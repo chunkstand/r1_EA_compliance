@@ -297,6 +297,7 @@ The `catalog-build` command writes:
 
 - `source_catalog.jsonl`
 - `source_set_manifest.json`
+- `catalog_validation.json`
 - `review_sources.sqlite`
 - `source_graph_nodes.jsonl`
 - `source_graph_edges.jsonl`
@@ -322,6 +323,14 @@ The `catalog-build` command writes:
 - git commit
 - optional download run ID
 - source, artifact, URL, authority, topic, host, role, parser, and status counts
+
+`catalog_validation.json` is the reviewer-engine gate. Checks cover:
+
+- unique source record IDs
+- required reviewer fields
+- valid artifact path, byte size, and SHA256 metadata for successful downloads
+- review graph links, including role, authority level, and review topics
+- duplicate or unknown rows in linked download manifests
 
 `review_sources.sqlite` exposes graph-ready review tables:
 

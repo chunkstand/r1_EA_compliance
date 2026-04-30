@@ -112,7 +112,7 @@ python -m usfs_r1_ea_sources catalog-build \
   --output-dir source_library
 ```
 
-The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
+The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `catalog_validation.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
 Pass `--run-id <download-run-id>` after downloads to link artifact hashes, paths, content types, and retrieval timestamps into the same reviewer-facing catalog.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:

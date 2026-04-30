@@ -141,7 +141,7 @@ def main(argv: list[str] | None = None) -> int:
             limit=args.limit,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
-        return 0
+        return 0 if result.summary["validation_passed"] else 1
 
     if args.command == "preflight":
         config = load_config(args.config)

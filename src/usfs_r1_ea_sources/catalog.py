@@ -23,6 +23,7 @@ class CatalogBuildResult:
     catalog_dir: Path
     source_catalog_path: Path
     source_set_manifest_path: Path
+    validation_path: Path
     sqlite_path: Path
     graph_nodes_path: Path
     graph_edges_path: Path
@@ -41,6 +42,7 @@ def build_review_catalog(
     catalog_dir.mkdir(parents=True, exist_ok=True)
     source_catalog_path = catalog_dir / "source_catalog.jsonl"
     source_set_manifest_path = catalog_dir / "source_set_manifest.json"
+    validation_path = catalog_dir / "catalog_validation.json"
     sqlite_path = catalog_dir / "review_sources.sqlite"
     graph_nodes_path = catalog_dir / "source_graph_nodes.jsonl"
     graph_edges_path = catalog_dir / "source_graph_edges.jsonl"
@@ -58,7 +60,7 @@ def build_review_catalog(
     )
 
     sources = load_canonical_sources(workbook_path, config.workbook)
-    manifest_records = _manifest_records_by_source_id(output_dir, run_id) if run_id else {}
+    manifest_records, manifest_load_checks = _load_manifest_records(output_dir, run_id, sources)
     catalog_records = [
         _catalog_record(
             source_set_id=source_set_id,
@@ -81,9 +83,15 @@ def build_review_catalog(
         records=catalog_records,
     )
     graph_nodes, graph_edges = _graph_records(catalog_records)
+    validation_report = _validation_report(
+        source_set_id=source_set_id,
+        records=catalog_records,
+        manifest_load_checks=manifest_load_checks,
+    )
 
     _write_jsonl(source_catalog_path, catalog_records)
     _write_json(source_set_manifest_path, manifest)
+    _write_json(validation_path, validation_report)
     _write_jsonl(graph_nodes_path, graph_nodes)
     _write_jsonl(graph_edges_path, graph_edges)
     _write_sqlite(sqlite_path, manifest, catalog_records)
@@ -96,6 +104,8 @@ def build_review_catalog(
         "review_topic_count": _review_topic_count(catalog_records),
         "authority_count": _authority_count(catalog_records),
         "download_run_id": run_id,
+        "validation_passed": validation_report["passed"],
+        "validation_path": str(validation_path),
         "source_catalog_path": str(source_catalog_path),
         "source_set_manifest_path": str(source_set_manifest_path),
         "sqlite_path": str(sqlite_path),
@@ -107,6 +117,7 @@ def build_review_catalog(
         catalog_dir=catalog_dir,
         source_catalog_path=source_catalog_path,
         source_set_manifest_path=source_set_manifest_path,
+        validation_path=validation_path,
         sqlite_path=sqlite_path,
         graph_nodes_path=graph_nodes_path,
         graph_edges_path=graph_edges_path,
@@ -336,6 +347,14 @@ def _create_schema(connection: sqlite3.Connection) -> None:
           retrieved_at TEXT,
           FOREIGN KEY (source_record_id) REFERENCES sources(source_record_id)
         );
+
+        CREATE INDEX idx_sources_host ON sources(host);
+        CREATE INDEX idx_sources_role ON sources(document_role);
+        CREATE INDEX idx_sources_authority_level ON sources(authority_level);
+        CREATE INDEX idx_sources_parser ON sources(expected_parser);
+        CREATE INDEX idx_sources_status ON sources(source_status);
+        CREATE INDEX idx_source_review_topics_topic ON source_review_topics(topic_id);
+        CREATE INDEX idx_source_artifacts_artifact ON source_artifacts(artifact_sha256);
         """
     )
 
@@ -495,7 +514,7 @@ def _insert_citation(connection: sqlite3.Connection, record: dict) -> None:
 
 def _graph_records(records: list[dict]) -> tuple[list[dict], list[dict]]:
     nodes_by_id: dict[str, dict] = {}
-    edges: list[dict] = []
+    edges_by_id: dict[str, dict] = {}
     for record in records:
         source_node_id = f"source:{record['source_record_id']}"
         nodes_by_id[source_node_id] = {
@@ -512,42 +531,208 @@ def _graph_records(records: list[dict]) -> tuple[list[dict], list[dict]]:
                 authority_node_id,
                 {"id": authority_node_id, "type": "Authority", "name": record["issuer"]},
             )
-            edges.append(_edge(source_node_id, authority_node_id, "ISSUED_BY"))
+            edge = _edge(source_node_id, authority_node_id, "ISSUED_BY")
+            edges_by_id[edge["id"]] = edge
         if record["applies_to"]:
             applies_node_id = f"applicability:{slugify(record['applies_to'], max_length=96)}"
             nodes_by_id.setdefault(
                 applies_node_id,
                 {"id": applies_node_id, "type": "Applicability", "label": record["applies_to"]},
             )
-            edges.append(_edge(source_node_id, applies_node_id, "APPLIES_TO"))
+            edge = _edge(source_node_id, applies_node_id, "APPLIES_TO")
+            edges_by_id[edge["id"]] = edge
         for topic in record["review_topics"]:
             topic_node_id = f"topic:{slugify(topic, max_length=96)}"
             nodes_by_id.setdefault(
                 topic_node_id,
                 {"id": topic_node_id, "type": "ReviewTopic", "label": topic},
             )
-            edges.append(_edge(source_node_id, topic_node_id, "SUPPORTS_REVIEW_TOPIC"))
+            edge = _edge(source_node_id, topic_node_id, "SUPPORTS_REVIEW_TOPIC")
+            edges_by_id[edge["id"]] = edge
         if record["artifact_sha256"]:
             artifact_node_id = f"artifact:{record['artifact_sha256']}"
             nodes_by_id.setdefault(
                 artifact_node_id,
                 {"id": artifact_node_id, "type": "Artifact", "sha256": record["artifact_sha256"]},
             )
-            edges.append(_edge(source_node_id, artifact_node_id, "HAS_ARTIFACT"))
-    return list(nodes_by_id.values()), edges
+            edge = _edge(source_node_id, artifact_node_id, "HAS_ARTIFACT")
+            edges_by_id[edge["id"]] = edge
+    return list(nodes_by_id.values()), list(edges_by_id.values())
 
 
 def _edge(source_id: str, target_id: str, relationship: str) -> dict:
-    return {"source": source_id, "target": target_id, "relationship": relationship}
+    edge_id = f"{source_id}|{relationship}|{target_id}"
+    return {"id": edge_id, "source": source_id, "target": target_id, "relationship": relationship}
 
 
-def _manifest_records_by_source_id(output_dir: Path, run_id: str) -> dict[str, dict]:
+def _load_manifest_records(
+    output_dir: Path,
+    run_id: str | None,
+    sources: list[WorkbookSource],
+) -> tuple[dict[str, dict], list[dict]]:
+    if not run_id:
+        return {}, []
+    source_ids = {source.source_record_id for source in sources}
     summary_path = output_dir / "runs" / run_id / "summary.json"
     if not summary_path.exists():
         raise FileNotFoundError(f"Missing run summary: {summary_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     manifest_path = _resolve_manifest_path(output_dir, summary)
-    return {record["source_record_id"]: record for record in _read_jsonl(manifest_path)}
+    records_by_id: dict[str, dict] = {}
+    duplicate_ids = []
+    unknown_ids = []
+    for record in _read_jsonl(manifest_path):
+        source_record_id = str(record.get("source_record_id") or "")
+        if source_record_id in records_by_id:
+            duplicate_ids.append(source_record_id)
+        if source_record_id not in source_ids:
+            unknown_ids.append(source_record_id)
+        records_by_id[source_record_id] = record
+    checks = [
+        {
+            "name": "download_manifest_has_no_duplicate_source_records",
+            "passed": not duplicate_ids,
+            "details": {"duplicate_source_record_ids": sorted(set(duplicate_ids))},
+        },
+        {
+            "name": "download_manifest_source_records_are_in_workbook",
+            "passed": not unknown_ids,
+            "details": {"unknown_source_record_ids": sorted(set(unknown_ids))},
+        },
+    ]
+    return records_by_id, checks
+
+
+def _validation_report(
+    *,
+    source_set_id: str,
+    records: list[dict],
+    manifest_load_checks: list[dict],
+) -> dict:
+    checks = [
+        _check_unique_source_records(records),
+        _check_required_reviewer_fields(records),
+        _check_artifact_metadata(records),
+        _check_review_graph_links(records),
+        *manifest_load_checks,
+    ]
+    return {
+        "source_set_id": source_set_id,
+        "passed": all(check["passed"] for check in checks),
+        "checks": checks,
+    }
+
+
+def _check_unique_source_records(records: list[dict]) -> dict:
+    counts = Counter(record["source_record_id"] for record in records)
+    duplicates = sorted(source_id for source_id, count in counts.items() if count > 1)
+    return {
+        "name": "source_record_ids_are_unique",
+        "passed": not duplicates,
+        "details": {"duplicate_source_record_ids": duplicates},
+    }
+
+
+def _check_required_reviewer_fields(records: list[dict]) -> dict:
+    required = [
+        "source_set_id",
+        "source_record_id",
+        "title",
+        "document_role",
+        "authority_level",
+        "original_url",
+        "effective_url",
+        "normalized_url",
+        "host",
+        "expected_parser",
+        "source_status",
+        "citation_label",
+    ]
+    failures = []
+    for record in records:
+        missing = [field for field in required if not record.get(field)]
+        if missing:
+            failures.append(
+                {
+                    "source_record_id": record.get("source_record_id"),
+                    "missing_fields": missing,
+                }
+            )
+    return {
+        "name": "required_reviewer_fields_are_present",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _check_artifact_metadata(records: list[dict]) -> dict:
+    failures = []
+    success_statuses = {"downloaded", "downloaded_existing", "duplicate_content"}
+    for record in records:
+        if record["source_status"] not in success_statuses:
+            continue
+        missing = [
+            field
+            for field in ["artifact_sha256", "artifact_path", "artifact_byte_size", "content_type"]
+            if not record.get(field)
+        ]
+        if missing:
+            failures.append(_artifact_validation_failure(record, f"missing fields: {', '.join(missing)}"))
+            continue
+        path = Path(str(record["artifact_path"]))
+        if not path.exists():
+            failures.append(_artifact_validation_failure(record, "artifact_path does not exist"))
+            continue
+        if path.stat().st_size != record["artifact_byte_size"]:
+            failures.append(_artifact_validation_failure(record, "artifact_byte_size mismatch"))
+        digest = sha256_file(path)
+        if digest != record["artifact_sha256"]:
+            failures.append(_artifact_validation_failure(record, "artifact_sha256 mismatch"))
+    return {
+        "name": "successful_sources_have_valid_artifact_metadata",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _check_review_graph_links(records: list[dict]) -> dict:
+    failures = []
+    for record in records:
+        if not record["review_topics"]:
+            failures.append(
+                {
+                    "source_record_id": record["source_record_id"],
+                    "reason": "missing review_topics",
+                }
+            )
+        if record["document_role"] == "source_document":
+            failures.append(
+                {
+                    "source_record_id": record["source_record_id"],
+                    "reason": "unclassified document_role",
+                }
+            )
+        if record["authority_level"] == "unknown":
+            failures.append(
+                {
+                    "source_record_id": record["source_record_id"],
+                    "reason": "unknown authority_level",
+                }
+            )
+    return {
+        "name": "sources_have_review_graph_links",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _artifact_validation_failure(record: dict, reason: str) -> dict:
+    return {
+        "source_record_id": record.get("source_record_id"),
+        "source_status": record.get("source_status"),
+        "artifact_path": record.get("artifact_path"),
+        "reason": reason,
+    }
 
 
 def _source_set_id(
@@ -602,8 +787,18 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
     title = source.title.lower()
     if "executive order" in value or "executive order" in title:
         return "executive_order"
+    if "federal register" in value or "final rule" in value or "final rule" in title:
+        return "regulation"
     if "regulation" in value or "cfr" in title:
         return "regulation"
+    if "directive" in value or "manual" in value or "supplement" in value:
+        return "agency_policy"
+    if "agency species page" in value or "agency page" in value:
+        return "agency_policy"
+    if "public law" in value:
+        return "law"
+    if "plan amendment" in value:
+        return "agency_policy"
     if "statute" in value or "u.s.c" in title or "united states code" in title:
         return "law"
     if "state" in value:

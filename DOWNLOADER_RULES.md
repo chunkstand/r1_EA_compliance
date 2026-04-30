@@ -256,6 +256,7 @@ Before the source library is used by an EA review engine:
 
 - Build `source_catalog.jsonl` with one record per workbook source row.
 - Build `source_set_manifest.json` with workbook, config, override, and git provenance.
+- Build `catalog_validation.json`; the catalog command must fail if reviewer catalog validation fails.
 - Build `review_sources.sqlite` as the queryable reviewer-engine catalog.
 - Preserve stable reviewer citation labels based on `source_record_id` and artifact SHA256 when
   available.
