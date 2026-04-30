@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -63,7 +64,7 @@ def run_compliance_gold_eval(
         _check_rule_pack_valid(rule_pack_validation, rule_pack_path),
         _check_gold_identity(gold, gold_file),
         _check_gold_rule_pack_identity(gold, rule_pack),
-        _check_cases_present(cases),
+        _check_cases_present(gold, gold_file, cases),
         _check_case_adjudication(cases),
         _check_case_rule_coverage(cases, rule_pack),
         _check_case_profiles(cases),
@@ -71,26 +72,31 @@ def run_compliance_gold_eval(
     ]
     adjudication_passed = all(check["passed"] for check in checks)
     review_eval_summary = None
+    review_eval_error = None
     if adjudication_passed:
+        review_eval_cases = _review_eval_cases(cases, gold_file)
         compliance_review_eval_file.write_text(
-            json.dumps(cases, indent=2, sort_keys=True) + "\n",
+            json.dumps(review_eval_cases, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-        review_eval = run_compliance_review_eval(
-            output_dir=output_dir,
-            eval_file=compliance_review_eval_file,
-            rule_pack_path=rule_pack_path,
-            source_set_id=source_set_id,
-            index_path=index_path,
-            results_dir=compliance_review_eval_dir,
-            source_top_k=source_top_k,
-            package_top_k=package_top_k,
-            chunk_max_chars=chunk_max_chars,
-            chunk_overlap_chars=chunk_overlap_chars,
-            docling_ocr=docling_ocr,
-            docling_timeout_seconds=docling_timeout_seconds,
-        )
-        review_eval_summary = review_eval.summary
+        try:
+            review_eval = run_compliance_review_eval(
+                output_dir=output_dir,
+                eval_file=compliance_review_eval_file,
+                rule_pack_path=rule_pack_path,
+                source_set_id=source_set_id,
+                index_path=index_path,
+                results_dir=compliance_review_eval_dir,
+                source_top_k=source_top_k,
+                package_top_k=package_top_k,
+                chunk_max_chars=chunk_max_chars,
+                chunk_overlap_chars=chunk_overlap_chars,
+                docling_ocr=docling_ocr,
+                docling_timeout_seconds=docling_timeout_seconds,
+            )
+            review_eval_summary = review_eval.summary
+        except (FileNotFoundError, ValueError) as error:
+            review_eval_error = str(error)
 
     case_results = list((review_eval_summary or {}).get("cases", []))
     case_count = len(cases)
@@ -129,6 +135,7 @@ def run_compliance_gold_eval(
         "compliance_review_eval_passed": bool(
             review_eval_summary and review_eval_summary.get("passed")
         ),
+        "compliance_review_eval_error": review_eval_error,
         "promotion_ready": adjudication_passed
         and bool(review_eval_summary and review_eval_summary.get("passed")),
         "passed": adjudication_passed
@@ -158,6 +165,15 @@ def _load_gold_eval(path: Path) -> dict:
 def _case_list(gold: dict) -> list[dict]:
     cases = gold.get("cases")
     return cases if isinstance(cases, list) else []
+
+
+def _review_eval_cases(cases: list[dict], gold_file: Path) -> list[dict]:
+    eval_cases = deepcopy(cases)
+    for case in eval_cases:
+        package_path = str(case.get("package_path") or "").strip()
+        if package_path:
+            case["package_path"] = str((gold_file.parent / package_path).resolve())
+    return eval_cases
 
 
 def _check_rule_pack_valid(rule_pack_validation: dict, rule_pack_path: Path) -> dict:
@@ -240,10 +256,22 @@ def _check_gold_rule_pack_identity(gold: dict, rule_pack: dict) -> dict:
     }
 
 
-def _check_cases_present(cases: list[dict]) -> dict:
+def _check_cases_present(gold: dict, gold_file: Path, cases: list[dict]) -> dict:
     failures = []
+    gold_root = gold_file.parent.resolve()
+    raw_cases = gold.get("cases")
+    if "cases" not in gold:
+        failures.append({"reason": "missing_cases"})
+    elif not isinstance(raw_cases, list):
+        failures.append(
+            {
+                "reason": "cases_must_be_list",
+                "actual_type": type(raw_cases).__name__,
+            }
+        )
     if len(cases) < 3:
         failures.append({"reason": "minimum_three_cases_required", "case_count": len(cases)})
+    case_ids = []
     for index, case in enumerate(cases):
         if not isinstance(case, dict):
             failures.append({"index": index, "reason": "case_must_be_object"})
@@ -253,6 +281,8 @@ def _check_cases_present(cases: list[dict]) -> dict:
             failures.append({"index": index, "reason": "missing_id"})
         elif not SAFE_ID_RE.fullmatch(case_id):
             failures.append({"index": index, "case_id": case_id, "reason": "unsafe_id"})
+        else:
+            case_ids.append(case_id)
         has_text = bool(str(case.get("package_text") or "").strip())
         has_path = bool(str(case.get("package_path") or "").strip())
         if has_text == has_path:
@@ -261,6 +291,40 @@ def _check_cases_present(cases: list[dict]) -> dict:
                     "index": index,
                     "case_id": case_id,
                     "reason": "exactly_one_package_fixture_required",
+                }
+            )
+        if has_path:
+            package_path = Path(str(case.get("package_path") or "").strip())
+            if package_path.is_absolute() or ".." in package_path.parts:
+                failures.append(
+                    {
+                        "index": index,
+                        "case_id": case_id,
+                        "reason": "package_path_must_be_relative_child",
+                        "package_path": str(package_path),
+                    }
+                )
+            else:
+                resolved_package_path = (gold_root / package_path).resolve()
+                try:
+                    resolved_package_path.relative_to(gold_root)
+                except ValueError:
+                    failures.append(
+                        {
+                            "index": index,
+                            "case_id": case_id,
+                            "reason": "package_path_must_resolve_under_gold_file",
+                            "package_path": str(package_path),
+                            "resolved_package_path": str(resolved_package_path),
+                        }
+                    )
+    for case_id, count in sorted(Counter(case_ids).items()):
+        if count > 1:
+            failures.append(
+                {
+                    "case_id": case_id,
+                    "count": count,
+                    "reason": "duplicate_id",
                 }
             )
     return {
@@ -416,12 +480,15 @@ def _gold_case_result(case: dict, case_results: list[dict]) -> dict:
     case_id = str(case.get("id") or "")
     result = next((item for item in case_results if item.get("id") == case_id), {})
     adjudication = case.get("adjudication")
+    failure_reasons = result.get("failure_reasons")
+    if not result:
+        failure_reasons = ["compliance_review_eval_not_run"]
     return {
         "id": case_id,
         "profile": case.get("profile"),
         "adjudication": adjudication if isinstance(adjudication, dict) else {},
         "passed": bool(result.get("passed")),
-        "failure_reasons": result.get("failure_reasons", []),
+        "failure_reasons": failure_reasons or [],
         "expected_statuses": case.get("expected_statuses", {}),
         "actual_statuses": result.get("actual_statuses", {}),
         "finding_status_counts": result.get("finding_status_counts", {}),

@@ -372,7 +372,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
 `compliance-gold-eval` reads a structured adjudication file, requires positive, mixed, and negative
 case profiles, verifies every case covers the active rule pack, then runs those cases through the
 real `compliance-review-eval` path. It emits `promotion_ready` only when adjudication checks and the
-underlying compliance-review eval both pass.
+underlying compliance-review eval both pass. Gold case IDs must be unique and safe for generated
+paths, and package fixture paths must stay under the gold file directory.
 
 Run the seed retrieval eval gate:
 
@@ -478,9 +479,10 @@ binding readiness separately so validation failures are not hidden inside a sing
 When `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
-reports a `compliance_gold_eval` promotion phase. Pass `--review-id <review-id>` after a compliance
-review to include `compliance_review` as an additional phase gate. The compliance phase requires the
-review source set to match the evaluated source set.
+reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
+rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` after a
+compliance review to include `compliance_review` as an additional phase gate. The compliance phase
+requires the review source set to match the evaluated source set.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

@@ -635,11 +635,15 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
 - at least three cases with positive, mixed, and negative profiles
 - per-case adjudication metadata, package fixture, expected statuses for every rule, expected
   status counts, unsupported finding IDs, and minimum finding count
+- unique safe case IDs; package fixture paths must be relative child paths under the gold file
+  directory when `package_path` is used instead of inline `package_text`
 
 `compliance_gold_eval_results.json` has schema version `compliance-gold-eval-results-v0` and records:
 
 - gold eval identity, rule-pack identity, source-set IDs, paths, and top-k values
 - adjudication check status and underlying compliance-review eval pass status
+- `compliance_review_eval_error` when the underlying eval could not execute because of a contract
+  or missing-fixture problem
 - case count, adjudicated case count, passed/failed case counts, profile counts, and required
   profiles present
 - `promotion_ready`, which is true only when adjudication checks and the underlying compliance-review
@@ -1103,7 +1107,8 @@ failure. When `compliance_coverage_results.json` exists beside the rule-claim ou
 also includes a `compliance_coverage` phase for matrix, source-claim, source-claim-term, and
 eval-case coverage. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
-promotion phase. When
+promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
+not-promotion-ready artifacts. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The evidence-graph and claim-extraction

@@ -545,20 +545,29 @@ def run_phase_aligned_eval(
             and compliance_gold_eval.get("rule_pack_version") == rule_claim_rule_pack_version
         )
         gold_passed = bool(compliance_gold_eval.get("passed"))
+        gold_promotion_ready = bool(compliance_gold_eval.get("promotion_ready"))
         gold_phase_passed = gold_passed and gold_source_set_matches and gold_rule_pack_matches
+        gold_failed_checks = []
+        if not gold_passed:
+            gold_failed_checks.append("gold_eval_failed")
+        if not gold_promotion_ready:
+            gold_failed_checks.append("gold_eval_not_promotion_ready")
+        if not gold_source_set_matches:
+            gold_failed_checks.append("source_set_mismatch")
+        if not gold_rule_pack_matches:
+            gold_failed_checks.append("rule_pack_mismatch")
         phases.append(
             _phase(
                 "compliance_gold_eval",
                 passed=gold_phase_passed,
-                reviewer_ready=bool(
-                    gold_phase_passed and compliance_gold_eval.get("promotion_ready")
-                ),
+                reviewer_ready=bool(gold_phase_passed and gold_promotion_ready),
                 details={
                     "gold_eval_path": str(compliance_gold_eval_path),
                     "gold_eval_id": compliance_gold_eval.get("gold_eval_id"),
                     "gold_eval_version": compliance_gold_eval.get("gold_eval_version"),
                     "gold_passed": gold_passed,
-                    "promotion_ready": bool(compliance_gold_eval.get("promotion_ready")),
+                    "promotion_ready": gold_promotion_ready,
+                    "failed_checks": gold_failed_checks,
                     "expected_source_set_id": source_set_id,
                     "gold_source_set_id": gold_source_set_id,
                     "source_set_matches": gold_source_set_matches,

@@ -52,7 +52,7 @@ Last verified locally on 2026-04-30.
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
 - Compliance gold eval: passed, `3/3` adjudicated cases, `promotion_ready`
-- Unit suite: `121` tests passed
+- Unit suite: `126` tests passed
 
 The verification set was:
 
@@ -326,8 +326,10 @@ Validated guarantees:
   per-rule expectations.
 - Compliance coverage rejects malformed matrix rows, missing matrix/eval/link coverage, and
   source-record or source-claim-term mismatches against current rule-claim links.
-- Compliance gold eval rejects missing adjudication metadata, missing required profiles, partial
-  rule-pack expectations, status count mismatches, and generated finding mismatches.
+- Compliance gold eval rejects missing adjudication metadata, missing required profiles, duplicate
+  case IDs, unsafe or escaping package fixture paths, partial rule-pack expectations, status count
+  mismatches, and generated finding mismatches. Missing package fixture files are recorded as failed
+  gold eval results instead of escaping without a machine-readable artifact.
 - Phase eval rejects stale compliance coverage artifacts when the coverage source set or rule pack
   does not match the evaluated source set and rule-claim binding.
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
@@ -581,9 +583,10 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 When a compliance coverage phase is included, `phase-eval` requires the matrix gate to pass, the
 rule pack to match, and the coverage source set to match the evaluated source set. When a gold eval
 phase is included, `phase-eval` requires the promotion gate to pass, the rule pack to match, and the
-gold eval source set to match the evaluated source set. When a compliance review phase is included,
-`phase-eval` requires the review report to exist, validation to pass, the review ID to match when
-supplied, and the review source set to match the evaluated source set.
+gold eval source set to match the evaluated source set; stale or failed gold artifacts report
+specific failed checks such as source-set or rule-pack mismatch. When a compliance review phase is
+included, `phase-eval` requires the review report to exist, validation to pass, the review ID to
+match when supplied, and the review source set to match the evaluated source set.
 
 ## Alignment And Next Milestone
 
