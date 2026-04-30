@@ -587,32 +587,41 @@ def _finding_for_item(
     package_evidence = package_search["results"][0] if package_search["results"] else None
     source_evidence = source_query["results"][0] if source_query["results"] else None
     applicability_terms = [str(term) for term in item.get("applies_if_package_terms", [])]
+    applicability_mode = str(
+        item.get("applicability_mode") or ("conditional" if applicability_terms else "baseline")
+    )
     applicability = True
+    applicability_evidence = None
     if applicability_terms:
-        applicability_search = bool(
-            _search_package_chunks(
-                package_chunks,
-                query=" ".join(applicability_terms),
-                required_terms=applicability_terms,
-                limit=1,
-            )["results"]
+        applicability_search = _search_package_chunks(
+            package_chunks,
+            query=" ".join(applicability_terms),
+            required_terms=applicability_terms,
+            limit=1,
         )
-        applicability = applicability_search
+        applicability_evidence = (
+            applicability_search["results"][0] if applicability_search["results"] else None
+        )
+        applicability = bool(applicability_evidence)
     if not applicability:
         status = "not_applicable"
         confidence = 0.6
-        rationale = "The applicability trigger terms were not found in the EA package."
+        applicability_rationale = "The applicability trigger terms were not found in the EA package."
+        rationale = applicability_rationale
     elif package_evidence and source_evidence:
         status = "pass"
         confidence = 0.82
+        applicability_rationale = "The authority was applicable to the EA package."
         rationale = "The EA package contains matching evidence and the source library provides supporting review authority."
     elif source_evidence and not package_evidence:
         status = "gap"
         confidence = 0.74
+        applicability_rationale = "The authority was applicable to the EA package."
         rationale = "The source library supports this review requirement, but matching EA package evidence was not found."
     else:
         status = "uncertain"
         confidence = 0.35
+        applicability_rationale = "The authority was applicable to the EA package."
         rationale = "The review item is not supported by enough package and source-library evidence for a deterministic finding."
     return {
         "id": item["id"],
@@ -626,6 +635,11 @@ def _finding_for_item(
         "package_terms": package_search["required_terms"],
         "source_query": source_query["query"],
         "source_filters": source_filters,
+        "applicability_status": "applicable" if applicability else "not_applicable",
+        "applicability_mode": applicability_mode,
+        "applicability_terms": applicability_terms,
+        "applicability_rationale": applicability_rationale,
+        "applicability_evidence": applicability_evidence,
         "package_evidence_status": "found" if package_evidence else "not_found",
         "source_library_evidence_status": "found" if source_evidence else "not_found",
         "package_evidence": package_evidence,

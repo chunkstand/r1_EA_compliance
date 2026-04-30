@@ -104,8 +104,10 @@ links into a local graph artifact. The `claim-extract` command extracts determin
 claims and entities with exact offsets and graph bindings. The `rule-claim-link` command binds
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
-reviewer-ready retrieval evidence. The `compliance-review` command evaluates a versioned rule pack
-and emits a compliance matrix plus finding graph with source-claim support. The
+reviewer-ready retrieval evidence. The `compliance-review` command identifies applicable
+statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
+rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
+finding graph with source-claim support. The
 `compliance-gold-eval` command runs the 10-case adjudication promotion gate. Embeddings and expanded
 human adjudication over real EA packages remain downstream work.
 
@@ -347,16 +349,20 @@ writes:
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
-Every `pass` finding requires package evidence and source-library evidence. Every `gap` finding
-requires source-library evidence and records that matching package evidence was not found.
-Claim-bearing findings also require validated rule-to-source-claim links. The finding graph connects
-the review, rule pack, rules, findings, evidence spans, source claims, and package gaps. Rule-pack
-IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and hyphens.
-Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot silently broaden
-source retrieval.
-The compliance matrix is the reviewer-facing table: each row carries rule status, applicability
-basis, package citation, source-library citation, applied source record IDs, source document roles,
-source-claim IDs, limitations, and whether citation requirements were met.
+The command follows an authority-first workflow: baseline authorities always apply, conditional
+authorities are marked applicable only when configured EA package terms are found, and not-applicable
+authorities are carried through the matrix without source or EA compliance citations. Every
+applicable `pass` finding requires package evidence and source-library evidence. Every applicable
+`gap` finding requires source-library evidence and records that matching package evidence was not
+found. Claim-bearing findings also require validated rule-to-source-claim links. The finding graph
+connects the review, rule pack, rules, findings, evidence spans, source claims, and package gaps.
+Rule-pack IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and
+hyphens. Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot
+silently broaden source retrieval.
+The compliance matrix is the reviewer-facing table: each row carries authority category, authority
+source record, authority document role, applicability mode, applicability status and basis, rule
+status, package citation, source-library citation, source-claim IDs, limitations, and whether
+citation requirements were met.
 
 Run the final compliance review eval gate:
 
@@ -454,8 +460,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
 `rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
 writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
 carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
-and exact source offsets. The current full corpus links all `7/7` seed rules with `35` validated
-links and no explicit gaps.
+and exact source offsets. The current full corpus links all `20/20` authority rules with `92`
+validated links and no explicit gaps.
 
 Run the seed rule-claim eval gate:
 

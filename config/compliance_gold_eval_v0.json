@@ -1,465 +1,1006 @@
 {
   "schema_version": "compliance-gold-eval-v0",
-  "id": "nepa-ea-gold-v0.2",
-  "version": "0.2.0",
-  "title": "NEPA EA Gold Adjudication Eval V0.2",
+  "id": "nepa-ea-authority-gold-v0.3",
+  "version": "0.3.0",
+  "title": "NEPA EA Authority Gold Eval V0.3",
   "rule_pack_id": "nepa-ea-v0",
-  "rule_pack_version": "0.2.0",
+  "rule_pack_version": "0.3.0",
   "adjudication": {
     "status": "seed_gold",
-    "method": "Ten realistic package profiles with explicit expected findings, applicable source rows, and source document classes for deterministic promotion gating.",
-    "adjudicated_by": ["codex-seed-adjudication"],
+    "method": "Synthetic authority-profile cases covering baseline and conditional source-authority rows.",
+    "adjudicated_by": [
+      "codex"
+    ],
     "adjudicated_at": "2026-04-30",
     "promotion_gate": true
   },
   "cases": [
     {
-      "id": "gold-all-rules-supported",
+      "id": "gold-all-authorities-supported",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. National Environmental Policy Act NEPA environmental assessment environmental effects alternatives consultation public comment finding of no significant impact significant effects schedule page limit unified review objection period publicly circulated tiers to incorporates by reference programmatic final environmental impact statement purpose and need affected environment environmental consequences FONSI decision notice mitigation coordination environmental review integrated National Forest Management Act Land Management Plan Forest Plan plan consistency 36 CFR 219.15 Custer Gallatin 2022 Land Management Plan Custer Gallatin National Forest Land Management Plan Endangered Species Act Section 7 threatened endangered biological assessment Fish and Wildlife Service National Historic Preservation Act Section 106 SHPO cultural resources historic properties 36 CFR part 800 adverse effect Montana SHPO State Historic Preservation Officer Roadless Rule inventoried roadless roadless area roadless characteristics Executive Order 11990 wetlands wetland Migratory Bird Treaty Act migratory bird birds conservation measures Executive Order 13186 The package describes alternatives, affected environment, environmental effects, consultation, coordination, public comment, a finding of no significant impact, decision notice, mitigation, schedule, objection period, and publicly circulated review. It tiers to and incorporates by reference a final environmental impact statement and programmatic analysis. The record addresses National Forest Management Act, 36 CFR 219.15, Custer Gallatin, 2022 Land Management Plan, Forest Plan, plan consistency, Endangered Species Act, Section 7, biological assessment, Fish and Wildlife Service, National Historic Preservation Act, Section 106, 36 CFR part 800, SHPO, adverse effect, cultural resources, Montana SHPO, Roadless Rule, inventoried roadless area, roadless characteristics, Executive Order 11990, wetlands, wetland, Migratory Bird Treaty Act, migratory bird, Executive Order 13186.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "pass",
+        "planning_rule_36cfr_21915_consistency": "pass",
+        "custer_gallatin_lmp_2022": "pass",
+        "esa_section_7": "pass",
+        "esa_consultation_50cfr_402": "pass",
+        "nhpa_section_106": "pass",
+        "nhpa_36cfr_800": "pass",
+        "montana_shpo_review": "pass",
+        "roadless_rule_36cfr_294b": "pass",
+        "eo_11990_wetlands": "pass",
+        "mbta_migratory_birds": "pass",
+        "eo_13186_migratory_birds": "pass"
+      },
+      "expected_finding_status_counts": {
+        "pass": 20
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "R1EA-005"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "R1PLAN-custer-gallatin-nf-02"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "esa_consultation_50cfr_402": [
+          "R1EA-066"
+        ],
+        "nhpa_section_106": [
+          "R1EA-070"
+        ],
+        "nhpa_36cfr_800": [
+          "R1EA-071"
+        ],
+        "montana_shpo_review": [
+          "R1EA-119"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "R1EA-049"
+        ],
+        "eo_11990_wetlands": [
+          "R1EA-104"
+        ],
+        "mbta_migratory_birds": [
+          "R1EA-094"
+        ],
+        "eo_13186_migratory_birds": [
+          "R1EA-096"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "forest_plan"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "esa_consultation_50cfr_402": [
+          "regulation"
+        ],
+        "nhpa_section_106": [
+          "law"
+        ],
+        "nhpa_36cfr_800": [
+          "regulation"
+        ],
+        "montana_shpo_review": [
+          "state_requirement"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "regulation"
+        ],
+        "eo_11990_wetlands": [
+          "executive_order"
+        ],
+        "mbta_migratory_birds": [
+          "law"
+        ],
+        "eo_13186_migratory_birds": [
+          "executive_order"
+        ]
+      },
+      "min_findings": 20,
       "profile": "positive",
-      "package_text": "Purpose and Need\n\nThe proposed action improves trail access and public safety. The need for action is to reduce deferred maintenance and improve access to recreation sites.\n\nAlternatives\n\nThe environmental assessment considers the no action alternative, the proposed action, and an alternate trailhead design.\n\nAffected Environment and Environmental Effects\n\nThe analysis describes the affected environment and environmental effects, including effects to soil, water, wildlife, and recreation.\n\nConsultation and Compliance\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, and water quality compliance.\n\nPublic Involvement\n\nThe project used public involvement through scoping, a comment opportunity, and responses to substantive comments.\n\nFONSI and Mitigation\n\nThe finding of no significant impact relies on mitigation measures and a decision notice. The EA identifies monitoring and enforcement responsibilities for mitigation commitments.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture intentionally includes package evidence for every current rule."
-      },
-      "expected_statuses": {
-        "purpose_need": "pass",
-        "alternatives": "pass",
-        "effects_analysis": "pass",
-        "integrated_compliance": "pass",
-        "public_involvement": "pass",
-        "fonsi_mitigation": "pass",
-        "mitigation_monitoring": "pass"
-      },
-      "expected_finding_status_counts": {
-        "pass": 7
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-all-authorities-supported."
+      }
     },
     {
-      "id": "gold-purpose-only",
-      "profile": "mixed",
-      "package_text": "Purpose and Need\n\nThe trail relocation is needed to repair drainage and reduce erosion near the campground. The package stops after describing the need.",
+      "id": "gold-baseline-nepa-supported",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 6,
+        "not_applicable": 14
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ]
+      },
+      "min_findings": 20,
+      "profile": "positive",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports purpose and need while omitting alternatives, effects, consultations, public involvement, FONSI support, and mitigation monitoring."
-      },
-      "expected_statuses": {
-        "purpose_need": "pass",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 6,
-        "pass": 1
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-baseline-nepa-supported."
+      }
     },
     {
-      "id": "gold-purpose-alternatives-only",
+      "id": "gold-nfma-forest-plan",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. National Forest Management Act Land Management Plan Forest Plan plan consistency Custer Gallatin 2022 Land Management Plan.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "pass",
+        "planning_rule_36cfr_21915_consistency": "pass",
+        "custer_gallatin_lmp_2022": "pass",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 9,
+        "not_applicable": 11
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "R1PLAN-custer-gallatin-nf-02"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "forest_plan"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Purpose and Need\n\nThe proposed action relocates a short trail segment to improve drainage and access. The need for action is recurring surface damage.\n\nAlternatives\n\nThe EA package compares alternatives and the no action alternative. The fixture stops after project framing.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports purpose, need, and alternatives while omitting the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "pass",
-        "alternatives": "pass",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 5,
-        "pass": 2
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-nfma-forest-plan."
+      }
     },
     {
-      "id": "gold-effects-only",
+      "id": "gold-esa-only",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. Endangered Species Act Section 7 threatened endangered biological assessment Fish and Wildlife Service.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "pass",
+        "esa_consultation_50cfr_402": "pass",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 8,
+        "not_applicable": 12
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "esa_consultation_50cfr_402": [
+          "R1EA-066"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "esa_consultation_50cfr_402": [
+          "regulation"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Affected Environment and Environmental Effects\n\nThe analysis describes the affected environment and environmental effects for soil, water, wildlife, and recreation.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports the effects-analysis rule and omits the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "pass",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 6,
-        "pass": 1
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-esa-only."
+      }
     },
     {
-      "id": "gold-consultation-only",
+      "id": "gold-nhpa-shpo-only",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. National Historic Preservation Act Section 106 36 CFR part 800 SHPO adverse effect historic properties cultural resources Montana SHPO State Historic Preservation Officer.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "pass",
+        "nhpa_36cfr_800": "pass",
+        "montana_shpo_review": "pass",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 9,
+        "not_applicable": 11
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "nhpa_section_106": [
+          "R1EA-070"
+        ],
+        "nhpa_36cfr_800": [
+          "R1EA-071"
+        ],
+        "montana_shpo_review": [
+          "R1EA-119"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "nhpa_section_106": [
+          "law"
+        ],
+        "nhpa_36cfr_800": [
+          "regulation"
+        ],
+        "montana_shpo_review": [
+          "state_requirement"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Consultation and Compliance\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, and water quality compliance.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports integrated environmental compliance and omits the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "pass",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 6,
-        "pass": 1
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-nhpa-shpo-only."
+      }
     },
     {
-      "id": "gold-public-involvement-only",
+      "id": "gold-roadless-wetlands",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. Roadless Rule inventoried roadless area roadless characteristics Executive Order 11990 wetlands wetland mitigation.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "pass",
+        "eo_11990_wetlands": "pass",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 8,
+        "not_applicable": 12
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "R1EA-049"
+        ],
+        "eo_11990_wetlands": [
+          "R1EA-104"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "regulation"
+        ],
+        "eo_11990_wetlands": [
+          "executive_order"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Public Involvement\n\nThe project file describes public involvement, scoping, and a comment period with responses to substantive comments.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports public involvement and omits the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "pass",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 6,
-        "pass": 1
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-roadless-wetlands."
+      }
     },
     {
-      "id": "gold-fonsi-decision-only",
+      "id": "gold-migratory-birds",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. Migratory Bird Treaty Act migratory bird birds Executive Order 13186 conservation measures.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "pass",
+        "eo_13186_migratory_birds": "pass"
+      },
+      "expected_finding_status_counts": {
+        "pass": 8,
+        "not_applicable": 12
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "mbta_migratory_birds": [
+          "R1EA-094"
+        ],
+        "eo_13186_migratory_birds": [
+          "R1EA-096"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "mbta_migratory_birds": [
+          "law"
+        ],
+        "eo_13186_migratory_birds": [
+          "executive_order"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Finding of No Significant Impact\n\nThe FONSI and decision notice explain why significant impact is not expected.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports FONSI and decision notice traceability without monitoring or enforcement evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "pass",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 6,
-        "pass": 1
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-migratory-birds."
+      }
     },
     {
-      "id": "gold-mitigation-monitoring-only",
+      "id": "gold-fonsi-only",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. Finding of No Significant Impact FONSI decision notice mitigation.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 7,
+        "not_applicable": 13
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Mitigation Monitoring\n\nThe package identifies mitigation monitoring, enforcement responsibilities, and commitments for implementation.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports mitigation and mitigation monitoring terms while omitting the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "pass",
-        "mitigation_monitoring": "pass"
-      },
-      "expected_finding_status_counts": {
-        "gap": 5,
-        "pass": 2
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-fonsi-only."
+      }
     },
     {
-      "id": "gold-consultation-public-mixed",
+      "id": "gold-programmatic-tiering",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review. tiers to incorporates by reference programmatic final environmental impact statement.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "pass": 7,
+        "not_applicable": 13
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "R1EA-005"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ]
+      },
+      "min_findings": 20,
       "profile": "mixed",
-      "package_text": "Consultation, Compliance, and Public Involvement\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, water quality compliance, public involvement, scoping, and comment responses.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports integrated compliance and public involvement while omitting the other rule evidence."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "pass",
-        "public_involvement": "pass",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 5,
-        "pass": 2
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-programmatic-tiering."
+      }
     },
     {
       "id": "gold-administrative-negative",
+      "package_text": "Administrative Transmittal. Routing slip. Staff contacts. Meeting date. Document control log.\n",
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "gap",
+        "nepa_4332_environmental_information": "gap",
+        "nepa_4336_level_of_review": "gap",
+        "nepa_4336a_timing_unified_review": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_ea_7cfr_1b5": "gap",
+        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_efficient_review_7cfr_1b9": "gap",
+        "nfma_16usc_1604_plan_consistency": "not_applicable",
+        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "nhpa_36cfr_800": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "not_applicable": 14
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_source_record_ids": {
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ]
+      },
+      "expected_source_document_roles": {
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ]
+      },
+      "min_findings": 20,
       "profile": "negative",
-      "package_text": "Administrative Transmittal\n\nRouting slip. Staff contacts. Meeting date. Document control schedule.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
-        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_by": [
+          "codex"
+        ],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture intentionally lacks package evidence for all current compliance rules."
-      },
-      "expected_statuses": {
-        "purpose_need": "gap",
-        "alternatives": "gap",
-        "effects_analysis": "gap",
-        "integrated_compliance": "gap",
-        "public_involvement": "gap",
-        "fonsi_mitigation": "gap",
-        "mitigation_monitoring": "gap"
-      },
-      "expected_finding_status_counts": {
-        "gap": 7
-      },
-      "expected_source_record_ids": {
-        "purpose_need": ["R1EA-008"],
-        "alternatives": ["R1EA-013"],
-        "effects_analysis": ["R1EA-013"],
-        "integrated_compliance": ["R1EA-015"],
-        "public_involvement": ["R1EA-008"],
-        "fonsi_mitigation": ["R1EA-014"],
-        "mitigation_monitoring": ["R1EA-008"]
-      },
-      "expected_source_document_roles": {
-        "purpose_need": ["regulation"],
-        "alternatives": ["regulation"],
-        "effects_analysis": ["regulation"],
-        "integrated_compliance": ["regulation"],
-        "public_involvement": ["regulation"],
-        "fonsi_mitigation": ["regulation"],
-        "mitigation_monitoring": ["regulation"]
-      },
-      "expected_unsupported_finding_ids": [],
-      "min_findings": 7
+        "rationale": "Authority-driven seed adjudication for gold-administrative-negative."
+      }
     }
   ]
 }

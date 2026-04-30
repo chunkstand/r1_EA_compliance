@@ -1,91 +1,327 @@
 {
   "schema_version": "compliance-rule-pack-coverage-v0",
   "rule_pack_id": "nepa-ea-v0",
-  "rule_pack_version": "0.2.0",
-  "title": "NEPA EA V0.2 Rule Pack Coverage Matrix",
+  "rule_pack_version": "0.3.0",
+  "title": "NEPA EA V0.3 Authority Rule Pack Coverage Matrix",
   "coverage_items": [
     {
-      "rule_id": "purpose_need",
-      "obligation_area": "EA purpose and need",
-      "expected_package_evidence": "Text identifying the purpose and need, need for action, or proposed action.",
-      "source_record_ids": ["R1EA-013"],
-      "source_claim_terms": ["purpose", "need", "proposed action"],
+      "rule_id": "nepa_statute_chapter_55",
+      "obligation_area": "National Environmental Policy Act applies",
+      "expected_package_evidence": "The EA package should show that the agency is conducting environmental review under the National Environmental Policy Act.",
+      "source_record_ids": [
+        "R1EA-001"
+      ],
+      "source_claim_terms": [
+        "national"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "alternatives",
-      "obligation_area": "Alternatives considered",
-      "expected_package_evidence": "Text describing alternatives, no action, or the proposed action.",
-      "source_record_ids": ["R1EA-001", "R1EA-008", "R1EA-018"],
-      "source_claim_terms": ["alternatives", "proposed action"],
+      "rule_id": "nepa_4332_environmental_information",
+      "obligation_area": "NEPA section 4332 environmental information is addressed",
+      "expected_package_evidence": "The EA package should disclose environmental information and analysis needed for informed agency decision-making.",
+      "source_record_ids": [
+        "R1EA-002"
+      ],
+      "source_claim_terms": [
+        "environmental"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "effects_analysis",
-      "obligation_area": "Affected environment and environmental effects",
-      "expected_package_evidence": "Text analyzing affected environment, environmental effects, consequences, or impacts.",
-      "source_record_ids": ["R1EA-008", "R1EA-013", "R1EA-018"],
-      "source_claim_terms": ["effects", "affected environment", "impacts"],
+      "rule_id": "nepa_4336_level_of_review",
+      "obligation_area": "NEPA level of review is supported",
+      "expected_package_evidence": "The EA package should support use of an EA by addressing whether significant effects are expected or whether an EIS is required.",
+      "source_record_ids": [
+        "R1EA-003"
+      ],
+      "source_claim_terms": [
+        "assessment"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "integrated_compliance",
-      "obligation_area": "Related environmental compliance and consultation",
-      "expected_package_evidence": "Text addressing consultation or related environmental review laws.",
-      "source_record_ids": ["R1EA-071"],
-      "source_claim_terms": ["section 106", "tribal", "consultation"],
+      "rule_id": "nepa_4336a_timing_unified_review",
+      "obligation_area": "NEPA timing and unified-review duties are addressed",
+      "expected_package_evidence": "The EA package should document review management, schedule, and unified-review considerations where they are part of the NEPA record.",
+      "source_record_ids": [
+        "R1EA-004"
+      ],
+      "source_claim_terms": [
+        "schedule"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "public_involvement",
-      "obligation_area": "Public involvement, scoping, and comment",
-      "expected_package_evidence": "Text describing public involvement, scoping, or comment opportunities.",
-      "source_record_ids": ["R1EA-015", "R1EA-025"],
-      "source_claim_terms": ["public involvement", "scoping", "comment"],
+      "rule_id": "nepa_4336b_programmatic_tiering",
+      "obligation_area": "Programmatic or tiered NEPA reliance is supported",
+      "expected_package_evidence": "When an EA tiers to or incorporates programmatic NEPA analysis, the reliance should be identified and traceable.",
+      "source_record_ids": [
+        "R1EA-005"
+      ],
+      "source_claim_terms": [
+        "programmatic"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "fonsi_mitigation",
-      "obligation_area": "FONSI, decision notice, and mitigation rationale",
-      "expected_package_evidence": "Text tracing FONSI, decision notice, or mitigation rationale.",
-      "source_record_ids": ["R1EA-014"],
-      "source_claim_terms": ["finding of no significant impact", "fonsi", "environmental assessment"],
+      "rule_id": "usda_nepa_ea_7cfr_1b5",
+      "obligation_area": "USDA EA requirements are met",
+      "expected_package_evidence": "The EA package should describe the proposal, alternatives as appropriate, affected environment, and environmental effects.",
+      "source_record_ids": [
+        "R1EA-013"
+      ],
+      "source_claim_terms": [
+        "usda"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     },
     {
-      "rule_id": "mitigation_monitoring",
-      "obligation_area": "Mitigation monitoring and enforcement",
-      "expected_package_evidence": "Text identifying monitoring or enforcement for mitigation commitments.",
-      "source_record_ids": ["R1EA-008", "R1EA-018"],
-      "source_claim_terms": ["mitigation", "monitoring", "enforcement"],
+      "rule_id": "usda_nepa_fonsi_7cfr_1b6",
+      "obligation_area": "USDA FONSI support is traceable",
+      "expected_package_evidence": "A FONSI or decision notice should be traceable to the EA analysis and mitigation or design features relied on for the finding.",
+      "source_record_ids": [
+        "R1EA-014"
+      ],
+      "source_claim_terms": [
+        "usda"
+      ],
       "eval_case_ids": [
-        "all-core-rules-pass",
-        "purpose-only-produces-package-gaps",
-        "unrelated-package-produces-all-gaps"
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "usda_nepa_efficient_review_7cfr_1b9",
+      "obligation_area": "Efficient and integrated environmental review is documented",
+      "expected_package_evidence": "The EA package should document coordination and efficient environmental review practices where relevant to the project record.",
+      "source_record_ids": [
+        "R1EA-015"
+      ],
+      "source_claim_terms": [
+        "efficient"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "nfma_16usc_1604_plan_consistency",
+      "obligation_area": "NFMA forest-plan consistency is addressed",
+      "expected_package_evidence": "Projects and activities authorized by the Forest Service should be consistent with applicable land management plan direction.",
+      "source_record_ids": [
+        "R1EA-022"
+      ],
+      "source_claim_terms": [
+        "nfma"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "planning_rule_36cfr_21915_consistency",
+      "obligation_area": "36 CFR 219.15 project consistency is addressed",
+      "expected_package_evidence": "The project approval document should describe consistency with applicable plan components under 36 CFR 219.15.",
+      "source_record_ids": [
+        "R1EA-024"
+      ],
+      "source_claim_terms": [
+        "219.15"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "custer_gallatin_lmp_2022",
+      "obligation_area": "2022 Custer Gallatin Land Management Plan is applied",
+      "expected_package_evidence": "The EA package should identify and apply the forest plan that governs the project area.",
+      "source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "source_claim_terms": [
+        "2022"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "esa_section_7",
+      "obligation_area": "Endangered Species Act section 7 consultation is addressed",
+      "expected_package_evidence": "The EA package should address ESA section 7 consultation when listed species or critical habitat may be affected.",
+      "source_record_ids": [
+        "R1EA-065"
+      ],
+      "source_claim_terms": [
+        "endangered"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "esa_consultation_50cfr_402",
+      "obligation_area": "ESA consultation regulations are addressed",
+      "expected_package_evidence": "The EA package should identify the consultation path and effects determinations when ESA consultation is implicated.",
+      "source_record_ids": [
+        "R1EA-066"
+      ],
+      "source_claim_terms": [
+        "consultation"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "nhpa_section_106",
+      "obligation_area": "NHPA section 106 compliance is addressed",
+      "expected_package_evidence": "The EA package should address section 106 consultation and findings when historic properties may be affected.",
+      "source_record_ids": [
+        "R1EA-070"
+      ],
+      "source_claim_terms": [
+        "nhpa"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "nhpa_36cfr_800",
+      "obligation_area": "36 CFR part 800 consultation process is addressed",
+      "expected_package_evidence": "The EA package should trace SHPO or THPO consultation, effects findings, and mitigation when 36 CFR part 800 applies.",
+      "source_record_ids": [
+        "R1EA-071"
+      ],
+      "source_claim_terms": [
+        "part"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "montana_shpo_review",
+      "obligation_area": "Montana SHPO review is addressed",
+      "expected_package_evidence": "The EA package should document Montana SHPO review, concurrence, or consultation when cultural resources are implicated in Montana.",
+      "source_record_ids": [
+        "R1EA-119"
+      ],
+      "source_claim_terms": [
+        "montana"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "roadless_rule_36cfr_294b",
+      "obligation_area": "Roadless Rule compliance is addressed",
+      "expected_package_evidence": "The EA package should address roadless-area effects and consistency where inventoried roadless areas are implicated.",
+      "source_record_ids": [
+        "R1EA-049"
+      ],
+      "source_claim_terms": [
+        "roadless"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "eo_11990_wetlands",
+      "obligation_area": "Executive Order 11990 wetlands protection is addressed",
+      "expected_package_evidence": "The EA package should address wetlands protection, avoidance, minimization, or compensating measures when wetlands are implicated.",
+      "source_record_ids": [
+        "R1EA-104"
+      ],
+      "source_claim_terms": [
+        "executive"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "mbta_migratory_birds",
+      "obligation_area": "Migratory Bird Treaty Act compliance is addressed",
+      "expected_package_evidence": "The EA package should address migratory bird effects or conservation measures when migratory birds may be affected.",
+      "source_record_ids": [
+        "R1EA-094"
+      ],
+      "source_claim_terms": [
+        "migratory"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ]
+    },
+    {
+      "rule_id": "eo_13186_migratory_birds",
+      "obligation_area": "Executive Order 13186 migratory-bird responsibilities are addressed",
+      "expected_package_evidence": "The EA package should address agency responsibilities to protect migratory birds when they are implicated.",
+      "source_record_ids": [
+        "R1EA-096"
+      ],
+      "source_claim_terms": [
+        "executive"
+      ],
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
       ]
     }
   ]

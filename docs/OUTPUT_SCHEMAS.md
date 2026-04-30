@@ -473,11 +473,18 @@ Each rule includes:
 - `question`
 - `requirement`
 - `severity`
+- `authority_category`
+- `authority_source_record_id`
+- `applicability_mode`
 - `package_query`
 - `package_terms`
+- optional `applies_if_package_terms`
 - `source_query`
 - `source_filters`
 - optional `evidence_expectation`
+
+`authority_document_role` may be supplied explicitly on a rule; otherwise generated artifacts derive
+it from `source_filters.document_role`.
 
 Supported `source_filters` keys are:
 
@@ -496,7 +503,8 @@ silently broaden retrieval.
 
 - summary paths and counts
 - rule-pack ID and version
-- rule count, finding count, claim-bearing finding count, and finding status counts
+- rule count, finding count, claim-bearing finding count, finding status counts, and authority
+  identification summary
 - unsupported finding IDs
 - validation
 - compliance findings
@@ -505,9 +513,11 @@ Each compliance finding includes:
 
 - rule-pack ID and version
 - rule ID, title, question, requirement, and severity
+- authority category, authority source record ID, authority document role, and applicability mode
 - status: `pass`, `gap`, `uncertain`, or `not_applicable`
 - claim type: `supported_compliance_finding`, `package_evidence_gap`, or `no_compliance_claim`
 - package query, package terms, source query, and source filters
+- applicability status, applicability terms, applicability rationale, and applicability evidence
 - package and source-library evidence statuses
 - package and source-library citation labels when present
 - source-claim link count, source claim IDs, source-claim evidence citations, and source-claim links
@@ -517,16 +527,19 @@ Each compliance finding includes:
 `compliance_matrix.json` has schema version `compliance-matrix-v0` and includes:
 
 - review ID, package path, source set, rule-pack summary, and matrix summary
-- status counts, claim row count, validation status, and reviewer-ready status
-- row columns for rule ID, title, status, applicability, requirement, package citation, source
-  citation, source claims, applied source records, and limitations
+- status counts, applicability counts, applicable source records, claim row count, validation status,
+  and reviewer-ready status
+- row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
+  limitations
 - one row per compliance finding
 
 Each matrix row includes:
 
 - rule ID, rule title, question, requirement, severity, status, claim type, confidence, and rationale
-- applicability status and applicability basis, including source filters, package terms, source
-  query, applied source record IDs, and applied source document roles
+- authority category, authority source record ID, authority document role, applicability mode,
+  applicability status, and applicability basis
+- applicability basis fields including source filters, package terms, conditional applicability
+  terms, source query, applied source record IDs, and applied source document roles
 - package query, source query, EA package citation, compact EA evidence span, source-library
   citation, and compact source evidence span
 - source-claim IDs, source-claim citations, source-claim count, citation-gate status, limitations,

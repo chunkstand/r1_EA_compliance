@@ -24,6 +24,16 @@ VALID_CLAIM_TYPES = {
     "package_evidence_gap",
     "supported_compliance_finding",
 }
+AUTHORITY_CATEGORIES = {
+    "agency_policy",
+    "case_law",
+    "executive_order",
+    "forest_plan",
+    "law",
+    "regulation",
+    "state_requirement",
+}
+APPLICABILITY_MODES = {"baseline", "conditional"}
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 ALLOWED_SOURCE_FILTER_KEYS = {
     "authority_level",
@@ -251,6 +261,7 @@ def validate_rule_pack(rule_pack: dict) -> dict:
         _check_rule_queries_and_terms(rule_pack),
         _check_rule_source_filters(rule_pack),
         _check_rule_source_filter_keys(rule_pack),
+        _check_rule_authority_metadata(rule_pack),
     ]
     return {
         "schema_version": "compliance-rule-pack-validation-v0",
@@ -448,12 +459,31 @@ def _compliance_finding(
     status = str(finding["status"])
     package_evidence = finding.get("package_evidence")
     source_evidence = finding.get("source_library_evidence")
+    if status == "not_applicable":
+        package_evidence = None
+        source_evidence = None
+        source_claim_links = []
     source_claim_evidence = [_source_claim_evidence(link) for link in source_claim_links]
+    source_filters = finding.get("source_filters", {})
+    authority_source_record_id = str(
+        rule.get("authority_source_record_id")
+        or (source_filters or {}).get("source_record_id")
+        or ""
+    ).strip()
+    authority_document_role = str(
+        rule.get("authority_document_role") or (source_filters or {}).get("document_role") or ""
+    ).strip()
     return {
         "id": finding["id"],
         "rule_id": rule["id"],
         "rule_pack_id": rule_pack["rule_pack_id"],
         "rule_pack_version": rule_pack["version"],
+        "authority_category": rule.get("authority_category"),
+        "authority_source_record_id": authority_source_record_id or None,
+        "authority_document_role": authority_document_role or None,
+        "applicability_mode": rule.get("applicability_mode")
+        or finding.get("applicability_mode"),
+        "applies_if_package_terms": rule.get("applies_if_package_terms", []),
         "title": rule["title"],
         "question": rule.get("question") or rule["title"],
         "requirement": rule.get("requirement"),
@@ -462,10 +492,14 @@ def _compliance_finding(
         "claim_type": _claim_type(status),
         "confidence": finding.get("confidence"),
         "rationale": finding.get("rationale"),
+        "applicability_status": finding.get("applicability_status"),
+        "applicability_terms": finding.get("applicability_terms", []),
+        "applicability_rationale": finding.get("applicability_rationale"),
+        "applicability_evidence": finding.get("applicability_evidence"),
         "package_query": finding.get("package_query"),
         "package_terms": finding.get("package_terms", []),
         "source_query": finding.get("source_query"),
-        "source_filters": finding.get("source_filters", {}),
+        "source_filters": source_filters,
         "package_evidence_status": finding.get("package_evidence_status"),
         "source_library_evidence_status": finding.get("source_library_evidence_status"),
         "package_evidence_citation": _citation_label(package_evidence),
@@ -537,6 +571,13 @@ def _finding_graph(
                 title=rule["title"],
                 severity=rule.get("severity", "medium"),
                 requirement=rule.get("requirement"),
+                authority_category=rule.get("authority_category"),
+                authority_source_record_id=rule.get("authority_source_record_id")
+                or (rule.get("source_filters") or {}).get("source_record_id"),
+                authority_document_role=rule.get("authority_document_role")
+                or (rule.get("source_filters") or {}).get("document_role"),
+                applicability_mode=rule.get("applicability_mode"),
+                applies_if_package_terms=rule.get("applies_if_package_terms", []),
                 source_query=rule.get("source_query"),
                 source_filters=rule.get("source_filters", {}),
             ),
@@ -550,6 +591,10 @@ def _finding_graph(
             claim_type=finding["claim_type"],
             severity=finding["severity"],
             confidence=finding["confidence"],
+            authority_category=finding.get("authority_category"),
+            authority_source_record_id=finding.get("authority_source_record_id"),
+            applicability_status=finding.get("applicability_status"),
+            applicability_mode=finding.get("applicability_mode"),
             package_evidence_status=finding["package_evidence_status"],
             source_library_evidence_status=finding["source_library_evidence_status"],
         )
@@ -701,6 +746,7 @@ def _validation_report(
         _check_claim_findings_have_source_citations(findings),
         _check_claim_findings_have_source_claim_links(findings),
         _check_no_unsupported_compliance_claims(findings),
+        _check_applicable_findings_have_authority_source_records(findings),
         _check_finding_graph_evidence_edges(review_id, findings, nodes, edges),
         _check_graph_integrity(nodes, edges),
         _check_graph_covers_findings(rule_pack, findings, nodes, edges),
@@ -736,6 +782,12 @@ def _summary(
 ) -> dict:
     status_counts = Counter(finding["status"] for finding in findings)
     claim_findings = [finding for finding in findings if finding["status"] in CLAIM_STATUSES]
+    applicable_findings = [
+        finding for finding in findings if finding.get("applicability_status") != "not_applicable"
+    ]
+    not_applicable_findings = [
+        finding for finding in findings if finding.get("applicability_status") == "not_applicable"
+    ]
     unsupported = [
         finding["id"]
         for finding in claim_findings
@@ -754,6 +806,23 @@ def _summary(
         "rule_count": len(rule_pack["rules"]),
         "finding_count": len(findings),
         "finding_status_counts": dict(status_counts),
+        "authority_identification": {
+            "workflow": "identify_applicable_authorities_then_evaluate_compliance",
+            "authority_rule_count": len(rule_pack["rules"]),
+            "applicable_authority_count": len(applicable_findings),
+            "not_applicable_authority_count": len(not_applicable_findings),
+            "applicable_rule_ids": sorted(finding["rule_id"] for finding in applicable_findings),
+            "not_applicable_rule_ids": sorted(
+                finding["rule_id"] for finding in not_applicable_findings
+            ),
+            "applicable_source_record_ids": sorted(
+                {
+                    str(finding["authority_source_record_id"])
+                    for finding in applicable_findings
+                    if finding.get("authority_source_record_id")
+                }
+            ),
+        },
         "claim_finding_count": len(claim_findings),
         "unsupported_finding_ids": unsupported,
         "compliance_review_path": str(compliance_review_path),
@@ -789,6 +858,7 @@ def _compliance_matrix(
 ) -> dict:
     rows = [_matrix_row(review_id, finding) for finding in findings]
     status_counts = dict(Counter(row["status"] for row in rows))
+    applicability_counts = dict(Counter(row["applicability_status"] for row in rows))
     return {
         "schema_version": COMPLIANCE_MATRIX_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -799,6 +869,17 @@ def _compliance_matrix(
         "summary": {
             "row_count": len(rows),
             "status_counts": status_counts,
+            "applicability_counts": applicability_counts,
+            "applicable_row_count": sum(
+                1 for row in rows if row["applicability_status"] == "applicable"
+            ),
+            "not_applicable_row_count": sum(
+                1 for row in rows if row["applicability_status"] == "not_applicable"
+            ),
+            "applicable_source_record_ids": summary.get("authority_identification", {}).get(
+                "applicable_source_record_ids",
+                [],
+            ),
             "claim_row_count": sum(1 for row in rows if row["status"] in CLAIM_STATUSES),
             "validated": bool(validation.get("passed")),
             "reviewer_ready": bool(summary.get("reviewer_ready")),
@@ -810,8 +891,11 @@ def _compliance_matrix(
         "columns": [
             "rule_id",
             "rule_title",
+            "authority_category",
+            "authority_source_record_id",
             "status",
             "applicability_status",
+            "applicability_mode",
             "requirement",
             "ea_package_citation",
             "source_library_citation",
@@ -835,6 +919,9 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "row_id": f"matrix:{review_id}:{finding['rule_id']}",
         "rule_id": finding["rule_id"],
         "rule_title": finding["title"],
+        "authority_category": finding.get("authority_category"),
+        "authority_source_record_id": finding.get("authority_source_record_id"),
+        "authority_document_role": finding.get("authority_document_role"),
         "question": finding.get("question"),
         "requirement": finding.get("requirement"),
         "severity": finding.get("severity"),
@@ -842,10 +929,15 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "claim_type": finding["claim_type"],
         "confidence": finding.get("confidence"),
         "rationale": finding.get("rationale"),
-        "applicability_status": (
-            "not_applicable" if finding["status"] == "not_applicable" else "applicable"
-        ),
+        "applicability_status": finding.get("applicability_status")
+        or ("not_applicable" if finding["status"] == "not_applicable" else "applicable"),
+        "applicability_mode": finding.get("applicability_mode"),
         "applicability_basis": {
+            "rationale": finding.get("applicability_rationale"),
+            "mode": finding.get("applicability_mode"),
+            "applies_if_package_terms": finding.get("applies_if_package_terms", []),
+            "matched_terms": finding.get("applicability_terms", []),
+            "applicability_evidence": _compact_evidence(finding.get("applicability_evidence")),
             "source_filters": finding.get("source_filters", {}),
             "package_terms": finding.get("package_terms", []),
             "source_query": finding.get("source_query"),
@@ -878,6 +970,7 @@ def _compact_evidence(evidence: dict | None) -> dict | None:
     return {
         "citation_label": evidence.get("citation_label"),
         "source_record_id": evidence.get("source_record_id"),
+        "title": evidence.get("title"),
         "chunk_id": evidence.get("chunk_id"),
         "text": span.get("text"),
         "source_char_start": span.get("source_char_start"),
@@ -886,6 +979,7 @@ def _compact_evidence(evidence: dict | None) -> dict | None:
         "chunk_char_end": span.get("chunk_char_end"),
         "page": provenance.get("page"),
         "section": provenance.get("section"),
+        "artifact_path": provenance.get("artifact_path"),
         "artifact_sha256": provenance.get("artifact_sha256"),
         "content_sha256": provenance.get("content_sha256"),
     }
@@ -941,20 +1035,43 @@ def _matrix_markdown(matrix: dict) -> str:
         f"`{matrix['rule_pack']['version']}`",
         f"- Rows: `{summary['row_count']}`",
         f"- Status counts: `{summary['status_counts']}`",
+        f"- Applicability counts: `{summary.get('applicability_counts', {})}`",
         f"- Reviewer ready: `{summary['reviewer_ready']}`",
         "",
-        "| Rule | Status | EA citation | Source citation | Source claims | Limitations |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Authority | Applicability | Status | EA evidence | Source evidence | Source claims | Limitations |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for row in matrix["rows"]:
+        ea_evidence = row.get("ea_package_evidence") or {}
+        source_evidence = row.get("source_library_evidence") or {}
         lines.append(
             "| "
             + " | ".join(
                 [
-                    _md_cell(f"{row['rule_id']} - {row['rule_title']}"),
+                    _md_cell(
+                        f"{row['rule_id']} - {row['rule_title']} "
+                        f"({row.get('authority_category')}: "
+                        f"{row.get('authority_source_record_id')})"
+                    ),
+                    _md_cell(
+                        f"{row.get('applicability_status')} / "
+                        f"{row.get('applicability_mode')}"
+                    ),
                     _md_cell(row["status"]),
-                    _md_cell(row.get("ea_package_citation") or "N/A"),
-                    _md_cell(row.get("source_library_citation") or "N/A"),
+                    _md_cell(
+                        _markdown_evidence_cell(
+                            row.get("ea_package_citation"),
+                            ea_evidence.get("title"),
+                            ea_evidence.get("text"),
+                        )
+                    ),
+                    _md_cell(
+                        _markdown_evidence_cell(
+                            row.get("source_library_citation"),
+                            source_evidence.get("title"),
+                            source_evidence.get("text"),
+                        )
+                    ),
                     _md_cell(", ".join(row.get("source_claim_ids", [])) or "N/A"),
                     _md_cell("; ".join(row.get("limitations", [])) or "None"),
                 ]
@@ -962,6 +1079,24 @@ def _matrix_markdown(matrix: dict) -> str:
             + " |"
         )
     return "\n".join(lines) + "\n"
+
+
+def _markdown_evidence_cell(citation: str | None, title: str | None, text: str | None) -> str:
+    if not citation:
+        return "N/A"
+    parts = [citation]
+    if title:
+        parts.append(title)
+    if text:
+        parts.append(_truncate(text, 220))
+    return " - ".join(parts)
+
+
+def _truncate(value: str, max_chars: int) -> str:
+    normalized = " ".join(str(value).split())
+    if len(normalized) <= max_chars:
+        return normalized
+    return normalized[: max_chars - 3].rstrip() + "..."
 
 
 def _md_cell(value: object) -> str:
@@ -1859,6 +1994,53 @@ def _check_rule_source_filter_keys(rule_pack: dict) -> dict:
     }
 
 
+def _check_rule_authority_metadata(rule_pack: dict) -> dict:
+    rules = rule_pack.get("rules") if isinstance(rule_pack.get("rules"), list) else []
+    failures = []
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        filters = rule.get("source_filters") if isinstance(rule.get("source_filters"), dict) else {}
+        authority_category = str(rule.get("authority_category") or "").strip()
+        applicability_mode = str(rule.get("applicability_mode") or "").strip()
+        source_record_id = str(
+            rule.get("authority_source_record_id") or filters.get("source_record_id") or ""
+        ).strip()
+        missing = []
+        invalid = []
+        if not authority_category:
+            missing.append("authority_category")
+        elif authority_category not in AUTHORITY_CATEGORIES:
+            invalid.append("authority_category")
+        if not applicability_mode:
+            missing.append("applicability_mode")
+        elif applicability_mode not in APPLICABILITY_MODES:
+            invalid.append("applicability_mode")
+        if not source_record_id:
+            missing.append("source_record_id")
+        if applicability_mode == "conditional":
+            terms = rule.get("applies_if_package_terms")
+            if not isinstance(terms, list) or not any(str(term).strip() for term in terms):
+                missing.append("applies_if_package_terms")
+        if missing or invalid:
+            failures.append(
+                {
+                    "rule_id": rule.get("id"),
+                    "missing": sorted(missing),
+                    "invalid": sorted(invalid),
+                }
+            )
+    return {
+        "name": "rule_authority_metadata_present",
+        "passed": not failures,
+        "details": {
+            "allowed_authority_categories": sorted(AUTHORITY_CATEGORIES),
+            "allowed_applicability_modes": sorted(APPLICABILITY_MODES),
+            "failures": failures,
+        },
+    }
+
+
 def _check_all_rules_evaluated(rule_pack: dict, findings: list[dict]) -> dict:
     expected = {str(rule["id"]) for rule in rule_pack["rules"]}
     actual = {str(finding["rule_id"]) for finding in findings}
@@ -1955,6 +2137,20 @@ def _check_no_unsupported_compliance_claims(findings: list[dict]) -> dict:
         "name": "no_unsupported_compliance_claims",
         "passed": not unsupported,
         "details": {"finding_ids": unsupported},
+    }
+
+
+def _check_applicable_findings_have_authority_source_records(findings: list[dict]) -> dict:
+    missing = sorted(
+        str(finding.get("rule_id"))
+        for finding in findings
+        if finding.get("applicability_status") != "not_applicable"
+        and not str(finding.get("authority_source_record_id") or "").strip()
+    )
+    return {
+        "name": "applicable_findings_have_authority_source_records",
+        "passed": not missing,
+        "details": {"rule_ids": missing},
     }
 
 

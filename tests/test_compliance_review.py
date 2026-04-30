@@ -72,6 +72,13 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(matrix["summary"]["row_count"], 2)
             matrix_rows = {row["rule_id"]: row for row in matrix["rows"]}
             self.assertEqual(matrix_rows["purpose_need"]["status"], "pass")
+            self.assertEqual(matrix_rows["purpose_need"]["authority_category"], "regulation")
+            self.assertEqual(
+                matrix_rows["purpose_need"]["authority_source_record_id"],
+                "R1EA-001",
+            )
+            self.assertEqual(matrix["summary"]["applicability_counts"], {"applicable": 2})
+            self.assertEqual(matrix["summary"]["applicable_row_count"], 2)
             self.assertTrue(matrix_rows["purpose_need"]["ea_package_citation"])
             self.assertTrue(matrix_rows["purpose_need"]["source_library_citation"])
             self.assertIn("R1EA-001", matrix_rows["purpose_need"]["applied_source_record_ids"])
@@ -86,6 +93,11 @@ class ComplianceReviewTests(unittest.TestCase):
                 result.compliance_validation_path.read_text(encoding="utf-8")
             )
             self.assertTrue(validation["passed"])
+            self.assertTrue(
+                _check(validation, "applicable_findings_have_authority_source_records")[
+                    "passed"
+                ]
+            )
             self.assertTrue(_check(validation, "all_rules_evaluated")["passed"])
             self.assertTrue(
                 _check(validation, "claim_findings_have_source_citations")["passed"]
@@ -137,6 +149,22 @@ class ComplianceReviewTests(unittest.TestCase):
         self.assertFalse(filter_check["passed"])
         self.assertEqual(filter_check["details"]["failures"][0]["unknown_keys"], ["document_roles"])
         self.assertEqual(filter_check["details"]["failures"][0]["empty_values"], ["host"])
+
+    def test_rule_pack_requires_authority_metadata(self) -> None:
+        rule_pack = _rule_pack()
+        rule_pack["rules"][0].pop("authority_category")
+        rule_pack["rules"][0].pop("authority_source_record_id")
+        rule_pack["rules"][0]["source_filters"].pop("source_record_id")
+
+        validation = validate_rule_pack(rule_pack)
+
+        self.assertFalse(validation["passed"])
+        authority_check = _check(validation, "rule_authority_metadata_present")
+        self.assertFalse(authority_check["passed"])
+        self.assertEqual(
+            authority_check["details"]["failures"][0]["missing"],
+            ["authority_category", "source_record_id"],
+        )
 
     def test_compliance_review_rejects_unsafe_review_id_before_writing_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1375,23 +1403,29 @@ def _rule_pack() -> dict:
             {
                 "id": "purpose_need",
                 "title": "Purpose and need are stated",
+                "authority_category": "regulation",
+                "authority_source_record_id": "R1EA-001",
+                "applicability_mode": "baseline",
                 "question": "Does the EA package identify the purpose and need?",
                 "requirement": "Purpose and need should be identified.",
                 "package_query": "purpose need proposed action",
                 "package_terms": ["purpose and need", "proposed action"],
                 "source_query": "environmental assessment purpose need",
-                "source_filters": {"document_role": "regulation"},
+                "source_filters": {"document_role": "regulation", "source_record_id": "R1EA-001"},
                 "severity": "high",
             },
             {
                 "id": "mitigation",
                 "title": "Mitigation is addressed",
+                "authority_category": "regulation",
+                "authority_source_record_id": "R1EA-002",
+                "applicability_mode": "baseline",
                 "question": "Does the EA package address mitigation?",
                 "requirement": "Mitigation should be addressed when used to support a finding.",
                 "package_query": "mitigation measures",
                 "package_terms": ["mitigation"],
                 "source_query": "mitigation measures finding of no significant impact",
-                "source_filters": {"document_role": "regulation"},
+                "source_filters": {"document_role": "regulation", "source_record_id": "R1EA-002"},
                 "severity": "high",
             },
         ],

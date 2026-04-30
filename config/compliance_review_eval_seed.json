@@ -1,111 +1,301 @@
 [
   {
-    "id": "all-core-rules-pass",
-    "package_text": "Purpose and Need\n\nThe proposed action improves trail access and includes alternatives, the no action alternative, affected environment, environmental effects, consultation under environmental review laws, public involvement through scoping and comment opportunities, mitigation supporting a finding of no significant impact, and monitoring and enforcement for mitigation commitments.",
+    "id": "all-authorities-pass",
+    "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. National Environmental Policy Act NEPA environmental assessment environmental effects alternatives consultation public comment finding of no significant impact significant effects schedule page limit unified review objection period publicly circulated tiers to incorporates by reference programmatic final environmental impact statement purpose and need affected environment environmental consequences FONSI decision notice mitigation coordination environmental review integrated National Forest Management Act Land Management Plan Forest Plan plan consistency 36 CFR 219.15 Custer Gallatin 2022 Land Management Plan Custer Gallatin National Forest Land Management Plan Endangered Species Act Section 7 threatened endangered biological assessment Fish and Wildlife Service National Historic Preservation Act Section 106 SHPO cultural resources historic properties 36 CFR part 800 adverse effect Montana SHPO State Historic Preservation Officer Roadless Rule inventoried roadless roadless area roadless characteristics Executive Order 11990 wetlands wetland Migratory Bird Treaty Act migratory bird birds conservation measures Executive Order 13186 The package describes alternatives, affected environment, environmental effects, consultation, coordination, public comment, a finding of no significant impact, decision notice, mitigation, schedule, objection period, and publicly circulated review. It tiers to and incorporates by reference a final environmental impact statement and programmatic analysis. The record addresses National Forest Management Act, 36 CFR 219.15, Custer Gallatin, 2022 Land Management Plan, Forest Plan, plan consistency, Endangered Species Act, Section 7, biological assessment, Fish and Wildlife Service, National Historic Preservation Act, Section 106, 36 CFR part 800, SHPO, adverse effect, cultural resources, Montana SHPO, Roadless Rule, inventoried roadless area, roadless characteristics, Executive Order 11990, wetlands, wetland, Migratory Bird Treaty Act, migratory bird, Executive Order 13186.\n",
     "expected_statuses": {
-      "purpose_need": "pass",
-      "alternatives": "pass",
-      "effects_analysis": "pass",
-      "integrated_compliance": "pass",
-      "public_involvement": "pass",
-      "fonsi_mitigation": "pass",
-      "mitigation_monitoring": "pass"
+      "nepa_statute_chapter_55": "pass",
+      "nepa_4332_environmental_information": "pass",
+      "nepa_4336_level_of_review": "pass",
+      "nepa_4336a_timing_unified_review": "pass",
+      "nepa_4336b_programmatic_tiering": "pass",
+      "usda_nepa_ea_7cfr_1b5": "pass",
+      "usda_nepa_fonsi_7cfr_1b6": "pass",
+      "usda_nepa_efficient_review_7cfr_1b9": "pass",
+      "nfma_16usc_1604_plan_consistency": "pass",
+      "planning_rule_36cfr_21915_consistency": "pass",
+      "custer_gallatin_lmp_2022": "pass",
+      "esa_section_7": "pass",
+      "esa_consultation_50cfr_402": "pass",
+      "nhpa_section_106": "pass",
+      "nhpa_36cfr_800": "pass",
+      "montana_shpo_review": "pass",
+      "roadless_rule_36cfr_294b": "pass",
+      "eo_11990_wetlands": "pass",
+      "mbta_migratory_birds": "pass",
+      "eo_13186_migratory_birds": "pass"
     },
     "expected_finding_status_counts": {
-      "pass": 7
+      "pass": 20
     },
     "expected_unsupported_finding_ids": [],
     "expected_source_record_ids": {
-      "purpose_need": ["R1EA-008"],
-      "alternatives": ["R1EA-013"],
-      "effects_analysis": ["R1EA-013"],
-      "integrated_compliance": ["R1EA-015"],
-      "public_involvement": ["R1EA-008"],
-      "fonsi_mitigation": ["R1EA-014"],
-      "mitigation_monitoring": ["R1EA-008"]
+      "nepa_statute_chapter_55": [
+        "R1EA-001"
+      ],
+      "nepa_4332_environmental_information": [
+        "R1EA-002"
+      ],
+      "nepa_4336_level_of_review": [
+        "R1EA-003"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "R1EA-004"
+      ],
+      "nepa_4336b_programmatic_tiering": [
+        "R1EA-005"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "R1EA-013"
+      ],
+      "usda_nepa_fonsi_7cfr_1b6": [
+        "R1EA-014"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "R1EA-015"
+      ],
+      "nfma_16usc_1604_plan_consistency": [
+        "R1EA-022"
+      ],
+      "planning_rule_36cfr_21915_consistency": [
+        "R1EA-024"
+      ],
+      "custer_gallatin_lmp_2022": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "esa_section_7": [
+        "R1EA-065"
+      ],
+      "esa_consultation_50cfr_402": [
+        "R1EA-066"
+      ],
+      "nhpa_section_106": [
+        "R1EA-070"
+      ],
+      "nhpa_36cfr_800": [
+        "R1EA-071"
+      ],
+      "montana_shpo_review": [
+        "R1EA-119"
+      ],
+      "roadless_rule_36cfr_294b": [
+        "R1EA-049"
+      ],
+      "eo_11990_wetlands": [
+        "R1EA-104"
+      ],
+      "mbta_migratory_birds": [
+        "R1EA-094"
+      ],
+      "eo_13186_migratory_birds": [
+        "R1EA-096"
+      ]
     },
     "expected_source_document_roles": {
-      "purpose_need": ["regulation"],
-      "alternatives": ["regulation"],
-      "effects_analysis": ["regulation"],
-      "integrated_compliance": ["regulation"],
-      "public_involvement": ["regulation"],
-      "fonsi_mitigation": ["regulation"],
-      "mitigation_monitoring": ["regulation"]
+      "nepa_statute_chapter_55": [
+        "law"
+      ],
+      "nepa_4332_environmental_information": [
+        "law"
+      ],
+      "nepa_4336_level_of_review": [
+        "law"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "law"
+      ],
+      "nepa_4336b_programmatic_tiering": [
+        "law"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "regulation"
+      ],
+      "usda_nepa_fonsi_7cfr_1b6": [
+        "regulation"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "regulation"
+      ],
+      "nfma_16usc_1604_plan_consistency": [
+        "law"
+      ],
+      "planning_rule_36cfr_21915_consistency": [
+        "regulation"
+      ],
+      "custer_gallatin_lmp_2022": [
+        "forest_plan"
+      ],
+      "esa_section_7": [
+        "law"
+      ],
+      "esa_consultation_50cfr_402": [
+        "regulation"
+      ],
+      "nhpa_section_106": [
+        "law"
+      ],
+      "nhpa_36cfr_800": [
+        "regulation"
+      ],
+      "montana_shpo_review": [
+        "state_requirement"
+      ],
+      "roadless_rule_36cfr_294b": [
+        "regulation"
+      ],
+      "eo_11990_wetlands": [
+        "executive_order"
+      ],
+      "mbta_migratory_birds": [
+        "law"
+      ],
+      "eo_13186_migratory_birds": [
+        "executive_order"
+      ]
     },
-    "min_findings": 7
+    "min_findings": 20
   },
   {
-    "id": "purpose-only-produces-package-gaps",
-    "package_text": "Purpose and Need\n\nThe proposed action improves trail access.",
+    "id": "baseline-nepa-only",
+    "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review.\n",
     "expected_statuses": {
-      "purpose_need": "pass",
-      "alternatives": "pass",
-      "effects_analysis": "gap",
-      "integrated_compliance": "gap",
-      "public_involvement": "gap",
-      "fonsi_mitigation": "gap",
-      "mitigation_monitoring": "gap"
+      "nepa_statute_chapter_55": "pass",
+      "nepa_4332_environmental_information": "pass",
+      "nepa_4336_level_of_review": "pass",
+      "nepa_4336a_timing_unified_review": "pass",
+      "nepa_4336b_programmatic_tiering": "not_applicable",
+      "usda_nepa_ea_7cfr_1b5": "pass",
+      "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+      "usda_nepa_efficient_review_7cfr_1b9": "pass",
+      "nfma_16usc_1604_plan_consistency": "not_applicable",
+      "planning_rule_36cfr_21915_consistency": "not_applicable",
+      "custer_gallatin_lmp_2022": "not_applicable",
+      "esa_section_7": "not_applicable",
+      "esa_consultation_50cfr_402": "not_applicable",
+      "nhpa_section_106": "not_applicable",
+      "nhpa_36cfr_800": "not_applicable",
+      "montana_shpo_review": "not_applicable",
+      "roadless_rule_36cfr_294b": "not_applicable",
+      "eo_11990_wetlands": "not_applicable",
+      "mbta_migratory_birds": "not_applicable",
+      "eo_13186_migratory_birds": "not_applicable"
     },
     "expected_finding_status_counts": {
-      "gap": 5,
-      "pass": 2
+      "pass": 6,
+      "not_applicable": 14
     },
     "expected_unsupported_finding_ids": [],
     "expected_source_record_ids": {
-      "purpose_need": ["R1EA-008"],
-      "alternatives": ["R1EA-013"],
-      "effects_analysis": ["R1EA-013"],
-      "integrated_compliance": ["R1EA-015"],
-      "public_involvement": ["R1EA-008"],
-      "fonsi_mitigation": ["R1EA-014"],
-      "mitigation_monitoring": ["R1EA-008"]
+      "nepa_statute_chapter_55": [
+        "R1EA-001"
+      ],
+      "nepa_4332_environmental_information": [
+        "R1EA-002"
+      ],
+      "nepa_4336_level_of_review": [
+        "R1EA-003"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "R1EA-004"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "R1EA-013"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "R1EA-015"
+      ]
     },
     "expected_source_document_roles": {
-      "purpose_need": ["regulation"],
-      "alternatives": ["regulation"],
-      "effects_analysis": ["regulation"],
-      "integrated_compliance": ["regulation"],
-      "public_involvement": ["regulation"],
-      "fonsi_mitigation": ["regulation"],
-      "mitigation_monitoring": ["regulation"]
+      "nepa_statute_chapter_55": [
+        "law"
+      ],
+      "nepa_4332_environmental_information": [
+        "law"
+      ],
+      "nepa_4336_level_of_review": [
+        "law"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "law"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "regulation"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "regulation"
+      ]
     },
-    "min_findings": 7
+    "min_findings": 20
   },
   {
-    "id": "unrelated-package-produces-all-gaps",
-    "package_text": "Administrative Record\n\nThis package lists project contacts and a meeting schedule only.",
+    "id": "unrelated-package-produces-baseline-gaps",
+    "package_text": "Administrative Transmittal. Routing slip. Staff contacts. Meeting date. Document control log.\n",
     "expected_statuses": {
-      "purpose_need": "gap",
-      "alternatives": "gap",
-      "effects_analysis": "gap",
-      "integrated_compliance": "gap",
-      "public_involvement": "gap",
-      "fonsi_mitigation": "gap",
-      "mitigation_monitoring": "gap"
+      "nepa_statute_chapter_55": "gap",
+      "nepa_4332_environmental_information": "gap",
+      "nepa_4336_level_of_review": "gap",
+      "nepa_4336a_timing_unified_review": "gap",
+      "nepa_4336b_programmatic_tiering": "not_applicable",
+      "usda_nepa_ea_7cfr_1b5": "gap",
+      "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+      "usda_nepa_efficient_review_7cfr_1b9": "gap",
+      "nfma_16usc_1604_plan_consistency": "not_applicable",
+      "planning_rule_36cfr_21915_consistency": "not_applicable",
+      "custer_gallatin_lmp_2022": "not_applicable",
+      "esa_section_7": "not_applicable",
+      "esa_consultation_50cfr_402": "not_applicable",
+      "nhpa_section_106": "not_applicable",
+      "nhpa_36cfr_800": "not_applicable",
+      "montana_shpo_review": "not_applicable",
+      "roadless_rule_36cfr_294b": "not_applicable",
+      "eo_11990_wetlands": "not_applicable",
+      "mbta_migratory_birds": "not_applicable",
+      "eo_13186_migratory_birds": "not_applicable"
     },
     "expected_finding_status_counts": {
-      "gap": 7
+      "gap": 6,
+      "not_applicable": 14
     },
     "expected_unsupported_finding_ids": [],
     "expected_source_record_ids": {
-      "purpose_need": ["R1EA-008"],
-      "alternatives": ["R1EA-013"],
-      "effects_analysis": ["R1EA-013"],
-      "integrated_compliance": ["R1EA-015"],
-      "public_involvement": ["R1EA-008"],
-      "fonsi_mitigation": ["R1EA-014"],
-      "mitigation_monitoring": ["R1EA-008"]
+      "nepa_statute_chapter_55": [
+        "R1EA-001"
+      ],
+      "nepa_4332_environmental_information": [
+        "R1EA-002"
+      ],
+      "nepa_4336_level_of_review": [
+        "R1EA-003"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "R1EA-004"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "R1EA-013"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "R1EA-015"
+      ]
     },
     "expected_source_document_roles": {
-      "purpose_need": ["regulation"],
-      "alternatives": ["regulation"],
-      "effects_analysis": ["regulation"],
-      "integrated_compliance": ["regulation"],
-      "public_involvement": ["regulation"],
-      "fonsi_mitigation": ["regulation"],
-      "mitigation_monitoring": ["regulation"]
+      "nepa_statute_chapter_55": [
+        "law"
+      ],
+      "nepa_4332_environmental_information": [
+        "law"
+      ],
+      "nepa_4336_level_of_review": [
+        "law"
+      ],
+      "nepa_4336a_timing_unified_review": [
+        "law"
+      ],
+      "usda_nepa_ea_7cfr_1b5": [
+        "regulation"
+      ],
+      "usda_nepa_efficient_review_7cfr_1b9": [
+        "regulation"
+      ]
     },
-    "min_findings": 7
+    "min_findings": 20
   }
 ]

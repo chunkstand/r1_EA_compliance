@@ -33,7 +33,7 @@ Last verified locally on 2026-04-30.
 - Active source set: `source-set-e364ea220cffd938`
 - Base phase eval: passed, `8/8` phases reviewer-ready
 - Compliance phase eval: passed, `9/9` phases reviewer-ready for
-  `smoke-compliance-review-v0-hardened`
+  `demo-compliance-matrix-authority-v03-ecid-2026-04-30`
 - Catalog: `147` source rows, `131` unique raw artifacts
 - Extraction: `147/147` selected sources extracted, validation passed
 - Retrieval: `13,619` chunks indexed, validation passed, reviewer-ready
@@ -42,51 +42,30 @@ Last verified locally on 2026-04-30.
 - Source claim graph: `35,348` claims, `8,479` entities, `90,153` nodes, `231,214`
   edges, validation passed, reviewer-ready
 - Claim eval seed: passed, `2/2` cases
-- Rule-claim binding: `35` links across `7/7` seed compliance rules, `0` explicit no-claim
+- Rule-claim binding: `92` links across `20/20` authority compliance rules, `0` explicit no-claim
   gaps, validation passed, reviewer-ready
-- Rule-claim eval seed: passed, `7/7` cases
-- Compliance coverage: `7/7` rules covered by matrix rows, source-claim links, source-claim
+- Rule-claim eval seed: passed, `20/20` authority cases
+- Compliance coverage: `20/20` rules covered by matrix rows, source-claim links, source-claim
   terms, and compliance review eval cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
-- Compliance review smoke: `compliance_validation.json` and `compliance_matrix.json` passed for
-  `smoke-compliance-review-v0-hardened`
+- Compliance demo review: authority-first `compliance_validation.json` and `compliance_matrix.json`
+  passed for `demo-compliance-matrix-authority-v03-ecid-2026-04-30`; all `20/20` authority rows
+  were applicable and passed
 - Compliance review eval seed: passed, `3/3` cases
 - Compliance gold eval: passed, `10/10` adjudicated cases, `promotion_ready`
-- Unit suite: `130` tests passed
+- Unit suite: `131` tests passed
 
 The verification set was:
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests
-python -m compileall -q src
-uv run --extra dev ruff check src tests
+PYTHONPATH=src uv run --extra dev pytest
+PYTHONPATH=src python -m compileall src
+PYTHONPATH=src uv run --extra dev ruff check src tests
 git diff --check
-uv lock --check
-PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library
-PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
-  --output-dir source_library \
-  --eval-file config/claim_eval_seed.json
-PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
-  --output-dir source_library \
-  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
 PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --eval-file config/rule_claim_link_eval_seed.json
-PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library
-printf '%s\n' \
-  'Purpose and Need' \
-  '' \
-  'The proposed action improves trail access and includes alternatives, affected environment, environmental effects, consultation, public involvement through scoping and comment opportunities, mitigation, monitoring and enforcement for mitigation commitments, and a finding of no significant impact.' \
-  > /tmp/ea-package-v02-smoke.txt
-PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
-  --package-path /tmp/ea-package-v02-smoke.txt \
-  --output-dir source_library \
-  --review-id smoke-ea-review-v0-hardened
-PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
-  --package-path /tmp/ea-package-v02-smoke.txt \
-  --output-dir source_library \
-  --review-id smoke-compliance-review-v0-hardened
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
@@ -100,9 +79,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --gold-file config/compliance_gold_eval_v0.json
+PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources compliance-review \
+  --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --review-id demo-compliance-matrix-authority-v03-ecid-2026-04-30 \
+  --docling-timeout-seconds 180
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
-  --review-id smoke-compliance-review-v0-hardened
+  --review-id demo-compliance-matrix-authority-v03-ecid-2026-04-30
 ```
 
 ## Storage Model
@@ -202,20 +187,21 @@ EA Package Review V0 is implemented through `ea-review`. It extracts a local EA 
 seed checklist, retrieves source-library evidence for each item, and writes package evidence,
 source-library evidence, finding status, limitations, and validation artifacts.
 
-Compliance Rule Pack + Matrix + Finding Graph V0.2 is implemented through `compliance-review`. It
-evaluates a versioned rule pack from `config/compliance_rule_pack_nepa_ea_v0.json`, reuses the
-`ea-review` package/retrieval gates, requires validated rule-to-source-claim bindings, and writes
-compliance validation, a compliance review report, a reviewer-facing compliance matrix, and a
-finding graph for rules, findings, source claims, source evidence, package evidence, and package
-gaps.
+Compliance Rule Pack + Matrix + Finding Graph V0.3 is implemented through `compliance-review`. It
+identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
+authorities from `config/compliance_rule_pack_nepa_ea_v0.json`, evaluates the EA against each
+applicable authority, reuses the `ea-review` package/retrieval gates, requires validated
+rule-to-source-claim bindings, and writes compliance validation, a compliance review report, a
+reviewer-facing compliance matrix, and a finding graph for rules, findings, source claims, source
+evidence, package evidence, and package gaps.
 
-Compliance Review Eval V0.2 is implemented through `compliance-review-eval`. It runs deterministic
+Compliance Review Eval V0.3 is implemented through `compliance-review-eval`. It runs deterministic
 package fixtures through the real compliance-review path and scores expected rule statuses, claim
 types, evidence presence, source-claim links, expected source record IDs, expected source document
 roles, citation coverage, unsupported finding IDs, failure taxonomy, compact reproduction paths, and
 finding-graph coverage.
 
-Compliance Gold Eval V0.2 is implemented through `compliance-gold-eval`. It validates a structured
+Compliance Gold Eval V0.3 is implemented through `compliance-gold-eval`. It validates a structured
 adjudication file, requires positive, mixed, and negative package profiles, runs ten adjudicated
 package fixtures through the real compliance-review eval path, and emits `promotion_ready` only
 when both adjudication checks and generated findings pass.
@@ -322,8 +308,10 @@ Validated guarantees:
 - Package evidence search requires configured package-term hits; single-word terms match whole
   tokens and phrase terms match contiguous text.
 - EA review validation rejects unsupported compliance claims.
-- Compliance review validates the rule pack, requires every rule to be evaluated, requires source
-  citations for claim-bearing findings, and validates finding graph node/edge integrity.
+- Compliance review validates the rule pack, requires every authority rule to carry authority and
+  applicability metadata, requires every rule to be evaluated, requires applicable findings to map
+  to source records, requires source citations for claim-bearing findings, and validates finding
+  graph node/edge integrity.
 - Rule-pack validation rejects unsafe rule-pack or rule IDs, unsupported source-filter keys, and
   empty source-filter values.
 - Compliance review eval rejects unsafe case IDs, ambiguous package fixtures, unsupported filters,
@@ -443,7 +431,10 @@ The command writes these artifacts beside the base EA review artifacts:
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
 The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,
-severity, package query and terms, source query, source filters, and an evidence expectation.
+severity, authority category, authority source record, applicability mode, package query and terms,
+optional conditional applicability terms, source query, source filters, and an evidence expectation.
+The authority document role is derived from explicit rule metadata when present, otherwise from
+`source_filters.document_role`.
 
 The finding graph contains:
 
@@ -455,10 +446,11 @@ The finding graph contains:
 - `PackageEvidence`
 - `PackageEvidenceGap`
 
-The compliance matrix is the first reviewer-facing matrix artifact. Each row records the rule,
-status, requirement, applicability basis, package evidence citation, source evidence citation,
-source-claim IDs, applied source record IDs, applied source document roles, citation-gate status,
-limitations, and failure category when a finding is not a supported pass.
+The compliance matrix is the first reviewer-facing matrix artifact. Each row records the authority,
+applicability mode and status, rule status, requirement, applicability basis, package evidence
+citation, source evidence citation, source-claim IDs, applied source record IDs, applied source
+document roles, citation-gate status, limitations, and failure category when an applicable finding is
+not a supported pass.
 
 `compliance_validation.json` checks rule-pack validity, base EA review validation, all-rules
 coverage, valid finding statuses, dual evidence for `pass`, source evidence for `gap`, source
@@ -614,9 +606,12 @@ data artifacts such as workbook rows, review topics, eval fixtures, rule packs, 
 matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
 binding, coverage validation, and phase evaluation.
 
-The Gold Eval Expansion + Failure Triage V0.2 milestone is implemented. The current gold gate now
-contains ten adjudicated realistic package profiles, expected source rows, expected source document
-classes, per-case failure taxonomy, compact reproduction paths, and generated compliance matrices.
+The Authority-First Compliance Matrix V0.3 milestone is implemented. The active rule pack contains
+20 authority rows covering baseline NEPA/USDA NEPA requirements plus conditional NFMA, planning-rule,
+forest-plan, ESA, NHPA, Montana SHPO, Roadless Rule, wetlands, and migratory-bird authorities. The
+gold gate contains ten adjudicated realistic package profiles, expected source rows, expected source
+document classes, per-case failure taxonomy, compact reproduction paths, and generated compliance
+matrices.
 
 The current system is reviewer-ready for deterministic seed-package and expanded gold-adjudication
 checks, but not yet production ready for broad EA review quality. The next efficient v1 milestone is
