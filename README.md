@@ -89,6 +89,21 @@ python -m usfs_r1_ea_sources pilot-hosts \
 
 Each host pilot runs `download`, `report`, and `validate-run`. The command writes a parent summary under `source_library/runs/<run-id-prefix>-host-pilots/` and exits nonzero if any selected host has failed rows or a failed acceptance gate.
 
+Plan controlled download batches before scaling beyond pilots:
+
+```bash
+python -m usfs_r1_ea_sources batch-download \
+  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --output-dir source_library \
+  --run-id-prefix first-batch \
+  --batch-size 5 \
+  --limit-per-host 1 \
+  --plan-only
+```
+
+Remove `--plan-only` to execute the planned batches. Each batch runs `download`, `report`, and `validate-run`, writes a parent `batch_plan.json`, `batch_ledger.json`, and `repair_queue.csv`, then stops on the first failed or repair-needed batch unless `--continue-on-failure` is passed.
+Use `--resume` to skip already passed batches under the same run prefix.
+
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 
 ```toml

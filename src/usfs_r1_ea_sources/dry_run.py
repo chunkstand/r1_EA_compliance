@@ -196,6 +196,7 @@ def _apply_filters(
     id_filter: str | None,
     host_filter: str | None,
     limit: int | None,
+    source_record_ids: set[str] | None = None,
 ) -> list[WorkbookSource]:
     filtered = sources
     if sheet_filter:
@@ -206,6 +207,8 @@ def _apply_filters(
             for source in filtered
             if source.source_id == id_filter or source.source_record_id == id_filter
         ]
+    if source_record_ids is not None:
+        filtered = [source for source in filtered if source.source_record_id in source_record_ids]
     if host_filter:
         filtered = [
             source

@@ -239,7 +239,18 @@ Before a run is considered complete:
 - URL override provenance and `filtered_override_count` match the run manifest.
 - The downloader can be rerun without corrupting or overwriting existing validated artifacts.
 
-## 15. First Milestone
+## 15. Batch Gates
+
+Before batch downloads begin:
+
+- Write a deterministic `batch_plan.json` with source record IDs for every planned batch.
+- Write a durable `batch_ledger.json` and update it after every batch state change.
+- Run `download`, `report`, and `validate-run` for each batch.
+- Stop on the first failed or repair-needed batch unless an operator explicitly chooses to continue.
+- Consolidate failed and review-needed rows into `repair_queue.csv`.
+- Support resume by skipping already passed batches under the same run prefix.
+
+## 16. First Milestone
 
 The first implementation milestone is manifest-only dry run:
 

@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse
 import json
 
+from .batches import run_batch_downloads
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .download import run_download
 from .dry_run import run_dry_run
@@ -87,6 +88,26 @@ def build_parser() -> argparse.ArgumentParser:
     pilots.add_argument("--limit-per-host", type=int)
     pilots.add_argument("--force", action="store_true")
 
+    batches = subparsers.add_parser(
+        "batch-download",
+        help="Plan and run controlled download batches with a ledger and acceptance gates.",
+    )
+    batches.add_argument("--workbook", required=True, type=Path)
+    batches.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    batches.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    batches.add_argument("--run-id-prefix", default="batch")
+    batches.add_argument(
+        "--host",
+        action="append",
+        help="Host to batch. Repeat for multiple hosts.",
+    )
+    batches.add_argument("--batch-size", type=int, default=5)
+    batches.add_argument("--limit-per-host", type=int)
+    batches.add_argument("--force", action="store_true")
+    batches.add_argument("--plan-only", action="store_true")
+    batches.add_argument("--resume", action="store_true")
+    batches.add_argument("--continue-on-failure", action="store_true")
+
     return parser
 
 
@@ -166,6 +187,24 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["all_ready"] else 1
+
+    if args.command == "batch-download":
+        config = load_config(args.config)
+        result = run_batch_downloads(
+            workbook_path=args.workbook,
+            output_dir=args.output_dir,
+            config=config,
+            run_id_prefix=args.run_id_prefix,
+            hosts=args.host,
+            batch_size=args.batch_size,
+            limit_per_host=args.limit_per_host,
+            force=args.force,
+            plan_only=args.plan_only,
+            resume=args.resume,
+            continue_on_failure=args.continue_on_failure,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["all_passed"] or args.plan_only else 1
 
     parser.error(f"Unknown command: {args.command}")
     return 2

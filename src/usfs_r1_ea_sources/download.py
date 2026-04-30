@@ -67,6 +67,7 @@ def run_download(
     id_filter: str | None = None,
     host_filter: str | None = None,
     limit: int | None = None,
+    source_record_ids: set[str] | None = None,
     force: bool = False,
     fetcher=None,
     sleep_fn=sleep,
@@ -89,7 +90,14 @@ def run_download(
     workbook_sha256 = sha256_file(workbook_path)
     sources = load_canonical_sources(workbook_path, config.workbook)
     excluded_urls = load_excluded_urls(workbook_path, config.workbook)
-    filtered_sources = _apply_filters(sources, sheet_filter, id_filter, host_filter, limit)
+    filtered_sources = _apply_filters(
+        sources,
+        sheet_filter,
+        id_filter,
+        host_filter,
+        limit,
+        source_record_ids=source_record_ids,
+    )
     write_event(
         events_path,
         run_id,

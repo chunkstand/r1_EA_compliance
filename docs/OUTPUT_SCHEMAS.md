@@ -235,3 +235,56 @@ Each host result includes:
 - `gate_passed`
 - `ready_for_full_download`
 - manifest, report, and acceptance-gate paths
+
+## Batch Download Outputs
+
+Path: `source_library/runs/<run-id-prefix>-batches/`
+
+The `batch-download` command writes:
+
+- `batch_plan.json`
+- `batch_ledger.json`
+- `summary.json`
+- `operator_report.md`
+- `repair_queue.csv`
+
+`batch_plan.json` includes:
+
+- `run_id`
+- `run_id_prefix`
+- `batch_size`
+- `limit_per_host`
+- `hosts_requested`
+- `batch_count`
+- `planned_row_count`
+- `batches`
+
+Each planned batch includes:
+
+- `batch_id`
+- `host`
+- `sequence`
+- `host_sequence`
+- `row_count`
+- `source_record_ids`
+- `workbook_rows`
+
+`batch_ledger.json` tracks every batch with:
+
+- `status`
+- row and status counts
+- `gate_passed`
+- `manifest_path`
+- `report_path`
+- `acceptance_gate_path`
+- `error`
+
+Batch statuses are:
+
+- `planned`
+- `running`
+- `passed`
+- `needs_repair`
+- `failed`
+
+`repair_queue.csv` consolidates failed or review-needed rows across executed batches.
