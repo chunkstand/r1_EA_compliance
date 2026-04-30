@@ -170,3 +170,15 @@ Headers:
 - `error_class`
 - `error_message`
 - `attempt_count`
+
+## Operator Report
+
+Path: `source_library/runs/<run_id>/operator_report.md`
+
+The report command reads a run summary and manifest, then writes a Markdown operator view with:
+
+- status counts
+- host counts
+- adapter counts
+- failed rows requiring manual review
+- suggested next action per failed row

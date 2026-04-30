@@ -12,6 +12,7 @@ import json
 import socket
 import ssl
 
+from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, new_run_id, utc_now, write_event
 from .records import WorkbookSource, planned_artifact_path, sha256_file
@@ -229,11 +230,15 @@ def fetch_url_metadata(
     network: NetworkConfig,
     validation: ValidationConfig,
 ) -> PreflightFetchResult:
+    adapted = adapt_download_url(url, network)
+    fetch_url = adapted.url if adapted else url
     last_result: PreflightFetchResult | None = None
     max_attempts = max(1, network.max_attempts)
     for attempt in range(1, max_attempts + 1):
         for method in ("HEAD", "GET"):
-            result = _fetch_once(url, method, network, validation, attempt)
+            result = _fetch_once(fetch_url, method, network, validation, attempt, original_url=url)
+            if adapted and result.status == "preflight_ok":
+                result = _with_adapter_metadata(result, adapted.adapter, adapted.expected_content_type)
             last_result = result
             if method == "HEAD" and result.status in {"blocked", "failed", "unsupported_content_type"}:
                 continue
@@ -253,6 +258,8 @@ def _fetch_once(
     network: NetworkConfig,
     validation: ValidationConfig,
     attempt_count: int,
+    *,
+    original_url: str | None = None,
 ) -> PreflightFetchResult:
     redirect_handler = RecordingRedirectHandler()
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
@@ -282,6 +289,7 @@ def _fetch_once(
                 attempt_count=attempt_count,
                 body_sample=body_sample,
                 validation=validation,
+                original_url=original_url,
             )
     except HTTPError as error:
         return _http_error_result(error, redirect_handler.redirect_chain, method, validation, attempt_count)
@@ -313,6 +321,7 @@ def _classify_response(
     attempt_count: int,
     body_sample: bytes,
     validation: ValidationConfig,
+    original_url: str | None = None,
 ) -> PreflightFetchResult:
     final_url_lower = final_url.lower()
     body_text = body_sample[:4096].decode("utf-8", errors="ignore").lower()
@@ -338,6 +347,8 @@ def _classify_response(
     elif body_text and _body_looks_blocked(body_text):
         status = "challenge_page"
         reason = "Challenge body pattern matched"
+    elif body_sample[:1024].lstrip().startswith((b"<?xml", b"<RULE", b"<ECFR")):
+        content_type = content_type if content_type in {"application/xml", "text/xml"} else "application/xml"
     elif content_type and content_type not in validation.allowed_content_types:
         status = "unsupported_content_type"
         reason = f"Unsupported content type: {content_type}"
@@ -350,8 +361,8 @@ def _classify_response(
     return PreflightFetchResult(
         status=status,
         http_status=http_status,
-        final_url=final_url,
-        redirect_chain=redirect_chain,
+        final_url=original_url or final_url,
+        redirect_chain=redirect_chain + ([final_url] if original_url and final_url != original_url else []),
         content_type=content_type,
         content_length=content_length,
         method=method,
@@ -441,6 +452,27 @@ def _body_looks_blocked(body_text: str) -> bool:
         "document not found",
     ]
     return any(pattern in body_text for pattern in patterns)
+
+
+def _with_adapter_metadata(
+    result: PreflightFetchResult,
+    adapter: str,
+    expected_content_type: str | None,
+) -> PreflightFetchResult:
+    validation = dict(result.validation)
+    validation["adapter"] = adapter
+    return PreflightFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=expected_content_type or result.content_type,
+        content_length=result.content_length,
+        method=result.method,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
 
 
 def _respect_host_delay(

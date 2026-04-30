@@ -56,6 +56,16 @@ python -m usfs_r1_ea_sources download \
 
 The downloader saves immutable raw artifacts under `source_library/artifacts/raw/`, computes SHA256 hashes, reuses existing artifacts on resume, and writes a row-level manifest for every workbook source row.
 
+Build an operator report for any run:
+
+```bash
+python -m usfs_r1_ea_sources report \
+  --output-dir source_library \
+  --run-id pilot-core-sources
+```
+
+The report writes `source_library/runs/<run_id>/operator_report.md` and lists status counts, host counts, adapter usage, and rows that need manual URL repair.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.

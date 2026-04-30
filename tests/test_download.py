@@ -170,6 +170,48 @@ class DownloadTests(unittest.TestCase):
             self.assertEqual(result.summary["failed_count"], 1)
             self.assertIn("challenge_page", result.failures_path.read_text(encoding="utf-8"))
 
+    def test_download_duplicate_content_reuses_canonical_artifact(self) -> None:
+        config = load_config(CONFIG)
+        same_body = b"<html><body>same captured content</body></html>" + b" " * 128
+
+        def same_content_fetcher(url, network, validation):  # noqa: ANN001
+            return DownloadFetchResult(
+                status="downloaded",
+                http_status=200,
+                final_url=url,
+                redirect_chain=[],
+                content_type="text/html",
+                content_length=len(same_body),
+                body=same_body,
+                attempt_count=1,
+                failure=None,
+                validation={"mode": "download", "passed": True, "reason": None},
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_download(
+                workbook_path=WORKBOOK,
+                output_dir=Path(tmp),
+                config=config,
+                run_id="duplicate-content",
+                limit=2,
+                fetcher=same_content_fetcher,
+                sleep_fn=lambda _: None,
+            )
+
+            records = [
+                json.loads(line)
+                for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(records[0]["status"], "downloaded")
+            self.assertEqual(records[1]["status"], "duplicate_content")
+            self.assertEqual(records[1]["artifact_path"], records[0]["artifact_path"])
+            self.assertEqual(records[1]["duplicate_of"], records[0]["artifact_path"])
+            artifact_files = list((Path(tmp) / "artifacts" / "raw").rglob("*"))
+            artifact_files = [path for path in artifact_files if path.is_file()]
+            self.assertEqual(len(artifact_files), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

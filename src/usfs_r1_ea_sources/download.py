@@ -13,6 +13,7 @@ import json
 import socket
 import ssl
 
+from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, new_run_id, utc_now, write_event
 from .preflight import _base_content_type, _body_looks_blocked, _int_or_none, _is_failure_status
@@ -230,24 +231,25 @@ def run_download(
         if fetch_result.status == "downloaded":
             artifact_sha256 = hashlib.sha256(fetch_result.body).hexdigest()
             artifact_byte_size = len(fetch_result.body)
-            artifact_path = _artifact_path_for_hash(planned_path, artifact_sha256, fetch_result.content_type)
-            artifact_path = _write_artifact(artifact_path, fetch_result.body, force=force)
-            if artifact_sha256 in artifact_by_sha and artifact_by_sha[artifact_sha256] != str(artifact_path):
+            if artifact_sha256 in artifact_by_sha:
                 duplicate_content_of = artifact_by_sha[artifact_sha256]
+                artifact_path = Path(duplicate_content_of)
                 status = "duplicate_content"
             else:
+                artifact_path = _artifact_path_for_hash(planned_path, artifact_sha256, fetch_result.content_type)
+                artifact_path = _write_artifact(artifact_path, fetch_result.body, force=force)
                 artifact_by_sha[artifact_sha256] = str(artifact_path)
-            write_event(
-                events_path,
-                run_id,
-                "artifact_written",
-                source=source,
-                details={
-                    "artifact_path": str(artifact_path),
-                    "artifact_sha256": artifact_sha256,
-                    "artifact_byte_size": artifact_byte_size,
-                },
-            )
+                write_event(
+                    events_path,
+                    run_id,
+                    "artifact_written",
+                    source=source,
+                    details={
+                        "artifact_path": str(artifact_path),
+                        "artifact_sha256": artifact_sha256,
+                        "artifact_byte_size": artifact_byte_size,
+                    },
+                )
             write_event(
                 events_path,
                 run_id,
@@ -339,10 +341,14 @@ def download_url(
     network: NetworkConfig,
     validation: ValidationConfig,
 ) -> DownloadFetchResult:
+    adapted = adapt_download_url(url, network)
+    fetch_url = adapted.url if adapted else url
     last_result: DownloadFetchResult | None = None
     max_attempts = max(1, network.max_attempts)
     for attempt in range(1, max_attempts + 1):
-        result = _download_once(url, network, validation, attempt)
+        result = _download_once(fetch_url, network, validation, attempt, original_url=url)
+        if adapted and result.status == "downloaded":
+            result = _with_adapter_metadata(result, adapted.adapter, adapted.expected_content_type)
         last_result = result
         if result.status not in {"failed", "rate_limited", "timeout"}:
             return result
@@ -356,6 +362,8 @@ def _download_once(
     network: NetworkConfig,
     validation: ValidationConfig,
     attempt_count: int,
+    *,
+    original_url: str | None = None,
 ) -> DownloadFetchResult:
     redirect_handler = RecordingRedirectHandler()
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
@@ -380,6 +388,7 @@ def _download_once(
                 body=body,
                 validation=validation,
                 attempt_count=attempt_count,
+                original_url=original_url,
             )
     except HTTPError as error:
         status = "failed"
@@ -427,6 +436,7 @@ def _classify_download_response(
     body: bytes,
     validation: ValidationConfig,
     attempt_count: int,
+    original_url: str | None = None,
 ) -> DownloadFetchResult:
     final_url_lower = final_url.lower()
     chain_lower = " ".join([final_url_lower, *(url.lower() for url in redirect_chain)])
@@ -455,6 +465,8 @@ def _classify_download_response(
     elif len(body) < validation.minimum_body_bytes:
         status = "invalid_content"
         reason = f"Body smaller than minimum: {len(body)} bytes"
+    elif _is_xml_body(body):
+        content_type = content_type if content_type in {"application/xml", "text/xml"} else "application/xml"
     elif content_type and content_type not in validation.allowed_content_types:
         status = "unsupported_content_type"
         reason = f"Unsupported content type: {content_type}"
@@ -465,8 +477,8 @@ def _classify_download_response(
     return DownloadFetchResult(
         status=status,
         http_status=http_status,
-        final_url=final_url,
-        redirect_chain=redirect_chain,
+        final_url=original_url or final_url,
+        redirect_chain=redirect_chain + ([final_url] if original_url and final_url != original_url else []),
         content_type=content_type,
         content_length=content_length,
         body=body if status == "downloaded" else b"",
@@ -508,6 +520,32 @@ def _failure(error_class: str, message: str, attempt_count: int) -> dict:
 
 def _looks_like_pdf(body: bytes) -> bool:
     return body[:1024].lstrip().startswith(b"%PDF")
+
+
+def _is_xml_body(body: bytes) -> bool:
+    sample = body[:1024].lstrip()
+    return sample.startswith(b"<?xml") or sample.startswith(b"<RULE") or sample.startswith(b"<ECFR")
+
+
+def _with_adapter_metadata(
+    result: DownloadFetchResult,
+    adapter: str,
+    expected_content_type: str | None,
+) -> DownloadFetchResult:
+    validation = dict(result.validation)
+    validation["adapter"] = adapter
+    return DownloadFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=expected_content_type or result.content_type,
+        content_length=result.content_length,
+        body=result.body,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
 
 
 def _artifact_path_for_hash(planned_path: Path, sha256: str, content_type: str | None) -> Path:

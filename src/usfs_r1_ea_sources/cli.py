@@ -8,6 +8,7 @@ from .config import DEFAULT_CONFIG_PATH, load_config
 from .download import run_download
 from .dry_run import run_dry_run
 from .preflight import run_preflight
+from .report import build_run_report
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -56,6 +57,14 @@ def build_parser() -> argparse.ArgumentParser:
     download.add_argument("--host")
     download.add_argument("--limit", type=int)
     download.add_argument("--force", action="store_true")
+
+    report = subparsers.add_parser(
+        "report",
+        help="Build an operator report for a previous dry-run, preflight, or download run.",
+    )
+    report.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    report.add_argument("--run-id", required=True)
+    report.add_argument("--json", action="store_true", help="Print report summary JSON instead of Markdown.")
 
     return parser
 
@@ -108,6 +117,14 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "report":
+        result = build_run_report(output_dir=args.output_dir, run_id=args.run_id)
+        if args.json:
+            print(json.dumps(result.summary, indent=2, sort_keys=True))
+        else:
+            print(result.text)
         return 0
 
     parser.error(f"Unknown command: {args.command}")
