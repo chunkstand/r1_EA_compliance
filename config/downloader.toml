@@ -51,3 +51,8 @@ concurrency = 1
 [hosts."www.fs.usda.gov"]
 delay_seconds = 1.0
 concurrency = 1
+
+[hosts."dahp.wa.gov"]
+delay_seconds = 1.0
+concurrency = 1
+browser_compatible_user_agent = true

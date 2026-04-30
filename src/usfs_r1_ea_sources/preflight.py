@@ -19,6 +19,9 @@ from .records import WorkbookSource, planned_artifact_path, sha256_file
 from .workbook import load_canonical_sources, load_excluded_urls
 
 
+BROWSER_COMPATIBLE_USER_AGENT = "Mozilla/5.0"
+
+
 @dataclass(frozen=True)
 class PreflightFetchResult:
     status: str
@@ -275,10 +278,7 @@ def _fetch_once(
 ) -> PreflightFetchResult:
     redirect_handler = RecordingRedirectHandler()
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
-    headers = {
-        "User-Agent": network.user_agent,
-        "Accept": "text/html,application/pdf,application/xhtml+xml,*/*;q=0.8",
-    }
+    headers = _request_headers(url, network)
     if method == "GET":
         headers["Range"] = "bytes=0-0"
 
@@ -291,7 +291,7 @@ def _fetch_once(
             final_url = response.geturl()
             content_type = _base_content_type(response.headers.get("content-type"))
             content_length = _int_or_none(response.headers.get("content-length"))
-            return _classify_response(
+            result = _classify_response(
                 http_status=http_status,
                 final_url=final_url,
                 redirect_chain=redirect_handler.redirect_chain,
@@ -303,6 +303,9 @@ def _fetch_once(
                 validation=validation,
                 original_url=original_url,
             )
+            if _uses_browser_compatible_user_agent(url, network):
+                return _with_browser_compatible_metadata(result)
+            return result
     except HTTPError as error:
         return _http_error_result(error, redirect_handler.redirect_chain, method, validation, attempt_count)
     except TimeoutError as error:
@@ -496,6 +499,40 @@ def _with_adapter_metadata(
         failure=result.failure,
         validation=validation,
     )
+
+
+def _with_browser_compatible_metadata(result: PreflightFetchResult) -> PreflightFetchResult:
+    validation = dict(result.validation)
+    validation["browser_compatible_user_agent"] = True
+    return PreflightFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=result.content_type,
+        content_length=result.content_length,
+        method=result.method,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
+
+
+def _request_headers(url: str, network: NetworkConfig) -> dict[str, str]:
+    if _uses_browser_compatible_user_agent(url, network):
+        return {
+            "User-Agent": BROWSER_COMPATIBLE_USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        }
+    return {
+        "User-Agent": network.user_agent,
+        "Accept": "text/html,application/pdf,application/xhtml+xml,*/*;q=0.8",
+    }
+
+
+def _uses_browser_compatible_user_agent(url: str, network: NetworkConfig) -> bool:
+    host_config = network.hosts.get(urlsplit(url).netloc.lower())
+    return bool(host_config and host_config.browser_compatible_user_agent)
 
 
 def _respect_host_delay(

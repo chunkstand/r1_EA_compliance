@@ -80,6 +80,9 @@ These rules define the accuracy, traceability, validation, and operational guard
 ## 5. Download Safety
 
 - Use a clear user agent identifying the local downloader.
+- If a public source blocks the project user agent but allows normal browser access, require an
+  explicit host-level browser-compatible user-agent setting and record that fact in validation
+  metadata.
 - Set connect and read timeouts on every request.
 - Apply per-host rate limits.
 - Apply bounded concurrency. Global concurrency and per-host concurrency must be configurable.

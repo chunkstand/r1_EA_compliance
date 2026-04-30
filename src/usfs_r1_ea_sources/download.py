@@ -18,6 +18,7 @@ from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write_event
 from .preflight import _base_content_type, _body_looks_blocked, _body_looks_not_found
 from .preflight import _int_or_none, _is_failure_status
+from .preflight import _request_headers, _uses_browser_compatible_user_agent
 from .preflight import _respect_host_delay
 from .records import WorkbookSource, planned_artifact_path, sha256_file
 from .workbook import load_canonical_sources, load_excluded_urls
@@ -392,17 +393,14 @@ def _download_once(
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
     request = Request(
         url,
-        headers={
-            "User-Agent": network.user_agent,
-            "Accept": "text/html,application/pdf,application/xhtml+xml,*/*;q=0.8",
-        },
+        headers=_request_headers(url, network),
         method="GET",
     )
     timeout = max(network.connect_timeout_seconds, network.read_timeout_seconds)
     try:
         with opener.open(request, timeout=timeout) as response:
             body = response.read()
-            return _classify_download_response(
+            result = _classify_download_response(
                 http_status=response.status,
                 final_url=response.geturl(),
                 redirect_chain=redirect_handler.redirect_chain,
@@ -413,6 +411,9 @@ def _download_once(
                 attempt_count=attempt_count,
                 original_url=original_url,
             )
+            if _uses_browser_compatible_user_agent(url, network):
+                return _with_browser_compatible_metadata(result)
+            return result
     except HTTPError as error:
         status = "failed"
         if error.code == 404:
@@ -566,6 +567,23 @@ def _with_adapter_metadata(
         final_url=result.final_url,
         redirect_chain=result.redirect_chain,
         content_type=expected_content_type or result.content_type,
+        content_length=result.content_length,
+        body=result.body,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
+
+
+def _with_browser_compatible_metadata(result: DownloadFetchResult) -> DownloadFetchResult:
+    validation = dict(result.validation)
+    validation["browser_compatible_user_agent"] = True
+    return DownloadFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=result.content_type,
         content_length=result.content_length,
         body=result.body,
         attempt_count=result.attempt_count,
