@@ -12,3 +12,43 @@
 source_record_id = "R1EA-080"
 override_url = "https://www.govinfo.gov/content/pkg/CFR-1997-title3-vol1/pdf/CFR-1997-title3-vol1-eo13007.pdf"
 reason = "Replaces stale Federal Register page returning 404 with the official GovInfo authenticated PDF for Executive Order 13007, Indian Sacred Sites, 61 FR 26771."
+
+[[overrides]]
+source_record_id = "R1EA-033"
+override_url = "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter2/subchapter1&edition=prelim"
+reason = "Replaces U.S. Code path that returned the not-found page with the current official Title 16 chapter 2 subchapter I page containing 16 U.S.C. sections 528-531."
+
+[[overrides]]
+source_record_id = "R1EA-072"
+override_url = "https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title54-section306102&num=0&edition=prelim"
+reason = "Replaces U.S. Code chapter path that returned the not-found page with the current official Title 54 section 306102 page for NHPA section 110 preservation program responsibilities."
+
+[[overrides]]
+source_record_id = "R1EA-032"
+override_url = "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?1909.12="
+reason = "Replaces stale Forest Service handbook URL returning 404 with the official Forest Service directives index for FSH 1909.12 after the new USDA guidance page timed out under downloader validation."
+
+[[overrides]]
+source_record_id = "R1PLAN-dakota-prairie-grasslands-01"
+override_url = "https://www.fs.usda.gov/r01/dpg/natural-resources"
+reason = "Replaces stale Dakota Prairie Grasslands natural resources URL after the Forest Service changed the unit slug from dakota-prairie to dpg."
+
+[[overrides]]
+source_record_id = "R1PLAN-dakota-prairie-grasslands-02"
+override_url = "https://www.fs.usda.gov/r01/dpg/projects"
+reason = "Replaces stale Dakota Prairie Grasslands planning URL with the current official Projects page covering proposed projects and planning categories; the current planning landing page returns 403 to downloader validation."
+
+[[overrides]]
+source_record_id = "R1PLAN-lolo-nf-01"
+override_url = "https://www.fs.usda.gov/r01/lolo/planning/forest-plan/forest-plan-revision"
+reason = "Replaces stale Lolo forest plan revision URL with the current official Forest Service forest-plan revision page."
+
+[[overrides]]
+source_record_id = "R1PLAN-nez-perce-clearwater-nfs-01"
+override_url = "https://www.fs.usda.gov/r01/nezperce-clearwater/planning"
+reason = "Replaces stale Nez Perce-Clearwater planning URL after the Forest Service changed the unit slug from nezperceclearwater to nezperce-clearwater."
+
+[[overrides]]
+source_record_id = "R1PLAN-nez-perce-clearwater-nfs-02"
+override_url = "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan"
+reason = "Replaces stale Nez Perce-Clearwater 2025 revised land management plan URL with the current official Forest Service page."
