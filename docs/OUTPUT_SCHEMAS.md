@@ -35,6 +35,28 @@ Required fields:
 
 For dry runs, network-derived fields are `null` or empty, and `status` is one of `planned`, `duplicate_url`, or `skipped_excluded`.
 
+For preflight runs, the manifest path is `source_library/manifests/preflight_<run_id>.jsonl`.
+Preflight records use the same row-level schema and add:
+
+- `http_status`
+- `content_length`
+- `fetch_method`
+- `attempt_count`
+
+Preflight `status` values include:
+
+- `preflight_ok`
+- `duplicate_url`
+- `skipped_excluded`
+- `blocked`
+- `challenge_page`
+- `not_found`
+- `timeout`
+- `rate_limited`
+- `ssl_error`
+- `unsupported_content_type`
+- `failed`
+
 ## Run Summary JSON
 
 Path: `source_library/runs/<run_id>/summary.json`
@@ -59,6 +81,11 @@ Required fields:
 - `status_counts`
 - `top_hosts`
 - `manifest_path`
+
+Preflight summaries also include:
+
+- `checked_url_count`
+- `preflight_ok_count`
 
 ## Validation Report JSON
 
@@ -110,3 +137,4 @@ Headers:
 - `status`
 - `error_class`
 - `error_message`
+- `attempt_count`

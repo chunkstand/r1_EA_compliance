@@ -6,6 +6,7 @@ import json
 
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .dry_run import run_dry_run
+from .preflight import run_preflight
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -28,6 +29,19 @@ def build_parser() -> argparse.ArgumentParser:
     dry_run.add_argument("--host")
     dry_run.add_argument("--limit", type=int)
 
+    preflight = subparsers.add_parser(
+        "preflight",
+        help="Check planned source URLs and write preflight reports without saving artifacts.",
+    )
+    preflight.add_argument("--workbook", required=True, type=Path)
+    preflight.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    preflight.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    preflight.add_argument("--run-id")
+    preflight.add_argument("--sheet")
+    preflight.add_argument("--id")
+    preflight.add_argument("--host")
+    preflight.add_argument("--limit", type=int)
+
     return parser
 
 
@@ -38,6 +52,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "dry-run":
         config = load_config(args.config)
         result = run_dry_run(
+            workbook_path=args.workbook,
+            output_dir=args.output_dir,
+            config=config,
+            run_id=args.run_id,
+            sheet_filter=args.sheet,
+            id_filter=args.id,
+            host_filter=args.host,
+            limit=args.limit,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "preflight":
+        config = load_config(args.config)
+        result = run_preflight(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
             config=config,

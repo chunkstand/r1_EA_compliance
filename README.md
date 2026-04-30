@@ -34,6 +34,17 @@ source_library/
 
 Generated `source_library` artifacts, run logs, and JSONL manifests are ignored by git by default.
 
+After the dry-run contract passes, use preflight to check URL reachability without saving source artifacts:
+
+```bash
+python -m usfs_r1_ea_sources preflight \
+  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --output-dir source_library \
+  --limit 10
+```
+
+Preflight records HTTP status, final URL, redirect chain, content type, content length, challenge-page detection, and failure status for each workbook row while fetching each unique URL only once.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.
