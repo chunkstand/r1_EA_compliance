@@ -1,0 +1,23 @@
+# Python/cache noise
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Local environment
+.env
+.env.*
+
+# Downloader-generated source library outputs
+source_library/artifacts/
+source_library/runs/
+source_library/manifests/*.jsonl
+source_library/manifests/*.tmp
+
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/
