@@ -28,6 +28,15 @@ SUPPORTED_CLAIM_TYPES = {
     "obligation",
     "prohibition",
 }
+SUPPORTED_CLAIM_EVAL_FILTERS = {
+    "authority_level",
+    "citation_label",
+    "claim_type",
+    "document_role",
+    "review_topic",
+    "source_record_id",
+    "topic",
+}
 REQUIRED_CLAIM_FIELDS = {
     "claim_id",
     "source_set_id",
@@ -359,7 +368,7 @@ def run_claim_eval(
         raise ValueError("top_k must be at least 1")
     claims_path = Path(claims_path)
     eval_file = Path(eval_file)
-    claims = _read_jsonl(claims_path) if claims_path.exists() else []
+    claims = _load_validated_claims_for_eval(claims_path)
     cases = _load_eval_cases(eval_file)
     output_dir = output_dir or claims_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1546,6 +1555,70 @@ def _query_claims(
     return [_claim_eval_result(claim, score) for score, claim in scored[:limit]]
 
 
+def _load_validated_claims_for_eval(claims_path: Path) -> list[dict]:
+    if not claims_path.exists():
+        raise FileNotFoundError(f"Missing claims file: {claims_path}")
+    claims_path = claims_path.resolve()
+    claims_dir = claims_path.parent
+    summary_path = claims_dir / "summary.json"
+    validation_path = claims_dir / "claim_validation.json"
+    missing = [
+        str(path)
+        for path in (summary_path, validation_path)
+        if not path.exists()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            "Missing claim readiness artifact(s): " + ", ".join(missing)
+        )
+    summary = _read_json(summary_path)
+    validation = _read_json(validation_path)
+    if not validation.get("passed") or not summary.get("reviewer_ready"):
+        raise ValueError(
+            f"Claim artifacts are not reviewer-ready: {claims_dir}. "
+            "Run claim-extract and resolve claim_validation.json failures before claim-eval."
+        )
+    source_set_id = str(summary.get("source_set_id") or "")
+    if not source_set_id:
+        raise ValueError(f"Claim summary has no source_set_id: {summary_path}")
+    output_dir = _output_dir_from_claims_path(claims_path, source_set_id=source_set_id)
+    current_validation = validate_claim_outputs(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        claims_path=claims_path,
+        entities_path=_required_summary_path(summary, "entities_path"),
+        nodes_path=_required_summary_path(summary, "nodes_path"),
+        edges_path=_required_summary_path(summary, "edges_path"),
+        chunks_path=_required_summary_path(summary, "chunks_path"),
+    )
+    if not current_validation["passed"]:
+        failed = ", ".join(_failed_check_names(current_validation))
+        raise ValueError(
+            f"Current claim artifacts failed validation before eval: {failed}"
+        )
+    return _read_jsonl(claims_path)
+
+
+def _required_summary_path(summary: dict, key: str) -> Path:
+    value = summary.get(key)
+    if not value:
+        raise ValueError(f"Claim summary is missing {key!r}.")
+    return Path(str(value))
+
+
+def _output_dir_from_claims_path(claims_path: Path, *, source_set_id: str) -> Path:
+    if claims_path.name != "claims.jsonl":
+        raise ValueError(f"Expected claims.jsonl path, got: {claims_path}")
+    claims_dir = claims_path.parent
+    source_dir = claims_dir.parent
+    derived_dir = source_dir.parent
+    if claims_dir.name != "claims" or source_dir.name != source_set_id or derived_dir.name != "derived":
+        raise ValueError(
+            "Claims path must be under source_library/derived/<source_set_id>/claims/."
+        )
+    return derived_dir.parent
+
+
 def _claim_matches_filters(claim: dict, filters: dict) -> bool:
     for key in (
         "source_record_id",
@@ -1678,7 +1751,75 @@ def _load_eval_cases(path: Path) -> list[dict]:
         for field in ("id", "query"):
             if not case.get(field):
                 raise ValueError(f"Claim eval case {index} is missing {field!r}.")
+        _validate_eval_case_filters(index, case)
+        _validate_eval_case_expectations(index, case)
+        _validate_positive_eval_int(index, case, "min_claims")
+        _validate_positive_eval_int(index, case, "top_k")
     return payload
+
+
+def _validate_eval_case_filters(index: int, case: dict) -> None:
+    filters = case.get("filters") or {}
+    if not isinstance(filters, dict):
+        raise ValueError(f"Claim eval case {index} filters must be an object.")
+    unknown = sorted(set(filters) - SUPPORTED_CLAIM_EVAL_FILTERS)
+    empty = sorted(key for key, value in filters.items() if value in (None, "", []))
+    claim_type = filters.get("claim_type")
+    if claim_type and claim_type not in SUPPORTED_CLAIM_TYPES:
+        raise ValueError(
+            f"Claim eval case {index} has unsupported claim_type filter: {claim_type!r}."
+        )
+    if unknown or empty:
+        details = []
+        if unknown:
+            details.append(f"unknown filters: {unknown}")
+        if empty:
+            details.append(f"empty filters: {empty}")
+        raise ValueError(
+            f"Claim eval case {index} has unsupported filters; " + "; ".join(details)
+        )
+
+
+def _validate_eval_case_expectations(index: int, case: dict) -> None:
+    expected_claim_types = case.get("expected_claim_types")
+    expected_claim_type = case.get("expected_claim_type")
+    if expected_claim_types is not None:
+        if not isinstance(expected_claim_types, list) or not expected_claim_types:
+            raise ValueError(
+                f"Claim eval case {index} expected_claim_types must be a non-empty list."
+            )
+        unsupported = sorted(set(str(value) for value in expected_claim_types) - SUPPORTED_CLAIM_TYPES)
+        if unsupported:
+            raise ValueError(
+                f"Claim eval case {index} has unsupported expected_claim_types: {unsupported}."
+            )
+    if expected_claim_type is not None and expected_claim_type not in SUPPORTED_CLAIM_TYPES:
+        raise ValueError(
+            f"Claim eval case {index} has unsupported expected_claim_type: {expected_claim_type!r}."
+        )
+    for key in ("expected_source_record_ids", "expected_terms"):
+        value = case.get(key)
+        if value is not None and not isinstance(value, list):
+            raise ValueError(f"Claim eval case {index} {key} must be a list.")
+
+
+def _validate_positive_eval_int(index: int, case: dict, key: str) -> None:
+    if key not in case:
+        return
+    try:
+        value = int(case[key])
+    except (TypeError, ValueError) as error:
+        raise ValueError(f"Claim eval case {index} {key} must be an integer.") from error
+    if value < 1:
+        raise ValueError(f"Claim eval case {index} {key} must be at least 1.")
+
+
+def _failed_check_names(validation: dict) -> list[str]:
+    return [
+        str(check.get("name"))
+        for check in validation.get("checks", [])
+        if not check.get("passed")
+    ]
 
 
 def _load_review_topics(catalog_sqlite_path: Path) -> dict[str, list[str]]:

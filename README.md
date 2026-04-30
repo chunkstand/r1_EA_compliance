@@ -374,6 +374,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
   --eval-file config/claim_eval_seed.json
 ```
 
+`claim-eval` revalidates the current claim artifacts before scoring cases. It refuses missing,
+tampered, or non-reviewer-ready claim outputs, and eval case filters fail fast on unknown or empty
+keys so typoed filters cannot silently broaden the eval.
+
 Run phase-aligned readiness evaluation:
 
 ```bash

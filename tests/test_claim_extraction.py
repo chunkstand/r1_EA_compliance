@@ -128,6 +128,74 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertEqual(result.summary["metrics"]["citation_coverage_rate"], 1.0)
             self.assertTrue(result.output_path.exists())
 
+    def test_claim_eval_revalidates_current_claim_artifacts_before_scoring(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-014",
+                        title="FONSI availability",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-014 | FONSI availability | artifact def456",
+                        text="USDA shall make the FONSI available to the public.",
+                    )
+                ],
+            )
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            claims = _read_jsonl(result.claims_path)
+            claims[0]["claim_text"] = "Tampered claim text."
+            _write_jsonl(result.claims_path, claims)
+            eval_file = _write_claim_eval_file(output_dir)
+
+            with self.assertRaisesRegex(ValueError, "Current claim artifacts failed validation"):
+                run_claim_eval(claims_path=result.claims_path, eval_file=eval_file)
+
+            self.assertFalse((result.claims_dir / "claim_eval_results.json").exists())
+
+    def test_claim_eval_rejects_unsupported_or_empty_filters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-014",
+                        title="FONSI availability",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-014 | FONSI availability | artifact def456",
+                        text="USDA shall make the FONSI available to the public.",
+                    )
+                ],
+            )
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            eval_file = output_dir / "bad_claim_eval.json"
+            eval_file.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "bad-filter",
+                            "query": "FONSI public",
+                            "filters": {"source_record_ids": ["R1EA-014"], "claim_type": ""},
+                        }
+                    ],
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "unsupported filters"):
+                run_claim_eval(claims_path=result.claims_path, eval_file=eval_file)
+
     def test_claim_validation_rejects_tampered_unsupported_claim(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -320,6 +388,27 @@ def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> P
         encoding="utf-8",
     )
     return path
+
+
+def _write_claim_eval_file(output_dir: Path) -> Path:
+    eval_file = output_dir / "claim_eval.json"
+    eval_file.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "fonsi-public",
+                    "query": "FONSI available public",
+                    "expected_source_record_ids": ["R1EA-014"],
+                    "expected_claim_type": "obligation",
+                    "expected_terms": ["FONSI", "public"],
+                    "filters": {"source_record_id": "R1EA-014"},
+                }
+            ],
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    return eval_file
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:

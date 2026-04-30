@@ -821,6 +821,25 @@ Claim graph edge relationships include:
 document-role counts, retrieval binding mismatch count, offset mismatch count, graph health metrics,
 validation status, and `reviewer_ready`.
 
+`claim-eval` revalidates the current claim artifacts before scoring cases. It requires
+`claim_validation.json` to have passed, `summary.json` to report `reviewer_ready: true`, and the
+current files to still pass the claim validation checks. Tampered claim files fail before an eval
+result is written.
+
+`claim-eval` supports these eval filter keys:
+
+- `source_record_id`
+- `claim_type`
+- `document_role`
+- `authority_level`
+- `citation_label`
+- `review_topic`
+- `topic`
+
+Unknown filter keys and empty filter values fail eval-file validation so typoed filters cannot
+silently broaden the eval. Supported expected claim types are the same claim types emitted by
+`claim-extract`.
+
 `claim-eval` writes `claim_eval_results.json` by default beside the claims file. It records eval
 case count, pass rate, source hit rate, claim-type hit rate, expected-term hit rate, citation
 coverage rate, zero-result rate, and per-case top claim results with provenance.
