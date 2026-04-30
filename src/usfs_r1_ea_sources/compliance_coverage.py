@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 import json
+import re
 
 from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .compliance_review import DEFAULT_RULE_PACK_PATH
@@ -18,6 +19,7 @@ from .rule_claim_binding import _load_validated_links_for_eval
 COVERAGE_MATRIX_SCHEMA_VERSION = "compliance-rule-pack-coverage-v0"
 COVERAGE_RESULT_SCHEMA_VERSION = "compliance-coverage-results-v0"
 DEFAULT_COVERAGE_MATRIX_PATH = Path("config/compliance_rule_pack_coverage_nepa_ea_v0.json")
+TEXT_TOKEN_RE = re.compile(r"[a-z0-9]+")
 REQUIRED_COVERAGE_FIELDS = {
     "eval_case_ids",
     "expected_package_evidence",
@@ -78,6 +80,7 @@ def run_compliance_coverage(
         _check_rule_claim_links_ready(links_path, links, link_error),
         _check_rules_have_source_claim_links(rule_pack, links),
         _check_matrix_source_records_match_links(matrix, links),
+        _check_matrix_source_claim_terms_match_links(matrix, links),
     ]
     passed = all(check["passed"] for check in checks)
     output_path = (
@@ -109,6 +112,10 @@ def run_compliance_coverage(
         "rules_without_eval_cases": _rules_without_eval_cases(rule_pack, eval_cases),
         "rules_without_source_claim_links": _rules_without_source_claim_links(rule_pack, links),
         "source_record_mismatch_rule_ids": _source_record_mismatch_rule_ids(matrix, links),
+        "source_claim_term_mismatch_rule_ids": _source_claim_term_mismatch_rule_ids(
+            matrix,
+            links,
+        ),
         "links_per_rule": _links_per_rule(rule_pack, links),
         "checks": checks,
     }
@@ -198,14 +205,67 @@ def _check_matrix_covers_rules(matrix: dict, rule_pack: dict) -> dict:
 
 def _check_matrix_required_fields(matrix: dict) -> dict:
     failures = []
-    for item in _coverage_items(matrix):
+    raw_items = matrix.get("coverage_items")
+    if not isinstance(raw_items, list):
+        failures.append(
+            {
+                "index": None,
+                "rule_id": None,
+                "reason": "coverage_items_must_be_list",
+            }
+        )
+        raw_items = []
+    for index, item in enumerate(raw_items):
+        if not isinstance(item, dict):
+            failures.append(
+                {
+                    "index": index,
+                    "rule_id": None,
+                    "reason": "coverage_item_must_be_object",
+                }
+            )
+            continue
         missing = []
         for field in REQUIRED_COVERAGE_FIELDS:
             value = item.get(field)
             if value in (None, "") or (isinstance(value, list) and not value):
                 missing.append(field)
         if missing:
-            failures.append({"rule_id": item.get("rule_id"), "missing_fields": sorted(missing)})
+            failures.append(
+                {
+                    "index": index,
+                    "rule_id": item.get("rule_id"),
+                    "reason": "missing_required_fields",
+                    "missing_fields": sorted(missing),
+                }
+            )
+            continue
+        invalid_list_fields = []
+        duplicate_list_values = {}
+        for field in ("eval_case_ids", "source_claim_terms", "source_record_ids"):
+            value = item.get(field)
+            if not isinstance(value, list) or not all(_is_non_empty_string(entry) for entry in value):
+                invalid_list_fields.append(field)
+                continue
+            counts = Counter(str(entry).strip() for entry in value)
+            duplicates = sorted(entry for entry, count in counts.items() if count > 1)
+            if duplicates:
+                duplicate_list_values[field] = duplicates
+        invalid_text_fields = []
+        for field in ("expected_package_evidence", "obligation_area", "rule_id"):
+            if not _is_non_empty_string(item.get(field)):
+                invalid_text_fields.append(field)
+        if invalid_list_fields or invalid_text_fields or duplicate_list_values:
+            failures.append(
+                {
+                    "index": index,
+                    "rule_id": item.get("rule_id"),
+                    "reason": "invalid_field_shape",
+                    "invalid_list_fields": sorted(invalid_list_fields),
+                    "invalid_text_fields": sorted(invalid_text_fields),
+                    "duplicate_list_values": duplicate_list_values,
+                }
+            )
     return {
         "name": "coverage_matrix_items_have_required_fields",
         "passed": not failures,
@@ -242,7 +302,7 @@ def _check_matrix_eval_case_ids(matrix: dict, eval_cases: list[dict]) -> dict:
     case_ids = {str(case.get("id") or "") for case in eval_cases}
     failures = []
     for item in _coverage_items(matrix):
-        ids = [str(value) for value in item.get("eval_case_ids", [])]
+        ids = _string_list(item.get("eval_case_ids"))
         missing = sorted(set(ids) - case_ids)
         if missing:
             failures.append({"rule_id": item.get("rule_id"), "missing_eval_case_ids": missing})
@@ -278,7 +338,7 @@ def _check_matrix_source_records_match_links(matrix: dict, links: list[dict]) ->
     links_by_rule = _links_by_rule(links)
     failures = []
     for item in _coverage_items(matrix):
-        expected_sources = {str(value) for value in item.get("source_record_ids", [])}
+        expected_sources = set(_string_list(item.get("source_record_ids")))
         if not expected_sources:
             continue
         actual_sources = {
@@ -300,13 +360,45 @@ def _check_matrix_source_records_match_links(matrix: dict, links: list[dict]) ->
     }
 
 
+def _check_matrix_source_claim_terms_match_links(matrix: dict, links: list[dict]) -> dict:
+    links_by_rule = _links_by_rule(links)
+    failures = []
+    for item in _coverage_items(matrix):
+        rule_id = str(item.get("rule_id") or "")
+        expected_terms = _string_list(item.get("source_claim_terms"))
+        if not rule_id or not expected_terms:
+            continue
+        rule_links = links_by_rule.get(rule_id, [])
+        missing_terms = [
+            term
+            for term in expected_terms
+            if not any(_link_supports_term(link, term) for link in rule_links)
+        ]
+        if missing_terms:
+            failures.append(
+                {
+                    "rule_id": rule_id,
+                    "missing_source_claim_terms": missing_terms,
+                    "link_count": len(rule_links),
+                    "link_ids": [str(link.get("link_id")) for link in rule_links[:5]],
+                }
+            )
+    return {
+        "name": "coverage_matrix_source_claim_terms_match_rule_claim_links",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
 def _rule_ids(rule_pack: dict) -> set[str]:
     return {str(rule["id"]) for rule in rule_pack.get("rules", [])}
 
 
 def _coverage_items(matrix: dict) -> list[dict]:
     items = matrix.get("coverage_items")
-    return items if isinstance(items, list) else []
+    if not isinstance(items, list):
+        return []
+    return [item for item in items if isinstance(item, dict)]
 
 
 def _links_by_rule(links: list[dict]) -> dict[str, list[dict]]:
@@ -342,6 +434,11 @@ def _source_record_mismatch_rule_ids(matrix: dict, links: list[dict]) -> list[st
     return [str(item["rule_id"]) for item in check["details"]["failures"]]
 
 
+def _source_claim_term_mismatch_rule_ids(matrix: dict, links: list[dict]) -> list[str]:
+    check = _check_matrix_source_claim_terms_match_links(matrix, links)
+    return [str(item["rule_id"]) for item in check["details"]["failures"]]
+
+
 def _links_per_rule(rule_pack: dict, links: list[dict]) -> dict[str, int]:
     counts = Counter(str(link.get("rule_id") or "") for link in links)
     return {rule_id: counts.get(rule_id, 0) for rule_id in sorted(_rule_ids(rule_pack))}
@@ -358,6 +455,42 @@ def _failed_check_names(validation: dict) -> list[str]:
         for check in validation.get("checks", [])
         if not check.get("passed")
     ]
+
+
+def _is_non_empty_string(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if _is_non_empty_string(item)]
+
+
+def _link_supports_term(link: dict, term: str) -> bool:
+    term_text = _normalize_text(term)
+    if not term_text:
+        return False
+    link_text = _normalize_text(
+        " ".join(
+            str(value)
+            for value in (
+                link.get("claim_text"),
+                link.get("title"),
+                link.get("citation_label"),
+                " ".join(str(value) for value in link.get("matched_terms", [])),
+                " ".join(str(value) for value in link.get("review_topics", [])),
+            )
+            if str(value or "").strip()
+        )
+    )
+    if " " in term_text:
+        return term_text in link_text
+    return term_text in set(link_text.split())
+
+
+def _normalize_text(value: str) -> str:
+    return " ".join(TEXT_TOKEN_RE.findall(str(value).lower()))
 
 
 def _utc_now() -> str:

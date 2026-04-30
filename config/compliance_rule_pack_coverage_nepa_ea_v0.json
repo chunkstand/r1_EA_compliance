@@ -33,7 +33,7 @@
       "obligation_area": "Affected environment and environmental effects",
       "expected_package_evidence": "Text analyzing affected environment, environmental effects, consequences, or impacts.",
       "source_record_ids": ["R1EA-008", "R1EA-013", "R1EA-018"],
-      "source_claim_terms": ["environmental effects", "affected environment", "impacts"],
+      "source_claim_terms": ["effects", "affected environment", "impacts"],
       "eval_case_ids": [
         "all-core-rules-pass",
         "purpose-only-produces-package-gaps",
@@ -45,7 +45,7 @@
       "obligation_area": "Related environmental compliance and consultation",
       "expected_package_evidence": "Text addressing consultation or related environmental review laws.",
       "source_record_ids": ["R1EA-071"],
-      "source_claim_terms": ["compliance", "consultation", "environmental review"],
+      "source_claim_terms": ["section 106", "tribal", "consultation"],
       "eval_case_ids": [
         "all-core-rules-pass",
         "purpose-only-produces-package-gaps",
@@ -69,7 +69,7 @@
       "obligation_area": "FONSI, decision notice, and mitigation rationale",
       "expected_package_evidence": "Text tracing FONSI, decision notice, or mitigation rationale.",
       "source_record_ids": ["R1EA-014"],
-      "source_claim_terms": ["finding of no significant impact", "mitigation", "decision notice"],
+      "source_claim_terms": ["finding of no significant impact", "fonsi", "environmental assessment"],
       "eval_case_ids": [
         "all-core-rules-pass",
         "purpose-only-produces-package-gaps",

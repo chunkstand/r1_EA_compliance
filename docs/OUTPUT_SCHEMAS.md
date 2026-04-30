@@ -611,10 +611,11 @@ evidence, source record IDs, source-claim terms, and eval case IDs.
 - rules without compliance-review eval cases
 - rules without source-claim links
 - rules whose coverage-matrix source records do not match current rule-claim links
+- rules whose coverage-matrix source-claim terms do not match current rule-claim links
 - links per rule
 - gate checks for rule-pack validity, matrix identity, matrix rule coverage, required fields,
   eval-case rule coverage, eval-case ID references, rule-claim readiness, source-claim link
-  coverage, and matrix/source-record agreement
+  coverage, matrix/source-record agreement, and matrix/source-claim-term agreement
 
 ## Derived Extraction Outputs
 
@@ -1069,7 +1070,8 @@ The `phase-eval` command writes `phase_eval_results.json` in the same directory.
 catalog capture, extraction, retrieval, evidence graph, claim extraction, and rule-claim binding as
 separate phases and records phase blockers so downstream compliance review cannot hide an upstream
 failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
-also includes a `compliance_coverage` phase for matrix, source-claim, and eval-case coverage. When
+also includes a `compliance_coverage` phase for matrix, source-claim, source-claim-term, and
+eval-case coverage. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The evidence-graph and claim-extraction

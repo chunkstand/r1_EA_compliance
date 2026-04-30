@@ -45,13 +45,13 @@ Last verified locally on 2026-04-30.
 - Rule-claim binding: `35` links across `7/7` seed compliance rules, `0` explicit no-claim
   gaps, validation passed, reviewer-ready
 - Rule-claim eval seed: passed, `7/7` cases
-- Compliance coverage: `7/7` rules covered by matrix rows, source-claim links, and compliance
-  review eval cases
+- Compliance coverage: `7/7` rules covered by matrix rows, source-claim links, source-claim
+  terms, and compliance review eval cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
-- Unit suite: `116` tests passed
+- Unit suite: `118` tests passed
 
 The verification set was:
 
@@ -234,8 +234,8 @@ Current state:
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review eval runs deterministic package fixtures and emits
   `compliance_review_eval_results.json`.
-- Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links, and
-  compliance review eval cases.
+- Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links,
+  source-claim terms, and compliance review eval cases.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -311,6 +311,10 @@ Validated guarantees:
   unsupported expected statuses, unsupported expected claim types, non-boolean evidence
   expectations, partial rule-pack coverage, unknown rule IDs, and status counts that do not match
   per-rule expectations.
+- Compliance coverage rejects malformed matrix rows, missing matrix/eval/link coverage, and
+  source-record or source-claim-term mismatches against current rule-claim links.
+- Phase eval rejects stale compliance coverage artifacts when the coverage source set or rule pack
+  does not match the evaluated source set and rule-claim binding.
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
   evaluated source set.
 

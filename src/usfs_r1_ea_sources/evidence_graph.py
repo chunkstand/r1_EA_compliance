@@ -522,6 +522,10 @@ def run_phase_aligned_eval(
                         "source_record_mismatch_rule_ids",
                         [],
                     ),
+                    "source_claim_term_mismatch_rule_ids": compliance_coverage.get(
+                        "source_claim_term_mismatch_rule_ids",
+                        [],
+                    ),
                 },
             )
         )

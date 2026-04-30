@@ -416,6 +416,7 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(result.summary["rules_without_coverage_items"], [])
             self.assertEqual(result.summary["rules_without_eval_cases"], [])
             self.assertEqual(result.summary["rules_without_source_claim_links"], [])
+            self.assertEqual(result.summary["source_claim_term_mismatch_rule_ids"], [])
 
     def test_compliance_coverage_reports_missing_rule_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -456,6 +457,106 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(result.summary["passed"])
             self.assertEqual(result.summary["rules_without_coverage_items"], ["mitigation"])
             self.assertFalse(_check(result.summary, "coverage_matrix_covers_every_rule")["passed"])
+
+    def test_compliance_coverage_reports_source_claim_term_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            link_result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "coverage-case",
+                        "package_text": "Purpose and Need. Mitigation measures support a FONSI.",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                    }
+                ],
+            )
+            coverage_path = _write_coverage_matrix(Path(tmp))
+            matrix = json.loads(coverage_path.read_text(encoding="utf-8"))
+            for item in matrix["coverage_items"]:
+                if item["rule_id"] == "mitigation":
+                    item["source_claim_terms"] = ["never present term"]
+            coverage_path.write_text(json.dumps(matrix, sort_keys=True), encoding="utf-8")
+
+            result = run_compliance_coverage(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                coverage_matrix_path=coverage_path,
+                eval_file=eval_path,
+                links_path=link_result.links_path,
+                results_dir=Path(tmp) / "coverage-results",
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["source_claim_term_mismatch_rule_ids"], ["mitigation"])
+            self.assertFalse(
+                _check(
+                    result.summary,
+                    "coverage_matrix_source_claim_terms_match_rule_claim_links",
+                )["passed"]
+            )
+
+    def test_compliance_coverage_reports_malformed_matrix_items_without_crashing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            link_result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "coverage-case",
+                        "package_text": "Purpose and Need. Mitigation measures support a FONSI.",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                    }
+                ],
+            )
+            coverage_path = _write_coverage_matrix(Path(tmp))
+            matrix = json.loads(coverage_path.read_text(encoding="utf-8"))
+            matrix["coverage_items"].append("not an object")
+            matrix["coverage_items"][1]["source_claim_terms"] = "mitigation"
+            coverage_path.write_text(json.dumps(matrix, sort_keys=True), encoding="utf-8")
+
+            result = run_compliance_coverage(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                coverage_matrix_path=coverage_path,
+                eval_file=eval_path,
+                links_path=link_result.links_path,
+                results_dir=Path(tmp) / "coverage-results",
+            )
+
+            self.assertFalse(result.summary["passed"])
+            required_fields_check = _check(
+                result.summary,
+                "coverage_matrix_items_have_required_fields",
+            )
+            self.assertFalse(required_fields_check["passed"])
+            reasons = {failure["reason"] for failure in required_fields_check["details"]["failures"]}
+            self.assertIn("coverage_item_must_be_object", reasons)
+            self.assertIn("invalid_field_shape", reasons)
 
     def test_phase_eval_rejects_stale_compliance_coverage_source_set(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

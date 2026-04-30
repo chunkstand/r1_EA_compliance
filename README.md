@@ -447,9 +447,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
 ```
 
 `compliance-coverage` validates that every rule has a coverage-matrix row, current source-claim
-links, and compliance-review eval coverage. It reports uncovered rules, rules without eval cases,
-rules without source-claim links, and coverage-matrix source records that do not match current
-rule-claim bindings.
+links, source-claim term support, and compliance-review eval coverage. It reports uncovered rules,
+rules without eval cases, rules without source-claim links, source-record mismatches, and
+source-claim terms that do not match current rule-claim bindings.
 
 Run phase-aligned readiness evaluation:
 
@@ -461,7 +461,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 This reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and rule-claim
 binding readiness separately so validation failures are not hidden inside a single aggregate score.
 When `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
-`compliance_coverage` phase for matrix, source-claim, and eval-case coverage. Pass
+`compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage. Pass
 `--review-id <review-id>` after a compliance review to include `compliance_review` as an additional
 phase gate. The compliance phase requires the review source set to match the evaluated source set.
 
