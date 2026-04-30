@@ -16,7 +16,8 @@ import ssl
 from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, new_run_id, utc_now, write_event
-from .preflight import _base_content_type, _body_looks_blocked, _int_or_none, _is_failure_status
+from .preflight import _base_content_type, _body_looks_blocked, _body_looks_not_found
+from .preflight import _int_or_none, _is_failure_status
 from .preflight import _respect_host_delay
 from .records import WorkbookSource, planned_artifact_path, sha256_file
 from .workbook import load_canonical_sources, load_excluded_urls
@@ -173,32 +174,41 @@ def run_download(
         if existing:
             artifact_sha256 = sha256_file(existing)
             artifact_byte_size = existing.stat().st_size
-            record = _manifest_record(
-                run_id=run_id,
-                workbook_path=workbook_path,
-                workbook_sha256=workbook_sha256,
+            existing_validation = _validate_existing_artifact(existing, config.validation)
+            if existing_validation["passed"]:
+                record = _manifest_record(
+                    run_id=run_id,
+                    workbook_path=workbook_path,
+                    workbook_sha256=workbook_sha256,
+                    source=source,
+                    status="downloaded_existing",
+                    planned_path=planned_path,
+                    final_url=None,
+                    redirect_chain=[],
+                    content_type=_content_type_for_suffix(existing.suffix),
+                    content_length=artifact_byte_size,
+                    http_status=None,
+                    attempt_count=0,
+                    artifact_path=existing,
+                    artifact_sha256=artifact_sha256,
+                    artifact_byte_size=artifact_byte_size,
+                    duplicate_of=None,
+                    failure=None,
+                    validation=existing_validation,
+                )
+                downloaded_by_url[source.normalized_url] = record
+                artifact_by_sha.setdefault(artifact_sha256, str(existing))
+                records.append(record)
+                write_event(events_path, run_id, "artifact_reused", source=source, details={"artifact_path": str(existing)})
+                write_event(events_path, run_id, "record_finalized", source=source, details={"status": record["status"]})
+                continue
+            write_event(
+                events_path,
+                run_id,
+                "artifact_invalid",
                 source=source,
-                status="downloaded_existing",
-                planned_path=planned_path,
-                final_url=None,
-                redirect_chain=[],
-                content_type=None,
-                content_length=artifact_byte_size,
-                http_status=None,
-                attempt_count=0,
-                artifact_path=existing,
-                artifact_sha256=artifact_sha256,
-                artifact_byte_size=artifact_byte_size,
-                duplicate_of=None,
-                failure=None,
-                validation={"mode": "download", "passed": True, "reason": "existing artifact reused"},
+                details={"artifact_path": str(existing), "reason": existing_validation["reason"]},
             )
-            downloaded_by_url[source.normalized_url] = record
-            artifact_by_sha.setdefault(artifact_sha256, str(existing))
-            records.append(record)
-            write_event(events_path, run_id, "artifact_reused", source=source, details={"artifact_path": str(existing)})
-            write_event(events_path, run_id, "record_finalized", source=source, details={"status": record["status"]})
-            continue
 
         host = urlsplit(source.normalized_url).netloc.lower()
         _respect_host_delay(host, host_last_fetch, config.network, sleep_fn)
@@ -459,6 +469,9 @@ def _classify_download_response(
     elif any(pattern.lower() in final_url_lower for pattern in validation.not_found_url_patterns):
         status = "not_found"
         reason = "Not-found URL pattern matched"
+    elif body_text and _body_looks_not_found(body_text):
+        status = "not_found"
+        reason = "Not-found body pattern matched"
     elif body_text and _body_looks_blocked(body_text):
         status = "challenge_page"
         reason = "Challenge body pattern matched"
@@ -564,6 +577,37 @@ def _suffix_for_content_type(content_type: str | None) -> str:
     if content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return ".docx"
     return ".bin"
+
+
+def _content_type_for_suffix(suffix: str) -> str | None:
+    return {
+        ".pdf": "application/pdf",
+        ".html": "text/html",
+        ".xml": "application/xml",
+        ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    }.get(suffix.lower())
+
+
+def _validate_existing_artifact(path: Path, validation: ValidationConfig) -> dict:
+    try:
+        body = path.read_bytes()
+    except OSError as error:
+        return {"mode": "download", "passed": False, "reason": str(error)}
+    if len(body) < validation.minimum_body_bytes:
+        return {
+            "mode": "download",
+            "passed": False,
+            "reason": f"Existing artifact smaller than minimum: {len(body)} bytes",
+        }
+    content_type = _content_type_for_suffix(path.suffix)
+    if content_type == "application/pdf" and not _looks_like_pdf(body):
+        return {"mode": "download", "passed": False, "reason": "Existing PDF failed header check"}
+    sample = body[:8192].decode("utf-8", errors="ignore").lower()
+    if sample and _body_looks_not_found(sample):
+        return {"mode": "download", "passed": False, "reason": "Existing artifact is not-found content"}
+    if sample and _body_looks_blocked(sample):
+        return {"mode": "download", "passed": False, "reason": "Existing artifact is challenge content"}
+    return {"mode": "download", "passed": True, "reason": "existing artifact reused"}
 
 
 def _write_artifact(path: Path, body: bytes, *, force: bool) -> Path:

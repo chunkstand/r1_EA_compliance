@@ -344,6 +344,9 @@ def _classify_response(
     elif any(pattern.lower() in final_url_lower for pattern in validation.not_found_url_patterns):
         status = "not_found"
         reason = "Not-found URL pattern matched"
+    elif body_text and _body_looks_not_found(body_text):
+        status = "not_found"
+        reason = "Not-found body pattern matched"
     elif body_text and _body_looks_blocked(body_text):
         status = "challenge_page"
         reason = "Challenge body pattern matched"
@@ -448,8 +451,16 @@ def _body_looks_blocked(body_text: str) -> bool:
         "access denied",
         "enable javascript",
         "verify you are human",
+    ]
+    return any(pattern in body_text for pattern in patterns)
+
+
+def _body_looks_not_found(body_text: str) -> bool:
+    patterns = [
         "docnotfound",
         "document not found",
+        "page not found",
+        "404 not found",
     ]
     return any(pattern in body_text for pattern in patterns)
 

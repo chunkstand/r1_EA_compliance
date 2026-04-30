@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from usfs_r1_ea_sources.adapters import adapt_download_url
+from usfs_r1_ea_sources.adapters import _ECFR_DATE_CACHE, adapt_download_url, latest_ecfr_date
 from usfs_r1_ea_sources.config import load_config
 from usfs_r1_ea_sources.download import DownloadFetchResult, run_download
 from usfs_r1_ea_sources.report import build_run_report, suggested_action
@@ -99,6 +99,69 @@ class AdapterAndReportTests(unittest.TestCase):
             }
         )
         self.assertIn("Repair stale Forest Service page URL", action)
+
+    def test_ecfr_latest_date_is_cached_by_title(self) -> None:
+        config = load_config(CONFIG)
+        _ECFR_DATE_CACHE.clear()
+
+        class FakeResponse:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):  # noqa: ANN001
+                return False
+
+            def read(self, *_args):  # noqa: ANN002
+                return (
+                    b'{"titles":[{"number":7,"up_to_date_as_of":"2026-04-28",'
+                    b'"latest_issue_date":"2026-04-28"}]}'
+                )
+
+        with patch("usfs_r1_ea_sources.adapters.urlopen", return_value=FakeResponse()) as mocked:
+            self.assertEqual(latest_ecfr_date(7, config.network), "2026-04-28")
+            self.assertEqual(latest_ecfr_date(7, config.network), "2026-04-28")
+
+        self.assertEqual(mocked.call_count, 1)
+
+    def test_report_resolves_manifest_path_relative_to_output_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            run_dir = output_dir / "runs" / "path-test"
+            manifest_dir = output_dir / "manifests"
+            run_dir.mkdir(parents=True)
+            manifest_dir.mkdir(parents=True)
+            (run_dir / "summary.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "path-test",
+                        "mode": "download",
+                        "workbook_sha256": "abc",
+                        "manifest_path": "manifests/download_path-test.jsonl",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (manifest_dir / "download_path-test.jsonl").write_text(
+                json.dumps(
+                    {
+                        "status": "downloaded",
+                        "normalized_url": "https://example.test/source",
+                        "source_record_id": "SRC-1",
+                        "sheet": "Ingest_Checklist",
+                        "excel_row": 5,
+                        "title": "Example",
+                        "original_url": "https://example.test/source",
+                        "validation": {},
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            report = build_run_report(output_dir=output_dir, run_id="path-test")
+            self.assertTrue(report.report_path.exists())
 
 
 if __name__ == "__main__":

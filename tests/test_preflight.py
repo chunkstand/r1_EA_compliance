@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.config import load_config
-from usfs_r1_ea_sources.preflight import PreflightFetchResult, run_preflight
+from usfs_r1_ea_sources.preflight import PreflightFetchResult, _classify_response, run_preflight
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -140,6 +140,23 @@ class PreflightTests(unittest.TestCase):
             self.assertEqual(result.summary["checked_url_count"], 44)
             self.assertEqual(result.summary["preflight_ok_count"], 44)
             self.assertEqual(result.summary["duplicate_url_count"], 1)
+
+    def test_preflight_classifies_document_not_found_body_as_not_found(self) -> None:
+        config = load_config(CONFIG)
+        result = _classify_response(
+            http_status=200,
+            final_url="https://uscode.house.gov/view.xhtml?bad=1",
+            redirect_chain=[],
+            content_type="text/html",
+            content_length=1024,
+            method="GET",
+            attempt_count=1,
+            body_sample=b"<html><body>Document not found</body></html>" + b" " * 128,
+            validation=config.validation,
+        )
+
+        self.assertEqual(result.status, "not_found")
+        self.assertFalse(result.validation["passed"])
 
 
 if __name__ == "__main__":

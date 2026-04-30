@@ -16,6 +16,9 @@ class AdaptedURL:
     expected_content_type: str | None = None
 
 
+_ECFR_DATE_CACHE: dict[int, str | None] = {}
+
+
 def adapt_download_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
     parsed = urlsplit(url)
     host = parsed.netloc.lower()
@@ -74,6 +77,8 @@ def _extract_path_component(path: str, name: str) -> str | None:
 
 
 def latest_ecfr_date(title: int, network: NetworkConfig) -> str | None:
+    if title in _ECFR_DATE_CACHE:
+        return _ECFR_DATE_CACHE[title]
     request = Request(
         "https://www.ecfr.gov/api/versioner/v1/titles.json",
         headers={"User-Agent": network.user_agent, "Accept": "application/json"},
@@ -82,8 +87,11 @@ def latest_ecfr_date(title: int, network: NetworkConfig) -> str | None:
         with urlopen(request, timeout=max(network.connect_timeout_seconds, network.read_timeout_seconds)) as response:
             data = json.load(response)
     except Exception:
+        _ECFR_DATE_CACHE[title] = None
         return None
     for item in data.get("titles", []):
         if item.get("number") == title:
-            return item.get("up_to_date_as_of") or item.get("latest_issue_date")
+            _ECFR_DATE_CACHE[title] = item.get("up_to_date_as_of") or item.get("latest_issue_date")
+            return _ECFR_DATE_CACHE[title]
+    _ECFR_DATE_CACHE[title] = None
     return None

@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.config import load_config
-from usfs_r1_ea_sources.download import DownloadFetchResult, run_download
+from usfs_r1_ea_sources.download import DownloadFetchResult, _classify_download_response, run_download
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -144,6 +144,42 @@ class DownloadTests(unittest.TestCase):
             self.assertTrue(Path(record["artifact_path"]).exists())
             self.assertTrue(record["artifact_sha256"])
 
+    def test_download_refetches_when_existing_artifact_is_invalid(self) -> None:
+        config = load_config(CONFIG)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            first_fetcher = FakeDownloader()
+            first = run_download(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                run_id="seed-invalid",
+                id_filter="R1EA-001",
+                fetcher=first_fetcher,
+                sleep_fn=lambda _: None,
+            )
+            first_record = json.loads(first.manifest_path.read_text(encoding="utf-8").splitlines()[0])
+            artifact = Path(first_record["artifact_path"])
+            artifact.write_bytes(b"bad")
+
+            second_fetcher = FakeDownloader()
+            second = run_download(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                run_id="refetch-invalid",
+                id_filter="R1EA-001",
+                fetcher=second_fetcher,
+                sleep_fn=lambda _: None,
+            )
+
+            self.assertEqual(len(second_fetcher.calls), 1)
+            self.assertEqual(second.summary["downloaded_count"], 1)
+            second_record = json.loads(second.manifest_path.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(second_record["status"], "downloaded")
+            self.assertGreaterEqual(second_record["artifact_byte_size"], 128)
+
     def test_download_does_not_write_artifact_for_challenge_page(self) -> None:
         config = load_config(CONFIG)
         challenge_url = (
@@ -169,6 +205,23 @@ class DownloadTests(unittest.TestCase):
             self.assertEqual(result.summary["downloaded_count"], 0)
             self.assertEqual(result.summary["failed_count"], 1)
             self.assertIn("challenge_page", result.failures_path.read_text(encoding="utf-8"))
+
+    def test_download_classifies_document_not_found_body_as_not_found(self) -> None:
+        config = load_config(CONFIG)
+
+        result = _classify_download_response(
+            http_status=200,
+            final_url="https://uscode.house.gov/docnotfound.xhtml",
+            redirect_chain=[],
+            content_type="text/html",
+            content_length=1024,
+            body=b"<html><body>Document not found</body></html>" + b" " * 128,
+            validation=config.validation,
+            attempt_count=1,
+        )
+
+        self.assertEqual(result.status, "not_found")
+        self.assertFalse(result.validation["passed"])
 
     def test_download_duplicate_content_reuses_canonical_artifact(self) -> None:
         config = load_config(CONFIG)

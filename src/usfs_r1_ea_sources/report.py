@@ -23,15 +23,7 @@ def build_run_report(*, output_dir: Path, run_id: str) -> ReportResult:
     if not summary_path.exists():
         raise FileNotFoundError(f"Missing run summary: {summary_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    manifest_path = Path(summary["manifest_path"])
-    if not manifest_path.is_absolute():
-        manifest_path = output_dir.parent / manifest_path
-    if not manifest_path.exists():
-        fallback = output_dir / "manifests" / f"{summary['mode']}_{run_id}.jsonl"
-        if fallback.exists():
-            manifest_path = fallback
-        else:
-            raise FileNotFoundError(f"Missing manifest: {manifest_path}")
+    manifest_path = _resolve_manifest_path(output_dir, summary)
 
     records = _read_jsonl(manifest_path)
     report_summary = summarize_records(summary, records)
@@ -141,3 +133,25 @@ def _read_jsonl(path: Path) -> list[dict]:
         for line in path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+
+
+def _resolve_manifest_path(output_dir: Path, summary: dict) -> Path:
+    manifest_value = Path(summary["manifest_path"])
+    candidates = []
+    if manifest_value.is_absolute():
+        candidates.append(manifest_value)
+    else:
+        candidates.extend(
+            [
+                manifest_value,
+                output_dir / manifest_value,
+                output_dir.parent / manifest_value,
+            ]
+        )
+    candidates.append(output_dir / "manifests" / f"{summary['mode']}_{summary['run_id']}.jsonl")
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(
+        "Missing manifest. Checked: " + ", ".join(str(candidate) for candidate in candidates)
+    )
