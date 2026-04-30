@@ -587,6 +587,35 @@ rule count.
   evidence mismatches, unsupported finding IDs, validation failed checks, compact finding summaries,
   failure reasons, and pass/fail status
 
+## Compliance Coverage Outputs
+
+Default path:
+`source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/compliance_coverage_results.json`
+
+The `compliance-coverage` command reads:
+
+- a versioned compliance rule pack
+- a coverage matrix, defaulting to `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
+- compliance-review eval cases, defaulting to `config/compliance_review_eval_seed.json`
+- reviewer-ready rule-claim links for the same source set and rule pack
+
+The coverage matrix has schema version `compliance-rule-pack-coverage-v0` and contains one
+`coverage_items` row per rule. Each row includes rule ID, obligation area, expected package
+evidence, source record IDs, source-claim terms, and eval case IDs.
+
+`compliance_coverage_results.json` has schema version `compliance-coverage-results-v0` and records:
+
+- rule-pack identity, coverage-matrix path, eval file, rule-claim link path, and source set
+- rule count, coverage item count, eval case count, and rule-claim link count
+- rules without coverage items
+- rules without compliance-review eval cases
+- rules without source-claim links
+- rules whose coverage-matrix source records do not match current rule-claim links
+- links per rule
+- gate checks for rule-pack validity, matrix identity, matrix rule coverage, required fields,
+  eval-case rule coverage, eval-case ID references, rule-claim readiness, source-claim link
+  coverage, and matrix/source-record agreement
+
 ## Derived Extraction Outputs
 
 Path: `source_library/derived/<source_set_id>/`
@@ -1039,7 +1068,8 @@ Graph edge relationships include:
 The `phase-eval` command writes `phase_eval_results.json` in the same directory. It evaluates
 catalog capture, extraction, retrieval, evidence graph, claim extraction, and rule-claim binding as
 separate phases and records phase blockers so downstream compliance review cannot hide an upstream
-failure. When
+failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
+also includes a `compliance_coverage` phase for matrix, source-claim, and eval-case coverage. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The evidence-graph and claim-extraction

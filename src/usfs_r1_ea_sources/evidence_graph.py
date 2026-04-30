@@ -345,6 +345,10 @@ def run_phase_aligned_eval(
     rule_claim_summary = (
         _read_json(rule_claim_summary_path) if rule_claim_summary_path.exists() else None
     )
+    compliance_coverage_path = rule_claim_summary_path.parent / "compliance_coverage_results.json"
+    compliance_coverage = (
+        _read_json(compliance_coverage_path) if compliance_coverage_path.exists() else None
+    )
 
     phases = [
         _phase(
@@ -466,6 +470,61 @@ def run_phase_aligned_eval(
             },
         ),
     ]
+    if compliance_coverage is not None:
+        coverage_source_set_id = compliance_coverage.get("source_set_id")
+        coverage_source_set_matches = coverage_source_set_id == source_set_id
+        rule_claim_rule_pack_id = (rule_claim_summary or {}).get("rule_pack_id")
+        rule_claim_rule_pack_version = (rule_claim_summary or {}).get("rule_pack_version")
+        coverage_rule_pack_matches = (
+            compliance_coverage.get("rule_pack_id") == rule_claim_rule_pack_id
+            and compliance_coverage.get("rule_pack_version") == rule_claim_rule_pack_version
+        )
+        coverage_passed = bool(compliance_coverage.get("passed"))
+        coverage_phase_passed = (
+            coverage_passed and coverage_source_set_matches and coverage_rule_pack_matches
+        )
+        phases.append(
+            _phase(
+                "compliance_coverage",
+                passed=coverage_phase_passed,
+                reviewer_ready=bool(
+                    coverage_phase_passed and compliance_coverage.get("reviewer_ready")
+                ),
+                details={
+                    "coverage_path": str(compliance_coverage_path),
+                    "coverage_passed": coverage_passed,
+                    "coverage_reviewer_ready": bool(compliance_coverage.get("reviewer_ready")),
+                    "expected_source_set_id": source_set_id,
+                    "coverage_source_set_id": coverage_source_set_id,
+                    "source_set_matches": coverage_source_set_matches,
+                    "expected_rule_pack_id": rule_claim_rule_pack_id,
+                    "expected_rule_pack_version": rule_claim_rule_pack_version,
+                    "rule_pack_id": compliance_coverage.get("rule_pack_id"),
+                    "rule_pack_version": compliance_coverage.get("rule_pack_version"),
+                    "rule_pack_matches": coverage_rule_pack_matches,
+                    "rule_count": compliance_coverage.get("rule_count", 0),
+                    "coverage_item_count": compliance_coverage.get("coverage_item_count", 0),
+                    "eval_case_count": compliance_coverage.get("eval_case_count", 0),
+                    "rule_claim_link_count": compliance_coverage.get("rule_claim_link_count", 0),
+                    "rules_without_coverage_items": compliance_coverage.get(
+                        "rules_without_coverage_items",
+                        [],
+                    ),
+                    "rules_without_eval_cases": compliance_coverage.get(
+                        "rules_without_eval_cases",
+                        [],
+                    ),
+                    "rules_without_source_claim_links": compliance_coverage.get(
+                        "rules_without_source_claim_links",
+                        [],
+                    ),
+                    "source_record_mismatch_rule_ids": compliance_coverage.get(
+                        "source_record_mismatch_rule_ids",
+                        [],
+                    ),
+                },
+            )
+        )
     if review_dir is not None:
         compliance_summary = (compliance_review or {}).get("summary", {})
         compliance_source_set_id = compliance_summary.get("source_set_id")

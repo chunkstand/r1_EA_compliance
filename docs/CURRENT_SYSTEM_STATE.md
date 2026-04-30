@@ -31,8 +31,8 @@ The current catalog validation passes. The captured-library integrity test suite
 Last verified locally on 2026-04-30.
 
 - Active source set: `source-set-e364ea220cffd938`
-- Base phase eval: passed, `6/6` phases reviewer-ready
-- Compliance phase eval: passed, `7/7` phases reviewer-ready for
+- Base phase eval: passed, `7/7` phases reviewer-ready
+- Compliance phase eval: passed, `8/8` phases reviewer-ready for
   `smoke-compliance-review-v0-hardened`
 - Catalog: `147` source rows, `131` unique raw artifacts
 - Extraction: `147/147` selected sources extracted, validation passed
@@ -42,14 +42,16 @@ Last verified locally on 2026-04-30.
 - Source claim graph: `35,348` claims, `8,479` entities, `90,153` nodes, `231,214`
   edges, validation passed, reviewer-ready
 - Claim eval seed: passed, `2/2` cases
-- Rule-claim binding: `25` links across `5/5` seed compliance rules, `0` explicit no-claim
+- Rule-claim binding: `35` links across `7/7` seed compliance rules, `0` explicit no-claim
   gaps, validation passed, reviewer-ready
-- Rule-claim eval seed: passed, `5/5` cases
+- Rule-claim eval seed: passed, `7/7` cases
+- Compliance coverage: `7/7` rules covered by matrix rows, source-claim links, and compliance
+  review eval cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
-- Unit suite: `113` tests passed
+- Unit suite: `116` tests passed
 
 The verification set was:
 
@@ -74,16 +76,21 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_libra
 printf '%s\n' \
   'Purpose and Need' \
   '' \
-  'The proposed action improves trail access and includes alternatives, affected environment, environmental effects, consultation, mitigation, and a finding of no significant impact.' \
-  > /tmp/ea-package-v0-smoke.txt
+  'The proposed action improves trail access and includes alternatives, affected environment, environmental effects, consultation, public involvement through scoping and comment opportunities, mitigation, monitoring and enforcement for mitigation commitments, and a finding of no significant impact.' \
+  > /tmp/ea-package-v02-smoke.txt
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
-  --package-path /tmp/ea-package-v0-smoke.txt \
+  --package-path /tmp/ea-package-v02-smoke.txt \
   --output-dir source_library \
   --review-id smoke-ea-review-v0-hardened
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
-  --package-path /tmp/ea-package-v0-smoke.txt \
+  --package-path /tmp/ea-package-v02-smoke.txt \
   --output-dir source_library \
   --review-id smoke-compliance-review-v0-hardened
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --coverage-matrix config/compliance_rule_pack_coverage_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
@@ -201,6 +208,10 @@ package fixtures through the real compliance-review path and scores expected rul
 types, evidence presence, source-claim links, citation coverage, unsupported finding IDs, and
 finding-graph coverage.
 
+Compliance Coverage V0 is implemented through `compliance-coverage`. It validates the coverage
+matrix, rule-pack identity, eval-case coverage, current source-claim links, and source-record
+alignment for each compliance rule.
+
 Current state:
 
 - Raw source documents are captured and cataloged.
@@ -215,18 +226,22 @@ Current state:
   chunk and source-text offsets.
 - The rule-claim binding layer links compliance rules to validated source claims and records explicit
   no-claim gaps when no validated source claim matches a rule.
-- Phase eval reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and
-  rule-claim-binding readiness separately.
+- Phase eval reports catalog, extraction, retrieval, evidence-graph, claim-extraction,
+  rule-claim-binding, and compliance-coverage readiness separately when coverage output exists.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review eval runs deterministic package fixtures and emits
   `compliance_review_eval_results.json`.
+- Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links, and
+  compliance review eval cases.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
 - A seed compliance review eval file exists at `config/compliance_review_eval_seed.json`.
+- A seed compliance coverage matrix exists at
+  `config/compliance_rule_pack_coverage_nepa_ea_v0.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
@@ -538,15 +553,19 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - evidence graph
 - claim extraction
 - rule-claim binding
+- optional compliance coverage when `compliance_coverage_results.json` exists beside the
+  rule-claim outputs
 - optional compliance review when `--review-id` or `--review-dir` is passed
 
-When a compliance review phase is included, `phase-eval` requires the review report to exist,
-validation to pass, the review ID to match when supplied, and the review source set to match the
-evaluated source set.
+When a compliance coverage phase is included, `phase-eval` requires the matrix gate to pass, the
+rule pack to match, and the coverage source set to match the evaluated source set. When a
+compliance review phase is included, `phase-eval` requires the review report to exist, validation to
+pass, the review ID to match when supplied, and the review source set to match the evaluated source
+set.
 
-Next downstream layers are broader rule-pack coverage, reviewer adjudication workflow, embeddings
-or reranking for recall improvement, and model-assisted synthesis that is constrained by evidence
-and validation gates.
+Next downstream layers are reviewer adjudication workflow, broader real-package eval coverage,
+embeddings or reranking for recall improvement, and model-assisted synthesis that is constrained by
+evidence and validation gates.
 
 ## Verification Commands
 
@@ -629,6 +648,16 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --eval-file config/rule_claim_link_eval_seed.json
+```
+
+Run the rule-pack coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --coverage-matrix config/compliance_rule_pack_coverage_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
 ```
 
 Run the seed compliance review eval:

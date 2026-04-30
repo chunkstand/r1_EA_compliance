@@ -11,9 +11,11 @@ import unittest
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.compliance_review import run_compliance_review_eval
 from usfs_r1_ea_sources.compliance_review import validate_rule_pack
+from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
+from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
 
 class ComplianceReviewTests(unittest.TestCase):
@@ -366,6 +368,147 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(second.summary["passed"])
             self.assertEqual(second.summary["cases"][0]["actual_statuses"]["mitigation"], "gap")
 
+    def test_compliance_coverage_scores_matrix_links_and_eval_cases(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            link_result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "coverage-case",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access "
+                            "and mitigation measures support a finding of no significant impact."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                    }
+                ],
+            )
+            coverage_path = _write_coverage_matrix(Path(tmp))
+
+            result = run_compliance_coverage(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                coverage_matrix_path=coverage_path,
+                eval_file=eval_path,
+                links_path=link_result.links_path,
+                results_dir=Path(tmp) / "coverage-results",
+            )
+
+            self.assertTrue(result.output_path.exists())
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["rule_count"], 2)
+            self.assertEqual(result.summary["coverage_item_count"], 2)
+            self.assertGreaterEqual(result.summary["rule_claim_link_count"], 2)
+            self.assertEqual(result.summary["rules_without_coverage_items"], [])
+            self.assertEqual(result.summary["rules_without_eval_cases"], [])
+            self.assertEqual(result.summary["rules_without_source_claim_links"], [])
+
+    def test_compliance_coverage_reports_missing_rule_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            link_result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "coverage-case",
+                        "package_text": "Purpose and Need",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "gap",
+                        },
+                    }
+                ],
+            )
+            coverage_path = _write_coverage_matrix(Path(tmp), rule_ids=["purpose_need"])
+
+            result = run_compliance_coverage(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                coverage_matrix_path=coverage_path,
+                eval_file=eval_path,
+                links_path=link_result.links_path,
+                results_dir=Path(tmp) / "coverage-results",
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["rules_without_coverage_items"], ["mitigation"])
+            self.assertFalse(_check(result.summary, "coverage_matrix_covers_every_rule")["passed"])
+
+    def test_phase_eval_rejects_stale_compliance_coverage_source_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            link_result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "coverage-case",
+                        "package_text": "Purpose and Need. Mitigation measures support a FONSI.",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                    }
+                ],
+            )
+            coverage_result = run_compliance_coverage(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                coverage_matrix_path=_write_coverage_matrix(Path(tmp)),
+                eval_file=eval_path,
+                links_path=link_result.links_path,
+            )
+            coverage_summary = json.loads(coverage_result.output_path.read_text(encoding="utf-8"))
+            coverage_summary["source_set_id"] = "source-set-other"
+            coverage_result.output_path.write_text(
+                json.dumps(coverage_summary, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+            )
+
+            self.assertFalse(phase_result.summary["reviewer_ready"])
+            coverage_phase = _phase(phase_result.summary, "compliance_coverage")
+            self.assertFalse(coverage_phase["passed"])
+            self.assertFalse(coverage_phase["reviewer_ready"])
+            self.assertTrue(coverage_phase["details"]["coverage_passed"])
+            self.assertFalse(coverage_phase["details"]["source_set_matches"])
+
     def test_phase_eval_can_include_compliance_review_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -657,6 +800,45 @@ def _write_compliance_eval_file(
     eval_path = path or directory / "compliance-eval.json"
     eval_path.write_text(json.dumps(cases, sort_keys=True), encoding="utf-8")
     return eval_path
+
+
+def _write_coverage_matrix(directory: Path, rule_ids: list[str] | None = None) -> Path:
+    items = [
+        {
+            "rule_id": "purpose_need",
+            "obligation_area": "Purpose and need",
+            "expected_package_evidence": "Purpose and need or proposed action text.",
+            "source_record_ids": ["R1EA-001"],
+            "source_claim_terms": ["purpose", "need"],
+            "eval_case_ids": ["coverage-case"],
+        },
+        {
+            "rule_id": "mitigation",
+            "obligation_area": "Mitigation",
+            "expected_package_evidence": "Mitigation or FONSI support text.",
+            "source_record_ids": ["R1EA-002"],
+            "source_claim_terms": ["mitigation"],
+            "eval_case_ids": ["coverage-case"],
+        },
+    ]
+    if rule_ids is not None:
+        wanted = set(rule_ids)
+        items = [item for item in items if item["rule_id"] in wanted]
+    path = directory / "coverage-matrix.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "compliance-rule-pack-coverage-v0",
+                "rule_pack_id": "unit-nepa-ea",
+                "rule_pack_version": "0.1.0",
+                "title": "Unit coverage matrix",
+                "coverage_items": items,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 def _rule_pack() -> dict:

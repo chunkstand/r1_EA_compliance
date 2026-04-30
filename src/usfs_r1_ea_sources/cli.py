@@ -10,6 +10,8 @@ from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
 from .claim_extraction import build_claim_extraction
 from .claim_extraction import default_claims_path
 from .claim_extraction import run_claim_eval
+from .compliance_coverage import DEFAULT_COVERAGE_MATRIX_PATH
+from .compliance_coverage import run_compliance_coverage
 from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .compliance_review import DEFAULT_RULE_PACK_PATH
 from .compliance_review import run_compliance_review
@@ -417,6 +419,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-document Docling timeout for PDF EA package fixtures. Use 0 to disable.",
     )
 
+    compliance_coverage = subparsers.add_parser(
+        "compliance-coverage",
+        help="Validate rule-pack coverage across coverage matrix, source-claim links, and eval cases.",
+    )
+    compliance_coverage.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    compliance_coverage.add_argument("--source-set-id")
+    compliance_coverage.add_argument("--links-path", type=Path)
+    compliance_coverage.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    compliance_coverage.add_argument(
+        "--coverage-matrix",
+        default=DEFAULT_COVERAGE_MATRIX_PATH,
+        type=Path,
+    )
+    compliance_coverage.add_argument(
+        "--eval-file",
+        default=DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH,
+        type=Path,
+    )
+    compliance_coverage.add_argument("--results-dir", type=Path)
+
     return parser
 
 
@@ -634,6 +656,19 @@ def main(argv: list[str] | None = None) -> int:
             chunk_overlap_chars=args.chunk_overlap_chars,
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "compliance-coverage":
+        result = run_compliance_coverage(
+            output_dir=args.output_dir,
+            rule_pack_path=args.rule_pack,
+            coverage_matrix_path=args.coverage_matrix,
+            eval_file=args.eval_file,
+            source_set_id=args.source_set_id,
+            links_path=args.links_path,
+            results_dir=args.results_dir,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1

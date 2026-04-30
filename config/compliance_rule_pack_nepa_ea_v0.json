@@ -1,8 +1,8 @@
 {
   "schema_version": "compliance-rule-pack-v0",
   "rule_pack_id": "nepa-ea-v0",
-  "version": "0.1.0",
-  "title": "NEPA Environmental Assessment Rule Pack V0",
+  "version": "0.2.0",
+  "title": "NEPA Environmental Assessment Rule Pack V0.2",
   "description": "Seed, evidence-gated rule pack for deterministic NEPA EA package review. Rules define the review question and retrieval requirements; findings are valid only when tied to source-library evidence.",
   "domain": "NEPA Environmental Assessment",
   "jurisdiction": "USDA Forest Service Region 1 source-library corpus",
@@ -56,6 +56,18 @@
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
     },
     {
+      "id": "public_involvement",
+      "title": "Public involvement opportunities are described",
+      "question": "Does the EA package describe public involvement, scoping, or comment opportunities?",
+      "requirement": "The EA package should identify public involvement, scoping, or comment opportunities when they are part of the review process.",
+      "severity": "medium",
+      "package_query": "public involvement scoping comment opportunities",
+      "package_terms": ["public involvement", "scoping", "comment"],
+      "source_query": "public involvement scoping comment environmental assessment",
+      "source_filters": {"document_role": "regulation"},
+      "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
+    },
+    {
       "id": "fonsi_mitigation",
       "title": "FONSI and mitigation support are traceable",
       "question": "Does the EA package support the FONSI or decision notice with mitigation rationale where applicable?",
@@ -64,6 +76,18 @@
       "package_query": "finding of no significant impact FONSI mitigation decision notice",
       "package_terms": ["finding of no significant impact", "FONSI", "mitigation", "decision notice"],
       "source_query": "finding of no significant impact mitigation monitoring enforcement",
+      "source_filters": {"document_role": "regulation"},
+      "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
+    },
+    {
+      "id": "mitigation_monitoring",
+      "title": "Mitigation monitoring and enforcement are traceable",
+      "question": "Does the EA package identify monitoring or enforcement for mitigation commitments where mitigation is used?",
+      "requirement": "When mitigation commitments support the EA outcome, monitoring or enforcement responsibilities should be traceable.",
+      "severity": "medium",
+      "package_query": "mitigation monitoring enforcement commitments",
+      "package_terms": ["mitigation", "monitoring", "enforcement"],
+      "source_query": "mitigation monitoring enforcement commitments environmental assessment",
       "source_filters": {"document_role": "regulation"},
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
     }

@@ -1,19 +1,21 @@
 [
   {
     "id": "all-core-rules-pass",
-    "package_text": "Purpose and Need\n\nThe proposed action improves trail access and includes alternatives, the no action alternative, affected environment, environmental effects, consultation under environmental review laws, and mitigation supporting a finding of no significant impact.",
+    "package_text": "Purpose and Need\n\nThe proposed action improves trail access and includes alternatives, the no action alternative, affected environment, environmental effects, consultation under environmental review laws, public involvement through scoping and comment opportunities, mitigation supporting a finding of no significant impact, and monitoring and enforcement for mitigation commitments.",
     "expected_statuses": {
       "purpose_need": "pass",
       "alternatives": "pass",
       "effects_analysis": "pass",
       "integrated_compliance": "pass",
-      "fonsi_mitigation": "pass"
+      "public_involvement": "pass",
+      "fonsi_mitigation": "pass",
+      "mitigation_monitoring": "pass"
     },
     "expected_finding_status_counts": {
-      "pass": 5
+      "pass": 7
     },
     "expected_unsupported_finding_ids": [],
-    "min_findings": 5
+    "min_findings": 7
   },
   {
     "id": "purpose-only-produces-package-gaps",
@@ -23,14 +25,16 @@
       "alternatives": "pass",
       "effects_analysis": "gap",
       "integrated_compliance": "gap",
-      "fonsi_mitigation": "gap"
+      "public_involvement": "gap",
+      "fonsi_mitigation": "gap",
+      "mitigation_monitoring": "gap"
     },
     "expected_finding_status_counts": {
-      "gap": 3,
+      "gap": 5,
       "pass": 2
     },
     "expected_unsupported_finding_ids": [],
-    "min_findings": 5
+    "min_findings": 7
   },
   {
     "id": "unrelated-package-produces-all-gaps",
@@ -40,12 +44,14 @@
       "alternatives": "gap",
       "effects_analysis": "gap",
       "integrated_compliance": "gap",
-      "fonsi_mitigation": "gap"
+      "public_involvement": "gap",
+      "fonsi_mitigation": "gap",
+      "mitigation_monitoring": "gap"
     },
     "expected_finding_status_counts": {
-      "gap": 5
+      "gap": 7
     },
     "expected_unsupported_finding_ids": [],
-    "min_findings": 5
+    "min_findings": 7
   }
 ]

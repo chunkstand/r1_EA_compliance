@@ -1,0 +1,92 @@
+{
+  "schema_version": "compliance-rule-pack-coverage-v0",
+  "rule_pack_id": "nepa-ea-v0",
+  "rule_pack_version": "0.2.0",
+  "title": "NEPA EA V0.2 Rule Pack Coverage Matrix",
+  "coverage_items": [
+    {
+      "rule_id": "purpose_need",
+      "obligation_area": "EA purpose and need",
+      "expected_package_evidence": "Text identifying the purpose and need, need for action, or proposed action.",
+      "source_record_ids": ["R1EA-013"],
+      "source_claim_terms": ["purpose", "need", "proposed action"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "alternatives",
+      "obligation_area": "Alternatives considered",
+      "expected_package_evidence": "Text describing alternatives, no action, or the proposed action.",
+      "source_record_ids": ["R1EA-001", "R1EA-008", "R1EA-018"],
+      "source_claim_terms": ["alternatives", "proposed action"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "effects_analysis",
+      "obligation_area": "Affected environment and environmental effects",
+      "expected_package_evidence": "Text analyzing affected environment, environmental effects, consequences, or impacts.",
+      "source_record_ids": ["R1EA-008", "R1EA-013", "R1EA-018"],
+      "source_claim_terms": ["environmental effects", "affected environment", "impacts"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "integrated_compliance",
+      "obligation_area": "Related environmental compliance and consultation",
+      "expected_package_evidence": "Text addressing consultation or related environmental review laws.",
+      "source_record_ids": ["R1EA-071"],
+      "source_claim_terms": ["compliance", "consultation", "environmental review"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "public_involvement",
+      "obligation_area": "Public involvement, scoping, and comment",
+      "expected_package_evidence": "Text describing public involvement, scoping, or comment opportunities.",
+      "source_record_ids": ["R1EA-015", "R1EA-025"],
+      "source_claim_terms": ["public involvement", "scoping", "comment"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "fonsi_mitigation",
+      "obligation_area": "FONSI, decision notice, and mitigation rationale",
+      "expected_package_evidence": "Text tracing FONSI, decision notice, or mitigation rationale.",
+      "source_record_ids": ["R1EA-014"],
+      "source_claim_terms": ["finding of no significant impact", "mitigation", "decision notice"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    },
+    {
+      "rule_id": "mitigation_monitoring",
+      "obligation_area": "Mitigation monitoring and enforcement",
+      "expected_package_evidence": "Text identifying monitoring or enforcement for mitigation commitments.",
+      "source_record_ids": ["R1EA-008", "R1EA-018"],
+      "source_claim_terms": ["mitigation", "monitoring", "enforcement"],
+      "eval_case_ids": [
+        "all-core-rules-pass",
+        "purpose-only-produces-package-gaps",
+        "unrelated-package-produces-all-gaps"
+      ]
+    }
+  ]
+}

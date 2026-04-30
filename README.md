@@ -33,6 +33,7 @@ domain-specific heuristics.
 - `config/claim_eval_seed.json`
 - `config/rule_claim_link_eval_seed.json`
 - `config/compliance_review_eval_seed.json`
+- `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 
@@ -420,7 +421,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
 `rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
 writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
 carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
-and exact source offsets. The current full corpus links all `5/5` seed rules with `25` validated
+and exact source offsets. The current full corpus links all `7/7` seed rules with `35` validated
 links and no explicit gaps.
 
 Run the seed rule-claim eval gate:
@@ -435,6 +436,21 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
 `rule-claim-eval` revalidates current link artifacts before scoring cases and refuses stale,
 tampered, or non-reviewer-ready bindings.
 
+Run rule-pack coverage:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --coverage-matrix config/compliance_rule_pack_coverage_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
+```
+
+`compliance-coverage` validates that every rule has a coverage-matrix row, current source-claim
+links, and compliance-review eval coverage. It reports uncovered rules, rules without eval cases,
+rules without source-claim links, and coverage-matrix source records that do not match current
+rule-claim bindings.
+
 Run phase-aligned readiness evaluation:
 
 ```bash
@@ -444,9 +460,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 
 This reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and rule-claim
 binding readiness separately so validation failures are not hidden inside a single aggregate score.
-Pass `--review-id <review-id>` after a compliance review to include `compliance_review` as an
-additional phase gate. The compliance phase requires the review source set to match the evaluated
-source set.
+When `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
+`compliance_coverage` phase for matrix, source-claim, and eval-case coverage. Pass
+`--review-id <review-id>` after a compliance review to include `compliance_review` as an additional
+phase gate. The compliance phase requires the review source set to match the evaluated source set.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

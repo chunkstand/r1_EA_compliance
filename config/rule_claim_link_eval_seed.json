@@ -24,9 +24,21 @@
     "min_links": 1
   },
   {
+    "id": "public-involvement-rule-claim-link",
+    "rule_id": "public_involvement",
+    "expected_terms": ["public", "scoping"],
+    "min_links": 1
+  },
+  {
     "id": "fonsi-mitigation-rule-claim-link",
     "rule_id": "fonsi_mitigation",
     "expected_terms": ["mitigation"],
+    "min_links": 1
+  },
+  {
+    "id": "mitigation-monitoring-rule-claim-link",
+    "rule_id": "mitigation_monitoring",
+    "expected_terms": ["mitigation", "monitoring"],
     "min_links": 1
   }
 ]
