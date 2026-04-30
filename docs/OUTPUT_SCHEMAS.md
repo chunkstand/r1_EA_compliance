@@ -892,14 +892,19 @@ claim match. A rule is covered only when it has at least one validated link or o
 - rule pack validity
 - source claims are reviewer-ready and still validate
 - link and gap files exist
+- link and gap records contain required fields and schema versions
 - link IDs and gap IDs are unique
 - link and gap records match the requested source set and rule-pack version
+- link IDs and gap IDs are deterministic for the current source set, rule pack, and claim/gap
+- link and gap rule metadata matches the current rule pack
 - every rule has a validated claim link or explicit no-claim gap
-- gap records are explicit and do not overlap linked rules
+- gap records are explicit, use supported gap reasons, and do not overlap linked rules
 - links resolve to current source claims
 - link provenance fields match current claim records
 - links still satisfy rule source filters
-- link scores, ranks, matched terms, and claim types are supported
+- link scores and matched terms recompute from the current rule and claim text
+- link ranks are contiguous per rule
+- link claim types are supported
 - SQLite counts match JSONL outputs
 
 `summary.json` includes source set, rule-pack identity, top-k, rule count, claim count, link count,

@@ -30,6 +30,49 @@ DEFAULT_TOP_K = 5
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]*")
 SUPPORTED_RULE_CLAIM_EVAL_FILTERS = {"rule_id", "claim_type", "source_record_id"}
+REQUIRED_LINK_FIELDS = {
+    "artifact_path",
+    "artifact_sha256",
+    "authority_level",
+    "chunk_char_end",
+    "chunk_char_start",
+    "chunk_id",
+    "citation_label",
+    "claim_id",
+    "claim_text",
+    "claim_type",
+    "content_sha256",
+    "document_role",
+    "link_id",
+    "matched_terms",
+    "parser_name",
+    "parser_version",
+    "rank",
+    "rule_id",
+    "rule_pack_id",
+    "rule_pack_version",
+    "rule_query",
+    "rule_source_filters",
+    "schema_version",
+    "score",
+    "source_char_end",
+    "source_char_start",
+    "source_record_id",
+    "source_set_id",
+    "validation_status",
+}
+REQUIRED_GAP_FIELDS = {
+    "gap_id",
+    "reason",
+    "rule_id",
+    "rule_pack_id",
+    "rule_pack_version",
+    "rule_query",
+    "rule_source_filters",
+    "schema_version",
+    "source_set_id",
+    "validation_status",
+}
 STOPWORDS = {
     "and",
     "are",
@@ -243,15 +286,19 @@ def validate_rule_claim_links(
             "details": {"links_path": str(links_path), "gaps_path": str(gaps_path)},
         },
         _check_links_loaded(links, gaps),
+        _check_required_link_fields(links),
+        _check_required_gap_fields(gaps),
         _check_unique_ids(links, key="link_id", check_name="rule_claim_link_ids_are_unique"),
         _check_unique_ids(gaps, key="gap_id", check_name="rule_claim_gap_ids_are_unique"),
         _check_link_rule_pack_fields(source_set_id, rule_pack, links, gaps),
+        _check_link_and_gap_identities(source_set_id, rule_pack, links, gaps),
         _check_rule_coverage(rule_pack, links, gaps),
         _check_gap_records(rule_pack, links, gaps),
         _check_links_resolve_to_claims(claims, links),
         _check_link_claim_fields_match_claims(claims, links),
         _check_links_match_rule_filters(rule_pack, links),
         _check_link_scores_and_terms(rule_pack, links),
+        _check_link_ranks_are_contiguous(links),
     ]
     return {
         "schema_version": RULE_CLAIM_LINK_VALIDATION_SCHEMA_VERSION,
@@ -563,18 +610,15 @@ def _gap_record(
     created_at: str,
     reason: str,
 ) -> dict:
-    material = "|".join(
-        [
-            source_set_id,
-            str(rule_pack["rule_pack_id"]),
-            str(rule_pack["version"]),
-            str(rule["id"]),
-            reason,
-        ]
-    )
     return {
         "schema_version": RULE_CLAIM_GAP_SCHEMA_VERSION,
-        "gap_id": f"rule_claim_gap:{hashlib.sha256(material.encode('utf-8')).hexdigest()[:24]}",
+        "gap_id": _gap_id(
+            source_set_id=source_set_id,
+            rule_pack_id=str(rule_pack["rule_pack_id"]),
+            rule_pack_version=str(rule_pack["version"]),
+            rule_id=str(rule["id"]),
+            reason=reason,
+        ),
         "source_set_id": source_set_id,
         "rule_pack_id": rule_pack["rule_pack_id"],
         "rule_pack_version": rule_pack["version"],
@@ -594,6 +638,50 @@ def _check_links_loaded(links: list[dict], gaps: list[dict]) -> dict:
         "name": "rule_claim_links_or_gaps_loaded",
         "passed": bool(links or gaps),
         "details": {"link_count": len(links), "gap_count": len(gaps)},
+    }
+
+
+def _check_required_link_fields(links: list[dict]) -> dict:
+    failures = []
+    for link in links:
+        missing = sorted(field for field in REQUIRED_LINK_FIELDS if link.get(field) in (None, ""))
+        if missing:
+            failures.append({"link_id": link.get("link_id"), "missing_fields": missing})
+        if link.get("schema_version") != RULE_CLAIM_LINK_SCHEMA_VERSION:
+            failures.append(
+                {
+                    "link_id": link.get("link_id"),
+                    "field": "schema_version",
+                    "expected": RULE_CLAIM_LINK_SCHEMA_VERSION,
+                    "actual": link.get("schema_version"),
+                }
+            )
+    return {
+        "name": "rule_claim_links_have_required_fields",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
+    }
+
+
+def _check_required_gap_fields(gaps: list[dict]) -> dict:
+    failures = []
+    for gap in gaps:
+        missing = sorted(field for field in REQUIRED_GAP_FIELDS if gap.get(field) in (None, ""))
+        if missing:
+            failures.append({"gap_id": gap.get("gap_id"), "missing_fields": missing})
+        if gap.get("schema_version") != RULE_CLAIM_GAP_SCHEMA_VERSION:
+            failures.append(
+                {
+                    "gap_id": gap.get("gap_id"),
+                    "field": "schema_version",
+                    "expected": RULE_CLAIM_GAP_SCHEMA_VERSION,
+                    "actual": gap.get("schema_version"),
+                }
+            )
+    return {
+        "name": "rule_claim_gaps_have_required_fields",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
     }
 
 
@@ -638,6 +726,84 @@ def _check_link_rule_pack_fields(
     }
 
 
+def _check_link_and_gap_identities(
+    source_set_id: str,
+    rule_pack: dict,
+    links: list[dict],
+    gaps: list[dict],
+) -> dict:
+    rules_by_id = {str(rule["id"]): rule for rule in rule_pack.get("rules", [])}
+    failures = []
+    for link in links:
+        rule_id = str(link.get("rule_id") or "")
+        rule = rules_by_id.get(rule_id)
+        expected_link_id = _link_id(
+            source_set_id=source_set_id,
+            rule_pack_id=str(rule_pack.get("rule_pack_id") or ""),
+            rule_pack_version=str(rule_pack.get("version") or ""),
+            rule_id=rule_id,
+            claim_id=str(link.get("claim_id") or ""),
+        )
+        if link.get("link_id") != expected_link_id:
+            failures.append(
+                {
+                    "id": link.get("link_id"),
+                    "field": "link_id",
+                    "expected": expected_link_id,
+                    "actual": link.get("link_id"),
+                }
+            )
+        if rule and not _rule_metadata_matches_record(rule, link):
+            failures.append(
+                {
+                    "id": link.get("link_id"),
+                    "field": "rule_metadata",
+                    "expected_rule_id": rule_id,
+                }
+            )
+    for gap in gaps:
+        rule_id = str(gap.get("rule_id") or "")
+        rule = rules_by_id.get(rule_id)
+        expected_gap_id = _gap_id(
+            source_set_id=source_set_id,
+            rule_pack_id=str(rule_pack.get("rule_pack_id") or ""),
+            rule_pack_version=str(rule_pack.get("version") or ""),
+            rule_id=rule_id,
+            reason=str(gap.get("reason") or ""),
+        )
+        if gap.get("gap_id") != expected_gap_id:
+            failures.append(
+                {
+                    "id": gap.get("gap_id"),
+                    "field": "gap_id",
+                    "expected": expected_gap_id,
+                    "actual": gap.get("gap_id"),
+                }
+            )
+        if rule and not _rule_metadata_matches_record(rule, gap):
+            failures.append(
+                {
+                    "id": gap.get("gap_id"),
+                    "field": "rule_metadata",
+                    "expected_rule_id": rule_id,
+                }
+            )
+    return {
+        "name": "rule_claim_record_identities_are_deterministic",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
+    }
+
+
+def _rule_metadata_matches_record(rule: dict, record: dict) -> bool:
+    return (
+        record.get("rule_title") == rule.get("title")
+        and record.get("rule_query") == _rule_query(rule)
+        and record.get("rule_requirement") == rule.get("requirement")
+        and record.get("rule_source_filters") == (rule.get("source_filters") or {})
+    )
+
+
 def _check_rule_coverage(rule_pack: dict, links: list[dict], gaps: list[dict]) -> dict:
     expected = {str(rule["id"]) for rule in rule_pack.get("rules", [])}
     linked = {str(link.get("rule_id") or "") for link in links}
@@ -667,6 +833,8 @@ def _check_gap_records(rule_pack: dict, links: list[dict], gaps: list[dict]) -> 
             failures.append({"gap_id": gap.get("gap_id"), "reason": "linked_rule_has_gap"})
         if gap.get("validation_status") != "explicit_no_claim_gap":
             failures.append({"gap_id": gap.get("gap_id"), "reason": "invalid_status"})
+        if gap.get("reason") != "no_validated_source_claim_match":
+            failures.append({"gap_id": gap.get("gap_id"), "reason": "unsupported_gap_reason"})
     return {
         "name": "rule_claim_gap_records_are_explicit",
         "passed": not failures,
@@ -764,6 +932,11 @@ def _check_link_scores_and_terms(rule_pack: dict, links: list[dict]) -> dict:
     for link in links:
         rule = rules_by_id.get(str(link.get("rule_id") or ""))
         terms = _tokenize(_rule_query(rule or {}))
+        expected_score = None
+        expected_terms = []
+        if rule:
+            expected_score, expected_terms = _score_rule_claim(rule, link, terms=terms, query=_rule_query(rule))
+            expected_score = round(expected_score, 6)
         try:
             score = float(link.get("score"))
             rank = int(link.get("rank"))
@@ -774,10 +947,55 @@ def _check_link_scores_and_terms(rule_pack: dict, links: list[dict]) -> dict:
             failures.append({"link_id": link.get("link_id"), "reason": "non_positive_score_or_rank"})
         if terms and not link.get("matched_terms"):
             failures.append({"link_id": link.get("link_id"), "reason": "missing_matched_terms"})
+        if expected_score is not None and round(score, 6) != expected_score:
+            failures.append(
+                {
+                    "link_id": link.get("link_id"),
+                    "reason": "score_mismatch",
+                    "expected": expected_score,
+                    "actual": round(score, 6),
+                }
+            )
+        if rule and list(link.get("matched_terms") or []) != expected_terms:
+            failures.append(
+                {
+                    "link_id": link.get("link_id"),
+                    "reason": "matched_terms_mismatch",
+                    "expected": expected_terms,
+                    "actual": link.get("matched_terms"),
+                }
+            )
         if link.get("claim_type") not in SUPPORTED_CLAIM_TYPES:
             failures.append({"link_id": link.get("link_id"), "reason": "unsupported_claim_type"})
     return {
         "name": "rule_claim_link_scores_are_supported",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
+    }
+
+
+def _check_link_ranks_are_contiguous(links: list[dict]) -> dict:
+    ranks_by_rule: dict[str, list[int]] = defaultdict(list)
+    failures = []
+    for link in links:
+        try:
+            ranks_by_rule[str(link.get("rule_id") or "")].append(int(link.get("rank")))
+        except (TypeError, ValueError):
+            failures.append({"link_id": link.get("link_id"), "reason": "invalid_rank"})
+    for rule_id, ranks in ranks_by_rule.items():
+        expected = list(range(1, len(ranks) + 1))
+        actual = sorted(ranks)
+        if actual != expected:
+            failures.append(
+                {
+                    "rule_id": rule_id,
+                    "reason": "non_contiguous_ranks",
+                    "expected": expected,
+                    "actual": actual,
+                }
+            )
+    return {
+        "name": "rule_claim_link_ranks_are_contiguous",
         "passed": not failures,
         "details": {"failures": failures[:50], "failure_count": len(failures)},
     }
@@ -1314,6 +1532,18 @@ def _link_id(
 ) -> str:
     material = "|".join([source_set_id, rule_pack_id, rule_pack_version, rule_id, claim_id])
     return f"rule_claim_link:{hashlib.sha256(material.encode('utf-8')).hexdigest()[:24]}"
+
+
+def _gap_id(
+    *,
+    source_set_id: str,
+    rule_pack_id: str,
+    rule_pack_version: str,
+    rule_id: str,
+    reason: str,
+) -> str:
+    material = "|".join([source_set_id, rule_pack_id, rule_pack_version, rule_id, reason])
+    return f"rule_claim_gap:{hashlib.sha256(material.encode('utf-8')).hexdigest()[:24]}"
 
 
 def _failed_check_names(validation: dict) -> list[str]:

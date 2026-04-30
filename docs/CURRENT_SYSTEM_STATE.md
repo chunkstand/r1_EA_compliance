@@ -48,7 +48,7 @@ Last verified locally on 2026-04-30.
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
-- Unit suite: `105` tests passed
+- Unit suite: `107` tests passed
 
 The verification set was:
 
