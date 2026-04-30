@@ -104,6 +104,17 @@ python -m usfs_r1_ea_sources batch-download \
 Remove `--plan-only` to execute the planned batches. Each batch runs `download`, `report`, and `validate-run`, writes a parent `batch_plan.json`, `batch_ledger.json`, and `repair_queue.csv`, then stops on the first failed or repair-needed batch unless `--continue-on-failure` is passed.
 Use `--resume` to skip already passed batches under the same run prefix.
 
+Build the reviewer-engine catalog before batch downloads:
+
+```bash
+python -m usfs_r1_ea_sources catalog-build \
+  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --output-dir source_library
+```
+
+The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
+Pass `--run-id <download-run-id>` after downloads to link artifact hashes, paths, content types, and retrieval timestamps into the same reviewer-facing catalog.
+
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 
 ```toml

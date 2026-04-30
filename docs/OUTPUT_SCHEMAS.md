@@ -288,3 +288,52 @@ Batch statuses are:
 - `failed`
 
 `repair_queue.csv` consolidates failed or review-needed rows across executed batches.
+
+## Reviewer Catalog Outputs
+
+Path: `source_library/catalog/`
+
+The `catalog-build` command writes:
+
+- `source_catalog.jsonl`
+- `source_set_manifest.json`
+- `review_sources.sqlite`
+- `source_graph_nodes.jsonl`
+- `source_graph_edges.jsonl`
+
+`source_catalog.jsonl` contains one reviewer-facing record per workbook source row, including:
+
+- workbook row identity and source provenance
+- `document_role`
+- `authority_level`
+- issuer, scope, layer, document type, applicability, and currentness fields
+- original, effective, normalized, and final URLs
+- expected parser strategy
+- source status
+- artifact SHA256/path/byte size/content type when linked to a download run
+- review topics
+- citation label
+
+`source_set_manifest.json` versions the source set with:
+
+- workbook SHA256
+- config SHA256
+- override registry SHA256
+- git commit
+- optional download run ID
+- source, artifact, URL, authority, topic, host, role, parser, and status counts
+
+`review_sources.sqlite` exposes graph-ready review tables:
+
+- `source_sets`
+- `sources`
+- `artifacts`
+- `source_artifacts`
+- `authorities`
+- `source_authorities`
+- `applicability`
+- `review_topics`
+- `source_review_topics`
+- `citations`
+
+The graph JSONL files provide portable seed nodes and edges for a later GraphRAG import.

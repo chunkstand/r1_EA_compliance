@@ -250,7 +250,23 @@ Before batch downloads begin:
 - Consolidate failed and review-needed rows into `repair_queue.csv`.
 - Support resume by skipping already passed batches under the same run prefix.
 
-## 16. First Milestone
+## 16. Reviewer Catalog Gates
+
+Before the source library is used by an EA review engine:
+
+- Build `source_catalog.jsonl` with one record per workbook source row.
+- Build `source_set_manifest.json` with workbook, config, override, and git provenance.
+- Build `review_sources.sqlite` as the queryable reviewer-engine catalog.
+- Preserve stable reviewer citation labels based on `source_record_id` and artifact SHA256 when
+  available.
+- Classify every row with `document_role`, `authority_level`, expected parser, applicability, and
+  review topics.
+- Export graph seed nodes and edges for source, authority, applicability, topic, and artifact
+  relationships.
+- Rebuild the catalog after download batches so artifact hashes, paths, retrieval timestamps, and
+  final URLs are linked.
+
+## 17. First Milestone
 
 The first implementation milestone is manifest-only dry run:
 

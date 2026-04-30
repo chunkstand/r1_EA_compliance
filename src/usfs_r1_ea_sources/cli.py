@@ -5,6 +5,7 @@ import argparse
 import json
 
 from .batches import run_batch_downloads
+from .catalog import build_review_catalog
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .download import run_download
 from .dry_run import run_dry_run
@@ -108,6 +109,18 @@ def build_parser() -> argparse.ArgumentParser:
     batches.add_argument("--resume", action="store_true")
     batches.add_argument("--continue-on-failure", action="store_true")
 
+    catalog = subparsers.add_parser(
+        "catalog-build",
+        help="Build reviewer-engine source catalog, source-set manifest, and SQLite index.",
+    )
+    catalog.add_argument("--workbook", required=True, type=Path)
+    catalog.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    catalog.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    catalog.add_argument(
+        "--run-id",
+        help="Optional download run ID to link artifacts into the catalog.",
+    )
+
     return parser
 
 
@@ -205,6 +218,18 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["all_passed"] or args.plan_only else 1
+
+    if args.command == "catalog-build":
+        config = load_config(args.config)
+        result = build_review_catalog(
+            workbook_path=args.workbook,
+            output_dir=args.output_dir,
+            config=config,
+            config_path=args.config,
+            run_id=args.run_id,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
 
     parser.error(f"Unknown command: {args.command}")
     return 2

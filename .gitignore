@@ -14,6 +14,7 @@ venv/
 
 # Downloader-generated source library outputs
 source_library/artifacts/
+source_library/catalog/
 source_library/runs/
 source_library/manifests/*.jsonl
 source_library/manifests/*.tmp
