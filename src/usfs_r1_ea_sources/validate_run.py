@@ -5,6 +5,7 @@ from pathlib import Path
 import hashlib
 import json
 
+from .records import normalize_url
 from .report import _read_jsonl, _resolve_manifest_path, is_repair_status, summarize_records
 
 
@@ -55,6 +56,7 @@ def validate_run(*, output_dir: Path, run_id: str) -> ValidationGateResult:
         _check_failure_rows_are_in_repair_queue(records, report_summary),
         _check_artifacts(records),
         _check_duplicate_content_links(records),
+        _check_url_provenance(records),
         _check_summary_counts(summary, records),
     ]
     gate_report = {
@@ -199,10 +201,71 @@ def _check_summary_counts(summary: dict, records: list[dict]) -> dict:
                 "actual": summary_status_counts,
             }
         )
+    if "filtered_override_count" in summary:
+        actual_override_count = sum(
+            1 for record in records if record.get("original_url") != record.get("effective_url")
+        )
+        if summary.get("filtered_override_count") != actual_override_count:
+            failures.append(
+                {
+                    "field": "filtered_override_count",
+                    "expected": actual_override_count,
+                    "actual": summary.get("filtered_override_count"),
+                }
+            )
     return {
         "name": "summary_counts_match_manifest",
         "passed": not failures,
         "details": {"failures": failures},
+    }
+
+
+def _check_url_provenance(records: list[dict]) -> dict:
+    failures = []
+    required_fields = {"original_url", "effective_url", "normalized_url"}
+    for record in records:
+        missing = sorted(field for field in required_fields if not record.get(field))
+        if missing:
+            failures.append(
+                _url_provenance_failure(record, f"missing URL fields: {', '.join(missing)}")
+            )
+            continue
+        if record.get("normalized_url") != normalize_url(str(record.get("effective_url"))):
+            failures.append(
+                _url_provenance_failure(record, "normalized_url does not match effective_url")
+            )
+
+        metadata = record.get("metadata") or {}
+        override_url = metadata.get("override_url")
+        override_reason = metadata.get("override_reason")
+        if override_url:
+            if record.get("effective_url") != override_url:
+                failures.append(
+                    _url_provenance_failure(record, "effective_url does not match override_url")
+                )
+            if record.get("original_url") == record.get("effective_url"):
+                failures.append(
+                    _url_provenance_failure(record, "override did not preserve original_url")
+                )
+            if not override_reason:
+                failures.append(_url_provenance_failure(record, "override_reason is missing"))
+        elif record.get("original_url") != record.get("effective_url"):
+            failures.append(
+                _url_provenance_failure(record, "effective_url changed without override metadata")
+            )
+    return {
+        "name": "url_provenance_is_traceable",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _url_provenance_failure(record: dict, reason: str) -> dict:
+    return {
+        "source_record_id": record.get("source_record_id"),
+        "original_url": record.get("original_url"),
+        "effective_url": record.get("effective_url"),
+        "reason": reason,
     }
 
 

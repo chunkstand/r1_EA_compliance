@@ -40,6 +40,10 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Follow redirects, but record the full redirect chain.
 - Store both `original_url` and `final_url`.
 - Do not silently repair broken URLs. Any manually corrected URL must be recorded as `override_url` with a reason.
+- URL overrides must be unique by `source_record_id`, must use absolute HTTP(S) URLs with hosts, and
+  must not target a URL listed in `Scope_Exclusions`.
+- Overridden rows must preserve both the workbook URL and effective URL, plus `metadata.override_url`
+  and `metadata.override_reason`.
 - Reject final URLs that resolve to known challenge, block, or not-found pages, even when the HTTP status is `200`.
 
 ## 4. Blocked, Excluded, And Failed URLs
@@ -232,6 +236,7 @@ Before a run is considered complete:
 - Challenge pages, not-found pages, and zero-byte files are not counted as successful downloads.
 - Duplicate references are preserved in the manifest.
 - Failures and `needs_review` rows are listed in the run report.
+- URL override provenance and `filtered_override_count` match the run manifest.
 - The downloader can be rerun without corrupting or overwriting existing validated artifacts.
 
 ## 15. First Milestone

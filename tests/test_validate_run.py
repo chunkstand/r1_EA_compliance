@@ -104,10 +104,63 @@ class ValidateRunTests(unittest.TestCase):
             result = validate_run(output_dir=output_dir, run_id="gate-dup-fail")
 
             self.assertFalse(result.passed)
-            self.assertFalse(_check(result.report, "duplicate_content_links_to_canonical_artifact")["passed"])
+            duplicate_check = _check(result.report, "duplicate_content_links_to_canonical_artifact")
+            self.assertFalse(duplicate_check["passed"])
+
+    def test_validate_run_fails_for_untraceable_url_override(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            record = _record(status="not_found", artifact_path=None)
+            record["effective_url"] = "https://example.test/repaired-source"
+            _write_run(output_dir, "gate-url-provenance-fail", [record])
+
+            result = validate_run(output_dir=output_dir, run_id="gate-url-provenance-fail")
+
+            self.assertFalse(result.passed)
+            self.assertFalse(_check(result.report, "url_provenance_is_traceable")["passed"])
+
+    def test_validate_run_fails_for_normalized_url_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            record = _record(status="not_found", artifact_path=None)
+            record["normalized_url"] = "https://example.test/different"
+            _write_run(output_dir, "gate-normalized-url-fail", [record])
+
+            result = validate_run(output_dir=output_dir, run_id="gate-normalized-url-fail")
+
+            self.assertFalse(result.passed)
+            self.assertFalse(_check(result.report, "url_provenance_is_traceable")["passed"])
+
+    def test_validate_run_checks_filtered_override_count(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            record = _record(status="not_found", artifact_path=None)
+            record["effective_url"] = "https://example.test/repaired-source"
+            record["metadata"] = {
+                "override_url": "https://example.test/repaired-source",
+                "override_reason": "Unit test repair",
+            }
+            _write_run(
+                output_dir,
+                "gate-override-count-fail",
+                [record],
+                summary_updates={"filtered_override_count": 0},
+            )
+
+            result = validate_run(output_dir=output_dir, run_id="gate-override-count-fail")
+
+            self.assertFalse(result.passed)
+            summary_check = _check(result.report, "summary_counts_match_manifest")
+            self.assertFalse(summary_check["passed"])
 
 
-def _write_run(output_dir: Path, run_id: str, records: list[dict]) -> None:
+def _write_run(
+    output_dir: Path,
+    run_id: str,
+    records: list[dict],
+    *,
+    summary_updates: dict | None = None,
+) -> None:
     run_dir = output_dir / "runs" / run_id
     manifest_dir = output_dir / "manifests"
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -120,18 +173,21 @@ def _write_run(output_dir: Path, run_id: str, records: list[dict]) -> None:
     status_counts: dict[str, int] = {}
     for record in records:
         status_counts[record["status"]] = status_counts.get(record["status"], 0) + 1
-    (run_dir / "summary.json").write_text(
-        json.dumps(
-            {
-                "run_id": run_id,
-                "mode": "download",
-                "filtered_rows": len(records),
-                "status_counts": status_counts,
-                "manifest_path": str(manifest_path),
-                "workbook_sha256": "abc",
-            },
-            sort_keys=True,
+    summary = {
+        "run_id": run_id,
+        "mode": "download",
+        "filtered_rows": len(records),
+        "filtered_override_count": sum(
+            1 for record in records if record.get("original_url") != record.get("effective_url")
         ),
+        "status_counts": status_counts,
+        "manifest_path": str(manifest_path),
+        "workbook_sha256": "abc",
+    }
+    if summary_updates:
+        summary.update(summary_updates)
+    (run_dir / "summary.json").write_text(
+        json.dumps(summary, sort_keys=True),
         encoding="utf-8",
     )
 
@@ -151,6 +207,7 @@ def _record(
         "excel_row": 5,
         "title": "Example",
         "original_url": "https://example.test/source",
+        "effective_url": "https://example.test/source",
         "normalized_url": "https://example.test/source",
         "status": status,
         "artifact_path": artifact_path,
@@ -160,6 +217,7 @@ def _record(
         "fetch_timestamp": None,
         "duplicate_of": duplicate_of,
         "validation": {"mode": "download", "passed": status != "not_found"},
+        "metadata": {},
     }
 
 

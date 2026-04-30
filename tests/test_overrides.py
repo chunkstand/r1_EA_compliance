@@ -33,6 +33,99 @@ override_url = "https://example.test/repaired"
             with self.assertRaisesRegex(ValueError, "missing reason"):
                 load_url_overrides(path)
 
+    def test_load_url_overrides_requires_source_record_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "overrides.toml"
+            path.write_text(
+                """
+[[overrides]]
+override_url = "https://example.test/repaired"
+reason = "Unit test repair"
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "missing source_record_id"):
+                load_url_overrides(path)
+
+    def test_load_url_overrides_requires_table_array(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "overrides.toml"
+            path.write_text(
+                """
+[overrides]
+source_record_id = "R1EA-001"
+override_url = "https://example.test/repaired"
+reason = "Unit test repair"
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, r"\[\[overrides\]\]"):
+                load_url_overrides(path)
+
+    def test_load_url_overrides_rejects_non_http_url(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "overrides.toml"
+            path.write_text(
+                """
+[[overrides]]
+source_record_id = "R1EA-001"
+override_url = "ftp://example.test/repaired"
+reason = "Unit test repair"
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "must use http or https"):
+                load_url_overrides(path)
+
+    def test_load_url_overrides_rejects_missing_host(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "overrides.toml"
+            path.write_text(
+                """
+[[overrides]]
+source_record_id = "R1EA-001"
+override_url = "https:///missing-host"
+reason = "Unit test repair"
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "missing a host"):
+                load_url_overrides(path)
+
+    def test_load_url_overrides_rejects_duplicate_source_record_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "overrides.toml"
+            path.write_text(
+                """
+[[overrides]]
+source_record_id = "R1EA-001"
+override_url = "https://example.test/repaired-one"
+reason = "Unit test repair"
+
+[[overrides]]
+source_record_id = "R1EA-001"
+override_url = "https://example.test/repaired-two"
+reason = "Second repair"
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "Duplicate URL override"):
+                load_url_overrides(path)
+
+    def test_load_canonical_sources_rejects_override_to_excluded_url(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            excluded_url = "https://www.ecfr.gov/current/title-36/chapter-II/part-220"
+            config_path = _write_config_with_override(tmp, override_url=excluded_url)
+            config = load_config(config_path)
+
+            with self.assertRaisesRegex(ValueError, "target excluded URLs"):
+                load_canonical_sources(WORKBOOK, config.workbook)
+
     def test_override_changes_effective_url_and_preserves_workbook_url(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             config_path = _write_config_with_override(tmp)
@@ -46,7 +139,10 @@ override_url = "https://example.test/repaired"
             )
             self.assertEqual(source.effective_url, "https://example.test/repaired-source")
             self.assertEqual(source.normalized_url, "https://example.test/repaired-source")
-            self.assertEqual(source.metadata["override_url"], "https://example.test/repaired-source")
+            self.assertEqual(
+                source.metadata["override_url"],
+                "https://example.test/repaired-source",
+            )
 
     def test_dry_run_manifest_records_effective_and_original_url(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -60,10 +156,15 @@ override_url = "https://example.test/repaired"
             )
             record = json.loads(result.manifest_path.read_text(encoding="utf-8").splitlines()[0])
 
-            self.assertEqual(record["original_url"], "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter55&edition=prelim")
+            self.assertEqual(
+                record["original_url"],
+                "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter55&edition=prelim",
+            )
             self.assertEqual(record["effective_url"], "https://example.test/repaired-source")
             self.assertEqual(record["normalized_url"], "https://example.test/repaired-source")
             self.assertEqual(record["metadata"]["override_reason"], "Unit test repair")
+            self.assertEqual(result.summary["override_count"], 1)
+            self.assertEqual(result.summary["filtered_override_count"], 1)
 
     def test_download_fetches_effective_url_not_workbook_url(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -98,19 +199,27 @@ override_url = "https://example.test/repaired"
             record = json.loads(result.manifest_path.read_text(encoding="utf-8").splitlines()[0])
 
             self.assertEqual(calls, ["https://example.test/repaired-source"])
-            self.assertEqual(record["original_url"], "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter55&edition=prelim")
+            self.assertEqual(
+                record["original_url"],
+                "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter55&edition=prelim",
+            )
             self.assertEqual(record["effective_url"], "https://example.test/repaired-source")
             self.assertEqual(record["final_url"], "https://example.test/repaired-source")
+            self.assertEqual(result.summary["filtered_override_count"], 1)
 
 
-def _write_config_with_override(tmp: str) -> Path:
+def _write_config_with_override(
+    tmp: str,
+    *,
+    override_url: str = "https://example.test/repaired-source",
+) -> Path:
     tmp_path = Path(tmp)
     override_path = tmp_path / "overrides.toml"
     override_path.write_text(
-        """
+        f"""
 [[overrides]]
 source_record_id = "R1EA-001"
-override_url = "https://example.test/repaired-source"
+override_url = "{override_url}"
 reason = "Unit test repair"
 """,
         encoding="utf-8",

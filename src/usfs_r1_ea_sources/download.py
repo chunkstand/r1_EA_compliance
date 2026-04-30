@@ -15,7 +15,7 @@ import ssl
 
 from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
-from .dry_run import _apply_filters, new_run_id, utc_now, write_event
+from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write_event
 from .preflight import _base_content_type, _body_looks_blocked, _body_looks_not_found
 from .preflight import _int_or_none, _is_failure_status
 from .preflight import _respect_host_delay
@@ -99,6 +99,8 @@ def run_download(
             "workbook_sha256": workbook_sha256,
             "canonical_rows": len(sources),
             "filtered_rows": len(filtered_sources),
+            "override_count": _override_count(sources),
+            "filtered_override_count": _override_count(filtered_sources),
             "excluded_url_count": len(excluded_urls),
         },
     )
@@ -308,6 +310,8 @@ def run_download(
         "workbook_sha256": workbook_sha256,
         "canonical_rows": len(sources),
         "filtered_rows": len(records),
+        "override_count": _override_count(sources),
+        "filtered_override_count": _override_count(filtered_sources),
         "unique_canonical_urls": len({source.normalized_url for source in sources}),
         "excluded_url_count": len(excluded_urls),
         "checked_url_count": len(

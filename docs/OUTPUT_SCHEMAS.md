@@ -37,6 +37,7 @@ Required fields:
 For dry runs, network-derived fields are `null` or empty, and `status` is one of `planned`, `duplicate_url`, or `skipped_excluded`.
 
 `original_url` is always the workbook cell value. `effective_url` is the URL actually used for planning/fetching after applying `config/url_overrides.toml`. When no override exists, both values are the same.
+Override records must also carry `metadata.override_url` and `metadata.override_reason` so repairs remain traceable.
 
 For preflight runs, the manifest path is `source_library/manifests/preflight_<run_id>.jsonl`.
 Preflight records use the same row-level schema and add:
@@ -100,6 +101,8 @@ Required fields:
 - `canonical_rows`
 - `unique_canonical_urls`
 - `excluded_url_count`
+- `override_count`
+- `filtered_override_count`
 - `planned_count`
 - `duplicate_url_count`
 - `skipped_excluded_count`
@@ -205,6 +208,7 @@ Checks cover:
 - failed rows appear in the repair queue
 - successful artifacts exist and match SHA256/byte-size metadata
 - duplicate-content rows link to a canonical artifact
+- URL provenance is traceable for workbook URLs and override URLs
 - summary counts match manifest records
 
 ## Host Pilot Summary
@@ -227,6 +231,7 @@ Each host result includes:
 - `host`
 - `run_id`
 - row and status counts
+- `filtered_override_count`
 - `gate_passed`
 - `ready_for_full_download`
 - manifest, report, and acceptance-gate paths

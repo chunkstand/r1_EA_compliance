@@ -153,6 +153,8 @@ def run_dry_run(
         "workbook_sha256": workbook_sha256,
         "canonical_rows": len(sources),
         "filtered_rows": len(records),
+        "override_count": _override_count(sources),
+        "filtered_override_count": _override_count(filtered_sources),
         "unique_canonical_urls": unique_canonical_urls,
         "excluded_url_count": len(excluded_urls),
         "planned_count": status_counts.get("planned", 0),
@@ -213,6 +215,10 @@ def _apply_filters(
     if limit is not None:
         filtered = filtered[:limit]
     return filtered
+
+
+def _override_count(sources: list[WorkbookSource]) -> int:
+    return sum(1 for source in sources if source.original_url != source.effective_url)
 
 
 def _manifest_record(

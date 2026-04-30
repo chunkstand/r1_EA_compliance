@@ -66,6 +66,7 @@ def run_host_pilots(
                 "host": host,
                 "run_id": host_run_id,
                 "filtered_rows": download_result.summary.get("filtered_rows"),
+                "filtered_override_count": download_result.summary.get("filtered_override_count"),
                 "checked_url_count": download_result.summary.get("checked_url_count"),
                 "downloaded_count": download_result.summary.get("downloaded_count"),
                 "downloaded_existing_count": download_result.summary.get("downloaded_existing_count"),
