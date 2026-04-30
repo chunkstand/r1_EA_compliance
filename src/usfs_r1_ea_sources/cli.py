@@ -353,6 +353,14 @@ def build_parser() -> argparse.ArgumentParser:
     ea_review.add_argument("--chunk-max-chars", type=int, default=1800)
     ea_review.add_argument("--chunk-overlap-chars", type=int, default=200)
     ea_review.add_argument(
+        "--reuse-package-cache",
+        action="store_true",
+        help=(
+            "Reuse existing package/package_manifest.jsonl and package/package_chunks.jsonl "
+            "under the review directory instead of re-extracting package files."
+        ),
+    )
+    ea_review.add_argument(
         "--docling-ocr",
         action="store_true",
         help="Enable Docling OCR for PDF EA package files.",
@@ -379,6 +387,14 @@ def build_parser() -> argparse.ArgumentParser:
     compliance_review.add_argument("--package-top-k", type=int, default=3)
     compliance_review.add_argument("--chunk-max-chars", type=int, default=1800)
     compliance_review.add_argument("--chunk-overlap-chars", type=int, default=200)
+    compliance_review.add_argument(
+        "--reuse-package-cache",
+        action="store_true",
+        help=(
+            "Reuse existing package/package_manifest.jsonl and package/package_chunks.jsonl "
+            "under the review directory instead of re-extracting package files."
+        ),
+    )
     compliance_review.add_argument(
         "--docling-ocr",
         action="store_true",
@@ -645,6 +661,7 @@ def main(argv: list[str] | None = None) -> int:
             chunk_overlap_chars=args.chunk_overlap_chars,
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
+            reuse_package_cache=args.reuse_package_cache,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1
@@ -667,6 +684,7 @@ def main(argv: list[str] | None = None) -> int:
             chunk_overlap_chars=args.chunk_overlap_chars,
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
+            reuse_package_cache=args.reuse_package_cache,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -94,6 +94,7 @@ def run_compliance_review(
     chunk_overlap_chars: int = 200,
     docling_ocr: bool = False,
     docling_timeout_seconds: float | None = 120.0,
+    reuse_package_cache: bool = False,
 ) -> ComplianceReviewResult:
     """Run a versioned compliance rule pack against a local EA package."""
 
@@ -155,6 +156,7 @@ def run_compliance_review(
         chunk_overlap_chars=chunk_overlap_chars,
         docling_ocr=docling_ocr,
         docling_timeout_seconds=docling_timeout_seconds,
+        reuse_package_cache=reuse_package_cache,
     )
     ea_report = _read_json(ea_result.json_report_path)
     ea_validation = _read_json(ea_result.validation_path)
@@ -269,6 +271,7 @@ def validate_rule_pack(rule_pack: dict) -> dict:
         _check_rule_source_filters(rule_pack),
         _check_rule_source_filter_keys(rule_pack),
         _check_rule_authority_metadata(rule_pack),
+        _check_rule_pack_baseline_source_records(rule_pack),
     ]
     return {
         "schema_version": "compliance-rule-pack-validation-v0",
@@ -756,6 +759,7 @@ def _validation_report(
         _check_claim_findings_have_source_claim_links(findings),
         _check_no_unsupported_compliance_claims(findings),
         _check_applicable_findings_have_authority_source_records(findings),
+        _check_baseline_source_documents_evaluated(rule_pack, findings),
         _check_finding_graph_evidence_edges(review_id, findings, nodes, edges),
         _check_graph_integrity(nodes, edges),
         _check_graph_covers_findings(rule_pack, findings, nodes, edges),
@@ -798,6 +802,14 @@ def _summary(
     not_applicable_findings = [
         finding for finding in findings if finding.get("applicability_status") == "not_applicable"
     ]
+    baseline_source_record_ids = _baseline_source_record_ids(rule_pack)
+    evaluated_baseline_source_record_ids = sorted(
+        {
+            str(finding["authority_source_record_id"])
+            for finding in findings
+            if finding.get("authority_source_record_id") in baseline_source_record_ids
+        }
+    )
     unsupported = [
         finding["id"]
         for finding in claim_findings
@@ -814,6 +826,9 @@ def _summary(
         "rule_pack_id": rule_pack["rule_pack_id"],
         "rule_pack_version": rule_pack["version"],
         "rule_count": len(rule_pack["rules"]),
+        "baseline_source_record_count": len(baseline_source_record_ids),
+        "baseline_source_record_ids": baseline_source_record_ids,
+        "evaluated_baseline_source_record_ids": evaluated_baseline_source_record_ids,
         "finding_count": len(findings),
         "finding_status_counts": dict(status_counts),
         "authority_identification": {
@@ -2276,6 +2291,68 @@ def _check_rule_authority_metadata(rule_pack: dict) -> dict:
     }
 
 
+def _check_rule_pack_baseline_source_records(rule_pack: dict) -> dict:
+    expected = _baseline_source_record_ids(rule_pack)
+    raw_expected = rule_pack.get("baseline_source_record_ids")
+    if raw_expected is None:
+        return {
+            "name": "baseline_source_records_covered",
+            "passed": True,
+            "details": {
+                "enforced": False,
+                "baseline_source_record_count": 0,
+                "missing_source_record_ids": [],
+                "non_baseline_rule_ids": [],
+            },
+        }
+    invalid_shape = (
+        not isinstance(raw_expected, list)
+        or not expected
+        or len(expected) != len(raw_expected)
+    )
+    duplicate_ids = sorted(
+        source_record_id
+        for source_record_id, count in Counter(expected).items()
+        if count > 1
+    )
+    unsafe_ids = sorted(
+        source_record_id
+        for source_record_id in expected
+        if not SAFE_ID_RE.fullmatch(source_record_id)
+    )
+    rules = rule_pack.get("rules") if isinstance(rule_pack.get("rules"), list) else []
+    rules_by_source_record_id = defaultdict(list)
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        source_record_id = _rule_source_record_id(rule)
+        if source_record_id:
+            rules_by_source_record_id[source_record_id].append(rule)
+    missing = sorted(
+        source_record_id
+        for source_record_id in expected
+        if source_record_id not in rules_by_source_record_id
+    )
+    non_baseline = sorted(
+        str(rule.get("id"))
+        for source_record_id in expected
+        for rule in rules_by_source_record_id.get(source_record_id, [])
+        if str(rule.get("applicability_mode") or "") != "baseline"
+    )
+    return {
+        "name": "baseline_source_records_covered",
+        "passed": not invalid_shape and not duplicate_ids and not unsafe_ids and not missing and not non_baseline,
+        "details": {
+            "enforced": True,
+            "baseline_source_record_count": len(expected),
+            "missing_source_record_ids": missing,
+            "duplicate_source_record_ids": duplicate_ids,
+            "unsafe_source_record_ids": unsafe_ids,
+            "non_baseline_rule_ids": non_baseline,
+        },
+    }
+
+
 def _check_all_rules_evaluated(rule_pack: dict, findings: list[dict]) -> dict:
     expected = {str(rule["id"]) for rule in rule_pack["rules"]}
     actual = {str(finding["rule_id"]) for finding in findings}
@@ -2285,6 +2362,24 @@ def _check_all_rules_evaluated(rule_pack: dict, findings: list[dict]) -> dict:
         "details": {
             "missing_rule_ids": sorted(expected - actual),
             "unexpected_rule_ids": sorted(actual - expected),
+        },
+    }
+
+
+def _check_baseline_source_documents_evaluated(rule_pack: dict, findings: list[dict]) -> dict:
+    expected = set(_baseline_source_record_ids(rule_pack))
+    actual = {
+        str(finding.get("authority_source_record_id"))
+        for finding in findings
+        if finding.get("authority_source_record_id")
+    }
+    missing = sorted(expected - actual)
+    return {
+        "name": "baseline_source_documents_evaluated",
+        "passed": not missing,
+        "details": {
+            "baseline_source_record_count": len(expected),
+            "missing_source_record_ids": missing,
         },
     }
 
@@ -2659,8 +2754,24 @@ def _rule_pack_summary(rule_pack: dict) -> dict:
         "description": rule_pack.get("description"),
         "domain": rule_pack.get("domain"),
         "jurisdiction": rule_pack.get("jurisdiction"),
+        "baseline_source_record_ids": _baseline_source_record_ids(rule_pack),
         "rule_count": len(rule_pack["rules"]),
     }
+
+
+def _baseline_source_record_ids(rule_pack: dict) -> list[str]:
+    raw = rule_pack.get("baseline_source_record_ids")
+    if not isinstance(raw, list):
+        return []
+    return [str(value).strip() for value in raw if str(value or "").strip()]
+
+
+def _rule_source_record_id(rule: dict) -> str | None:
+    filters = rule.get("source_filters") if isinstance(rule.get("source_filters"), dict) else {}
+    value = rule.get("authority_source_record_id") or filters.get("source_record_id")
+    if not str(value or "").strip():
+        return None
+    return str(value).strip()
 
 
 def _citation_label(evidence: dict | None) -> str | None:

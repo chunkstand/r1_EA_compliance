@@ -13,7 +13,7 @@ from usfs_r1_ea_sources.config import load_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_current_2026.xlsx"
+WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 
 

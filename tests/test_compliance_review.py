@@ -58,6 +58,11 @@ class ComplianceReviewTests(unittest.TestCase):
                 result.summary["compliance_matrix_pdf_path"],
                 str(result.compliance_matrix_pdf_path),
             )
+            self.assertEqual(result.summary["baseline_source_record_count"], 2)
+            self.assertEqual(
+                result.summary["evaluated_baseline_source_record_ids"],
+                ["R1EA-001", "R1EA-002"],
+            )
 
             report = json.loads(result.compliance_review_path.read_text(encoding="utf-8"))
             purpose = _finding(report, "purpose_need")
@@ -109,6 +114,7 @@ class ComplianceReviewTests(unittest.TestCase):
                     "passed"
                 ]
             )
+            self.assertTrue(_check(validation, "baseline_source_documents_evaluated")["passed"])
             self.assertTrue(_check(validation, "all_rules_evaluated")["passed"])
             self.assertTrue(
                 _check(validation, "claim_findings_have_source_citations")["passed"]
@@ -177,6 +183,32 @@ class ComplianceReviewTests(unittest.TestCase):
             ["authority_category", "source_record_id"],
         )
 
+    def test_rule_pack_requires_declared_baseline_source_record_rules(self) -> None:
+        rule_pack = _rule_pack()
+        rule_pack["baseline_source_record_ids"] = ["R1EA-001", "R1EA-003"]
+
+        validation = validate_rule_pack(rule_pack)
+
+        self.assertFalse(validation["passed"])
+        baseline_check = _check(validation, "baseline_source_records_covered")
+        self.assertFalse(baseline_check["passed"])
+        self.assertEqual(
+            baseline_check["details"]["missing_source_record_ids"],
+            ["R1EA-003"],
+        )
+
+    def test_rule_pack_requires_declared_baseline_rules_to_be_baseline_mode(self) -> None:
+        rule_pack = _rule_pack()
+        rule_pack["rules"][1]["applicability_mode"] = "conditional"
+        rule_pack["rules"][1]["applies_if_package_terms"] = ["mitigation"]
+
+        validation = validate_rule_pack(rule_pack)
+
+        self.assertFalse(validation["passed"])
+        baseline_check = _check(validation, "baseline_source_records_covered")
+        self.assertFalse(baseline_check["passed"])
+        self.assertEqual(baseline_check["details"]["non_baseline_rule_ids"], ["mitigation"])
+
     def test_compliance_review_rejects_unsafe_review_id_before_writing_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -192,6 +224,37 @@ class ComplianceReviewTests(unittest.TestCase):
                 )
 
             self.assertFalse((Path(tmp) / "bad-review").exists())
+
+    def test_compliance_review_can_reuse_existing_package_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Purpose and Need\n\nThe proposed action improves trail access.",
+            )
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+
+            first = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="reuse-cache-unit",
+            )
+            package_path.write_text("Routing slip. No package evidence.", encoding="utf-8")
+            second = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="reuse-cache-unit",
+                reuse_package_cache=True,
+            )
+
+            self.assertEqual(first.summary["finding_status_counts"], {"pass": 1})
+            self.assertEqual(second.summary["finding_status_counts"], {"pass": 1})
 
     def test_compliance_review_eval_scores_package_fixtures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1300,7 +1363,18 @@ def _write_package(directory: Path, text: str) -> Path:
 def _write_rule_pack(directory: Path, rule_ids: list[str] | None = None) -> Path:
     rule_pack = _rule_pack()
     if rule_ids is not None:
-        rule_pack["rules"] = [rule for rule in rule_pack["rules"] if rule["id"] in set(rule_ids)]
+        wanted = set(rule_ids)
+        rule_pack["rules"] = [rule for rule in rule_pack["rules"] if rule["id"] in wanted]
+        kept_source_record_ids = {
+            rule["authority_source_record_id"]
+            for rule in rule_pack["rules"]
+            if rule.get("authority_source_record_id")
+        }
+        rule_pack["baseline_source_record_ids"] = [
+            source_record_id
+            for source_record_id in rule_pack.get("baseline_source_record_ids", [])
+            if source_record_id in kept_source_record_ids
+        ]
     path = directory / "rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
@@ -1446,6 +1520,7 @@ def _rule_pack() -> dict:
         "version": "0.1.0",
         "title": "Unit NEPA EA Rule Pack",
         "description": "Unit test rule pack.",
+        "baseline_source_record_ids": ["R1EA-001", "R1EA-002"],
         "rules": [
             {
                 "id": "purpose_need",

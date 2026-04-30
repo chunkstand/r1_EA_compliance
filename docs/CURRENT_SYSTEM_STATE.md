@@ -3,7 +3,7 @@
 This project is a local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA
 Forest Service Region 1 source material.
 
-The workbook `usfs_region1_ea_document_checklist_current_2026.xlsx` remains the source-of-truth
+The workbook `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` remains the source-of-truth
 input for the knowledge base. The generated `source_library/` is the audited local capture and
 derived reviewer corpus used by extraction, retrieval, evidence graph, source-claim extraction,
 rule-claim binding, and deterministic EA package review commands.
@@ -641,7 +641,7 @@ Rebuild the full reviewer catalog from the current full batch:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --batch-run-id full-library-batches
 ```

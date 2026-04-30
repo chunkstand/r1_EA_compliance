@@ -77,6 +77,7 @@ def run_ea_review(
     chunk_overlap_chars: int = 200,
     docling_ocr: bool = False,
     docling_timeout_seconds: float | None = 120.0,
+    reuse_package_cache: bool = False,
 ) -> EAReviewResult:
     """Run a deterministic, provenance-bearing EA package checklist review."""
 
@@ -128,26 +129,33 @@ def run_ea_review(
         validation_path=validation_path,
         json_report_path=json_report_path,
         markdown_report_path=markdown_report_path,
+        preserve_package_cache=reuse_package_cache,
     )
-    for directory in (extracted_text_dir, docling_json_dir):
-        directory.mkdir(parents=True, exist_ok=True)
 
     checklist = _load_checklist(checklist_path)
-    package_files = _discover_package_files(package_path)
-    extracted_at = _utc_now()
-    package_manifest, package_chunks = _extract_package_files(
-        package_files=package_files,
-        review_id=review_id,
-        extracted_text_dir=extracted_text_dir,
-        docling_json_dir=docling_json_dir,
-        extracted_at=extracted_at,
-        chunk_max_chars=chunk_max_chars,
-        chunk_overlap_chars=chunk_overlap_chars,
-        docling_ocr=docling_ocr,
-        docling_timeout_seconds=docling_timeout_seconds,
-    )
-    _write_jsonl(package_manifest_path, package_manifest)
-    _write_jsonl(package_chunks_path, package_chunks)
+    if reuse_package_cache:
+        package_manifest, package_chunks = _load_package_cache(
+            package_manifest_path=package_manifest_path,
+            package_chunks_path=package_chunks_path,
+        )
+    else:
+        for directory in (extracted_text_dir, docling_json_dir):
+            directory.mkdir(parents=True, exist_ok=True)
+        package_files = _discover_package_files(package_path)
+        extracted_at = _utc_now()
+        package_manifest, package_chunks = _extract_package_files(
+            package_files=package_files,
+            review_id=review_id,
+            extracted_text_dir=extracted_text_dir,
+            docling_json_dir=docling_json_dir,
+            extracted_at=extracted_at,
+            chunk_max_chars=chunk_max_chars,
+            chunk_overlap_chars=chunk_overlap_chars,
+            docling_ocr=docling_ocr,
+            docling_timeout_seconds=docling_timeout_seconds,
+        )
+        _write_jsonl(package_manifest_path, package_manifest)
+        _write_jsonl(package_chunks_path, package_chunks)
 
     findings = []
     for item in checklist:
@@ -233,11 +241,36 @@ def _prepare_review_outputs(
     validation_path: Path,
     json_report_path: Path,
     markdown_report_path: Path,
+    preserve_package_cache: bool = False,
 ) -> None:
-    if package_dir.exists():
+    if package_dir.exists() and not preserve_package_cache:
         shutil.rmtree(package_dir)
     for path in (validation_path, json_report_path, markdown_report_path):
         path.unlink(missing_ok=True)
+
+
+def _load_package_cache(
+    *,
+    package_manifest_path: Path,
+    package_chunks_path: Path,
+) -> tuple[list[dict], list[dict]]:
+    missing = [
+        str(path)
+        for path in (package_manifest_path, package_chunks_path)
+        if not path.exists()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            "Cannot reuse EA package cache because required cache files are missing: "
+            + ", ".join(missing)
+        )
+    package_manifest = _read_jsonl(package_manifest_path)
+    package_chunks = _read_jsonl(package_chunks_path)
+    if not package_manifest or not package_chunks:
+        raise ValueError(
+            "Cannot reuse EA package cache because package manifest or chunks are empty."
+        )
+    return package_manifest, package_chunks
 
 
 def _discover_package_files(package_path: Path) -> list[Path]:
@@ -1037,6 +1070,14 @@ def _tokenize(value: str) -> list[str]:
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _read_jsonl(path: Path) -> list[dict]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def _write_jsonl(path: Path, records: list[dict]) -> None:

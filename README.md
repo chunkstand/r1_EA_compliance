@@ -25,7 +25,7 @@ domain-specific heuristics.
 
 ## Current Inputs
 
-- `usfs_region1_ea_document_checklist_current_2026.xlsx`
+- `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
 - `DOWNLOADER_RULES.md`
 - `config/downloader.toml`
 - `config/url_overrides.toml`
@@ -141,7 +141,7 @@ Dry-run workbook parsing without network access:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources dry-run \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library
 ```
 
@@ -149,7 +149,7 @@ Preflight URL reachability without saving artifacts:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources preflight \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --limit 10
 ```
@@ -160,7 +160,7 @@ Download a small controlled slice:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources download \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --limit 5
 ```
@@ -191,7 +191,7 @@ Run staged host pilots before the full download:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources pilot-hosts \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix staged-pilot \
   --host www.ecfr.gov \
@@ -204,7 +204,7 @@ Plan controlled download batches before scaling beyond pilots:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix first-batch \
   --batch-size 5 \
@@ -219,7 +219,7 @@ Run or refresh the full captured library:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix full-library \
   --batch-size 10 \
@@ -230,7 +230,7 @@ Build the reviewer-engine catalog from the full batch:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
-  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
   --batch-run-id full-library-batches
 ```
