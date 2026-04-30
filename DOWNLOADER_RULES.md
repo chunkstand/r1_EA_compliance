@@ -271,18 +271,32 @@ Before the source library is used by an EA review engine:
 - Rebuild the catalog after download batches so artifact hashes, paths, retrieval timestamps, and
   final URLs are linked.
 
-## 17. First Milestone
+## 17. Captured-Library Integrity Gates
 
-The first implementation milestone is manifest-only dry run:
+Before the captured library is treated as ready for reviewer-engine ingestion:
 
-- parse workbook
-- compute workbook SHA256
-- identify canonical rows
-- apply exclusions
-- normalize URLs
-- detect duplicate URLs
-- assign planned artifact paths
-- write a dry-run manifest and summary
-- perform no downloads
+- The full parent batch summary must report `all_passed`.
+- The parent batch ledger must contain one passed entry for every planned batch.
+- The consolidated repair queue must be empty except for the header.
+- Child batch manifests must cover every canonical workbook row exactly once.
+- Each child manifest's source IDs must match its parent ledger entry.
+- Every successful row must have an artifact path, SHA256, byte size, and content type.
+- Every artifact path must exist on disk.
+- Every artifact SHA256 must recompute from saved bytes.
+- Every artifact byte size must match saved bytes.
+- Duplicate-content rows must point to an existing canonical artifact.
+- Every URL override row must preserve the workbook URL as `original_url`, use the repaired URL as
+  `effective_url`, and carry `metadata.override_url` plus `metadata.override_reason`.
+- The reviewer catalog must link every workbook row to the corresponding manifest artifact.
+- The SQLite index must match `source_catalog.jsonl` for source rows, artifacts, citations, and
+  source-artifact links.
 
-No network downloader should be implemented until the dry-run manifest proves the row counts, exclusions, duplicate handling, and planned paths.
+These checks are implemented in `tests/test_captured_library.py`.
+
+## 18. Current Boundary
+
+The source library currently stores raw artifacts and source-level metadata. It does not yet store
+semantic chunks, embeddings, content-level claim graphs, or page/section-level extracted citations.
+Those derived outputs must be built as a separate downstream layer and must retain the source
+record ID, artifact SHA256, citation label, URL provenance, parser version, and offsets needed to
+trace every chunk back to the raw source artifact.
