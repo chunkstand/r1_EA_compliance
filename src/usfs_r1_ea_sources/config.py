@@ -13,6 +13,7 @@ class WorkbookConfig:
     canonical_sheets: tuple[str, ...]
     exclusion_sheet: str
     header_row: int
+    overrides_path: Path | None
 
 
 @dataclass(frozen=True)
@@ -72,6 +73,7 @@ def load_config(path: Path | str = DEFAULT_CONFIG_PATH) -> DownloaderConfig:
             canonical_sheets=tuple(workbook["canonical_sheets"]),
             exclusion_sheet=workbook["exclusion_sheet"],
             header_row=int(workbook["header_row"]),
+            overrides_path=Path(workbook["overrides_path"]) if workbook.get("overrides_path") else None,
         ),
         outputs=OutputConfig(
             root=Path(outputs["root"]),

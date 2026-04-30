@@ -42,6 +42,7 @@ class WorkbookSource:
     source_id: str | None
     title: str
     original_url: str
+    effective_url: str
     normalized_url: str
     metadata: dict[str, str | None]
 

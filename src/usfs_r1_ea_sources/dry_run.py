@@ -40,7 +40,7 @@ def write_event(
     source: WorkbookSource | None = None,
     details: dict | None = None,
 ) -> None:
-    url = source.original_url if source else None
+    url = source.effective_url if source else None
     host = urlsplit(url).netloc.lower() if url else None
     event = {
         "run_id": run_id,
@@ -235,6 +235,7 @@ def _manifest_record(
         "source_id": source.source_id,
         "title": source.title,
         "original_url": source.original_url,
+        "effective_url": source.effective_url,
         "normalized_url": source.normalized_url,
         "final_url": None,
         "redirect_chain": [],

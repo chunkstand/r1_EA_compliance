@@ -19,6 +19,7 @@ Required fields:
 - `source_id`
 - `title`
 - `original_url`
+- `effective_url`
 - `normalized_url`
 - `final_url`
 - `redirect_chain`
@@ -34,6 +35,8 @@ Required fields:
 - `metadata`
 
 For dry runs, network-derived fields are `null` or empty, and `status` is one of `planned`, `duplicate_url`, or `skipped_excluded`.
+
+`original_url` is always the workbook cell value. `effective_url` is the URL actually used for planning/fetching after applying `config/url_overrides.toml`. When no override exists, both values are the same.
 
 For preflight runs, the manifest path is `source_library/manifests/preflight_<run_id>.jsonl`.
 Preflight records use the same row-level schema and add:

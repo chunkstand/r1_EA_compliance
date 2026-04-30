@@ -6,6 +6,7 @@ from typing import Iterable
 from openpyxl import load_workbook
 
 from .config import WorkbookConfig
+from .overrides import apply_url_overrides, load_url_overrides
 from .records import WorkbookSource, normalize_url, slugify
 
 
@@ -70,7 +71,8 @@ def load_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[
         else:
             raise ValueError(f"Unsupported canonical sheet: {sheet_name}")
 
-    return sources
+    overrides = load_url_overrides(config.overrides_path)
+    return apply_url_overrides(sources, overrides)
 
 
 def _load_ingest_checklist(sheet, headers: dict[str, int], header_row: int) -> Iterable[WorkbookSource]:
@@ -94,6 +96,7 @@ def _load_ingest_checklist(sheet, headers: dict[str, int], header_row: int) -> I
             source_id=source_id,
             title=title,
             original_url=original_url,
+            effective_url=original_url,
             normalized_url=normalize_url(original_url),
             metadata={
                 "ingest_status": _cell(sheet, row, headers, "Ingest_Status"),
@@ -134,6 +137,7 @@ def _load_forest_plans(sheet, headers: dict[str, int], header_row: int) -> Itera
             source_id=source_id,
             title=title,
             original_url=original_url,
+            effective_url=original_url,
             normalized_url=normalize_url(original_url),
             metadata={
                 "unit_or_overlay": unit,

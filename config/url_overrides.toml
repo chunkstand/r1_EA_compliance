@@ -1,0 +1,9 @@
+# URL repair registry.
+#
+# Use this file when a workbook URL is stale, blocked, or needs a stable official
+# export URL. Do not edit workbook cells just to repair downloader reachability.
+#
+# [[overrides]]
+# source_record_id = "R1EA-000"
+# override_url = "https://example.gov/current-official-source"
+# reason = "Replaces stale workbook URL after manual source verification."

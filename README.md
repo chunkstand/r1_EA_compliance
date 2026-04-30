@@ -89,6 +89,17 @@ python -m usfs_r1_ea_sources pilot-hosts \
 
 Each host pilot runs `download`, `report`, and `validate-run`. The command writes a parent summary under `source_library/runs/<run-id-prefix>-host-pilots/` and exits nonzero if any selected host has failed rows or a failed acceptance gate.
 
+Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
+
+```toml
+[[overrides]]
+source_record_id = "R1EA-000"
+override_url = "https://example.gov/current-official-source"
+reason = "Replaces stale workbook URL after manual source verification."
+```
+
+Manifests preserve the workbook cell as `original_url` and use `effective_url` for fetching, deduplication, host pilots, and artifact paths.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.

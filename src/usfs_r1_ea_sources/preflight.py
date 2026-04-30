@@ -138,7 +138,7 @@ def run_preflight(
             host = urlsplit(source.normalized_url).netloc.lower()
             _respect_host_delay(host, host_last_fetch, config.network, sleep_fn)
             write_event(events_path, run_id, "fetch_attempt_started", source=source)
-            fetch_result = fetcher(source.original_url, config.network, config.validation)
+            fetch_result = fetcher(source.effective_url, config.network, config.validation)
             host_last_fetch[host] = monotonic()
             fetched_by_url[source.normalized_url] = fetch_result
             first_record_by_url[source.normalized_url] = source.source_record_id
@@ -526,6 +526,7 @@ def _manifest_record(
         "source_id": source.source_id,
         "title": source.title,
         "original_url": source.original_url,
+        "effective_url": source.effective_url,
         "normalized_url": source.normalized_url,
         "final_url": fetch_result.final_url,
         "redirect_chain": fetch_result.redirect_chain,

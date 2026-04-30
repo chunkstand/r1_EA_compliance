@@ -2,6 +2,7 @@
 canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]
 exclusion_sheet = "Scope_Exclusions"
 header_row = 4
+overrides_path = "config/url_overrides.toml"
 
 [outputs]
 root = "source_library"
