@@ -28,6 +28,10 @@ from .retrieval import build_retrieval_index
 from .retrieval import default_index_path
 from .retrieval import query_retrieval_index
 from .retrieval import run_retrieval_eval
+from .rule_claim_binding import DEFAULT_RULE_CLAIM_EVAL_PATH
+from .rule_claim_binding import build_rule_claim_links
+from .rule_claim_binding import default_rule_claim_links_path
+from .rule_claim_binding import run_rule_claim_link_eval
 from .validate_run import validate_run
 
 
@@ -282,11 +286,37 @@ def build_parser() -> argparse.ArgumentParser:
     claim_eval.add_argument("--top-k", type=int, default=5)
     claim_eval.add_argument("--results-dir", type=Path)
 
+    rule_claim_link = subparsers.add_parser(
+        "rule-claim-link",
+        help="Build deterministic links from compliance rules to validated source claims.",
+    )
+    rule_claim_link.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    rule_claim_link.add_argument("--source-set-id")
+    rule_claim_link.add_argument("--claims-path", type=Path)
+    rule_claim_link.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    rule_claim_link.add_argument("--top-k", type=int, default=5)
+
+    rule_claim_eval = subparsers.add_parser(
+        "rule-claim-eval",
+        help="Run deterministic eval cases against rule-to-source-claim links.",
+    )
+    rule_claim_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    rule_claim_eval.add_argument("--source-set-id")
+    rule_claim_eval.add_argument("--links-path", type=Path)
+    rule_claim_eval.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    rule_claim_eval.add_argument(
+        "--eval-file",
+        default=DEFAULT_RULE_CLAIM_EVAL_PATH,
+        type=Path,
+    )
+    rule_claim_eval.add_argument("--top-k", type=int, default=5)
+    rule_claim_eval.add_argument("--results-dir", type=Path)
+
     phase_eval = subparsers.add_parser(
         "phase-eval",
         help=(
             "Run phase-aligned readiness evals across catalog, extraction, retrieval, graph, "
-            "claim extraction, and optionally one compliance review."
+            "claim extraction, rule-claim binding, and optionally one compliance review."
         ),
     )
     phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
@@ -468,6 +498,32 @@ def main(argv: list[str] | None = None) -> int:
         )
         result = run_claim_eval(
             claims_path=claims_path,
+            eval_file=args.eval_file,
+            top_k=args.top_k,
+            output_dir=args.results_dir,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "rule-claim-link":
+        result = build_rule_claim_links(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            claims_path=args.claims_path,
+            rule_pack_path=args.rule_pack,
+            top_k=args.top_k,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "rule-claim-eval":
+        links_path = args.links_path or default_rule_claim_links_path(
+            args.output_dir,
+            source_set_id=args.source_set_id,
+            rule_pack_path=args.rule_pack,
+        )
+        result = run_rule_claim_link_eval(
+            links_path=links_path,
             eval_file=args.eval_file,
             top_k=args.top_k,
             output_dir=args.results_dir,

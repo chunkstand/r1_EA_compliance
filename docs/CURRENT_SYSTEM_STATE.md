@@ -5,8 +5,8 @@ Forest Service Region 1 source material.
 
 The workbook `usfs_region1_ea_document_checklist_current_2026.xlsx` remains the source-of-truth
 input for the knowledge base. The generated `source_library/` is the audited local capture and
-derived reviewer corpus used by extraction, retrieval, evidence graph, and deterministic EA package
-review commands.
+derived reviewer corpus used by extraction, retrieval, evidence graph, source-claim extraction,
+rule-claim binding, and deterministic EA package review commands.
 
 ## Current Capture
 
@@ -31,8 +31,8 @@ The current catalog validation passes. The captured-library integrity test suite
 Last verified locally on 2026-04-30.
 
 - Active source set: `source-set-e364ea220cffd938`
-- Base phase eval: passed, `5/5` phases reviewer-ready
-- Compliance phase eval: passed, `6/6` phases reviewer-ready for
+- Base phase eval: passed, `6/6` phases reviewer-ready
+- Compliance phase eval: passed, `7/7` phases reviewer-ready for
   `smoke-compliance-review-v0-hardened`
 - Catalog: `147` source rows, `131` unique raw artifacts
 - Extraction: `147/147` selected sources extracted, validation passed
@@ -42,10 +42,13 @@ Last verified locally on 2026-04-30.
 - Source claim graph: `35,348` claims, `8,479` entities, `90,153` nodes, `231,214`
   edges, validation passed, reviewer-ready
 - Claim eval seed: passed, `2/2` cases
+- Rule-claim binding: `25` links across `5/5` seed compliance rules, `0` explicit no-claim
+  gaps, validation passed, reviewer-ready
+- Rule-claim eval seed: passed, `5/5` cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
-- Unit suite: `101` tests passed
+- Unit suite: `105` tests passed
 
 The verification set was:
 
@@ -59,6 +62,13 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_li
 PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
   --output-dir source_library \
   --eval-file config/claim_eval_seed.json
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/rule_claim_link_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library
 printf '%s\n' \
   'Purpose and Need' \
@@ -177,8 +187,9 @@ source-library evidence, finding status, limitations, and validation artifacts.
 
 Compliance Rule Pack + Finding Graph V0 is implemented through `compliance-review`. It evaluates a
 versioned rule pack from `config/compliance_rule_pack_nepa_ea_v0.json`, reuses the `ea-review`
-package/retrieval gates, and writes compliance validation, a compliance review report, and a finding
-graph for rules, findings, source evidence, package evidence, and package gaps.
+package/retrieval gates, requires validated rule-to-source-claim bindings, and writes compliance
+validation, a compliance review report, and a finding graph for rules, findings, source claims,
+source evidence, package evidence, and package gaps.
 
 Current state:
 
@@ -192,14 +203,17 @@ Current state:
   parser, and review-topic nodes with health metrics.
 - The source claim graph builds claim, entity, authority, and claim-evidence-span nodes with exact
   chunk and source-text offsets.
-- Phase eval reports catalog, extraction, retrieval, evidence-graph, and claim-extraction readiness
-  separately.
+- The rule-claim binding layer links compliance rules to validated source claims and records explicit
+  no-claim gaps when no validated source claim matches a rule.
+- Phase eval reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and
+  rule-claim-binding readiness separately.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
+- A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
@@ -225,9 +239,13 @@ claims, entities, authority nodes, claim evidence spans, and edges back to chunk
 It is deterministic pattern extraction with strict validation, not a model-generated interpretation
 of compliance meaning.
 
+The rule-claim binding layer is the implemented bridge from compliance rules to source claims. It
+uses rule-pack queries and source filters to rank validated source claims, writes exact provenance
+for each link, and treats missing rule support as explicit no-claim gaps rather than silent evidence.
+
 The finding graph is the implemented compliance-review graph. It includes rule packs, compliance
-rules, findings, evidence-span references, and package-gap nodes. It does not replace human reviewer
-adjudication.
+rules, findings, source-claim references, evidence-span references, and package-gap nodes. It does
+not replace human reviewer adjudication.
 
 ## Accuracy Guarantees
 
@@ -500,15 +518,16 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - retrieval
 - evidence graph
 - claim extraction
+- rule-claim binding
 - optional compliance review when `--review-id` or `--review-dir` is passed
 
 When a compliance review phase is included, `phase-eval` requires the review report to exist,
 validation to pass, the review ID to match when supplied, and the review source set to match the
 evaluated source set.
 
-Next downstream layers are embeddings, claim-to-rule retrieval, broader rule-pack coverage,
-reviewer adjudication workflow, and model-assisted synthesis that is constrained by evidence and
-validation gates.
+Next downstream layers are broader rule-pack coverage, reviewer adjudication workflow, embeddings
+or reranking for recall improvement, and model-assisted synthesis that is constrained by evidence
+and validation gates.
 
 ## Verification Commands
 

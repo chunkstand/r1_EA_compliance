@@ -1,0 +1,32 @@
+[
+  {
+    "id": "purpose-need-rule-claim-link",
+    "rule_id": "purpose_need",
+    "expected_terms": ["purpose", "need"],
+    "min_links": 1
+  },
+  {
+    "id": "alternatives-rule-claim-link",
+    "rule_id": "alternatives",
+    "expected_terms": ["alternatives"],
+    "min_links": 1
+  },
+  {
+    "id": "effects-analysis-rule-claim-link",
+    "rule_id": "effects_analysis",
+    "expected_terms": ["effects"],
+    "min_links": 1
+  },
+  {
+    "id": "integrated-compliance-rule-claim-link",
+    "rule_id": "integrated_compliance",
+    "expected_terms": ["compliance"],
+    "min_links": 1
+  },
+  {
+    "id": "fonsi-mitigation-rule-claim-link",
+    "rule_id": "fonsi_mitigation",
+    "expected_terms": ["mitigation"],
+    "min_links": 1
+  }
+]

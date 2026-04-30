@@ -93,6 +93,9 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 - run full-corpus extraction rather than optimizing a one-source slice
 - build broader retrieval evals from real EA review questions
 - extract source claims with generic legal/action patterns and strict offset validation
+- bind rule-pack requirements to validated source claims with deterministic scoring and explicit
+  no-claim gaps
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
-- keep generated conclusions downstream of retrieval, graph evidence, and eval gates
+- keep generated conclusions downstream of retrieval, graph evidence, source-claim links, and eval
+  gates

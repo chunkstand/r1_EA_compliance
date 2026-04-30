@@ -5,8 +5,8 @@ source material.
 
 The workbook is the source-of-truth input for the knowledge base. The system captures the full
 canonical workbook source set into a local, auditable source library, then builds derived extraction,
-retrieval, evidence graph, source-claim graph, and deterministic EA package review artifacts on top
-of that corpus.
+retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
+review artifacts on top of that corpus.
 
 Current full-library capture:
 
@@ -31,6 +31,7 @@ domain-specific heuristics.
 - `config/url_overrides.toml`
 - `config/retrieval_eval_seed.json`
 - `config/claim_eval_seed.json`
+- `config/rule_claim_link_eval_seed.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 
@@ -66,6 +67,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/claims/claim_graph_edges.jsonl`
   - `source_library/derived/<source_set_id>/claims/claim_graph.sqlite`
   - `source_library/derived/<source_set_id>/claims/claim_validation.json`
+- Rule-claim binding outputs:
+  - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.jsonl`
+  - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_gaps.jsonl`
+  - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.sqlite`
+  - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_validation.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
   - `source_library/reviews/<review_id>/package/package_chunks.jsonl`
@@ -82,10 +88,12 @@ The raw artifacts are not semantic chunks. They are source bytes plus provenance
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
 links into a local graph artifact. The `claim-extract` command extracts deterministic source-text
-claims and entities with exact offsets and graph bindings. The `ea-review` command runs deterministic
-package checklist reviews against reviewer-ready retrieval evidence. The `compliance-review` command
-evaluates a versioned rule pack and emits a finding graph. Embeddings and a full adjudication
-workflow remain downstream work.
+claims and entities with exact offsets and graph bindings. The `rule-claim-link` command binds
+versioned compliance rules to validated source claims before compliance findings rely on those
+authorities. The `ea-review` command runs deterministic package checklist reviews against
+reviewer-ready retrieval evidence. The `compliance-review` command evaluates a versioned rule pack
+and emits a finding graph with source-claim support. Embeddings and a full adjudication workflow
+remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -106,8 +114,9 @@ For each selected source row, the engine should:
 The catalog graph JSONL files are source metadata graph seeds. They link sources to artifacts,
 authorities, review topics, applicability, and related reviewer concepts. The derived evidence graph
 adds document, chunk, evidence-span, parser, and topic nodes. The source claim graph adds extracted
-claim, entity, authority, and claim-evidence-span nodes. No graph layer stores embeddings or trusted
-model-generated compliance conclusions.
+claim, entity, authority, and claim-evidence-span nodes. The rule-claim binding layer links
+compliance rules to validated claim nodes without generating legal conclusions. No graph layer stores
+embeddings or trusted model-generated compliance conclusions.
 
 ## Common Commands
 
@@ -321,11 +330,12 @@ writes:
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
 Every `pass` finding requires package evidence and source-library evidence. Every `gap` finding
-requires source-library evidence and records that matching package evidence was not found. The
-finding graph connects the review, rule pack, rules, findings, evidence spans, and package gaps.
-Rule-pack IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores,
-and hyphens. Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot
-silently broaden source retrieval.
+requires source-library evidence and records that matching package evidence was not found.
+Claim-bearing findings also require validated rule-to-source-claim links. The finding graph connects
+the review, rule pack, rules, findings, evidence spans, source claims, and package gaps. Rule-pack
+IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and hyphens.
+Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot silently broaden
+source retrieval.
 
 Run the seed retrieval eval gate:
 
@@ -378,6 +388,32 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
 tampered, or non-reviewer-ready claim outputs, and eval case filters fail fast on unknown or empty
 keys so typoed filters cannot silently broaden the eval.
 
+Build deterministic rule-to-source-claim links:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+```
+
+`rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
+writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
+carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
+and exact source offsets. The current full corpus links all `5/5` seed rules with `25` validated
+links and no explicit gaps.
+
+Run the seed rule-claim eval gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/rule_claim_link_eval_seed.json
+```
+
+`rule-claim-eval` revalidates current link artifacts before scoring cases and refuses stale,
+tampered, or non-reviewer-ready bindings.
+
 Run phase-aligned readiness evaluation:
 
 ```bash
@@ -385,8 +421,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library
 ```
 
-This reports catalog, extraction, retrieval, evidence-graph, and claim-extraction readiness
-separately so validation failures are not hidden inside a single aggregate score.
+This reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and rule-claim
+binding readiness separately so validation failures are not hidden inside a single aggregate score.
 Pass `--review-id <review-id>` after a compliance review to include `compliance_review` as an
 additional phase gate. The compliance phase requires the review source set to match the evaluated
 source set.

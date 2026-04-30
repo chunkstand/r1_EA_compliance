@@ -36,6 +36,8 @@ class ComplianceReviewResult:
     compliance_validation_path: Path
     finding_nodes_path: Path
     finding_edges_path: Path
+    rule_claim_links_path: Path
+    rule_claim_validation_path: Path
     ea_review_report_path: Path
     ea_review_validation_path: Path
     summary: dict
@@ -86,6 +88,16 @@ def run_compliance_review(
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
     )
+    from .rule_claim_binding import build_rule_claim_links
+    from .rule_claim_binding import links_by_rule
+
+    rule_claim_result = build_rule_claim_links(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        rule_pack_path=rule_pack_path,
+    )
+    rule_claim_links = _read_jsonl(rule_claim_result.links_path)
+    rule_claim_links_by_rule = links_by_rule(rule_claim_links, limit=source_top_k)
 
     ea_result = run_ea_review(
         package_path=package_path,
@@ -110,6 +122,7 @@ def run_compliance_review(
             rule_pack=rule_pack,
             rule=rules_by_id[str(finding["id"])],
             finding=finding,
+            source_claim_links=rule_claim_links_by_rule.get(str(finding["id"]), []),
         )
         for finding in ea_report["findings"]
     ]
@@ -122,6 +135,7 @@ def run_compliance_review(
         review_id=review_id,
         rule_pack=rule_pack,
         rule_pack_validation=rule_pack_validation,
+        rule_claim_validation=rule_claim_result.summary,
         ea_validation=ea_validation,
         findings=findings,
         nodes=nodes,
@@ -139,6 +153,7 @@ def run_compliance_review(
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
+        rule_claim_result=rule_claim_result,
         ea_result=ea_result,
         validation=validation,
         nodes=nodes,
@@ -163,6 +178,8 @@ def run_compliance_review(
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
+        rule_claim_links_path=rule_claim_result.links_path,
+        rule_claim_validation_path=rule_claim_result.validation_path,
         ea_review_report_path=ea_result.json_report_path,
         ea_review_validation_path=ea_result.validation_path,
         summary=summary,
@@ -213,10 +230,17 @@ def _prepare_outputs(
         path.unlink(missing_ok=True)
 
 
-def _compliance_finding(*, rule_pack: dict, rule: dict, finding: dict) -> dict:
+def _compliance_finding(
+    *,
+    rule_pack: dict,
+    rule: dict,
+    finding: dict,
+    source_claim_links: list[dict],
+) -> dict:
     status = str(finding["status"])
     package_evidence = finding.get("package_evidence")
     source_evidence = finding.get("source_library_evidence")
+    source_claim_evidence = [_source_claim_evidence(link) for link in source_claim_links]
     return {
         "id": finding["id"],
         "rule_id": rule["id"],
@@ -238,6 +262,12 @@ def _compliance_finding(*, rule_pack: dict, rule: dict, finding: dict) -> dict:
         "source_library_evidence_status": finding.get("source_library_evidence_status"),
         "package_evidence_citation": _citation_label(package_evidence),
         "source_library_evidence_citation": _citation_label(source_evidence),
+        "source_claim_link_count": len(source_claim_evidence),
+        "source_claim_ids": [link["claim_id"] for link in source_claim_evidence],
+        "source_claim_evidence_citations": [
+            link["citation_label"] for link in source_claim_evidence if link.get("citation_label")
+        ],
+        "source_claim_links": source_claim_evidence,
         "package_evidence": package_evidence,
         "source_library_evidence": source_evidence,
         "package_results": finding.get("package_results", []),
@@ -346,6 +376,32 @@ def _finding_graph(
                 source_node_id,
             )
 
+        for source_claim in finding.get("source_claim_links", []):
+            source_claim_node_id = _source_claim_node_id(source_claim)
+            nodes[source_claim_node_id] = _source_claim_node(source_claim_node_id, source_claim)
+            edges[
+                _edge_id(
+                    finding_node_id,
+                    "FINDING_SUPPORTED_BY_SOURCE_CLAIM",
+                    source_claim_node_id,
+                )
+            ] = _edge(
+                finding_node_id,
+                "FINDING_SUPPORTED_BY_SOURCE_CLAIM",
+                source_claim_node_id,
+            )
+            edges[
+                _edge_id(
+                    rule_node_id,
+                    "RULE_BOUND_TO_SOURCE_CLAIM",
+                    source_claim_node_id,
+                )
+            ] = _edge(
+                rule_node_id,
+                "RULE_BOUND_TO_SOURCE_CLAIM",
+                source_claim_node_id,
+            )
+
         if finding.get("package_evidence"):
             package_node_id = _evidence_node_id(
                 review_id,
@@ -396,6 +452,7 @@ def _validation_report(
     review_id: str,
     rule_pack: dict,
     rule_pack_validation: dict,
+    rule_claim_validation: dict,
     ea_validation: dict,
     findings: list[dict],
     nodes: list[dict],
@@ -406,6 +463,20 @@ def _validation_report(
             "name": "rule_pack_valid",
             "passed": bool(rule_pack_validation.get("passed")),
             "details": rule_pack_validation,
+        },
+        {
+            "name": "rule_claim_binding_reviewer_ready",
+            "passed": bool(rule_claim_validation.get("reviewer_ready")),
+            "details": {
+                "reviewer_ready": bool(rule_claim_validation.get("reviewer_ready")),
+                "validation_passed": bool(rule_claim_validation.get("validation_passed")),
+                "links_path": rule_claim_validation.get("links_path"),
+                "validation_path": rule_claim_validation.get("validation_path"),
+                "rule_count": rule_claim_validation.get("rule_count", 0),
+                "link_count": rule_claim_validation.get("link_count", 0),
+                "gap_count": rule_claim_validation.get("gap_count", 0),
+                "rules_without_links": rule_claim_validation.get("rules_without_links", []),
+            },
         },
         {
             "name": "ea_review_validation_passed",
@@ -420,6 +491,7 @@ def _validation_report(
         _check_pass_findings_have_dual_evidence(findings),
         _check_gap_findings_have_source_evidence(findings),
         _check_claim_findings_have_source_citations(findings),
+        _check_claim_findings_have_source_claim_links(findings),
         _check_no_unsupported_compliance_claims(findings),
         _check_finding_graph_evidence_edges(review_id, findings, nodes, edges),
         _check_graph_integrity(nodes, edges),
@@ -446,6 +518,7 @@ def _summary(
     compliance_validation_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
+    rule_claim_result,
     ea_result,
     validation: dict,
     nodes: list[dict],
@@ -457,6 +530,7 @@ def _summary(
         finding["id"]
         for finding in claim_findings
         if not finding.get("source_library_evidence_citation")
+        or not finding.get("source_claim_links")
     ]
     return {
         "review_id": review_id,
@@ -476,6 +550,12 @@ def _summary(
         "compliance_validation_path": str(compliance_validation_path),
         "finding_nodes_path": str(finding_nodes_path),
         "finding_edges_path": str(finding_edges_path),
+        "rule_claim_links_path": str(rule_claim_result.links_path),
+        "rule_claim_validation_path": str(rule_claim_result.validation_path),
+        "rule_claim_summary_path": str(rule_claim_result.summary_path),
+        "rule_claim_link_count": rule_claim_result.summary["link_count"],
+        "rule_claim_gap_count": rule_claim_result.summary["gap_count"],
+        "rule_claim_rules_without_links": rule_claim_result.summary["rules_without_links"],
         "finding_node_count": len(nodes),
         "finding_edge_count": len(edges),
         "ea_review_report_path": str(ea_result.json_report_path),
@@ -724,6 +804,20 @@ def _check_claim_findings_have_source_citations(findings: list[dict]) -> dict:
     }
 
 
+def _check_claim_findings_have_source_claim_links(findings: list[dict]) -> dict:
+    failures = [
+        finding["id"]
+        for finding in findings
+        if finding["status"] in CLAIM_STATUSES
+        and not finding.get("source_claim_links")
+    ]
+    return {
+        "name": "claim_findings_have_source_claim_links",
+        "passed": not failures,
+        "details": {"finding_ids": failures},
+    }
+
+
 def _check_no_unsupported_compliance_claims(findings: list[dict]) -> dict:
     unsupported = [
         finding["id"]
@@ -784,6 +878,13 @@ def _check_finding_graph_evidence_edges(
             "FINDING_SUPPORTED_BY_SOURCE_EVIDENCE",
             "SourceLibraryEvidence",
         )
+        source_claim_edge = _has_edge_to_type(
+            edge_tuples,
+            node_types,
+            finding_node_id,
+            "FINDING_SUPPORTED_BY_SOURCE_CLAIM",
+            "SourceClaim",
+        )
         package_edge = _has_edge_to_type(
             edge_tuples,
             node_types,
@@ -801,6 +902,8 @@ def _check_finding_graph_evidence_edges(
         missing = []
         if finding["status"] in CLAIM_STATUSES and not source_edge:
             missing.append("source_evidence_edge")
+        if finding["status"] in CLAIM_STATUSES and not source_claim_edge:
+            missing.append("source_claim_edge")
         if finding["status"] == "pass" and not package_edge:
             missing.append("package_evidence_edge")
         if finding["status"] == "gap" and not gap_edge:
@@ -909,6 +1012,61 @@ def _evidence_node(node_id: str, node_type: str, evidence: dict) -> dict:
     )
 
 
+def _source_claim_evidence(link: dict) -> dict:
+    return {
+        "link_id": link["link_id"],
+        "rule_id": link["rule_id"],
+        "claim_id": link["claim_id"],
+        "claim_type": link["claim_type"],
+        "claim_text": link["claim_text"],
+        "rank": link["rank"],
+        "score": link["score"],
+        "matched_terms": link.get("matched_terms", []),
+        "source_record_id": link["source_record_id"],
+        "chunk_id": link["chunk_id"],
+        "citation_label": link["citation_label"],
+        "authority_level": link["authority_level"],
+        "document_role": link["document_role"],
+        "review_topics": link.get("review_topics", []),
+        "artifact_sha256": link["artifact_sha256"],
+        "artifact_path": link["artifact_path"],
+        "parser_name": link["parser_name"],
+        "parser_version": link["parser_version"],
+        "source_text_path": link.get("source_text_path"),
+        "source_char_start": link["source_char_start"],
+        "source_char_end": link["source_char_end"],
+        "chunk_char_start": link["chunk_char_start"],
+        "chunk_char_end": link["chunk_char_end"],
+        "content_sha256": link["content_sha256"],
+        "validation_status": link["validation_status"],
+    }
+
+
+def _source_claim_node(node_id: str, source_claim: dict) -> dict:
+    return _node(
+        node_id,
+        "SourceClaim",
+        link_id=source_claim.get("link_id"),
+        rule_id=source_claim.get("rule_id"),
+        claim_id=source_claim.get("claim_id"),
+        claim_type=source_claim.get("claim_type"),
+        claim_text=source_claim.get("claim_text"),
+        rank=source_claim.get("rank"),
+        score=source_claim.get("score"),
+        matched_terms=source_claim.get("matched_terms", []),
+        source_record_id=source_claim.get("source_record_id"),
+        chunk_id=source_claim.get("chunk_id"),
+        citation_label=source_claim.get("citation_label"),
+        source_char_start=source_claim.get("source_char_start"),
+        source_char_end=source_claim.get("source_char_end"),
+        content_sha256=source_claim.get("content_sha256"),
+    )
+
+
+def _source_claim_node_id(source_claim: dict) -> str:
+    return f"source_claim:{source_claim['claim_id']}"
+
+
 def _evidence_node_id(
     review_id: str,
     rule_id: str,
@@ -989,6 +1147,14 @@ def _utc_now() -> str:
 
 def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _read_jsonl(path: Path) -> list[dict]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def _write_json(path: Path, value: dict) -> None:

@@ -444,6 +444,9 @@ The `compliance-review` command writes the base EA review outputs plus:
 - a local EA package file or directory passed with `--package-path`
 - a versioned compliance rule pack, defaulting to
   `config/compliance_rule_pack_nepa_ea_v0.json`
+- reviewer-ready source claim artifacts and rule-claim bindings under
+  `source_library/derived/<source_set_id>/claims/` and
+  `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
 - the source-library retrieval index, normally
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
 
@@ -503,6 +506,7 @@ Each compliance finding includes:
 - package query, package terms, source query, and source filters
 - package and source-library evidence statuses
 - package and source-library citation labels when present
+- source-claim link count, source claim IDs, source-claim evidence citations, and source-claim links
 - top package and source-library evidence results
 - limitations
 
@@ -512,6 +516,7 @@ Each compliance finding includes:
 - `ComplianceReview`
 - `ComplianceRule`
 - `ComplianceFinding`
+- `SourceClaim`
 - `SourceLibraryEvidence`
 - `PackageEvidence`
 - `PackageEvidenceGap`
@@ -522,6 +527,8 @@ Each compliance finding includes:
 - `RULE_PACK_HAS_RULE`
 - `REVIEW_EVALUATED_RULE`
 - `RULE_PRODUCED_FINDING`
+- `RULE_BOUND_TO_SOURCE_CLAIM`
+- `FINDING_SUPPORTED_BY_SOURCE_CLAIM`
 - `FINDING_SUPPORTED_BY_SOURCE_EVIDENCE`
 - `FINDING_SUPPORTED_BY_PACKAGE_EVIDENCE`
 - `FINDING_HAS_PACKAGE_GAP`
@@ -529,12 +536,14 @@ Each compliance finding includes:
 `compliance_validation.json` records gate-facing checks for:
 
 - rule-pack validity
+- rule-claim binding readiness
 - base EA review validation
 - every rule evaluated
 - valid finding statuses
 - `pass` findings have both package and source-library evidence
 - `gap` findings have source-library evidence
 - claim-bearing findings have source-library citation labels
+- claim-bearing findings have source-claim links
 - no unsupported compliance claims are emitted
 - finding graph evidence edges match each finding claim type
 - finding graph node/edge integrity
@@ -844,6 +853,64 @@ silently broaden the eval. Supported expected claim types are the same claim typ
 case count, pass rate, source hit rate, claim-type hit rate, expected-term hit rate, citation
 coverage rate, zero-result rate, and per-case top claim results with provenance.
 
+## Rule-Claim Binding Outputs
+
+Path: `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
+
+The `rule-claim-link` command writes:
+
+- `rule_claim_links.jsonl`
+- `rule_claim_link_gaps.jsonl`
+- `rule_claim_links.sqlite`
+- `rule_claim_link_validation.json`
+- `summary.json`
+
+`rule-claim-link` reads:
+
+- reviewer-ready source claims from `source_library/derived/<source_set_id>/claims/claims.jsonl`
+- the claim readiness artifacts beside that file
+- a versioned compliance rule pack, defaulting to
+  `config/compliance_rule_pack_nepa_ea_v0.json`
+
+Each `rule_claim_links.jsonl` record includes:
+
+- `rule_pack_id`, `rule_pack_version`, and `rule_id`
+- deterministic `link_id`
+- rule query, requirement, and source filters
+- rank, score, and matched terms
+- `claim_id`, claim type, and exact claim text
+- source record ID, chunk ID, citation label, authority level, document role, and review topics
+- artifact path/SHA256, URL provenance, parser name/version, and source text path
+- chunk-local and extracted-text character offsets
+- claim text hash, chunk hash, and validation status
+
+`rule_claim_link_gaps.jsonl` records explicit no-claim gaps for rules that have no validated source
+claim match. A rule is covered only when it has at least one validated link or one explicit gap.
+
+`rule_claim_link_validation.json` checks:
+
+- rule pack validity
+- source claims are reviewer-ready and still validate
+- link and gap files exist
+- link IDs and gap IDs are unique
+- link and gap records match the requested source set and rule-pack version
+- every rule has a validated claim link or explicit no-claim gap
+- gap records are explicit and do not overlap linked rules
+- links resolve to current source claims
+- link provenance fields match current claim records
+- links still satisfy rule source filters
+- link scores, ranks, matched terms, and claim types are supported
+- SQLite counts match JSONL outputs
+
+`summary.json` includes source set, rule-pack identity, top-k, rule count, claim count, link count,
+gap count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
+source-record count, validation status, and `reviewer_ready`.
+
+`rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. It writes
+`rule_claim_link_eval_results.json` by default beside the link file and records pass rate, min-link
+rate, claim-type hit rate, source hit rate, expected-term hit rate, citation coverage rate,
+zero-result rate, and per-case top link results with provenance.
+
 ## Document Evidence Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/evidence_graph/`
@@ -927,10 +994,12 @@ Graph edge relationships include:
 - `reviewer_ready`
 
 The `phase-eval` command writes `phase_eval_results.json` in the same directory. It evaluates
-catalog capture, extraction, retrieval, evidence graph, and claim extraction as separate phases and
-records phase blockers so downstream compliance review cannot hide an upstream failure. When
+catalog capture, extraction, retrieval, evidence graph, claim extraction, and rule-claim binding as
+separate phases and records phase blockers so downstream compliance review cannot hide an upstream
+failure. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
-counts.
+counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
+without links.

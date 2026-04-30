@@ -49,10 +49,13 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(purpose["claim_type"], "supported_compliance_finding")
             self.assertTrue(purpose["source_library_evidence_citation"])
             self.assertTrue(purpose["package_evidence_citation"])
+            self.assertGreaterEqual(purpose["source_claim_link_count"], 1)
+            self.assertTrue(purpose["source_claim_links"][0]["claim_id"])
             self.assertEqual(mitigation["status"], "gap")
             self.assertEqual(mitigation["claim_type"], "package_evidence_gap")
             self.assertTrue(mitigation["source_library_evidence_citation"])
             self.assertIsNone(mitigation["package_evidence_citation"])
+            self.assertGreaterEqual(mitigation["source_claim_link_count"], 1)
 
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
@@ -62,14 +65,22 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(
                 _check(validation, "claim_findings_have_source_citations")["passed"]
             )
+            self.assertTrue(
+                _check(validation, "claim_findings_have_source_claim_links")["passed"]
+            )
             nodes = _read_jsonl(result.finding_nodes_path)
             edges = _read_jsonl(result.finding_edges_path)
             self.assertIn("ComplianceRulePack", {node["type"] for node in nodes})
             self.assertIn("ComplianceRule", {node["type"] for node in nodes})
             self.assertIn("ComplianceFinding", {node["type"] for node in nodes})
+            self.assertIn("SourceClaim", {node["type"] for node in nodes})
             self.assertIn("PackageEvidenceGap", {node["type"] for node in nodes})
             self.assertIn(
                 "FINDING_SUPPORTED_BY_SOURCE_EVIDENCE",
+                {edge["relationship"] for edge in edges},
+            )
+            self.assertIn(
+                "FINDING_SUPPORTED_BY_SOURCE_CLAIM",
                 {edge["relationship"] for edge in edges},
             )
             self.assertIn("FINDING_HAS_PACKAGE_GAP", {edge["relationship"] for edge in edges})
@@ -141,10 +152,13 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 6)
+            self.assertEqual(result.summary["phase_count"], 7)
             claim_phase = _phase(result.summary, "claim_extraction")
             self.assertTrue(claim_phase["passed"])
             self.assertTrue(claim_phase["reviewer_ready"])
+            rule_claim_phase = _phase(result.summary, "rule_claim_binding")
+            self.assertTrue(rule_claim_phase["passed"])
+            self.assertTrue(rule_claim_phase["reviewer_ready"])
             compliance_phase = _phase(result.summary, "compliance_review")
             self.assertTrue(compliance_phase["passed"])
             self.assertTrue(compliance_phase["reviewer_ready"])

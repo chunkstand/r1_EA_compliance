@@ -11,6 +11,7 @@ import re
 import sqlite3
 
 from .extract import _source_derived_dir
+from .rule_claim_binding import default_rule_claim_links_dir
 
 
 GRAPH_SCHEMA_VERSION = "document-evidence-graph-v1"
@@ -269,6 +270,20 @@ def run_phase_aligned_eval(
     claim_dir = source_derived_dir / "claims"
     claim_validation_path = claim_dir / "claim_validation.json"
     claim_summary_path = claim_dir / "summary.json"
+    try:
+        rule_claim_dir = default_rule_claim_links_dir(
+            output_dir,
+            source_set_id=source_set_id,
+        )
+    except (FileNotFoundError, ValueError):
+        rule_claim_dir = source_derived_dir / "rule_claim_links"
+    rule_claim_validation_path = rule_claim_dir / "rule_claim_link_validation.json"
+    rule_claim_summary_path = rule_claim_dir / "summary.json"
+    if not rule_claim_summary_path.exists():
+        candidates = sorted((source_derived_dir / "rule_claim_links").glob("*/*/summary.json"))
+        if candidates:
+            rule_claim_summary_path = candidates[0]
+            rule_claim_validation_path = rule_claim_summary_path.parent / "rule_claim_link_validation.json"
     if review_id and not SAFE_REVIEW_ID_RE.fullmatch(review_id):
         raise ValueError(
             "review_id must contain only letters, numbers, dot, underscore, or hyphen."
@@ -310,6 +325,25 @@ def run_phase_aligned_eval(
         _read_json(compliance_review_path)
         if compliance_review_path is not None and compliance_review_path.exists()
         else None
+    )
+    compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
+    if compliance_summary_for_rule_claim.get("rule_claim_summary_path"):
+        candidate_summary_path = Path(str(compliance_summary_for_rule_claim["rule_claim_summary_path"]))
+        if candidate_summary_path.exists():
+            rule_claim_summary_path = candidate_summary_path
+    if compliance_summary_for_rule_claim.get("rule_claim_validation_path"):
+        candidate_validation_path = Path(
+            str(compliance_summary_for_rule_claim["rule_claim_validation_path"])
+        )
+        if candidate_validation_path.exists():
+            rule_claim_validation_path = candidate_validation_path
+    rule_claim_validation = (
+        _read_json(rule_claim_validation_path)
+        if rule_claim_validation_path.exists()
+        else None
+    )
+    rule_claim_summary = (
+        _read_json(rule_claim_summary_path) if rule_claim_summary_path.exists() else None
     )
 
     phases = [
@@ -402,6 +436,33 @@ def run_phase_aligned_eval(
                     0,
                 ),
                 "metrics": (claim_summary or {}).get("metrics", {}),
+            },
+        ),
+        _phase(
+            "rule_claim_binding",
+            passed=bool(rule_claim_validation and rule_claim_validation.get("passed")),
+            reviewer_ready=bool(rule_claim_summary and rule_claim_summary.get("reviewer_ready")),
+            details={
+                "validation_path": str(rule_claim_validation_path),
+                "summary_path": str(rule_claim_summary_path),
+                "validation_passed": bool(
+                    rule_claim_validation and rule_claim_validation.get("passed")
+                ),
+                "reviewer_ready": bool(
+                    rule_claim_summary and rule_claim_summary.get("reviewer_ready")
+                ),
+                "failed_validation_checks": _failed_check_names(rule_claim_validation),
+                "links_path": (rule_claim_summary or {}).get("links_path"),
+                "gaps_path": (rule_claim_summary or {}).get("gaps_path"),
+                "rule_pack_id": (rule_claim_summary or {}).get("rule_pack_id"),
+                "rule_pack_version": (rule_claim_summary or {}).get("rule_pack_version"),
+                "rule_count": (rule_claim_summary or {}).get("rule_count", 0),
+                "link_count": (rule_claim_summary or {}).get("link_count", 0),
+                "gap_count": (rule_claim_summary or {}).get("gap_count", 0),
+                "rules_without_links": (rule_claim_summary or {}).get(
+                    "rules_without_links",
+                    [],
+                ),
             },
         ),
     ]

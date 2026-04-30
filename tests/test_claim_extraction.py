@@ -14,6 +14,7 @@ from usfs_r1_ea_sources.claim_extraction import validate_claim_outputs
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
+from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
 
 class ClaimExtractionTests(unittest.TestCase):
@@ -293,6 +294,12 @@ class ClaimExtractionTests(unittest.TestCase):
             )
             build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
             build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp), document_role="law")
+            build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
 
             result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
 
@@ -301,6 +308,9 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertTrue(claim_phase["passed"])
             self.assertTrue(claim_phase["reviewer_ready"])
             self.assertEqual(claim_phase["details"]["claim_count"], 1)
+            rule_claim_phase = _phase(result.summary, "rule_claim_binding")
+            self.assertTrue(rule_claim_phase["passed"])
+            self.assertTrue(rule_claim_phase["reviewer_ready"])
 
 
 def _prepare_source_library(output_dir: Path, source_set_id: str, chunks: list[dict]) -> None:
@@ -409,6 +419,32 @@ def _write_claim_eval_file(output_dir: Path) -> Path:
         encoding="utf-8",
     )
     return eval_file
+
+
+def _write_rule_pack(directory: Path, *, document_role: str) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-nepa-ea",
+        "version": "0.1.0",
+        "title": "Unit NEPA EA Rule Pack",
+        "description": "Unit test rule pack.",
+        "rules": [
+            {
+                "id": "level_of_review",
+                "title": "EA level of review",
+                "question": "Does the source explain when an EA is prepared?",
+                "requirement": "An agency shall prepare an environmental assessment.",
+                "package_query": "environmental assessment",
+                "package_terms": ["environmental assessment"],
+                "source_query": "agency shall prepare environmental assessment",
+                "source_filters": {"document_role": document_role},
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:
