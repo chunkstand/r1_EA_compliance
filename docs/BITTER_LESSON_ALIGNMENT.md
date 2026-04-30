@@ -64,8 +64,9 @@ The current v1 foundation is aligned in the important places:
 - retrieval is a general local index over chunks and metadata
 - retrieval evals measure evidence recall and provenance coverage
 - the evidence graph is built from source/chunk/evidence primitives
+- the source claim graph is built from exact source-text spans, not generated conclusions
 - graph validation rejects stale or forged evidence payloads
-- phase eval separates capture, extraction, retrieval, and graph readiness
+- phase eval separates capture, extraction, retrieval, graph, and claim readiness
 
 The current partial-corpus state is also correctly treated as diagnostic. The system can inspect and
 evaluate the slice, but it does not mark the reviewer engine ready.
@@ -85,12 +86,13 @@ place for those terms is data:
 This keeps the core engine reusable and lets better corpus coverage, retrieval, graph reasoning,
 and model evaluation improve the reviewer over time.
 
-## Current Rule-Pack Milestone
+## Current Claim and Rule-Pack Milestones
 
-The current compliance milestone favors a computation-scalable reviewer loop:
+The current claim and compliance milestones favor a computation-scalable reviewer loop:
 
 - run full-corpus extraction rather than optimizing a one-source slice
 - build broader retrieval evals from real EA review questions
+- extract source claims with generic legal/action patterns and strict offset validation
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
 - keep generated conclusions downstream of retrieval, graph evidence, and eval gates

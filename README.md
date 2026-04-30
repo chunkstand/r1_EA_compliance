@@ -5,7 +5,8 @@ source material.
 
 The workbook is the source-of-truth input for the knowledge base. The system captures the full
 canonical workbook source set into a local, auditable source library, then builds derived extraction,
-retrieval, evidence graph, and deterministic EA package review artifacts on top of that corpus.
+retrieval, evidence graph, source-claim graph, and deterministic EA package review artifacts on top
+of that corpus.
 
 Current full-library capture:
 
@@ -29,6 +30,7 @@ domain-specific heuristics.
 - `config/downloader.toml`
 - `config/url_overrides.toml`
 - `config/retrieval_eval_seed.json`
+- `config/claim_eval_seed.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 
@@ -57,6 +59,13 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite`
   - `source_library/derived/<source_set_id>/evidence_graph/evidence_graph_validation.json`
   - `source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json`
+- Source claim graph outputs:
+  - `source_library/derived/<source_set_id>/claims/claims.jsonl`
+  - `source_library/derived/<source_set_id>/claims/entities.jsonl`
+  - `source_library/derived/<source_set_id>/claims/claim_graph_nodes.jsonl`
+  - `source_library/derived/<source_set_id>/claims/claim_graph_edges.jsonl`
+  - `source_library/derived/<source_set_id>/claims/claim_graph.sqlite`
+  - `source_library/derived/<source_set_id>/claims/claim_validation.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
   - `source_library/reviews/<review_id>/package/package_chunks.jsonl`
@@ -72,10 +81,11 @@ The raw artifacts are not semantic chunks. They are source bytes plus provenance
 `extract-build` command builds a derived text/chunk layer from the catalog. The
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
-links into a local graph artifact. The `ea-review` command runs deterministic package checklist
-reviews against reviewer-ready retrieval evidence. The `compliance-review` command evaluates a
-versioned rule pack and emits a finding graph. Embeddings, content-level legal claim extraction, and
-a full adjudication workflow remain downstream work.
+links into a local graph artifact. The `claim-extract` command extracts deterministic source-text
+claims and entities with exact offsets and graph bindings. The `ea-review` command runs deterministic
+package checklist reviews against reviewer-ready retrieval evidence. The `compliance-review` command
+evaluates a versioned rule pack and emits a finding graph. Embeddings and a full adjudication
+workflow remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -95,8 +105,9 @@ For each selected source row, the engine should:
 
 The catalog graph JSONL files are source metadata graph seeds. They link sources to artifacts,
 authorities, review topics, applicability, and related reviewer concepts. The derived evidence graph
-adds document, chunk, evidence-span, parser, and topic nodes. Neither graph layer currently includes
-extracted legal claims, embeddings, or model-generated compliance conclusions.
+adds document, chunk, evidence-span, parser, and topic nodes. The source claim graph adds extracted
+claim, entity, authority, and claim-evidence-span nodes. No graph layer stores embeddings or trusted
+model-generated compliance conclusions.
 
 ## Common Commands
 
@@ -342,6 +353,27 @@ so stale or edited chunk files cannot produce reviewer-ready graph artifacts. Us
 `--allow-partial-retrieval` only for diagnostic slices; the graph can validate structurally, but
 `reviewer_ready` remains `false`.
 
+Build deterministic source claims and entity graph artifacts:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract \
+  --output-dir source_library
+```
+
+`claim-extract` reads extracted chunks, catalog topics, and the reviewer-ready retrieval index. It
+emits exact source-text claim spans, entities, authority links, graph JSONL, SQLite, validation, and
+summary artifacts. Claims are deterministic `obligation`, `prohibition`, `condition`,
+`authorization`, `definition`, `exemption`, or `guidance` records and are reviewer-ready only when
+their offsets, hashes, chunk IDs, citations, and retrieval-index bindings validate.
+
+Run the seed claim eval gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
+  --output-dir source_library \
+  --eval-file config/claim_eval_seed.json
+```
+
 Run phase-aligned readiness evaluation:
 
 ```bash
@@ -349,8 +381,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library
 ```
 
-This reports catalog, extraction, retrieval, and evidence-graph readiness separately so validation
-failures are not hidden inside a single aggregate score.
+This reports catalog, extraction, retrieval, evidence-graph, and claim-extraction readiness
+separately so validation failures are not hidden inside a single aggregate score.
 Pass `--review-id <review-id>` after a compliance review to include `compliance_review` as an
 additional phase gate. The compliance phase requires the review source set to match the evaluated
 source set.

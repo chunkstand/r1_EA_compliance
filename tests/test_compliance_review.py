@@ -10,6 +10,7 @@ import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.compliance_review import validate_rule_pack
+from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
@@ -140,7 +141,10 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 5)
+            self.assertEqual(result.summary["phase_count"], 6)
+            claim_phase = _phase(result.summary, "claim_extraction")
+            self.assertTrue(claim_phase["passed"])
+            self.assertTrue(claim_phase["reviewer_ready"])
             compliance_phase = _phase(result.summary, "compliance_review")
             self.assertTrue(compliance_phase["passed"])
             self.assertTrue(compliance_phase["reviewer_ready"])
@@ -219,6 +223,7 @@ def _build_source_library(output_dir: Path, source_set_id: str) -> None:
         },
     )
     build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+    build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
 
 
 def _write_extraction_diagnostics(

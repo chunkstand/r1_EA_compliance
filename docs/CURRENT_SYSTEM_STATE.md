@@ -31,18 +31,21 @@ The current catalog validation passes. The captured-library integrity test suite
 Last verified locally on 2026-04-30.
 
 - Active source set: `source-set-e364ea220cffd938`
-- Base phase eval: passed, `4/4` phases reviewer-ready
-- Compliance phase eval: passed, `5/5` phases reviewer-ready for
+- Base phase eval: passed, `5/5` phases reviewer-ready
+- Compliance phase eval: passed, `6/6` phases reviewer-ready for
   `smoke-compliance-review-v0-hardened`
 - Catalog: `147` source rows, `131` unique raw artifacts
 - Extraction: `147/147` selected sources extracted, validation passed
 - Retrieval: `13,619` chunks indexed, validation passed, reviewer-ready
 - Evidence graph: `36,578` nodes, `106,182` edges, validation passed, reviewer-ready
 - Retrieval-to-graph binding mismatches: `0`
+- Source claim graph: `35,348` claims, `8,479` entities, `90,153` nodes, `231,214`
+  edges, validation passed, reviewer-ready
+- Claim eval seed: passed, `2/2` cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
-- Unit suite: `94` tests passed
+- Unit suite: `99` tests passed
 
 The verification set was:
 
@@ -52,6 +55,10 @@ python -m compileall -q src
 uv run --extra dev ruff check src tests
 git diff --check
 uv lock --check
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
+  --output-dir source_library \
+  --eval-file config/claim_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library
 printf '%s\n' \
   'Purpose and Need' \
@@ -157,7 +164,12 @@ document role, authority level, source record, review topic, citation label, and
 The document evidence graph layer is implemented through `evidence-graph-build`. It turns extracted
 chunks and retrieval metadata into graph artifacts for source documents, raw artifacts, extracted
 text, sections, chunks, evidence spans, parsers, and review topics. It is a graph substrate for
-auditable review; it does not yet extract legal claims.
+auditable review; source-text legal claims are handled by the separate claim graph layer.
+
+Source Claim Graph V0 is implemented through `claim-extract`. It extracts deterministic legal-style
+claims from exact chunk text spans, links entities and authorities, validates offsets and retrieval
+bindings, and writes claim graph artifacts under
+`source_library/derived/<source_set_id>/claims/`.
 
 EA Package Review V0 is implemented through `ea-review`. It extracts a local EA package, runs the
 seed checklist, retrieves source-library evidence for each item, and writes package evidence,
@@ -178,17 +190,20 @@ Current state:
 - Retrieval builds and queries a provenance-bearing local evidence index.
 - The document evidence graph builds source, artifact, extracted-text, section, chunk, evidence-span,
   parser, and review-topic nodes with health metrics.
-- Phase eval reports catalog, extraction, retrieval, and graph readiness separately.
+- The source claim graph builds claim, entity, authority, and claim-evidence-span nodes with exact
+  chunk and source-text offsets.
+- Phase eval reports catalog, extraction, retrieval, evidence-graph, and claim-extraction readiness
+  separately.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
+- A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
 - No embeddings exist yet.
-- No source-text legal claim/entity extraction graph exists yet.
 - No model-generated compliance narrative is trusted without deterministic package and source
   evidence.
 - Page/section offsets are available only where the selected parser can infer them; all chunks carry
@@ -202,12 +217,17 @@ The catalog graph seed is a source metadata graph. It includes relationships suc
 - source to applicability
 
 The document evidence graph is the implemented content graph. It includes document sections, chunks,
-evidence spans, parser provenance, and review-topic edges. It does not yet include extracted legal
-claims, table structure recovery, embeddings, or vector chunks.
+evidence spans, parser provenance, and review-topic edges. It does not include table structure
+recovery, embeddings, or vector chunks.
+
+The source claim graph is the implemented claim/entity graph. It includes extracted source-text
+claims, entities, authority nodes, claim evidence spans, and edges back to chunk/source provenance.
+It is deterministic pattern extraction with strict validation, not a model-generated interpretation
+of compliance meaning.
 
 The finding graph is the implemented compliance-review graph. It includes rule packs, compliance
-rules, findings, evidence-span references, and package-gap nodes. It does not replace source-text
-legal claim extraction or human reviewer adjudication.
+rules, findings, evidence-span references, and package-gap nodes. It does not replace human reviewer
+adjudication.
 
 ## Accuracy Guarantees
 
@@ -479,15 +499,16 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - extraction
 - retrieval
 - evidence graph
+- claim extraction
 - optional compliance review when `--review-id` or `--review-dir` is passed
 
 When a compliance review phase is included, `phase-eval` requires the review report to exist,
 validation to pass, the review ID to match when supplied, and the review source set to match the
 evaluated source set.
 
-Next downstream layers are embeddings, source-text claim/entity extraction, broader rule-pack
-coverage, reviewer adjudication workflow, and model-assisted synthesis that is constrained by
-evidence and validation gates.
+Next downstream layers are embeddings, claim-to-rule retrieval, broader rule-pack coverage,
+reviewer adjudication workflow, and model-assisted synthesis that is constrained by evidence and
+validation gates.
 
 ## Verification Commands
 
@@ -548,6 +569,16 @@ Build the evidence graph:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build \
   --output-dir source_library
+```
+
+Build source claims and run the seed claim eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract \
+  --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
+  --output-dir source_library \
+  --eval-file config/claim_eval_seed.json
 ```
 
 Run phase-aligned readiness evaluation:

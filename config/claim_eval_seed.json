@@ -1,0 +1,20 @@
+[
+  {
+    "id": "level-of-review-ea-threshold",
+    "query": "prepare environmental assessment significance unknown",
+    "expected_source_record_ids": ["R1EA-003"],
+    "expected_claim_type": "condition",
+    "expected_terms": ["environmental assessment", "significance"],
+    "filters": {"source_record_id": "R1EA-003"},
+    "min_claims": 1
+  },
+  {
+    "id": "fonsi-public-availability",
+    "query": "FONSI available to the public",
+    "expected_source_record_ids": ["R1EA-014"],
+    "expected_claim_type": "obligation",
+    "expected_terms": ["FONSI", "public"],
+    "filters": {"source_record_id": "R1EA-014"},
+    "min_claims": 1
+  }
+]

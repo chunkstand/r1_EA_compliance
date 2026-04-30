@@ -1,7 +1,8 @@
 # System Output Schemas
 
 The system writes durable, auditable outputs under `source_library/`. This file covers downloader,
-batch, catalog, EA review, extraction, retrieval, evidence graph, and phase-eval artifacts.
+batch, catalog, EA review, extraction, retrieval, evidence graph, source claim graph, and phase-eval
+artifacts.
 
 ## Row Manifest JSONL
 
@@ -727,6 +728,103 @@ and chunk content hash.
 - per-case query, filters, expectations, failure reasons, missing expected source IDs, missing
   expected terms, top source IDs, and top evidence results
 
+## Source Claim Graph Outputs
+
+Path: `source_library/derived/<source_set_id>/claims/`
+
+The `claim-extract` command writes:
+
+- `claims.jsonl`
+- `entities.jsonl`
+- `claim_graph_nodes.jsonl`
+- `claim_graph_edges.jsonl`
+- `claim_graph.sqlite`
+- `claim_validation.json`
+- `summary.json`
+
+`claim-extract` reads:
+
+- `source_library/derived/<source_set_id>/chunks/chunks.jsonl`
+- `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
+- `source_library/derived/<source_set_id>/diagnostics/summary.json`
+- `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
+- `source_library/derived/<source_set_id>/retrieval/retrieval_validation.json`
+- `source_library/derived/<source_set_id>/retrieval/summary.json`
+- `source_library/catalog/review_sources.sqlite`
+
+`claims.jsonl` contains exact source-text claim spans. Each claim includes:
+
+- stable `claim_id`
+- `source_set_id`
+- `source_record_id`
+- `chunk_id`
+- claim type: `obligation`, `prohibition`, `condition`, `authorization`, `definition`,
+  `exemption`, or `guidance`
+- exact `claim_text`
+- citation label, authority level, document role, title, and review topics
+- artifact path/SHA256 and URL provenance
+- parser name/version
+- source text path
+- chunk-local and extracted-text character offsets
+- claim text hash and source chunk hash
+- extractor name/version, pattern ID, confidence, and validation status
+
+`entities.jsonl` contains deterministic entity records extracted from claim text, including legal
+citations, section references, acronyms, and named actors. Each entity records its claim IDs, source
+record IDs, citation labels, mention count, and extractor version.
+
+Claim graph node types:
+
+- `SourceSet`
+- `SourceDocument`
+- `DocumentChunk`
+- `Claim`
+- `ClaimEvidenceSpan`
+- `Entity`
+- `Authority`
+- `ReviewTopic`
+
+Claim graph edge relationships include:
+
+- `SOURCE_SET_HAS_SOURCE`
+- `SOURCE_HAS_CHUNK`
+- `CHUNK_HAS_CLAIM`
+- `CLAIM_HAS_EVIDENCE_SPAN`
+- `CLAIM_EVIDENCE_FROM_CHUNK`
+- `CLAIM_MENTIONS_ENTITY`
+- `CLAIM_HAS_AUTHORITY`
+- `SOURCE_HAS_AUTHORITY`
+- `CLAIM_SUPPORTS_REVIEW_TOPIC`
+
+`claim_validation.json` checks:
+
+- extraction validation passed
+- extraction scope is complete
+- retrieval validation passed
+- retrieval is reviewer-ready, unless `--allow-partial-retrieval` is used for diagnostics
+- retrieval index exists and is readable
+- claim/entity/graph JSONL files exist
+- claim IDs and entity IDs are unique
+- every claim has required provenance
+- claim types are supported
+- claim source-set IDs match the evaluated source set
+- claim chunk IDs resolve to extracted chunks
+- claim offsets match chunk text and source text files
+- claim text hashes match
+- claims match the retrieval index binding for their source chunks
+- unsupported claims are not emitted
+- entities resolve to claims
+- graph nodes and edges are internally consistent
+- graph health metrics pass
+
+`summary.json` includes claim count, entity count, graph counts, claim-type counts, authority and
+document-role counts, retrieval binding mismatch count, offset mismatch count, graph health metrics,
+validation status, and `reviewer_ready`.
+
+`claim-eval` writes `claim_eval_results.json` by default beside the claims file. It records eval
+case count, pass rate, source hit rate, claim-type hit rate, expected-term hit rate, citation
+coverage rate, zero-result rate, and per-case top claim results with provenance.
+
 ## Document Evidence Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/evidence_graph/`
@@ -810,9 +908,10 @@ Graph edge relationships include:
 - `reviewer_ready`
 
 The `phase-eval` command writes `phase_eval_results.json` in the same directory. It evaluates
-catalog capture, extraction, retrieval, and evidence graph as separate phases and records phase
-blockers so downstream compliance review cannot hide an upstream failure. When `--review-id` or
-`--review-dir` is supplied, it also evaluates a `compliance_review` phase and requires the review
-report to exist, validation to pass, the review ID to match when supplied, and the review source set
-to match the evaluated source set. The evidence-graph phase also reports failed validation check
-names, freshness status, retrieval index path, and retrieval binding mismatch count.
+catalog capture, extraction, retrieval, evidence graph, and claim extraction as separate phases and
+records phase blockers so downstream compliance review cannot hide an upstream failure. When
+`--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
+requires the review report to exist, validation to pass, the review ID to match when supplied, and
+the review source set to match the evaluated source set. The evidence-graph and claim-extraction
+phases report failed validation check names, retrieval index path, and retrieval binding mismatch
+counts.

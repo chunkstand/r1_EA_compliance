@@ -266,6 +266,9 @@ def run_phase_aligned_eval(
     retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
     graph_summary_path = graph_dir / "summary.json"
+    claim_dir = source_derived_dir / "claims"
+    claim_validation_path = claim_dir / "claim_validation.json"
+    claim_summary_path = claim_dir / "summary.json"
     if review_id and not SAFE_REVIEW_ID_RE.fullmatch(review_id):
         raise ValueError(
             "review_id must contain only letters, numbers, dot, underscore, or hyphen."
@@ -296,6 +299,8 @@ def run_phase_aligned_eval(
     )
     graph_validation = _read_json(graph_validation_path) if graph_validation_path.exists() else None
     graph_summary = _read_json(graph_summary_path) if graph_summary_path.exists() else None
+    claim_validation = _read_json(claim_validation_path) if claim_validation_path.exists() else None
+    claim_summary = _read_json(claim_summary_path) if claim_summary_path.exists() else None
     compliance_validation = (
         _read_json(compliance_validation_path)
         if compliance_validation_path is not None and compliance_validation_path.exists()
@@ -374,6 +379,29 @@ def run_phase_aligned_eval(
                     0,
                 ),
                 "metrics": (graph_summary or {}).get("metrics", {}),
+            },
+        ),
+        _phase(
+            "claim_extraction",
+            passed=bool(claim_validation and claim_validation.get("passed")),
+            reviewer_ready=bool(claim_summary and claim_summary.get("reviewer_ready")),
+            details={
+                "validation_path": str(claim_validation_path),
+                "summary_path": str(claim_summary_path),
+                "validation_passed": bool(claim_validation and claim_validation.get("passed")),
+                "reviewer_ready": bool(claim_summary and claim_summary.get("reviewer_ready")),
+                "failed_validation_checks": _failed_check_names(claim_validation),
+                "claims_path": (claim_summary or {}).get("claims_path"),
+                "entities_path": (claim_summary or {}).get("entities_path"),
+                "claim_count": (claim_summary or {}).get("claim_count", 0),
+                "entity_count": (claim_summary or {}).get("entity_count", 0),
+                "claim_type_counts": (claim_summary or {}).get("claim_type_counts", {}),
+                "retrieval_index_path": (claim_summary or {}).get("retrieval_index_path"),
+                "retrieval_binding_mismatch_count": (claim_summary or {}).get(
+                    "retrieval_binding_mismatch_count",
+                    0,
+                ),
+                "metrics": (claim_summary or {}).get("metrics", {}),
             },
         ),
     ]

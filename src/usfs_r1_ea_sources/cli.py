@@ -6,6 +6,10 @@ import json
 
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
+from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
+from .claim_extraction import build_claim_extraction
+from .claim_extraction import default_claims_path
+from .claim_extraction import run_claim_eval
 from .compliance_review import DEFAULT_RULE_PACK_PATH
 from .compliance_review import run_compliance_review
 from .config import DEFAULT_CONFIG_PATH, load_config
@@ -253,11 +257,36 @@ def build_parser() -> argparse.ArgumentParser:
         help="Build a diagnostic graph from a non-reviewer-ready retrieval index.",
     )
 
+    claim_extract = subparsers.add_parser(
+        "claim-extract",
+        help="Extract deterministic source-text claims and entity graph artifacts from chunks.",
+    )
+    claim_extract.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    claim_extract.add_argument("--source-set-id")
+    claim_extract.add_argument("--chunks-path", type=Path)
+    claim_extract.add_argument("--catalog-sqlite-path", type=Path)
+    claim_extract.add_argument(
+        "--allow-partial-retrieval",
+        action="store_true",
+        help="Build diagnostic claims from a non-reviewer-ready retrieval index.",
+    )
+
+    claim_eval = subparsers.add_parser(
+        "claim-eval",
+        help="Run deterministic eval cases against extracted source claims.",
+    )
+    claim_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    claim_eval.add_argument("--source-set-id")
+    claim_eval.add_argument("--claims-path", type=Path)
+    claim_eval.add_argument("--eval-file", default=DEFAULT_CLAIM_EVAL_PATH, type=Path)
+    claim_eval.add_argument("--top-k", type=int, default=5)
+    claim_eval.add_argument("--results-dir", type=Path)
+
     phase_eval = subparsers.add_parser(
         "phase-eval",
         help=(
             "Run phase-aligned readiness evals across catalog, extraction, retrieval, graph, "
-            "and optionally one compliance review."
+            "claim extraction, and optionally one compliance review."
         ),
     )
     phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
@@ -420,6 +449,31 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "claim-extract":
+        result = build_claim_extraction(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            chunks_path=args.chunks_path,
+            catalog_sqlite_path=args.catalog_sqlite_path,
+            allow_partial_retrieval=args.allow_partial_retrieval,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "claim-eval":
+        claims_path = args.claims_path or default_claims_path(
+            args.output_dir,
+            args.source_set_id,
+        )
+        result = run_claim_eval(
+            claims_path=claims_path,
+            eval_file=args.eval_file,
+            top_k=args.top_k,
+            output_dir=args.results_dir,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "phase-eval":
         result = run_phase_aligned_eval(
