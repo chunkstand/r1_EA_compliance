@@ -45,6 +45,17 @@ python -m usfs_r1_ea_sources preflight \
 
 Preflight records HTTP status, final URL, redirect chain, content type, content length, challenge-page detection, and failure status for each workbook row while fetching each unique URL only once.
 
+After preflight results are acceptable, download raw artifacts:
+
+```bash
+python -m usfs_r1_ea_sources download \
+  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --output-dir source_library \
+  --limit 5
+```
+
+The downloader saves immutable raw artifacts under `source_library/artifacts/raw/`, computes SHA256 hashes, reuses existing artifacts on resume, and writes a row-level manifest for every workbook source row.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.

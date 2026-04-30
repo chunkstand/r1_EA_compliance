@@ -57,6 +57,31 @@ Preflight `status` values include:
 - `unsupported_content_type`
 - `failed`
 
+For download runs, the manifest path is `source_library/manifests/download_<run_id>.jsonl`.
+Download records use the same row-level schema and add:
+
+- `planned_artifact_path`
+- `content_length`
+- `http_status`
+- `attempt_count`
+
+Download `status` values include:
+
+- `downloaded`
+- `downloaded_existing`
+- `duplicate_url`
+- `duplicate_content`
+- `skipped_excluded`
+- `blocked`
+- `challenge_page`
+- `not_found`
+- `timeout`
+- `rate_limited`
+- `ssl_error`
+- `invalid_content`
+- `unsupported_content_type`
+- `failed`
+
 ## Run Summary JSON
 
 Path: `source_library/runs/<run_id>/summary.json`
@@ -86,6 +111,13 @@ Preflight summaries also include:
 
 - `checked_url_count`
 - `preflight_ok_count`
+
+Download summaries also include:
+
+- `checked_url_count`
+- `downloaded_count`
+- `downloaded_existing_count`
+- `duplicate_content_count`
 
 ## Validation Report JSON
 
