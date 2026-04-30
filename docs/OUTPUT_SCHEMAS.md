@@ -273,6 +273,8 @@ Each planned batch includes:
 
 - `status`
 - row and status counts
+- `artifact_count`
+- `browser_compatible_user_agent_count`
 - `gate_passed`
 - `manifest_path`
 - `report_path`

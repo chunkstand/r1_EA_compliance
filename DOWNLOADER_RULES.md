@@ -250,6 +250,7 @@ Before batch downloads begin:
 - Write a durable `batch_ledger.json` and update it after every batch state change.
 - Run `download`, `report`, and `validate-run` for each batch.
 - Stop on the first failed or repair-needed batch unless an operator explicitly chooses to continue.
+- Summarize artifact counts and browser-compatible user-agent usage in the batch ledger.
 - Consolidate failed and review-needed rows into `repair_queue.csv`.
 - Support resume by skipping already passed batches under the same run prefix.
 

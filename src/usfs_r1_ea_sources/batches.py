@@ -38,7 +38,12 @@ def build_batch_plan(
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
     sources = load_canonical_sources(workbook_path, config.workbook)
-    selected_hosts = hosts or sorted({source_host(source) for source in sources})
+    available_hosts = {source_host(source) for source in sources}
+    if hosts:
+        unknown_hosts = sorted(set(hosts) - available_hosts)
+        if unknown_hosts:
+            raise ValueError(f"Batch plan requested hosts with no workbook sources: {unknown_hosts}")
+    selected_hosts = hosts or sorted(available_hosts)
     batches: list[dict] = []
     for host in selected_hosts:
         host_sources = [source for source in sources if source_host(source) == host]
@@ -143,6 +148,7 @@ def run_batch_downloads(
                 )
                 report_result = reporter(output_dir=output_dir, run_id=entry["batch_id"])
                 validation_result = validator(output_dir=output_dir, run_id=entry["batch_id"])
+                manifest_metrics = _batch_manifest_metrics(download_result.manifest_path)
                 batch_repair_rows = [
                     {**row, "batch_id": entry["batch_id"], "run_id": entry["batch_id"]}
                     for row in report_result.summary.get("repair_rows", [])
@@ -170,6 +176,10 @@ def run_batch_downloads(
                         "failed_count": failed_count,
                         "needs_review_count": needs_review_count,
                         "status_counts": download_result.summary.get("status_counts", {}),
+                        "artifact_count": manifest_metrics["artifact_count"],
+                        "browser_compatible_user_agent_count": manifest_metrics[
+                            "browser_compatible_user_agent_count"
+                        ],
                         "gate_passed": validation_result.passed,
                         "manifest_path": str(download_result.manifest_path),
                         "report_path": str(report_result.report_path),
@@ -228,6 +238,8 @@ def render_batch_report(summary: dict, ledger_entries: list[dict]) -> str:
         f"- Passed: `{summary['passed_batch_count']}`",
         f"- Failed: `{summary['failed_batch_count']}`",
         f"- Needs repair: `{summary['needs_repair_batch_count']}`",
+        f"- Artifacts: `{summary['artifact_count']}`",
+        f"- Browser-compatible UA rows: `{summary['browser_compatible_user_agent_count']}`",
         f"- All passed: `{summary['all_passed']}`",
         "",
         "## Batches",
@@ -306,6 +318,10 @@ def _batch_summary(
     status_counts: dict[str, int] = {}
     for entry in ledger_entries:
         status_counts[entry["status"]] = status_counts.get(entry["status"], 0) + 1
+    artifact_count = sum(int(entry.get("artifact_count") or 0) for entry in ledger_entries)
+    browser_compatible_count = sum(
+        int(entry.get("browser_compatible_user_agent_count") or 0) for entry in ledger_entries
+    )
     return {
         "run_id": parent_run_id,
         "run_id_prefix": run_id_prefix,
@@ -319,6 +335,8 @@ def _batch_summary(
         "needs_repair_batch_count": status_counts.get("needs_repair", 0),
         "planned_batch_count": status_counts.get("planned", 0),
         "running_batch_count": status_counts.get("running", 0),
+        "artifact_count": artifact_count,
+        "browser_compatible_user_agent_count": browser_compatible_count,
         "all_passed": bool(ledger_entries)
         and all(entry["status"] == "passed" for entry in ledger_entries),
         "stopped_after_batch_id": stopped_after_batch_id,
@@ -331,6 +349,25 @@ def _batch_summary(
 
 def _write_ledger(path: Path, run_id: str, entries: list[dict]) -> None:
     _write_json(path, {"run_id": run_id, "batches": entries})
+
+
+def _batch_manifest_metrics(manifest_path: Path) -> dict:
+    if not manifest_path.exists():
+        return {"artifact_count": 0, "browser_compatible_user_agent_count": 0}
+    artifact_sha256s = set()
+    browser_compatible_count = 0
+    for line in manifest_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if record.get("artifact_sha256"):
+            artifact_sha256s.add(record["artifact_sha256"])
+        if record.get("validation", {}).get("browser_compatible_user_agent"):
+            browser_compatible_count += 1
+    return {
+        "artifact_count": len(artifact_sha256s),
+        "browser_compatible_user_agent_count": browser_compatible_count,
+    }
 
 
 def _write_json(path: Path, payload: dict) -> None:
