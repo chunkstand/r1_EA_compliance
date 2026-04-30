@@ -18,8 +18,10 @@ WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.
 CONFIG = ROOT / "config" / "downloader.toml"
 OVERRIDES = ROOT / "config" / "url_overrides.toml"
 SOURCE_LIBRARY = ROOT / "source_library"
-FULL_BATCH_RUN_ID = "full-library-batches"
-SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
+FULL_BATCH_RUN_ID = "corpus-update-2026-04-30-batches"
+ARTIFACT_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
+NON_ARTIFACT_SUCCESS_STATUSES = {"skipped_excluded"}
+SUCCESS_STATUSES = ARTIFACT_STATUSES | NON_ARTIFACT_SUCCESS_STATUSES
 
 
 class CapturedLibraryIntegrityTests(unittest.TestCase):
@@ -65,7 +67,6 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
         self.assertEqual(self.summary["passed_batch_count"], self.summary["batch_count"])
         self.assertEqual(self.summary["failed_batch_count"], 0)
         self.assertEqual(self.summary["needs_repair_batch_count"], 0)
-        self.assertEqual(self.summary["status_counts"], {"passed": self.summary["batch_count"]})
 
         with (self.run_dir / "repair_queue.csv").open(newline="", encoding="utf-8") as handle:
             repair_rows = list(csv.DictReader(handle))
@@ -90,13 +91,31 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
                 set(batch["source_record_ids"]),
                 msg=batch["batch_id"],
             )
-            self.assertEqual(sum(1 for record in records if record["status"] not in SUCCESS_STATUSES), 0)
+            unexpected_statuses = [
+                record
+                for record in records
+                if record["status"] not in SUCCESS_STATUSES
+            ]
+            self.assertEqual(unexpected_statuses, [], msg=batch["batch_id"])
+
+        skipped_ids = sorted(
+            record["source_record_id"]
+            for record in self.batch_records
+            if record["status"] in NON_ARTIFACT_SUCCESS_STATUSES
+        )
+        self.assertEqual(skipped_ids, ["R1EA-160"])
 
     def test_artifact_hashes_sizes_and_duplicate_links_are_accurate(self) -> None:
         artifact_paths_by_sha: dict[str, set[str]] = {}
         for record in self.batch_records:
             self.assertIn(record["status"], SUCCESS_STATUSES)
             self.assertIsNone(record.get("failure"), msg=record["source_record_id"])
+            if record["status"] in NON_ARTIFACT_SUCCESS_STATUSES:
+                self.assertIsNone(record.get("artifact_sha256"), msg=record["source_record_id"])
+                self.assertIsNone(record.get("artifact_path"), msg=record["source_record_id"])
+                self.assertIsNone(record.get("artifact_byte_size"), msg=record["source_record_id"])
+                continue
+
             artifact_sha = record.get("artifact_sha256")
             artifact_path_value = record.get("artifact_path")
             self.assertTrue(artifact_sha, msg=record["source_record_id"])
@@ -153,7 +172,11 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
             self.assertEqual(catalog_record["source_status"], batch_record["status"], msg=source_id)
             self.assertEqual(catalog_record["artifact_sha256"], batch_record["artifact_sha256"], msg=source_id)
             self.assertEqual(catalog_record["artifact_path"], batch_record["artifact_path"], msg=source_id)
-            self.assertEqual(catalog_record["original_url"], batch_record["original_url"], msg=source_id)
+            self.assertEqual(
+                catalog_record["original_url"],
+                self.sources_by_id[source_id].original_url,
+                msg=source_id,
+            )
             self.assertEqual(catalog_record["effective_url"], batch_record["effective_url"], msg=source_id)
             self.assertEqual(catalog_record["download_run_id"], batch_record["run_id"], msg=source_id)
             self.assertEqual(catalog_record["download_batch_run_id"], FULL_BATCH_RUN_ID, msg=source_id)
@@ -177,7 +200,7 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
             )
             self.assertEqual(
                 connection.execute("SELECT count(*) FROM source_artifacts").fetchone()[0],
-                len(self.catalog_records),
+                sum(1 for record in self.catalog_records if record["artifact_sha256"]),
             )
             self.assertEqual(
                 connection.execute("SELECT count(*) FROM citations").fetchone()[0],
@@ -194,6 +217,7 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
         catalog_links = {
             record["source_record_id"]: record["artifact_sha256"]
             for record in self.catalog_records
+            if record["artifact_sha256"]
         }
         self.assertEqual(sqlite_links, catalog_links)
 

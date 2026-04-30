@@ -86,10 +86,11 @@ class DownloadTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 147)
-            self.assertEqual(len(fetcher.calls), 144)
-            self.assertEqual(result.summary["downloaded_count"], 144)
-            self.assertEqual(result.summary["duplicate_url_count"], 3)
+            self.assertEqual(len(records), 186)
+            self.assertEqual(len(fetcher.calls), 167)
+            self.assertEqual(result.summary["downloaded_count"], 167)
+            self.assertEqual(result.summary["duplicate_url_count"], 18)
+            self.assertEqual(result.summary["skipped_excluded_count"], 1)
             self.assertEqual(result.summary["failed_count"], 0)
 
             downloaded = [record for record in records if record["status"] == "downloaded"]
@@ -103,7 +104,7 @@ class DownloadTests(unittest.TestCase):
                 self.assertIn(record["artifact_sha256"][:12], artifact.name)
 
             duplicate_rows = [record for record in records if record["status"] == "duplicate_url"]
-            self.assertEqual(len(duplicate_rows), 3)
+            self.assertEqual(len(duplicate_rows), 18)
             self.assertTrue(all(record["duplicate_of"] for record in duplicate_rows))
 
             validation = json.loads(result.validation_report_path.read_text(encoding="utf-8"))

@@ -36,12 +36,12 @@ class CatalogTests(unittest.TestCase):
             records = _read_jsonl(result.source_catalog_path)
             manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
 
-            self.assertEqual(len(records), 147)
-            self.assertEqual(manifest["source_count"], 147)
-            self.assertEqual(manifest["unique_url_count"], 144)
-            self.assertEqual(manifest["status_counts"], {"planned": 147})
-            self.assertEqual(result.summary["source_count"], 147)
-            self.assertGreater(result.summary["review_topic_count"], 100)
+            self.assertEqual(len(records), 186)
+            self.assertEqual(manifest["source_count"], 186)
+            self.assertEqual(manifest["unique_url_count"], 168)
+            self.assertEqual(manifest["status_counts"], {"planned": 186})
+            self.assertEqual(result.summary["source_count"], 186)
+            self.assertGreater(result.summary["review_topic_count"], 200)
             self.assertTrue(result.summary["validation_passed"])
             self.assertTrue(result.validation_path.exists())
             validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
@@ -57,9 +57,9 @@ class CatalogTests(unittest.TestCase):
                 source_count = connection.execute("SELECT count(*) FROM sources").fetchone()[0]
                 topic_count = connection.execute("SELECT count(*) FROM review_topics").fetchone()[0]
                 citation_count = connection.execute("SELECT count(*) FROM citations").fetchone()[0]
-            self.assertEqual(source_count, 147)
-            self.assertGreater(topic_count, 100)
-            self.assertEqual(citation_count, 147)
+            self.assertEqual(source_count, 186)
+            self.assertGreater(topic_count, 200)
+            self.assertEqual(citation_count, 186)
 
     def test_build_review_catalog_links_download_manifest_artifact(self) -> None:
         config = load_config(CONFIG)

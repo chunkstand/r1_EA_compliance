@@ -100,6 +100,7 @@ def build_extraction(
     *,
     output_dir: Path,
     id_filter: str | None = None,
+    id_filters: set[str] | None = None,
     parser_filter: str | None = None,
     limit: int | None = None,
     chunk_max_chars: int = 1800,
@@ -149,10 +150,14 @@ def build_extraction(
     extraction_validation_path = diagnostics_dir / "extraction_validation.json"
     summary_path = diagnostics_dir / "summary.json"
 
+    selected_ids = set(id_filters or set())
+    if id_filter:
+        selected_ids.add(id_filter)
+
     rows = _load_catalog_rows(
         sqlite_path,
         source_set_id=source_set_id,
-        id_filter=id_filter,
+        id_filters=selected_ids or None,
         parser_filter=parser_filter,
         limit=limit,
     )
@@ -195,7 +200,12 @@ def build_extraction(
         extraction_manifest_path=extraction_manifest_path,
         validation_path=extraction_validation_path,
         summary_path=summary_path,
-        filters={"id": id_filter, "parser": parser_filter, "limit": limit},
+        filters={
+            "id": id_filter,
+            "ids": sorted(selected_ids) if selected_ids else None,
+            "parser": parser_filter,
+            "limit": limit,
+        },
         extraction_options={
             "chunk_max_chars": chunk_max_chars,
             "chunk_overlap_chars": chunk_overlap_chars,
@@ -245,7 +255,7 @@ def _load_catalog_rows(
     sqlite_path: Path,
     *,
     source_set_id: str,
-    id_filter: str | None,
+    id_filters: set[str] | None,
     parser_filter: str | None,
     limit: int | None,
 ) -> list[dict]:
@@ -291,9 +301,10 @@ def _load_catalog_rows(
         WHERE s.source_set_id = ?
     """
     params: list[object] = [source_set_id]
-    if id_filter:
-        query += " AND s.source_record_id = ?"
-        params.append(id_filter)
+    if id_filters:
+        placeholders = ", ".join("?" for _ in id_filters)
+        query += f" AND s.source_record_id IN ({placeholders})"
+        params.extend(sorted(id_filters))
     if parser_filter:
         query += " AND s.expected_parser = ?"
         params.append(parser_filter)

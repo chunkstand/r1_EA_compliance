@@ -52,3 +52,93 @@ reason = "Replaces stale Nez Perce-Clearwater planning URL after the Forest Serv
 source_record_id = "R1PLAN-nez-perce-clearwater-nfs-02"
 override_url = "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan"
 reason = "Replaces stale Nez Perce-Clearwater 2025 revised land management plan URL with the current official Forest Service page."
+
+[[overrides]]
+source_record_id = "R1EA-124"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-125"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-126"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-127"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-128"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-129"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-130"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-131"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-132"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-133"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-134"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-135"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-136"
+override_url = "https://www.ecfr.gov/api/versioner/v1/full/2026-04-28/title-36.xml?part=254"
+reason = "Explicitly ingests the official eCFR XML for 36 CFR part 254 after the workbook also listed the HTML subpart URL in Scope_Exclusions as a baseline-only exclusion."
+
+[[overrides]]
+source_record_id = "R1EA-150"
+override_url = "https://www.usda.gov/sites/default/files/guidance-documents/ForestService.Manual%205400%205430%20Exchanges.pdf"
+reason = "Replaces timeout-prone USDA guidance page with its official USDA download target for FSM 5430 Exchanges."
+
+[[overrides]]
+source_record_id = "R1EA-151"
+override_url = "https://www.usda.gov/sites/default/files/guidance-documents/ForestService.Handbook%205409.13%20Land%20Exchange%2030-36.pdf"
+reason = "Replaces timeout-prone USDA guidance page with its official USDA download target for FSH 5409.13 Land Exchange 30-36."
+
+[[overrides]]
+source_record_id = "R1EA-152"
+override_url = "https://www.usda.gov/sites/default/files/guidance-documents/ForestService.Handbook%205409.13%20Land%20Exchange%2037-39.pdf"
+reason = "Replaces timeout-prone Forest Service handbook page with its official USDA download target for FSH 5409.13 Land Exchange 37-39."
+
+[[overrides]]
+source_record_id = "R1EA-153"
+override_url = "https://www.usda.gov/sites/default/files/guidance-documents/ForestService.Handbook%205409.13%2050%20Title%20Evidence.pdf"
+reason = "Replaces timeout-prone Forest Service handbook page with its official USDA download target for FSH 5409.13 chapter 50 Title Evidence."
+
+[[overrides]]
+source_record_id = "R1EA-154"
+override_url = "https://www.usda.gov/sites/default/files/guidance-documents/ForestService.Handbook%205409.13%2060%20Reservations%20and%20Outstanding%20Rights.pdf"
+reason = "Replaces timeout-prone Forest Service handbook page with its official USDA download target for FSH 5409.13 chapter 60 Reservations and Outstanding Rights."

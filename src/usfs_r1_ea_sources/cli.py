@@ -170,7 +170,12 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     extract.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    extract.add_argument("--id", help="Limit extraction to one source_record_id.")
+    extract.add_argument(
+        "--id",
+        action="append",
+        dest="ids",
+        help="Limit extraction to a source_record_id. Repeat for multiple IDs.",
+    )
     extract.add_argument("--parser", help="Limit extraction to one expected_parser value.")
     extract.add_argument("--limit", type=int)
     extract.add_argument("--chunk-max-chars", type=int, default=1800)
@@ -512,7 +517,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "extract-build":
         result = build_extraction(
             output_dir=args.output_dir,
-            id_filter=args.id,
+            id_filters=set(args.ids or []),
             parser_filter=args.parser,
             limit=args.limit,
             chunk_max_chars=args.chunk_max_chars,

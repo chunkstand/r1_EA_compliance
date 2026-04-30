@@ -941,6 +941,15 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
         return "state_requirement"
     if "guidance" in value or "policy" in value or "manual" in title or "handbook" in title:
         return "agency_policy"
+    if (
+        "official project page" in value
+        or "news release" in value
+        or "repository" in value
+        or "project page" in title
+        or "news release" in title
+        or "project documents" in title
+    ):
+        return "project_reference"
     if "case" in value or "court" in title:
         return "case_law"
     return "source_document"

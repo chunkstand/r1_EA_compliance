@@ -21,10 +21,13 @@ class DryRunTests(unittest.TestCase):
         sources = load_canonical_sources(WORKBOOK, config.workbook)
         excluded_urls = load_excluded_urls(WORKBOOK, config.workbook)
 
-        self.assertEqual(len(sources), 147)
-        self.assertEqual(len({source.normalized_url for source in sources}), 144)
-        self.assertEqual(len(excluded_urls), 17)
-        self.assertFalse({source.normalized_url for source in sources} & excluded_urls)
+        self.assertEqual(len(sources), 186)
+        self.assertEqual(len({source.normalized_url for source in sources}), 168)
+        self.assertEqual(len(excluded_urls), 19)
+        self.assertEqual(
+            [source.source_record_id for source in sources if source.normalized_url in excluded_urls],
+            ["R1EA-160"],
+        )
 
     def test_dry_run_writes_manifest_and_reports(self) -> None:
         config = load_config(CONFIG)
@@ -47,17 +50,17 @@ class DryRunTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(manifest_records), 147)
-            self.assertEqual(result.summary["canonical_rows"], 147)
-            self.assertEqual(result.summary["unique_canonical_urls"], 144)
-            self.assertEqual(result.summary["planned_count"], 144)
-            self.assertEqual(result.summary["duplicate_url_count"], 3)
-            self.assertEqual(result.summary["skipped_excluded_count"], 0)
+            self.assertEqual(len(manifest_records), 186)
+            self.assertEqual(result.summary["canonical_rows"], 186)
+            self.assertEqual(result.summary["unique_canonical_urls"], 168)
+            self.assertEqual(result.summary["planned_count"], 167)
+            self.assertEqual(result.summary["duplicate_url_count"], 18)
+            self.assertEqual(result.summary["skipped_excluded_count"], 1)
 
             duplicate_records = [
                 record for record in manifest_records if record["status"] == "duplicate_url"
             ]
-            self.assertEqual(len(duplicate_records), 3)
+            self.assertEqual(len(duplicate_records), 18)
             self.assertTrue(all(record["duplicate_of"] for record in duplicate_records))
 
             validation = json.loads(result.validation_report_path.read_text(encoding="utf-8"))
@@ -75,9 +78,9 @@ class DryRunTests(unittest.TestCase):
                 host_filter="www.ecfr.gov",
             )
 
-            self.assertEqual(result.summary["filtered_rows"], 45)
-            self.assertEqual(result.summary["status_counts"]["planned"], 44)
-            self.assertEqual(result.summary["status_counts"]["duplicate_url"], 1)
+            self.assertEqual(result.summary["filtered_rows"], 61)
+            self.assertEqual(result.summary["status_counts"]["planned"], 46)
+            self.assertEqual(result.summary["status_counts"]["duplicate_url"], 15)
 
 
 if __name__ == "__main__":

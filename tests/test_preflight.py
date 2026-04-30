@@ -59,15 +59,16 @@ class PreflightTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 147)
-            self.assertEqual(len(fetcher.calls), 144)
-            self.assertEqual(result.summary["checked_url_count"], 144)
-            self.assertEqual(result.summary["preflight_ok_count"], 144)
-            self.assertEqual(result.summary["duplicate_url_count"], 3)
+            self.assertEqual(len(records), 186)
+            self.assertEqual(len(fetcher.calls), 167)
+            self.assertEqual(result.summary["checked_url_count"], 167)
+            self.assertEqual(result.summary["preflight_ok_count"], 167)
+            self.assertEqual(result.summary["duplicate_url_count"], 18)
+            self.assertEqual(result.summary["skipped_excluded_count"], 1)
             self.assertEqual(result.summary["failed_count"], 0)
 
             duplicate_records = [record for record in records if record["status"] == "duplicate_url"]
-            self.assertEqual(len(duplicate_records), 3)
+            self.assertEqual(len(duplicate_records), 18)
             self.assertTrue(all(record["duplicate_of"] for record in duplicate_records))
 
             validation = json.loads(result.validation_report_path.read_text(encoding="utf-8"))
@@ -137,10 +138,10 @@ class PreflightTests(unittest.TestCase):
                 sleep_fn=lambda _: None,
             )
 
-            self.assertEqual(result.summary["filtered_rows"], 45)
-            self.assertEqual(result.summary["checked_url_count"], 44)
-            self.assertEqual(result.summary["preflight_ok_count"], 44)
-            self.assertEqual(result.summary["duplicate_url_count"], 1)
+            self.assertEqual(result.summary["filtered_rows"], 61)
+            self.assertEqual(result.summary["checked_url_count"], 46)
+            self.assertEqual(result.summary["preflight_ok_count"], 46)
+            self.assertEqual(result.summary["duplicate_url_count"], 15)
 
     def test_preflight_classifies_document_not_found_body_as_not_found(self) -> None:
         config = load_config(CONFIG)
