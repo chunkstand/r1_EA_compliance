@@ -341,8 +341,6 @@ Before retrieved evidence is used in an EA compliance review:
 - Run `retrieval-eval` before treating the index as reviewer-ready. Track pass rate, expected-term
   hit rate, citation coverage rate, unsupported-answer rate, and zero-result rate.
 
-## 20. Current Boundary
-
 ## 20. Document Evidence Graph Gates
 
 Before the graph layer is used by a compliance reviewer:
@@ -360,13 +358,70 @@ Before the graph layer is used by a compliance reviewer:
 - Fail the graph gate when retrieval binding fails, chunk hashes do not match text, node IDs or edge
   IDs duplicate, edges dangle, chunks lack evidence spans, chunks lack artifact traces, chunks lack
   review-topic edges, or graph health metrics fail.
-- Run `phase-eval` before compliance execution so catalog, extraction, retrieval, and graph
+- Run `phase-eval` before compliance execution so catalog, extraction, retrieval, evidence graph,
+  claim extraction, rule-claim binding, optional coverage, optional gold eval, and optional review
   readiness are reported separately.
 
-## 21. Current Boundary
+## 21. Source Claim Gates
+
+Before source claims are used by compliance findings:
+
+- Run `claim-extract` from extracted chunks, catalog topics, and the reviewer-ready retrieval index.
+- Preserve claim IDs, claim type, source text, entity links, authority links, citation labels, chunk
+  IDs, artifact hashes, content hashes, and exact source-text offsets.
+- Fail the claim gate when source offsets drift, content hashes mismatch, chunk IDs are missing,
+  claim evidence spans are unbound, retrieval-index bindings drift, or claim graph edges dangle.
+- Run `claim-eval` before treating claim artifacts as reviewer-ready. Eval filters must be known and
+  non-empty so typoed filters cannot silently broaden scoring.
+
+## 22. Rule-Claim Binding Gates
+
+Before rule-pack findings rely on source authorities:
+
+- Run `rule-claim-link` from reviewer-ready claim artifacts and the versioned compliance rule pack.
+- Require safe rule-pack IDs and rule IDs.
+- Preserve deterministic rule-to-claim links with claim type, score, matched terms, citation label,
+  chunk ID, artifact hash, and exact source offsets.
+- Record explicit no-claim gaps when a rule has no validated source-claim support.
+- Run `rule-claim-eval` and require current link artifacts to validate before scoring eval cases.
+
+## 23. Compliance Review Gates
+
+Before compliance findings are treated as reviewer-ready:
+
+- Run `compliance-review` through the same package extraction and source retrieval gates as
+  `ea-review`.
+- Require rule-pack validation, rule-claim binding readiness, every rule evaluated, source
+  citations for claim-bearing findings, and finding graph node/edge integrity.
+- A `pass` finding must have package evidence and source-library evidence.
+- A `gap` finding must have source-library evidence and must explicitly mean matching package
+  evidence was not found.
+- Claim-bearing findings must link to validated source claims and citation-bearing source evidence.
+- Run `compliance-review-eval` against deterministic package fixtures before promotion.
+
+## 24. Compliance Coverage and Gold Eval Gates
+
+Before a rule pack is promoted beyond seed checks:
+
+- Run `compliance-coverage` so every rule has coverage-matrix support, current source-claim links,
+  source-claim term support, source-record agreement, and compliance-review eval coverage.
+- Run `compliance-gold-eval` so adjudicated positive, mixed, and negative package profiles pass
+  through the real compliance-review eval path.
+- Gold eval cases must have unique safe IDs, complete top-level and per-case adjudication metadata,
+  positive/mixed/negative profile coverage, complete rule-pack expectations, and matching status
+  counts.
+- Gold `package_path` fixtures must be relative child paths under the gold file directory; absolute,
+  parent-traversal, and resolved path escapes must fail closed.
+- Missing package fixture files must be recorded in `compliance_gold_eval_results.json` as failed
+  results instead of escaping without a machine-readable artifact.
+
+## 25. Current Boundary
 
 The source library stores raw artifacts and source-level metadata. The extraction layer builds
 rebuildable derived text and chunks under `source_library/derived/<source_set_id>/`, the retrieval
 layer builds a local evidence index from those chunks, and the evidence graph layer builds a
-document/chunk/evidence graph. The system does not yet store embeddings, extracted legal claims,
-compliance findings, or reviewer reports.
+document/chunk/evidence graph. The current system also stores deterministic source-claim graph
+artifacts, rule-claim bindings, EA package review outputs, compliance finding graphs,
+compliance-review eval outputs, compliance coverage results, and compliance-gold-eval promotion
+artifacts. The system does not yet store embeddings, broad real-package adjudication coverage, or
+model-generated compliance synthesis trusted beyond deterministic evidence and eval gates.

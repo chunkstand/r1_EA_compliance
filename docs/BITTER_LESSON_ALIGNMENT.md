@@ -70,6 +70,8 @@ The current v1 foundation is aligned in the important places:
 - compliance review findings require package evidence, source evidence, source-claim links, and
   finding graph coverage
 - gold adjudication fixtures are versioned data and run through the same compliance-review eval path
+- gold eval promotion is fail-closed on adjudication metadata, fixture safety, rule coverage, source
+  set freshness, and rule-pack freshness
 - phase eval separates capture, extraction, retrieval, graph, claim, rule binding, coverage, gold
   eval, and review readiness
 

@@ -237,7 +237,8 @@ Current state:
 - The rule-claim binding layer links compliance rules to validated source claims and records explicit
   no-claim gaps when no validated source claim matches a rule.
 - Phase eval reports catalog, extraction, retrieval, evidence-graph, claim-extraction,
-  rule-claim-binding, and compliance-coverage readiness separately when coverage output exists.
+  rule-claim-binding, optional compliance-coverage, optional compliance-gold-eval, and optional
+  compliance-review readiness separately when those artifacts exist or are requested.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
@@ -349,6 +350,9 @@ Boundaries:
   source-library citations.
 - It proves the current final compliance-review eval seed passes deterministic all-pass, mixed
   pass/gap, and all-gap package fixtures.
+- It proves the current seed compliance-gold-eval promotion gate passes one positive, one mixed, and
+  one negative adjudicated fixture profile.
+- It does not prove broad real-world EA review quality beyond the current seed and gold eval cases.
 - It does not prove semantic legal interpretation of the extracted text.
 - It does not prove that future web versions will remain unchanged.
 

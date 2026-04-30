@@ -622,6 +622,15 @@ evidence, source record IDs, source-claim terms, and eval case IDs.
 Default path:
 `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
 
+Related generated artifacts:
+
+- `adjudicated_cases.compliance_review_eval.json`, the gold cases normalized into the underlying
+  compliance-review eval format
+- `compliance_review_eval/compliance_review_eval_results.json`, the nested compliance-review eval
+  result used by the promotion gate
+- `compliance_review_eval/packages/<case_id>.txt` for inline package-text fixtures
+- `compliance_review_eval/reviews/<case_id>/` for per-case generated compliance review artifacts
+
 The `compliance-gold-eval` command reads:
 
 - a versioned compliance rule pack

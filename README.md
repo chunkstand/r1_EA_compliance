@@ -89,6 +89,10 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`
   - `source_library/reviews/compliance_review_eval/packages/<case_id>.txt`
   - `source_library/reviews/compliance_review_eval/reviews/<case_id>/`
+- Compliance gold eval outputs:
+  - `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
+  - `source_library/reviews/compliance_gold_eval/adjudicated_cases.compliance_review_eval.json`
+  - `source_library/reviews/compliance_gold_eval/compliance_review_eval/`
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
 `extract-build` command builds a derived text/chunk layer from the catalog. The
@@ -99,7 +103,8 @@ claims and entities with exact offsets and graph bindings. The `rule-claim-link`
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
 reviewer-ready retrieval evidence. The `compliance-review` command evaluates a versioned rule pack
-and emits a finding graph with source-claim support. Embeddings and a full adjudication workflow
+and emits a finding graph with source-claim support. The `compliance-gold-eval` command runs the
+seed adjudication promotion gate. Embeddings and expanded human adjudication over real EA packages
 remain downstream work.
 
 ## Reviewer Engine Entry Points
