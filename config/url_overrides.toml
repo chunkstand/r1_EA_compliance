@@ -7,3 +7,8 @@
 # source_record_id = "R1EA-000"
 # override_url = "https://example.gov/current-official-source"
 # reason = "Replaces stale workbook URL after manual source verification."
+
+[[overrides]]
+source_record_id = "R1EA-080"
+override_url = "https://www.govinfo.gov/content/pkg/CFR-1997-title3-vol1/pdf/CFR-1997-title3-vol1-eo13007.pdf"
+reason = "Replaces stale Federal Register page returning 404 with the official GovInfo authenticated PDF for Executive Order 13007, Indian Sacred Sites, 61 FR 26771."
