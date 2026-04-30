@@ -69,8 +69,9 @@ The current v1 foundation is aligned in the important places:
 - compliance rule packs and coverage expectations are versioned data, not hidden runtime branches
 - compliance review findings require package evidence, source evidence, source-claim links, and
   finding graph coverage
-- phase eval separates capture, extraction, retrieval, graph, claim, rule binding, coverage, and
-  review readiness
+- gold adjudication fixtures are versioned data and run through the same compliance-review eval path
+- phase eval separates capture, extraction, retrieval, graph, claim, rule binding, coverage, gold
+  eval, and review readiness
 
 The current full-library state is correctly treated as a gated v1 foundation. The system can inspect
 and evaluate the captured corpus and deterministic seed packages, but it does not claim broad EA
@@ -103,6 +104,8 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 - evaluate final compliance-review findings against deterministic package fixtures
 - validate rule-pack coverage against matrix rows, current source-claim links, source-claim terms,
   and compliance-review eval cases
+- run adjudicated positive, mixed, and negative package profiles through a deterministic promotion
+  gate
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
 - keep generated conclusions downstream of retrieval, graph evidence, source-claim links, and eval
@@ -110,6 +113,7 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 
 ## Next Alignment Milestone
 
-The next aligned step is reviewer adjudication plus a gold real-package eval set. This keeps the
-system on the Bitter Lesson path: improve quality through broader data, stronger evaluation, and
-transparent failure telemetry before adding bespoke review logic or model-generated synthesis.
+The next aligned step is expanding the gold eval set and triaging failures from more realistic EA
+packages. This keeps the system on the Bitter Lesson path: improve quality through broader data,
+stronger evaluation, and transparent failure telemetry before adding bespoke review logic or
+model-generated synthesis.

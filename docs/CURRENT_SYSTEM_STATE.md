@@ -31,8 +31,8 @@ The current catalog validation passes. The captured-library integrity test suite
 Last verified locally on 2026-04-30.
 
 - Active source set: `source-set-e364ea220cffd938`
-- Base phase eval: passed, `7/7` phases reviewer-ready
-- Compliance phase eval: passed, `8/8` phases reviewer-ready for
+- Base phase eval: passed, `8/8` phases reviewer-ready
+- Compliance phase eval: passed, `9/9` phases reviewer-ready for
   `smoke-compliance-review-v0-hardened`
 - Catalog: `147` source rows, `131` unique raw artifacts
 - Extraction: `147/147` selected sources extracted, validation passed
@@ -51,7 +51,8 @@ Last verified locally on 2026-04-30.
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
-- Unit suite: `118` tests passed
+- Compliance gold eval: passed, `3/3` adjudicated cases, `promotion_ready`
+- Unit suite: `121` tests passed
 
 The verification set was:
 
@@ -95,6 +96,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --eval-file config/compliance_review_eval_seed.json
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/compliance_gold_eval_v0.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id smoke-compliance-review-v0-hardened
@@ -208,6 +213,11 @@ package fixtures through the real compliance-review path and scores expected rul
 types, evidence presence, source-claim links, citation coverage, unsupported finding IDs, and
 finding-graph coverage.
 
+Compliance Gold Eval V0.1 is implemented through `compliance-gold-eval`. It validates a structured
+adjudication file, requires positive, mixed, and negative package profiles, runs those adjudicated
+fixtures through the real compliance-review eval path, and emits `promotion_ready` only when both
+adjudication checks and generated findings pass.
+
 Compliance Coverage V0 is implemented through `compliance-coverage`. It validates the coverage
 matrix, rule-pack identity, eval-case coverage, current source-claim links, source-claim terms, and
 source-record alignment for each compliance rule.
@@ -234,12 +244,15 @@ Current state:
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review eval runs deterministic package fixtures and emits
   `compliance_review_eval_results.json`.
+- Compliance gold eval runs adjudicated positive/mixed/negative package fixtures and emits
+  `compliance_gold_eval_results.json`.
 - Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links,
   source-claim terms, and compliance review eval cases.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
 - A seed compliance review eval file exists at `config/compliance_review_eval_seed.json`.
+- A seed compliance gold eval file exists at `config/compliance_gold_eval_v0.json`.
 - A seed compliance coverage matrix exists at
   `config/compliance_rule_pack_coverage_nepa_ea_v0.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
@@ -313,6 +326,8 @@ Validated guarantees:
   per-rule expectations.
 - Compliance coverage rejects malformed matrix rows, missing matrix/eval/link coverage, and
   source-record or source-claim-term mismatches against current rule-claim links.
+- Compliance gold eval rejects missing adjudication metadata, missing required profiles, partial
+  rule-pack expectations, status count mismatches, and generated finding mismatches.
 - Phase eval rejects stale compliance coverage artifacts when the coverage source set or rule pack
   does not match the evaluated source set and rule-claim binding.
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
@@ -559,13 +574,16 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - rule-claim binding
 - optional compliance coverage when `compliance_coverage_results.json` exists beside the
   rule-claim outputs
+- optional compliance gold eval when `compliance_gold_eval_results.json` exists under
+  `source_library/reviews/compliance_gold_eval/`
 - optional compliance review when `--review-id` or `--review-dir` is passed
 
 When a compliance coverage phase is included, `phase-eval` requires the matrix gate to pass, the
-rule pack to match, and the coverage source set to match the evaluated source set. When a
-compliance review phase is included, `phase-eval` requires the review report to exist, validation to
-pass, the review ID to match when supplied, and the review source set to match the evaluated source
-set.
+rule pack to match, and the coverage source set to match the evaluated source set. When a gold eval
+phase is included, `phase-eval` requires the promotion gate to pass, the rule pack to match, and the
+gold eval source set to match the evaluated source set. When a compliance review phase is included,
+`phase-eval` requires the review report to exist, validation to pass, the review ID to match when
+supplied, and the review source set to match the evaluated source set.
 
 ## Alignment And Next Milestone
 
@@ -575,28 +593,26 @@ data artifacts such as workbook rows, review topics, eval fixtures, rule packs, 
 matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
 binding, coverage validation, and phase evaluation.
 
-The current system is reviewer-ready for deterministic seed-package checks, but not yet production
-ready for broad EA review quality. The major remaining gap is evaluation coverage over realistic EA
-packages and human adjudication of expected findings. The next milestone should be:
+The current system is reviewer-ready for deterministic seed-package and gold-adjudication checks,
+but not yet production ready for broad EA review quality. The major remaining gap is recall and
+robustness over a larger set of real EA packages. The next milestone should be:
 
-**Reviewer Adjudication + Gold Real-Package Eval V0.1**
+**Gold Eval Expansion + Failure Triage V0.2**
 
 Goal:
 
-- create a durable adjudication artifact format for human-reviewed expected findings
-- add a small gold eval set from real or realistic EA packages
-- run the existing compliance-review path against those packages
-- score rule status, package evidence, source evidence, source-claim links, citation coverage, and
-  finding graph coverage against adjudicated expectations
-- keep the promotion gate deterministic and fail-closed before adding embeddings, reranking, or
-  model-assisted synthesis
+- add more adjudicated real or realistic EA packages beyond the three seed profiles
+- record failures as durable eval cases rather than ad hoc notes
+- identify whether misses come from package extraction, package evidence search, source retrieval,
+  rule-claim binding, or rule wording
+- keep the promotion gate deterministic before embeddings, reranking, or model-assisted synthesis
 
 Exit criteria:
 
-- at least three adjudicated package fixtures covering all seven current rules
-- one positive, one mixed pass/gap, and one difficult/negative package fixture
-- a CLI eval command or extension that emits machine-readable adjudication results
-- phase or acceptance-gate documentation showing the gold eval must pass before reviewer promotion
+- at least ten adjudicated package fixtures or issue-derived failure cases
+- per-failure category counts and compact reproduction paths
+- an updated gold eval artifact with versioned additions
+- no regression in the current three-case gold promotion gate
 
 Next downstream layers after that are embeddings or reranking for recall improvement and
 model-assisted synthesis constrained by evidence, graph traces, and validation gates.
@@ -701,6 +717,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --eval-file config/compliance_review_eval_seed.json
+```
+
+Run the adjudicated gold eval promotion gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/compliance_gold_eval_v0.json
 ```
 
 Run phase-aligned readiness evaluation:

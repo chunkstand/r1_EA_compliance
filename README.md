@@ -33,6 +33,7 @@ domain-specific heuristics.
 - `config/claim_eval_seed.json`
 - `config/rule_claim_link_eval_seed.json`
 - `config/compliance_review_eval_seed.json`
+- `config/compliance_gold_eval_v0.json`
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
@@ -359,6 +360,20 @@ source-claim links, finding status counts, unsupported finding IDs, citation cov
 finding-graph coverage. Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched
 status counts fail fast so typoed or incomplete fixtures cannot silently broaden scoring.
 
+Run the adjudicated gold eval promotion gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/compliance_gold_eval_v0.json
+```
+
+`compliance-gold-eval` reads a structured adjudication file, requires positive, mixed, and negative
+case profiles, verifies every case covers the active rule pack, then runs those cases through the
+real `compliance-review-eval` path. It emits `promotion_ready` only when adjudication checks and the
+underlying compliance-review eval both pass.
+
 Run the seed retrieval eval gate:
 
 ```bash
@@ -461,9 +476,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 This reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and rule-claim
 binding readiness separately so validation failures are not hidden inside a single aggregate score.
 When `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
-`compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage. Pass
-`--review-id <review-id>` after a compliance review to include `compliance_review` as an additional
-phase gate. The compliance phase requires the review source set to match the evaluated source set.
+`compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
+When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
+reports a `compliance_gold_eval` promotion phase. Pass `--review-id <review-id>` after a compliance
+review to include `compliance_review` as an additional phase gate. The compliance phase requires the
+review source set to match the evaluated source set.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

@@ -12,6 +12,8 @@ from .claim_extraction import default_claims_path
 from .claim_extraction import run_claim_eval
 from .compliance_coverage import DEFAULT_COVERAGE_MATRIX_PATH
 from .compliance_coverage import run_compliance_coverage
+from .compliance_gold_eval import DEFAULT_COMPLIANCE_GOLD_EVAL_PATH
+from .compliance_gold_eval import run_compliance_gold_eval
 from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .compliance_review import DEFAULT_RULE_PACK_PATH
 from .compliance_review import run_compliance_review
@@ -419,9 +421,39 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-document Docling timeout for PDF EA package fixtures. Use 0 to disable.",
     )
 
+    compliance_gold_eval = subparsers.add_parser(
+        "compliance-gold-eval",
+        help="Run adjudicated gold package fixtures through the compliance-review gate.",
+    )
+    compliance_gold_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    compliance_gold_eval.add_argument("--source-set-id")
+    compliance_gold_eval.add_argument("--index-path", type=Path)
+    compliance_gold_eval.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    compliance_gold_eval.add_argument(
+        "--gold-file",
+        default=DEFAULT_COMPLIANCE_GOLD_EVAL_PATH,
+        type=Path,
+    )
+    compliance_gold_eval.add_argument("--results-dir", type=Path)
+    compliance_gold_eval.add_argument("--source-top-k", type=int, default=3)
+    compliance_gold_eval.add_argument("--package-top-k", type=int, default=3)
+    compliance_gold_eval.add_argument("--chunk-max-chars", type=int, default=1800)
+    compliance_gold_eval.add_argument("--chunk-overlap-chars", type=int, default=200)
+    compliance_gold_eval.add_argument(
+        "--docling-ocr",
+        action="store_true",
+        help="Enable Docling OCR for PDF gold package fixtures.",
+    )
+    compliance_gold_eval.add_argument(
+        "--docling-timeout-seconds",
+        type=float,
+        default=120.0,
+        help="Per-document Docling timeout for PDF gold package fixtures. Use 0 to disable.",
+    )
+
     compliance_coverage = subparsers.add_parser(
         "compliance-coverage",
-        help="Validate rule-pack coverage across coverage matrix, source-claim links, and eval cases.",
+        help="Validate rule-pack coverage across coverage matrix, source-claim links, terms, and eval cases.",
     )
     compliance_coverage.add_argument("--output-dir", default=Path("source_library"), type=Path)
     compliance_coverage.add_argument("--source-set-id")
@@ -646,6 +678,27 @@ def main(argv: list[str] | None = None) -> int:
         result = run_compliance_review_eval(
             output_dir=args.output_dir,
             eval_file=args.eval_file,
+            rule_pack_path=args.rule_pack,
+            source_set_id=args.source_set_id,
+            index_path=args.index_path,
+            results_dir=args.results_dir,
+            source_top_k=args.source_top_k,
+            package_top_k=args.package_top_k,
+            chunk_max_chars=args.chunk_max_chars,
+            chunk_overlap_chars=args.chunk_overlap_chars,
+            docling_ocr=args.docling_ocr,
+            docling_timeout_seconds=timeout,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "compliance-gold-eval":
+        timeout = args.docling_timeout_seconds
+        if timeout is not None and timeout <= 0:
+            timeout = None
+        result = run_compliance_gold_eval(
+            output_dir=args.output_dir,
+            gold_file=args.gold_file,
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,

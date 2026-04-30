@@ -1,0 +1,478 @@
+from __future__ import annotations
+
+from collections import Counter
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+import json
+import re
+
+from .compliance_review import DEFAULT_RULE_PACK_PATH
+from .compliance_review import VALID_FINDING_STATUSES
+from .compliance_review import load_rule_pack
+from .compliance_review import run_compliance_review_eval
+from .compliance_review import validate_rule_pack
+
+
+COMPLIANCE_GOLD_EVAL_SCHEMA_VERSION = "compliance-gold-eval-v0"
+COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION = "compliance-gold-eval-results-v0"
+DEFAULT_COMPLIANCE_GOLD_EVAL_PATH = Path("config/compliance_gold_eval_v0.json")
+REQUIRED_CASE_PROFILES = {"mixed", "negative", "positive"}
+SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+
+
+@dataclass(frozen=True)
+class ComplianceGoldEvalResult:
+    gold_file: Path
+    output_dir: Path
+    output_path: Path
+    summary: dict
+
+
+def run_compliance_gold_eval(
+    *,
+    output_dir: Path,
+    gold_file: Path = DEFAULT_COMPLIANCE_GOLD_EVAL_PATH,
+    rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
+    source_set_id: str | None = None,
+    index_path: Path | None = None,
+    results_dir: Path | None = None,
+    source_top_k: int = 3,
+    package_top_k: int = 3,
+    chunk_max_chars: int = 1800,
+    chunk_overlap_chars: int = 200,
+    docling_ocr: bool = False,
+    docling_timeout_seconds: float | None = 120.0,
+) -> ComplianceGoldEvalResult:
+    """Run the adjudicated gold eval gate through the real compliance-review path."""
+
+    output_dir = Path(output_dir)
+    gold_file = Path(gold_file)
+    rule_pack_path = Path(rule_pack_path)
+    gold = _load_gold_eval(gold_file)
+    rule_pack = load_rule_pack(rule_pack_path)
+    rule_pack_validation = validate_rule_pack(rule_pack)
+    cases = _case_list(gold)
+    eval_output_dir = Path(results_dir) if results_dir else output_dir / "reviews" / "compliance_gold_eval"
+    eval_output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = eval_output_dir / "compliance_gold_eval_results.json"
+    compliance_review_eval_dir = eval_output_dir / "compliance_review_eval"
+    compliance_review_eval_file = eval_output_dir / "adjudicated_cases.compliance_review_eval.json"
+
+    checks = [
+        _check_rule_pack_valid(rule_pack_validation, rule_pack_path),
+        _check_gold_identity(gold, gold_file),
+        _check_gold_rule_pack_identity(gold, rule_pack),
+        _check_cases_present(cases),
+        _check_case_adjudication(cases),
+        _check_case_rule_coverage(cases, rule_pack),
+        _check_case_profiles(cases),
+        _check_case_status_counts(cases, rule_pack),
+    ]
+    adjudication_passed = all(check["passed"] for check in checks)
+    review_eval_summary = None
+    if adjudication_passed:
+        compliance_review_eval_file.write_text(
+            json.dumps(cases, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        review_eval = run_compliance_review_eval(
+            output_dir=output_dir,
+            eval_file=compliance_review_eval_file,
+            rule_pack_path=rule_pack_path,
+            source_set_id=source_set_id,
+            index_path=index_path,
+            results_dir=compliance_review_eval_dir,
+            source_top_k=source_top_k,
+            package_top_k=package_top_k,
+            chunk_max_chars=chunk_max_chars,
+            chunk_overlap_chars=chunk_overlap_chars,
+            docling_ocr=docling_ocr,
+            docling_timeout_seconds=docling_timeout_seconds,
+        )
+        review_eval_summary = review_eval.summary
+
+    case_results = list((review_eval_summary or {}).get("cases", []))
+    case_count = len(cases)
+    passed_case_count = int((review_eval_summary or {}).get("passed_count") or 0)
+    source_set_ids = list((review_eval_summary or {}).get("source_set_ids") or [])
+    profile_counts = _profile_counts(cases)
+    summary = {
+        "schema_version": COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "gold_file": str(gold_file),
+        "output_dir": str(eval_output_dir),
+        "output_path": str(output_path),
+        "compliance_review_eval_file": str(compliance_review_eval_file),
+        "compliance_review_eval_path": str(
+            compliance_review_eval_dir / "compliance_review_eval_results.json"
+        ),
+        "rule_pack_path": str(rule_pack_path),
+        "gold_eval_id": gold.get("id"),
+        "gold_eval_version": gold.get("version"),
+        "rule_pack_id": rule_pack.get("rule_pack_id"),
+        "rule_pack_version": rule_pack.get("version"),
+        "source_set_id": source_set_id or (source_set_ids[0] if len(source_set_ids) == 1 else None),
+        "source_set_ids": source_set_ids,
+        "source_top_k": source_top_k,
+        "package_top_k": package_top_k,
+        "case_count": case_count,
+        "adjudicated_case_count": _adjudicated_case_count(cases),
+        "passed_case_count": passed_case_count,
+        "failed_case_count": case_count - passed_case_count,
+        "profile_counts": profile_counts,
+        "required_profiles": sorted(REQUIRED_CASE_PROFILES),
+        "required_profiles_present": sorted(
+            REQUIRED_CASE_PROFILES.intersection(profile_counts)
+        ),
+        "adjudication_checks_passed": adjudication_passed,
+        "compliance_review_eval_passed": bool(
+            review_eval_summary and review_eval_summary.get("passed")
+        ),
+        "promotion_ready": adjudication_passed
+        and bool(review_eval_summary and review_eval_summary.get("passed")),
+        "passed": adjudication_passed
+        and bool(review_eval_summary and review_eval_summary.get("passed")),
+        "checks": checks,
+        "metrics": (review_eval_summary or {}).get("metrics", {}),
+        "cases": [_gold_case_result(case, case_results) for case in cases],
+    }
+    _write_json(output_path, summary)
+    return ComplianceGoldEvalResult(
+        gold_file=gold_file,
+        output_dir=eval_output_dir,
+        output_path=output_path,
+        summary=summary,
+    )
+
+
+def _load_gold_eval(path: Path) -> dict:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing compliance gold eval file: {path}")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("Compliance gold eval file must be a JSON object.")
+    return value
+
+
+def _case_list(gold: dict) -> list[dict]:
+    cases = gold.get("cases")
+    return cases if isinstance(cases, list) else []
+
+
+def _check_rule_pack_valid(rule_pack_validation: dict, rule_pack_path: Path) -> dict:
+    return {
+        "name": "rule_pack_valid",
+        "passed": bool(rule_pack_validation.get("passed")),
+        "details": {
+            "path": str(rule_pack_path),
+            "failed_checks": [
+                str(check.get("name"))
+                for check in rule_pack_validation.get("checks", [])
+                if not check.get("passed")
+            ],
+        },
+    }
+
+
+def _check_gold_identity(gold: dict, gold_file: Path) -> dict:
+    failures = []
+    if gold.get("schema_version") != COMPLIANCE_GOLD_EVAL_SCHEMA_VERSION:
+        failures.append(
+            {
+                "field": "schema_version",
+                "expected": COMPLIANCE_GOLD_EVAL_SCHEMA_VERSION,
+                "actual": gold.get("schema_version"),
+            }
+        )
+    for field in ("id", "version", "title"):
+        value = str(gold.get(field) or "").strip()
+        if not value:
+            failures.append({"field": field, "reason": "missing"})
+        elif field in {"id", "version"} and not SAFE_ID_RE.fullmatch(value):
+            failures.append({"field": field, "reason": "unsafe_id", "actual": value})
+    adjudication = gold.get("adjudication")
+    if not isinstance(adjudication, dict):
+        failures.append({"field": "adjudication", "reason": "missing_or_invalid"})
+    else:
+        missing = [
+            field
+            for field in ("adjudicated_at", "method", "status")
+            if not str(adjudication.get(field) or "").strip()
+        ]
+        if not _string_list(adjudication.get("adjudicated_by")):
+            missing.append("adjudicated_by")
+        if adjudication.get("promotion_gate") is not True:
+            missing.append("promotion_gate")
+        if missing:
+            failures.append(
+                {
+                    "field": "adjudication",
+                    "reason": "missing_adjudication_fields",
+                    "fields": sorted(missing),
+                }
+            )
+    return {
+        "name": "gold_eval_identity_valid",
+        "passed": not failures,
+        "details": {"path": str(gold_file), "failures": failures},
+    }
+
+
+def _check_gold_rule_pack_identity(gold: dict, rule_pack: dict) -> dict:
+    failures = []
+    for gold_field, rule_field in (
+        ("rule_pack_id", "rule_pack_id"),
+        ("rule_pack_version", "version"),
+    ):
+        if gold.get(gold_field) != rule_pack.get(rule_field):
+            failures.append(
+                {
+                    "field": gold_field,
+                    "expected": rule_pack.get(rule_field),
+                    "actual": gold.get(gold_field),
+                }
+            )
+    return {
+        "name": "gold_eval_rule_pack_matches",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _check_cases_present(cases: list[dict]) -> dict:
+    failures = []
+    if len(cases) < 3:
+        failures.append({"reason": "minimum_three_cases_required", "case_count": len(cases)})
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            failures.append({"index": index, "reason": "case_must_be_object"})
+            continue
+        case_id = str(case.get("id") or "").strip()
+        if not case_id:
+            failures.append({"index": index, "reason": "missing_id"})
+        elif not SAFE_ID_RE.fullmatch(case_id):
+            failures.append({"index": index, "case_id": case_id, "reason": "unsafe_id"})
+        has_text = bool(str(case.get("package_text") or "").strip())
+        has_path = bool(str(case.get("package_path") or "").strip())
+        if has_text == has_path:
+            failures.append(
+                {
+                    "index": index,
+                    "case_id": case_id,
+                    "reason": "exactly_one_package_fixture_required",
+                }
+            )
+    return {
+        "name": "gold_eval_cases_present",
+        "passed": not failures,
+        "details": {"case_count": len(cases), "failures": failures},
+    }
+
+
+def _check_case_adjudication(cases: list[dict]) -> dict:
+    failures = []
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            continue
+        case_id = str(case.get("id") or "")
+        adjudication = case.get("adjudication")
+        if not isinstance(adjudication, dict):
+            failures.append({"index": index, "case_id": case_id, "reason": "missing_adjudication"})
+            continue
+        missing = []
+        for field in ("adjudicated_at", "rationale", "source_type", "status"):
+            if not str(adjudication.get(field) or "").strip():
+                missing.append(field)
+        if not _string_list(adjudication.get("adjudicated_by")):
+            missing.append("adjudicated_by")
+        if missing:
+            failures.append(
+                {
+                    "index": index,
+                    "case_id": case_id,
+                    "reason": "missing_adjudication_fields",
+                    "fields": sorted(missing),
+                }
+            )
+    return {
+        "name": "gold_eval_cases_have_adjudication",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _check_case_rule_coverage(cases: list[dict], rule_pack: dict) -> dict:
+    expected_rule_ids = _rule_ids(rule_pack)
+    failures = []
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            continue
+        case_id = str(case.get("id") or "")
+        statuses = case.get("expected_statuses")
+        if not isinstance(statuses, dict):
+            failures.append({"index": index, "case_id": case_id, "reason": "missing_statuses"})
+            continue
+        actual = {str(rule_id) for rule_id in statuses}
+        invalid_statuses = sorted(
+            str(status)
+            for status in statuses.values()
+            if str(status) not in VALID_FINDING_STATUSES
+        )
+        missing = sorted(expected_rule_ids - actual)
+        unexpected = sorted(actual - expected_rule_ids)
+        if missing or unexpected or invalid_statuses:
+            failures.append(
+                {
+                    "index": index,
+                    "case_id": case_id,
+                    "missing_rule_ids": missing,
+                    "unexpected_rule_ids": unexpected,
+                    "invalid_statuses": invalid_statuses,
+                }
+            )
+    return {
+        "name": "gold_eval_cases_cover_rule_pack",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _check_case_profiles(cases: list[dict]) -> dict:
+    profile_counts = _profile_counts(cases)
+    missing_profiles = sorted(REQUIRED_CASE_PROFILES - set(profile_counts))
+    invalid_profiles = sorted(
+        {
+            str(case.get("profile") or "")
+            for case in cases
+            if isinstance(case, dict)
+            and str(case.get("profile") or "") not in REQUIRED_CASE_PROFILES
+        }
+    )
+    return {
+        "name": "gold_eval_required_profiles_present",
+        "passed": not missing_profiles and not invalid_profiles,
+        "details": {
+            "profile_counts": profile_counts,
+            "missing_profiles": missing_profiles,
+            "invalid_profiles": invalid_profiles,
+        },
+    }
+
+
+def _check_case_status_counts(cases: list[dict], rule_pack: dict) -> dict:
+    rule_count = len(_rule_ids(rule_pack))
+    failures = []
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            continue
+        case_id = str(case.get("id") or "")
+        statuses = case.get("expected_statuses")
+        expected_counts = case.get("expected_finding_status_counts") or {}
+        if not isinstance(statuses, dict) or not isinstance(expected_counts, dict):
+            failures.append({"index": index, "case_id": case_id, "reason": "invalid_counts"})
+            continue
+        try:
+            normalized_counts = {
+                str(status): int(count)
+                for status, count in expected_counts.items()
+                if int(count) != 0
+            }
+        except (TypeError, ValueError):
+            failures.append({"index": index, "case_id": case_id, "reason": "invalid_counts"})
+            continue
+        actual_counts = dict(Counter(str(status) for status in statuses.values()))
+        if sum(normalized_counts.values()) != rule_count or normalized_counts != actual_counts:
+            failures.append(
+                {
+                    "index": index,
+                    "case_id": case_id,
+                    "reason": "counts_do_not_match_expected_statuses",
+                    "expected": normalized_counts,
+                    "actual": actual_counts,
+                }
+            )
+    return {
+        "name": "gold_eval_status_counts_match_expected_statuses",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
+
+def _gold_case_result(case: dict, case_results: list[dict]) -> dict:
+    if not isinstance(case, dict):
+        return {
+            "id": None,
+            "profile": None,
+            "adjudication": {},
+            "passed": False,
+            "failure_reasons": ["case_must_be_object"],
+            "expected_statuses": {},
+            "actual_statuses": {},
+            "finding_status_counts": {},
+            "review_dir": None,
+            "package_path": None,
+        }
+    case_id = str(case.get("id") or "")
+    result = next((item for item in case_results if item.get("id") == case_id), {})
+    adjudication = case.get("adjudication")
+    return {
+        "id": case_id,
+        "profile": case.get("profile"),
+        "adjudication": adjudication if isinstance(adjudication, dict) else {},
+        "passed": bool(result.get("passed")),
+        "failure_reasons": result.get("failure_reasons", []),
+        "expected_statuses": case.get("expected_statuses", {}),
+        "actual_statuses": result.get("actual_statuses", {}),
+        "finding_status_counts": result.get("finding_status_counts", {}),
+        "review_dir": result.get("review_dir"),
+        "package_path": result.get("package_path"),
+    }
+
+
+def _rule_ids(rule_pack: dict) -> set[str]:
+    return {
+        str(rule.get("id"))
+        for rule in rule_pack.get("rules", [])
+        if isinstance(rule, dict) and str(rule.get("id") or "").strip()
+    }
+
+
+def _profile_counts(cases: list[dict]) -> dict[str, int]:
+    counts = Counter(
+        str(case.get("profile") or "")
+        for case in cases
+        if isinstance(case, dict) and str(case.get("profile") or "") in REQUIRED_CASE_PROFILES
+    )
+    return {profile: counts[profile] for profile in sorted(counts)}
+
+
+def _adjudicated_case_count(cases: list[dict]) -> int:
+    return sum(1 for case in cases if _case_adjudication_complete(case))
+
+
+def _case_adjudication_complete(case: object) -> bool:
+    if not isinstance(case, dict):
+        return False
+    adjudication = case.get("adjudication")
+    if not isinstance(adjudication, dict):
+        return False
+    required = ("adjudicated_at", "rationale", "source_type", "status")
+    return all(str(adjudication.get(field) or "").strip() for field in required) and bool(
+        _string_list(adjudication.get("adjudicated_by"))
+    )
+
+
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _utc_now() -> str:
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _write_json(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")

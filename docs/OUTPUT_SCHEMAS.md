@@ -617,6 +617,36 @@ evidence, source record IDs, source-claim terms, and eval case IDs.
   eval-case rule coverage, eval-case ID references, rule-claim readiness, source-claim link
   coverage, matrix/source-record agreement, and matrix/source-claim-term agreement
 
+## Compliance Gold Eval Outputs
+
+Default path:
+`source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
+
+The `compliance-gold-eval` command reads:
+
+- a versioned compliance rule pack
+- a gold adjudication file, defaulting to `config/compliance_gold_eval_v0.json`
+- reviewer-ready source-library artifacts used by the underlying `compliance-review-eval` path
+
+The gold adjudication file has schema version `compliance-gold-eval-v0` and records:
+
+- gold eval ID, version, title, rule-pack ID, and rule-pack version
+- top-level adjudication metadata and promotion-gate intent
+- at least three cases with positive, mixed, and negative profiles
+- per-case adjudication metadata, package fixture, expected statuses for every rule, expected
+  status counts, unsupported finding IDs, and minimum finding count
+
+`compliance_gold_eval_results.json` has schema version `compliance-gold-eval-results-v0` and records:
+
+- gold eval identity, rule-pack identity, source-set IDs, paths, and top-k values
+- adjudication check status and underlying compliance-review eval pass status
+- case count, adjudicated case count, passed/failed case counts, profile counts, and required
+  profiles present
+- `promotion_ready`, which is true only when adjudication checks and the underlying compliance-review
+  eval both pass
+- per-case adjudication metadata, expected and actual statuses, finding counts, review paths,
+  failure reasons, and pass/fail status
+
 ## Derived Extraction Outputs
 
 Path: `source_library/derived/<source_set_id>/`
@@ -1071,7 +1101,9 @@ catalog capture, extraction, retrieval, evidence graph, claim extraction, and ru
 separate phases and records phase blockers so downstream compliance review cannot hide an upstream
 failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
 also includes a `compliance_coverage` phase for matrix, source-claim, source-claim-term, and
-eval-case coverage. When
+eval-case coverage. When `compliance_gold_eval_results.json` exists under
+`source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
+promotion phase. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The evidence-graph and claim-extraction

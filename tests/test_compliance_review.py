@@ -12,6 +12,7 @@ from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.compliance_review import run_compliance_review_eval
 from usfs_r1_ea_sources.compliance_review import validate_rule_pack
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
+from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
@@ -610,6 +611,88 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(coverage_phase["details"]["coverage_passed"])
             self.assertFalse(coverage_phase["details"]["source_set_matches"])
 
+    def test_compliance_gold_eval_runs_adjudicated_profiles(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            gold_path = _write_gold_eval_file(Path(tmp))
+
+            result = run_compliance_gold_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                gold_file=gold_path,
+            )
+
+            self.assertTrue(result.output_path.exists())
+            self.assertTrue(result.summary["passed"])
+            self.assertTrue(result.summary["promotion_ready"])
+            self.assertEqual(result.summary["case_count"], 3)
+            self.assertEqual(result.summary["adjudicated_case_count"], 3)
+            self.assertEqual(
+                result.summary["profile_counts"],
+                {"mixed": 1, "negative": 1, "positive": 1},
+            )
+            self.assertEqual(result.summary["failed_case_count"], 0)
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+            )
+            gold_phase = _phase(phase_result.summary, "compliance_gold_eval")
+            self.assertTrue(gold_phase["passed"])
+            self.assertTrue(gold_phase["reviewer_ready"])
+            self.assertEqual(gold_phase["details"]["case_count"], 3)
+
+    def test_compliance_gold_eval_fails_missing_required_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            gold_path = _write_gold_eval_file(Path(tmp), profiles=["positive", "mixed", "mixed"])
+
+            result = run_compliance_gold_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                gold_file=gold_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(result.summary["promotion_ready"])
+            profile_check = _check(result.summary, "gold_eval_required_profiles_present")
+            self.assertFalse(profile_check["passed"])
+            self.assertEqual(profile_check["details"]["missing_profiles"], ["negative"])
+
+    def test_compliance_gold_eval_fails_missing_adjudication_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            gold_path = _write_gold_eval_file(Path(tmp))
+            gold = json.loads(gold_path.read_text(encoding="utf-8"))
+            gold["cases"][0]["adjudication"].pop("rationale")
+            gold_path.write_text(json.dumps(gold, sort_keys=True), encoding="utf-8")
+
+            result = run_compliance_gold_eval(
+                output_dir=output_dir,
+                source_set_id="source-set-test",
+                rule_pack_path=rule_pack_path,
+                gold_file=gold_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(result.summary["promotion_ready"])
+            self.assertFalse(result.summary["compliance_review_eval_passed"])
+            adjudication_check = _check(result.summary, "gold_eval_cases_have_adjudication")
+            self.assertFalse(adjudication_check["passed"])
+            self.assertEqual(
+                adjudication_check["details"]["failures"][0]["fields"],
+                ["rationale"],
+            )
+
     def test_phase_eval_can_include_compliance_review_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -934,6 +1017,81 @@ def _write_coverage_matrix(directory: Path, rule_ids: list[str] | None = None) -
                 "rule_pack_version": "0.1.0",
                 "title": "Unit coverage matrix",
                 "coverage_items": items,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_gold_eval_file(directory: Path, profiles: list[str] | None = None) -> Path:
+    profiles = profiles or ["positive", "mixed", "negative"]
+    cases = [
+        {
+            "id": "gold-positive",
+            "profile": profiles[0],
+            "package_text": (
+                "Purpose and Need. The proposed action improves trail access. "
+                "Alternatives include no action. Mitigation measures support a FONSI."
+            ),
+            "expected_statuses": {
+                "purpose_need": "pass",
+                "mitigation": "pass",
+            },
+            "expected_finding_status_counts": {"pass": 2},
+            "min_findings": 2,
+        },
+        {
+            "id": "gold-mixed",
+            "profile": profiles[1],
+            "package_text": "Purpose and Need. The proposed action improves trail access.",
+            "expected_statuses": {
+                "purpose_need": "pass",
+                "mitigation": "gap",
+            },
+            "expected_finding_status_counts": {"gap": 1, "pass": 1},
+            "min_findings": 2,
+        },
+        {
+            "id": "gold-negative",
+            "profile": profiles[2],
+            "package_text": "Routing slip. Staff contacts and a meeting date.",
+            "expected_statuses": {
+                "purpose_need": "gap",
+                "mitigation": "gap",
+            },
+            "expected_finding_status_counts": {"gap": 2},
+            "min_findings": 2,
+        },
+    ]
+    for case in cases:
+        case["adjudication"] = {
+            "status": "adjudicated_seed",
+            "source_type": "realistic_synthetic",
+            "adjudicated_by": ["unit-test"],
+            "adjudicated_at": "2026-04-30",
+            "rationale": f"Unit adjudication for {case['id']}.",
+        }
+        case["expected_unsupported_finding_ids"] = []
+    path = directory / "gold-eval.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "compliance-gold-eval-v0",
+                "id": "unit-gold-v0.1",
+                "version": "0.1.0",
+                "title": "Unit Gold Eval",
+                "rule_pack_id": "unit-nepa-ea",
+                "rule_pack_version": "0.1.0",
+                "adjudication": {
+                    "status": "seed_gold",
+                    "method": "Unit test adjudication.",
+                    "adjudicated_by": ["unit-test"],
+                    "adjudicated_at": "2026-04-30",
+                    "promotion_gate": True,
+                },
+                "cases": cases,
             },
             sort_keys=True,
         ),

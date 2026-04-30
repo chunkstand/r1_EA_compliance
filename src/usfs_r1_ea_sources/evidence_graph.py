@@ -349,6 +349,12 @@ def run_phase_aligned_eval(
     compliance_coverage = (
         _read_json(compliance_coverage_path) if compliance_coverage_path.exists() else None
     )
+    compliance_gold_eval_path = (
+        output_dir / "reviews" / "compliance_gold_eval" / "compliance_gold_eval_results.json"
+    )
+    compliance_gold_eval = (
+        _read_json(compliance_gold_eval_path) if compliance_gold_eval_path.exists() else None
+    )
 
     phases = [
         _phase(
@@ -525,6 +531,56 @@ def run_phase_aligned_eval(
                     "source_claim_term_mismatch_rule_ids": compliance_coverage.get(
                         "source_claim_term_mismatch_rule_ids",
                         [],
+                    ),
+                },
+            )
+        )
+    if compliance_gold_eval is not None:
+        gold_source_set_id = compliance_gold_eval.get("source_set_id")
+        gold_source_set_matches = gold_source_set_id == source_set_id
+        rule_claim_rule_pack_id = (rule_claim_summary or {}).get("rule_pack_id")
+        rule_claim_rule_pack_version = (rule_claim_summary or {}).get("rule_pack_version")
+        gold_rule_pack_matches = (
+            compliance_gold_eval.get("rule_pack_id") == rule_claim_rule_pack_id
+            and compliance_gold_eval.get("rule_pack_version") == rule_claim_rule_pack_version
+        )
+        gold_passed = bool(compliance_gold_eval.get("passed"))
+        gold_phase_passed = gold_passed and gold_source_set_matches and gold_rule_pack_matches
+        phases.append(
+            _phase(
+                "compliance_gold_eval",
+                passed=gold_phase_passed,
+                reviewer_ready=bool(
+                    gold_phase_passed and compliance_gold_eval.get("promotion_ready")
+                ),
+                details={
+                    "gold_eval_path": str(compliance_gold_eval_path),
+                    "gold_eval_id": compliance_gold_eval.get("gold_eval_id"),
+                    "gold_eval_version": compliance_gold_eval.get("gold_eval_version"),
+                    "gold_passed": gold_passed,
+                    "promotion_ready": bool(compliance_gold_eval.get("promotion_ready")),
+                    "expected_source_set_id": source_set_id,
+                    "gold_source_set_id": gold_source_set_id,
+                    "source_set_matches": gold_source_set_matches,
+                    "expected_rule_pack_id": rule_claim_rule_pack_id,
+                    "expected_rule_pack_version": rule_claim_rule_pack_version,
+                    "rule_pack_id": compliance_gold_eval.get("rule_pack_id"),
+                    "rule_pack_version": compliance_gold_eval.get("rule_pack_version"),
+                    "rule_pack_matches": gold_rule_pack_matches,
+                    "case_count": compliance_gold_eval.get("case_count", 0),
+                    "adjudicated_case_count": compliance_gold_eval.get(
+                        "adjudicated_case_count",
+                        0,
+                    ),
+                    "passed_case_count": compliance_gold_eval.get("passed_case_count", 0),
+                    "failed_case_count": compliance_gold_eval.get("failed_case_count", 0),
+                    "profile_counts": compliance_gold_eval.get("profile_counts", {}),
+                    "required_profiles_present": compliance_gold_eval.get(
+                        "required_profiles_present",
+                        [],
+                    ),
+                    "compliance_review_eval_path": compliance_gold_eval.get(
+                        "compliance_review_eval_path"
                     ),
                 },
             )
