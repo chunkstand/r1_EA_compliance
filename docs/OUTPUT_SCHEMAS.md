@@ -182,3 +182,24 @@ The report command reads a run summary and manifest, then writes a Markdown oper
 - adapter counts
 - failed rows requiring manual review
 - suggested next action per failed row
+
+## Acceptance Gate
+
+Path: `source_library/runs/<run_id>/acceptance_gate.json`
+
+The `validate-run` command writes:
+
+- `run_id`
+- `mode`
+- `passed`
+- `checks`
+- `summary`
+
+Checks cover:
+
+- all rows have final status
+- excluded rows have no artifact or fetch evidence
+- failed rows appear in the repair queue
+- successful artifacts exist and match SHA256/byte-size metadata
+- duplicate-content rows link to a canonical artifact
+- summary counts match manifest records

@@ -9,6 +9,7 @@ from .download import run_download
 from .dry_run import run_dry_run
 from .preflight import run_preflight
 from .report import build_run_report
+from .validate_run import validate_run
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -65,6 +66,13 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--output-dir", default=Path("source_library"), type=Path)
     report.add_argument("--run-id", required=True)
     report.add_argument("--json", action="store_true", help="Print report summary JSON instead of Markdown.")
+
+    validate = subparsers.add_parser(
+        "validate-run",
+        help="Run acceptance-gate checks for a previous run manifest and artifacts.",
+    )
+    validate.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    validate.add_argument("--run-id", required=True)
 
     return parser
 
@@ -126,6 +134,11 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(result.text)
         return 0
+
+    if args.command == "validate-run":
+        result = validate_run(output_dir=args.output_dir, run_id=args.run_id)
+        print(json.dumps(result.report, indent=2, sort_keys=True))
+        return 0 if result.passed else 1
 
     parser.error(f"Unknown command: {args.command}")
     return 2

@@ -9,6 +9,17 @@ import json
 from .preflight import _is_failure_status
 
 
+SUCCESS_OR_NONACTION_STATUSES = {
+    "downloaded",
+    "downloaded_existing",
+    "duplicate_content",
+    "duplicate_url",
+    "planned",
+    "preflight_ok",
+    "skipped_excluded",
+}
+
+
 @dataclass(frozen=True)
 class ReportResult:
     run_id: str
@@ -59,7 +70,7 @@ def summarize_records(summary: dict, records: list[dict]) -> dict:
             "suggested_action": suggested_action(record),
         }
         for record in records
-        if _is_failure_status(record["status"])
+        if is_repair_status(record["status"])
     ]
     return {
         "run_id": summary["run_id"],
@@ -91,6 +102,12 @@ def suggested_action(record: dict) -> str:
     if status == "rate_limited":
         return "Retry later with lower host rate and preserve Retry-After if present."
     return "Manual source review required."
+
+
+def is_repair_status(status: str) -> bool:
+    if _is_failure_status(status):
+        return True
+    return status not in SUCCESS_OR_NONACTION_STATUSES
 
 
 def render_markdown_report(report: dict) -> str:

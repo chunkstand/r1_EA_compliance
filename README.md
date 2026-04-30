@@ -66,6 +66,16 @@ python -m usfs_r1_ea_sources report \
 
 The report writes `source_library/runs/<run_id>/operator_report.md` and lists status counts, host counts, adapter usage, and rows that need manual URL repair.
 
+Before scaling a pilot into a full download, run the acceptance gate:
+
+```bash
+python -m usfs_r1_ea_sources validate-run \
+  --output-dir source_library \
+  --run-id pilot-core-sources-adapted
+```
+
+The gate writes `source_library/runs/<run_id>/acceptance_gate.json` and exits nonzero if artifact hashes, byte sizes, duplicate links, status counts, exclusion safety, or repair-queue coverage fail.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.
