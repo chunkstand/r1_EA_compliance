@@ -12,6 +12,15 @@ dependencies = [
   "openpyxl>=3.1",
 ]
 
+[project.optional-dependencies]
+extraction = [
+  "docling>=2; python_version < '3.14'",
+  "pypdf>=5",
+]
+dev = [
+  "ruff>=0.11",
+]
+
 [project.scripts]
 usfs-r1-ea-sources = "usfs_r1_ea_sources.cli:main"
 

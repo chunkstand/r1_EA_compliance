@@ -293,10 +293,80 @@ Before the captured library is treated as ready for reviewer-engine ingestion:
 
 These checks are implemented in `tests/test_captured_library.py`.
 
-## 18. Current Boundary
+## 18. Extraction Gates
 
-The source library currently stores raw artifacts and source-level metadata. It does not yet store
-semantic chunks, embeddings, content-level claim graphs, or page/section-level extracted citations.
-Those derived outputs must be built as a separate downstream layer and must retain the source
-record ID, artifact SHA256, citation label, URL provenance, parser version, and offsets needed to
-trace every chunk back to the raw source artifact.
+Before derived text and chunks are treated as ready for reviewer-engine retrieval:
+
+- Run `extract-build` from the reviewer catalog, not by scanning `artifacts/raw/`.
+- Verify `catalog_validation.json` has passed unless an operator explicitly permits an invalid
+  catalog for diagnostics.
+- Recompute each artifact SHA256 before parsing.
+- Route each source by `expected_parser`, `content_type`, and file suffix.
+- Use the built-in legal XML parser for XML legal sources.
+- Use Docling first for PDF extraction with OCR disabled by default for born-digital PDFs, and keep
+  a hard child-process timeout so large PDFs do not hang an extraction run.
+- If a born-digital PDF exceeds the Docling timeout, fall back to `pypdf_text_fallback` and record
+  that parser name/version plus fallback audit metadata in the extraction manifest and chunks.
+- Enable OCR explicitly with `--docling-ocr` for scanned PDFs and adjust
+  `--docling-timeout-seconds` only with operator intent.
+- HTML and DOCX may use built-in parsers or Docling with `--prefer-docling`.
+- Write one terminal `extraction_manifest.jsonl` row per selected source.
+- Replace only the safe derived directory for the active `source_set_id`; do not leave stale
+  chunks or text files from earlier attempts.
+- Preserve `source_set_id`, `source_record_id`, artifact SHA256, citation label, URL provenance,
+  parser name/version, extraction timestamp, and offsets on every chunk.
+- Fail the extraction gate when hashes mismatch, parsers error, selected rows do not extract, chunk
+  IDs duplicate, or chunks lack required provenance.
+
+## 19. Retrieval Gates
+
+Before retrieved evidence is used in an EA compliance review:
+
+- Run `retrieval-build` from `chunks/chunks.jsonl` and `review_sources.sqlite`, not from raw
+  filenames.
+- Require `extraction_validation.json` to pass unless an operator explicitly permits failed
+  extraction output for diagnostics.
+- Require full extraction coverage by default. A filtered extraction slice must fail reviewer-ready
+  retrieval gates unless `--allow-partial-extraction` is passed for diagnostics, and even then the
+  resulting summary must record `reviewer_ready: false`.
+- Preserve `source_record_id`, artifact SHA256/path, citation label, URL provenance, parser
+  name/version, extraction timestamp, extracted-text offsets, and content hash on every indexed
+  chunk.
+- Attach catalog review topics to indexed chunks so retrieval can filter by reviewer topic.
+- Fail the retrieval gate when chunks are missing, source-set IDs drift, chunk IDs duplicate,
+  extracted sources are missing indexed chunks, linked artifact/text paths are missing, content
+  hashes mismatch, offsets are invalid, or required provenance is absent.
+- Query results must return evidence spans with offsets and citation-bearing provenance. Do not use
+  uncited snippets for compliance conclusions.
+- Run `retrieval-eval` before treating the index as reviewer-ready. Track pass rate, expected-term
+  hit rate, citation coverage rate, unsupported-answer rate, and zero-result rate.
+
+## 20. Current Boundary
+
+## 20. Document Evidence Graph Gates
+
+Before the graph layer is used by a compliance reviewer:
+
+- Run `evidence-graph-build` from extracted chunks, catalog metadata, and retrieval diagnostics.
+- Require catalog validation, extraction validation, and retrieval validation to pass.
+- Require a reviewer-ready retrieval index by default. A partial retrieval graph must be explicitly
+  diagnostic through `--allow-partial-retrieval`, and must still record `reviewer_ready: false`.
+- Require the graph builder to reopen the retrieval SQLite index and prove chunks still match the
+  indexed source-set IDs, provenance fields, offsets, text, review topics, and content hashes.
+- Preserve source document, raw artifact, extracted text, section, chunk, evidence span, parser, and
+  review topic nodes.
+- Preserve edges from evidence spans back to source documents, artifacts, chunks, parser versions,
+  citation labels, content hashes, and offsets.
+- Fail the graph gate when retrieval binding fails, chunk hashes do not match text, node IDs or edge
+  IDs duplicate, edges dangle, chunks lack evidence spans, chunks lack artifact traces, chunks lack
+  review-topic edges, or graph health metrics fail.
+- Run `phase-eval` before compliance execution so catalog, extraction, retrieval, and graph
+  readiness are reported separately.
+
+## 21. Current Boundary
+
+The source library stores raw artifacts and source-level metadata. The extraction layer builds
+rebuildable derived text and chunks under `source_library/derived/<source_set_id>/`, the retrieval
+layer builds a local evidence index from those chunks, and the evidence graph layer builds a
+document/chunk/evidence graph. The system does not yet store embeddings, extracted legal claims,
+compliance findings, or reviewer reports.

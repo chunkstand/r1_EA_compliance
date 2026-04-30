@@ -6,6 +6,7 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 .venv/
+.venv-docling/
 venv/
 
 # Local environment
@@ -16,6 +17,8 @@ venv/
 source_library/artifacts/
 source_library/catalog/
 source_library/runs/
+source_library/derived/
+source_library/reviews/
 source_library/manifests/*.jsonl
 source_library/manifests/*.tmp
 

@@ -6,12 +6,24 @@ import json
 
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
+from .compliance_review import DEFAULT_RULE_PACK_PATH
+from .compliance_review import run_compliance_review
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .download import run_download
 from .dry_run import run_dry_run
+from .ea_review import DEFAULT_CHECKLIST_PATH
+from .ea_review import run_ea_review
+from .evidence_graph import build_evidence_graph
+from .evidence_graph import run_phase_aligned_eval
+from .extract import build_extraction
+from .extraction_accuracy import run_extraction_accuracy_audit
 from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
+from .retrieval import build_retrieval_index
+from .retrieval import default_index_path
+from .retrieval import query_retrieval_index
+from .retrieval import run_retrieval_eval
 from .validate_run import validate_run
 
 
@@ -68,7 +80,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     report.add_argument("--output-dir", default=Path("source_library"), type=Path)
     report.add_argument("--run-id", required=True)
-    report.add_argument("--json", action="store_true", help="Print report summary JSON instead of Markdown.")
+    report.add_argument(
+        "--json",
+        action="store_true",
+        help="Print report summary JSON instead of Markdown.",
+    )
 
     validate = subparsers.add_parser(
         "validate-run",
@@ -85,7 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
     pilots.add_argument("--output-dir", default=Path("source_library"), type=Path)
     pilots.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
     pilots.add_argument("--run-id-prefix", default="host-pilot")
-    pilots.add_argument("--host", action="append", help="Host to pilot. Repeat for multiple hosts. Defaults to all canonical hosts.")
+    pilots.add_argument(
+        "--host",
+        action="append",
+        help="Host to pilot. Repeat for multiple hosts. Defaults to all canonical hosts.",
+    )
     pilots.add_argument("--limit-per-host", type=int)
     pilots.add_argument("--force", action="store_true")
 
@@ -122,7 +142,188 @@ def build_parser() -> argparse.ArgumentParser:
     )
     catalog.add_argument(
         "--batch-run-id",
-        help="Optional parent batch-download run ID to link artifacts from all passed child batches.",
+        help=(
+            "Optional parent batch-download run ID to link artifacts from all passed child "
+            "batches."
+        ),
+    )
+
+    extract = subparsers.add_parser(
+        "extract-build",
+        help=(
+            "Build derived extracted text, chunks, and extraction diagnostics from the reviewer "
+            "catalog."
+        ),
+    )
+    extract.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    extract.add_argument("--id", help="Limit extraction to one source_record_id.")
+    extract.add_argument("--parser", help="Limit extraction to one expected_parser value.")
+    extract.add_argument("--limit", type=int)
+    extract.add_argument("--chunk-max-chars", type=int, default=1800)
+    extract.add_argument("--chunk-overlap-chars", type=int, default=200)
+    extract.add_argument(
+        "--prefer-docling",
+        action="store_true",
+        help="Use Docling for HTML/DOCX when installed. PDF always requires Docling.",
+    )
+    extract.add_argument(
+        "--docling-ocr",
+        action="store_true",
+        help="Enable Docling OCR for PDFs. Default is born-digital PDF extraction without OCR.",
+    )
+    extract.add_argument(
+        "--docling-timeout-seconds",
+        type=float,
+        default=300.0,
+        help="Per-document Docling timeout. Use 0 to disable the timeout.",
+    )
+    extract.add_argument(
+        "--allow-invalid-catalog",
+        action="store_true",
+        help="Run even if catalog_validation.json has not passed.",
+    )
+
+    extraction_accuracy = subparsers.add_parser(
+        "extraction-accuracy-audit",
+        help="Run deterministic extraction accuracy checks against generated extraction outputs.",
+    )
+    extraction_accuracy.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    extraction_accuracy.add_argument("--source-set-id")
+    extraction_accuracy.add_argument("--output-path", type=Path)
+
+    retrieval_build = subparsers.add_parser(
+        "retrieval-build",
+        help="Build a local evidence retrieval index from extracted chunks.",
+    )
+    retrieval_build.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    retrieval_build.add_argument("--source-set-id")
+    retrieval_build.add_argument("--chunks-path", type=Path)
+    retrieval_build.add_argument("--catalog-sqlite-path", type=Path)
+    retrieval_build.add_argument(
+        "--allow-failed-extraction",
+        action="store_true",
+        help="Build even if extraction_validation.json has not passed.",
+    )
+    retrieval_build.add_argument(
+        "--allow-partial-extraction",
+        action="store_true",
+        help="Build a diagnostic index from a filtered extraction slice.",
+    )
+
+    retrieval_query = subparsers.add_parser(
+        "retrieval-query",
+        help="Query the local evidence index and print provenance-bearing evidence spans.",
+    )
+    retrieval_query.add_argument("query")
+    retrieval_query.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    retrieval_query.add_argument("--source-set-id")
+    retrieval_query.add_argument("--index-path", type=Path)
+    retrieval_query.add_argument("--limit", type=int, default=5)
+    retrieval_query.add_argument("--document-role")
+    retrieval_query.add_argument("--authority-level")
+    retrieval_query.add_argument("--source-record-id")
+    retrieval_query.add_argument("--review-topic")
+    retrieval_query.add_argument("--citation")
+    retrieval_query.add_argument("--host")
+
+    retrieval_eval = subparsers.add_parser(
+        "retrieval-eval",
+        help="Run the evidence retrieval eval set against a local retrieval index.",
+    )
+    retrieval_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    retrieval_eval.add_argument("--source-set-id")
+    retrieval_eval.add_argument("--index-path", type=Path)
+    retrieval_eval.add_argument(
+        "--eval-file",
+        default=Path("config/retrieval_eval_seed.json"),
+        type=Path,
+    )
+    retrieval_eval.add_argument("--top-k", type=int, default=5)
+    retrieval_eval.add_argument("--results-dir", type=Path)
+
+    evidence_graph = subparsers.add_parser(
+        "evidence-graph-build",
+        help="Build a document evidence graph from extracted chunks and retrieval metadata.",
+    )
+    evidence_graph.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    evidence_graph.add_argument("--source-set-id")
+    evidence_graph.add_argument(
+        "--allow-partial-retrieval",
+        action="store_true",
+        help="Build a diagnostic graph from a non-reviewer-ready retrieval index.",
+    )
+
+    phase_eval = subparsers.add_parser(
+        "phase-eval",
+        help=(
+            "Run phase-aligned readiness evals across catalog, extraction, retrieval, graph, "
+            "and optionally one compliance review."
+        ),
+    )
+    phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    phase_eval.add_argument("--source-set-id")
+    phase_eval.add_argument(
+        "--review-id",
+        help="Optional compliance review ID to include as a phase gate.",
+    )
+    phase_eval.add_argument(
+        "--review-dir",
+        type=Path,
+        help="Optional explicit compliance review directory to include as a phase gate.",
+    )
+
+    ea_review = subparsers.add_parser(
+        "ea-review",
+        help="Run a deterministic, evidence-backed EA package checklist review.",
+    )
+    ea_review.add_argument("--package-path", required=True, type=Path)
+    ea_review.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    ea_review.add_argument("--source-set-id")
+    ea_review.add_argument("--index-path", type=Path)
+    ea_review.add_argument("--checklist", default=DEFAULT_CHECKLIST_PATH, type=Path)
+    ea_review.add_argument("--review-id")
+    ea_review.add_argument("--results-dir", type=Path)
+    ea_review.add_argument("--source-top-k", type=int, default=3)
+    ea_review.add_argument("--package-top-k", type=int, default=3)
+    ea_review.add_argument("--chunk-max-chars", type=int, default=1800)
+    ea_review.add_argument("--chunk-overlap-chars", type=int, default=200)
+    ea_review.add_argument(
+        "--docling-ocr",
+        action="store_true",
+        help="Enable Docling OCR for PDF EA package files.",
+    )
+    ea_review.add_argument(
+        "--docling-timeout-seconds",
+        type=float,
+        default=120.0,
+        help="Per-document Docling timeout for PDF EA package files. Use 0 to disable.",
+    )
+
+    compliance_review = subparsers.add_parser(
+        "compliance-review",
+        help="Run a versioned compliance rule pack against a local EA package.",
+    )
+    compliance_review.add_argument("--package-path", required=True, type=Path)
+    compliance_review.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    compliance_review.add_argument("--source-set-id")
+    compliance_review.add_argument("--index-path", type=Path)
+    compliance_review.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    compliance_review.add_argument("--review-id")
+    compliance_review.add_argument("--results-dir", type=Path)
+    compliance_review.add_argument("--source-top-k", type=int, default=3)
+    compliance_review.add_argument("--package-top-k", type=int, default=3)
+    compliance_review.add_argument("--chunk-max-chars", type=int, default=1800)
+    compliance_review.add_argument("--chunk-overlap-chars", type=int, default=200)
+    compliance_review.add_argument(
+        "--docling-ocr",
+        action="store_true",
+        help="Enable Docling OCR for PDF EA package files.",
+    )
+    compliance_review.add_argument(
+        "--docling-timeout-seconds",
+        type=float,
+        default=120.0,
+        help="Per-document Docling timeout for PDF EA package files. Use 0 to disable.",
     )
 
     return parser
@@ -146,6 +347,133 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "extract-build":
+        result = build_extraction(
+            output_dir=args.output_dir,
+            id_filter=args.id,
+            parser_filter=args.parser,
+            limit=args.limit,
+            chunk_max_chars=args.chunk_max_chars,
+            chunk_overlap_chars=args.chunk_overlap_chars,
+            prefer_docling=args.prefer_docling,
+            docling_ocr=args.docling_ocr,
+            docling_timeout_seconds=args.docling_timeout_seconds,
+            allow_invalid_catalog=args.allow_invalid_catalog,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "extraction-accuracy-audit":
+        result = run_extraction_accuracy_audit(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "retrieval-build":
+        result = build_retrieval_index(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            chunks_path=args.chunks_path,
+            catalog_sqlite_path=args.catalog_sqlite_path,
+            allow_failed_extraction=args.allow_failed_extraction,
+            allow_partial_extraction=args.allow_partial_extraction,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "retrieval-query":
+        index_path = args.index_path or default_index_path(args.output_dir, args.source_set_id)
+        result = query_retrieval_index(
+            index_path=index_path,
+            query=args.query,
+            limit=args.limit,
+            document_role=args.document_role,
+            authority_level=args.authority_level,
+            source_record_id=args.source_record_id,
+            review_topic=args.review_topic,
+            citation=args.citation,
+            host=args.host,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0 if result["hit_count"] else 1
+
+    if args.command == "retrieval-eval":
+        index_path = args.index_path or default_index_path(args.output_dir, args.source_set_id)
+        result = run_retrieval_eval(
+            index_path=index_path,
+            eval_file=args.eval_file,
+            top_k=args.top_k,
+            output_dir=args.results_dir,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "evidence-graph-build":
+        result = build_evidence_graph(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            allow_partial_retrieval=args.allow_partial_retrieval,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "phase-eval":
+        result = run_phase_aligned_eval(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["reviewer_ready"] else 1
+
+    if args.command == "ea-review":
+        timeout = args.docling_timeout_seconds
+        if timeout is not None and timeout <= 0:
+            timeout = None
+        result = run_ea_review(
+            package_path=args.package_path,
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            index_path=args.index_path,
+            checklist_path=args.checklist,
+            review_id=args.review_id,
+            results_dir=args.results_dir,
+            source_top_k=args.source_top_k,
+            package_top_k=args.package_top_k,
+            chunk_max_chars=args.chunk_max_chars,
+            chunk_overlap_chars=args.chunk_overlap_chars,
+            docling_ocr=args.docling_ocr,
+            docling_timeout_seconds=timeout,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["reviewer_ready"] else 1
+
+    if args.command == "compliance-review":
+        timeout = args.docling_timeout_seconds
+        if timeout is not None and timeout <= 0:
+            timeout = None
+        result = run_compliance_review(
+            package_path=args.package_path,
+            output_dir=args.output_dir,
+            rule_pack_path=args.rule_pack,
+            source_set_id=args.source_set_id,
+            index_path=args.index_path,
+            review_id=args.review_id,
+            results_dir=args.results_dir,
+            source_top_k=args.source_top_k,
+            package_top_k=args.package_top_k,
+            chunk_max_chars=args.chunk_max_chars,
+            chunk_overlap_chars=args.chunk_overlap_chars,
+            docling_ocr=args.docling_ocr,
+            docling_timeout_seconds=timeout,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["reviewer_ready"] else 1
 
     if args.command == "preflight":
         config = load_config(args.config)

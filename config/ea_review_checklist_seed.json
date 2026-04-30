@@ -1,0 +1,52 @@
+[
+  {
+    "id": "purpose_need",
+    "title": "Purpose and need are stated",
+    "question": "Does the EA package identify the purpose and need for action?",
+    "package_query": "purpose need proposed action",
+    "package_terms": ["purpose and need", "need for action", "proposed action"],
+    "source_query": "environmental assessment purpose and need proposed action",
+    "source_filters": {"document_role": "regulation"},
+    "severity": "high"
+  },
+  {
+    "id": "alternatives",
+    "title": "Alternatives are described",
+    "question": "Does the EA package describe the proposed action and alternatives?",
+    "package_query": "alternatives no action proposed action",
+    "package_terms": ["alternatives", "no action", "proposed action"],
+    "source_query": "environmental assessment alternatives proposed action environmental effects",
+    "source_filters": {"document_role": "regulation"},
+    "severity": "high"
+  },
+  {
+    "id": "effects_analysis",
+    "title": "Environmental effects are analyzed",
+    "question": "Does the EA package analyze affected environment and environmental effects?",
+    "package_query": "affected environment environmental effects impacts",
+    "package_terms": ["affected environment", "environmental effects", "environmental consequences", "impacts"],
+    "source_query": "environmental assessment affected environment environmental effects",
+    "source_filters": {"document_role": "regulation"},
+    "severity": "high"
+  },
+  {
+    "id": "integrated_compliance",
+    "title": "Related environmental compliance is addressed",
+    "question": "Does the EA package address consultation or related environmental review laws?",
+    "package_query": "consultation section 106 endangered species tribal water quality",
+    "package_terms": ["consultation", "section 106", "endangered species", "tribal", "water quality"],
+    "source_query": "integrated environmental review compliance environmental review laws consultation",
+    "source_filters": {"document_role": "regulation"},
+    "severity": "medium"
+  },
+  {
+    "id": "fonsi_mitigation",
+    "title": "FONSI and mitigation support are traceable",
+    "question": "Does the EA package support the FONSI or decision notice with mitigation rationale where applicable?",
+    "package_query": "finding of no significant impact FONSI mitigation decision notice",
+    "package_terms": ["finding of no significant impact", "FONSI", "mitigation", "decision notice"],
+    "source_query": "finding of no significant impact mitigation monitoring enforcement",
+    "source_filters": {"document_role": "regulation"},
+    "severity": "high"
+  }
+]

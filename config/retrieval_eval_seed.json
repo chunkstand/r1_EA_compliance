@@ -1,0 +1,29 @@
+[
+  {
+    "id": "nepa-alternatives-environmental-effects",
+    "query": "NEPA alternatives environmental effects",
+    "expected_terms": [
+      "alternatives",
+      "environmental"
+    ],
+    "filters": {}
+  },
+  {
+    "id": "scoping-public-comment",
+    "query": "scoping public comment environmental concerns",
+    "expected_terms": [
+      "scoping",
+      "public"
+    ],
+    "filters": {}
+  },
+  {
+    "id": "decision-notice-mitigation",
+    "query": "decision notice mitigation measures",
+    "expected_terms": [
+      "decision",
+      "mitigation"
+    ],
+    "filters": {}
+  }
+]

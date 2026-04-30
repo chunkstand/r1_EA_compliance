@@ -1,8 +1,12 @@
 # Current System State
 
-This project is a local source-library builder for USDA Forest Service Region 1 Environmental Assessment review sources.
+This project is a local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA
+Forest Service Region 1 source material.
 
-The workbook `usfs_region1_ea_document_checklist_current_2026.xlsx` remains the source-of-truth input. The generated `source_library/` is the audited local capture of those workbook sources for downstream EA review-engine ingestion.
+The workbook `usfs_region1_ea_document_checklist_current_2026.xlsx` remains the source-of-truth
+input for the knowledge base. The generated `source_library/` is the audited local capture and
+derived reviewer corpus used by extraction, retrieval, evidence graph, and deterministic EA package
+review commands.
 
 ## Current Capture
 
@@ -21,6 +25,51 @@ The current full-library capture is:
 - Reviewer catalog source-artifact links: `147`
 
 The current catalog validation passes. The captured-library integrity test suite also passes against these generated outputs.
+
+## Verified State Snapshot
+
+Last verified locally on 2026-04-30.
+
+- Active source set: `source-set-e364ea220cffd938`
+- Base phase eval: passed, `4/4` phases reviewer-ready
+- Compliance phase eval: passed, `5/5` phases reviewer-ready for
+  `smoke-compliance-review-v0-hardened`
+- Catalog: `147` source rows, `131` unique raw artifacts
+- Extraction: `147/147` selected sources extracted, validation passed
+- Retrieval: `13,619` chunks indexed, validation passed, reviewer-ready
+- Evidence graph: `36,578` nodes, `106,182` edges, validation passed, reviewer-ready
+- Retrieval-to-graph binding mismatches: `0`
+- EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
+- Compliance review smoke: `compliance_validation.json` passed for
+  `smoke-compliance-review-v0-hardened`
+- Unit suite: `94` tests passed
+
+The verification set was:
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests
+python -m compileall -q src
+uv run --extra dev ruff check src tests
+git diff --check
+uv lock --check
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library
+printf '%s\n' \
+  'Purpose and Need' \
+  '' \
+  'The proposed action improves trail access and includes alternatives, affected environment, environmental effects, consultation, mitigation, and a finding of no significant impact.' \
+  > /tmp/ea-package-v0-smoke.txt
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
+  --package-path /tmp/ea-package-v0-smoke.txt \
+  --output-dir source_library \
+  --review-id smoke-ea-review-v0-hardened
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
+  --package-path /tmp/ea-package-v0-smoke.txt \
+  --output-dir source_library \
+  --review-id smoke-compliance-review-v0-hardened
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id smoke-compliance-review-v0-hardened
+```
 
 ## Storage Model
 
@@ -94,28 +143,71 @@ The catalog contains:
 
 The reviewer catalog links every workbook row to an artifact, including duplicate-content rows.
 
-## Chunking And Graph Status
+## Extraction, Retrieval, Review, And Graph Status
 
-The system has not yet chunked document contents.
+The raw source library does not store semantic chunks. A derived extraction layer is implemented
+through `extract-build`; it reads the reviewer catalog, rehashes artifacts, and writes rebuildable
+extracted text, chunk JSONL, and extraction diagnostics under
+`source_library/derived/<source_set_id>/`.
+
+The first retrieval layer is also implemented through `retrieval-build`. It indexes extracted
+chunks into a local SQLite evidence index and supports deterministic text queries filtered by
+document role, authority level, source record, review topic, citation label, and host.
+
+The document evidence graph layer is implemented through `evidence-graph-build`. It turns extracted
+chunks and retrieval metadata into graph artifacts for source documents, raw artifacts, extracted
+text, sections, chunks, evidence spans, parsers, and review topics. It is a graph substrate for
+auditable review; it does not yet extract legal claims.
+
+EA Package Review V0 is implemented through `ea-review`. It extracts a local EA package, runs the
+seed checklist, retrieves source-library evidence for each item, and writes package evidence,
+source-library evidence, finding status, limitations, and validation artifacts.
+
+Compliance Rule Pack + Finding Graph V0 is implemented through `compliance-review`. It evaluates a
+versioned rule pack from `config/compliance_rule_pack_nepa_ea_v0.json`, reuses the `ea-review`
+package/retrieval gates, and writes compliance validation, a compliance review report, and a finding
+graph for rules, findings, source evidence, package evidence, and package gaps.
 
 Current state:
 
-- Raw source documents are captured.
+- Raw source documents are captured and cataloged.
 - Source metadata is normalized into JSONL and SQLite.
-- Graph seed files exist for source-level relationships.
-- No semantic text chunks exist yet.
+- Derived extraction builds text and chunks from the catalog.
+- The extraction accuracy audit verifies text hashes, raw artifact hashes, chunk offset fidelity,
+  gap-free chunk coverage, eCFR section/subpart scoping, markup cleanup, and PDF token coverage.
+- Retrieval builds and queries a provenance-bearing local evidence index.
+- The document evidence graph builds source, artifact, extracted-text, section, chunk, evidence-span,
+  parser, and review-topic nodes with health metrics.
+- Phase eval reports catalog, extraction, retrieval, and graph readiness separately.
+- EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
+  reports plus `review_validation.json`.
+- Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
+  `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
+- A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
+- A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
+- A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
+- Catalog graph seed files exist for source-level relationships.
 - No embeddings exist yet.
-- No content-level claim graph exists yet.
-- No page/section-level citation offsets exist yet.
+- No source-text legal claim/entity extraction graph exists yet.
+- No model-generated compliance narrative is trusted without deterministic package and source
+  evidence.
+- Page/section offsets are available only where the selected parser can infer them; all chunks carry
+  extracted-text character offsets.
 
-The current graph is a source metadata graph. It includes relationships such as:
+The catalog graph seed is a source metadata graph. It includes relationships such as:
 
 - source to artifact
 - source to authority
 - source to review topic
 - source to applicability
 
-It does not include extracted claims, document sections, paragraphs, tables, pages, or vector chunks.
+The document evidence graph is the implemented content graph. It includes document sections, chunks,
+evidence spans, parser provenance, and review-topic edges. It does not yet include extracted legal
+claims, table structure recovery, embeddings, or vector chunks.
+
+The finding graph is the implemented compliance-review graph. It includes rule packs, compliance
+rules, findings, evidence-span references, and package-gap nodes. It does not replace source-text
+legal claim extraction or human reviewer adjudication.
 
 ## Accuracy Guarantees
 
@@ -135,17 +227,42 @@ Validated guarantees:
 - Override metadata includes `override_url` and `override_reason`.
 - The reviewer catalog matches batch manifests.
 - SQLite source-artifact links match the JSONL catalog.
+- Extraction outputs match raw artifact hashes and manifest text hashes.
+- Chunk text matches extracted-text offset slices.
+- Retrieval chunks validate against source-set IDs, content hashes, offsets, required provenance, and
+  catalog linkage.
+- Evidence graph chunks validate against the retrieval index before graph artifacts are marked
+  reviewer-ready.
+- EA review `pass` findings require both package evidence and source-library evidence.
+- EA review `gap` findings require source-library evidence and explicitly mean package evidence was
+  not found.
+- EA review validation rejects unsupported compliance claims.
+- Compliance review validates the rule pack, requires every rule to be evaluated, requires source
+  citations for claim-bearing findings, and validates finding graph node/edge integrity.
+- Rule-pack validation rejects unsafe rule-pack or rule IDs, unsupported source-filter keys, and
+  empty source-filter values.
+- Phase eval rejects stale compliance review artifacts when the review source set does not match the
+  evaluated source set.
 
 Boundaries:
 
 - A successful download means the source bytes were captured and validated.
 - It does not prove that the source is legally current beyond the workbook metadata and retrieval evidence.
-- It does not prove that a downstream parser extracted all content correctly.
+- It proves the current generated extraction artifacts pass deterministic accuracy gates for
+  source scoping, chunk fidelity, markup cleanup, and independent PDF token comparison.
+- It proves the current retrieval and evidence graph artifacts passed deterministic provenance and
+  binding gates.
+- It proves the current EA review V0 cannot mark a finding as `pass` without both package and
+  source-library evidence.
+- It proves the current compliance review V0 cannot produce claim-bearing findings without
+  source-library citations.
+- It does not prove semantic legal interpretation of the extracted text.
 - It does not prove that future web versions will remain unchanged.
 
 ## Reviewer Engine Read Path
 
-The EA review engine should not scan `artifacts/raw/` directly as its source of truth. It should read through the catalog.
+The EA review engine should not scan `artifacts/raw/` directly as its source of truth. It should
+read through the catalog, extraction outputs, and retrieval index in order.
 
 Recommended read path:
 
@@ -157,6 +274,11 @@ Recommended read path:
 6. Recompute SHA256 and byte size before parsing.
 7. Parse by `expected_parser` and `content_type`.
 8. Emit downstream chunks with immutable provenance fields.
+9. Build `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`.
+10. Retrieve evidence spans through `retrieval-query` or the retrieval module before generating any
+    compliance answer.
+11. For package review, run `ea-review` so each checklist item records both package evidence and
+    source-library evidence, or marks the item as a gap/uncertain without unsupported claims.
 
 Every downstream text chunk should carry:
 
@@ -174,34 +296,198 @@ Every downstream text chunk should carry:
 
 The review engine should cite `citation_label` and offset metadata, not raw filenames.
 
-## Next Processing Layer
+## EA Package Review V0
 
-The next system layer should build a derived extraction/chunk index without modifying raw artifacts.
+The current package-review milestone is implemented through:
 
-Recommended derived layout:
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
+  --package-path /absolute/path/to/ea-package-or-folder \
+  --output-dir source_library
+```
+
+The command writes `source_library/reviews/<review_id>/review_report.json` and
+`review_report.md`, `review_validation.json`, plus package extraction artifacts under
+`source_library/reviews/<review_id>/package/`.
+Findings use the statuses `pass`, `gap`, `uncertain`, and `not_applicable`.
+
+A `gap` means the source library returned supporting review authority but matching package evidence
+was not found. An `uncertain` finding does not make a compliance claim.
+The command fails fast if the source-library retrieval index is not reviewer-ready, and rerunning a
+fixed review ID replaces prior package artifacts before writing the new report.
+
+`review_validation.json` is the gate-facing artifact. It checks source retrieval readiness, package
+extraction, package chunk creation, valid finding statuses, dual evidence for `pass` findings, source
+evidence for `gap` findings, and absence of unsupported compliance claims.
+
+## Compliance Rule Pack And Finding Graph V0
+
+The rule-pack milestone is implemented through:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
+  --package-path /absolute/path/to/ea-package-or-folder \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+```
+
+The command writes these artifacts beside the base EA review artifacts:
+
+- `source_library/reviews/<review_id>/compliance_validation.json`
+- `source_library/reviews/<review_id>/compliance_review.json`
+- `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
+- `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
+
+The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,
+severity, package query and terms, source query, source filters, and an evidence expectation.
+
+The finding graph contains:
+
+- `ComplianceRulePack`
+- `ComplianceReview`
+- `ComplianceRule`
+- `ComplianceFinding`
+- `SourceLibraryEvidence`
+- `PackageEvidence`
+- `PackageEvidenceGap`
+
+`compliance_validation.json` checks rule-pack validity, base EA review validation, all-rules
+coverage, valid finding statuses, dual evidence for `pass`, source evidence for `gap`, source
+citations for claim-bearing findings, unsupported-claim absence, finding graph evidence-edge
+coverage, and finding graph integrity.
+
+Rule-pack IDs, rule IDs, and fixed review IDs are constrained to letters, numbers, dots,
+underscores, and hyphens so review outputs cannot escape the intended review directory. Rule
+`source_filters` must use supported retrieval filter keys; typoed keys fail validation instead of
+silently widening retrieval.
+
+## Derived Extraction Layer
+
+The extraction layer builds a derived text/chunk index without modifying raw artifacts.
+PDF extraction uses Docling first; born-digital PDFs that exceed the Docling timeout can fall back
+to `pypdf_text_fallback`, with parser name/version preserved in manifests and chunks and fallback
+metadata preserved in the extraction manifest.
+
+Derived layout:
 
 ```text
 source_library/
   derived/
-    extracted_text/
-    chunks/
-    embeddings/
-    content_graph/
+    <source_set_id>/
+      extracted_text/
+      docling_json/
+      chunks/
+        chunks.jsonl
+      diagnostics/
+        extraction_manifest.jsonl
+        extraction_validation.json
+        extraction_accuracy_audit.json
+        summary.json
 ```
 
-Recommended derived outputs:
+Derived outputs:
 
 - extracted text per artifact
-- page-aware PDF extraction where possible
+- Docling JSON when Docling is used by the parser
 - HTML/XML section extraction
 - chunk JSONL with stable chunk IDs
 - chunk-level SHA256 or content hash
 - parser diagnostics
 - extraction validation report
 - chunk-to-source and chunk-to-artifact links
-- optional content graph for sections, claims, citations, and review findings
 
 Derived data should always be rebuildable from raw artifacts and the reviewer catalog.
+
+## Evidence Retrieval Layer
+
+Retrieval layout:
+
+```text
+source_library/
+  derived/
+    <source_set_id>/
+      retrieval/
+        evidence_index.sqlite
+        retrieval_manifest.json
+        retrieval_validation.json
+        summary.json
+        retrieval_eval_results.json
+```
+
+The retrieval layer is intentionally lexical and auditable for v1. It stores the source chunk text
+and the provenance required for a reviewer to verify the citation back to raw artifacts and extracted
+text offsets.
+
+Retrieval validation checks:
+
+- extraction validation passed unless explicitly overridden
+- extraction scope is complete unless `--allow-partial-extraction` is passed for diagnostics
+- chunks JSONL exists and contains chunks
+- catalog SQLite exists
+- chunk source-set IDs match the target source set
+- chunk IDs are unique
+- indexed source IDs match extracted source IDs in `extraction_manifest.jsonl`
+- chunk hashes match the stored text
+- chunk offsets are valid
+- linked artifact and extracted-text paths still exist
+- required citation, artifact, URL, parser, and offset fields are present
+
+`retrieval-build` records `reviewer_ready`. This is true only when the index validates and the
+extraction summary shows complete catalog coverage. A filtered one-document slice can still be
+indexed with `--allow-partial-extraction`, but it remains a diagnostic index, not a reviewer-ready
+corpus.
+
+## Document Evidence Graph Layer
+
+Evidence graph layout:
+
+```text
+source_library/
+  derived/
+    <source_set_id>/
+      evidence_graph/
+        document_graph_nodes.jsonl
+        document_graph_edges.jsonl
+        evidence_graph.sqlite
+        evidence_graph_validation.json
+        summary.json
+        phase_eval_results.json
+```
+
+The evidence graph contains these node types:
+
+- `SourceSet`
+- `SourceDocument`
+- `RawArtifact`
+- `ExtractedText`
+- `DocumentSection`
+- `DocumentChunk`
+- `EvidenceSpan`
+- `Parser`
+- `ReviewTopic`
+
+Every `EvidenceSpan` traces to a chunk, source document, raw artifact, parser version, content
+hash, citation label, URL provenance, and extracted-text offsets. The graph build also reopens the
+retrieval SQLite index and requires chunk IDs, source-set IDs, provenance fields, offsets, content
+hashes, text, and review topics to match before graph artifacts are persisted. The graph records
+health metrics: connected components, isolated nodes, dangling edges, evidence coverage, topic
+coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash mismatches.
+
+`phase-eval` keeps readiness checks phase-aligned:
+
+- catalog capture
+- extraction
+- retrieval
+- evidence graph
+- optional compliance review when `--review-id` or `--review-dir` is passed
+
+When a compliance review phase is included, `phase-eval` requires the review report to exist,
+validation to pass, the review ID to match when supplied, and the review source set to match the
+evaluated source set.
+
+Next downstream layers are embeddings, source-text claim/entity extraction, broader rule-pack
+coverage, reviewer adjudication workflow, and model-assisted synthesis that is constrained by
+evidence and validation gates.
 
 ## Verification Commands
 
@@ -224,4 +510,49 @@ PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
   --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
   --output-dir source_library \
   --batch-run-id full-library-batches
+```
+
+Build derived extraction outputs from the current reviewer catalog:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
+  --output-dir source_library
+```
+
+Build the evidence retrieval index:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build \
+  --output-dir source_library
+```
+
+Run a retrieval query:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-query \
+  --output-dir source_library \
+  --review-topic alternatives \
+  "alternatives environmental effects"
+```
+
+Run the seed retrieval eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval \
+  --output-dir source_library \
+  --eval-file config/retrieval_eval_seed.json
+```
+
+Build the evidence graph:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build \
+  --output-dir source_library
+```
+
+Run phase-aligned readiness evaluation:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library
 ```
