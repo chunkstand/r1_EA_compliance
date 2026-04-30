@@ -7,6 +7,7 @@ from pathlib import Path
 import hashlib
 import json
 import re
+import textwrap
 
 from .ea_review import run_ea_review
 
@@ -59,6 +60,7 @@ class ComplianceReviewResult:
     compliance_review_path: Path
     compliance_matrix_path: Path
     compliance_matrix_markdown_path: Path
+    compliance_matrix_pdf_path: Path
     compliance_validation_path: Path
     finding_nodes_path: Path
     finding_edges_path: Path
@@ -115,6 +117,7 @@ def run_compliance_review(
     compliance_review_path = review_dir / "compliance_review.json"
     compliance_matrix_path = review_dir / "compliance_matrix.json"
     compliance_matrix_markdown_path = review_dir / "compliance_matrix.md"
+    compliance_matrix_pdf_path = review_dir / "compliance_matrix.pdf"
     compliance_validation_path = review_dir / "compliance_validation.json"
     finding_nodes_path = review_dir / "finding_graph_nodes.jsonl"
     finding_edges_path = review_dir / "finding_graph_edges.jsonl"
@@ -122,6 +125,7 @@ def run_compliance_review(
         compliance_review_path=compliance_review_path,
         compliance_matrix_path=compliance_matrix_path,
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
+        compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -190,6 +194,7 @@ def run_compliance_review(
         compliance_review_path=compliance_review_path,
         compliance_matrix_path=compliance_matrix_path,
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
+        compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -223,6 +228,7 @@ def run_compliance_review(
         _matrix_markdown(matrix),
         encoding="utf-8",
     )
+    _write_compliance_matrix_pdf(compliance_matrix_pdf_path, matrix)
     _write_json(compliance_validation_path, validation)
     _write_json(compliance_review_path, report)
     return ComplianceReviewResult(
@@ -231,6 +237,7 @@ def run_compliance_review(
         compliance_review_path=compliance_review_path,
         compliance_matrix_path=compliance_matrix_path,
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
+        compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -434,6 +441,7 @@ def _prepare_outputs(
     compliance_review_path: Path,
     compliance_matrix_path: Path,
     compliance_matrix_markdown_path: Path,
+    compliance_matrix_pdf_path: Path,
     compliance_validation_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
@@ -442,6 +450,7 @@ def _prepare_outputs(
         compliance_review_path,
         compliance_matrix_path,
         compliance_matrix_markdown_path,
+        compliance_matrix_pdf_path,
         compliance_validation_path,
         finding_nodes_path,
         finding_edges_path,
@@ -771,6 +780,7 @@ def _summary(
     compliance_review_path: Path,
     compliance_matrix_path: Path,
     compliance_matrix_markdown_path: Path,
+    compliance_matrix_pdf_path: Path,
     compliance_validation_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
@@ -828,6 +838,7 @@ def _summary(
         "compliance_review_path": str(compliance_review_path),
         "compliance_matrix_path": str(compliance_matrix_path),
         "compliance_matrix_markdown_path": str(compliance_matrix_markdown_path),
+        "compliance_matrix_pdf_path": str(compliance_matrix_pdf_path),
         "compliance_validation_path": str(compliance_validation_path),
         "finding_nodes_path": str(finding_nodes_path),
         "finding_edges_path": str(finding_edges_path),
@@ -885,6 +896,7 @@ def _compliance_matrix(
             "reviewer_ready": bool(summary.get("reviewer_ready")),
             "compliance_review_path": summary.get("compliance_review_path"),
             "compliance_validation_path": summary.get("compliance_validation_path"),
+            "compliance_matrix_pdf_path": summary.get("compliance_matrix_pdf_path"),
             "finding_graph_nodes_path": summary.get("finding_nodes_path"),
             "finding_graph_edges_path": summary.get("finding_edges_path"),
         },
@@ -1079,6 +1091,227 @@ def _matrix_markdown(matrix: dict) -> str:
             + " |"
         )
     return "\n".join(lines) + "\n"
+
+
+def _write_compliance_matrix_pdf(path: Path, matrix: dict) -> None:
+    pages = _matrix_pdf_pages(matrix)
+    _write_simple_pdf(path, pages, title="Compliance Matrix")
+
+
+def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
+    summary = matrix["summary"]
+    rule_pack = matrix["rule_pack"]
+    lines = [
+        "Compliance Matrix",
+        f"Review ID: {matrix['review_id']}",
+        f"Source set: {matrix.get('source_set_id')}",
+        f"Rule pack: {rule_pack['rule_pack_id']} {rule_pack['version']}",
+        f"Rows: {summary['row_count']}",
+        f"Status counts: {summary['status_counts']}",
+        f"Applicability counts: {summary.get('applicability_counts', {})}",
+        f"Reviewer ready: {summary['reviewer_ready']}",
+        "",
+        (
+            "Workflow: identify applicable authorities, evaluate the EA against each applicable "
+            "authority, and cite both EA-package and source-library evidence."
+        ),
+        "",
+    ]
+    for index, row in enumerate(matrix["rows"], start=1):
+        lines.extend(_matrix_pdf_row_lines(index, row))
+        lines.append("")
+    return _paginate_pdf_lines(lines, max_lines=45)
+
+
+def _matrix_pdf_row_lines(index: int, row: dict) -> list[str]:
+    ea_evidence = row.get("ea_package_evidence") or {}
+    source_evidence = row.get("source_library_evidence") or {}
+    lines = [
+        (
+            f"{index}. {row['rule_id']} - {row['rule_title']} "
+            f"({row.get('authority_category')}: {row.get('authority_source_record_id')})"
+        ),
+        (
+            f"   Applicability: {row.get('applicability_status')} / "
+            f"{row.get('applicability_mode')} | Status: {row.get('status')}"
+        ),
+        (
+            "   EA evidence: "
+            + _pdf_evidence_cell(row.get("ea_package_citation"), ea_evidence)
+        ),
+        (
+            "   Source evidence: "
+            + _pdf_evidence_cell(row.get("source_library_citation"), source_evidence)
+        ),
+        "   Source claims: " + (", ".join(row.get("source_claim_ids", [])) or "N/A"),
+        "   Limitations: " + ("; ".join(row.get("limitations", [])) or "None"),
+    ]
+    wrapped: list[str] = []
+    for line in lines:
+        wrapped.extend(_wrap_pdf_line(line))
+    return wrapped
+
+
+def _pdf_evidence_cell(citation: str | None, evidence: dict) -> str:
+    if not evidence:
+        return "N/A"
+    parts = []
+    if citation:
+        parts.append(citation)
+    if evidence.get("title"):
+        parts.append(str(evidence["title"]))
+    if evidence.get("text"):
+        parts.append(_truncate(str(evidence["text"]), 260))
+    return " - ".join(parts) if parts else "N/A"
+
+
+def _wrap_pdf_line(line: str, width: int = 150) -> list[str]:
+    if len(line) <= width:
+        return [line]
+    leading_spaces = len(line) - len(line.lstrip(" "))
+    indent = " " * min(leading_spaces + 4, 10)
+    return textwrap.wrap(
+        line,
+        width=width,
+        subsequent_indent=indent,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+
+
+def _paginate_pdf_lines(lines: list[str], *, max_lines: int) -> list[list[str]]:
+    pages: list[list[str]] = []
+    page: list[str] = []
+    for line in lines:
+        if len(page) >= max_lines:
+            pages.append(page)
+            page = []
+        page.append(line)
+    if page:
+        pages.append(page)
+    return pages or [["Compliance Matrix"]]
+
+
+def _write_simple_pdf(path: Path, pages: list[list[str]], *, title: str) -> None:
+    width = 1008
+    height = 612
+    margin_x = 34
+    start_y = 568
+    leading = 12
+    font_size = 8
+    objects: list[bytes | None] = [None, None, None]
+
+    def add_object(payload: bytes) -> int:
+        objects.append(payload)
+        return len(objects)
+
+    for page_number, page_lines in enumerate(pages, start=1):
+        content = _pdf_page_content(
+            page_lines,
+            page_number=page_number,
+            page_count=len(pages),
+            title=title,
+            margin_x=margin_x,
+            start_y=start_y,
+            leading=leading,
+            font_size=font_size,
+        )
+        content_id = add_object(
+            b"<< /Length "
+            + str(len(content)).encode("ascii")
+            + b" >>\nstream\n"
+            + content
+            + b"\nendstream"
+        )
+        page_id = add_object(
+            (
+                f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {width} {height}] "
+                f"/Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>"
+            ).encode("ascii")
+        )
+        objects[1] = (objects[1] or b"") + f"{page_id} 0 R ".encode("ascii")
+
+    kids = objects[1] or b""
+    objects[0] = b"<< /Type /Catalog /Pages 2 0 R >>"
+    objects[1] = (
+        b"<< /Type /Pages /Kids ["
+        + kids
+        + b"] /Count "
+        + str(len(pages)).encode("ascii")
+        + b" >>"
+    )
+    objects[2] = b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"
+    _write_pdf_objects(path, [obj for obj in objects if obj is not None])
+
+
+def _pdf_page_content(
+    lines: list[str],
+    *,
+    page_number: int,
+    page_count: int,
+    title: str,
+    margin_x: int,
+    start_y: int,
+    leading: int,
+    font_size: int,
+) -> bytes:
+    commands = [f"BT /F1 {font_size} Tf {leading} TL {margin_x} {start_y} Td"]
+    for line in lines:
+        commands.append(f"({_pdf_escape(line)}) Tj T*")
+    footer_y = 24 - (start_y - len(lines) * leading)
+    commands.append(
+        f"0 {footer_y} Td ({_pdf_escape(f'{title} | Page {page_number} of {page_count}')}) Tj"
+    )
+    commands.append("ET")
+    return "\n".join(commands).encode("latin-1", errors="replace")
+
+
+def _pdf_escape(value: str) -> str:
+    return (
+        _pdf_text(value)
+        .replace("\\", "\\\\")
+        .replace("(", "\\(")
+        .replace(")", "\\)")
+    )
+
+
+def _pdf_text(value: str) -> str:
+    replacements = {
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u00a7": "Sec.",
+    }
+    text = str(value)
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
+
+def _write_pdf_objects(path: Path, objects: list[bytes]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    offsets = []
+    payload = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(len(payload))
+        payload.extend(f"{index} 0 obj\n".encode("ascii"))
+        payload.extend(obj)
+        payload.extend(b"\nendobj\n")
+    xref_offset = len(payload)
+    payload.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    payload.extend(b"0000000000 65535 f \n")
+    for offset in offsets:
+        payload.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    payload.extend(
+        (
+            f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
+            f"startxref\n{xref_offset}\n%%EOF\n"
+        ).encode("ascii")
+    )
+    path.write_bytes(bytes(payload))
 
 
 def _markdown_evidence_cell(citation: str | None, title: str | None, text: str | None) -> str:
@@ -1524,6 +1757,7 @@ def _compliance_review_eval_case_result(
         "compliance_review_path": str(result.compliance_review_path),
         "compliance_matrix_path": str(result.compliance_matrix_path),
         "compliance_matrix_markdown_path": str(result.compliance_matrix_markdown_path),
+        "compliance_matrix_pdf_path": str(result.compliance_matrix_pdf_path),
         "compliance_validation_path": str(result.compliance_validation_path),
         "finding_nodes_path": str(result.finding_nodes_path),
         "finding_edges_path": str(result.finding_edges_path),
@@ -1813,6 +2047,7 @@ def _case_reproduction(result: ComplianceReviewResult, package_path: Path) -> di
         "package_path": str(package_path),
         "compliance_review_path": str(result.compliance_review_path),
         "compliance_matrix_path": str(result.compliance_matrix_path),
+        "compliance_matrix_pdf_path": str(result.compliance_matrix_pdf_path),
         "compliance_validation_path": str(result.compliance_validation_path),
     }
 

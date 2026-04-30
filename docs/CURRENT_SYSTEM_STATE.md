@@ -48,12 +48,13 @@ Last verified locally on 2026-04-30.
 - Compliance coverage: `20/20` rules covered by matrix rows, source-claim links, source-claim
   terms, and compliance review eval cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
-- Compliance demo review: authority-first `compliance_validation.json` and `compliance_matrix.json`
-  passed for `demo-compliance-matrix-authority-v03-ecid-2026-04-30`; all `20/20` authority rows
-  were applicable and passed
+- Compliance demo review: authority-first `compliance_validation.json`, `compliance_matrix.json`,
+  and `compliance_matrix.pdf` passed for
+  `demo-compliance-matrix-authority-v03-ecid-2026-04-30`; all `20/20` authority rows were applicable
+  and passed
 - Compliance review eval seed: passed, `3/3` cases
 - Compliance gold eval: passed, `10/10` adjudicated cases, `promotion_ready`
-- Unit suite: `131` tests passed
+- Unit suite: `132` tests passed
 
 The verification set was:
 
@@ -231,6 +232,7 @@ Current state:
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
+  `compliance_matrix.pdf`,
   `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review eval runs deterministic package fixtures and emits
   `compliance_review_eval_results.json` with failure taxonomy and reproduction paths.
@@ -427,6 +429,7 @@ The command writes these artifacts beside the base EA review artifacts:
 - `source_library/reviews/<review_id>/compliance_review.json`
 - `source_library/reviews/<review_id>/compliance_matrix.json`
 - `source_library/reviews/<review_id>/compliance_matrix.md`
+- `source_library/reviews/<review_id>/compliance_matrix.pdf`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 

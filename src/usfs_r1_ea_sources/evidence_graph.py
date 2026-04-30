@@ -298,6 +298,9 @@ def run_phase_aligned_eval(
     )
     compliance_review_path = review_dir / "compliance_review.json" if review_dir is not None else None
     compliance_matrix_path = review_dir / "compliance_matrix.json" if review_dir is not None else None
+    compliance_matrix_pdf_path = (
+        review_dir / "compliance_matrix.pdf" if review_dir is not None else None
+    )
 
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
@@ -613,8 +616,18 @@ def run_phase_aligned_eval(
         matrix_summary = (compliance_matrix or {}).get("summary", {})
         matrix_rule_pack = (compliance_matrix or {}).get("rule_pack", {})
         compliance_matrix_exists = compliance_matrix is not None
+        compliance_matrix_pdf_exists = (
+            compliance_matrix_pdf_path is not None and compliance_matrix_pdf_path.exists()
+        )
+        compliance_matrix_pdf_valid = (
+            compliance_matrix_pdf_exists
+            and compliance_matrix_pdf_path.stat().st_size > 0
+            and compliance_matrix_pdf_path.read_bytes().startswith(b"%PDF-")
+        )
         matrix_checks = {
             "matrix_exists": compliance_matrix_exists,
+            "matrix_pdf_exists": compliance_matrix_pdf_exists,
+            "matrix_pdf_header_valid": compliance_matrix_pdf_valid,
             "matrix_schema_matches": (compliance_matrix or {}).get("schema_version")
             == COMPLIANCE_MATRIX_SCHEMA_VERSION,
             "matrix_review_id_matches": (compliance_matrix or {}).get("review_id")
@@ -651,8 +664,11 @@ def run_phase_aligned_eval(
                     "validation_path": str(compliance_validation_path),
                     "review_path": str(compliance_review_path),
                     "matrix_path": str(compliance_matrix_path),
+                    "matrix_pdf_path": str(compliance_matrix_pdf_path),
                     "review_exists": compliance_review_exists,
                     "matrix_exists": compliance_matrix_exists,
+                    "matrix_pdf_exists": compliance_matrix_pdf_exists,
+                    "matrix_pdf_header_valid": compliance_matrix_pdf_valid,
                     "validation_passed": compliance_validation_passed,
                     "reviewer_ready": bool(compliance_summary.get("reviewer_ready")),
                     "expected_source_set_id": source_set_id,

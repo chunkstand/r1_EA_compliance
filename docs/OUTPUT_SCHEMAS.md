@@ -440,6 +440,7 @@ The `compliance-review` command writes the base EA review outputs plus:
 - `compliance_review.json`
 - `compliance_matrix.json`
 - `compliance_matrix.md`
+- `compliance_matrix.pdf`
 - `finding_graph_nodes.jsonl`
 - `finding_graph_edges.jsonl`
 
@@ -528,7 +529,7 @@ Each compliance finding includes:
 
 - review ID, package path, source set, rule-pack summary, and matrix summary
 - status counts, applicability counts, applicable source records, claim row count, validation status,
-  and reviewer-ready status
+  reviewer-ready status, and PDF path
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
 - one row per compliance finding
@@ -545,8 +546,9 @@ Each matrix row includes:
 - source-claim IDs, source-claim citations, source-claim count, citation-gate status, limitations,
   and failure category when applicable
 
-`compliance_matrix.md` is a compact human-readable rendering of the same rows. The JSON matrix is
-the stable machine contract.
+`compliance_matrix.md` is a compact human-readable rendering of the same rows.
+`compliance_matrix.pdf` is generated for every compliance review from the same JSON matrix data. The
+JSON matrix is the stable machine contract.
 
 `finding_graph_nodes.jsonl` contains:
 
@@ -1166,7 +1168,8 @@ not-promotion-ready artifacts. When
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. The compliance-review phase also requires
 `compliance_matrix.json` to exist and match the review's schema version, review ID, source set, rule
-pack, row count, and status counts. The evidence-graph and claim-extraction
+pack, row count, and status counts, and requires `compliance_matrix.pdf` to exist with a valid PDF
+header. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

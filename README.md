@@ -85,6 +85,7 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/compliance_review.json`
   - `source_library/reviews/<review_id>/compliance_matrix.json`
   - `source_library/reviews/<review_id>/compliance_matrix.md`
+  - `source_library/reviews/<review_id>/compliance_matrix.pdf`
   - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 - Compliance review eval outputs:
@@ -346,6 +347,7 @@ writes:
 - `source_library/reviews/<review_id>/compliance_review.json`
 - `source_library/reviews/<review_id>/compliance_matrix.json`
 - `source_library/reviews/<review_id>/compliance_matrix.md`
+- `source_library/reviews/<review_id>/compliance_matrix.pdf`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
@@ -362,7 +364,8 @@ silently broaden source retrieval.
 The compliance matrix is the reviewer-facing table: each row carries authority category, authority
 source record, authority document role, applicability mode, applicability status and basis, rule
 status, package citation, source-library citation, source-claim IDs, limitations, and whether
-citation requirements were met.
+citation requirements were met. Every compliance review also renders `compliance_matrix.pdf` from
+the same matrix data.
 
 Run the final compliance review eval gate:
 
@@ -507,7 +510,8 @@ rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <rev
 compliance review to include `compliance_review` as an additional phase gate. The compliance phase
 requires the review source set to match the evaluated source set and requires the review's
 `compliance_matrix.json` to exist with the expected schema version, review ID, source set, rule pack,
-row count, and status counts.
+row count, and status counts. It also requires `compliance_matrix.pdf` to exist and have a valid PDF
+header.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

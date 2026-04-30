@@ -42,6 +42,9 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(result.compliance_review_path.exists())
             self.assertTrue(result.compliance_matrix_path.exists())
             self.assertTrue(result.compliance_matrix_markdown_path.exists())
+            self.assertTrue(result.compliance_matrix_pdf_path.exists())
+            self.assertGreater(result.compliance_matrix_pdf_path.stat().st_size, 0)
+            self.assertTrue(result.compliance_matrix_pdf_path.read_bytes().startswith(b"%PDF-"))
             self.assertTrue(result.compliance_validation_path.exists())
             self.assertTrue(result.finding_nodes_path.exists())
             self.assertTrue(result.finding_edges_path.exists())
@@ -50,6 +53,10 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(
                 result.summary["compliance_matrix_path"],
                 str(result.compliance_matrix_path),
+            )
+            self.assertEqual(
+                result.summary["compliance_matrix_pdf_path"],
+                str(result.compliance_matrix_pdf_path),
             )
 
             report = json.loads(result.compliance_review_path.read_text(encoding="utf-8"))
@@ -79,6 +86,10 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             self.assertEqual(matrix["summary"]["applicability_counts"], {"applicable": 2})
             self.assertEqual(matrix["summary"]["applicable_row_count"], 2)
+            self.assertEqual(
+                matrix["summary"]["compliance_matrix_pdf_path"],
+                str(result.compliance_matrix_pdf_path),
+            )
             self.assertTrue(matrix_rows["purpose_need"]["ea_package_citation"])
             self.assertTrue(matrix_rows["purpose_need"]["source_library_citation"])
             self.assertIn("R1EA-001", matrix_rows["purpose_need"]["applied_source_record_ids"])
@@ -261,6 +272,7 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(cases["unit-all-pass"]["expected_source_document_roles_match"])
             self.assertEqual(cases["unit-all-pass"]["source_record_mismatches"], [])
             self.assertTrue(Path(cases["unit-all-pass"]["compliance_matrix_path"]).exists())
+            self.assertTrue(Path(cases["unit-all-pass"]["compliance_matrix_pdf_path"]).exists())
             self.assertEqual(result.summary["failure_category_counts"], {})
 
     def test_compliance_review_eval_rejects_bad_filters(self) -> None:
@@ -976,6 +988,8 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["reviewer_ready"])
             self.assertEqual(compliance_phase["details"]["rule_pack_id"], "unit-nepa-ea")
             self.assertTrue(compliance_phase["details"]["matrix_exists"])
+            self.assertTrue(compliance_phase["details"]["matrix_pdf_exists"])
+            self.assertTrue(compliance_phase["details"]["matrix_pdf_header_valid"])
             self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
             self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
 
@@ -1009,6 +1023,39 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(compliance_phase["details"]["matrix_exists"])
             self.assertIn(
                 "matrix_exists",
+                compliance_phase["details"]["failed_artifact_checks"],
+            )
+
+    def test_phase_eval_rejects_missing_compliance_matrix_pdf(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="missing-matrix-pdf-review",
+            )
+            result.compliance_matrix_pdf_path.unlink()
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="missing-matrix-pdf-review",
+            )
+
+            self.assertFalse(phase_result.summary["reviewer_ready"])
+            compliance_phase = _phase(phase_result.summary, "compliance_review")
+            self.assertFalse(compliance_phase["passed"])
+            self.assertFalse(compliance_phase["reviewer_ready"])
+            self.assertFalse(compliance_phase["details"]["matrix_pdf_exists"])
+            self.assertIn(
+                "matrix_pdf_exists",
                 compliance_phase["details"]["failed_artifact_checks"],
             )
 
