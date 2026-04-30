@@ -565,13 +565,16 @@ Each eval case includes:
 
 - stable `id`
 - exactly one package fixture, either `package_text` or `package_path`
-- `expected_statuses`, mapping rule IDs to `pass`, `gap`, `uncertain`, or `not_applicable`
+- `expected_statuses`, mapping every rule-pack rule ID to `pass`, `gap`, `uncertain`, or
+  `not_applicable`
 - optional expected claim types, package evidence, source evidence, source-claim links, status
   counts, unsupported finding IDs, and graph coverage requirements
 - optional filters over `rule_id`, `status`, or `claim_type`
 
 Unknown filters, empty filters, unsupported statuses, unsupported claim types, unsafe case IDs, and
-invalid package fixture definitions fail before reviews run.
+invalid package fixture definitions fail before reviews run. Rule-scoped expectations must refer to
+current rule-pack rule IDs, and expected status counts must match `expected_statuses` and sum to the
+rule count.
 
 `compliance_review_eval_results.json` has schema version `compliance-review-eval-v0` and records:
 

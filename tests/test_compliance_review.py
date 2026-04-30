@@ -214,6 +214,52 @@ class ComplianceReviewTests(unittest.TestCase):
                     eval_file=eval_path,
                 )
 
+    def test_compliance_review_eval_requires_full_rule_pack_expectations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "partial-expectations",
+                        "package_text": "Purpose and Need",
+                        "expected_statuses": {"purpose_need": "pass"},
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(ValueError, "cover every rule"):
+                run_compliance_review_eval(
+                    output_dir=Path(tmp) / "source_library",
+                    rule_pack_path=rule_pack_path,
+                    eval_file=eval_path,
+                )
+
+    def test_compliance_review_eval_rejects_status_count_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "bad-status-count",
+                        "package_text": "Purpose and Need",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "gap",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(ValueError, "expected_finding_status_counts"):
+                run_compliance_review_eval(
+                    output_dir=Path(tmp) / "source_library",
+                    rule_pack_path=rule_pack_path,
+                    eval_file=eval_path,
+                )
+
     def test_compliance_review_eval_flags_false_pass_expectations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

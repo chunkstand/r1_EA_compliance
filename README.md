@@ -353,9 +353,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
 
 `compliance-review-eval` writes deterministic package fixtures from the eval file, runs the real
 `compliance-review` command for each case, and scores the generated findings. It asserts expected
-per-rule statuses, claim types, package evidence, source-library evidence, source-claim links,
-finding status counts, unsupported finding IDs, citation coverage, and finding-graph coverage.
-Bad eval filters fail fast so typoed rule/status/claim-type filters cannot silently broaden scoring.
+statuses for every rule in the rule pack, claim types, package evidence, source-library evidence,
+source-claim links, finding status counts, unsupported finding IDs, citation coverage, and
+finding-graph coverage. Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched
+status counts fail fast so typoed or incomplete fixtures cannot silently broaden scoring.
 
 Run the seed retrieval eval gate:
 

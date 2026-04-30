@@ -49,7 +49,7 @@ Last verified locally on 2026-04-30.
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
-- Unit suite: `111` tests passed
+- Unit suite: `113` tests passed
 
 The verification set was:
 
@@ -293,8 +293,9 @@ Validated guarantees:
 - Rule-pack validation rejects unsafe rule-pack or rule IDs, unsupported source-filter keys, and
   empty source-filter values.
 - Compliance review eval rejects unsafe case IDs, ambiguous package fixtures, unsupported filters,
-  unsupported expected statuses, unsupported expected claim types, and non-boolean evidence
-  expectations.
+  unsupported expected statuses, unsupported expected claim types, non-boolean evidence
+  expectations, partial rule-pack coverage, unknown rule IDs, and status counts that do not match
+  per-rule expectations.
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
   evaluated source set.
 

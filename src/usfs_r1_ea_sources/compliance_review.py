@@ -259,7 +259,17 @@ def run_compliance_review_eval(
     output_dir = Path(output_dir)
     eval_file = Path(eval_file)
     rule_pack_path = Path(rule_pack_path)
+    if not rule_pack_path.exists():
+        raise FileNotFoundError(f"Missing compliance rule pack: {rule_pack_path}")
+    rule_pack = load_rule_pack(rule_pack_path)
+    rule_pack_validation = validate_rule_pack(rule_pack)
+    if not rule_pack_validation["passed"]:
+        failed = ", ".join(
+            check["name"] for check in rule_pack_validation["checks"] if not check["passed"]
+        )
+        raise ValueError(f"Compliance rule pack is invalid. Failed checks: {failed}")
     cases = _load_compliance_review_eval_cases(eval_file)
+    _validate_compliance_review_eval_cases_against_rule_pack(cases, rule_pack)
 
     eval_output_dir = Path(results_dir) if results_dir else output_dir / "reviews" / "compliance_review_eval"
     package_dir = eval_output_dir / "packages"
@@ -767,6 +777,77 @@ def _validate_eval_package_fixture(index: int, case: dict) -> None:
         raise ValueError(
             f"Compliance review eval case {index} must define exactly one of "
             "package_text or package_path."
+        )
+
+
+def _validate_compliance_review_eval_cases_against_rule_pack(
+    cases: list[dict],
+    rule_pack: dict,
+) -> None:
+    expected_rule_ids = {str(rule["id"]) for rule in rule_pack["rules"]}
+    rule_count = len(expected_rule_ids)
+    for index, case in enumerate(cases):
+        case_id = str(case["id"])
+        status_rule_ids = set(_string_map(case["expected_statuses"]))
+        if status_rule_ids != expected_rule_ids:
+            missing = sorted(expected_rule_ids - status_rule_ids)
+            unexpected = sorted(status_rule_ids - expected_rule_ids)
+            raise ValueError(
+                f"Compliance review eval case {index} ({case_id}) expected_statuses must "
+                f"cover every rule in the rule pack. Missing: {missing}; unexpected: {unexpected}."
+            )
+        for key in (
+            "expected_claim_types",
+            "expected_package_evidence",
+            "expected_source_evidence",
+            "expected_source_claim_links",
+        ):
+            _validate_eval_rule_map_keys(index, case_id, case.get(key) or {}, expected_rule_ids, key)
+        unsupported_ids = set(str(value) for value in case.get("expected_unsupported_finding_ids", []))
+        unexpected_unsupported = sorted(unsupported_ids - expected_rule_ids)
+        if unexpected_unsupported:
+            raise ValueError(
+                f"Compliance review eval case {index} ({case_id}) expected_unsupported_finding_ids "
+                f"contains unknown rule IDs: {unexpected_unsupported}."
+            )
+        filters = case.get("filters") or {}
+        if "rule_id" in filters:
+            rule_filter_ids = set(_filter_values(filters["rule_id"]))
+            unknown_filters = sorted(rule_filter_ids - expected_rule_ids)
+            if unknown_filters:
+                raise ValueError(
+                    f"Compliance review eval case {index} ({case_id}) rule_id filter "
+                    f"contains unknown rule IDs: {unknown_filters}."
+                )
+        expected_counts = {
+            str(status): int(count)
+            for status, count in (case.get("expected_finding_status_counts") or {}).items()
+        }
+        if expected_counts:
+            counts_from_statuses = dict(Counter(str(status) for status in case["expected_statuses"].values()))
+            normalized_expected_counts = {
+                status: count for status, count in expected_counts.items() if count
+            }
+            if sum(expected_counts.values()) != rule_count or normalized_expected_counts != counts_from_statuses:
+                raise ValueError(
+                    f"Compliance review eval case {index} ({case_id}) expected_finding_status_counts "
+                    "must match expected_statuses and sum to the rule count."
+                )
+
+
+def _validate_eval_rule_map_keys(
+    index: int,
+    case_id: str,
+    values: dict,
+    expected_rule_ids: set[str],
+    key: str,
+) -> None:
+    actual = set(str(rule_id) for rule_id in values)
+    unexpected = sorted(actual - expected_rule_ids)
+    if unexpected:
+        raise ValueError(
+            f"Compliance review eval case {index} ({case_id}) {key} contains unknown rule IDs: "
+            f"{unexpected}."
         )
 
 
