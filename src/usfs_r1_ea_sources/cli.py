@@ -7,6 +7,7 @@ import json
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .download import run_download
 from .dry_run import run_dry_run
+from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
 from .validate_run import validate_run
@@ -74,6 +75,18 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("--output-dir", default=Path("source_library"), type=Path)
     validate.add_argument("--run-id", required=True)
 
+    pilots = subparsers.add_parser(
+        "pilot-hosts",
+        help="Run staged host pilots: download, report, and validate each selected host.",
+    )
+    pilots.add_argument("--workbook", required=True, type=Path)
+    pilots.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    pilots.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    pilots.add_argument("--run-id-prefix", default="host-pilot")
+    pilots.add_argument("--host", action="append", help="Host to pilot. Repeat for multiple hosts. Defaults to all canonical hosts.")
+    pilots.add_argument("--limit-per-host", type=int)
+    pilots.add_argument("--force", action="store_true")
+
     return parser
 
 
@@ -139,6 +152,20 @@ def main(argv: list[str] | None = None) -> int:
         result = validate_run(output_dir=args.output_dir, run_id=args.run_id)
         print(json.dumps(result.report, indent=2, sort_keys=True))
         return 0 if result.passed else 1
+
+    if args.command == "pilot-hosts":
+        config = load_config(args.config)
+        result = run_host_pilots(
+            workbook_path=args.workbook,
+            output_dir=args.output_dir,
+            config=config,
+            run_id_prefix=args.run_id_prefix,
+            hosts=args.host,
+            limit_per_host=args.limit_per_host,
+            force=args.force,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["all_ready"] else 1
 
     parser.error(f"Unknown command: {args.command}")
     return 2

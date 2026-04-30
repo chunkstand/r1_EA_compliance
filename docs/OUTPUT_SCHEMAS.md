@@ -203,3 +203,27 @@ Checks cover:
 - successful artifacts exist and match SHA256/byte-size metadata
 - duplicate-content rows link to a canonical artifact
 - summary counts match manifest records
+
+## Host Pilot Summary
+
+Path: `source_library/runs/<run-id-prefix>-host-pilots/summary.json`
+
+The `pilot-hosts` command writes:
+
+- `run_id`
+- `run_id_prefix`
+- `hosts_requested`
+- `host_count`
+- `ready_host_count`
+- `blocked_host_count`
+- `all_ready`
+- `host_results`
+
+Each host result includes:
+
+- `host`
+- `run_id`
+- row and status counts
+- `gate_passed`
+- `ready_for_full_download`
+- manifest, report, and acceptance-gate paths

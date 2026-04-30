@@ -76,6 +76,19 @@ python -m usfs_r1_ea_sources validate-run \
 
 The gate writes `source_library/runs/<run_id>/acceptance_gate.json` and exits nonzero if artifact hashes, byte sizes, duplicate links, status counts, exclusion safety, or repair-queue coverage fail.
 
+Run staged host pilots before the full download:
+
+```bash
+python -m usfs_r1_ea_sources pilot-hosts \
+  --workbook usfs_region1_ea_document_checklist_current_2026.xlsx \
+  --output-dir source_library \
+  --run-id-prefix staged-pilot \
+  --host www.ecfr.gov \
+  --host uscode.house.gov
+```
+
+Each host pilot runs `download`, `report`, and `validate-run`. The command writes a parent summary under `source_library/runs/<run-id-prefix>-host-pilots/` and exits nonzero if any selected host has failed rows or a failed acceptance gate.
+
 ## Development
 
 Use the bundled Python runtime or any Python 3.11+ environment with `openpyxl` installed.
