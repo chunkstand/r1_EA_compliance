@@ -120,6 +120,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--run-id",
         help="Optional download run ID to link artifacts into the catalog.",
     )
+    catalog.add_argument(
+        "--batch-run-id",
+        help="Optional parent batch-download run ID to link artifacts from all passed child batches.",
+    )
 
     return parser
 
@@ -220,6 +224,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if result.summary["all_passed"] or args.plan_only else 1
 
     if args.command == "catalog-build":
+        if args.run_id and args.batch_run_id:
+            parser.error("catalog-build accepts either --run-id or --batch-run-id, not both")
         config = load_config(args.config)
         result = build_review_catalog(
             workbook_path=args.workbook,
@@ -227,9 +233,10 @@ def main(argv: list[str] | None = None) -> int:
             config=config,
             config_path=args.config,
             run_id=args.run_id,
+            batch_run_id=args.batch_run_id,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
-        return 0
+        return 0 if result.summary["validation_passed"] else 1
 
     parser.error(f"Unknown command: {args.command}")
     return 2

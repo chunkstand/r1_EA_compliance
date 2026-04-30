@@ -93,6 +93,66 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(artifact_count, 1)
             self.assertEqual(link_count, 1)
 
+    def test_build_review_catalog_links_batch_download_manifests(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            manifest_001 = _write_download_run(
+                output_dir,
+                "unit-batch-uscode-001",
+                source_record_id="R1EA-001",
+                artifact_body=b"<html><body>batch artifact 1</body></html>" + b" " * 128,
+            )
+            manifest_002 = _write_download_run(
+                output_dir,
+                "unit-batch-ecfr-001",
+                source_record_id="R1EA-008",
+                artifact_body=b"<xml><body>batch artifact 2</body></xml>" + b" " * 128,
+                content_type="application/xml",
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-batches",
+                [
+                    ("unit-batch-uscode-001", manifest_001),
+                    ("unit-batch-ecfr-001", manifest_002),
+                ],
+            )
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_id="unit-batches",
+            )
+
+            records = _read_jsonl(result.source_catalog_path)
+            manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
+            r1ea001 = next(record for record in records if record["source_record_id"] == "R1EA-001")
+            r1ea008 = next(record for record in records if record["source_record_id"] == "R1EA-008")
+            r1ea002 = next(record for record in records if record["source_record_id"] == "R1EA-002")
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["download_batch_run_id"], "unit-batches")
+            self.assertEqual(result.summary["artifact_count"], 2)
+            self.assertEqual(manifest["download_batch_run_id"], "unit-batches")
+            self.assertEqual(r1ea001["source_status"], "downloaded")
+            self.assertEqual(r1ea001["download_run_id"], "unit-batch-uscode-001")
+            self.assertEqual(r1ea001["download_batch_run_id"], "unit-batches")
+            self.assertEqual(r1ea008["expected_parser"], "xml")
+            self.assertEqual(r1ea002["source_status"], "not_in_run")
+            self.assertIsNone(r1ea002["download_run_id"])
+            self.assertEqual(r1ea002["download_batch_run_id"], "unit-batches")
+
+            with closing(sqlite3.connect(result.sqlite_path)) as connection:
+                artifact_count = connection.execute("SELECT count(*) FROM artifacts").fetchone()[0]
+                batch_id = connection.execute(
+                    "SELECT download_batch_run_id FROM source_sets"
+                ).fetchone()[0]
+            self.assertEqual(artifact_count, 2)
+            self.assertEqual(batch_id, "unit-batches")
+
     def test_build_review_catalog_validation_fails_for_unknown_manifest_source(self) -> None:
         config = load_config(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:
@@ -113,29 +173,90 @@ class CatalogTests(unittest.TestCase):
             self.assertFalse(check["passed"])
             self.assertEqual(check["details"]["unknown_source_record_ids"], ["UNKNOWN-001"])
 
+    def test_build_review_catalog_validation_fails_for_unknown_batch_manifest_source(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            manifest_path = _write_download_run(
+                output_dir,
+                "unit-batch-unknown-001",
+                source_record_id="UNKNOWN-001",
+            )
+            _write_batch_run(output_dir, "unit-batches", [("unit-batch-unknown-001", manifest_path)])
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_id="unit-batches",
+            )
+
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            check = _check(validation, "download_manifest_source_records_are_in_workbook")
+            self.assertFalse(result.summary["validation_passed"])
+            self.assertFalse(check["passed"])
+            self.assertEqual(check["details"]["unknown_source_record_ids"], ["UNKNOWN-001"])
+
+    def test_build_review_catalog_validation_fails_for_batch_ledger_row_mismatch(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            manifest_path = _write_download_run(
+                output_dir,
+                "unit-batch-mismatch-001",
+                source_record_id="R1EA-001",
+            )
+            _write_batch_run(output_dir, "unit-batches", [("unit-batch-mismatch-001", manifest_path)])
+            ledger_path = output_dir / "runs" / "unit-batches" / "batch_ledger.json"
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            ledger["batches"][0]["source_record_ids"] = ["R1EA-002"]
+            ledger_path.write_text(json.dumps(ledger, sort_keys=True), encoding="utf-8")
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_id="unit-batches",
+            )
+
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            check = _check(validation, "batch_download_manifest_rows_match_ledger")
+            self.assertFalse(result.summary["validation_passed"])
+            self.assertFalse(check["passed"])
+            self.assertEqual(check["details"]["mismatches"][0]["missing_source_record_ids"], ["R1EA-002"])
+            self.assertEqual(
+                check["details"]["mismatches"][0]["unexpected_source_record_ids"],
+                ["R1EA-001"],
+            )
+
 
 def _write_download_run(
     output_dir: Path,
     run_id: str,
     *,
     source_record_id: str = "R1EA-001",
-) -> None:
+    artifact_body: bytes | None = None,
+    content_type: str = "text/html",
+) -> Path:
     run_dir = output_dir / "runs" / run_id
     manifest_dir = output_dir / "manifests"
     run_dir.mkdir(parents=True)
-    manifest_dir.mkdir(parents=True)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = manifest_dir / f"download_{run_id}.jsonl"
-    artifact = output_dir / "artifacts" / "raw" / "example.html"
-    artifact.parent.mkdir(parents=True)
-    artifact.write_bytes(_artifact_body())
+    body = artifact_body or _artifact_body()
+    artifact = output_dir / "artifacts" / "raw" / f"{run_id}-{source_record_id}.html"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_bytes(body)
     record = {
         "run_id": run_id,
         "source_record_id": source_record_id,
         "status": "downloaded",
         "artifact_path": str(artifact),
-        "artifact_sha256": _artifact_sha256(),
-        "artifact_byte_size": len(_artifact_body()),
-        "content_type": "text/html",
+        "artifact_sha256": _artifact_sha256(body),
+        "artifact_byte_size": len(body),
+        "content_type": content_type,
         "fetch_timestamp": "2026-04-30T00:00:00Z",
         "final_url": "https://example.test/final",
     }
@@ -146,6 +267,38 @@ def _write_download_run(
         "manifest_path": str(manifest_path),
         "filtered_rows": 1,
         "status_counts": {"downloaded": 1},
+    }
+    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
+    return manifest_path
+
+
+def _write_batch_run(output_dir: Path, batch_run_id: str, batches: list[tuple[str, Path]]) -> None:
+    run_dir = output_dir / "runs" / batch_run_id
+    run_dir.mkdir(parents=True)
+    ledger_path = run_dir / "batch_ledger.json"
+    ledger_batches = [
+        {
+            "batch_id": batch_id,
+            "status": "passed",
+            "gate_passed": True,
+            "manifest_path": str(manifest_path),
+            "source_record_ids": [
+                record["source_record_id"] for record in _read_jsonl(manifest_path)
+            ],
+        }
+        for batch_id, manifest_path in batches
+    ]
+    ledger_path.write_text(
+        json.dumps({"run_id": batch_run_id, "batches": ledger_batches}, sort_keys=True),
+        encoding="utf-8",
+    )
+    summary = {
+        "run_id": batch_run_id,
+        "all_passed": True,
+        "batch_count": len(batches),
+        "failed_batch_count": 0,
+        "needs_repair_batch_count": 0,
+        "ledger_path": str(ledger_path),
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
 
@@ -162,8 +315,8 @@ def _artifact_body() -> bytes:
     return b"<html><body>catalog artifact</body></html>" + b" " * 128
 
 
-def _artifact_sha256() -> str:
-    return hashlib.sha256(_artifact_body()).hexdigest()
+def _artifact_sha256(body: bytes | None = None) -> str:
+    return hashlib.sha256(body or _artifact_body()).hexdigest()
 
 
 def _check(validation: dict, name: str) -> dict:

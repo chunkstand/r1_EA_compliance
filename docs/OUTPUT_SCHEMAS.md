@@ -324,6 +324,7 @@ The `catalog-build` command writes:
 - override registry SHA256
 - git commit
 - optional download run ID
+- optional parent batch-download run ID
 - source, artifact, URL, authority, topic, host, role, parser, and status counts
 
 `catalog_validation.json` is the reviewer-engine gate. Checks cover:
@@ -333,6 +334,7 @@ The `catalog-build` command writes:
 - valid artifact path, byte size, and SHA256 metadata for successful downloads
 - review graph links, including role, authority level, and review topics
 - duplicate or unknown rows in linked download manifests
+- parent batch-download completion, child manifest availability, and ledger-to-manifest row matching when `--batch-run-id` is used
 
 `review_sources.sqlite` exposes graph-ready review tables:
 

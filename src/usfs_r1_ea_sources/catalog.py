@@ -37,7 +37,10 @@ def build_review_catalog(
     config: DownloaderConfig,
     config_path: Path | None = None,
     run_id: str | None = None,
+    batch_run_id: str | None = None,
 ) -> CatalogBuildResult:
+    if run_id and batch_run_id:
+        raise ValueError("run_id and batch_run_id are mutually exclusive")
     catalog_dir = output_dir / "catalog"
     catalog_dir.mkdir(parents=True, exist_ok=True)
     source_catalog_path = catalog_dir / "source_catalog.jsonl"
@@ -56,17 +59,24 @@ def build_review_catalog(
         config_sha256=config_sha256,
         overrides_sha256=overrides_sha256,
         run_id=run_id,
+        batch_run_id=batch_run_id,
         git_commit=git_commit,
     )
 
     sources = load_canonical_sources(workbook_path, config.workbook)
-    manifest_records, manifest_load_checks = _load_manifest_records(output_dir, run_id, sources)
+    manifest_records, manifest_load_checks = _load_manifest_records(
+        output_dir,
+        run_id,
+        batch_run_id,
+        sources,
+    )
     catalog_records = [
         _catalog_record(
             source_set_id=source_set_id,
             source=source,
             manifest_record=manifest_records.get(source.source_record_id),
             run_id=run_id,
+            batch_run_id=batch_run_id,
         )
         for source in sources
     ]
@@ -80,6 +90,7 @@ def build_review_catalog(
         overrides_sha256=overrides_sha256,
         git_commit=git_commit,
         run_id=run_id,
+        batch_run_id=batch_run_id,
         records=catalog_records,
     )
     graph_nodes, graph_edges = _graph_records(catalog_records)
@@ -104,6 +115,7 @@ def build_review_catalog(
         "review_topic_count": _review_topic_count(catalog_records),
         "authority_count": _authority_count(catalog_records),
         "download_run_id": run_id,
+        "download_batch_run_id": batch_run_id,
         "validation_passed": validation_report["passed"],
         "validation_path": str(validation_path),
         "source_catalog_path": str(source_catalog_path),
@@ -131,6 +143,7 @@ def _catalog_record(
     source: WorkbookSource,
     manifest_record: dict | None,
     run_id: str | None,
+    batch_run_id: str | None,
 ) -> dict:
     metadata = source.metadata
     host = urlsplit(source.normalized_url).netloc.lower()
@@ -141,7 +154,8 @@ def _catalog_record(
     review_topics = _review_topics(review_engine_checks)
     artifact_sha256 = _from_manifest(manifest_record, "artifact_sha256")
     content_type = _from_manifest(manifest_record, "content_type")
-    source_status = _source_status(manifest_record, run_id)
+    source_status = _source_status(manifest_record, bool(run_id or batch_run_id))
+    artifact_run_id = _from_manifest(manifest_record, "run_id") or run_id
     return {
         "source_set_id": source_set_id,
         "source_record_id": source.source_record_id,
@@ -167,7 +181,8 @@ def _catalog_record(
         "host": host,
         "expected_parser": _expected_parser(source, content_type),
         "source_status": source_status,
-        "download_run_id": run_id,
+        "download_run_id": artifact_run_id,
+        "download_batch_run_id": batch_run_id,
         "final_url": _from_manifest(manifest_record, "final_url"),
         "artifact_sha256": artifact_sha256,
         "artifact_path": _from_manifest(manifest_record, "artifact_path"),
@@ -191,6 +206,7 @@ def _source_set_manifest(
     overrides_sha256: str | None,
     git_commit: str | None,
     run_id: str | None,
+    batch_run_id: str | None,
     records: list[dict],
 ) -> dict:
     status_counts = Counter(record["source_status"] for record in records)
@@ -208,6 +224,7 @@ def _source_set_manifest(
         "overrides_sha256": overrides_sha256,
         "git_commit": git_commit,
         "download_run_id": run_id,
+        "download_batch_run_id": batch_run_id,
         "source_count": len(records),
         "unique_url_count": len({record["normalized_url"] for record in records}),
         "artifact_count": _artifact_count(records),
@@ -248,6 +265,7 @@ def _create_schema(connection: sqlite3.Connection) -> None:
           overrides_sha256 TEXT,
           git_commit TEXT,
           download_run_id TEXT,
+          download_batch_run_id TEXT,
           source_count INTEGER NOT NULL,
           unique_url_count INTEGER NOT NULL,
           artifact_count INTEGER NOT NULL
@@ -364,8 +382,9 @@ def _insert_source_set(connection: sqlite3.Connection, manifest: dict) -> None:
         """
         INSERT INTO source_sets (
           source_set_id, created_at, workbook_sha256, config_sha256, overrides_sha256,
-          git_commit, download_run_id, source_count, unique_url_count, artifact_count
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          git_commit, download_run_id, download_batch_run_id, source_count, unique_url_count,
+          artifact_count
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             manifest["source_set_id"],
@@ -375,6 +394,7 @@ def _insert_source_set(connection: sqlite3.Connection, manifest: dict) -> None:
             manifest.get("overrides_sha256"),
             manifest.get("git_commit"),
             manifest.get("download_run_id"),
+            manifest.get("download_batch_run_id"),
             manifest["source_count"],
             manifest["unique_url_count"],
             manifest["artifact_count"],
@@ -568,10 +588,23 @@ def _edge(source_id: str, target_id: str, relationship: str) -> dict:
 def _load_manifest_records(
     output_dir: Path,
     run_id: str | None,
+    batch_run_id: str | None,
     sources: list[WorkbookSource],
 ) -> tuple[dict[str, dict], list[dict]]:
-    if not run_id:
+    if not run_id and not batch_run_id:
         return {}, []
+    if run_id:
+        return _load_single_manifest_records(output_dir, run_id, sources)
+    if not batch_run_id:
+        return {}, []
+    return _load_batch_manifest_records(output_dir, batch_run_id, sources)
+
+
+def _load_single_manifest_records(
+    output_dir: Path,
+    run_id: str,
+    sources: list[WorkbookSource],
+) -> tuple[dict[str, dict], list[dict]]:
     source_ids = {source.source_record_id for source in sources}
     summary_path = output_dir / "runs" / run_id / "summary.json"
     if not summary_path.exists():
@@ -601,6 +634,107 @@ def _load_manifest_records(
         },
     ]
     return records_by_id, checks
+
+
+def _load_batch_manifest_records(
+    output_dir: Path,
+    batch_run_id: str,
+    sources: list[WorkbookSource],
+) -> tuple[dict[str, dict], list[dict]]:
+    source_ids = {source.source_record_id for source in sources}
+    summary_path = output_dir / "runs" / batch_run_id / "summary.json"
+    if not summary_path.exists():
+        raise FileNotFoundError(f"Missing batch run summary: {summary_path}")
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    ledger_path = _resolve_existing_path(
+        output_dir,
+        summary.get("ledger_path"),
+        output_dir / "runs" / batch_run_id / "batch_ledger.json",
+    )
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+    records_by_id: dict[str, dict] = {}
+    duplicate_ids = []
+    unknown_ids = []
+    missing_manifest_batches = []
+    non_passed_batches = []
+    row_mismatches = []
+
+    for batch in ledger.get("batches", []):
+        batch_id = str(batch.get("batch_id") or "")
+        if batch.get("status") != "passed" or batch.get("gate_passed") is not True:
+            non_passed_batches.append(batch_id)
+            continue
+        manifest_path = _resolve_existing_path(output_dir, batch.get("manifest_path"), None)
+        if not manifest_path or not manifest_path.exists():
+            missing_manifest_batches.append(batch_id)
+            continue
+        manifest_source_ids = set()
+        for record in _read_jsonl(manifest_path):
+            source_record_id = str(record.get("source_record_id") or "")
+            manifest_source_ids.add(source_record_id)
+            if source_record_id in records_by_id:
+                duplicate_ids.append(source_record_id)
+            if source_record_id not in source_ids:
+                unknown_ids.append(source_record_id)
+            records_by_id[source_record_id] = {**record, "download_batch_run_id": batch_run_id}
+        ledger_source_ids = {str(source_id) for source_id in batch.get("source_record_ids", [])}
+        if ledger_source_ids and manifest_source_ids != ledger_source_ids:
+            row_mismatches.append(
+                {
+                    "batch_id": batch_id,
+                    "missing_source_record_ids": sorted(ledger_source_ids - manifest_source_ids),
+                    "unexpected_source_record_ids": sorted(manifest_source_ids - ledger_source_ids),
+                }
+            )
+
+    checks = [
+        {
+            "name": "batch_download_parent_passed",
+            "passed": bool(summary.get("all_passed")) and not non_passed_batches,
+            "details": {
+                "batch_run_id": batch_run_id,
+                "all_passed": bool(summary.get("all_passed")),
+                "non_passed_batch_ids": sorted(set(non_passed_batches)),
+            },
+        },
+        {
+            "name": "batch_download_manifests_exist",
+            "passed": not missing_manifest_batches,
+            "details": {"missing_manifest_batch_ids": sorted(set(missing_manifest_batches))},
+        },
+        {
+            "name": "batch_download_manifest_rows_match_ledger",
+            "passed": not row_mismatches,
+            "details": {"mismatches": row_mismatches},
+        },
+        {
+            "name": "download_manifest_has_no_duplicate_source_records",
+            "passed": not duplicate_ids,
+            "details": {"duplicate_source_record_ids": sorted(set(duplicate_ids))},
+        },
+        {
+            "name": "download_manifest_source_records_are_in_workbook",
+            "passed": not unknown_ids,
+            "details": {"unknown_source_record_ids": sorted(set(unknown_ids))},
+        },
+    ]
+    return records_by_id, checks
+
+
+def _resolve_existing_path(output_dir: Path, value: str | None, fallback: Path | None) -> Path | None:
+    candidates: list[Path] = []
+    if value:
+        path = Path(value)
+        if path.is_absolute():
+            candidates.append(path)
+        else:
+            candidates.extend([path, output_dir / path, output_dir.parent / path])
+    if fallback:
+        candidates.append(fallback)
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return fallback
 
 
 def _validation_report(
@@ -741,6 +875,7 @@ def _source_set_id(
     config_sha256: str | None,
     overrides_sha256: str | None,
     run_id: str | None,
+    batch_run_id: str | None,
     git_commit: str | None,
 ) -> str:
     payload = {
@@ -748,6 +883,7 @@ def _source_set_id(
         "config_sha256": config_sha256,
         "overrides_sha256": overrides_sha256,
         "download_run_id": run_id,
+        "download_batch_run_id": batch_run_id,
         "git_commit": git_commit,
     }
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
@@ -774,10 +910,10 @@ def _git_commit(cwd: Path) -> str | None:
     return result.stdout.strip() or None
 
 
-def _source_status(manifest_record: dict | None, run_id: str | None) -> str:
+def _source_status(manifest_record: dict | None, run_scope_present: bool) -> str:
     if manifest_record:
         return str(manifest_record.get("status") or "unknown")
-    return "not_in_run" if run_id else "planned"
+    return "not_in_run" if run_scope_present else "planned"
 
 
 def _document_role(source: WorkbookSource, document_type: str | None) -> str:
