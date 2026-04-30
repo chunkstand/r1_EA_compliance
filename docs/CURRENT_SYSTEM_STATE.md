@@ -209,8 +209,8 @@ types, evidence presence, source-claim links, citation coverage, unsupported fin
 finding-graph coverage.
 
 Compliance Coverage V0 is implemented through `compliance-coverage`. It validates the coverage
-matrix, rule-pack identity, eval-case coverage, current source-claim links, and source-record
-alignment for each compliance rule.
+matrix, rule-pack identity, eval-case coverage, current source-claim links, source-claim terms, and
+source-record alignment for each compliance rule.
 
 Current state:
 
@@ -567,9 +567,39 @@ compliance review phase is included, `phase-eval` requires the review report to 
 pass, the review ID to match when supplied, and the review source set to match the evaluated source
 set.
 
-Next downstream layers are reviewer adjudication workflow, broader real-package eval coverage,
-embeddings or reranking for recall improvement, and model-assisted synthesis that is constrained by
-evidence and validation gates.
+## Alignment And Next Milestone
+
+The current implementation remains aligned with the v1 reviewer-engine goal: accurate, auditable,
+verifiable compliance review against a local knowledge base. Domain knowledge lives in versioned
+data artifacts such as workbook rows, review topics, eval fixtures, rule packs, and the coverage
+matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
+binding, coverage validation, and phase evaluation.
+
+The current system is reviewer-ready for deterministic seed-package checks, but not yet production
+ready for broad EA review quality. The major remaining gap is evaluation coverage over realistic EA
+packages and human adjudication of expected findings. The next milestone should be:
+
+**Reviewer Adjudication + Gold Real-Package Eval V0.1**
+
+Goal:
+
+- create a durable adjudication artifact format for human-reviewed expected findings
+- add a small gold eval set from real or realistic EA packages
+- run the existing compliance-review path against those packages
+- score rule status, package evidence, source evidence, source-claim links, citation coverage, and
+  finding graph coverage against adjudicated expectations
+- keep the promotion gate deterministic and fail-closed before adding embeddings, reranking, or
+  model-assisted synthesis
+
+Exit criteria:
+
+- at least three adjudicated package fixtures covering all seven current rules
+- one positive, one mixed pass/gap, and one difficult/negative package fixture
+- a CLI eval command or extension that emits machine-readable adjudication results
+- phase or acceptance-gate documentation showing the gold eval must pass before reviewer promotion
+
+Next downstream layers after that are embeddings or reranking for recall improvement and
+model-assisted synthesis constrained by evidence, graph traces, and validation gates.
 
 ## Verification Commands
 

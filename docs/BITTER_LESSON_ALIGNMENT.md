@@ -66,10 +66,15 @@ The current v1 foundation is aligned in the important places:
 - the evidence graph is built from source/chunk/evidence primitives
 - the source claim graph is built from exact source-text spans, not generated conclusions
 - graph validation rejects stale or forged evidence payloads
-- phase eval separates capture, extraction, retrieval, graph, and claim readiness
+- compliance rule packs and coverage expectations are versioned data, not hidden runtime branches
+- compliance review findings require package evidence, source evidence, source-claim links, and
+  finding graph coverage
+- phase eval separates capture, extraction, retrieval, graph, claim, rule binding, coverage, and
+  review readiness
 
-The current partial-corpus state is also correctly treated as diagnostic. The system can inspect and
-evaluate the slice, but it does not mark the reviewer engine ready.
+The current full-library state is correctly treated as a gated v1 foundation. The system can inspect
+and evaluate the captured corpus and deterministic seed packages, but it does not claim broad EA
+review quality until adjudicated real-package eval coverage exists.
 
 ## Guardrails
 
@@ -96,7 +101,15 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 - bind rule-pack requirements to validated source claims with deterministic scoring and explicit
   no-claim gaps
 - evaluate final compliance-review findings against deterministic package fixtures
+- validate rule-pack coverage against matrix rows, current source-claim links, source-claim terms,
+  and compliance-review eval cases
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
 - keep generated conclusions downstream of retrieval, graph evidence, source-claim links, and eval
   gates
+
+## Next Alignment Milestone
+
+The next aligned step is reviewer adjudication plus a gold real-package eval set. This keeps the
+system on the Bitter Lesson path: improve quality through broader data, stronger evaluation, and
+transparent failure telemetry before adding bespoke review logic or model-generated synthesis.
