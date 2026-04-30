@@ -1,0 +1,52 @@
+[workbook]
+canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]
+exclusion_sheet = "Scope_Exclusions"
+header_row = 4
+
+[outputs]
+root = "source_library"
+raw_artifact_dir = "artifacts/raw"
+manifest_dir = "manifests"
+run_dir = "runs"
+
+[network]
+user_agent = "usfs-r1-ea-source-downloader/0.1 (+local research archive)"
+connect_timeout_seconds = 10
+read_timeout_seconds = 30
+max_attempts = 3
+global_concurrency = 4
+default_host_concurrency = 1
+default_host_delay_seconds = 1.0
+
+[validation]
+minimum_body_bytes = 128
+allowed_content_types = [
+  "application/pdf",
+  "text/html",
+  "application/xhtml+xml",
+  "application/xml",
+  "text/xml",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+]
+challenge_url_patterns = [
+  "unblock.federalregister.gov",
+]
+not_found_url_patterns = [
+  "docnotfound.xhtml",
+]
+
+[hosts."www.ecfr.gov"]
+delay_seconds = 2.0
+concurrency = 1
+
+[hosts."www.federalregister.gov"]
+delay_seconds = 2.0
+concurrency = 1
+
+[hosts."uscode.house.gov"]
+delay_seconds = 1.0
+concurrency = 1
+
+[hosts."www.fs.usda.gov"]
+delay_seconds = 1.0
+concurrency = 1

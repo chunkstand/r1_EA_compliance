@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "usfs-r1-ea-sources"
+version = "0.1.0"
+description = "Dry-run and downloader tooling for USFS Region 1 EA source library inputs."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "openpyxl>=3.1",
+]
+
+[project.scripts]
+usfs-r1-ea-sources = "usfs_r1_ea_sources.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
