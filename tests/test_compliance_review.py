@@ -9,6 +9,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
+from usfs_r1_ea_sources.compliance_review import run_compliance_review_eval
 from usfs_r1_ea_sources.compliance_review import validate_rule_pack
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
@@ -128,6 +129,196 @@ class ComplianceReviewTests(unittest.TestCase):
                 )
 
             self.assertFalse((Path(tmp) / "bad-review").exists())
+
+    def test_compliance_review_eval_scores_package_fixtures(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "unit-all-pass",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access "
+                            "and mitigation measures support a finding of no significant impact."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                        "expected_unsupported_finding_ids": [],
+                        "min_findings": 2,
+                    },
+                    {
+                        "id": "unit-package-gap",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "gap",
+                        },
+                        "expected_finding_status_counts": {"gap": 1, "pass": 1},
+                        "expected_unsupported_finding_ids": [],
+                        "min_findings": 2,
+                    },
+                ],
+            )
+
+            result = run_compliance_review_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                eval_file=eval_path,
+                results_dir=Path(tmp) / "eval-results",
+            )
+
+            self.assertTrue(result.output_path.exists())
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["case_count"], 2)
+            self.assertEqual(result.summary["passed_count"], 2)
+            self.assertEqual(result.summary["metrics"]["pass_rate"], 1.0)
+            cases = {case["id"]: case for case in result.summary["cases"]}
+            self.assertEqual(
+                cases["unit-all-pass"]["actual_statuses"],
+                {"mitigation": "pass", "purpose_need": "pass"},
+            )
+            self.assertEqual(
+                cases["unit-package-gap"]["actual_statuses"],
+                {"mitigation": "gap", "purpose_need": "pass"},
+            )
+            self.assertTrue(cases["unit-package-gap"]["citation_coverage_supported"])
+            self.assertTrue(cases["unit-package-gap"]["graph_coverage_supported"])
+
+    def test_compliance_review_eval_rejects_bad_filters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "bad-filter",
+                        "package_text": "Purpose and Need",
+                        "filters": {"rule_ids": "purpose_need"},
+                        "expected_statuses": {"purpose_need": "pass"},
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(ValueError, "invalid filters"):
+                run_compliance_review_eval(
+                    output_dir=Path(tmp) / "source_library",
+                    eval_file=eval_path,
+                )
+
+    def test_compliance_review_eval_flags_false_pass_expectations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "false-pass",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                        "expected_unsupported_finding_ids": [],
+                        "min_findings": 2,
+                    }
+                ],
+            )
+
+            result = run_compliance_review_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                eval_file=eval_path,
+                results_dir=Path(tmp) / "eval-results",
+            )
+
+            self.assertFalse(result.summary["passed"])
+            case = result.summary["cases"][0]
+            self.assertFalse(case["expected_statuses_match"])
+            self.assertFalse(case["expected_claim_types_match"])
+            self.assertFalse(case["expected_package_evidence_match"])
+            self.assertIn("expected_statuses_match", case["failure_reasons"])
+            self.assertEqual(case["actual_statuses"]["mitigation"], "gap")
+
+    def test_compliance_review_eval_replaces_stale_case_outputs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = Path(tmp) / "compliance-eval.json"
+            results_dir = Path(tmp) / "eval-results"
+            _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "stable-case",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access "
+                            "and mitigation measures support a finding of no significant impact."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                    }
+                ],
+                path=eval_path,
+            )
+            first = run_compliance_review_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                eval_file=eval_path,
+                results_dir=results_dir,
+            )
+            self.assertTrue(first.summary["passed"])
+            self.assertEqual(first.summary["cases"][0]["actual_statuses"]["mitigation"], "pass")
+
+            _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "stable-case",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "gap",
+                        },
+                        "expected_finding_status_counts": {"gap": 1, "pass": 1},
+                    }
+                ],
+                path=eval_path,
+            )
+
+            second = run_compliance_review_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                eval_file=eval_path,
+                results_dir=results_dir,
+            )
+
+            self.assertTrue(second.summary["passed"])
+            self.assertEqual(second.summary["cases"][0]["actual_statuses"]["mitigation"], "gap")
 
     def test_phase_eval_can_include_compliance_review_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -409,6 +600,17 @@ def _write_rule_pack(directory: Path, rule_ids: list[str] | None = None) -> Path
     path = directory / "rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
+
+
+def _write_compliance_eval_file(
+    directory: Path,
+    cases: list[dict],
+    *,
+    path: Path | None = None,
+) -> Path:
+    eval_path = path or directory / "compliance-eval.json"
+    eval_path.write_text(json.dumps(cases, sort_keys=True), encoding="utf-8")
+    return eval_path
 
 
 def _rule_pack() -> dict:

@@ -48,7 +48,8 @@ Last verified locally on 2026-04-30.
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
 - Compliance review smoke: `compliance_validation.json` passed for
   `smoke-compliance-review-v0-hardened`
-- Unit suite: `107` tests passed
+- Compliance review eval seed: passed, `3/3` cases
+- Unit suite: `111` tests passed
 
 The verification set was:
 
@@ -83,6 +84,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path /tmp/ea-package-v0-smoke.txt \
   --output-dir source_library \
   --review-id smoke-compliance-review-v0-hardened
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id smoke-compliance-review-v0-hardened
@@ -191,6 +196,11 @@ package/retrieval gates, requires validated rule-to-source-claim bindings, and w
 validation, a compliance review report, and a finding graph for rules, findings, source claims,
 source evidence, package evidence, and package gaps.
 
+Compliance Review Eval V0 is implemented through `compliance-review-eval`. It runs deterministic
+package fixtures through the real compliance-review path and scores expected rule statuses, claim
+types, evidence presence, source-claim links, citation coverage, unsupported finding IDs, and
+finding-graph coverage.
+
 Current state:
 
 - Raw source documents are captured and cataloged.
@@ -211,9 +221,12 @@ Current state:
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
+- Compliance review eval runs deterministic package fixtures and emits
+  `compliance_review_eval_results.json`.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
+- A seed compliance review eval file exists at `config/compliance_review_eval_seed.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
@@ -279,6 +292,9 @@ Validated guarantees:
   citations for claim-bearing findings, and validates finding graph node/edge integrity.
 - Rule-pack validation rejects unsafe rule-pack or rule IDs, unsupported source-filter keys, and
   empty source-filter values.
+- Compliance review eval rejects unsafe case IDs, ambiguous package fixtures, unsupported filters,
+  unsupported expected statuses, unsupported expected claim types, and non-boolean evidence
+  expectations.
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
   evaluated source set.
 
@@ -294,6 +310,8 @@ Boundaries:
   source-library evidence.
 - It proves the current compliance review V0 cannot produce claim-bearing findings without
   source-library citations.
+- It proves the current final compliance-review eval seed passes deterministic all-pass, mixed
+  pass/gap, and all-gap package fixtures.
 - It does not prove semantic legal interpretation of the extracted text.
 - It does not prove that future web versions will remain unchanged.
 
@@ -598,6 +616,27 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract \
 PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
   --output-dir source_library \
   --eval-file config/claim_eval_seed.json
+```
+
+Build rule-claim bindings and run the seed rule-claim eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/rule_claim_link_eval_seed.json
+```
+
+Run the seed compliance review eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
 ```
 
 Run phase-aligned readiness evaluation:

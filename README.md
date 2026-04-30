@@ -32,6 +32,7 @@ domain-specific heuristics.
 - `config/retrieval_eval_seed.json`
 - `config/claim_eval_seed.json`
 - `config/rule_claim_link_eval_seed.json`
+- `config/compliance_review_eval_seed.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 
@@ -82,6 +83,10 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/compliance_review.json`
   - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
+- Compliance review eval outputs:
+  - `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`
+  - `source_library/reviews/compliance_review_eval/packages/<case_id>.txt`
+  - `source_library/reviews/compliance_review_eval/reviews/<case_id>/`
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
 `extract-build` command builds a derived text/chunk layer from the catalog. The
@@ -336,6 +341,21 @@ the review, rule pack, rules, findings, evidence spans, source claims, and packa
 IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and hyphens.
 Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot silently broaden
 source retrieval.
+
+Run the final compliance review eval gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/compliance_review_eval_seed.json
+```
+
+`compliance-review-eval` writes deterministic package fixtures from the eval file, runs the real
+`compliance-review` command for each case, and scores the generated findings. It asserts expected
+per-rule statuses, claim types, package evidence, source-library evidence, source-claim links,
+finding status counts, unsupported finding IDs, citation coverage, and finding-graph coverage.
+Bad eval filters fail fast so typoed rule/status/claim-type filters cannot silently broaden scoring.
 
 Run the seed retrieval eval gate:
 

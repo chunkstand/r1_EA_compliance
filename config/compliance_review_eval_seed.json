@@ -1,0 +1,51 @@
+[
+  {
+    "id": "all-core-rules-pass",
+    "package_text": "Purpose and Need\n\nThe proposed action improves trail access and includes alternatives, the no action alternative, affected environment, environmental effects, consultation under environmental review laws, and mitigation supporting a finding of no significant impact.",
+    "expected_statuses": {
+      "purpose_need": "pass",
+      "alternatives": "pass",
+      "effects_analysis": "pass",
+      "integrated_compliance": "pass",
+      "fonsi_mitigation": "pass"
+    },
+    "expected_finding_status_counts": {
+      "pass": 5
+    },
+    "expected_unsupported_finding_ids": [],
+    "min_findings": 5
+  },
+  {
+    "id": "purpose-only-produces-package-gaps",
+    "package_text": "Purpose and Need\n\nThe proposed action improves trail access.",
+    "expected_statuses": {
+      "purpose_need": "pass",
+      "alternatives": "pass",
+      "effects_analysis": "gap",
+      "integrated_compliance": "gap",
+      "fonsi_mitigation": "gap"
+    },
+    "expected_finding_status_counts": {
+      "gap": 3,
+      "pass": 2
+    },
+    "expected_unsupported_finding_ids": [],
+    "min_findings": 5
+  },
+  {
+    "id": "unrelated-package-produces-all-gaps",
+    "package_text": "Administrative Record\n\nThis package lists project contacts and a meeting schedule only.",
+    "expected_statuses": {
+      "purpose_need": "gap",
+      "alternatives": "gap",
+      "effects_analysis": "gap",
+      "integrated_compliance": "gap",
+      "fonsi_mitigation": "gap"
+    },
+    "expected_finding_status_counts": {
+      "gap": 5
+    },
+    "expected_unsupported_finding_ids": [],
+    "min_findings": 5
+  }
+]

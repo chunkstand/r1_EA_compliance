@@ -95,6 +95,7 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 - extract source claims with generic legal/action patterns and strict offset validation
 - bind rule-pack requirements to validated source claims with deterministic scoring and explicit
   no-claim gaps
+- evaluate final compliance-review findings against deterministic package fixtures
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
 - keep generated conclusions downstream of retrieval, graph evidence, source-claim links, and eval
