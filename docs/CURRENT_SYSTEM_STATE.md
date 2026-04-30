@@ -48,11 +48,11 @@ Last verified locally on 2026-04-30.
 - Compliance coverage: `7/7` rules covered by matrix rows, source-claim links, source-claim
   terms, and compliance review eval cases
 - EA review smoke: `review_validation.json` passed for `smoke-ea-review-v0-hardened`
-- Compliance review smoke: `compliance_validation.json` passed for
+- Compliance review smoke: `compliance_validation.json` and `compliance_matrix.json` passed for
   `smoke-compliance-review-v0-hardened`
 - Compliance review eval seed: passed, `3/3` cases
-- Compliance gold eval: passed, `3/3` adjudicated cases, `promotion_ready`
-- Unit suite: `126` tests passed
+- Compliance gold eval: passed, `10/10` adjudicated cases, `promotion_ready`
+- Unit suite: `130` tests passed
 
 The verification set was:
 
@@ -202,21 +202,23 @@ EA Package Review V0 is implemented through `ea-review`. It extracts a local EA 
 seed checklist, retrieves source-library evidence for each item, and writes package evidence,
 source-library evidence, finding status, limitations, and validation artifacts.
 
-Compliance Rule Pack + Finding Graph V0 is implemented through `compliance-review`. It evaluates a
-versioned rule pack from `config/compliance_rule_pack_nepa_ea_v0.json`, reuses the `ea-review`
-package/retrieval gates, requires validated rule-to-source-claim bindings, and writes compliance
-validation, a compliance review report, and a finding graph for rules, findings, source claims,
-source evidence, package evidence, and package gaps.
+Compliance Rule Pack + Matrix + Finding Graph V0.2 is implemented through `compliance-review`. It
+evaluates a versioned rule pack from `config/compliance_rule_pack_nepa_ea_v0.json`, reuses the
+`ea-review` package/retrieval gates, requires validated rule-to-source-claim bindings, and writes
+compliance validation, a compliance review report, a reviewer-facing compliance matrix, and a
+finding graph for rules, findings, source claims, source evidence, package evidence, and package
+gaps.
 
-Compliance Review Eval V0 is implemented through `compliance-review-eval`. It runs deterministic
+Compliance Review Eval V0.2 is implemented through `compliance-review-eval`. It runs deterministic
 package fixtures through the real compliance-review path and scores expected rule statuses, claim
-types, evidence presence, source-claim links, citation coverage, unsupported finding IDs, and
+types, evidence presence, source-claim links, expected source record IDs, expected source document
+roles, citation coverage, unsupported finding IDs, failure taxonomy, compact reproduction paths, and
 finding-graph coverage.
 
-Compliance Gold Eval V0.1 is implemented through `compliance-gold-eval`. It validates a structured
-adjudication file, requires positive, mixed, and negative package profiles, runs those adjudicated
-fixtures through the real compliance-review eval path, and emits `promotion_ready` only when both
-adjudication checks and generated findings pass.
+Compliance Gold Eval V0.2 is implemented through `compliance-gold-eval`. It validates a structured
+adjudication file, requires positive, mixed, and negative package profiles, runs ten adjudicated
+package fixtures through the real compliance-review eval path, and emits `promotion_ready` only
+when both adjudication checks and generated findings pass.
 
 Compliance Coverage V0 is implemented through `compliance-coverage`. It validates the coverage
 matrix, rule-pack identity, eval-case coverage, current source-claim links, source-claim terms, and
@@ -242,11 +244,12 @@ Current state:
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
-  `compliance_review.json`, `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
+  `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
+  `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review eval runs deterministic package fixtures and emits
-  `compliance_review_eval_results.json`.
+  `compliance_review_eval_results.json` with failure taxonomy and reproduction paths.
 - Compliance gold eval runs adjudicated positive/mixed/negative package fixtures and emits
-  `compliance_gold_eval_results.json`.
+  `compliance_gold_eval_results.json`; the current gate has ten adjudicated cases.
 - Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links,
   source-claim terms, and compliance review eval cases.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
@@ -316,6 +319,8 @@ Validated guarantees:
 - EA review `pass` findings require both package evidence and source-library evidence.
 - EA review `gap` findings require source-library evidence and explicitly mean package evidence was
   not found.
+- Package evidence search requires configured package-term hits; single-word terms match whole
+  tokens and phrase terms match contiguous text.
 - EA review validation rejects unsupported compliance claims.
 - Compliance review validates the rule pack, requires every rule to be evaluated, requires source
   citations for claim-bearing findings, and validates finding graph node/edge integrity.
@@ -432,6 +437,8 @@ The command writes these artifacts beside the base EA review artifacts:
 
 - `source_library/reviews/<review_id>/compliance_validation.json`
 - `source_library/reviews/<review_id>/compliance_review.json`
+- `source_library/reviews/<review_id>/compliance_matrix.json`
+- `source_library/reviews/<review_id>/compliance_matrix.md`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
@@ -447,6 +454,11 @@ The finding graph contains:
 - `SourceLibraryEvidence`
 - `PackageEvidence`
 - `PackageEvidenceGap`
+
+The compliance matrix is the first reviewer-facing matrix artifact. Each row records the rule,
+status, requirement, applicability basis, package evidence citation, source evidence citation,
+source-claim IDs, applied source record IDs, applied source document roles, citation-gate status,
+limitations, and failure category when a finding is not a supported pass.
 
 `compliance_validation.json` checks rule-pack validity, base EA review validation, all-rules
 coverage, valid finding statuses, dual evidence for `pass`, source evidence for `gap`, source
@@ -590,7 +602,9 @@ phase is included, `phase-eval` requires the promotion gate to pass, the rule pa
 gold eval source set to match the evaluated source set; stale or failed gold artifacts report
 specific failed checks such as source-set or rule-pack mismatch. When a compliance review phase is
 included, `phase-eval` requires the review report to exist, validation to pass, the review ID to
-match when supplied, and the review source set to match the evaluated source set.
+match when supplied, and the review source set to match the evaluated source set. It also requires
+the compliance matrix artifact to exist and match the review's schema version, review ID, source set,
+rule pack, row count, and status counts.
 
 ## Alignment And Next Milestone
 
@@ -600,29 +614,16 @@ data artifacts such as workbook rows, review topics, eval fixtures, rule packs, 
 matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
 binding, coverage validation, and phase evaluation.
 
-The current system is reviewer-ready for deterministic seed-package and gold-adjudication checks,
-but not yet production ready for broad EA review quality. The major remaining gap is recall and
-robustness over a larger set of real EA packages. The next milestone should be:
+The Gold Eval Expansion + Failure Triage V0.2 milestone is implemented. The current gold gate now
+contains ten adjudicated realistic package profiles, expected source rows, expected source document
+classes, per-case failure taxonomy, compact reproduction paths, and generated compliance matrices.
 
-**Gold Eval Expansion + Failure Triage V0.2**
-
-Goal:
-
-- add more adjudicated real or realistic EA packages beyond the three seed profiles
-- record failures as durable eval cases rather than ad hoc notes
-- identify whether misses come from package extraction, package evidence search, source retrieval,
-  rule-claim binding, or rule wording
-- keep the promotion gate deterministic before embeddings, reranking, or model-assisted synthesis
-
-Exit criteria:
-
-- at least ten adjudicated package fixtures or issue-derived failure cases
-- per-failure category counts and compact reproduction paths
-- an updated gold eval artifact with versioned additions
-- no regression in the current three-case gold promotion gate
-
-Next downstream layers after that are embeddings or reranking for recall improvement and
-model-assisted synthesis constrained by evidence, graph traces, and validation gates.
+The current system is reviewer-ready for deterministic seed-package and expanded gold-adjudication
+checks, but not yet production ready for broad EA review quality. The next efficient v1 milestone is
+to run the same matrix and failure-taxonomy path over a small set of real EA packages and use those
+failures to decide whether the next fix belongs in package extraction, package evidence search,
+source retrieval, source applicability, rule-claim binding, or rule wording. Embeddings, reranking,
+and model-assisted synthesis remain downstream of that evidence-backed real-package pass.
 
 ## Verification Commands
 

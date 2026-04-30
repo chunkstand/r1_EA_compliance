@@ -1,13 +1,13 @@
 {
   "schema_version": "compliance-gold-eval-v0",
-  "id": "nepa-ea-gold-v0.1",
-  "version": "0.1.0",
-  "title": "NEPA EA Gold Adjudication Eval V0.1",
+  "id": "nepa-ea-gold-v0.2",
+  "version": "0.2.0",
+  "title": "NEPA EA Gold Adjudication Eval V0.2",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.2.0",
   "adjudication": {
     "status": "seed_gold",
-    "method": "Realistic package fixtures with explicit expected findings for deterministic promotion gating.",
+    "method": "Ten realistic package profiles with explicit expected findings, applicable source rows, and source document classes for deterministic promotion gating.",
     "adjudicated_by": ["codex-seed-adjudication"],
     "adjudicated_at": "2026-04-30",
     "promotion_gate": true
@@ -16,7 +16,7 @@
     {
       "id": "gold-all-rules-supported",
       "profile": "positive",
-      "package_text": "Purpose and Need\n\nThe proposed action improves trail access and public safety. The need for action is to reduce deferred maintenance and improve access to recreation sites.\n\nAlternatives\n\nThe environmental assessment considers the no action alternative, the proposed action, and an alternate trailhead design.\n\nAffected Environment and Environmental Effects\n\nThe analysis describes the affected environment and environmental effects, including impacts to soil, water, wildlife, and recreation.\n\nConsultation and Compliance\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, and water quality compliance.\n\nPublic Involvement\n\nThe project used public involvement through scoping, a comment opportunity, and responses to substantive comments.\n\nFONSI and Mitigation\n\nThe finding of no significant impact relies on mitigation measures and a decision notice. The EA identifies monitoring and enforcement responsibilities for mitigation commitments.",
+      "package_text": "Purpose and Need\n\nThe proposed action improves trail access and public safety. The need for action is to reduce deferred maintenance and improve access to recreation sites.\n\nAlternatives\n\nThe environmental assessment considers the no action alternative, the proposed action, and an alternate trailhead design.\n\nAffected Environment and Environmental Effects\n\nThe analysis describes the affected environment and environmental effects, including effects to soil, water, wildlife, and recreation.\n\nConsultation and Compliance\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, and water quality compliance.\n\nPublic Involvement\n\nThe project used public involvement through scoping, a comment opportunity, and responses to substantive comments.\n\nFONSI and Mitigation\n\nThe finding of no significant impact relies on mitigation measures and a decision notice. The EA identifies monitoring and enforcement responsibilities for mitigation commitments.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
@@ -36,19 +36,82 @@
       "expected_finding_status_counts": {
         "pass": 7
       },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-purpose-only",
+      "profile": "mixed",
+      "package_text": "Purpose and Need\n\nThe trail relocation is needed to repair drainage and reduce erosion near the campground. The package stops after describing the need.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports purpose and need while omitting alternatives, effects, consultations, public involvement, FONSI support, and mitigation monitoring."
+      },
+      "expected_statuses": {
+        "purpose_need": "pass",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "gap",
+        "public_involvement": "gap",
+        "fonsi_mitigation": "gap",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "pass": 1
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
       "expected_unsupported_finding_ids": [],
       "min_findings": 7
     },
     {
       "id": "gold-purpose-alternatives-only",
       "profile": "mixed",
-      "package_text": "Purpose and Need\n\nThe proposed action relocates a short trail segment to improve drainage and access. The need for action is recurring surface damage.\n\nAlternatives\n\nThe EA package compares alternatives and the proposed action. The fixture stops after project framing.",
+      "package_text": "Purpose and Need\n\nThe proposed action relocates a short trail segment to improve drainage and access. The need for action is recurring surface damage.\n\nAlternatives\n\nThe EA package compares alternatives and the no action alternative. The fixture stops after project framing.",
       "adjudication": {
         "status": "adjudicated_seed",
         "source_type": "realistic_synthetic",
         "adjudicated_by": ["codex-seed-adjudication"],
         "adjudicated_at": "2026-04-30",
-        "rationale": "The fixture supports purpose/need and alternatives while omitting the other rule evidence."
+        "rationale": "The fixture supports purpose, need, and alternatives while omitting the other rule evidence."
       },
       "expected_statuses": {
         "purpose_need": "pass",
@@ -62,6 +125,294 @@
       "expected_finding_status_counts": {
         "gap": 5,
         "pass": 2
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-effects-only",
+      "profile": "mixed",
+      "package_text": "Affected Environment and Environmental Effects\n\nThe analysis describes the affected environment and environmental effects for soil, water, wildlife, and recreation.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports the effects-analysis rule and omits the other rule evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "pass",
+        "integrated_compliance": "gap",
+        "public_involvement": "gap",
+        "fonsi_mitigation": "gap",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "pass": 1
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-consultation-only",
+      "profile": "mixed",
+      "package_text": "Consultation and Compliance\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, and water quality compliance.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports integrated environmental compliance and omits the other rule evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "pass",
+        "public_involvement": "gap",
+        "fonsi_mitigation": "gap",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "pass": 1
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-public-involvement-only",
+      "profile": "mixed",
+      "package_text": "Public Involvement\n\nThe project file describes public involvement, scoping, and a comment period with responses to substantive comments.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports public involvement and omits the other rule evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "gap",
+        "public_involvement": "pass",
+        "fonsi_mitigation": "gap",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "pass": 1
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-fonsi-decision-only",
+      "profile": "mixed",
+      "package_text": "Finding of No Significant Impact\n\nThe FONSI and decision notice explain why significant impact is not expected.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports FONSI and decision notice traceability without monitoring or enforcement evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "gap",
+        "public_involvement": "gap",
+        "fonsi_mitigation": "pass",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 6,
+        "pass": 1
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-mitigation-monitoring-only",
+      "profile": "mixed",
+      "package_text": "Mitigation Monitoring\n\nThe package identifies mitigation monitoring, enforcement responsibilities, and commitments for implementation.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports mitigation and mitigation monitoring terms while omitting the other rule evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "gap",
+        "public_involvement": "gap",
+        "fonsi_mitigation": "pass",
+        "mitigation_monitoring": "pass"
+      },
+      "expected_finding_status_counts": {
+        "gap": 5,
+        "pass": 2
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
+      },
+      "expected_unsupported_finding_ids": [],
+      "min_findings": 7
+    },
+    {
+      "id": "gold-consultation-public-mixed",
+      "profile": "mixed",
+      "package_text": "Consultation, Compliance, and Public Involvement\n\nThe record documents section 106 consultation, tribal coordination, endangered species review, water quality compliance, public involvement, scoping, and comment responses.",
+      "adjudication": {
+        "status": "adjudicated_seed",
+        "source_type": "realistic_synthetic",
+        "adjudicated_by": ["codex-seed-adjudication"],
+        "adjudicated_at": "2026-04-30",
+        "rationale": "The fixture supports integrated compliance and public involvement while omitting the other rule evidence."
+      },
+      "expected_statuses": {
+        "purpose_need": "gap",
+        "alternatives": "gap",
+        "effects_analysis": "gap",
+        "integrated_compliance": "pass",
+        "public_involvement": "pass",
+        "fonsi_mitigation": "gap",
+        "mitigation_monitoring": "gap"
+      },
+      "expected_finding_status_counts": {
+        "gap": 5,
+        "pass": 2
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
       },
       "expected_unsupported_finding_ids": [],
       "min_findings": 7
@@ -88,6 +439,24 @@
       },
       "expected_finding_status_counts": {
         "gap": 7
+      },
+      "expected_source_record_ids": {
+        "purpose_need": ["R1EA-008"],
+        "alternatives": ["R1EA-013"],
+        "effects_analysis": ["R1EA-013"],
+        "integrated_compliance": ["R1EA-015"],
+        "public_involvement": ["R1EA-008"],
+        "fonsi_mitigation": ["R1EA-014"],
+        "mitigation_monitoring": ["R1EA-008"]
+      },
+      "expected_source_document_roles": {
+        "purpose_need": ["regulation"],
+        "alternatives": ["regulation"],
+        "effects_analysis": ["regulation"],
+        "integrated_compliance": ["regulation"],
+        "public_involvement": ["regulation"],
+        "fonsi_mitigation": ["regulation"],
+        "mitigation_monitoring": ["regulation"]
       },
       "expected_unsupported_finding_ids": [],
       "min_findings": 7

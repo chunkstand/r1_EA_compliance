@@ -69,6 +69,8 @@ The current v1 foundation is aligned in the important places:
 - compliance rule packs and coverage expectations are versioned data, not hidden runtime branches
 - compliance review findings require package evidence, source evidence, source-claim links, and
   finding graph coverage
+- compliance review emits a machine-readable matrix that preserves applied source rows, source
+  document roles, direct citations, source claims, and limitations
 - gold adjudication fixtures are versioned data and run through the same compliance-review eval path
 - gold eval promotion is fail-closed on adjudication metadata, fixture safety, rule coverage, source
   set freshness, and rule-pack freshness
@@ -103,11 +105,11 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 - extract source claims with generic legal/action patterns and strict offset validation
 - bind rule-pack requirements to validated source claims with deterministic scoring and explicit
   no-claim gaps
-- evaluate final compliance-review findings against deterministic package fixtures
+- evaluate final compliance-review findings and matrix rows against deterministic package fixtures
 - validate rule-pack coverage against matrix rows, current source-claim links, source-claim terms,
   and compliance-review eval cases
-- run adjudicated positive, mixed, and negative package profiles through a deterministic promotion
-  gate
+- run ten adjudicated positive, mixed, and negative package profiles through a deterministic
+  promotion gate
 - add failure telemetry for missed evidence and unsupported answers
 - keep compliance rule packs as data, with citations required for every claim-bearing finding
 - keep generated conclusions downstream of retrieval, graph evidence, source-claim links, and eval
@@ -115,7 +117,7 @@ The current claim and compliance milestones favor a computation-scalable reviewe
 
 ## Next Alignment Milestone
 
-The next aligned step is expanding the gold eval set and triaging failures from more realistic EA
-packages. This keeps the system on the Bitter Lesson path: improve quality through broader data,
+The next aligned step is applying the same matrix and failure-taxonomy path to a small set of real
+EA packages. This keeps the system on the Bitter Lesson path: improve quality through broader data,
 stronger evaluation, and transparent failure telemetry before adding bespoke review logic or
 model-generated synthesis.

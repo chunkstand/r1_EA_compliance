@@ -13,6 +13,7 @@ from .ea_review import run_ea_review
 
 RULE_PACK_SCHEMA_VERSION = "compliance-rule-pack-v0"
 COMPLIANCE_REVIEW_SCHEMA_VERSION = "compliance-review-v0"
+COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v0"
 DEFAULT_RULE_PACK_PATH = Path("config/compliance_rule_pack_nepa_ea_v0.json")
 DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH = Path("config/compliance_review_eval_seed.json")
@@ -46,6 +47,8 @@ class ComplianceReviewResult:
     review_id: str
     review_dir: Path
     compliance_review_path: Path
+    compliance_matrix_path: Path
+    compliance_matrix_markdown_path: Path
     compliance_validation_path: Path
     finding_nodes_path: Path
     finding_edges_path: Path
@@ -100,11 +103,15 @@ def run_compliance_review(
     _validate_safe_id(review_id, "review_id")
     review_dir = Path(results_dir) if results_dir else output_dir / "reviews" / review_id
     compliance_review_path = review_dir / "compliance_review.json"
+    compliance_matrix_path = review_dir / "compliance_matrix.json"
+    compliance_matrix_markdown_path = review_dir / "compliance_matrix.md"
     compliance_validation_path = review_dir / "compliance_validation.json"
     finding_nodes_path = review_dir / "finding_graph_nodes.jsonl"
     finding_edges_path = review_dir / "finding_graph_edges.jsonl"
     _prepare_outputs(
         compliance_review_path=compliance_review_path,
+        compliance_matrix_path=compliance_matrix_path,
+        compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -171,6 +178,8 @@ def run_compliance_review(
         ea_summary=ea_report["summary"],
         findings=findings,
         compliance_review_path=compliance_review_path,
+        compliance_matrix_path=compliance_matrix_path,
+        compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -188,14 +197,30 @@ def run_compliance_review(
         "validation": validation,
         "findings": findings,
     }
+    matrix = _compliance_matrix(
+        review_id=review_id,
+        package_path=package_path,
+        rule_pack=rule_pack,
+        findings=findings,
+        summary=summary,
+        validation=validation,
+    )
     _write_jsonl(finding_nodes_path, nodes)
     _write_jsonl(finding_edges_path, edges)
+    _write_json(compliance_matrix_path, matrix)
+    compliance_matrix_markdown_path.parent.mkdir(parents=True, exist_ok=True)
+    compliance_matrix_markdown_path.write_text(
+        _matrix_markdown(matrix),
+        encoding="utf-8",
+    )
     _write_json(compliance_validation_path, validation)
     _write_json(compliance_review_path, report)
     return ComplianceReviewResult(
         review_id=review_id,
         review_dir=review_dir,
         compliance_review_path=compliance_review_path,
+        compliance_matrix_path=compliance_matrix_path,
+        compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_validation_path=compliance_validation_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
@@ -362,6 +387,14 @@ def run_compliance_review_eval(
                 case_results,
                 "expected_source_claim_links_match",
             ),
+            "source_record_match_rate": _case_rate(
+                case_results,
+                "expected_source_record_ids_match",
+            ),
+            "source_document_role_match_rate": _case_rate(
+                case_results,
+                "expected_source_document_roles_match",
+            ),
             "citation_coverage_rate": _case_rate(case_results, "citation_coverage_supported"),
             "graph_coverage_rate": _case_rate(case_results, "graph_coverage_supported"),
             "unsupported_finding_match_rate": _case_rate(
@@ -373,6 +406,7 @@ def run_compliance_review_eval(
                 case_count,
             ),
         },
+        "failure_category_counts": _failure_category_counts(case_results),
         "cases": case_results,
     }
     _write_json(output_path, summary)
@@ -387,12 +421,16 @@ def run_compliance_review_eval(
 def _prepare_outputs(
     *,
     compliance_review_path: Path,
+    compliance_matrix_path: Path,
+    compliance_matrix_markdown_path: Path,
     compliance_validation_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
 ) -> None:
     for path in (
         compliance_review_path,
+        compliance_matrix_path,
+        compliance_matrix_markdown_path,
         compliance_validation_path,
         finding_nodes_path,
         finding_edges_path,
@@ -685,6 +723,8 @@ def _summary(
     ea_summary: dict,
     findings: list[dict],
     compliance_review_path: Path,
+    compliance_matrix_path: Path,
+    compliance_matrix_markdown_path: Path,
     compliance_validation_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
@@ -717,6 +757,8 @@ def _summary(
         "claim_finding_count": len(claim_findings),
         "unsupported_finding_ids": unsupported,
         "compliance_review_path": str(compliance_review_path),
+        "compliance_matrix_path": str(compliance_matrix_path),
+        "compliance_matrix_markdown_path": str(compliance_matrix_markdown_path),
         "compliance_validation_path": str(compliance_validation_path),
         "finding_nodes_path": str(finding_nodes_path),
         "finding_edges_path": str(finding_edges_path),
@@ -734,6 +776,196 @@ def _summary(
         "validation_passed": validation["passed"],
         "reviewer_ready": validation["passed"],
     }
+
+
+def _compliance_matrix(
+    *,
+    review_id: str,
+    package_path: Path,
+    rule_pack: dict,
+    findings: list[dict],
+    summary: dict,
+    validation: dict,
+) -> dict:
+    rows = [_matrix_row(review_id, finding) for finding in findings]
+    status_counts = dict(Counter(row["status"] for row in rows))
+    return {
+        "schema_version": COMPLIANCE_MATRIX_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "review_id": review_id,
+        "package_path": str(package_path),
+        "source_set_id": summary.get("source_set_id"),
+        "rule_pack": _rule_pack_summary(rule_pack),
+        "summary": {
+            "row_count": len(rows),
+            "status_counts": status_counts,
+            "claim_row_count": sum(1 for row in rows if row["status"] in CLAIM_STATUSES),
+            "validated": bool(validation.get("passed")),
+            "reviewer_ready": bool(summary.get("reviewer_ready")),
+            "compliance_review_path": summary.get("compliance_review_path"),
+            "compliance_validation_path": summary.get("compliance_validation_path"),
+            "finding_graph_nodes_path": summary.get("finding_nodes_path"),
+            "finding_graph_edges_path": summary.get("finding_edges_path"),
+        },
+        "columns": [
+            "rule_id",
+            "rule_title",
+            "status",
+            "applicability_status",
+            "requirement",
+            "ea_package_citation",
+            "source_library_citation",
+            "source_claim_ids",
+            "applied_source_record_ids",
+            "limitations",
+        ],
+        "rows": rows,
+    }
+
+
+def _matrix_row(review_id: str, finding: dict) -> dict:
+    source_claim_ids = [str(value) for value in finding.get("source_claim_ids", [])]
+    source_claim_citations = [
+        str(value) for value in finding.get("source_claim_evidence_citations", []) if value
+    ]
+    applied_source_record_ids = _finding_source_record_ids(finding)
+    applied_source_document_roles = _finding_source_document_roles(finding)
+    citation_requirements_met = _finding_has_required_eval_citations(finding)
+    return {
+        "row_id": f"matrix:{review_id}:{finding['rule_id']}",
+        "rule_id": finding["rule_id"],
+        "rule_title": finding["title"],
+        "question": finding.get("question"),
+        "requirement": finding.get("requirement"),
+        "severity": finding.get("severity"),
+        "status": finding["status"],
+        "claim_type": finding["claim_type"],
+        "confidence": finding.get("confidence"),
+        "rationale": finding.get("rationale"),
+        "applicability_status": (
+            "not_applicable" if finding["status"] == "not_applicable" else "applicable"
+        ),
+        "applicability_basis": {
+            "source_filters": finding.get("source_filters", {}),
+            "package_terms": finding.get("package_terms", []),
+            "source_query": finding.get("source_query"),
+            "applied_source_record_ids": applied_source_record_ids,
+            "applied_source_document_roles": applied_source_document_roles,
+        },
+        "package_query": finding.get("package_query"),
+        "source_query": finding.get("source_query"),
+        "ea_package_citation": finding.get("package_evidence_citation"),
+        "ea_package_evidence": _compact_evidence(finding.get("package_evidence")),
+        "source_library_citation": finding.get("source_library_evidence_citation"),
+        "source_library_evidence": _compact_evidence(finding.get("source_library_evidence")),
+        "source_claim_ids": source_claim_ids,
+        "source_claim_citations": sorted(set(source_claim_citations)),
+        "source_claim_count": len(source_claim_ids),
+        "applied_source_record_ids": applied_source_record_ids,
+        "applied_source_document_roles": applied_source_document_roles,
+        "citation_requirements_met": citation_requirements_met,
+        "limitation_count": len(finding.get("limitations", [])),
+        "limitations": finding.get("limitations", []),
+        "failure_category": _matrix_failure_category(finding),
+    }
+
+
+def _compact_evidence(evidence: dict | None) -> dict | None:
+    if not evidence:
+        return None
+    span = evidence.get("evidence_span") or {}
+    provenance = evidence.get("provenance") or {}
+    return {
+        "citation_label": evidence.get("citation_label"),
+        "source_record_id": evidence.get("source_record_id"),
+        "chunk_id": evidence.get("chunk_id"),
+        "text": span.get("text"),
+        "source_char_start": span.get("source_char_start"),
+        "source_char_end": span.get("source_char_end"),
+        "chunk_char_start": span.get("chunk_char_start"),
+        "chunk_char_end": span.get("chunk_char_end"),
+        "page": provenance.get("page"),
+        "section": provenance.get("section"),
+        "artifact_sha256": provenance.get("artifact_sha256"),
+        "content_sha256": provenance.get("content_sha256"),
+    }
+
+
+def _finding_source_record_ids(finding: dict) -> list[str]:
+    source_record_ids = set()
+    source_evidence = finding.get("source_library_evidence") or {}
+    if source_evidence.get("source_record_id"):
+        source_record_ids.add(str(source_evidence["source_record_id"]))
+    for link in finding.get("source_claim_links", []):
+        if link.get("source_record_id"):
+            source_record_ids.add(str(link["source_record_id"]))
+    return sorted(source_record_ids)
+
+
+def _finding_source_document_roles(finding: dict) -> list[str]:
+    roles = set()
+    source_evidence = finding.get("source_library_evidence") or {}
+    if source_evidence.get("document_role"):
+        roles.add(str(source_evidence["document_role"]))
+    for link in finding.get("source_claim_links", []):
+        if link.get("document_role"):
+            roles.add(str(link["document_role"]))
+    return sorted(roles)
+
+
+def _matrix_failure_category(finding: dict) -> str | None:
+    status = finding.get("status")
+    if status == "pass":
+        return None
+    if status == "gap":
+        return "package_evidence_gap"
+    if status == "not_applicable":
+        return "not_applicable"
+    if finding.get("source_library_evidence_status") != "found":
+        return "source_retrieval_miss"
+    if finding.get("package_evidence_status") != "found":
+        return "package_evidence_search_miss"
+    if status not in VALID_FINDING_STATUSES:
+        return "unsupported_status"
+    return "uncertain_finding"
+
+
+def _matrix_markdown(matrix: dict) -> str:
+    summary = matrix["summary"]
+    lines = [
+        "# Compliance Matrix",
+        "",
+        f"- Review ID: `{matrix['review_id']}`",
+        f"- Source set: `{matrix.get('source_set_id')}`",
+        f"- Rule pack: `{matrix['rule_pack']['rule_pack_id']}` "
+        f"`{matrix['rule_pack']['version']}`",
+        f"- Rows: `{summary['row_count']}`",
+        f"- Status counts: `{summary['status_counts']}`",
+        f"- Reviewer ready: `{summary['reviewer_ready']}`",
+        "",
+        "| Rule | Status | EA citation | Source citation | Source claims | Limitations |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in matrix["rows"]:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    _md_cell(f"{row['rule_id']} - {row['rule_title']}"),
+                    _md_cell(row["status"]),
+                    _md_cell(row.get("ea_package_citation") or "N/A"),
+                    _md_cell(row.get("source_library_citation") or "N/A"),
+                    _md_cell(", ".join(row.get("source_claim_ids", [])) or "N/A"),
+                    _md_cell("; ".join(row.get("limitations", [])) or "None"),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _md_cell(value: object) -> str:
+    return str(value).replace("|", "\\|").replace("\n", " ").strip()
 
 
 def _load_compliance_review_eval_cases(path: Path) -> list[dict]:
@@ -759,6 +991,8 @@ def _load_compliance_review_eval_cases(path: Path) -> list[dict]:
         _validate_eval_expected_bool_map(index, case, "expected_package_evidence")
         _validate_eval_expected_bool_map(index, case, "expected_source_evidence")
         _validate_eval_expected_bool_map(index, case, "expected_source_claim_links")
+        _validate_eval_expected_string_list_map(index, case, "expected_source_record_ids")
+        _validate_eval_expected_string_list_map(index, case, "expected_source_document_roles")
         _validate_eval_status_counts(index, case)
         _validate_eval_string_list(index, case, "expected_unsupported_finding_ids")
         _validate_optional_bool(index, case, "expected_validation_passed")
@@ -801,6 +1035,8 @@ def _validate_compliance_review_eval_cases_against_rule_pack(
             "expected_package_evidence",
             "expected_source_evidence",
             "expected_source_claim_links",
+            "expected_source_record_ids",
+            "expected_source_document_roles",
         ):
             _validate_eval_rule_map_keys(index, case_id, case.get(key) or {}, expected_rule_ids, key)
         unsupported_ids = set(str(value) for value in case.get("expected_unsupported_finding_ids", []))
@@ -932,6 +1168,24 @@ def _validate_eval_expected_bool_map(index: int, case: dict, key: str) -> None:
         )
 
 
+def _validate_eval_expected_string_list_map(index: int, case: dict, key: str) -> None:
+    expected = case.get(key) or {}
+    if not isinstance(expected, dict):
+        raise ValueError(f"Compliance review eval case {index} {key} must be an object.")
+    invalid = []
+    for rule_id, values in expected.items():
+        if not isinstance(values, list) or not values:
+            invalid.append(str(rule_id))
+            continue
+        if any(not str(value).strip() for value in values):
+            invalid.append(str(rule_id))
+    if invalid:
+        raise ValueError(
+            f"Compliance review eval case {index} {key} values must be non-empty "
+            f"lists of strings: {invalid}."
+        )
+
+
 def _validate_eval_status_counts(index: int, case: dict) -> None:
     expected = case.get("expected_finding_status_counts") or {}
     if not isinstance(expected, dict):
@@ -1044,6 +1298,21 @@ def _compliance_review_eval_case_result(
         expected_source_claim_links,
         _finding_has_source_claim_links,
     )
+    expected_source_record_ids = _expected_string_list_map(case, "expected_source_record_ids")
+    expected_source_document_roles = _expected_string_list_map(
+        case,
+        "expected_source_document_roles",
+    )
+    source_record_mismatches = _expected_subset_mismatches(
+        findings_by_rule,
+        expected_source_record_ids,
+        _finding_source_record_ids,
+    )
+    source_document_role_mismatches = _expected_subset_mismatches(
+        findings_by_rule,
+        expected_source_document_roles,
+        _finding_source_document_roles,
+    )
     expected_status_counts = {
         str(status): int(count)
         for status, count in (case.get("expected_finding_status_counts") or {}).items()
@@ -1085,6 +1354,8 @@ def _compliance_review_eval_case_result(
         "expected_package_evidence_match": not package_evidence_mismatches,
         "expected_source_evidence_match": not source_evidence_mismatches,
         "expected_source_claim_links_match": not source_claim_link_mismatches,
+        "expected_source_record_ids_match": not source_record_mismatches,
+        "expected_source_document_roles_match": not source_document_role_mismatches,
         "status_counts_match": status_counts_match,
         "unsupported_finding_ids_match": unsupported_finding_ids_match,
         "citation_coverage_supported": citation_coverage_supported,
@@ -1095,6 +1366,18 @@ def _compliance_review_eval_case_result(
         for name, passed in result_flags.items()
         if not passed
     ]
+    failure_taxonomy = _failure_taxonomy(
+        result_flags=result_flags,
+        status_mismatches=status_mismatches,
+        claim_type_mismatches=claim_type_mismatches,
+        package_evidence_mismatches=package_evidence_mismatches,
+        source_evidence_mismatches=source_evidence_mismatches,
+        source_claim_link_mismatches=source_claim_link_mismatches,
+        source_record_mismatches=source_record_mismatches,
+        source_document_role_mismatches=source_document_role_mismatches,
+        validation_failed_checks=_failed_check_names(validation),
+        selected_findings=selected_findings,
+    )
     return {
         "id": case["id"],
         "review_id": result.review_id,
@@ -1104,6 +1387,8 @@ def _compliance_review_eval_case_result(
         "package_path": str(package_path),
         "review_dir": str(result.review_dir),
         "compliance_review_path": str(result.compliance_review_path),
+        "compliance_matrix_path": str(result.compliance_matrix_path),
+        "compliance_matrix_markdown_path": str(result.compliance_matrix_markdown_path),
         "compliance_validation_path": str(result.compliance_validation_path),
         "finding_nodes_path": str(result.finding_nodes_path),
         "finding_edges_path": str(result.finding_edges_path),
@@ -1127,6 +1412,10 @@ def _compliance_review_eval_case_result(
         "package_evidence_mismatches": package_evidence_mismatches,
         "source_evidence_mismatches": source_evidence_mismatches,
         "source_claim_link_mismatches": source_claim_link_mismatches,
+        "expected_source_record_ids": expected_source_record_ids,
+        "source_record_mismatches": source_record_mismatches,
+        "expected_source_document_roles": expected_source_document_roles,
+        "source_document_role_mismatches": source_document_role_mismatches,
         "expected_finding_status_counts": expected_status_counts,
         "expected_unsupported_finding_ids": expected_unsupported,
         "actual_unsupported_finding_ids": actual_unsupported,
@@ -1139,6 +1428,9 @@ def _compliance_review_eval_case_result(
         "finding_results": [_eval_finding_summary(finding) for finding in selected_findings],
         **result_flags,
         "failure_reasons": failure_reasons,
+        "failure_taxonomy": failure_taxonomy,
+        "failure_category_counts": dict(Counter(item["category"] for item in failure_taxonomy)),
+        "reproduction": _case_reproduction(result, package_path),
         "passed": not failure_reasons,
     }
 
@@ -1181,6 +1473,35 @@ def _expected_bool_presence_map(
     }
     expected.update({str(rule_id): bool(value) for rule_id, value in (case.get(key) or {}).items()})
     return expected
+
+
+def _expected_string_list_map(case: dict, key: str) -> dict[str, list[str]]:
+    return {
+        str(rule_id): sorted({str(value) for value in values if str(value).strip()})
+        for rule_id, values in (case.get(key) or {}).items()
+    }
+
+
+def _expected_subset_mismatches(
+    findings_by_rule: dict[str, dict],
+    expected: dict[str, list[str]],
+    actual_values,
+) -> list[dict]:
+    failures = []
+    for rule_id, expected_values in expected.items():
+        finding = findings_by_rule.get(rule_id)
+        actual = actual_values(finding) if finding else []
+        missing = sorted(set(expected_values) - set(actual))
+        if missing:
+            failures.append(
+                {
+                    "rule_id": rule_id,
+                    "expected": expected_values,
+                    "actual": actual,
+                    "missing": missing,
+                }
+            )
+    return failures
 
 
 def _value_mismatches(
@@ -1247,6 +1568,117 @@ def _eval_finding_summary(finding: dict) -> dict:
         "package_evidence_citation": finding.get("package_evidence_citation"),
         "source_library_evidence_citation": finding.get("source_library_evidence_citation"),
         "source_claim_link_count": finding.get("source_claim_link_count", 0),
+        "applied_source_record_ids": _finding_source_record_ids(finding),
+        "applied_source_document_roles": _finding_source_document_roles(finding),
+    }
+
+
+def _failure_taxonomy(
+    *,
+    result_flags: dict[str, bool],
+    status_mismatches: list[dict],
+    claim_type_mismatches: list[dict],
+    package_evidence_mismatches: list[dict],
+    source_evidence_mismatches: list[dict],
+    source_claim_link_mismatches: list[dict],
+    source_record_mismatches: list[dict],
+    source_document_role_mismatches: list[dict],
+    validation_failed_checks: list[str],
+    selected_findings: list[dict],
+) -> list[dict]:
+    taxonomy = []
+    if not result_flags["validation_passed_matches"] or not result_flags["reviewer_ready_matches"]:
+        taxonomy.append(
+            _taxonomy_entry(
+                "validation_gate_miss",
+                validation_failed_checks,
+                ["reviewer_ready", "validation_passed"],
+            )
+        )
+    if not result_flags["min_findings_met"]:
+        taxonomy.append(_taxonomy_entry("rule_wording_issue", [], ["min_findings"]))
+    if status_mismatches or claim_type_mismatches:
+        taxonomy.append(
+            _taxonomy_entry(
+                "rule_wording_issue",
+                status_mismatches + claim_type_mismatches,
+            )
+        )
+    if package_evidence_mismatches:
+        taxonomy.append(
+            _taxonomy_entry("package_evidence_search_miss", package_evidence_mismatches)
+        )
+    if source_evidence_mismatches:
+        taxonomy.append(_taxonomy_entry("source_retrieval_miss", source_evidence_mismatches))
+    if source_claim_link_mismatches:
+        taxonomy.append(_taxonomy_entry("rule_claim_binding_miss", source_claim_link_mismatches))
+    if source_record_mismatches or source_document_role_mismatches:
+        taxonomy.append(
+            _taxonomy_entry(
+                "source_applicability_miss",
+                source_record_mismatches + source_document_role_mismatches,
+            )
+        )
+    if not result_flags["citation_coverage_supported"]:
+        unsupported = [
+            finding.get("rule_id")
+            for finding in selected_findings
+            if not _finding_has_required_eval_citations(finding)
+        ]
+        taxonomy.append(_taxonomy_entry("citation_relevance_issue", unsupported))
+    if not result_flags["graph_coverage_supported"]:
+        taxonomy.append(
+            _taxonomy_entry(
+                "finding_graph_miss",
+                validation_failed_checks,
+                sorted(GRAPH_COVERAGE_CHECKS),
+            )
+        )
+    return taxonomy
+
+
+def _taxonomy_entry(
+    category: str,
+    evidence: list,
+    checks: list[str] | None = None,
+) -> dict:
+    rule_ids = sorted(
+        {
+            str(item.get("rule_id"))
+            for item in evidence
+            if isinstance(item, dict) and item.get("rule_id")
+        }
+    )
+    if not rule_ids:
+        rule_ids = sorted({str(item) for item in evidence if isinstance(item, str)})
+    return {
+        "category": category,
+        "rule_ids": rule_ids,
+        "checks": checks or [],
+        "evidence": evidence,
+    }
+
+
+def _failure_category_counts(cases: list[dict]) -> dict[str, int]:
+    counts = Counter()
+    for case in cases:
+        for item in case.get("failure_taxonomy", []):
+            counts[str(item.get("category"))] += 1
+    return dict(sorted(counts.items()))
+
+
+def _case_reproduction(result: ComplianceReviewResult, package_path: Path) -> dict:
+    return {
+        "command": (
+            "PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review "
+            f"--package-path {package_path} --output-dir <source_library> "
+            f"--review-id {result.review_id}"
+        ),
+        "review_dir": str(result.review_dir),
+        "package_path": str(package_path),
+        "compliance_review_path": str(result.compliance_review_path),
+        "compliance_matrix_path": str(result.compliance_matrix_path),
+        "compliance_validation_path": str(result.compliance_validation_path),
     }
 
 

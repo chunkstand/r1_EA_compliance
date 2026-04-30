@@ -137,6 +137,131 @@ class EAReviewTests(unittest.TestCase):
                     review_id="not-ready",
                 )
 
+    def test_package_search_requires_configured_package_terms(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="EA alternatives",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | EA alternatives | artifact abc123",
+                        text="An environmental assessment should describe alternatives.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-001": ["Alternatives"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Purpose and Need\n\nThe proposed action improves trail access.",
+            )
+            checklist = Path(tmp) / "checklist.json"
+            checklist.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "alternatives",
+                            "title": "Alternatives are described",
+                            "package_query": "alternatives no action proposed action",
+                            "package_terms": ["alternatives", "no action"],
+                            "source_query": "environmental assessment alternatives",
+                            "source_filters": {"document_role": "regulation"},
+                            "severity": "high",
+                        }
+                    ],
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_ea_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                checklist_path=checklist,
+                review_id="required-term-review",
+            )
+
+            report = json.loads(result.json_report_path.read_text(encoding="utf-8"))
+            alternatives = _finding(report, "alternatives")
+            self.assertEqual(alternatives["status"], "gap")
+            self.assertEqual(alternatives["package_evidence_status"], "not_found")
+            self.assertEqual(alternatives["source_library_evidence_status"], "found")
+
+    def test_package_search_does_not_match_required_term_substrings(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="Public involvement",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | Public involvement | artifact abc123",
+                        text="An environmental assessment may include public comment.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-001": ["Public involvement"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Project notes\n\nThe administrative commentary describes routing only.",
+            )
+            checklist = Path(tmp) / "checklist.json"
+            checklist.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "public_involvement",
+                            "title": "Public comment is described",
+                            "package_query": "public involvement scoping comment",
+                            "package_terms": ["comment"],
+                            "source_query": "public comment environmental assessment",
+                            "source_filters": {"document_role": "regulation"},
+                            "severity": "medium",
+                        }
+                    ],
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_ea_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                checklist_path=checklist,
+                review_id="substring-term-review",
+            )
+
+            report = json.loads(result.json_report_path.read_text(encoding="utf-8"))
+            finding = _finding(report, "public_involvement")
+            self.assertEqual(finding["status"], "gap")
+            self.assertEqual(finding["package_evidence_status"], "not_found")
+
     def test_ea_review_replaces_stale_outputs_for_fixed_review_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

@@ -40,11 +40,17 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.compliance_review_path.exists())
+            self.assertTrue(result.compliance_matrix_path.exists())
+            self.assertTrue(result.compliance_matrix_markdown_path.exists())
             self.assertTrue(result.compliance_validation_path.exists())
             self.assertTrue(result.finding_nodes_path.exists())
             self.assertTrue(result.finding_edges_path.exists())
             self.assertTrue(result.summary["reviewer_ready"])
             self.assertEqual(result.summary["finding_status_counts"], {"gap": 1, "pass": 1})
+            self.assertEqual(
+                result.summary["compliance_matrix_path"],
+                str(result.compliance_matrix_path),
+            )
 
             report = json.loads(result.compliance_review_path.read_text(encoding="utf-8"))
             purpose = _finding(report, "purpose_need")
@@ -60,6 +66,21 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(mitigation["source_library_evidence_citation"])
             self.assertIsNone(mitigation["package_evidence_citation"])
             self.assertGreaterEqual(mitigation["source_claim_link_count"], 1)
+
+            matrix = json.loads(result.compliance_matrix_path.read_text(encoding="utf-8"))
+            self.assertEqual(matrix["schema_version"], "compliance-matrix-v0")
+            self.assertEqual(matrix["summary"]["row_count"], 2)
+            matrix_rows = {row["rule_id"]: row for row in matrix["rows"]}
+            self.assertEqual(matrix_rows["purpose_need"]["status"], "pass")
+            self.assertTrue(matrix_rows["purpose_need"]["ea_package_citation"])
+            self.assertTrue(matrix_rows["purpose_need"]["source_library_citation"])
+            self.assertIn("R1EA-001", matrix_rows["purpose_need"]["applied_source_record_ids"])
+            self.assertEqual(matrix_rows["purpose_need"]["applied_source_document_roles"], ["regulation"])
+            self.assertTrue(matrix_rows["purpose_need"]["citation_requirements_met"])
+            self.assertEqual(matrix_rows["mitigation"]["failure_category"], "package_evidence_gap")
+            markdown = result.compliance_matrix_markdown_path.read_text(encoding="utf-8")
+            self.assertIn("# Compliance Matrix", markdown)
+            self.assertIn("purpose_need", markdown)
 
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
@@ -154,6 +175,14 @@ class ComplianceReviewTests(unittest.TestCase):
                         },
                         "expected_finding_status_counts": {"pass": 2},
                         "expected_unsupported_finding_ids": [],
+                        "expected_source_record_ids": {
+                            "purpose_need": ["R1EA-001"],
+                            "mitigation": ["R1EA-002"],
+                        },
+                        "expected_source_document_roles": {
+                            "purpose_need": ["regulation"],
+                            "mitigation": ["regulation"],
+                        },
                         "min_findings": 2,
                     },
                     {
@@ -167,6 +196,10 @@ class ComplianceReviewTests(unittest.TestCase):
                         },
                         "expected_finding_status_counts": {"gap": 1, "pass": 1},
                         "expected_unsupported_finding_ids": [],
+                        "expected_source_record_ids": {
+                            "purpose_need": ["R1EA-001"],
+                            "mitigation": ["R1EA-002"],
+                        },
                         "min_findings": 2,
                     },
                 ],
@@ -196,6 +229,11 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             self.assertTrue(cases["unit-package-gap"]["citation_coverage_supported"])
             self.assertTrue(cases["unit-package-gap"]["graph_coverage_supported"])
+            self.assertTrue(cases["unit-all-pass"]["expected_source_record_ids_match"])
+            self.assertTrue(cases["unit-all-pass"]["expected_source_document_roles_match"])
+            self.assertEqual(cases["unit-all-pass"]["source_record_mismatches"], [])
+            self.assertTrue(Path(cases["unit-all-pass"]["compliance_matrix_path"]).exists())
+            self.assertEqual(result.summary["failure_category_counts"], {})
 
     def test_compliance_review_eval_rejects_bad_filters(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -214,6 +252,31 @@ class ComplianceReviewTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "invalid filters"):
                 run_compliance_review_eval(
                     output_dir=Path(tmp) / "source_library",
+                    eval_file=eval_path,
+                )
+
+    def test_compliance_review_eval_rejects_invalid_expected_source_lists(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "bad-source-list",
+                        "package_text": "Purpose and Need",
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "gap",
+                        },
+                        "expected_source_record_ids": {"purpose_need": []},
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(ValueError, "non-empty lists"):
+                run_compliance_review_eval(
+                    output_dir=Path(tmp) / "source_library",
+                    rule_pack_path=rule_pack_path,
                     eval_file=eval_path,
                 )
 
@@ -303,6 +366,13 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(case["expected_package_evidence_match"])
             self.assertIn("expected_statuses_match", case["failure_reasons"])
             self.assertEqual(case["actual_statuses"]["mitigation"], "gap")
+            categories = {item["category"] for item in case["failure_taxonomy"]}
+            self.assertIn("rule_wording_issue", categories)
+            self.assertIn("package_evidence_search_miss", categories)
+            self.assertEqual(
+                result.summary["failure_category_counts"]["rule_wording_issue"],
+                1,
+            )
 
     def test_compliance_review_eval_replaces_stale_case_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -637,6 +707,9 @@ class ComplianceReviewTests(unittest.TestCase):
                 {"mixed": 1, "negative": 1, "positive": 1},
             )
             self.assertEqual(result.summary["failed_case_count"], 0)
+            self.assertEqual(result.summary["metrics"]["source_record_match_rate"], 1.0)
+            self.assertEqual(result.summary["metrics"]["source_document_role_match_rate"], 1.0)
+            self.assertEqual(result.summary["cases"][0]["source_record_mismatches"], [])
             phase_result = run_phase_aligned_eval(
                 output_dir=output_dir,
                 source_set_id=source_set_id,
@@ -874,6 +947,42 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["passed"])
             self.assertTrue(compliance_phase["reviewer_ready"])
             self.assertEqual(compliance_phase["details"]["rule_pack_id"], "unit-nepa-ea")
+            self.assertTrue(compliance_phase["details"]["matrix_exists"])
+            self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
+            self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
+
+    def test_phase_eval_rejects_missing_compliance_matrix(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="missing-matrix-review",
+            )
+            result.compliance_matrix_path.unlink()
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="missing-matrix-review",
+            )
+
+            self.assertFalse(phase_result.summary["reviewer_ready"])
+            compliance_phase = _phase(phase_result.summary, "compliance_review")
+            self.assertFalse(compliance_phase["passed"])
+            self.assertFalse(compliance_phase["reviewer_ready"])
+            self.assertFalse(compliance_phase["details"]["matrix_exists"])
+            self.assertIn(
+                "matrix_exists",
+                compliance_phase["details"]["failed_artifact_checks"],
+            )
 
     def test_phase_eval_rejects_stale_compliance_review_source_set(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1221,6 +1330,14 @@ def _write_gold_eval_file(directory: Path, profiles: list[str] | None = None) ->
             "rationale": f"Unit adjudication for {case['id']}.",
         }
         case["expected_unsupported_finding_ids"] = []
+        case["expected_source_record_ids"] = {
+            "purpose_need": ["R1EA-001"],
+            "mitigation": ["R1EA-002"],
+        }
+        case["expected_source_document_roles"] = {
+            "purpose_need": ["regulation"],
+            "mitigation": ["regulation"],
+        }
     path = directory / "gold-eval.json"
     path.write_text(
         json.dumps(

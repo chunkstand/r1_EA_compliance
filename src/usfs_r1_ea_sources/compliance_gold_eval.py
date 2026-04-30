@@ -142,6 +142,10 @@ def run_compliance_gold_eval(
         and bool(review_eval_summary and review_eval_summary.get("passed")),
         "checks": checks,
         "metrics": (review_eval_summary or {}).get("metrics", {}),
+        "failure_category_counts": (review_eval_summary or {}).get(
+            "failure_category_counts",
+            {},
+        ),
         "cases": [_gold_case_result(case, case_results) for case in cases],
     }
     _write_json(output_path, summary)
@@ -474,8 +478,17 @@ def _gold_case_result(case: dict, case_results: list[dict]) -> dict:
             "expected_statuses": {},
             "actual_statuses": {},
             "finding_status_counts": {},
+            "failure_taxonomy": [
+                {
+                    "category": "validation_gate_miss",
+                    "rule_ids": [],
+                    "checks": ["case_must_be_object"],
+                    "evidence": ["case_must_be_object"],
+                }
+            ],
             "review_dir": None,
             "package_path": None,
+            "compliance_matrix_path": None,
         }
     case_id = str(case.get("id") or "")
     result = next((item for item in case_results if item.get("id") == case_id), {})
@@ -492,8 +505,13 @@ def _gold_case_result(case: dict, case_results: list[dict]) -> dict:
         "expected_statuses": case.get("expected_statuses", {}),
         "actual_statuses": result.get("actual_statuses", {}),
         "finding_status_counts": result.get("finding_status_counts", {}),
+        "failure_taxonomy": result.get("failure_taxonomy", []),
+        "failure_category_counts": result.get("failure_category_counts", {}),
+        "source_record_mismatches": result.get("source_record_mismatches", []),
+        "source_document_role_mismatches": result.get("source_document_role_mismatches", []),
         "review_dir": result.get("review_dir"),
         "package_path": result.get("package_path"),
+        "compliance_matrix_path": result.get("compliance_matrix_path"),
     }
 
 

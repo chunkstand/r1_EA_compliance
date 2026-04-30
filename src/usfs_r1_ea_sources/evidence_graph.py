@@ -15,6 +15,7 @@ from .rule_claim_binding import default_rule_claim_links_dir
 
 
 GRAPH_SCHEMA_VERSION = "document-evidence-graph-v1"
+COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 DEFAULT_SQLITE_FILENAME = "evidence_graph.sqlite"
 DEFAULT_RETRIEVAL_INDEX_FILENAME = "evidence_index.sqlite"
 RETRIEVAL_BINDING_FIELDS = (
@@ -296,6 +297,7 @@ def run_phase_aligned_eval(
         review_dir / "compliance_validation.json" if review_dir is not None else None
     )
     compliance_review_path = review_dir / "compliance_review.json" if review_dir is not None else None
+    compliance_matrix_path = review_dir / "compliance_matrix.json" if review_dir is not None else None
 
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
@@ -324,6 +326,11 @@ def run_phase_aligned_eval(
     compliance_review = (
         _read_json(compliance_review_path)
         if compliance_review_path is not None and compliance_review_path.exists()
+        else None
+    )
+    compliance_matrix = (
+        _read_json(compliance_matrix_path)
+        if compliance_matrix_path is not None and compliance_matrix_path.exists()
         else None
     )
     compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
@@ -603,11 +610,32 @@ def run_phase_aligned_eval(
         compliance_validation_passed = bool(
             compliance_validation and compliance_validation.get("passed")
         )
+        matrix_summary = (compliance_matrix or {}).get("summary", {})
+        matrix_rule_pack = (compliance_matrix or {}).get("rule_pack", {})
+        compliance_matrix_exists = compliance_matrix is not None
+        matrix_checks = {
+            "matrix_exists": compliance_matrix_exists,
+            "matrix_schema_matches": (compliance_matrix or {}).get("schema_version")
+            == COMPLIANCE_MATRIX_SCHEMA_VERSION,
+            "matrix_review_id_matches": (compliance_matrix or {}).get("review_id")
+            == compliance_summary.get("review_id"),
+            "matrix_source_set_matches": (compliance_matrix or {}).get("source_set_id")
+            == compliance_source_set_id,
+            "matrix_rule_pack_matches": matrix_rule_pack.get("rule_pack_id")
+            == compliance_summary.get("rule_pack_id")
+            and matrix_rule_pack.get("version") == compliance_summary.get("rule_pack_version"),
+            "matrix_row_count_matches": matrix_summary.get("row_count")
+            == compliance_summary.get("finding_count"),
+            "matrix_status_counts_match": matrix_summary.get("status_counts")
+            == compliance_summary.get("finding_status_counts"),
+        }
+        compliance_matrix_passed = all(matrix_checks.values())
         compliance_phase_passed = (
             compliance_review_exists
             and compliance_validation_passed
             and source_set_matches
             and review_id_matches
+            and compliance_matrix_passed
         )
         phases.append(
             _phase(
@@ -622,7 +650,9 @@ def run_phase_aligned_eval(
                     "review_id": compliance_summary.get("review_id") or review_id,
                     "validation_path": str(compliance_validation_path),
                     "review_path": str(compliance_review_path),
+                    "matrix_path": str(compliance_matrix_path),
                     "review_exists": compliance_review_exists,
+                    "matrix_exists": compliance_matrix_exists,
                     "validation_passed": compliance_validation_passed,
                     "reviewer_ready": bool(compliance_summary.get("reviewer_ready")),
                     "expected_source_set_id": source_set_id,
@@ -630,6 +660,10 @@ def run_phase_aligned_eval(
                     "source_set_matches": source_set_matches,
                     "review_id_matches": review_id_matches,
                     "failed_validation_checks": _failed_check_names(compliance_validation),
+                    "failed_artifact_checks": sorted(
+                        name for name, passed in matrix_checks.items() if not passed
+                    ),
+                    **matrix_checks,
                     "rule_pack_id": compliance_summary.get("rule_pack_id"),
                     "rule_pack_version": compliance_summary.get("rule_pack_version"),
                     "finding_count": compliance_summary.get("finding_count", 0),

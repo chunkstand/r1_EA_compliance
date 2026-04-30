@@ -83,6 +83,8 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/review_report.md`
   - `source_library/reviews/<review_id>/compliance_validation.json`
   - `source_library/reviews/<review_id>/compliance_review.json`
+  - `source_library/reviews/<review_id>/compliance_matrix.json`
+  - `source_library/reviews/<review_id>/compliance_matrix.md`
   - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 - Compliance review eval outputs:
@@ -103,9 +105,9 @@ claims and entities with exact offsets and graph bindings. The `rule-claim-link`
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
 reviewer-ready retrieval evidence. The `compliance-review` command evaluates a versioned rule pack
-and emits a finding graph with source-claim support. The `compliance-gold-eval` command runs the
-seed adjudication promotion gate. Embeddings and expanded human adjudication over real EA packages
-remain downstream work.
+and emits a compliance matrix plus finding graph with source-claim support. The
+`compliance-gold-eval` command runs the 10-case adjudication promotion gate. Embeddings and expanded
+human adjudication over real EA packages remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -320,11 +322,13 @@ knowledge-base evidence for each item, and writes:
 Findings are deterministic `pass`, `gap`, `uncertain`, or `not_applicable` records. A `gap` means
 the source library supports the review requirement but no matching EA package evidence span was
 found. An `uncertain` item does not make a compliance claim.
+Package evidence search requires at least one configured package term to match; single-word package
+terms match whole tokens, while phrase terms match contiguous text.
 The command requires the source-library retrieval summary and validation to be reviewer-ready before
 running, and fixed review IDs replace prior package artifacts so stale package chunks cannot survive
 reruns.
 
-Run a versioned compliance rule pack and emit the finding graph:
+Run a versioned compliance rule pack and emit the compliance matrix and finding graph:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
@@ -338,6 +342,8 @@ writes:
 
 - `source_library/reviews/<review_id>/compliance_validation.json`
 - `source_library/reviews/<review_id>/compliance_review.json`
+- `source_library/reviews/<review_id>/compliance_matrix.json`
+- `source_library/reviews/<review_id>/compliance_matrix.md`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
 
@@ -348,6 +354,9 @@ the review, rule pack, rules, findings, evidence spans, source claims, and packa
 IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and hyphens.
 Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot silently broaden
 source retrieval.
+The compliance matrix is the reviewer-facing table: each row carries rule status, applicability
+basis, package citation, source-library citation, applied source record IDs, source document roles,
+source-claim IDs, limitations, and whether citation requirements were met.
 
 Run the final compliance review eval gate:
 
@@ -361,9 +370,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
 `compliance-review-eval` writes deterministic package fixtures from the eval file, runs the real
 `compliance-review` command for each case, and scores the generated findings. It asserts expected
 statuses for every rule in the rule pack, claim types, package evidence, source-library evidence,
-source-claim links, finding status counts, unsupported finding IDs, citation coverage, and
-finding-graph coverage. Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched
-status counts fail fast so typoed or incomplete fixtures cannot silently broaden scoring.
+source-claim links, expected source record IDs, expected source document roles, finding status
+counts, unsupported finding IDs, citation coverage, failure taxonomy, and finding-graph coverage.
+Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched status counts fail
+fast so typoed or incomplete fixtures cannot silently broaden scoring.
 
 Run the adjudicated gold eval promotion gate:
 
@@ -376,9 +386,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
 
 `compliance-gold-eval` reads a structured adjudication file, requires positive, mixed, and negative
 case profiles, verifies every case covers the active rule pack, then runs those cases through the
-real `compliance-review-eval` path. It emits `promotion_ready` only when adjudication checks and the
-underlying compliance-review eval both pass. Gold case IDs must be unique and safe for generated
-paths, and package fixture paths must stay under the gold file directory.
+real `compliance-review-eval` path. The current gold file contains 10 realistic adjudicated package
+profiles with expected status counts, applicable source rows, and source document classes. It emits
+`promotion_ready` only when adjudication checks and the underlying compliance-review eval both pass.
+Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
+the gold file directory.
 
 Run the seed retrieval eval gate:
 
@@ -487,7 +499,9 @@ When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.j
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
 rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` after a
 compliance review to include `compliance_review` as an additional phase gate. The compliance phase
-requires the review source set to match the evaluated source set.
+requires the review source set to match the evaluated source set and requires the review's
+`compliance_matrix.json` to exist with the expected schema version, review ID, source set, rule pack,
+row count, and status counts.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

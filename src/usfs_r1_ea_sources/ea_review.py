@@ -480,9 +480,14 @@ def _search_package_chunks(
     limit: int,
 ) -> dict:
     terms = _query_terms(query, required_terms)
+    evidence_terms = [term.strip().lower() for term in required_terms if term.strip()]
     scored = []
     for chunk in chunks:
-        score, matched_terms = _score_package_chunk(chunk, terms)
+        score, matched_terms = _score_package_chunk(
+            chunk,
+            terms,
+            evidence_terms=evidence_terms,
+        )
         if score <= 0:
             continue
         scored.append((score, chunk, matched_terms))
@@ -511,16 +516,20 @@ def _query_terms(query: str, required_terms: list[str]) -> list[str]:
     return sorted(set(terms), key=lambda value: (len(value.split()), value), reverse=True)
 
 
-def _score_package_chunk(chunk: dict, terms: list[str]) -> tuple[float, list[str]]:
+def _score_package_chunk(
+    chunk: dict,
+    terms: list[str],
+    *,
+    evidence_terms: list[str] | None = None,
+) -> tuple[float, list[str]]:
     text = " ".join([str(chunk.get("title") or ""), str(chunk.get("heading") or ""), chunk["text"]])
     lower = text.lower()
     token_set = set(_tokenize(text))
+    if evidence_terms and not _matches_any_term(lower, token_set, evidence_terms):
+        return 0.0, []
     matched = []
     for term in terms:
-        if " " in term:
-            if term in lower:
-                matched.append(term)
-        elif term in token_set or term in lower:
+        if _matches_term(lower, token_set, term):
             matched.append(term)
     if not matched:
         return 0.0, []
@@ -528,6 +537,16 @@ def _score_package_chunk(chunk: dict, terms: list[str]) -> tuple[float, list[str
     score = len(matched) / max(1, len(terms))
     score += phrase_hits * 0.2
     return score, matched
+
+
+def _matches_any_term(lower_text: str, token_set: set[str], terms: list[str]) -> bool:
+    return any(_matches_term(lower_text, token_set, term) for term in terms)
+
+
+def _matches_term(lower_text: str, token_set: set[str], term: str) -> bool:
+    if " " in term:
+        return term in lower_text
+    return term in token_set
 
 
 def _package_result(*, rank: int, score: float, chunk: dict, terms: list[str]) -> dict:

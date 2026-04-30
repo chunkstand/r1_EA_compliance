@@ -417,6 +417,8 @@ Each finding includes:
 A `gap` is allowed to have no package evidence span because the missing package evidence is the
 finding. It must still have source-library evidence. An `uncertain` finding does not make a
 compliance claim.
+Package evidence search requires at least one configured package term to match. Single-word package
+terms match whole tokens; phrase terms match contiguous text.
 
 `review_validation.json` records gate-facing checks for:
 
@@ -436,6 +438,8 @@ The `compliance-review` command writes the base EA review outputs plus:
 
 - `compliance_validation.json`
 - `compliance_review.json`
+- `compliance_matrix.json`
+- `compliance_matrix.md`
 - `finding_graph_nodes.jsonl`
 - `finding_graph_edges.jsonl`
 
@@ -510,6 +514,27 @@ Each compliance finding includes:
 - top package and source-library evidence results
 - limitations
 
+`compliance_matrix.json` has schema version `compliance-matrix-v0` and includes:
+
+- review ID, package path, source set, rule-pack summary, and matrix summary
+- status counts, claim row count, validation status, and reviewer-ready status
+- row columns for rule ID, title, status, applicability, requirement, package citation, source
+  citation, source claims, applied source records, and limitations
+- one row per compliance finding
+
+Each matrix row includes:
+
+- rule ID, rule title, question, requirement, severity, status, claim type, confidence, and rationale
+- applicability status and applicability basis, including source filters, package terms, source
+  query, applied source record IDs, and applied source document roles
+- package query, source query, EA package citation, compact EA evidence span, source-library
+  citation, and compact source evidence span
+- source-claim IDs, source-claim citations, source-claim count, citation-gate status, limitations,
+  and failure category when applicable
+
+`compliance_matrix.md` is a compact human-readable rendering of the same rows. The JSON matrix is
+the stable machine contract.
+
 `finding_graph_nodes.jsonl` contains:
 
 - `ComplianceRulePack`
@@ -568,7 +593,8 @@ Each eval case includes:
 - `expected_statuses`, mapping every rule-pack rule ID to `pass`, `gap`, `uncertain`, or
   `not_applicable`
 - optional expected claim types, package evidence, source evidence, source-claim links, status
-  counts, unsupported finding IDs, and graph coverage requirements
+  counts, expected source record IDs, expected source document roles, unsupported finding IDs, and
+  graph coverage requirements
 - optional filters over `rule_id`, `status`, or `claim_type`
 
 Unknown filters, empty filters, unsupported statuses, unsupported claim types, unsafe case IDs, and
@@ -581,11 +607,13 @@ rule count.
 - eval file, output path, rule pack, source set, top-k values, and creation timestamp
 - case count, passed count, failed count, and aggregate pass status
 - metrics for validation matching, reviewer-ready matching, status matching, claim-type matching,
-  package evidence matching, source evidence matching, source-claim link matching, citation
-  coverage, graph coverage, unsupported finding matching, and zero-finding rate
+  package evidence matching, source evidence matching, source-claim link matching, source-record
+  matching, source-document-role matching, citation coverage, graph coverage, unsupported finding
+  matching, and zero-finding rate
 - per-case generated review paths, expected and actual statuses, expected and actual claim types,
-  evidence mismatches, unsupported finding IDs, validation failed checks, compact finding summaries,
-  failure reasons, and pass/fail status
+  evidence mismatches, source-record mismatches, source-document-role mismatches, unsupported
+  finding IDs, validation failed checks, compact finding summaries, failure reasons, failure
+  taxonomy, compact reproduction paths, and pass/fail status
 
 ## Compliance Coverage Outputs
 
@@ -641,9 +669,11 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
 
 - gold eval ID, version, title, rule-pack ID, and rule-pack version
 - top-level adjudication metadata and promotion-gate intent
-- at least three cases with positive, mixed, and negative profiles
+- at least three cases with positive, mixed, and negative profiles; the current project gold file
+  contains ten adjudicated realistic profiles
 - per-case adjudication metadata, package fixture, expected statuses for every rule, expected
-  status counts, unsupported finding IDs, and minimum finding count
+  status counts, expected source record IDs, expected source document roles, unsupported finding
+  IDs, and minimum finding count
 - unique safe case IDs; package fixture paths must be relative child paths under the gold file
   directory when `package_path` is used instead of inline `package_text`
 
@@ -655,10 +685,11 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
   or missing-fixture problem
 - case count, adjudicated case count, passed/failed case counts, profile counts, and required
   profiles present
+- aggregate failure-category counts from the underlying compliance-review eval
 - `promotion_ready`, which is true only when adjudication checks and the underlying compliance-review
   eval both pass
 - per-case adjudication metadata, expected and actual statuses, finding counts, review paths,
-  failure reasons, and pass/fail status
+  matrix paths, failure taxonomy, failure reasons, and pass/fail status
 
 ## Derived Extraction Outputs
 
@@ -1120,7 +1151,9 @@ promotion phase with explicit failed-check details for stale source-set, rule-pa
 not-promotion-ready artifacts. When
 `--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
-the review source set to match the evaluated source set. The evidence-graph and claim-extraction
+the review source set to match the evaluated source set. The compliance-review phase also requires
+`compliance_matrix.json` to exist and match the review's schema version, review ID, source set, rule
+pack, row count, and status counts. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

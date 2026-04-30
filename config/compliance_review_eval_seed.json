@@ -15,6 +15,24 @@
       "pass": 7
     },
     "expected_unsupported_finding_ids": [],
+    "expected_source_record_ids": {
+      "purpose_need": ["R1EA-008"],
+      "alternatives": ["R1EA-013"],
+      "effects_analysis": ["R1EA-013"],
+      "integrated_compliance": ["R1EA-015"],
+      "public_involvement": ["R1EA-008"],
+      "fonsi_mitigation": ["R1EA-014"],
+      "mitigation_monitoring": ["R1EA-008"]
+    },
+    "expected_source_document_roles": {
+      "purpose_need": ["regulation"],
+      "alternatives": ["regulation"],
+      "effects_analysis": ["regulation"],
+      "integrated_compliance": ["regulation"],
+      "public_involvement": ["regulation"],
+      "fonsi_mitigation": ["regulation"],
+      "mitigation_monitoring": ["regulation"]
+    },
     "min_findings": 7
   },
   {
@@ -34,6 +52,24 @@
       "pass": 2
     },
     "expected_unsupported_finding_ids": [],
+    "expected_source_record_ids": {
+      "purpose_need": ["R1EA-008"],
+      "alternatives": ["R1EA-013"],
+      "effects_analysis": ["R1EA-013"],
+      "integrated_compliance": ["R1EA-015"],
+      "public_involvement": ["R1EA-008"],
+      "fonsi_mitigation": ["R1EA-014"],
+      "mitigation_monitoring": ["R1EA-008"]
+    },
+    "expected_source_document_roles": {
+      "purpose_need": ["regulation"],
+      "alternatives": ["regulation"],
+      "effects_analysis": ["regulation"],
+      "integrated_compliance": ["regulation"],
+      "public_involvement": ["regulation"],
+      "fonsi_mitigation": ["regulation"],
+      "mitigation_monitoring": ["regulation"]
+    },
     "min_findings": 7
   },
   {
@@ -52,6 +88,24 @@
       "gap": 7
     },
     "expected_unsupported_finding_ids": [],
+    "expected_source_record_ids": {
+      "purpose_need": ["R1EA-008"],
+      "alternatives": ["R1EA-013"],
+      "effects_analysis": ["R1EA-013"],
+      "integrated_compliance": ["R1EA-015"],
+      "public_involvement": ["R1EA-008"],
+      "fonsi_mitigation": ["R1EA-014"],
+      "mitigation_monitoring": ["R1EA-008"]
+    },
+    "expected_source_document_roles": {
+      "purpose_need": ["regulation"],
+      "alternatives": ["regulation"],
+      "effects_analysis": ["regulation"],
+      "integrated_compliance": ["regulation"],
+      "public_involvement": ["regulation"],
+      "fonsi_mitigation": ["regulation"],
+      "mitigation_monitoring": ["regulation"]
+    },
     "min_findings": 7
   }
 ]
