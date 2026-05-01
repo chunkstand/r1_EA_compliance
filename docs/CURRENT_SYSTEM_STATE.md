@@ -246,7 +246,9 @@ overlays, and binds resolved plan context to Custer Gallatin source-library reco
 requires the complete Custer Gallatin plan-review bundle in the retrieval index: planning page, Land
 Management Plan, Record of Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and
 Biological Opinion. Triggered ROD, FEIS, designated-area/allocation, and ESA cues are routed to the
-supporting records in addition to the primary LMP area/component evidence.
+supporting records in addition to the primary LMP area/component evidence. Supporting routes are
+trigger-gated and emit `trigger_evidence`, so broad EA section labels do not silently activate FEIS
+records and uppercase acronym triggers do not match ordinary lowercase words.
 
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
@@ -525,6 +527,7 @@ Custer Gallatin packages it extracts:
 - package evidence and source-library LMP evidence
 - triggered supporting plan evidence from the Custer Gallatin ROD, FEIS Volumes 1 and 2,
   Biological Assessment, and Biological Opinion
+- trigger evidence showing why each supporting plan record was applied
 - required source-record readiness for all seven Custer Gallatin plan/supporting records
 - unresolved mentions that need human reviewer resolution
 

@@ -475,6 +475,8 @@ resolution without re-extracting the package files.
 - resolved overlays
 - `supporting_plan_evidence`: triggered ROD, FEIS, designated-area/allocation, ESA Biological
   Assessment, and Biological Opinion evidence routes
+  - each route includes `trigger_terms` and `trigger_evidence` so reviewers can inspect why the
+    supporting plan record was applied
 - `source_record_readiness`: required Custer Gallatin source-record IDs, indexed chunk counts, and
   missing source IDs
 - package evidence snippets
@@ -495,7 +497,13 @@ area, management area, or overlay set `needs_reviewer_resolution` and are not re
 - required Custer Gallatin source records being indexed
 - plan-context entries carrying package evidence
 - plan-context entries carrying source-library plan evidence
-- triggered supporting plan-evidence routes carrying source-library evidence
+- triggered supporting plan-evidence routes carrying trigger evidence and source-library evidence
+
+Supporting plan routes are trigger-gated. Broad EA section labels such as `purpose and need` or
+`alternatives` can be captured as package context after a FEIS route is triggered, but they do not
+activate FEIS routing by themselves. Uppercase acronym triggers such as `ROD`, `FEIS`, `BA`, `BO`,
+and `ESA` require uppercase matches, preventing ordinary lowercase words from activating supporting
+plan records.
 
 `forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
 the context, validation, and package-cache paths; scope status; resolved area counts; unresolved

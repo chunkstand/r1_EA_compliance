@@ -130,8 +130,9 @@ reviewer-ready retrieval evidence. The `forest-plan-resolve` command extracts Cu
 forest-plan review context from an EA package, including project location signals, geographic areas,
 management areas, overlays, and source-library plan evidence. It also routes triggered package cues
 to the Custer Gallatin ROD, FEIS Volumes 1 and 2, Biological Assessment, and Biological Opinion so
-forest-plan reviews can apply the supporting plan record set, not only the primary LMP. The
-`compliance-review` command
+forest-plan reviews can apply the supporting plan record set, not only the primary LMP. Supporting
+routes are trigger-gated and report `trigger_evidence` so reviewers can see why a supporting record
+was applied. The `compliance-review` command
 identifies applicable
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
@@ -383,7 +384,9 @@ extracts ranger district, project-location, geographic-area, management-area, an
 For resolved Custer Gallatin packages, it records the expected Custer Gallatin plan source records
 and retrieves supporting source-library plan evidence from the primary Land Management Plan. It also
 routes triggered ROD, FEIS, designated-area/allocation, ESA Biological Assessment, and Biological
-Opinion cues to the required Custer Gallatin supporting records, then writes:
+Opinion cues to the required Custer Gallatin supporting records. Broad section labels such as
+`purpose and need` do not activate FEIS routing by themselves, and acronym triggers such as `ROD`,
+`FEIS`, `BA`, `BO`, and `ESA` require uppercase matches. The command then writes:
 
 - `source_library/reviews/<review_id>/forest_plan_context.json`
 - `source_library/reviews/<review_id>/forest_plan_context_validation.json`

@@ -100,6 +100,7 @@ class PlanEvidenceRoute:
     package_terms: tuple[str, ...]
     source_query: str
     source_terms: tuple[str, ...]
+    trigger_terms: tuple[str, ...] = ()
 
 
 SUPPORTING_PLAN_EVIDENCE_ROUTES = (
@@ -127,6 +128,14 @@ SUPPORTING_PLAN_EVIDENCE_ROUTES = (
             "plan approval",
             "objection resolution",
             "decision basis",
+        ),
+        trigger_terms=(
+            "Record of Decision",
+            "ROD",
+            "selected alternative",
+            "decision basis",
+            "objection resolution",
+            "plan approval",
         ),
     ),
     PlanEvidenceRoute(
@@ -159,6 +168,14 @@ SUPPORTING_PLAN_EVIDENCE_ROUTES = (
             "cumulative effects",
             "plan consistency",
         ),
+        trigger_terms=(
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiered to",
+            "tiers to",
+            "incorporates by reference",
+            "plan consistency",
+        ),
     ),
     PlanEvidenceRoute(
         route_id="support-feis-volume-2-designated-areas",
@@ -189,6 +206,18 @@ SUPPORTING_PLAN_EVIDENCE_ROUTES = (
             "backcountry areas",
             "recreation emphasis",
             "resource effects",
+        ),
+        trigger_terms=(
+            "designated area",
+            "designated areas",
+            "plan allocation",
+            "plan allocations",
+            "Inventoried Roadless Area",
+            "recommended wilderness",
+            "backcountry area",
+            "backcountry areas",
+            "recreation emphasis area",
+            "recreation emphasis areas",
         ),
     ),
     PlanEvidenceRoute(
@@ -223,6 +252,17 @@ SUPPORTING_PLAN_EVIDENCE_ROUTES = (
             "conservation measures",
             "action area",
         ),
+        trigger_terms=(
+            "Biological Assessment",
+            "BA",
+            "Endangered Species Act",
+            "ESA",
+            "threatened",
+            "endangered",
+            "proposed species",
+            "candidate species",
+            "critical habitat",
+        ),
     ),
     PlanEvidenceRoute(
         route_id="support-biological-opinion-esa",
@@ -253,6 +293,17 @@ SUPPORTING_PLAN_EVIDENCE_ROUTES = (
             "incidental take",
             "reinitiation",
             "terms and conditions",
+            "effects determinations",
+        ),
+        trigger_terms=(
+            "Biological Opinion",
+            "BO",
+            "Endangered Species Act",
+            "ESA",
+            "incidental take",
+            "reinitiation",
+            "terms and conditions",
+            "effects determination",
             "effects determinations",
         ),
     ),
@@ -830,6 +881,16 @@ def _supporting_plan_evidence(
 ) -> list[dict]:
     routed_evidence = []
     for route in routes:
+        trigger_terms = route.trigger_terms or route.package_terms
+        trigger_evidence = _mentions_for_terms(
+            package_chunks=package_chunks,
+            terms=trigger_terms,
+            name=route.name,
+            category=route.category,
+            entry_id=route.route_id,
+        )
+        if not trigger_evidence:
+            continue
         package_evidence = _mentions_for_route(package_chunks, route)
         if not package_evidence:
             continue
@@ -849,6 +910,8 @@ def _supporting_plan_evidence(
                 "source_record_id": route.source_record_id,
                 "source_role": route.source_role,
                 "package_terms": list(route.package_terms),
+                "trigger_terms": list(trigger_terms),
+                "trigger_evidence": trigger_evidence,
                 "source_query": route.source_query,
                 "source_terms": list(route.source_terms),
                 "package_evidence": package_evidence,
@@ -883,13 +946,11 @@ def _supporting_source_evidence(
 
 
 def _supporting_evidence_matches_route(text: str, route: PlanEvidenceRoute) -> bool:
-    lower = text.lower()
-    return any(_alias_pattern(term).search(lower) for term in route.source_terms)
+    return any(_term_found(text, term) for term in route.source_terms)
 
 
 def _evidence_text_matches_entry(text: str, entry: GazetteerEntry) -> bool:
-    lower = text.lower()
-    return any(_alias_pattern(term).search(lower) for term in entry.terms)
+    return any(_term_found(text, term) for term in entry.terms)
 
 
 def _mentions_for_entry(package_chunks: list[dict], entry: GazetteerEntry) -> list[dict]:
@@ -908,14 +969,31 @@ def _mentions_for_entry(package_chunks: list[dict], entry: GazetteerEntry) -> li
 
 
 def _mentions_for_route(package_chunks: list[dict], route: PlanEvidenceRoute) -> list[dict]:
+    return _mentions_for_terms(
+        package_chunks=package_chunks,
+        terms=route.package_terms,
+        name=route.name,
+        category=route.category,
+        entry_id=route.route_id,
+    )
+
+
+def _mentions_for_terms(
+    *,
+    package_chunks: list[dict],
+    terms: tuple[str, ...],
+    name: str,
+    category: str,
+    entry_id: str,
+) -> list[dict]:
     mentions = []
-    for alias in route.package_terms:
+    for alias in terms:
         mentions.extend(
             _mentions_for_alias(
                 package_chunks,
-                name=route.name,
-                category=route.category,
-                entry_id=route.route_id,
+                name=name,
+                category=category,
+                entry_id=entry_id,
                 alias=alias,
             )
         )
@@ -951,12 +1029,12 @@ def _mentions_for_alias(
     entry_id: str,
     alias: str,
 ) -> list[dict]:
-    pattern = _alias_pattern(alias)
+    pattern, case_sensitive = _compiled_alias_pattern(alias)
     mentions = []
     for chunk in package_chunks:
         text = str(chunk.get("text") or "")
-        lower = text.lower()
-        for match in pattern.finditer(lower):
+        search_text = text if case_sensitive else text.lower()
+        for match in pattern.finditer(search_text):
             mentions.append(
                 _package_evidence(
                     chunk=chunk,
@@ -973,8 +1051,28 @@ def _mentions_for_alias(
 
 
 def _alias_pattern(alias: str) -> re.Pattern[str]:
-    escaped = re.escape(alias.lower()).replace(r"\ ", r"\s+")
-    return re.compile(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])")
+    pattern, _ = _compiled_alias_pattern(alias)
+    return pattern
+
+
+def _compiled_alias_pattern(alias: str) -> tuple[re.Pattern[str], bool]:
+    case_sensitive = _is_case_sensitive_alias(alias)
+    pattern_text = alias if case_sensitive else alias.lower()
+    escaped = re.escape(pattern_text).replace(r"\ ", r"\s+")
+    return re.compile(rf"(?<![A-Za-z0-9]){escaped}(?![A-Za-z0-9])"), case_sensitive
+
+
+def _term_found(text: str, term: str) -> bool:
+    pattern, case_sensitive = _compiled_alias_pattern(term)
+    search_text = text if case_sensitive else text.lower()
+    return bool(pattern.search(search_text))
+
+
+def _is_case_sensitive_alias(alias: str) -> bool:
+    compact = re.sub(r"[^A-Za-z0-9]", "", alias)
+    if len(compact) < 2 or not any(char.isalpha() for char in compact):
+        return False
+    return compact.upper() == compact and any(char.isupper() for char in alias)
 
 
 def _package_evidence(
@@ -1215,12 +1313,17 @@ def _check_resolved_entries_have_plan_source_evidence(context: dict) -> dict:
 def _check_triggered_supporting_plan_evidence_has_source_evidence(context: dict) -> dict:
     failures = []
     for entry in context.get("supporting_plan_evidence", []):
-        if not entry.get("package_evidence") or not entry.get("plan_source_evidence"):
+        if (
+            not entry.get("trigger_evidence")
+            or not entry.get("package_evidence")
+            or not entry.get("plan_source_evidence")
+        ):
             failures.append(
                 {
                     "route_id": entry.get("route_id"),
                     "name": entry.get("name"),
                     "source_record_id": entry.get("source_record_id"),
+                    "trigger_evidence_count": len(entry.get("trigger_evidence", [])),
                     "package_evidence_count": len(entry.get("package_evidence", [])),
                     "plan_source_evidence_count": len(entry.get("plan_source_evidence", [])),
                 }

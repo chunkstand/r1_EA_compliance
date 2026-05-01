@@ -168,7 +168,73 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertIn("R1PLAN-custer-gallatin-nf-05", supporting_source_ids)
             for entry in context["supporting_plan_evidence"]:
                 self.assertEqual(entry["resolution_status"], "resolved")
+                self.assertTrue(entry["trigger_evidence"])
                 self.assertTrue(entry["package_evidence"])
+                self.assertTrue(entry["plan_source_evidence"])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_broad_section_labels_and_lowercase_acronyms_do_not_trigger_supporting_routes(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The EA purpose and need and alternatives sections describe effects.",
+                        "A fishing rod was found near the trail and ba and bo are field codes.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-no-broad-trigger",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+
+    def test_uppercase_acronyms_trigger_supporting_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The ROD and FEIS are incorporated by reference.",
+                        "ESA consultation includes BA and BO records.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-uppercase-triggers",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            supporting_source_ids = {
+                entry["source_record_id"] for entry in context["supporting_plan_evidence"]
+            }
+            self.assertIn("R1PLAN-custer-gallatin-nf-03", supporting_source_ids)
+            self.assertIn("R1PLAN-custer-gallatin-nf-04", supporting_source_ids)
+            self.assertIn("R1PLAN-custer-gallatin-nf-06", supporting_source_ids)
+            self.assertIn("R1PLAN-custer-gallatin-nf-07", supporting_source_ids)
+            for entry in context["supporting_plan_evidence"]:
+                self.assertTrue(entry["trigger_evidence"])
                 self.assertTrue(entry["plan_source_evidence"])
             self.assertTrue(result.summary["reviewer_ready"])
 
