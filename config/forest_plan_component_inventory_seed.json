@@ -1,0 +1,184 @@
+{
+  "schema_version": "forest-plan-component-inventory-v0",
+  "inventory_id": "custer-gallatin-east-crazies-components-v0",
+  "forest_unit_id": "custer-gallatin-nf",
+  "plan_version": "2022",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "description": "Initial Custer Gallatin component inventory for East Crazies-relevant Crazy Mountains Backcountry Area plan components.",
+  "components": [
+    {
+      "component_id": "cg-lmp-2022-cmbca-dc-01",
+      "forest_unit_id": "custer-gallatin-nf",
+      "plan_version": "2022",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "component_type": "desired_condition",
+      "section_id": "chapter-3-bridger-bangtail-crazy-cmbca",
+      "section_heading": "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
+      "page": null,
+      "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "component_text": "Desired Conditions (BC-DC-CMBCA) 01 Quiet, nonmotorized recreation opportunities predominate.",
+      "geographic_area_ids": [
+        "geo-bridger-bangtail-crazy"
+      ],
+      "management_area_ids": [
+        "mgmt-crazy-mountains-bca"
+      ],
+      "overlay_ids": [],
+      "resource_topics": [
+        "recreation",
+        "backcountry area"
+      ],
+      "activity_tags": [
+        "nonmotorized recreation"
+      ],
+      "package_evidence_terms": [
+        "nonmotorized recreation",
+        "quiet recreation"
+      ],
+      "source_chunk_ids": [
+        "chunk:a32ef66c5d1d24788b5bdef42958de03"
+      ],
+      "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+      "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788",
+      "provenance": {
+        "entity": {
+          "type": "forest_plan_component",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "source_chunk_ids": [
+            "chunk:a32ef66c5d1d24788b5bdef42958de03"
+          ],
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788"
+        },
+        "activity": {
+          "type": "component_inventory_seed",
+          "source": "source_library derived Custer Gallatin LMP chunk",
+          "created_at": "2026-05-01T00:00:00Z"
+        },
+        "agent": {
+          "type": "deterministic_config",
+          "name": "config/forest_plan_component_inventory_seed.json",
+          "version": "forest-plan-component-inventory-v0"
+        }
+      }
+    },
+    {
+      "component_id": "cg-lmp-2022-cmbca-std-01",
+      "forest_unit_id": "custer-gallatin-nf",
+      "plan_version": "2022",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "component_type": "standard",
+      "section_id": "chapter-3-bridger-bangtail-crazy-cmbca",
+      "section_heading": "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
+      "page": null,
+      "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "component_text": "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads shall not be allowed.",
+      "geographic_area_ids": [
+        "geo-bridger-bangtail-crazy"
+      ],
+      "management_area_ids": [
+        "mgmt-crazy-mountains-bca"
+      ],
+      "overlay_ids": [],
+      "resource_topics": [
+        "roads",
+        "backcountry area"
+      ],
+      "activity_tags": [
+        "new roads"
+      ],
+      "package_evidence_terms": [
+        "new permanent or temporary roads",
+        "temporary roads",
+        "permanent roads"
+      ],
+      "source_chunk_ids": [
+        "chunk:a32ef66c5d1d24788b5bdef42958de03"
+      ],
+      "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+      "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788",
+      "provenance": {
+        "entity": {
+          "type": "forest_plan_component",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "source_chunk_ids": [
+            "chunk:a32ef66c5d1d24788b5bdef42958de03"
+          ],
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788"
+        },
+        "activity": {
+          "type": "component_inventory_seed",
+          "source": "source_library derived Custer Gallatin LMP chunk",
+          "created_at": "2026-05-01T00:00:00Z"
+        },
+        "agent": {
+          "type": "deterministic_config",
+          "name": "config/forest_plan_component_inventory_seed.json",
+          "version": "forest-plan-component-inventory-v0"
+        }
+      }
+    },
+    {
+      "component_id": "cg-lmp-2022-cmbca-suit-01",
+      "forest_unit_id": "custer-gallatin-nf",
+      "plan_version": "2022",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "component_type": "suitability",
+      "section_id": "chapter-3-bridger-bangtail-crazy-cmbca",
+      "section_heading": "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
+      "page": null,
+      "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "component_text": "Suitability (BC-SUIT-CMBCA) 01 The backcountry area is not suitable for motorized transport. The backcountry area is not suitable for mechanized transport, except use of game carts.",
+      "geographic_area_ids": [
+        "geo-bridger-bangtail-crazy"
+      ],
+      "management_area_ids": [
+        "mgmt-crazy-mountains-bca"
+      ],
+      "overlay_ids": [],
+      "resource_topics": [
+        "transport",
+        "backcountry area"
+      ],
+      "activity_tags": [
+        "motorized transport",
+        "mechanized transport"
+      ],
+      "package_evidence_terms": [
+        "motorized transport",
+        "mechanized transport",
+        "game carts"
+      ],
+      "source_chunk_ids": [
+        "chunk:a32ef66c5d1d24788b5bdef42958de03"
+      ],
+      "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+      "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788",
+      "provenance": {
+        "entity": {
+          "type": "forest_plan_component",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "source_chunk_ids": [
+            "chunk:a32ef66c5d1d24788b5bdef42958de03"
+          ],
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "e1daef42827cb9481ba8625ccc01d79e0a7ac25539c7cea21c22e598064e5788"
+        },
+        "activity": {
+          "type": "component_inventory_seed",
+          "source": "source_library derived Custer Gallatin LMP chunk",
+          "created_at": "2026-05-01T00:00:00Z"
+        },
+        "agent": {
+          "type": "deterministic_config",
+          "name": "config/forest_plan_component_inventory_seed.json",
+          "version": "forest-plan-component-inventory-v0"
+        }
+      }
+    }
+  ]
+}

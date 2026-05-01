@@ -15,6 +15,8 @@ from .ea_review import _load_package_cache
 from .ea_review import _source_set_id_from_catalog
 from .ea_review import _source_set_id_from_index
 from .ea_review import _utc_now
+from .forest_plan_components import DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH
+from .forest_plan_components import run_forest_plan_component_evaluation
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import ForestPlanProfile
 from .forest_plan_profiles import ForestPlanProfileCollection
@@ -42,6 +44,9 @@ class ForestPlanResolverResult:
     validation_path: Path
     summary_path: Path
     summary: dict
+    component_findings_path: Path | None = None
+    component_markdown_path: Path | None = None
+    component_reviewer_resolution_queue_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -237,6 +242,7 @@ def run_forest_plan_resolver(
     docling_ocr: bool = False,
     docling_timeout_seconds: float | None = 120.0,
     reuse_package_cache: bool = False,
+    component_inventory_path: Path | None = None,
 ) -> ForestPlanResolverResult:
     """Resolve forest-plan context from a local EA package."""
 
@@ -262,12 +268,18 @@ def run_forest_plan_resolver(
     context_path = review_dir / "forest_plan_context.json"
     validation_path = review_dir / "forest_plan_context_validation.json"
     summary_path = review_dir / "forest_plan_context_summary.json"
+    component_findings_output_path = review_dir / "forest_plan_component_findings.json"
+    component_markdown_output_path = review_dir / "forest_plan_component_findings.md"
+    component_queue_output_path = review_dir / "forest_plan_reviewer_resolution_queue.json"
 
     _prepare_outputs(
         package_dir=package_dir,
         context_path=context_path,
         validation_path=validation_path,
         summary_path=summary_path,
+        component_findings_path=component_findings_output_path,
+        component_markdown_path=component_markdown_output_path,
+        component_queue_path=component_queue_output_path,
         preserve_package_cache=reuse_package_cache,
     )
 
@@ -343,6 +355,32 @@ def run_forest_plan_resolver(
         validation,
         resolver_profile=resolver_profile,
     )
+    component_evaluation_summary = None
+    component_findings_path = None
+    component_markdown_path = None
+    component_queue_path = None
+    if _is_profile_scope(context, resolver_profile):
+        resolved_component_inventory_path = _resolve_component_inventory_path(
+            component_inventory_path=component_inventory_path,
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        component_result = run_forest_plan_component_evaluation(
+            review_id=review_id,
+            review_dir=review_dir,
+            context=context,
+            package_chunks=package_chunks,
+            component_inventory_path=resolved_component_inventory_path,
+            forest_unit_id=resolver_profile.profile.forest_unit_id,
+            source_set_id=source_set_id,
+            index_path=Path(index_path) if index_path else None,
+            package_top_k=source_top_k,
+            source_top_k=source_top_k,
+        )
+        component_evaluation_summary = component_result.summary
+        component_findings_path = component_result.findings_path
+        component_markdown_path = component_result.markdown_path
+        component_queue_path = component_result.reviewer_resolution_queue_path
     summary = _summary(
         context=context,
         validation=validation,
@@ -352,6 +390,7 @@ def run_forest_plan_resolver(
         validation_path=validation_path,
         summary_path=summary_path,
         retrieval_readiness=retrieval_readiness,
+        component_evaluation_summary=component_evaluation_summary,
     )
 
     _write_json(context_path, context)
@@ -366,7 +405,31 @@ def run_forest_plan_resolver(
         validation_path=validation_path,
         summary_path=summary_path,
         summary=summary,
+        component_findings_path=component_findings_path,
+        component_markdown_path=component_markdown_path,
+        component_reviewer_resolution_queue_path=component_queue_path,
     )
+
+
+def _resolve_component_inventory_path(
+    *,
+    component_inventory_path: Path | None,
+    output_dir: Path,
+    source_set_id: str | None,
+) -> Path:
+    if component_inventory_path is not None:
+        return Path(component_inventory_path)
+    if source_set_id:
+        source_set_inventory_path = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "forest_plan_components"
+            / "component_inventory.json"
+        )
+        if source_set_inventory_path.exists():
+            return source_set_inventory_path
+    return DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH
 
 
 def _prepare_outputs(
@@ -375,12 +438,23 @@ def _prepare_outputs(
     context_path: Path,
     validation_path: Path,
     summary_path: Path,
+    component_findings_path: Path | None,
+    component_markdown_path: Path | None,
+    component_queue_path: Path | None,
     preserve_package_cache: bool,
 ) -> None:
     if package_dir.exists() and not preserve_package_cache:
         shutil.rmtree(package_dir)
-    for path in (context_path, validation_path, summary_path):
-        path.unlink(missing_ok=True)
+    for path in (
+        context_path,
+        validation_path,
+        summary_path,
+        component_findings_path,
+        component_markdown_path,
+        component_queue_path,
+    ):
+        if path is not None:
+            path.unlink(missing_ok=True)
 
 
 def _resolve_scope(
@@ -1116,11 +1190,12 @@ def _summary(
     validation_path: Path,
     summary_path: Path,
     retrieval_readiness: dict | None,
+    component_evaluation_summary: dict | None = None,
 ) -> dict:
     failed_package_records = [
         record for record in package_manifest if record.get("status") != "extracted"
     ]
-    return {
+    summary = {
         "schema_version": "forest-plan-context-summary-v0",
         "review_id": context["review_id"],
         "scope_status": context["scope_status"],
@@ -1143,6 +1218,12 @@ def _summary(
         "reviewer_ready": validation["passed"] and not context["needs_reviewer_resolution"],
         "retrieval_readiness": retrieval_readiness,
     }
+    if component_evaluation_summary is not None:
+        summary["component_evaluation"] = component_evaluation_summary
+        summary["reviewer_ready"] = summary["reviewer_ready"] and bool(
+            component_evaluation_summary.get("validation_passed")
+        )
+    return summary
 
 
 def _retrieval_readiness_report(

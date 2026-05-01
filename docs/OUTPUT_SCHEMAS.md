@@ -442,6 +442,10 @@ The `forest-plan-resolve` command writes:
 - `forest_plan_context.json`
 - `forest_plan_context_validation.json`
 - `forest_plan_context_summary.json`
+- for packages resolved to the selected forest-plan profile:
+  - `forest_plan_component_findings.json`
+  - `forest_plan_component_findings.md`
+  - `forest_plan_reviewer_resolution_queue.json`
 
 `forest-plan-resolve` reads:
 
@@ -511,7 +515,97 @@ plan records.
 `forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
 the context, validation, and package-cache paths; scope status; resolved area counts; unresolved
 mention count; supporting plan-evidence route count; `needs_reviewer_resolution`; retrieval
-readiness; and `reviewer_ready`.
+readiness; and `reviewer_ready`. For packages resolved to the selected forest-plan profile, it also
+includes a `component_evaluation` summary with component counts, finding status counts,
+reviewer-resolution counts, provenance-complete counts, validation status, and component-evaluator
+reviewer readiness.
+
+## Forest Plan Component Evaluation Outputs
+
+Path: `source_library/reviews/<review_id>/`
+
+For packages resolved to the selected forest-plan profile, `forest-plan-resolve` runs the forest-plan
+component evaluator after context resolution. By default, it reads the source-set component inventory
+at `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json` when
+present and falls back to `config/forest_plan_component_inventory_seed.json`;
+`--forest-plan-component-inventory-path <path>` overrides that inventory path. The evaluator reads a
+component inventory with schema version `forest-plan-component-inventory-v0`, filters it to the
+selected forest-plan profile, checks that each component belongs to the active source set, retrieves
+current plan-source evidence from the local retrieval index, searches the EA package chunks for
+component-specific evidence terms, and writes structured findings plus reviewer-resolution work
+items.
+
+The component inventory is data, not runtime branching. The seed inventory at
+`config/forest_plan_component_inventory_seed.json` currently covers the East Crazies-relevant Crazy
+Mountains Backcountry Area components from the 2022 Custer Gallatin Land Management Plan. Each
+component includes:
+
+- `component_id`
+- `forest_unit_id`
+- `plan_version`
+- `source_set_id`
+- `source_record_id`
+- `component_type`: one of `desired_condition`, `goal`, `guideline`, `monitoring`, `objective`,
+  `plan_amendment`, `standard`, or `suitability`
+- `section_id`
+- `section_heading`
+- `page`
+- `citation_label`
+- `component_text`
+- `geographic_area_ids`
+- `management_area_ids`
+- `overlay_ids`
+- `resource_topics`
+- `activity_tags`
+- `package_evidence_terms`
+- `source_chunk_ids`
+- `artifact_sha256`
+- `content_sha256`
+- `provenance` with non-empty `entity`, `activity`, and `agent` objects
+
+`forest_plan_component_findings.json` has schema version `forest-plan-component-findings-v0` and
+includes:
+
+- review ID, source set, component inventory path, summary, validation, component records, and
+  findings
+- one finding per selected component
+- finding status: `supported`, `partial`, `gap`, `not_applicable`, or
+  `needs_reviewer_resolution`
+- applicability status: `applicable`, `candidate`, `not_applicable`, or
+  `needs_reviewer_resolution`
+- applicability basis with source-set match status, matched context IDs, component context IDs,
+  package query, and package evidence terms
+- plan-source evidence from the current retrieval index
+- EA package evidence from package chunks
+- rationale
+- embedded reviewer-resolution items
+- W3C PROV-style finding provenance with `entity`, `activity`, and `agent`
+
+The evaluator is fail-closed for source-set drift. If a component inventory points to a different
+`source_set_id` than the active review, component findings become `needs_reviewer_resolution`, the
+reviewer-resolution queue receives refresh items, and the component validation check
+`component_source_sets_match_review_source_set` fails.
+
+Validation embedded in `forest_plan_component_findings.json` records gate-facing checks for:
+
+- component inventory presence
+- component source-set alignment with the active review source set
+- component provenance completeness
+- valid finding and applicability statuses
+- `supported` and `partial` findings having both package evidence and plan-source evidence
+- `gap` findings having plan-source evidence
+- finding provenance completeness
+- reviewer-resolution queue coverage for `gap`, `partial`, and `needs_reviewer_resolution`
+  findings
+
+`forest_plan_reviewer_resolution_queue.json` has schema version
+`forest-plan-reviewer-resolution-queue-v0` and includes review ID, source set, item count, and
+resolution items. Queue items identify the finding, component, reason, severity, message, source-set
+IDs, status fields, and provenance. Missing package evidence, missing current plan evidence, and
+component source-set drift are represented as reviewer work rather than hidden passes.
+
+`forest_plan_component_findings.md` is a compact human-readable rendering generated from the JSON
+findings. The JSON findings and queue remain the stable machine contracts.
 
 ## Compliance Review Outputs
 

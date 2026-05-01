@@ -434,6 +434,14 @@ def build_parser() -> argparse.ArgumentParser:
     forest_plan_resolve.add_argument("--chunk-max-chars", type=int, default=1800)
     forest_plan_resolve.add_argument("--chunk-overlap-chars", type=int, default=200)
     forest_plan_resolve.add_argument(
+        "--forest-plan-component-inventory-path",
+        type=Path,
+        help=(
+            "Override the forest-plan component inventory JSON. By default, forest-plan-resolve "
+            "runs component evaluation for in-scope packages from the source-set inventory or seed inventory."
+        ),
+    )
+    forest_plan_resolve.add_argument(
         "--reuse-package-cache",
         action="store_true",
         help=(
@@ -755,6 +763,7 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
             reuse_package_cache=args.reuse_package_cache,
+            component_inventory_path=args.forest_plan_component_inventory_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1

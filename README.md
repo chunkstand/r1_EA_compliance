@@ -170,6 +170,13 @@ claim, entity, authority, and claim-evidence-span nodes. The rule-claim binding 
 compliance rules to validated claim nodes without generating legal conclusions. No graph layer stores
 embeddings or trusted model-generated compliance conclusions.
 
+Forest-plan component evaluation is a default part of `forest-plan-resolve` for packages resolved to
+the selected forest-plan profile. The resolver uses a source-set component inventory when present and
+falls back to `config/forest_plan_component_inventory_seed.json`; `--forest-plan-component-inventory-path`
+only overrides the inventory path. The evaluator writes component findings and a reviewer-resolution
+queue; supported/partial findings require both package evidence and current plan-source evidence,
+while source-set drift and missing package evidence become reviewer work.
+
 ## Common Commands
 
 Dry-run workbook parsing without network access:

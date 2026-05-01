@@ -258,6 +258,18 @@ Gallatin ROD route unless the package explicitly references `Record of Decision`
 `plan consistency` labels do not activate FEIS routing unless an explicit FEIS, tiering, or
 incorporation cue is present.
 
+Forest Plan Component Evaluation V0 is implemented as a default `forest-plan-resolve` stage for
+packages resolved to the selected forest-plan profile. It reads a source-set component inventory when
+present, falls back to the seed inventory, validates component provenance and source-set alignment,
+retrieves current plan evidence from the local retrieval index, searches package chunks for component
+evidence terms, and writes
+`forest_plan_component_findings.json`, `forest_plan_component_findings.md`, and
+`forest_plan_reviewer_resolution_queue.json`. The seed inventory
+`config/forest_plan_component_inventory_seed.json` covers the first East Crazies-relevant Custer
+Gallatin Crazy Mountains Backcountry Area components. Supported and partial findings require both
+plan-source evidence and package evidence; gaps and stale source-set IDs become reviewer-resolution
+items instead of legal conclusions.
+
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
 authorities from `config/compliance_rule_pack_nepa_ea_v0.json`, evaluates the EA against each
@@ -313,6 +325,11 @@ Current state:
   Custer Gallatin plan/supporting records in retrieval, resolves management areas from the EA
   package, and adds `supporting_plan_evidence` routes for ROD, FEIS Volumes 1 and 2, Biological
   Assessment, and Biological Opinion triggers.
+- Forest-plan component evaluation writes component findings and a reviewer-resolution queue from a
+  versioned inventory for packages resolved to the selected forest-plan profile. The current seed
+  inventory is intentionally narrow and focused on Crazy Mountains Backcountry Area components for
+  the East Crazies proving case; broader component extraction/inventory build commands remain
+  downstream work.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
   `compliance_matrix.pdf`,

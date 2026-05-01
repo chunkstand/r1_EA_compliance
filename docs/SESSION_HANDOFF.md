@@ -4,11 +4,22 @@ Date: 2026-05-01
 
 ## Current State
 
-The forest-plan review evaluator is in the profile-driven resolver milestone. The worktree was clean
-before this handoff was written.
+The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
+to the selected forest-plan profile. The worktree was clean before this milestone began; these
+changes remain unstaged and uncommitted until the operator asks for commit work.
 
 Current session update:
 
+- Forest-plan component evaluation V0 has been added as a required `forest-plan-resolve` stage for
+  packages resolved to the selected forest-plan profile; `--forest-plan-component-inventory-path`
+  only overrides the inventory path.
+- New component outputs are `forest_plan_component_findings.json`,
+  `forest_plan_component_findings.md`, and `forest_plan_reviewer_resolution_queue.json`.
+- `config/forest_plan_component_inventory_seed.json` contains the first narrow Custer Gallatin seed
+  inventory for East Crazies-relevant Crazy Mountains Backcountry Area components.
+- Component validation now fails closed on source-set drift, requires supported/partial findings to
+  carry both package and plan-source evidence, and turns missing package evidence into
+  reviewer-resolution queue items.
 - Sequence 3 forest-plan improvement work has started with a durable East Crazies fixture under
   `tests/fixtures/forest_plan_evaluator/east_crazies_profile_driven.txt`.
 - The fixture proves Custer Gallatin scope, Bridger/Bangtail/Crazy Mountains Geographic Area, Crazy
@@ -36,6 +47,10 @@ Implemented behavior:
 - `config/forest_plan_profiles.json` contains the first forest-plan profile for Custer Gallatin.
 - `forest-plan-resolve` reads forest names, ambiguous terms, required source records, area terms,
   overlays, and supporting evidence routes from the selected profile.
+- `forest-plan-resolve` writes component findings, a Markdown rendering, and a reviewer-resolution
+  queue from a data inventory for packages resolved to the selected forest-plan profile.
+- `config/forest_plan_component_inventory_seed.json` is the current component inventory seed for
+  the Crazy Mountains Backcountry Area proving slice.
 - Default Custer Gallatin V0 output compatibility is preserved: `scope_status` still uses
   `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`.
 - `--forest-unit-id` and `--forest-plan-profiles-path` allow the resolver to run against another
@@ -47,21 +62,22 @@ Implemented behavior:
 Latest verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest
 PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
+PYTHONPATH=src uv run --extra dev pytest
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
+python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
 git diff --check
 ```
 
-Results: full test suite passed with `165 passed`; focused resolver/profile tests passed with
-`27 passed`; lint, compile, JSON validation, and whitespace checks passed.
+Results: full test suite passed with `167 passed`; focused resolver/profile tests passed with
+`29 passed`; lint, compile, JSON validation, and whitespace checks passed.
 
 ## Next Sequence
 
-Sequence 3 continuation: run the improved forest-plan resolver against the local East
-Crazies/Custer Gallatin demo package and decide whether the V1 demo uses only
+Sequence 4 continuation: run the improved forest-plan resolver plus the component inventory against
+the local East Crazies/Custer Gallatin demo package and decide whether the V1 demo uses
 `forest-plan-resolve` plus `ea-review`, or also includes `compliance-review`.
 
 Goal:
@@ -81,6 +97,8 @@ Relevant files:
 - `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md`
 - `docs/FOREST_PLAN_COMPONENT_EVALUATION_MILESTONE_PLAN.md`
 - `config/forest_plan_profiles.json`
+- `config/forest_plan_component_inventory_seed.json`
+- `src/usfs_r1_ea_sources/forest_plan_components.py`
 - `src/usfs_r1_ea_sources/forest_plan_resolver.py`
 - `tests/test_forest_plan_resolver.py`
 - Optional new fixture file under `tests/fixtures/` if a durable text fixture is cleaner than an
@@ -96,6 +114,9 @@ Required eval signal:
   evidence.
 - ROD evidence does not trigger from generic decision labels unless explicit ROD terms are present.
 - Reviewer-ready status remains citation/evidence gated.
+- Component findings are produced from the inventory path with plan-source evidence, package
+  evidence where present, and reviewer-resolution items for gaps.
+- Stale component inventory source-set IDs fail closed.
 
 Required tests:
 
@@ -103,13 +124,15 @@ Required tests:
 PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
+python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
 git diff --check
 ```
 
 Run the full suite before committing if resolver behavior changes beyond fixture construction.
 
 Commit policy:
-Stage only the Sequence 3 files, verify, and commit before starting Sequence 4.
+Stage only the component-evaluation milestone files, verify, and commit only when the operator asks
+for a commit.
 
 Stop conditions:
 
@@ -120,7 +143,7 @@ Stop conditions:
 - A finding or reviewer-ready status would pass without both package evidence and source-library
   evidence.
 
-Expert alignment check for Sequence 3:
+Expert alignment check for Sequence 4:
 
 - Scott Vandegrift: readiness and reuse should be explicit; avoid unnecessary full-corpus rebuilds.
 - Chuck Nicholson: the fixture should look like practitioner QA/QC, with transparent criteria and

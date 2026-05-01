@@ -54,6 +54,9 @@ class ForestPlanResolverTests(unittest.TestCase):
                 _names(context["management_areas"]),
                 ["Crazy Mountains Backcountry Area"],
             )
+            self.assertIsNotNone(result.component_findings_path)
+            self.assertTrue(result.component_findings_path.exists())
+            self.assertTrue(result.summary["component_evaluation"]["validation_passed"])
 
             supporting_by_route = {
                 entry["route_id"]: entry for entry in context["supporting_plan_evidence"]
@@ -73,6 +76,106 @@ class ForestPlanResolverTests(unittest.TestCase):
                 self.assertTrue(entry["trigger_evidence"])
                 self.assertTrue(entry["package_evidence"])
                 self.assertTrue(entry["plan_source_evidence"])
+
+    def test_component_inventory_path_writes_evidence_backed_findings_and_queue(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "The EA says quiet nonmotorized recreation opportunities predominate.",
+                        "No new permanent or temporary roads are proposed.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-findings",
+                component_inventory_path=inventory_path,
+            )
+
+            self.assertIsNotNone(result.component_findings_path)
+            self.assertIsNotNone(result.component_markdown_path)
+            self.assertIsNotNone(result.component_reviewer_resolution_queue_path)
+            component_summary = result.summary["component_evaluation"]
+            self.assertEqual(component_summary["component_count"], 3)
+            self.assertEqual(component_summary["finding_status_counts"], {"supported": 2, "gap": 1})
+            self.assertEqual(component_summary["reviewer_resolution_count"], 1)
+            self.assertTrue(component_summary["validation_passed"])
+            self.assertTrue(component_summary["reviewer_ready"])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            supported = findings["cg-test-cmbca-std-01"]
+            self.assertEqual(supported["finding_status"], "supported")
+            self.assertTrue(supported["plan_source_evidence"])
+            self.assertTrue(supported["package_evidence"])
+            self.assertEqual(supported["reviewer_resolution_items"], [])
+
+            gap = findings["cg-test-cmbca-suit-01"]
+            self.assertEqual(gap["finding_status"], "gap")
+            self.assertTrue(gap["plan_source_evidence"])
+            self.assertEqual(gap["package_evidence"], [])
+            self.assertEqual(gap["reviewer_resolution_items"][0]["reason"], "missing_package_evidence")
+
+            queue = json.loads(
+                result.component_reviewer_resolution_queue_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(queue["item_count"], 1)
+            self.assertEqual(queue["items"][0]["component_id"], "cg-test-cmbca-suit-01")
+
+    def test_component_inventory_source_set_drift_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(
+                Path(tmp),
+                source_set_id="source-set-stale",
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "No new permanent or temporary roads are proposed.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-stale",
+                component_inventory_path=inventory_path,
+            )
+
+            component_summary = result.summary["component_evaluation"]
+            self.assertFalse(component_summary["validation_passed"])
+            self.assertEqual(
+                component_summary["finding_status_counts"],
+                {"needs_reviewer_resolution": 3},
+            )
+            self.assertEqual(component_summary["reviewer_resolution_count"], 3)
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            validation = report["validation"]
+            self.assertFalse(validation["passed"])
+            self.assertFalse(
+                _check(validation, "component_source_sets_match_review_source_set")["passed"]
+            )
 
     def test_other_configured_profiles_are_out_of_scope_for_selected_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -572,6 +675,20 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertTrue(result.summary["reviewer_ready"])
 
 
+_CUSTER_PLAN_TEXT = (
+    "The Bridger, Bangtail, and Crazy Mountains Geographic Area includes "
+    "several plan land allocations. Plan Components-Crazy Mountains "
+    "Backcountry Area (CMBCA) contain direction for backcountry use. "
+    "The Hyalite Recreation Emphasis Area (HREA) has recreation setting "
+    "direction. Inventoried Roadless Area direction applies where mapped. "
+    "Desired Conditions (BC-DC-CMBCA) 01 Quiet, nonmotorized recreation "
+    "opportunities predominate. Standards (BC-STD-CMBCA) 01 New permanent "
+    "or temporary roads shall not be allowed. Suitability (BC-SUIT-CMBCA) "
+    "01 The backcountry area is not suitable for motorized transport. The "
+    "backcountry area is not suitable for mechanized transport, except use "
+    "of game carts."
+)
+
 _CUSTER_TEST_SOURCES = (
     (
         "R1PLAN-custer-gallatin-nf-01",
@@ -585,13 +702,7 @@ _CUSTER_TEST_SOURCES = (
     (
         "R1PLAN-custer-gallatin-nf-02",
         "2022 Custer Gallatin Land Management Plan PDF",
-        (
-            "The Bridger, Bangtail, and Crazy Mountains Geographic Area includes "
-            "several plan land allocations. Plan Components-Crazy Mountains "
-            "Backcountry Area (CMBCA) contain direction for backcountry use. "
-            "The Hyalite Recreation Emphasis Area (HREA) has recreation setting "
-            "direction. Inventoried Roadless Area direction applies where mapped."
-        ),
+        _CUSTER_PLAN_TEXT,
     ),
     (
         "R1PLAN-custer-gallatin-nf-03",
@@ -708,6 +819,11 @@ def _build_custer_source_library(
             catalog_source_count is not None and catalog_source_count != len(source_record_ids)
         ),
     )
+    if "R1PLAN-custer-gallatin-nf-02" in source_record_ids:
+        _write_component_inventory(
+            output_dir / "derived" / source_set_id / "forest_plan_components",
+            source_set_id=source_set_id,
+        )
     return source_set_id
 
 
@@ -878,6 +994,99 @@ def _write_resolver_profile_config(
         extra_profile.update(extra_profile_updates)
         payload["profiles"].append(extra_profile)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _write_component_inventory(path: Path, *, source_set_id: str) -> Path:
+    inventory_path = path / "component_inventory.json"
+    inventory_path.parent.mkdir(parents=True, exist_ok=True)
+    source_record_id = "R1PLAN-custer-gallatin-nf-02"
+    artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
+    content_sha256 = hashlib.sha256(_CUSTER_PLAN_TEXT.encode("utf-8")).hexdigest()
+    source_chunk_ids = [f"chunk:{source_record_id}"]
+    base = {
+        "forest_unit_id": "custer-gallatin-nf",
+        "plan_version": "2022",
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "section_id": "chapter-3-bridger-bangtail-crazy-cmbca",
+        "section_heading": "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
+        "page": None,
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 | test plan | artifact abc123",
+        "geographic_area_ids": ["geo-bridger-bangtail-crazy"],
+        "management_area_ids": ["mgmt-crazy-mountains-bca"],
+        "overlay_ids": [],
+        "resource_topics": ["backcountry area"],
+        "source_chunk_ids": source_chunk_ids,
+        "artifact_sha256": artifact_sha256,
+        "content_sha256": content_sha256,
+    }
+    provenance = {
+        "entity": {
+            "type": "forest_plan_component",
+            "source_record_id": source_record_id,
+            "source_chunk_ids": source_chunk_ids,
+            "artifact_sha256": artifact_sha256,
+            "content_sha256": content_sha256,
+        },
+        "activity": {
+            "type": "component_inventory_fixture",
+            "created_at": "2026-05-01T00:00:00Z",
+        },
+        "agent": {
+            "type": "deterministic_test_fixture",
+            "name": "tests/test_forest_plan_resolver.py",
+            "version": "forest-plan-component-inventory-v0",
+        },
+    }
+    components = [
+        {
+            **base,
+            "component_id": "cg-test-cmbca-dc-01",
+            "component_type": "desired_condition",
+            "component_text": (
+                "Desired Conditions (BC-DC-CMBCA) 01 Quiet, nonmotorized recreation "
+                "opportunities predominate."
+            ),
+            "activity_tags": ["nonmotorized recreation"],
+            "package_evidence_terms": ["nonmotorized recreation"],
+            "provenance": provenance,
+        },
+        {
+            **base,
+            "component_id": "cg-test-cmbca-std-01",
+            "component_type": "standard",
+            "component_text": (
+                "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads shall "
+                "not be allowed."
+            ),
+            "activity_tags": ["new roads"],
+            "package_evidence_terms": ["new permanent or temporary roads"],
+            "provenance": provenance,
+        },
+        {
+            **base,
+            "component_id": "cg-test-cmbca-suit-01",
+            "component_type": "suitability",
+            "component_text": (
+                "Suitability (BC-SUIT-CMBCA) 01 The backcountry area is not suitable "
+                "for motorized transport. The backcountry area is not suitable for "
+                "mechanized transport, except use of game carts."
+            ),
+            "activity_tags": ["motorized transport", "mechanized transport"],
+            "package_evidence_terms": ["motorized transport", "mechanized transport"],
+            "provenance": provenance,
+        },
+    ]
+    inventory = {
+        "schema_version": "forest-plan-component-inventory-v0",
+        "inventory_id": "cg-test-components-v0",
+        "forest_unit_id": "custer-gallatin-nf",
+        "plan_version": "2022",
+        "source_set_id": source_set_id,
+        "components": components,
+    }
+    inventory_path.write_text(json.dumps(inventory, indent=2, sort_keys=True), encoding="utf-8")
+    return inventory_path
 
 
 def _names(entries: list[dict]) -> list[str]:
