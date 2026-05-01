@@ -80,9 +80,15 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Rule-claim binding for rule pack `nepa-ea-v0` version `0.4.0` has been rebuilt with `191` links
   across `44/44` rules, `0` gaps, and no rules without source-claim links.
 - Compliance coverage has been refreshed for the `44`-rule matrix and `3` seed eval cases.
-- Compliance review eval passed `3/3` seed cases.
-- Compliance gold eval passed `10/10` adjudicated cases and is `promotion_ready`.
+- Compliance review eval passed `3/3` seed cases. The Custer-scoped all-authorities fixture now
+  expects `reviewer_ready: false` when the full forest-plan component gate is unmet.
+- Compliance gold eval passed `10/10` adjudicated cases and is `promotion_ready`. Custer-scoped gold
+  fixtures likewise preserve rule-level expected statuses while expecting the overall forest-plan
+  component gate to fail readiness unless component evidence coverage is complete.
 - Phase eval passed `8/8` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
+- The current Custer Gallatin LMP component inventory was generated from the active source-set
+  chunks: `331` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
+  and `0` duplicate component or standard IDs.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -346,13 +352,17 @@ Current state:
   Assessment, and Biological Opinion triggers.
 - Forest-plan component evaluation writes component findings, selected-inventory coverage,
   applicable-standard coverage, and a reviewer-resolution queue from a versioned inventory for
-  packages resolved to the selected forest-plan profile. The current seed inventory is intentionally
-  narrow and focused on Crazy Mountains Backcountry Area components for the East Crazies proving
-  case; broader component extraction/inventory build commands remain downstream work.
+  packages resolved to the selected forest-plan profile. The current source-set inventory for the
+  2022 Custer Gallatin Land Management Plan is generated from extracted chunks and has passing build
+  coverage; the seed inventory remains only a fallback/test fixture.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
   `compliance_matrix.pdf`,
   `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
+- Compliance review now invokes the forest-plan resolver against the same package cache. For Custer
+  Gallatin packages, `forest_plan_component_gate_reviewer_ready` must pass, the matrix summary links
+  to `forest_plan_review`, and the finding graph includes forest-plan review/component-evaluation
+  nodes.
 - EA review and compliance review can rerun checklist/rule evaluation against existing
   `package_manifest.jsonl` and `package_chunks.jsonl` with `--reuse-package-cache`; use this for
   rule-pack refreshes when the EA package was already extracted.
@@ -475,6 +485,8 @@ Boundaries:
   source-library evidence.
 - It proves the current compliance review V0 cannot produce claim-bearing findings without
   source-library citations.
+- It proves a Custer Gallatin-scoped compliance review cannot be reviewer-ready when forest-plan
+  component evaluation is absent, stale, or not reviewer-ready.
 - It proves the current final compliance-review eval seed passes deterministic all-pass, mixed
   pass/gap, and all-gap package fixtures.
 - It proves the current seed compliance-gold-eval promotion gate passes one positive, one mixed, and
@@ -812,6 +824,9 @@ extractions and `7` already-current Custer Gallatin slice records, then parsed
 `R1PLAN-dakota-prairie-grasslands-02` as the only fresh extraction. Retrieval, evidence graph,
 source claims, rule-claim bindings, compliance coverage, compliance-review eval, compliance-gold
 eval, and phase eval have also been rebuilt and are reviewer-ready for the full current source set.
+The Custer Gallatin LMP component inventory has also been generated for the current source set with
+`331` components and `58` standards, and its build coverage passes with no missing or duplicate
+component/standard IDs.
 The prior 147-row downstream corpus remains useful for historical comparison only and should not be
 treated as current promotion evidence for the expanded workbook.
 

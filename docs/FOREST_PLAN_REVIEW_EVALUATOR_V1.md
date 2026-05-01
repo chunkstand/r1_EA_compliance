@@ -98,8 +98,9 @@ Expected V1 review shape:
 - The component-evaluation path writes `forest_plan_component_findings.json`,
   `forest_plan_component_findings.md`, and `forest_plan_reviewer_resolution_queue.json` for packages
   resolved to the selected forest-plan profile.
-- The current seed inventory covers the Crazy Mountains Backcountry Area proving slice; broader
-  component inventory extraction remains downstream work.
+- The current source-set Custer Gallatin LMP inventory is generated from extracted chunks and has
+  passing build coverage with `331` components and `58` standards. The seed inventory remains only a
+  fallback/test fixture.
 
 ## Expert Alignment Checks
 
@@ -150,9 +151,9 @@ The first build milestone is complete only when the repository has:
 - a machine-readable reviewer-resolution queue; and
 - docs updated to describe implemented behavior and residual risk.
 
-The first component-evaluation slice now satisfies the output-contract and queue portions of this
-gate for seeded components. It does not yet provide broad component extraction, component graph
-artifacts, or real-package promotion readiness.
+The component-evaluation slice now satisfies the output-contract, queue, generated-inventory, and
+compliance-review gate portions for current source-set artifacts. It does not yet prove real-package
+promotion readiness for the Custer Gallatin proving EA.
 
 Suggested focused verification:
 

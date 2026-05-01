@@ -8,6 +8,7 @@ import json
 import re
 
 from .ea_review import _search_package_chunks
+from .forest_plan_profiles import load_forest_plan_profile
 from .retrieval import query_retrieval_index
 
 
@@ -159,6 +160,7 @@ def build_forest_plan_component_inventory(
         and chunk.get("document_role") == "forest_plan"
     ]
     components = []
+    profile_context = _profile_context_terms(forest_unit_id)
     for chunk in chunks:
         components.extend(
             _components_from_chunk(
@@ -169,8 +171,10 @@ def build_forest_plan_component_inventory(
                 geographic_area_ids=geographic_area_ids or [],
                 management_area_ids=management_area_ids or [],
                 overlay_ids=overlay_ids or [],
+                profile_context=profile_context,
             )
         )
+    components = _merge_overlapping_component_records(components)
     validation_errors = []
     for index, component in enumerate(components):
         try:
@@ -241,6 +245,7 @@ def _components_from_chunk(
     geographic_area_ids: list[str],
     management_area_ids: list[str],
     overlay_ids: list[str],
+    profile_context: dict[str, tuple[object, ...]],
 ) -> list[dict]:
     text = str(chunk.get("text") or "")
     components = []
@@ -255,6 +260,7 @@ def _components_from_chunk(
             start=match.start(),
             fallback=str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components"),
         )
+        context_text = f"{section_heading} {code} {component_text}"
         source_chunk_ids = [str(chunk.get("chunk_id") or "").strip()]
         source_chunk_ids = [chunk_id for chunk_id in source_chunk_ids if chunk_id]
         package_evidence_terms = _package_evidence_terms_from_text(component_text)
@@ -280,9 +286,33 @@ def _components_from_chunk(
                 "page": chunk.get("page") if isinstance(chunk.get("page"), int) else None,
                 "citation_label": str(chunk.get("citation_label") or chunk.get("title") or ""),
                 "component_text": component_text,
-                "geographic_area_ids": list(geographic_area_ids),
-                "management_area_ids": list(management_area_ids),
-                "overlay_ids": list(overlay_ids),
+                "geographic_area_ids": _dedupe_preserve_order(
+                    [
+                        *geographic_area_ids,
+                        *_matching_profile_entry_ids(
+                            context_text,
+                            profile_context.get("geographic_area_terms", ()),
+                        ),
+                    ]
+                ),
+                "management_area_ids": _dedupe_preserve_order(
+                    [
+                        *management_area_ids,
+                        *_matching_profile_entry_ids(
+                            context_text,
+                            profile_context.get("management_area_terms", ()),
+                        ),
+                    ]
+                ),
+                "overlay_ids": _dedupe_preserve_order(
+                    [
+                        *overlay_ids,
+                        *_matching_profile_entry_ids(
+                            context_text,
+                            profile_context.get("overlay_terms", ()),
+                        ),
+                    ]
+                ),
                 "resource_topics": resource_topics,
                 "activity_tags": package_evidence_terms,
                 "source_chunk_ids": source_chunk_ids,
@@ -307,7 +337,7 @@ def _component_inventory_build_coverage(
     components: list[dict],
     validation_errors: list[dict],
 ) -> dict:
-    detected_labels = _detected_component_labels(chunks)
+    detected_labels = _merge_overlapping_detected_labels(_detected_component_labels(chunks))
     detected_standards = [
         label for label in detected_labels if label["component_type"] == "standard"
     ]
@@ -399,6 +429,11 @@ def _detected_component_labels(chunks: list[dict]) -> list[dict]:
                 code=match.group("code"),
                 number=match.group("number"),
             )
+            component_text = _compact(
+                f"{match.group('label')} ({match.group('code')}) "
+                f"{match.group('number')} {match.group('text')}",
+                limit=10000,
+            )
             labels.append(
                 {
                     "component_id": component_id,
@@ -406,6 +441,7 @@ def _detected_component_labels(chunks: list[dict]) -> list[dict]:
                     "label": match.group("label"),
                     "code": match.group("code"),
                     "number": match.group("number"),
+                    "component_text": component_text,
                     "source_record_id": str(chunk.get("source_record_id") or ""),
                     "chunk_id": str(chunk.get("chunk_id") or ""),
                     "section_heading": _section_heading_for_match(
@@ -418,6 +454,111 @@ def _detected_component_labels(chunks: list[dict]) -> list[dict]:
                 }
             )
     return labels
+
+
+def _profile_context_terms(forest_unit_id: str) -> dict[str, tuple[object, ...]]:
+    try:
+        profile = load_forest_plan_profile(forest_unit_id)
+    except (FileNotFoundError, KeyError, ValueError):
+        return {}
+    return {
+        "geographic_area_terms": profile.geographic_area_terms,
+        "management_area_terms": profile.management_area_terms,
+        "overlay_terms": profile.overlay_terms,
+    }
+
+
+def _matching_profile_entry_ids(text: str, entries: tuple[object, ...]) -> list[str]:
+    normalized_text = _normalized_component_text(text)
+    text_tokens = set(TOKEN_RE.findall(normalized_text))
+    matches = []
+    for entry in entries:
+        entry_id = str(getattr(entry, "entry_id", "") or "").strip()
+        terms = getattr(entry, "terms", ())
+        if not entry_id:
+            continue
+        for term in terms:
+            normalized_term = _normalized_component_text(str(term))
+            if not normalized_term:
+                continue
+            if " " in normalized_term and normalized_term in normalized_text:
+                matches.append(entry_id)
+                break
+            if " " not in normalized_term and normalized_term in text_tokens:
+                matches.append(entry_id)
+                break
+    return _dedupe_preserve_order(matches)
+
+
+def _merge_overlapping_component_records(components: list[dict]) -> list[dict]:
+    merged = []
+    for _component_id, group in _group_by_component_id(components):
+        if len(group) == 1 or not _overlapping_duplicate_group(group):
+            merged.extend(group)
+            continue
+        base = max(group, key=lambda component: len(str(component.get("component_text") or "")))
+        combined = dict(base)
+        source_chunk_ids = _dedupe_preserve_order(
+            [
+                chunk_id
+                for component in group
+                for chunk_id in component.get("source_chunk_ids", [])
+                if str(chunk_id).strip()
+            ]
+        )
+        combined["source_chunk_ids"] = source_chunk_ids
+        provenance = dict(combined.get("provenance") or {})
+        entity = dict(provenance.get("entity") or {})
+        entity["source_chunk_ids"] = source_chunk_ids
+        provenance["entity"] = entity
+        combined["provenance"] = provenance
+        merged.append(combined)
+    return merged
+
+
+def _merge_overlapping_detected_labels(labels: list[dict]) -> list[dict]:
+    merged = []
+    for _component_id, group in _group_by_component_id(labels):
+        if len(group) == 1 or not _overlapping_duplicate_group(group):
+            merged.extend(group)
+            continue
+        merged.append(max(group, key=lambda label: len(str(label.get("component_text") or ""))))
+    return merged
+
+
+def _group_by_component_id(items: list[dict]) -> list[tuple[str, list[dict]]]:
+    grouped: dict[str, list[dict]] = {}
+    order = []
+    for item in items:
+        component_id = str(item.get("component_id") or "")
+        if component_id not in grouped:
+            grouped[component_id] = []
+            order.append(component_id)
+        grouped[component_id].append(item)
+    return [(component_id, grouped[component_id]) for component_id in order]
+
+
+def _overlapping_duplicate_group(group: list[dict]) -> bool:
+    chunk_ids = [_primary_source_chunk_id(item) for item in group]
+    chunk_ids = [chunk_id for chunk_id in chunk_ids if chunk_id]
+    if len(set(chunk_ids)) <= 1:
+        return False
+    if len({str(item.get("component_type") or "") for item in group}) > 1:
+        return False
+    texts = [_normalized_component_text(str(item.get("component_text") or "")) for item in group]
+    if any(not text for text in texts):
+        return False
+    longest = max(texts, key=len)
+    return all(text == longest or text in longest for text in texts)
+
+
+def _primary_source_chunk_id(item: dict) -> str:
+    if item.get("chunk_id"):
+        return str(item["chunk_id"])
+    source_chunk_ids = item.get("source_chunk_ids")
+    if isinstance(source_chunk_ids, list) and source_chunk_ids:
+        return str(source_chunk_ids[0])
+    return ""
 
 
 def _component_type_from_label(label: str) -> str:
@@ -458,6 +599,22 @@ def _safe_identifier(value: str) -> str:
     if not normalized:
         return "unknown"
     return normalized
+
+
+def _dedupe_preserve_order(values: list[str]) -> list[str]:
+    deduped = []
+    seen = set()
+    for value in values:
+        text = str(value).strip()
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        deduped.append(text)
+    return deduped
+
+
+def _normalized_component_text(value: str) -> str:
+    return " ".join(TOKEN_RE.findall(str(value).lower()))
 
 
 def _package_evidence_terms_from_text(text: str) -> list[str]:

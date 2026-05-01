@@ -127,25 +127,33 @@ Already in place:
   finding graph artifacts from configured rules and package evidence.
 - `forest-plan-resolve` can resolve Custer Gallatin context through profile data, required
   source-record readiness, plan geography, overlays, and trigger-gated supporting records.
-- Forest-plan component evaluation V0 has a seeded component inventory, structured findings, and a
-  reviewer-resolution queue contract.
+- Forest-plan component evaluation V0 has a generated current-source-set component inventory,
+  structured findings, and a reviewer-resolution queue contract.
 
 Current readiness state after the 2026-05-01 downstream promotion:
 
 - Full-source-set downstream artifacts for `source-set-ba8d0feae79501b8` are promoted through
   extraction, retrieval, evidence graph, claim extraction, rule-claim binding, coverage, gold eval,
   and phase eval.
+- The current Custer Gallatin LMP component inventory for `source-set-ba8d0feae79501b8` has passing
+  build coverage with `331` components, `58` standards, `0` missing component or standard IDs, and
+  `0` duplicate component or standard IDs.
+- `compliance-review` now invokes forest-plan context/component evaluation against the same package
+  cache, requires the forest-plan component gate for Custer Gallatin packages, links
+  `forest_plan_review` from the matrix summary, and adds forest-plan review/component-evaluation
+  nodes to the finding graph.
 - The prior `forest_service_directives_portal` / `R1EA-028` source-claim gap is closed through a
   general structural-definition claim pattern and refreshed rule-claim binding.
 - Phase eval passes `8/8` phases with `reviewer_ready: true` for the active source set.
 
 Remaining blockers to complete V1 Custer Gallatin real-package readiness:
 
-- The forest-plan component inventory is still a narrow seed, not a complete Custer Gallatin
-  component inventory for NFMA project consistency review.
-- `compliance-review` does not yet consume forest-plan component findings as a mandatory NFMA phase.
+- The real Custer Gallatin proving package still needs to be run through the updated
+  `compliance-review` path and adjudicated before V1 can be called reviewer-ready for that EA.
+- Component retrieval precision/recall and real-package failure taxonomy remain to be measured
+  against the proving package.
 - No generated V1 review artifact should be called fully reviewer-ready until current validation
-  proves source-set, rule-pack, component, package, and finding graph alignment.
+  proves source-set, rule-pack, component, package, and finding graph alignment for that package.
 
 ## V1 Definition Of Done
 
@@ -280,6 +288,15 @@ Deliverables:
   records.
 - Tests proving stale source-set IDs and missing source chunks fail closed.
 
+Current status:
+
+- Implemented for the active Custer Gallatin LMP source record through `forest-plan-components-build`.
+- Current generated inventory for `source-set-ba8d0feae79501b8` has `331` components and `58`
+  standards from `536` selected chunks, with build coverage passing and no missing or duplicate
+  component/standard IDs.
+- Overlapping extraction chunks are merged when they carry the same component text from adjacent
+  chunks; true duplicate labels in the same chunk still fail build coverage.
+
 Verification:
 
 ```bash
@@ -394,11 +411,22 @@ Deliverables:
 
 - `compliance-review` invokes or consumes the forest-plan resolver/component evaluation for packages
   resolved to the selected profile.
-- Compliance matrix rows include forest-plan component rows or links to the NFMA matrix.
-- Finding graph links compliance findings to forest-plan component findings where applicable.
+- Compliance matrix output links to the forest-plan review/component artifacts through the
+  `forest_plan_review` summary.
+- Finding graph links the compliance review to `ForestPlanReview` and
+  `ForestPlanComponentEvaluation` nodes where applicable.
 - `compliance_validation.json` fails when required forest-plan component artifacts are missing,
   stale, or not reviewer-ready.
-- Tests covering supported, gap, candidate, stale-source-set, and no-Custer-Gallatin-scope cases.
+- Tests covering reviewer-ready, package-evidence gap, stale-source-set, and no-Custer-Gallatin or
+  ambiguous-scope cases.
+
+Current status:
+
+- Implemented for selected-profile packages. The compliance review reuses the EA package cache,
+  runs forest-plan resolution/component evaluation, and exposes
+  `forest_plan_component_gate_reviewer_ready` in `compliance_validation.json`.
+- Focused tests cover non-Custer/ambiguous scope, Custer reviewer-ready component evaluation, and
+  stale component inventory fail-close behavior.
 
 Verification:
 

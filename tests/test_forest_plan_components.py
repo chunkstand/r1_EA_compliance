@@ -148,6 +148,70 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                     forest_unit_id="custer-gallatin-nf",
                 )
 
+    def test_overlapping_chunk_duplicates_are_merged_before_build_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-custer-gallatin-nf-02"
+            first_chunk = _chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                text=(
+                    "Plan Components-Crazy Mountains Backcountry Area (CMBCA).\n"
+                    "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads "
+                    "shall not be allowed."
+                ),
+            )
+            overlap_chunk = {
+                **_chunk(
+                    source_set_id=source_set_id,
+                    source_record_id=source_record_id,
+                    text=(
+                        "Plan Components-Crazy Mountains Backcountry Area (CMBCA).\n"
+                        "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads "
+                        "shall not be allowed.\nCuster Gallatin Land Management Plan page 72."
+                    ),
+                ),
+                "chunk_id": f"chunk:{source_record_id}:overlap",
+                "chunk_index": 1,
+            }
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[first_chunk, overlap_chunk],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="custer-gallatin-nf",
+                plan_version="2022",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertTrue(result.summary["coverage_passed"])
+            self.assertEqual(result.summary["component_count"], 1)
+            self.assertEqual(result.summary["standard_count"], 1)
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["duplicate_component_ids"], [])
+            self.assertEqual(coverage["duplicate_standard_ids"], [])
+            self.assertEqual(coverage["detected_component_count"], 1)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="custer-gallatin-nf",
+            )
+            self.assertEqual(len(components), 1)
+            self.assertEqual(
+                components[0]["source_chunk_ids"],
+                [f"chunk:{source_record_id}", f"chunk:{source_record_id}:overlap"],
+            )
+            self.assertEqual(
+                components[0]["management_area_ids"],
+                ["mgmt-crazy-mountains-bca"],
+            )
+
     def test_failing_build_coverage_blocks_generated_inventory_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

@@ -103,8 +103,12 @@ Already implemented:
   Gallatin ROD or FEIS routes by themselves.
 - Forest-plan component evaluation V0 is implemented as a default `forest-plan-resolve` stage for
   packages resolved to the selected forest-plan profile.
-- `config/forest_plan_component_inventory_seed.json` provides a narrow Custer Gallatin component
-  seed for the Crazy Mountains Backcountry Area proving case.
+- `forest-plan-components-build` generates the active-source-set Custer Gallatin LMP component
+  inventory from extracted chunks.
+- The current generated inventory for `source-set-ba8d0feae79501b8` has `331` components, `58`
+  standards, and passing build coverage with no missing or duplicate component/standard IDs.
+- `config/forest_plan_component_inventory_seed.json` remains a narrow fallback/test fixture for the
+  Crazy Mountains Backcountry Area proving case.
 - Component findings now have a stable JSON/Markdown output contract and a machine-readable
   reviewer-resolution queue.
 - Component validation fails closed on source-set drift and requires supported/partial findings to
@@ -114,20 +118,17 @@ Already implemented:
   applicable standard lacks plan-source evidence, EA package evidence, or a resolved compliance
   status.
 
-Missing:
+Remaining gaps:
 
-- No rebuildable component extraction command exists yet.
-- No complete structured forest-plan component inventory exists beyond the initial seed file.
-- No complete NFMA coverage gate proves that all applicable standards from a full Forest Plan
-  inventory were applied to the EA package.
-- No compliance-status model beyond V0 standard support/gap classification has been implemented yet.
-- Component evidence retrieval is implemented for seeded components, but no standalone
-  precision/recall eval artifact exists yet.
-- No graph links connect components to context, package evidence, and findings.
-- No component graph artifacts are emitted yet.
-- No broad real-package component evaluation gate exists beyond focused fixture coverage.
-- `compliance-review` does not yet consume forest-plan component findings as a mandatory NFMA
-  compliance phase.
+- No complete real-package V1 proving review has been run and adjudicated through the updated
+  `compliance-review` path.
+- No standalone component retrieval precision/recall eval artifact exists yet.
+- Component-level graph artifacts are not yet emitted as a separate component graph; the compliance
+  finding graph currently links the review to forest-plan review/component-evaluation artifacts.
+- The compliance-status model remains V0 standard support/gap classification and should be expanded
+  only after real-package failures show the next needed categories.
+- The current generated inventory covers the active Custer Gallatin LMP source record; future plan
+  amendments or other forest plans still require their own generated inventories and coverage.
 
 ## Definition Of Complete NFMA Forest Plan Review
 
@@ -652,10 +653,10 @@ broader compliance-review path.
 Deliverables:
 
 - V1 demo review report section summarizing forest-plan component findings.
-- `compliance-review` consumes forest-plan component findings and fails closed when the NFMA
-  compliance matrix is absent, stale, incomplete, or not reviewer-ready.
+- `compliance-review` consumes forest-plan component findings and fails closed when the forest-plan
+  component gate is absent, stale, incomplete, or not reviewer-ready.
 - Clear distinction between forest-plan component evaluation, EA checklist review, and the mandatory
-  NFMA compliance matrix.
+  NFMA component gate.
 - Handoff that states the forest-plan compliance status, incomplete standards if any, and whether the
   V1 demo may proceed into broader `compliance-review`.
 

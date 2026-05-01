@@ -15,6 +15,7 @@ from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.forest_plan_components import build_forest_plan_component_inventory
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
@@ -116,6 +117,10 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             self.assertTrue(_check(validation, "baseline_source_documents_evaluated")["passed"])
             self.assertTrue(_check(validation, "all_rules_evaluated")["passed"])
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertFalse(forest_plan_gate["details"]["required"])
+            self.assertEqual(forest_plan_gate["details"]["scope_status"], "ambiguous")
             self.assertTrue(
                 _check(validation, "claim_findings_have_source_citations")["passed"]
             )
@@ -138,6 +143,127 @@ class ComplianceReviewTests(unittest.TestCase):
                 {edge["relationship"] for edge in edges},
             )
             self.assertIn("FINDING_HAS_PACKAGE_GAP", {edge["relationship"] for edge in edges})
+
+    def test_custer_compliance_review_requires_generated_component_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_custer_compliance_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area. No new permanent or temporary roads "
+                    "are proposed."
+                ),
+            )
+            rule_pack_path = _write_custer_rule_pack(Path(tmp))
+
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="custer-compliance-unit",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertEqual(forest_plan["scope_status"], "custer_gallatin")
+            self.assertTrue(forest_plan["reviewer_ready"])
+            self.assertTrue(forest_plan["component_evaluation"]["validation_passed"])
+            self.assertTrue(forest_plan["component_evaluation"]["reviewer_ready"])
+            self.assertTrue(forest_plan["component_findings_path"])
+            self.assertTrue(forest_plan["component_inventory_coverage_path"])
+            self.assertTrue(forest_plan["applicable_standard_coverage_path"])
+            matrix = json.loads(result.compliance_matrix_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                matrix["summary"]["forest_plan_review"]["scope_status"],
+                "custer_gallatin",
+            )
+            self.assertTrue(
+                matrix["summary"]["forest_plan_review"]["component_findings_path"]
+            )
+
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertTrue(forest_plan_gate["details"]["required"])
+            self.assertTrue(forest_plan_gate["details"]["component_reviewer_ready"])
+            self.assertTrue(
+                forest_plan_gate["details"]["component_inventory_coverage_passed"]
+            )
+            self.assertTrue(
+                forest_plan_gate["details"]["applicable_standard_coverage_passed"]
+            )
+            nodes = _read_jsonl(result.finding_nodes_path)
+            edges = _read_jsonl(result.finding_edges_path)
+            self.assertIn("ForestPlanReview", {node["type"] for node in nodes})
+            self.assertIn("ForestPlanComponentEvaluation", {node["type"] for node in nodes})
+            self.assertIn(
+                "REVIEW_INCLUDES_FOREST_PLAN_REVIEW",
+                {edge["relationship"] for edge in edges},
+            )
+            self.assertIn(
+                "FOREST_PLAN_REVIEW_HAS_COMPONENT_EVALUATION",
+                {edge["relationship"] for edge in edges},
+            )
+
+    def test_custer_compliance_review_fails_closed_on_stale_component_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_custer_compliance_source_library(output_dir, source_set_id)
+            inventory_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "forest_plan_components"
+                / "component_inventory.json"
+            )
+            inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+            inventory["source_set_id"] = "source-set-stale"
+            for component in inventory["components"]:
+                component["source_set_id"] = "source-set-stale"
+            inventory_path.write_text(
+                json.dumps(inventory, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area. No new permanent or temporary roads "
+                    "are proposed."
+                ),
+            )
+            rule_pack_path = _write_custer_rule_pack(Path(tmp))
+
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="custer-stale-component-unit",
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertEqual(forest_plan["scope_status"], "custer_gallatin")
+            self.assertFalse(forest_plan["reviewer_ready"])
+            self.assertFalse(forest_plan["component_evaluation"]["validation_passed"])
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertFalse(forest_plan_gate["passed"])
+            self.assertTrue(forest_plan_gate["details"]["required"])
+            self.assertFalse(forest_plan_gate["details"]["component_reviewer_ready"])
+            self.assertFalse(
+                forest_plan_gate["details"]["component_inventory_coverage_passed"]
+            )
 
     def test_compliance_review_rejects_invalid_rule_pack(self) -> None:
         rule_pack = _rule_pack()
@@ -1157,6 +1283,55 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(compliance_phase["details"]["source_set_matches"])
 
 
+_CUSTER_PLAN_COMPONENT_TEXT = (
+    "The 2022 Custer Gallatin Land Management Plan includes "
+    "Plan Components-Crazy Mountains Backcountry Area (CMBCA). "
+    "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads shall not be allowed."
+)
+
+_CUSTER_SOURCES = (
+    (
+        "R1PLAN-custer-gallatin-nf-01",
+        "Custer Gallatin land management plan page",
+        (
+            "The Custer Gallatin land management plan page lists the current plan, "
+            "record of decision, final environmental impact statement volumes, "
+            "biological assessment, and biological opinion."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-02",
+        "2022 Custer Gallatin Land Management Plan PDF",
+        _CUSTER_PLAN_COMPONENT_TEXT,
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-03",
+        "Custer Gallatin Land Management Plan Record of Decision PDF",
+        "The record of decision identifies the selected alternative and plan approval.",
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-04",
+        "Custer Gallatin Land Management Plan FEIS Volume 1 PDF",
+        "The final environmental impact statement volume 1 describes effects context.",
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-05",
+        "Custer Gallatin Land Management Plan FEIS Volume 2 PDF",
+        "The final environmental impact statement volume 2 discusses plan allocations.",
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-06",
+        "Custer Gallatin LMP Biological Assessment PDF",
+        "The biological assessment analyzes species and habitat effects.",
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-07",
+        "Custer Gallatin LMP Biological Opinion PDF",
+        "The biological opinion documents ESA section 7 consultation.",
+    ),
+)
+
+
 def _build_source_library(output_dir: Path, source_set_id: str) -> None:
     _write_extraction_diagnostics(
         output_dir,
@@ -1196,6 +1371,49 @@ def _build_source_library(output_dir: Path, source_set_id: str) -> None:
     )
     build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
     build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+
+
+def _build_custer_compliance_source_library(output_dir: Path, source_set_id: str) -> None:
+    source_record_ids = [source_record_id for source_record_id, _title, _text in _CUSTER_SOURCES]
+    _write_extraction_diagnostics(
+        output_dir,
+        source_set_id,
+        source_record_ids=source_record_ids,
+    )
+    chunks_path = _write_chunks(
+        output_dir,
+        source_set_id,
+        [
+            _chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                title=title,
+                document_role="forest_plan",
+                authority_level="forest_plan",
+                citation_label=f"{source_record_id} | {title} | artifact abc123",
+                text=text,
+            )
+            for source_record_id, title, text in _CUSTER_SOURCES
+        ],
+    )
+    _write_catalog_sqlite(
+        output_dir,
+        {
+            source_record_id: [title]
+            for source_record_id, title, _text in _CUSTER_SOURCES
+        },
+    )
+    build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+    build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+    build_forest_plan_component_inventory(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        source_record_id="R1PLAN-custer-gallatin-nf-02",
+        forest_unit_id="custer-gallatin-nf",
+        plan_version="2022",
+        chunks_path=chunks_path,
+        management_area_ids=["mgmt-crazy-mountains-bca"],
+    )
 
 
 def _write_extraction_diagnostics(
@@ -1245,7 +1463,7 @@ def _write_extraction_diagnostics(
     )
 
 
-def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> None:
+def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> Path:
     path = output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     for chunk in chunks:
@@ -1259,6 +1477,7 @@ def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> N
         "".join(json.dumps(chunk, sort_keys=True) + "\n" for chunk in chunks),
         encoding="utf-8",
     )
+    return path
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> None:
@@ -1376,6 +1595,43 @@ def _write_rule_pack(directory: Path, rule_ids: list[str] | None = None) -> Path
             if source_record_id in kept_source_record_ids
         ]
     path = directory / "rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_custer_rule_pack(directory: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-custer-gallatin-ea",
+        "version": "0.1.0",
+        "title": "Unit Custer Gallatin EA Rule Pack",
+        "description": "Unit test Custer Gallatin forest-plan rule pack.",
+        "baseline_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
+        "rules": [
+            {
+                "id": "custer_gallatin_lmp_2022",
+                "title": "Custer Gallatin forest-plan standard is addressed",
+                "authority_category": "forest_plan",
+                "authority_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+                "authority_document_role": "forest_plan",
+                "applicability_mode": "baseline",
+                "question": "Does the EA package address the applicable Custer Gallatin standard?",
+                "requirement": (
+                    "Custer Gallatin EAs in the Crazy Mountains Backcountry Area must "
+                    "address the standard prohibiting new permanent or temporary roads."
+                ),
+                "package_query": "new permanent or temporary roads",
+                "package_terms": ["new permanent or temporary roads"],
+                "source_query": "new permanent or temporary roads shall not be allowed",
+                "source_filters": {
+                    "document_role": "forest_plan",
+                    "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+                },
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "custer-rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
 

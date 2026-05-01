@@ -663,6 +663,12 @@ The `compliance-review` command writes the base EA review outputs plus:
 - `finding_graph_nodes.jsonl`
 - `finding_graph_edges.jsonl`
 
+It also invokes the forest-plan resolver against the same package cache. For packages resolved to
+the selected forest-plan profile, the review directory includes the forest-plan context,
+component-finding, component-inventory coverage, applicable-standard coverage, and
+reviewer-resolution artifacts described above. Custer Gallatin compliance review fails closed when
+that forest-plan component evaluation is absent, stale, or not reviewer-ready.
+
 `compliance-review` reads:
 
 - a local EA package file or directory passed with `--package-path`
@@ -673,6 +679,9 @@ The `compliance-review` command writes the base EA review outputs plus:
   `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
 - the source-library retrieval index, normally
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
+- the source-set forest-plan component inventory at
+  `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json` when the
+  package resolves to the selected forest-plan profile
 
 When `--reuse-package-cache` is supplied, the review directory must already contain:
 
@@ -738,6 +747,8 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
 - rule count, baseline source-record count/list, evaluated baseline source-record list, finding
   count, claim-bearing finding count, finding status counts, and authority identification summary
 - unsupported finding IDs
+- `forest_plan_review`, with forest-plan resolver paths, scope status, reviewer-ready status, and
+  component-evaluation artifact paths when applicable
 - validation
 - compliance findings
 
@@ -760,7 +771,7 @@ Each compliance finding includes:
 
 - review ID, package path, source set, rule-pack summary, and matrix summary
 - status counts, applicability counts, applicable source records, claim row count, validation status,
-  reviewer-ready status, and PDF path
+  reviewer-ready status, PDF path, and `forest_plan_review` links when present
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
 - one row per compliance finding
@@ -788,6 +799,8 @@ JSON matrix is the stable machine contract.
 
 - `ComplianceRulePack`
 - `ComplianceReview`
+- `ForestPlanReview`
+- `ForestPlanComponentEvaluation` when component evaluation runs
 - `ComplianceRule`
 - `ComplianceFinding`
 - `SourceClaim`
@@ -806,6 +819,8 @@ JSON matrix is the stable machine contract.
 - `FINDING_SUPPORTED_BY_SOURCE_EVIDENCE`
 - `FINDING_SUPPORTED_BY_PACKAGE_EVIDENCE`
 - `FINDING_HAS_PACKAGE_GAP`
+- `REVIEW_INCLUDES_FOREST_PLAN_REVIEW`
+- `FOREST_PLAN_REVIEW_HAS_COMPONENT_EVALUATION`
 
 `compliance_validation.json` records gate-facing checks for:
 
@@ -813,6 +828,8 @@ JSON matrix is the stable machine contract.
   validation when `baseline_source_record_ids` is declared
 - rule-claim binding readiness
 - base EA review validation
+- Custer Gallatin forest-plan component reviewer readiness through
+  `forest_plan_component_gate_reviewer_ready`
 - every rule evaluated
 - declared baseline source records evaluated in the findings
 - valid finding statuses

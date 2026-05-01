@@ -35,7 +35,9 @@ Custer Gallatin forest-plan resolver now requires the planning page, LMP, ROD, F
 Biological Assessment, and Biological Opinion to be present in the retrieval index before it reviews
 a Custer Gallatin EA. Full all-source extraction, retrieval, evidence graph, source-claim,
 rule-claim, compliance coverage, compliance-review eval, compliance-gold eval, and phase-eval
-artifacts have been promoted for this source set. Older reviewer-ready downstream artifacts under
+artifacts have been promoted for this source set. The source-set Custer Gallatin Land Management
+Plan component inventory has also been generated from current chunks with `331` components, `58`
+standards, and passing build coverage. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
@@ -134,8 +136,8 @@ management areas, overlays, and source-library plan evidence, then routes trigge
 profile-declared supporting records such as the Custer Gallatin ROD, FEIS Volumes 1 and 2,
 Biological Assessment, and Biological Opinion. Supporting routes are trigger-gated and report
 `trigger_evidence` so reviewers can see why a supporting record was applied. The `compliance-review`
-command
-identifies applicable
+command invokes the forest-plan resolver against the same package cache, requires reviewer-ready
+forest-plan component evaluation for Custer Gallatin packages, and identifies applicable
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
 finding graph with source-claim support. The
@@ -178,7 +180,9 @@ queue; supported/partial findings require both package evidence and current plan
 while source-set drift and missing package evidence become reviewer work. The first NFMA coverage
 gate also writes selected-inventory coverage and applicable-standard coverage artifacts, and
 reviewer-ready status fails when an applicable standard lacks plan-source evidence, package evidence,
-or a resolved compliance status.
+or a resolved compliance status. The current source-set inventory for the 2022 Custer Gallatin LMP
+is generated from extracted chunks and has passing build coverage; the seed inventory is now only a
+fallback/test fixture.
 
 ## Common Commands
 
@@ -472,6 +476,12 @@ writes:
 - `source_library/reviews/<review_id>/compliance_matrix.pdf`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
+
+For Custer Gallatin packages, the same review directory also includes the forest-plan context and
+component-evaluation artifacts. `compliance_validation.json` includes the
+`forest_plan_component_gate_reviewer_ready` check, the compliance matrix summary links to
+`forest_plan_review`, and the finding graph includes `ForestPlanReview` and
+`ForestPlanComponentEvaluation` nodes.
 
 The command follows an authority-first workflow: baseline authorities always apply, conditional
 authorities are marked applicable only when configured EA package terms are found, and not-applicable

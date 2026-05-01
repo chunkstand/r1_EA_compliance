@@ -10,6 +10,7 @@ import re
 import textwrap
 
 from .ea_review import run_ea_review
+from .forest_plan_resolver import run_forest_plan_resolver
 
 
 RULE_PACK_SCHEMA_VERSION = "compliance-rule-pack-v0"
@@ -160,6 +161,20 @@ def run_compliance_review(
     )
     ea_report = _read_json(ea_result.json_report_path)
     ea_validation = _read_json(ea_result.validation_path)
+    forest_plan_result = run_forest_plan_resolver(
+        package_path=package_path,
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        index_path=index_path,
+        review_id=review_id,
+        results_dir=review_dir,
+        source_top_k=source_top_k,
+        chunk_max_chars=chunk_max_chars,
+        chunk_overlap_chars=chunk_overlap_chars,
+        docling_ocr=docling_ocr,
+        docling_timeout_seconds=docling_timeout_seconds,
+        reuse_package_cache=True,
+    )
     rules_by_id = {str(rule["id"]): rule for rule in rule_pack["rules"]}
     findings = [
         _compliance_finding(
@@ -175,12 +190,19 @@ def run_compliance_review(
         rule_pack=rule_pack,
         findings=findings,
     )
+    nodes, edges = _attach_forest_plan_graph(
+        nodes=nodes,
+        edges=edges,
+        review_id=review_id,
+        forest_plan_result=forest_plan_result,
+    )
     validation = _validation_report(
         review_id=review_id,
         rule_pack=rule_pack,
         rule_pack_validation=rule_pack_validation,
         rule_claim_validation=rule_claim_result.summary,
         ea_validation=ea_validation,
+        forest_plan_summary=forest_plan_result.summary,
         findings=findings,
         nodes=nodes,
         edges=edges,
@@ -202,6 +224,7 @@ def run_compliance_review(
         finding_edges_path=finding_edges_path,
         rule_claim_result=rule_claim_result,
         ea_result=ea_result,
+        forest_plan_result=forest_plan_result,
         validation=validation,
         nodes=nodes,
         edges=edges,
@@ -712,6 +735,78 @@ def _finding_graph(
     )
 
 
+def _attach_forest_plan_graph(
+    *,
+    nodes: list[dict],
+    edges: list[dict],
+    review_id: str,
+    forest_plan_result,
+) -> tuple[list[dict], list[dict]]:
+    node_map = {node["id"]: node for node in nodes}
+    edge_map = {edge["id"]: edge for edge in edges}
+    review_node_id = f"compliance_review:{review_id}"
+    forest_plan_summary = _forest_plan_summary_for_compliance(forest_plan_result)
+    forest_plan_node_id = f"forest_plan_review:{review_id}"
+    node_map[forest_plan_node_id] = _node(
+        forest_plan_node_id,
+        "ForestPlanReview",
+        review_id=review_id,
+        scope_status=forest_plan_summary.get("scope_status"),
+        source_set_id=forest_plan_summary.get("source_set_id"),
+        reviewer_ready=forest_plan_summary.get("reviewer_ready"),
+        validation_passed=forest_plan_summary.get("validation_passed"),
+        needs_reviewer_resolution=forest_plan_summary.get("needs_reviewer_resolution"),
+        context_path=forest_plan_summary.get("context_path"),
+        summary_path=forest_plan_summary.get("summary_path"),
+        validation_path=forest_plan_summary.get("validation_path"),
+    )
+    edge = _edge(
+        review_node_id,
+        "REVIEW_INCLUDES_FOREST_PLAN_REVIEW",
+        forest_plan_node_id,
+    )
+    edge_map[edge["id"]] = edge
+    component_evaluation = forest_plan_summary.get("component_evaluation") or {}
+    if component_evaluation:
+        component_node_id = f"forest_plan_component_evaluation:{review_id}"
+        node_map[component_node_id] = _node(
+            component_node_id,
+            "ForestPlanComponentEvaluation",
+            review_id=review_id,
+            source_set_id=component_evaluation.get("source_set_id"),
+            reviewer_ready=component_evaluation.get("reviewer_ready"),
+            validation_passed=component_evaluation.get("validation_passed"),
+            component_count=component_evaluation.get("component_count"),
+            standard_count=component_evaluation.get("standard_count"),
+            applicable_standard_count=component_evaluation.get("applicable_standard_count"),
+            all_applicable_standards_applied=component_evaluation.get(
+                "all_applicable_standards_applied"
+            ),
+            reviewer_resolution_count=component_evaluation.get("reviewer_resolution_count"),
+            findings_path=forest_plan_summary.get("component_findings_path"),
+            markdown_path=forest_plan_summary.get("component_markdown_path"),
+            reviewer_resolution_queue_path=forest_plan_summary.get(
+                "component_reviewer_resolution_queue_path"
+            ),
+            component_inventory_coverage_path=forest_plan_summary.get(
+                "component_inventory_coverage_path"
+            ),
+            applicable_standard_coverage_path=forest_plan_summary.get(
+                "applicable_standard_coverage_path"
+            ),
+        )
+        edge = _edge(
+            forest_plan_node_id,
+            "FOREST_PLAN_REVIEW_HAS_COMPONENT_EVALUATION",
+            component_node_id,
+        )
+        edge_map[edge["id"]] = edge
+    return sorted(node_map.values(), key=lambda node: node["id"]), sorted(
+        edge_map.values(),
+        key=lambda edge: edge["id"],
+    )
+
+
 def _validation_report(
     *,
     review_id: str,
@@ -719,6 +814,7 @@ def _validation_report(
     rule_pack_validation: dict,
     rule_claim_validation: dict,
     ea_validation: dict,
+    forest_plan_summary: dict,
     findings: list[dict],
     nodes: list[dict],
     edges: list[dict],
@@ -751,6 +847,7 @@ def _validation_report(
                 "failed_checks": _failed_check_names(ea_validation),
             },
         },
+        _check_forest_plan_component_gate(forest_plan_summary),
         _check_all_rules_evaluated(rule_pack, findings),
         _check_finding_statuses(findings),
         _check_pass_findings_have_dual_evidence(findings),
@@ -790,6 +887,7 @@ def _summary(
     finding_edges_path: Path,
     rule_claim_result,
     ea_result,
+    forest_plan_result,
     validation: dict,
     nodes: list[dict],
     edges: list[dict],
@@ -868,8 +966,53 @@ def _summary(
         "ea_review_report_path": str(ea_result.json_report_path),
         "ea_review_validation_path": str(ea_result.validation_path),
         "ea_review_reviewer_ready": bool(ea_summary.get("reviewer_ready")),
+        "forest_plan_review": _forest_plan_summary_for_compliance(forest_plan_result),
         "validation_passed": validation["passed"],
         "reviewer_ready": validation["passed"],
+    }
+
+
+def _forest_plan_summary_for_compliance(forest_plan_result) -> dict:
+    summary = forest_plan_result.summary
+    component_evaluation = summary.get("component_evaluation") or {}
+    return {
+        "review_id": forest_plan_result.review_id,
+        "review_dir": str(forest_plan_result.review_dir),
+        "context_path": str(forest_plan_result.context_path),
+        "validation_path": str(forest_plan_result.validation_path),
+        "summary_path": str(forest_plan_result.summary_path),
+        "scope_status": summary.get("scope_status"),
+        "source_set_id": summary.get("source_set_id"),
+        "index_path": summary.get("index_path"),
+        "validation_passed": bool(summary.get("validation_passed")),
+        "reviewer_ready": bool(summary.get("reviewer_ready")),
+        "needs_reviewer_resolution": bool(summary.get("needs_reviewer_resolution")),
+        "component_findings_path": (
+            str(forest_plan_result.component_findings_path)
+            if forest_plan_result.component_findings_path
+            else None
+        ),
+        "component_markdown_path": (
+            str(forest_plan_result.component_markdown_path)
+            if forest_plan_result.component_markdown_path
+            else None
+        ),
+        "component_reviewer_resolution_queue_path": (
+            str(forest_plan_result.component_reviewer_resolution_queue_path)
+            if forest_plan_result.component_reviewer_resolution_queue_path
+            else None
+        ),
+        "component_inventory_coverage_path": (
+            str(forest_plan_result.component_inventory_coverage_path)
+            if forest_plan_result.component_inventory_coverage_path
+            else None
+        ),
+        "applicable_standard_coverage_path": (
+            str(forest_plan_result.applicable_standard_coverage_path)
+            if forest_plan_result.applicable_standard_coverage_path
+            else None
+        ),
+        "component_evaluation": component_evaluation,
     }
 
 
@@ -914,6 +1057,7 @@ def _compliance_matrix(
             "compliance_matrix_pdf_path": summary.get("compliance_matrix_pdf_path"),
             "finding_graph_nodes_path": summary.get("finding_nodes_path"),
             "finding_graph_edges_path": summary.get("finding_edges_path"),
+            "forest_plan_review": summary.get("forest_plan_review"),
         },
         "columns": [
             "rule_id",
@@ -1064,10 +1208,20 @@ def _matrix_markdown(matrix: dict) -> str:
         f"- Status counts: `{summary['status_counts']}`",
         f"- Applicability counts: `{summary.get('applicability_counts', {})}`",
         f"- Reviewer ready: `{summary['reviewer_ready']}`",
-        "",
-        "| Authority | Applicability | Status | EA evidence | Source evidence | Source claims | Limitations |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
+    forest_plan_review = summary.get("forest_plan_review") or {}
+    if forest_plan_review:
+        lines.append(
+            f"- Forest-plan review: `{forest_plan_review.get('scope_status')}` "
+            f"(reviewer ready: `{forest_plan_review.get('reviewer_ready')}`)"
+        )
+    lines.extend(
+        [
+            "",
+            "| Authority | Applicability | Status | EA evidence | Source evidence | Source claims | Limitations |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    )
     for row in matrix["rows"]:
         ea_evidence = row.get("ea_package_evidence") or {}
         source_evidence = row.get("source_library_evidence") or {}
@@ -1125,13 +1279,24 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
         f"Status counts: {summary['status_counts']}",
         f"Applicability counts: {summary.get('applicability_counts', {})}",
         f"Reviewer ready: {summary['reviewer_ready']}",
-        "",
-        (
-            "Workflow: identify applicable authorities, evaluate the EA against each applicable "
-            "authority, and cite both EA-package and source-library evidence."
-        ),
-        "",
     ]
+    forest_plan_review = summary.get("forest_plan_review") or {}
+    if forest_plan_review:
+        lines.append(
+            "Forest-plan review: "
+            f"{forest_plan_review.get('scope_status')} "
+            f"(reviewer ready: {forest_plan_review.get('reviewer_ready')})"
+        )
+    lines.extend(
+        [
+            "",
+            (
+                "Workflow: identify applicable authorities, evaluate the EA against each applicable "
+                "authority, and cite both EA-package and source-library evidence."
+            ),
+            "",
+        ]
+    )
     for index, row in enumerate(matrix["rows"], start=1):
         lines.extend(_matrix_pdf_row_lines(index, row))
         lines.append("")
@@ -2425,6 +2590,42 @@ def _check_gap_findings_have_source_evidence(findings: list[dict]) -> dict:
         "name": "gap_findings_have_source_evidence",
         "passed": not failures,
         "details": {"finding_ids": failures},
+    }
+
+
+def _check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
+    scope_status = str(forest_plan_summary.get("scope_status") or "")
+    component_evaluation = forest_plan_summary.get("component_evaluation") or {}
+    required = scope_status == "custer_gallatin"
+    if not required:
+        passed = True
+    else:
+        passed = bool(forest_plan_summary.get("reviewer_ready")) and bool(
+            component_evaluation.get("reviewer_ready")
+        )
+    return {
+        "name": "forest_plan_component_gate_reviewer_ready",
+        "passed": passed,
+        "details": {
+            "required": required,
+            "scope_status": scope_status,
+            "forest_plan_reviewer_ready": bool(forest_plan_summary.get("reviewer_ready")),
+            "validation_passed": bool(forest_plan_summary.get("validation_passed")),
+            "context_path": forest_plan_summary.get("context_path"),
+            "summary_path": forest_plan_summary.get("summary_path"),
+            "component_evaluation_present": bool(component_evaluation),
+            "component_reviewer_ready": bool(component_evaluation.get("reviewer_ready")),
+            "component_validation_passed": bool(component_evaluation.get("validation_passed")),
+            "component_inventory_coverage_passed": bool(
+                component_evaluation.get("component_inventory_coverage_passed")
+            ),
+            "applicable_standard_coverage_passed": bool(
+                component_evaluation.get("applicable_standard_coverage_passed")
+            ),
+            "reviewer_resolution_count": component_evaluation.get(
+                "reviewer_resolution_count",
+            ),
+        },
     }
 
 

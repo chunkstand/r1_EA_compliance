@@ -68,10 +68,11 @@ Implemented behavior:
 - `forest-plan-resolve` also writes selected-inventory coverage and applicable-standard coverage;
   reviewer-ready status fails when an applicable standard lacks plan evidence, package evidence, or a
   resolved compliance status.
-- `config/forest_plan_component_inventory_seed.json` is the current component inventory seed for
-  the Crazy Mountains Backcountry Area proving slice.
 - `forest-plan-components-build` can produce rebuildable source-set component inventories and build
   coverage from extracted forest-plan chunks.
+- The current Custer Gallatin LMP inventory for `source-set-ba8d0feae79501b8` has been generated
+  from extracted chunks with `331` components, `58` standards, and passing build coverage. The seed
+  inventory is now a fallback/test fixture.
 - Built source-set inventories fail inventory coverage when their adjacent build coverage is missing
   or failed, which prevents them from being silently used as NFMA compliance evidence.
 - Default Custer Gallatin V0 output compatibility is preserved: `scope_status` still uses
@@ -86,31 +87,37 @@ Latest verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_compliance_review.py tests/test_forest_plan_resolver.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
-PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-components-build --help
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --source-record-id R1PLAN-custer-gallatin-nf-02 --forest-unit-id custer-gallatin-nf --plan-version 2022
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --eval-file config/compliance_review_eval_seed.json
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --gold-file config/compliance_gold_eval_v0.json
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
 python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
 git diff --check
 ```
 
-Results: full test suite passed with `172 passed`; focused forest-plan component/resolver/profile
-tests passed with `34 passed`; lint, compile, CLI help, JSON validation, and whitespace checks
-passed.
+Results: full test suite passed with `182 passed`; focused forest-plan/component/compliance tests
+passed with `58 passed`; lint, compile, JSON validation, and whitespace checks passed. The generated
+component inventory build passed with `331` components and `58` standards. Live compliance-review
+eval passed `3/3`, compliance-gold-eval passed `10/10` and is `promotion_ready`, and phase eval
+passed `8/8` phases with `reviewer_ready: true`.
 
 ## Next Sequence
 
-Next sequence: build the first rebuildable component inventory extraction pipeline that can feed the
-NFMA coverage gate with more than the seed inventory.
+Next sequence: run the Custer Gallatin proving EA through the updated compliance-review path and
+adjudicate the forest-plan component gate, compliance matrix, and failure taxonomy.
 
 Goal:
-Create source-set component inventory artifacts from extracted Forest Plan text, with one first-class
-record per standard and enough coverage metadata to prove standards were not collapsed or skipped.
+Produce a reviewer-ready or explicitly fail-closed V1 Custer Gallatin compliance review from the
+real proving package, using the current source-set component inventory and downstream source-set
+promotion artifacts.
 
 Non-goals:
 
-- Do not rebuild the full 190-row downstream corpus.
+- Do not rebuild the full 190-row downstream corpus unless the proving run exposes stale artifacts.
 - Do not add East Crazies-specific resolver branches.
 - Do not scan raw artifact filenames to decide forest-plan behavior.
 - Do not broaden the output schema unless the fixture requires a minimal test-only assertion.
