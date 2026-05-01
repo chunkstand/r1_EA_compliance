@@ -214,6 +214,14 @@ def build_parser() -> argparse.ArgumentParser:
             "of reparsing them."
         ),
     )
+    extract.add_argument(
+        "--reuse-inventory-path",
+        type=Path,
+        help=(
+            "Reuse extraction candidates from a reuse-inventory records JSONL file while rebuilding "
+            "the current source set manifest and chunks."
+        ),
+    )
 
     reuse_inventory = subparsers.add_parser(
         "reuse-inventory",
@@ -641,6 +649,7 @@ def main(argv: list[str] | None = None) -> int:
             docling_timeout_seconds=args.docling_timeout_seconds,
             allow_invalid_catalog=args.allow_invalid_catalog,
             reuse_existing=args.reuse_existing,
+            reuse_inventory_path=args.reuse_inventory_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1

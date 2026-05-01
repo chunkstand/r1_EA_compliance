@@ -33,11 +33,10 @@ Custer Gallatin FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biologi
 forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. The
 Custer Gallatin forest-plan resolver now requires the planning page, LMP, ROD, FEIS Volumes 1 and 2,
 Biological Assessment, and Biological Opinion to be present in the retrieval index before it reviews
-a Custer Gallatin EA. A Custer Gallatin-only extraction/retrieval slice for those seven records is
-built under the current source set for forest-plan review. Full all-source extraction, evidence
-graph, source-claim, rule-claim, and compliance promotion artifacts still need to be rebuilt for this
-source set; older reviewer-ready downstream artifacts under `source-set-e364ea220cffd938` remain
-useful only as prior 147-row evidence.
+a Custer Gallatin EA. Full all-source extraction, retrieval, evidence graph, source-claim,
+rule-claim, compliance coverage, compliance-review eval, compliance-gold eval, and phase-eval
+artifacts have been promoted for this source set. Older reviewer-ready downstream artifacts under
+`source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan:
@@ -307,11 +306,6 @@ For delta extraction, repeat `--id` for each selected `source_record_id`. The co
 complete selected ID list in `diagnostics/summary.json`; retrieval remains non-reviewer-ready for a
 filtered extraction unless rebuilt with explicit partial-extraction allowance.
 
-When a prior extraction already produced matching text for unchanged artifacts, pass
-`--reuse-existing` to rebuild the manifest and chunks without reparsing those artifacts. This is
-intended for critical targeted recovery or source-slice refreshes, not for promotion evidence that
-requires a clean full-source-set extraction.
-
 Before a reuse-first rebuild, inventory current and prior extracted text without running extraction
 or review commands:
 
@@ -324,6 +318,18 @@ The command writes `source_library/derived/<source_set_id>/reuse_inventory/` wit
 current catalog source classified as `already_current_cg_slice`, `reuse_extraction`,
 `needs_extract`, or `excluded`. Reuse candidates require matching `source_record_id`, artifact
 SHA256, parser/content type metadata, existing extracted text, and matching text SHA256.
+
+When unchanged artifacts already have matching extracted text, pass `--reuse-existing` to reuse the
+current source-set text/cache and pass `--reuse-inventory-path` to copy validated prior source-set
+candidate text into the current extraction. This rewrites the manifest and chunks for the current
+source set while reparsing only rows that the inventory classified as `needs_extract`:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
+  --output-dir source_library \
+  --reuse-existing \
+  --reuse-inventory-path source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl
+```
 
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text
 to that XML element and records the applied source scope in parser metadata. Run the accuracy audit
@@ -355,9 +361,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build \
 ```
 
 By default, `retrieval-build` requires a full extraction scope: no extraction filters, selected
-source count equal to catalog source count, and one indexed chunk source for every extracted source.
-For a one-source diagnostic slice, pass `--allow-partial-extraction`; the command will build the
-index but mark `reviewer_ready` as `false`.
+source count equal to catalog source count, all required non-excluded sources extracted, and one
+indexed chunk source for every extracted source. Scope-excluded rows remain terminal manifest rows
+but do not require chunks. For a one-source diagnostic slice, pass `--allow-partial-extraction`; the
+command will build the index but mark `reviewer_ready` as `false`.
 
 Query the evidence index with text and reviewer filters:
 
@@ -582,10 +589,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
 `rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
 writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
 carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
-and exact source offsets. Rule-claim outputs are versioned by rule-pack ID and version. After the
-active rule pack moved to `0.4.0` and 44 rules, old `0.3.0`/20-rule link, coverage, compliance-eval,
-and gold-eval artifacts should be treated as stale for promotion until regenerated and adjudicated
-against the `0.4.0` rule set.
+and exact source offsets. Rule-claim outputs are versioned by rule-pack ID and version. Old
+`0.3.0`/20-rule link, coverage, compliance-eval, and gold-eval artifacts should be treated as stale
+for promotion. Current promotion evidence must come from the regenerated `0.4.0`/44-rule artifacts
+for `source-set-ba8d0feae79501b8`.
 
 Run the seed rule-claim eval gate:
 

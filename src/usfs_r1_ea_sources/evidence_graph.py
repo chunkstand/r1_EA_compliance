@@ -394,7 +394,20 @@ def run_phase_aligned_eval(
                     extraction_summary,
                     "selected_source_count",
                 ),
+                "required_extraction_source_count": _int_from_summary(
+                    extraction_summary,
+                    "required_extraction_source_count",
+                ),
+                "selected_required_extraction_source_count": _int_from_summary(
+                    extraction_summary,
+                    "selected_required_extraction_source_count",
+                ),
                 "extracted_count": _int_from_summary(extraction_summary, "extracted_count"),
+                "failed_count": _int_from_summary(extraction_summary, "failed_count"),
+                "skipped_excluded_count": _int_from_summary(
+                    extraction_summary,
+                    "skipped_excluded_count",
+                ),
             },
         ),
         _phase(
@@ -977,7 +990,20 @@ def _validation_report(
                     extraction_summary,
                     "selected_source_count",
                 ),
+                "required_extraction_source_count": _int_from_summary(
+                    extraction_summary,
+                    "required_extraction_source_count",
+                ),
+                "selected_required_extraction_source_count": _int_from_summary(
+                    extraction_summary,
+                    "selected_required_extraction_source_count",
+                ),
                 "extracted_count": _int_from_summary(extraction_summary, "extracted_count"),
+                "failed_count": _int_from_summary(extraction_summary, "failed_count"),
+                "skipped_excluded_count": _int_from_summary(
+                    extraction_summary,
+                    "skipped_excluded_count",
+                ),
                 "filters": (extraction_summary or {}).get("filters", {}),
             },
         },
@@ -1643,13 +1669,24 @@ def _extraction_summary_is_complete(extraction_summary: dict | None) -> bool:
     catalog_count = _int_from_summary(extraction_summary, "catalog_source_count")
     selected_count = _int_from_summary(extraction_summary, "selected_source_count")
     extracted_count = _int_from_summary(extraction_summary, "extracted_count")
+    failed_count = _int_from_summary(extraction_summary, "failed_count")
+    required_count = (
+        _int_from_summary(extraction_summary, "required_extraction_source_count")
+        or catalog_count
+    )
+    selected_required_count = (
+        _int_from_summary(extraction_summary, "selected_required_extraction_source_count")
+        or selected_count
+    )
     filters = extraction_summary.get("filters") or {}
     active_filters = [value for value in filters.values() if value not in (None, "", [])]
     return (
         catalog_count > 0
         and not active_filters
         and selected_count == catalog_count
-        and extracted_count == catalog_count
+        and selected_required_count == required_count
+        and extracted_count == required_count
+        and failed_count == 0
     )
 
 

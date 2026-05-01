@@ -84,6 +84,65 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertIn("CLAIM_HAS_EVIDENCE_SPAN", {edge["relationship"] for edge in edges})
             self.assertIn("CLAIM_MENTIONS_ENTITY", {edge["relationship"] for edge in edges})
 
+    def test_claim_extraction_allows_scope_excluded_rows_in_complete_extraction(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-003",
+                        title="Level of review",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="R1EA-003 | Level of review | artifact abc123",
+                        text="An agency shall prepare an environmental assessment.",
+                    )
+                ],
+                skipped_source_record_ids=["R1EA-160"],
+            )
+
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["extraction_complete"])
+
+    def test_claim_extraction_captures_structural_definition_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-028",
+                        title="Forest Service Directives",
+                        document_role="agency_policy",
+                        authority_level="federal",
+                        citation_label="R1EA-028 | Forest Service Directives | artifact abc123",
+                        text=(
+                            "The Forest Service Directive System consists of the Forest Service "
+                            "Manual and Handbooks, which codify the agency's policy, practice, "
+                            "and procedure."
+                        ),
+                    )
+                ],
+            )
+
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            claims = _read_jsonl(result.claims_path)
+            self.assertEqual(claims[0]["source_record_id"], "R1EA-028")
+            self.assertEqual(claims[0]["claim_type"], "definition")
+            self.assertEqual(claims[0]["pattern_id"], "structural_definition")
+
     def test_claim_eval_scores_expected_claims_terms_and_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -313,12 +372,21 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertTrue(rule_claim_phase["reviewer_ready"])
 
 
-def _prepare_source_library(output_dir: Path, source_set_id: str, chunks: list[dict]) -> None:
+def _prepare_source_library(
+    output_dir: Path,
+    source_set_id: str,
+    chunks: list[dict],
+    *,
+    skipped_source_record_ids: list[str] | None = None,
+) -> None:
     _write_catalog_validation(output_dir, passed=True)
+    source_record_ids = sorted({chunk["source_record_id"] for chunk in chunks})
     _write_extraction_diagnostics(
         output_dir,
         source_set_id,
-        source_record_ids=sorted({chunk["source_record_id"] for chunk in chunks}),
+        source_record_ids=source_record_ids,
+        skipped_source_record_ids=skipped_source_record_ids,
+        catalog_source_count=len(source_record_ids) + len(skipped_source_record_ids or []),
     )
     _write_chunks(output_dir, source_set_id, chunks)
     _write_catalog_sqlite(
@@ -342,6 +410,8 @@ def _write_extraction_diagnostics(
     source_set_id: str,
     *,
     source_record_ids: list[str],
+    skipped_source_record_ids: list[str] | None = None,
+    catalog_source_count: int | None = None,
 ) -> None:
     diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
     diagnostics_dir.mkdir(parents=True, exist_ok=True)
@@ -349,6 +419,7 @@ def _write_extraction_diagnostics(
         json.dumps({"passed": True}, sort_keys=True),
         encoding="utf-8",
     )
+    skipped_source_record_ids = skipped_source_record_ids or []
     manifest_records = [
         {
             "source_set_id": source_set_id,
@@ -357,15 +428,31 @@ def _write_extraction_diagnostics(
         }
         for source_record_id in source_record_ids
     ]
+    manifest_records.extend(
+        {
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "status": "skipped_excluded",
+        }
+        for source_record_id in skipped_source_record_ids
+    )
     (diagnostics_dir / "extraction_manifest.jsonl").write_text(
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in manifest_records),
         encoding="utf-8",
     )
+    selected_count = len(source_record_ids) + len(skipped_source_record_ids)
+    catalog_count = catalog_source_count if catalog_source_count is not None else selected_count
+    required_count = catalog_count - len(skipped_source_record_ids)
     summary = {
         "source_set_id": source_set_id,
-        "catalog_source_count": len(source_record_ids),
-        "selected_source_count": len(source_record_ids),
+        "catalog_source_count": catalog_count,
+        "artifact_bearing_source_count": required_count,
+        "required_extraction_source_count": required_count,
+        "selected_source_count": selected_count,
+        "selected_required_extraction_source_count": len(source_record_ids),
         "extracted_count": len(source_record_ids),
+        "failed_count": 0,
+        "skipped_excluded_count": len(skipped_source_record_ids),
         "filters": {"id": None, "parser": None, "limit": None},
     }
     (diagnostics_dir / "summary.json").write_text(

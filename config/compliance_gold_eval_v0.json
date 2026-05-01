@@ -1,34 +1,58 @@
 {
   "schema_version": "compliance-gold-eval-v0",
-  "id": "nepa-ea-authority-gold-v0.3",
-  "version": "0.3.0",
-  "title": "NEPA EA Authority Gold Eval V0.3",
+  "id": "nepa-ea-authority-gold-v0.4",
+  "version": "0.4.0",
+  "title": "NEPA EA Authority Gold Eval V0.4",
   "rule_pack_id": "nepa-ea-v0",
-  "rule_pack_version": "0.3.0",
+  "rule_pack_version": "0.4.0",
   "adjudication": {
     "status": "seed_gold",
-    "method": "Synthetic authority-profile cases covering baseline and conditional source-authority rows.",
+    "method": "Synthetic authority-profile cases covering the v0.4 baseline and conditional source-authority rows.",
     "adjudicated_by": [
       "codex"
     ],
-    "adjudicated_at": "2026-04-30",
+    "adjudicated_at": "2026-05-01",
     "promotion_gate": true
   },
   "cases": [
     {
       "id": "gold-all-authorities-supported",
-      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. National Environmental Policy Act NEPA environmental assessment environmental effects alternatives consultation public comment finding of no significant impact significant effects schedule page limit unified review objection period publicly circulated tiers to incorporates by reference programmatic final environmental impact statement purpose and need affected environment environmental consequences FONSI decision notice mitigation coordination environmental review integrated National Forest Management Act Land Management Plan Forest Plan plan consistency 36 CFR 219.15 Custer Gallatin 2022 Land Management Plan Custer Gallatin National Forest Land Management Plan Endangered Species Act Section 7 threatened endangered biological assessment Fish and Wildlife Service National Historic Preservation Act Section 106 SHPO cultural resources historic properties 36 CFR part 800 adverse effect Montana SHPO State Historic Preservation Officer Roadless Rule inventoried roadless roadless area roadless characteristics Executive Order 11990 wetlands wetland Migratory Bird Treaty Act migratory bird birds conservation measures Executive Order 13186 The package describes alternatives, affected environment, environmental effects, consultation, coordination, public comment, a finding of no significant impact, decision notice, mitigation, schedule, objection period, and publicly circulated review. It tiers to and incorporates by reference a final environmental impact statement and programmatic analysis. The record addresses National Forest Management Act, 36 CFR 219.15, Custer Gallatin, 2022 Land Management Plan, Forest Plan, plan consistency, Endangered Species Act, Section 7, biological assessment, Fish and Wildlife Service, National Historic Preservation Act, Section 106, 36 CFR part 800, SHPO, adverse effect, cultural resources, Montana SHPO, Roadless Rule, inventoried roadless area, roadless characteristics, Executive Order 11990, wetlands, wetland, Migratory Bird Treaty Act, migratory bird, Executive Order 13186.\n",
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. This fixture intentionally includes every baseline and conditional authority trigger used by the v0.4 rule pack. National Environmental Policy Act applies: National Environmental Policy Act; NEPA; environmental assessment. NEPA section 4332 environmental information is addressed: environmental effects; alternatives; consultation; public comment. NEPA level of review is supported: environmental assessment; finding of no significant impact; significant effects. NEPA timing and unified-review duties are addressed: schedule; page limit; unified review; objection period; publicly circulated. 7 CFR part 1b - National Environment Policy Act is reviewed: 7 CFR part 1b; NEPA procedures; environmental assessment. 7 CFR \u00a7 1b.1 - Purpose is reviewed: decision-making; coordinated; predictable; timely review. 7 CFR \u00a7 1b.2 - Policy is reviewed: major Federal action; discretion; significance; project at hand. USDA EA requirements are met: purpose and need; alternatives; affected environment; environmental effects; environmental consequences. USDA FONSI support is traceable: finding of no significant impact; FONSI; decision notice; mitigation. Efficient and integrated environmental review is documented: consultation; coordination; environmental review; integrated. 7 CFR \u00a7 1b.11 - Definitions and acronyms is reviewed: definitions; acronyms; terminology; NEPA. USDA final rule: National Environmental Policy Act, 91 FR 17092, Apr. 3, 2026 is reviewed: 7 CFR part 1b; effective date; USDA final rule; NEPA. Forest Service Environmental Planning / NEPA page is reviewed: Forest Service; NEPA; USDA NEPA rule; 36 CFR part 220. Seven County Infrastructure Coalition v. Eagle County, Supreme Court opinion is reviewed: reasonably foreseeable effects; project at hand; agency discretion; NEPA. Administrative Procedure Act final agency action, 5 U.S.C. \u00a7 704 is reviewed: final agency action; decision notice; FONSI; authorization. NFMA forest-plan consistency is addressed: National Forest Management Act; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 219 - Planning is reviewed: 36 CFR part 219; planning; plan components; project consistency. 36 CFR 219.15 project consistency is addressed: 36 CFR 219.15; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 218 - Project-level predecisional administrative review is reviewed: 36 CFR part 218; objection; legal notice; decision notice. Forest Service National Directives portal is reviewed: Forest Service directives; manual; handbook; current directives. Forest Service Region 1 field directives index is reviewed: Region 1 directives; regional supplement; field directives; current directives. FSM 2670 - Threatened, Endangered and Sensitive Plants and Animals is reviewed: FSM 2670; threatened; endangered; sensitive species; biological evaluation. Multiple-Use Sustained-Yield Act, 16 U.S.C. \u00a7\u00a7 528-531 is reviewed: multiple use; sustained yield; outdoor recreation; watershed; wildlife. Organic Administration Act, 16 U.S.C. \u00a7 475 is reviewed: watershed; timber; national forest purposes. Organic Administration Act, 16 U.S.C. \u00a7 551 is reviewed: occupancy; use; protection; national forests. Northern Region species of conservation concern page is reviewed: species of conservation concern; Regional Forester; sensitive species; forest plan. 42 U.S.C. \u00a7 4336b - Programmatic environmental documents is reviewed: tiers to; incorporates by reference; programmatic; final environmental impact statement. 42 U.S.C. \u00a7 4336c - Adoption of categorical exclusions is reviewed: categorical exclusion; CE; level of review; adopted CE. 42 U.S.C. \u00a7 4336f - Sponsor-prepared environmental documents is reviewed: sponsor; applicant; financial interest; agency responsibility. 7 CFR \u00a7 1b.3 - Categorical exclusions and FANEC is reviewed: categorical exclusion; extraordinary circumstances; FANEC. 7 CFR \u00a7 1b.4 - USDA subcomponent categorical exclusions is reviewed: subcomponent categorical exclusion; extraordinary circumstances; CE; categorical exclusion; USDA CE. 7 CFR \u00a7 1b.10 - Documentation prepared by applicant or third party is reviewed: applicant; third party; independent evaluation; financial disclosure. 36 CFR part 214 - Postdecisional administrative review for written instruments is reviewed: 36 CFR part 214; appeal; written authorization; effective date. 36 CFR part 216 - Notice and comment for Forest Service directives is reviewed: 36 CFR part 216; directives; notice and comment; standards; directive. 2022 Custer Gallatin Land Management Plan is applied: Custer Gallatin; 2022 Land Management Plan; Custer Gallatin National Forest Land Management Plan; Land Management Plan. Endangered Species Act section 7 consultation is addressed: Endangered Species Act; Section 7; threatened; endangered; biological assessment. ESA consultation regulations are addressed: Endangered Species Act; Section 7; biological assessment; Fish and Wildlife Service; U.S. Fish and Wildlife Service. NHPA section 106 compliance is addressed: National Historic Preservation Act; Section 106; SHPO; cultural resources; historic properties. 36 CFR part 800 consultation process is addressed: 36 CFR part 800; Section 106; SHPO; adverse effect; historic properties. Montana SHPO review is addressed: Montana SHPO; State Historic Preservation Officer; SHPO; cultural resources; cultural resource. Roadless Rule compliance is addressed: Roadless Rule; inventoried roadless; roadless area; roadless characteristics; Inventoried Roadless Area. Executive Order 11990 wetlands protection is addressed: Executive Order 11990; wetlands; wetland; mitigation; floodplains. Migratory Bird Treaty Act compliance is addressed: Migratory Bird Treaty Act; migratory bird; birds; conservation measures; Executive Order 13186. Executive Order 13186 migratory-bird responsibilities are addressed: Executive Order 13186; migratory bird; Migratory Bird Treaty Act.\n",
       "expected_statuses": {
         "nepa_statute_chapter_55": "pass",
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "pass",
+        "usda_nepa_policy_7cfr_1b2": "pass",
         "usda_nepa_ea_7cfr_1b5": "pass",
         "usda_nepa_fonsi_7cfr_1b6": "pass",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "pass",
         "nfma_16usc_1604_plan_consistency": "pass",
+        "planning_rule_36cfr_219": "pass",
         "planning_rule_36cfr_21915_consistency": "pass",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "pass",
+        "region1_directives_index": "pass",
+        "fsm_2670_species_policy": "pass",
+        "musuya_multiple_use_sustained_yield": "pass",
+        "organic_act_16usc_475": "pass",
+        "organic_act_16usc_551": "pass",
+        "region1_species_of_conservation_concern": "pass",
+        "nepa_4336b_programmatic_tiering": "pass",
+        "nepa_4336c_ce_adoption_screen": "pass",
+        "nepa_4336f_sponsor_prepared_documents": "pass",
+        "usda_nepa_ce_fanec_7cfr_1b3": "pass",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "pass",
+        "usda_nepa_applicant_docs_7cfr_1b10": "pass",
+        "postdecisional_review_36cfr_214": "pass",
+        "directives_notice_comment_36cfr_216": "pass",
         "custer_gallatin_lmp_2022": "pass",
         "esa_section_7": "pass",
         "esa_consultation_50cfr_402": "pass",
@@ -41,7 +65,7 @@
         "eo_13186_migratory_birds": "pass"
       },
       "expected_finding_status_counts": {
-        "pass": 20
+        "pass": 44
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -57,8 +81,14 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
-        "nepa_4336b_programmatic_tiering": [
-          "R1EA-005"
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
         ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
@@ -69,11 +99,77 @@
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
         ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
         "nfma_16usc_1604_plan_consistency": [
           "R1EA-022"
         ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
         "planning_rule_36cfr_21915_consistency": [
           "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "R1EA-005"
+        ],
+        "nepa_4336c_ce_adoption_screen": [
+          "R1EA-006"
+        ],
+        "nepa_4336f_sponsor_prepared_documents": [
+          "R1EA-007"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ],
+        "usda_nepa_subcomponent_ce_7cfr_1b4": [
+          "R1EA-012"
+        ],
+        "usda_nepa_applicant_docs_7cfr_1b10": [
+          "R1EA-016"
+        ],
+        "postdecisional_review_36cfr_214": [
+          "R1EA-026"
+        ],
+        "directives_notice_comment_36cfr_216": [
+          "R1EA-027"
         ],
         "custer_gallatin_lmp_2022": [
           "R1PLAN-custer-gallatin-nf-02"
@@ -119,8 +215,14 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
-        "nepa_4336b_programmatic_tiering": [
-          "law"
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
         ],
         "usda_nepa_ea_7cfr_1b5": [
           "regulation"
@@ -131,10 +233,76 @@
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
         ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
         "nfma_16usc_1604_plan_consistency": [
           "law"
         ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
         "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "law"
+        ],
+        "nepa_4336c_ce_adoption_screen": [
+          "law"
+        ],
+        "nepa_4336f_sponsor_prepared_documents": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ],
+        "usda_nepa_subcomponent_ce_7cfr_1b4": [
+          "regulation"
+        ],
+        "usda_nepa_applicant_docs_7cfr_1b10": [
+          "regulation"
+        ],
+        "postdecisional_review_36cfr_214": [
+          "regulation"
+        ],
+        "directives_notice_comment_36cfr_216": [
           "regulation"
         ],
         "custer_gallatin_lmp_2022": [
@@ -168,7 +336,7 @@
           "executive_order"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "positive",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -188,12 +356,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -206,8 +398,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 6,
-        "not_applicable": 14
+        "gap": 14,
+        "not_applicable": 18,
+        "pass": 12
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -223,11 +416,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ]
       },
       "expected_source_document_roles": {
@@ -243,14 +496,74 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "positive",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -270,12 +583,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
         "nfma_16usc_1604_plan_consistency": "pass",
+        "planning_rule_36cfr_219": "gap",
         "planning_rule_36cfr_21915_consistency": "pass",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "pass",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -288,8 +625,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 9,
-        "not_applicable": 11
+        "gap": 11,
+        "not_applicable": 17,
+        "pass": 16
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -305,17 +643,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
         ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
         "nfma_16usc_1604_plan_consistency": [
           "R1EA-022"
         ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
         "planning_rule_36cfr_21915_consistency": [
           "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ],
         "custer_gallatin_lmp_2022": [
           "R1PLAN-custer-gallatin-nf-02"
@@ -334,23 +726,77 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
         ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
         "nfma_16usc_1604_plan_consistency": [
           "law"
         ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
         "planning_rule_36cfr_21915_consistency": [
           "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ],
         "custer_gallatin_lmp_2022": [
           "forest_plan"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -370,12 +816,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "pass",
+        "musuya_multiple_use_sustained_yield": "pass",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "pass",
         "esa_consultation_50cfr_402": "pass",
@@ -388,8 +858,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 8,
-        "not_applicable": 12
+        "gap": 12,
+        "not_applicable": 16,
+        "pass": 16
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -405,11 +876,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ],
         "esa_section_7": [
           "R1EA-065"
@@ -431,11 +962,71 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ],
         "esa_section_7": [
           "law"
@@ -444,7 +1035,7 @@
           "regulation"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -464,12 +1055,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -482,8 +1097,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 9,
-        "not_applicable": 11
+        "gap": 14,
+        "not_applicable": 15,
+        "pass": 15
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -499,11 +1115,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ],
         "nhpa_section_106": [
           "R1EA-070"
@@ -528,11 +1204,71 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ],
         "nhpa_section_106": [
           "law"
@@ -544,7 +1280,7 @@
           "state_requirement"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -564,12 +1300,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "pass",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -582,8 +1342,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 8,
-        "not_applicable": 12
+        "gap": 13,
+        "not_applicable": 16,
+        "pass": 15
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -599,11 +1360,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ],
         "roadless_rule_36cfr_294b": [
           "R1EA-049"
@@ -625,11 +1446,71 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ],
         "roadless_rule_36cfr_294b": [
           "regulation"
@@ -638,7 +1519,7 @@
           "executive_order"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -658,12 +1539,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -676,8 +1581,9 @@
         "eo_13186_migratory_birds": "pass"
       },
       "expected_finding_status_counts": {
-        "pass": 8,
-        "not_applicable": 12
+        "gap": 14,
+        "not_applicable": 16,
+        "pass": 14
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -693,11 +1599,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ],
         "mbta_migratory_birds": [
           "R1EA-094"
@@ -719,11 +1685,71 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ],
         "mbta_migratory_birds": [
           "law"
@@ -732,7 +1758,7 @@
           "executive_order"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -752,12 +1778,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
         "usda_nepa_fonsi_7cfr_1b6": "pass",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "pass",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -770,8 +1820,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 7,
-        "not_applicable": 13
+        "gap": 12,
+        "not_applicable": 18,
+        "pass": 14
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -787,6 +1838,15 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
@@ -795,6 +1855,54 @@
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ]
       },
       "expected_source_document_roles": {
@@ -810,6 +1918,15 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "regulation"
         ],
@@ -818,9 +1935,57 @@
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -840,12 +2005,36 @@
         "nepa_4332_environmental_information": "pass",
         "nepa_4336_level_of_review": "pass",
         "nepa_4336a_timing_unified_review": "pass",
-        "nepa_4336b_programmatic_tiering": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "pass",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "pass",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "seven_county_nepa_scope": "pass",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "pass",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "pass",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -858,8 +2047,9 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "pass": 7,
-        "not_applicable": 13
+        "gap": 14,
+        "not_applicable": 17,
+        "pass": 13
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -875,14 +2065,74 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
-        "nepa_4336b_programmatic_tiering": [
-          "R1EA-005"
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
         ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "R1EA-005"
         ]
       },
       "expected_source_document_roles": {
@@ -898,17 +2148,77 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
-        "nepa_4336b_programmatic_tiering": [
-          "law"
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
         ],
         "usda_nepa_ea_7cfr_1b5": [
           "regulation"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "law"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "mixed",
       "adjudication": {
         "status": "adjudicated_seed",
@@ -928,12 +2238,36 @@
         "nepa_4332_environmental_information": "gap",
         "nepa_4336_level_of_review": "gap",
         "nepa_4336a_timing_unified_review": "gap",
-        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "usda_nepa_7cfr_part_1b": "gap",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
         "usda_nepa_ea_7cfr_1b5": "gap",
-        "usda_nepa_fonsi_7cfr_1b6": "not_applicable",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
         "usda_nepa_efficient_review_7cfr_1b9": "gap",
-        "nfma_16usc_1604_plan_consistency": "not_applicable",
-        "planning_rule_36cfr_21915_consistency": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "gap",
+        "usda_nepa_final_rule_91fr17092": "gap",
+        "forest_service_nepa_policy_page": "gap",
+        "seven_county_nepa_scope": "gap",
+        "apa_final_agency_action": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "predecisional_review_36cfr_218": "gap",
+        "forest_service_directives_portal": "gap",
+        "region1_directives_index": "gap",
+        "fsm_2670_species_policy": "gap",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
         "custer_gallatin_lmp_2022": "not_applicable",
         "esa_section_7": "not_applicable",
         "esa_consultation_50cfr_402": "not_applicable",
@@ -946,8 +2280,8 @@
         "eo_13186_migratory_birds": "not_applicable"
       },
       "expected_finding_status_counts": {
-        "gap": 6,
-        "not_applicable": 14
+        "gap": 26,
+        "not_applicable": 18
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
@@ -963,11 +2297,71 @@
         "nepa_4336a_timing_unified_review": [
           "R1EA-004"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
           "R1EA-013"
         ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "R1EA-015"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
         ]
       },
       "expected_source_document_roles": {
@@ -983,14 +2377,74 @@
         "nepa_4336a_timing_unified_review": [
           "law"
         ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
         "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
           "regulation"
         ],
         "usda_nepa_efficient_review_7cfr_1b9": [
           "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
         ]
       },
-      "min_findings": 20,
+      "min_findings": 44,
       "profile": "negative",
       "adjudication": {
         "status": "adjudicated_seed",

@@ -132,6 +132,42 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertFalse(diagnostic.summary["reviewer_ready"])
             self.assertTrue(diagnostic.nodes_path.exists())
 
+    def test_evidence_graph_allows_scope_excluded_rows_in_complete_extraction(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-003"],
+                skipped_source_record_ids=["R1EA-160"],
+                catalog_source_count=2,
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-003",
+                        title="Extracted source",
+                        document_role="case_law",
+                        authority_level="federal",
+                        citation_label="R1EA-003 | Extracted source | artifact abc123",
+                        text="NEPA requires environmental review.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-003": ["NEPA"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            result = build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["extraction_complete"])
+
     def test_evidence_graph_rejects_forged_chunks_after_retrieval_build(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -289,6 +325,7 @@ def _write_extraction_diagnostics(
     source_set_id: str,
     *,
     source_record_ids: list[str],
+    skipped_source_record_ids: list[str] | None = None,
     catalog_source_count: int | None = None,
     filters: dict | None = None,
 ) -> None:
@@ -298,6 +335,7 @@ def _write_extraction_diagnostics(
         json.dumps({"passed": True}, sort_keys=True),
         encoding="utf-8",
     )
+    skipped_source_record_ids = skipped_source_record_ids or []
     manifest_records = [
         {
             "source_set_id": source_set_id,
@@ -306,18 +344,31 @@ def _write_extraction_diagnostics(
         }
         for source_record_id in source_record_ids
     ]
+    manifest_records.extend(
+        {
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "status": "skipped_excluded",
+        }
+        for source_record_id in skipped_source_record_ids
+    )
     (diagnostics_dir / "extraction_manifest.jsonl").write_text(
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in manifest_records),
         encoding="utf-8",
     )
-    catalog_count = (
-        catalog_source_count if catalog_source_count is not None else len(source_record_ids)
-    )
+    selected_count = len(source_record_ids) + len(skipped_source_record_ids)
+    catalog_count = catalog_source_count if catalog_source_count is not None else selected_count
+    required_count = catalog_count - len(skipped_source_record_ids)
     summary = {
         "source_set_id": source_set_id,
         "catalog_source_count": catalog_count,
-        "selected_source_count": len(source_record_ids),
+        "artifact_bearing_source_count": required_count,
+        "required_extraction_source_count": required_count,
+        "selected_source_count": selected_count,
+        "selected_required_extraction_source_count": len(source_record_ids),
         "extracted_count": len(source_record_ids),
+        "failed_count": 0,
+        "skipped_excluded_count": len(skipped_source_record_ids),
         "filters": filters or {"id": None, "parser": None, "limit": None},
     }
     (diagnostics_dir / "summary.json").write_text(

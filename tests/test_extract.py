@@ -307,6 +307,208 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(second_manifest[0]["parser_metadata"]["reused_existing"])
             self.assertEqual(Path(second_manifest[0]["text_path"]), text_path)
 
+    def test_build_extraction_reuses_prior_inventory_candidate(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            body = _html_body()
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-001",
+                artifact_body=body,
+                content_type="text/html",
+                suffix=".html",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            catalog_row = next(
+                row
+                for row in _read_jsonl(output_dir / "catalog" / "source_catalog.jsonl")
+                if row["source_record_id"] == "R1EA-001"
+            )
+            source_set_id = json.loads(
+                (output_dir / "catalog" / "source_set_manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )["source_set_id"]
+            prior_text = "Prior extraction text keeps environmental impacts traceable."
+            prior_text_path = (
+                output_dir
+                / "derived"
+                / "source-set-prior"
+                / "extracted_text"
+                / "R1EA-001_prior.txt"
+            )
+            prior_text_path.parent.mkdir(parents=True)
+            prior_text_path.write_text(prior_text + "\n", encoding="utf-8")
+            text_sha256 = hashlib.sha256(prior_text.encode("utf-8")).hexdigest()
+            inventory_path = output_dir / "reuse_inventory_records.jsonl"
+            inventory_record = {
+                "source_set_id": source_set_id,
+                "source_record_id": "R1EA-001",
+                "classification": "reuse_extraction",
+                "artifact_check": {"passed": True},
+                "artifact_sha256": catalog_row["artifact_sha256"],
+                "expected_parser": catalog_row["expected_parser"],
+                "content_type": catalog_row["content_type"],
+                "reuse_candidate": {
+                    "source_set_id": "source-set-prior",
+                    "source_record_id": "R1EA-001",
+                    "status": "extracted",
+                    "artifact_sha256": catalog_row["artifact_sha256"],
+                    "expected_parser": catalog_row["expected_parser"],
+                    "content_type": catalog_row["content_type"],
+                    "parser_name": "python_htmlparser",
+                    "parser_version": "test",
+                    "parser_metadata": None,
+                    "chunk_count": 1,
+                    "text_path": str(prior_text_path),
+                    "text_sha256": text_sha256,
+                },
+            }
+            inventory_path.write_text(
+                json.dumps(inventory_record, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            original_extract_payload = extract_module._extract_payload
+
+            def fail_if_called(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+                raise AssertionError("reuse inventory should not reparse reusable artifacts")
+
+            extract_module._extract_payload = fail_if_called
+            try:
+                result = build_extraction(
+                    output_dir=output_dir,
+                    id_filter="R1EA-001",
+                    reuse_inventory_path=inventory_path,
+                )
+            finally:
+                extract_module._extract_payload = original_extract_payload
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["reused_count"], 1)
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["parser_name"], "python_htmlparser")
+            self.assertEqual(
+                manifest[0]["parser_metadata"]["reuse_from"],
+                "inventory_prior_extraction",
+            )
+            self.assertEqual(
+                manifest[0]["parser_metadata"]["reuse_source_set_id"],
+                "source-set-prior",
+            )
+            self.assertIn(
+                "environmental impacts",
+                Path(manifest[0]["text_path"]).read_text(encoding="utf-8"),
+            )
+
+    def test_build_extraction_treats_scope_excluded_rows_as_terminal(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-160",
+                status="skipped_excluded",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            result = build_extraction(output_dir=output_dir, id_filter="R1EA-160")
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["skipped_excluded_count"], 1)
+            self.assertEqual(result.summary["failed_count"], 0)
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["status"], "skipped_excluded")
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            self.assertTrue(_check(validation, "all_required_rows_extracted")["passed"])
+
+    def test_reuse_inventory_prevents_loose_text_reuse_for_needs_extract_rows(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-001",
+                artifact_body=_html_body(),
+                content_type="text/html",
+                suffix=".html",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            catalog_row = next(
+                row
+                for row in _read_jsonl(output_dir / "catalog" / "source_catalog.jsonl")
+                if row["source_record_id"] == "R1EA-001"
+            )
+            source_set_id = json.loads(
+                (output_dir / "catalog" / "source_set_manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )["source_set_id"]
+            current_text_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "extracted_text"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.txt"
+            )
+            current_text_path.parent.mkdir(parents=True)
+            current_text_path.write_text("Loose stale text should not be reused.\n", encoding="utf-8")
+            inventory_path = output_dir / "reuse_inventory_records.jsonl"
+            inventory_record = {
+                "source_set_id": source_set_id,
+                "source_record_id": "R1EA-001",
+                "classification": "needs_extract",
+                "artifact_check": {"passed": True},
+                "artifact_sha256": catalog_row["artifact_sha256"],
+                "expected_parser": catalog_row["expected_parser"],
+                "content_type": catalog_row["content_type"],
+                "reuse_candidate": None,
+            }
+            inventory_path.write_text(
+                json.dumps(inventory_record, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            result = build_extraction(
+                output_dir=output_dir,
+                id_filter="R1EA-001",
+                reuse_existing=True,
+                reuse_inventory_path=inventory_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["reused_count"], 0)
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["parser_name"], "python_htmlparser")
+            self.assertIn(
+                "National Environmental Policy Act",
+                Path(manifest[0]["text_path"]).read_text(encoding="utf-8"),
+            )
+
     def test_build_extraction_reports_pdf_failure_when_docling_is_unavailable(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
@@ -404,9 +606,10 @@ def _write_download_run(
     run_id: str,
     *,
     source_record_id: str,
-    artifact_body: bytes,
-    content_type: str,
-    suffix: str,
+    artifact_body: bytes = b"",
+    content_type: str = "text/html",
+    suffix: str = ".html",
+    status: str = "downloaded",
 ) -> Path:
     run_dir = output_dir / "runs" / run_id
     manifest_dir = output_dir / "manifests"
@@ -415,14 +618,17 @@ def _write_download_run(
     manifest_path = manifest_dir / f"download_{run_id}.jsonl"
     artifact = output_dir / "artifacts" / "raw" / f"{run_id}-{source_record_id}{suffix}"
     artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_bytes(artifact_body)
+    if status != "skipped_excluded":
+        artifact.write_bytes(artifact_body)
     record = {
         "run_id": run_id,
         "source_record_id": source_record_id,
-        "status": "downloaded",
-        "artifact_path": str(artifact),
-        "artifact_sha256": _artifact_sha256(artifact_body),
-        "artifact_byte_size": len(artifact_body),
+        "status": status,
+        "artifact_path": str(artifact) if status != "skipped_excluded" else None,
+        "artifact_sha256": _artifact_sha256(artifact_body)
+        if status != "skipped_excluded"
+        else None,
+        "artifact_byte_size": len(artifact_body) if status != "skipped_excluded" else None,
         "content_type": content_type,
         "fetch_timestamp": "2026-04-30T00:00:00Z",
         "final_url": "https://example.test/final",
@@ -433,7 +639,7 @@ def _write_download_run(
         "mode": "download",
         "manifest_path": str(manifest_path),
         "filtered_rows": 1,
-        "status_counts": {"downloaded": 1},
+        "status_counts": {status: 1},
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
     return artifact

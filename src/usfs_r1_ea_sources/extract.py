@@ -29,8 +29,11 @@ DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessin
 PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
+NON_EXTRACTABLE_SOURCE_STATUSES = {"skipped_excluded"}
+CURRENT_REUSE_INVENTORY_CLASSIFICATIONS = {"already_current", "already_current_cg_slice"}
 TERMINAL_STATUSES = {
     "extracted",
+    "skipped_excluded",
     "no_artifact",
     "artifact_missing",
     "hash_mismatch",
@@ -110,6 +113,7 @@ def build_extraction(
     docling_timeout_seconds: float | None = 300.0,
     allow_invalid_catalog: bool = False,
     reuse_existing: bool = False,
+    reuse_inventory_path: Path | None = None,
 ) -> ExtractionBuildResult:
     """Build derived extracted text and chunks from the reviewer catalog."""
 
@@ -135,9 +139,14 @@ def build_extraction(
 
     source_set_manifest = _read_json(manifest_path)
     source_set_id = source_set_manifest["source_set_id"]
+    reuse_inventory_records = _load_reuse_inventory_records(
+        reuse_inventory_path,
+        source_set_id=source_set_id,
+    )
+    preserve_existing_outputs = reuse_existing or reuse_inventory_records is not None
     derived_dir = output_dir / "derived"
     source_derived_dir = _source_derived_dir(derived_dir, source_set_id)
-    if source_derived_dir.exists() and not reuse_existing:
+    if source_derived_dir.exists() and not preserve_existing_outputs:
         shutil.rmtree(source_derived_dir)
     extracted_text_dir = source_derived_dir / "extracted_text"
     docling_json_dir = source_derived_dir / "docling_json"
@@ -146,7 +155,7 @@ def build_extraction(
     payload_cache_dir = diagnostics_dir / "payload_cache"
     for directory in (extracted_text_dir, docling_json_dir, chunks_dir, diagnostics_dir):
         directory.mkdir(parents=True, exist_ok=True)
-    if reuse_existing:
+    if preserve_existing_outputs:
         payload_cache_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_dir / "chunks.jsonl"
@@ -182,6 +191,8 @@ def build_extraction(
             docling_ocr=docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
             reuse_existing=reuse_existing,
+            reuse_inventory_record=(reuse_inventory_records or {}).get(row["source_record_id"]),
+            reuse_inventory_enforced=reuse_inventory_records is not None,
             payload_cache_dir=payload_cache_dir,
         )
         manifest_records.append(record)
@@ -219,6 +230,7 @@ def build_extraction(
             "docling_ocr": docling_ocr,
             "docling_timeout_seconds": docling_timeout_seconds,
             "reuse_existing": reuse_existing,
+            "reuse_inventory_path": str(reuse_inventory_path) if reuse_inventory_path else None,
         },
     )
     _write_json(extraction_validation_path, validation)
@@ -342,9 +354,18 @@ def _extract_row(
     docling_ocr: bool,
     docling_timeout_seconds: float | None,
     reuse_existing: bool,
+    reuse_inventory_record: dict | None,
+    reuse_inventory_enforced: bool,
     payload_cache_dir: Path,
 ) -> tuple[dict, list[dict]]:
     base_record = _base_manifest_record(row=row, extracted_at=extracted_at)
+    if row.get("source_status") in NON_EXTRACTABLE_SOURCE_STATUSES:
+        return _skipped_record(
+            base_record,
+            status=str(row.get("source_status")),
+            reason="Catalog row is explicitly non-extractable.",
+        ), []
+
     artifact_path_value = row.get("artifact_path")
     artifact_sha256 = row.get("artifact_sha256")
     if (
@@ -400,7 +421,12 @@ def _extract_row(
         )
         return record, []
 
-    if reuse_existing:
+    allow_current_reuse = reuse_existing and (
+        not reuse_inventory_enforced
+        or (reuse_inventory_record or {}).get("classification")
+        in CURRENT_REUSE_INVENTORY_CLASSIFICATIONS
+    )
+    if allow_current_reuse:
         reused = _reuse_existing_extraction(
             row=row,
             base_record=base_record,
@@ -410,6 +436,21 @@ def _extract_row(
             extracted_at=extracted_at,
             chunk_max_chars=chunk_max_chars,
             chunk_overlap_chars=chunk_overlap_chars,
+        )
+        if reused is not None:
+            return reused
+    if reuse_inventory_record is not None:
+        reused = _reuse_inventory_extraction(
+            row=row,
+            base_record=base_record,
+            output_dir=output_dir,
+            extracted_text_dir=extracted_text_dir,
+            docling_json_dir=docling_json_dir,
+            payload_cache_dir=payload_cache_dir,
+            extracted_at=extracted_at,
+            chunk_max_chars=chunk_max_chars,
+            chunk_overlap_chars=chunk_overlap_chars,
+            inventory_record=reuse_inventory_record,
         )
         if reused is not None:
             return reused
@@ -579,6 +620,102 @@ def _reuse_existing_extraction(
     )
 
 
+def _reuse_inventory_extraction(
+    *,
+    row: dict,
+    base_record: dict,
+    output_dir: Path,
+    extracted_text_dir: Path,
+    docling_json_dir: Path,
+    payload_cache_dir: Path,
+    extracted_at: str,
+    chunk_max_chars: int,
+    chunk_overlap_chars: int,
+    inventory_record: dict,
+) -> tuple[dict, list[dict]] | None:
+    classification = inventory_record.get("classification")
+    if classification in CURRENT_REUSE_INVENTORY_CLASSIFICATIONS:
+        candidate = inventory_record.get("current_extraction")
+        reuse_from = "inventory_current_extraction"
+    elif classification == "reuse_extraction":
+        candidate = inventory_record.get("reuse_candidate")
+        reuse_from = "inventory_prior_extraction"
+    else:
+        return None
+
+    if not isinstance(candidate, dict):
+        return None
+    if not _reuse_inventory_record_matches_row(inventory_record, candidate, row):
+        return None
+
+    source_text_path = _resolve_existing_path(output_dir, candidate.get("text_path"))
+    if source_text_path is None or not source_text_path.is_file():
+        return None
+
+    text = source_text_path.read_text(encoding="utf-8").strip()
+    if not text:
+        return None
+    expected_text_sha256 = candidate.get("text_sha256")
+    actual_text_sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if expected_text_sha256 and actual_text_sha256 != expected_text_sha256:
+        return None
+
+    text, blocks = _blocks_from_plain_text(text)
+    metadata = {
+        **(candidate.get("parser_metadata") or {}),
+        "reuse_from": reuse_from,
+        "reuse_inventory_classification": classification,
+        "reuse_source_set_id": candidate.get("source_set_id"),
+        "reuse_text_path": str(source_text_path),
+        "reuse_text_sha256": actual_text_sha256,
+        "reuse_without_parser_payload": True,
+    }
+    payload = ExtractionPayload(
+        text=text,
+        blocks=blocks,
+        parser_name=candidate.get("parser_name") or "reused_extracted_text",
+        parser_version=str(candidate.get("parser_version") or "1"),
+        metadata=metadata,
+    )
+    return _record_and_chunks_from_payload(
+        row=row,
+        base_record=base_record,
+        payload=payload,
+        extracted_text_dir=extracted_text_dir,
+        docling_json_dir=docling_json_dir,
+        payload_cache_dir=payload_cache_dir,
+        extracted_at=extracted_at,
+        chunk_max_chars=chunk_max_chars,
+        chunk_overlap_chars=chunk_overlap_chars,
+        write_text=True,
+        reused=True,
+    )
+
+
+def _reuse_inventory_record_matches_row(
+    inventory_record: dict,
+    candidate: dict,
+    row: dict,
+) -> bool:
+    if inventory_record.get("source_record_id") != row.get("source_record_id"):
+        return False
+    if inventory_record.get("source_set_id") != row.get("source_set_id"):
+        return False
+    for field in ("source_record_id", "artifact_sha256", "expected_parser", "content_type"):
+        expected = row.get(field)
+        if expected is None:
+            continue
+        for value in (inventory_record.get(field), candidate.get(field)):
+            if value is not None and str(value) != str(expected):
+                return False
+    if candidate.get("status") != "extracted":
+        return False
+    if int(candidate.get("chunk_count") or 0) <= 0:
+        return False
+    artifact_check = inventory_record.get("artifact_check") or {}
+    return artifact_check.get("passed") is not False
+
+
 def _base_manifest_record(*, row: dict, extracted_at: str) -> dict:
     return {
         "source_set_id": row["source_set_id"],
@@ -624,6 +761,19 @@ def _failed_record(base_record: dict, *, status: str, error_class: str, message:
                 "error_class": error_class,
                 "error_message": message,
             },
+        }
+    )
+    return record
+
+
+def _skipped_record(base_record: dict, *, status: str, reason: str) -> dict:
+    record = dict(base_record)
+    record.update(
+        {
+            "status": status,
+            "artifact_sha256_verified": None,
+            "parser_metadata": {"skip_reason": reason},
+            "failure": None,
         }
     )
     return record
@@ -1550,7 +1700,7 @@ def _validation_report(
 ) -> dict:
     checks = [
         _check_all_sources_terminal(rows, manifest_records),
-        _check_all_selected_rows_extracted(manifest_records),
+        _check_all_required_rows_extracted(manifest_records),
         _check_successes_have_text(manifest_records),
         _check_successes_have_chunks(manifest_records),
         _check_no_hash_mismatches(manifest_records),
@@ -1605,13 +1755,24 @@ def _check_successes_have_text(records: list[dict]) -> dict:
     }
 
 
-def _check_all_selected_rows_extracted(records: list[dict]) -> dict:
-    failed = [record for record in records if record["status"] != "extracted"]
+def _check_all_required_rows_extracted(records: list[dict]) -> dict:
+    failed = [
+        record
+        for record in records
+        if record["status"] != "extracted"
+        and record.get("source_status") not in NON_EXTRACTABLE_SOURCE_STATUSES
+    ]
+    skipped = [
+        record["source_record_id"]
+        for record in records
+        if record.get("source_status") in NON_EXTRACTABLE_SOURCE_STATUSES
+    ]
     return {
-        "name": "all_selected_rows_extracted",
+        "name": "all_required_rows_extracted",
         "passed": not failed,
         "details": {
             "status_counts": dict(Counter(record["status"] for record in records)),
+            "skipped_non_extractable_source_record_ids": sorted(skipped),
             "failed_source_record_ids": sorted(record["source_record_id"] for record in failed),
         },
     }
@@ -1795,6 +1956,16 @@ def _summary(
         if (record.get("parser_metadata") or {}).get("reused_existing")
     )
     source_status_counts = Counter(row["source_status"] for row in rows)
+    catalog_source_status_counts = Counter(source_set_manifest.get("status_counts") or {})
+    catalog_source_count = int(source_set_manifest.get("source_count") or 0)
+    catalog_non_extractable_count = sum(
+        catalog_source_status_counts.get(status, 0) for status in NON_EXTRACTABLE_SOURCE_STATUSES
+    )
+    selected_non_extractable_count = sum(
+        count for status, count in source_status_counts.items() if status in NON_EXTRACTABLE_SOURCE_STATUSES
+    )
+    required_extraction_source_count = max(catalog_source_count - catalog_non_extractable_count, 0)
+    selected_required_extraction_source_count = len(rows) - selected_non_extractable_count
     expected_parser_counts = Counter(row["expected_parser"] for row in rows)
     failure_counts = Counter(
         (record.get("failure") or {}).get("error_class")
@@ -1804,13 +1975,20 @@ def _summary(
     return {
         "source_set_id": source_set_id,
         "created_at": _utc_now(),
-        "catalog_source_count": source_set_manifest.get("source_count"),
+        "catalog_source_count": catalog_source_count,
+        "artifact_bearing_source_count": required_extraction_source_count,
+        "required_extraction_source_count": required_extraction_source_count,
         "selected_source_count": len(rows),
+        "selected_required_extraction_source_count": selected_required_extraction_source_count,
+        "catalog_skipped_excluded_count": catalog_non_extractable_count,
+        "skipped_excluded_count": status_counts.get("skipped_excluded", 0),
         "filters": filters,
         "extraction_options": extraction_options,
         "extracted_count": status_counts.get("extracted", 0),
         "failed_count": sum(
-            count for status, count in status_counts.items() if status != "extracted"
+            count
+            for status, count in status_counts.items()
+            if status != "extracted" and status not in NON_EXTRACTABLE_SOURCE_STATUSES
         ),
         "chunk_count": len(chunks),
         "status_counts": dict(status_counts),
@@ -1871,6 +2049,21 @@ def _resolve_artifact_path(output_dir: Path, artifact_path: str) -> Path:
     return output_dir / path
 
 
+def _resolve_existing_path(output_dir: Path, value: object | None) -> Path | None:
+    if not value:
+        return None
+    path = Path(str(value))
+    candidates = (
+        [path]
+        if path.is_absolute()
+        else [path, output_dir / path, output_dir.parent / path]
+    )
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
+
+
 def _text_path(extracted_text_dir: Path, *, source_record_id: str, artifact_sha256: str) -> Path:
     return extracted_text_dir / f"{source_record_id}_{artifact_sha256[:16]}.txt"
 
@@ -1919,6 +2112,36 @@ def _utc_now() -> str:
 
 def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_reuse_inventory_records(
+    reuse_inventory_path: Path | None,
+    *,
+    source_set_id: str,
+) -> dict[str, dict] | None:
+    if reuse_inventory_path is None:
+        return None
+    records: dict[str, dict] = {}
+    for record in _read_jsonl(reuse_inventory_path):
+        if record.get("source_set_id") != source_set_id:
+            raise ValueError(
+                "Reuse inventory source_set_id does not match catalog source_set_id: "
+                f"{record.get('source_set_id')} != {source_set_id}"
+            )
+        source_record_id = str(record.get("source_record_id") or "")
+        if source_record_id:
+            records[source_record_id] = record
+    return records
+
+
+def _read_jsonl(path: Path) -> list[dict]:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing JSONL file: {path}")
+    records = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            records.append(json.loads(line))
+    return records
 
 
 def _write_json(path: Path, value: dict) -> None:

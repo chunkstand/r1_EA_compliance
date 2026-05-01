@@ -130,13 +130,17 @@ Already in place:
 - Forest-plan component evaluation V0 has a seeded component inventory, structured findings, and a
   reviewer-resolution queue contract.
 
-Current blockers to complete V1 compliance-review readiness:
+Current readiness state after the 2026-05-01 downstream promotion:
 
-- Full-source-set downstream artifacts for `source-set-ba8d0feae79501b8` have not been promoted
-  through extraction, retrieval, evidence graph, claim extraction, rule-claim binding, coverage,
-  gold eval, and phase eval.
-- The latest local `0.4.0` compliance rerun had a known source-claim gap for
-  `forest_service_directives_portal` / `R1EA-028`.
+- Full-source-set downstream artifacts for `source-set-ba8d0feae79501b8` are promoted through
+  extraction, retrieval, evidence graph, claim extraction, rule-claim binding, coverage, gold eval,
+  and phase eval.
+- The prior `forest_service_directives_portal` / `R1EA-028` source-claim gap is closed through a
+  general structural-definition claim pattern and refreshed rule-claim binding.
+- Phase eval passes `8/8` phases with `reviewer_ready: true` for the active source set.
+
+Remaining blockers to complete V1 Custer Gallatin real-package readiness:
+
 - The forest-plan component inventory is still a narrow seed, not a complete Custer Gallatin
   component inventory for NFMA project consistency review.
 - `compliance-review` does not yet consume forest-plan component findings as a mandatory NFMA phase.
@@ -222,10 +226,9 @@ Deliverables:
 - Evidence graph artifacts for the active source set.
 - Source claim graph artifacts for the active source set.
 - Rule-claim links for rule pack `nepa-ea-v0` version `0.4.0`.
-- Resolved `R1EA-028` / `forest_service_directives_portal` source-claim support, or a rule-pack
-  change that intentionally turns it into a non-claim-bearing reviewer check with tests.
-- Current `rule-claim-eval`, `compliance-coverage`, and `phase-eval` evidence for the active source
-  set.
+- Resolved `R1EA-028` / `forest_service_directives_portal` source-claim support.
+- Current `rule-claim-eval`, `compliance-coverage`, compliance-review-eval, compliance-gold-eval,
+  and `phase-eval` evidence for the active source set.
 
 Verification:
 

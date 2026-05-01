@@ -61,14 +61,30 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Catalog: `190` source rows, `160` unique raw artifacts, `189` source-artifact links
 - Custer Gallatin supporting PDF records added: `R1PLAN-custer-gallatin-nf-04` through
   `R1PLAN-custer-gallatin-nf-07`
-- Full-source-set extraction/retrieval/graph/claim artifacts have not yet been rebuilt for this
-  source set.
 - Reuse inventory for the current source set is implemented and has been run locally. It classified
   `7` sources as already current in the Custer Gallatin slice, `181` sources as reusable from prior
   extraction outputs, `1` source as needing extraction, and `1` source as excluded.
-- Unit suite: `139` tests passed, `5` subtests passed
+- Reuse-first extraction assembly has been run for the full source set. It produced `190` terminal
+  extraction manifest rows: `189` extracted rows, `1` scope-excluded row, `18,822` chunks,
+  `188` reused rows, and `0` failed rows. `R1PLAN-dakota-prairie-grasslands-02` was parsed as the
+  one fresh HTML extraction.
+- Retrieval has been rebuilt from the assembled extraction layer with `18,822` chunks and
+  `reviewer_ready: true`.
+- Extraction accuracy audit passed for the current source set: `190` records checked, `189`
+  extracted records, `18,822` chunks, no text-hash, raw-hash, offset, gap-coverage, markup, eCFR
+  scope, or PDF token cross-check failures.
+- Evidence graph has been rebuilt and is reviewer-ready with `38,601` nodes, `134,501` edges, and
+  `0` retrieval-binding mismatches.
+- Source-claim extraction has been rebuilt and is reviewer-ready with `43,353` claims, `9,818`
+  entities, and `1.0` claim evidence/topic/authority coverage rates.
+- Rule-claim binding for rule pack `nepa-ea-v0` version `0.4.0` has been rebuilt with `191` links
+  across `44/44` rules, `0` gaps, and no rules without source-claim links.
+- Compliance coverage has been refreshed for the `44`-rule matrix and `3` seed eval cases.
+- Compliance review eval passed `3/3` seed cases.
+- Compliance gold eval passed `10/10` adjudicated cases and is `promotion_ready`.
+- Phase eval passed `8/8` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
 
-Last full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
+Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
 
 - Active source set: `source-set-e364ea220cffd938`
@@ -102,11 +118,9 @@ Post-baseline-expansion verification on 2026-04-30:
   and `44` total rules.
 - `tests/test_compliance_review.py` passes with `32` tests.
 - `git diff --check` passed before commit `720d75c`.
-- Full compliance-review promotion gates have not yet been refreshed for rule-pack `0.4.0`.
-- A cached local ECID compliance rerun against the existing package cache evaluated all 26 baseline
-  source records and 44 rules, but did not pass the final gate because
-  `forest_service_directives_portal` / `R1EA-028` lacked a source-claim link. Treat that as the next
-  rule-claim/eval refresh gap, not as a promoted review.
+- Superseded by the 2026-05-01 current-source-set refresh above, which closed the
+  `forest_service_directives_portal` / `R1EA-028` source-claim link gap and promoted coverage/gold
+  eval artifacts for rule-pack `0.4.0`.
 
 The full downstream promotion verification set for the prior 147-row source set was:
 
@@ -286,13 +300,13 @@ Rule-pack `0.4.0` contains `44` rules. It declares `baseline_source_record_ids` 
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
-Compliance Review Eval V0.3 is implemented through `compliance-review-eval`. It runs deterministic
-package fixtures through the real compliance-review path and scores expected rule statuses, claim
-types, evidence presence, source-claim links, expected source record IDs, expected source document
-roles, citation coverage, unsupported finding IDs, failure taxonomy, compact reproduction paths, and
-finding-graph coverage.
+Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
+target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
+path. The gate scores expected rule statuses, claim types, evidence presence, source-claim links,
+expected source record IDs, expected source document roles, citation coverage, unsupported finding
+IDs, failure taxonomy, compact reproduction paths, and finding-graph coverage.
 
-Compliance Gold Eval V0.3 is implemented through `compliance-gold-eval`. It validates a structured
+Compliance Gold Eval V0.4 is implemented through `compliance-gold-eval`. It validates a structured
 adjudication file, requires positive, mixed, and negative package profiles, runs ten adjudicated
 package fixtures through the real compliance-review eval path, and emits `promotion_ready` only
 when both adjudication checks and generated findings pass.
@@ -306,9 +320,10 @@ Current state:
 - Raw source documents are captured and cataloged for the 190-row workbook contract, except the
   intentionally scope-excluded `R1EA-160` project page.
 - Source metadata is normalized into JSONL and SQLite.
-- Derived extraction builds text and chunks from the catalog. The newest source set currently has a
-  validated downloader/catalog corpus only; full-source-set extraction/retrieval/graph/claim
-  artifacts still need to be rebuilt for `source-set-ba8d0feae79501b8`.
+- Derived extraction builds text and chunks from the catalog. The newest source set now has a
+  full-source-set extraction layer, reviewer-ready retrieval index, evidence graph, source-claim
+  graph, rule-claim bindings, compliance coverage, compliance-review eval, compliance-gold eval, and
+  phase-eval promotion evidence for `source-set-ba8d0feae79501b8`.
 - The extraction accuracy audit verifies text hashes, raw artifact hashes, chunk offset fidelity,
   gap-free chunk coverage, eCFR section/subpart scoping, markup cleanup, and PDF token coverage.
 - Retrieval builds and queries a provenance-bearing local evidence index.
@@ -407,8 +422,8 @@ Validated downloader/catalog guarantees for the current 190-row corpus:
 - The reviewer catalog matches batch manifests.
 - SQLite source-artifact links match the JSONL catalog.
 - The prior 38-source land-exchange delta extraction for `source-set-572d6384a59a7b2a` matched raw
-  artifact hashes and manifest text hashes, but it is not current extraction evidence for
-  `source-set-ba8d0feae79501b8`.
+  artifact hashes and manifest text hashes, but it is superseded by the current reuse-first
+  extraction assembly for `source-set-ba8d0feae79501b8`.
 - Chunk text matches extracted-text offset slices.
 - Retrieval chunks validate against source-set IDs, content hashes, offsets, required provenance, and
   catalog linkage.
@@ -442,18 +457,20 @@ Validated downloader/catalog guarantees for the current 190-row corpus:
 - Phase eval rejects stale compliance review artifacts when the review source set does not match the
   evaluated source set.
 
-Full extraction, retrieval, evidence graph, source-claim, rule-claim, and compliance-promotion
-guarantees for the current 190-row source set require rebuilding those downstream layers from
+Full extraction, retrieval, evidence-graph, source-claim, rule-claim, coverage, compliance-review
+eval, compliance-gold eval, and phase-eval guarantees now exist for the current 190-row source set
 `source-set-ba8d0feae79501b8`.
 
 Boundaries:
 
 - A successful download means the source bytes were captured and validated.
 - It does not prove that the source is legally current beyond the workbook metadata and retrieval evidence.
-- It proves the current generated extraction artifacts pass deterministic accuracy gates for
-  source scoping, chunk fidelity, markup cleanup, and independent PDF token comparison.
-- It proves the current retrieval and evidence graph artifacts passed deterministic provenance and
-  binding gates.
+- It proves the current generated extraction artifacts pass deterministic extraction validation and
+  extraction accuracy audit checks for text hashes, raw artifact hashes, chunk offsets, chunk
+  coverage, scoped XML, markup cleanup, and sampled PDF token coverage.
+- It proves the current retrieval, evidence graph, source-claim graph, rule-claim binding,
+  compliance coverage, compliance review eval, compliance gold eval, and phase eval artifacts passed
+  deterministic provenance, coverage, freshness, and binding gates.
 - It proves the current EA review V0 cannot mark a finding as `pass` without both package and
   source-library evidence.
 - It proves the current compliance review V0 cannot produce claim-bearing findings without
@@ -707,9 +724,10 @@ Retrieval validation checks:
 - required citation, artifact, URL, parser, and offset fields are present
 
 `retrieval-build` records `reviewer_ready`. This is true only when the index validates and the
-extraction summary shows complete catalog coverage. A filtered one-document slice can still be
-indexed with `--allow-partial-extraction`, but it remains a diagnostic index, not a reviewer-ready
-corpus.
+extraction summary shows complete catalog coverage for all required non-excluded sources.
+Scope-excluded rows count toward selected catalog coverage but do not require chunks. A filtered
+one-document slice can still be indexed with `--allow-partial-extraction`, but it remains a
+diagnostic index, not a reviewer-ready corpus.
 
 ## Document Evidence Graph Layer
 
@@ -779,42 +797,29 @@ data artifacts such as workbook rows, review topics, eval fixtures, rule packs, 
 matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
 binding, coverage validation, and phase evaluation.
 
-The Authority-First Compliance Matrix V0.4 milestone is partially implemented. The active rule pack
-contains 44 authority rows and explicitly requires all 26 workbook `Scope=Baseline` source records
-in every EA review, with additional conditional rules for triggered authorities. The prior gold and
-coverage gates contain ten adjudicated realistic package profiles, expected source rows, expected
-source document classes, per-case failure taxonomy, compact reproduction paths, and generated
-compliance matrices, but those gates must be refreshed against the `0.4.0`/44-rule pack before they
-are promotion evidence for the expanded baseline.
+The Authority-First Compliance Matrix V0.4 milestone is implemented for the current local source-set
+promotion gate. The active rule pack contains 44 authority rows and explicitly requires all 26
+workbook `Scope=Baseline` source records in every EA review, with additional conditional rules for
+triggered authorities. The refreshed coverage and gold gates contain ten adjudicated realistic
+package profiles, expected source rows, expected source document classes, per-case failure taxonomy,
+compact reproduction paths, and generated compliance matrices for the `0.4.0`/44-rule pack.
 
 The current system has a complete 190-row downloader/catalog corpus that includes the four missed
-Custer Gallatin FEIS and ESA-supporting plan documents. A Custer Gallatin-focused
-extraction/retrieval slice has been rebuilt for `source-set-ba8d0feae79501b8`: all seven required
-Custer Gallatin plan/supporting records are extracted and indexed. The current targeted recovery
-slice reused existing extracted text for those unchanged records and produced 4,683 retrieval
-chunks. That retrieval summary remains marked partial because the full 190-row source set is not
-extracted, but `forest-plan-resolve` accepts it for Custer Gallatin review because every required
-Custer Gallatin source record is present and retrieval validation passes. Full-source-set
-extraction, evidence graph, source-claim, rule-claim, coverage, and gold promotion artifacts should
-not be rebuilt unless promotion requires them; the current forest-plan sequence only needs the
-seven-record Custer Gallatin slice. The prior 147-row downstream corpus remains useful for
-deterministic seed-package and expanded gold-adjudication checks, but should not be treated as
-current promotion evidence for the expanded workbook.
+Custer Gallatin FEIS and ESA-supporting plan documents. Full-source-set reuse-first extraction has
+now been assembled for `source-set-ba8d0feae79501b8`: the current manifest has `189` extracted rows,
+`1` scope-excluded row, `0` failures, and `18,822` chunks. The assembly reused `181` validated prior
+extractions and `7` already-current Custer Gallatin slice records, then parsed
+`R1PLAN-dakota-prairie-grasslands-02` as the only fresh extraction. Retrieval, evidence graph,
+source claims, rule-claim bindings, compliance coverage, compliance-review eval, compliance-gold
+eval, and phase eval have also been rebuilt and are reviewer-ready for the full current source set.
+The prior 147-row downstream corpus remains useful for historical comparison only and should not be
+treated as current promotion evidence for the expanded workbook.
 
-The next efficient v1 milestone is reuse-first extraction assembly for the current source set, not a
-blind full reparse. The current reuse inventory is stored at
-`source_library/derived/source-set-ba8d0feae79501b8/reuse_inventory/reuse_inventory.json`; it found
-`181` reusable prior extracted-text records, `7` already-current Custer Gallatin slice records,
-`R1PLAN-dakota-prairie-grasslands-02` as the only artifact-bearing source needing extraction, and
-`R1EA-160` as excluded. After reuse-first extraction assembly, rebuild the retrieval/claim/rule-claim
-layers only as needed for the requested demo review. If full compliance promotion becomes the
-milestone, then refresh the rule-claim/eval/coverage artifacts for rule-pack `0.4.0`, resolve the
-`R1EA-028` source-claim link gap if it persists, and rerun the compliance promotion gates without
-re-extracting already cached EA packages. After those gates pass, run the same matrix and
-failure-taxonomy path over a small set of real EA packages and use those failures to decide whether
-the next fix belongs in package extraction, package evidence search, source retrieval, source
-applicability, rule-claim binding, or rule wording. Embeddings, reranking, and model-assisted
-synthesis remain downstream of that evidence-backed real-package pass.
+The next v1 milestone is to run the same compliance matrix and failure-taxonomy path over the Custer
+Gallatin proving package, then use those failures to decide whether the next fix belongs in package
+extraction, package evidence search, source retrieval, source applicability, rule-claim binding, or
+rule wording. Embeddings, reranking, and model-assisted synthesis remain downstream of that
+evidence-backed real-package pass.
 
 ## Verification Commands
 
@@ -851,6 +856,16 @@ Inventory extraction reuse opportunities before a reuse-first rebuild:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory \
   --output-dir source_library
+```
+
+Assemble the current source set with reuse first, then parse only records without a valid current
+or prior extraction candidate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
+  --output-dir source_library \
+  --reuse-existing \
+  --reuse-inventory-path source_library/derived/source-set-ba8d0feae79501b8/reuse_inventory/reuse_inventory_records.jsonl
 ```
 
 For a delta-only extraction, repeat `--id` for each selected source record. The 2026-04-30

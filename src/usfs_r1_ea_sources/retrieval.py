@@ -858,7 +858,20 @@ def _check_extraction_scope_is_complete(
             "allow_partial_extraction": allow_partial_extraction,
             "catalog_source_count": _int_from_summary(extraction_summary, "catalog_source_count"),
             "selected_source_count": _int_from_summary(extraction_summary, "selected_source_count"),
+            "required_extraction_source_count": _int_from_summary(
+                extraction_summary,
+                "required_extraction_source_count",
+            ),
+            "selected_required_extraction_source_count": _int_from_summary(
+                extraction_summary,
+                "selected_required_extraction_source_count",
+            ),
             "extracted_count": _int_from_summary(extraction_summary, "extracted_count"),
+            "failed_count": _int_from_summary(extraction_summary, "failed_count"),
+            "skipped_excluded_count": _int_from_summary(
+                extraction_summary,
+                "skipped_excluded_count",
+            ),
             "filters": (extraction_summary or {}).get("filters", {}),
             "complete": complete,
         },
@@ -1071,6 +1084,15 @@ def _extraction_summary_is_complete(extraction_summary: dict | None) -> bool:
     catalog_count = _int_from_summary(extraction_summary, "catalog_source_count")
     selected_count = _int_from_summary(extraction_summary, "selected_source_count")
     extracted_count = _int_from_summary(extraction_summary, "extracted_count")
+    failed_count = _int_from_summary(extraction_summary, "failed_count")
+    required_count = (
+        _int_from_summary(extraction_summary, "required_extraction_source_count")
+        or catalog_count
+    )
+    selected_required_count = (
+        _int_from_summary(extraction_summary, "selected_required_extraction_source_count")
+        or selected_count
+    )
     if catalog_count <= 0:
         return False
     filters = extraction_summary.get("filters") or {}
@@ -1078,7 +1100,9 @@ def _extraction_summary_is_complete(extraction_summary: dict | None) -> bool:
     return (
         not active_filters
         and selected_count == catalog_count
-        and extracted_count == catalog_count
+        and selected_required_count == required_count
+        and extracted_count == required_count
+        and failed_count == 0
     )
 
 

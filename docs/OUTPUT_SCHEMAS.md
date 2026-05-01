@@ -956,13 +956,19 @@ The `extract-build` command writes:
 - `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
 - `diagnostics/summary.json`
 
-The command replaces the derived directory for the selected `source_set_id` on each run so stale
-text or chunk files cannot survive from a previous extraction attempt. The `source_set_id` is
-validated as a safe path segment before the derived directory is deleted.
+The command replaces the derived directory for the selected `source_set_id` on each non-reuse run
+so stale text or chunk files cannot survive from a previous extraction attempt. The `source_set_id`
+is validated as a safe path segment before the derived directory is deleted. Reuse-first runs keep
+the directory in place so validated current text/cache can be reused, but still rewrite the
+manifest, chunks, validation, and summary files for the current source set.
 
 `--id` may be supplied more than once for a delta extraction. A filtered extraction is valid for
 repair or update work, but downstream retrieval remains non-reviewer-ready unless it is explicitly
 built with partial-extraction allowance.
+
+`--reuse-existing` reuses matching current source-set text/cache entries. `--reuse-inventory-path`
+points to `reuse_inventory_records.jsonl` and lets extraction copy validated prior source-set text
+for `reuse_extraction` candidates before reparsing any remaining `needs_extract` rows.
 
 `extract-build` reads `source_library/catalog/review_sources.sqlite`; it does not scan
 `source_library/artifacts/raw/` as its authority source. For each selected catalog row it:
@@ -999,6 +1005,7 @@ built with partial-extraction allowance.
 Terminal extraction statuses are:
 
 - `extracted`
+- `skipped_excluded`
 - `no_artifact`
 - `artifact_missing`
 - `hash_mismatch`
@@ -1006,7 +1013,8 @@ Terminal extraction statuses are:
 - `parser_timeout`
 - `empty_text`
 
-`diagnostics/summary.json` includes source-set ID, catalog source count, selected source count,
+`diagnostics/summary.json` includes source-set ID, catalog source count, required extraction source
+count, selected source count, selected required extraction source count, skipped-excluded count,
 extracted count, failed count, chunk count, parser counts, validation status, and extraction
 filters. The `filters` object includes the legacy singular `id`, the repeated `ids` list when
 multiple source records were selected, `parser`, and `limit`.
@@ -1101,7 +1109,8 @@ The `retrieval-build` command writes:
 
 The command validates that extraction passed, extraction scope is complete, chunk IDs are unique,
 chunk text hashes still match, chunk offsets are valid, catalog topics are available, linked
-artifact/text paths still exist, and each indexed chunk carries retrieval provenance. A filtered
+artifact/text paths still exist, and each indexed chunk carries retrieval provenance. Scope-excluded
+rows count toward selected catalog coverage but not required extraction coverage. A filtered
 diagnostic index can be built with `--allow-partial-extraction`, but that summary records
 `reviewer_ready: false`.
 
@@ -1112,7 +1121,8 @@ diagnostic index can be built with `--allow-partial-extraction`, but that summar
 - catalog SQLite path
 - extraction validation, manifest, and summary paths
 - chunk count and indexed source count
-- catalog source count, selected source count, and extracted source count
+- catalog source count, selected source count, required extraction source count, selected required
+  extraction source count, skipped-excluded count, and extracted source count
 - extraction filters
 - FTS5 availability
 - validation status
