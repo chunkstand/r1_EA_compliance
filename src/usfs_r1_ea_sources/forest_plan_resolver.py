@@ -36,6 +36,26 @@ CUSTER_GALLATIN_SOURCE_RECORDS = [
         "role": "record_of_decision",
         "required_for": "plan approval and decision basis when needed",
     },
+    {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-04",
+        "role": "final_environmental_impact_statement_volume_1",
+        "required_for": "purpose and need, alternatives, affected environment, and effects context",
+    },
+    {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-05",
+        "role": "final_environmental_impact_statement_volume_2",
+        "required_for": "resource effects, designated areas, plan allocations, disclosures, and references",
+    },
+    {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-06",
+        "role": "biological_assessment",
+        "required_for": "plan-level ESA effects analysis and project-level consultation cues",
+    },
+    {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-07",
+        "role": "biological_opinion",
+        "required_for": "plan-level ESA consultation, terms, incidental take, and reinitiation triggers",
+    },
 ]
 
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")

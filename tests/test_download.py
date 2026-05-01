@@ -86,9 +86,9 @@ class DownloadTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 186)
-            self.assertEqual(len(fetcher.calls), 167)
-            self.assertEqual(result.summary["downloaded_count"], 167)
+            self.assertEqual(len(records), 190)
+            self.assertEqual(len(fetcher.calls), 171)
+            self.assertEqual(result.summary["downloaded_count"], 171)
             self.assertEqual(result.summary["duplicate_url_count"], 18)
             self.assertEqual(result.summary["skipped_excluded_count"], 1)
             self.assertEqual(result.summary["failed_count"], 0)

@@ -15,8 +15,8 @@ The uploaded workbook now defines the active source contract:
 - `Ingest_Checklist` ingest rows: `162`
 - `Scope=Baseline` rows: `26`
 - `Scope=Conditional` rows: `136`
-- `R1_Forest_Plans` unit/overlay rows: `24`
-- Total rows in the default ingest-driving sheets: `186`
+- `R1_Forest_Plans` unit/overlay rows: `28`
+- Total rows in the default ingest-driving sheets: `190`
 
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.
@@ -30,22 +30,22 @@ R1EA-021, R1EA-022, R1EA-023, R1EA-024, R1EA-025, R1EA-028, R1EA-029,
 R1EA-031, R1EA-033, R1EA-034, R1EA-035, R1EA-067
 ```
 
-The current generated downloader/catalog corpus now covers the full 186-row workbook contract:
+The current generated downloader/catalog corpus now covers the full 190-row workbook contract:
 
-- Parent batch run: `corpus-update-2026-04-30-batches`
-- Canonical workbook rows: `186`
-- Batch count: `29`
-- Passed batches: `29`
+- Parent batch run: `corpus-update-2026-05-01-cg-support-batches`
+- Canonical workbook rows: `190`
+- Batch count: `52`
+- Passed batches: `52`
 - Failed batches: `0`
 - Repair-needed batches: `0`
 - Repair queue: empty except the CSV header
-- Unique effective URLs: `168`
-- Reviewer catalog source set: `source-set-572d6384a59a7b2a`
-- Reviewer catalog source rows: `186`
-- Reviewer catalog unique artifacts: `155`
-- Reviewer catalog source-artifact links: `185`
-- Source statuses: `downloaded=6`, `downloaded_existing=165`, `duplicate_content=2`,
-  `duplicate_url=12`, `skipped_excluded=1`
+- Unique effective URLs: `172`
+- Reviewer catalog source set: `source-set-ba8d0feae79501b8`
+- Reviewer catalog source rows: `190`
+- Reviewer catalog unique artifacts: `160`
+- Reviewer catalog source-artifact links: `189`
+- Source statuses: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
+  `duplicate_url=9`, `skipped_excluded=1`
 
 `R1EA-160` is present in the workbook/catalog as a `project_reference`, but has no artifact because
 its URL remains in `Scope_Exclusions`. The current catalog validation passes, and the
@@ -53,19 +53,20 @@ captured-library integrity test suite passes against these generated outputs.
 
 ## Verified State Snapshot
 
-Latest corpus-update verification was run locally on 2026-04-30 after the land-exchange source
-update.
+Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
+Gallatin FEIS and ESA-supporting plan documents.
 
-- Active catalog source set: `source-set-572d6384a59a7b2a`
-- Download/catalog batch: `corpus-update-2026-04-30-batches`, `29/29` batches passed
-- Catalog: `186` source rows, `155` unique raw artifacts, `185` source-artifact links
-- Delta extraction: `38/38` selected new artifact-bearing sources extracted, validation passed
-- Delta extraction chunks: `1,211`
-- Delta extraction expected parser counts: `xml=29`, `pdf=7`, `html=2`
-- Unit suite: `135` tests passed, `5` subtests passed
+- Active catalog source set: `source-set-ba8d0feae79501b8`
+- Download/catalog batch: `corpus-update-2026-05-01-cg-support-batches`, `52/52` batches passed
+- Catalog: `190` source rows, `160` unique raw artifacts, `189` source-artifact links
+- Custer Gallatin supporting PDF records added: `R1PLAN-custer-gallatin-nf-04` through
+  `R1PLAN-custer-gallatin-nf-07`
+- Full-source-set extraction/retrieval/graph/claim artifacts have not yet been rebuilt for this
+  source set.
+- Unit suite: `139` tests passed, `5` subtests passed
 
 Last full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
-`0.4.0` baseline expansion and before the 186-row catalog update.
+`0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
 
 - Active source set: `source-set-e364ea220cffd938`
 - Base phase eval: passed, `8/8` phases reviewer-ready
@@ -179,7 +180,7 @@ For full-batch operation, the parent batch ledger points to many child download 
 Current parent batch path:
 
 ```text
-source_library/runs/corpus-update-2026-04-30-batches/
+source_library/runs/corpus-update-2026-05-01-cg-support-batches/
 ```
 
 The parent batch run contains:
@@ -272,13 +273,12 @@ source-record alignment for each compliance rule.
 
 Current state:
 
-- Raw source documents are captured and cataloged for the 186-row workbook contract, except the
+- Raw source documents are captured and cataloged for the 190-row workbook contract, except the
   intentionally scope-excluded `R1EA-160` project page.
 - Source metadata is normalized into JSONL and SQLite.
 - Derived extraction builds text and chunks from the catalog. The newest source set currently has a
-  validated 38-source delta extraction for newly added artifact-bearing rows; full-source-set
-  extraction/retrieval/graph/claim artifacts still need to be rebuilt for
-  `source-set-572d6384a59a7b2a`.
+  validated downloader/catalog corpus only; full-source-set extraction/retrieval/graph/claim
+  artifacts still need to be rebuilt for `source-set-ba8d0feae79501b8`.
 - The extraction accuracy audit verifies text hashes, raw artifact hashes, chunk offset fidelity,
   gap-free chunk coverage, eCFR section/subpart scoping, markup cleanup, and PDF token coverage.
 - Retrieval builds and queries a provenance-bearing local evidence index.
@@ -353,10 +353,10 @@ not replace human reviewer adjudication.
 
 The current downloader and catalog guarantee capture integrity, not legal interpretation.
 
-Validated downloader/catalog guarantees for the current 186-row corpus:
+Validated downloader/catalog guarantees for the current 190-row corpus:
 
 - Every generated-corpus source row has one final captured status.
-- The combined batch ledger covers all `186` generated-corpus workbook rows.
+- The combined batch ledger covers all `190` generated-corpus workbook rows.
 - The repair queue is empty after URL repairs.
 - Every artifact-bearing successful row links to an artifact.
 - The one scope-excluded row, `R1EA-160`, has no artifact or fetch evidence.
@@ -368,8 +368,9 @@ Validated downloader/catalog guarantees for the current 186-row corpus:
 - Override metadata includes `override_url` and `override_reason`.
 - The reviewer catalog matches batch manifests.
 - SQLite source-artifact links match the JSONL catalog.
-- The 38-source land-exchange delta extraction for `source-set-572d6384a59a7b2a` matches raw
-  artifact hashes and manifest text hashes.
+- The prior 38-source land-exchange delta extraction for `source-set-572d6384a59a7b2a` matched raw
+  artifact hashes and manifest text hashes, but it is not current extraction evidence for
+  `source-set-ba8d0feae79501b8`.
 - Chunk text matches extracted-text offset slices.
 - Retrieval chunks validate against source-set IDs, content hashes, offsets, required provenance, and
   catalog linkage.
@@ -404,8 +405,8 @@ Validated downloader/catalog guarantees for the current 186-row corpus:
   evaluated source set.
 
 Full extraction, retrieval, evidence graph, source-claim, rule-claim, and compliance-promotion
-guarantees for the current 186-row source set require rebuilding those downstream layers from
-`source-set-572d6384a59a7b2a`.
+guarantees for the current 190-row source set require rebuilding those downstream layers from
+`source-set-ba8d0feae79501b8`.
 
 Boundaries:
 
@@ -734,16 +735,16 @@ source document classes, per-case failure taxonomy, compact reproduction paths, 
 compliance matrices, but those gates must be refreshed against the `0.4.0`/44-rule pack before they
 are promotion evidence for the expanded baseline.
 
-The current system has a complete 186-row downloader/catalog corpus and a validated extraction of
-the 38 newly added artifact-bearing land-exchange sources. It is not yet reviewer-ready for the
-expanded source set because retrieval, evidence graph, source-claim, rule-claim, coverage, and gold
-promotion artifacts still need to be rebuilt from `source-set-572d6384a59a7b2a`. The prior
-147-row downstream corpus remains useful for deterministic seed-package and expanded
-gold-adjudication checks, but should not be treated as current promotion evidence for the expanded
-workbook.
+The current system has a complete 190-row downloader/catalog corpus that includes the four missed
+Custer Gallatin FEIS and ESA-supporting plan documents. It is not yet reviewer-ready for the
+expanded source set because extraction, retrieval, evidence graph, source-claim, rule-claim,
+coverage, and gold promotion artifacts still need to be rebuilt from
+`source-set-ba8d0feae79501b8`. The prior 147-row downstream corpus remains useful for deterministic
+seed-package and expanded gold-adjudication checks, but should not be treated as current promotion
+evidence for the expanded workbook.
 
 The next efficient v1 milestone is to run the full extraction/retrieval/evidence-graph/claim rebuild
-for `source-set-572d6384a59a7b2a`, rebuild or refresh the rule-claim/eval/coverage artifacts for
+for `source-set-ba8d0feae79501b8`, rebuild or refresh the rule-claim/eval/coverage artifacts for
 rule-pack `0.4.0`, resolve the `R1EA-028` source-claim link gap if it persists, and then rerun the
 compliance promotion gates without re-extracting already cached EA packages. After those gates pass,
 run the same matrix and failure-taxonomy path over a small set of real EA packages and use those
@@ -771,7 +772,7 @@ Rebuild the full reviewer catalog from the current full batch:
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
   --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
-  --batch-run-id corpus-update-2026-04-30-batches
+  --batch-run-id corpus-update-2026-05-01-cg-support-batches
 ```
 
 Build derived extraction outputs from the current reviewer catalog:

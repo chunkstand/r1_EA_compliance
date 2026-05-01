@@ -45,6 +45,18 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertEqual(context["scope_status"], "custer_gallatin")
             self.assertFalse(context["needs_reviewer_resolution"])
             self.assertEqual(
+                [record["source_record_id"] for record in context["source_records"]],
+                [
+                    "R1PLAN-custer-gallatin-nf-01",
+                    "R1PLAN-custer-gallatin-nf-02",
+                    "R1PLAN-custer-gallatin-nf-03",
+                    "R1PLAN-custer-gallatin-nf-04",
+                    "R1PLAN-custer-gallatin-nf-05",
+                    "R1PLAN-custer-gallatin-nf-06",
+                    "R1PLAN-custer-gallatin-nf-07",
+                ],
+            )
+            self.assertEqual(
                 _names(context["geographic_areas"]),
                 ["Bridger, Bangtail, and Crazy Mountains Geographic Area"],
             )

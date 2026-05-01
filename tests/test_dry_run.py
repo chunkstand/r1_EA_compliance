@@ -21,8 +21,8 @@ class DryRunTests(unittest.TestCase):
         sources = load_canonical_sources(WORKBOOK, config.workbook)
         excluded_urls = load_excluded_urls(WORKBOOK, config.workbook)
 
-        self.assertEqual(len(sources), 186)
-        self.assertEqual(len({source.normalized_url for source in sources}), 168)
+        self.assertEqual(len(sources), 190)
+        self.assertEqual(len({source.normalized_url for source in sources}), 172)
         self.assertEqual(len(excluded_urls), 19)
         self.assertEqual(
             [source.source_record_id for source in sources if source.normalized_url in excluded_urls],
@@ -50,10 +50,10 @@ class DryRunTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(manifest_records), 186)
-            self.assertEqual(result.summary["canonical_rows"], 186)
-            self.assertEqual(result.summary["unique_canonical_urls"], 168)
-            self.assertEqual(result.summary["planned_count"], 167)
+            self.assertEqual(len(manifest_records), 190)
+            self.assertEqual(result.summary["canonical_rows"], 190)
+            self.assertEqual(result.summary["unique_canonical_urls"], 172)
+            self.assertEqual(result.summary["planned_count"], 171)
             self.assertEqual(result.summary["duplicate_url_count"], 18)
             self.assertEqual(result.summary["skipped_excluded_count"], 1)
 

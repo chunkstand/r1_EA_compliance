@@ -14,24 +14,25 @@ Current workbook source contract:
 - `Ingest_Checklist` ingest rows: `162`
 - `Scope=Baseline` rows that must be evaluated in every EA compliance review: `26`
 - `Scope=Conditional` rows loaded for trigger-based review: `136`
-- `R1_Forest_Plans` unit/overlay rows: `24`
+- `R1_Forest_Plans` unit/overlay rows: `28`
 
 Current generated source-library capture:
 
-- Run ID: `corpus-update-2026-04-30-batches`
-- Workbook rows covered: `186`
-- Batch result: `29/29` batches passed
+- Run ID: `corpus-update-2026-05-01-cg-support-batches`
+- Workbook rows covered: `190`
+- Batch result: `52/52` batches passed
 - Repair queue: empty except header
-- Unique workbook/effective URLs: `168`
-- Unique raw artifacts in reviewer catalog: `155`
-- Source-to-artifact links: `185`
-- Status counts: `downloaded=6`, `downloaded_existing=165`, `duplicate_content=2`,
-  `duplicate_url=12`, `skipped_excluded=1`
+- Unique workbook/effective URLs: `172`
+- Unique raw artifacts in reviewer catalog: `160`
+- Source-to-artifact links: `189`
+- Status counts: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
+  `duplicate_url=9`, `skipped_excluded=1`
 
-The current catalog source set is `source-set-572d6384a59a7b2a`. The latest corpus update extracted
-the 38 newly downloaded artifact-bearing rows and produced `1,211` chunks. Full downstream
-retrieval, evidence graph, source-claim, rule-claim, and compliance promotion artifacts still need
-to be rebuilt for this source set; older reviewer-ready downstream artifacts under
+The current catalog source set is `source-set-ba8d0feae79501b8`. The latest corpus update added the
+Custer Gallatin FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion as
+forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. Full
+downstream extraction, retrieval, evidence graph, source-claim, rule-claim, and compliance promotion
+artifacts still need to be rebuilt for this source set; older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
@@ -256,7 +257,7 @@ Build the reviewer-engine catalog from the full batch:
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
   --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
-  --batch-run-id corpus-update-2026-04-30-batches
+  --batch-run-id corpus-update-2026-05-01-cg-support-batches
 ```
 
 The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `catalog_validation.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
