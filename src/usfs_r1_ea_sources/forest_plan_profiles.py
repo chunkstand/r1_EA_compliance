@@ -7,7 +7,9 @@ from typing import Any
 
 
 FOREST_PLAN_PROFILES_SCHEMA_VERSION = "forest-plan-profiles-v0"
-DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
+DEFAULT_FOREST_PLAN_PROFILES_PATH = (
+    Path(__file__).resolve().parents[2] / "config" / "forest_plan_profiles.json"
+)
 
 
 @dataclass(frozen=True)

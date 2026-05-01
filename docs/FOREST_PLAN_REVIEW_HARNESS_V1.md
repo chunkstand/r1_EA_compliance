@@ -150,9 +150,10 @@ git diff --check
 
 ## Residual Risks To Preserve
 
-- Current Custer Gallatin resolver behavior is implemented as V0 and is still described as
-  Custer Gallatin-only in existing docs. V1 should generalize this through profile data before broad
-  use.
+- Current Custer Gallatin resolver behavior is implemented as V0 and now reads forest names,
+  required source records, area terms, overlays, and supporting evidence routes from profile data.
+  Follow-on sequences still need to expose profile metadata in outputs and add East Crazies
+  profile-path fixture coverage before broad use.
 - The current Custer Gallatin retrieval slice is intentionally partial for the 190-row source set, but
   it is sufficient for this forest-plan proving case because all required profile source records are
   indexed and retrieval validation passes.

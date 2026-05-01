@@ -27,6 +27,8 @@ from .evidence_graph import build_evidence_graph
 from .evidence_graph import run_phase_aligned_eval
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver import run_forest_plan_resolver
 from .pilots import run_host_pilots
 from .preflight import run_preflight
@@ -414,10 +416,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     forest_plan_resolve = subparsers.add_parser(
         "forest-plan-resolve",
-        help="Resolve Custer Gallatin forest-plan context from a local EA package.",
+        help="Resolve profile-driven forest-plan context from a local EA package.",
     )
     forest_plan_resolve.add_argument("--package-path", required=True, type=Path)
     forest_plan_resolve.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    forest_plan_resolve.add_argument("--forest-unit-id", default=DEFAULT_FOREST_PLAN_PROFILE_ID)
+    forest_plan_resolve.add_argument(
+        "--forest-plan-profiles-path",
+        default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
     forest_plan_resolve.add_argument("--source-set-id")
     forest_plan_resolve.add_argument("--index-path", type=Path)
     forest_plan_resolve.add_argument("--review-id")
@@ -758,6 +766,8 @@ def main(argv: list[str] | None = None) -> int:
         result = run_forest_plan_resolver(
             package_path=args.package_path,
             output_dir=args.output_dir,
+            forest_unit_id=args.forest_unit_id,
+            profiles_path=args.forest_plan_profiles_path,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
             review_id=args.review_id,

@@ -13,6 +13,82 @@ from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
 
 class ForestPlanResolverTests(unittest.TestCase):
+    def test_scope_resolution_uses_profile_unit_names(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Profile Forest"],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The East Crazy project is on Profile Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-name-driven",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Profile Forest")
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_readiness_uses_profile_required_roles(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                missing_source_ids={"R1PLAN-custer-gallatin-nf-07"},
+            )
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                required_roles=[
+                    "planning_page",
+                    "primary_land_management_plan",
+                ],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-required-roles",
+                profiles_path=profiles_path,
+            )
+
+            readiness = result.summary["retrieval_readiness"]["required_source_records"]
+            self.assertEqual(
+                readiness["required_source_record_ids"],
+                [
+                    "R1PLAN-custer-gallatin-nf-01",
+                    "R1PLAN-custer-gallatin-nf-02",
+                ],
+            )
+            self.assertEqual(readiness["missing_source_record_ids"], [])
+            self.assertTrue(result.summary["reviewer_ready"])
+
     def test_resolves_custer_gallatin_geographic_and_management_areas(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -656,6 +732,21 @@ def _write_package(directory: Path, text: str) -> Path:
     package_path = directory / "ea-package.txt"
     package_path.write_text(text, encoding="utf-8")
     return package_path
+
+
+def _write_resolver_profile_config(
+    path: Path,
+    *,
+    forest_unit_names: list[str] | None = None,
+    required_roles: list[str] | None = None,
+) -> None:
+    payload = json.loads(Path("config/forest_plan_profiles.json").read_text(encoding="utf-8"))
+    profile = payload["profiles"][0]
+    if forest_unit_names is not None:
+        profile["forest_unit_names"] = forest_unit_names
+    if required_roles is not None:
+        profile["required_readiness_source_roles"] = required_roles
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
 def _names(entries: list[dict]) -> list[str]:

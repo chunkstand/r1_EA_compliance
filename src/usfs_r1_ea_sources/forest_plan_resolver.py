@@ -15,53 +15,19 @@ from .ea_review import _load_package_cache
 from .ea_review import _source_set_id_from_catalog
 from .ea_review import _source_set_id_from_index
 from .ea_review import _utc_now
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_profiles import ForestPlanProfile
+from .forest_plan_profiles import ForestPlanTermEntry
+from .forest_plan_profiles import KnownForestUnit
+from .forest_plan_profiles import SupportingRecordTriggerRule
+from .forest_plan_profiles import load_forest_plan_profiles
 from .retrieval import default_index_path
 from .retrieval import query_retrieval_index
 
 
 FOREST_PLAN_CONTEXT_SCHEMA_VERSION = "forest-plan-context-v0"
-CUSTER_GALLATIN_PLAN_SOURCE_ID = "R1PLAN-custer-gallatin-nf-02"
-CUSTER_GALLATIN_SOURCE_RECORDS = [
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-01",
-        "role": "planning_page",
-        "required_for": "currentness and document-set resolution",
-    },
-    {
-        "source_record_id": CUSTER_GALLATIN_PLAN_SOURCE_ID,
-        "role": "primary_land_management_plan",
-        "required_for": "plan component and area resolution",
-    },
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-03",
-        "role": "record_of_decision",
-        "required_for": "plan approval and decision basis when needed",
-    },
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-04",
-        "role": "final_environmental_impact_statement_volume_1",
-        "required_for": "purpose and need, alternatives, affected environment, and effects context",
-    },
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-05",
-        "role": "final_environmental_impact_statement_volume_2",
-        "required_for": "resource effects, designated areas, plan allocations, disclosures, and references",
-    },
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-06",
-        "role": "biological_assessment",
-        "required_for": "plan-level ESA effects analysis and project-level consultation cues",
-    },
-    {
-        "source_record_id": "R1PLAN-custer-gallatin-nf-07",
-        "role": "biological_opinion",
-        "required_for": "plan-level ESA consultation, terms, incidental take, and reinitiation triggers",
-    },
-]
-CUSTER_GALLATIN_REQUIRED_SOURCE_IDS = tuple(
-    str(record["source_record_id"]) for record in CUSTER_GALLATIN_SOURCE_RECORDS
-)
-
+CUSTER_GALLATIN_FOREST_UNIT_ID = "custer-gallatin-nf"
+DEFAULT_FOREST_PLAN_PROFILE_ID = CUSTER_GALLATIN_FOREST_UNIT_ID
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
@@ -83,7 +49,7 @@ class GazetteerEntry:
     category: str
     name: str
     aliases: tuple[str, ...] = ()
-    source_record_id: str = CUSTER_GALLATIN_PLAN_SOURCE_ID
+    source_record_id: str | None = None
 
     @property
     def terms(self) -> tuple[str, ...]:
@@ -103,414 +69,136 @@ class PlanEvidenceRoute:
     trigger_terms: tuple[str, ...] = ()
 
 
-SUPPORTING_PLAN_EVIDENCE_ROUTES = (
-    PlanEvidenceRoute(
-        route_id="support-rod-decision-basis",
-        category="decision_basis",
-        name="Record of Decision decision basis",
-        source_record_id="R1PLAN-custer-gallatin-nf-03",
-        source_role="record_of_decision",
-        package_terms=(
-            "Record of Decision",
-            "ROD",
-            "selected alternative",
-            "decision basis",
-            "objection resolution",
-            "plan approval",
-        ),
-        source_query=(
-            "Custer Gallatin record of decision selected alternative plan approval "
-            "objection resolution decision basis"
-        ),
-        source_terms=(
-            "record of decision",
-            "selected alternative",
-            "plan approval",
-            "objection resolution",
-            "decision basis",
-        ),
-        trigger_terms=(
-            "Record of Decision",
-            "ROD",
-            "selected alternative",
-            "decision basis",
-            "objection resolution",
-            "plan approval",
-        ),
-    ),
-    PlanEvidenceRoute(
-        route_id="support-feis-volume-1-context",
-        category="feis_context",
-        name="FEIS Volume 1 analysis context",
-        source_record_id="R1PLAN-custer-gallatin-nf-04",
-        source_role="final_environmental_impact_statement_volume_1",
-        package_terms=(
-            "Final Environmental Impact Statement",
-            "FEIS",
-            "tiered to",
-            "tiers to",
-            "incorporates by reference",
-            "purpose and need",
-            "alternatives",
-            "affected environment",
-            "environmental consequences",
-            "cumulative effects",
-        ),
-        source_query=(
-            "Custer Gallatin FEIS Volume 1 purpose and need alternatives affected "
-            "environment environmental consequences cumulative effects plan consistency"
-        ),
-        source_terms=(
-            "purpose and need",
-            "alternatives",
-            "affected environment",
-            "environmental consequences",
-            "cumulative effects",
-            "plan consistency",
-        ),
-        trigger_terms=(
-            "Final Environmental Impact Statement",
-            "FEIS",
-            "tiered to",
-            "tiers to",
-            "incorporates by reference",
-            "plan consistency",
-        ),
-    ),
-    PlanEvidenceRoute(
-        route_id="support-feis-volume-2-designated-areas",
-        category="feis_designated_areas",
-        name="FEIS Volume 2 designated areas and plan allocations",
-        source_record_id="R1PLAN-custer-gallatin-nf-05",
-        source_role="final_environmental_impact_statement_volume_2",
-        package_terms=(
-            "designated area",
-            "designated areas",
-            "plan allocation",
-            "plan allocations",
-            "Inventoried Roadless Area",
-            "recommended wilderness",
-            "backcountry area",
-            "backcountry areas",
-            "recreation emphasis area",
-            "recreation emphasis areas",
-        ),
-        source_query=(
-            "Custer Gallatin FEIS Volume 2 designated areas inventoried roadless "
-            "plan allocations backcountry recreation emphasis resource effects"
-        ),
-        source_terms=(
-            "designated areas",
-            "plan allocations",
-            "inventoried roadless",
-            "backcountry areas",
-            "recreation emphasis",
-            "resource effects",
-        ),
-        trigger_terms=(
-            "designated area",
-            "designated areas",
-            "plan allocation",
-            "plan allocations",
-            "Inventoried Roadless Area",
-            "recommended wilderness",
-            "backcountry area",
-            "backcountry areas",
-            "recreation emphasis area",
-            "recreation emphasis areas",
-        ),
-    ),
-    PlanEvidenceRoute(
-        route_id="support-biological-assessment-esa",
-        category="esa_consultation",
-        name="Biological Assessment ESA effects analysis",
-        source_record_id="R1PLAN-custer-gallatin-nf-06",
-        source_role="biological_assessment",
-        package_terms=(
-            "Biological Assessment",
-            "BA",
-            "Endangered Species Act",
-            "ESA",
-            "Section 7",
-            "threatened",
-            "endangered",
-            "proposed species",
-            "candidate species",
-            "critical habitat",
-        ),
-        source_query=(
-            "Custer Gallatin biological assessment threatened endangered proposed "
-            "candidate species critical habitat conservation measures action area"
-        ),
-        source_terms=(
-            "biological assessment",
-            "threatened",
-            "endangered",
-            "proposed",
-            "candidate species",
-            "critical habitat",
-            "conservation measures",
-            "action area",
-        ),
-        trigger_terms=(
-            "Biological Assessment",
-            "BA",
-            "Endangered Species Act",
-            "ESA",
-            "threatened",
-            "endangered",
-            "proposed species",
-            "candidate species",
-            "critical habitat",
-        ),
-    ),
-    PlanEvidenceRoute(
-        route_id="support-biological-opinion-esa",
-        category="esa_consultation",
-        name="Biological Opinion ESA consultation terms",
-        source_record_id="R1PLAN-custer-gallatin-nf-07",
-        source_role="biological_opinion",
-        package_terms=(
-            "Biological Opinion",
-            "BO",
-            "Endangered Species Act",
-            "ESA",
-            "Section 7",
-            "incidental take",
-            "reinitiation",
-            "terms and conditions",
-            "effects determination",
-            "effects determinations",
-        ),
-        source_query=(
-            "Custer Gallatin biological opinion section 7 consultation incidental "
-            "take reinitiation terms and conditions effects determinations"
-        ),
-        source_terms=(
-            "biological opinion",
-            "section 7",
-            "consultation",
-            "incidental take",
-            "reinitiation",
-            "terms and conditions",
-            "effects determinations",
-        ),
-        trigger_terms=(
-            "Biological Opinion",
-            "BO",
-            "Endangered Species Act",
-            "ESA",
-            "incidental take",
-            "reinitiation",
-            "terms and conditions",
-            "effects determination",
-            "effects determinations",
-        ),
-    ),
-)
+@dataclass(frozen=True)
+class ForestPlanResolverProfile:
+    profile: ForestPlanProfile
+    known_other_forest_units: tuple[KnownForestUnit, ...]
+    scope_status: str
+    out_of_scope_status: str
+    source_records: tuple[dict[str, str], ...]
+    required_source_record_ids: tuple[str, ...]
+    ranger_district_entries: tuple[GazetteerEntry, ...]
+    geographic_area_entries: tuple[GazetteerEntry, ...]
+    management_area_entries: tuple[GazetteerEntry, ...]
+    overlay_entries: tuple[GazetteerEntry, ...]
+    supporting_plan_evidence_routes: tuple[PlanEvidenceRoute, ...]
 
 
-FOREST_UNIT_ALIASES = (
-    "Custer Gallatin National Forest",
-    "Custer-Gallatin National Forest",
-    "Custer Gallatin",
-    "Custer-Gallatin",
-    "CGNF",
-)
+def _load_resolver_profile(
+    forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
+    profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
+) -> ForestPlanResolverProfile:
+    collection = load_forest_plan_profiles(Path(profiles_path))
+    return _resolver_profile_from_profile(
+        profile=collection.get(forest_unit_id),
+        known_other_forest_units=collection.known_other_forest_units,
+    )
 
+
+def _resolver_profile_from_profile(
+    *,
+    profile: ForestPlanProfile,
+    known_other_forest_units: tuple[KnownForestUnit, ...],
+) -> ForestPlanResolverProfile:
+    return ForestPlanResolverProfile(
+        profile=profile,
+        known_other_forest_units=known_other_forest_units,
+        scope_status=_scope_status_for_profile(profile),
+        out_of_scope_status=_out_of_scope_status_for_profile(profile),
+        source_records=_source_records_for_profile(profile),
+        required_source_record_ids=profile.required_source_record_ids,
+        ranger_district_entries=_gazetteer_entries(profile.ranger_district_terms),
+        geographic_area_entries=_gazetteer_entries(profile.geographic_area_terms),
+        management_area_entries=_gazetteer_entries(profile.management_area_terms),
+        overlay_entries=_gazetteer_entries(profile.overlay_terms),
+        supporting_plan_evidence_routes=_supporting_routes_for_profile(
+            profile.supporting_record_trigger_rules
+        ),
+    )
+
+
+def _scope_status_for_profile(profile: ForestPlanProfile) -> str:
+    if profile.forest_unit_id == CUSTER_GALLATIN_FOREST_UNIT_ID:
+        return "custer_gallatin"
+    status = re.sub(r"[^A-Za-z0-9_.-]+", "-", profile.forest_unit_id).strip("-")
+    return status.replace("-", "_") or "forest_plan_profile"
+
+
+def _out_of_scope_status_for_profile(profile: ForestPlanProfile) -> str:
+    if profile.forest_unit_id == CUSTER_GALLATIN_FOREST_UNIT_ID:
+        return "not_custer_gallatin"
+    return "not_selected_forest_unit"
+
+
+def _source_records_for_profile(profile: ForestPlanProfile) -> tuple[dict[str, str], ...]:
+    return tuple(
+        {
+            "source_record_id": record.source_record_id,
+            "role": record.role,
+            "required_for": record.required_for,
+        }
+        for record in profile.supporting_source_records
+    )
+
+
+def _gazetteer_entries(
+    profile_terms: tuple[ForestPlanTermEntry, ...],
+) -> tuple[GazetteerEntry, ...]:
+    return tuple(
+        GazetteerEntry(
+            entry.entry_id,
+            entry.category,
+            entry.name,
+            entry.aliases,
+            entry.source_record_id,
+        )
+        for entry in profile_terms
+    )
+
+
+def _supporting_routes_for_profile(
+    rules: tuple[SupportingRecordTriggerRule, ...],
+) -> tuple[PlanEvidenceRoute, ...]:
+    return tuple(
+        PlanEvidenceRoute(
+            route_id=rule.route_id,
+            category=rule.category,
+            name=rule.name,
+            source_record_id=rule.source_record_id,
+            source_role=rule.target_source_role,
+            package_terms=rule.package_terms,
+            source_query=rule.source_query,
+            source_terms=rule.source_terms,
+            trigger_terms=rule.trigger_terms,
+        )
+        for rule in rules
+    )
+
+
+_DEFAULT_RESOLVER_PROFILE = _load_resolver_profile()
+CUSTER_GALLATIN_PLAN_SOURCE_ID = _DEFAULT_RESOLVER_PROFILE.profile.active_plan_source_record_id
+CUSTER_GALLATIN_SOURCE_RECORDS = [
+    dict(record) for record in _DEFAULT_RESOLVER_PROFILE.source_records
+]
+CUSTER_GALLATIN_REQUIRED_SOURCE_IDS = _DEFAULT_RESOLVER_PROFILE.required_source_record_ids
+SUPPORTING_PLAN_EVIDENCE_ROUTES = _DEFAULT_RESOLVER_PROFILE.supporting_plan_evidence_routes
+FOREST_UNIT_ALIASES = _DEFAULT_RESOLVER_PROFILE.profile.forest_unit_names
 NON_CUSTER_FOREST_ALIASES = {
-    "Beaverhead-Deerlodge National Forest": (
-        "Beaverhead-Deerlodge National Forest",
-        "Beaverhead Deerlodge National Forest",
-        "BDNF",
-    ),
-    "Bitterroot National Forest": ("Bitterroot National Forest",),
-    "Dakota Prairie Grasslands": ("Dakota Prairie Grasslands",),
-    "Flathead National Forest": ("Flathead National Forest",),
-    "Helena-Lewis and Clark National Forest": (
-        "Helena-Lewis and Clark National Forest",
-        "Helena Lewis and Clark National Forest",
-    ),
-    "Idaho Panhandle National Forests": ("Idaho Panhandle National Forests",),
-    "Kootenai National Forest": ("Kootenai National Forest",),
-    "Lolo National Forest": ("Lolo National Forest",),
-    "Nez Perce-Clearwater National Forests": (
-        "Nez Perce-Clearwater National Forests",
-        "Nez Perce Clearwater National Forests",
-    ),
+    unit.names[0]: unit.names for unit in _DEFAULT_RESOLVER_PROFILE.known_other_forest_units
 }
-
-AMBIGUOUS_FOREST_CUES = (
-    "Gallatin",
-    "Gallatin National Forest",
-    "Custer",
-)
-
-LOCATION_ENTRIES = (
-    GazetteerEntry(
-        "district-ashland",
-        "district",
-        "Ashland Ranger District",
-        ("Ashland District",),
-    ),
-    GazetteerEntry(
-        "district-sioux",
-        "district",
-        "Sioux Ranger District",
-        ("Sioux District",),
-    ),
-    GazetteerEntry("district-bozeman", "district", "Bozeman Ranger District"),
-    GazetteerEntry("district-gardiner", "district", "Gardiner Ranger District"),
-    GazetteerEntry("district-hebgen-lake", "district", "Hebgen Lake Ranger District"),
-    GazetteerEntry("district-yellowstone", "district", "Yellowstone Ranger District"),
-    GazetteerEntry("district-beartooth", "district", "Beartooth Ranger District"),
-)
-
-GEOGRAPHIC_AREA_ENTRIES = (
-    GazetteerEntry("geo-sioux", "geographic_area", "Sioux Geographic Area"),
-    GazetteerEntry("geo-ashland", "geographic_area", "Ashland Geographic Area"),
-    GazetteerEntry("geo-pryor-mountains", "geographic_area", "Pryor Mountains Geographic Area"),
-    GazetteerEntry(
-        "geo-absaroka-beartooth",
-        "geographic_area",
-        "Absaroka Beartooth Mountains Geographic Area",
-        ("Absaroka-Beartooth Mountains Geographic Area",),
-    ),
-    GazetteerEntry(
-        "geo-bridger-bangtail-crazy",
-        "geographic_area",
-        "Bridger, Bangtail, and Crazy Mountains Geographic Area",
-        (
-            "Bridger Bangtail and Crazy Mountains Geographic Area",
-            "Bridger, Bangtail and Crazy Mountains Geographic Area",
-        ),
-    ),
-    GazetteerEntry(
-        "geo-madison-henrys-gallatin",
-        "geographic_area",
-        "Madison, Henrys Lake, and Gallatin Mountains Geographic Area",
-        (
-            "Madison Henrys Lake and Gallatin Mountains Geographic Area",
-            "Madison, Henrys Lake and Gallatin Mountains Geographic Area",
-        ),
-    ),
-)
-
-MANAGEMENT_AREA_ENTRIES = (
-    GazetteerEntry("mgmt-chalk-buttes-bca", "management_area", "Chalk Buttes Backcountry Area", ("CBBCA",)),
-    GazetteerEntry("mgmt-ashland-bca", "management_area", "Ashland Backcountry Areas", ("ABCA",)),
-    GazetteerEntry("mgmt-cook-mountain", "management_area", "Cook Mountain Backcountry Area"),
-    GazetteerEntry("mgmt-king-mountain", "management_area", "King Mountain Backcountry Area"),
-    GazetteerEntry("mgmt-tongue-river-breaks", "management_area", "Tongue River Breaks Backcountry Area"),
-    GazetteerEntry("mgmt-big-pryor-bca", "management_area", "Big Pryor Backcountry Area"),
-    GazetteerEntry("mgmt-punch-bowl-bca", "management_area", "Punch Bowl Backcountry Area", ("PBBCA",)),
-    GazetteerEntry("mgmt-stillwater-complex", "management_area", "Stillwater Complex", ("SWC",)),
-    GazetteerEntry("mgmt-line-creek-rna", "management_area", "Line Creek Plateau Research Natural Area"),
-    GazetteerEntry("mgmt-oto-ranch", "management_area", "OTO Ranch", ("OTO",)),
-    GazetteerEntry(
-        "mgmt-beartooth-scenic-byway",
-        "management_area",
-        "Beartooth National Forest Scenic Byway",
-        ("NSB",),
-    ),
-    GazetteerEntry("mgmt-bad-canyon-bca", "management_area", "Bad Canyon Backcountry Area", ("BCBCA",)),
-    GazetteerEntry(
-        "mgmt-boulder-river-rea",
-        "management_area",
-        "Boulder River Recreation Emphasis Area",
-        ("BRREA",),
-    ),
-    GazetteerEntry(
-        "mgmt-cooke-city-winter-rea",
-        "management_area",
-        "Cooke City Winter Recreation Emphasis Area",
-        ("CCREA",),
-    ),
-    GazetteerEntry(
-        "mgmt-main-fork-rock-creek-rea",
-        "management_area",
-        "Main Fork Rock Creek Recreation Emphasis Area",
-        ("MFRCREA",),
-    ),
-    GazetteerEntry("mgmt-bangtail-special-area", "management_area", "Bangtail Special Area", ("BSA",)),
-    GazetteerEntry("mgmt-blacktail-peak-bca", "management_area", "Blacktail Peak Backcountry Area", ("BPBCA",)),
-    GazetteerEntry("mgmt-crazy-mountains-bca", "management_area", "Crazy Mountains Backcountry Area", ("CMBCA",)),
-    GazetteerEntry("mgmt-bridger-rea", "management_area", "Bridger Recreation Emphasis Area", ("BREA",)),
-    GazetteerEntry(
-        "mgmt-cabin-creek-recreation-wildlife",
-        "management_area",
-        "Cabin Creek Recreation and Wildlife Management Area",
-        ("CCRW",),
-    ),
-    GazetteerEntry("mgmt-wilderness-study-area", "management_area", "Wilderness Study Area", ("WSA",)),
-    GazetteerEntry("mgmt-black-sand-spring-sa", "management_area", "Black Sand Spring Special Area", ("BSSSA",)),
-    GazetteerEntry("mgmt-cdnst", "management_area", "Continental Divide National Scenic Trail", ("CDNST",)),
-    GazetteerEntry("mgmt-earthquake-lake", "management_area", "Earthquake Lake Geologic Area", ("ELGA",)),
-    GazetteerEntry("mgmt-municipal-watershed", "management_area", "Municipal Watershed"),
-    GazetteerEntry("mgmt-buffalo-horn-bca", "management_area", "Buffalo Horn Backcountry Area", ("BHBCA",)),
-    GazetteerEntry("mgmt-lionhead-bca", "management_area", "Lionhead Backcountry Area", ("LHBCA",)),
-    GazetteerEntry("mgmt-south-cottonwood-bca", "management_area", "South Cottonwood Backcountry Area", ("SCBCA",)),
-    GazetteerEntry("mgmt-west-pine-bca", "management_area", "West Pine Backcountry Area", ("WPBCA",)),
-    GazetteerEntry(
-        "mgmt-gallatin-river-rea",
-        "management_area",
-        "Gallatin River Recreation Emphasis Area",
-        ("GRREA",),
-    ),
-    GazetteerEntry(
-        "mgmt-hebgen-lakeshore-rea",
-        "management_area",
-        "Hebgen Lakeshore Recreation Emphasis Area",
-        ("HLREA",),
-    ),
-    GazetteerEntry(
-        "mgmt-hebgen-winter-rea",
-        "management_area",
-        "Hebgen Winter Recreation Emphasis Area",
-        ("HWREA",),
-    ),
-    GazetteerEntry("mgmt-hyalite-rea", "management_area", "Hyalite Recreation Emphasis Area", ("HREA",)),
-    GazetteerEntry(
-        "mgmt-storm-castle-rea",
-        "management_area",
-        "Storm Castle Recreation Emphasis Area",
-        ("SCREA",),
-    ),
-    GazetteerEntry(
-        "mgmt-yellowstone-river-rea",
-        "management_area",
-        "Yellowstone River Recreation Emphasis Area",
-        ("YRREA",),
-    ),
-)
-
-OVERLAY_ENTRIES = (
-    GazetteerEntry("overlay-designated-wilderness", "overlay", "Designated Wilderness", ("DWA",)),
-    GazetteerEntry("overlay-wild-scenic-river", "overlay", "Designated Wild and Scenic River", ("DWSR",)),
-    GazetteerEntry("overlay-inventoried-roadless", "overlay", "Inventoried Roadless Area", ("Inventoried Roadless Areas", "IRA")),
-    GazetteerEntry("overlay-research-natural-area", "overlay", "Research Natural Area", ("RNA",)),
-    GazetteerEntry("overlay-special-area", "overlay", "Special Area"),
-    GazetteerEntry("overlay-national-natural-landmark", "overlay", "National Natural Landmark", ("NNL",)),
-    GazetteerEntry("overlay-national-recreation-trail", "overlay", "National Recreation Trail", ("NRT",)),
-    GazetteerEntry(
-        "overlay-eligible-wild-scenic-river",
-        "overlay",
-        "Eligible Wild and Scenic River",
-        ("Eligible Wild and Scenic Rivers", "EWSR"),
-    ),
-    GazetteerEntry(
-        "overlay-recommended-wilderness",
-        "overlay",
-        "Recommended Wilderness Area",
-        ("Recommended Wilderness Areas", "RWA"),
-    ),
-)
+AMBIGUOUS_FOREST_CUES = _DEFAULT_RESOLVER_PROFILE.profile.ambiguous_unit_terms
+LOCATION_ENTRIES = _DEFAULT_RESOLVER_PROFILE.ranger_district_entries
+GEOGRAPHIC_AREA_ENTRIES = _DEFAULT_RESOLVER_PROFILE.geographic_area_entries
+MANAGEMENT_AREA_ENTRIES = _DEFAULT_RESOLVER_PROFILE.management_area_entries
+OVERLAY_ENTRIES = _DEFAULT_RESOLVER_PROFILE.overlay_entries
 
 
 def run_forest_plan_resolver(
     *,
     package_path: Path,
     output_dir: Path,
+    forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
+    profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     source_set_id: str | None = None,
     index_path: Path | None = None,
     review_id: str | None = None,
@@ -522,7 +210,7 @@ def run_forest_plan_resolver(
     docling_timeout_seconds: float | None = 120.0,
     reuse_package_cache: bool = False,
 ) -> ForestPlanResolverResult:
-    """Resolve Custer Gallatin forest-plan context from a local EA package."""
+    """Resolve forest-plan context from a local EA package."""
 
     package_path = Path(package_path)
     output_dir = Path(output_dir)
@@ -530,6 +218,10 @@ def run_forest_plan_resolver(
         raise ValueError("source_top_k must be at least 1")
     if not package_path.exists():
         raise FileNotFoundError(f"Missing EA package path: {package_path}")
+    resolver_profile = _load_resolver_profile(
+        forest_unit_id=forest_unit_id,
+        profiles_path=profiles_path,
+    )
 
     review_id = review_id or _default_review_id(package_path)
     _validate_safe_id(review_id, "review_id")
@@ -573,9 +265,9 @@ def run_forest_plan_resolver(
         _write_jsonl(package_manifest_path, package_manifest)
         _write_jsonl(package_chunks_path, package_chunks)
 
-    scope = _resolve_scope(package_chunks)
+    scope = _resolve_scope(package_chunks, resolver_profile=resolver_profile)
     retrieval_readiness = None
-    if scope["scope_status"] == "custer_gallatin":
+    if _is_profile_scope(scope, resolver_profile):
         if index_path is None:
             index_path = default_index_path(output_dir, source_set_id)
         index_path = Path(index_path)
@@ -588,7 +280,7 @@ def run_forest_plan_resolver(
         retrieval_readiness = _retrieval_readiness_report(
             index_path=index_path,
             source_set_id=source_set_id,
-            required_source_record_ids=CUSTER_GALLATIN_REQUIRED_SOURCE_IDS,
+            required_source_record_ids=resolver_profile.required_source_record_ids,
         )
         if not retrieval_readiness["passed"]:
             failed = ", ".join(
@@ -608,6 +300,7 @@ def run_forest_plan_resolver(
         package_manifest=package_manifest,
         package_chunks=package_chunks,
         scope=scope,
+        resolver_profile=resolver_profile,
         source_top_k=source_top_k,
         source_record_readiness=(
             retrieval_readiness.get("required_source_records")
@@ -615,9 +308,13 @@ def run_forest_plan_resolver(
             else None
         ),
     )
-    validation = _validation_report(context)
+    validation = _validation_report(context, resolver_profile=resolver_profile)
     context["validation"] = validation
-    context["needs_reviewer_resolution"] = _needs_reviewer_resolution(context, validation)
+    context["needs_reviewer_resolution"] = _needs_reviewer_resolution(
+        context,
+        validation,
+        resolver_profile=resolver_profile,
+    )
     summary = _summary(
         context=context,
         validation=validation,
@@ -658,56 +355,60 @@ def _prepare_outputs(
         path.unlink(missing_ok=True)
 
 
-def _resolve_scope(package_chunks: list[dict]) -> dict:
-    custer_mentions = _mentions_for_aliases(
+def _resolve_scope(
+    package_chunks: list[dict],
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> dict:
+    profile_mentions = _mentions_for_aliases(
         package_chunks,
-        name="Custer Gallatin National Forest",
+        name=resolver_profile.profile.forest_unit_names[0],
         category="forest_unit",
-        aliases=FOREST_UNIT_ALIASES,
+        aliases=resolver_profile.profile.forest_unit_names,
     )
-    non_custer_mentions = []
-    for name, aliases in NON_CUSTER_FOREST_ALIASES.items():
-        non_custer_mentions.extend(
+    other_forest_mentions = []
+    for unit in resolver_profile.known_other_forest_units:
+        other_forest_mentions.extend(
             _mentions_for_aliases(
                 package_chunks,
-                name=name,
+                name=unit.names[0],
                 category="forest_unit",
-                aliases=aliases,
+                aliases=unit.names,
             )
         )
     ambiguous_mentions = []
-    if not custer_mentions:
+    if not profile_mentions:
         ambiguous_mentions = _mentions_for_aliases(
             package_chunks,
             name="ambiguous forest cue",
             category="forest_unit",
-            aliases=AMBIGUOUS_FOREST_CUES,
+            aliases=resolver_profile.profile.ambiguous_unit_terms,
         )
 
-    if custer_mentions and not non_custer_mentions:
-        status = "custer_gallatin"
+    if profile_mentions and not other_forest_mentions:
+        status = resolver_profile.scope_status
         forest_unit = {
-            "name": "Custer Gallatin National Forest",
-            "package_evidence": custer_mentions[:5],
+            "name": resolver_profile.profile.forest_unit_names[0],
+            "package_evidence": profile_mentions[:5],
         }
-    elif non_custer_mentions and not custer_mentions:
-        status = "not_custer_gallatin"
+    elif other_forest_mentions and not profile_mentions:
+        status = resolver_profile.out_of_scope_status
         forest_unit = {
-            "name": non_custer_mentions[0]["name"],
-            "package_evidence": non_custer_mentions[:5],
+            "name": other_forest_mentions[0]["name"],
+            "package_evidence": other_forest_mentions[:5],
         }
     else:
         status = "ambiguous"
         forest_unit = None
 
     unresolved = []
-    if custer_mentions and non_custer_mentions:
+    if profile_mentions and other_forest_mentions:
         unresolved.extend(
-            _unresolved_from_evidence("multiple_forest_units_mentioned", non_custer_mentions)
+            _unresolved_from_evidence("multiple_forest_units_mentioned", other_forest_mentions)
         )
     if ambiguous_mentions:
         unresolved.extend(_unresolved_from_evidence("ambiguous_forest_unit", ambiguous_mentions))
-    if not custer_mentions and not non_custer_mentions and not ambiguous_mentions:
+    if not profile_mentions and not other_forest_mentions and not ambiguous_mentions:
         unresolved.append(
             {
                 "category": "forest_unit",
@@ -733,42 +434,43 @@ def _context_report(
     package_manifest: list[dict],
     package_chunks: list[dict],
     scope: dict,
+    resolver_profile: ForestPlanResolverProfile,
     source_top_k: int,
     source_record_readiness: dict | None = None,
 ) -> dict:
     source_records = (
-        list(CUSTER_GALLATIN_SOURCE_RECORDS)
-        if scope["scope_status"] == "custer_gallatin"
+        [dict(record) for record in resolver_profile.source_records]
+        if _is_profile_scope(scope, resolver_profile)
         else []
     )
     project_location_signals = _resolved_entries(
-        entries=LOCATION_ENTRIES,
+        entries=resolver_profile.ranger_district_entries,
         package_chunks=package_chunks,
         index_path=index_path,
         source_top_k=source_top_k,
         attach_plan_evidence=False,
     )
-    if scope["scope_status"] == "custer_gallatin":
+    if _is_profile_scope(scope, resolver_profile):
         geographic_areas = _resolved_entries(
-            entries=GEOGRAPHIC_AREA_ENTRIES,
+            entries=resolver_profile.geographic_area_entries,
             package_chunks=package_chunks,
             index_path=index_path,
             source_top_k=source_top_k,
         )
         management_areas = _resolved_entries(
-            entries=MANAGEMENT_AREA_ENTRIES,
+            entries=resolver_profile.management_area_entries,
             package_chunks=package_chunks,
             index_path=index_path,
             source_top_k=source_top_k,
         )
         overlays = _resolved_entries(
-            entries=OVERLAY_ENTRIES,
+            entries=resolver_profile.overlay_entries,
             package_chunks=package_chunks,
             index_path=index_path,
             source_top_k=source_top_k,
         )
         supporting_plan_evidence = _supporting_plan_evidence(
-            routes=SUPPORTING_PLAN_EVIDENCE_ROUTES,
+            routes=resolver_profile.supporting_plan_evidence_routes,
             package_chunks=package_chunks,
             index_path=index_path,
             source_top_k=source_top_k,
@@ -856,6 +558,8 @@ def _resolved_entries(
 
 
 def _plan_source_evidence(*, entry: GazetteerEntry, index_path: Path, limit: int) -> list[dict]:
+    if entry.source_record_id is None:
+        return []
     query = " ".join(entry.terms)
     result = query_retrieval_index(
         index_path=index_path,
@@ -1195,12 +899,19 @@ def _flatten_plan_source_evidence(*groups) -> list[dict]:
     return flattened
 
 
-def _validation_report(context: dict) -> dict:
+def _validation_report(
+    context: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> dict:
     checks = [
         _check_schema_fields(context),
-        _check_scope_resolved(context),
-        _check_required_custer_source_records_indexed(context),
-        _check_custer_scope_has_resolved_area(context),
+        _check_scope_resolved(context, resolver_profile=resolver_profile),
+        _check_required_custer_source_records_indexed(
+            context,
+            resolver_profile=resolver_profile,
+        ),
+        _check_custer_scope_has_resolved_area(context, resolver_profile=resolver_profile),
         _check_resolved_entries_have_plan_source_evidence(context),
         _check_triggered_supporting_plan_evidence_has_source_evidence(context),
     ]
@@ -1236,17 +947,25 @@ def _check_schema_fields(context: dict) -> dict:
     }
 
 
-def _check_scope_resolved(context: dict) -> dict:
+def _check_scope_resolved(
+    context: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> dict:
     status = context.get("scope_status")
     return {
         "name": "scope_status_resolved",
-        "passed": status in {"custer_gallatin", "not_custer_gallatin"},
+        "passed": status in {resolver_profile.scope_status, resolver_profile.out_of_scope_status},
         "details": {"scope_status": status},
     }
 
 
-def _check_custer_scope_has_resolved_area(context: dict) -> dict:
-    if context.get("scope_status") != "custer_gallatin":
+def _check_custer_scope_has_resolved_area(
+    context: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> dict:
+    if not _is_profile_scope(context, resolver_profile):
         return {
             "name": "custer_scope_has_resolved_area",
             "passed": True,
@@ -1269,8 +988,12 @@ def _check_custer_scope_has_resolved_area(context: dict) -> dict:
     }
 
 
-def _check_required_custer_source_records_indexed(context: dict) -> dict:
-    if context.get("scope_status") != "custer_gallatin":
+def _check_required_custer_source_records_indexed(
+    context: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> dict:
+    if not _is_profile_scope(context, resolver_profile):
         return {
             "name": "required_custer_source_records_indexed",
             "passed": True,
@@ -1338,12 +1061,21 @@ def _check_triggered_supporting_plan_evidence_has_source_evidence(context: dict)
     }
 
 
-def _needs_reviewer_resolution(context: dict, validation: dict) -> bool:
-    if context.get("scope_status") == "not_custer_gallatin":
+def _needs_reviewer_resolution(
+    context: dict,
+    validation: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> bool:
+    if context.get("scope_status") == resolver_profile.out_of_scope_status:
         return False
-    if context.get("scope_status") != "custer_gallatin":
+    if not _is_profile_scope(context, resolver_profile):
         return True
     return not validation.get("passed")
+
+
+def _is_profile_scope(context: dict, resolver_profile: ForestPlanResolverProfile) -> bool:
+    return context.get("scope_status") == resolver_profile.scope_status
 
 
 def _summary(

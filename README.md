@@ -126,13 +126,14 @@ links into a local graph artifact. The `claim-extract` command extracts determin
 claims and entities with exact offsets and graph bindings. The `rule-claim-link` command binds
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
-reviewer-ready retrieval evidence. The `forest-plan-resolve` command extracts Custer Gallatin
-forest-plan review context from an EA package, including project location signals, geographic areas,
-management areas, overlays, and source-library plan evidence. It also routes triggered package cues
-to the Custer Gallatin ROD, FEIS Volumes 1 and 2, Biological Assessment, and Biological Opinion so
-forest-plan reviews can apply the supporting plan record set, not only the primary LMP. Supporting
-routes are trigger-gated and report `trigger_evidence` so reviewers can see why a supporting record
-was applied. The `compliance-review` command
+reviewer-ready retrieval evidence. The `forest-plan-resolve` command extracts forest-plan review
+context from an EA package using the selected profile in `config/forest_plan_profiles.json`; the
+first profile is Custer Gallatin. It resolves project location signals, geographic areas,
+management areas, overlays, and source-library plan evidence, then routes triggered package cues to
+profile-declared supporting records such as the Custer Gallatin ROD, FEIS Volumes 1 and 2,
+Biological Assessment, and Biological Opinion. Supporting routes are trigger-gated and report
+`trigger_evidence` so reviewers can see why a supporting record was applied. The `compliance-review`
+command
 identifies applicable
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
@@ -396,13 +397,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
   --output-dir source_library
 ```
 
-`forest-plan-resolve` is the first Custer Gallatin-only forest-plan review sequence. It extracts or
-reuses the package cache, resolves whether the EA is for the Custer Gallatin National Forest, then
-extracts ranger district, project-location, geographic-area, management-area, and overlay signals.
-For resolved Custer Gallatin packages, it records the expected Custer Gallatin plan source records
-and retrieves supporting source-library plan evidence from the primary Land Management Plan. It also
-routes triggered ROD, FEIS, designated-area/allocation, ESA Biological Assessment, and Biological
-Opinion cues to the required Custer Gallatin supporting records. Broad section labels such as
+`forest-plan-resolve` is the first profile-driven forest-plan review sequence, with Custer Gallatin
+as the first configured profile. It extracts or reuses the package cache, resolves whether the EA
+matches the selected profile, then extracts ranger district, project-location, geographic-area,
+management-area, and overlay signals from profile data. For resolved Custer Gallatin packages, it
+records the expected profile source records and retrieves supporting source-library plan evidence
+from the primary Land Management Plan. It also routes triggered ROD, FEIS,
+designated-area/allocation, ESA Biological Assessment, and Biological Opinion cues to the required
+Custer Gallatin supporting records declared by the profile. Broad section labels such as
 `purpose and need` do not activate FEIS routing by themselves, and acronym triggers such as `ROD`,
 `FEIS`, `BA`, `BO`, and `ESA` require uppercase matches. The command then writes:
 

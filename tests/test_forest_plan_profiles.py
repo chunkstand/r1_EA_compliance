@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.forest_plan_profiles import (
+    DEFAULT_FOREST_PLAN_PROFILES_PATH,
     FOREST_PLAN_PROFILES_SCHEMA_VERSION,
     load_forest_plan_profile,
     load_forest_plan_profiles,
@@ -16,6 +17,10 @@ from usfs_r1_ea_sources.forest_plan_resolver import SUPPORTING_PLAN_EVIDENCE_ROU
 
 
 class ForestPlanProfileTests(unittest.TestCase):
+    def test_default_profile_path_is_repo_absolute(self) -> None:
+        self.assertTrue(DEFAULT_FOREST_PLAN_PROFILES_PATH.is_absolute())
+        self.assertTrue(DEFAULT_FOREST_PLAN_PROFILES_PATH.exists())
+
     def test_loads_custer_gallatin_profile_as_data(self) -> None:
         profiles = load_forest_plan_profiles()
         profile = profiles.get("custer-gallatin-nf")

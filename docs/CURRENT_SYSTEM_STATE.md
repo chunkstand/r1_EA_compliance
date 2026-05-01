@@ -242,16 +242,17 @@ EA Package Review V0 is implemented through `ea-review`. It extracts a local EA 
 seed checklist, retrieves source-library evidence for each item, and writes package evidence,
 source-library evidence, finding status, limitations, and validation artifacts.
 
-Custer Gallatin Forest Plan Resolver V0 is implemented through `forest-plan-resolve`. It extracts or
-reuses a local EA package, resolves whether the package is Custer Gallatin scoped, extracts
-ranger-district and project-location signals, extracts geographic areas, management areas, and
-overlays, and binds resolved plan context to Custer Gallatin source-library records. The resolver
-requires the complete Custer Gallatin plan-review bundle in the retrieval index: planning page, Land
-Management Plan, Record of Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and
-Biological Opinion. Triggered ROD, FEIS, designated-area/allocation, and ESA cues are routed to the
-supporting records in addition to the primary LMP area/component evidence. Supporting routes are
-trigger-gated and emit `trigger_evidence`, so broad EA section labels do not silently activate FEIS
-records and uppercase acronym triggers do not match ordinary lowercase words.
+Custer Gallatin Forest Plan Resolver V0 is implemented through `forest-plan-resolve` as the first
+configured forest-plan profile. It extracts or reuses a local EA package, resolves whether the
+package matches the selected profile, extracts ranger-district and project-location signals,
+extracts geographic areas, management areas, and overlays from profile data, and binds resolved plan
+context to profile-declared source-library records. The default Custer Gallatin profile requires the
+complete plan-review bundle in the retrieval index: planning page, Land Management Plan, Record of
+Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion. Triggered
+ROD, FEIS, designated-area/allocation, and ESA cues are routed to profile-declared supporting
+records in addition to the primary LMP area/component evidence. Supporting routes are trigger-gated
+and emit `trigger_evidence`, so broad EA section labels do not silently activate FEIS records and
+uppercase acronym triggers do not match ordinary lowercase words.
 
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
@@ -518,9 +519,12 @@ The command writes `source_library/reviews/<review_id>/forest_plan_context.json`
 `forest_plan_context_validation.json`, and `forest_plan_context_summary.json`, plus package
 extraction artifacts under `source_library/reviews/<review_id>/package/`.
 
-The resolver is intentionally Custer Gallatin-only. It returns `scope_status=custer_gallatin`,
-`not_custer_gallatin`, or `ambiguous`; ambiguous `Gallatin`-only packages are not guessed. For
-Custer Gallatin packages it extracts:
+The default resolver profile is Custer Gallatin and preserves the V0 output contract. It returns
+`scope_status=custer_gallatin`, `not_custer_gallatin`, or `ambiguous`; ambiguous `Gallatin`-only
+packages are not guessed. The command now accepts `--forest-unit-id` and
+`--forest-plan-profiles-path` so profile data, not Python constants, defines forest names, required
+source records, area terms, overlays, and supporting evidence routes. For Custer Gallatin packages
+it extracts:
 
 - forest unit and ranger district signals
 - project location snippets
@@ -531,13 +535,13 @@ Custer Gallatin packages it extracts:
 - triggered supporting plan evidence from the Custer Gallatin ROD, FEIS Volumes 1 and 2,
   Biological Assessment, and Biological Opinion
 - trigger evidence showing why each supporting plan record was applied
-- required source-record readiness for all seven Custer Gallatin plan/supporting records
+- required source-record readiness for all Custer Gallatin profile-required plan/supporting records
 - unresolved mentions that need human reviewer resolution
 
 Custer Gallatin packages are reviewer-ready only when validation passes and at least one geographic
-area, management area, or overlay is resolved. They also require all seven Custer Gallatin
-plan/supporting records to be indexed. Packages that appear Custer Gallatin scoped but lack a
-resolved plan area, or trigger a supporting record without source evidence, set
+area, management area, or overlay is resolved. They also require every Custer Gallatin
+profile-required plan/supporting record to be indexed. Packages that appear Custer Gallatin scoped
+but lack a resolved plan area, or trigger a supporting record without source evidence, set
 `needs_reviewer_resolution` instead of silently passing.
 
 Forest-plan improvement work uses sequence discipline: each implemented sequence updates repo docs,

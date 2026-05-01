@@ -76,7 +76,7 @@
         "Custer"
       ],
       "active_plan_source_record_id": "R1PLAN-custer-gallatin-nf-02",
-      "profile_data_source": "Workbook R1_Forest_Plans rows and current forest_plan_resolver V0 constants.",
+      "profile_data_source": "Workbook R1_Forest_Plans rows and the Custer Gallatin V0 resolver inventory migrated into profile data.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
           "source_record_id": "R1PLAN-custer-gallatin-nf-01",

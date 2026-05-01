@@ -446,14 +446,16 @@ The `forest-plan-resolve` command writes:
 `forest-plan-resolve` reads:
 
 - a local EA package file or directory passed with `--package-path`
-- configured Custer Gallatin plan source-record IDs
-- the source-library retrieval index when the package is resolved as Custer Gallatin scoped
+- the selected forest-plan profile from `config/forest_plan_profiles.json`, or the path passed with
+  `--forest-plan-profiles-path`
+- the profile-declared plan source-record IDs
+- the source-library retrieval index when the package is resolved to the selected profile
 
 For Custer Gallatin-scoped packages, retrieval readiness is satisfied only when the index contains
-all seven required Custer Gallatin records: the planning page, Land Management Plan, Record of
-Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion. This allows a
-Custer Gallatin-only extraction/retrieval slice to support forest-plan review while still preventing
-reviews against an incomplete Custer Gallatin plan bundle.
+all required records declared by the Custer Gallatin profile: the planning page, Land Management
+Plan, Record of Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological
+Opinion. This allows a Custer Gallatin extraction/retrieval slice to support the first proving case
+while still preventing reviews against an incomplete profile-required plan bundle.
 
 When `--reuse-package-cache` is supplied, the review directory must already contain:
 
@@ -467,8 +469,8 @@ resolution without re-extracting the package files.
 
 - summary paths and package extraction counts
 - `scope_status`: `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`
-- forest unit and Custer Gallatin ranger district signals
-- Custer Gallatin source records used by the resolver
+- forest unit and ranger district signals from the selected profile
+- profile source records used by the resolver
 - project location signals found in the EA package
 - resolved geographic areas
 - resolved management areas
@@ -477,7 +479,7 @@ resolution without re-extracting the package files.
   Assessment, and Biological Opinion evidence routes
   - each route includes `trigger_terms` and `trigger_evidence` so reviewers can inspect why the
     supporting plan record was applied
-- `source_record_readiness`: required Custer Gallatin source-record IDs, indexed chunk counts, and
+- `source_record_readiness`: required profile source-record IDs, indexed chunk counts, and
   missing source IDs
 - package evidence snippets
 - source-library plan evidence snippets
@@ -485,16 +487,17 @@ resolution without re-extracting the package files.
 - `needs_reviewer_resolution`
 - validation results
 
-The resolver is scoped to the Custer Gallatin National Forest. It does not infer Custer Gallatin
-scope from ambiguous `Gallatin`-only mentions. Custer Gallatin packages with no resolved geographic
-area, management area, or overlay set `needs_reviewer_resolution` and are not reviewer-ready.
+The default resolver profile is scoped to the Custer Gallatin National Forest. It does not infer
+Custer Gallatin scope from ambiguous `Gallatin`-only mentions. Custer Gallatin packages with no
+resolved geographic area, management area, or overlay set `needs_reviewer_resolution` and are not
+reviewer-ready.
 
 `forest_plan_context_validation.json` records gate-facing checks for:
 
 - required context fields
 - resolved scope status
 - Custer Gallatin packages having at least one resolved geographic area, management area, or overlay
-- required Custer Gallatin source records being indexed
+- required profile source records being indexed
 - plan-context entries carrying package evidence
 - plan-context entries carrying source-library plan evidence
 - triggered supporting plan-evidence routes carrying trigger evidence and source-library evidence
