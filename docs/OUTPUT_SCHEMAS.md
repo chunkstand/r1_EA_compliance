@@ -542,12 +542,21 @@ forest-plan chunks and writes:
 
 - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json`
 - `source_library/derived/<source_set_id>/forest_plan_components/components.jsonl`
+- `source_library/derived/<source_set_id>/forest_plan_components/component_inventory_build_coverage.json`
 - `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
 
 The builder is deterministic and only consumes chunks whose `source_set_id`, `source_record_id`, and
 `document_role=forest_plan` match the requested source. It extracts labeled plan components such as
 `Standards (BC-STD-CMBCA) 01 ...`, preserves source chunk IDs, hashes, citation labels, and
 provenance, and fails validation if generated component records are malformed.
+
+`component_inventory_build_coverage.json` has schema version
+`forest-plan-component-inventory-build-coverage-v0` and records selected chunk count, detected
+component labels, detected standard labels, built component counts, missing detected component IDs,
+missing detected standard IDs, duplicate component IDs, duplicate standard IDs, validation errors,
+and pass/fail checks. Source-set generated inventories under
+`source_library/derived/<source_set_id>/forest_plan_components/` require passing build coverage
+before component evaluation can mark inventory coverage as passed.
 
 The component inventory is data, not runtime branching. The seed inventory at
 `config/forest_plan_component_inventory_seed.json` currently covers the East Crazies-relevant Crazy

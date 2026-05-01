@@ -22,6 +22,9 @@ FOREST_PLAN_COMPONENT_INVENTORY_COVERAGE_SCHEMA_VERSION = (
 FOREST_PLAN_APPLICABLE_STANDARD_COVERAGE_SCHEMA_VERSION = (
     "forest-plan-applicable-standard-coverage-v0"
 )
+FOREST_PLAN_COMPONENT_INVENTORY_BUILD_COVERAGE_SCHEMA_VERSION = (
+    "forest-plan-component-inventory-build-coverage-v0"
+)
 DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH = (
     Path(__file__).resolve().parents[2] / "config" / "forest_plan_component_inventory_seed.json"
 )
@@ -120,6 +123,7 @@ class ForestPlanComponentEvaluationResult:
 class ForestPlanComponentInventoryBuildResult:
     inventory_path: Path
     components_jsonl_path: Path
+    coverage_path: Path
     summary_path: Path
     summary: dict
 
@@ -145,6 +149,7 @@ def build_forest_plan_component_inventory(
     component_dir = output_dir / "derived" / source_set_id / "forest_plan_components"
     inventory_path = component_dir / "component_inventory.json"
     components_jsonl_path = component_dir / "components.jsonl"
+    coverage_path = component_dir / "component_inventory_build_coverage.json"
     summary_path = component_dir / "summary.json"
     chunks = [
         chunk
@@ -166,13 +171,26 @@ def build_forest_plan_component_inventory(
                 overlay_ids=overlay_ids or [],
             )
         )
-    _reject_duplicate(
-        [component["component_id"] for component in components],
-        "component_id",
-        "component inventory build",
-    )
+    validation_errors = []
     for index, component in enumerate(components):
-        _parse_component(component, f"built components[{index}]")
+        try:
+            _parse_component(component, f"built components[{index}]")
+        except ValueError as error:
+            validation_errors.append(
+                {
+                    "component_id": component.get("component_id"),
+                    "index": index,
+                    "error": str(error),
+                }
+            )
+    coverage = _component_inventory_build_coverage(
+        source_set_id=source_set_id,
+        source_record_id=source_record_id,
+        chunks_path=chunks_path,
+        chunks=chunks,
+        components=components,
+        validation_errors=validation_errors,
+    )
     inventory = {
         "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION,
         "inventory_id": _safe_identifier(f"{forest_unit_id}-{plan_version}-components"),
@@ -189,6 +207,7 @@ def build_forest_plan_component_inventory(
         "chunks_path": str(chunks_path),
         "inventory_path": str(inventory_path),
         "components_jsonl_path": str(components_jsonl_path),
+        "coverage_path": str(coverage_path),
         "component_count": len(components),
         "component_type_counts": dict(
             Counter(component["component_type"] for component in components)
@@ -196,15 +215,18 @@ def build_forest_plan_component_inventory(
         "standard_count": sum(
             1 for component in components if component["component_type"] == "standard"
         ),
-        "passed": bool(components),
+        "coverage_passed": coverage["passed"],
+        "passed": coverage["passed"],
     }
     component_dir.mkdir(parents=True, exist_ok=True)
     _write_json(inventory_path, inventory)
     _write_jsonl(components_jsonl_path, components)
+    _write_json(coverage_path, coverage)
     _write_json(summary_path, summary)
     return ForestPlanComponentInventoryBuildResult(
         inventory_path=inventory_path,
         components_jsonl_path=components_jsonl_path,
+        coverage_path=coverage_path,
         summary_path=summary_path,
         summary=summary,
     )
@@ -274,6 +296,128 @@ def _components_from_chunk(
             }
         )
     return components
+
+
+def _component_inventory_build_coverage(
+    *,
+    source_set_id: str,
+    source_record_id: str,
+    chunks_path: Path,
+    chunks: list[dict],
+    components: list[dict],
+    validation_errors: list[dict],
+) -> dict:
+    detected_labels = _detected_component_labels(chunks)
+    detected_standards = [
+        label for label in detected_labels if label["component_type"] == "standard"
+    ]
+    detected_component_ids = [label["component_id"] for label in detected_labels]
+    detected_standard_ids = [label["component_id"] for label in detected_standards]
+    built_component_ids = [str(component.get("component_id") or "") for component in components]
+    built_standard_ids = [
+        str(component.get("component_id") or "")
+        for component in components
+        if component.get("component_type") == "standard"
+    ]
+    missing_component_ids = sorted(set(detected_component_ids) - set(built_component_ids))
+    missing_standard_ids = sorted(set(detected_standard_ids) - set(built_standard_ids))
+    duplicate_component_ids = _duplicate_values(built_component_ids)
+    duplicate_standard_ids = _duplicate_values(detected_standard_ids)
+    checks = [
+        {
+            "name": "selected_forest_plan_chunks_present",
+            "passed": bool(chunks),
+            "details": {"chunk_count": len(chunks), "chunks_path": str(chunks_path)},
+        },
+        {
+            "name": "labeled_components_detected",
+            "passed": bool(detected_labels),
+            "details": {"detected_component_count": len(detected_labels)},
+        },
+        {
+            "name": "standard_components_detected",
+            "passed": bool(detected_standards),
+            "details": {"detected_standard_count": len(detected_standards)},
+        },
+        {
+            "name": "all_detected_components_built",
+            "passed": not missing_component_ids,
+            "details": {"component_ids": missing_component_ids},
+        },
+        {
+            "name": "all_detected_standards_built",
+            "passed": not missing_standard_ids,
+            "details": {"component_ids": missing_standard_ids},
+        },
+        {
+            "name": "built_component_ids_are_unique",
+            "passed": not duplicate_component_ids,
+            "details": {"component_ids": duplicate_component_ids},
+        },
+        {
+            "name": "detected_standard_labels_are_unique",
+            "passed": not duplicate_standard_ids,
+            "details": {"component_ids": duplicate_standard_ids},
+        },
+        {
+            "name": "built_component_records_validate",
+            "passed": not validation_errors,
+            "details": {"errors": validation_errors},
+        },
+    ]
+    return {
+        "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_BUILD_COVERAGE_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "chunks_path": str(chunks_path),
+        "selected_chunk_count": len(chunks),
+        "detected_component_count": len(detected_labels),
+        "detected_standard_count": len(detected_standards),
+        "built_component_count": len(components),
+        "built_standard_count": len(built_standard_ids),
+        "missing_component_ids": missing_component_ids,
+        "missing_standard_ids": missing_standard_ids,
+        "duplicate_component_ids": duplicate_component_ids,
+        "duplicate_standard_ids": duplicate_standard_ids,
+        "validation_errors": validation_errors,
+        "detected_component_labels": detected_labels,
+        "detected_standard_labels": detected_standards,
+        "passed": all(check["passed"] for check in checks),
+        "checks": checks,
+    }
+
+
+def _detected_component_labels(chunks: list[dict]) -> list[dict]:
+    labels = []
+    for chunk in chunks:
+        text = str(chunk.get("text") or "")
+        for match in COMPONENT_LABEL_RE.finditer(text):
+            component_type = _component_type_from_label(match.group("label"))
+            component_id = _component_id(
+                source_record_id=str(chunk.get("source_record_id") or ""),
+                code=match.group("code"),
+                number=match.group("number"),
+            )
+            labels.append(
+                {
+                    "component_id": component_id,
+                    "component_type": component_type,
+                    "label": match.group("label"),
+                    "code": match.group("code"),
+                    "number": match.group("number"),
+                    "source_record_id": str(chunk.get("source_record_id") or ""),
+                    "chunk_id": str(chunk.get("chunk_id") or ""),
+                    "section_heading": _section_heading_for_match(
+                        text=text,
+                        start=match.start(),
+                        fallback=str(
+                            chunk.get("heading") or chunk.get("title") or "Forest Plan Components"
+                        ),
+                    ),
+                }
+            )
+    return labels
 
 
 def _component_type_from_label(label: str) -> str:
@@ -879,6 +1023,16 @@ def _component_inventory_coverage(
     component_inventory_path: Path,
     components: list[dict],
 ) -> dict:
+    build_coverage = _load_component_inventory_build_coverage(component_inventory_path)
+    build_coverage_required = _component_inventory_build_coverage_required(
+        component_inventory_path
+    )
+    build_coverage_path = _component_inventory_build_coverage_path(component_inventory_path)
+    build_coverage_passed = (
+        bool(build_coverage and build_coverage.get("passed"))
+        if build_coverage_required or build_coverage is not None
+        else True
+    )
     component_type_counts = Counter(component["component_type"] for component in components)
     standard_component_ids = sorted(
         component["component_id"]
@@ -933,6 +1087,30 @@ def _component_inventory_coverage(
             "passed": not missing_provenance,
             "details": {"component_ids": missing_provenance},
         },
+        {
+            "name": "component_inventory_build_coverage_passes",
+            "passed": build_coverage_passed,
+            "details": {
+                "required": build_coverage_required,
+                "path": str(build_coverage_path),
+                "present": build_coverage is not None,
+                "schema_version": (
+                    build_coverage.get("schema_version") if build_coverage else None
+                ),
+                "detected_standard_count": (
+                    build_coverage.get("detected_standard_count") if build_coverage else None
+                ),
+                "built_standard_count": (
+                    build_coverage.get("built_standard_count") if build_coverage else None
+                ),
+                "missing_standard_ids": (
+                    build_coverage.get("missing_standard_ids") if build_coverage else None
+                ),
+                "duplicate_standard_ids": (
+                    build_coverage.get("duplicate_standard_ids") if build_coverage else None
+                ),
+            },
+        },
     ]
     return {
         "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_COVERAGE_SCHEMA_VERSION,
@@ -940,6 +1118,9 @@ def _component_inventory_coverage(
         "review_id": review_id,
         "source_set_id": source_set_id,
         "component_inventory_path": str(component_inventory_path),
+        "component_inventory_build_coverage_path": str(build_coverage_path),
+        "component_inventory_build_coverage_required": build_coverage_required,
+        "component_inventory_build_coverage_passed": build_coverage_passed,
         "coverage_scope": "selected_component_inventory",
         "component_count": len(components),
         "component_type_counts": dict(component_type_counts),
@@ -1231,6 +1412,12 @@ def _check_component_inventory_coverage(inventory_coverage: dict) -> dict:
             "schema_version": inventory_coverage.get("schema_version"),
             "component_count": inventory_coverage.get("component_count"),
             "standard_count": inventory_coverage.get("standard_count"),
+            "component_inventory_build_coverage_required": inventory_coverage.get(
+                "component_inventory_build_coverage_required"
+            ),
+            "component_inventory_build_coverage_passed": inventory_coverage.get(
+                "component_inventory_build_coverage_passed"
+            ),
         },
     }
 
@@ -1475,9 +1662,13 @@ def _require_hex_string(value: dict, field: str, context: str) -> str:
     return raw
 
 
-def _reject_duplicate(values: list[str], field: str, context: str) -> None:
+def _duplicate_values(values: list[str]) -> list[str]:
     counts = Counter(values)
-    duplicates = sorted(value for value, count in counts.items() if count > 1)
+    return sorted(value for value, count in counts.items() if value and count > 1)
+
+
+def _reject_duplicate(values: list[str], field: str, context: str) -> None:
+    duplicates = _duplicate_values(values)
     if duplicates:
         raise ValueError(f"{context} contains duplicate {field} values: {duplicates}.")
 
@@ -1506,6 +1697,45 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
         encoding="utf-8",
     )
+
+
+def _load_component_inventory_build_coverage(component_inventory_path: Path) -> dict | None:
+    coverage_path = _component_inventory_build_coverage_path(component_inventory_path)
+    if not coverage_path.exists():
+        return None
+    try:
+        coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        return {
+            "schema_version": None,
+            "passed": False,
+            "load_error": f"Invalid JSON: {error}",
+        }
+    if not isinstance(coverage, dict):
+        return {
+            "schema_version": None,
+            "passed": False,
+            "load_error": "Coverage file must contain a JSON object.",
+        }
+    if (
+        coverage.get("schema_version")
+        != FOREST_PLAN_COMPONENT_INVENTORY_BUILD_COVERAGE_SCHEMA_VERSION
+    ):
+        coverage = dict(coverage)
+        coverage["passed"] = False
+        coverage["load_error"] = "Unsupported component inventory build coverage schema_version."
+    return coverage
+
+
+def _component_inventory_build_coverage_required(component_inventory_path: Path) -> bool:
+    return (
+        component_inventory_path.name == "component_inventory.json"
+        and component_inventory_path.parent.name == "forest_plan_components"
+    )
+
+
+def _component_inventory_build_coverage_path(component_inventory_path: Path) -> Path:
+    return component_inventory_path.with_name("component_inventory_build_coverage.json")
 
 
 def _utc_now() -> str:

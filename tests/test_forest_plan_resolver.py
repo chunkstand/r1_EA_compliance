@@ -1166,6 +1166,64 @@ def _write_component_inventory(path: Path, *, source_set_id: str) -> Path:
         "components": components,
     }
     inventory_path.write_text(json.dumps(inventory, indent=2, sort_keys=True), encoding="utf-8")
+    if path.name == "forest_plan_components":
+        coverage = {
+            "schema_version": "forest-plan-component-inventory-build-coverage-v0",
+            "created_at": "2026-05-01T00:00:00Z",
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "chunks_path": "source_library/derived/source-set-test/chunks/chunks.jsonl",
+            "selected_chunk_count": 1,
+            "detected_component_count": len(components),
+            "detected_standard_count": 1,
+            "built_component_count": len(components),
+            "built_standard_count": 1,
+            "missing_component_ids": [],
+            "missing_standard_ids": [],
+            "duplicate_component_ids": [],
+            "duplicate_standard_ids": [],
+            "validation_errors": [],
+            "detected_component_labels": [
+                {
+                    "component_id": component["component_id"],
+                    "component_type": component["component_type"],
+                    "label": component["component_type"],
+                    "code": component["component_id"],
+                    "number": "01",
+                    "source_record_id": source_record_id,
+                    "chunk_id": source_chunk_ids[0],
+                    "section_heading": base["section_heading"],
+                }
+                for component in components
+            ],
+            "detected_standard_labels": [
+                {
+                    "component_id": "cg-test-cmbca-std-01",
+                    "component_type": "standard",
+                    "label": "Standards",
+                    "code": "BC-STD-CMBCA",
+                    "number": "01",
+                    "source_record_id": source_record_id,
+                    "chunk_id": source_chunk_ids[0],
+                    "section_heading": base["section_heading"],
+                }
+            ],
+            "passed": True,
+            "checks": [
+                {"name": "selected_forest_plan_chunks_present", "passed": True, "details": {}},
+                {"name": "labeled_components_detected", "passed": True, "details": {}},
+                {"name": "standard_components_detected", "passed": True, "details": {}},
+                {"name": "all_detected_components_built", "passed": True, "details": {}},
+                {"name": "all_detected_standards_built", "passed": True, "details": {}},
+                {"name": "built_component_ids_are_unique", "passed": True, "details": {}},
+                {"name": "detected_standard_labels_are_unique", "passed": True, "details": {}},
+                {"name": "built_component_records_validate", "passed": True, "details": {}},
+            ],
+        }
+        (path / "component_inventory_build_coverage.json").write_text(
+            json.dumps(coverage, indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
     return inventory_path
 
 

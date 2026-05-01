@@ -25,6 +25,13 @@ Current session update:
 - Component findings now carry a structured `compliance_status`; applicable standards require
   plan-source evidence, EA package evidence, and a resolved compliance status before component
   validation can pass.
+- `forest-plan-components-build` now writes source-set inventory artifacts plus
+  `component_inventory_build_coverage.json`, proving selected forest-plan chunks, detected component
+  labels, detected standard labels, missing detected standards, duplicate standards, and generated
+  record validation before a built inventory can pass.
+- Source-set generated component inventories under
+  `source_library/derived/<source_set_id>/forest_plan_components/` must have passing build coverage
+  before `forest_plan_component_inventory_coverage.json` can pass during NFMA component evaluation.
 - Sequence 3 forest-plan improvement work has started with a durable East Crazies fixture under
   `tests/fixtures/forest_plan_evaluator/east_crazies_profile_driven.txt`.
 - The fixture proves Custer Gallatin scope, Bridger/Bangtail/Crazy Mountains Geographic Area, Crazy
@@ -47,6 +54,9 @@ Recent sequence commits:
 - `270bfa7` - Sequence 2: drive forest plan resolver from profiles
 - `3ca34f7` - Sequence 2 hardening: close profile resolution gaps
 - `8f607e4` - Add mandatory forest plan component review
+- `21d30b6` - Add NFMA standard coverage gate
+- `ab7f034` - Fix forest plan component inventory CLI override
+- `ca29dfa` - Add forest plan component inventory builder
 
 Implemented behavior:
 
@@ -60,6 +70,10 @@ Implemented behavior:
   resolved compliance status.
 - `config/forest_plan_component_inventory_seed.json` is the current component inventory seed for
   the Crazy Mountains Backcountry Area proving slice.
+- `forest-plan-components-build` can produce rebuildable source-set component inventories and build
+  coverage from extracted forest-plan chunks.
+- Built source-set inventories fail inventory coverage when their adjacent build coverage is missing
+  or failed, which prevents them from being silently used as NFMA compliance evidence.
 - Default Custer Gallatin V0 output compatibility is preserved: `scope_status` still uses
   `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`.
 - `--forest-unit-id` and `--forest-plan-profiles-path` allow the resolver to run against another
@@ -72,16 +86,18 @@ Latest verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-components-build --help
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
 python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
 git diff --check
 ```
 
-Results: full test suite passed with `168 passed`; focused resolver/profile tests passed with
-`30 passed`; lint, compile, JSON validation, and whitespace checks passed.
+Results: full test suite passed with `172 passed`; focused forest-plan component/resolver/profile
+tests passed with `34 passed`; lint, compile, CLI help, JSON validation, and whitespace checks
+passed.
 
 ## Next Sequence
 
