@@ -763,7 +763,6 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
             reuse_package_cache=args.reuse_package_cache,
-            component_inventory_path=args.forest_plan_component_inventory_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1
@@ -787,6 +786,7 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
             reuse_package_cache=args.reuse_package_cache,
+            component_inventory_path=args.forest_plan_component_inventory_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1
