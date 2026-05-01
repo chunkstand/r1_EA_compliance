@@ -8,15 +8,31 @@ canonical workbook source set into a local, auditable source library, then build
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 
-Current full-library capture:
+Current workbook source contract:
 
-- Run ID: `full-library-batches`
-- Workbook rows covered: `147`
-- Batch result: `28/28` batches passed
+- Workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
+- `Ingest_Checklist` ingest rows: `162`
+- `Scope=Baseline` rows that must be evaluated in every EA compliance review: `26`
+- `Scope=Conditional` rows loaded for trigger-based review: `136`
+- `R1_Forest_Plans` unit/overlay rows: `24`
+
+Current generated source-library capture:
+
+- Run ID: `corpus-update-2026-04-30-batches`
+- Workbook rows covered: `186`
+- Batch result: `29/29` batches passed
 - Repair queue: empty except header
-- Unique workbook/effective URLs: `144`
-- Unique raw artifacts in reviewer catalog: `131`
-- Source-to-artifact links: `147`
+- Unique workbook/effective URLs: `168`
+- Unique raw artifacts in reviewer catalog: `155`
+- Source-to-artifact links: `185`
+- Status counts: `downloaded=6`, `downloaded_existing=165`, `duplicate_content=2`,
+  `duplicate_url=12`, `skipped_excluded=1`
+
+The current catalog source set is `source-set-572d6384a59a7b2a`. The latest corpus update extracted
+the 38 newly downloaded artifact-bearing rows and produced `1,211` chunks. Full downstream
+retrieval, evidence graph, source-claim, rule-claim, and compliance promotion artifacts still need
+to be rebuilt for this source set; older reviewer-ready downstream artifacts under
+`source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer
@@ -109,8 +125,10 @@ reviewer-ready retrieval evidence. The `compliance-review` command identifies ap
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
 finding graph with source-claim support. The
-`compliance-gold-eval` command runs the 10-case adjudication promotion gate. Embeddings and expanded
-human adjudication over real EA packages remain downstream work.
+`compliance-gold-eval` command runs the 10-case adjudication promotion gate. The active compliance
+rule pack is `0.4.0`: it declares the 26 workbook `Scope=Baseline` source records explicitly and
+contains 44 total authority rules. Embeddings and expanded human adjudication over real EA packages
+remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -232,7 +250,7 @@ Build the reviewer-engine catalog from the full batch:
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
   --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
-  --batch-run-id full-library-batches
+  --batch-run-id corpus-update-2026-04-30-batches
 ```
 
 The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `catalog_validation.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
@@ -256,6 +274,10 @@ parsing, routes by `expected_parser` and `content_type`, and writes:
 - `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
 - `source_library/derived/<source_set_id>/diagnostics/extraction_accuracy_audit.json`
 - `source_library/derived/<source_set_id>/diagnostics/summary.json`
+
+For delta extraction, repeat `--id` for each selected `source_record_id`. The command records the
+complete selected ID list in `diagnostics/summary.json`; retrieval remains non-reviewer-ready for a
+filtered extraction unless rebuilt with explicit partial-extraction allowance.
 
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text
 to that XML element and records the applied source scope in parser metadata. Run the accuracy audit
@@ -329,7 +351,9 @@ Package evidence search requires at least one configured package term to match; 
 terms match whole tokens, while phrase terms match contiguous text.
 The command requires the source-library retrieval summary and validation to be reviewer-ready before
 running, and fixed review IDs replace prior package artifacts so stale package chunks cannot survive
-reruns.
+reruns. Pass `--reuse-package-cache` only when a review directory already has
+`package/package_manifest.jsonl` and `package/package_chunks.jsonl` that you intend to reuse; this
+reruns checklist/rule evaluation against cached package chunks without re-extracting PDFs.
 
 Run a versioned compliance rule pack and emit the compliance matrix and finding graph:
 
@@ -338,6 +362,18 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path /absolute/path/to/ea-package-or-folder \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+```
+
+To refresh rules against an already extracted package, keep the same review ID and add
+`--reuse-package-cache`:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
+  --package-path /absolute/path/to/ea-package-or-folder \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --review-id <existing-review-id> \
+  --reuse-package-cache
 ```
 
 `compliance-review` reuses the package extraction and source retrieval gates from `ea-review`, then
@@ -353,7 +389,11 @@ writes:
 
 The command follows an authority-first workflow: baseline authorities always apply, conditional
 authorities are marked applicable only when configured EA package terms are found, and not-applicable
-authorities are carried through the matrix without source or EA compliance citations. Every
+authorities are carried through the matrix without source or EA compliance citations. The rule pack
+declares `baseline_source_record_ids`; for the active workbook this list is the 26
+`Ingest_Checklist` rows where `Scope=Baseline`, not the first rows in workbook order. Rule-pack
+validation fails when a declared baseline source record has no rule or when its rule is not
+`applicability_mode=baseline`. Every
 applicable `pass` finding requires package evidence and source-library evidence. Every applicable
 `gap` finding requires source-library evidence and records that matching package evidence was not
 found. Claim-bearing findings also require validated rule-to-source-claim links. The finding graph
@@ -463,8 +503,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
 `rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
 writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
 carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
-and exact source offsets. The current full corpus links all `20/20` authority rules with `92`
-validated links and no explicit gaps.
+and exact source offsets. Rule-claim outputs are versioned by rule-pack ID and version. After the
+active rule pack moved to `0.4.0` and 44 rules, old `0.3.0`/20-rule link, coverage, compliance-eval,
+and gold-eval artifacts should be treated as stale for promotion until regenerated and adjudicated
+against the `0.4.0` rule set.
 
 Run the seed rule-claim eval gate:
 

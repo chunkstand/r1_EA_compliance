@@ -455,12 +455,21 @@ The `compliance-review` command writes the base EA review outputs plus:
 - the source-library retrieval index, normally
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
 
+When `--reuse-package-cache` is supplied, the review directory must already contain:
+
+- `package/package_manifest.jsonl`
+- `package/package_chunks.jsonl`
+
+In that mode the command preserves those package cache files and reruns checklist/compliance
+evaluation without re-extracting the package files.
+
 The rule pack has schema version `compliance-rule-pack-v0` and includes:
 
 - `rule_pack_id`
 - `version`
 - `title`
 - optional description, domain, and jurisdiction
+- optional `baseline_source_record_ids`
 - `rules`
 
 `rule_pack_id`, `version`, and each rule `id` must contain only letters, numbers, dots,
@@ -499,13 +508,16 @@ Supported `source_filters` keys are:
 
 Unknown filter keys and empty filter values fail rule-pack validation so typoed filters cannot
 silently broaden retrieval.
+When `baseline_source_record_ids` is present, rule-pack validation requires every listed source
+record ID to be safe, unique, covered by at least one rule, and covered only by rules whose
+`applicability_mode` is `baseline`.
 
 `compliance_review.json` has schema version `compliance-review-v0` and includes:
 
 - summary paths and counts
 - rule-pack ID and version
-- rule count, finding count, claim-bearing finding count, finding status counts, and authority
-  identification summary
+- rule count, baseline source-record count/list, evaluated baseline source-record list, finding
+  count, claim-bearing finding count, finding status counts, and authority identification summary
 - unsupported finding IDs
 - validation
 - compliance findings
@@ -533,6 +545,9 @@ Each compliance finding includes:
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
 - one row per compliance finding
+
+The matrix rule-pack summary includes `baseline_source_record_ids` when the active rule pack
+declares them.
 
 Each matrix row includes:
 
@@ -575,10 +590,12 @@ JSON matrix is the stable machine contract.
 
 `compliance_validation.json` records gate-facing checks for:
 
-- rule-pack validity
+- rule-pack validity, including `baseline_source_records_covered` inside the nested rule-pack
+  validation when `baseline_source_record_ids` is declared
 - rule-claim binding readiness
 - base EA review validation
 - every rule evaluated
+- declared baseline source records evaluated in the findings
 - valid finding statuses
 - `pass` findings have both package and source-library evidence
 - `gap` findings have source-library evidence
@@ -724,6 +741,10 @@ The command replaces the derived directory for the selected `source_set_id` on e
 text or chunk files cannot survive from a previous extraction attempt. The `source_set_id` is
 validated as a safe path segment before the derived directory is deleted.
 
+`--id` may be supplied more than once for a delta extraction. A filtered extraction is valid for
+repair or update work, but downstream retrieval remains non-reviewer-ready unless it is explicitly
+built with partial-extraction allowance.
+
 `extract-build` reads `source_library/catalog/review_sources.sqlite`; it does not scan
 `source_library/artifacts/raw/` as its authority source. For each selected catalog row it:
 
@@ -765,6 +786,11 @@ Terminal extraction statuses are:
 - `parser_error`
 - `parser_timeout`
 - `empty_text`
+
+`diagnostics/summary.json` includes source-set ID, catalog source count, selected source count,
+extracted count, failed count, chunk count, parser counts, validation status, and extraction
+filters. The `filters` object includes the legacy singular `id`, the repeated `ids` list when
+multiple source records were selected, `parser`, and `limit`.
 
 `chunks/chunks.jsonl` contains retrieval-ready text chunks with:
 
