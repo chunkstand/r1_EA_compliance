@@ -118,7 +118,9 @@ def load_forest_plan_profiles(
     )
     known_other_forest_units = tuple(
         _parse_known_forest_unit(raw_unit, index)
-        for index, raw_unit in enumerate(payload.get("known_other_forest_units", []))
+        for index, raw_unit in enumerate(
+            _optional_list(payload, "known_other_forest_units", "profile collection")
+        )
     )
     _reject_duplicate(
         [unit.forest_unit_id for unit in known_other_forest_units],
@@ -158,6 +160,11 @@ def _parse_profile(raw_profile: object, index: int) -> ForestPlanProfile:
             "supporting_source_record_ids_by_role."
         )
     required_roles = _require_string_tuple(profile, "required_readiness_source_roles", context)
+    _reject_duplicate(
+        list(required_roles),
+        "source role",
+        f"{context}.required_readiness_source_roles",
+    )
     _validate_known_roles(required_roles, source_records, f"{context}.required_readiness_source_roles")
     default_plan_source_id = active_plan_source_record_id
     ranger_district_terms = _parse_term_entries(
@@ -203,7 +210,7 @@ def _parse_profile(raw_profile: object, index: int) -> ForestPlanProfile:
         plan_component_types=_require_string_tuple(profile, "plan_component_types", context),
         supporting_record_trigger_rules=supporting_record_trigger_rules,
         review_topics=_require_string_tuple(profile, "review_topics", context),
-        profile_data_source=profile.get("profile_data_source"),
+        profile_data_source=_optional_string(profile, "profile_data_source", context),
     )
 
 
@@ -213,10 +220,12 @@ def _parse_source_records(
 ) -> dict[str, ForestPlanSourceRecord]:
     source_records = {}
     for role, raw_record in raw_source_records.items():
+        if not isinstance(role, str) or not role.strip():
+            raise ValueError(f"{context}.supporting_source_record_ids_by_role keys must be strings.")
         record_context = f"{context}.supporting_source_record_ids_by_role[{role!r}]"
         record = _require_object(raw_record, record_context)
-        source_records[str(role)] = ForestPlanSourceRecord(
-            role=str(role),
+        source_records[role] = ForestPlanSourceRecord(
+            role=role,
             source_record_id=_require_string(record, "source_record_id", record_context),
             required_for=_require_string(record, "required_for", record_context),
         )
@@ -246,10 +255,13 @@ def _parse_term_entries(
                 entry_id=_require_string(entry, "entry_id", entry_context),
                 category=_require_string(entry, "category", entry_context),
                 name=_require_string(entry, "name", entry_context),
-                aliases=tuple(str(alias) for alias in entry.get("aliases", [])),
-                source_record_id=str(entry.get("source_record_id") or default_source_record_id)
-                if entry.get("source_record_id") or default_source_record_id
-                else None,
+                aliases=_optional_string_tuple(entry, "aliases", entry_context),
+                source_record_id=_optional_string(
+                    entry,
+                    "source_record_id",
+                    entry_context,
+                    default=default_source_record_id,
+                ),
             )
         )
     _reject_duplicate([entry.entry_id for entry in entries], "entry_id", f"{context}.{field}")
@@ -281,7 +293,13 @@ def _parse_trigger_rules(
                 package_terms=package_terms,
                 source_query=_require_string(rule, "source_query", rule_context),
                 source_terms=_require_string_tuple(rule, "source_terms", rule_context),
-                trigger_terms=tuple(rule.get("trigger_terms") or package_terms),
+                trigger_terms=_optional_string_tuple(
+                    rule,
+                    "trigger_terms",
+                    rule_context,
+                    default=package_terms,
+                    allow_empty=False,
+                ),
             )
         )
     _reject_duplicate(
@@ -324,6 +342,12 @@ def _require_list(payload: dict[str, object], field: str, context: str) -> list[
     return value
 
 
+def _optional_list(payload: dict[str, object], field: str, context: str) -> list[object]:
+    if field not in payload:
+        return []
+    return _require_list(payload, field, context)
+
+
 def _require_string(payload: dict[str, object], field: str, context: str) -> str:
     value = payload.get(field)
     if not isinstance(value, str) or not value.strip():
@@ -331,10 +355,45 @@ def _require_string(payload: dict[str, object], field: str, context: str) -> str
     return value
 
 
+def _optional_string(
+    payload: dict[str, object],
+    field: str,
+    context: str,
+    *,
+    default: str | None = None,
+) -> str | None:
+    value = payload.get(field, default)
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{context}.{field} must be a non-empty string when present.")
+    return value
+
+
 def _require_string_tuple(payload: dict[str, object], field: str, context: str) -> tuple[str, ...]:
     values = _require_list(payload, field, context)
     if not values:
         raise ValueError(f"{context}.{field} must not be empty.")
+    return _string_tuple(values, field, context)
+
+
+def _optional_string_tuple(
+    payload: dict[str, object],
+    field: str,
+    context: str,
+    *,
+    default: tuple[str, ...] = (),
+    allow_empty: bool = True,
+) -> tuple[str, ...]:
+    if field not in payload:
+        return default
+    values = _require_list(payload, field, context)
+    if not values and not allow_empty:
+        raise ValueError(f"{context}.{field} must not be empty when present.")
+    return _string_tuple(values, field, context)
+
+
+def _string_tuple(values: list[object], field: str, context: str) -> tuple[str, ...]:
     invalid = [value for value in values if not isinstance(value, str) or not value.strip()]
     if invalid:
         raise ValueError(f"{context}.{field} must contain only non-empty strings.")
@@ -353,4 +412,7 @@ def _reject_duplicate(values: list[str], field: str, context: str) -> None:
 
 
 def _read_json(path: Path) -> dict[str, Any]:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Forest-plan profile file must contain a JSON object: {path}")
+    return payload

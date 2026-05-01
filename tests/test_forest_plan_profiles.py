@@ -87,13 +87,126 @@ class ForestPlanProfileTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unknown source roles: missing_role"):
                 load_forest_plan_profiles(path)
 
+    def test_rejects_non_list_known_other_forest_units(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "profiles.json"
+            payload = _profile_config_payload()
+            payload["known_other_forest_units"] = "not-a-list"
+            _write_json(path, payload)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "profile collection.known_other_forest_units must be a list",
+            ):
+                load_forest_plan_profiles(path)
+
+    def test_rejects_non_list_term_aliases(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "profiles.json"
+            _write_profile_config(
+                path,
+                profile_updates={
+                    "geographic_area_terms": [
+                        {
+                            "entry_id": "geo-one",
+                            "category": "geographic_area",
+                            "name": "Area One",
+                            "aliases": "Area 1",
+                        }
+                    ]
+                },
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"profiles\[0\]\.geographic_area_terms\[0\]\.aliases must be a list",
+            ):
+                load_forest_plan_profiles(path)
+
+    def test_rejects_empty_explicit_trigger_terms(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "profiles.json"
+            _write_profile_config(
+                path,
+                supporting_record_trigger_rules=[
+                    {
+                        "route_id": "empty-trigger",
+                        "category": "bad",
+                        "name": "Bad trigger",
+                        "target_source_role": "primary_plan",
+                        "package_terms": ["term"],
+                        "source_query": "term",
+                        "source_terms": ["term"],
+                        "trigger_terms": [],
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"profiles\[0\]\.supporting_record_trigger_rules\[0\]\.trigger_terms "
+                "must not be empty",
+            ):
+                load_forest_plan_profiles(path)
+
+    def test_defaults_trigger_terms_to_package_terms_when_omitted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "profiles.json"
+            _write_profile_config(
+                path,
+                supporting_record_trigger_rules=[
+                    {
+                        "route_id": "default-trigger",
+                        "category": "route",
+                        "name": "Default trigger route",
+                        "target_source_role": "primary_plan",
+                        "package_terms": ["package term"],
+                        "source_query": "source term",
+                        "source_terms": ["source term"],
+                    }
+                ],
+            )
+
+            profile = load_forest_plan_profile("unit-one", path)
+
+            self.assertEqual(
+                profile.supporting_record_trigger_rules[0].trigger_terms,
+                ("package term",),
+            )
+
+    def test_rejects_non_string_profile_data_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "profiles.json"
+            _write_profile_config(path, profile_updates={"profile_data_source": 123})
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"profiles\[0\]\.profile_data_source must be a non-empty string",
+            ):
+                load_forest_plan_profiles(path)
+
 
 def _write_profile_config(
     path: Path,
     *,
     required_readiness_source_roles: list[str] | None = None,
     supporting_record_trigger_rules: list[dict] | None = None,
+    profile_updates: dict | None = None,
 ) -> None:
+    payload = _profile_config_payload(
+        required_readiness_source_roles=required_readiness_source_roles,
+        supporting_record_trigger_rules=supporting_record_trigger_rules,
+        profile_updates=profile_updates,
+    )
+    _write_json(path, payload)
+
+
+def _profile_config_payload(
+    *,
+    required_readiness_source_roles: list[str] | None = None,
+    supporting_record_trigger_rules: list[dict] | None = None,
+    profile_updates: dict | None = None,
+) -> dict:
     payload = {
         "schema_version": FOREST_PLAN_PROFILES_SCHEMA_VERSION,
         "profiles": [
@@ -120,6 +233,12 @@ def _write_profile_config(
             }
         ],
     }
+    if profile_updates:
+        payload["profiles"][0].update(profile_updates)
+    return payload
+
+
+def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
