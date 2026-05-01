@@ -109,13 +109,18 @@ Already implemented:
   reviewer-resolution queue.
 - Component validation fails closed on source-set drift and requires supported/partial findings to
   carry both package evidence and current plan-source evidence.
+- NFMA standard coverage V0 writes selected-inventory coverage and applicable-standard coverage
+  artifacts, adds structured compliance status to findings, and fails reviewer-ready when an
+  applicable standard lacks plan-source evidence, EA package evidence, or a resolved compliance
+  status.
 
 Missing:
 
 - No rebuildable component extraction command exists yet.
 - No complete structured forest-plan component inventory exists beyond the initial seed file.
-- No explicit NFMA coverage gate proves that all applicable standards were applied to the EA package.
-- No compliance-status model distinguishes standard compliance from general evidence support.
+- No complete NFMA coverage gate proves that all applicable standards from a full Forest Plan
+  inventory were applied to the EA package.
+- No compliance-status model beyond V0 standard support/gap classification has been implemented yet.
 - Component evidence retrieval is implemented for seeded components, but no standalone
   precision/recall eval artifact exists yet.
 - No graph links connect components to context, package evidence, and findings.

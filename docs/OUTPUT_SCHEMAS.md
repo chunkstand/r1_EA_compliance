@@ -446,6 +446,8 @@ The `forest-plan-resolve` command writes:
   - `forest_plan_component_findings.json`
   - `forest_plan_component_findings.md`
   - `forest_plan_reviewer_resolution_queue.json`
+  - `forest_plan_component_inventory_coverage.json`
+  - `forest_plan_applicable_standard_coverage.json`
 
 `forest-plan-resolve` reads:
 
@@ -517,8 +519,8 @@ the context, validation, and package-cache paths; scope status; resolved area co
 mention count; supporting plan-evidence route count; `needs_reviewer_resolution`; retrieval
 readiness; and `reviewer_ready`. For packages resolved to the selected forest-plan profile, it also
 includes a `component_evaluation` summary with component counts, finding status counts,
-reviewer-resolution counts, provenance-complete counts, validation status, and component-evaluator
-reviewer readiness.
+standard counts, compliance-status counts, all-applicable-standards coverage, reviewer-resolution
+counts, provenance-complete counts, validation status, and component-evaluator reviewer readiness.
 
 ## Forest Plan Component Evaluation Outputs
 
@@ -571,6 +573,8 @@ includes:
 - one finding per selected component
 - finding status: `supported`, `partial`, `gap`, `not_applicable`, or
   `needs_reviewer_resolution`
+- compliance status: `complies`, `potential_noncompliance`, `insufficient_evidence`,
+  `not_applicable`, `needs_reviewer_resolution`, or `not_evaluated_for_compliance`
 - applicability status: `applicable`, `candidate`, `not_applicable`, or
   `needs_reviewer_resolution`
 - applicability basis with source-set match status, matched context IDs, component context IDs,
@@ -592,17 +596,34 @@ Validation embedded in `forest_plan_component_findings.json` records gate-facing
 - component source-set alignment with the active review source set
 - component provenance completeness
 - valid finding and applicability statuses
+- valid compliance statuses
 - `supported` and `partial` findings having both package evidence and plan-source evidence
 - `gap` findings having plan-source evidence
 - finding provenance completeness
 - reviewer-resolution queue coverage for `gap`, `partial`, and `needs_reviewer_resolution`
   findings
+- component inventory coverage passing
+- applicable standards having package evidence, plan-source evidence, and a resolved compliance
+  status before reviewer-ready status can pass
 
 `forest_plan_reviewer_resolution_queue.json` has schema version
 `forest-plan-reviewer-resolution-queue-v0` and includes review ID, source set, item count, and
 resolution items. Queue items identify the finding, component, reason, severity, message, source-set
 IDs, status fields, and provenance. Missing package evidence, missing current plan evidence, and
 component source-set drift are represented as reviewer work rather than hidden passes.
+
+`forest_plan_component_inventory_coverage.json` has schema version
+`forest-plan-component-inventory-coverage-v0` and records selected-inventory coverage for the review:
+component counts by type, standard component IDs, source-set alignment, source-chunk coverage, and
+provenance coverage. This V0 artifact proves the selected inventory is internally usable; it does not
+yet prove that a full Forest Plan extraction command captured every standard in the plan.
+
+`forest_plan_applicable_standard_coverage.json` has schema version
+`forest-plan-applicable-standard-coverage-v0` and records one row per selected standard component.
+For applicable standards, reviewer-ready requires both plan-source evidence and EA package evidence
+plus a resolved compliance status. Missing package evidence, missing plan evidence, unresolved
+standard applicability, or invalid compliance status makes `all_applicable_standards_applied` false
+and causes component validation to fail.
 
 `forest_plan_component_findings.md` is a compact human-readable rendering generated from the JSON
 findings. The JSON findings and queue remain the stable machine contracts.

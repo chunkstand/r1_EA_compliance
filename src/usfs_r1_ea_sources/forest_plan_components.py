@@ -16,6 +16,12 @@ FOREST_PLAN_COMPONENT_FINDINGS_SCHEMA_VERSION = "forest-plan-component-findings-
 FOREST_PLAN_REVIEWER_RESOLUTION_QUEUE_SCHEMA_VERSION = (
     "forest-plan-reviewer-resolution-queue-v0"
 )
+FOREST_PLAN_COMPONENT_INVENTORY_COVERAGE_SCHEMA_VERSION = (
+    "forest-plan-component-inventory-coverage-v0"
+)
+FOREST_PLAN_APPLICABLE_STANDARD_COVERAGE_SCHEMA_VERSION = (
+    "forest-plan-applicable-standard-coverage-v0"
+)
 DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH = (
     Path(__file__).resolve().parents[2] / "config" / "forest_plan_component_inventory_seed.json"
 )
@@ -42,6 +48,14 @@ VALID_FINDING_STATUSES = {
     "not_applicable",
     "needs_reviewer_resolution",
 }
+VALID_COMPLIANCE_STATUSES = {
+    "complies",
+    "potential_noncompliance",
+    "insufficient_evidence",
+    "not_applicable",
+    "needs_reviewer_resolution",
+    "not_evaluated_for_compliance",
+}
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.:-]+$")
 
 
@@ -50,6 +64,8 @@ class ForestPlanComponentEvaluationResult:
     findings_path: Path
     markdown_path: Path
     reviewer_resolution_queue_path: Path
+    component_inventory_coverage_path: Path
+    applicable_standard_coverage_path: Path
     summary: dict
 
 
@@ -78,6 +94,8 @@ def run_forest_plan_component_evaluation(
     findings_path = review_dir / "forest_plan_component_findings.json"
     markdown_path = review_dir / "forest_plan_component_findings.md"
     queue_path = review_dir / "forest_plan_reviewer_resolution_queue.json"
+    inventory_coverage_path = review_dir / "forest_plan_component_inventory_coverage.json"
+    standard_coverage_path = review_dir / "forest_plan_applicable_standard_coverage.json"
     components = load_forest_plan_component_inventory(
         component_inventory_path,
         forest_unit_id=forest_unit_id,
@@ -100,11 +118,25 @@ def run_forest_plan_component_evaluation(
         source_set_id=source_set_id,
         findings=findings,
     )
+    inventory_coverage = _component_inventory_coverage(
+        review_id=review_id,
+        source_set_id=source_set_id,
+        component_inventory_path=component_inventory_path,
+        components=components,
+    )
+    standard_coverage = _applicable_standard_coverage(
+        review_id=review_id,
+        source_set_id=source_set_id,
+        components=components,
+        findings=findings,
+    )
     validation = _validation_report(
         source_set_id=source_set_id,
         components=components,
         findings=findings,
         queue=queue,
+        inventory_coverage=inventory_coverage,
+        standard_coverage=standard_coverage,
     )
     summary = _summary(
         review_id=review_id,
@@ -113,10 +145,14 @@ def run_forest_plan_component_evaluation(
         findings_path=findings_path,
         markdown_path=markdown_path,
         queue_path=queue_path,
+        inventory_coverage_path=inventory_coverage_path,
+        standard_coverage_path=standard_coverage_path,
         components=components,
         findings=findings,
         queue=queue,
         validation=validation,
+        inventory_coverage=inventory_coverage,
+        standard_coverage=standard_coverage,
     )
     report = {
         "schema_version": FOREST_PLAN_COMPONENT_FINDINGS_SCHEMA_VERSION,
@@ -126,6 +162,8 @@ def run_forest_plan_component_evaluation(
         "component_inventory_path": str(component_inventory_path),
         "summary": summary,
         "validation": validation,
+        "component_inventory_coverage": inventory_coverage,
+        "applicable_standard_coverage": standard_coverage,
         "components": components,
         "findings": findings,
     }
@@ -133,11 +171,15 @@ def run_forest_plan_component_evaluation(
     review_dir.mkdir(parents=True, exist_ok=True)
     _write_json(findings_path, report)
     _write_json(queue_path, queue)
+    _write_json(inventory_coverage_path, inventory_coverage)
+    _write_json(standard_coverage_path, standard_coverage)
     markdown_path.write_text(_markdown_report(report, queue), encoding="utf-8")
     return ForestPlanComponentEvaluationResult(
         findings_path=findings_path,
         markdown_path=markdown_path,
         reviewer_resolution_queue_path=queue_path,
+        component_inventory_coverage_path=inventory_coverage_path,
+        applicable_standard_coverage_path=standard_coverage_path,
         summary=summary,
     )
 
@@ -298,6 +340,10 @@ def _component_finding(
         finding_status = "gap"
         rationale = "The component is applicable and source-library plan evidence exists, but matching EA package evidence was not found."
 
+    compliance_status = _compliance_status(
+        component=component,
+        finding_status=finding_status,
+    )
     reviewer_items = _reviewer_resolution_items_for_finding(
         review_id=review_id,
         component=component,
@@ -316,6 +362,7 @@ def _component_finding(
         "component_type": component["component_type"],
         "applicability_status": applicability_status,
         "finding_status": finding_status,
+        "compliance_status": compliance_status,
         "applicability_basis": {
             "source_set_id": source_set_id,
             "component_source_set_id": component["source_set_id"],
@@ -342,6 +389,18 @@ def _component_finding(
             finding_status=finding_status,
         ),
     }
+
+
+def _compliance_status(*, component: dict, finding_status: str) -> str:
+    if component["component_type"] != "standard":
+        return "not_evaluated_for_compliance"
+    if finding_status == "supported":
+        return "complies"
+    if finding_status == "not_applicable":
+        return "not_applicable"
+    if finding_status in {"gap", "partial"}:
+        return "insufficient_evidence"
+    return "needs_reviewer_resolution"
 
 
 def _component_package_search(
@@ -489,22 +548,216 @@ def _reviewer_resolution_queue(
     }
 
 
+def _component_inventory_coverage(
+    *,
+    review_id: str,
+    source_set_id: str | None,
+    component_inventory_path: Path,
+    components: list[dict],
+) -> dict:
+    component_type_counts = Counter(component["component_type"] for component in components)
+    standard_component_ids = sorted(
+        component["component_id"]
+        for component in components
+        if component["component_type"] == "standard"
+    )
+    source_set_mismatches = [
+        {
+            "component_id": component["component_id"],
+            "component_source_set_id": component["source_set_id"],
+            "review_source_set_id": source_set_id,
+        }
+        for component in components
+        if component["source_set_id"] != source_set_id
+    ]
+    missing_source_chunks = [
+        component["component_id"]
+        for component in components
+        if not component.get("source_chunk_ids")
+    ]
+    missing_provenance = [
+        component["component_id"]
+        for component in components
+        if not _provenance_complete(component.get("provenance"))
+    ]
+    checks = [
+        {
+            "name": "component_inventory_has_components",
+            "passed": bool(components),
+            "details": {"component_count": len(components)},
+        },
+        {
+            "name": "component_inventory_has_standard_records",
+            "passed": bool(standard_component_ids),
+            "details": {
+                "standard_count": len(standard_component_ids),
+                "standard_component_ids": standard_component_ids,
+            },
+        },
+        {
+            "name": "component_source_sets_match_review_source_set",
+            "passed": bool(source_set_id) and not source_set_mismatches,
+            "details": {"mismatches": source_set_mismatches},
+        },
+        {
+            "name": "component_records_have_source_chunks",
+            "passed": not missing_source_chunks,
+            "details": {"component_ids": missing_source_chunks},
+        },
+        {
+            "name": "component_records_have_provenance",
+            "passed": not missing_provenance,
+            "details": {"component_ids": missing_provenance},
+        },
+    ]
+    return {
+        "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_COVERAGE_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "review_id": review_id,
+        "source_set_id": source_set_id,
+        "component_inventory_path": str(component_inventory_path),
+        "coverage_scope": "selected_component_inventory",
+        "component_count": len(components),
+        "component_type_counts": dict(component_type_counts),
+        "standard_count": len(standard_component_ids),
+        "standard_component_ids": standard_component_ids,
+        "passed": all(check["passed"] for check in checks),
+        "checks": checks,
+    }
+
+
+def _applicable_standard_coverage(
+    *,
+    review_id: str,
+    source_set_id: str | None,
+    components: list[dict],
+    findings: list[dict],
+) -> dict:
+    findings_by_component_id = {finding["component_id"]: finding for finding in findings}
+    standard_components = [
+        component for component in components if component["component_type"] == "standard"
+    ]
+    rows = [
+        _standard_coverage_row(
+            component=component,
+            finding=findings_by_component_id.get(component["component_id"]),
+        )
+        for component in standard_components
+    ]
+    applicable_rows = [row for row in rows if row["applicability_status"] == "applicable"]
+    missing_finding_ids = [
+        row["component_id"] for row in rows if "missing_finding" in row["failure_reasons"]
+    ]
+    unapplied_applicable_standard_ids = [
+        row["component_id"] for row in applicable_rows if not row["standard_applied"]
+    ]
+    invalid_status_ids = [
+        row["component_id"]
+        for row in rows
+        if row["compliance_status"] not in VALID_COMPLIANCE_STATUSES
+    ]
+    checks = [
+        {
+            "name": "standard_inventory_has_standards",
+            "passed": bool(standard_components),
+            "details": {"standard_count": len(standard_components)},
+        },
+        {
+            "name": "standard_findings_present",
+            "passed": not missing_finding_ids,
+            "details": {"component_ids": missing_finding_ids},
+        },
+        {
+            "name": "standard_compliance_statuses_are_valid",
+            "passed": not invalid_status_ids,
+            "details": {"component_ids": invalid_status_ids},
+        },
+        {
+            "name": "applicable_standards_have_package_and_plan_evidence",
+            "passed": not unapplied_applicable_standard_ids,
+            "details": {"component_ids": unapplied_applicable_standard_ids},
+        },
+    ]
+    all_applicable_standards_applied = all(
+        row["standard_applied"] for row in applicable_rows
+    )
+    return {
+        "schema_version": FOREST_PLAN_APPLICABLE_STANDARD_COVERAGE_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "review_id": review_id,
+        "source_set_id": source_set_id,
+        "standard_count": len(standard_components),
+        "applicable_standard_count": len(applicable_rows),
+        "applied_standard_count": sum(1 for row in applicable_rows if row["standard_applied"]),
+        "all_applicable_standards_applied": all_applicable_standards_applied,
+        "passed": all(check["passed"] for check in checks),
+        "checks": checks,
+        "standards": rows,
+    }
+
+
+def _standard_coverage_row(*, component: dict, finding: dict | None) -> dict:
+    if finding is None:
+        return {
+            "component_id": component["component_id"],
+            "finding_id": None,
+            "applicability_status": "needs_reviewer_resolution",
+            "finding_status": "needs_reviewer_resolution",
+            "compliance_status": "needs_reviewer_resolution",
+            "plan_source_evidence_count": 0,
+            "package_evidence_count": 0,
+            "standard_applied": False,
+            "failure_reasons": ["missing_finding"],
+        }
+    plan_source_evidence_count = len(finding.get("plan_source_evidence") or [])
+    package_evidence_count = len(finding.get("package_evidence") or [])
+    compliance_status = str(finding.get("compliance_status") or "")
+    failure_reasons = []
+    if finding.get("applicability_status") == "applicable":
+        if plan_source_evidence_count == 0:
+            failure_reasons.append("missing_plan_source_evidence")
+        if package_evidence_count == 0:
+            failure_reasons.append("missing_package_evidence")
+        if compliance_status in {"insufficient_evidence", "needs_reviewer_resolution", ""}:
+            failure_reasons.append("unresolved_standard_compliance")
+    elif finding.get("applicability_status") in {"candidate", "needs_reviewer_resolution"}:
+        failure_reasons.append("unresolved_standard_applicability")
+    if compliance_status not in VALID_COMPLIANCE_STATUSES:
+        failure_reasons.append("invalid_compliance_status")
+    return {
+        "component_id": component["component_id"],
+        "finding_id": finding["finding_id"],
+        "applicability_status": finding["applicability_status"],
+        "finding_status": finding["finding_status"],
+        "compliance_status": compliance_status,
+        "plan_source_evidence_count": plan_source_evidence_count,
+        "package_evidence_count": package_evidence_count,
+        "standard_applied": not failure_reasons,
+        "failure_reasons": failure_reasons,
+    }
+
+
 def _validation_report(
     *,
     source_set_id: str | None,
     components: list[dict],
     findings: list[dict],
     queue: dict,
+    inventory_coverage: dict,
+    standard_coverage: dict,
 ) -> dict:
     checks = [
         _check_components_present(components),
         _check_component_source_sets_current(source_set_id, components),
         _check_component_provenance_complete(components),
         _check_finding_statuses(findings),
+        _check_compliance_statuses(findings),
         _check_supported_findings_have_dual_evidence(findings),
         _check_gap_findings_have_plan_source_evidence(findings),
         _check_finding_provenance_complete(findings),
         _check_reviewer_resolution_queue(queue, findings),
+        _check_component_inventory_coverage(inventory_coverage),
+        _check_applicable_standard_coverage(standard_coverage),
     ]
     return {
         "schema_version": "forest-plan-component-findings-validation-v0",
@@ -570,6 +823,22 @@ def _check_finding_statuses(findings: list[dict]) -> dict:
     }
 
 
+def _check_compliance_statuses(findings: list[dict]) -> dict:
+    invalid = [
+        {
+            "finding_id": finding.get("finding_id"),
+            "compliance_status": finding.get("compliance_status"),
+        }
+        for finding in findings
+        if finding.get("compliance_status") not in VALID_COMPLIANCE_STATUSES
+    ]
+    return {
+        "name": "compliance_statuses_are_valid",
+        "passed": bool(findings) and not invalid,
+        "details": {"invalid": invalid, "finding_count": len(findings)},
+    }
+
+
 def _check_supported_findings_have_dual_evidence(findings: list[dict]) -> dict:
     failures = [
         finding["finding_id"]
@@ -630,6 +899,32 @@ def _check_reviewer_resolution_queue(queue: dict, findings: list[dict]) -> dict:
     }
 
 
+def _check_component_inventory_coverage(inventory_coverage: dict) -> dict:
+    return {
+        "name": "component_inventory_coverage_passes",
+        "passed": bool(inventory_coverage.get("passed")),
+        "details": {
+            "schema_version": inventory_coverage.get("schema_version"),
+            "component_count": inventory_coverage.get("component_count"),
+            "standard_count": inventory_coverage.get("standard_count"),
+        },
+    }
+
+
+def _check_applicable_standard_coverage(standard_coverage: dict) -> dict:
+    return {
+        "name": "all_applicable_standards_applied",
+        "passed": bool(standard_coverage.get("passed"))
+        and bool(standard_coverage.get("all_applicable_standards_applied")),
+        "details": {
+            "schema_version": standard_coverage.get("schema_version"),
+            "standard_count": standard_coverage.get("standard_count"),
+            "applicable_standard_count": standard_coverage.get("applicable_standard_count"),
+            "applied_standard_count": standard_coverage.get("applied_standard_count"),
+        },
+    }
+
+
 def _summary(
     *,
     review_id: str,
@@ -638,13 +933,18 @@ def _summary(
     findings_path: Path,
     markdown_path: Path,
     queue_path: Path,
+    inventory_coverage_path: Path,
+    standard_coverage_path: Path,
     components: list[dict],
     findings: list[dict],
     queue: dict,
     validation: dict,
+    inventory_coverage: dict,
+    standard_coverage: dict,
 ) -> dict:
     status_counts = Counter(finding["finding_status"] for finding in findings)
     applicability_counts = Counter(finding["applicability_status"] for finding in findings)
+    compliance_status_counts = Counter(finding["compliance_status"] for finding in findings)
     provenance_complete_count = sum(
         1 for finding in findings if _provenance_complete(finding.get("provenance"))
     )
@@ -655,8 +955,18 @@ def _summary(
         "findings_path": str(findings_path),
         "markdown_path": str(markdown_path),
         "reviewer_resolution_queue_path": str(queue_path),
+        "component_inventory_coverage_path": str(inventory_coverage_path),
+        "applicable_standard_coverage_path": str(standard_coverage_path),
         "component_count": len(components),
         "finding_count": len(findings),
+        "standard_count": int(standard_coverage.get("standard_count") or 0),
+        "applicable_standard_count": int(
+            standard_coverage.get("applicable_standard_count") or 0
+        ),
+        "applied_standard_count": int(standard_coverage.get("applied_standard_count") or 0),
+        "all_applicable_standards_applied": bool(
+            standard_coverage.get("all_applicable_standards_applied")
+        ),
         "applicable_count": applicability_counts.get("applicable", 0),
         "supported_count": status_counts.get("supported", 0),
         "partial_count": status_counts.get("partial", 0),
@@ -665,8 +975,11 @@ def _summary(
         "needs_reviewer_resolution_count": status_counts.get("needs_reviewer_resolution", 0),
         "finding_status_counts": dict(status_counts),
         "applicability_status_counts": dict(applicability_counts),
+        "compliance_status_counts": dict(compliance_status_counts),
         "reviewer_resolution_count": int(queue.get("item_count") or 0),
         "provenance_complete_count": provenance_complete_count,
+        "component_inventory_coverage_passed": bool(inventory_coverage.get("passed")),
+        "applicable_standard_coverage_passed": bool(standard_coverage.get("passed")),
         "validation_passed": validation["passed"],
         "reviewer_ready": validation["passed"],
     }

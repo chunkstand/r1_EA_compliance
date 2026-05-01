@@ -47,6 +47,8 @@ class ForestPlanResolverResult:
     component_findings_path: Path | None = None
     component_markdown_path: Path | None = None
     component_reviewer_resolution_queue_path: Path | None = None
+    component_inventory_coverage_path: Path | None = None
+    applicable_standard_coverage_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -271,6 +273,12 @@ def run_forest_plan_resolver(
     component_findings_output_path = review_dir / "forest_plan_component_findings.json"
     component_markdown_output_path = review_dir / "forest_plan_component_findings.md"
     component_queue_output_path = review_dir / "forest_plan_reviewer_resolution_queue.json"
+    component_inventory_coverage_output_path = (
+        review_dir / "forest_plan_component_inventory_coverage.json"
+    )
+    applicable_standard_coverage_output_path = (
+        review_dir / "forest_plan_applicable_standard_coverage.json"
+    )
 
     _prepare_outputs(
         package_dir=package_dir,
@@ -280,6 +288,8 @@ def run_forest_plan_resolver(
         component_findings_path=component_findings_output_path,
         component_markdown_path=component_markdown_output_path,
         component_queue_path=component_queue_output_path,
+        component_inventory_coverage_path=component_inventory_coverage_output_path,
+        applicable_standard_coverage_path=applicable_standard_coverage_output_path,
         preserve_package_cache=reuse_package_cache,
     )
 
@@ -359,6 +369,8 @@ def run_forest_plan_resolver(
     component_findings_path = None
     component_markdown_path = None
     component_queue_path = None
+    component_inventory_coverage_path = None
+    applicable_standard_coverage_path = None
     if _is_profile_scope(context, resolver_profile):
         resolved_component_inventory_path = _resolve_component_inventory_path(
             component_inventory_path=component_inventory_path,
@@ -381,6 +393,8 @@ def run_forest_plan_resolver(
         component_findings_path = component_result.findings_path
         component_markdown_path = component_result.markdown_path
         component_queue_path = component_result.reviewer_resolution_queue_path
+        component_inventory_coverage_path = component_result.component_inventory_coverage_path
+        applicable_standard_coverage_path = component_result.applicable_standard_coverage_path
     summary = _summary(
         context=context,
         validation=validation,
@@ -408,6 +422,8 @@ def run_forest_plan_resolver(
         component_findings_path=component_findings_path,
         component_markdown_path=component_markdown_path,
         component_reviewer_resolution_queue_path=component_queue_path,
+        component_inventory_coverage_path=component_inventory_coverage_path,
+        applicable_standard_coverage_path=applicable_standard_coverage_path,
     )
 
 
@@ -441,6 +457,8 @@ def _prepare_outputs(
     component_findings_path: Path | None,
     component_markdown_path: Path | None,
     component_queue_path: Path | None,
+    component_inventory_coverage_path: Path | None,
+    applicable_standard_coverage_path: Path | None,
     preserve_package_cache: bool,
 ) -> None:
     if package_dir.exists() and not preserve_package_cache:
@@ -452,6 +470,8 @@ def _prepare_outputs(
         component_findings_path,
         component_markdown_path,
         component_queue_path,
+        component_inventory_coverage_path,
+        applicable_standard_coverage_path,
     ):
         if path is not None:
             path.unlink(missing_ok=True)

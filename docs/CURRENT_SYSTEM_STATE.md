@@ -264,7 +264,11 @@ present, falls back to the seed inventory, validates component provenance and so
 retrieves current plan evidence from the local retrieval index, searches package chunks for component
 evidence terms, and writes
 `forest_plan_component_findings.json`, `forest_plan_component_findings.md`, and
-`forest_plan_reviewer_resolution_queue.json`. The seed inventory
+`forest_plan_reviewer_resolution_queue.json`. NFMA standard coverage V0 also writes
+`forest_plan_component_inventory_coverage.json` and
+`forest_plan_applicable_standard_coverage.json`; applicable standards must have plan-source evidence,
+EA package evidence, and a resolved compliance status before component validation can pass. The seed
+inventory
 `config/forest_plan_component_inventory_seed.json` covers the first East Crazies-relevant Custer
 Gallatin Crazy Mountains Backcountry Area components. Supported and partial findings require both
 plan-source evidence and package evidence; gaps and stale source-set IDs become reviewer-resolution
@@ -325,11 +329,11 @@ Current state:
   Custer Gallatin plan/supporting records in retrieval, resolves management areas from the EA
   package, and adds `supporting_plan_evidence` routes for ROD, FEIS Volumes 1 and 2, Biological
   Assessment, and Biological Opinion triggers.
-- Forest-plan component evaluation writes component findings and a reviewer-resolution queue from a
-  versioned inventory for packages resolved to the selected forest-plan profile. The current seed
-  inventory is intentionally narrow and focused on Crazy Mountains Backcountry Area components for
-  the East Crazies proving case; broader component extraction/inventory build commands remain
-  downstream work.
+- Forest-plan component evaluation writes component findings, selected-inventory coverage,
+  applicable-standard coverage, and a reviewer-resolution queue from a versioned inventory for
+  packages resolved to the selected forest-plan profile. The current seed inventory is intentionally
+  narrow and focused on Crazy Mountains Backcountry Area components for the East Crazies proving
+  case; broader component extraction/inventory build commands remain downstream work.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
   `compliance_matrix.pdf`,

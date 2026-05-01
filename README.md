@@ -175,7 +175,10 @@ the selected forest-plan profile. The resolver uses a source-set component inven
 falls back to `config/forest_plan_component_inventory_seed.json`; `--forest-plan-component-inventory-path`
 only overrides the inventory path. The evaluator writes component findings and a reviewer-resolution
 queue; supported/partial findings require both package evidence and current plan-source evidence,
-while source-set drift and missing package evidence become reviewer work.
+while source-set drift and missing package evidence become reviewer work. The first NFMA coverage
+gate also writes selected-inventory coverage and applicable-standard coverage artifacts, and
+reviewer-ready status fails when an applicable standard lacks plan-source evidence, package evidence,
+or a resolved compliance status.
 
 ## Common Commands
 

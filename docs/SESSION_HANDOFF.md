@@ -5,8 +5,8 @@ Date: 2026-05-01
 ## Current State
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
-to the selected forest-plan profile. The worktree was clean before this milestone began; these
-changes remain unstaged and uncommitted until the operator asks for commit work.
+to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
+current follow-on slice adds the first NFMA standard-coverage gate.
 
 Current session update:
 
@@ -20,6 +20,11 @@ Current session update:
 - Component validation now fails closed on source-set drift, requires supported/partial findings to
   carry both package and plan-source evidence, and turns missing package evidence into
   reviewer-resolution queue items.
+- NFMA standard coverage V0 writes `forest_plan_component_inventory_coverage.json` and
+  `forest_plan_applicable_standard_coverage.json`.
+- Component findings now carry a structured `compliance_status`; applicable standards require
+  plan-source evidence, EA package evidence, and a resolved compliance status before component
+  validation can pass.
 - Sequence 3 forest-plan improvement work has started with a durable East Crazies fixture under
   `tests/fixtures/forest_plan_evaluator/east_crazies_profile_driven.txt`.
 - The fixture proves Custer Gallatin scope, Bridger/Bangtail/Crazy Mountains Geographic Area, Crazy
@@ -41,6 +46,7 @@ Recent sequence commits:
 - `c0da944` - Sequence 1 hardening: tighten profile validation
 - `270bfa7` - Sequence 2: drive forest plan resolver from profiles
 - `3ca34f7` - Sequence 2 hardening: close profile resolution gaps
+- `8f607e4` - Add mandatory forest plan component review
 
 Implemented behavior:
 
@@ -49,6 +55,9 @@ Implemented behavior:
   overlays, and supporting evidence routes from the selected profile.
 - `forest-plan-resolve` writes component findings, a Markdown rendering, and a reviewer-resolution
   queue from a data inventory for packages resolved to the selected forest-plan profile.
+- `forest-plan-resolve` also writes selected-inventory coverage and applicable-standard coverage;
+  reviewer-ready status fails when an applicable standard lacks plan evidence, package evidence, or a
+  resolved compliance status.
 - `config/forest_plan_component_inventory_seed.json` is the current component inventory seed for
   the Crazy Mountains Backcountry Area proving slice.
 - Default Custer Gallatin V0 output compatibility is preserved: `scope_status` still uses
@@ -62,8 +71,8 @@ Implemented behavior:
 Latest verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
 PYTHONPATH=src uv run --extra dev pytest
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
@@ -71,18 +80,17 @@ python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest
 git diff --check
 ```
 
-Results: full test suite passed with `167 passed`; focused resolver/profile tests passed with
-`29 passed`; lint, compile, JSON validation, and whitespace checks passed.
+Results: full test suite passed with `168 passed`; focused resolver/profile tests passed with
+`30 passed`; lint, compile, JSON validation, and whitespace checks passed.
 
 ## Next Sequence
 
-Sequence 4 continuation: run the improved forest-plan resolver plus the component inventory against
-the local East Crazies/Custer Gallatin demo package and decide whether the V1 demo uses
-`forest-plan-resolve` plus `ea-review`, or also includes `compliance-review`.
+Next sequence: build the first rebuildable component inventory extraction pipeline that can feed the
+NFMA coverage gate with more than the seed inventory.
 
 Goal:
-Prove the first real proving case resolves through profile data, not Custer Gallatin-specific
-runtime constants or East Crazies-specific exceptions.
+Create source-set component inventory artifacts from extracted Forest Plan text, with one first-class
+record per standard and enough coverage metadata to prove standards were not collapsed or skipped.
 
 Non-goals:
 
@@ -117,6 +125,8 @@ Required eval signal:
 - Component findings are produced from the inventory path with plan-source evidence, package
   evidence where present, and reviewer-resolution items for gaps.
 - Stale component inventory source-set IDs fail closed.
+- Applicable standards are represented in `forest_plan_applicable_standard_coverage.json`; missing
+  standard package evidence blocks reviewer-ready status.
 
 Required tests:
 
@@ -128,11 +138,10 @@ python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest
 git diff --check
 ```
 
-Run the full suite before committing if resolver behavior changes beyond fixture construction.
+Run the full suite before committing if resolver behavior or generated output schemas change.
 
 Commit policy:
-Stage only the component-evaluation milestone files, verify, and commit only when the operator asks
-for a commit.
+Stage only the current sequence files, verify, and commit atomically.
 
 Stop conditions:
 
@@ -140,8 +149,8 @@ Stop conditions:
   branch.
 - Required source-record readiness fails because the test source library lacks a profile-required
   supporting record.
-- A finding or reviewer-ready status would pass without both package evidence and source-library
-  evidence.
+- An applicable standard would pass reviewer-ready without plan-source evidence, package evidence,
+  and a resolved compliance status.
 
 Expert alignment check for Sequence 4:
 

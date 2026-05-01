@@ -106,10 +106,22 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertIsNotNone(result.component_findings_path)
             self.assertIsNotNone(result.component_markdown_path)
             self.assertIsNotNone(result.component_reviewer_resolution_queue_path)
+            self.assertIsNotNone(result.component_inventory_coverage_path)
+            self.assertIsNotNone(result.applicable_standard_coverage_path)
             component_summary = result.summary["component_evaluation"]
             self.assertEqual(component_summary["component_count"], 3)
+            self.assertEqual(component_summary["standard_count"], 1)
+            self.assertEqual(component_summary["applicable_standard_count"], 1)
+            self.assertEqual(component_summary["applied_standard_count"], 1)
             self.assertEqual(component_summary["finding_status_counts"], {"supported": 2, "gap": 1})
+            self.assertEqual(
+                component_summary["compliance_status_counts"],
+                {"not_evaluated_for_compliance": 2, "complies": 1},
+            )
             self.assertEqual(component_summary["reviewer_resolution_count"], 1)
+            self.assertTrue(component_summary["all_applicable_standards_applied"])
+            self.assertTrue(component_summary["component_inventory_coverage_passed"])
+            self.assertTrue(component_summary["applicable_standard_coverage_passed"])
             self.assertTrue(component_summary["validation_passed"])
             self.assertTrue(component_summary["reviewer_ready"])
             self.assertTrue(result.summary["reviewer_ready"])
@@ -118,6 +130,7 @@ class ForestPlanResolverTests(unittest.TestCase):
             findings = {finding["component_id"]: finding for finding in report["findings"]}
             supported = findings["cg-test-cmbca-std-01"]
             self.assertEqual(supported["finding_status"], "supported")
+            self.assertEqual(supported["compliance_status"], "complies")
             self.assertTrue(supported["plan_source_evidence"])
             self.assertTrue(supported["package_evidence"])
             self.assertEqual(supported["reviewer_resolution_items"], [])
@@ -133,6 +146,72 @@ class ForestPlanResolverTests(unittest.TestCase):
             )
             self.assertEqual(queue["item_count"], 1)
             self.assertEqual(queue["items"][0]["component_id"], "cg-test-cmbca-suit-01")
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            self.assertTrue(standard_coverage["passed"])
+            self.assertTrue(standard_coverage["all_applicable_standards_applied"])
+            self.assertEqual(standard_coverage["standard_count"], 1)
+            self.assertEqual(standard_coverage["standards"][0]["component_id"], "cg-test-cmbca-std-01")
+            self.assertEqual(standard_coverage["standards"][0]["compliance_status"], "complies")
+
+            inventory_coverage = json.loads(
+                result.component_inventory_coverage_path.read_text(encoding="utf-8")
+            )
+            self.assertTrue(inventory_coverage["passed"])
+            self.assertEqual(inventory_coverage["component_type_counts"]["standard"], 1)
+
+    def test_applicable_standard_without_package_evidence_blocks_reviewer_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "The EA says quiet nonmotorized recreation opportunities predominate.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-standard-gap",
+                component_inventory_path=inventory_path,
+            )
+
+            component_summary = result.summary["component_evaluation"]
+            self.assertFalse(component_summary["validation_passed"])
+            self.assertFalse(component_summary["reviewer_ready"])
+            self.assertFalse(component_summary["all_applicable_standards_applied"])
+            self.assertEqual(component_summary["applied_standard_count"], 0)
+            self.assertFalse(result.summary["reviewer_ready"])
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            standard = findings["cg-test-cmbca-std-01"]
+            self.assertEqual(standard["finding_status"], "gap")
+            self.assertEqual(standard["compliance_status"], "insufficient_evidence")
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            self.assertFalse(standard_coverage["passed"])
+            self.assertFalse(standard_coverage["all_applicable_standards_applied"])
+            self.assertEqual(
+                standard_coverage["standards"][0]["failure_reasons"],
+                ["missing_package_evidence", "unresolved_standard_compliance"],
+            )
+
+            validation = report["validation"]
+            self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
     def test_component_inventory_source_set_drift_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -296,6 +375,7 @@ class ForestPlanResolverTests(unittest.TestCase):
                         "The action is within the Crazy Mountains Backcountry Area.",
                         "Trail work also crosses the Hyalite Recreation Emphasis Area.",
                         "Mapped Inventoried Roadless Area direction is reviewed.",
+                        "No new permanent or temporary roads are proposed.",
                     ]
                 ),
             )
