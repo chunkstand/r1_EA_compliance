@@ -202,6 +202,14 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Run even if catalog_validation.json has not passed.",
     )
+    extract.add_argument(
+        "--reuse-existing",
+        action="store_true",
+        help=(
+            "Reuse matching extracted text or payload cache entries for unchanged artifacts instead "
+            "of reparsing them."
+        ),
+    )
 
     extraction_accuracy = subparsers.add_parser(
         "extraction-accuracy-audit",
@@ -560,6 +568,7 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=args.docling_timeout_seconds,
             allow_invalid_catalog=args.allow_invalid_catalog,
+            reuse_existing=args.reuse_existing,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1

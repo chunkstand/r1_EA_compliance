@@ -294,6 +294,11 @@ For delta extraction, repeat `--id` for each selected `source_record_id`. The co
 complete selected ID list in `diagnostics/summary.json`; retrieval remains non-reviewer-ready for a
 filtered extraction unless rebuilt with explicit partial-extraction allowance.
 
+When a prior extraction already produced matching text for unchanged artifacts, pass
+`--reuse-existing` to rebuild the manifest and chunks without reparsing those artifacts. This is
+intended for critical targeted recovery or source-slice refreshes, not for promotion evidence that
+requires a clean full-source-set extraction.
+
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text
 to that XML element and records the applied source scope in parser metadata. Run the accuracy audit
 after extraction to verify text hashes, raw artifact hashes, chunk offsets, no chunk coverage gaps,

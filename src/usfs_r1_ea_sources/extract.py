@@ -109,6 +109,7 @@ def build_extraction(
     docling_ocr: bool = False,
     docling_timeout_seconds: float | None = 300.0,
     allow_invalid_catalog: bool = False,
+    reuse_existing: bool = False,
 ) -> ExtractionBuildResult:
     """Build derived extracted text and chunks from the reviewer catalog."""
 
@@ -136,14 +137,17 @@ def build_extraction(
     source_set_id = source_set_manifest["source_set_id"]
     derived_dir = output_dir / "derived"
     source_derived_dir = _source_derived_dir(derived_dir, source_set_id)
-    if source_derived_dir.exists():
+    if source_derived_dir.exists() and not reuse_existing:
         shutil.rmtree(source_derived_dir)
     extracted_text_dir = source_derived_dir / "extracted_text"
     docling_json_dir = source_derived_dir / "docling_json"
     chunks_dir = source_derived_dir / "chunks"
     diagnostics_dir = source_derived_dir / "diagnostics"
+    payload_cache_dir = diagnostics_dir / "payload_cache"
     for directory in (extracted_text_dir, docling_json_dir, chunks_dir, diagnostics_dir):
         directory.mkdir(parents=True, exist_ok=True)
+    if reuse_existing:
+        payload_cache_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_dir / "chunks.jsonl"
     extraction_manifest_path = diagnostics_dir / "extraction_manifest.jsonl"
@@ -177,6 +181,8 @@ def build_extraction(
             prefer_docling=prefer_docling,
             docling_ocr=docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
+            reuse_existing=reuse_existing,
+            payload_cache_dir=payload_cache_dir,
         )
         manifest_records.append(record)
         chunks.extend(row_chunks)
@@ -212,6 +218,7 @@ def build_extraction(
             "prefer_docling": prefer_docling,
             "docling_ocr": docling_ocr,
             "docling_timeout_seconds": docling_timeout_seconds,
+            "reuse_existing": reuse_existing,
         },
     )
     _write_json(extraction_validation_path, validation)
@@ -334,6 +341,8 @@ def _extract_row(
     prefer_docling: bool,
     docling_ocr: bool,
     docling_timeout_seconds: float | None,
+    reuse_existing: bool,
+    payload_cache_dir: Path,
 ) -> tuple[dict, list[dict]]:
     base_record = _base_manifest_record(row=row, extracted_at=extracted_at)
     artifact_path_value = row.get("artifact_path")
@@ -391,6 +400,20 @@ def _extract_row(
         )
         return record, []
 
+    if reuse_existing:
+        reused = _reuse_existing_extraction(
+            row=row,
+            base_record=base_record,
+            extracted_text_dir=extracted_text_dir,
+            docling_json_dir=docling_json_dir,
+            payload_cache_dir=payload_cache_dir,
+            extracted_at=extracted_at,
+            chunk_max_chars=chunk_max_chars,
+            chunk_overlap_chars=chunk_overlap_chars,
+        )
+        if reused is not None:
+            return reused
+
     try:
         payload = _extract_payload(
             row=row,
@@ -410,6 +433,36 @@ def _extract_row(
         record["artifact_sha256_verified"] = True
         return record, []
 
+    return _record_and_chunks_from_payload(
+        row=row,
+        base_record=base_record,
+        payload=payload,
+        extracted_text_dir=extracted_text_dir,
+        docling_json_dir=docling_json_dir,
+        payload_cache_dir=payload_cache_dir,
+        extracted_at=extracted_at,
+        chunk_max_chars=chunk_max_chars,
+        chunk_overlap_chars=chunk_overlap_chars,
+        write_text=True,
+        reused=False,
+    )
+
+
+def _record_and_chunks_from_payload(
+    *,
+    row: dict,
+    base_record: dict,
+    payload: ExtractionPayload,
+    extracted_text_dir: Path,
+    docling_json_dir: Path,
+    payload_cache_dir: Path,
+    extracted_at: str,
+    chunk_max_chars: int,
+    chunk_overlap_chars: int,
+    write_text: bool,
+    reused: bool,
+) -> tuple[dict, list[dict]]:
+    artifact_sha256 = row["artifact_sha256"]
     text = payload.text.strip()
     if not text:
         record = _failed_record(
@@ -429,12 +482,18 @@ def _extract_row(
         source_record_id=row["source_record_id"],
         artifact_sha256=artifact_sha256,
     )
-    text_path.write_text(text + "\n", encoding="utf-8")
+    if write_text:
+        text_path.write_text(text + "\n", encoding="utf-8")
 
     docling_json_path = None
     if payload.docling_json is not None:
         docling_json_path = docling_json_dir / f"{artifact_sha256[:16]}.json"
-        _write_json(docling_json_path, payload.docling_json)
+        if write_text or not docling_json_path.exists():
+            _write_json(docling_json_path, payload.docling_json)
+
+    if write_text:
+        payload_cache_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(_payload_cache_path(payload_cache_dir, row), _payload_to_wire(payload))
 
     row_chunks = _chunks_for_payload(
         row=row,
@@ -451,7 +510,7 @@ def _extract_row(
             "artifact_sha256_verified": True,
             "parser_name": payload.parser_name,
             "parser_version": payload.parser_version,
-            "parser_metadata": payload.metadata,
+            "parser_metadata": _parser_metadata_with_reuse(payload.metadata, reused=reused),
             "text_path": str(text_path),
             "docling_json_path": str(docling_json_path) if docling_json_path else None,
             "text_char_count": len(text),
@@ -461,6 +520,63 @@ def _extract_row(
         }
     )
     return record, row_chunks
+
+
+def _reuse_existing_extraction(
+    *,
+    row: dict,
+    base_record: dict,
+    extracted_text_dir: Path,
+    docling_json_dir: Path,
+    payload_cache_dir: Path,
+    extracted_at: str,
+    chunk_max_chars: int,
+    chunk_overlap_chars: int,
+) -> tuple[dict, list[dict]] | None:
+    text_path = _text_path(
+        extracted_text_dir,
+        source_record_id=row["source_record_id"],
+        artifact_sha256=row["artifact_sha256"],
+    )
+    if not text_path.exists() or not text_path.is_file():
+        return None
+
+    payload_path = _payload_cache_path(payload_cache_dir, row)
+    payload = None
+    if payload_path.exists():
+        try:
+            payload = _payload_from_wire(_read_json(payload_path))
+        except (KeyError, TypeError, json.JSONDecodeError):
+            payload = None
+    if payload is None:
+        text = text_path.read_text(encoding="utf-8").strip()
+        if not text:
+            return None
+        text, blocks = _blocks_from_plain_text(text)
+        payload = ExtractionPayload(
+            text=text,
+            blocks=blocks,
+            parser_name="reused_extracted_text",
+            parser_version="1",
+            metadata={
+                "reuse_from": "extracted_text",
+                "reuse_without_parser_payload": True,
+            },
+        )
+
+    return _record_and_chunks_from_payload(
+        row=row,
+        base_record=base_record,
+        payload=payload,
+        extracted_text_dir=extracted_text_dir,
+        docling_json_dir=docling_json_dir,
+        payload_cache_dir=payload_cache_dir,
+        extracted_at=extracted_at,
+        chunk_max_chars=chunk_max_chars,
+        chunk_overlap_chars=chunk_overlap_chars,
+        write_text=False,
+        reused=True,
+    )
 
 
 def _base_manifest_record(*, row: dict, extracted_at: str) -> dict:
@@ -1673,6 +1789,11 @@ def _summary(
         for record in manifest_records
         if (record.get("parser_metadata") or {}).get("fallback_from")
     )
+    reused_count = sum(
+        1
+        for record in manifest_records
+        if (record.get("parser_metadata") or {}).get("reused_existing")
+    )
     source_status_counts = Counter(row["source_status"] for row in rows)
     expected_parser_counts = Counter(row["expected_parser"] for row in rows)
     failure_counts = Counter(
@@ -1697,6 +1818,7 @@ def _summary(
         "expected_parser_counts": dict(expected_parser_counts),
         "parser_counts": dict(parser_counts),
         "fallback_counts": dict(fallback_counts),
+        "reused_count": reused_count,
         "failure_counts": {key: count for key, count in failure_counts.items() if key},
         "failed_source_examples": _failed_source_examples(manifest_records),
         "validation_passed": validation["passed"],
@@ -1751,6 +1873,23 @@ def _resolve_artifact_path(output_dir: Path, artifact_path: str) -> Path:
 
 def _text_path(extracted_text_dir: Path, *, source_record_id: str, artifact_sha256: str) -> Path:
     return extracted_text_dir / f"{source_record_id}_{artifact_sha256[:16]}.txt"
+
+
+def _payload_cache_path(payload_cache_dir: Path, row: dict) -> Path:
+    source_record_id = str(row["source_record_id"])
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", source_record_id):
+        raise ValueError(f"Unsafe source_record_id for payload cache path: {source_record_id!r}")
+    artifact_sha256 = str(row["artifact_sha256"])
+    return payload_cache_dir / f"{source_record_id}_{artifact_sha256[:16]}.json"
+
+
+def _parser_metadata_with_reuse(metadata: dict | None, *, reused: bool) -> dict | None:
+    if not reused:
+        return metadata
+    return {
+        **(metadata or {}),
+        "reused_existing": True,
+    }
 
 
 def _final_url(row: dict) -> str | None:

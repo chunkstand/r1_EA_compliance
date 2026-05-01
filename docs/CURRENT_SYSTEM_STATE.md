@@ -753,23 +753,28 @@ are promotion evidence for the expanded baseline.
 The current system has a complete 190-row downloader/catalog corpus that includes the four missed
 Custer Gallatin FEIS and ESA-supporting plan documents. A Custer Gallatin-focused
 extraction/retrieval slice has been rebuilt for `source-set-ba8d0feae79501b8`: all seven required
-Custer Gallatin plan/supporting records are extracted and indexed, producing 4,599 retrieval chunks.
-That retrieval summary remains marked partial because the full 190-row source set is not extracted,
-but `forest-plan-resolve` accepts it for Custer Gallatin review because every required Custer
-Gallatin source record is present and retrieval validation passes. Full-source-set extraction,
-evidence graph, source-claim, rule-claim, coverage, and gold promotion artifacts still need to be
-rebuilt from `source-set-ba8d0feae79501b8`. The prior 147-row downstream corpus remains useful for
+Custer Gallatin plan/supporting records are extracted and indexed. The current targeted recovery
+slice reused existing extracted text for those unchanged records and produced 4,683 retrieval
+chunks. That retrieval summary remains marked partial because the full 190-row source set is not
+extracted, but `forest-plan-resolve` accepts it for Custer Gallatin review because every required
+Custer Gallatin source record is present and retrieval validation passes. Full-source-set
+extraction, evidence graph, source-claim, rule-claim, coverage, and gold promotion artifacts should
+not be rebuilt unless promotion requires them; the current forest-plan sequence only needs the
+seven-record Custer Gallatin slice. The prior 147-row downstream corpus remains useful for
 deterministic seed-package and expanded gold-adjudication checks, but should not be treated as
 current promotion evidence for the expanded workbook.
 
-The next efficient v1 milestone is to run the full extraction/retrieval/evidence-graph/claim rebuild
-for `source-set-ba8d0feae79501b8`, rebuild or refresh the rule-claim/eval/coverage artifacts for
-rule-pack `0.4.0`, resolve the `R1EA-028` source-claim link gap if it persists, and then rerun the
-compliance promotion gates without re-extracting already cached EA packages. After those gates pass,
-run the same matrix and failure-taxonomy path over a small set of real EA packages and use those
-failures to decide whether the next fix belongs in package extraction, package evidence search,
-source retrieval, source applicability, rule-claim binding, or rule wording. Embeddings, reranking,
-and model-assisted synthesis remain downstream of that evidence-backed real-package pass.
+The next efficient v1 milestone is to improve how Custer Gallatin forest-plan context is consumed by
+the EA/compliance review path using the seven-record Custer Gallatin slice first. Rebuild the full
+190-row extraction/retrieval/evidence-graph/claim chain only when a promotion gate actually needs
+current all-source evidence. If full compliance promotion becomes the milestone, then rebuild or
+refresh the rule-claim/eval/coverage artifacts for rule-pack `0.4.0`, resolve the `R1EA-028`
+source-claim link gap if it persists, and rerun the compliance promotion gates without re-extracting
+already cached EA packages. After those gates pass, run the same matrix and failure-taxonomy path
+over a small set of real EA packages and use those failures to decide whether the next fix belongs
+in package extraction, package evidence search, source retrieval, source applicability,
+rule-claim binding, or rule wording. Embeddings, reranking, and model-assisted synthesis remain
+downstream of that evidence-backed real-package pass.
 
 ## Verification Commands
 

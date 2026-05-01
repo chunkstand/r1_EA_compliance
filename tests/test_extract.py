@@ -260,6 +260,53 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(second.summary["validation_passed"])
             self.assertFalse(stale.exists())
 
+    def test_build_extraction_reuses_existing_payload_when_requested(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-001",
+                artifact_body=_html_body(),
+                content_type="text/html",
+                suffix=".html",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            first = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+            first_manifest = _read_jsonl(first.extraction_manifest_path)
+            text_path = Path(first_manifest[0]["text_path"])
+            self.assertTrue(text_path.exists())
+
+            original_extract_payload = extract_module._extract_payload
+
+            def fail_if_called(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+                raise AssertionError("reuse_existing should not reparse unchanged artifacts")
+
+            extract_module._extract_payload = fail_if_called
+            try:
+                second = build_extraction(
+                    output_dir=output_dir,
+                    id_filter="R1EA-001",
+                    reuse_existing=True,
+                )
+            finally:
+                extract_module._extract_payload = original_extract_payload
+
+            self.assertTrue(second.summary["validation_passed"])
+            self.assertEqual(second.summary["reused_count"], 1)
+            second_manifest = _read_jsonl(second.extraction_manifest_path)
+            self.assertEqual(second_manifest[0]["parser_name"], "python_htmlparser")
+            self.assertTrue(second_manifest[0]["parser_metadata"]["reused_existing"])
+            self.assertEqual(Path(second_manifest[0]["text_path"]), text_path)
+
     def test_build_extraction_reports_pdf_failure_when_docling_is_unavailable(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
