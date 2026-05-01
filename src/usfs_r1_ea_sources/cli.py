@@ -27,6 +27,7 @@ from .evidence_graph import build_evidence_graph
 from .evidence_graph import run_phase_aligned_eval
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .forest_plan_resolver import run_forest_plan_resolver
 from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
@@ -377,6 +378,39 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-document Docling timeout for PDF EA package files. Use 0 to disable.",
     )
 
+    forest_plan_resolve = subparsers.add_parser(
+        "forest-plan-resolve",
+        help="Resolve Custer Gallatin forest-plan context from a local EA package.",
+    )
+    forest_plan_resolve.add_argument("--package-path", required=True, type=Path)
+    forest_plan_resolve.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    forest_plan_resolve.add_argument("--source-set-id")
+    forest_plan_resolve.add_argument("--index-path", type=Path)
+    forest_plan_resolve.add_argument("--review-id")
+    forest_plan_resolve.add_argument("--results-dir", type=Path)
+    forest_plan_resolve.add_argument("--source-top-k", type=int, default=2)
+    forest_plan_resolve.add_argument("--chunk-max-chars", type=int, default=1800)
+    forest_plan_resolve.add_argument("--chunk-overlap-chars", type=int, default=200)
+    forest_plan_resolve.add_argument(
+        "--reuse-package-cache",
+        action="store_true",
+        help=(
+            "Reuse existing package/package_manifest.jsonl and package/package_chunks.jsonl "
+            "under the review directory instead of re-extracting package files."
+        ),
+    )
+    forest_plan_resolve.add_argument(
+        "--docling-ocr",
+        action="store_true",
+        help="Enable Docling OCR for PDF EA package files.",
+    )
+    forest_plan_resolve.add_argument(
+        "--docling-timeout-seconds",
+        type=float,
+        default=120.0,
+        help="Per-document Docling timeout for PDF EA package files. Use 0 to disable.",
+    )
+
     compliance_review = subparsers.add_parser(
         "compliance-review",
         help="Run a versioned compliance rule pack against a local EA package.",
@@ -662,6 +696,27 @@ def main(argv: list[str] | None = None) -> int:
             results_dir=args.results_dir,
             source_top_k=args.source_top_k,
             package_top_k=args.package_top_k,
+            chunk_max_chars=args.chunk_max_chars,
+            chunk_overlap_chars=args.chunk_overlap_chars,
+            docling_ocr=args.docling_ocr,
+            docling_timeout_seconds=timeout,
+            reuse_package_cache=args.reuse_package_cache,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["reviewer_ready"] else 1
+
+    if args.command == "forest-plan-resolve":
+        timeout = args.docling_timeout_seconds
+        if timeout is not None and timeout <= 0:
+            timeout = None
+        result = run_forest_plan_resolver(
+            package_path=args.package_path,
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            index_path=args.index_path,
+            review_id=args.review_id,
+            results_dir=args.results_dir,
+            source_top_k=args.source_top_k,
             chunk_max_chars=args.chunk_max_chars,
             chunk_overlap_chars=args.chunk_overlap_chars,
             docling_ocr=args.docling_ocr,

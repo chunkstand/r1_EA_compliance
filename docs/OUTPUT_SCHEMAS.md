@@ -430,6 +430,65 @@ terms match whole tokens; phrase terms match contiguous text.
 - `gap` findings have source-library evidence
 - no unsupported compliance claims are emitted
 
+## Custer Gallatin Forest Plan Context Outputs
+
+Path: `source_library/reviews/<review_id>/`
+
+The `forest-plan-resolve` command writes:
+
+- `package/package_manifest.jsonl`
+- `package/package_chunks.jsonl`
+- `package/extracted_text/<source_record_id>_<artifact_sha256_prefix>.txt`
+- `forest_plan_context.json`
+- `forest_plan_context_validation.json`
+- `forest_plan_context_summary.json`
+
+`forest-plan-resolve` reads:
+
+- a local EA package file or directory passed with `--package-path`
+- configured Custer Gallatin plan source-record IDs
+- the source-library retrieval index when the package is resolved as Custer Gallatin scoped
+
+When `--reuse-package-cache` is supplied, the review directory must already contain:
+
+- `package/package_manifest.jsonl`
+- `package/package_chunks.jsonl`
+
+In that mode the command preserves those package cache files and reruns forest-plan context
+resolution without re-extracting the package files.
+
+`forest_plan_context.json` has schema version `forest-plan-context-v0` and includes:
+
+- summary paths and package extraction counts
+- `scope_status`: `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`
+- forest unit and Custer Gallatin ranger district signals
+- Custer Gallatin source records used by the resolver
+- project location signals found in the EA package
+- resolved geographic areas
+- resolved management areas
+- resolved overlays
+- package evidence snippets
+- source-library plan evidence snippets
+- unresolved mentions that require reviewer attention
+- `needs_reviewer_resolution`
+- validation results
+
+The resolver is scoped to the Custer Gallatin National Forest. It does not infer Custer Gallatin
+scope from ambiguous `Gallatin`-only mentions. Custer Gallatin packages with no resolved geographic
+area, management area, or overlay set `needs_reviewer_resolution` and are not reviewer-ready.
+
+`forest_plan_context_validation.json` records gate-facing checks for:
+
+- required context fields
+- resolved scope status
+- Custer Gallatin packages having at least one resolved geographic area, management area, or overlay
+- plan-context entries carrying package evidence
+- plan-context entries carrying source-library plan evidence
+
+`forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
+the context, validation, and package-cache paths; scope status; resolved area counts; unresolved
+mention count; `needs_reviewer_resolution`; and `reviewer_ready`.
+
 ## Compliance Review Outputs
 
 Path: `source_library/reviews/<review_id>/`

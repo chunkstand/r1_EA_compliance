@@ -238,6 +238,11 @@ EA Package Review V0 is implemented through `ea-review`. It extracts a local EA 
 seed checklist, retrieves source-library evidence for each item, and writes package evidence,
 source-library evidence, finding status, limitations, and validation artifacts.
 
+Custer Gallatin Forest Plan Resolver V0 is implemented through `forest-plan-resolve`. It extracts or
+reuses a local EA package, resolves whether the package is Custer Gallatin scoped, extracts
+ranger-district and project-location signals, extracts geographic areas, management areas, and
+overlays, and binds resolved plan context to Custer Gallatin source-library records.
+
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
 authorities from `config/compliance_rule_pack_nepa_ea_v0.json`, evaluates the EA against each
@@ -288,6 +293,9 @@ Current state:
   compliance-review readiness separately when those artifacts exist or are requested.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
+- Custer Gallatin forest-plan context resolution runs against a local EA package and emits
+  `forest_plan_context.json`, `forest_plan_context_validation.json`, and
+  `forest_plan_context_summary.json`.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
   `compliance_matrix.pdf`,
@@ -482,6 +490,39 @@ re-extracting package PDFs.
 `review_validation.json` is the gate-facing artifact. It checks source retrieval readiness, package
 extraction, package chunk creation, valid finding statuses, dual evidence for `pass` findings, source
 evidence for `gap` findings, and absence of unsupported compliance claims.
+
+## Custer Gallatin Forest Plan Resolver V0
+
+The first forest-plan-specific review milestone is implemented through:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
+  --package-path /absolute/path/to/ea-package-or-folder \
+  --output-dir source_library
+```
+
+The command writes `source_library/reviews/<review_id>/forest_plan_context.json`,
+`forest_plan_context_validation.json`, and `forest_plan_context_summary.json`, plus package
+extraction artifacts under `source_library/reviews/<review_id>/package/`.
+
+The resolver is intentionally Custer Gallatin-only. It returns `scope_status=custer_gallatin`,
+`not_custer_gallatin`, or `ambiguous`; ambiguous `Gallatin`-only packages are not guessed. For
+Custer Gallatin packages it extracts:
+
+- forest unit and ranger district signals
+- project location snippets
+- Custer Gallatin geographic areas
+- Custer Gallatin management areas
+- overlays such as inventoried roadless areas
+- package evidence and source-library plan evidence
+- unresolved mentions that need human reviewer resolution
+
+Custer Gallatin packages are reviewer-ready only when validation passes and at least one geographic
+area, management area, or overlay is resolved. Packages that appear Custer Gallatin scoped but lack a
+resolved plan area set `needs_reviewer_resolution` instead of silently passing.
+
+Forest-plan improvement work uses sequence discipline: each implemented sequence updates repo docs,
+passes focused verification, and is committed before the next sequence starts.
 
 ## Compliance Rule Pack And Finding Graph V0
 

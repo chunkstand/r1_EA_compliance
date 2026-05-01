@@ -121,7 +121,10 @@ links into a local graph artifact. The `claim-extract` command extracts determin
 claims and entities with exact offsets and graph bindings. The `rule-claim-link` command binds
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
-reviewer-ready retrieval evidence. The `compliance-review` command identifies applicable
+reviewer-ready retrieval evidence. The `forest-plan-resolve` command extracts Custer Gallatin
+forest-plan review context from an EA package, including project location signals, geographic areas,
+management areas, overlays, and source-library plan evidence. The `compliance-review` command
+identifies applicable
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
 finding graph with source-claim support. The
@@ -137,6 +140,9 @@ The EA review engine should start from one of these catalog surfaces rather than
 - `source_library/catalog/review_sources.sqlite`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
+
+Forest-plan improvement work uses sequence discipline: each implemented forest-plan sequence must
+update repo docs, pass focused verification, and be committed before the next sequence begins.
 
 For each selected source row, the engine should:
 
@@ -354,6 +360,31 @@ running, and fixed review IDs replace prior package artifacts so stale package c
 reruns. Pass `--reuse-package-cache` only when a review directory already has
 `package/package_manifest.jsonl` and `package/package_chunks.jsonl` that you intend to reuse; this
 reruns checklist/rule evaluation against cached package chunks without re-extracting PDFs.
+
+Resolve Custer Gallatin forest-plan context from a local EA package:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
+  --package-path /absolute/path/to/ea-package-or-folder \
+  --output-dir source_library
+```
+
+`forest-plan-resolve` is the first Custer Gallatin-only forest-plan review sequence. It extracts or
+reuses the package cache, resolves whether the EA is for the Custer Gallatin National Forest, then
+extracts ranger district, project-location, geographic-area, management-area, and overlay signals.
+For resolved Custer Gallatin packages, it records the expected Custer Gallatin plan source records
+and retrieves supporting source-library plan evidence from the primary Land Management Plan, then
+writes:
+
+- `source_library/reviews/<review_id>/forest_plan_context.json`
+- `source_library/reviews/<review_id>/forest_plan_context_validation.json`
+- `source_library/reviews/<review_id>/forest_plan_context_summary.json`
+- `source_library/reviews/<review_id>/package/package_manifest.jsonl`
+- `source_library/reviews/<review_id>/package/package_chunks.jsonl`
+
+Custer Gallatin packages with no resolved geographic area, management area, or overlay are not
+reviewer-ready and set `needs_reviewer_resolution`. Ambiguous `Gallatin`-only packages are not
+guessed. Non-Custer packages are marked `not_custer_gallatin` and treated as out of scope.
 
 Run a versioned compliance rule pack and emit the compliance matrix and finding graph:
 
