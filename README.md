@@ -40,10 +40,11 @@ source set; older reviewer-ready downstream artifacts under `source-set-e364ea22
 useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
-read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the current V1 demo document
-review milestone plan. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the
-reviewer engine biased toward scalable search, learning, evidence, and eval loops instead of hidden
-domain-specific heuristics.
+read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan:
+a Custer Gallatin National Forest EA compliance review as the proving ground. See
+`docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
+toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
+heuristics.
 
 ## Current Inputs
 
