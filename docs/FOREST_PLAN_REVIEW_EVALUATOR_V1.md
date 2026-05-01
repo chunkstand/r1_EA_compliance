@@ -1,15 +1,15 @@
-# Forest Plan Review Harness V1
+# Forest Plan Review Evaluator V1
 
-This brief defines the first build contract for a generic forest-plan review harness. Custer Gallatin
-and the East Crazies package are the first proving case, not the architecture boundary.
+This brief defines the first build contract for a generic forest-plan review evaluator. Custer
+Gallatin and the East Crazies package are the first proving case, not the architecture boundary.
 
-The harness must stay aligned with the Bitter Lesson: review quality should improve through better
+The evaluator must stay aligned with the Bitter Lesson: review quality should improve through better
 source coverage, structured metadata, retrieval, evidence extraction, evaluation fixtures, and failure
 telemetry. Runtime logic must not depend on handwritten Custer Gallatin or East Crazies exceptions.
 
 ## Goal
 
-Build a reusable forest-plan review harness that can:
+Build a reusable forest-plan review evaluator that can:
 
 - identify the applicable forest or grassland plan profile for an EA package;
 - verify that required plan and supporting source records are indexed;
@@ -20,18 +20,23 @@ Build a reusable forest-plan review harness that can:
 - feed the full EA/compliance review path without converting evidence retrieval into unsupported
   legal conclusions.
 
+The system-level V1 demo milestone plan is tracked in
+`docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md`; the evaluator is a support slice for
+forest-plan-aware demos, not the whole V1 scope. The component-level forest-plan evaluation plan is
+tracked in `docs/FOREST_PLAN_COMPONENT_EVALUATION_MILESTONE_PLAN.md`.
+
 ## Non-Goals
 
 - Do not build Custer Gallatin-specific runtime control flow.
 - Do not infer forest-plan consistency from broad mentions of "Forest Plan" or "Land Management
   Plan."
 - Do not rebuild the full 190-row downstream corpus solely for this milestone.
-- Do not treat the harness output as a final legal sufficiency determination.
+- Do not treat the evaluator output as a final legal sufficiency determination.
 - Do not scan raw artifact filenames to decide reviewer behavior.
 
 ## Generic Forest Plan Profile Schema
 
-The harness should read forest-specific facts from data/config/catalog surfaces. A profile should be
+The evaluator should read forest-specific facts from data/config/catalog surfaces. A profile should be
 expressive enough to support Custer Gallatin now and other Region 1 forest plans later.
 
 Minimum profile fields:
@@ -76,7 +81,7 @@ cg-live-smoke
 
 Expected V1 review shape:
 
-- The harness resolves the package to the Custer Gallatin profile using profile data.
+- The evaluator resolves the package to the Custer Gallatin profile using profile data.
 - Required Custer Gallatin plan/supporting records are present in retrieval before review proceeds.
 - The package resolves to the Bridger, Bangtail, and Crazy Mountains Geographic Area.
 - The package resolves to the Crazy Mountains Backcountry Area.
@@ -97,7 +102,7 @@ After each forest-plan milestone, check the result against this panel.
 
 ### Scott Vandegrift Alignment
 
-The harness should support efficient, predictable environmental review:
+The evaluator should support efficient, predictable environmental review:
 
 - reuse existing reliable source records and extracted text when hashes match;
 - keep review outputs concise and structured;
@@ -107,7 +112,7 @@ The harness should support efficient, predictable environmental review:
 
 ### Chuck Nicholson Alignment
 
-The harness should read like practitioner-grade NEPA QA/QC:
+The evaluator should read like practitioner-grade NEPA QA/QC:
 
 - tie review to purpose and need, proposed action, alternatives, and decision context when available;
 - keep analysis proportional to the project and likely issues;
@@ -118,7 +123,7 @@ The harness should read like practitioner-grade NEPA QA/QC:
 
 ### Liz Esposito Alignment
 
-The harness should be legally defensible without pretending to be counsel:
+The evaluator should be legally defensible without pretending to be counsel:
 
 - anchor project consistency review to `36 CFR 219.15`;
 - distinguish goals, desired conditions, objectives, standards, guidelines, and suitability;
@@ -158,5 +163,5 @@ git diff --check
   it is sufficient for this forest-plan proving case because all required profile source records are
   indexed and retrieval validation passes.
 - Full compliance promotion remains separate. Existing downstream promotion gaps, such as unrelated
-  source-claim link failures, should not block the generic forest-plan harness unless they prevent the
-  full EA review path from consuming the harness output.
+  source-claim link failures, should not block the generic forest-plan evaluator unless they prevent
+  the full EA review path from consuming the evaluator output.

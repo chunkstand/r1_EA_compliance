@@ -252,7 +252,11 @@ Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Op
 ROD, FEIS, designated-area/allocation, and ESA cues are routed to profile-declared supporting
 records in addition to the primary LMP area/component evidence. Supporting routes are trigger-gated
 and emit `trigger_evidence`, so broad EA section labels do not silently activate FEIS records and
-uppercase acronym triggers do not match ordinary lowercase words.
+uppercase acronym triggers do not match ordinary lowercase words. Generic project decision labels
+such as `selected alternative`, `decision basis`, or `plan approval` do not activate the Custer
+Gallatin ROD route unless the package explicitly references `Record of Decision` or `ROD`; generic
+`plan consistency` labels do not activate FEIS routing unless an explicit FEIS, tiering, or
+incorporation cue is present.
 
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
@@ -537,6 +541,11 @@ it extracts:
 - trigger evidence showing why each supporting plan record was applied
 - required source-record readiness for all Custer Gallatin profile-required plan/supporting records
 - unresolved mentions that need human reviewer resolution
+
+The East Crazies profile-driven fixture proves the minimum V1 forest-plan support slice: Custer
+Gallatin scope, Bridger/Bangtail/Crazy Mountains Geographic Area, Crazy Mountains Backcountry Area,
+all seven required Custer Gallatin source records, FEIS/BA/BO supporting routes from explicit
+package evidence, and no Custer Gallatin ROD routing from generic project decision labels.
 
 Custer Gallatin packages are reviewer-ready only when validation passes and at least one geographic
 area, management area, or overlay is resolved. They also require every Custer Gallatin

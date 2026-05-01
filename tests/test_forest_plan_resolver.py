@@ -13,6 +13,67 @@ from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
 
 class ForestPlanResolverTests(unittest.TestCase):
+    def test_east_crazies_fixture_resolves_profile_driven_forest_plan_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(Path(tmp), _east_crazies_fixture_text())
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="east-crazies-profile-driven",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertFalse(context["needs_reviewer_resolution"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertTrue(context["source_record_readiness"]["ready"])
+            self.assertEqual(context["source_record_readiness"]["missing_source_record_ids"], [])
+            self.assertEqual(
+                context["source_record_readiness"]["required_source_record_ids"],
+                [
+                    "R1PLAN-custer-gallatin-nf-01",
+                    "R1PLAN-custer-gallatin-nf-02",
+                    "R1PLAN-custer-gallatin-nf-03",
+                    "R1PLAN-custer-gallatin-nf-04",
+                    "R1PLAN-custer-gallatin-nf-05",
+                    "R1PLAN-custer-gallatin-nf-06",
+                    "R1PLAN-custer-gallatin-nf-07",
+                ],
+            )
+            self.assertEqual(
+                _names(context["geographic_areas"]),
+                ["Bridger, Bangtail, and Crazy Mountains Geographic Area"],
+            )
+            self.assertEqual(
+                _names(context["management_areas"]),
+                ["Crazy Mountains Backcountry Area"],
+            )
+
+            supporting_by_route = {
+                entry["route_id"]: entry for entry in context["supporting_plan_evidence"]
+            }
+            self.assertEqual(
+                set(supporting_by_route),
+                {
+                    "support-biological-assessment-esa",
+                    "support-biological-opinion-esa",
+                    "support-feis-volume-1-context",
+                    "support-feis-volume-2-designated-areas",
+                },
+            )
+            self.assertNotIn("support-rod-decision-basis", supporting_by_route)
+            for entry in supporting_by_route.values():
+                self.assertEqual(entry["resolution_status"], "resolved")
+                self.assertTrue(entry["trigger_evidence"])
+                self.assertTrue(entry["package_evidence"])
+                self.assertTrue(entry["plan_source_evidence"])
+
     def test_other_configured_profiles_are_out_of_scope_for_selected_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             profiles_path = Path(tmp) / "profiles.json"
@@ -301,6 +362,35 @@ class ForestPlanResolverTests(unittest.TestCase):
                 output_dir=output_dir,
                 source_set_id=source_set_id,
                 review_id="cg-no-broad-trigger",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+
+    def test_project_decision_and_plan_consistency_labels_do_not_trigger_supporting_routes(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The plan consistency table discusses the selected alternative, decision "
+                        "basis, objection resolution, and plan approval for the project decision.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-generic-decision-labels",
             )
 
             context = json.loads(result.context_path.read_text(encoding="utf-8"))
@@ -761,6 +851,13 @@ def _write_package(directory: Path, text: str) -> Path:
     package_path = directory / "ea-package.txt"
     package_path.write_text(text, encoding="utf-8")
     return package_path
+
+
+def _east_crazies_fixture_text() -> str:
+    path = Path(__file__).parent / "fixtures" / "forest_plan_evaluator" / (
+        "east_crazies_profile_driven.txt"
+    )
+    return path.read_text(encoding="utf-8")
 
 
 def _write_resolver_profile_config(

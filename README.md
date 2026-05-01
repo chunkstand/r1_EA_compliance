@@ -40,8 +40,9 @@ source set; older reviewer-ready downstream artifacts under `source-set-e364ea22
 useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
-read path. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer
-engine biased toward scalable search, learning, evidence, and eval loops instead of hidden
+read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the current V1 demo document
+review milestone plan. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the
+reviewer engine biased toward scalable search, learning, evidence, and eval loops instead of hidden
 domain-specific heuristics.
 
 ## Current Inputs
@@ -405,8 +406,12 @@ records the expected profile source records and retrieves supporting source-libr
 from the primary Land Management Plan. It also routes triggered ROD, FEIS,
 designated-area/allocation, ESA Biological Assessment, and Biological Opinion cues to the required
 Custer Gallatin supporting records declared by the profile. Broad section labels such as
-`purpose and need` do not activate FEIS routing by themselves, and acronym triggers such as `ROD`,
-`FEIS`, `BA`, `BO`, and `ESA` require uppercase matches. The command then writes:
+`purpose and need` do not activate FEIS routing by themselves. Generic project decision labels such
+as `selected alternative`, `decision basis`, or `plan approval` do not activate the Custer Gallatin
+ROD route unless the package explicitly says `Record of Decision` or `ROD`; `plan consistency`
+labels do not activate FEIS routing unless an explicit FEIS/tiering/incorporation cue is present.
+Acronym triggers such as `ROD`, `FEIS`, `BA`, `BO`, and `ESA` require uppercase matches. The command
+then writes:
 
 - `source_library/reviews/<review_id>/forest_plan_context.json`
 - `source_library/reviews/<review_id>/forest_plan_context_validation.json`
