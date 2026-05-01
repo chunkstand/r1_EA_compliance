@@ -17,6 +17,7 @@ from .ea_review import _source_set_id_from_index
 from .ea_review import _utc_now
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import ForestPlanProfile
+from .forest_plan_profiles import ForestPlanProfileCollection
 from .forest_plan_profiles import ForestPlanTermEntry
 from .forest_plan_profiles import KnownForestUnit
 from .forest_plan_profiles import SupportingRecordTriggerRule
@@ -89,10 +90,37 @@ def _load_resolver_profile(
     profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
 ) -> ForestPlanResolverProfile:
     collection = load_forest_plan_profiles(Path(profiles_path))
+    profile = collection.get(forest_unit_id)
     return _resolver_profile_from_profile(
-        profile=collection.get(forest_unit_id),
-        known_other_forest_units=collection.known_other_forest_units,
+        profile=profile,
+        known_other_forest_units=_known_other_forest_units_for_profile(
+            collection=collection,
+            selected_profile=profile,
+        ),
     )
+
+
+def _known_other_forest_units_for_profile(
+    *,
+    collection: ForestPlanProfileCollection,
+    selected_profile: ForestPlanProfile,
+) -> tuple[KnownForestUnit, ...]:
+    units_by_id = {
+        unit.forest_unit_id: unit
+        for unit in collection.known_other_forest_units
+        if unit.forest_unit_id != selected_profile.forest_unit_id
+    }
+    for profile in collection.profiles:
+        if profile.forest_unit_id == selected_profile.forest_unit_id:
+            continue
+        units_by_id.setdefault(
+            profile.forest_unit_id,
+            KnownForestUnit(
+                forest_unit_id=profile.forest_unit_id,
+                names=profile.forest_unit_names,
+            ),
+        )
+    return tuple(units_by_id.values())
 
 
 def _resolver_profile_from_profile(

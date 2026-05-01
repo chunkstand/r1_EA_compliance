@@ -13,6 +13,35 @@ from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
 
 class ForestPlanResolverTests(unittest.TestCase):
+    def test_other_configured_profiles_are_out_of_scope_for_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                extra_profile_updates={
+                    "forest_unit_id": "profile-two-nf",
+                    "forest_unit_names": ["Profile Two National Forest"],
+                    "ambiguous_unit_terms": ["Profile Two"],
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "The proposed action is on Profile Two National Forest.",
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=Path(tmp) / "source_library",
+                review_id="other-configured-profile",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "not_custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Profile Two National Forest")
+            self.assertFalse(context["needs_reviewer_resolution"])
+            self.assertTrue(result.summary["reviewer_ready"])
+
     def test_scope_resolution_uses_profile_unit_names(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -739,6 +768,7 @@ def _write_resolver_profile_config(
     *,
     forest_unit_names: list[str] | None = None,
     required_roles: list[str] | None = None,
+    extra_profile_updates: dict | None = None,
 ) -> None:
     payload = json.loads(Path("config/forest_plan_profiles.json").read_text(encoding="utf-8"))
     profile = payload["profiles"][0]
@@ -746,6 +776,10 @@ def _write_resolver_profile_config(
         profile["forest_unit_names"] = forest_unit_names
     if required_roles is not None:
         profile["required_readiness_source_roles"] = required_roles
+    if extra_profile_updates is not None:
+        extra_profile = dict(profile)
+        extra_profile.update(extra_profile_updates)
+        payload["profiles"].append(extra_profile)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 

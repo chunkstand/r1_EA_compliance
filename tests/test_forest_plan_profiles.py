@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import json
+import os
 import tempfile
 import unittest
 
@@ -20,6 +21,17 @@ class ForestPlanProfileTests(unittest.TestCase):
     def test_default_profile_path_is_repo_absolute(self) -> None:
         self.assertTrue(DEFAULT_FOREST_PLAN_PROFILES_PATH.is_absolute())
         self.assertTrue(DEFAULT_FOREST_PLAN_PROFILES_PATH.exists())
+
+    def test_loads_default_profiles_from_non_repo_cwd(self) -> None:
+        original_cwd = Path.cwd()
+        with tempfile.TemporaryDirectory() as tmp:
+            try:
+                os.chdir(tmp)
+                profiles = load_forest_plan_profiles()
+            finally:
+                os.chdir(original_cwd)
+
+        self.assertEqual(profiles.get("custer-gallatin-nf").forest_unit_id, "custer-gallatin-nf")
 
     def test_loads_custer_gallatin_profile_as_data(self) -> None:
         profiles = load_forest_plan_profiles()
