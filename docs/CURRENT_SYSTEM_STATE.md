@@ -242,7 +242,11 @@ source-library evidence, finding status, limitations, and validation artifacts.
 Custer Gallatin Forest Plan Resolver V0 is implemented through `forest-plan-resolve`. It extracts or
 reuses a local EA package, resolves whether the package is Custer Gallatin scoped, extracts
 ranger-district and project-location signals, extracts geographic areas, management areas, and
-overlays, and binds resolved plan context to Custer Gallatin source-library records.
+overlays, and binds resolved plan context to Custer Gallatin source-library records. The resolver
+requires the complete Custer Gallatin plan-review bundle in the retrieval index: planning page, Land
+Management Plan, Record of Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and
+Biological Opinion. Triggered ROD, FEIS, designated-area/allocation, and ESA cues are routed to the
+supporting records in addition to the primary LMP area/component evidence.
 
 Compliance Rule Pack + Matrix + Finding Graph V0.4 is implemented through `compliance-review`. It
 identifies applicable statutory, regulatory, policy, state, executive-order, and forest-plan
@@ -295,7 +299,10 @@ Current state:
   reports plus `review_validation.json`.
 - Custer Gallatin forest-plan context resolution runs against a local EA package and emits
   `forest_plan_context.json`, `forest_plan_context_validation.json`, and
-  `forest_plan_context_summary.json`.
+  `forest_plan_context_summary.json`. The current Custer Gallatin path requires all seven
+  Custer Gallatin plan/supporting records in retrieval, resolves management areas from the EA
+  package, and adds `supporting_plan_evidence` routes for ROD, FEIS Volumes 1 and 2, Biological
+  Assessment, and Biological Opinion triggers.
 - Compliance review runs a versioned rule pack and emits `compliance_validation.json`,
   `compliance_review.json`, `compliance_matrix.json`, `compliance_matrix.md`,
   `compliance_matrix.pdf`,
@@ -515,12 +522,17 @@ Custer Gallatin packages it extracts:
 - Custer Gallatin geographic areas
 - Custer Gallatin management areas
 - overlays such as inventoried roadless areas
-- package evidence and source-library plan evidence
+- package evidence and source-library LMP evidence
+- triggered supporting plan evidence from the Custer Gallatin ROD, FEIS Volumes 1 and 2,
+  Biological Assessment, and Biological Opinion
+- required source-record readiness for all seven Custer Gallatin plan/supporting records
 - unresolved mentions that need human reviewer resolution
 
 Custer Gallatin packages are reviewer-ready only when validation passes and at least one geographic
-area, management area, or overlay is resolved. Packages that appear Custer Gallatin scoped but lack a
-resolved plan area set `needs_reviewer_resolution` instead of silently passing.
+area, management area, or overlay is resolved. They also require all seven Custer Gallatin
+plan/supporting records to be indexed. Packages that appear Custer Gallatin scoped but lack a
+resolved plan area, or trigger a supporting record without source evidence, set
+`needs_reviewer_resolution` instead of silently passing.
 
 Forest-plan improvement work uses sequence discipline: each implemented sequence updates repo docs,
 passes focused verification, and is committed before the next sequence starts.
@@ -736,12 +748,16 @@ compliance matrices, but those gates must be refreshed against the `0.4.0`/44-ru
 are promotion evidence for the expanded baseline.
 
 The current system has a complete 190-row downloader/catalog corpus that includes the four missed
-Custer Gallatin FEIS and ESA-supporting plan documents. It is not yet reviewer-ready for the
-expanded source set because extraction, retrieval, evidence graph, source-claim, rule-claim,
-coverage, and gold promotion artifacts still need to be rebuilt from
-`source-set-ba8d0feae79501b8`. The prior 147-row downstream corpus remains useful for deterministic
-seed-package and expanded gold-adjudication checks, but should not be treated as current promotion
-evidence for the expanded workbook.
+Custer Gallatin FEIS and ESA-supporting plan documents. A Custer Gallatin-focused
+extraction/retrieval slice has been rebuilt for `source-set-ba8d0feae79501b8`: all seven required
+Custer Gallatin plan/supporting records are extracted and indexed, producing 4,599 retrieval chunks.
+That retrieval summary remains marked partial because the full 190-row source set is not extracted,
+but `forest-plan-resolve` accepts it for Custer Gallatin review because every required Custer
+Gallatin source record is present and retrieval validation passes. Full-source-set extraction,
+evidence graph, source-claim, rule-claim, coverage, and gold promotion artifacts still need to be
+rebuilt from `source-set-ba8d0feae79501b8`. The prior 147-row downstream corpus remains useful for
+deterministic seed-package and expanded gold-adjudication checks, but should not be treated as
+current promotion evidence for the expanded workbook.
 
 The next efficient v1 milestone is to run the full extraction/retrieval/evidence-graph/claim rebuild
 for `source-set-ba8d0feae79501b8`, rebuild or refresh the rule-claim/eval/coverage artifacts for

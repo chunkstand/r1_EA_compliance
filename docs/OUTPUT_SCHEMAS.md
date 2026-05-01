@@ -449,6 +449,12 @@ The `forest-plan-resolve` command writes:
 - configured Custer Gallatin plan source-record IDs
 - the source-library retrieval index when the package is resolved as Custer Gallatin scoped
 
+For Custer Gallatin-scoped packages, retrieval readiness is satisfied only when the index contains
+all seven required Custer Gallatin records: the planning page, Land Management Plan, Record of
+Decision, FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion. This allows a
+Custer Gallatin-only extraction/retrieval slice to support forest-plan review while still preventing
+reviews against an incomplete Custer Gallatin plan bundle.
+
 When `--reuse-package-cache` is supplied, the review directory must already contain:
 
 - `package/package_manifest.jsonl`
@@ -467,6 +473,10 @@ resolution without re-extracting the package files.
 - resolved geographic areas
 - resolved management areas
 - resolved overlays
+- `supporting_plan_evidence`: triggered ROD, FEIS, designated-area/allocation, ESA Biological
+  Assessment, and Biological Opinion evidence routes
+- `source_record_readiness`: required Custer Gallatin source-record IDs, indexed chunk counts, and
+  missing source IDs
 - package evidence snippets
 - source-library plan evidence snippets
 - unresolved mentions that require reviewer attention
@@ -482,12 +492,15 @@ area, management area, or overlay set `needs_reviewer_resolution` and are not re
 - required context fields
 - resolved scope status
 - Custer Gallatin packages having at least one resolved geographic area, management area, or overlay
+- required Custer Gallatin source records being indexed
 - plan-context entries carrying package evidence
 - plan-context entries carrying source-library plan evidence
+- triggered supporting plan-evidence routes carrying source-library evidence
 
 `forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
 the context, validation, and package-cache paths; scope status; resolved area counts; unresolved
-mention count; `needs_reviewer_resolution`; and `reviewer_ready`.
+mention count; supporting plan-evidence route count; `needs_reviewer_resolution`; retrieval
+readiness; and `reviewer_ready`.
 
 ## Compliance Review Outputs
 

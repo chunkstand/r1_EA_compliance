@@ -30,10 +30,14 @@ Current generated source-library capture:
 
 The current catalog source set is `source-set-ba8d0feae79501b8`. The latest corpus update added the
 Custer Gallatin FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion as
-forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. Full
-downstream extraction, retrieval, evidence graph, source-claim, rule-claim, and compliance promotion
-artifacts still need to be rebuilt for this source set; older reviewer-ready downstream artifacts under
-`source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
+forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. The
+Custer Gallatin forest-plan resolver now requires the planning page, LMP, ROD, FEIS Volumes 1 and 2,
+Biological Assessment, and Biological Opinion to be present in the retrieval index before it reviews
+a Custer Gallatin EA. A Custer Gallatin-only extraction/retrieval slice for those seven records is
+built under the current source set for forest-plan review. Full all-source extraction, evidence
+graph, source-claim, rule-claim, and compliance promotion artifacts still need to be rebuilt for this
+source set; older reviewer-ready downstream artifacts under `source-set-e364ea220cffd938` remain
+useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer
@@ -124,7 +128,10 @@ versioned compliance rules to validated source claims before compliance findings
 authorities. The `ea-review` command runs deterministic package checklist reviews against
 reviewer-ready retrieval evidence. The `forest-plan-resolve` command extracts Custer Gallatin
 forest-plan review context from an EA package, including project location signals, geographic areas,
-management areas, overlays, and source-library plan evidence. The `compliance-review` command
+management areas, overlays, and source-library plan evidence. It also routes triggered package cues
+to the Custer Gallatin ROD, FEIS Volumes 1 and 2, Biological Assessment, and Biological Opinion so
+forest-plan reviews can apply the supporting plan record set, not only the primary LMP. The
+`compliance-review` command
 identifies applicable
 statutory, regulatory, policy, state, executive-order, and forest-plan authorities from a versioned
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
@@ -374,8 +381,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
 reuses the package cache, resolves whether the EA is for the Custer Gallatin National Forest, then
 extracts ranger district, project-location, geographic-area, management-area, and overlay signals.
 For resolved Custer Gallatin packages, it records the expected Custer Gallatin plan source records
-and retrieves supporting source-library plan evidence from the primary Land Management Plan, then
-writes:
+and retrieves supporting source-library plan evidence from the primary Land Management Plan. It also
+routes triggered ROD, FEIS, designated-area/allocation, ESA Biological Assessment, and Biological
+Opinion cues to the required Custer Gallatin supporting records, then writes:
 
 - `source_library/reviews/<review_id>/forest_plan_context.json`
 - `source_library/reviews/<review_id>/forest_plan_context_validation.json`

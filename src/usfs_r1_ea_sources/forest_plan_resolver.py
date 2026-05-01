@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import shutil
+import sqlite3
 
 from .ea_review import _discover_package_files
 from .ea_review import _extract_package_files
@@ -57,6 +58,9 @@ CUSTER_GALLATIN_SOURCE_RECORDS = [
         "required_for": "plan-level ESA consultation, terms, incidental take, and reinitiation triggers",
     },
 ]
+CUSTER_GALLATIN_REQUIRED_SOURCE_IDS = tuple(
+    str(record["source_record_id"]) for record in CUSTER_GALLATIN_SOURCE_RECORDS
+)
 
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
@@ -84,6 +88,175 @@ class GazetteerEntry:
     @property
     def terms(self) -> tuple[str, ...]:
         return (self.name, *self.aliases)
+
+
+@dataclass(frozen=True)
+class PlanEvidenceRoute:
+    route_id: str
+    category: str
+    name: str
+    source_record_id: str
+    source_role: str
+    package_terms: tuple[str, ...]
+    source_query: str
+    source_terms: tuple[str, ...]
+
+
+SUPPORTING_PLAN_EVIDENCE_ROUTES = (
+    PlanEvidenceRoute(
+        route_id="support-rod-decision-basis",
+        category="decision_basis",
+        name="Record of Decision decision basis",
+        source_record_id="R1PLAN-custer-gallatin-nf-03",
+        source_role="record_of_decision",
+        package_terms=(
+            "Record of Decision",
+            "ROD",
+            "selected alternative",
+            "decision basis",
+            "objection resolution",
+            "plan approval",
+        ),
+        source_query=(
+            "Custer Gallatin record of decision selected alternative plan approval "
+            "objection resolution decision basis"
+        ),
+        source_terms=(
+            "record of decision",
+            "selected alternative",
+            "plan approval",
+            "objection resolution",
+            "decision basis",
+        ),
+    ),
+    PlanEvidenceRoute(
+        route_id="support-feis-volume-1-context",
+        category="feis_context",
+        name="FEIS Volume 1 analysis context",
+        source_record_id="R1PLAN-custer-gallatin-nf-04",
+        source_role="final_environmental_impact_statement_volume_1",
+        package_terms=(
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiered to",
+            "tiers to",
+            "incorporates by reference",
+            "purpose and need",
+            "alternatives",
+            "affected environment",
+            "environmental consequences",
+            "cumulative effects",
+        ),
+        source_query=(
+            "Custer Gallatin FEIS Volume 1 purpose and need alternatives affected "
+            "environment environmental consequences cumulative effects plan consistency"
+        ),
+        source_terms=(
+            "purpose and need",
+            "alternatives",
+            "affected environment",
+            "environmental consequences",
+            "cumulative effects",
+            "plan consistency",
+        ),
+    ),
+    PlanEvidenceRoute(
+        route_id="support-feis-volume-2-designated-areas",
+        category="feis_designated_areas",
+        name="FEIS Volume 2 designated areas and plan allocations",
+        source_record_id="R1PLAN-custer-gallatin-nf-05",
+        source_role="final_environmental_impact_statement_volume_2",
+        package_terms=(
+            "designated area",
+            "designated areas",
+            "plan allocation",
+            "plan allocations",
+            "Inventoried Roadless Area",
+            "recommended wilderness",
+            "backcountry area",
+            "backcountry areas",
+            "recreation emphasis area",
+            "recreation emphasis areas",
+        ),
+        source_query=(
+            "Custer Gallatin FEIS Volume 2 designated areas inventoried roadless "
+            "plan allocations backcountry recreation emphasis resource effects"
+        ),
+        source_terms=(
+            "designated areas",
+            "plan allocations",
+            "inventoried roadless",
+            "backcountry areas",
+            "recreation emphasis",
+            "resource effects",
+        ),
+    ),
+    PlanEvidenceRoute(
+        route_id="support-biological-assessment-esa",
+        category="esa_consultation",
+        name="Biological Assessment ESA effects analysis",
+        source_record_id="R1PLAN-custer-gallatin-nf-06",
+        source_role="biological_assessment",
+        package_terms=(
+            "Biological Assessment",
+            "BA",
+            "Endangered Species Act",
+            "ESA",
+            "Section 7",
+            "threatened",
+            "endangered",
+            "proposed species",
+            "candidate species",
+            "critical habitat",
+        ),
+        source_query=(
+            "Custer Gallatin biological assessment threatened endangered proposed "
+            "candidate species critical habitat conservation measures action area"
+        ),
+        source_terms=(
+            "biological assessment",
+            "threatened",
+            "endangered",
+            "proposed",
+            "candidate species",
+            "critical habitat",
+            "conservation measures",
+            "action area",
+        ),
+    ),
+    PlanEvidenceRoute(
+        route_id="support-biological-opinion-esa",
+        category="esa_consultation",
+        name="Biological Opinion ESA consultation terms",
+        source_record_id="R1PLAN-custer-gallatin-nf-07",
+        source_role="biological_opinion",
+        package_terms=(
+            "Biological Opinion",
+            "BO",
+            "Endangered Species Act",
+            "ESA",
+            "Section 7",
+            "incidental take",
+            "reinitiation",
+            "terms and conditions",
+            "effects determination",
+            "effects determinations",
+        ),
+        source_query=(
+            "Custer Gallatin biological opinion section 7 consultation incidental "
+            "take reinitiation terms and conditions effects determinations"
+        ),
+        source_terms=(
+            "biological opinion",
+            "section 7",
+            "consultation",
+            "incidental take",
+            "reinitiation",
+            "terms and conditions",
+            "effects determinations",
+        ),
+    ),
+)
 
 
 FOREST_UNIT_ALIASES = (
@@ -364,6 +537,7 @@ def run_forest_plan_resolver(
         retrieval_readiness = _retrieval_readiness_report(
             index_path=index_path,
             source_set_id=source_set_id,
+            required_source_record_ids=CUSTER_GALLATIN_REQUIRED_SOURCE_IDS,
         )
         if not retrieval_readiness["passed"]:
             failed = ", ".join(
@@ -384,6 +558,11 @@ def run_forest_plan_resolver(
         package_chunks=package_chunks,
         scope=scope,
         source_top_k=source_top_k,
+        source_record_readiness=(
+            retrieval_readiness.get("required_source_records")
+            if retrieval_readiness
+            else None
+        ),
     )
     validation = _validation_report(context)
     context["validation"] = validation
@@ -504,6 +683,7 @@ def _context_report(
     package_chunks: list[dict],
     scope: dict,
     source_top_k: int,
+    source_record_readiness: dict | None = None,
 ) -> dict:
     source_records = (
         list(CUSTER_GALLATIN_SOURCE_RECORDS)
@@ -536,10 +716,17 @@ def _context_report(
             index_path=index_path,
             source_top_k=source_top_k,
         )
+        supporting_plan_evidence = _supporting_plan_evidence(
+            routes=SUPPORTING_PLAN_EVIDENCE_ROUTES,
+            package_chunks=package_chunks,
+            index_path=index_path,
+            source_top_k=source_top_k,
+        )
     else:
         geographic_areas = []
         management_areas = []
         overlays = []
+        supporting_plan_evidence = []
 
     unresolved_mentions = list(scope["unresolved_mentions"])
     package_evidence = _flatten_package_evidence(
@@ -548,11 +735,13 @@ def _context_report(
         geographic_areas,
         management_areas,
         overlays,
+        supporting_plan_evidence,
     )
     plan_source_evidence = _flatten_plan_source_evidence(
         geographic_areas,
         management_areas,
         overlays,
+        supporting_plan_evidence,
     )
     return {
         "schema_version": FOREST_PLAN_CONTEXT_SCHEMA_VERSION,
@@ -569,6 +758,8 @@ def _context_report(
         "geographic_areas": geographic_areas,
         "management_areas": management_areas,
         "overlays": overlays,
+        "supporting_plan_evidence": supporting_plan_evidence,
+        "source_record_readiness": source_record_readiness,
         "package_evidence": package_evidence,
         "plan_source_evidence": plan_source_evidence,
         "unresolved_mentions": unresolved_mentions,
@@ -630,6 +821,72 @@ def _plan_source_evidence(*, entry: GazetteerEntry, index_path: Path, limit: int
     return filtered[:limit]
 
 
+def _supporting_plan_evidence(
+    *,
+    routes: tuple[PlanEvidenceRoute, ...],
+    package_chunks: list[dict],
+    index_path: Path | None,
+    source_top_k: int,
+) -> list[dict]:
+    routed_evidence = []
+    for route in routes:
+        package_evidence = _mentions_for_route(package_chunks, route)
+        if not package_evidence:
+            continue
+        plan_evidence = []
+        if index_path is not None:
+            plan_evidence = _supporting_source_evidence(
+                route=route,
+                index_path=index_path,
+                limit=source_top_k,
+            )
+        routed_evidence.append(
+            {
+                "entry_id": route.route_id,
+                "route_id": route.route_id,
+                "category": route.category,
+                "name": route.name,
+                "source_record_id": route.source_record_id,
+                "source_role": route.source_role,
+                "package_terms": list(route.package_terms),
+                "source_query": route.source_query,
+                "source_terms": list(route.source_terms),
+                "package_evidence": package_evidence,
+                "plan_source_evidence": plan_evidence,
+                "resolution_status": (
+                    "resolved" if plan_evidence else "missing_plan_source_evidence"
+                ),
+            }
+        )
+    return sorted(routed_evidence, key=lambda item: item["route_id"])
+
+
+def _supporting_source_evidence(
+    *, route: PlanEvidenceRoute, index_path: Path, limit: int
+) -> list[dict]:
+    result = query_retrieval_index(
+        index_path=index_path,
+        query=route.source_query,
+        limit=max(limit, 5),
+        document_role="forest_plan",
+        source_record_id=route.source_record_id,
+    )
+    filtered = [
+        row
+        for row in result["results"]
+        if _supporting_evidence_matches_route(
+            str(row.get("evidence_span", {}).get("text") or ""),
+            route,
+        )
+    ]
+    return filtered[:limit]
+
+
+def _supporting_evidence_matches_route(text: str, route: PlanEvidenceRoute) -> bool:
+    lower = text.lower()
+    return any(_alias_pattern(term).search(lower) for term in route.source_terms)
+
+
 def _evidence_text_matches_entry(text: str, entry: GazetteerEntry) -> bool:
     lower = text.lower()
     return any(_alias_pattern(term).search(lower) for term in entry.terms)
@@ -644,6 +901,21 @@ def _mentions_for_entry(package_chunks: list[dict], entry: GazetteerEntry) -> li
                 name=entry.name,
                 category=entry.category,
                 entry_id=entry.entry_id,
+                alias=alias,
+            )
+        )
+    return _dedupe_evidence(mentions)[:5]
+
+
+def _mentions_for_route(package_chunks: list[dict], route: PlanEvidenceRoute) -> list[dict]:
+    mentions = []
+    for alias in route.package_terms:
+        mentions.extend(
+            _mentions_for_alias(
+                package_chunks,
+                name=route.name,
+                category=route.category,
+                entry_id=route.route_id,
                 alias=alias,
             )
         )
@@ -829,8 +1101,10 @@ def _validation_report(context: dict) -> dict:
     checks = [
         _check_schema_fields(context),
         _check_scope_resolved(context),
+        _check_required_custer_source_records_indexed(context),
         _check_custer_scope_has_resolved_area(context),
         _check_resolved_entries_have_plan_source_evidence(context),
+        _check_triggered_supporting_plan_evidence_has_source_evidence(context),
     ]
     return {
         "schema_version": "forest-plan-context-validation-v0",
@@ -849,6 +1123,8 @@ def _check_schema_fields(context: dict) -> dict:
         "geographic_areas",
         "management_areas",
         "overlays",
+        "supporting_plan_evidence",
+        "source_record_readiness",
         "package_evidence",
         "plan_source_evidence",
         "unresolved_mentions",
@@ -895,6 +1171,26 @@ def _check_custer_scope_has_resolved_area(context: dict) -> dict:
     }
 
 
+def _check_required_custer_source_records_indexed(context: dict) -> dict:
+    if context.get("scope_status") != "custer_gallatin":
+        return {
+            "name": "required_custer_source_records_indexed",
+            "passed": True,
+            "details": {"not_applicable": True},
+        }
+    readiness = context.get("source_record_readiness") or {}
+    missing = list(readiness.get("missing_source_record_ids") or [])
+    return {
+        "name": "required_custer_source_records_indexed",
+        "passed": bool(readiness.get("ready")) and not missing,
+        "details": {
+            "required_source_record_ids": readiness.get("required_source_record_ids", []),
+            "indexed_source_record_counts": readiness.get("indexed_source_record_counts", {}),
+            "missing_source_record_ids": missing,
+        },
+    }
+
+
 def _check_resolved_entries_have_plan_source_evidence(context: dict) -> dict:
     failures = []
     for collection_name in ("geographic_areas", "management_areas", "overlays"):
@@ -913,6 +1209,29 @@ def _check_resolved_entries_have_plan_source_evidence(context: dict) -> dict:
         "name": "resolved_entries_have_package_and_plan_source_evidence",
         "passed": not failures,
         "details": {"failures": failures},
+    }
+
+
+def _check_triggered_supporting_plan_evidence_has_source_evidence(context: dict) -> dict:
+    failures = []
+    for entry in context.get("supporting_plan_evidence", []):
+        if not entry.get("package_evidence") or not entry.get("plan_source_evidence"):
+            failures.append(
+                {
+                    "route_id": entry.get("route_id"),
+                    "name": entry.get("name"),
+                    "source_record_id": entry.get("source_record_id"),
+                    "package_evidence_count": len(entry.get("package_evidence", [])),
+                    "plan_source_evidence_count": len(entry.get("plan_source_evidence", [])),
+                }
+            )
+    return {
+        "name": "triggered_supporting_plan_evidence_has_source_evidence",
+        "passed": not failures,
+        "details": {
+            "triggered_route_count": len(context.get("supporting_plan_evidence", [])),
+            "failures": failures,
+        },
     }
 
 
@@ -954,6 +1273,7 @@ def _summary(
         "geographic_area_count": len(context["geographic_areas"]),
         "management_area_count": len(context["management_areas"]),
         "overlay_count": len(context["overlays"]),
+        "supporting_plan_evidence_count": len(context["supporting_plan_evidence"]),
         "unresolved_mention_count": len(context["unresolved_mentions"]),
         "needs_reviewer_resolution": context["needs_reviewer_resolution"],
         "validation_passed": validation["passed"],
@@ -962,11 +1282,37 @@ def _summary(
     }
 
 
-def _retrieval_readiness_report(*, index_path: Path, source_set_id: str) -> dict:
+def _retrieval_readiness_report(
+    *,
+    index_path: Path,
+    source_set_id: str,
+    required_source_record_ids: tuple[str, ...] = (),
+) -> dict:
     summary_path = index_path.parent / "summary.json"
     validation_path = index_path.parent / "retrieval_validation.json"
     summary = _read_json_if_exists(summary_path)
     validation = _read_json_if_exists(validation_path)
+    indexed_source_counts = _indexed_source_record_counts(index_path, required_source_record_ids)
+    missing_source_record_ids = [
+        source_record_id
+        for source_record_id in required_source_record_ids
+        if indexed_source_counts.get(source_record_id, 0) <= 0
+    ]
+    required_source_records_ready = bool(required_source_record_ids) and not missing_source_record_ids
+    resolver_ready = bool(
+        summary
+        and (
+            required_source_records_ready
+            if required_source_record_ids
+            else summary.get("reviewer_ready")
+        )
+    )
+    required_source_records = {
+        "required_source_record_ids": list(required_source_record_ids),
+        "indexed_source_record_counts": indexed_source_counts,
+        "missing_source_record_ids": missing_source_record_ids,
+        "ready": required_source_records_ready,
+    }
     checks = [
         {
             "name": "retrieval_index_exists",
@@ -997,18 +1343,50 @@ def _retrieval_readiness_report(*, index_path: Path, source_set_id: str) -> dict
             "details": {"passed": bool(validation and validation.get("passed"))},
         },
         {
-            "name": "retrieval_summary_reviewer_ready",
-            "passed": bool(summary and summary.get("reviewer_ready")),
-            "details": {"reviewer_ready": bool(summary and summary.get("reviewer_ready"))},
+            "name": "required_custer_source_records_indexed",
+            "passed": not required_source_record_ids or required_source_records_ready,
+            "details": required_source_records,
+        },
+        {
+            "name": "retrieval_ready_for_forest_plan_resolver",
+            "passed": resolver_ready,
+            "details": {
+                "summary_reviewer_ready": bool(summary and summary.get("reviewer_ready")),
+                "required_source_records_ready": required_source_records_ready,
+            },
         },
     ]
     return {
         "index_path": str(index_path),
         "summary_path": str(summary_path),
         "validation_path": str(validation_path),
+        "required_source_records": required_source_records,
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
     }
+
+
+def _indexed_source_record_counts(
+    index_path: Path,
+    required_source_record_ids: tuple[str, ...],
+) -> dict[str, int]:
+    if not required_source_record_ids or not index_path.exists():
+        return {}
+    placeholders = ",".join("?" for _ in required_source_record_ids)
+    try:
+        with sqlite3.connect(index_path) as connection:
+            rows = connection.execute(
+                f"""
+                SELECT source_record_id, COUNT(*)
+                FROM chunks
+                WHERE source_record_id IN ({placeholders})
+                GROUP BY source_record_id
+                """,
+                list(required_source_record_ids),
+            ).fetchall()
+    except sqlite3.Error:
+        return {}
+    return {str(source_record_id): int(count) for source_record_id, count in rows}
 
 
 def _read_json_if_exists(path: Path) -> dict | None:

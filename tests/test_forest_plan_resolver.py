@@ -56,6 +56,7 @@ class ForestPlanResolverTests(unittest.TestCase):
                     "R1PLAN-custer-gallatin-nf-07",
                 ],
             )
+            self.assertTrue(context["source_record_readiness"]["ready"])
             self.assertEqual(
                 _names(context["geographic_areas"]),
                 ["Bridger, Bangtail, and Crazy Mountains Geographic Area"],
@@ -75,8 +76,174 @@ class ForestPlanResolverTests(unittest.TestCase):
                     self.assertEqual(entry["resolution_status"], "resolved")
                     self.assertTrue(entry["package_evidence"])
                     self.assertTrue(entry["plan_source_evidence"])
+            self.assertIn(
+                "R1PLAN-custer-gallatin-nf-05",
+                {entry["source_record_id"] for entry in context["supporting_plan_evidence"]},
+            )
             validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
             self.assertTrue(validation["passed"])
+
+    def test_allows_partial_custer_slice_when_required_records_are_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir, catalog_source_count=190)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-partial-required",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            readiness = result.summary["retrieval_readiness"]
+            self.assertTrue(readiness["passed"])
+            self.assertTrue(readiness["required_source_records"]["ready"])
+            self.assertTrue(
+                _readiness_check(readiness, "retrieval_ready_for_forest_plan_resolver")["passed"]
+            )
+
+    def test_requires_all_custer_gallatin_source_records_in_index(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                missing_source_ids={"R1PLAN-custer-gallatin-nf-07"},
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                    ]
+                ),
+            )
+
+            with self.assertRaisesRegex(ValueError, "required_custer_source_records_indexed"):
+                run_forest_plan_resolver(
+                    package_path=package_path,
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    review_id="cg-missing-source",
+                )
+
+    def test_feis_tiering_and_designated_areas_trigger_feis_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The EA tiers to the Final Environmental Impact Statement.",
+                        "The effects section discusses designated areas and plan allocations.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-feis",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            supporting_source_ids = {
+                entry["source_record_id"] for entry in context["supporting_plan_evidence"]
+            }
+            self.assertIn("R1PLAN-custer-gallatin-nf-04", supporting_source_ids)
+            self.assertIn("R1PLAN-custer-gallatin-nf-05", supporting_source_ids)
+            for entry in context["supporting_plan_evidence"]:
+                self.assertEqual(entry["resolution_status"], "resolved")
+                self.assertTrue(entry["package_evidence"])
+                self.assertTrue(entry["plan_source_evidence"])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_esa_consultation_triggers_ba_and_bo_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The EA discusses Endangered Species Act Section 7 consultation.",
+                        "The file includes a biological assessment and biological opinion.",
+                        "The analysis references critical habitat, incidental take, and reinitiation.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-esa",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            supporting_source_ids = {
+                entry["source_record_id"] for entry in context["supporting_plan_evidence"]
+            }
+            self.assertIn("R1PLAN-custer-gallatin-nf-06", supporting_source_ids)
+            self.assertIn("R1PLAN-custer-gallatin-nf-07", supporting_source_ids)
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_triggered_supporting_source_without_evidence_needs_resolution(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                weak_supporting_source_ids={
+                    "R1PLAN-custer-gallatin-nf-06",
+                    "R1PLAN-custer-gallatin-nf-07",
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The EA discusses Endangered Species Act Section 7 consultation.",
+                        "The file includes a biological assessment and biological opinion.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-weak-esa",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            self.assertTrue(context["needs_reviewer_resolution"])
+            self.assertFalse(result.summary["reviewer_ready"])
+            self.assertFalse(validation["passed"])
+            self.assertFalse(
+                _check(
+                    validation,
+                    "triggered_supporting_plan_evidence_has_source_evidence",
+                )["passed"]
+            )
 
     def test_custer_scope_without_area_needs_reviewer_resolution(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -144,36 +311,142 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertTrue(result.summary["reviewer_ready"])
 
 
-def _build_custer_source_library(output_dir: Path) -> str:
+_CUSTER_TEST_SOURCES = (
+    (
+        "R1PLAN-custer-gallatin-nf-01",
+        "Custer Gallatin land management plan page",
+        (
+            "The Custer Gallatin land management plan page lists the current plan, "
+            "record of decision, final environmental impact statement volumes, "
+            "biological assessment, and biological opinion."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-02",
+        "2022 Custer Gallatin Land Management Plan PDF",
+        (
+            "The Bridger, Bangtail, and Crazy Mountains Geographic Area includes "
+            "several plan land allocations. Plan Components-Crazy Mountains "
+            "Backcountry Area (CMBCA) contain direction for backcountry use. "
+            "The Hyalite Recreation Emphasis Area (HREA) has recreation setting "
+            "direction. Inventoried Roadless Area direction applies where mapped."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-03",
+        "Custer Gallatin Land Management Plan Record of Decision PDF",
+        (
+            "The record of decision identifies the selected alternative, explains "
+            "the decision basis, records objection resolution, and documents plan approval."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-04",
+        "Custer Gallatin Land Management Plan FEIS Volume 1 PDF",
+        (
+            "The final environmental impact statement volume 1 describes purpose and need, "
+            "alternatives, affected environment, environmental consequences, cumulative "
+            "effects, and plan consistency context."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-05",
+        "Custer Gallatin Land Management Plan FEIS Volume 2 PDF",
+        (
+            "The final environmental impact statement volume 2 discusses designated areas, "
+            "plan allocations, inventoried roadless areas, backcountry areas, recreation "
+            "emphasis areas, and resource effects."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-06",
+        "Custer Gallatin LMP Biological Assessment PDF",
+        (
+            "The biological assessment analyzes threatened, endangered, proposed, and "
+            "candidate species, critical habitat, conservation measures, action area, "
+            "and species effects."
+        ),
+    ),
+    (
+        "R1PLAN-custer-gallatin-nf-07",
+        "Custer Gallatin LMP Biological Opinion PDF",
+        (
+            "The biological opinion documents Endangered Species Act section 7 consultation, "
+            "effects determinations, incidental take, reinitiation, and terms and conditions."
+        ),
+    ),
+)
+
+_CUSTER_TEST_REVIEW_TOPICS = {
+    "R1PLAN-custer-gallatin-nf-01": "Check current Custer Gallatin plan document set",
+    "R1PLAN-custer-gallatin-nf-02": "Extract plan components by resource and geography",
+    "R1PLAN-custer-gallatin-nf-03": "Check selected alternative and plan approval",
+    "R1PLAN-custer-gallatin-nf-04": "Use FEIS Volume 1 for alternatives and effects context",
+    "R1PLAN-custer-gallatin-nf-05": "Use FEIS Volume 2 for designated areas and allocations",
+    "R1PLAN-custer-gallatin-nf-06": "Check plan-level species effects analysis",
+    "R1PLAN-custer-gallatin-nf-07": "Check plan-level ESA consultation terms",
+}
+
+_WEAK_SOURCE_TEXT = (
+    "This source chunk is intentionally generic for a negative resolver test. "
+    "It has catalog provenance but no matching routed evidence terms."
+)
+
+
+def _build_custer_source_library(
+    output_dir: Path,
+    *,
+    catalog_source_count: int | None = None,
+    missing_source_ids: set[str] | None = None,
+    weak_supporting_source_ids: set[str] | None = None,
+) -> str:
     source_set_id = "source-set-test"
-    source_record_id = "R1PLAN-custer-gallatin-nf-02"
-    _write_extraction_diagnostics(output_dir, source_set_id, [source_record_id])
+    missing_source_ids = missing_source_ids or set()
+    weak_supporting_source_ids = weak_supporting_source_ids or set()
+    chunks = [
+        _chunk(
+            source_set_id=source_set_id,
+            source_record_id=source_record_id,
+            title=title,
+            document_role="forest_plan",
+            authority_level="forest",
+            citation_label=f"{source_record_id} | {title} | artifact abc123",
+            text=(
+                _WEAK_SOURCE_TEXT
+                if source_record_id in weak_supporting_source_ids
+                else text
+            ),
+        )
+        for source_record_id, title, text in _CUSTER_TEST_SOURCES
+        if source_record_id not in missing_source_ids
+    ]
+    source_record_ids = [chunk["source_record_id"] for chunk in chunks]
+    _write_extraction_diagnostics(
+        output_dir,
+        source_set_id,
+        source_record_ids,
+        catalog_source_count=catalog_source_count,
+    )
     _write_chunks(
         output_dir,
         source_set_id,
-        [
-            _chunk(
-                source_set_id=source_set_id,
-                source_record_id=source_record_id,
-                title="2022 Custer Gallatin Land Management Plan PDF",
-                document_role="forest_plan",
-                authority_level="forest",
-                citation_label="R1PLAN-custer-gallatin-nf-02 | 2022 plan | artifact abc123",
-                text=(
-                    "The Bridger, Bangtail, and Crazy Mountains Geographic Area includes "
-                    "several plan land allocations. Plan Components-Crazy Mountains "
-                    "Backcountry Area (CMBCA) contain direction for backcountry use. "
-                    "The Hyalite Recreation Emphasis Area (HREA) has recreation setting "
-                    "direction. Inventoried Roadless Area direction applies where mapped."
-                ),
-            ),
-        ],
+        chunks,
     )
     _write_catalog_sqlite(
         output_dir,
-        {source_record_id: ["Extract plan components by resource and geography"]},
+        {
+            source_record_id: [topic]
+            for source_record_id, topic in _CUSTER_TEST_REVIEW_TOPICS.items()
+            if source_record_id in source_record_ids
+        },
     )
-    build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+    build_retrieval_index(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        allow_partial_extraction=(
+            catalog_source_count is not None and catalog_source_count != len(source_record_ids)
+        ),
+    )
     return source_set_id
 
 
@@ -181,6 +454,8 @@ def _write_extraction_diagnostics(
     output_dir: Path,
     source_set_id: str,
     source_record_ids: list[str],
+    *,
+    catalog_source_count: int | None = None,
 ) -> None:
     diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
     diagnostics_dir.mkdir(parents=True, exist_ok=True)
@@ -202,10 +477,14 @@ def _write_extraction_diagnostics(
     )
     summary = {
         "source_set_id": source_set_id,
-        "catalog_source_count": len(source_record_ids),
+        "catalog_source_count": catalog_source_count or len(source_record_ids),
         "selected_source_count": len(source_record_ids),
         "extracted_count": len(source_record_ids),
-        "filters": {"id": None, "parser": None, "limit": None},
+        "filters": {
+            "id": source_record_ids if catalog_source_count else None,
+            "parser": None,
+            "limit": None,
+        },
     }
     (diagnostics_dir / "summary.json").write_text(
         json.dumps(summary, sort_keys=True),
@@ -319,6 +598,10 @@ def _names(entries: list[dict]) -> list[str]:
 
 def _check(validation: dict, name: str) -> dict:
     return next(check for check in validation["checks"] if check["name"] == name)
+
+
+def _readiness_check(readiness: dict, name: str) -> dict:
+    return next(check for check in readiness["checks"] if check["name"] == name)
 
 
 if __name__ == "__main__":
