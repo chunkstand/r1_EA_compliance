@@ -872,6 +872,33 @@ extracted count, failed count, chunk count, parser counts, validation status, an
 filters. The `filters` object includes the legacy singular `id`, the repeated `ids` list when
 multiple source records were selected, `parser`, and `limit`.
 
+## Extraction Reuse Inventory Outputs
+
+Path: `source_library/derived/<source_set_id>/reuse_inventory/`
+
+The `reuse-inventory` command is read-only with respect to extraction/retrieval/review layers. It
+reads the current catalog, the current extraction manifest if one exists, and prior derived
+extraction manifests, then writes:
+
+- `reuse_inventory.json`
+- `reuse_inventory_records.jsonl`
+- `summary.json`
+
+`reuse_inventory_records.jsonl` contains one row per current catalog source with:
+
+- `source_record_id`, title, source status, scope, document role, authority level, expected parser,
+  and content type
+- artifact path, artifact SHA256, artifact byte size, and artifact verification result
+- `classification`, one of `already_current`, `already_current_cg_slice`, `reuse_extraction`,
+  `needs_extract`, or `excluded`
+- `current_extraction` metadata when the current source set already has matching extracted text
+- `reuse_candidate` metadata when a prior source-set extraction can be reused
+- candidate failure details when prior records were found but rejected
+
+Reuse candidates require matching `source_record_id`, artifact SHA256, expected parser, content type,
+existing extracted text, nonzero chunk count, and matching text SHA256. The inventory does not copy
+text, rebuild chunks, build retrieval, or run any EA/compliance review.
+
 `chunks/chunks.jsonl` contains retrieval-ready text chunks with:
 
 - stable `chunk_id`

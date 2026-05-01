@@ -299,6 +299,19 @@ When a prior extraction already produced matching text for unchanged artifacts, 
 intended for critical targeted recovery or source-slice refreshes, not for promotion evidence that
 requires a clean full-source-set extraction.
 
+Before a reuse-first rebuild, inventory current and prior extracted text without running extraction
+or review commands:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory \
+  --output-dir source_library
+```
+
+The command writes `source_library/derived/<source_set_id>/reuse_inventory/` with one row per
+current catalog source classified as `already_current_cg_slice`, `reuse_extraction`,
+`needs_extract`, or `excluded`. Reuse candidates require matching `source_record_id`, artifact
+SHA256, parser/content type metadata, existing extracted text, and matching text SHA256.
+
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text
 to that XML element and records the applied source scope in parser metadata. Run the accuracy audit
 after extraction to verify text hashes, raw artifact hashes, chunk offsets, no chunk coverage gaps,

@@ -63,6 +63,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   `R1PLAN-custer-gallatin-nf-07`
 - Full-source-set extraction/retrieval/graph/claim artifacts have not yet been rebuilt for this
   source set.
+- Reuse inventory for the current source set is implemented and has been run locally. It classified
+  `7` sources as already current in the Custer Gallatin slice, `181` sources as reusable from prior
+  extraction outputs, `1` source as needing extraction, and `1` source as excluded.
 - Unit suite: `139` tests passed, `5` subtests passed
 
 Last full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
@@ -764,17 +767,20 @@ seven-record Custer Gallatin slice. The prior 147-row downstream corpus remains 
 deterministic seed-package and expanded gold-adjudication checks, but should not be treated as
 current promotion evidence for the expanded workbook.
 
-The next efficient v1 milestone is to improve how Custer Gallatin forest-plan context is consumed by
-the EA/compliance review path using the seven-record Custer Gallatin slice first. Rebuild the full
-190-row extraction/retrieval/evidence-graph/claim chain only when a promotion gate actually needs
-current all-source evidence. If full compliance promotion becomes the milestone, then rebuild or
-refresh the rule-claim/eval/coverage artifacts for rule-pack `0.4.0`, resolve the `R1EA-028`
-source-claim link gap if it persists, and rerun the compliance promotion gates without re-extracting
-already cached EA packages. After those gates pass, run the same matrix and failure-taxonomy path
-over a small set of real EA packages and use those failures to decide whether the next fix belongs
-in package extraction, package evidence search, source retrieval, source applicability,
-rule-claim binding, or rule wording. Embeddings, reranking, and model-assisted synthesis remain
-downstream of that evidence-backed real-package pass.
+The next efficient v1 milestone is reuse-first extraction assembly for the current source set, not a
+blind full reparse. The current reuse inventory is stored at
+`source_library/derived/source-set-ba8d0feae79501b8/reuse_inventory/reuse_inventory.json`; it found
+`181` reusable prior extracted-text records, `7` already-current Custer Gallatin slice records,
+`R1PLAN-dakota-prairie-grasslands-02` as the only artifact-bearing source needing extraction, and
+`R1EA-160` as excluded. After reuse-first extraction assembly, rebuild the retrieval/claim/rule-claim
+layers only as needed for the requested demo review. If full compliance promotion becomes the
+milestone, then refresh the rule-claim/eval/coverage artifacts for rule-pack `0.4.0`, resolve the
+`R1EA-028` source-claim link gap if it persists, and rerun the compliance promotion gates without
+re-extracting already cached EA packages. After those gates pass, run the same matrix and
+failure-taxonomy path over a small set of real EA packages and use those failures to decide whether
+the next fix belongs in package extraction, package evidence search, source retrieval, source
+applicability, rule-claim binding, or rule wording. Embeddings, reranking, and model-assisted
+synthesis remain downstream of that evidence-backed real-package pass.
 
 ## Verification Commands
 
@@ -803,6 +809,13 @@ Build derived extraction outputs from the current reviewer catalog:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
+  --output-dir source_library
+```
+
+Inventory extraction reuse opportunities before a reuse-first rebuild:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory \
   --output-dir source_library
 ```
 

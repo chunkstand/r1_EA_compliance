@@ -35,6 +35,7 @@ from .retrieval import build_retrieval_index
 from .retrieval import default_index_path
 from .retrieval import query_retrieval_index
 from .retrieval import run_retrieval_eval
+from .reuse_inventory import build_reuse_inventory
 from .rule_claim_binding import DEFAULT_RULE_CLAIM_EVAL_PATH
 from .rule_claim_binding import build_rule_claim_links
 from .rule_claim_binding import default_rule_claim_links_path
@@ -209,6 +210,31 @@ def build_parser() -> argparse.ArgumentParser:
             "Reuse matching extracted text or payload cache entries for unchanged artifacts instead "
             "of reparsing them."
         ),
+    )
+
+    reuse_inventory = subparsers.add_parser(
+        "reuse-inventory",
+        help=(
+            "Inventory current, reusable, missing, and excluded extraction records without running "
+            "extraction or review commands."
+        ),
+    )
+    reuse_inventory.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    reuse_inventory.add_argument("--source-set-id")
+    reuse_inventory.add_argument(
+        "--previous-source-set-id",
+        action="append",
+        dest="previous_source_set_ids",
+        help=(
+            "Prior derived source-set ID to compare. Repeat for multiple IDs. Defaults to all "
+            "other derived source sets with extraction manifests."
+        ),
+    )
+    reuse_inventory.add_argument("--catalog-path", type=Path)
+    reuse_inventory.add_argument(
+        "--skip-artifact-hash-check",
+        action="store_true",
+        help="Skip recomputing current raw artifact SHA256 values during inventory.",
     )
 
     extraction_accuracy = subparsers.add_parser(
@@ -572,6 +598,17 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "reuse-inventory":
+        result = build_reuse_inventory(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            previous_source_set_ids=args.previous_source_set_ids,
+            catalog_path=args.catalog_path,
+            verify_artifact_hashes=not args.skip_artifact_hash_check,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
 
     if args.command == "extraction-accuracy-audit":
         result = run_extraction_accuracy_audit(
