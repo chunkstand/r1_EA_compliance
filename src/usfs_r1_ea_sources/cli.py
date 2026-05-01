@@ -27,6 +27,7 @@ from .evidence_graph import build_evidence_graph
 from .evidence_graph import run_phase_aligned_eval
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver import run_forest_plan_resolver
@@ -414,6 +415,35 @@ def build_parser() -> argparse.ArgumentParser:
         help="Per-document Docling timeout for PDF EA package files. Use 0 to disable.",
     )
 
+    forest_plan_components = subparsers.add_parser(
+        "forest-plan-components-build",
+        help="Build a source-traced forest-plan component inventory from extracted plan chunks.",
+    )
+    forest_plan_components.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    forest_plan_components.add_argument("--source-set-id", required=True)
+    forest_plan_components.add_argument("--source-record-id", required=True)
+    forest_plan_components.add_argument("--forest-unit-id", default=DEFAULT_FOREST_PLAN_PROFILE_ID)
+    forest_plan_components.add_argument("--plan-version", required=True)
+    forest_plan_components.add_argument("--chunks-path", type=Path)
+    forest_plan_components.add_argument(
+        "--geographic-area-id",
+        action="append",
+        dest="geographic_area_ids",
+        help="Resolved geographic area ID to attach to built component records. Repeatable.",
+    )
+    forest_plan_components.add_argument(
+        "--management-area-id",
+        action="append",
+        dest="management_area_ids",
+        help="Resolved management area ID to attach to built component records. Repeatable.",
+    )
+    forest_plan_components.add_argument(
+        "--overlay-id",
+        action="append",
+        dest="overlay_ids",
+        help="Resolved overlay ID to attach to built component records. Repeatable.",
+    )
+
     forest_plan_resolve = subparsers.add_parser(
         "forest-plan-resolve",
         help="Resolve profile-driven forest-plan context from a local EA package.",
@@ -766,6 +796,21 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1
+
+    if args.command == "forest-plan-components-build":
+        result = build_forest_plan_component_inventory(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            source_record_id=args.source_record_id,
+            forest_unit_id=args.forest_unit_id,
+            plan_version=args.plan_version,
+            chunks_path=args.chunks_path,
+            geographic_area_ids=args.geographic_area_ids,
+            management_area_ids=args.management_area_ids,
+            overlay_ids=args.overlay_ids,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "forest-plan-resolve":
         timeout = args.docling_timeout_seconds

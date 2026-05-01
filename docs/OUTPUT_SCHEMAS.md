@@ -537,6 +537,18 @@ current plan-source evidence from the local retrieval index, searches the EA pac
 component-specific evidence terms, and writes structured findings plus reviewer-resolution work
 items.
 
+The `forest-plan-components-build` command builds the source-set component inventory from extracted
+forest-plan chunks and writes:
+
+- `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json`
+- `source_library/derived/<source_set_id>/forest_plan_components/components.jsonl`
+- `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
+
+The builder is deterministic and only consumes chunks whose `source_set_id`, `source_record_id`, and
+`document_role=forest_plan` match the requested source. It extracts labeled plan components such as
+`Standards (BC-STD-CMBCA) 01 ...`, preserves source chunk IDs, hashes, citation labels, and
+provenance, and fails validation if generated component records are malformed.
+
 The component inventory is data, not runtime branching. The seed inventory at
 `config/forest_plan_component_inventory_seed.json` currently covers the East Crazies-relevant Crazy
 Mountains Backcountry Area components from the 2022 Custer Gallatin Land Management Plan. Each

@@ -57,6 +57,53 @@ VALID_COMPLIANCE_STATUSES = {
     "not_evaluated_for_compliance",
 }
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.:-]+$")
+COMPONENT_LABEL_RE = re.compile(
+    r"\b(?P<label>Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
+    r"\s*\((?P<code>[A-Za-z0-9-]+)\)\s*(?P<number>[A-Za-z0-9.]+)\s+"
+    r"(?P<text>.*?)(?=\b(?:Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
+    r"\s*\([A-Za-z0-9-]+\)\s*[A-Za-z0-9.]+\s+|\bPlan Components[-\u2013\u2014]|\Z)",
+    re.DOTALL,
+)
+SECTION_HEADING_RE = re.compile(
+    r"Plan Components[-\u2013\u2014]\s*(?P<section>[^.]+)",
+    re.IGNORECASE,
+)
+LEADING_COMPONENT_LABEL_RE = re.compile(
+    r"^(?:Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
+    r"\s*\([A-Za-z0-9-]+\)\s*[A-Za-z0-9.]+\s+",
+    re.IGNORECASE,
+)
+MODAL_BOUNDARY_RE = re.compile(
+    r"\b(?:shall|must|should|may|will|would|is|are|includes?|contains?|allows?|prohibits?)\b",
+    re.IGNORECASE,
+)
+TOKEN_RE = re.compile(r"[a-z][a-z0-9-]*")
+TERM_STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "be",
+    "by",
+    "for",
+    "from",
+    "in",
+    "is",
+    "may",
+    "must",
+    "new",
+    "not",
+    "of",
+    "or",
+    "shall",
+    "should",
+    "that",
+    "the",
+    "to",
+    "will",
+    "with",
+}
 
 
 @dataclass(frozen=True)
@@ -67,6 +114,283 @@ class ForestPlanComponentEvaluationResult:
     component_inventory_coverage_path: Path
     applicable_standard_coverage_path: Path
     summary: dict
+
+
+@dataclass(frozen=True)
+class ForestPlanComponentInventoryBuildResult:
+    inventory_path: Path
+    components_jsonl_path: Path
+    summary_path: Path
+    summary: dict
+
+
+def build_forest_plan_component_inventory(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    source_record_id: str,
+    forest_unit_id: str,
+    plan_version: str,
+    chunks_path: Path | None = None,
+    geographic_area_ids: list[str] | None = None,
+    management_area_ids: list[str] | None = None,
+    overlay_ids: list[str] | None = None,
+) -> ForestPlanComponentInventoryBuildResult:
+    """Build a source-set forest-plan component inventory from labeled plan chunks."""
+
+    output_dir = Path(output_dir)
+    chunks_path = chunks_path or (
+        output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"
+    )
+    component_dir = output_dir / "derived" / source_set_id / "forest_plan_components"
+    inventory_path = component_dir / "component_inventory.json"
+    components_jsonl_path = component_dir / "components.jsonl"
+    summary_path = component_dir / "summary.json"
+    chunks = [
+        chunk
+        for chunk in _read_jsonl(chunks_path)
+        if chunk.get("source_set_id") == source_set_id
+        and chunk.get("source_record_id") == source_record_id
+        and chunk.get("document_role") == "forest_plan"
+    ]
+    components = []
+    for chunk in chunks:
+        components.extend(
+            _components_from_chunk(
+                chunk=chunk,
+                forest_unit_id=forest_unit_id,
+                plan_version=plan_version,
+                source_set_id=source_set_id,
+                geographic_area_ids=geographic_area_ids or [],
+                management_area_ids=management_area_ids or [],
+                overlay_ids=overlay_ids or [],
+            )
+        )
+    _reject_duplicate(
+        [component["component_id"] for component in components],
+        "component_id",
+        "component inventory build",
+    )
+    for index, component in enumerate(components):
+        _parse_component(component, f"built components[{index}]")
+    inventory = {
+        "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION,
+        "inventory_id": _safe_identifier(f"{forest_unit_id}-{plan_version}-components"),
+        "forest_unit_id": forest_unit_id,
+        "plan_version": plan_version,
+        "source_set_id": source_set_id,
+        "components": components,
+    }
+    summary = {
+        "schema_version": "forest-plan-component-inventory-build-summary-v0",
+        "created_at": _utc_now(),
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "chunks_path": str(chunks_path),
+        "inventory_path": str(inventory_path),
+        "components_jsonl_path": str(components_jsonl_path),
+        "component_count": len(components),
+        "component_type_counts": dict(
+            Counter(component["component_type"] for component in components)
+        ),
+        "standard_count": sum(
+            1 for component in components if component["component_type"] == "standard"
+        ),
+        "passed": bool(components),
+    }
+    component_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(inventory_path, inventory)
+    _write_jsonl(components_jsonl_path, components)
+    _write_json(summary_path, summary)
+    return ForestPlanComponentInventoryBuildResult(
+        inventory_path=inventory_path,
+        components_jsonl_path=components_jsonl_path,
+        summary_path=summary_path,
+        summary=summary,
+    )
+
+
+def _components_from_chunk(
+    *,
+    chunk: dict,
+    forest_unit_id: str,
+    plan_version: str,
+    source_set_id: str,
+    geographic_area_ids: list[str],
+    management_area_ids: list[str],
+    overlay_ids: list[str],
+) -> list[dict]:
+    text = str(chunk.get("text") or "")
+    components = []
+    for match in COMPONENT_LABEL_RE.finditer(text):
+        label = match.group("label")
+        code = match.group("code")
+        number = match.group("number")
+        component_body = _compact(match.group("text"), limit=10000)
+        component_text = _compact(f"{label} ({code}) {number} {component_body}", limit=10000)
+        section_heading = _section_heading_for_match(
+            text=text,
+            start=match.start(),
+            fallback=str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components"),
+        )
+        source_chunk_ids = [str(chunk.get("chunk_id") or "").strip()]
+        source_chunk_ids = [chunk_id for chunk_id in source_chunk_ids if chunk_id]
+        package_evidence_terms = _package_evidence_terms_from_text(component_text)
+        resource_topics = _resource_topics_from_terms(
+            terms=package_evidence_terms,
+            code=code,
+            section_heading=section_heading,
+        )
+        components.append(
+            {
+                "component_id": _component_id(
+                    source_record_id=str(chunk.get("source_record_id") or ""),
+                    code=code,
+                    number=number,
+                ),
+                "forest_unit_id": forest_unit_id,
+                "plan_version": plan_version,
+                "source_set_id": source_set_id,
+                "source_record_id": str(chunk.get("source_record_id") or ""),
+                "component_type": _component_type_from_label(label),
+                "section_id": _safe_identifier(section_heading),
+                "section_heading": section_heading,
+                "page": chunk.get("page") if isinstance(chunk.get("page"), int) else None,
+                "citation_label": str(chunk.get("citation_label") or chunk.get("title") or ""),
+                "component_text": component_text,
+                "geographic_area_ids": list(geographic_area_ids),
+                "management_area_ids": list(management_area_ids),
+                "overlay_ids": list(overlay_ids),
+                "resource_topics": resource_topics,
+                "activity_tags": package_evidence_terms,
+                "source_chunk_ids": source_chunk_ids,
+                "artifact_sha256": str(chunk.get("artifact_sha256") or ""),
+                "content_sha256": str(chunk.get("content_sha256") or ""),
+                "provenance": _component_provenance(
+                    chunk=chunk,
+                    source_chunk_ids=source_chunk_ids,
+                ),
+                "package_evidence_terms": package_evidence_terms,
+            }
+        )
+    return components
+
+
+def _component_type_from_label(label: str) -> str:
+    normalized = " ".join(label.lower().split())
+    if normalized.startswith("desired condition"):
+        return "desired_condition"
+    if normalized.startswith("goal"):
+        return "goal"
+    if normalized.startswith("guideline"):
+        return "guideline"
+    if normalized.startswith("monitoring"):
+        return "monitoring"
+    if normalized.startswith("objective"):
+        return "objective"
+    if normalized.startswith("standard"):
+        return "standard"
+    if normalized.startswith("suitability"):
+        return "suitability"
+    raise ValueError(f"Unsupported forest-plan component label: {label!r}.")
+
+
+def _section_heading_for_match(*, text: str, start: int, fallback: str) -> str:
+    prefix = text[:start]
+    matches = list(SECTION_HEADING_RE.finditer(prefix))
+    if matches:
+        section = _compact(matches[-1].group("section"), limit=240)
+        return f"Plan Components-{section}"
+    return _compact(fallback, limit=240)
+
+
+def _component_id(*, source_record_id: str, code: str, number: str) -> str:
+    return _safe_identifier(f"{source_record_id}-{code}-{number}")
+
+
+def _safe_identifier(value: str) -> str:
+    normalized = re.sub(r"[^A-Za-z0-9_.:-]+", "-", value.strip())
+    normalized = re.sub(r"-+", "-", normalized).strip("-")
+    if not normalized:
+        return "unknown"
+    return normalized
+
+
+def _package_evidence_terms_from_text(text: str) -> list[str]:
+    component_body = LEADING_COMPONENT_LABEL_RE.sub("", _compact(text, limit=10000)).strip()
+    first_sentence = re.split(r"(?<=[.?!])\s+", component_body, maxsplit=1)[0]
+    modal_match = MODAL_BOUNDARY_RE.search(first_sentence)
+    candidates = []
+    if modal_match:
+        candidates.append(first_sentence[: modal_match.start()])
+    candidates.append(first_sentence)
+    candidates.extend(_content_ngrams(first_sentence, max_terms=6))
+    return _dedupe_terms(candidates)
+
+
+def _content_ngrams(text: str, *, max_terms: int) -> list[str]:
+    tokens = [token for token in TOKEN_RE.findall(text.lower()) if token not in TERM_STOPWORDS]
+    terms = []
+    for size in range(min(5, len(tokens)), 1, -1):
+        for index in range(0, len(tokens) - size + 1):
+            terms.append(" ".join(tokens[index : index + size]))
+            if len(terms) >= max_terms:
+                return terms
+    return terms
+
+
+def _dedupe_terms(candidates: list[str]) -> list[str]:
+    terms = []
+    seen = set()
+    for candidate in candidates:
+        term = re.sub(r"[^A-Za-z0-9 -]+", " ", candidate.lower())
+        term = " ".join(term.split())
+        if not term or term in seen:
+            continue
+        content_tokens = [
+            token for token in TOKEN_RE.findall(term) if token not in TERM_STOPWORDS
+        ]
+        if not content_tokens:
+            continue
+        seen.add(term)
+        terms.append(term)
+    return terms
+
+
+def _resource_topics_from_terms(
+    *,
+    terms: list[str],
+    code: str,
+    section_heading: str,
+) -> list[str]:
+    resource_topics = terms[:3]
+    if not resource_topics:
+        resource_topics = _content_ngrams(f"{section_heading} {code}", max_terms=3)
+    if not resource_topics:
+        resource_topics = [_safe_identifier(code).lower()]
+    return resource_topics
+
+
+def _component_provenance(*, chunk: dict, source_chunk_ids: list[str]) -> dict:
+    return {
+        "entity": {
+            "type": "forest_plan_component",
+            "source_record_id": str(chunk.get("source_record_id") or ""),
+            "source_chunk_ids": source_chunk_ids,
+            "artifact_sha256": str(chunk.get("artifact_sha256") or ""),
+            "content_sha256": str(chunk.get("content_sha256") or ""),
+        },
+        "activity": {
+            "type": "forest_plan_component_inventory_build",
+            "created_at": _utc_now(),
+            "source": str(chunk.get("source_text_path") or ""),
+        },
+        "agent": {
+            "type": "deterministic_code",
+            "name": "usfs_r1_ea_sources.forest_plan_components",
+            "version": FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION,
+        },
+    }
 
 
 def run_forest_plan_component_evaluation(
@@ -1161,6 +1485,27 @@ def _reject_duplicate(values: list[str], field: str, context: str) -> None:
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _read_jsonl(path: Path) -> list[dict]:
+    records = []
+    with path.open(encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if not isinstance(record, dict):
+                raise ValueError(f"{path}:{line_number} must contain a JSON object.")
+            records.append(record)
+    return records
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
+        encoding="utf-8",
+    )
 
 
 def _utc_now() -> str:
