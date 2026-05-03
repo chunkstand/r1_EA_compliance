@@ -76,7 +76,7 @@ Primary failing artifacts/checks:
   `all_applicable_standards_applied=true`.
 - `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` passes.
 - `v1_ea_eval_results.json` failure categories:
-  `rule_section_mismatch=2`. `conditional_false_positive=0`,
+  `rule_section_mismatch=1`. `conditional_false_positive=0`,
   `conditional_false_negative=0`, and forest-plan expectation match rate is now `1.0`.
 - V1 EA gate repair milestone 1 locked the failure reproduction without changing applicability,
   trigger, or section-routing behavior. The eval summary now includes
@@ -91,6 +91,10 @@ Primary failing artifacts/checks:
   extraordinary-circumstances review. A follow-up gap pass added explicit
   `does_not_apply_if_package_terms` guards so negated same-chunk CE/FANEC language remains
   non-applicable evidence rather than a positive trigger.
+- V1 EA gate repair milestone 3 routes `nepa_statute_chapter_55` package evidence to
+  purpose-and-need environmental-assessment text. The live V1 eval now reports
+  `rule_source_section_expectations_met=true`, `rule_section_match_rate=1.0`, and leaves only
+  `nepa_4336b_programmatic_tiering` in `failed_rule_ids`.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the

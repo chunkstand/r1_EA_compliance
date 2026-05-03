@@ -13,7 +13,7 @@ Current review contract:
 - Source set: `source-set-ba8d0feae79501b8`
 - Rule pack: `config/compliance_rule_pack_nepa_ea_v0.json`, `nepa-ea-v0` version `0.4.0`
 - V1 eval contract: `config/v1_ecid_real_ea_eval.json`
-- Current gate status: `v1-ea-eval` fails with `conditional_false_positive=3` and
+- Original gate status: `v1-ea-eval` fails with `conditional_false_positive=3` and
   `rule_section_mismatch=2`
 
 Current failing expectations:
@@ -31,6 +31,14 @@ Current failing expectations:
   the V1 contract expects `not_applicable`.
 - `usda_nepa_subcomponent_ce_7cfr_1b4`: conditional false positive. The review marks it applicable
   where the V1 contract expects `not_applicable`.
+
+Progress through Milestone 3:
+
+- Milestone 2 closed the three CE/FANEC conditional false positives without introducing conditional
+  false negatives.
+- Milestone 3 routes `nepa_statute_chapter_55` package evidence to purpose-and-need
+  environmental-assessment text. The live V1 eval now reports `rule_source_section_expectations_met`
+  passing and leaves only the `nepa_4336b_programmatic_tiering` section mismatch for Milestone 4.
 
 ## Sequence Rules
 

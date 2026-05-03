@@ -16,10 +16,10 @@
       "question": "Does the EA package show that the review is being conducted under NEPA?",
       "requirement": "The EA package should show that the agency is conducting environmental review under the National Environmental Policy Act.",
       "severity": "high",
-      "package_query": "National Environmental Policy Act NEPA environmental assessment",
+      "package_query": "purpose and need for action environmental assessment",
       "package_terms": [
-        "National Environmental Policy Act",
-        "NEPA",
+        "purpose and need for action",
+        "purpose and need",
         "environmental assessment"
       ],
       "source_query": "National Environmental Policy Act 42 U.S.C. chapter 55 environmental assessment",

@@ -951,9 +951,15 @@ extraordinary-circumstances review. The milestone also carries explicit
 exclusion path not being used remain non-applicable evidence instead of positive CE triggers. The
 live V1 eval now reports `conditional_false_positive=0` and `conditional_false_negative=0`.
 
-The next v1 milestone is to close the remaining non-forest-plan V1 eval failures for the Custer
-Gallatin proving package: two rule/conditional section mismatches for `nepa_statute_chapter_55` and
-`nepa_4336b_programmatic_tiering`. Use those failures to decide whether the fix belongs in package
+The V1 baseline section-attribution milestone is implemented for `nepa_statute_chapter_55`: package
+evidence routing now selects the EA purpose-and-need environmental-assessment span, and the live V1
+eval reports `rule_source_section_expectations_met=true`, `rule_section_match_rate=1.0`,
+`baseline_source_record_match_rate=1.0`, `baseline_document_role_match_rate=1.0`, and
+`citation_requirement_match_rate=1.0`.
+
+The next v1 milestone is to close the remaining non-forest-plan V1 eval failure for the Custer
+Gallatin proving package: the conditional `rule_section_mismatch` on
+`nepa_4336b_programmatic_tiering`. Use that failure to decide whether the fix belongs in package
 section binding, conditional rule routing, or rule wording. Embeddings, reranking, and
 model-assisted synthesis remain downstream of that evidence-backed real-package pass.
 

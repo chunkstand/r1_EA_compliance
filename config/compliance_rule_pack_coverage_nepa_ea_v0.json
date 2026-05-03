@@ -6,7 +6,7 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
-      "expected_package_evidence": "The EA package should show that the agency is conducting environmental review under the National Environmental Policy Act.",
+      "expected_package_evidence": "The EA package should show NEPA review through the EA purpose-and-need framing or equivalent environmental assessment evidence.",
       "obligation_area": "National Environmental Policy Act applies",
       "rule_id": "nepa_statute_chapter_55",
       "source_claim_terms": [

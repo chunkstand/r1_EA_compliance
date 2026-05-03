@@ -488,6 +488,25 @@ class ComplianceReviewTests(unittest.TestCase):
                 self.assertGreaterEqual(len(rule["applies_if_package_term_groups"]), 2)
                 self.assertTrue(rule["does_not_apply_if_package_terms"])
 
+    def test_nepa_statute_rule_routes_package_evidence_to_purpose_need_terms(self) -> None:
+        rule_pack = json.loads(
+            Path("config/compliance_rule_pack_nepa_ea_v0.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        rules_by_id = {rule["id"]: rule for rule in rule_pack["rules"]}
+        rule = rules_by_id["nepa_statute_chapter_55"]
+
+        self.assertIn("purpose and need", rule["package_query"])
+        self.assertEqual(
+            rule["package_terms"],
+            [
+                "purpose and need for action",
+                "purpose and need",
+                "environmental assessment",
+            ],
+        )
+
     def test_compliance_review_eval_scores_package_fixtures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
