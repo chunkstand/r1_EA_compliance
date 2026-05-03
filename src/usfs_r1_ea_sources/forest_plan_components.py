@@ -60,11 +60,22 @@ VALID_COMPLIANCE_STATUSES = {
     "not_evaluated_for_compliance",
 }
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.:-]+$")
+COMPONENT_LABEL_PATTERN = (
+    r"Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability"
+)
+COMPONENT_NUMBER_RE = re.compile(r"^[0-9][A-Za-z0-9.]*$")
 COMPONENT_LABEL_RE = re.compile(
-    r"\b(?P<label>Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
+    rf"\b(?P<label>{COMPONENT_LABEL_PATTERN})"
     r"\s*\((?P<code>[A-Za-z0-9-]+)\)\s*(?P<number>[0-9][A-Za-z0-9.]*)\s+"
-    r"(?P<text>.*?)(?=\b(?:Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
-    r"\s*\([A-Za-z0-9-]+\)\s*[0-9][A-Za-z0-9.]*\s+|\bPlan Components[-\u2013\u2014]|\Z)",
+    rf"(?P<text>.*?)(?=\b(?:{COMPONENT_LABEL_PATTERN})"
+    r"\s*\([A-Za-z0-9-]+\)\s*[A-Za-z0-9.]+\s+|\bPlan Components[-\u2013\u2014]|\Z)",
+    re.DOTALL,
+)
+COMPONENT_LABEL_CANDIDATE_RE = re.compile(
+    rf"\b(?P<label>{COMPONENT_LABEL_PATTERN})"
+    r"\s*\((?P<code>[A-Za-z0-9-]+)\)\s*(?P<number>[A-Za-z0-9.]+)\s+"
+    rf"(?P<text>.*?)(?=\b(?:{COMPONENT_LABEL_PATTERN})"
+    r"\s*\([A-Za-z0-9-]+\)\s*[A-Za-z0-9.]+\s+|\bPlan Components[-\u2013\u2014]|\Z)",
     re.DOTALL,
 )
 SECTION_HEADING_RE = re.compile(
@@ -334,6 +345,10 @@ def build_forest_plan_component_inventory(
         "standard_count": sum(
             1 for component in components if component["component_type"] == "standard"
         ),
+        "inventory_quality_issue_count": coverage["inventory_quality_issue_count"],
+        "blocking_inventory_quality_issue_count": coverage[
+            "blocking_inventory_quality_issue_count"
+        ],
         "coverage_passed": coverage["passed"],
         "passed": coverage["passed"],
     }
@@ -458,6 +473,10 @@ def _component_inventory_build_coverage(
     validation_errors: list[dict],
 ) -> dict:
     detected_labels = _merge_overlapping_detected_labels(_detected_component_labels(chunks))
+    inventory_quality_issues = _component_inventory_quality_issues(chunks)
+    blocking_inventory_quality_issues = [
+        issue for issue in inventory_quality_issues if issue.get("severity") == "error"
+    ]
     detected_standards = [
         label for label in detected_labels if label["component_type"] == "standard"
     ]
@@ -514,6 +533,14 @@ def _component_inventory_build_coverage(
             "passed": not validation_errors,
             "details": {"errors": validation_errors},
         },
+        {
+            "name": "blocking_inventory_quality_issues_absent",
+            "passed": not blocking_inventory_quality_issues,
+            "details": {
+                "issue_count": len(blocking_inventory_quality_issues),
+                "issues": blocking_inventory_quality_issues,
+            },
+        },
     ]
     return {
         "schema_version": FOREST_PLAN_COMPONENT_INVENTORY_BUILD_COVERAGE_SCHEMA_VERSION,
@@ -526,11 +553,14 @@ def _component_inventory_build_coverage(
         "detected_standard_count": len(detected_standards),
         "built_component_count": len(components),
         "built_standard_count": len(built_standard_ids),
+        "inventory_quality_issue_count": len(inventory_quality_issues),
+        "blocking_inventory_quality_issue_count": len(blocking_inventory_quality_issues),
         "missing_component_ids": missing_component_ids,
         "missing_standard_ids": missing_standard_ids,
         "duplicate_component_ids": duplicate_component_ids,
         "duplicate_standard_ids": duplicate_standard_ids,
         "validation_errors": validation_errors,
+        "inventory_quality_issues": inventory_quality_issues,
         "detected_component_labels": detected_labels,
         "detected_standard_labels": detected_standards,
         "passed": all(check["passed"] for check in checks),
@@ -574,6 +604,102 @@ def _detected_component_labels(chunks: list[dict]) -> list[dict]:
                 }
             )
     return labels
+
+
+def _component_inventory_quality_issues(chunks: list[dict]) -> list[dict]:
+    issues = []
+    seen = set()
+    for chunk in chunks:
+        text = str(chunk.get("text") or "")
+        for match in COMPONENT_LABEL_CANDIDATE_RE.finditer(text):
+            number = match.group("number")
+            if COMPONENT_NUMBER_RE.match(number):
+                continue
+            label = match.group("label")
+            code = match.group("code")
+            source_record_id = str(chunk.get("source_record_id") or "")
+            candidate_component_id = _component_id(
+                source_record_id=source_record_id,
+                code=code,
+                number=number,
+            )
+            suggested_number = _suggested_component_number(
+                number_token=number,
+                text=match.group("text"),
+            )
+            suggested_component_id = (
+                _component_id(
+                    source_record_id=source_record_id,
+                    code=code,
+                    number=suggested_number,
+                )
+                if suggested_number
+                else None
+            )
+            issue_type = _component_inventory_quality_issue_type(
+                number=number,
+                text=match.group("text"),
+            )
+            chunk_id = str(chunk.get("chunk_id") or "")
+            dedupe_key = (
+                issue_type,
+                candidate_component_id,
+                suggested_component_id,
+                chunk_id,
+            )
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            section_heading = _section_heading_for_match(
+                text=text,
+                start=match.start(),
+                fallback=str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components"),
+            )
+            issues.append(
+                {
+                    "issue_id": _safe_identifier(
+                        f"{candidate_component_id}-{issue_type}-{chunk_id or 'chunk'}"
+                    ),
+                    "issue_type": issue_type,
+                    "severity": "warning",
+                    "candidate_component_id": candidate_component_id,
+                    "suggested_component_id": suggested_component_id,
+                    "label": label,
+                    "code": code,
+                    "number_token": number,
+                    "source_record_id": source_record_id,
+                    "chunk_id": chunk_id,
+                    "section_heading": section_heading,
+                    "candidate_text": _compact(
+                        f"{label} ({code}) {number} {match.group('text')}",
+                        limit=1200,
+                    ),
+                    "message": (
+                        "Component-like label was not built because the token after the "
+                        "component code is not numeric; inspect whether this is a "
+                        "cross-reference/table heading or should be normalized."
+                    ),
+                }
+            )
+    return issues
+
+
+def _component_inventory_quality_issue_type(*, number: str, text: str) -> str:
+    normalized_number = number.strip().lower()
+    normalized_text = _normalized_component_text(text)
+    if normalized_number in {"see", "table"} or normalized_text.startswith("see "):
+        return "cross_reference_component_label"
+    return "non_numeric_component_label"
+
+
+def _suggested_component_number(*, number_token: str, text: str) -> str | None:
+    if number_token.strip().lower() in {"table", "figure", "appendix"}:
+        return None
+    match = re.search(r"(?:\A|[.!?]\s+)(?P<number>[0-9][A-Za-z0-9.]*)\s+\S", text)
+    if not match:
+        return None
+    number = match.group("number").strip().rstrip(".")
+    return number if COMPONENT_NUMBER_RE.match(number) else None
 
 
 def _profile_context_terms(forest_unit_id: str) -> dict[str, tuple[object, ...]]:

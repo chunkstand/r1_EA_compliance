@@ -480,6 +480,19 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             )
             component_ids = {component["component_id"] for component in components}
             self.assertNotIn(f"{source_record_id}-FW-GDL-VEGNF-See", component_ids)
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["inventory_quality_issue_count"], 1)
+            self.assertEqual(coverage["blocking_inventory_quality_issue_count"], 0)
+            quality_issue = coverage["inventory_quality_issues"][0]
+            self.assertEqual(quality_issue["issue_type"], "cross_reference_component_label")
+            self.assertEqual(
+                quality_issue["candidate_component_id"],
+                f"{source_record_id}-FW-GDL-VEGNF-See",
+            )
+            self.assertEqual(
+                quality_issue["suggested_component_id"],
+                f"{source_record_id}-FW-GDL-VEGNF-01",
+            )
             wild_horse = next(
                 component
                 for component in components
@@ -492,6 +505,53 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             )
             self.assertEqual(wild_horse["geographic_area_ids"], ["geo-pryor-mountains"])
             self.assertIn("mgmt-earthquake-lake", earthquake_lake["management_area_ids"])
+
+    def test_build_stops_component_text_before_malformed_component_label(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-custer-gallatin-nf-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Objectives (FW-OBJ-VEGNF) 01 Complete vegetation projects "
+                            "each decade. Guidelines (FW-GDL-VEGNF) See additional plan "
+                            "components for shrubland habitats. 01 Prescribed fire "
+                            "management should include a mosaic of burned and unburned "
+                            "areas. Standards (FW-STD-VEGNF) 01 Vegetation treatment "
+                            "methods shall protect rare plants."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="custer-gallatin-nf",
+                plan_version="2022",
+                chunks_path=chunks_path,
+            )
+
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="custer-gallatin-nf",
+            )
+            objective = next(
+                component
+                for component in components
+                if component["component_id"] == f"{source_record_id}-FW-OBJ-VEGNF-01"
+            )
+            self.assertNotIn("FW-GDL-VEGNF", objective["component_text"])
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertTrue(coverage["passed"])
+            self.assertEqual(coverage["inventory_quality_issue_count"], 1)
 
     def test_duplicate_standard_labels_fail_build_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

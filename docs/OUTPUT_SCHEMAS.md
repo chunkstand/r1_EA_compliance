@@ -558,13 +558,17 @@ The builder is deterministic and only consumes chunks whose `source_set_id`, `so
 `Standards (BC-STD-CMBCA) 01 ...`, requires a numeric component number after the label, preserves
 source chunk IDs, hashes, citation labels, and provenance, and fails validation if generated
 component records are malformed. This avoids treating cross-reference labels such as `Guidelines
-(FW-GDL-VEGNF) See ...` or table captions as plan components.
+(FW-GDL-VEGNF) See ...` or table captions as plan components, stops valid component text before
+those malformed labels, and records the suppressed label as an inventory-quality issue.
 
 `component_inventory_build_coverage.json` has schema version
 `forest-plan-component-inventory-build-coverage-v0` and records selected chunk count, detected
 component labels, detected standard labels, built component counts, missing detected component IDs,
 missing detected standard IDs, duplicate component IDs, duplicate standard IDs, validation errors,
-and pass/fail checks. Source-set generated inventories under
+inventory-quality issues for component-like labels with nonnumeric number tokens, and pass/fail
+checks. Inventory-quality issues are non-blocking warnings unless they are emitted with
+`severity=error`; the `blocking_inventory_quality_issues_absent` check keeps build coverage fail
+closed if a future inventory-quality rule is promoted to blocking. Source-set generated inventories under
 `source_library/derived/<source_set_id>/forest_plan_components/` require passing build coverage
 before component evaluation can mark inventory coverage as passed.
 

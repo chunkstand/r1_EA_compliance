@@ -139,7 +139,10 @@ Current session update:
 - `forest-plan-components-build` now writes source-set inventory artifacts plus
   `component_inventory_build_coverage.json`, proving selected forest-plan chunks, detected component
   labels, detected standard labels, missing detected standards, duplicate standards, and generated
-  record validation before a built inventory can pass.
+  record validation before a built inventory can pass. Current build coverage also records `2`
+  suppressed component-like labels with nonnumeric number tokens, such as cross-reference/table
+  headings, as non-blocking inventory-quality issues instead of allowing rough IDs into the
+  inventory.
 - Source-set generated component inventories under
   `source_library/derived/<source_set_id>/forest_plan_components/` must have passing build coverage
   before `forest_plan_component_inventory_coverage.json` can pass during NFMA component evaluation.

@@ -85,10 +85,12 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Compliance gold eval passed `10/10` adjudicated cases and is `promotion_ready`. Custer-scoped gold
   fixtures likewise preserve rule-level expected statuses while expecting the overall forest-plan
   component gate to fail readiness unless component evidence coverage is complete.
-- Phase eval passed `8/8` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
+- Phase eval passed `10/10` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
   chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
-  and `0` duplicate component or standard IDs.
+  `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
+  Component-like labels with nonnumeric number tokens, such as cross-reference/table headings, are
+  suppressed from generated component IDs and surfaced in build coverage.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -918,7 +920,9 @@ source claims, rule-claim bindings, compliance coverage, compliance-review eval,
 eval, and phase eval have also been rebuilt and are reviewer-ready for the full current source set.
 The Custer Gallatin LMP component inventory has also been generated for the current source set with
 `329` components and `58` standards, and its build coverage passes with no missing or duplicate
-component/standard IDs.
+component/standard IDs. Build coverage also records `2` suppressed component-like labels with
+nonnumeric number tokens as inventory-quality issues instead of allowing rough IDs such as
+`FW-GDL-VEGNF-See` into the inventory.
 The prior 147-row downstream corpus remains useful for historical comparison only and should not be
 treated as current promotion evidence for the expanded workbook.
 

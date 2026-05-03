@@ -37,7 +37,8 @@ a Custer Gallatin EA. Full all-source extraction, retrieval, evidence graph, sou
 rule-claim, compliance coverage, compliance-review eval, compliance-gold eval, and phase-eval
 artifacts have been promoted for this source set. The source-set Custer Gallatin Land Management
 Plan component inventory has also been generated from current chunks with `329` components, `58`
-standards, and passing build coverage. Older reviewer-ready downstream artifacts under
+standards, passing build coverage, and `2` inventory-quality warnings for suppressed
+component-like labels with nonnumeric number tokens. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
