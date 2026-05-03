@@ -36,6 +36,10 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertTrue(result.summary["eval_lanes"]["overall"]["passed"])
             self.assertTrue(result.summary["eval_lanes"]["broader_ea"]["passed"])
             self.assertTrue(result.summary["eval_lanes"]["forest_plan"]["passed"])
+            self.assertEqual(result.summary["failed_rule_expectation_count"], 0)
+            self.assertEqual(result.summary["failed_rule_ids"], [])
+            self.assertEqual(result.summary["failed_rule_ids_by_category"], {})
+            self.assertEqual(result.summary["failed_rule_expectations"], [])
 
     def test_v1_eval_flags_conditional_false_negative_and_section_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -353,61 +357,7 @@ class V1EAReviewEvalTests(unittest.TestCase):
             )
 
             self.assertFalse(result.summary["passed"])
-            self.assertEqual(
-                result.summary["failure_category_counts"],
-                {"conditional_false_positive": 3, "rule_section_mismatch": 2},
-            )
-            self.assertEqual(
-                result.summary["failed_rule_ids_by_category"],
-                {
-                    "conditional_false_positive": [
-                        "nepa_4336c_ce_adoption_screen",
-                        "usda_nepa_ce_fanec_7cfr_1b3",
-                        "usda_nepa_subcomponent_ce_7cfr_1b4",
-                    ],
-                    "rule_section_mismatch": [
-                        "nepa_4336b_programmatic_tiering",
-                        "nepa_statute_chapter_55",
-                    ],
-                },
-            )
-            self.assertEqual(
-                [
-                    (
-                        failure["expectation_type"],
-                        failure["rule_id"],
-                        failure["failure_categories"],
-                    )
-                    for failure in result.summary["failed_rule_expectations"]
-                ],
-                [
-                    (
-                        "rule_review_expectation",
-                        "nepa_statute_chapter_55",
-                        ["rule_section_mismatch"],
-                    ),
-                    (
-                        "conditional_source_expectation",
-                        "nepa_4336b_programmatic_tiering",
-                        ["rule_section_mismatch"],
-                    ),
-                    (
-                        "conditional_source_expectation",
-                        "nepa_4336c_ce_adoption_screen",
-                        ["conditional_false_positive"],
-                    ),
-                    (
-                        "conditional_source_expectation",
-                        "usda_nepa_ce_fanec_7cfr_1b3",
-                        ["conditional_false_positive"],
-                    ),
-                    (
-                        "conditional_source_expectation",
-                        "usda_nepa_subcomponent_ce_7cfr_1b4",
-                        ["conditional_false_positive"],
-                    ),
-                ],
-            )
+            _assert_repair_baseline_failure_summary(self, result.summary)
 
     def test_cli_accepts_v1_ea_eval_command(self) -> None:
         args = build_parser().parse_args(
@@ -422,6 +372,74 @@ class V1EAReviewEvalTests(unittest.TestCase):
 
         self.assertEqual(args.command, "v1-ea-eval")
         self.assertEqual(args.review_id, "v1-unit")
+
+
+def _assert_repair_baseline_failure_summary(
+    test_case: unittest.TestCase,
+    summary: dict,
+) -> None:
+    expected_ids_by_category = {
+        "conditional_false_positive": [
+            "nepa_4336c_ce_adoption_screen",
+            "usda_nepa_ce_fanec_7cfr_1b3",
+            "usda_nepa_subcomponent_ce_7cfr_1b4",
+        ],
+        "rule_section_mismatch": [
+            "nepa_4336b_programmatic_tiering",
+            "nepa_statute_chapter_55",
+        ],
+    }
+    test_case.assertEqual(
+        summary["failure_category_counts"],
+        {"conditional_false_positive": 3, "rule_section_mismatch": 2},
+    )
+    test_case.assertEqual(summary["failed_rule_expectation_count"], 5)
+    test_case.assertEqual(
+        summary["failed_rule_ids"],
+        sorted(
+            rule_id
+            for rule_ids in expected_ids_by_category.values()
+            for rule_id in rule_ids
+        ),
+    )
+    test_case.assertEqual(summary["failed_rule_ids_by_category"], expected_ids_by_category)
+    test_case.assertEqual(
+        [
+            (
+                failure["expectation_type"],
+                failure["rule_id"],
+                failure["failure_categories"],
+            )
+            for failure in summary["failed_rule_expectations"]
+        ],
+        [
+            (
+                "rule_review_expectation",
+                "nepa_statute_chapter_55",
+                ["rule_section_mismatch"],
+            ),
+            (
+                "conditional_source_expectation",
+                "nepa_4336b_programmatic_tiering",
+                ["rule_section_mismatch"],
+            ),
+            (
+                "conditional_source_expectation",
+                "nepa_4336c_ce_adoption_screen",
+                ["conditional_false_positive"],
+            ),
+            (
+                "conditional_source_expectation",
+                "usda_nepa_ce_fanec_7cfr_1b3",
+                ["conditional_false_positive"],
+            ),
+            (
+                "conditional_source_expectation",
+                "usda_nepa_subcomponent_ce_7cfr_1b4",
+                ["conditional_false_positive"],
+            ),
+        ],
+    )
 
 
 def _write_repair_baseline_failure_review(review_dir: Path) -> None:

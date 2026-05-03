@@ -79,8 +79,9 @@ Primary failing artifacts/checks:
   `conditional_false_positive=3` and `rule_section_mismatch=2`. Forest-plan expectation match rate
   is now `1.0`.
 - V1 EA gate repair milestone 1 locked the failure reproduction without changing applicability,
-  trigger, or section-routing behavior. The eval summary now includes `failed_rule_ids_by_category`
-  and `failed_rule_expectations`, naming the three CE false positives
+  trigger, or section-routing behavior. The eval summary now includes
+  `failed_rule_expectation_count`, `failed_rule_ids`, `failed_rule_ids_by_category`, and
+  `failed_rule_expectations`, naming the three CE false positives
   (`nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`,
   `usda_nepa_subcomponent_ce_7cfr_1b4`) and the two section mismatches
   (`nepa_statute_chapter_55`, `nepa_4336b_programmatic_tiering`).

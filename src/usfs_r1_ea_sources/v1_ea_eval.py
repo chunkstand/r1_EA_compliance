@@ -138,6 +138,7 @@ def run_v1_ea_review_eval(
         rule_results=rule_results,
         conditional_results=conditional_results,
     )
+    failed_rule_ids = _failed_rule_ids(failed_rule_expectations)
     failed_rule_ids_by_category = _failed_rule_ids_by_category(failed_rule_expectations)
     eval_lanes = _eval_lanes(
         checks=checks,
@@ -177,6 +178,8 @@ def run_v1_ea_review_eval(
         "forest_plan_failure_category_counts": dict(
             sorted(forest_plan_failure_category_counts.items())
         ),
+        "failed_rule_expectation_count": len(failed_rule_expectations),
+        "failed_rule_ids": failed_rule_ids,
         "failed_rule_ids_by_category": failed_rule_ids_by_category,
         "failed_rule_expectations": failed_rule_expectations,
         "eval_lanes": eval_lanes,
@@ -1069,6 +1072,16 @@ def _failed_rule_expectations(
                 entry["adjudication_pending"] = result.get("adjudication_pending")
             failed.append(entry)
     return failed
+
+
+def _failed_rule_ids(failed_rule_expectations: list[dict[str, Any]]) -> list[str]:
+    return sorted(
+        {
+            str(expectation["rule_id"])
+            for expectation in failed_rule_expectations
+            if expectation.get("rule_id")
+        }
+    )
 
 
 def _failed_rule_ids_by_category(
