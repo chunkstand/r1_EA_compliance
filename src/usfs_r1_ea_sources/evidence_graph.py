@@ -875,16 +875,44 @@ def run_phase_aligned_eval(
                             "pending_adjudication_count",
                             0,
                         ),
+                        "real_ea_omission_count": adjudication_summary.get(
+                            "real_ea_omission_count",
+                            0,
+                        ),
+                        "system_miss_count": adjudication_summary.get(
+                            "system_miss_count",
+                            0,
+                        ),
                         "adjudication_completion_rate": adjudication_summary.get(
                             "adjudication_completion_rate",
+                            0,
+                        ),
+                        "real_ea_omission_rate": adjudication_summary.get(
+                            "real_ea_omission_rate",
+                            0,
+                        ),
+                        "system_miss_rate": adjudication_summary.get(
+                            "system_miss_rate",
                             0,
                         ),
                         "adjudication_expectation_match_rate": adjudication_summary.get(
                             "adjudication_expectation_match_rate",
                             0,
                         ),
+                        "adjudication_outcome_counts": adjudication_summary.get(
+                            "adjudication_outcome_counts",
+                            {},
+                        ),
                         "disposition_counts": adjudication_summary.get(
                             "disposition_counts",
+                            {},
+                        ),
+                        "real_ea_omission_disposition_counts": adjudication_summary.get(
+                            "real_ea_omission_disposition_counts",
+                            {},
+                        ),
+                        "system_miss_disposition_counts": adjudication_summary.get(
+                            "system_miss_disposition_counts",
                             {},
                         ),
                         "failure_category_counts": adjudication_summary.get(

@@ -1220,6 +1220,12 @@ class ComplianceReviewTests(unittest.TestCase):
                 adjudication_phase["details"]["adjudication_completion_rate"],
                 1.0,
             )
+            self.assertEqual(adjudication_phase["details"]["real_ea_omission_count"], 2)
+            self.assertEqual(adjudication_phase["details"]["system_miss_count"], 0)
+            self.assertEqual(
+                adjudication_phase["details"]["adjudication_outcome_counts"],
+                {"real_ea_omission": 2},
+            )
 
     def test_phase_eval_can_include_component_eval_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1697,6 +1703,7 @@ def _write_component_adjudication_eval(
     review_dir.mkdir(parents=True, exist_ok=True)
     resolved_count = 2 - pending_count
     failure_counts = {"adjudication_pending": pending_count} if pending_count else {}
+    outcome_counts = {"real_ea_omission": resolved_count} if resolved_count else {}
     (review_dir / "forest_plan_component_adjudication_eval.json").write_text(
         json.dumps(
             {
@@ -1713,13 +1720,24 @@ def _write_component_adjudication_eval(
                     "adjudication_item_count": 2,
                     "resolved_adjudication_count": resolved_count,
                     "pending_adjudication_count": pending_count,
+                    "real_ea_omission_count": resolved_count,
+                    "system_miss_count": 0,
                     "adjudication_completion_rate": round(resolved_count / 2, 6),
+                    "real_ea_omission_rate": round(resolved_count / 2, 6),
+                    "system_miss_rate": 0.0,
                     "adjudication_expectation_match_rate": 1.0,
+                    "adjudication_outcome_counts": outcome_counts,
                     "disposition_counts": (
                         {"true_ea_omission": resolved_count}
                         if resolved_count
                         else {}
                     ),
+                    "real_ea_omission_disposition_counts": (
+                        {"true_ea_omission": resolved_count}
+                        if resolved_count
+                        else {}
+                    ),
+                    "system_miss_disposition_counts": {},
                     "failure_category_counts": failure_counts,
                     "passed": passed,
                 },

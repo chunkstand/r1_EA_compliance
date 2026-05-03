@@ -26,6 +26,8 @@ RESOLVED_DISPOSITIONS = {
 }
 ALLOWED_DISPOSITIONS = PENDING_DISPOSITIONS | RESOLVED_DISPOSITIONS
 REQUIRED_ADJUDICATION_FIELDS = ("adjudicated_at", "rationale", "source_type")
+REAL_EA_OMISSION_DISPOSITIONS = {"true_ea_omission"}
+SYSTEM_MISS_DISPOSITIONS = RESOLVED_DISPOSITIONS - REAL_EA_OMISSION_DISPOSITIONS
 
 
 @dataclass(frozen=True)
@@ -508,6 +510,7 @@ def _item_result(
         "component_type": finding.get("component_type"),
         "queue_reason": queue_item.get("reason"),
         "disposition": disposition or None,
+        "adjudication_outcome": _adjudication_outcome(disposition),
         "current": current,
         "expected_current": expected_current,
         "passed": not failure_categories,
@@ -587,6 +590,14 @@ def _status_mismatches(
                 }
             )
     return mismatches
+
+
+def _adjudication_outcome(disposition: str) -> str | None:
+    if disposition in REAL_EA_OMISSION_DISPOSITIONS:
+        return "real_ea_omission"
+    if disposition in SYSTEM_MISS_DISPOSITIONS:
+        return "system_miss"
+    return None
 
 
 def _check_adjudication_identity(
@@ -720,6 +731,23 @@ def _eval_summary(
     resolved_count = sum(
         1 for result in item_results if result.get("disposition") in RESOLVED_DISPOSITIONS
     )
+    outcome_counts = Counter(
+        str(result.get("adjudication_outcome") or "")
+        for result in item_results
+        if result.get("adjudication_outcome")
+    )
+    real_ea_omission_count = outcome_counts.get("real_ea_omission", 0)
+    system_miss_count = outcome_counts.get("system_miss", 0)
+    real_ea_omission_disposition_counts = Counter(
+        str(result.get("disposition") or "")
+        for result in item_results
+        if result.get("adjudication_outcome") == "real_ea_omission"
+    )
+    system_miss_disposition_counts = Counter(
+        str(result.get("disposition") or "")
+        for result in item_results
+        if result.get("adjudication_outcome") == "system_miss"
+    )
     pending_count = sum(
         1 for result in item_results if result.get("disposition") in PENDING_DISPOSITIONS
     )
@@ -737,13 +765,22 @@ def _eval_summary(
         "adjudication_item_count": len(item_results),
         "resolved_adjudication_count": resolved_count,
         "pending_adjudication_count": pending_count,
+        "real_ea_omission_count": real_ea_omission_count,
+        "system_miss_count": system_miss_count,
         "expectation_mismatch_count": expectation_mismatch_count,
         "adjudication_completion_rate": _rate(resolved_count, len(queue_items)),
+        "real_ea_omission_rate": _rate(real_ea_omission_count, len(queue_items)),
+        "system_miss_rate": _rate(system_miss_count, len(queue_items)),
         "adjudication_expectation_match_rate": _rate(
             len(queue_items) - expectation_mismatch_count,
             len(queue_items),
         ),
+        "adjudication_outcome_counts": dict(sorted(outcome_counts.items())),
         "disposition_counts": dict(sorted(disposition_counts.items())),
+        "real_ea_omission_disposition_counts": dict(
+            sorted(real_ea_omission_disposition_counts.items())
+        ),
+        "system_miss_disposition_counts": dict(sorted(system_miss_disposition_counts.items())),
         "failure_category_counts": dict(sorted(failure_counts.items())),
         "passed": passed,
         "checks": checks,

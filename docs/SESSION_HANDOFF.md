@@ -78,10 +78,11 @@ Primary failing artifacts/checks:
   `3` objectives, and `1` suitability component. The completed adjudication artifact is local at
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`.
   `forest-plan-component-adjudication-eval` passes with `21` resolved items, `0` pending items,
-  completion rate `1.0`, expectation match rate `1.0`, and disposition counts:
-  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
-  `evidence_linking_miss=9`. `phase-eval --review-id v1-cg-ecid-compliance-review` now includes
-  that passing result as the `forest_plan_component_adjudication` phase.
+  completion rate `1.0`, expectation match rate `1.0`, `real_ea_omission_count=0`, and
+  `system_miss_count=21`. Disposition counts are `applicability_false_positive=11`,
+  `component_inventory_overreach=1`, and `evidence_linking_miss=9`.
+  `phase-eval --review-id v1-cg-ecid-compliance-review` now includes that passing result as the
+  `forest_plan_component_adjudication` phase.
 - The forest-plan component eval result has been written locally at
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`.
   `phase-eval --review-id v1-cg-ecid-compliance-review` includes it as the passing
@@ -114,6 +115,9 @@ Current session update:
 - The adjudication disposition taxonomy is explicit data: `true_ea_omission`, `retrieval_miss`,
   `package_section_chunking_miss`, `component_inventory_overreach`,
   `applicability_false_positive`, and `evidence_linking_miss`.
+- The adjudication eval separates dispositions into `real_ea_omission` versus `system_miss`
+  outcome metrics. For the current East Crazies forest-plan adjudication, all `21` resolved
+  non-standard component items are system misses and none are real EA omissions.
 - Profile-driven forest-plan scope resolution now distinguishes operative selected-profile evidence
   from incidental references to other forests. Background/reference mentions of another configured
   forest no longer force `ambiguous`, while operative evidence that the project is on another forest
@@ -224,7 +228,8 @@ standards, `21` reviewer-resolution items, and zero unresolved applicable standa
 evidence. Component-level forest-plan eval passes all `8` adjudicated cases. The completed
 component adjudication eval passes with `21` resolved items, zero pending items, and disposition
 counts of `applicability_false_positive=11`, `component_inventory_overreach=1`, and
-`evidence_linking_miss=9`. `phase-eval` passes `11/11` phases and reports `reviewer_ready=true`;
+`evidence_linking_miss=9`; the adjudication outcome split is `system_miss_count=21` and
+`real_ea_omission_count=0`. `phase-eval` passes `11/11` phases and reports `reviewer_ready=true`;
 `v1-ea-eval` reports forest-plan expectation match rate `1.0`,
 section detection/source-record/document-role rates `1.0`, zero open standard reviewer-resolution
 items, and remaining non-forest-plan failure categories `conditional_false_positive=3` and

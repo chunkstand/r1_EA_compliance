@@ -741,11 +741,16 @@ The `forest-plan-component-adjudication-eval` command reads the completed adjudi
 writes `forest_plan_component_adjudication_eval.json` by default. The eval result has schema version
 `forest-plan-component-adjudication-eval-v0` and records:
 
-- pass/fail summary, completion rate, expectation match rate, disposition counts, and failure
-  category counts
+- pass/fail summary, completion rate, expectation match rate, disposition counts, adjudication
+  outcome counts, and failure category counts
+- real EA omission versus system-miss counts/rates; `true_ea_omission` is counted as a real EA
+  omission, while retrieval, chunking, inventory, applicability, and evidence-linking dispositions
+  are counted as system misses to feed improvement work. Outcome rates are calculated over the
+  current reviewer-resolution queue item count.
 - checks for review/source-set identity, adjudication coverage of the current queue, completed
   adjudication metadata, and status expectation matches
-- per-item results with current statuses, expected statuses, disposition, and failure categories
+- per-item results with current statuses, expected statuses, disposition, adjudication outcome, and
+  failure categories
 
 The eval fails closed on missing queue items, unexpected adjudications, duplicate items, pending
 dispositions, incomplete adjudication metadata, invalid dispositions, or status expectation
@@ -1630,8 +1635,9 @@ review directory contains `forest_plan_component_adjudication_eval.json`, or a c
 `forest_plan_component_adjudication.json` before the eval has been run, phase eval also includes a
 `forest_plan_component_adjudication` phase. That phase requires the adjudication eval to exist,
 pass, match the evaluated source set, and match the supplied review ID when one is provided; its
-details include queue count, resolved and pending adjudication counts, completion rate, expectation
-match rate, disposition counts, and failure-category counts. The evidence-graph and claim-extraction
+details include queue count, resolved and pending adjudication counts, real EA omission and
+system-miss counts/rates, completion rate, expectation match rate, disposition counts,
+adjudication-outcome counts, and failure-category counts. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

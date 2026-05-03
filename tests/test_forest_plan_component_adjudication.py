@@ -66,6 +66,29 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
             self.assertEqual(result.summary["resolved_adjudication_count"], 2)
             self.assertEqual(result.summary["pending_adjudication_count"], 0)
             self.assertEqual(result.summary["adjudication_completion_rate"], 1.0)
+            self.assertEqual(result.summary["real_ea_omission_count"], 1)
+            self.assertEqual(result.summary["system_miss_count"], 1)
+            self.assertEqual(result.summary["real_ea_omission_rate"], 0.5)
+            self.assertEqual(result.summary["system_miss_rate"], 0.5)
+            self.assertEqual(
+                result.summary["adjudication_outcome_counts"],
+                {"real_ea_omission": 1, "system_miss": 1},
+            )
+            self.assertEqual(
+                result.summary["real_ea_omission_disposition_counts"],
+                {"true_ea_omission": 1},
+            )
+            self.assertEqual(
+                result.summary["system_miss_disposition_counts"],
+                {"component_inventory_overreach": 1},
+            )
+            report = _read_json(result.output_path)
+            outcomes = {
+                item["component_id"]: item["adjudication_outcome"]
+                for item in report["item_results"]
+            }
+            self.assertEqual(outcomes["fp-std-01"], "real_ea_omission")
+            self.assertEqual(outcomes["fp-gdl-01"], "system_miss")
 
     def test_eval_fails_pending_or_mismatched_adjudications(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

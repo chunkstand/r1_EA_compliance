@@ -420,11 +420,14 @@ Current state:
   component. Those items are now completed locally in
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`.
   `forest-plan-component-adjudication-eval` passes with completion rate `1.0`, expectation match
-  rate `1.0`, `pending_adjudication_count=0`, and disposition counts of
-  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
-  `evidence_linking_miss=9`. When the adjudication eval artifact is present in a review directory,
-  `phase-eval --review-id` includes it as a `forest_plan_component_adjudication` phase so pending
-  or stale adjudication work blocks reviewer readiness at the phase gate.
+  rate `1.0`, `pending_adjudication_count=0`, `real_ea_omission_count=0`, and
+  `system_miss_count=21`. The disposition counts are `applicability_false_positive=11`,
+  `component_inventory_overreach=1`, and `evidence_linking_miss=9`. The eval now reports explicit
+  real-EA-omission versus system-miss outcome counts/rates so the adjudication artifact feeds the
+  improvement loop instead of only closing the readiness gate. When the adjudication eval artifact
+  is present in a review directory, `phase-eval --review-id` includes it as a
+  `forest_plan_component_adjudication` phase so pending or stale adjudication work blocks reviewer
+  readiness at the phase gate.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -883,8 +886,8 @@ component metrics, failed checks, and failure-category counts. When a forest-pla
 adjudication phase is included,
 `phase-eval` requires the adjudication eval to exist, pass, match the evaluated source set, and match
 the supplied review ID when one is provided. The phase reports queue count, resolved and pending
-adjudication counts, completion rate, expectation match rate, disposition counts, and
-failure-category counts.
+adjudication counts, real EA omission and system-miss counts/rates, completion rate, expectation
+match rate, disposition counts, adjudication-outcome counts, and failure-category counts.
 
 ## Alignment And Next Milestone
 

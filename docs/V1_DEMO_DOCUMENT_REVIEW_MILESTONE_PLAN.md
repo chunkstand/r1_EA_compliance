@@ -505,8 +505,9 @@ Current milestone status:
 - `forest-plan-component-adjudication-eval` passes for
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`
   with `21` resolved items, zero pending items, completion rate `1.0`, expectation match rate
-  `1.0`, and disposition counts of `applicability_false_positive=11`,
-  `component_inventory_overreach=1`, and `evidence_linking_miss=9`.
+  `1.0`, `real_ea_omission_count=0`, and `system_miss_count=21`. Disposition counts are
+  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
+  `evidence_linking_miss=9`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` passes `11/11` phases and reports
   `reviewer_ready=true`.
 - `v1-ea-eval` still fails on non-forest-plan residuals:
