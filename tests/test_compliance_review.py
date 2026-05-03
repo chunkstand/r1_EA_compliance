@@ -532,6 +532,32 @@ class ComplianceReviewTests(unittest.TestCase):
             ],
         )
 
+    def test_rule_pack_rejects_invalid_package_section_preferences(self) -> None:
+        rule_pack = _rule_pack()
+        rule_pack["rules"][0]["package_section_terms"] = []
+        rule_pack["rules"][0]["package_section_term_groups"] = [
+            ["purpose and need"],
+            [],
+        ]
+
+        validation = validate_rule_pack(rule_pack)
+
+        self.assertFalse(validation["passed"])
+        section_check = _check(validation, "rule_package_section_preferences_are_valid")
+        self.assertFalse(section_check["passed"])
+        self.assertEqual(
+            section_check["details"]["failures"],
+            [
+                {
+                    "rule_id": "purpose_need",
+                    "invalid": [
+                        "package_section_term_groups",
+                        "package_section_terms",
+                    ],
+                }
+            ],
+        )
+
     def test_package_search_prefers_rule_declared_section_context(self) -> None:
         chunks = [
             _chunk(

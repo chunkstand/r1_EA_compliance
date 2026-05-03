@@ -850,6 +850,10 @@ Each rule includes:
 - `applicability_mode`
 - `package_query`
 - `package_terms`
+- optional `package_section_terms`, which are section-context preference terms used to rank and
+  anchor package evidence only after the required package terms match
+- optional `package_section_term_groups`, where each inner list is an OR group and every group must
+  match in one package chunk before the section context is preferred
 - optional `applies_if_package_terms`
 - optional `applies_if_package_term_groups`, where each inner list is an OR group and every group
   must match in one package chunk before a conditional rule is applicable

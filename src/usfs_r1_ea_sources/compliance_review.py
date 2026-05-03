@@ -291,6 +291,7 @@ def validate_rule_pack(rule_pack: dict) -> dict:
         _check_rule_ids_safe(rule_pack),
         _check_required_rule_fields(rule_pack),
         _check_rule_queries_and_terms(rule_pack),
+        _check_rule_package_section_preferences(rule_pack),
         _check_rule_source_filters(rule_pack),
         _check_rule_source_filter_keys(rule_pack),
         _check_rule_authority_metadata(rule_pack),
@@ -2379,6 +2380,35 @@ def _check_rule_queries_and_terms(rule_pack: dict) -> dict:
         "name": "rule_package_terms_present",
         "passed": not failures,
         "details": {"rule_ids": failures},
+    }
+
+
+def _check_rule_package_section_preferences(rule_pack: dict) -> dict:
+    rules = rule_pack.get("rules") if isinstance(rule_pack.get("rules"), list) else []
+    failures = []
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        invalid = []
+        section_terms = rule.get("package_section_terms")
+        section_term_groups = rule.get("package_section_term_groups")
+        if section_terms is not None and not _valid_nonempty_term_list(section_terms):
+            invalid.append("package_section_terms")
+        if section_term_groups is not None and not _valid_nonempty_term_groups(
+            section_term_groups
+        ):
+            invalid.append("package_section_term_groups")
+        if invalid:
+            failures.append(
+                {
+                    "rule_id": rule.get("id"),
+                    "invalid": sorted(invalid),
+                }
+            )
+    return {
+        "name": "rule_package_section_preferences_are_valid",
+        "passed": not failures,
+        "details": {"failures": failures},
     }
 
 

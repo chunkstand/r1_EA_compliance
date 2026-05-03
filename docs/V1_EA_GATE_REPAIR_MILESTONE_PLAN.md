@@ -2,10 +2,12 @@
 
 Date: 2026-05-03
 
-This plan fixes the remaining `v1-ea-eval` blockers for the East Crazy Inspiration Divide V1
-compliance review. It is intentionally scoped to the broader EA gate. Forest-plan scope,
-component coverage, standard coverage, component adjudication, and phase-eval readiness are already
-passing for the current review and should not be refactored as part of this sequence.
+This plan records the `v1-ea-eval` gate repair sequence for the East Crazy Inspiration Divide V1
+compliance review. Milestones 1 through 4 have closed the original broader EA source/section
+blockers. The active next milestone is now conditional adjudication policy coverage, not another
+source-routing repair. Forest-plan scope, component coverage, standard coverage, component
+adjudication, and phase-eval readiness are already passing for the current review and should not be
+refactored as part of this sequence.
 
 Current review contract:
 
@@ -13,8 +15,12 @@ Current review contract:
 - Source set: `source-set-ba8d0feae79501b8`
 - Rule pack: `config/compliance_rule_pack_nepa_ea_v0.json`, `nepa-ea-v0` version `0.4.0`
 - V1 eval contract: `config/v1_ecid_real_ea_eval.json`
-- Original gate status: `v1-ea-eval` fails with `conditional_false_positive=3` and
+- Original gate status before this sequence: `v1-ea-eval` failed with `conditional_false_positive=3` and
   `rule_section_mismatch=2`
+- Current gate status after Milestone 4: `v1-ea-eval` passes with `passed=true`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, `failure_category_counts={}`,
+  `failed_rule_ids=[]`, `rule_section_match_rate=1.0`, `conditional_false_positive=0`,
+  `conditional_false_negative=0`, and `conditional_adjudication_pending_count=14`.
 
 Original failing expectations:
 
@@ -43,6 +49,9 @@ Progress through Milestone 4:
   eval now passes with `broader_ea_passed=true`, `forest_plan_passed=true`, no
   `rule_section_mismatch`, and `nepa_4336b_programmatic_tiering` still source-aligned to
   `R1EA-005` with `adjudication_pending=true`.
+- The Milestone 4 gap pass makes the rule-pack contract explicit: optional
+  `package_section_terms` and `package_section_term_groups` are now documented and validator-checked
+  so malformed section-routing preferences cannot silently change review behavior.
 - Milestone 5 is now the next milestone: make the remaining conditional adjudication policy explicit
   so V1 does not hide material applicability uncertainty behind a passing source/section gate.
 
@@ -276,6 +285,17 @@ Required eval signal:
 - `nepa_4336b_programmatic_tiering` still appears for adjudication, remains source-aligned to
   `R1EA-005`, and passes section alignment.
 - The broader EA lane has no remaining `rule_section_mismatch`.
+
+Completion status:
+
+- Implemented and verified on 2026-05-03. The rule declares `package_section_term_groups` for
+  alternatives and environmental-consequences context, package evidence ranking applies those
+  groups only after the required tiering evidence match succeeds, and the rule-pack validator now
+  rejects malformed package section preferences.
+- The live V1 eval passes with `actual_package_section_ids=["alternatives",
+  "environmental_consequences"]`, `actual_source_record_ids=["R1EA-005"]`,
+  `actual_source_document_roles=["law"]`, and `adjudication_pending=true` for
+  `nepa_4336b_programmatic_tiering`.
 
 Required tests:
 

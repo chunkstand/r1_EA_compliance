@@ -962,9 +962,11 @@ eval reports `rule_source_section_expectations_met=true`, `rule_section_match_ra
 The V1 programmatic-tiering section-routing milestone is implemented: `nepa_4336b_programmatic_tiering`
 now declares package section term groups for alternatives and environmental consequences, and
 package evidence ranking uses those rule-declared groups as a context preference after the normal
-tiering evidence match succeeds. The live V1 eval reports actual package sections
-`alternatives` and `environmental_consequences`, actual source record `R1EA-005`, actual document
-role `law`, `adjudication_pending=true`, and no `rule_section_mismatch`.
+tiering evidence match succeeds. The rule-pack validator and schema docs now cover these optional
+section-preference fields so malformed `package_section_terms` or `package_section_term_groups`
+fail validation instead of silently changing review behavior. The live V1 eval reports actual
+package sections `alternatives` and `environmental_consequences`, actual source record `R1EA-005`,
+actual document role `law`, `adjudication_pending=true`, and no `rule_section_mismatch`.
 
 The next v1 milestone is Milestone 5: close conditional adjudication coverage. The current V1 eval
 passes, but `conditional_adjudication_pending_count=14` remains explicit. The next slice should

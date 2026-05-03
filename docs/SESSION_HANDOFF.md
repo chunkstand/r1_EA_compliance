@@ -98,7 +98,8 @@ Primary gate artifacts/checks:
   `nepa_4336b_programmatic_tiering` and uses them as a package-evidence ranking/span preference.
   The live V1 eval now reports `nepa_4336b_programmatic_tiering` with actual package sections
   `alternatives` and `environmental_consequences`, actual source record `R1EA-005`, actual source
-  document role `law`, and `adjudication_pending=true`.
+  document role `law`, and `adjudication_pending=true`. The follow-up gap pass made the new
+  package section preference contract explicit in rule-pack validation and output-schema docs.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the
