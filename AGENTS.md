@@ -30,6 +30,27 @@ Avoid broad repo scans unless the user asks for a full audit. Use `rg` for targe
 not rely on chat history for current corpus counts or readiness; re-check repo docs and generated
 artifacts when the answer depends on live state.
 
+## Milestone And Commit Discipline
+
+- Treat each milestone or sequence as a hard implementation boundary. For non-trivial work, define
+  the milestone goal, non-goals, affected surfaces, required verification, commit policy, and stop
+  conditions before editing.
+- Keep milestone implementation tightly scoped to that milestone. Do not fold in opportunistic
+  refactors, unrelated fixes, broad docs rewrites, corpus regeneration, or adjacent reviewer,
+  downloader, extraction, retrieval, graph, compliance, or eval changes unless they are required for
+  the milestone or the user explicitly expands scope.
+- Make one atomic commit for each completed milestone or sequence. In this repository, a milestone
+  is not complete until its verified implementation slice has been committed, unless the user
+  explicitly says not to commit. Include only the verified milestone slice: implementation, matching
+  tests, relevant docs, and required evaluation artifacts.
+- Run milestone-appropriate verification before each milestone commit. If verification cannot pass,
+  stop at the failed milestone and report the blocker instead of carrying unverified work into a
+  later commit.
+- When new issues surface outside the current milestone, record them as follow-up work or a new
+  milestone rather than mixing them into the current commit.
+- Never stage pre-existing unrelated worktree changes. If unrelated dirty files are present, leave
+  them untouched and call them out when relevant.
+
 ## Important Paths
 
 - Active workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
@@ -144,8 +165,8 @@ Always report verification concisely: command, result, skipped checks, and resid
 - Keep docs synchronized with implemented behavior. Update `README.md`, `DOWNLOADER_RULES.md`,
   `docs/OUTPUT_SCHEMAS.md`, or `docs/CURRENT_SYSTEM_STATE.md` when behavior, gates, or current
   state changes.
-- Preserve user changes. Stage only the verified milestone slice when committing, and commit or push
-  only when the user asks for that workflow or supplies an explicit commit policy.
+- Preserve user changes. Stage only the verified milestone slice when committing. Commit completed
+  milestones by default after verification. Push only when the user asks for push/publish.
 - For read-only reviews or corpus-status questions, do not modify files, run destructive cleanup, or
   mutate generated outputs.
 
