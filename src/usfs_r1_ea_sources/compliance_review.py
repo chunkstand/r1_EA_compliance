@@ -519,6 +519,7 @@ def _compliance_finding(
         "applicability_mode": rule.get("applicability_mode")
         or finding.get("applicability_mode"),
         "applies_if_package_terms": rule.get("applies_if_package_terms", []),
+        "applies_if_package_term_groups": rule.get("applies_if_package_term_groups", []),
         "title": rule["title"],
         "question": rule.get("question") or rule["title"],
         "requirement": rule.get("requirement"),
@@ -529,6 +530,7 @@ def _compliance_finding(
         "rationale": finding.get("rationale"),
         "applicability_status": finding.get("applicability_status"),
         "applicability_terms": finding.get("applicability_terms", []),
+        "applicability_term_groups": finding.get("applicability_term_groups", []),
         "applicability_rationale": finding.get("applicability_rationale"),
         "applicability_evidence": finding.get("applicability_evidence"),
         "package_query": finding.get("package_query"),
@@ -613,6 +615,7 @@ def _finding_graph(
                 or (rule.get("source_filters") or {}).get("document_role"),
                 applicability_mode=rule.get("applicability_mode"),
                 applies_if_package_terms=rule.get("applies_if_package_terms", []),
+                applies_if_package_term_groups=rule.get("applies_if_package_term_groups", []),
                 source_query=rule.get("source_query"),
                 source_filters=rule.get("source_filters", {}),
             ),
@@ -1107,6 +1110,10 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
             "rationale": finding.get("applicability_rationale"),
             "mode": finding.get("applicability_mode"),
             "applies_if_package_terms": finding.get("applies_if_package_terms", []),
+            "applies_if_package_term_groups": finding.get(
+                "applies_if_package_term_groups",
+                [],
+            ),
             "matched_terms": finding.get("applicability_terms", []),
             "applicability_evidence": _compact_evidence(finding.get("applicability_evidence")),
             "source_filters": finding.get("source_filters", {}),
@@ -2435,8 +2442,13 @@ def _check_rule_authority_metadata(rule_pack: dict) -> dict:
             missing.append("source_record_id")
         if applicability_mode == "conditional":
             terms = rule.get("applies_if_package_terms")
-            if not isinstance(terms, list) or not any(str(term).strip() for term in terms):
+            term_groups = rule.get("applies_if_package_term_groups")
+            has_terms = isinstance(terms, list) and any(str(term).strip() for term in terms)
+            has_term_groups = _valid_nonempty_term_groups(term_groups)
+            if not has_terms and not has_term_groups:
                 missing.append("applies_if_package_terms")
+            if term_groups is not None and not has_term_groups:
+                invalid.append("applies_if_package_term_groups")
         if missing or invalid:
             failures.append(
                 {
@@ -2454,6 +2466,13 @@ def _check_rule_authority_metadata(rule_pack: dict) -> dict:
             "failures": failures,
         },
     }
+
+
+def _valid_nonempty_term_groups(value) -> bool:
+    return isinstance(value, list) and all(
+        isinstance(group, list) and any(str(term).strip() for term in group)
+        for group in value
+    ) and bool(value)
 
 
 def _check_rule_pack_baseline_source_records(rule_pack: dict) -> dict:

@@ -492,7 +492,7 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
-      "expected_package_evidence": "When CE adoption or rejection is relevant, the EA package should document the pathway and why EA review is appropriate.",
+      "expected_package_evidence": "When CE adoption or a categorical-exclusion path is actually implicated, the EA package should document the adopted CE or categorical-exclusion pathway and why EA review is appropriate.",
       "obligation_area": "42 U.S.C. \u00a7 4336c - Adoption of categorical exclusions is reviewed",
       "rule_id": "nepa_4336c_ce_adoption_screen",
       "source_claim_terms": [
@@ -528,7 +528,7 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
-      "expected_package_evidence": "The EA package should document CE/FANEC screening or explain why a CE path does not resolve the review when implicated.",
+      "expected_package_evidence": "The EA package should document a CE/FANEC screen, categorical-exclusion path, or extraordinary-circumstances review before this rule is applicable.",
       "obligation_area": "7 CFR \u00a7 1b.3 - Categorical exclusions and FANEC is reviewed",
       "rule_id": "usda_nepa_ce_fanec_7cfr_1b3",
       "source_claim_terms": [
@@ -546,7 +546,7 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
-      "expected_package_evidence": "The EA package should document subcomponent CE screening where the action might fit a USDA CE.",
+      "expected_package_evidence": "The EA package should document subcomponent CE or USDA CE screening, including extraordinary-circumstances review, before this rule is applicable.",
       "obligation_area": "7 CFR \u00a7 1b.4 - USDA subcomponent categorical exclusions is reviewed",
       "rule_id": "usda_nepa_subcomponent_ce_7cfr_1b4",
       "source_claim_terms": [

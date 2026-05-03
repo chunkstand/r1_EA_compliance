@@ -851,6 +851,8 @@ Each rule includes:
 - `package_query`
 - `package_terms`
 - optional `applies_if_package_terms`
+- optional `applies_if_package_term_groups`, where each inner list is an OR group and every group
+  must match in one package chunk before a conditional rule is applicable
 - `source_query`
 - `source_filters`
 - optional `evidence_expectation`
@@ -894,7 +896,8 @@ Each compliance finding includes:
 - status: `pass`, `gap`, `uncertain`, or `not_applicable`
 - claim type: `supported_compliance_finding`, `package_evidence_gap`, or `no_compliance_claim`
 - package query, package terms, source query, and source filters
-- applicability status, applicability terms, applicability rationale, and applicability evidence
+- applicability status, applicability terms, optional applicability term groups, applicability
+  rationale, and applicability evidence
 - package and source-library evidence statuses
 - package and source-library citation labels when present
 - source-claim link count, source claim IDs, source-claim evidence citations, and source-claim links
@@ -919,7 +922,8 @@ Each matrix row includes:
 - authority category, authority source record ID, authority document role, applicability mode,
   applicability status, and applicability basis
 - applicability basis fields including source filters, package terms, conditional applicability
-  terms, source query, applied source record IDs, and applied source document roles
+  terms, optional conditional applicability term groups, source query, applied source record IDs,
+  and applied source document roles
 - package query, source query, EA package citation, compact EA evidence span, source-library
   citation, and compact source evidence span
 - source-claim IDs, source-claim citations, source-claim count, citation-gate status, limitations,

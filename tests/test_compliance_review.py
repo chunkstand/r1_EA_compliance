@@ -382,6 +382,73 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(first.summary["finding_status_counts"], {"pass": 1})
             self.assertEqual(second.summary["finding_status_counts"], {"pass": 1})
 
+    def test_conditional_applicability_requires_grouped_positive_trigger_terms(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_grouped_conditional_rule_pack(Path(tmp))
+            negative_dir = Path(tmp) / "negative"
+            positive_dir = Path(tmp) / "positive"
+            negative_dir.mkdir()
+            positive_dir.mkdir()
+            negative_package = _write_package(
+                negative_dir,
+                (
+                    "Decision Notice and FONSI\n\nThe EA is not subject to a categorical "
+                    "exclusion. Mitigation measures support a FONSI."
+                ),
+            )
+            positive_package = _write_package(
+                positive_dir,
+                (
+                    "CE Screening\n\nThe agency adopted CE after categorical exclusion "
+                    "path screening. Mitigation measures support a FONSI."
+                ),
+            )
+
+            negative = run_compliance_review(
+                package_path=negative_package,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="grouped-trigger-negative",
+            )
+            positive = run_compliance_review(
+                package_path=positive_package,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="grouped-trigger-positive",
+            )
+
+            negative_report = json.loads(
+                negative.compliance_review_path.read_text(encoding="utf-8")
+            )
+            positive_report = json.loads(
+                positive.compliance_review_path.read_text(encoding="utf-8")
+            )
+            negative_finding = _finding(negative_report, "ce_adoption")
+            positive_finding = _finding(positive_report, "ce_adoption")
+            expected_groups = [
+                ["categorical exclusion", "CE"],
+                ["adopted CE", "categorical exclusion path"],
+            ]
+            self.assertEqual(negative_finding["status"], "not_applicable")
+            self.assertEqual(negative_finding["applicability_status"], "not_applicable")
+            self.assertEqual(negative_finding["applicability_term_groups"], expected_groups)
+            self.assertEqual(positive_finding["status"], "pass")
+            self.assertEqual(positive_finding["applicability_status"], "applicable")
+            self.assertTrue(positive_finding["applicability_evidence"])
+            positive_matrix = json.loads(
+                positive.compliance_matrix_path.read_text(encoding="utf-8")
+            )
+            positive_row = positive_matrix["rows"][0]
+            self.assertEqual(
+                positive_row["applicability_basis"]["applies_if_package_term_groups"],
+                expected_groups,
+            )
+
     def test_compliance_review_eval_scores_package_fixtures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -1899,6 +1966,47 @@ def _write_rule_pack(directory: Path, rule_ids: list[str] | None = None) -> Path
             if source_record_id in kept_source_record_ids
         ]
     path = directory / "rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_grouped_conditional_rule_pack(directory: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-grouped-conditional",
+        "version": "0.1.0",
+        "title": "Unit Grouped Conditional Rule Pack",
+        "description": "Unit test rule pack for grouped conditional applicability.",
+        "rules": [
+            {
+                "id": "ce_adoption",
+                "title": "CE adoption is reviewed",
+                "authority_category": "regulation",
+                "authority_source_record_id": "R1EA-002",
+                "applicability_mode": "conditional",
+                "question": "Does the EA package document a CE adoption path?",
+                "requirement": "A CE adoption path should be documented when actually used.",
+                "package_query": "adopted CE categorical exclusion path",
+                "package_terms": ["adopted CE", "categorical exclusion path"],
+                "source_query": "mitigation measures finding of no significant impact",
+                "source_filters": {
+                    "document_role": "regulation",
+                    "source_record_id": "R1EA-002",
+                },
+                "applies_if_package_terms": [
+                    "categorical exclusion",
+                    "adopted CE",
+                    "categorical exclusion path",
+                ],
+                "applies_if_package_term_groups": [
+                    ["categorical exclusion", "CE"],
+                    ["adopted CE", "categorical exclusion path"],
+                ],
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "grouped-conditional-rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
 

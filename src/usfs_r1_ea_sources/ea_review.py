@@ -511,15 +511,21 @@ def _search_package_chunks(
     query: str,
     required_terms: list[str],
     limit: int,
+    required_term_groups: list[list[str]] | None = None,
 ) -> dict:
     terms = _query_terms(query, required_terms)
     evidence_terms = [term.strip().lower() for term in required_terms if term.strip()]
+    evidence_term_groups = [
+        [term.strip().lower() for term in group if term.strip()]
+        for group in (required_term_groups or [])
+    ]
     scored = []
     for chunk in chunks:
         score, matched_terms = _score_package_chunk(
             chunk,
             terms,
             evidence_terms=evidence_terms,
+            evidence_term_groups=evidence_term_groups,
         )
         if score <= 0:
             continue
@@ -538,6 +544,7 @@ def _search_package_chunks(
     return {
         "query": query,
         "required_terms": required_terms,
+        "required_term_groups": required_term_groups or [],
         "hit_count": len(results),
         "results": results,
     }
@@ -554,11 +561,19 @@ def _score_package_chunk(
     terms: list[str],
     *,
     evidence_terms: list[str] | None = None,
+    evidence_term_groups: list[list[str]] | None = None,
 ) -> tuple[float, list[str]]:
     text = " ".join([str(chunk.get("title") or ""), str(chunk.get("heading") or ""), chunk["text"]])
     lower = text.lower()
     token_set = set(_tokenize(text))
-    if evidence_terms and not _matches_any_term(lower, token_set, evidence_terms):
+    group_matches: list[str] = []
+    if evidence_term_groups:
+        for group in evidence_term_groups:
+            matched_group_terms = _matched_terms(lower, token_set, group)
+            if not matched_group_terms:
+                return 0.0, []
+            group_matches.extend(matched_group_terms)
+    elif evidence_terms and not _matches_any_term(lower, token_set, evidence_terms):
         return 0.0, []
     matched = []
     for term in terms:
@@ -566,10 +581,17 @@ def _score_package_chunk(
             matched.append(term)
     if not matched:
         return 0.0, []
+    matched = sorted(set(matched) | set(group_matches))
     phrase_hits = sum(1 for term in matched if " " in term)
     score = len(matched) / max(1, len(terms))
     score += phrase_hits * 0.2
+    if evidence_term_groups:
+        score += len(evidence_term_groups) * 0.3
     return score, matched
+
+
+def _matched_terms(lower_text: str, token_set: set[str], terms: list[str]) -> list[str]:
+    return [term for term in terms if _matches_term(lower_text, token_set, term)]
 
 
 def _matches_any_term(lower_text: str, token_set: set[str], terms: list[str]) -> bool:
@@ -609,6 +631,17 @@ def _package_result(*, rank: int, score: float, chunk: dict, terms: list[str]) -
     }
 
 
+def _applicability_term_groups(item: dict) -> list[list[str]]:
+    groups = []
+    for group in item.get("applies_if_package_term_groups", []) or []:
+        if not isinstance(group, list):
+            continue
+        terms = [str(term).strip() for term in group if str(term).strip()]
+        if terms:
+            groups.append(terms)
+    return groups
+
+
 def _finding_for_item(
     *,
     item: dict,
@@ -620,16 +653,22 @@ def _finding_for_item(
     package_evidence = package_search["results"][0] if package_search["results"] else None
     source_evidence = source_query["results"][0] if source_query["results"] else None
     applicability_terms = [str(term) for term in item.get("applies_if_package_terms", [])]
+    applicability_term_groups = _applicability_term_groups(item)
     applicability_mode = str(
-        item.get("applicability_mode") or ("conditional" if applicability_terms else "baseline")
+        item.get("applicability_mode")
+        or ("conditional" if applicability_terms or applicability_term_groups else "baseline")
     )
     applicability = True
     applicability_evidence = None
-    if applicability_terms:
+    if applicability_terms or applicability_term_groups:
+        search_terms = applicability_terms or [
+            term for group in applicability_term_groups for term in group
+        ]
         applicability_search = _search_package_chunks(
             package_chunks,
-            query=" ".join(applicability_terms),
-            required_terms=applicability_terms,
+            query=" ".join(search_terms),
+            required_terms=search_terms,
+            required_term_groups=applicability_term_groups,
             limit=1,
         )
         applicability_evidence = (
@@ -671,6 +710,7 @@ def _finding_for_item(
         "applicability_status": "applicable" if applicability else "not_applicable",
         "applicability_mode": applicability_mode,
         "applicability_terms": applicability_terms,
+        "applicability_term_groups": applicability_term_groups,
         "applicability_rationale": applicability_rationale,
         "applicability_evidence": applicability_evidence,
         "package_evidence_status": "found" if package_evidence else "not_found",

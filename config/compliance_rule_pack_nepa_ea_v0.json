@@ -643,11 +643,11 @@
       "question": "If a categorical-exclusion path is implicated, does the EA package explain the CE/adopted CE screen or why EA review is being used?",
       "requirement": "When CE adoption or rejection is relevant, the EA package should document the pathway and why EA review is appropriate.",
       "severity": "high",
-      "package_query": "categorical exclusion CE level of review",
+      "package_query": "adopted CE adoption of categorical exclusion categorical exclusion path",
       "package_terms": [
-        "categorical exclusion",
-        "CE",
-        "level of review"
+        "adopted CE",
+        "adoption of categorical exclusion",
+        "categorical exclusion path"
       ],
       "source_query": "42 U.S.C. § 4336c - Adoption of categorical exclusions Another agency CE considered and rejected/adopted Check CE-adoption pathway and ensure EA explains why CE did not apply if relevant",
       "source_filters": {
@@ -656,9 +656,20 @@
       },
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span.",
       "applies_if_package_terms": [
-        "categorical exclusion",
-        "CE",
-        "adopted CE"
+        "adopted CE",
+        "adoption of categorical exclusion",
+        "categorical exclusion path"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "categorical exclusion",
+          "CE"
+        ],
+        [
+          "adopted CE",
+          "adoption of categorical exclusion",
+          "categorical exclusion path"
+        ]
       ]
     },
     {
@@ -698,10 +709,11 @@
       "question": "If a categorical exclusion or FANEC path is implicated, does the EA package document that screen?",
       "requirement": "The EA package should document CE/FANEC screening or explain why a CE path does not resolve the review when implicated.",
       "severity": "high",
-      "package_query": "categorical exclusion extraordinary circumstances FANEC",
+      "package_query": "CE FANEC screen categorical exclusion path extraordinary circumstances review",
       "package_terms": [
-        "categorical exclusion",
-        "extraordinary circumstances",
+        "CE/FANEC screen",
+        "categorical exclusion path",
+        "extraordinary circumstances review",
         "FANEC"
       ],
       "source_query": "7 CFR § 1b.3 - Categorical exclusions and FANEC Possible CE, adopted CE, or established CE pathway Check that EA file documents CE/FANEC screen or reason CE did not resolve NEPA",
@@ -711,9 +723,21 @@
       },
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span.",
       "applies_if_package_terms": [
-        "categorical exclusion",
-        "FANEC",
-        "extraordinary circumstances"
+        "CE/FANEC screen",
+        "categorical exclusion path",
+        "extraordinary circumstances review",
+        "FANEC"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "categorical exclusion",
+          "FANEC"
+        ],
+        [
+          "CE/FANEC screen",
+          "categorical exclusion path",
+          "extraordinary circumstances review"
+        ]
       ]
     },
     {
@@ -725,11 +749,11 @@
       "question": "If a USDA subcomponent categorical exclusion might apply, does the EA package document that screen?",
       "requirement": "The EA package should document subcomponent CE screening where the action might fit a USDA CE.",
       "severity": "high",
-      "package_query": "subcomponent categorical exclusion extraordinary circumstances CE",
+      "package_query": "USDA CE screening subcomponent categorical exclusion extraordinary circumstances review",
       "package_terms": [
         "subcomponent categorical exclusion",
-        "extraordinary circumstances",
-        "CE"
+        "USDA CE screening",
+        "extraordinary circumstances review"
       ],
       "source_query": "7 CFR § 1b.4 - USDA subcomponent categorical exclusions Action fits or may fit USDA CE Check CE list and extraordinary circumstances; if EA selected, verify no applicable CE was available or used",
       "source_filters": {
@@ -738,9 +762,19 @@
       },
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span.",
       "applies_if_package_terms": [
-        "categorical exclusion",
-        "extraordinary circumstances",
-        "USDA CE"
+        "subcomponent categorical exclusion",
+        "USDA CE screening",
+        "extraordinary circumstances review"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "subcomponent categorical exclusion",
+          "USDA CE"
+        ],
+        [
+          "USDA CE screening",
+          "extraordinary circumstances review"
+        ]
       ]
     },
     {

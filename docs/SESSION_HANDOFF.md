@@ -76,8 +76,8 @@ Primary failing artifacts/checks:
   `all_applicable_standards_applied=true`.
 - `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` passes.
 - `v1_ea_eval_results.json` failure categories:
-  `conditional_false_positive=3` and `rule_section_mismatch=2`. Forest-plan expectation match rate
-  is now `1.0`.
+  `rule_section_mismatch=2`. `conditional_false_positive=0`,
+  `conditional_false_negative=0`, and forest-plan expectation match rate is now `1.0`.
 - V1 EA gate repair milestone 1 locked the failure reproduction without changing applicability,
   trigger, or section-routing behavior. The eval summary now includes
   `failed_rule_expectation_count`, `failed_rule_ids`, `failed_rule_ids_by_category`, and
@@ -85,6 +85,10 @@ Primary failing artifacts/checks:
   (`nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`,
   `usda_nepa_subcomponent_ce_7cfr_1b4`) and the two section mismatches
   (`nepa_statute_chapter_55`, `nepa_4336b_programmatic_tiering`).
+- V1 EA gate repair milestone 2 added grouped positive applicability triggers for the three CE/FANEC
+  conditional rules. The East Crazies review now keeps those rules `not_applicable` unless package
+  evidence shows an adopted CE, CE/FANEC screen, categorical-exclusion path, USDA CE screening, or
+  extraordinary-circumstances review.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the

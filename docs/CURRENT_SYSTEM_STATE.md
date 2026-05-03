@@ -728,7 +728,8 @@ The command writes these artifacts beside the base EA review artifacts:
 
 The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,
 severity, authority category, authority source record, applicability mode, package query and terms,
-optional conditional applicability terms, source query, source filters, and an evidence expectation.
+optional conditional applicability terms, optional grouped conditional applicability terms, source
+query, source filters, and an evidence expectation.
 The authority document role is derived from explicit rule metadata when present, otherwise from
 `source_filters.document_role`.
 Rule-pack `0.4.0` also declares `baseline_source_record_ids`; these are the 26
@@ -941,11 +942,18 @@ nonnumeric number tokens as inventory-quality issues instead of allowing rough I
 The prior 147-row downstream corpus remains useful for historical comparison only and should not be
 treated as current promotion evidence for the expanded workbook.
 
+The V1 CE/FANEC conditional-applicability milestone is implemented: grouped positive trigger
+semantics now keep `nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`, and
+`usda_nepa_subcomponent_ce_7cfr_1b4` not applicable for the East Crazies package unless package
+evidence shows an adopted CE, CE/FANEC screen, categorical-exclusion path, USDA CE screening, or
+extraordinary-circumstances review. The live V1 eval now reports `conditional_false_positive=0` and
+`conditional_false_negative=0`.
+
 The next v1 milestone is to close the remaining non-forest-plan V1 eval failures for the Custer
-Gallatin proving package: three categorical-exclusion conditional false positives and two
-rule/conditional section mismatches. Use those failures to decide whether the fix belongs in package
-section binding, source applicability, conditional rule gating, or rule wording. Embeddings,
-reranking, and model-assisted synthesis remain downstream of that evidence-backed real-package pass.
+Gallatin proving package: two rule/conditional section mismatches for `nepa_statute_chapter_55` and
+`nepa_4336b_programmatic_tiering`. Use those failures to decide whether the fix belongs in package
+section binding, conditional rule routing, or rule wording. Embeddings, reranking, and
+model-assisted synthesis remain downstream of that evidence-backed real-package pass.
 
 ## Verification Commands
 
