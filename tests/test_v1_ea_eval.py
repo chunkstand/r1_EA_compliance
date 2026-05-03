@@ -149,6 +149,71 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(failures["baseline_source_record_missing"], 1)
             self.assertLess(result.summary["metrics"]["baseline_source_record_match_rate"], 1.0)
 
+    def test_v1_eval_tracks_standard_resolution_queue_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            _write_json(
+                review_dir / "forest_plan_reviewer_resolution_queue.json",
+                {
+                    "schema_version": "forest-plan-reviewer-resolution-queue-v0",
+                    "summary": {"item_count": 2},
+                    "items": [
+                        {"component_id": "component-dc", "component_type": "desired_condition"},
+                        {"component_id": "component-guideline", "component_type": "guideline"},
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["forest_plan"]["max_reviewer_resolution_items"] = 2
+            contract["forest_plan"]["max_standard_reviewer_resolution_items"] = 0
+            _write_json(eval_file, contract)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            metrics = result.summary["metrics"]
+            self.assertEqual(metrics["reviewer_resolution_item_count"], 2)
+            self.assertEqual(metrics["standard_reviewer_resolution_item_count"], 0)
+
+    def test_v1_eval_fails_open_standard_resolution_queue(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            _write_json(
+                review_dir / "forest_plan_reviewer_resolution_queue.json",
+                {
+                    "schema_version": "forest-plan-reviewer-resolution-queue-v0",
+                    "summary": {"item_count": 1},
+                    "items": [
+                        {"component_id": "component-standard", "component_type": "standard"},
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["forest_plan"]["max_reviewer_resolution_items"] = 1
+            contract["forest_plan"]["max_standard_reviewer_resolution_items"] = 0
+            _write_json(eval_file, contract)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            failures = result.summary["failure_category_counts"]
+            self.assertEqual(failures["forest_plan_standard_reviewer_resolution_open"], 1)
+            self.assertEqual(result.summary["metrics"]["standard_reviewer_resolution_item_count"], 1)
+
     def test_cli_accepts_v1_ea_eval_command(self) -> None:
         args = build_parser().parse_args(
             [

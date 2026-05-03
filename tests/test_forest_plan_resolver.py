@@ -213,6 +213,172 @@ class ForestPlanResolverTests(unittest.TestCase):
             validation = report["validation"]
             self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
+    def test_component_plan_consistency_yes_row_supplies_standard_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        (
+                            "| BC-STD-CMBCA-01 | New permanent or temporary roads shall not "
+                            "be allowed. | Yes | The EA section 2.2 project design shows no "
+                            "new permanent or temporary roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-standard-yes-row",
+                component_inventory_path=inventory_path,
+            )
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            standard = findings["cg-test-cmbca-std-01"]
+            self.assertEqual(standard["finding_status"], "supported")
+            self.assertEqual(standard["compliance_status"], "complies")
+            determination = standard["applicability_basis"]["package_component_determination"]
+            self.assertEqual(determination["component_key"], "BC-STD-CMBCA-01")
+            self.assertEqual(determination["component_applies"], "yes")
+            self.assertEqual(determination["review_section"], "EA section 2.2")
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            row = standard_coverage["standards"][0]
+            self.assertTrue(row["standard_applied"])
+            self.assertEqual(row["ea_review_section"], "EA section 2.2")
+            self.assertEqual(
+                row["package_component_determination"]["component_applies"],
+                "yes",
+            )
+
+    def test_component_plan_consistency_no_row_marks_standard_not_applicable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        (
+                            "| BC-STD-CMBCA-01 | New permanent or temporary roads shall not "
+                            "be allowed. | No | This component applies to a specific "
+                            "geographic area which is entirely outside the project area. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-standard-no-row",
+                component_inventory_path=inventory_path,
+            )
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            standard = findings["cg-test-cmbca-std-01"]
+            self.assertEqual(standard["applicability_status"], "not_applicable")
+            self.assertEqual(standard["finding_status"], "not_applicable")
+            self.assertEqual(standard["compliance_status"], "not_applicable")
+            determination = standard["applicability_basis"]["package_component_determination"]
+            self.assertEqual(determination["component_applies"], "no")
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            self.assertTrue(standard_coverage["passed"])
+            self.assertTrue(standard_coverage["all_applicable_standards_applied"])
+            self.assertEqual(standard_coverage["applicable_standard_count"], 0)
+            self.assertEqual(standard_coverage["standards"][0]["plan_source_evidence_count"], 1)
+
+    def test_context_excluded_standard_keeps_lmp_source_binding(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+            standard = next(
+                component
+                for component in inventory["components"]
+                if component["component_id"] == "cg-test-cmbca-std-01"
+            )
+            standard.update(
+                {
+                    "component_id": "cg-test-pryor-std-01",
+                    "component_text": (
+                        "Standards (PR-STD-VEGNF) 01 Invasive species treatments in "
+                        "locations of regional endemic and peripheral plant occurrences "
+                        "shall use methods that are not detrimental to long-term persistence."
+                    ),
+                    "section_heading": "Plan Components-Pryor Mountains Geographic Area",
+                    "geographic_area_ids": ["geo-pryor-mountains"],
+                    "management_area_ids": [],
+                    "package_evidence_terms": [
+                        "regional endemic and peripheral plant occurrences"
+                    ],
+                }
+            )
+            inventory_path.write_text(
+                json.dumps(inventory, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-component-standard-context-excluded",
+                component_inventory_path=inventory_path,
+            )
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            standard_finding = findings["cg-test-pryor-std-01"]
+            self.assertEqual(standard_finding["applicability_status"], "not_applicable")
+            self.assertEqual(standard_finding["finding_status"], "not_applicable")
+            self.assertEqual(standard_finding["compliance_status"], "not_applicable")
+            self.assertEqual(len(standard_finding["plan_source_evidence"]), 1)
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            row = standard_coverage["standards"][0]
+            self.assertTrue(standard_coverage["passed"])
+            self.assertEqual(row["component_key"], "PR-STD-VEGNF-01")
+            self.assertEqual(row["plan_source_evidence_count"], 1)
+            self.assertEqual(
+                row["plan_source_citations"],
+                ["R1PLAN-custer-gallatin-nf-02 | test plan | artifact abc123"],
+            )
+
     def test_component_inventory_source_set_drift_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -443,6 +609,27 @@ class ForestPlanResolverTests(unittest.TestCase):
                             "this component applies is not part of the project area."
                         ),
                         "Pryor Mountains Geographic Area | No | The project is not in this area.",
+                        (
+                            "Research Natural Area | FW-STD-RNA-01 | No | This component is "
+                            "forestwide and would apply to the project area, but there are no "
+                            "research natural areas in the project area or affected by the project."
+                        ),
+                        (
+                            "FW-DC-RNA-01 | Ecological processes that support functional and "
+                            "structural patterns of research natural area ecosystems are present "
+                            "and functioning to sustain the species and ecological conditions for "
+                            "which the research natural area was established. "
+                            + " ".join(["supporting context"] * 28)
+                            + " | No | This component is forestwide and would apply to the "
+                            "project area, but there are no research natural areas in the project "
+                            "area or affected by the project."
+                        ),
+                        (
+                            "FW-DC-DWSR-01 | Designated rivers retain their free-flowing "
+                            "condition. | No | This component is forestwide and would apply "
+                            "to the project area, but there are no designated rivers in the "
+                            "project area or affected by the project."
+                        ),
                         "No new permanent or temporary roads are proposed.",
                     ]
                 ),

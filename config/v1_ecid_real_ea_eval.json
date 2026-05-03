@@ -387,6 +387,7 @@
     "min_applicable_standard_count": 1,
     "require_all_applicable_standards_applied": true,
     "require_reviewer_ready": true,
-    "max_reviewer_resolution_items": 0
+    "max_reviewer_resolution_items": 21,
+    "max_standard_reviewer_resolution_items": 0
   }
 }

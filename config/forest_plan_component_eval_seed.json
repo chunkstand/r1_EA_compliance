@@ -1,0 +1,169 @@
+{
+  "schema_version": "forest-plan-component-eval-v0",
+  "eval_id": "east-crazies-forest-plan-components-v0",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "description": "Adjudicated component-level eval cases for the East Crazy Inspiration Divide forest-plan review.",
+  "metric_thresholds": {
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "false_applicable_component_rate": {
+      "max": 0.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "resolved_compliance_status_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_closure_rate": {
+      "min": 0.875
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "cases": [
+    {
+      "case_id": "fw-std-wlbat-01-applies-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLBAT-01",
+      "description": "Bat decontamination standard is forestwide and explicitly marked applicable in the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlgb-01-applies-ea-section-3-4",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLGB-01",
+      "description": "Grizzly bear food storage standard is applicable and package evidence points to EA section 3.4.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "EA section 3.4",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlsg-01-not-applicable-no-sage-grouse-habitat",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLSG-01",
+      "description": "Greater sage-grouse standard is not applicable because the package states no sage-grouse habitat.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlpd-01-not-applicable-no-prairie-dog-habitat",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLPD-01",
+      "description": "Prairie dog habitat standard is not applicable because the package states no prairie dog habitat.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-dwa-01-not-applicable-no-designated-wilderness",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-DWA-01",
+      "description": "Designated wilderness standard is not applicable because no designated wilderness is in or affected by the project.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "pr-std-vegnf-01-not-applicable-outside-pryor-mountains",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-PR-STD-VEGNF-01",
+      "description": "Pryor Mountains vegetation standard is not applicable because the project resolved to the East Crazies context, not the Pryor Mountains.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "ab-std-rna-01-not-applicable-no-research-natural-area",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RNA-01",
+      "description": "Absaroka Beartooth RNA standard is not applicable because no research natural area is in or affected by the project.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-wtr-01-open-package-evidence-gap",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WTR-01",
+      "description": "Forestwide water desired condition remains applicable but lacks package evidence, so reviewer resolution should stay open.",
+      "component_type": "desired_condition",
+      "applicability_status": "applicable",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    }
+  ]
+}

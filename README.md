@@ -176,13 +176,42 @@ Forest-plan component evaluation is a default part of `forest-plan-resolve` for 
 the selected forest-plan profile. The resolver uses a source-set component inventory when present and
 falls back to `config/forest_plan_component_inventory_seed.json`; `--forest-plan-component-inventory-path`
 only overrides the inventory path. The evaluator writes component findings and a reviewer-resolution
-queue; supported/partial findings require both package evidence and current plan-source evidence,
-while source-set drift and missing package evidence become reviewer work. The first NFMA coverage
-gate also writes selected-inventory coverage and applicable-standard coverage artifacts, and
-reviewer-ready status fails when an applicable standard lacks plan-source evidence, package evidence,
-or a resolved compliance status. The current source-set inventory for the 2022 Custer Gallatin LMP
-is generated from extracted chunks and has passing build coverage; the seed inventory is now only a
-fallback/test fixture.
+queue; supported/partial findings require both package evidence and plan-source evidence from the
+component inventory's source chunk binding, while source-set drift and missing package evidence
+become reviewer work. The first NFMA coverage gate also writes selected-inventory coverage and
+applicable-standard coverage artifacts, and reviewer-ready status fails when an applicable standard
+lacks plan-source evidence, package evidence, or a resolved compliance status. The current source-set
+inventory for the 2022 Custer Gallatin LMP is generated from extracted chunks and has passing build
+coverage; the seed inventory is now only a fallback/test fixture.
+
+The applicable-standard gate also reads explicit EA package plan-consistency table rows keyed by
+component code, including extraction variants such as `FW-STD-FAC -01` and
+`FW-STD-ROSSPNM- 01`. A `Yes` row supplies package evidence and the reviewed EA section when
+present; a `No` row marks the standard not applicable with citation-bearing package evidence.
+Malformed table rows with an empty component-code cell can still bind when the row's component text
+matches the LMP component text. Standards excluded by resolved project context still retain an LMP
+component binding and plan-source citation so the coverage table is auditable instead of silently
+dropping source context.
+
+Component package retrieval is section-aware. Queries are built from the component code, component
+text, resource topics, activity tags, geography/management context, and mandatory/prohibitive terms;
+candidate package evidence is then bound to a package section family such as hydrology, wildlife,
+recreation/access, land exchange, minerals, or general EA. Negative plan-consistency determinations
+and absence statements such as `not part of the project area`, `no ... in the parcels`, or
+`outside of <area/overlay>` suppress false-applicable context unless the package also contains
+affirmative location evidence. Restrictive recreation/access standards can also bind to proposed
+trail or route evidence that explicitly supports nonmotorized/no-motorized use, so standards written
+as prohibitions do not require the EA to repeat the plan's exact phrasing.
+
+`forest-plan-component-eval` scores the current forest-plan review against adjudicated
+component-level cases in `config/forest_plan_component_eval_seed.json`. The eval measures component
+applicability precision/recall, applicable-standard recall, false-applicable component rate,
+package-section match rate, plan-source citation correctness, package-evidence citation
+correctness, resolved compliance-status rate, and reviewer-resolution closure rate. This is the
+feedback loop for improving forest-plan accuracy across runs; it fails closed when package evidence,
+plan citations, section bindings, applicability, compliance status, reviewer-resolution state, or
+the identity of any consumed review artifact drifts from the adjudicated contract. Citation
+correctness is exact: extra or missing plan/package citations both fail the case.
 
 ## Common Commands
 
@@ -676,6 +705,20 @@ links, source-claim term support, and compliance-review eval coverage. It report
 rules without eval cases, rules without source-claim links, source-record mismatches, and
 source-claim terms that do not match current rule-claim bindings.
 
+Run forest-plan component eval against an existing review:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --eval-file config/forest_plan_component_eval_seed.json
+```
+
+`forest-plan-component-eval` reads the review's component findings, applicable-standard coverage,
+and reviewer-resolution queue, then writes `forest_plan_component_eval_results.json` beside the
+review artifacts. Use this after `forest-plan-resolve` or `compliance-review` when changing
+component applicability, source binding, package evidence extraction, or reviewer-resolution logic.
+
 Run phase-aligned readiness evaluation:
 
 ```bash
@@ -691,7 +734,9 @@ When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.j
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
 rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` after a
 compliance review to include `compliance_review` as an additional phase gate. If the review
-directory contains `forest_plan_component_adjudication_eval.json`, or a completed
+directory contains `forest_plan_component_eval_results.json`, phase eval also reports a
+`forest_plan_component_eval` phase with component-level metrics and failure categories. If the
+review directory contains `forest_plan_component_adjudication_eval.json`, or a completed
 `forest_plan_component_adjudication.json` that still needs an eval, phase eval also reports a
 `forest_plan_component_adjudication` phase with completion rate, expectation match rate,
 disposition counts, and failure categories. The compliance phase requires the review source set to

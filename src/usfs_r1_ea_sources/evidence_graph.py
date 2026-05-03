@@ -11,6 +11,7 @@ import re
 import sqlite3
 
 from .extract import _source_derived_dir
+from .forest_plan_component_eval import FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -306,6 +307,11 @@ def run_phase_aligned_eval(
         if review_dir is not None
         else None
     )
+    component_eval_path = (
+        review_dir / "forest_plan_component_eval_results.json"
+        if review_dir is not None
+        else None
+    )
     component_adjudication_file_path = (
         review_dir / "forest_plan_component_adjudication.json"
         if review_dir is not None
@@ -350,6 +356,11 @@ def run_phase_aligned_eval(
         _read_json(component_adjudication_eval_path)
         if component_adjudication_eval_path is not None
         and component_adjudication_eval_path.exists()
+        else None
+    )
+    component_eval = (
+        _read_json(component_eval_path)
+        if component_eval_path is not None and component_eval_path.exists()
         else None
     )
     compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
@@ -719,6 +730,74 @@ def run_phase_aligned_eval(
                 },
             )
         )
+        if component_eval is not None:
+            component_eval_summary = (
+                component_eval.get("summary")
+                if isinstance(component_eval, dict)
+                and isinstance(component_eval.get("summary"), dict)
+                else {}
+            )
+            component_eval_schema_version = (
+                component_eval.get("schema_version")
+                if isinstance(component_eval, dict)
+                else None
+            ) or component_eval_summary.get("schema_version")
+            component_eval_review_id = component_eval_summary.get("review_id")
+            component_eval_source_set_id = component_eval_summary.get("source_set_id")
+            expected_component_eval_review_id = review_id or compliance_summary.get("review_id")
+            component_eval_passed = bool(component_eval_summary.get("passed"))
+            component_eval_schema_matches = (
+                component_eval_schema_version == FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
+            )
+            component_eval_source_set_matches = component_eval_source_set_id == source_set_id
+            component_eval_review_id_matches = (
+                expected_component_eval_review_id is None
+                or component_eval_review_id == expected_component_eval_review_id
+            )
+            component_eval_failed_checks = []
+            if not component_eval_schema_matches:
+                component_eval_failed_checks.append("schema_version_mismatch")
+            if not component_eval_passed:
+                component_eval_failed_checks.append("component_eval_failed")
+            if not component_eval_source_set_matches:
+                component_eval_failed_checks.append("source_set_mismatch")
+            if not component_eval_review_id_matches:
+                component_eval_failed_checks.append("review_id_mismatch")
+            component_eval_phase_passed = (
+                component_eval_schema_matches
+                and component_eval_passed
+                and component_eval_source_set_matches
+                and component_eval_review_id_matches
+            )
+            phases.append(
+                _phase(
+                    "forest_plan_component_eval",
+                    passed=component_eval_phase_passed,
+                    reviewer_ready=component_eval_phase_passed,
+                    details={
+                        "review_dir": str(review_dir),
+                        "eval_path": str(component_eval_path),
+                        "schema_version": component_eval_schema_version,
+                        "schema_version_matches": component_eval_schema_matches,
+                        "eval_passed": component_eval_passed,
+                        "failed_checks": component_eval_failed_checks,
+                        "expected_source_set_id": source_set_id,
+                        "component_eval_source_set_id": component_eval_source_set_id,
+                        "source_set_matches": component_eval_source_set_matches,
+                        "expected_review_id": expected_component_eval_review_id,
+                        "component_eval_review_id": component_eval_review_id,
+                        "review_id_matches": component_eval_review_id_matches,
+                        "case_count": component_eval_summary.get("case_count", 0),
+                        "passed_case_count": component_eval_summary.get("passed_case_count", 0),
+                        "failed_case_count": component_eval_summary.get("failed_case_count", 0),
+                        "metrics": component_eval_summary.get("metrics", {}),
+                        "failure_category_counts": component_eval_summary.get(
+                            "failure_category_counts",
+                            {},
+                        ),
+                    },
+                )
+            )
         should_include_component_adjudication = bool(
             component_adjudication_eval_path is not None
             and component_adjudication_eval_path.exists()

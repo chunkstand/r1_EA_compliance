@@ -31,6 +31,8 @@ from .forest_plan_component_adjudication import (
     run_forest_plan_component_adjudication_eval,
     write_forest_plan_component_adjudication_template,
 )
+from .forest_plan_component_eval import DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH
+from .forest_plan_component_eval import run_forest_plan_component_eval
 from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
@@ -485,6 +487,24 @@ def build_parser() -> argparse.ArgumentParser:
     forest_plan_component_adjudication_eval.add_argument("--adjudication-file", type=Path)
     forest_plan_component_adjudication_eval.add_argument("--output-path", type=Path)
 
+    forest_plan_component_eval = subparsers.add_parser(
+        "forest-plan-component-eval",
+        help="Evaluate forest-plan component findings against adjudicated component cases.",
+    )
+    forest_plan_component_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    forest_plan_component_eval.add_argument("--review-id")
+    forest_plan_component_eval.add_argument("--review-dir", type=Path)
+    forest_plan_component_eval.add_argument(
+        "--eval-file",
+        default=DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH,
+        type=Path,
+    )
+    forest_plan_component_eval.add_argument("--output-path", type=Path)
+
     forest_plan_resolve = subparsers.add_parser(
         "forest-plan-resolve",
         help="Resolve profile-driven forest-plan context from a local EA package.",
@@ -880,6 +900,17 @@ def main(argv: list[str] | None = None) -> int:
             review_id=args.review_id,
             review_dir=args.review_dir,
             adjudication_file=args.adjudication_file,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "forest-plan-component-eval":
+        result = run_forest_plan_component_eval(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+            eval_file=args.eval_file,
             output_path=args.output_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))

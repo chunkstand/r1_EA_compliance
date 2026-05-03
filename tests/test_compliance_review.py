@@ -1221,6 +1221,82 @@ class ComplianceReviewTests(unittest.TestCase):
                 1.0,
             )
 
+    def test_phase_eval_can_include_component_eval_phase(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="phase-review",
+            )
+            _write_component_eval(
+                output_dir / "reviews" / "phase-review",
+                source_set_id=source_set_id,
+                review_id="phase-review",
+                passed=True,
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="phase-review",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(result.summary["phase_count"], 8)
+            component_eval_phase = _phase(result.summary, "forest_plan_component_eval")
+            self.assertTrue(component_eval_phase["passed"])
+            self.assertTrue(component_eval_phase["reviewer_ready"])
+            self.assertEqual(component_eval_phase["details"]["case_count"], 3)
+            self.assertEqual(
+                component_eval_phase["details"]["metrics"]["applicable_standard_recall"],
+                1.0,
+            )
+
+    def test_phase_eval_rejects_component_eval_schema_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="phase-review",
+            )
+            _write_component_eval(
+                output_dir / "reviews" / "phase-review",
+                source_set_id=source_set_id,
+                review_id="phase-review",
+                passed=True,
+                schema_version="wrong-schema",
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="phase-review",
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            component_eval_phase = _phase(result.summary, "forest_plan_component_eval")
+            self.assertFalse(component_eval_phase["passed"])
+            self.assertEqual(
+                component_eval_phase["details"]["failed_checks"],
+                ["schema_version_mismatch"],
+            )
+
     def test_phase_eval_rejects_pending_component_adjudication(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -1645,6 +1721,41 @@ def _write_component_adjudication_eval(
                         else {}
                     ),
                     "failure_category_counts": failure_counts,
+                    "passed": passed,
+                },
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_component_eval(
+    review_dir: Path,
+    *,
+    source_set_id: str,
+    review_id: str,
+    passed: bool,
+    schema_version: str = "forest-plan-component-eval-results-v0",
+) -> None:
+    review_dir.mkdir(parents=True, exist_ok=True)
+    (review_dir / "forest_plan_component_eval_results.json").write_text(
+        json.dumps(
+            {
+                "schema_version": schema_version,
+                "summary": {
+                    "schema_version": schema_version,
+                    "review_id": review_id,
+                    "source_set_id": source_set_id,
+                    "case_count": 3,
+                    "passed_case_count": 3 if passed else 2,
+                    "failed_case_count": 0 if passed else 1,
+                    "metrics": {
+                        "component_applicability_precision": 1.0,
+                        "component_applicability_recall": 1.0,
+                        "applicable_standard_recall": 1.0,
+                    },
+                    "failure_category_counts": {} if passed else {"package_section_mismatch": 1},
                     "passed": passed,
                 },
             },

@@ -718,6 +718,16 @@ def _evaluate_forest_plan(
             passed=actual_count <= maximum,
             failure_category="forest_plan_reviewer_resolution_open",
         )
+    if expectations.get("max_standard_reviewer_resolution_items") is not None:
+        maximum = int(expectations["max_standard_reviewer_resolution_items"])
+        actual_count = _reviewer_resolution_count_by_component_type(queue, "standard")
+        add_result(
+            expectation_id="standard_reviewer_resolution_item_count",
+            expected={"max": maximum},
+            actual=actual_count,
+            passed=actual_count <= maximum,
+            failure_category="forest_plan_standard_reviewer_resolution_open",
+        )
     return results
 
 
@@ -891,6 +901,10 @@ def _metrics(
         ),
         "reviewer_resolution_item_count": _reviewer_resolution_count(
             artifacts["forest_plan_reviewer_resolution_queue"]
+        ),
+        "standard_reviewer_resolution_item_count": _reviewer_resolution_count_by_component_type(
+            artifacts["forest_plan_reviewer_resolution_queue"],
+            "standard",
         ),
     }
 
@@ -1214,8 +1228,21 @@ def _reviewer_resolution_count(queue: dict[str, Any]) -> int:
             return int(summary[key])
         if queue.get(key) is not None:
             return int(queue[key])
-    items = queue.get("items") or queue.get("queue") or []
+    items = _reviewer_resolution_items(queue)
     return len(items) if isinstance(items, list) else 0
+
+
+def _reviewer_resolution_count_by_component_type(queue: dict[str, Any], component_type: str) -> int:
+    return sum(
+        1
+        for item in _reviewer_resolution_items(queue)
+        if str(item.get("component_type") or "") == component_type
+    )
+
+
+def _reviewer_resolution_items(queue: dict[str, Any]) -> list[dict[str, Any]]:
+    items = queue.get("items") or queue.get("queue") or []
+    return [item for item in items if isinstance(item, dict)] if isinstance(items, list) else []
 
 
 def _nested_get(value: dict[str, Any], path: list[str]) -> Any:

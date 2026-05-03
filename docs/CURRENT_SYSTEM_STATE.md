@@ -381,16 +381,30 @@ Current state:
 - The first real East Crazy Inspiration Divide V1 compliance review run exists locally at
   `source_library/reviews/v1-cg-ecid-compliance-review/`. It extracted `43` package files into
   `1,265` chunks, produced compliance review/matrix/PDF/graph artifacts, and passed
-  the upstream source-set phases. After the profile-driven forest-plan scope fix, the package
+  the upstream source-set phases. After the section-aware forest-plan retrieval pass, the package
   resolves to `scope_status: custer_gallatin`; forest-plan context validation passes with
-  `3` geographic areas, `11` management areas, `7` overlays, and `5` supporting plan evidence
-  records. Forest-plan component artifacts are now produced from the generated source-set inventory
-  with `331` component findings, `58` standards, `46` applicable standards, and `39` applied
-  standards. The stricter compliance/V1 gates still fail closed because
-  `forest_plan_component_gate_reviewer_ready` is false, `82` forest-plan reviewer-resolution items
-  remain open, three categorical-exclusion conditionals are false positives against the current V1
-  contract, and two rule/conditional section matches are off. This is the current V1 blocker before
-  practitioner-ready completion.
+  `2` geographic areas, `1` management area, `2` overlays, and `5` supporting plan evidence
+  records. The retained context is Bridger/Bangtail/Crazy, Madison/Henrys Lake/Gallatin, Crazy
+  Mountains BCA, Inventoried Roadless Area, and Recommended Wilderness Area. Forest-plan component
+  artifacts are produced from the generated source-set inventory with `331` component findings,
+  `58` standards, `12` applicable standards, and `12` applied standards. The stricter
+  applicable-standard coverage gate now passes with `all_applicable_standards_applied=true`; the
+  prior `AB-STD-RCREA-01` gap is supported by recreation/access package evidence for the proposed
+  nonmotorized Sweet Trunk Trail. The reviewer-resolution queue now has `21` citation-bearing
+  `missing_package_evidence` items, all non-standard components.
+  Component-level forest-plan eval runs against `config/forest_plan_component_eval_seed.json` and
+  passes all `8` adjudicated cases: component applicability precision/recall,
+  applicable-standard recall, package-section match rate, plan-source citation correctness,
+  package-evidence citation correctness, resolved compliance-status rate, compliance-status match
+  rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
+  `0.0`; reviewer-resolution closure rate is `0.875`. `phase-eval --review-id
+  v1-cg-ecid-compliance-review` now reports `10/11` passing phases, with
+  `forest_plan_component_eval` passing and `forest_plan_component_adjudication` failing only on
+  pending reviewer adjudication. The stricter V1 eval now passes all forest-plan expectations,
+  including zero open standard reviewer-resolution items and a capped `21` total non-standard
+  reviewer-resolution items. It still fails closed on non-forest-plan review quality gaps: three
+  categorical-exclusion conditional false positives and two rule/conditional section mismatches.
+  Those are the current V1 blockers before practitioner-ready completion.
 - Forest-plan component adjudication tooling is implemented through
   `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
   template command exports one adjudication item for each open component reviewer-resolution queue
@@ -399,10 +413,10 @@ Current state:
   has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
   `retrieval_miss`, `package_section_chunking_miss`, `component_inventory_overreach`,
   `applicability_false_positive`, or `evidence_linking_miss`.
-  Running the template against `v1-cg-ecid-compliance-review` produced `82` pending items:
-  `35` guidelines, `26` desired conditions, `7` objectives, `7` standards, `4` suitability
-  components, and `3` goals. Running the eval against that pending template fails by design with
-  `adjudication_pending=82`, completion rate `0.0`, and expectation match rate `1.0`. When the
+  Running the template against `v1-cg-ecid-compliance-review` produced `21` pending items:
+  `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and `1` suitability
+  component. Running the eval against that pending template fails by design with
+  `adjudication_pending=21`, completion rate `0.0`, and expectation match rate `1.0`. When the
   adjudication eval artifact is present in a review directory, `phase-eval --review-id` includes it
   as a `forest_plan_component_adjudication` phase so pending or stale adjudication work blocks
   reviewer readiness at the phase gate.
@@ -413,6 +427,8 @@ Current state:
 - A seed compliance gold eval file exists at `config/compliance_gold_eval_v0.json`.
 - A seed compliance coverage matrix exists at
   `config/compliance_rule_pack_coverage_nepa_ea_v0.json`.
+- A seed forest-plan component eval file exists at
+  `config/forest_plan_component_eval_seed.json`.
 - A V1 real-EA review eval contract exists at `config/v1_ecid_real_ea_eval.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
@@ -522,6 +538,11 @@ Boundaries:
   source-library citations.
 - It proves a Custer Gallatin-scoped compliance review cannot be reviewer-ready when forest-plan
   component evaluation is absent, stale, or not reviewer-ready.
+- It proves component-level forest-plan accuracy can be scored against adjudicated cases for
+  applicability, standard recall, package-section binding, plan-source citations, package-evidence
+  citations, resolved compliance status, and reviewer-resolution closure before running additional
+  real EA packages. The component eval checks review/source-set identity across every consumed
+  review artifact and treats extra citations as citation mismatches, not harmless surplus evidence.
 - It proves the profile-driven forest-plan resolver can resolve the real East Crazy Inspiration
   Divide package to Custer Gallatin scope without treating incidental references to other forests as
   ambiguity, while still failing closed when component coverage is not reviewer-ready.
@@ -836,6 +857,8 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - optional compliance gold eval when `compliance_gold_eval_results.json` exists under
   `source_library/reviews/compliance_gold_eval/`
 - optional compliance review when `--review-id` or `--review-dir` is passed
+- optional forest-plan component eval when the review directory contains
+  `forest_plan_component_eval_results.json`
 - optional forest-plan component adjudication when the review directory contains
   `forest_plan_component_adjudication_eval.json` or a completed
   `forest_plan_component_adjudication.json`
@@ -848,10 +871,14 @@ specific failed checks such as source-set or rule-pack mismatch. When a complian
 included, `phase-eval` requires the review report to exist, validation to pass, the review ID to
 match when supplied, and the review source set to match the evaluated source set. It also requires
 the compliance matrix artifact to exist and match the review's schema version, review ID, source set,
-rule pack, row count, and status counts. When a forest-plan component adjudication phase is
-included, `phase-eval` requires the adjudication eval to exist, pass, match the evaluated source
-set, and match the supplied review ID when one is provided. The phase reports queue count, resolved
-and pending adjudication counts, completion rate, expectation match rate, disposition counts, and
+rule pack, row count, and status counts. When a forest-plan component eval phase is included,
+`phase-eval` requires the component eval result schema version to match, pass, match the evaluated
+source set, and match the supplied review ID when one is provided. The phase reports case counts,
+component metrics, failed checks, and failure-category counts. When a forest-plan component
+adjudication phase is included,
+`phase-eval` requires the adjudication eval to exist, pass, match the evaluated source set, and match
+the supplied review ID when one is provided. The phase reports queue count, resolved and pending
+adjudication counts, completion rate, expectation match rate, disposition counts, and
 failure-category counts.
 
 ## Alignment And Next Milestone

@@ -9,7 +9,6 @@ import re
 
 from .ea_review import _search_package_chunks
 from .forest_plan_profiles import load_forest_plan_profile
-from .retrieval import query_retrieval_index
 
 
 FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION = "forest-plan-component-inventory-v0"
@@ -77,6 +76,12 @@ LEADING_COMPONENT_LABEL_RE = re.compile(
     r"\s*\([A-Za-z0-9-]+\)\s*[A-Za-z0-9.]+\s+",
     re.IGNORECASE,
 )
+COMPONENT_CODE_NUMBER_RE = re.compile(
+    r"^(?:Desired Conditions?|Goals?|Guidelines?|Monitoring|Objectives?|Standards?|Suitability)"
+    r"\s*\((?P<code>[A-Za-z0-9-]+)\)\s*(?P<number>[A-Za-z0-9.]+)\b",
+    re.IGNORECASE,
+)
+PLAN_CONSISTENCY_YES_NO = {"yes", "no"}
 MODAL_BOUNDARY_RE = re.compile(
     r"\b(?:shall|must|should|may|will|would|is|are|includes?|contains?|allows?|prohibits?)\b",
     re.IGNORECASE,
@@ -90,7 +95,11 @@ TERM_STOPWORDS = {
     "as",
     "be",
     "by",
+    "component",
+    "components",
     "for",
+    "forest",
+    "forestwide",
     "from",
     "in",
     "is",
@@ -100,6 +109,7 @@ TERM_STOPWORDS = {
     "not",
     "of",
     "or",
+    "project",
     "shall",
     "should",
     "that",
@@ -107,6 +117,111 @@ TERM_STOPWORDS = {
     "to",
     "will",
     "with",
+}
+GENERIC_COMPONENT_TERMS = {
+    *TERM_STOPWORDS,
+    "action",
+    "actions",
+    "activities",
+    "activity",
+    "area",
+    "areas",
+    "authorized",
+    "custer",
+    "direction",
+    "gallatin",
+    "management",
+    "national",
+    "provide",
+    "provides",
+    "protect",
+    "related",
+    "resource",
+    "resources",
+}
+SECTION_FAMILY_KEYWORDS = {
+    "hydrology": {
+        "aquatic",
+        "aquatics",
+        "floodplain",
+        "floodplains",
+        "hydrology",
+        "riparian",
+        "river",
+        "rivers",
+        "stream",
+        "streams",
+        "water",
+        "watershed",
+        "watersheds",
+        "wetland",
+        "wetlands",
+    },
+    "wildlife": {
+        "bat",
+        "bear",
+        "big game",
+        "carnivore",
+        "elk",
+        "fisheries",
+        "grizzly",
+        "lynx",
+        "prairie dog",
+        "sage-grouse",
+        "species",
+        "wildlife habitat",
+        "wildlife",
+        "wolverine",
+    },
+    "botany": {
+        "at-risk plant",
+        "botany",
+        "invasive",
+        "plant",
+        "plants",
+        "vegetation",
+        "whitebark",
+        "weed",
+    },
+    "recreation_access": {
+        "access",
+        "backcountry",
+        "bicycle",
+        "event",
+        "events",
+        "facility",
+        "facilities",
+        "mechanized",
+        "motorized",
+        "nonmotorized",
+        "recreation",
+        "road",
+        "roadless",
+        "roads",
+        "scenic",
+        "trail",
+        "trails",
+        "transport",
+    },
+    "land_exchange": {
+        "acquired",
+        "acquisition",
+        "conveyance",
+        "estate",
+        "exchange",
+        "federal",
+        "land exchange",
+        "parcel",
+        "parcels",
+    },
+    "minerals": {
+        "geologic",
+        "mineral",
+        "minerals",
+        "palladium",
+        "platinum",
+        "saleable",
+    },
 }
 
 
@@ -260,7 +375,11 @@ def _components_from_chunk(
             start=match.start(),
             fallback=str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components"),
         )
-        context_text = f"{section_heading} {code} {component_text}"
+        context_text = (
+            f"{section_heading} {code} "
+            f"{_component_context_window(text=text, start=match.start(), end=match.end())} "
+            f"{component_text}"
+        )
         source_chunk_ids = [str(chunk.get("chunk_id") or "").strip()]
         source_chunk_ids = [chunk_id for chunk_id in source_chunk_ids if chunk_id]
         package_evidence_terms = _package_evidence_terms_from_text(component_text)
@@ -474,7 +593,7 @@ def _matching_profile_entry_ids(text: str, entries: tuple[object, ...]) -> list[
     matches = []
     for entry in entries:
         entry_id = str(getattr(entry, "entry_id", "") or "").strip()
-        terms = getattr(entry, "terms", ())
+        terms = _profile_entry_context_terms(entry)
         if not entry_id:
             continue
         for term in terms:
@@ -488,6 +607,17 @@ def _matching_profile_entry_ids(text: str, entries: tuple[object, ...]) -> list[
                 matches.append(entry_id)
                 break
     return _dedupe_preserve_order(matches)
+
+
+def _profile_entry_context_terms(entry: object) -> tuple[str, ...]:
+    terms = [str(term).strip() for term in getattr(entry, "terms", ()) if str(term).strip()]
+    category = str(getattr(entry, "category", "") or "").strip()
+    if category == "geographic_area":
+        for term in list(terms):
+            shortened = re.sub(r"\s+Geographic\s+Area\Z", "", term, flags=re.IGNORECASE).strip()
+            if shortened and shortened != term and len(TOKEN_RE.findall(shortened.lower())) >= 2:
+                terms.append(shortened)
+    return tuple(_dedupe_preserve_order(terms))
 
 
 def _merge_overlapping_component_records(components: list[dict]) -> list[dict]:
@@ -587,6 +717,12 @@ def _section_heading_for_match(*, text: str, start: int, fallback: str) -> str:
         section = _compact(matches[-1].group("section"), limit=240)
         return f"Plan Components-{section}"
     return _compact(fallback, limit=240)
+
+
+def _component_context_window(*, text: str, start: int, end: int) -> str:
+    window_start = max(0, start - 1200)
+    window_end = min(len(text), end + 400)
+    return _compact(text[window_start:window_end], limit=2000)
 
 
 def _component_id(*, source_record_id: str, code: str, number: str) -> str:
@@ -931,23 +1067,43 @@ def _component_finding(
         package_chunks=package_chunks,
         limit=package_top_k,
     )
-    package_evidence = package_search["results"]
+    package_determination = _component_package_determination(
+        component=component,
+        package_chunks=package_chunks,
+    )
+    if package_determination and package_determination.get("component_applies") == "no":
+        package_evidence = [package_determination]
+    else:
+        package_evidence = _merge_package_evidence(
+            [package_determination] if package_determination else [],
+            package_search["results"],
+            limit=package_top_k,
+        )
     plan_source_evidence = []
-    if source_set_matches and context_match and index_path is not None:
+    should_bind_plan_source = (
+        context_match
+        or component["component_type"] == "standard"
+        or package_determination is not None
+    )
+    if source_set_matches and should_bind_plan_source and index_path is not None:
         plan_source_evidence = _component_plan_source_evidence(
             component=component,
             index_path=index_path,
             limit=source_top_k,
         )
 
-    if context.get("needs_reviewer_resolution"):
-        applicability_status = "needs_reviewer_resolution"
-        finding_status = "needs_reviewer_resolution"
-        rationale = "The forest-plan context resolver requires reviewer resolution before component findings can be trusted."
-    elif not source_set_matches:
+    if not source_set_matches:
         applicability_status = "needs_reviewer_resolution"
         finding_status = "needs_reviewer_resolution"
         rationale = "The component inventory source set does not match the review source set."
+    elif package_determination and package_determination.get("component_applies") == "no":
+        applicability_status = "not_applicable"
+        finding_status = "not_applicable"
+        rationale = "The EA package explicitly marks this plan component not applicable."
+    elif context.get("needs_reviewer_resolution"):
+        applicability_status = "needs_reviewer_resolution"
+        finding_status = "needs_reviewer_resolution"
+        rationale = "The forest-plan context resolver requires reviewer resolution before component findings can be trusted."
     elif not context_match:
         applicability_status = "not_applicable"
         finding_status = "not_applicable"
@@ -959,7 +1115,10 @@ def _component_finding(
     elif package_evidence:
         applicability_status = "applicable"
         finding_status = "supported"
-        rationale = "The component is applicable and the EA package contains matching evidence."
+        if package_determination:
+            rationale = "The component is applicable and the EA package contains an explicit plan-consistency determination."
+        else:
+            rationale = "The component is applicable and the EA package contains matching evidence."
     else:
         applicability_status = "applicable"
         finding_status = "gap"
@@ -1002,6 +1161,12 @@ def _component_finding(
             },
             "package_query": package_search["query"],
             "package_evidence_terms": package_search["required_terms"],
+            "component_key": _component_reference_key(component),
+            "package_component_determination": (
+                _package_determination_basis(package_determination)
+                if package_determination
+                else None
+            ),
         },
         "plan_source_evidence": plan_source_evidence,
         "package_evidence": package_evidence,
@@ -1034,17 +1199,367 @@ def _component_package_search(
     package_chunks: list[dict],
     limit: int,
 ) -> dict:
-    terms = component.get("package_evidence_terms") or [
-        *component.get("resource_topics", []),
-        *component.get("activity_tags", []),
-    ]
+    terms = _component_package_search_terms(component)
+    section_families = _component_section_families(component)
     query = " ".join([component["section_heading"], component["component_text"], *terms])
-    return _search_package_chunks(
+    raw = _search_package_chunks(
         package_chunks,
         query=query,
         required_terms=list(terms),
-        limit=limit,
+        limit=max(limit * 10, 10),
     )
+    results = []
+    rejected_count = 0
+    chunks_by_id = {chunk.get("chunk_id"): chunk for chunk in package_chunks}
+    for result in raw["results"]:
+        evidence = _annotate_component_package_evidence(
+            evidence=result,
+            chunk=chunks_by_id.get(result.get("chunk_id"), {}),
+            component=component,
+            required_terms=terms,
+            core_terms=_component_core_evidence_terms(component),
+            section_families=section_families,
+        )
+        if _package_evidence_matches_component(
+            component=component,
+            evidence=evidence,
+            section_families=section_families,
+        ):
+            results.append(evidence)
+        else:
+            rejected_count += 1
+        if len(results) >= limit:
+            break
+    return {
+        "query": query,
+        "required_terms": terms,
+        "section_families": section_families,
+        "raw_hit_count": raw["hit_count"],
+        "rejected_count": rejected_count,
+        "hit_count": len(results),
+        "results": results,
+    }
+
+
+def _component_package_search_terms(component: dict) -> list[str]:
+    candidates = [
+        *component.get("package_evidence_terms", []),
+        *component.get("resource_topics", []),
+        *component.get("activity_tags", []),
+        *_component_keyword_terms(
+            " ".join(
+                [
+                    str(component.get("section_heading") or ""),
+                    str(component.get("component_text") or ""),
+                ]
+            )
+        ),
+    ]
+    component_key = _component_reference_key(component)
+    if component_key:
+        candidates.append(component_key)
+        candidates.extend(part for part in component_key.split("-") if len(part) > 2)
+    return _dedupe_terms(candidates)
+
+
+def _component_core_evidence_terms(component: dict) -> list[str]:
+    return [
+        term
+        for term in _dedupe_terms(
+            [
+                *component.get("package_evidence_terms", []),
+                *component.get("resource_topics", []),
+                *component.get("activity_tags", []),
+            ]
+        )
+        if not _is_context_only_term(term)
+    ]
+
+
+def _is_context_only_term(term: str) -> bool:
+    normalized = _normalized_component_text(term)
+    if not normalized:
+        return True
+    tokens = TOKEN_RE.findall(normalized)
+    if not tokens:
+        return True
+    context_tokens = {
+        "area",
+        "backcountry",
+        "crazy",
+        "geographic",
+        "management",
+        "mountain",
+        "mountains",
+        "plan",
+    }
+    return all(token in context_tokens or token in GENERIC_COMPONENT_TERMS for token in tokens)
+
+
+def _component_keyword_terms(text: str) -> list[str]:
+    terms = []
+    for token in TOKEN_RE.findall(text.lower()):
+        if len(token) < 4 or token in GENERIC_COMPONENT_TERMS or token in terms:
+            continue
+        terms.append(token)
+        if len(terms) >= 12:
+            break
+    return terms
+
+
+def _component_section_families(component: dict) -> list[str]:
+    text = " ".join(
+        [
+            str(component.get("section_heading") or ""),
+            str(component.get("component_text") or ""),
+            " ".join(component.get("package_evidence_terms") or []),
+            " ".join(component.get("resource_topics") or []),
+            " ".join(component.get("activity_tags") or []),
+        ]
+    ).lower()
+    families = [
+        family
+        for family, keywords in SECTION_FAMILY_KEYWORDS.items()
+        if any(keyword in text for keyword in keywords)
+    ]
+    if not families:
+        families.append("general_ea")
+    return _dedupe_preserve_order(families)
+
+
+def _annotate_component_package_evidence(
+    *,
+    evidence: dict,
+    chunk: dict,
+    component: dict,
+    required_terms: list[str],
+    core_terms: list[str],
+    section_families: list[str],
+) -> dict:
+    annotated = dict(evidence)
+    evidence_text = " ".join(
+        [
+            _package_evidence_text(evidence),
+            str(chunk.get("text") or "").lower(),
+        ]
+    )
+    matched_terms = [
+        term for term in required_terms if _term_matches_text(evidence_text, term)
+    ]
+    matched_core_terms = [
+        term for term in core_terms if _term_matches_text(evidence_text, term)
+    ]
+    evidence_family = _package_evidence_section_family(evidence, context_text=evidence_text)
+    annotated["matched_component_terms"] = matched_terms
+    annotated["matched_core_terms"] = matched_core_terms
+    annotated["review_section"] = _package_evidence_review_section(evidence)
+    annotated["section_binding"] = {
+        "component_section_families": section_families,
+        "package_section_family": evidence_family,
+        "matched": evidence_family in section_families or evidence_family == "general_ea",
+    }
+    if _package_evidence_supports_restrictive_recreation_component(
+        component=component,
+        evidence=evidence,
+        section_families=section_families,
+        context_text=evidence_text,
+        family=evidence_family,
+    ):
+        annotated["restrictive_access_support"] = True
+    return annotated
+
+
+def _package_evidence_matches_component(
+    *,
+    component: dict,
+    evidence: dict,
+    section_families: list[str],
+) -> bool:
+    text = _package_evidence_text(evidence)
+    if _is_negative_package_evidence(text):
+        return False
+    family = _package_evidence_section_family(evidence)
+    if family == "plan_consistency":
+        component_key = _component_reference_key(component)
+        return bool(
+            component_key
+            and component_key.lower() in text
+            and re.search(r"(?:\|\s*yes\s*\||(?:^|\n)\s*yes\s*(?:\n|-))", text)
+        )
+    if (
+        evidence.get("restrictive_access_support")
+        or _package_evidence_supports_restrictive_recreation_component(
+            component=component,
+            evidence=evidence,
+            section_families=section_families,
+        )
+    ):
+        return True
+    if not evidence.get("matched_core_terms"):
+        return False
+    if family in section_families:
+        return True
+    if family == "general_ea":
+        return len(evidence.get("matched_component_terms") or []) >= 2
+    return False
+
+
+def _package_evidence_supports_restrictive_recreation_component(
+    *,
+    component: dict,
+    evidence: dict,
+    section_families: list[str],
+    context_text: str | None = None,
+    family: str | None = None,
+) -> bool:
+    if component.get("component_type") != "standard":
+        return False
+    if "recreation_access" not in section_families:
+        return False
+    family = family or _package_evidence_section_family(evidence, context_text=context_text)
+    if family not in {"recreation_access", "general_ea"}:
+        return False
+
+    component_text = _normalized_component_text(str(component.get("component_text") or ""))
+    if not re.search(
+        r"\b(?:shall|should|must)\s+not\b|"
+        r"\bnot\s+be\s+(?:allowed|authorized|constructed|designated|permitted)\b",
+        component_text,
+    ):
+        return False
+    if "motorized" not in set(TOKEN_RE.findall(component_text)):
+        return False
+    if not re.search(r"\b(?:trail|trails|road|roads|route|routes|transport|travel)\b", component_text):
+        return False
+
+    evidence_text = (context_text or _package_evidence_text(evidence)).lower()
+    if _mentions_trail_access(component_text) and not re.search(
+        r"\b(?:trail|trails|route|routes)\b",
+        evidence_text,
+    ):
+        return False
+    if _mentions_road_access(component_text) and not re.search(
+        r"\b(?:road|roads|route|routes)\b",
+        evidence_text,
+    ):
+        return False
+    if not (_mentions_trail_access(component_text) or _mentions_road_access(component_text)):
+        if not re.search(r"\b(?:route|routes|transport|travel)\b", evidence_text):
+            return False
+    if not re.search(
+        r"\b(?:new|proposed|relocat(?:e|ed|ion)|construct(?:ed|ion)|"
+        r"action\s+alternative|alternative\s+1|will|would)\b",
+        evidence_text,
+    ):
+        return False
+    return _text_supports_nonmotorized_access(evidence_text)
+
+
+def _mentions_trail_access(text: str) -> bool:
+    return bool(re.search(r"\btrails?\b", text))
+
+
+def _mentions_road_access(text: str) -> bool:
+    return bool(re.search(r"\broads?\b", text))
+
+
+def _text_supports_nonmotorized_access(text: str) -> bool:
+    return bool(
+        re.search(r"\bnon[-\s]?motorized\b", text)
+        or re.search(
+            r"\b(?:not|without|free\s+of|prohibit(?:ed|s)?|"
+            r"does\s+not\s+include|will\s+not\s+include)\b.{0,100}\bmotorized\b",
+            text,
+        )
+        or re.search(r"\bno\s+(?:new\s+)?motorized\b", text)
+        or re.search(
+            r"\bmotorized\b.{0,100}\b(?:prohibit(?:ed|s)?|not\s+allowed|"
+            r"not\s+authorized|not\s+included)\b",
+            text,
+        )
+    )
+
+
+def _package_evidence_section_family(evidence: dict, context_text: str | None = None) -> str:
+    title = str(evidence.get("title") or "").lower()
+    if "plan consistency table" in title:
+        return "plan_consistency"
+    text = (context_text or _package_evidence_text(evidence)).lower()
+    if any(term in text for term in ("aquatic", "wetland", "hydrology", "water")):
+        return "hydrology"
+    if any(term in text for term in ("wildlife", "fisheries")):
+        return "wildlife"
+    if any(term in text for term in ("botany", "plant", "vegetation")):
+        return "botany"
+    if any(
+        term in text
+        for term in ("road", "trail", "access", "recreation", "special areas", "special uses")
+    ):
+        return "recreation_access"
+    if any(term in text for term in ("mineral", "geologic")):
+        return "minerals"
+    if any(
+        term in title
+        for term in (
+            "environmental assessment",
+            "decision notice",
+            "fone",
+            "fonsi",
+            "pre-ea",
+            "preea",
+            "faq",
+        )
+    ):
+        return "general_ea"
+    return "general_ea"
+
+
+def _package_evidence_review_section(evidence: dict) -> str:
+    provenance = evidence.get("provenance") if isinstance(evidence.get("provenance"), dict) else {}
+    for field in ("section", "heading"):
+        value = str(provenance.get(field) or "").strip()
+        if value:
+            return value
+    return str(evidence.get("title") or "EA package")
+
+
+def _package_evidence_text(evidence: dict) -> str:
+    span = evidence.get("evidence_span") if isinstance(evidence.get("evidence_span"), dict) else {}
+    provenance = evidence.get("provenance") if isinstance(evidence.get("provenance"), dict) else {}
+    return " ".join(
+        str(part or "")
+        for part in (
+            evidence.get("title"),
+            span.get("text"),
+            provenance.get("section"),
+            provenance.get("heading"),
+        )
+    ).lower()
+
+
+def _is_negative_package_evidence(text: str) -> bool:
+    if "plan consistency table" not in text:
+        return False
+    return bool(
+        re.search(r"\|\s*no\s*\|", text)
+        or re.search(r"(?:^|\n)\s*no\s*(?:\n|-)", text)
+        or re.search(r"\bnot\s+part\s+of\s+(?:the\s+)?project\s+area\b", text)
+        or re.search(r"\boutside(?:\s+of)?\s+(?:the\s+)?project\s+area\b", text)
+        or re.search(
+            r"\b(?:there\s+(?:are|is)\s+no|no)\b.{0,180}\b(?:in\s+the\s+project\s+area|"
+            r"affected\s+by\s+(?:the|this)\s+project)\b",
+            text,
+        )
+    )
+
+
+def _term_matches_text(text: str, term: str) -> bool:
+    normalized_term = _normalized_component_text(term)
+    if not normalized_term:
+        return False
+    if " " in normalized_term:
+        return normalized_term in text
+    return normalized_term in set(TOKEN_RE.findall(text))
 
 
 def _component_plan_source_evidence(
@@ -1053,20 +1568,336 @@ def _component_plan_source_evidence(
     index_path: Path,
     limit: int,
 ) -> list[dict]:
-    result = query_retrieval_index(
-        index_path=index_path,
-        query=component["component_text"],
-        limit=max(limit, 5),
-        document_role="forest_plan",
-        source_record_id=component["source_record_id"],
-    )
-    source_chunk_ids = set(component["source_chunk_ids"])
-    filtered = [
-        row
-        for row in result["results"]
-        if not source_chunk_ids or row.get("chunk_id") in source_chunk_ids
+    del index_path
+    return _component_inventory_plan_source_evidence(component)[:limit]
+
+
+def _component_inventory_plan_source_evidence(component: dict) -> list[dict]:
+    source_chunk_ids = component.get("source_chunk_ids") or []
+    chunk_id = str(source_chunk_ids[0]) if source_chunk_ids else component["component_id"]
+    provenance = component.get("provenance") or {}
+    activity = provenance.get("activity") if isinstance(provenance, dict) else {}
+    entity = provenance.get("entity") if isinstance(provenance, dict) else {}
+    return [
+        {
+            "rank": 1,
+            "score": 1.0,
+            "chunk_id": chunk_id,
+            "source_record_id": component["source_record_id"],
+            "title": component.get("section_heading") or "Forest Plan Component",
+            "citation_label": component.get("citation_label"),
+            "document_role": "forest_plan",
+            "authority_level": "forest",
+            "review_topics": [
+                "Extract plan components by resource and geography",
+                "check suitability/designated areas",
+            ],
+            "evidence_span": {
+                "text": component["component_text"],
+                "chunk_char_start": None,
+                "chunk_char_end": None,
+                "source_char_start": None,
+                "source_char_end": None,
+            },
+            "provenance": {
+                "artifact_sha256": component.get("artifact_sha256"),
+                "content_sha256": component.get("content_sha256"),
+                "source_chunk_ids": list(source_chunk_ids),
+                "source_record_id": component["source_record_id"],
+                "source_text_path": (
+                    activity.get("source") if isinstance(activity, dict) else None
+                ),
+                "component_inventory_entity": entity if isinstance(entity, dict) else None,
+                "parser_name": "forest_plan_component_inventory",
+                "parser_version": FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION,
+            },
+        }
     ]
-    return filtered[:limit]
+
+
+def _component_package_determination(
+    *,
+    component: dict,
+    package_chunks: list[dict],
+) -> dict | None:
+    component_key = _component_reference_key(component)
+    if not component_key:
+        return None
+    pattern = _component_key_pattern(component_key)
+    candidates = []
+    for chunk in package_chunks:
+        text = str(chunk.get("text") or "")
+        for match in pattern.finditer(text):
+            row = _plan_consistency_row(
+                chunk=chunk,
+                text=text,
+                match_start=match.start(),
+                match_end=match.end(),
+                component_key=component_key,
+            )
+            if row is not None:
+                candidates.append(row)
+        if not candidates:
+            row = _plan_consistency_text_row(
+                chunk=chunk,
+                text=text,
+                component=component,
+                component_key=component_key,
+            )
+            if row is not None:
+                candidates.append(row)
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda item: (
+            str(item.get("source_record_id") or ""),
+            int(item.get("provenance", {}).get("char_start") or 0),
+        )
+    )
+    result = dict(candidates[0])
+    result["rank"] = 1
+    return result
+
+
+def _component_reference_key(component: dict) -> str | None:
+    match = COMPONENT_CODE_NUMBER_RE.search(str(component.get("component_text") or ""))
+    if not match:
+        return None
+    return f"{match.group('code')}-{match.group('number')}"
+
+
+def _component_key_pattern(component_key: str) -> re.Pattern[str]:
+    prefix, separator, number = component_key.rpartition("-")
+    if not separator or not prefix or not number:
+        return re.compile(rf"(?<![A-Za-z0-9]){re.escape(component_key)}(?![A-Za-z0-9])")
+    prefix_pattern = re.escape(prefix).replace(r"\-", r"\s*-\s*")
+    number_pattern = re.escape(number)
+    return re.compile(
+        rf"(?<![A-Za-z0-9]){prefix_pattern}\s*-?\s*{number_pattern}(?![A-Za-z0-9])",
+        re.IGNORECASE,
+    )
+
+
+def _plan_consistency_row(
+    *,
+    chunk: dict,
+    text: str,
+    match_start: int,
+    match_end: int,
+    component_key: str,
+) -> dict | None:
+    row_start = text.rfind("|", 0, match_start)
+    if row_start < 0:
+        row_start = max(0, match_start - 120)
+    window = text[row_start : min(len(text), match_end + 5000)]
+    cells = [cell.strip() for cell in window.split("|")]
+    component_key_fingerprint = _component_key_fingerprint(component_key)
+    key_index = next(
+        (
+            index
+            for index, cell in enumerate(cells)
+            if _component_key_fingerprint(cell) == component_key_fingerprint
+        ),
+        None,
+    )
+    if key_index is None or len(cells) <= key_index + 3:
+        return None
+    applies = _yes_no_cell(cells[key_index + 2])
+    if applies not in PLAN_CONSISTENCY_YES_NO:
+        return None
+    explanation = _compact(cells[key_index + 3], limit=1200)
+    component_text = _compact(cells[key_index + 1], limit=1200)
+    row_cells = cells[key_index : key_index + 4]
+    row_text = " | ".join(cell for cell in row_cells if cell)
+    row_offset = window.find(cells[key_index])
+    if row_offset < 0:
+        row_offset = match_start - row_start
+    span_start = row_start + row_offset
+    span_end = min(len(text), span_start + len(row_text))
+    return _package_determination_result(
+        chunk=chunk,
+        component_key=component_key,
+        component_applies=applies,
+        component_text=component_text,
+        explanation=explanation,
+        span_start=span_start,
+        span_end=span_end,
+        row_text=row_text,
+    )
+
+
+def _plan_consistency_text_row(
+    *,
+    chunk: dict,
+    text: str,
+    component: dict,
+    component_key: str,
+) -> dict | None:
+    if "plan consistency table" not in str(chunk.get("title") or "").lower():
+        return None
+    component_text = _component_body_text(str(component.get("component_text") or ""))
+    if not component_text:
+        return None
+    cells = [cell.strip() for cell in text.split("|")]
+    for index in range(0, max(0, len(cells) - 3)):
+        key_cell = cells[index]
+        candidate_component_text = _compact(cells[index + 1], limit=1200)
+        applies = _yes_no_cell(cells[index + 2])
+        if key_cell or applies not in PLAN_CONSISTENCY_YES_NO:
+            continue
+        if not _component_text_matches(candidate_component_text, component_text):
+            continue
+        explanation = _compact(cells[index + 3], limit=1200)
+        row_cells = cells[index : index + 4]
+        row_text = " | ".join(cell for cell in row_cells if cell)
+        span_start = text.find(cells[index + 1])
+        if span_start < 0:
+            span_start = 0
+        span_end = min(len(text), span_start + len(row_text))
+        return _package_determination_result(
+            chunk=chunk,
+            component_key=component_key,
+            component_applies=applies,
+            component_text=candidate_component_text,
+            explanation=explanation,
+            span_start=span_start,
+            span_end=span_end,
+            row_text=row_text,
+        )
+    return None
+
+
+def _component_body_text(component_text: str) -> str:
+    return _normalized_component_text(LEADING_COMPONENT_LABEL_RE.sub("", component_text))
+
+
+def _component_text_matches(candidate: str, target: str) -> bool:
+    candidate_text = _normalized_component_text(candidate)
+    if not candidate_text or not target:
+        return False
+    candidate_prefix = " ".join(candidate_text.split()[:18])
+    target_prefix = " ".join(target.split()[:18])
+    return bool(candidate_prefix and target_prefix and candidate_prefix == target_prefix)
+
+
+def _component_key_fingerprint(value: str) -> str:
+    return re.sub(r"[^A-Z0-9]+", "", str(value).upper())
+
+
+def _yes_no_cell(value: str) -> str | None:
+    normalized = re.sub(r"[^A-Za-z]+", " ", value).strip().lower()
+    if normalized in PLAN_CONSISTENCY_YES_NO:
+        return normalized
+    return None
+
+
+def _package_determination_result(
+    *,
+    chunk: dict,
+    component_key: str,
+    component_applies: str,
+    component_text: str,
+    explanation: str,
+    span_start: int,
+    span_end: int,
+    row_text: str,
+) -> dict:
+    source_chunk_start = int(chunk.get("char_start") or 0)
+    return {
+        "rank": 1,
+        "score": 1.0,
+        "chunk_id": chunk["chunk_id"],
+        "source_record_id": chunk["source_record_id"],
+        "title": chunk["title"],
+        "citation_label": chunk["citation_label"],
+        "matched_terms": [component_key, component_applies],
+        "component_key": component_key,
+        "component_applies": component_applies,
+        "determination_source": "ea_plan_consistency_table",
+        "determination_explanation": explanation,
+        "determination_component_text": component_text,
+        "review_section": _package_review_section(
+            chunk=chunk,
+            explanation=explanation,
+        ),
+        "evidence_span": {
+            "text": row_text,
+            "chunk_char_start": span_start,
+            "chunk_char_end": span_end,
+            "source_char_start": source_chunk_start + span_start,
+            "source_char_end": source_chunk_start + span_end,
+        },
+        "provenance": {
+            "artifact_sha256": chunk["artifact_sha256"],
+            "artifact_path": chunk["artifact_path"],
+            "parser_name": chunk["parser_name"],
+            "parser_version": chunk["parser_version"],
+            "extracted_at": chunk["extracted_at"],
+            "source_text_path": chunk["source_text_path"],
+            "char_start": chunk["char_start"],
+            "char_end": chunk["char_end"],
+            "page": chunk["page"],
+            "section": chunk["section"],
+            "heading": chunk["heading"],
+            "content_sha256": chunk["content_sha256"],
+        },
+    }
+
+
+def _package_review_section(*, chunk: dict, explanation: str) -> str:
+    explicit_section = _explicit_ea_section(explanation)
+    if explicit_section:
+        return explicit_section
+    for field in ("section", "heading", "title"):
+        value = str(chunk.get(field) or "").strip()
+        if value:
+            return value
+    return "EA package"
+
+
+def _explicit_ea_section(text: str) -> str | None:
+    match = re.search(r"\bEA(?:,)?\s+section\s+([0-9]+(?:\.[0-9]+)*)", text, re.IGNORECASE)
+    if match:
+        return f"EA section {match.group(1)}"
+    return None
+
+
+def _package_determination_basis(determination: dict | None) -> dict | None:
+    if not determination:
+        return None
+    return {
+        "component_key": determination.get("component_key"),
+        "component_applies": determination.get("component_applies"),
+        "determination_source": determination.get("determination_source"),
+        "determination_explanation": determination.get("determination_explanation"),
+        "review_section": determination.get("review_section"),
+        "citation_label": determination.get("citation_label"),
+        "chunk_id": determination.get("chunk_id"),
+        "source_record_id": determination.get("source_record_id"),
+    }
+
+
+def _merge_package_evidence(
+    preferred: list[dict],
+    fallback: list[dict],
+    *,
+    limit: int,
+) -> list[dict]:
+    merged = []
+    seen = set()
+    for evidence in [*preferred, *fallback]:
+        key = (
+            evidence.get("chunk_id"),
+            evidence.get("evidence_span", {}).get("source_char_start"),
+            evidence.get("evidence_span", {}).get("source_char_end"),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(evidence)
+        if len(merged) >= limit:
+            break
+    return merged
 
 
 def _context_matches_component(context: dict, component: dict) -> bool:
@@ -1135,6 +1966,18 @@ def _reviewer_resolution_items_for_finding(
             "review_id": review_id,
             "finding_id": f"{component['component_id']}-finding",
             "component_id": component["component_id"],
+            "component_key": _component_reference_key(component),
+            "component_type": component["component_type"],
+            "component_text": component["component_text"],
+            "component_context": {
+                "section_heading": component.get("section_heading"),
+                "geographic_area_ids": component.get("geographic_area_ids", []),
+                "management_area_ids": component.get("management_area_ids", []),
+                "overlay_ids": component.get("overlay_ids", []),
+                "resource_topics": component.get("resource_topics", []),
+                "activity_tags": component.get("activity_tags", []),
+            },
+            "package_evidence_terms": component.get("package_evidence_terms", []),
             "reason": reason,
             "severity": severity,
             "message": message,
@@ -1318,6 +2161,9 @@ def _applicable_standard_coverage(
         for row in rows
         if row["compliance_status"] not in VALID_COMPLIANCE_STATUSES
     ]
+    standards_missing_plan_source_ids = [
+        row["component_id"] for row in rows if row["plan_source_evidence_count"] == 0
+    ]
     checks = [
         {
             "name": "standard_inventory_has_standards",
@@ -1333,6 +2179,11 @@ def _applicable_standard_coverage(
             "name": "standard_compliance_statuses_are_valid",
             "passed": not invalid_status_ids,
             "details": {"component_ids": invalid_status_ids},
+        },
+        {
+            "name": "standards_have_plan_source_evidence",
+            "passed": not standards_missing_plan_source_ids,
+            "details": {"component_ids": standards_missing_plan_source_ids},
         },
         {
             "name": "applicable_standards_have_package_and_plan_evidence",
@@ -1362,12 +2213,17 @@ def _standard_coverage_row(*, component: dict, finding: dict | None) -> dict:
     if finding is None:
         return {
             "component_id": component["component_id"],
+            "component_key": _component_reference_key(component),
             "finding_id": None,
             "applicability_status": "needs_reviewer_resolution",
             "finding_status": "needs_reviewer_resolution",
             "compliance_status": "needs_reviewer_resolution",
             "plan_source_evidence_count": 0,
             "package_evidence_count": 0,
+            "ea_review_section": None,
+            "package_component_determination": None,
+            "plan_source_citations": [],
+            "package_evidence_citations": [],
             "standard_applied": False,
             "failure_reasons": ["missing_finding"],
         }
@@ -1375,9 +2231,9 @@ def _standard_coverage_row(*, component: dict, finding: dict | None) -> dict:
     package_evidence_count = len(finding.get("package_evidence") or [])
     compliance_status = str(finding.get("compliance_status") or "")
     failure_reasons = []
+    if plan_source_evidence_count == 0:
+        failure_reasons.append("missing_plan_source_evidence")
     if finding.get("applicability_status") == "applicable":
-        if plan_source_evidence_count == 0:
-            failure_reasons.append("missing_plan_source_evidence")
         if package_evidence_count == 0:
             failure_reasons.append("missing_package_evidence")
         if compliance_status in {"insufficient_evidence", "needs_reviewer_resolution", ""}:
@@ -1388,15 +2244,52 @@ def _standard_coverage_row(*, component: dict, finding: dict | None) -> dict:
         failure_reasons.append("invalid_compliance_status")
     return {
         "component_id": component["component_id"],
+        "component_key": _component_reference_key(component),
         "finding_id": finding["finding_id"],
         "applicability_status": finding["applicability_status"],
         "finding_status": finding["finding_status"],
         "compliance_status": compliance_status,
         "plan_source_evidence_count": plan_source_evidence_count,
         "package_evidence_count": package_evidence_count,
+        "ea_review_section": _finding_review_section(finding),
+        "package_component_determination": (
+            finding.get("applicability_basis", {}).get("package_component_determination")
+        ),
+        "plan_source_citations": _citation_labels(finding.get("plan_source_evidence") or []),
+        "package_evidence_citations": _citation_labels(finding.get("package_evidence") or []),
         "standard_applied": not failure_reasons,
         "failure_reasons": failure_reasons,
     }
+
+
+def _finding_review_section(finding: dict) -> str | None:
+    determination = (
+        finding.get("applicability_basis", {}).get("package_component_determination")
+    )
+    if isinstance(determination, dict) and determination.get("review_section"):
+        return str(determination["review_section"])
+    for evidence in finding.get("package_evidence") or []:
+        if evidence.get("review_section"):
+            return str(evidence["review_section"])
+        provenance = evidence.get("provenance") or {}
+        for field in ("section", "heading"):
+            value = str(provenance.get(field) or "").strip()
+            if value:
+                return value
+        title = str(evidence.get("title") or "").strip()
+        if title:
+            return title
+    return None
+
+
+def _citation_labels(evidence_items: list[dict]) -> list[str]:
+    return _dedupe_preserve_order(
+        [
+            label
+            for item in evidence_items
+            if (label := str(item.get("citation_label") or "").strip())
+        ]
+    )
 
 
 def _validation_report(

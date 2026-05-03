@@ -8,13 +8,203 @@ import unittest
 
 from usfs_r1_ea_sources.cli import build_parser
 from usfs_r1_ea_sources.forest_plan_components import (
+    _applicable_standard_coverage,
     _component_inventory_coverage,
+    _component_package_determination,
+    _component_package_search,
     build_forest_plan_component_inventory,
     load_forest_plan_component_inventory,
 )
 
 
 class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
+    def test_applicable_standard_coverage_requires_plan_source_for_not_applicable_standard(
+        self,
+    ) -> None:
+        coverage = _applicable_standard_coverage(
+            review_id="review-test",
+            source_set_id="source-set-test",
+            components=[
+                {
+                    "component_id": "component-std-1",
+                    "component_type": "standard",
+                    "component_text": "Standards (FW-STD-TEST) 01 Standard text.",
+                }
+            ],
+            findings=[
+                {
+                    "finding_id": "finding-std-1",
+                    "component_id": "component-std-1",
+                    "applicability_status": "not_applicable",
+                    "finding_status": "not_applicable",
+                    "compliance_status": "not_applicable",
+                    "plan_source_evidence": [],
+                    "package_evidence": [],
+                }
+            ],
+        )
+
+        self.assertFalse(coverage["passed"])
+        self.assertEqual(coverage["applicable_standard_count"], 0)
+        self.assertIn(
+            "component-std-1",
+            _check(coverage, "standards_have_plan_source_evidence")["details"]["component_ids"],
+        )
+        self.assertIn("missing_plan_source_evidence", coverage["standards"][0]["failure_reasons"])
+
+    def test_component_package_search_is_section_aware_and_filters_negative_rows(self) -> None:
+        component = {
+            "component_id": "component-water",
+            "component_type": "desired_condition",
+            "section_heading": "Plan Components-Watershed, Aquatics, and Riparian",
+            "component_text": (
+                "Desired Conditions (FW-DC-WTR) 01 Watershed features, including "
+                "natural disturbance regimes and aquatic or riparian habitats, are well "
+                "distributed, diverse, and complex."
+            ),
+            "package_evidence_terms": ["watershed features", "aquatic", "riparian"],
+            "resource_topics": ["watershed features"],
+            "activity_tags": ["aquatic", "riparian"],
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "FW-DC-WTR-01 | Watershed features are well distributed. | No | "
+                    "This component is forestwide and would apply to the project area, "
+                    "but there are no perennial streams in the project area or affected "
+                    "by the project."
+                ),
+            ),
+            _package_chunk(
+                title="2024 Wildlife Report.pdf",
+                text="Riparian habitat may provide wildlife movement corridors.",
+            ),
+            _package_chunk(
+                title="2024 Aquatics Report.pdf",
+                text=(
+                    "The project protects watershed condition, aquatic habitat, and "
+                    "riparian conservation measures through design features."
+                ),
+            ),
+        ]
+
+        result = _component_package_search(component=component, package_chunks=chunks, limit=3)
+
+        self.assertEqual(result["hit_count"], 1)
+        self.assertEqual(result["results"][0]["title"], "2024 Aquatics Report.pdf")
+        self.assertEqual(result["results"][0]["review_section"], "2024 Aquatics Report.pdf")
+        self.assertEqual(
+            result["results"][0]["section_binding"]["package_section_family"],
+            "hydrology",
+        )
+
+    def test_component_package_search_supports_restrictive_access_standard(self) -> None:
+        component = {
+            "component_id": "component-ab-rcrea",
+            "component_type": "standard",
+            "section_heading": "Plan Components-Bridger Bangtail Crazy Mountains",
+            "component_text": (
+                "Standards (AB-STD-RCREA) 01 New motorized trails shall not be "
+                "constructed or designated, except for reroutes of existing trails "
+                "necessary for safety, resource protection or enhancement."
+            ),
+            "package_evidence_terms": [
+                "new motorized trails",
+                "motorized trails constructed designated except",
+            ],
+            "resource_topics": ["new motorized trails"],
+            "activity_tags": ["trails constructed designated except reroutes"],
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "MG-STD-BHBCA-03 | New motorized trails shall not be constructed "
+                    "or designated. | No | The geographic area to which this "
+                    "component applies is not part of the project area."
+                ),
+            ),
+            _package_chunk(
+                title="2024 Roads Trails Access.pdf",
+                text=(
+                    "The Forest Service would reserve an easement on this existing "
+                    "motorized trail as part of the proposed action."
+                ),
+            ),
+            _package_chunk(
+                title="Final Environmental Assessment.pdf",
+                text=(
+                    "The new trail would be called Sweet Trunk Trail No. 274. The "
+                    "route would be managed consistently with the Land Management "
+                    "Plan for nonmotorized, foot and horse recreation opportunities."
+                ),
+            ),
+        ]
+
+        result = _component_package_search(component=component, package_chunks=chunks, limit=3)
+
+        self.assertEqual(result["hit_count"], 1)
+        self.assertEqual(result["results"][0]["title"], "Final Environmental Assessment.pdf")
+        self.assertEqual(
+            result["results"][0]["section_binding"]["package_section_family"],
+            "recreation_access",
+        )
+
+    def test_component_package_determination_matches_spaced_component_codes(self) -> None:
+        component = {
+            "component_text": (
+                "Standards (FW-STD-FAC) 01 Extraction of saleable mineral materials "
+                "shall not be allowed in administrative sites."
+            )
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "FW-STD-FAC -01 | Extraction of saleable mineral materials shall "
+                    "not be allowed in administrative sites. | No | No administrative "
+                    "sites are included in the project."
+                ),
+            )
+        ]
+
+        determination = _component_package_determination(
+            component=component,
+            package_chunks=chunks,
+        )
+
+        self.assertIsNotNone(determination)
+        self.assertEqual(determination["component_key"], "FW-STD-FAC-01")
+        self.assertEqual(determination["component_applies"], "no")
+
+    def test_component_package_determination_matches_empty_code_text_row(self) -> None:
+        component = {
+            "component_text": (
+                "Standards (FW-STD-SCENERY) 01 Timber harvest units shall be shaped "
+                "and blended with the natural terrain to the extent practicable."
+            )
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "| | Timber harvest units shall be shaped and blended with the "
+                    "natural terrain to the extent practicable. | No | The project "
+                    "does not include timber harvest. |"
+                ),
+            )
+        ]
+
+        determination = _component_package_determination(
+            component=component,
+            package_chunks=chunks,
+        )
+
+        self.assertIsNotNone(determination)
+        self.assertEqual(determination["component_key"], "FW-STD-SCENERY-01")
+        self.assertEqual(determination["component_applies"], "no")
+
     def test_builds_labeled_component_inventory_from_forest_plan_chunks(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -99,6 +289,47 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                 standard["section_heading"],
                 "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
             )
+
+    def test_build_uses_nearby_section_context_for_area_prefixed_components(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-custer-gallatin-nf-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "The Pryor Mountains provide resilient habitat conditions for "
+                            "regional endemic and peripheral plant species occurrences. "
+                            "Standards (PR-STD-VEGNF) 01 Invasive species treatments in "
+                            "locations of regional endemic and peripheral plant occurrences "
+                            "shall use methods that are not detrimental to the long-term "
+                            "persistence of the species."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="custer-gallatin-nf",
+                plan_version="2022",
+                chunks_path=chunks_path,
+            )
+
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="custer-gallatin-nf",
+            )
+            standard = components[0]
+            self.assertEqual(standard["component_id"], f"{source_record_id}-PR-STD-VEGNF-01")
+            self.assertEqual(standard["geographic_area_ids"], ["geo-pryor-mountains"])
 
     def test_duplicate_standard_labels_fail_build_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -326,6 +557,23 @@ def _chunk(*, source_set_id: str, source_record_id: str, text: str) -> dict:
     }
 
 
+def _package_chunk(*, title: str, text: str) -> dict:
+    source_record_id = title.replace(" ", "-")
+    return {
+        **_chunk(
+            source_set_id="source-set-package",
+            source_record_id=source_record_id,
+            text=text,
+        ),
+        "title": title,
+        "document_role": "environmental_assessment",
+        "authority_level": "project",
+        "citation_label": f"{source_record_id} package citation",
+        "artifact_path": f"package/{source_record_id}.pdf",
+        "heading": None,
+    }
+
+
 def _write_chunks(*, output_dir: Path, source_set_id: str, chunks: list[dict]) -> Path:
     path = output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -334,6 +582,13 @@ def _write_chunks(*, output_dir: Path, source_set_id: str, chunks: list[dict]) -
         encoding="utf-8",
     )
     return path
+
+
+def _check(report: dict, name: str) -> dict:
+    for check in report["checks"]:
+        if check["name"] == name:
+            return check
+    raise AssertionError(f"Missing check {name!r}")
 
 
 if __name__ == "__main__":

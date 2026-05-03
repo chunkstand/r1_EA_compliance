@@ -129,6 +129,11 @@ Already in place:
   source-record readiness, plan geography, overlays, and trigger-gated supporting records.
 - Forest-plan component evaluation V0 has a generated current-source-set component inventory,
   structured findings, and a reviewer-resolution queue contract.
+- Forest-plan component eval has an adjudicated component-level seed contract at
+  `config/forest_plan_component_eval_seed.json` and scores applicability precision/recall,
+  applicable-standard recall, false-applicable component rate, package-section binding,
+  plan-source citations, package-evidence citations, resolved compliance status, and
+  reviewer-resolution closure.
 
 Current readiness state after the 2026-05-01 downstream promotion:
 
@@ -149,16 +154,25 @@ Current readiness state after the 2026-05-01 downstream promotion:
 Remaining blockers to complete V1 Custer Gallatin real-package readiness:
 
 - The real Custer Gallatin proving package now resolves to `scope_status: custer_gallatin` and
-  produces forest-plan component artifacts, but `forest_plan_component_gate_reviewer_ready` fails
-  with `82` reviewer-resolution items and `7` applicable standards without applied evidence.
+  produces forest-plan component artifacts. The section-aware retrieval pass resolves the package
+  context to `2` geographic areas, `1` management area, and `2` overlays, and suppresses table-only
+  negative or incidental area mentions. The applicable-standard gate now passes with `12`
+  applicable standards and `12` applied standards; the prior `AB-STD-RCREA-01` gap is supported by
+  recreation/access package evidence for the proposed nonmotorized Sweet Trunk Trail.
+- Component-level forest-plan eval passes all `8` adjudicated cases for the proving package.
+  Component applicability precision/recall, applicable-standard recall, package-section match rate,
+  plan-source citation correctness, package-evidence citation correctness, resolved
+  compliance-status rate, compliance-status match rate, and reviewer-resolution state match rate are
+  `1.0`; false-applicable component rate is `0.0`; reviewer-resolution closure rate is `0.875`.
 - The component adjudication template/eval loop is implemented, and the current real-package queue
-  has been exported as `82` pending adjudication items in both JSON and Markdown worklist form. The
+  has been exported as `21` pending adjudication items in both JSON and Markdown worklist form. The
   adjudication eval is now visible as a `forest_plan_component_adjudication` phase when present.
   Those items must be completed before their dispositions can be used to improve retrieval,
   component applicability, inventory quality, or evidence-linking logic.
 - Real-package failure taxonomy is now measured by `v1-ea-eval`: remaining failures are the
-  forest-plan component gate, three conditional false positives, and two rule/conditional section
-  mismatches.
+  open non-standard forest-plan component adjudication queue, three conditional false positives, and
+  two rule/conditional section mismatches. Forest-plan expectations now pass with zero open standard
+  reviewer-resolution items.
 - No generated V1 review artifact should be called fully reviewer-ready until current validation
   proves source-set, rule-pack, component, package, and finding graph alignment for that package.
 
@@ -487,6 +501,10 @@ Deliverables:
 Verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --eval-file config/forest_plan_component_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
@@ -510,7 +528,12 @@ git diff --check
 Stop conditions:
 
 - `phase-eval` reports stale source-set, stale rule-pack, missing PDF, missing graph, failed
-  forest-plan component readiness, or failed/pending forest-plan component adjudication.
+  forest-plan component readiness, failed forest-plan component eval, or failed/pending forest-plan
+  component adjudication.
+- `forest-plan-component-eval` reports review/source-set drift, missed expected components,
+  false-applicable components, missing applicable standards, package-section mismatches, incorrect
+  plan-source citations, incorrect package-evidence citations, unresolved compliance status, or
+  reviewer-resolution state drift.
 - `v1-ea-eval` reports missed required EA sections, source-record/document-role mismatches,
   missing baseline source records, missing conditional expectations, applicable conditional
   source/section mismatches, conditional false positives or false negatives, forest-plan expectation

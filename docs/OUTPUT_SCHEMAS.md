@@ -499,7 +499,10 @@ resolved geographic area, management area, or overlay set `needs_reviewer_resolu
 reviewer-ready. Other configured forest profiles block Custer Gallatin scope only when they appear
 as operative project-scope evidence; incidental background, reference, bibliography, or coordination
 mentions do not force `ambiguous`. Negative package-location evidence, such as `not part of the
-project area`, is filtered before geographic or management area resolution.
+project area`, `there are no <area/overlay> in the parcels`, or `outside of <area/overlay>`, is
+filtered before geographic, management-area, or overlay resolution. If an entry has negative
+package-location evidence, table-only or incidental mentions are suppressed unless the package also
+contains affirmative project-location evidence for that entry.
 
 `forest_plan_context_validation.json` records gate-facing checks for:
 
@@ -535,10 +538,12 @@ at `source_library/derived/<source_set_id>/forest_plan_components/component_inve
 present and falls back to `config/forest_plan_component_inventory_seed.json`;
 `--forest-plan-component-inventory-path <path>` overrides that inventory path. The evaluator reads a
 component inventory with schema version `forest-plan-component-inventory-v0`, filters it to the
-selected forest-plan profile, checks that each component belongs to the active source set, retrieves
-current plan-source evidence from the local retrieval index, searches the EA package chunks for
+selected forest-plan profile, checks that each component belongs to the active source set, binds
+plan-source evidence from the inventory's exact source chunk IDs, searches the EA package chunks for
 component-specific evidence terms, and writes structured findings plus reviewer-resolution work
-items.
+items. The resolver still requires retrieval readiness for profile scope, context, and supporting
+source-record evidence, but component plan-source citations come from the generated inventory
+binding rather than a per-component retrieval query.
 
 The `forest-plan-components-build` command builds the source-set component inventory from extracted
 forest-plan chunks and writes:
@@ -602,9 +607,11 @@ includes:
 - applicability status: `applicable`, `candidate`, `not_applicable`, or
   `needs_reviewer_resolution`
 - applicability basis with source-set match status, matched context IDs, component context IDs,
-  package query, and package evidence terms
-- plan-source evidence from the current retrieval index
-- EA package evidence from package chunks
+  package query, package evidence terms, normalized component key, and explicit package component
+  determination when a plan-consistency row is present
+- plan-source evidence from the inventory-backed LMP component source chunk
+- EA package evidence from package chunks, annotated with matched component/core terms,
+  `review_section`, and `section_binding` metadata
 - rationale
 - embedded reviewer-resolution items
 - W3C PROV-style finding provenance with `entity`, `activity`, and `agent`
@@ -626,6 +633,13 @@ Validation embedded in `forest_plan_component_findings.json` records gate-facing
 - finding provenance completeness
 - reviewer-resolution queue coverage for `gap`, `partial`, and `needs_reviewer_resolution`
   findings
+
+Component package matching is section-aware. The package query combines component text, component
+code, package evidence terms, resource topics, activity tags, and non-generic component keywords.
+Candidate package evidence is filtered by negative Plan Consistency Table rows, section family
+binding, and core-term matches before it can support a finding. Plan Consistency Table rows are
+component-code aware, tolerate spacing variants introduced by extraction, and can bind conservative
+empty-code rows when the row's component text matches the LMP component text.
 - component inventory coverage passing
 - applicable standards having package evidence, plan-source evidence, and a resolved compliance
   status before reviewer-ready status can pass
@@ -644,13 +658,51 @@ yet prove that a full Forest Plan extraction command captured every standard in 
 
 `forest_plan_applicable_standard_coverage.json` has schema version
 `forest-plan-applicable-standard-coverage-v0` and records one row per selected standard component.
-For applicable standards, reviewer-ready requires both plan-source evidence and EA package evidence
-plus a resolved compliance status. Missing package evidence, missing plan evidence, unresolved
-standard applicability, or invalid compliance status makes `all_applicable_standards_applied` false
-and causes component validation to fail.
+Each row includes `component_key`, `ea_review_section`, package component determination details when
+available, plan-source citation labels, package-evidence citation labels, evidence counts, status
+fields, `standard_applied`, and failure reasons. For applicable standards, reviewer-ready requires
+both plan-source evidence and EA package evidence plus a resolved compliance status. Missing package
+evidence, missing plan evidence, unresolved standard applicability, or invalid compliance status
+makes `all_applicable_standards_applied` false and causes component validation to fail. Every
+standard row, including rows determined not applicable, must retain LMP plan-source evidence so
+excluded standards remain auditable against the correct source component.
+
+When EA package text contains a plan-consistency row keyed to the LMP component code, a `Yes`
+determination is treated as package evidence and a `No` determination marks that standard
+`not_applicable`. Context-excluded standards remain outside the applicable count but retain the LMP
+component key and plan-source citation so reviewers can verify which source component was excluded.
 
 `forest_plan_component_findings.md` is a compact human-readable rendering generated from the JSON
 findings. The JSON findings and queue remain the stable machine contracts.
+
+### Forest Plan Component Eval
+
+The `forest-plan-component-eval` command reads an existing forest-plan review directory with:
+
+- `forest_plan_component_findings.json`
+- `forest_plan_applicable_standard_coverage.json`
+- `forest_plan_reviewer_resolution_queue.json`
+
+It writes `forest_plan_component_eval_results.json` by default. The eval contract defaults to
+`config/forest_plan_component_eval_seed.json`, has schema version `forest-plan-component-eval-v0`,
+and records adjudicated component cases with expected applicability, EA package section, plan-source
+citations, package-evidence citations, compliance status, and reviewer-resolution state.
+
+The result has schema version `forest-plan-component-eval-results-v0` and records:
+
+- review identity: `review_id`, `source_set_id`, `eval_id`, and artifact paths
+- pass/fail summary, threshold checks, case counts, and failure-category counts
+- metrics for component applicability precision/recall, applicable-standard recall,
+  false-applicable component rate, package-section match rate, plan-source citation correctness,
+  package-evidence citation correctness, resolved compliance-status rate, compliance-status match
+  rate, reviewer-resolution closure rate, and reviewer-resolution state match rate
+- per-case actual/expected values for applicability, package section, plan citations, package
+  evidence citations, compliance status, reviewer-resolution state, and failure categories
+
+The eval fails closed on missing review artifacts, review/source-set identity drift in any consumed
+review artifact, missing expected cases, unexpected applicability, package-section mismatch, exact
+plan citation mismatch, exact package evidence citation mismatch, unresolved or incorrect compliance
+status, reviewer-resolution state mismatch, or unmet metric thresholds.
 
 ### Forest Plan Component Adjudication
 
@@ -959,7 +1011,8 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - `conditional_source_expectations` for `applicable`, `not_applicable`,
   `needs_reviewer_resolution`, or `adjudicate` conditional-rule expectations
 - `forest_plan` expectations for required plan source records, resolved geographic/management
-  areas, component IDs, applicable standards, reviewer readiness, and open reviewer-resolution items
+  areas, component IDs, applicable standards, reviewer readiness, total open reviewer-resolution
+  items, and open standard reviewer-resolution items
 
 `v1_ea_eval_results.json` has schema version `v1-ea-real-review-eval-results-v0` and records:
 
@@ -980,7 +1033,8 @@ Key metrics include section detection rate, baseline source/document-role match 
 rule-section/source/document-role match rates, citation requirement match rate, conditional
 expectation match rate, conditional adjudication completion rate, actual-applicable conditional
 source and section match rates, missing conditional expectation count, conditional false positive
-and false negative counts, forest-plan expectation match rate, and reviewer-resolution item count.
+and false negative counts, forest-plan expectation match rate, reviewer-resolution item count, and
+standard reviewer-resolution item count.
 
 ## Compliance Coverage Outputs
 
@@ -1567,13 +1621,17 @@ requires the review report to exist, validation to pass, the review ID to match 
 the review source set to match the evaluated source set. The compliance-review phase also requires
 `compliance_matrix.json` to exist and match the review's schema version, review ID, source set, rule
 pack, row count, and status counts, and requires `compliance_matrix.pdf` to exist with a valid PDF
-header. If that review directory contains `forest_plan_component_adjudication_eval.json`, or a
-completed `forest_plan_component_adjudication.json` before the eval has been run, phase eval also
-includes a `forest_plan_component_adjudication` phase. That phase requires the adjudication eval to
-exist, pass, match the evaluated source set, and match the supplied review ID when one is provided;
-its details include queue count, resolved and pending adjudication counts, completion rate,
-expectation match rate, disposition counts, and failure-category counts. The evidence-graph and
-claim-extraction
+header. If that review directory contains `forest_plan_component_eval_results.json`, phase eval
+also includes a `forest_plan_component_eval` phase. That phase requires the component eval to exist,
+use schema version `forest-plan-component-eval-results-v0`, pass, match the evaluated source set,
+and match the supplied review ID when one is provided; its details include case counts, component
+metrics, failed checks, and failure-category counts. If that
+review directory contains `forest_plan_component_adjudication_eval.json`, or a completed
+`forest_plan_component_adjudication.json` before the eval has been run, phase eval also includes a
+`forest_plan_component_adjudication` phase. That phase requires the adjudication eval to exist,
+pass, match the evaluated source set, and match the supplied review ID when one is provided; its
+details include queue count, resolved and pending adjudication counts, completion rate, expectation
+match rate, disposition counts, and failure-category counts. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

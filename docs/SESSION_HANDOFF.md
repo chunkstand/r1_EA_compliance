@@ -32,54 +32,74 @@ Current run result:
 - The profile-driven forest-plan resolver now resolves the package to `scope_status:
   custer_gallatin`; context validation passes and `needs_reviewer_resolution` is `false`.
 - Forest-plan component artifacts are now produced from the current source-set inventory:
-  `331` component findings, `58` standards, `46` applicable standards, and `39` applied standards.
-- Compliance validation fails closed on `forest_plan_component_gate_reviewer_ready` because the
-  component evaluator still has `82` gap findings and `82` reviewer-resolution queue items.
-- Phase eval passes `8/10` phases after the component adjudication eval is present; the failing
-  phases are `compliance_review` and `forest_plan_component_adjudication`.
+  `331` component findings, `58` standards, `12` applicable standards, and `12` applied standards.
+- Compliance validation passes; the compliance review is reviewer-ready. The stricter
+  applicable-standard coverage gate now passes with `all_applicable_standards_applied=true`; the
+  prior `AB-STD-RCREA-01` gap is supported by recreation/access package evidence for the proposed
+  nonmotorized Sweet Trunk Trail.
+- Component-level forest-plan eval now passes all `8` adjudicated cases from
+  `config/forest_plan_component_eval_seed.json`: applicability precision/recall,
+  applicable-standard recall, package-section match rate, plan-source citation correctness,
+  package-evidence citation correctness, resolved compliance-status rate, compliance-status match
+  rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
+  `0.0`; reviewer-resolution closure rate is `0.875`.
+- Phase eval passes `10/11` phases after the component eval and component adjudication eval are
+  present; `forest_plan_component_eval` passes and the only failing phase remains
+  `forest_plan_component_adjudication`.
 - V1 real-EA eval still fails, as intended for the current gap state. Good signals: all `13`
   required EA section families were detected, all `26` baseline authorities matched source records
   and document roles, all baseline document roles matched, citation/source-record match rates are
-  `1.0`, and Custer Gallatin plan source/component ID expectations now match the generated
-  source-set inventory.
-- Remaining V1 blockers: `forest_plan_component_gate_reviewer_ready`,
-  `all_applicable_standards_applied=false`, `82` forest-plan reviewer-resolution items, three
-  categorical-exclusion conditionals treated as applicable where the V1 contract expects
-  not-applicable, and two rule/conditional section mismatches.
+  `1.0`, and all Custer Gallatin forest-plan expectations pass, including zero open standard
+  reviewer-resolution items.
+- Remaining V1 blockers: three categorical-exclusion conditionals treated as applicable where the
+  V1 contract expects not-applicable, and two rule/conditional section mismatches. The forest-plan
+  adjudication worklist remains open as `21` non-standard items and is tracked separately by
+  `phase-eval`.
 
 Primary failing artifacts/checks:
 
 - `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_context_summary.json` reports
-  `scope_status: custer_gallatin`, `reviewer_ready: false`, `validation_passed: true`,
-  `needs_reviewer_resolution: false`, `geographic_area_count: 3`, `management_area_count: 11`,
-  `overlay_count: 7`, and `supporting_plan_evidence_count: 5`.
+  `scope_status: custer_gallatin`, `reviewer_ready: true`, `validation_passed: true`,
+  `needs_reviewer_resolution: false`, `geographic_area_count: 2`, `management_area_count: 1`,
+  `overlay_count: 2`, and `supporting_plan_evidence_count: 5`.
 - `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_findings.json`
-  reports `331` findings: `194` supported, `82` gap, and `55` not applicable.
+  reports `331` findings: `73` supported, `21` gap, and `237` not applicable.
 - `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json`
-  reports `46` applicable standards and `39` applied standards.
-- `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` fails only
-  `forest_plan_component_gate_reviewer_ready`.
+  reports `12` applicable standards, `12` applied standards, and
+  `all_applicable_standards_applied=true`.
+- `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` passes.
 - `v1_ea_eval_results.json` failure categories:
-  `applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
-  `forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
-  `rule_section_mismatch=2`.
+  `conditional_false_positive=3` and `rule_section_mismatch=2`. Forest-plan expectation match rate
+  is now `1.0`.
 - The forest-plan component adjudication template has been exported locally at
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.json`.
   The companion worklist is
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.md`.
-  It contains `82` pending items: `35` guidelines, `26` desired conditions, `7` objectives,
-  `7` standards, `4` suitability components, and `3` goals. The eval against that pending template
-  fails by design with `adjudication_pending=82`, completion rate `0.0`, and expectation match rate
-  `1.0`. `phase-eval --review-id v1-cg-ecid-compliance-review` now includes that result as a
+  It contains `21` pending items: `8` desired conditions, `2` goals, `7` guidelines,
+  `3` objectives, and `1` suitability component. The eval
+  against that pending template fails by design with `adjudication_pending=21`, completion rate
+  `0.0`, and expectation match rate `1.0`. `phase-eval --review-id v1-cg-ecid-compliance-review`
+  now includes that result as a
   `forest_plan_component_adjudication` phase.
+- The forest-plan component eval result has been written locally at
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`.
+  `phase-eval --review-id v1-cg-ecid-compliance-review` includes it as the passing
+  `forest_plan_component_eval` phase.
+- A follow-up audit tightened the last two milestone gates: component eval now checks
+  review/source-set identity across component findings, applicable-standard coverage, and
+  reviewer-resolution queue artifacts; citation correctness requires exact plan/package citation
+  sets; phase eval rejects a stale component-eval result schema; and applicable-standard coverage
+  fails if any selected standard loses LMP plan-source evidence, even when the standard is not
+  applicable.
 
 Next implementation target:
 
-Complete the adjudication file for the `82` exported component queue items, then use
+Complete the adjudication file for the `21` exported component queue items, then use
 `forest-plan-component-adjudication-eval` to separate true EA omissions from retrieval misses,
 section/chunking misses, component-inventory overreach, applicability false positives, and evidence
-linking misses. The scope blocker is closed; the remaining non-ready state is substantive component
-coverage and conditional/rule-section evaluation, not missing forest-plan context.
+linking misses. The scope and applicable-standard blockers are closed; the remaining non-ready state
+is non-standard component adjudication plus conditional/rule-section evaluation, not missing
+forest-plan context or standard coverage.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -184,6 +204,7 @@ Current profile-driven resolver fix verification on 2026-05-03:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/forest_plan_component_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template --output-dir source_library --review-id v1-cg-ecid-compliance-review
@@ -195,19 +216,21 @@ python -m json.tool config/v1_ecid_real_ea_eval.json /private/tmp/v1_ecid_real_e
 git diff --check
 ```
 
-Results: focused resolver tests and the full suite passed with `190 passed`; lint, compile, JSON
-validation, and whitespace checks passed. The cached forest-plan and compliance reruns exit nonzero
-by design because reviewer readiness now fails on substantive forest-plan component coverage, not
-scope ambiguity. `phase-eval` passes `8/10` phases and fails `compliance_review` and
-`forest_plan_component_adjudication`; `v1-ea-eval`
-now reports forest-plan expectation match rate `0.7`, section detection/source-record/document-role
-rates `1.0`, and remaining failure categories
-`applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
-`forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
-`rule_section_mismatch=2`.
-The component adjudication template export passed with `82` pending items and produced both JSON and
+Results from the latest live rerun: compliance review still passes with `43` pass findings and `1`
+not applicable finding; forest-plan context validation passes with `2` geographic areas, `1`
+management area, `2` overlays, and `5` supporting plan-evidence routes. Forest-plan component
+validation now passes: `331` components, `58` standards, `12` applicable standards, `12` applied
+standards, `21` reviewer-resolution items, and zero unresolved applicable standards. The prior
+`AB-STD-RCREA-01` standard gap now has LMP source binding plus matching recreation/access package
+evidence. Component-level forest-plan eval passes all `8` adjudicated cases. `phase-eval` passes
+`10/11` phases, with `forest_plan_component_eval` passing and only
+`forest_plan_component_adjudication` failing; `v1-ea-eval` reports forest-plan expectation match
+rate `1.0`, section detection/source-record/document-role rates `1.0`, zero open standard
+reviewer-resolution items, and remaining non-forest-plan failure categories
+`conditional_false_positive=3` and `rule_section_mismatch=2`.
+The component adjudication template export passed with `21` pending items and produced both JSON and
 Markdown worklist artifacts. The adjudication eval against that pending template fails by design
-with `adjudication_pending=82`; this is the expected baseline before reviewer adjudication.
+with `adjudication_pending=21`; this is the expected baseline before reviewer adjudication.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
@@ -217,22 +240,25 @@ PYTHONPATH=src python -m compileall src
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --source-record-id R1PLAN-custer-gallatin-nf-02 --forest-unit-id custer-gallatin-nf --plan-version 2022
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --eval-file config/compliance_review_eval_seed.json
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --gold-file config/compliance_gold_eval_v0.json
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/forest_plan_component_eval_seed.json
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
 python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
+python -m json.tool config/forest_plan_component_eval_seed.json /tmp/forest_plan_component_eval_seed.validated.json
 git diff --check
 ```
 
-Results: full test suite passed with `182 passed`; focused forest-plan/component/compliance tests
-passed with `58 passed`; lint, compile, JSON validation, and whitespace checks passed. The generated
-component inventory build passed with `331` components and `58` standards. Live compliance-review
-eval passed `3/3`, compliance-gold-eval passed `10/10` and is `promotion_ready`, and phase eval
-passed `8/8` phases with `reviewer_ready: true`.
+Latest verification: full test suite passed with `208 passed, 5 subtests passed`; focused
+forest-plan resolver/component tests passed with `30 passed`; focused compliance/V1 eval tests
+passed with `42 passed`; lint, compile, and whitespace checks passed. The generated component
+inventory build passed with `331` components and `58` standards. Live compliance review now passes
+for the proving package; component-level forest-plan eval passes all `8` cases; phase eval passes
+`10/11` review phases and is blocked only by pending forest-plan component adjudication.
 
 ## Next Sequence
 
-Next sequence: run the Custer Gallatin proving EA through the updated compliance-review path and
-adjudicate the forest-plan component gate, compliance matrix, and failure taxonomy.
+Next sequence: adjudicate the `18` remaining non-standard forest-plan component queue items, then
+repair the remaining V1 eval issues in the conditional-source and rule-section expectations.
 
 Goal:
 Produce a reviewer-ready or explicitly fail-closed V1 Custer Gallatin compliance review from the
