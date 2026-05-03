@@ -652,6 +652,54 @@ and causes component validation to fail.
 `forest_plan_component_findings.md` is a compact human-readable rendering generated from the JSON
 findings. The JSON findings and queue remain the stable machine contracts.
 
+### Forest Plan Component Adjudication
+
+The `forest-plan-component-adjudication-template` command reads an existing review directory with:
+
+- `forest_plan_component_findings.json`
+- `forest_plan_reviewer_resolution_queue.json`
+
+It writes `forest_plan_component_adjudication_template.json` by default, plus a companion
+`forest_plan_component_adjudication_template.md` reviewer worklist. The JSON template has schema
+version `forest-plan-component-adjudication-v0` and includes:
+
+- review identity: `adjudication_id`, `review_id`, and `source_set_id`
+- top-level adjudication metadata fields for method, reviewer, date, and status
+- `allowed_dispositions` and `resolved_dispositions`
+- one item for each current reviewer-resolution queue item
+- current and expected finding/applicability/compliance status values
+- queue reason, component type, matched context, component context, evidence counts, component text,
+  and package evidence terms
+
+The Markdown worklist is a human-readable rendering of the same queue items for review and triage.
+The JSON template remains the authoritative contract consumed by the adjudication eval.
+
+Reviewers should copy or rename the template to `forest_plan_component_adjudication.json`, replace
+`disposition: pending` with a resolved disposition, and fill `adjudicated_at`, `adjudicated_by`,
+`source_type`, and `rationale`. Resolved dispositions are:
+
+- `true_ea_omission`
+- `retrieval_miss`
+- `package_section_chunking_miss`
+- `component_inventory_overreach`
+- `applicability_false_positive`
+- `evidence_linking_miss`
+
+The `forest-plan-component-adjudication-eval` command reads the completed adjudication file and
+writes `forest_plan_component_adjudication_eval.json` by default. The eval result has schema version
+`forest-plan-component-adjudication-eval-v0` and records:
+
+- pass/fail summary, completion rate, expectation match rate, disposition counts, and failure
+  category counts
+- checks for review/source-set identity, adjudication coverage of the current queue, completed
+  adjudication metadata, and status expectation matches
+- per-item results with current statuses, expected statuses, disposition, and failure categories
+
+The eval fails closed on missing queue items, unexpected adjudications, duplicate items, pending
+dispositions, incomplete adjudication metadata, invalid dispositions, or status expectation
+mismatches. A `true_ea_omission` can be a completed adjudication; it documents a real review gap
+rather than silently marking the component supported.
+
 ## Compliance Review Outputs
 
 Path: `source_library/reviews/<review_id>/`
@@ -1519,7 +1567,13 @@ requires the review report to exist, validation to pass, the review ID to match 
 the review source set to match the evaluated source set. The compliance-review phase also requires
 `compliance_matrix.json` to exist and match the review's schema version, review ID, source set, rule
 pack, row count, and status counts, and requires `compliance_matrix.pdf` to exist with a valid PDF
-header. The evidence-graph and claim-extraction
+header. If that review directory contains `forest_plan_component_adjudication_eval.json`, or a
+completed `forest_plan_component_adjudication.json` before the eval has been run, phase eval also
+includes a `forest_plan_component_adjudication` phase. That phase requires the adjudication eval to
+exist, pass, match the evaluated source set, and match the supplied review ID when one is provided;
+its details include queue count, resolved and pending adjudication counts, completion rate,
+expectation match rate, disposition counts, and failure-category counts. The evidence-graph and
+claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

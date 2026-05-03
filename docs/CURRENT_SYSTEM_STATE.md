@@ -391,6 +391,21 @@ Current state:
   remain open, three categorical-exclusion conditionals are false positives against the current V1
   contract, and two rule/conditional section matches are off. This is the current V1 blocker before
   practitioner-ready completion.
+- Forest-plan component adjudication tooling is implemented through
+  `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
+  template command exports one adjudication item for each open component reviewer-resolution queue
+  item, with current status expectations and reviewer-fillable dispositions, and writes a companion
+  Markdown worklist for human triage. The eval command fails closed until every current queue item
+  has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
+  `retrieval_miss`, `package_section_chunking_miss`, `component_inventory_overreach`,
+  `applicability_false_positive`, or `evidence_linking_miss`.
+  Running the template against `v1-cg-ecid-compliance-review` produced `82` pending items:
+  `35` guidelines, `26` desired conditions, `7` objectives, `7` standards, `4` suitability
+  components, and `3` goals. Running the eval against that pending template fails by design with
+  `adjudication_pending=82`, completion rate `0.0`, and expectation match rate `1.0`. When the
+  adjudication eval artifact is present in a review directory, `phase-eval --review-id` includes it
+  as a `forest_plan_component_adjudication` phase so pending or stale adjudication work blocks
+  reviewer readiness at the phase gate.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -510,6 +525,9 @@ Boundaries:
 - It proves the profile-driven forest-plan resolver can resolve the real East Crazy Inspiration
   Divide package to Custer Gallatin scope without treating incidental references to other forests as
   ambiguity, while still failing closed when component coverage is not reviewer-ready.
+- It proves forest-plan component reviewer-resolution items can be exported into a stable
+  adjudication contract and evaluated for queue coverage, completion, disposition counts, and status
+  expectation drift before those reviewer decisions are used as improvement data.
 - It proves the current final compliance-review eval seed passes deterministic all-pass, mixed
   pass/gap, and all-gap package fixtures.
 - It proves the current seed compliance-gold-eval promotion gate passes one positive, one mixed, and
@@ -818,6 +836,9 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - optional compliance gold eval when `compliance_gold_eval_results.json` exists under
   `source_library/reviews/compliance_gold_eval/`
 - optional compliance review when `--review-id` or `--review-dir` is passed
+- optional forest-plan component adjudication when the review directory contains
+  `forest_plan_component_adjudication_eval.json` or a completed
+  `forest_plan_component_adjudication.json`
 
 When a compliance coverage phase is included, `phase-eval` requires the matrix gate to pass, the
 rule pack to match, and the coverage source set to match the evaluated source set. When a gold eval
@@ -827,7 +848,11 @@ specific failed checks such as source-set or rule-pack mismatch. When a complian
 included, `phase-eval` requires the review report to exist, validation to pass, the review ID to
 match when supplied, and the review source set to match the evaluated source set. It also requires
 the compliance matrix artifact to exist and match the review's schema version, review ID, source set,
-rule pack, row count, and status counts.
+rule pack, row count, and status counts. When a forest-plan component adjudication phase is
+included, `phase-eval` requires the adjudication eval to exist, pass, match the evaluated source
+set, and match the supplied review ID when one is provided. The phase reports queue count, resolved
+and pending adjudication counts, completion rate, expectation match rate, disposition counts, and
+failure-category counts.
 
 ## Alignment And Next Milestone
 

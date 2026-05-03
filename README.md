@@ -449,6 +449,28 @@ mentions do not force an otherwise Custer Gallatin package to `ambiguous`. Negat
 text such as `not part of the project area` is filtered before geographic and management area
 resolution. Non-Custer packages are marked `not_custer_gallatin` and treated as out of scope.
 
+Export and evaluate a forest-plan component adjudication file for an existing review:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --adjudication-file source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json
+```
+
+The template command reads `forest_plan_component_findings.json` and
+`forest_plan_reviewer_resolution_queue.json`, then writes a reviewer-fillable JSON adjudication file
+and a Markdown worklist with one item per open queue item. The eval command fails until each item
+has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
+`retrieval_miss`,
+`package_section_chunking_miss`, `component_inventory_overreach`, `applicability_false_positive`, or
+`evidence_linking_miss`. This keeps model or code guesses out of the legal conclusion while turning
+reviewer decisions into measurable improvement data.
+
 Run a versioned compliance rule pack and emit the compliance matrix and finding graph:
 
 ```bash
@@ -668,11 +690,14 @@ When `compliance_coverage_results.json` exists beside the rule-claim outputs, it
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
 rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` after a
-compliance review to include `compliance_review` as an additional phase gate. The compliance phase
-requires the review source set to match the evaluated source set and requires the review's
-`compliance_matrix.json` to exist with the expected schema version, review ID, source set, rule pack,
-row count, and status counts. It also requires `compliance_matrix.pdf` to exist and have a valid PDF
-header.
+compliance review to include `compliance_review` as an additional phase gate. If the review
+directory contains `forest_plan_component_adjudication_eval.json`, or a completed
+`forest_plan_component_adjudication.json` that still needs an eval, phase eval also reports a
+`forest_plan_component_adjudication` phase with completion rate, expectation match rate,
+disposition counts, and failure categories. The compliance phase requires the review source set to
+match the evaluated source set and requires the review's `compliance_matrix.json` to exist with the
+expected schema version, review ID, source set, rule pack, row count, and status counts. It also
+requires `compliance_matrix.pdf` to exist and have a valid PDF header.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 

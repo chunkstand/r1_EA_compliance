@@ -27,6 +27,10 @@ from .evidence_graph import build_evidence_graph
 from .evidence_graph import run_phase_aligned_eval
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .forest_plan_component_adjudication import (
+    run_forest_plan_component_adjudication_eval,
+    write_forest_plan_component_adjudication_template,
+)
 from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
@@ -454,6 +458,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="Resolved overlay ID to attach to built component records. Repeatable.",
     )
 
+    forest_plan_component_adjudication_template = subparsers.add_parser(
+        "forest-plan-component-adjudication-template",
+        help="Export a reviewer-fillable adjudication template for forest-plan component queue items.",
+    )
+    forest_plan_component_adjudication_template.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    forest_plan_component_adjudication_template.add_argument("--review-id")
+    forest_plan_component_adjudication_template.add_argument("--review-dir", type=Path)
+    forest_plan_component_adjudication_template.add_argument("--output-path", type=Path)
+
+    forest_plan_component_adjudication_eval = subparsers.add_parser(
+        "forest-plan-component-adjudication-eval",
+        help="Evaluate completed forest-plan component adjudications against current artifacts.",
+    )
+    forest_plan_component_adjudication_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    forest_plan_component_adjudication_eval.add_argument("--review-id")
+    forest_plan_component_adjudication_eval.add_argument("--review-dir", type=Path)
+    forest_plan_component_adjudication_eval.add_argument("--adjudication-file", type=Path)
+    forest_plan_component_adjudication_eval.add_argument("--output-path", type=Path)
+
     forest_plan_resolve = subparsers.add_parser(
         "forest-plan-resolve",
         help="Resolve profile-driven forest-plan context from a local EA package.",
@@ -829,6 +860,27 @@ def main(argv: list[str] | None = None) -> int:
             geographic_area_ids=args.geographic_area_ids,
             management_area_ids=args.management_area_ids,
             overlay_ids=args.overlay_ids,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "forest-plan-component-adjudication-template":
+        result = write_forest_plan_component_adjudication_template(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "forest-plan-component-adjudication-eval":
+        result = run_forest_plan_component_adjudication_eval(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+            adjudication_file=args.adjudication_file,
+            output_path=args.output_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1

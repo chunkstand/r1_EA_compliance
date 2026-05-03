@@ -35,7 +35,8 @@ Current run result:
   `331` component findings, `58` standards, `46` applicable standards, and `39` applied standards.
 - Compliance validation fails closed on `forest_plan_component_gate_reviewer_ready` because the
   component evaluator still has `82` gap findings and `82` reviewer-resolution queue items.
-- Phase eval passes `8/9` phases; only `compliance_review` fails validation/reviewer readiness.
+- Phase eval passes `8/10` phases after the component adjudication eval is present; the failing
+  phases are `compliance_review` and `forest_plan_component_adjudication`.
 - V1 real-EA eval still fails, as intended for the current gap state. Good signals: all `13`
   required EA section families were detected, all `26` baseline authorities matched source records
   and document roles, all baseline document roles matched, citation/source-record match rates are
@@ -62,12 +63,23 @@ Primary failing artifacts/checks:
   `applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
   `forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
   `rule_section_mismatch=2`.
+- The forest-plan component adjudication template has been exported locally at
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.json`.
+  The companion worklist is
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.md`.
+  It contains `82` pending items: `35` guidelines, `26` desired conditions, `7` objectives,
+  `7` standards, `4` suitability components, and `3` goals. The eval against that pending template
+  fails by design with `adjudication_pending=82`, completion rate `0.0`, and expectation match rate
+  `1.0`. `phase-eval --review-id v1-cg-ecid-compliance-review` now includes that result as a
+  `forest_plan_component_adjudication` phase.
 
 Next implementation target:
 
-Adjudicate and improve the forest-plan component review gate. The scope blocker is closed; the
-remaining non-ready state is substantive component coverage and conditional/rule-section
-evaluation, not missing forest-plan context.
+Complete the adjudication file for the `82` exported component queue items, then use
+`forest-plan-component-adjudication-eval` to separate true EA omissions from retrieval misses,
+section/chunking misses, component-inventory overreach, applicability false positives, and evidence
+linking misses. The scope blocker is closed; the remaining non-ready state is substantive component
+coverage and conditional/rule-section evaluation, not missing forest-plan context.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -75,6 +87,14 @@ current follow-on slice adds the first NFMA standard-coverage gate.
 
 Current session update:
 
+- Forest-plan component adjudication tooling has been added. The template command exports current
+  reviewer-resolution queue items to a stable adjudication contract plus a Markdown reviewer
+  worklist; the eval command checks identity, queue coverage, completed adjudication metadata,
+  resolved dispositions, and expected current status matches. Phase eval now surfaces the
+  adjudication eval as a readiness phase when that artifact is present.
+- The adjudication disposition taxonomy is explicit data: `true_ea_omission`, `retrieval_miss`,
+  `package_section_chunking_miss`, `component_inventory_overreach`,
+  `applicability_false_positive`, and `evidence_linking_miss`.
 - Profile-driven forest-plan scope resolution now distinguishes operative selected-profile evidence
   from incidental references to other forests. Background/reference mentions of another configured
   forest no longer force `ambiguous`, while operative evidence that the project is on another forest
@@ -166,6 +186,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path "
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache --docling-timeout-seconds 180
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template --output-dir source_library --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --adjudication-file source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.json
 UV_CACHE_DIR=/private/tmp/usfs_uv_cache PYTHONPATH=src uv run --extra dev pytest
 UV_CACHE_DIR=/private/tmp/usfs_uv_cache PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
@@ -176,12 +198,16 @@ git diff --check
 Results: focused resolver tests and the full suite passed with `190 passed`; lint, compile, JSON
 validation, and whitespace checks passed. The cached forest-plan and compliance reruns exit nonzero
 by design because reviewer readiness now fails on substantive forest-plan component coverage, not
-scope ambiguity. `phase-eval` passes `8/9` phases and fails only `compliance_review`; `v1-ea-eval`
+scope ambiguity. `phase-eval` passes `8/10` phases and fails `compliance_review` and
+`forest_plan_component_adjudication`; `v1-ea-eval`
 now reports forest-plan expectation match rate `0.7`, section detection/source-record/document-role
 rates `1.0`, and remaining failure categories
 `applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
 `forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
 `rule_section_mismatch=2`.
+The component adjudication template export passed with `82` pending items and produced both JSON and
+Markdown worklist artifacts. The adjudication eval against that pending template fails by design
+with `adjudication_pending=82`; this is the expected baseline before reviewer adjudication.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest

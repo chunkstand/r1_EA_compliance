@@ -1182,6 +1182,85 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
             self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
 
+    def test_phase_eval_can_include_component_adjudication_phase(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="phase-review",
+            )
+            _write_component_adjudication_eval(
+                output_dir / "reviews" / "phase-review",
+                source_set_id=source_set_id,
+                review_id="phase-review",
+                passed=True,
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="phase-review",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(result.summary["phase_count"], 8)
+            adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
+            self.assertTrue(adjudication_phase["passed"])
+            self.assertTrue(adjudication_phase["reviewer_ready"])
+            self.assertEqual(adjudication_phase["details"]["queue_item_count"], 2)
+            self.assertEqual(
+                adjudication_phase["details"]["adjudication_completion_rate"],
+                1.0,
+            )
+
+    def test_phase_eval_rejects_pending_component_adjudication(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="pending-adjudication-review",
+            )
+            _write_component_adjudication_eval(
+                output_dir / "reviews" / "pending-adjudication-review",
+                source_set_id=source_set_id,
+                review_id="pending-adjudication-review",
+                passed=False,
+                pending_count=1,
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="pending-adjudication-review",
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
+            self.assertFalse(adjudication_phase["passed"])
+            self.assertFalse(adjudication_phase["reviewer_ready"])
+            self.assertIn("adjudication_eval_failed", adjudication_phase["details"]["failed_checks"])
+            self.assertEqual(adjudication_phase["details"]["pending_adjudication_count"], 1)
+            self.assertEqual(
+                adjudication_phase["details"]["failure_category_counts"],
+                {"adjudication_pending": 1},
+            )
+
     def test_phase_eval_rejects_missing_compliance_matrix(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -1524,6 +1603,50 @@ def _write_graph_phase_outputs(output_dir: Path, source_set_id: str) -> None:
                 "retrieval_index_chunk_count": 2,
                 "retrieval_binding_mismatch_count": 0,
                 "metrics": {},
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_component_adjudication_eval(
+    review_dir: Path,
+    *,
+    source_set_id: str,
+    review_id: str,
+    passed: bool,
+    pending_count: int = 0,
+) -> None:
+    review_dir.mkdir(parents=True, exist_ok=True)
+    resolved_count = 2 - pending_count
+    failure_counts = {"adjudication_pending": pending_count} if pending_count else {}
+    (review_dir / "forest_plan_component_adjudication_eval.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "forest-plan-component-adjudication-eval-v0",
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "summary": {
+                    "review_id": review_id,
+                    "source_set_id": source_set_id,
+                    "adjudication_file": str(
+                        review_dir / "forest_plan_component_adjudication.json"
+                    ),
+                    "queue_item_count": 2,
+                    "adjudication_item_count": 2,
+                    "resolved_adjudication_count": resolved_count,
+                    "pending_adjudication_count": pending_count,
+                    "adjudication_completion_rate": round(resolved_count / 2, 6),
+                    "adjudication_expectation_match_rate": 1.0,
+                    "disposition_counts": (
+                        {"true_ea_omission": resolved_count}
+                        if resolved_count
+                        else {}
+                    ),
+                    "failure_category_counts": failure_counts,
+                    "passed": passed,
+                },
             },
             sort_keys=True,
         ),

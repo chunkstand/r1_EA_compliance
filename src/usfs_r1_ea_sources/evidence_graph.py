@@ -301,6 +301,16 @@ def run_phase_aligned_eval(
     compliance_matrix_pdf_path = (
         review_dir / "compliance_matrix.pdf" if review_dir is not None else None
     )
+    component_adjudication_eval_path = (
+        review_dir / "forest_plan_component_adjudication_eval.json"
+        if review_dir is not None
+        else None
+    )
+    component_adjudication_file_path = (
+        review_dir / "forest_plan_component_adjudication.json"
+        if review_dir is not None
+        else None
+    )
 
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
@@ -334,6 +344,12 @@ def run_phase_aligned_eval(
     compliance_matrix = (
         _read_json(compliance_matrix_path)
         if compliance_matrix_path is not None and compliance_matrix_path.exists()
+        else None
+    )
+    component_adjudication_eval = (
+        _read_json(component_adjudication_eval_path)
+        if component_adjudication_eval_path is not None
+        and component_adjudication_eval_path.exists()
         else None
     )
     compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
@@ -703,6 +719,102 @@ def run_phase_aligned_eval(
                 },
             )
         )
+        should_include_component_adjudication = bool(
+            component_adjudication_eval_path is not None
+            and component_adjudication_eval_path.exists()
+        ) or bool(
+            component_adjudication_file_path is not None
+            and component_adjudication_file_path.exists()
+        )
+        if should_include_component_adjudication:
+            adjudication_summary = (
+                component_adjudication_eval.get("summary")
+                if isinstance(component_adjudication_eval, dict)
+                and isinstance(component_adjudication_eval.get("summary"), dict)
+                else {}
+            )
+            adjudication_review_id = (
+                component_adjudication_eval or {}
+            ).get("review_id") or adjudication_summary.get("review_id")
+            adjudication_source_set_id = (
+                component_adjudication_eval or {}
+            ).get("source_set_id") or adjudication_summary.get("source_set_id")
+            expected_adjudication_review_id = review_id or compliance_summary.get("review_id")
+            adjudication_eval_exists = component_adjudication_eval is not None
+            adjudication_eval_passed = bool(adjudication_summary.get("passed"))
+            adjudication_source_set_matches = adjudication_source_set_id == source_set_id
+            adjudication_review_id_matches = (
+                expected_adjudication_review_id is None
+                or adjudication_review_id == expected_adjudication_review_id
+            )
+            adjudication_failed_checks = []
+            if not adjudication_eval_exists:
+                adjudication_failed_checks.append("adjudication_eval_missing")
+            if adjudication_eval_exists and not adjudication_eval_passed:
+                adjudication_failed_checks.append("adjudication_eval_failed")
+            if adjudication_eval_exists and not adjudication_source_set_matches:
+                adjudication_failed_checks.append("source_set_mismatch")
+            if adjudication_eval_exists and not adjudication_review_id_matches:
+                adjudication_failed_checks.append("review_id_mismatch")
+            adjudication_phase_passed = (
+                adjudication_eval_exists
+                and adjudication_eval_passed
+                and adjudication_source_set_matches
+                and adjudication_review_id_matches
+            )
+            phases.append(
+                _phase(
+                    "forest_plan_component_adjudication",
+                    passed=adjudication_phase_passed,
+                    reviewer_ready=adjudication_phase_passed,
+                    details={
+                        "review_dir": str(review_dir),
+                        "eval_path": str(component_adjudication_eval_path),
+                        "adjudication_file": (
+                            adjudication_summary.get("adjudication_file")
+                            or str(component_adjudication_file_path)
+                        ),
+                        "eval_exists": adjudication_eval_exists,
+                        "eval_passed": adjudication_eval_passed,
+                        "failed_checks": adjudication_failed_checks,
+                        "expected_source_set_id": source_set_id,
+                        "adjudication_source_set_id": adjudication_source_set_id,
+                        "source_set_matches": adjudication_source_set_matches,
+                        "expected_review_id": expected_adjudication_review_id,
+                        "adjudication_review_id": adjudication_review_id,
+                        "review_id_matches": adjudication_review_id_matches,
+                        "queue_item_count": adjudication_summary.get("queue_item_count", 0),
+                        "adjudication_item_count": adjudication_summary.get(
+                            "adjudication_item_count",
+                            0,
+                        ),
+                        "resolved_adjudication_count": adjudication_summary.get(
+                            "resolved_adjudication_count",
+                            0,
+                        ),
+                        "pending_adjudication_count": adjudication_summary.get(
+                            "pending_adjudication_count",
+                            0,
+                        ),
+                        "adjudication_completion_rate": adjudication_summary.get(
+                            "adjudication_completion_rate",
+                            0,
+                        ),
+                        "adjudication_expectation_match_rate": adjudication_summary.get(
+                            "adjudication_expectation_match_rate",
+                            0,
+                        ),
+                        "disposition_counts": adjudication_summary.get(
+                            "disposition_counts",
+                            {},
+                        ),
+                        "failure_category_counts": adjudication_summary.get(
+                            "failure_category_counts",
+                            {},
+                        ),
+                    },
+                )
+            )
     blockers = [
         {"phase": phase["name"], "reason": reason}
         for phase in phases
