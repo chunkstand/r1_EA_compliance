@@ -397,9 +397,10 @@ Deliverables:
 - `forest_plan_component_findings.json`
 - `forest_plan_component_findings.md`
 - `forest_plan_reviewer_resolution_queue.json`
-- `forest_plan_nfma_compliance_matrix.json`
-- `forest_plan_nfma_compliance_matrix.md`
-- `forest_plan_nfma_compliance_matrix.pdf`
+- `forest_plan_component_inventory_coverage.json`
+- `forest_plan_applicable_standard_coverage.json`
+- Forest-plan rows linked from the review-level `compliance_matrix.json`, `compliance_matrix.md`,
+  and `compliance_matrix.pdf`.
 - Summary fields in `forest_plan_context_summary.json` for component count, applicable count,
   applicable standard count, compliance-status counts, reviewer-resolution count, and
   all-applicable-standards-applied status.

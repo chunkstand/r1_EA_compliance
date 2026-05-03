@@ -137,8 +137,8 @@ claim beyond the current Custer Gallatin proving package without a new evidence-
 gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
-to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
-current follow-on slice adds the first NFMA standard-coverage gate.
+to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`, and
+the NFMA standard-coverage gate is committed at `21d30b6`.
 
 Current session update:
 
@@ -166,8 +166,11 @@ Current session update:
 - Forest-plan component evaluation V0 has been added as a required `forest-plan-resolve` stage for
   packages resolved to the selected forest-plan profile; `--forest-plan-component-inventory-path`
   only overrides the inventory path.
-- New component outputs are `forest_plan_component_findings.json`,
-  `forest_plan_component_findings.md`, and `forest_plan_reviewer_resolution_queue.json`.
+- Component outputs are `forest_plan_component_findings.json`,
+  `forest_plan_component_findings.md`, `forest_plan_reviewer_resolution_queue.json`,
+  `forest_plan_component_inventory_coverage.json`, and
+  `forest_plan_applicable_standard_coverage.json`; forest-plan rows are linked from the
+  review-level compliance matrix JSON, Markdown, and PDF.
 - `config/forest_plan_component_inventory_seed.json` contains the first narrow Custer Gallatin seed
   inventory for East Crazies-relevant Crazy Mountains Backcountry Area components.
 - Component validation now fails closed on source-set drift, requires supported/partial findings to

@@ -68,6 +68,10 @@ heuristics.
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
+- `config/forest_plan_profiles.json`
+- `config/forest_plan_component_inventory_seed.json`
+- `config/forest_plan_component_eval_seed.json`
+- `config/v1_ecid_real_ea_eval.json`
 
 ## Stored Data
 
@@ -106,6 +110,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_gaps.jsonl`
   - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.sqlite`
   - `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_validation.json`
+- Forest-plan component inventory outputs:
+  - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json`
+  - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory_build_coverage.json`
+  - `source_library/derived/<source_set_id>/forest_plan_components/components.jsonl`
+  - `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
   - `source_library/reviews/<review_id>/package/package_chunks.jsonl`
@@ -119,6 +128,15 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/compliance_matrix.pdf`
   - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
+  - `source_library/reviews/<review_id>/forest_plan_context.json`
+  - `source_library/reviews/<review_id>/forest_plan_context_validation.json`
+  - `source_library/reviews/<review_id>/forest_plan_context_summary.json`
+  - `source_library/reviews/<review_id>/forest_plan_component_findings.json`
+  - `source_library/reviews/<review_id>/forest_plan_component_findings.md`
+  - `source_library/reviews/<review_id>/forest_plan_reviewer_resolution_queue.json`
+  - `source_library/reviews/<review_id>/forest_plan_component_inventory_coverage.json`
+  - `source_library/reviews/<review_id>/forest_plan_applicable_standard_coverage.json`
+  - `source_library/reviews/<review_id>/forest_plan_component_eval_results.json`
   - `source_library/reviews/<review_id>/v1_ea_eval_results.json`
 - Compliance review eval outputs:
   - `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`

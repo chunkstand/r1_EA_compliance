@@ -189,9 +189,11 @@ source_library/
     forest_plan_component_findings.json
     forest_plan_component_findings.md
     forest_plan_reviewer_resolution_queue.json
-    forest_plan_nfma_compliance_matrix.json
-    forest_plan_nfma_compliance_matrix.md
-    forest_plan_nfma_compliance_matrix.pdf
+    forest_plan_component_inventory_coverage.json
+    forest_plan_applicable_standard_coverage.json
+    compliance_matrix.json
+    compliance_matrix.md
+    compliance_matrix.pdf
 ```
 
 ## Milestone 1: Data Model, Provenance, And Output Contract
@@ -550,9 +552,10 @@ Deliverables:
   - `forest_plan_component_findings.json`
   - `forest_plan_component_findings.md`
   - `forest_plan_reviewer_resolution_queue.json`
-  - `forest_plan_nfma_compliance_matrix.json`
-  - `forest_plan_nfma_compliance_matrix.md`
-  - `forest_plan_nfma_compliance_matrix.pdf`
+  - `forest_plan_component_inventory_coverage.json`
+  - `forest_plan_applicable_standard_coverage.json`
+  - forest-plan rows linked from the review-level `compliance_matrix.json`, `compliance_matrix.md`,
+    and `compliance_matrix.pdf`
 - Add summary fields to `forest_plan_context_summary.json`:
   - component count
   - applicable count
