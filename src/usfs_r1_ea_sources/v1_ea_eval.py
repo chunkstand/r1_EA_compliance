@@ -577,11 +577,8 @@ def _conditional_adjudication_report(
         for result in pending_results
         if str(result.get("rule_id") or "").strip()
     ]
-    accepted_pending_rule_ids = sorted(
-        str(rule_id)
-        for rule_id in policy.get("accepted_pending_rule_ids", [])
-        if str(rule_id).strip()
-    )
+    raw_accepted_pending_rule_ids = policy.get("accepted_pending_rule_ids")
+    accepted_pending_rule_ids = _policy_rule_ids(raw_accepted_pending_rule_ids)
     accepted_pending_count = policy.get("accepted_pending_count")
     mode = str(policy.get("mode") or "").strip()
     failure_reasons = []
@@ -589,9 +586,14 @@ def _conditional_adjudication_report(
         failure_reasons.append("missing_conditional_adjudication_policy")
     if policy_present and mode != "accepted_pending_v1":
         failure_reasons.append("unsupported_conditional_adjudication_policy_mode")
-    if policy_present and not isinstance(policy.get("accepted_pending_rule_ids"), list):
+    if policy_present and not isinstance(raw_accepted_pending_rule_ids, list):
         failure_reasons.append("accepted_pending_rule_ids_must_be_list")
-    if policy_present and accepted_pending_count != len(actual_pending_rule_ids):
+    if policy_present and (
+        not isinstance(accepted_pending_count, int)
+        or isinstance(accepted_pending_count, bool)
+    ):
+        failure_reasons.append("accepted_pending_count_must_be_integer")
+    elif policy_present and accepted_pending_count != len(actual_pending_rule_ids):
         failure_reasons.append("accepted_pending_count_mismatch")
     unexpected_pending_rule_ids = sorted(
         set(actual_pending_rule_ids) - set(accepted_pending_rule_ids)
@@ -669,6 +671,12 @@ def _conditional_adjudication_summary(report: dict[str, Any]) -> dict[str, Any]:
         "missing_pending_rule_ids": report.get("missing_pending_rule_ids", []),
         "failure_reasons": report.get("failure_reasons", []),
     }
+
+
+def _policy_rule_ids(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return sorted(str(rule_id).strip() for rule_id in value if str(rule_id).strip())
 
 
 def _evaluate_rule_source_section(
@@ -1422,17 +1430,34 @@ def _validate_contract(contract: dict[str, Any]) -> None:
             )
         if policy.get("mode") != "accepted_pending_v1":
             raise ValueError("conditional_adjudication_policy.mode must be accepted_pending_v1")
-        accepted_rule_ids = sorted(
-            str(rule_id)
-            for rule_id in policy.get("accepted_pending_rule_ids", [])
-            if str(rule_id).strip()
-        )
+        raw_accepted_rule_ids = policy.get("accepted_pending_rule_ids")
+        if not isinstance(raw_accepted_rule_ids, list):
+            raise ValueError(
+                "conditional_adjudication_policy.accepted_pending_rule_ids must be a list"
+            )
+        if not all(
+            isinstance(rule_id, str) and rule_id.strip()
+            for rule_id in raw_accepted_rule_ids
+        ):
+            raise ValueError(
+                "conditional_adjudication_policy.accepted_pending_rule_ids must contain "
+                "non-empty strings"
+            )
+        accepted_rule_ids = _policy_rule_ids(raw_accepted_rule_ids)
         if accepted_rule_ids != adjudicate_rule_ids:
             raise ValueError(
                 "conditional_adjudication_policy.accepted_pending_rule_ids must match "
                 "adjudicate conditional expectations"
             )
-        if policy.get("accepted_pending_count") != len(adjudicate_rule_ids):
+        accepted_pending_count = policy.get("accepted_pending_count")
+        if not isinstance(accepted_pending_count, int) or isinstance(
+            accepted_pending_count,
+            bool,
+        ):
+            raise ValueError(
+                "conditional_adjudication_policy.accepted_pending_count must be an integer"
+            )
+        if accepted_pending_count != len(adjudicate_rule_ids):
             raise ValueError(
                 "conditional_adjudication_policy.accepted_pending_count must match "
                 "adjudicate conditional expectation count"

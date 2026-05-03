@@ -1058,7 +1058,7 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - `conditional_adjudication_policy` when any conditional expectation uses `adjudicate`. The current
   accepted policy mode is `accepted_pending_v1`, with an explicit pending count, accepted pending
   rule IDs, and rationale. The evaluator fails closed if pending adjudication rows are not covered
-  by this policy.
+  by this policy or if the accepted pending count/rule-ID fields are malformed.
 - `forest_plan` expectations for required plan source records, resolved geographic/management
   areas, component IDs, applicable standards, reviewer readiness, total open reviewer-resolution
   items, and open standard reviewer-resolution items

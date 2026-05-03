@@ -257,6 +257,29 @@ class V1EAReviewEvalTests(unittest.TestCase):
                     eval_file=eval_file,
                 )
 
+    def test_v1_eval_rejects_malformed_pending_conditional_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["conditional_source_expectations"][0][
+                "expected_applicability"
+            ] = "adjudicate"
+            contract["conditional_adjudication_policy"] = _accepted_pending_policy(
+                ["esa_section_7"]
+            )
+            contract["conditional_adjudication_policy"]["accepted_pending_rule_ids"] = None
+            _write_json(eval_file, contract)
+
+            with self.assertRaisesRegex(ValueError, "accepted_pending_rule_ids"):
+                run_v1_ea_review_eval(
+                    output_dir=root / "source_library",
+                    review_id="v1-unit",
+                    eval_file=eval_file,
+                )
+
     def test_v1_eval_outputs_explicit_pending_conditional_policy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

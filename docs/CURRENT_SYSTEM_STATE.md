@@ -975,7 +975,9 @@ classification rationale, and the contract declares
 `conditional_adjudication_policy.mode=accepted_pending_v1` with `accepted_pending_count=14`.
 `v1-ea-eval` now emits a `conditional_adjudication` summary and full pending-results queue, fails
 if accepted pending rule IDs/counts drift from the actual `adjudicate` rows, and keeps
-source/section alignment enforced for actual applicable pending rows.
+source/section alignment enforced for actual applicable pending rows. The gap-close pass hardens
+that policy contract so malformed accepted pending count/rule-ID fields fail with explicit contract
+validation errors.
 
 The next v1 milestone is Milestone 6: final V1 gate promotion. That slice should rerun the current
 review and promotion gates end to end, including `phase-eval`, `v1-ea-eval`,

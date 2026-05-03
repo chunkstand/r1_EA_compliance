@@ -340,10 +340,17 @@ Stop conditions:
   applicability gating, and explicit pending-adjudication policy are working.
 - Full tests or lint fail for reasons related to the V1 repair.
 
-Expert alignment check for Sequence 4:
+Expert alignment notes retained from the earlier forest-plan sequence:
 
 - Scott Vandegrift: readiness and reuse should be explicit; avoid unnecessary full-corpus rebuilds.
 - Chuck Nicholson: the fixture should look like practitioner QA/QC, with transparent criteria and
   actionable gaps.
 - Liz Esposito: every supported result must keep source-record IDs and evidence basis visible; do
   not convert the fixture into a legal conclusion.
+
+Milestone 5 alignment closeout:
+
+- Pending conditional rows are explicit accepted V1 risk, not resolved legal conclusions.
+- Malformed conditional-adjudication policy counts or rule-ID lists fail contract validation.
+- Milestone 6 remains the next sequence: final V1 gate promotion through phase eval, V1 eval,
+  compliance-review eval, gold eval, full tests, lint, compile, and docs promotion.

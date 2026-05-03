@@ -379,6 +379,9 @@ Completion status:
 - This milestone does not resolve the pending legal/applicability judgments. It makes them explicit
   and keeps source-record, document-role, citation, and package-section gates active for every
   pending row that the review marks actually applicable.
+- The Milestone 5 gap-close pass hardens the contract shape: malformed accepted pending
+  count/rule-ID fields now fail with explicit validation errors, `README.md` lists the
+  `v1_ea_eval_results.json` review artifact, and the durable handoff points to Milestone 6.
 
 Required tests:
 
