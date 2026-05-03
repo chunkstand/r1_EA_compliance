@@ -134,6 +134,11 @@ def run_v1_ea_review_eval(
         forest_plan_results=forest_plan_results,
         artifact_errors=artifacts["artifact_errors"],
     )
+    failed_rule_expectations = _failed_rule_expectations(
+        rule_results=rule_results,
+        conditional_results=conditional_results,
+    )
+    failed_rule_ids_by_category = _failed_rule_ids_by_category(failed_rule_expectations)
     eval_lanes = _eval_lanes(
         checks=checks,
         section_results=section_results,
@@ -172,6 +177,8 @@ def run_v1_ea_review_eval(
         "forest_plan_failure_category_counts": dict(
             sorted(forest_plan_failure_category_counts.items())
         ),
+        "failed_rule_ids_by_category": failed_rule_ids_by_category,
+        "failed_rule_expectations": failed_rule_expectations,
         "eval_lanes": eval_lanes,
     }
     payload = {
@@ -1025,6 +1032,59 @@ def _forest_plan_failure_category_counts(
         if result.get("failure_category"):
             counts[str(result["failure_category"])] += 1
     return counts
+
+
+def _failed_rule_expectations(
+    *,
+    rule_results: list[dict[str, Any]],
+    conditional_results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    failed: list[dict[str, Any]] = []
+    for expectation_type, results in (
+        ("rule_review_expectation", rule_results),
+        ("conditional_source_expectation", conditional_results),
+    ):
+        for result in results:
+            categories = [
+                str(category)
+                for category in result.get("failure_categories", [])
+                if str(category).strip()
+            ]
+            if result.get("passed") and not categories:
+                continue
+            entry = {
+                "expectation_type": expectation_type,
+                "rule_id": result.get("rule_id"),
+                "failure_categories": categories,
+                "actual_applicability": result.get("actual_applicability"),
+                "actual_status": result.get("actual_status"),
+                "expected_package_section_ids": result.get("expected_package_section_ids", []),
+                "actual_package_section_ids": result.get("actual_package_section_ids", []),
+                "expected_source_record_ids": result.get("expected_source_record_ids", []),
+                "actual_source_record_ids": result.get("actual_source_record_ids", []),
+            }
+            if expectation_type == "conditional_source_expectation":
+                entry["expected_applicability"] = result.get("expected_applicability")
+                entry["actual_is_applicable"] = result.get("actual_is_applicable")
+                entry["adjudication_pending"] = result.get("adjudication_pending")
+            failed.append(entry)
+    return failed
+
+
+def _failed_rule_ids_by_category(
+    failed_rule_expectations: list[dict[str, Any]],
+) -> dict[str, list[str]]:
+    category_rule_ids: dict[str, set[str]] = {}
+    for expectation in failed_rule_expectations:
+        rule_id = expectation.get("rule_id")
+        if not rule_id:
+            continue
+        for category in expectation.get("failure_categories", []):
+            category_rule_ids.setdefault(str(category), set()).add(str(rule_id))
+    return {
+        category: sorted(rule_ids)
+        for category, rule_ids in sorted(category_rule_ids.items())
+    }
 
 
 def _eval_lanes(

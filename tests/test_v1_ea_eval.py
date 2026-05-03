@@ -339,6 +339,76 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(forest_lane["failed_check_names"], ["forest_plan_expectations_met"])
             self.assertEqual(result.summary["eval_lanes"]["broader_ea"]["failed_check_names"], [])
 
+    def test_v1_eval_output_names_current_repair_baseline_failures(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_repair_baseline_failure_review(review_dir)
+            eval_file = _write_repair_baseline_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(
+                result.summary["failure_category_counts"],
+                {"conditional_false_positive": 3, "rule_section_mismatch": 2},
+            )
+            self.assertEqual(
+                result.summary["failed_rule_ids_by_category"],
+                {
+                    "conditional_false_positive": [
+                        "nepa_4336c_ce_adoption_screen",
+                        "usda_nepa_ce_fanec_7cfr_1b3",
+                        "usda_nepa_subcomponent_ce_7cfr_1b4",
+                    ],
+                    "rule_section_mismatch": [
+                        "nepa_4336b_programmatic_tiering",
+                        "nepa_statute_chapter_55",
+                    ],
+                },
+            )
+            self.assertEqual(
+                [
+                    (
+                        failure["expectation_type"],
+                        failure["rule_id"],
+                        failure["failure_categories"],
+                    )
+                    for failure in result.summary["failed_rule_expectations"]
+                ],
+                [
+                    (
+                        "rule_review_expectation",
+                        "nepa_statute_chapter_55",
+                        ["rule_section_mismatch"],
+                    ),
+                    (
+                        "conditional_source_expectation",
+                        "nepa_4336b_programmatic_tiering",
+                        ["rule_section_mismatch"],
+                    ),
+                    (
+                        "conditional_source_expectation",
+                        "nepa_4336c_ce_adoption_screen",
+                        ["conditional_false_positive"],
+                    ),
+                    (
+                        "conditional_source_expectation",
+                        "usda_nepa_ce_fanec_7cfr_1b3",
+                        ["conditional_false_positive"],
+                    ),
+                    (
+                        "conditional_source_expectation",
+                        "usda_nepa_subcomponent_ce_7cfr_1b4",
+                        ["conditional_false_positive"],
+                    ),
+                ],
+            )
+
     def test_cli_accepts_v1_ea_eval_command(self) -> None:
         args = build_parser().parse_args(
             [
@@ -352,6 +422,213 @@ class V1EAReviewEvalTests(unittest.TestCase):
 
         self.assertEqual(args.command, "v1-ea-eval")
         self.assertEqual(args.review_id, "v1-unit")
+
+
+def _write_repair_baseline_failure_review(review_dir: Path) -> None:
+    _write_jsonl(
+        review_dir / "package" / "package_chunks.jsonl",
+        [
+            {
+                "chunk_id": "chunk-purpose",
+                "title": "EA",
+                "heading": "Purpose and Need",
+                "section": "Purpose and Need",
+                "text": "The purpose and need section is present in the package.",
+            },
+            {
+                "chunk_id": "chunk-alternatives",
+                "title": "EA",
+                "heading": "Alternatives",
+                "section": "Alternatives",
+                "text": "Alternatives are described for the proposed action.",
+            },
+            {
+                "chunk_id": "chunk-effects",
+                "title": "EA",
+                "heading": "Environmental Consequences",
+                "section": "Environmental Consequences",
+                "text": "Environmental consequences are disclosed.",
+            },
+            {
+                "chunk_id": "chunk-biology",
+                "title": "EA",
+                "heading": "Biological Resources",
+                "section": "Biological Resources",
+                "text": "Biological resources are discussed.",
+            },
+            {
+                "chunk_id": "chunk-cultural",
+                "title": "EA",
+                "heading": "Cultural Resources",
+                "section": "Cultural Resources",
+                "text": "Cultural resources are discussed.",
+            },
+        ],
+    )
+    findings = [
+        _finding(
+            rule_id="nepa_statute_chapter_55",
+            status="pass",
+            applicability_mode="baseline",
+            source_record_id="R1EA-001",
+            document_role="law",
+            package_text="National Environmental Policy Act chapter 55 authority applies.",
+            package_section="Authority Summary",
+        ),
+        _finding(
+            rule_id="nepa_4336b_programmatic_tiering",
+            status="pass",
+            applicability_mode="conditional",
+            source_record_id="R1EA-005",
+            document_role="law",
+            package_text=(
+                "Programmatic analysis appears in biological resources and cultural resources."
+            ),
+            package_section="Biological Resources and Cultural Resources",
+        ),
+        _finding(
+            rule_id="nepa_4336c_ce_adoption_screen",
+            status="pass",
+            applicability_mode="conditional",
+            source_record_id="R1EA-006",
+            document_role="law",
+            package_text="The EA mentions categorical exclusions and a FONSI.",
+            package_section="Decision and FONSI",
+        ),
+        _finding(
+            rule_id="usda_nepa_ce_fanec_7cfr_1b3",
+            status="pass",
+            applicability_mode="conditional",
+            source_record_id="R1EA-011",
+            document_role="regulation",
+            package_text="The EA mentions FANEC and extraordinary circumstances.",
+            package_section="Decision and FONSI",
+        ),
+        _finding(
+            rule_id="usda_nepa_subcomponent_ce_7cfr_1b4",
+            status="pass",
+            applicability_mode="conditional",
+            source_record_id="R1EA-012",
+            document_role="regulation",
+            package_text="The EA mentions categorical exclusions and level of review.",
+            package_section="Decision and FONSI",
+        ),
+    ]
+    _write_json(
+        review_dir / "compliance_review.json",
+        {
+            "schema_version": "compliance-review-v0",
+            "review_id": "v1-unit",
+            "source_set_id": "source-set-test",
+            "rule_pack_id": "nepa-ea-v0",
+            "rule_pack_version": "0.4.0",
+            "summary": {
+                "review_id": "v1-unit",
+                "source_set_id": "source-set-test",
+                "rule_pack_id": "nepa-ea-v0",
+                "rule_pack_version": "0.4.0",
+                "reviewer_ready": False,
+            },
+            "findings": findings,
+        },
+    )
+    _write_json(
+        review_dir / "compliance_matrix.json",
+        {
+            "schema_version": "compliance-matrix-v0",
+            "summary": {"row_count": len(findings)},
+            "rows": [_matrix_row("v1-unit", finding) for finding in findings],
+        },
+    )
+    _write_json(
+        review_dir / "compliance_validation.json",
+        {"schema_version": "compliance-validation-v0", "passed": True, "checks": []},
+    )
+
+
+def _write_repair_baseline_eval_contract(root: Path, *, review_id: str) -> Path:
+    path = root / "v1_repair_baseline_eval.json"
+    _write_json(
+        path,
+        {
+            "schema_version": "v1-ea-real-review-eval-contract-v0",
+            "eval_id": "v1-repair-baseline",
+            "review_id": review_id,
+            "source_set_id": "source-set-test",
+            "rule_pack_id": "nepa-ea-v0",
+            "rule_pack_version": "0.4.0",
+            "allow_unadjudicated_conditional_expectations": True,
+            "baseline_policy": {
+                "require_source_record_match_authority": True,
+                "expected_source_record_ids": ["R1EA-001"],
+            },
+            "section_expectations": [
+                {
+                    "section_id": "purpose_need",
+                    "label": "Purpose and Need",
+                    "required": True,
+                    "expected_terms": ["purpose and need"],
+                },
+                {
+                    "section_id": "alternatives",
+                    "label": "Alternatives",
+                    "required": True,
+                    "expected_terms": ["alternatives"],
+                },
+                {
+                    "section_id": "environmental_consequences",
+                    "label": "Environmental Consequences",
+                    "required": True,
+                    "expected_terms": ["environmental consequences"],
+                },
+                {
+                    "section_id": "biological_resources",
+                    "label": "Biological Resources",
+                    "required": True,
+                    "expected_terms": ["biological resources"],
+                },
+                {
+                    "section_id": "cultural_resources",
+                    "label": "Cultural Resources",
+                    "required": True,
+                    "expected_terms": ["cultural resources"],
+                },
+            ],
+            "rule_review_expectations": [
+                {
+                    "rule_id": "nepa_statute_chapter_55",
+                    "expected_package_section_ids": ["purpose_need"],
+                    "expected_source_record_ids": ["R1EA-001"],
+                    "expected_source_document_roles": ["law"],
+                }
+            ],
+            "conditional_source_expectations": [
+                {
+                    "rule_id": "nepa_4336b_programmatic_tiering",
+                    "expected_applicability": "adjudicate",
+                    "expected_package_section_ids": [
+                        "alternatives",
+                        "environmental_consequences",
+                    ],
+                    "expected_source_record_ids": ["R1EA-005"],
+                    "expected_source_document_roles": ["law"],
+                },
+                {
+                    "rule_id": "nepa_4336c_ce_adoption_screen",
+                    "expected_applicability": "not_applicable",
+                },
+                {
+                    "rule_id": "usda_nepa_ce_fanec_7cfr_1b3",
+                    "expected_applicability": "not_applicable",
+                },
+                {
+                    "rule_id": "usda_nepa_subcomponent_ce_7cfr_1b4",
+                    "expected_applicability": "not_applicable",
+                },
+            ],
+        },
+    )
+    return path
 
 
 def _write_positive_review(review_dir: Path) -> None:

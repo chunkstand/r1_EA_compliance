@@ -1050,12 +1050,16 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - summary identity, output path, overall pass/fail status, lane pass/fail status, checks, metrics,
   and failure-category counts
 - `broader_ea_passed`, `forest_plan_passed`, `forest_plan_component_adjudication_required`,
-  `broader_ea_failure_category_counts`, `forest_plan_failure_category_counts`, and `eval_lanes`.
-  `eval_lanes.overall` preserves the full readiness gate, `eval_lanes.broader_ea` isolates package
-  sections, baseline authority alignment, rule bindings, conditional sources, and non-forest-plan
-  artifact failures, and `eval_lanes.forest_plan` isolates Custer Gallatin source records, scope,
-  components, applicable standards, reviewer readiness, forest-plan artifacts, the forest-plan
-  compliance-validation gate, and component adjudication counts.
+  `broader_ea_failure_category_counts`, `forest_plan_failure_category_counts`,
+  `failed_rule_ids_by_category`, `failed_rule_expectations`, and `eval_lanes`. The failed-rule
+  summaries name rule IDs, expectation type, failure categories, actual applicability/status,
+  expected and actual package sections, and expected and actual source records so CLI output can
+  identify the blocking rule rows without manual JSON inspection. `eval_lanes.overall` preserves the
+  full readiness gate, `eval_lanes.broader_ea` isolates package sections, baseline authority
+  alignment, rule bindings, conditional sources, and non-forest-plan artifact failures, and
+  `eval_lanes.forest_plan` isolates Custer Gallatin source records, scope, components, applicable
+  standards, reviewer readiness, forest-plan artifacts, the forest-plan compliance-validation gate,
+  and component adjudication counts.
 - `section_results` with detected package chunks and missed required section families
 - `baseline_results` verifying baseline findings use their authority source records and document
   roles
