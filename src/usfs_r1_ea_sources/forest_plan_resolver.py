@@ -498,6 +498,12 @@ def _resolve_scope(
                 aliases=unit.names,
             )
         )
+    profile_scope_mentions = [
+        mention for mention in profile_mentions if _is_scope_decisive_mention(mention)
+    ]
+    blocking_other_forest_mentions = [
+        mention for mention in other_forest_mentions if _is_scope_decisive_mention(mention)
+    ]
     ambiguous_mentions = []
     if not profile_mentions:
         ambiguous_mentions = _mentions_for_aliases(
@@ -507,26 +513,29 @@ def _resolve_scope(
             aliases=resolver_profile.profile.ambiguous_unit_terms,
         )
 
-    if profile_mentions and not other_forest_mentions:
+    if profile_mentions and not blocking_other_forest_mentions:
         status = resolver_profile.scope_status
         forest_unit = {
             "name": resolver_profile.profile.forest_unit_names[0],
-            "package_evidence": profile_mentions[:5],
+            "package_evidence": (profile_scope_mentions or profile_mentions)[:5],
         }
-    elif other_forest_mentions and not profile_mentions:
+    elif blocking_other_forest_mentions and not profile_mentions:
         status = resolver_profile.out_of_scope_status
         forest_unit = {
-            "name": other_forest_mentions[0]["name"],
-            "package_evidence": other_forest_mentions[:5],
+            "name": blocking_other_forest_mentions[0]["name"],
+            "package_evidence": blocking_other_forest_mentions[:5],
         }
     else:
         status = "ambiguous"
         forest_unit = None
 
     unresolved = []
-    if profile_mentions and other_forest_mentions:
+    if profile_mentions and blocking_other_forest_mentions:
         unresolved.extend(
-            _unresolved_from_evidence("multiple_forest_units_mentioned", other_forest_mentions)
+            _unresolved_from_evidence(
+                "multiple_forest_units_mentioned",
+                blocking_other_forest_mentions,
+            )
         )
     if ambiguous_mentions:
         unresolved.extend(_unresolved_from_evidence("ambiguous_forest_unit", ambiguous_mentions))
@@ -654,7 +663,11 @@ def _resolved_entries(
 ) -> list[dict]:
     resolved = []
     for entry in entries:
-        package_evidence = _mentions_for_entry(package_chunks, entry)
+        package_evidence = [
+            evidence
+            for evidence in _mentions_for_entry(package_chunks, entry)
+            if not _is_negative_location_context(evidence)
+        ][:5]
         if not package_evidence:
             continue
         plan_evidence = []
@@ -664,6 +677,8 @@ def _resolved_entries(
                 index_path=index_path,
                 limit=source_top_k,
             )
+            if not plan_evidence:
+                continue
         resolved.append(
             {
                 "entry_id": entry.entry_id,
@@ -791,7 +806,7 @@ def _mentions_for_entry(package_chunks: list[dict], entry: GazetteerEntry) -> li
                 alias=alias,
             )
         )
-    return _dedupe_evidence(mentions)[:5]
+    return _dedupe_evidence(mentions)
 
 
 def _mentions_for_route(package_chunks: list[dict], route: PlanEvidenceRoute) -> list[dict]:
@@ -874,6 +889,80 @@ def _mentions_for_alias(
                 )
             )
     return mentions
+
+
+def _is_scope_decisive_mention(evidence: dict) -> bool:
+    text = _scope_decision_text(evidence)
+    return not _has_incidental_forest_unit_context(text)
+
+
+def _is_negative_location_context(evidence: dict) -> bool:
+    text = _location_decision_window(evidence)
+    negative_phrases = (
+        "not part of the project area",
+        "outside the project area",
+        "outside of the project area",
+        "project is not in this area",
+        "project is not within this area",
+        "is not in the project area",
+        "is not within the project area",
+        "not affected by the project",
+        "not affected by this project",
+        "does not apply to the project area",
+        "no designated wilderness in the project area",
+        "no designated wilderness in the project area or affected by the project",
+    )
+    return any(phrase in text for phrase in negative_phrases)
+
+
+def _location_decision_window(evidence: dict) -> str:
+    span = evidence.get("evidence_span") or {}
+    text = str(span.get("text") or "").lower()
+    alias = str(evidence.get("matched_alias") or "").lower()
+    if not text or not alias:
+        return _scope_decision_text(evidence)
+    pattern, _case_sensitive = _compiled_alias_pattern(alias)
+    match = pattern.search(text)
+    if match is None:
+        return text
+    start = max(0, match.start() - 80)
+    end = min(len(text), match.end() + 100)
+    return text[start:end]
+
+
+def _scope_decision_text(evidence: dict) -> str:
+    span = evidence.get("evidence_span") or {}
+    provenance = evidence.get("provenance") or {}
+    parts = [
+        evidence.get("title"),
+        span.get("text"),
+        provenance.get("section"),
+        provenance.get("heading"),
+        provenance.get("artifact_path"),
+    ]
+    return " ".join(str(part) for part in parts if part).lower()
+
+
+def _has_incidental_forest_unit_context(text: str) -> bool:
+    incidental_phrases = (
+        "references",
+        "literature cited",
+        "bibliography",
+        "works cited",
+        "reference list",
+        "coordinates stewardship",
+        "northern portion",
+        "southern portion",
+        "not likely to use affected parcels",
+    )
+    if any(phrase in text for phrase in incidental_phrases):
+        return True
+    reference_like_patterns = (
+        r"\b\d{4}[a-z]?\.\s+[^.]{0,180}\bnational forest\b",
+        r"\busda forest service\.\s+\d{4}[a-z]?\b",
+        r"\bu\.s\. department of agriculture\b[^.]{0,180}\b\d{4}[a-z]?\b",
+    )
+    return any(re.search(pattern, text) for pattern in reference_like_patterns)
 
 
 def _alias_pattern(alias: str) -> re.Pattern[str]:

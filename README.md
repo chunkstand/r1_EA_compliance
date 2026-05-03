@@ -443,7 +443,11 @@ then writes:
 
 Custer Gallatin packages with no resolved geographic area, management area, or overlay are not
 reviewer-ready and set `needs_reviewer_resolution`. Ambiguous `Gallatin`-only packages are not
-guessed. Non-Custer packages are marked `not_custer_gallatin` and treated as out of scope.
+guessed. Other configured forest profiles remain blocking evidence when they are mentioned as
+operative project scope, but incidental background, reference, bibliography, or coordination
+mentions do not force an otherwise Custer Gallatin package to `ambiguous`. Negative package-location
+text such as `not part of the project area` is filtered before geographic and management area
+resolution. Non-Custer packages are marked `not_custer_gallatin` and treated as out of scope.
 
 Run a versioned compliance rule pack and emit the compliance matrix and finding graph:
 
@@ -536,6 +540,25 @@ profiles with expected status counts, applicable source rows, and source documen
 `promotion_ready` only when adjudication checks and the underlying compliance-review eval both pass.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
+
+Run the V1 real-EA review eval after the East Crazy Inspiration Divide compliance review exists:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --eval-file config/v1_ecid_real_ea_eval.json
+```
+
+`v1-ea-eval` does not rerun extraction or review. It reads an existing review directory and scores
+whether the real EA review applied the correct source documents to the correct EA sections. The
+default V1 contract tracks required EA section detection, baseline authority/source alignment,
+all 26 baseline source records, rule-to-section matches, rule-to-source-record matches,
+rule-to-document-role matches, conditional applicability expectations, applicable conditional
+source/section alignment, missing conditional expectations, conditional false positives/negatives,
+Custer Gallatin required plan records, forest-plan geographic/management area resolution, component
+coverage, applicable-standard application, citation requirements, reviewer-resolution queue size,
+and failure-category counts.
 
 Run the seed retrieval eval gate:
 

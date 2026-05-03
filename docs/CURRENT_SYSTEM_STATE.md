@@ -372,6 +372,25 @@ Current state:
   `compliance_gold_eval_results.json`; the current gate has ten adjudicated cases.
 - Compliance coverage runs the coverage matrix against the current rule pack, rule-claim links,
   source-claim terms, and compliance review eval cases.
+- V1 real-EA review eval is implemented through `v1-ea-eval`. It reads an existing East Crazy
+  Inspiration Divide compliance review directory and scores required EA section detection,
+  rule-to-section matches, source-record/document-role correctness, all 26 baseline source records,
+  conditional applicability, applicable conditional source/section alignment, missing conditional
+  expectations, Custer Gallatin forest-plan source/component/standard expectations, citation
+  requirements, and reviewer-resolution queue size against `config/v1_ecid_real_ea_eval.json`.
+- The first real East Crazy Inspiration Divide V1 compliance review run exists locally at
+  `source_library/reviews/v1-cg-ecid-compliance-review/`. It extracted `43` package files into
+  `1,265` chunks, produced compliance review/matrix/PDF/graph artifacts, and passed
+  the upstream source-set phases. After the profile-driven forest-plan scope fix, the package
+  resolves to `scope_status: custer_gallatin`; forest-plan context validation passes with
+  `3` geographic areas, `11` management areas, `7` overlays, and `5` supporting plan evidence
+  records. Forest-plan component artifacts are now produced from the generated source-set inventory
+  with `331` component findings, `58` standards, `46` applicable standards, and `39` applied
+  standards. The stricter compliance/V1 gates still fail closed because
+  `forest_plan_component_gate_reviewer_ready` is false, `82` forest-plan reviewer-resolution items
+  remain open, three categorical-exclusion conditionals are false positives against the current V1
+  contract, and two rule/conditional section matches are off. This is the current V1 blocker before
+  practitioner-ready completion.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -379,6 +398,7 @@ Current state:
 - A seed compliance gold eval file exists at `config/compliance_gold_eval_v0.json`.
 - A seed compliance coverage matrix exists at
   `config/compliance_rule_pack_coverage_nepa_ea_v0.json`.
+- A V1 real-EA review eval contract exists at `config/v1_ecid_real_ea_eval.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
@@ -487,11 +507,16 @@ Boundaries:
   source-library citations.
 - It proves a Custer Gallatin-scoped compliance review cannot be reviewer-ready when forest-plan
   component evaluation is absent, stale, or not reviewer-ready.
+- It proves the profile-driven forest-plan resolver can resolve the real East Crazy Inspiration
+  Divide package to Custer Gallatin scope without treating incidental references to other forests as
+  ambiguity, while still failing closed when component coverage is not reviewer-ready.
 - It proves the current final compliance-review eval seed passes deterministic all-pass, mixed
   pass/gap, and all-gap package fixtures.
 - It proves the current seed compliance-gold-eval promotion gate passes one positive, one mixed, and
   one negative adjudicated fixture profile.
-- It does not prove broad real-world EA review quality beyond the current seed and gold eval cases.
+- It defines a V1 real-EA eval contract for the East Crazy Inspiration Divide run, but that contract
+  does not prove real-world EA review quality until `v1-ea-eval` passes against the actual review
+  artifacts and the remaining component/conditional/section failures are adjudicated.
 - It does not prove semantic legal interpretation of the extracted text.
 - It does not prove that future web versions will remain unchanged.
 
@@ -577,8 +602,11 @@ The default resolver profile is Custer Gallatin and preserves the V0 output cont
 `scope_status=custer_gallatin`, `not_custer_gallatin`, or `ambiguous`; ambiguous `Gallatin`-only
 packages are not guessed. The command now accepts `--forest-unit-id` and
 `--forest-plan-profiles-path` so profile data, not Python constants, defines forest names, required
-source records, area terms, overlays, and supporting evidence routes. For Custer Gallatin packages
-it extracts:
+source records, area terms, overlays, and supporting evidence routes. Other configured forest
+profiles are still blocking evidence when mentioned as operative project scope, but incidental
+background, reference, bibliography, or coordination mentions do not force an otherwise
+Custer-Gallatin package to `ambiguous`. Negative package-location text such as `not part of the
+project area` is also filtered before area resolution. For Custer Gallatin packages it extracts:
 
 - forest unit and ranger district signals
 - project location snippets

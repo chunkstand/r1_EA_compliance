@@ -496,7 +496,10 @@ resolution without re-extracting the package files.
 The default resolver profile is scoped to the Custer Gallatin National Forest. It does not infer
 Custer Gallatin scope from ambiguous `Gallatin`-only mentions. Custer Gallatin packages with no
 resolved geographic area, management area, or overlay set `needs_reviewer_resolution` and are not
-reviewer-ready.
+reviewer-ready. Other configured forest profiles block Custer Gallatin scope only when they appear
+as operative project-scope evidence; incidental background, reference, bibliography, or coordination
+mentions do not force `ambiguous`. Negative package-location evidence, such as `not part of the
+project area`, is filtered before geographic or management area resolution.
 
 `forest_plan_context_validation.json` records gate-facing checks for:
 
@@ -882,6 +885,54 @@ rule count.
   evidence mismatches, source-record mismatches, source-document-role mismatches, unsupported
   finding IDs, validation failed checks, compact finding summaries, failure reasons, failure
   taxonomy, compact reproduction paths, and pass/fail status
+
+## V1 Real EA Review Eval Outputs
+
+Default contract: `config/v1_ecid_real_ea_eval.json`
+
+Default output:
+`source_library/reviews/<review_id>/v1_ea_eval_results.json`
+
+The `v1-ea-eval` command reads an existing real review directory. It does not create package
+fixtures or rerun `compliance-review`. The gate expects these review artifacts:
+
+- `compliance_review.json`
+- `compliance_matrix.json`
+- `compliance_validation.json`
+- `package/package_chunks.jsonl`
+- Custer Gallatin forest-plan artifacts when the contract has `forest_plan` expectations
+
+The contract has schema version `v1-ea-real-review-eval-contract-v0` and records:
+
+- review identity: eval ID, review ID, source-set ID, rule-pack ID, and rule-pack version
+- `section_expectations` for required real-EA section families and detection terms
+- `rule_review_expectations` for rule-to-package-section, source-record, document-role, and
+  citation checks
+- `conditional_source_expectations` for `applicable`, `not_applicable`,
+  `needs_reviewer_resolution`, or `adjudicate` conditional-rule expectations
+- `forest_plan` expectations for required plan source records, resolved geographic/management
+  areas, component IDs, applicable standards, reviewer readiness, and open reviewer-resolution items
+
+`v1_ea_eval_results.json` has schema version `v1-ea-real-review-eval-results-v0` and records:
+
+- summary identity, output path, pass/fail status, checks, metrics, and failure-category counts
+- `section_results` with detected package chunks and missed required section families
+- `baseline_results` verifying baseline findings use their authority source records and document
+  roles
+- `rule_results` with expected and actual section IDs, source record IDs, document roles, citation
+  status, and failure categories
+- `conditional_results` with expected/actual applicability, adjudication-pending status, false
+  positive/false negative counts, missing conditional-contract expectations, and source/section
+  alignment. When the review marks a conditional rule applicable, source/section alignment is
+  enforced even if the contract still marks final applicability as `adjudicate`.
+- `forest_plan_results` for required source records, resolved areas, component coverage,
+  applicable-standard coverage, reviewer readiness, and reviewer-resolution queue size
+
+Key metrics include section detection rate, baseline source/document-role match rates,
+rule-section/source/document-role match rates, citation requirement match rate, conditional
+expectation match rate, conditional adjudication completion rate, actual-applicable conditional
+source and section match rates, missing conditional expectation count, conditional false positive
+and false negative counts, forest-plan expectation match rate, and reviewer-resolution item count.
 
 ## Compliance Coverage Outputs
 

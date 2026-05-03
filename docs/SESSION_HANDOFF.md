@@ -1,8 +1,73 @@
 # Session Handoff
 
-Date: 2026-05-01
+Date: 2026-05-03
 
 ## Current State
+
+The East Crazy Inspiration Divide V1 compliance review has been rerun against the real package at
+`source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)`.
+The review ID is `v1-cg-ecid-compliance-review`, source set is
+`source-set-ba8d0feae79501b8`, rule pack is `nepa-ea-v0` version `0.4.0`, and generated review
+artifacts are under `source_library/reviews/v1-cg-ecid-compliance-review/`.
+
+Current cached rerun command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
+  --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" \
+  --output-dir source_library \
+  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --review-id v1-cg-ecid-compliance-review \
+  --reuse-package-cache \
+  --docling-timeout-seconds 180
+```
+
+Current run result:
+
+- Package extraction wrote `43` manifest rows and `1,265` package chunks.
+- Compliance review wrote JSON, Markdown, PDF matrix, and finding graph artifacts.
+- Compliance findings: `44` total, with `43` pass and `1` not applicable.
+- All `26` baseline source records were evaluated.
+- The profile-driven forest-plan resolver now resolves the package to `scope_status:
+  custer_gallatin`; context validation passes and `needs_reviewer_resolution` is `false`.
+- Forest-plan component artifacts are now produced from the current source-set inventory:
+  `331` component findings, `58` standards, `46` applicable standards, and `39` applied standards.
+- Compliance validation fails closed on `forest_plan_component_gate_reviewer_ready` because the
+  component evaluator still has `82` gap findings and `82` reviewer-resolution queue items.
+- Phase eval passes `8/9` phases; only `compliance_review` fails validation/reviewer readiness.
+- V1 real-EA eval still fails, as intended for the current gap state. Good signals: all `13`
+  required EA section families were detected, all `26` baseline authorities matched source records
+  and document roles, all baseline document roles matched, citation/source-record match rates are
+  `1.0`, and Custer Gallatin plan source/component ID expectations now match the generated
+  source-set inventory.
+- Remaining V1 blockers: `forest_plan_component_gate_reviewer_ready`,
+  `all_applicable_standards_applied=false`, `82` forest-plan reviewer-resolution items, three
+  categorical-exclusion conditionals treated as applicable where the V1 contract expects
+  not-applicable, and two rule/conditional section mismatches.
+
+Primary failing artifacts/checks:
+
+- `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_context_summary.json` reports
+  `scope_status: custer_gallatin`, `reviewer_ready: false`, `validation_passed: true`,
+  `needs_reviewer_resolution: false`, `geographic_area_count: 3`, `management_area_count: 11`,
+  `overlay_count: 7`, and `supporting_plan_evidence_count: 5`.
+- `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_findings.json`
+  reports `331` findings: `194` supported, `82` gap, and `55` not applicable.
+- `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json`
+  reports `46` applicable standards and `39` applied standards.
+- `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` fails only
+  `forest_plan_component_gate_reviewer_ready`.
+- `v1_ea_eval_results.json` failure categories:
+  `applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
+  `forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
+  `rule_section_mismatch=2`.
+
+Next implementation target:
+
+Adjudicate and improve the forest-plan component review gate. The scope blocker is closed; the
+remaining non-ready state is substantive component coverage and conditional/rule-section
+evaluation, not missing forest-plan context.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -10,6 +75,15 @@ current follow-on slice adds the first NFMA standard-coverage gate.
 
 Current session update:
 
+- Profile-driven forest-plan scope resolution now distinguishes operative selected-profile evidence
+  from incidental references to other forests. Background/reference mentions of another configured
+  forest no longer force `ambiguous`, while operative evidence that the project is on another forest
+  still blocks Custer Gallatin resolution.
+- Negative package-location rows such as `not part of the project area` are filtered before
+  geographic or management area entries are resolved.
+- The real East Crazy Inspiration Divide package now resolves to Custer Gallatin scope and produces
+  forest-plan component artifacts from the source-set inventory; the V1 eval contract now expects
+  the generated `R1PLAN-custer-gallatin-nf-02-...` component IDs instead of the old seed fixture IDs.
 - Forest-plan component evaluation V0 has been added as a required `forest-plan-resolve` stage for
   packages resolved to the selected forest-plan profile; `--forest-plan-component-inventory-path`
   only overrides the inventory path.
@@ -84,6 +158,30 @@ Implemented behavior:
 - Default profile loading works from outside the repository working directory.
 
 Latest verification:
+
+Current profile-driven resolver fix verification on 2026-05-03:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json
+UV_CACHE_DIR=/private/tmp/usfs_uv_cache PYTHONPATH=src uv run --extra dev pytest
+UV_CACHE_DIR=/private/tmp/usfs_uv_cache PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+python -m json.tool config/v1_ecid_real_ea_eval.json /private/tmp/v1_ecid_real_ea_eval.validated.json
+git diff --check
+```
+
+Results: focused resolver tests and the full suite passed with `190 passed`; lint, compile, JSON
+validation, and whitespace checks passed. The cached forest-plan and compliance reruns exit nonzero
+by design because reviewer readiness now fails on substantive forest-plan component coverage, not
+scope ambiguity. `phase-eval` passes `8/9` phases and fails only `compliance_review`; `v1-ea-eval`
+now reports forest-plan expectation match rate `0.7`, section detection/source-record/document-role
+rates `1.0`, and remaining failure categories
+`applicable_standard_not_evaluated=1`, `forest_plan_reviewer_not_ready=1`,
+`forest_plan_reviewer_resolution_open=1`, `conditional_false_positive=3`, and
+`rule_section_mismatch=2`.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest

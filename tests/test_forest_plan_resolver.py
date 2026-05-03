@@ -317,6 +317,69 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertEqual(context["forest_unit"]["name"], "Profile Forest")
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_profile_scope_ignores_incidental_other_forest_references(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "The project area is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "The Land Management Plan consistency table applies to the proposed action.",
+                        "Quiet nonmotorized recreation opportunities predominate.",
+                        "No new permanent or temporary roads are proposed.",
+                        "References: USDA Forest Service. 2016. Flathead National Forest methods paper.",
+                        (
+                            "The Custer Gallatin National Forest coordinates stewardship with "
+                            "the Beaverhead-Deerlodge National Forest for distant wilderness areas."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-incidental-other-forests",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertEqual(
+                [item["reason"] for item in context["unresolved_mentions"]],
+                [],
+            )
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_profile_scope_stays_ambiguous_when_other_forest_is_operative(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest and "
+                    "the Beaverhead-Deerlodge National Forest."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=Path(tmp) / "source_library",
+                review_id="profile-operative-other-forest",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "ambiguous")
+            self.assertTrue(context["needs_reviewer_resolution"])
+            self.assertEqual(
+                context["unresolved_mentions"][0]["reason"],
+                "multiple_forest_units_mentioned",
+            )
+
     def test_readiness_uses_profile_required_roles(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -375,6 +438,11 @@ class ForestPlanResolverTests(unittest.TestCase):
                         "The action is within the Crazy Mountains Backcountry Area.",
                         "Trail work also crosses the Hyalite Recreation Emphasis Area.",
                         "Mapped Inventoried Roadless Area direction is reviewed.",
+                        (
+                            "Blacktail Peak Backcountry Area | No | The geographic area to which "
+                            "this component applies is not part of the project area."
+                        ),
+                        "Pryor Mountains Geographic Area | No | The project is not in this area.",
                         "No new permanent or temporary roads are proposed.",
                     ]
                 ),

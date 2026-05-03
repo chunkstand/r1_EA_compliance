@@ -148,10 +148,12 @@ Current readiness state after the 2026-05-01 downstream promotion:
 
 Remaining blockers to complete V1 Custer Gallatin real-package readiness:
 
-- The real Custer Gallatin proving package still needs to be run through the updated
-  `compliance-review` path and adjudicated before V1 can be called reviewer-ready for that EA.
-- Component retrieval precision/recall and real-package failure taxonomy remain to be measured
-  against the proving package.
+- The real Custer Gallatin proving package now resolves to `scope_status: custer_gallatin` and
+  produces forest-plan component artifacts, but `forest_plan_component_gate_reviewer_ready` fails
+  with `82` reviewer-resolution items and `7` applicable standards without applied evidence.
+- Real-package failure taxonomy is now measured by `v1-ea-eval`: remaining failures are the
+  forest-plan component gate, three conditional false positives, and two rule/conditional section
+  mismatches.
 - No generated V1 review artifact should be called fully reviewer-ready until current validation
   proves source-set, rule-pack, component, package, and finding graph alignment for that package.
 
@@ -483,6 +485,10 @@ Verification:
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --eval-file config/v1_ecid_real_ea_eval.json
 PYTHONPATH=src uv run --extra dev pytest tests/test_ea_review.py tests/test_compliance_review.py tests/test_forest_plan_resolver.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
@@ -493,6 +499,10 @@ Stop conditions:
 
 - `phase-eval` reports stale source-set, stale rule-pack, missing PDF, missing graph, or failed
   forest-plan component readiness.
+- `v1-ea-eval` reports missed required EA sections, source-record/document-role mismatches,
+  missing baseline source records, missing conditional expectations, applicable conditional
+  source/section mismatches, conditional false positives or false negatives, forest-plan expectation
+  failures, or open reviewer-resolution items.
 - Any supported finding lacks source-library evidence, package evidence, or required source-claim
   links.
 - The reviewer-resolution queue is empty only because unresolved evidence was omitted.

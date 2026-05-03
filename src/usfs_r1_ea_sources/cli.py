@@ -43,6 +43,8 @@ from .rule_claim_binding import DEFAULT_RULE_CLAIM_EVAL_PATH
 from .rule_claim_binding import build_rule_claim_links
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import run_rule_claim_link_eval
+from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
+from .v1_ea_eval import run_v1_ea_review_eval
 from .validate_run import validate_run
 
 
@@ -614,6 +616,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     compliance_coverage.add_argument("--results-dir", type=Path)
 
+    v1_ea_eval = subparsers.add_parser(
+        "v1-ea-eval",
+        help="Evaluate a real EA compliance review against the V1 source/section contract.",
+    )
+    v1_ea_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    v1_ea_eval.add_argument("--review-id")
+    v1_ea_eval.add_argument("--review-dir", type=Path)
+    v1_ea_eval.add_argument("--eval-file", default=DEFAULT_V1_EA_EVAL_PATH, type=Path)
+    v1_ea_eval.add_argument("--output-path", type=Path)
+
     return parser
 
 
@@ -919,6 +931,17 @@ def main(argv: list[str] | None = None) -> int:
             source_set_id=args.source_set_id,
             links_path=args.links_path,
             results_dir=args.results_dir,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "v1-ea-eval":
+        result = run_v1_ea_review_eval(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+            eval_file=args.eval_file,
+            output_path=args.output_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1
