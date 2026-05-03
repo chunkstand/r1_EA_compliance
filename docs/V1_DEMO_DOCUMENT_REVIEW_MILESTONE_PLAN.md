@@ -141,7 +141,7 @@ Current readiness state after the 2026-05-01 downstream promotion:
   extraction, retrieval, evidence graph, claim extraction, rule-claim binding, coverage, gold eval,
   and phase eval.
 - The current Custer Gallatin LMP component inventory for `source-set-ba8d0feae79501b8` has passing
-  build coverage with `331` components, `58` standards, `0` missing component or standard IDs, and
+  build coverage with `329` components, `58` standards, `0` missing component or standard IDs, and
   `0` duplicate component or standard IDs.
 - `compliance-review` now invokes forest-plan context/component evaluation against the same package
   cache, requires the forest-plan component gate for Custer Gallatin packages, links
@@ -163,16 +163,14 @@ Remaining blockers to complete V1 Custer Gallatin real-package readiness:
   Component applicability precision/recall, applicable-standard recall, package-section match rate,
   plan-source citation correctness, package-evidence citation correctness, resolved
   compliance-status rate, compliance-status match rate, and reviewer-resolution state match rate are
-  `1.0`; false-applicable component rate is `0.0`; reviewer-resolution closure rate is `0.875`.
-- The component adjudication template/eval loop is implemented, and the current real-package queue
-  has been exported as `21` pending adjudication items in both JSON and Markdown worklist form. The
-  adjudication eval is now visible as a `forest_plan_component_adjudication` phase when present.
-  Those items must be completed before their dispositions can be used to improve retrieval,
-  component applicability, inventory quality, or evidence-linking logic.
+  `1.0`; false-applicable component rate is `0.0`; reviewer-resolution closure rate is `1.0`.
+- The component adjudication template/eval loop is implemented, and the prior real-package queue
+  of `21` pending non-standard items has been reduced to `0` by evidence-backed resolver fixes.
+  The prior adjudications classified those items as system misses; phase eval now checks any
+  component-adjudication eval artifact against the current queue count before accepting it.
 - Real-package failure taxonomy is now measured by `v1-ea-eval`: remaining failures are the
-  open non-standard forest-plan component adjudication queue, three conditional false positives, and
-  two rule/conditional section mismatches. Forest-plan expectations now pass with zero open standard
-  reviewer-resolution items.
+  three conditional false positives and two rule/conditional section mismatches. Forest-plan
+  expectations now pass with zero open reviewer-resolution items.
 - No generated V1 review artifact should be called fully reviewer-ready until current validation
   proves source-set, rule-pack, component, package, and finding graph alignment for that package.
 
@@ -312,7 +310,7 @@ Deliverables:
 Current status:
 
 - Implemented for the active Custer Gallatin LMP source record through `forest-plan-components-build`.
-- Current generated inventory for `source-set-ba8d0feae79501b8` has `331` components and `58`
+- Current generated inventory for `source-set-ba8d0feae79501b8` has `329` components and `58`
   standards from `536` selected chunks, with build coverage passing and no missing or duplicate
   component/standard IDs.
 - Overlapping extraction chunks are merged when they carry the same component text from adjacent
@@ -493,8 +491,7 @@ Deliverables:
 - Base EA review validation/report artifacts.
 - Forest-plan context validation and summary.
 - Forest-plan component findings, NFMA matrix, and reviewer-resolution queue.
-- Completed non-standard forest-plan component adjudication artifact for the exported
-  reviewer-resolution queue.
+- Component adjudication eval support for any exported reviewer-resolution queue.
 - Compliance validation, compliance review JSON, compliance matrix JSON/Markdown/PDF, and finding
   graph nodes/edges.
 - Concise run record with command, package path, review ID, source set, rule pack, profile, component
@@ -502,13 +499,11 @@ Deliverables:
 
 Current milestone status:
 
-- `forest-plan-component-adjudication-eval` passes for
-  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`
-  with `21` resolved items, zero pending items, completion rate `1.0`, expectation match rate
-  `1.0`, `real_ea_omission_count=0`, and `system_miss_count=21`. Disposition counts are
-  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
-  `evidence_linking_miss=9`.
-- `phase-eval --review-id v1-cg-ecid-compliance-review` passes `11/11` phases and reports
+- The current `forest_plan_reviewer_resolution_queue.json` has `0` items. The prior `21` item
+  non-standard queue has been closed through split-row Plan Consistency Table binding,
+  plain-text-row parsing, profile-context matching, and pseudo-component suppression.
+- `forest-plan-component-eval` passes all `8` cases with reviewer-resolution closure rate `1.0`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review` passes `10/10` phases and reports
   `reviewer_ready=true`.
 - `v1-ea-eval` still fails on non-forest-plan residuals:
   `conditional_false_positive=3` and `rule_section_mismatch=2`; forest-plan expectations pass

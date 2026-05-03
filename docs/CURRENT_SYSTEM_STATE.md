@@ -87,7 +87,7 @@ Gallatin FEIS and ESA-supporting plan documents.
   component gate to fail readiness unless component evidence coverage is complete.
 - Phase eval passed `8/8` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
-  chunks: `331` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
+  chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
   and `0` duplicate component or standard IDs.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
@@ -386,24 +386,29 @@ Current state:
   `2` geographic areas, `1` management area, `2` overlays, and `5` supporting plan evidence
   records. The retained context is Bridger/Bangtail/Crazy, Madison/Henrys Lake/Gallatin, Crazy
   Mountains BCA, Inventoried Roadless Area, and Recommended Wilderness Area. Forest-plan component
-  artifacts are produced from the generated source-set inventory with `331` component findings,
+  artifacts are produced from the generated source-set inventory with `329` component findings,
   `58` standards, `12` applicable standards, and `12` applied standards. The stricter
   applicable-standard coverage gate now passes with `all_applicable_standards_applied=true`; the
   prior `AB-STD-RCREA-01` gap is supported by recreation/access package evidence for the proposed
-  nonmotorized Sweet Trunk Trail. The reviewer-resolution queue now has `21` citation-bearing
-  `missing_package_evidence` items, all non-standard components.
+  nonmotorized Sweet Trunk Trail. The non-standard reviewer-resolution queue is now closed:
+  `forest_plan_component_findings.json` reports `79` supported findings, `250` not applicable
+  findings, `0` gaps, and `0` reviewer-resolution items. The resolver now reads split Plan
+  Consistency Table rows across adjacent package chunks, handles duplicated/split component-key
+  cells and plain-text rows, and suppresses cross-reference pseudo-components that do not have a
+  numeric component number.
   Component-level forest-plan eval runs against `config/forest_plan_component_eval_seed.json` and
   passes all `8` adjudicated cases: component applicability precision/recall,
   applicable-standard recall, package-section match rate, plan-source citation correctness,
   package-evidence citation correctness, resolved compliance-status rate, compliance-status match
   rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
-  `0.0`; reviewer-resolution closure rate is `0.875`. The completed non-standard component
-  adjudication artifact resolves all `21` reviewer-resolution items with disposition counts of
-  `9` evidence-linking misses, `11` applicability false positives, and `1`
-  component-inventory overreach. `phase-eval --review-id v1-cg-ecid-compliance-review` now reports
-  `11/11` passing phases and `reviewer_ready=true`. The stricter V1 eval now passes all
+  `0.0`; reviewer-resolution closure rate is `1.0`. The prior completed non-standard component
+  adjudication artifact classified the old `21` items as system misses; those adjudications are
+  superseded by evidence-backed resolver fixes, and phase eval now rejects stale component
+  adjudication evals whose queue count differs from the current queue. `phase-eval --review-id
+  v1-cg-ecid-compliance-review` now reports `10/10` passing phases and `reviewer_ready=true`.
+  The stricter V1 eval now passes all
   forest-plan expectations, including zero open standard reviewer-resolution items and a capped
-  `21` total non-standard reviewer-resolution items. It still fails closed on non-forest-plan
+  `0` total forest-plan reviewer-resolution items. It still fails closed on non-forest-plan
   review quality gaps: three categorical-exclusion conditional false positives and two
   rule/conditional section mismatches. Those are the current V1 blockers before
   practitioner-ready completion.
@@ -415,19 +420,14 @@ Current state:
   has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
   `retrieval_miss`, `package_section_chunking_miss`, `component_inventory_overreach`,
   `applicability_false_positive`, or `evidence_linking_miss`.
-  Running the template against `v1-cg-ecid-compliance-review` produced `21` pending items:
+  Earlier runs against `v1-cg-ecid-compliance-review` produced `21` pending non-standard items:
   `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and `1` suitability
-  component. Those items are now completed locally in
-  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`.
-  `forest-plan-component-adjudication-eval` passes with completion rate `1.0`, expectation match
-  rate `1.0`, `pending_adjudication_count=0`, `real_ea_omission_count=0`, and
-  `system_miss_count=21`. The disposition counts are `applicability_false_positive=11`,
-  `component_inventory_overreach=1`, and `evidence_linking_miss=9`. The eval now reports explicit
-  real-EA-omission versus system-miss outcome counts/rates so the adjudication artifact feeds the
-  improvement loop instead of only closing the readiness gate. When the adjudication eval artifact
-  is present in a review directory, `phase-eval --review-id` includes it as a
-  `forest_plan_component_adjudication` phase so pending or stale adjudication work blocks reviewer
-  readiness at the phase gate.
+  component. Those items were adjudicated as system misses, then closed by the resolver and
+  component-inventory fixes described above. The current generated queue has `0` items, so no
+  component adjudication phase is required for the latest review artifacts. When an adjudication
+  eval artifact is present in a review directory, `phase-eval --review-id` includes it as a
+  `forest_plan_component_adjudication` phase and now checks it against the current queue count so
+  pending, stale, or mismatched adjudication work blocks reviewer readiness at the phase gate.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -913,7 +913,7 @@ extractions and `7` already-current Custer Gallatin slice records, then parsed
 source claims, rule-claim bindings, compliance coverage, compliance-review eval, compliance-gold
 eval, and phase eval have also been rebuilt and are reviewer-ready for the full current source set.
 The Custer Gallatin LMP component inventory has also been generated for the current source set with
-`331` components and `58` standards, and its build coverage passes with no missing or duplicate
+`329` components and `58` standards, and its build coverage passes with no missing or duplicate
 component/standard IDs.
 The prior 147-row downstream corpus remains useful for historical comparison only and should not be
 treated as current promotion evidence for the expanded workbook.

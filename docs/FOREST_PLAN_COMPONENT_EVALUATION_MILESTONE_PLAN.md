@@ -105,7 +105,7 @@ Already implemented:
   packages resolved to the selected forest-plan profile.
 - `forest-plan-components-build` generates the active-source-set Custer Gallatin LMP component
   inventory from extracted chunks.
-- The current generated inventory for `source-set-ba8d0feae79501b8` has `331` components, `58`
+- The current generated inventory for `source-set-ba8d0feae79501b8` has `329` components, `58`
   standards, and passing build coverage with no missing or duplicate component/standard IDs.
 - `config/forest_plan_component_inventory_seed.json` remains a narrow fallback/test fixture for the
   Crazy Mountains Backcountry Area proving case.

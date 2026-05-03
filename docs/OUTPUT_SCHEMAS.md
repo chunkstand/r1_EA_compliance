@@ -555,8 +555,10 @@ forest-plan chunks and writes:
 
 The builder is deterministic and only consumes chunks whose `source_set_id`, `source_record_id`, and
 `document_role=forest_plan` match the requested source. It extracts labeled plan components such as
-`Standards (BC-STD-CMBCA) 01 ...`, preserves source chunk IDs, hashes, citation labels, and
-provenance, and fails validation if generated component records are malformed.
+`Standards (BC-STD-CMBCA) 01 ...`, requires a numeric component number after the label, preserves
+source chunk IDs, hashes, citation labels, and provenance, and fails validation if generated
+component records are malformed. This avoids treating cross-reference labels such as `Guidelines
+(FW-GDL-VEGNF) See ...` or table captions as plan components.
 
 `component_inventory_build_coverage.json` has schema version
 `forest-plan-component-inventory-build-coverage-v0` and records selected chunk count, detected
@@ -638,8 +640,10 @@ Component package matching is section-aware. The package query combines componen
 code, package evidence terms, resource topics, activity tags, and non-generic component keywords.
 Candidate package evidence is filtered by negative Plan Consistency Table rows, section family
 binding, and core-term matches before it can support a finding. Plan Consistency Table rows are
-component-code aware, tolerate spacing variants introduced by extraction, and can bind conservative
-empty-code rows when the row's component text matches the LMP component text.
+component-code aware, tolerate spacing variants introduced by extraction, can read rows split across
+adjacent chunks from the same package document, can recover duplicated or split component-key cells,
+and can bind conservative empty-code or plain-text rows when the row's component text matches the
+LMP component text.
 - component inventory coverage passing
 - applicable standards having package evidence, plan-source evidence, and a resolved compliance
   status before reviewer-ready status can pass
@@ -669,8 +673,10 @@ excluded standards remain auditable against the correct source component.
 
 When EA package text contains a plan-consistency row keyed to the LMP component code, a `Yes`
 determination is treated as package evidence and a `No` determination marks that standard
-`not_applicable`. Context-excluded standards remain outside the applicable count but retain the LMP
-component key and plan-source citation so reviewers can verify which source component was excluded.
+`not_applicable`. Determination provenance includes `chunk_window_ids` when the table row was
+reconstructed from adjacent package chunks. Context-excluded standards remain outside the
+applicable count but retain the LMP component key and plan-source citation so reviewers can verify
+which source component was excluded.
 
 `forest_plan_component_findings.md` is a compact human-readable rendering generated from the JSON
 findings. The JSON findings and queue remain the stable machine contracts.
@@ -1635,9 +1641,11 @@ review directory contains `forest_plan_component_adjudication_eval.json`, or a c
 `forest_plan_component_adjudication.json` before the eval has been run, phase eval also includes a
 `forest_plan_component_adjudication` phase. That phase requires the adjudication eval to exist,
 pass, match the evaluated source set, and match the supplied review ID when one is provided; its
-details include queue count, resolved and pending adjudication counts, real EA omission and
-system-miss counts/rates, completion rate, expectation match rate, disposition counts,
-adjudication-outcome counts, and failure-category counts. The evidence-graph and claim-extraction
+details include queue count, current reviewer-resolution queue count when available, whether those
+counts match, resolved and pending adjudication counts, real EA omission and system-miss
+counts/rates, completion rate, expectation match rate, disposition counts, adjudication-outcome
+counts, and failure-category counts. Stale adjudication evals whose recorded queue count differs
+from the current queue fail the phase. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

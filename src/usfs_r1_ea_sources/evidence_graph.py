@@ -312,6 +312,11 @@ def run_phase_aligned_eval(
         if review_dir is not None
         else None
     )
+    component_queue_path = (
+        review_dir / "forest_plan_reviewer_resolution_queue.json"
+        if review_dir is not None
+        else None
+    )
     component_adjudication_file_path = (
         review_dir / "forest_plan_component_adjudication.json"
         if review_dir is not None
@@ -361,6 +366,11 @@ def run_phase_aligned_eval(
     component_eval = (
         _read_json(component_eval_path)
         if component_eval_path is not None and component_eval_path.exists()
+        else None
+    )
+    component_queue = (
+        _read_json(component_queue_path)
+        if component_queue_path is not None and component_queue_path.exists()
         else None
     )
     compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
@@ -826,6 +836,15 @@ def run_phase_aligned_eval(
                 expected_adjudication_review_id is None
                 or adjudication_review_id == expected_adjudication_review_id
             )
+            current_queue_count = (
+                _current_queue_item_count(component_queue) if component_queue is not None else None
+            )
+            adjudication_queue_count = _safe_int(
+                adjudication_summary.get("queue_item_count"),
+            )
+            adjudication_queue_matches_current = (
+                current_queue_count is None or adjudication_queue_count == current_queue_count
+            )
             adjudication_failed_checks = []
             if not adjudication_eval_exists:
                 adjudication_failed_checks.append("adjudication_eval_missing")
@@ -835,11 +854,14 @@ def run_phase_aligned_eval(
                 adjudication_failed_checks.append("source_set_mismatch")
             if adjudication_eval_exists and not adjudication_review_id_matches:
                 adjudication_failed_checks.append("review_id_mismatch")
+            if adjudication_eval_exists and not adjudication_queue_matches_current:
+                adjudication_failed_checks.append("queue_item_count_mismatch")
             adjudication_phase_passed = (
                 adjudication_eval_exists
                 and adjudication_eval_passed
                 and adjudication_source_set_matches
                 and adjudication_review_id_matches
+                and adjudication_queue_matches_current
             )
             phases.append(
                 _phase(
@@ -863,6 +885,10 @@ def run_phase_aligned_eval(
                         "adjudication_review_id": adjudication_review_id,
                         "review_id_matches": adjudication_review_id_matches,
                         "queue_item_count": adjudication_summary.get("queue_item_count", 0),
+                        "current_queue_item_count": current_queue_count,
+                        "queue_item_count_matches_current": (
+                            adjudication_queue_matches_current
+                        ),
                         "adjudication_item_count": adjudication_summary.get(
                             "adjudication_item_count",
                             0,
@@ -1916,6 +1942,13 @@ def _int_from_summary(summary: dict | None, key: str) -> int:
         return int(summary.get(key) or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _current_queue_item_count(queue: dict) -> int:
+    items = queue.get("items")
+    if isinstance(items, list):
+        return len(items)
+    return _safe_int(queue.get("item_count"))
 
 
 def _check_detail_count(validation: dict, check_name: str, detail_key: str) -> int:

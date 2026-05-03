@@ -30,7 +30,7 @@
       "min": 1.0
     },
     "reviewer_resolution_closure_rate": {
-      "min": 0.875
+      "min": 1.0
     },
     "reviewer_resolution_state_match_rate": {
       "min": 1.0
@@ -67,7 +67,8 @@
         "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
       ],
       "package_evidence_citations": [
-        "EA-PACKAGE-042 (bebc890bc3da)"
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-012 (533c439d7ce5)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -154,16 +155,19 @@
       "reviewer_resolution_state": "closed"
     },
     {
-      "case_id": "fw-dc-wtr-01-open-package-evidence-gap",
+      "case_id": "fw-dc-wtr-01-supported-plan-consistency",
       "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WTR-01",
-      "description": "Forestwide water desired condition remains applicable but lacks package evidence, so reviewer resolution should stay open.",
+      "description": "Forestwide water desired condition is applicable and supported by the EA plan-consistency table.",
       "component_type": "desired_condition",
       "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
       "plan_source_citations": [
         "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
       ],
-      "package_evidence_citations": [],
-      "reviewer_resolution_state": "open"
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
     }
   ]
 }

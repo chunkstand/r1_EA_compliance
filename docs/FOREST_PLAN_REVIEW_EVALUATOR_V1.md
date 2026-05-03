@@ -99,7 +99,7 @@ Expected V1 review shape:
   `forest_plan_component_findings.md`, and `forest_plan_reviewer_resolution_queue.json` for packages
   resolved to the selected forest-plan profile.
 - The current source-set Custer Gallatin LMP inventory is generated from extracted chunks and has
-  passing build coverage with `331` components and `58` standards. The seed inventory remains only a
+  passing build coverage with `329` components and `58` standards. The seed inventory remains only a
   fallback/test fixture.
 
 ## Expert Alignment Checks

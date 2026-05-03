@@ -205,6 +205,113 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
         self.assertEqual(determination["component_key"], "FW-STD-SCENERY-01")
         self.assertEqual(determination["component_applies"], "no")
 
+    def test_component_package_determination_reads_split_plan_consistency_rows(self) -> None:
+        component = {
+            "component_text": (
+                "Desired Conditions (FW-DC-SOIL) 01 The inherent productivity of soil "
+                "resources sustains native plant communities and wildlife populations "
+                "while maintaining hydrologic function and providing for social and "
+                "economic benefits."
+            )
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "| FW-DC-SOIL-01 | The inherent productivity of soil resources "
+                    "sustains native plant communities and wildlife populations while "
+                    "maintaining hydrologic function and providing for social and "
+                    "economic benefits."
+                ),
+            ),
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "C-SOIL-01 | The inherent productivity of soil resources sustains "
+                    "native plant communities and wildlife populations while maintaining "
+                    "hydrologic function and providing for social and economic benefits. "
+                    "| Yes | The project does not affect the Forest's ability to attain "
+                    "this desired condition. |"
+                ),
+            ),
+        ]
+
+        determination = _component_package_determination(
+            component=component,
+            package_chunks=chunks,
+        )
+
+        self.assertIsNotNone(determination)
+        self.assertEqual(determination["component_key"], "FW-DC-SOIL-01")
+        self.assertEqual(determination["component_applies"], "yes")
+        self.assertIn(
+            "chunk_window_ids",
+            determination["provenance"],
+        )
+
+    def test_component_package_determination_reads_split_component_key_row(self) -> None:
+        component = {
+            "component_text": (
+                "Objectives (FW-OBJ-ROSSPNM) 01 Eliminate five identified unauthorized "
+                "motorized travel incursions per decade to maintain the semi-primitive "
+                "non-motorized setting."
+            )
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "| FW-OBJ-ROSSPNM- | Eliminate five identified unauthorized "
+                    "motorized travel incursions per decade to maintain the semi- | "
+                    "No | The project was not designed to meet this objective, but it "
+                    "will not prevent the Forest from meeting it. | | 01 | primitive "
+                    "non-motorized setting. |"
+                ),
+            )
+        ]
+
+        determination = _component_package_determination(
+            component=component,
+            package_chunks=chunks,
+        )
+
+        self.assertIsNotNone(determination)
+        self.assertEqual(determination["component_key"], "FW-OBJ-ROSSPNM-01")
+        self.assertEqual(determination["component_applies"], "no")
+
+    def test_component_package_determination_reads_plain_text_plan_consistency_rows(self) -> None:
+        component = {
+            "component_text": (
+                "Goals (MG-GO-ELGA) 01 The Custer Gallatin National Forest and partners "
+                "operate the visitor center complex to host exhibits, films, "
+                "presentations and interpretive trails focused on earthquakes, plate "
+                "tectonics, and seismicity of the area and the world."
+            )
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "MG-GO-ELGA-01 The Custer Gallatin National Forest and partners "
+                    "operate the visitor center complex to host exhibits, films, "
+                    "presentations and interpretive trails focused on earthquakes, "
+                    "plate tectonics, and seismicity of the area and the world. "
+                    "No - The geographic area to which this component applies is not "
+                    "part of the project area. MG-DC-BHBCA-01 The backcountry area "
+                    "provides less developed recreation opportunities."
+                ),
+            )
+        ]
+
+        determination = _component_package_determination(
+            component=component,
+            package_chunks=chunks,
+        )
+
+        self.assertIsNotNone(determination)
+        self.assertEqual(determination["component_key"], "MG-GO-ELGA-01")
+        self.assertEqual(determination["component_applies"], "no")
+
     def test_builds_labeled_component_inventory_from_forest_plan_chunks(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -330,6 +437,61 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             standard = components[0]
             self.assertEqual(standard["component_id"], f"{source_record_id}-PR-STD-VEGNF-01")
             self.assertEqual(standard["geographic_area_ids"], ["geo-pryor-mountains"])
+
+    def test_build_skips_cross_reference_labels_and_matches_singular_area_terms(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-custer-gallatin-nf-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Guidelines (FW-GDL-VEGNF) See additional plan components "
+                            "for shrubland habitats. 01 To promote habitat heterogeneity, "
+                            "prescribed fire management should include a mosaic of burned "
+                            "and unburned areas.\n"
+                            "Desired Conditions (PR-DC-WHT) 01 Pryor Mountain Wild Horse "
+                            "Territory maintains a thriving ecological balance with other "
+                            "resources and activities.\n"
+                            "Goals (MG-GO-ELGA) 01 The Custer Gallatin National Forest and "
+                            "partners operate the visitor center complex."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="custer-gallatin-nf",
+                plan_version="2022",
+                chunks_path=chunks_path,
+            )
+
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="custer-gallatin-nf",
+            )
+            component_ids = {component["component_id"] for component in components}
+            self.assertNotIn(f"{source_record_id}-FW-GDL-VEGNF-See", component_ids)
+            wild_horse = next(
+                component
+                for component in components
+                if component["component_id"] == f"{source_record_id}-PR-DC-WHT-01"
+            )
+            earthquake_lake = next(
+                component
+                for component in components
+                if component["component_id"] == f"{source_record_id}-MG-GO-ELGA-01"
+            )
+            self.assertEqual(wild_horse["geographic_area_ids"], ["geo-pryor-mountains"])
+            self.assertIn("mgmt-earthquake-lake", earthquake_lake["management_area_ids"])
 
     def test_duplicate_standard_labels_fail_build_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -36,7 +36,7 @@ Biological Assessment, and Biological Opinion to be present in the retrieval ind
 a Custer Gallatin EA. Full all-source extraction, retrieval, evidence graph, source-claim,
 rule-claim, compliance coverage, compliance-review eval, compliance-gold eval, and phase-eval
 artifacts have been promoted for this source set. The source-set Custer Gallatin Land Management
-Plan component inventory has also been generated from current chunks with `331` components, `58`
+Plan component inventory has also been generated from current chunks with `329` components, `58`
 standards, and passing build coverage. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 

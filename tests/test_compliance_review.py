@@ -1227,6 +1227,58 @@ class ComplianceReviewTests(unittest.TestCase):
                 {"real_ea_omission": 2},
             )
 
+    def test_phase_eval_rejects_stale_component_adjudication_queue_count(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="stale-adjudication-review",
+            )
+            review_dir = output_dir / "reviews" / "stale-adjudication-review"
+            _write_component_adjudication_eval(
+                review_dir,
+                source_set_id=source_set_id,
+                review_id="stale-adjudication-review",
+                passed=True,
+            )
+            (review_dir / "forest_plan_reviewer_resolution_queue.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "forest-plan-reviewer-resolution-queue-v0",
+                        "review_id": "stale-adjudication-review",
+                        "source_set_id": source_set_id,
+                        "item_count": 0,
+                        "items": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="stale-adjudication-review",
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
+            self.assertFalse(adjudication_phase["passed"])
+            self.assertIn(
+                "queue_item_count_mismatch",
+                adjudication_phase["details"]["failed_checks"],
+            )
+            self.assertEqual(adjudication_phase["details"]["queue_item_count"], 2)
+            self.assertEqual(adjudication_phase["details"]["current_queue_item_count"], 0)
+
     def test_phase_eval_can_include_component_eval_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
