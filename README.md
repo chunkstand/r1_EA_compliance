@@ -210,8 +210,10 @@ package-section match rate, plan-source citation correctness, package-evidence c
 correctness, resolved compliance-status rate, and reviewer-resolution closure rate. This is the
 feedback loop for improving forest-plan accuracy across runs; it fails closed when package evidence,
 plan citations, section bindings, applicability, compliance status, reviewer-resolution state, or
-the identity of any consumed review artifact drifts from the adjudicated contract. Citation
-correctness is exact: extra or missing plan/package citations both fail the case.
+the identity of any consumed review artifact drifts from the adjudicated contract. The current seed
+also carries coverage requirements so it fails if the cases no longer cover every applicable
+standard, representative non-standard component types, hard negatives, and section-bound package
+evidence. Citation correctness is exact: extra or missing plan/package citations both fail the case.
 
 ## Common Commands
 

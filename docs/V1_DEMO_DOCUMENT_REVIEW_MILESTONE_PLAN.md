@@ -159,11 +159,11 @@ Remaining blockers to complete V1 Custer Gallatin real-package readiness:
   negative or incidental area mentions. The applicable-standard gate now passes with `12`
   applicable standards and `12` applied standards; the prior `AB-STD-RCREA-01` gap is supported by
   recreation/access package evidence for the proposed nonmotorized Sweet Trunk Trail.
-- Component-level forest-plan eval passes all `8` adjudicated cases for the proving package.
-  Component applicability precision/recall, applicable-standard recall, package-section match rate,
-  plan-source citation correctness, package-evidence citation correctness, resolved
-  compliance-status rate, compliance-status match rate, and reviewer-resolution state match rate are
-  `1.0`; false-applicable component rate is `0.0`; reviewer-resolution closure rate is `1.0`.
+- Component-level forest-plan eval passes all `35` adjudicated cases for the proving package. The
+  case set covers every `12/12` applicable standards, representative non-standard components across
+  desired conditions, goals, guidelines, objectives, and suitability, hard negatives, and
+  section-bound package evidence. Case coverage requirements pass, and all scored accuracy,
+  citation, section, compliance-status, and reviewer-resolution metrics meet strict thresholds.
 - The component adjudication template/eval loop is implemented, and the prior real-package queue
   of `21` pending non-standard items has been reduced to `0` by evidence-backed resolver fixes.
   The prior adjudications classified those items as system misses; phase eval now checks any
@@ -502,7 +502,8 @@ Current milestone status:
 - The current `forest_plan_reviewer_resolution_queue.json` has `0` items. The prior `21` item
   non-standard queue has been closed through split-row Plan Consistency Table binding,
   plain-text-row parsing, profile-context matching, and pseudo-component suppression.
-- `forest-plan-component-eval` passes all `8` cases with reviewer-resolution closure rate `1.0`.
+- `forest-plan-component-eval` passes all `35` cases with all-applicable-standard coverage and
+  reviewer-resolution closure rate `1.0`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` passes `10/10` phases and reports
   `reviewer_ready=true`.
 - `v1-ea-eval` still fails on non-forest-plan residuals:

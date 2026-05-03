@@ -94,6 +94,7 @@ def run_forest_plan_component_eval(
             "source_set_id": contract.get("source_set_id"),
             "case_count": len(contract["cases"]),
             "metric_thresholds": contract.get("metric_thresholds", {}),
+            "coverage_requirements": contract.get("coverage_requirements", {}),
         },
     }
     _write_json(resolved_output_path, payload)
@@ -449,8 +450,111 @@ def _checks(
                 ],
             },
         },
+        _check_case_coverage_requirements(contract, artifacts, case_results),
         _check_metric_thresholds(contract.get("metric_thresholds", {}), metrics),
     ]
+
+
+def _check_case_coverage_requirements(
+    contract: dict[str, Any],
+    artifacts: dict[str, Any],
+    case_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    requirements = contract.get("coverage_requirements")
+    if not isinstance(requirements, dict):
+        return {
+            "name": "case_coverage_requirements_met",
+            "passed": True,
+            "details": {"enabled": False},
+        }
+    failures = []
+    if requirements.get("require_all_applicable_standards"):
+        actual_applicable_standards = set(_applicable_standard_component_ids(artifacts))
+        expected_applicable_standard_cases = {
+            result["component_id"]
+            for result in case_results
+            if result["expected"].get("applicable_standard") is True
+        }
+        missing = sorted(actual_applicable_standards - expected_applicable_standard_cases)
+        if missing:
+            failures.append(
+                {
+                    "requirement": "require_all_applicable_standards",
+                    "missing_component_ids": missing,
+                }
+            )
+    for field, key in (
+        ("minimum_cases_by_component_type", "component_type"),
+        ("minimum_cases_by_applicability_status", "applicability_status"),
+    ):
+        expected_minimums = requirements.get(field)
+        if not isinstance(expected_minimums, dict):
+            continue
+        counts = Counter(
+            str(result["expected"].get(key) or "")
+            for result in case_results
+            if result["expected"].get(key)
+        )
+        for value, minimum in expected_minimums.items():
+            actual = counts.get(str(value), 0)
+            required = _safe_int(minimum)
+            if actual < required:
+                failures.append(
+                    {
+                        "requirement": field,
+                        "value": str(value),
+                        "min": required,
+                        "actual": actual,
+                    }
+                )
+    minimum_section_bound = _safe_int(requirements.get("minimum_section_bound_cases"))
+    if minimum_section_bound:
+        section_bound_count = sum(
+            1 for result in case_results if "package_section" in result["expected"]
+        )
+        if section_bound_count < minimum_section_bound:
+            failures.append(
+                {
+                    "requirement": "minimum_section_bound_cases",
+                    "min": minimum_section_bound,
+                    "actual": section_bound_count,
+                }
+            )
+    minimum_not_applicable = _safe_int(requirements.get("minimum_not_applicable_cases"))
+    if minimum_not_applicable:
+        not_applicable_count = sum(
+            1
+            for result in case_results
+            if result["expected"].get("applicability_status") == "not_applicable"
+        )
+        if not_applicable_count < minimum_not_applicable:
+            failures.append(
+                {
+                    "requirement": "minimum_not_applicable_cases",
+                    "min": minimum_not_applicable,
+                    "actual": not_applicable_count,
+                }
+            )
+    return {
+        "name": "case_coverage_requirements_met",
+        "passed": not failures,
+        "details": {
+            "enabled": True,
+            "failures": failures,
+        },
+    }
+
+
+def _applicable_standard_component_ids(artifacts: dict[str, Any]) -> list[str]:
+    coverage = artifacts.get("standard_coverage")
+    standards = coverage.get("standards") if isinstance(coverage, dict) else None
+    if not isinstance(standards, list):
+        return []
+    return _dedupe(
+        str(row.get("component_id") or "")
+        for row in standards
+        if isinstance(row, dict) and row.get("applicability_status") == "applicable"
+    )
 
 
 def _check_metric_thresholds(thresholds: object, metrics: dict[str, Any]) -> dict[str, Any]:
@@ -737,6 +841,13 @@ def _rate(numerator: int, denominator: int) -> float:
     if denominator <= 0:
         return 1.0
     return round(numerator / denominator, 6)
+
+
+def _safe_int(value: object) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _utc_now() -> str:

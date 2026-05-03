@@ -144,6 +144,67 @@ class ForestPlanComponentEvalTests(unittest.TestCase):
                 identities,
             )
 
+    def test_component_eval_enforces_case_coverage_requirements(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "component-eval"
+            _write_review_artifacts(review_dir)
+            eval_file = root / "component_eval.json"
+            _write_eval_contract(
+                eval_file,
+                cases=[
+                    {
+                        "case_id": "dc-1-open-gap",
+                        "component_id": "component-dc-1",
+                        "component_type": "desired_condition",
+                        "applicability_status": "applicable",
+                        "plan_source_citations": ["PLAN-001"],
+                        "package_evidence_citations": [],
+                        "reviewer_resolution_state": "open",
+                    }
+                ],
+                coverage_requirements={
+                    "require_all_applicable_standards": True,
+                    "minimum_cases_by_component_type": {
+                        "desired_condition": 1,
+                        "standard": 1,
+                    },
+                    "minimum_cases_by_applicability_status": {
+                        "not_applicable": 1,
+                    },
+                    "minimum_not_applicable_cases": 1,
+                    "minimum_section_bound_cases": 1,
+                },
+            )
+
+            result = run_forest_plan_component_eval(
+                output_dir=root / "source_library",
+                review_id="component-eval",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            checks = {check["name"]: check for check in result.summary["checks"]}
+            coverage_check = checks["case_coverage_requirements_met"]
+            self.assertFalse(coverage_check["passed"])
+            failures = coverage_check["details"]["failures"]
+            self.assertIn(
+                {
+                    "requirement": "require_all_applicable_standards",
+                    "missing_component_ids": ["component-std-1"],
+                },
+                failures,
+            )
+            self.assertIn(
+                {
+                    "requirement": "minimum_cases_by_component_type",
+                    "value": "standard",
+                    "min": 1,
+                    "actual": 0,
+                },
+                failures,
+            )
+
 
 def _write_review_artifacts(review_dir: Path) -> None:
     review_dir.mkdir(parents=True, exist_ok=True)
@@ -241,12 +302,14 @@ def _write_eval_contract(
     *,
     cases: list[dict] | None = None,
     thresholds: dict | None = None,
+    coverage_requirements: dict | None = None,
 ) -> None:
     payload = {
         "schema_version": "forest-plan-component-eval-v0",
         "eval_id": "component-eval-test",
         "review_id": "component-eval",
         "source_set_id": "source-set-test",
+        "coverage_requirements": coverage_requirements or {},
         "metric_thresholds": thresholds
         or {
             "component_applicability_precision": {"min": 1.0},

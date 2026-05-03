@@ -397,11 +397,14 @@ Current state:
   cells and plain-text rows, and suppresses cross-reference pseudo-components that do not have a
   numeric component number.
   Component-level forest-plan eval runs against `config/forest_plan_component_eval_seed.json` and
-  passes all `8` adjudicated cases: component applicability precision/recall,
-  applicable-standard recall, package-section match rate, plan-source citation correctness,
-  package-evidence citation correctness, resolved compliance-status rate, compliance-status match
-  rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
-  `0.0`; reviewer-resolution closure rate is `1.0`. The prior completed non-standard component
+  passes all `35` adjudicated cases. The eval now covers every one of the `12` applicable standards,
+  `10` representative non-standard applicable components across desired conditions, goals,
+  guidelines, objectives, and suitability, and `12` hard-negative not-applicable cases. Case coverage
+  requirements pass, and component applicability precision/recall, applicable-standard recall,
+  package-section match rate, plan-source citation correctness, package-evidence citation
+  correctness, resolved compliance-status rate, compliance-status match rate, reviewer-resolution
+  state match rate, false-applicable component rate, and reviewer-resolution closure rate all meet
+  their strict thresholds. The prior completed non-standard component
   adjudication artifact classified the old `21` items as system misses; those adjudications are
   superseded by evidence-backed resolver fixes, and phase eval now rejects stale component
   adjudication evals whose queue count differs from the current queue. `phase-eval --review-id
@@ -550,7 +553,8 @@ Boundaries:
   applicability, standard recall, package-section binding, plan-source citations, package-evidence
   citations, resolved compliance status, and reviewer-resolution closure before running additional
   real EA packages. The component eval checks review/source-set identity across every consumed
-  review artifact and treats extra citations as citation mismatches, not harmless surplus evidence.
+  review artifact, enforces all-applicable-standard and minimum representative-case coverage, and
+  treats extra citations as citation mismatches, not harmless surplus evidence.
 - It proves the profile-driven forest-plan resolver can resolve the real East Crazy Inspiration
   Divide package to Custer Gallatin scope without treating incidental references to other forests as
   ambiguity, while still failing closed when component coverage is not reviewer-ready.

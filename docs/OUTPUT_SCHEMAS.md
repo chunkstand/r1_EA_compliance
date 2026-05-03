@@ -692,12 +692,16 @@ The `forest-plan-component-eval` command reads an existing forest-plan review di
 It writes `forest_plan_component_eval_results.json` by default. The eval contract defaults to
 `config/forest_plan_component_eval_seed.json`, has schema version `forest-plan-component-eval-v0`,
 and records adjudicated component cases with expected applicability, EA package section, plan-source
-citations, package-evidence citations, compliance status, and reviewer-resolution state.
+citations, package-evidence citations, compliance status, and reviewer-resolution state. Contracts
+may also include `coverage_requirements` for minimum case coverage and a hard requirement that every
+currently applicable standard in `forest_plan_applicable_standard_coverage.json` has an expected
+applicable-standard case.
 
 The result has schema version `forest-plan-component-eval-results-v0` and records:
 
 - review identity: `review_id`, `source_set_id`, `eval_id`, and artifact paths
-- pass/fail summary, threshold checks, case counts, and failure-category counts
+- pass/fail summary, threshold checks, coverage-requirement checks, case counts, and
+  failure-category counts
 - metrics for component applicability precision/recall, applicable-standard recall,
   false-applicable component rate, package-section match rate, plan-source citation correctness,
   package-evidence citation correctness, resolved compliance-status rate, compliance-status match
@@ -706,9 +710,10 @@ The result has schema version `forest-plan-component-eval-results-v0` and record
   evidence citations, compliance status, reviewer-resolution state, and failure categories
 
 The eval fails closed on missing review artifacts, review/source-set identity drift in any consumed
-review artifact, missing expected cases, unexpected applicability, package-section mismatch, exact
-plan citation mismatch, exact package evidence citation mismatch, unresolved or incorrect compliance
-status, reviewer-resolution state mismatch, or unmet metric thresholds.
+review artifact, missing expected cases, uncovered applicable standards, unmet minimum component
+type/applicability/section-bound case counts, unexpected applicability, package-section mismatch,
+exact plan citation mismatch, exact package evidence citation mismatch, unresolved or incorrect
+compliance status, reviewer-resolution state mismatch, or unmet metric thresholds.
 
 ### Forest Plan Component Adjudication
 

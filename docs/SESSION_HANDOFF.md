@@ -37,12 +37,11 @@ Current run result:
   applicable-standard coverage gate now passes with `all_applicable_standards_applied=true`; the
   prior `AB-STD-RCREA-01` gap is supported by recreation/access package evidence for the proposed
   nonmotorized Sweet Trunk Trail.
-- Component-level forest-plan eval now passes all `8` adjudicated cases from
-  `config/forest_plan_component_eval_seed.json`: applicability precision/recall,
-  applicable-standard recall, package-section match rate, plan-source citation correctness,
-  package-evidence citation correctness, resolved compliance-status rate, compliance-status match
-  rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
-  `0.0`; reviewer-resolution closure rate is `1.0`.
+- Component-level forest-plan eval now passes all `35` adjudicated cases from
+  `config/forest_plan_component_eval_seed.json`: every applicable standard is covered, the case set
+  includes representative non-standard component types and hard negatives, case coverage
+  requirements pass, and all scored accuracy/citation/section/closure metrics meet strict
+  thresholds.
 - Phase eval passes `10/10` phases after stale component adjudication artifacts are removed;
   `forest_plan_component_eval` passes, and the review is `reviewer_ready=true` at the phase gate.
   Phase eval now rejects stale component-adjudication eval artifacts whose recorded queue count
@@ -220,8 +219,9 @@ management area, `2` overlays, and `5` supporting plan-evidence routes. Forest-p
 validation now passes: `329` components, `58` standards, `12` applicable standards, `12` applied
 standards, `0` reviewer-resolution items, and zero unresolved applicable standards. The prior
 `AB-STD-RCREA-01` standard gap and the prior `21` non-standard queue items now have evidence-backed
-support or correct not-applicable determinations. Component-level forest-plan eval passes all `8`
-adjudicated cases. `phase-eval` passes `10/10` phases and reports `reviewer_ready=true`;
+support or correct not-applicable determinations. Component-level forest-plan eval passes all `35`
+adjudicated cases with all-applicable-standard coverage. `phase-eval` passes `10/10` phases and
+reports `reviewer_ready=true`;
 `v1-ea-eval` reports forest-plan expectation match rate `1.0`,
 section detection/source-record/document-role rates `1.0`, zero open standard reviewer-resolution
 items, and remaining non-forest-plan failure categories `conditional_false_positive=3` and
@@ -236,19 +236,18 @@ PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-compo
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --eval-file config/compliance_review_eval_seed.json
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --gold-file config/compliance_gold_eval_v0.json
 PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/forest_plan_component_eval_seed.json
-PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8
+PYTHONPATH=src uv run --extra dev python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
 python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
 python -m json.tool config/forest_plan_component_eval_seed.json /tmp/forest_plan_component_eval_seed.validated.json
 git diff --check
 ```
 
-Latest verification: full test suite previously passed with `208 passed, 5 subtests passed`;
-focused forest-plan resolver/component tests passed with `30 passed`; focused compliance/V1 eval
-tests passed with `42 passed`; lint, compile, and whitespace checks passed. The current milestone
-reran focused forest-plan component/resolver/eval tests, component eval, phase eval (`10/10` phases,
-`reviewer_ready=true`), and V1 EA eval (`passed=false` only on `conditional_false_positive=3` and
-`rule_section_mismatch=2`).
+Latest verification: full test suite passed with `220 passed, 5 subtests passed`; focused
+forest-plan component eval tests passed with `5 passed`; focused component-eval phase test passed;
+lint, compile, JSON validation, and whitespace checks passed. The current milestone reran component
+eval (`35/35` cases), phase eval (`10/10` phases, `reviewer_ready=true`), and V1 EA eval
+(`passed=false` only on `conditional_false_positive=3` and `rule_section_mismatch=2`).
 
 ## Next Sequence
 
