@@ -16,7 +16,7 @@ Current review contract:
 - Original gate status: `v1-ea-eval` fails with `conditional_false_positive=3` and
   `rule_section_mismatch=2`
 
-Current failing expectations:
+Original failing expectations:
 
 - `nepa_statute_chapter_55`: baseline rule section mismatch. The rule is present and source-aligned
   to `R1EA-001`, but actual package section IDs are empty where the contract expects
