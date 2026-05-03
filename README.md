@@ -618,6 +618,13 @@ Custer Gallatin required plan records, forest-plan geographic/management area re
 coverage, applicable-standard application, citation requirements, reviewer-resolution queue size,
 and failure-category counts.
 
+The result summary separates the overall readiness gate from two diagnostic lanes:
+`broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and
+review artifacts outside the forest-plan set; and `forest_plan` for Custer Gallatin source records,
+scope, component coverage, applicable standards, reviewer readiness, and component adjudication.
+This allows the real V1 eval to fail overall on non-forest-plan gaps while still reporting
+`forest_plan_passed=true` when the forest-plan review lane is complete.
+
 Run the seed retrieval eval gate:
 
 ```bash

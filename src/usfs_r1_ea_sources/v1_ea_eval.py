@@ -18,6 +18,16 @@ EXPECTED_APPLICABILITY_VALUES = {
     "needs_reviewer_resolution",
     "adjudicate",
 }
+FOREST_PLAN_ARTIFACTS = {
+    "forest_plan_context_summary",
+    "forest_plan_context",
+    "forest_plan_component_findings",
+    "forest_plan_applicable_standard_coverage",
+    "forest_plan_reviewer_resolution_queue",
+}
+FOREST_PLAN_VALIDATION_CHECKS = {
+    "forest_plan_component_gate_reviewer_ready",
+}
 
 
 @dataclass(frozen=True)
@@ -113,6 +123,29 @@ def run_v1_ea_review_eval(
         forest_plan_results=forest_plan_results,
         artifact_errors=artifacts["artifact_errors"],
     )
+    broader_ea_failure_category_counts = _broader_ea_failure_category_counts(
+        section_results=section_results,
+        baseline_results=baseline_results,
+        rule_results=rule_results,
+        conditional_results=conditional_results,
+        artifact_errors=artifacts["artifact_errors"],
+    )
+    forest_plan_failure_category_counts = _forest_plan_failure_category_counts(
+        forest_plan_results=forest_plan_results,
+        artifact_errors=artifacts["artifact_errors"],
+    )
+    eval_lanes = _eval_lanes(
+        checks=checks,
+        section_results=section_results,
+        baseline_results=baseline_results,
+        rule_results=rule_results,
+        conditional_results=conditional_results,
+        forest_plan_results=forest_plan_results,
+        artifacts=artifacts,
+        failure_category_counts=failure_category_counts,
+        broader_ea_failure_category_counts=broader_ea_failure_category_counts,
+        forest_plan_failure_category_counts=forest_plan_failure_category_counts,
+    )
     passed = all(check["passed"] for check in checks)
 
     summary = {
@@ -125,9 +158,21 @@ def run_v1_ea_review_eval(
         "output_path": str(resolved_output_path),
         "generated_at": _utc_now(),
         "passed": passed,
+        "broader_ea_passed": eval_lanes["broader_ea"]["passed"],
+        "forest_plan_passed": eval_lanes["forest_plan"]["passed"],
+        "forest_plan_component_adjudication_required": eval_lanes["forest_plan"][
+            "component_adjudication_required"
+        ],
         "checks": checks,
         "metrics": metrics,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "broader_ea_failure_category_counts": dict(
+            sorted(broader_ea_failure_category_counts.items())
+        ),
+        "forest_plan_failure_category_counts": dict(
+            sorted(forest_plan_failure_category_counts.items())
+        ),
+        "eval_lanes": eval_lanes,
     }
     payload = {
         "summary": summary,
@@ -937,6 +982,174 @@ def _failure_category_counts(
         if result.get("failure_category"):
             counts[str(result["failure_category"])] += 1
     return counts
+
+
+def _broader_ea_failure_category_counts(
+    *,
+    section_results: list[dict[str, Any]],
+    baseline_results: list[dict[str, Any]],
+    rule_results: list[dict[str, Any]],
+    conditional_results: list[dict[str, Any]],
+    artifact_errors: list[dict[str, Any]],
+) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for error in artifact_errors:
+        if str(error.get("artifact") or "") in FOREST_PLAN_ARTIFACTS:
+            continue
+        counts[str(error["failure_category"])] += 1
+    for result in section_results:
+        if result.get("failure_category"):
+            counts[str(result["failure_category"])] += 1
+    for result in baseline_results:
+        for category in result.get("failure_categories", []):
+            counts[str(category)] += 1
+    for result in rule_results:
+        for category in result.get("failure_categories", []):
+            counts[str(category)] += 1
+    for result in conditional_results:
+        for category in result.get("failure_categories", []):
+            counts[str(category)] += 1
+    return counts
+
+
+def _forest_plan_failure_category_counts(
+    *,
+    forest_plan_results: list[dict[str, Any]],
+    artifact_errors: list[dict[str, Any]],
+) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for error in artifact_errors:
+        if str(error.get("artifact") or "") in FOREST_PLAN_ARTIFACTS:
+            counts[str(error["failure_category"])] += 1
+    for result in forest_plan_results:
+        if result.get("failure_category"):
+            counts[str(result["failure_category"])] += 1
+    return counts
+
+
+def _eval_lanes(
+    *,
+    checks: list[dict[str, Any]],
+    section_results: list[dict[str, Any]],
+    baseline_results: list[dict[str, Any]],
+    rule_results: list[dict[str, Any]],
+    conditional_results: list[dict[str, Any]],
+    forest_plan_results: list[dict[str, Any]],
+    artifacts: dict[str, Any],
+    failure_category_counts: Counter[str],
+    broader_ea_failure_category_counts: Counter[str],
+    forest_plan_failure_category_counts: Counter[str],
+) -> dict[str, Any]:
+    check_by_name = {str(check["name"]): check for check in checks}
+    broader_check_names = [
+        "eval_contract_valid",
+        "review_artifacts_loaded",
+        "review_identity_matches_contract",
+        "required_sections_detected",
+        "baseline_source_documents_match_authority",
+        "rule_source_section_expectations_met",
+        "conditional_source_expectations_met",
+    ]
+    broader_failed_checks = []
+    for name in broader_check_names:
+        check = check_by_name.get(name)
+        if not check:
+            continue
+        if name == "review_artifacts_loaded":
+            non_forest_artifact_errors = [
+                error
+                for error in artifacts["artifact_errors"]
+                if str(error.get("artifact") or "") not in FOREST_PLAN_ARTIFACTS
+            ]
+            if non_forest_artifact_errors:
+                broader_failed_checks.append(name)
+            continue
+        if not check.get("passed"):
+            broader_failed_checks.append(name)
+
+    validation_check = check_by_name.get("compliance_validation_passed")
+    validation_failed_checks = _failed_compliance_validation_check_names(validation_check)
+    if validation_check and not validation_check.get("passed"):
+        non_forest_validation_failures = [
+            name
+            for name in validation_failed_checks
+            if name not in FOREST_PLAN_VALIDATION_CHECKS
+        ]
+        if non_forest_validation_failures or not validation_failed_checks:
+            broader_failed_checks.append("compliance_validation_passed")
+
+    forest_artifact_errors = [
+        error
+        for error in artifacts["artifact_errors"]
+        if str(error.get("artifact") or "") in FOREST_PLAN_ARTIFACTS
+    ]
+    forest_failed_checks = []
+    if forest_artifact_errors:
+        forest_failed_checks.append("review_artifacts_loaded")
+    if any(name in FOREST_PLAN_VALIDATION_CHECKS for name in validation_failed_checks):
+        forest_failed_checks.append("compliance_validation_passed")
+    forest_plan_check = check_by_name.get("forest_plan_expectations_met")
+    if forest_plan_check and not forest_plan_check.get("passed"):
+        forest_failed_checks.append("forest_plan_expectations_met")
+
+    reviewer_resolution_count = _reviewer_resolution_count(
+        artifacts["forest_plan_reviewer_resolution_queue"]
+    )
+    standard_reviewer_resolution_count = _reviewer_resolution_count_by_component_type(
+        artifacts["forest_plan_reviewer_resolution_queue"],
+        "standard",
+    )
+    overall_failed_checks = [
+        str(check["name"]) for check in checks if not bool(check.get("passed"))
+    ]
+    return {
+        "overall": {
+            "passed": not overall_failed_checks,
+            "failed_check_names": overall_failed_checks,
+            "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        },
+        "broader_ea": {
+            "passed": not broader_failed_checks,
+            "failed_check_names": broader_failed_checks,
+            "failure_category_counts": dict(
+                sorted(broader_ea_failure_category_counts.items())
+            ),
+            "section_expectation_count": len(section_results),
+            "baseline_rule_count": len(baseline_results),
+            "rule_expectation_count": len(rule_results),
+            "conditional_expectation_count": len(conditional_results),
+        },
+        "forest_plan": {
+            "passed": not forest_failed_checks,
+            "failed_check_names": forest_failed_checks,
+            "failure_category_counts": dict(
+                sorted(forest_plan_failure_category_counts.items())
+            ),
+            "expectation_count": len(forest_plan_results),
+            "passed_expectation_count": sum(
+                1 for result in forest_plan_results if result.get("passed")
+            ),
+            "failed_expectation_count": sum(
+                1 for result in forest_plan_results if not result.get("passed")
+            ),
+            "pending_component_adjudication_count": reviewer_resolution_count,
+            "pending_standard_adjudication_count": standard_reviewer_resolution_count,
+            "component_adjudication_required": reviewer_resolution_count > 0,
+        },
+    }
+
+
+def _failed_compliance_validation_check_names(check: dict[str, Any] | None) -> list[str]:
+    if not check:
+        return []
+    details = check.get("details")
+    if not isinstance(details, dict):
+        return []
+    return [
+        str(name)
+        for name in details.get("failed_checks") or []
+        if str(name).strip()
+    ]
 
 
 def _validate_contract(contract: dict[str, Any]) -> None:

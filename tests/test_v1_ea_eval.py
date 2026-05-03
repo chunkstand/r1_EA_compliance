@@ -30,6 +30,12 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(metrics["source_record_match_rate"], 1.0)
             self.assertEqual(metrics["conditional_false_negative_count"], 0)
             self.assertEqual(metrics["forest_plan_expectation_match_rate"], 1.0)
+            self.assertTrue(result.summary["broader_ea_passed"])
+            self.assertTrue(result.summary["forest_plan_passed"])
+            self.assertFalse(result.summary["forest_plan_component_adjudication_required"])
+            self.assertTrue(result.summary["eval_lanes"]["overall"]["passed"])
+            self.assertTrue(result.summary["eval_lanes"]["broader_ea"]["passed"])
+            self.assertTrue(result.summary["eval_lanes"]["forest_plan"]["passed"])
 
     def test_v1_eval_flags_conditional_false_negative_and_section_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -73,6 +79,23 @@ class V1EAReviewEvalTests(unittest.TestCase):
             failures = result.summary["failure_category_counts"]
             self.assertEqual(failures["conditional_false_negative"], 1)
             self.assertGreaterEqual(failures["ea_section_detection_miss"], 1)
+            self.assertFalse(result.summary["broader_ea_passed"])
+            self.assertTrue(result.summary["forest_plan_passed"])
+            self.assertFalse(
+                result.summary["eval_lanes"]["forest_plan"][
+                    "component_adjudication_required"
+                ]
+            )
+            self.assertEqual(result.summary["forest_plan_failure_category_counts"], {})
+            self.assertIn(
+                "conditional_false_negative",
+                result.summary["broader_ea_failure_category_counts"],
+            )
+            self.assertEqual(result.summary["eval_lanes"]["forest_plan"]["failed_check_names"], [])
+            self.assertIn(
+                "conditional_source_expectations_met",
+                result.summary["eval_lanes"]["broader_ea"]["failed_check_names"],
+            )
 
     def test_v1_eval_enforces_source_alignment_for_adjudicate_when_applicable(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -181,6 +204,22 @@ class V1EAReviewEvalTests(unittest.TestCase):
             metrics = result.summary["metrics"]
             self.assertEqual(metrics["reviewer_resolution_item_count"], 2)
             self.assertEqual(metrics["standard_reviewer_resolution_item_count"], 0)
+            self.assertTrue(result.summary["forest_plan_passed"])
+            self.assertTrue(
+                result.summary["eval_lanes"]["forest_plan"][
+                    "component_adjudication_required"
+                ]
+            )
+            self.assertEqual(
+                result.summary["eval_lanes"]["forest_plan"][
+                    "pending_component_adjudication_count"
+                ],
+                2,
+            )
+            self.assertEqual(
+                result.summary["eval_lanes"]["forest_plan"]["failed_check_names"],
+                [],
+            )
 
     def test_v1_eval_fails_open_standard_resolution_queue(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -213,6 +252,92 @@ class V1EAReviewEvalTests(unittest.TestCase):
             failures = result.summary["failure_category_counts"]
             self.assertEqual(failures["forest_plan_standard_reviewer_resolution_open"], 1)
             self.assertEqual(result.summary["metrics"]["standard_reviewer_resolution_item_count"], 1)
+            self.assertTrue(result.summary["broader_ea_passed"])
+            self.assertFalse(result.summary["forest_plan_passed"])
+            self.assertEqual(result.summary["broader_ea_failure_category_counts"], {})
+            self.assertEqual(
+                result.summary["forest_plan_failure_category_counts"][
+                    "forest_plan_standard_reviewer_resolution_open"
+                ],
+                1,
+            )
+
+    def test_v1_eval_keeps_forest_plan_validation_failure_in_forest_lane(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            _write_json(
+                review_dir / "compliance_validation.json",
+                {
+                    "schema_version": "compliance-validation-v0",
+                    "passed": False,
+                    "checks": [
+                        {
+                            "name": "forest_plan_component_gate_reviewer_ready",
+                            "passed": False,
+                        }
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertTrue(result.summary["broader_ea_passed"])
+            self.assertFalse(result.summary["forest_plan_passed"])
+            self.assertEqual(result.summary["broader_ea_failure_category_counts"], {})
+            self.assertEqual(result.summary["forest_plan_failure_category_counts"], {})
+            self.assertEqual(result.summary["eval_lanes"]["broader_ea"]["failed_check_names"], [])
+            self.assertEqual(
+                result.summary["eval_lanes"]["forest_plan"]["failed_check_names"],
+                ["compliance_validation_passed"],
+            )
+
+    def test_v1_eval_keeps_component_adjudication_blocker_in_forest_plan_lane(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            _write_json(
+                review_dir / "forest_plan_reviewer_resolution_queue.json",
+                {
+                    "schema_version": "forest-plan-reviewer-resolution-queue-v0",
+                    "summary": {"item_count": 1},
+                    "items": [
+                        {"component_id": "component-dc", "component_type": "desired_condition"},
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertTrue(result.summary["broader_ea_passed"])
+            self.assertFalse(result.summary["forest_plan_passed"])
+            self.assertEqual(result.summary["broader_ea_failure_category_counts"], {})
+            self.assertEqual(
+                result.summary["forest_plan_failure_category_counts"][
+                    "forest_plan_reviewer_resolution_open"
+                ],
+                1,
+            )
+            forest_lane = result.summary["eval_lanes"]["forest_plan"]
+            self.assertTrue(forest_lane["component_adjudication_required"])
+            self.assertEqual(forest_lane["pending_component_adjudication_count"], 1)
+            self.assertEqual(forest_lane["pending_standard_adjudication_count"], 0)
+            self.assertEqual(forest_lane["failed_check_names"], ["forest_plan_expectations_met"])
+            self.assertEqual(result.summary["eval_lanes"]["broader_ea"]["failed_check_names"], [])
 
     def test_cli_accepts_v1_ea_eval_command(self) -> None:
         args = build_parser().parse_args(

@@ -438,6 +438,13 @@ Current state:
   eval artifact is present in a review directory, `phase-eval --review-id` includes it as a
   `forest_plan_component_adjudication` phase and now checks it against the current queue count so
   pending, stale, or mismatched adjudication work blocks reviewer readiness at the phase gate.
+- The V1 real-EA eval now records explicit diagnostic lanes in `v1_ea_eval_results.json`. The
+  overall gate remains failed for the current East Crazies package, but the lane split reports
+  `broader_ea_passed=false`, `forest_plan_passed=true`,
+  `forest_plan_component_adjudication_required=false`, non-forest-plan failure categories
+  `conditional_false_positive=3` and `rule_section_mismatch=2`, and no forest-plan failure
+  categories. Forest-plan readiness can therefore be tracked independently from the remaining
+  conditional-source and rule-section review gaps.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.

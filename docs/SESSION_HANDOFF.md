@@ -57,6 +57,10 @@ Current run result:
 - Remaining V1 blockers: three categorical-exclusion conditionals treated as applicable where the
   V1 contract expects not-applicable, and two rule/conditional section mismatches. The forest-plan
   adjudication worklist is complete and no longer blocks `phase-eval`.
+- `v1-ea-eval` now records separate lanes in `v1_ea_eval_results.json`: `broader_ea` carries the
+  remaining conditional-source and rule-section failures, while `forest_plan` passes with no
+  component-adjudication requirement. Overall V1 readiness still fails until the broader EA lane is
+  repaired.
 
 Primary failing artifacts/checks:
 
