@@ -425,8 +425,9 @@ Current state:
   section-attribution, and programmatic-tiering section-routing repairs. `v1-ea-eval` now reports
   `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`, empty failure-category
   counts, `failed_rule_ids=[]`, `conditional_false_positive=0`, `conditional_false_negative=0`,
-  and `rule_section_match_rate=1.0`. The remaining V1 work is explicit policy coverage for
-  adjudication-pending conditional rules, not a current source/section mismatch.
+  and `rule_section_match_rate=1.0`. The V1 eval contract now carries explicit policy coverage for
+  `14` adjudication-pending conditional rules, so those rows are visible accepted V1 risk rather
+  than a hidden pass condition.
 - Forest-plan component adjudication tooling is implemented through
   `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
   template command exports one adjudication item for each open component reviewer-resolution queue
@@ -968,11 +969,18 @@ fail validation instead of silently changing review behavior. The live V1 eval r
 package sections `alternatives` and `environmental_consequences`, actual source record `R1EA-005`,
 actual document role `law`, `adjudication_pending=true`, and no `rule_section_mismatch`.
 
-The next v1 milestone is Milestone 5: close conditional adjudication coverage. The current V1 eval
-passes, but `conditional_adjudication_pending_count=14` remains explicit. The next slice should
-decide whether those pending `adjudicate` conditionals are an accepted V1 risk surfaced in output
-and docs or whether a separate conditional-adjudication artifact/eval loop is required before final
-promotion. Embeddings, reranking, and model-assisted synthesis remain downstream of this
+The V1 conditional-adjudication milestone is implemented. Each of the `18`
+`conditional_source_expectations` in `config/v1_ecid_real_ea_eval.json` now has a
+classification rationale, and the contract declares
+`conditional_adjudication_policy.mode=accepted_pending_v1` with `accepted_pending_count=14`.
+`v1-ea-eval` now emits a `conditional_adjudication` summary and full pending-results queue, fails
+if accepted pending rule IDs/counts drift from the actual `adjudicate` rows, and keeps
+source/section alignment enforced for actual applicable pending rows.
+
+The next v1 milestone is Milestone 6: final V1 gate promotion. That slice should rerun the current
+review and promotion gates end to end, including `phase-eval`, `v1-ea-eval`,
+`compliance-review-eval`, and `compliance-gold-eval`, then update the durable docs to describe the
+promoted V1 gate. Embeddings, reranking, and model-assisted synthesis remain downstream of this
 evidence-backed real-package gate.
 
 ## Verification Commands

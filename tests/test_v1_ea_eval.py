@@ -112,6 +112,9 @@ class V1EAReviewEvalTests(unittest.TestCase):
             contract["conditional_source_expectations"][0]["expected_source_record_ids"] = [
                 "R1EA-does-not-match"
             ]
+            contract["conditional_adjudication_policy"] = _accepted_pending_policy(
+                ["esa_section_7"]
+            )
             _write_json(eval_file, contract)
 
             result = run_v1_ea_review_eval(
@@ -163,6 +166,10 @@ class V1EAReviewEvalTests(unittest.TestCase):
                 {
                     "rule_id": "nepa_4336b_programmatic_tiering",
                     "expected_applicability": "adjudicate",
+                    "classification_rationale": (
+                        "Programmatic tiering requires reviewer judgment while V1 "
+                        "enforces source and section alignment."
+                    ),
                     "expected_package_section_ids": [
                         "alternatives",
                         "environmental_consequences",
@@ -170,6 +177,9 @@ class V1EAReviewEvalTests(unittest.TestCase):
                     "expected_source_record_ids": ["R1EA-005"],
                     "expected_source_document_roles": ["law"],
                 }
+            )
+            contract["conditional_adjudication_policy"] = _accepted_pending_policy(
+                ["nepa_4336b_programmatic_tiering"]
             )
             _write_json(eval_file, contract)
             report = _read_json(review_dir / "compliance_review.json")
@@ -228,6 +238,69 @@ class V1EAReviewEvalTests(unittest.TestCase):
                 ["biological_resources", "cultural_resources"],
             )
 
+    def test_v1_eval_requires_pending_conditional_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["conditional_source_expectations"][0][
+                "expected_applicability"
+            ] = "adjudicate"
+            _write_json(eval_file, contract)
+
+            with self.assertRaisesRegex(ValueError, "conditional_adjudication_policy"):
+                run_v1_ea_review_eval(
+                    output_dir=root / "source_library",
+                    review_id="v1-unit",
+                    eval_file=eval_file,
+                )
+
+    def test_v1_eval_outputs_explicit_pending_conditional_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["conditional_source_expectations"][0][
+                "expected_applicability"
+            ] = "adjudicate"
+            contract["conditional_adjudication_policy"] = _accepted_pending_policy(
+                ["esa_section_7"]
+            )
+            _write_json(eval_file, contract)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            policy_summary = result.summary["conditional_adjudication"]
+            self.assertTrue(policy_summary["passed"])
+            self.assertEqual(policy_summary["policy_mode"], "accepted_pending_v1")
+            self.assertEqual(policy_summary["actual_pending_count"], 1)
+            self.assertEqual(policy_summary["actual_pending_rule_ids"], ["esa_section_7"])
+            self.assertEqual(
+                result.summary["metrics"]["conditional_adjudication_accepted_pending_count"],
+                1,
+            )
+            policy_check = _summary_check(result.summary, "conditional_adjudication_policy_met")
+            self.assertTrue(policy_check["passed"])
+            output = _read_json(result.output_path)
+            self.assertEqual(
+                output["conditional_adjudication"]["pending_results"][0]["rule_id"],
+                "esa_section_7",
+            )
+            self.assertTrue(
+                output["conditional_adjudication"]["pending_results"][0][
+                    "classification_rationale"
+                ]
+            )
+
     def test_v1_eval_flags_applicable_conditional_missing_from_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -252,6 +325,28 @@ class V1EAReviewEvalTests(unittest.TestCase):
             failures = result.summary["failure_category_counts"]
             self.assertEqual(failures["conditional_expectation_missing"], 1)
             self.assertEqual(result.summary["metrics"]["conditional_expectation_missing_count"], 1)
+
+    def test_real_v1_contract_declares_conditional_adjudication_policy(self) -> None:
+        contract = _read_json(Path("config/v1_ecid_real_ea_eval.json"))
+        adjudicate_rule_ids = sorted(
+            expectation["rule_id"]
+            for expectation in contract["conditional_source_expectations"]
+            if expectation["expected_applicability"] == "adjudicate"
+        )
+        policy = contract["conditional_adjudication_policy"]
+
+        self.assertEqual(len(contract["conditional_source_expectations"]), 18)
+        self.assertEqual(len(adjudicate_rule_ids), 14)
+        self.assertEqual(policy["mode"], "accepted_pending_v1")
+        self.assertEqual(policy["accepted_pending_count"], 14)
+        self.assertEqual(policy["accepted_pending_rule_ids"], adjudicate_rule_ids)
+        self.assertTrue(policy["rationale"])
+        self.assertTrue(
+            all(
+                expectation.get("classification_rationale")
+                for expectation in contract["conditional_source_expectations"]
+            )
+        )
 
     def test_v1_eval_flags_missing_expected_baseline_source_record(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -594,6 +689,22 @@ def _assert_repair_baseline_failure_summary(
     )
 
 
+def _summary_check(summary: dict, name: str) -> dict:
+    return next(check for check in summary["checks"] if check["name"] == name)
+
+
+def _accepted_pending_policy(rule_ids: list[str]) -> dict:
+    return {
+        "mode": "accepted_pending_v1",
+        "accepted_pending_count": len(rule_ids),
+        "accepted_pending_rule_ids": sorted(rule_ids),
+        "rationale": (
+            "Unit contract accepts these pending conditional rows while source and "
+            "section alignment remain enforced."
+        ),
+    }
+
+
 def _write_repair_baseline_failure_review(review_dir: Path) -> None:
     _write_jsonl(
         review_dir / "package" / "package_chunks.jsonl",
@@ -728,6 +839,9 @@ def _write_repair_baseline_eval_contract(root: Path, *, review_id: str) -> Path:
             "rule_pack_id": "nepa-ea-v0",
             "rule_pack_version": "0.4.0",
             "allow_unadjudicated_conditional_expectations": True,
+            "conditional_adjudication_policy": _accepted_pending_policy(
+                ["nepa_4336b_programmatic_tiering"]
+            ),
             "baseline_policy": {
                 "require_source_record_match_authority": True,
                 "expected_source_record_ids": ["R1EA-001"],
@@ -776,6 +890,10 @@ def _write_repair_baseline_eval_contract(root: Path, *, review_id: str) -> Path:
                 {
                     "rule_id": "nepa_4336b_programmatic_tiering",
                     "expected_applicability": "adjudicate",
+                    "classification_rationale": (
+                        "Programmatic tiering remains a reviewer judgment item in "
+                        "the repair baseline."
+                    ),
                     "expected_package_section_ids": [
                         "alternatives",
                         "environmental_consequences",
@@ -786,14 +904,26 @@ def _write_repair_baseline_eval_contract(root: Path, *, review_id: str) -> Path:
                 {
                     "rule_id": "nepa_4336c_ce_adoption_screen",
                     "expected_applicability": "not_applicable",
+                    "classification_rationale": (
+                        "The repair baseline package is an EA context, not an "
+                        "adopted categorical-exclusion path."
+                    ),
                 },
                 {
                     "rule_id": "usda_nepa_ce_fanec_7cfr_1b3",
                     "expected_applicability": "not_applicable",
+                    "classification_rationale": (
+                        "The repair baseline does not rely on a USDA categorical "
+                        "exclusion or FANEC path."
+                    ),
                 },
                 {
                     "rule_id": "usda_nepa_subcomponent_ce_7cfr_1b4",
                     "expected_applicability": "not_applicable",
+                    "classification_rationale": (
+                        "The repair baseline does not use subcomponent categorical "
+                        "exclusion screening."
+                    ),
                 },
             ],
         },
@@ -1027,6 +1157,10 @@ def _write_eval_contract(root: Path, *, review_id: str) -> Path:
                     "expected_source_record_ids": ["R1EA-065"],
                     "expected_source_document_roles": ["law"],
                     "trigger_terms": ["Endangered Species Act", "biological assessment"],
+                    "classification_rationale": (
+                        "The package contains biological assessment evidence, so "
+                        "the ESA Section 7 row is applicable in this unit fixture."
+                    ),
                 },
                 {
                     "rule_id": "custer_gallatin_lmp_2022",
@@ -1035,6 +1169,10 @@ def _write_eval_contract(root: Path, *, review_id: str) -> Path:
                     "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
                     "expected_source_document_roles": ["forest_plan"],
                     "trigger_terms": ["Custer Gallatin", "Land Management Plan"],
+                    "classification_rationale": (
+                        "The package resolves to the Custer Gallatin Land "
+                        "Management Plan in this unit fixture."
+                    ),
                 },
             ],
             "forest_plan": {

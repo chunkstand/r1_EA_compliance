@@ -1052,7 +1052,13 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - `rule_review_expectations` for rule-to-package-section, source-record, document-role, and
   citation checks
 - `conditional_source_expectations` for `applicable`, `not_applicable`,
-  `needs_reviewer_resolution`, or `adjudicate` conditional-rule expectations
+  `needs_reviewer_resolution`, or `adjudicate` conditional-rule expectations. Each conditional
+  expectation must include `classification_rationale` so the contract records why the real EA row is
+  considered applicable, not applicable, or pending reviewer adjudication.
+- `conditional_adjudication_policy` when any conditional expectation uses `adjudicate`. The current
+  accepted policy mode is `accepted_pending_v1`, with an explicit pending count, accepted pending
+  rule IDs, and rationale. The evaluator fails closed if pending adjudication rows are not covered
+  by this policy.
 - `forest_plan` expectations for required plan source records, resolved geographic/management
   areas, component IDs, applicable standards, reviewer readiness, total open reviewer-resolution
   items, and open standard reviewer-resolution items
@@ -1073,6 +1079,9 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
   Custer Gallatin source records, scope, components, applicable standards, reviewer readiness,
   forest-plan artifacts, the forest-plan compliance-validation gate, and component adjudication
   counts.
+- `conditional_adjudication`, a summary of the gate-facing pending-conditional policy: policy mode,
+  accepted pending count/rule IDs, actual pending count/rule IDs, actual applicable pending count,
+  unexpected or missing pending rule IDs, and policy failure reasons
 - `section_results` with detected package chunks and missed required section families
 - `baseline_results` verifying baseline findings use their authority source records and document
   roles
@@ -1080,17 +1089,22 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
   status, and failure categories
 - `conditional_results` with expected/actual applicability, adjudication-pending status, false
   positive/false negative counts, missing conditional-contract expectations, and source/section
-  alignment. When the review marks a conditional rule applicable, source/section alignment is
-  enforced even if the contract still marks final applicability as `adjudicate`.
+  alignment. Results also carry the contract `classification_rationale`. When the review marks a
+  conditional rule applicable, source/section alignment is enforced even if the contract still marks
+  final applicability as `adjudicate`.
+- top-level `conditional_adjudication` with the full pending-results queue for every accepted
+  `adjudicate` row, including actual applicability/status, source/section alignment, expected and
+  actual source records, expected and actual document roles, and the classification rationale
 - `forest_plan_results` for required source records, resolved areas, component coverage,
   applicable-standard coverage, reviewer readiness, and reviewer-resolution queue size
 
 Key metrics include section detection rate, baseline source/document-role match rates,
 rule-section/source/document-role match rates, citation requirement match rate, conditional
-expectation match rate, conditional adjudication completion rate, actual-applicable conditional
-source and section match rates, missing conditional expectation count, conditional false positive
-and false negative counts, forest-plan expectation match rate, reviewer-resolution item count, and
-standard reviewer-resolution item count.
+expectation match rate, conditional adjudication completion rate, accepted/missing/unexpected
+conditional adjudication counts, actual-applicable conditional source and section match rates,
+missing conditional expectation count, conditional false positive and false negative counts,
+forest-plan expectation match rate, reviewer-resolution item count, and standard reviewer-resolution
+item count.
 
 ## Compliance Coverage Outputs
 

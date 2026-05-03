@@ -93,6 +93,10 @@ def run_v1_ea_review_eval(
             contract.get("allow_unadjudicated_conditional_expectations", True)
         ),
     )
+    conditional_adjudication = _conditional_adjudication_report(
+        contract=contract,
+        conditional_results=conditional_results,
+    )
     forest_plan_results = _evaluate_forest_plan(
         expectations=contract.get("forest_plan", {}),
         artifacts=artifacts,
@@ -105,6 +109,7 @@ def run_v1_ea_review_eval(
         baseline_results=baseline_results,
         rule_results=rule_results,
         conditional_results=conditional_results,
+        conditional_adjudication=conditional_adjudication,
         forest_plan_results=forest_plan_results,
     )
     metrics = _metrics(
@@ -112,6 +117,7 @@ def run_v1_ea_review_eval(
         baseline_results=baseline_results,
         rule_results=rule_results,
         conditional_results=conditional_results,
+        conditional_adjudication=conditional_adjudication,
         forest_plan_results=forest_plan_results,
         artifacts=artifacts,
     )
@@ -120,6 +126,7 @@ def run_v1_ea_review_eval(
         baseline_results=baseline_results,
         rule_results=rule_results,
         conditional_results=conditional_results,
+        conditional_adjudication=conditional_adjudication,
         forest_plan_results=forest_plan_results,
         artifact_errors=artifacts["artifact_errors"],
     )
@@ -128,6 +135,7 @@ def run_v1_ea_review_eval(
         baseline_results=baseline_results,
         rule_results=rule_results,
         conditional_results=conditional_results,
+        conditional_adjudication=conditional_adjudication,
         artifact_errors=artifacts["artifact_errors"],
     )
     forest_plan_failure_category_counts = _forest_plan_failure_category_counts(
@@ -182,6 +190,9 @@ def run_v1_ea_review_eval(
         "failed_rule_ids": failed_rule_ids,
         "failed_rule_ids_by_category": failed_rule_ids_by_category,
         "failed_rule_expectations": failed_rule_expectations,
+        "conditional_adjudication": _conditional_adjudication_summary(
+            conditional_adjudication
+        ),
         "eval_lanes": eval_lanes,
     }
     payload = {
@@ -190,6 +201,7 @@ def run_v1_ea_review_eval(
         "baseline_results": baseline_results,
         "rule_results": rule_results,
         "conditional_results": conditional_results,
+        "conditional_adjudication": conditional_adjudication,
         "forest_plan_results": forest_plan_results,
         "artifact_paths": artifacts["artifact_paths"],
         "contract": {
@@ -491,6 +503,7 @@ def _evaluate_conditional_expectations(
                 "adjudication_pending": adjudication_pending,
                 "source_alignment_required": source_alignment_required,
                 "trigger_terms": expectation.get("trigger_terms", []),
+                "classification_rationale": expectation.get("classification_rationale"),
                 "expected_package_section_ids": expectation.get("expected_package_section_ids", []),
                 "actual_package_section_ids": source_section["actual_package_section_ids"],
                 "section_match": source_section["section_match"],
@@ -526,6 +539,7 @@ def _evaluate_conditional_expectations(
                 "adjudication_pending": False,
                 "source_alignment_required": True,
                 "trigger_terms": [],
+                "classification_rationale": None,
                 "expected_package_section_ids": [],
                 "actual_package_section_ids": [],
                 "section_match": False,
@@ -540,6 +554,121 @@ def _evaluate_conditional_expectations(
             }
         )
     return results
+
+
+def _conditional_adjudication_report(
+    *,
+    contract: dict[str, Any],
+    conditional_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    policy = contract.get("conditional_adjudication_policy")
+    policy_present = isinstance(policy, dict) and bool(policy)
+    policy = policy if isinstance(policy, dict) else {}
+    pending_results = sorted(
+        (
+            result
+            for result in conditional_results
+            if result.get("adjudication_pending")
+        ),
+        key=lambda result: str(result.get("rule_id") or ""),
+    )
+    actual_pending_rule_ids = [
+        str(result["rule_id"])
+        for result in pending_results
+        if str(result.get("rule_id") or "").strip()
+    ]
+    accepted_pending_rule_ids = sorted(
+        str(rule_id)
+        for rule_id in policy.get("accepted_pending_rule_ids", [])
+        if str(rule_id).strip()
+    )
+    accepted_pending_count = policy.get("accepted_pending_count")
+    mode = str(policy.get("mode") or "").strip()
+    failure_reasons = []
+    if pending_results and not policy_present:
+        failure_reasons.append("missing_conditional_adjudication_policy")
+    if policy_present and mode != "accepted_pending_v1":
+        failure_reasons.append("unsupported_conditional_adjudication_policy_mode")
+    if policy_present and not isinstance(policy.get("accepted_pending_rule_ids"), list):
+        failure_reasons.append("accepted_pending_rule_ids_must_be_list")
+    if policy_present and accepted_pending_count != len(actual_pending_rule_ids):
+        failure_reasons.append("accepted_pending_count_mismatch")
+    unexpected_pending_rule_ids = sorted(
+        set(actual_pending_rule_ids) - set(accepted_pending_rule_ids)
+    )
+    missing_pending_rule_ids = sorted(
+        set(accepted_pending_rule_ids) - set(actual_pending_rule_ids)
+    )
+    if unexpected_pending_rule_ids:
+        failure_reasons.append("unexpected_pending_rule_ids")
+    if missing_pending_rule_ids:
+        failure_reasons.append("missing_pending_rule_ids")
+    passed = not failure_reasons
+    return {
+        "schema_version": "conditional-adjudication-policy-results-v0",
+        "passed": passed,
+        "failure_category": None
+        if passed
+        else "conditional_adjudication_policy_mismatch",
+        "failure_reasons": failure_reasons,
+        "policy_present": policy_present,
+        "policy_mode": mode or None,
+        "policy_rationale": policy.get("rationale") if policy_present else None,
+        "accepted_pending_count": accepted_pending_count if policy_present else None,
+        "accepted_pending_rule_ids": accepted_pending_rule_ids,
+        "actual_pending_count": len(actual_pending_rule_ids),
+        "actual_pending_rule_ids": actual_pending_rule_ids,
+        "actual_pending_applicable_count": sum(
+            1 for result in pending_results if result.get("actual_is_applicable")
+        ),
+        "unexpected_pending_rule_ids": unexpected_pending_rule_ids,
+        "missing_pending_rule_ids": missing_pending_rule_ids,
+        "pending_results": [
+            {
+                "rule_id": result.get("rule_id"),
+                "expected_applicability": result.get("expected_applicability"),
+                "actual_applicability": result.get("actual_applicability"),
+                "actual_status": result.get("actual_status"),
+                "actual_is_applicable": result.get("actual_is_applicable"),
+                "classification_rationale": result.get("classification_rationale"),
+                "source_alignment_required": result.get("source_alignment_required"),
+                "section_match": result.get("section_match"),
+                "source_record_match": result.get("source_record_match"),
+                "source_document_role_match": result.get("source_document_role_match"),
+                "expected_package_section_ids": result.get(
+                    "expected_package_section_ids",
+                    [],
+                ),
+                "actual_package_section_ids": result.get("actual_package_section_ids", []),
+                "expected_source_record_ids": result.get("expected_source_record_ids", []),
+                "actual_source_record_ids": result.get("actual_source_record_ids", []),
+                "expected_source_document_roles": result.get(
+                    "expected_source_document_roles",
+                    [],
+                ),
+                "actual_source_document_roles": result.get(
+                    "actual_source_document_roles",
+                    [],
+                ),
+            }
+            for result in pending_results
+        ],
+    }
+
+
+def _conditional_adjudication_summary(report: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "passed": report.get("passed"),
+        "policy_mode": report.get("policy_mode"),
+        "accepted_pending_count": report.get("accepted_pending_count"),
+        "actual_pending_count": report.get("actual_pending_count"),
+        "actual_pending_applicable_count": report.get("actual_pending_applicable_count"),
+        "accepted_pending_rule_ids": report.get("accepted_pending_rule_ids", []),
+        "actual_pending_rule_ids": report.get("actual_pending_rule_ids", []),
+        "unexpected_pending_rule_ids": report.get("unexpected_pending_rule_ids", []),
+        "missing_pending_rule_ids": report.get("missing_pending_rule_ids", []),
+        "failure_reasons": report.get("failure_reasons", []),
+    }
 
 
 def _evaluate_rule_source_section(
@@ -795,6 +924,7 @@ def _checks(
     baseline_results: list[dict[str, Any]],
     rule_results: list[dict[str, Any]],
     conditional_results: list[dict[str, Any]],
+    conditional_adjudication: dict[str, Any],
     forest_plan_results: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     identity = _review_identity(artifacts["compliance_review"])
@@ -848,6 +978,15 @@ def _checks(
             "details": _check_counts(conditional_results),
         },
         {
+            "name": "conditional_adjudication_policy_met",
+            "passed": bool(conditional_adjudication.get("passed")),
+            "details": {
+                key: value
+                for key, value in conditional_adjudication.items()
+                if key != "pending_results"
+            },
+        },
+        {
             "name": "forest_plan_expectations_met",
             "passed": all(result["passed"] for result in forest_plan_results),
             "details": _check_counts(forest_plan_results),
@@ -861,6 +1000,7 @@ def _metrics(
     baseline_results: list[dict[str, Any]],
     rule_results: list[dict[str, Any]],
     conditional_results: list[dict[str, Any]],
+    conditional_adjudication: dict[str, Any],
     forest_plan_results: list[dict[str, Any]],
     artifacts: dict[str, Any],
 ) -> dict[str, Any]:
@@ -916,6 +1056,15 @@ def _metrics(
             len(conditional_scored),
             len(conditional_results),
         ),
+        "conditional_adjudication_accepted_pending_count": conditional_adjudication.get(
+            "accepted_pending_count"
+        ),
+        "conditional_adjudication_unexpected_pending_count": len(
+            conditional_adjudication.get("unexpected_pending_rule_ids", [])
+        ),
+        "conditional_adjudication_missing_pending_count": len(
+            conditional_adjudication.get("missing_pending_rule_ids", [])
+        ),
         "conditional_expectation_match_rate": _rate(
             sum(1 for result in conditional_scored if result["applicability_match"]),
             len(conditional_scored),
@@ -970,6 +1119,7 @@ def _failure_category_counts(
     baseline_results: list[dict[str, Any]],
     rule_results: list[dict[str, Any]],
     conditional_results: list[dict[str, Any]],
+    conditional_adjudication: dict[str, Any],
     forest_plan_results: list[dict[str, Any]],
     artifact_errors: list[dict[str, Any]],
 ) -> Counter[str]:
@@ -988,6 +1138,10 @@ def _failure_category_counts(
     for result in conditional_results:
         for category in result.get("failure_categories", []):
             counts[str(category)] += 1
+    if not conditional_adjudication.get("passed"):
+        category = conditional_adjudication.get("failure_category")
+        if category:
+            counts[str(category)] += 1
     for result in forest_plan_results:
         if result.get("failure_category"):
             counts[str(result["failure_category"])] += 1
@@ -1000,6 +1154,7 @@ def _broader_ea_failure_category_counts(
     baseline_results: list[dict[str, Any]],
     rule_results: list[dict[str, Any]],
     conditional_results: list[dict[str, Any]],
+    conditional_adjudication: dict[str, Any],
     artifact_errors: list[dict[str, Any]],
 ) -> Counter[str]:
     counts: Counter[str] = Counter()
@@ -1018,6 +1173,10 @@ def _broader_ea_failure_category_counts(
             counts[str(category)] += 1
     for result in conditional_results:
         for category in result.get("failure_categories", []):
+            counts[str(category)] += 1
+    if not conditional_adjudication.get("passed"):
+        category = conditional_adjudication.get("failure_category")
+        if category:
             counts[str(category)] += 1
     return counts
 
@@ -1122,6 +1281,7 @@ def _eval_lanes(
         "baseline_source_documents_match_authority",
         "rule_source_section_expectations_met",
         "conditional_source_expectations_met",
+        "conditional_adjudication_policy_met",
     ]
     broader_failed_checks = []
     for name in broader_check_names:
@@ -1245,6 +1405,40 @@ def _validate_contract(contract: dict[str, Any]) -> None:
                     raise ValueError(
                         f"{name}[{index}] has invalid expected_applicability: {value!r}"
                     )
+                if not str(expectation.get("classification_rationale") or "").strip():
+                    raise ValueError(f"{name}[{index}] requires classification_rationale")
+    adjudicate_rule_ids = sorted(
+        str(expectation["rule_id"])
+        for expectation in contract.get("conditional_source_expectations", [])
+        if expectation.get("expected_applicability") == "adjudicate"
+        and str(expectation.get("rule_id") or "").strip()
+    )
+    if adjudicate_rule_ids:
+        policy = contract.get("conditional_adjudication_policy")
+        if not isinstance(policy, dict):
+            raise ValueError(
+                "conditional_adjudication_policy is required when conditional "
+                "expectations use expected_applicability=adjudicate"
+            )
+        if policy.get("mode") != "accepted_pending_v1":
+            raise ValueError("conditional_adjudication_policy.mode must be accepted_pending_v1")
+        accepted_rule_ids = sorted(
+            str(rule_id)
+            for rule_id in policy.get("accepted_pending_rule_ids", [])
+            if str(rule_id).strip()
+        )
+        if accepted_rule_ids != adjudicate_rule_ids:
+            raise ValueError(
+                "conditional_adjudication_policy.accepted_pending_rule_ids must match "
+                "adjudicate conditional expectations"
+            )
+        if policy.get("accepted_pending_count") != len(adjudicate_rule_ids):
+            raise ValueError(
+                "conditional_adjudication_policy.accepted_pending_count must match "
+                "adjudicate conditional expectation count"
+            )
+        if not str(policy.get("rationale") or "").strip():
+            raise ValueError("conditional_adjudication_policy requires rationale")
 
 
 def _findings_by_rule(compliance_review: dict[str, Any]) -> dict[str, dict[str, Any]]:

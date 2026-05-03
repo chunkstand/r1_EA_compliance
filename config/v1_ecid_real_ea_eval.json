@@ -7,6 +7,27 @@
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
   "allow_unadjudicated_conditional_expectations": true,
+  "conditional_adjudication_policy": {
+    "mode": "accepted_pending_v1",
+    "accepted_pending_count": 14,
+    "accepted_pending_rule_ids": [
+      "directives_notice_comment_36cfr_216",
+      "eo_11990_wetlands",
+      "eo_13186_migratory_birds",
+      "esa_consultation_50cfr_402",
+      "esa_section_7",
+      "mbta_migratory_birds",
+      "montana_shpo_review",
+      "nepa_4336b_programmatic_tiering",
+      "nepa_4336f_sponsor_prepared_documents",
+      "nhpa_36cfr_800",
+      "nhpa_section_106",
+      "postdecisional_review_36cfr_214",
+      "roadless_rule_36cfr_294b",
+      "usda_nepa_applicant_docs_7cfr_1b10"
+    ],
+    "rationale": "V1 accepts these conditional rows as explicit pending reviewer risk, not as final legal conclusions. The gate still requires each actual applicable pending row to satisfy configured source-record, document-role, citation, and package-section alignment."
+  },
   "baseline_policy": {
     "require_source_record_match_authority": true,
     "require_document_role_match_authority": true,
@@ -220,6 +241,7 @@
       "rule_id": "nepa_4336b_programmatic_tiering",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["tiers to", "programmatic", "final environmental impact statement"],
+      "classification_rationale": "The package uses tiering and programmatic FEIS language, but the adequacy and final applicability of the tiering authority require reviewer judgment. V1 accepts this as pending only when the source and alternatives/environmental-consequences section alignment pass.",
       "expected_package_section_ids": ["alternatives", "environmental_consequences"],
       "expected_source_record_ids": ["R1EA-005"],
       "expected_source_document_roles": ["law"]
@@ -228,6 +250,7 @@
       "rule_id": "nepa_4336c_ce_adoption_screen",
       "expected_applicability": "not_applicable",
       "trigger_terms": ["categorical exclusion", "adopted CE"],
+      "classification_rationale": "The East Crazies package is an EA/FONSI review and does not adopt or rely on a categorical-exclusion path.",
       "expected_source_record_ids": ["R1EA-006"],
       "expected_source_document_roles": ["law"]
     },
@@ -235,6 +258,7 @@
       "rule_id": "nepa_4336f_sponsor_prepared_documents",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["sponsor", "applicant", "financial interest"],
+      "classification_rationale": "The land exchange involves non-federal parties, but whether sponsor-prepared environmental-document requirements are triggered is a reviewer judgment item for V1.",
       "expected_source_record_ids": ["R1EA-007"],
       "expected_source_document_roles": ["law"]
     },
@@ -242,6 +266,7 @@
       "rule_id": "usda_nepa_ce_fanec_7cfr_1b3",
       "expected_applicability": "not_applicable",
       "trigger_terms": ["categorical exclusion", "FANEC", "extraordinary circumstances"],
+      "classification_rationale": "The package does not use a USDA categorical exclusion, FANEC, or extraordinary-circumstances CE screen as the review path.",
       "expected_source_record_ids": ["R1EA-011"],
       "expected_source_document_roles": ["regulation"]
     },
@@ -249,6 +274,7 @@
       "rule_id": "usda_nepa_subcomponent_ce_7cfr_1b4",
       "expected_applicability": "not_applicable",
       "trigger_terms": ["categorical exclusion", "extraordinary circumstances", "USDA CE"],
+      "classification_rationale": "The package proceeds through an EA rather than a subcomponent categorical-exclusion process.",
       "expected_source_record_ids": ["R1EA-012"],
       "expected_source_document_roles": ["regulation"]
     },
@@ -256,6 +282,7 @@
       "rule_id": "usda_nepa_applicant_docs_7cfr_1b10",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["applicant", "third party", "financial disclosure"],
+      "classification_rationale": "The package has applicant and land-exchange context, but whether applicant-document and financial-disclosure requirements are fully triggered remains pending reviewer judgment.",
       "expected_source_record_ids": ["R1EA-016"],
       "expected_source_document_roles": ["regulation"]
     },
@@ -263,6 +290,7 @@
       "rule_id": "postdecisional_review_36cfr_214",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["appeal", "written authorization", "effective date"],
+      "classification_rationale": "The package includes decision and objection-review context, but V1 leaves the final postdecisional-review applicability determination to reviewer adjudication.",
       "expected_source_record_ids": ["R1EA-026"],
       "expected_source_document_roles": ["regulation"]
     },
@@ -270,6 +298,7 @@
       "rule_id": "directives_notice_comment_36cfr_216",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["directive", "notice and comment", "standards"],
+      "classification_rationale": "The package discusses standards and review process terms, but whether Forest Service directive notice-and-comment rules are triggered for this project record is pending reviewer judgment.",
       "expected_source_record_ids": ["R1EA-027"],
       "expected_source_document_roles": ["regulation"]
     },
@@ -281,6 +310,7 @@
         "2022 Land Management Plan",
         "Crazy Mountains Backcountry Area"
       ],
+      "classification_rationale": "The project is on the Custer Gallatin National Forest and the package identifies the applicable 2022 Land Management Plan and Crazy Mountains Backcountry Area context.",
       "expected_package_section_ids": ["forest_plan_consistency"],
       "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
       "expected_source_document_roles": ["forest_plan"]
@@ -295,6 +325,7 @@
         "endangered",
         "biological assessment"
       ],
+      "classification_rationale": "The package contains biological-resource and ESA consultation signals, but V1 treats final ESA Section 7 compliance applicability as pending reviewer adjudication.",
       "expected_package_section_ids": ["biological_resources"],
       "expected_source_record_ids": ["R1EA-065"],
       "expected_source_document_roles": ["law"]
@@ -303,6 +334,7 @@
       "rule_id": "esa_consultation_50cfr_402",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Endangered Species Act", "Section 7", "U.S. Fish and Wildlife Service"],
+      "classification_rationale": "The package includes ESA consultation cues and biological-resource evidence, but the consultation-regulation applicability finding remains a pending reviewer judgment.",
       "expected_package_section_ids": ["biological_resources"],
       "expected_source_record_ids": ["R1EA-066"],
       "expected_source_document_roles": ["regulation"]
@@ -311,6 +343,7 @@
       "rule_id": "nhpa_section_106",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["National Historic Preservation Act", "Section 106", "historic properties"],
+      "classification_rationale": "The package contains cultural-resource and Section 106 context, but final NHPA applicability and sufficiency are pending reviewer adjudication.",
       "expected_package_section_ids": ["cultural_resources"],
       "expected_source_record_ids": ["R1EA-070"],
       "expected_source_document_roles": ["law"]
@@ -319,6 +352,7 @@
       "rule_id": "nhpa_36cfr_800",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["36 CFR part 800", "SHPO", "adverse effect", "historic properties"],
+      "classification_rationale": "The package includes SHPO and historic-property evidence, but final 36 CFR part 800 applicability and process sufficiency are pending reviewer adjudication.",
       "expected_package_section_ids": ["cultural_resources"],
       "expected_source_record_ids": ["R1EA-071"],
       "expected_source_document_roles": ["regulation"]
@@ -327,6 +361,7 @@
       "rule_id": "montana_shpo_review",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Montana SHPO", "State Historic Preservation Officer", "cultural resource"],
+      "classification_rationale": "The package includes Montana SHPO and cultural-resource evidence, but the state-review applicability determination is left pending for reviewer adjudication.",
       "expected_package_section_ids": ["cultural_resources"],
       "expected_source_record_ids": ["R1EA-119"],
       "expected_source_document_roles": ["state_requirement"]
@@ -335,6 +370,7 @@
       "rule_id": "roadless_rule_36cfr_294b",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Roadless Rule", "inventoried roadless", "roadless area"],
+      "classification_rationale": "The package includes roadless-area evidence, but final Roadless Rule applicability and project-effect interpretation remain pending reviewer adjudication.",
       "expected_package_section_ids": ["roadless_wetlands"],
       "expected_source_record_ids": ["R1EA-049"],
       "expected_source_document_roles": ["regulation"]
@@ -343,6 +379,7 @@
       "rule_id": "eo_11990_wetlands",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Executive Order 11990", "wetlands", "wetland", "floodplains"],
+      "classification_rationale": "The package includes wetlands and floodplain-related evidence, but final EO 11990 applicability is pending reviewer adjudication.",
       "expected_package_section_ids": ["roadless_wetlands"],
       "expected_source_record_ids": ["R1EA-104"],
       "expected_source_document_roles": ["executive_order"]
@@ -351,6 +388,7 @@
       "rule_id": "mbta_migratory_birds",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Migratory Bird Treaty Act", "migratory bird", "birds"],
+      "classification_rationale": "The package contains biological-resource and bird-related evidence, but final MBTA applicability remains pending reviewer adjudication.",
       "expected_package_section_ids": ["biological_resources"],
       "expected_source_record_ids": ["R1EA-094"],
       "expected_source_document_roles": ["law"]
@@ -359,6 +397,7 @@
       "rule_id": "eo_13186_migratory_birds",
       "expected_applicability": "adjudicate",
       "trigger_terms": ["Executive Order 13186", "migratory bird", "Migratory Bird Treaty Act"],
+      "classification_rationale": "The package contains migratory-bird signals, but final EO 13186 applicability remains pending reviewer adjudication.",
       "expected_package_section_ids": ["biological_resources"],
       "expected_source_record_ids": ["R1EA-096"],
       "expected_source_document_roles": ["executive_order"]

@@ -100,6 +100,10 @@ Primary gate artifacts/checks:
   `alternatives` and `environmental_consequences`, actual source record `R1EA-005`, actual source
   document role `law`, and `adjudication_pending=true`. The follow-up gap pass made the new
   package section preference contract explicit in rule-pack validation and output-schema docs.
+- V1 EA gate repair milestone 5 makes conditional adjudication explicit. All `18`
+  conditional-source expectations now carry classification rationales, the contract accepts exactly
+  `14` pending `adjudicate` rows under `conditional_adjudication_policy.mode=accepted_pending_v1`,
+  and `v1-ea-eval` emits both a summary and full pending-results queue for those rows.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the
@@ -119,10 +123,10 @@ Primary gate artifacts/checks:
 
 Next implementation target:
 
-Implement Milestone 5: close conditional adjudication coverage. The current V1 source/section gate
-passes, but `conditional_adjudication_pending_count=14` remains explicit in the V1 output. The next
-slice should decide and encode whether pending `adjudicate` conditionals are an accepted V1 risk or
-whether a separate conditional-adjudication artifact/eval loop is required before final promotion.
+Implement Milestone 6: final V1 gate promotion. The current V1 source/section and conditional
+adjudication gates pass; the next slice should rerun the current review and promotion gates end to
+end, confirm `phase-eval`, `v1-ea-eval`, `compliance-review-eval`, and `compliance-gold-eval`, and
+update durable docs for the promoted V1 gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -284,58 +288,57 @@ the compliance review and V1 EA eval; `v1-ea-eval` now passes with `broader_ea_p
 
 ## Next Sequence
 
-Next sequence: implement V1 EA gate repair Milestone 5, closing conditional adjudication coverage
-now that the source/section gate passes.
+Next sequence: implement V1 EA gate repair Milestone 6, final V1 gate promotion.
 
 Goal:
-Make the current `conditional_adjudication_pending_count=14` explicit as either an accepted V1
-risk or a separate adjudication artifact/eval requirement, without hiding material conditional-rule
-uncertainty behind the passing V1 source/section gate.
+Regenerate and verify the current East Crazy Inspiration Divide review artifacts, then promote the
+V1 EA gate only after the broader EA lane, forest-plan lane, phase eval, compliance-review eval, and
+gold eval all pass.
 
 Non-goals:
 
-- Do not require model-generated legal conclusions.
-- Do not weaken source-record, document-role, citation, section, forest-plan, or validation gates.
-- Do not rerun the full 190-row downstream corpus unless the adjudication policy exposes stale
-  artifacts.
-- Do not treat pending conditional adjudications as resolved without explicit evidence.
+- Do not broaden the claim to all Region 1 forests.
+- Do not stage ignored generated `source_library/` outputs unless repository policy changes.
+- Do not weaken source-record, document-role, citation, section, forest-plan, phase-eval, or
+  validation gates.
 
 Relevant files:
 
-- `config/v1_ecid_real_ea_eval.json`
-- `src/usfs_r1_ea_sources/v1_ea_eval.py`
-- `docs/OUTPUT_SCHEMAS.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
-- `tests/test_v1_ea_eval.py`
+- `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md`
+- `README.md`
+- focused source/test/config changes from the prior gate-repair milestones
 
 Required eval signal:
 
-- No false positives or false negatives remain in V1 conditional expectations.
-- No unclassified conditional rules are hidden behind a pass result.
-- Any remaining `adjudicate` rows are explicit and visible in V1 output/docs.
-- Source-record, document-role, citation, section, and forest-plan rates remain `1.0`.
+- `v1-ea-eval` reports `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review` reports all phases passing.
+- Compliance review eval and gold eval remain promotion-ready.
 
 Required tests:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/compliance_review_eval_seed.json
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/compliance_gold_eval_v0.json
+PYTHONPATH=src uv run --extra dev pytest
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
 git diff --check
 ```
-
-Run the full suite before committing if resolver behavior or generated output schemas change.
 
 Commit policy:
 Stage only the current sequence files, verify, and commit atomically.
 
 Stop conditions:
 
-- The fixture cannot prove profile-driven behavior without adding a special East Crazies runtime
-  branch.
-- Required source-record readiness fails because the test source library lacks a profile-required
-  supporting record.
-- An applicable standard would pass reviewer-ready without plan-source evidence, package evidence,
-  and a resolved compliance status.
+- Any source-set, rule-pack, compliance validation, forest-plan, phase-eval, or V1 EA eval identity
+  check fails.
+- `v1-ea-eval` passes only because expectations were weakened rather than because evidence routing,
+  applicability gating, and explicit pending-adjudication policy are working.
+- Full tests or lint fail for reasons related to the V1 repair.
 
 Expert alignment check for Sequence 4:
 

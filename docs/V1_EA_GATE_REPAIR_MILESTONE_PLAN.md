@@ -3,11 +3,11 @@
 Date: 2026-05-03
 
 This plan records the `v1-ea-eval` gate repair sequence for the East Crazy Inspiration Divide V1
-compliance review. Milestones 1 through 4 have closed the original broader EA source/section
-blockers. The active next milestone is now conditional adjudication policy coverage, not another
-source-routing repair. Forest-plan scope, component coverage, standard coverage, component
-adjudication, and phase-eval readiness are already passing for the current review and should not be
-refactored as part of this sequence.
+compliance review. Milestones 1 through 5 have closed the original broader EA source/section
+blockers and made pending conditional adjudication explicit in the V1 gate. The active next
+milestone is final V1 gate promotion. Forest-plan scope, component coverage, standard coverage,
+component adjudication, and phase-eval readiness are already passing for the current review and
+should not be refactored as part of this sequence.
 
 Current review contract:
 
@@ -17,10 +17,11 @@ Current review contract:
 - V1 eval contract: `config/v1_ecid_real_ea_eval.json`
 - Original gate status before this sequence: `v1-ea-eval` failed with `conditional_false_positive=3` and
   `rule_section_mismatch=2`
-- Current gate status after Milestone 4: `v1-ea-eval` passes with `passed=true`,
+- Current gate status after Milestone 5: `v1-ea-eval` passes with `passed=true`,
   `broader_ea_passed=true`, `forest_plan_passed=true`, `failure_category_counts={}`,
   `failed_rule_ids=[]`, `rule_section_match_rate=1.0`, `conditional_false_positive=0`,
-  `conditional_false_negative=0`, and `conditional_adjudication_pending_count=14`.
+  `conditional_false_negative=0`, `conditional_adjudication_pending_count=14`, and
+  `conditional_adjudication.policy_mode=accepted_pending_v1`.
 
 Original failing expectations:
 
@@ -38,7 +39,7 @@ Original failing expectations:
 - `usda_nepa_subcomponent_ce_7cfr_1b4`: conditional false positive. The review marks it applicable
   where the V1 contract expects `not_applicable`.
 
-Progress through Milestone 4:
+Progress through Milestone 5:
 
 - Milestone 2 closed the three CE/FANEC conditional false positives without introducing conditional
   false negatives.
@@ -52,8 +53,12 @@ Progress through Milestone 4:
 - The Milestone 4 gap pass makes the rule-pack contract explicit: optional
   `package_section_terms` and `package_section_term_groups` are now documented and validator-checked
   so malformed section-routing preferences cannot silently change review behavior.
-- Milestone 5 is now the next milestone: make the remaining conditional adjudication policy explicit
-  so V1 does not hide material applicability uncertainty behind a passing source/section gate.
+- Milestone 5 makes the remaining conditional adjudication policy explicit. All `18`
+  conditional-source expectations now carry classification rationales, and the V1 contract accepts
+  exactly `14` pending `adjudicate` rows as visible V1 risk under
+  `conditional_adjudication_policy.mode=accepted_pending_v1`.
+- Milestone 6 is now the next milestone: rerun and promote the final V1 gate after the broader EA,
+  forest-plan, phase-eval, compliance-review-eval, and compliance-gold gates all pass.
 
 ## Sequence Rules
 
@@ -360,6 +365,20 @@ Required eval signal:
 - No false positives or false negatives remain.
 - No unclassified conditional rules remain hidden behind a pass result.
 - Any remaining `adjudicate` rows are explicit and visible in V1 output.
+
+Completion status:
+
+- Implemented and verified on 2026-05-03. The V1 eval contract now requires
+  `classification_rationale` on every conditional expectation and requires
+  `conditional_adjudication_policy` whenever an expectation uses
+  `expected_applicability=adjudicate`.
+- The accepted V1 policy is `accepted_pending_v1`: the gate accepts exactly `14` pending
+  conditional rows as reviewer risk, emits those row IDs in the summary, writes a full
+  `conditional_adjudication.pending_results` queue, and fails if the accepted pending count or rule
+  IDs drift.
+- This milestone does not resolve the pending legal/applicability judgments. It makes them explicit
+  and keeps source-record, document-role, citation, and package-section gates active for every
+  pending row that the review marks actually applicable.
 
 Required tests:
 
