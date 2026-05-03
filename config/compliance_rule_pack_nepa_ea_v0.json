@@ -670,6 +670,12 @@
           "adoption of categorical exclusion",
           "categorical exclusion path"
         ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "not subject to a categorical exclusion",
+        "categorical exclusion does not apply",
+        "categorical exclusion path is not used",
+        "not using a categorical exclusion"
       ]
     },
     {
@@ -738,6 +744,12 @@
           "categorical exclusion path",
           "extraordinary circumstances review"
         ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "CE/FANEC screen is not required",
+        "FANEC does not apply",
+        "categorical exclusion does not apply",
+        "no categorical exclusion applies"
       ]
     },
     {
@@ -775,6 +787,12 @@
           "USDA CE screening",
           "extraordinary circumstances review"
         ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "USDA CE screening is not required",
+        "USDA CE does not apply",
+        "subcomponent categorical exclusion does not apply",
+        "no subcomponent categorical exclusion applies"
       ]
     },
     {

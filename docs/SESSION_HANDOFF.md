@@ -88,7 +88,9 @@ Primary failing artifacts/checks:
 - V1 EA gate repair milestone 2 added grouped positive applicability triggers for the three CE/FANEC
   conditional rules. The East Crazies review now keeps those rules `not_applicable` unless package
   evidence shows an adopted CE, CE/FANEC screen, categorical-exclusion path, USDA CE screening, or
-  extraordinary-circumstances review.
+  extraordinary-circumstances review. A follow-up gap pass added explicit
+  `does_not_apply_if_package_terms` guards so negated same-chunk CE/FANEC language remains
+  non-applicable evidence rather than a positive trigger.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the

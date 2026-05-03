@@ -642,6 +642,14 @@ def _applicability_term_groups(item: dict) -> list[list[str]]:
     return groups
 
 
+def _package_term_list(item: dict, key: str) -> list[str]:
+    return [
+        str(term).strip()
+        for term in item.get(key, []) or []
+        if str(term).strip()
+    ]
+
+
 def _finding_for_item(
     *,
     item: dict,
@@ -652,15 +660,31 @@ def _finding_for_item(
 ) -> dict:
     package_evidence = package_search["results"][0] if package_search["results"] else None
     source_evidence = source_query["results"][0] if source_query["results"] else None
-    applicability_terms = [str(term) for term in item.get("applies_if_package_terms", [])]
+    applicability_terms = _package_term_list(item, "applies_if_package_terms")
     applicability_term_groups = _applicability_term_groups(item)
+    applicability_negative_terms = _package_term_list(
+        item,
+        "does_not_apply_if_package_terms",
+    )
     applicability_mode = str(
         item.get("applicability_mode")
         or ("conditional" if applicability_terms or applicability_term_groups else "baseline")
     )
     applicability = True
     applicability_evidence = None
+    applicability_negative_evidence = None
+    explicit_negative_match = False
     if applicability_terms or applicability_term_groups:
+        if applicability_negative_terms:
+            negative_search = _search_package_chunks(
+                package_chunks,
+                query=" ".join(applicability_negative_terms),
+                required_terms=applicability_negative_terms,
+                limit=1,
+            )
+            applicability_negative_evidence = (
+                negative_search["results"][0] if negative_search["results"] else None
+            )
         search_terms = applicability_terms or [
             term for group in applicability_term_groups for term in group
         ]
@@ -674,11 +698,23 @@ def _finding_for_item(
         applicability_evidence = (
             applicability_search["results"][0] if applicability_search["results"] else None
         )
-        applicability = bool(applicability_evidence)
+        explicit_negative_match = bool(applicability_negative_evidence) and (
+            not applicability_evidence
+            or applicability_negative_evidence["chunk_id"] == applicability_evidence["chunk_id"]
+        )
+        if explicit_negative_match:
+            applicability_evidence = None
+        applicability = bool(applicability_evidence) and not explicit_negative_match
     if not applicability:
         status = "not_applicable"
         confidence = 0.6
-        applicability_rationale = "The applicability trigger terms were not found in the EA package."
+        if explicit_negative_match:
+            applicability_rationale = (
+                "The EA package contains explicit non-applicability evidence for this "
+                "conditional authority."
+            )
+        else:
+            applicability_rationale = "The applicability trigger terms were not found in the EA package."
         rationale = applicability_rationale
     elif package_evidence and source_evidence:
         status = "pass"
@@ -711,8 +747,10 @@ def _finding_for_item(
         "applicability_mode": applicability_mode,
         "applicability_terms": applicability_terms,
         "applicability_term_groups": applicability_term_groups,
+        "applicability_negative_terms": applicability_negative_terms,
         "applicability_rationale": applicability_rationale,
         "applicability_evidence": applicability_evidence,
+        "applicability_negative_evidence": applicability_negative_evidence,
         "package_evidence_status": "found" if package_evidence else "not_found",
         "source_library_evidence_status": "found" if source_evidence else "not_found",
         "package_evidence": package_evidence,

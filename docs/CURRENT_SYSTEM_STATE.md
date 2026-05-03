@@ -946,8 +946,10 @@ The V1 CE/FANEC conditional-applicability milestone is implemented: grouped posi
 semantics now keep `nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`, and
 `usda_nepa_subcomponent_ce_7cfr_1b4` not applicable for the East Crazies package unless package
 evidence shows an adopted CE, CE/FANEC screen, categorical-exclusion path, USDA CE screening, or
-extraordinary-circumstances review. The live V1 eval now reports `conditional_false_positive=0` and
-`conditional_false_negative=0`.
+extraordinary-circumstances review. The milestone also carries explicit
+`does_not_apply_if_package_terms` guards so negated same-chunk phrases such as a categorical
+exclusion path not being used remain non-applicable evidence instead of positive CE triggers. The
+live V1 eval now reports `conditional_false_positive=0` and `conditional_false_negative=0`.
 
 The next v1 milestone is to close the remaining non-forest-plan V1 eval failures for the Custer
 Gallatin proving package: two rule/conditional section mismatches for `nepa_statute_chapter_55` and

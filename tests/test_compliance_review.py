@@ -396,7 +396,8 @@ class ComplianceReviewTests(unittest.TestCase):
                 negative_dir,
                 (
                     "Decision Notice and FONSI\n\nThe EA is not subject to a categorical "
-                    "exclusion. Mitigation measures support a FONSI."
+                    "exclusion, and the categorical exclusion path is not used. "
+                    "Mitigation measures support a FONSI."
                 ),
             )
             positive_package = _write_package(
@@ -437,6 +438,16 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(negative_finding["status"], "not_applicable")
             self.assertEqual(negative_finding["applicability_status"], "not_applicable")
             self.assertEqual(negative_finding["applicability_term_groups"], expected_groups)
+            self.assertEqual(
+                negative_finding["applicability_negative_terms"],
+                [
+                    "not subject to a categorical exclusion",
+                    "categorical exclusion path is not used",
+                ],
+            )
+            self.assertIsNone(negative_finding["applicability_evidence"])
+            self.assertTrue(negative_finding["applicability_negative_evidence"])
+            self.assertIn("explicit non-applicability", negative_finding["rationale"])
             self.assertEqual(positive_finding["status"], "pass")
             self.assertEqual(positive_finding["applicability_status"], "applicable")
             self.assertTrue(positive_finding["applicability_evidence"])
@@ -448,6 +459,34 @@ class ComplianceReviewTests(unittest.TestCase):
                 positive_row["applicability_basis"]["applies_if_package_term_groups"],
                 expected_groups,
             )
+            self.assertEqual(
+                positive_row["applicability_basis"]["does_not_apply_if_package_terms"],
+                [
+                    "not subject to a categorical exclusion",
+                    "categorical exclusion path is not used",
+                ],
+            )
+
+    def test_nepa_ce_rule_pack_has_explicit_non_applicability_guards(self) -> None:
+        rule_pack = json.loads(
+            Path("config/compliance_rule_pack_nepa_ea_v0.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        validation = validate_rule_pack(rule_pack)
+        rules_by_id = {rule["id"]: rule for rule in rule_pack["rules"]}
+        guarded_rule_ids = [
+            "nepa_4336c_ce_adoption_screen",
+            "usda_nepa_ce_fanec_7cfr_1b3",
+            "usda_nepa_subcomponent_ce_7cfr_1b4",
+        ]
+
+        self.assertTrue(validation["passed"])
+        for rule_id in guarded_rule_ids:
+            with self.subTest(rule_id=rule_id):
+                rule = rules_by_id[rule_id]
+                self.assertGreaterEqual(len(rule["applies_if_package_term_groups"]), 2)
+                self.assertTrue(rule["does_not_apply_if_package_terms"])
 
     def test_compliance_review_eval_scores_package_fixtures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -2001,6 +2040,10 @@ def _write_grouped_conditional_rule_pack(directory: Path) -> Path:
                 "applies_if_package_term_groups": [
                     ["categorical exclusion", "CE"],
                     ["adopted CE", "categorical exclusion path"],
+                ],
+                "does_not_apply_if_package_terms": [
+                    "not subject to a categorical exclusion",
+                    "categorical exclusion path is not used",
                 ],
                 "severity": "high",
             }

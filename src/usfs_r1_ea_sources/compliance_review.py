@@ -520,6 +520,7 @@ def _compliance_finding(
         or finding.get("applicability_mode"),
         "applies_if_package_terms": rule.get("applies_if_package_terms", []),
         "applies_if_package_term_groups": rule.get("applies_if_package_term_groups", []),
+        "does_not_apply_if_package_terms": rule.get("does_not_apply_if_package_terms", []),
         "title": rule["title"],
         "question": rule.get("question") or rule["title"],
         "requirement": rule.get("requirement"),
@@ -531,8 +532,10 @@ def _compliance_finding(
         "applicability_status": finding.get("applicability_status"),
         "applicability_terms": finding.get("applicability_terms", []),
         "applicability_term_groups": finding.get("applicability_term_groups", []),
+        "applicability_negative_terms": finding.get("applicability_negative_terms", []),
         "applicability_rationale": finding.get("applicability_rationale"),
         "applicability_evidence": finding.get("applicability_evidence"),
+        "applicability_negative_evidence": finding.get("applicability_negative_evidence"),
         "package_query": finding.get("package_query"),
         "package_terms": finding.get("package_terms", []),
         "source_query": finding.get("source_query"),
@@ -616,6 +619,10 @@ def _finding_graph(
                 applicability_mode=rule.get("applicability_mode"),
                 applies_if_package_terms=rule.get("applies_if_package_terms", []),
                 applies_if_package_term_groups=rule.get("applies_if_package_term_groups", []),
+                does_not_apply_if_package_terms=rule.get(
+                    "does_not_apply_if_package_terms",
+                    [],
+                ),
                 source_query=rule.get("source_query"),
                 source_filters=rule.get("source_filters", {}),
             ),
@@ -1114,8 +1121,16 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
                 "applies_if_package_term_groups",
                 [],
             ),
+            "does_not_apply_if_package_terms": finding.get(
+                "does_not_apply_if_package_terms",
+                [],
+            ),
             "matched_terms": finding.get("applicability_terms", []),
             "applicability_evidence": _compact_evidence(finding.get("applicability_evidence")),
+            "applicability_negative_terms": finding.get("applicability_negative_terms", []),
+            "applicability_negative_evidence": _compact_evidence(
+                finding.get("applicability_negative_evidence")
+            ),
             "source_filters": finding.get("source_filters", {}),
             "package_terms": finding.get("package_terms", []),
             "source_query": finding.get("source_query"),
@@ -2443,12 +2458,15 @@ def _check_rule_authority_metadata(rule_pack: dict) -> dict:
         if applicability_mode == "conditional":
             terms = rule.get("applies_if_package_terms")
             term_groups = rule.get("applies_if_package_term_groups")
+            negative_terms = rule.get("does_not_apply_if_package_terms")
             has_terms = isinstance(terms, list) and any(str(term).strip() for term in terms)
             has_term_groups = _valid_nonempty_term_groups(term_groups)
             if not has_terms and not has_term_groups:
                 missing.append("applies_if_package_terms")
             if term_groups is not None and not has_term_groups:
                 invalid.append("applies_if_package_term_groups")
+            if negative_terms is not None and not _valid_nonempty_term_list(negative_terms):
+                invalid.append("does_not_apply_if_package_terms")
         if missing or invalid:
             failures.append(
                 {
@@ -2473,6 +2491,10 @@ def _valid_nonempty_term_groups(value) -> bool:
         isinstance(group, list) and any(str(term).strip() for term in group)
         for group in value
     ) and bool(value)
+
+
+def _valid_nonempty_term_list(value) -> bool:
+    return isinstance(value, list) and all(str(term).strip() for term in value) and bool(value)
 
 
 def _check_rule_pack_baseline_source_records(rule_pack: dict) -> dict:
