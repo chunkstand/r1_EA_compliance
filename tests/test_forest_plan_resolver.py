@@ -605,6 +605,15 @@ class ForestPlanResolverTests(unittest.TestCase):
                         "Trail work also crosses the Hyalite Recreation Emphasis Area.",
                         "Mapped Inventoried Roadless Area direction is reviewed.",
                         (
+                            "Recreation and access section: quiet nonmotorized recreation "
+                            "opportunities predominate in the Crazy Mountains Backcountry Area."
+                        ),
+                        (
+                            "The backcountry area is not suitable for motorized transport or "
+                            "mechanized transport."
+                        ),
+                        "No new permanent or temporary roads are proposed.",
+                        (
                             "Blacktail Peak Backcountry Area | No | The geographic area to which "
                             "this component applies is not part of the project area."
                         ),
@@ -630,7 +639,6 @@ class ForestPlanResolverTests(unittest.TestCase):
                             "to the project area, but there are no designated rivers in the "
                             "project area or affected by the project."
                         ),
-                        "No new permanent or temporary roads are proposed.",
                     ]
                 ),
             )

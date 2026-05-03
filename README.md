@@ -197,12 +197,16 @@ dropping source context.
 Component package retrieval is section-aware. Queries are built from the component code, component
 text, resource topics, activity tags, geography/management context, and mandatory/prohibitive terms;
 candidate package evidence is then bound to a package section family such as hydrology, wildlife,
-recreation/access, land exchange, minerals, or general EA. Negative plan-consistency determinations
-and absence statements such as `not part of the project area`, `no ... in the parcels`, or
-`outside of <area/overlay>` suppress false-applicable context unless the package also contains
-affirmative location evidence. Restrictive recreation/access standards can also bind to proposed
-trail or route evidence that explicitly supports nonmotorized/no-motorized use, so standards written
-as prohibitions do not require the EA to repeat the plan's exact phrasing.
+botany, scenery, sustainability, recreation/access, land exchange, minerals, or general EA.
+Non-standard components use stricter section binding: outside explicit Plan Consistency Table rows,
+desired conditions, goals, guidelines, objectives, and suitability components require a matching EA
+package section family and substantive component terms before package evidence can support the
+finding. Negative plan-consistency determinations and absence statements such as `not part of the
+project area`, `no ... in the parcels`, or `outside of <area/overlay>` suppress false-applicable
+context unless the package also contains affirmative location evidence. Restrictive recreation/access
+standards can also bind to proposed trail or route evidence that explicitly supports
+nonmotorized/no-motorized use, so standards written as prohibitions do not require the EA to repeat
+the plan's exact phrasing.
 
 `forest-plan-component-eval` scores the current forest-plan review against adjudicated
 component-level cases in `config/forest_plan_component_eval_seed.json`. The eval measures component

@@ -386,7 +386,7 @@
     {
       "case_id": "fw-dc-prisk-01-nonstandard-positive-multi-evidence",
       "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-PRISK-01",
-      "description": "At-risk plant desired condition is applicable and has plan-consistency plus package evidence.",
+      "description": "At-risk plant desired condition is applicable and has plan-consistency plus botany/pre-EA package evidence.",
       "component_type": "desired_condition",
       "applicability_status": "applicable",
       "package_section": "Plan Consistency Table.pdf",
@@ -395,6 +395,7 @@
       ],
       "package_evidence_citations": [
         "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-007 (9a075b74e71d)",
         "EA-PACKAGE-033 (2259556c2475)"
       ],
       "reviewer_resolution_state": "closed"

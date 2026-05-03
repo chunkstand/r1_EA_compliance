@@ -643,7 +643,14 @@ Validation embedded in `forest_plan_component_findings.json` records gate-facing
 Component package matching is section-aware. The package query combines component text, component
 code, package evidence terms, resource topics, activity tags, and non-generic component keywords.
 Candidate package evidence is filtered by negative Plan Consistency Table rows, section family
-binding, and core-term matches before it can support a finding. Plan Consistency Table rows are
+binding, and core-term matches before it can support a finding. Section families currently include
+hydrology, wildlife, botany, scenery, sustainability, recreation/access, land exchange, and
+minerals. Non-standard components use the `strict_nonstandard_section_family` binding policy: outside
+explicit Plan Consistency Table determinations, desired conditions, goals, guidelines, objectives,
+and suitability components need a matching package section family plus substantive component-term
+evidence before package evidence can support the finding. The section-family label is derived from
+the evidence span and section metadata rather than unrelated text elsewhere in the same chunk. Plan
+Consistency Table rows are
 component-code aware, tolerate spacing variants introduced by extraction, can read rows split across
 adjacent chunks from the same package document, can recover duplicated or split component-key cells,
 and can bind conservative empty-code or plain-text rows when the row's component text matches the

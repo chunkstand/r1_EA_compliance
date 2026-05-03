@@ -99,6 +99,140 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             "hydrology",
         )
 
+    def test_nonstandard_package_search_requires_matching_section_family(self) -> None:
+        component = {
+            "component_id": "component-wildlife-guideline",
+            "component_type": "guideline",
+            "section_heading": "Plan Components-Wildlife",
+            "component_text": (
+                "Guidelines (FW-GDL-WL) 01 To maintain secure habitat and habitat "
+                "connectivity for wildlife species, new management activities should "
+                "retain hiding cover and avoid displacement."
+            ),
+            "package_evidence_terms": ["secure habitat", "habitat connectivity"],
+            "resource_topics": ["secure habitat"],
+            "activity_tags": ["habitat connectivity"],
+        }
+        chunks = [
+            _package_chunk(
+                title="Final Environmental Assessment.pdf",
+                text=(
+                    "The proposed action mentions secure habitat, but this summary "
+                    "does not bind the discussion to a resource-specific section."
+                ),
+            ),
+            _package_chunk(
+                title="Hydrology and Wetlands Report.pdf",
+                text=(
+                    "Riparian habitat and wetland habitat connectivity would be "
+                    "maintained through hydrology design features."
+                ),
+            ),
+            _package_chunk(
+                title="Wildlife Report.pdf",
+                text=(
+                    "Wildlife habitat connectivity and secure habitat would be "
+                    "maintained by retaining hiding cover near movement corridors."
+                ),
+            ),
+        ]
+
+        result = _component_package_search(component=component, package_chunks=chunks, limit=3)
+
+        self.assertEqual(result["hit_count"], 1)
+        self.assertEqual(result["results"][0]["title"], "Wildlife Report.pdf")
+        self.assertEqual(
+            result["results"][0]["section_binding"]["package_section_family"],
+            "wildlife",
+        )
+        self.assertEqual(
+            result["results"][0]["section_binding"]["binding_policy"],
+            "strict_nonstandard_section_family",
+        )
+
+    def test_nonstandard_package_search_binds_scenery_and_sustainability_sections(self) -> None:
+        scenery_component = {
+            "component_id": "component-scenery-guideline",
+            "component_type": "guideline",
+            "section_heading": "Plan Components-Scenery",
+            "component_text": (
+                "Guidelines (FW-GDL-SCENERY) 01 Management activities should repeat "
+                "form, line, color, and texture of the natural landscape character."
+            ),
+            "package_evidence_terms": ["natural landscape character", "form line color texture"],
+            "resource_topics": ["natural landscape character"],
+            "activity_tags": ["form line color texture"],
+        }
+        sustainability_component = {
+            "component_id": "component-sustainability-objective",
+            "component_type": "objective",
+            "section_heading": "Plan Components-Sustainability",
+            "component_text": (
+                "Objectives (FW-OBJ-CARB) 01 Maintain carbon stocks and climate "
+                "resilience while supporting sustainable ecosystem services."
+            ),
+            "package_evidence_terms": ["carbon stocks", "climate resilience"],
+            "resource_topics": ["carbon stocks"],
+            "activity_tags": ["climate resilience"],
+        }
+        chunks = [
+            _package_chunk(
+                title="Recreation and Access.pdf",
+                text=(
+                    "A scenic trail would provide views of the natural landscape "
+                    "character, but this section addresses access management."
+                ),
+            ),
+            _package_chunk(
+                title="Scenery and Visual Resources.pdf",
+                text=(
+                    "Project design would repeat form, line, color, and texture and "
+                    "protect natural landscape character."
+                ),
+            ),
+            _package_chunk(
+                title="Wildlife Report.pdf",
+                text=(
+                    "Wildlife habitat would be resilient, but the report does not "
+                    "evaluate carbon stocks or climate resilience."
+                ),
+            ),
+            _package_chunk(
+                title="Sustainability and Climate.pdf",
+                text=(
+                    "The project would maintain carbon stocks and climate resilience "
+                    "while protecting sustainable ecosystem services."
+                ),
+            ),
+        ]
+
+        scenery_result = _component_package_search(
+            component=scenery_component,
+            package_chunks=chunks,
+            limit=3,
+        )
+        sustainability_result = _component_package_search(
+            component=sustainability_component,
+            package_chunks=chunks,
+            limit=3,
+        )
+
+        self.assertEqual(scenery_result["hit_count"], 1)
+        self.assertEqual(scenery_result["results"][0]["title"], "Scenery and Visual Resources.pdf")
+        self.assertEqual(
+            scenery_result["results"][0]["section_binding"]["package_section_family"],
+            "scenery",
+        )
+        self.assertEqual(sustainability_result["hit_count"], 1)
+        self.assertEqual(
+            sustainability_result["results"][0]["title"],
+            "Sustainability and Climate.pdf",
+        )
+        self.assertEqual(
+            sustainability_result["results"][0]["section_binding"]["package_section_family"],
+            "sustainability",
+        )
+
     def test_component_package_search_supports_restrictive_access_standard(self) -> None:
         component = {
             "component_id": "component-ab-rcrea",

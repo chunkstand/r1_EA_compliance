@@ -194,6 +194,25 @@ SECTION_FAMILY_KEYWORDS = {
         "whitebark",
         "weed",
     },
+    "scenery": {
+        "aesthetic",
+        "aesthetics",
+        "landscape character",
+        "natural appearing",
+        "scenery",
+        "scenic",
+        "visual",
+        "viewshed",
+    },
+    "sustainability": {
+        "carbon",
+        "climate",
+        "ecosystem services",
+        "resilience",
+        "resilient",
+        "sustainability",
+        "sustainable",
+    },
     "recreation_access": {
         "access",
         "backcountry",
@@ -209,7 +228,6 @@ SECTION_FAMILY_KEYWORDS = {
         "road",
         "roadless",
         "roads",
-        "scenic",
         "trail",
         "trails",
         "transport",
@@ -1452,12 +1470,8 @@ def _component_section_families(component: dict) -> list[str]:
             " ".join(component.get("resource_topics") or []),
             " ".join(component.get("activity_tags") or []),
         ]
-    ).lower()
-    families = [
-        family
-        for family, keywords in SECTION_FAMILY_KEYWORDS.items()
-        if any(keyword in text for keyword in keywords)
-    ]
+    )
+    families = _section_families_from_text(text)
     if not families:
         families.append("general_ea")
     return _dedupe_preserve_order(families)
@@ -1485,14 +1499,24 @@ def _annotate_component_package_evidence(
     matched_core_terms = [
         term for term in core_terms if _term_matches_text(evidence_text, term)
     ]
-    evidence_family = _package_evidence_section_family(evidence, context_text=evidence_text)
+    evidence_family = _package_evidence_section_family(evidence)
+    matched_substantive_core_terms = _substantive_core_terms(matched_core_terms)
     annotated["matched_component_terms"] = matched_terms
     annotated["matched_core_terms"] = matched_core_terms
+    annotated["matched_substantive_core_terms"] = matched_substantive_core_terms
+    section_matched = _package_section_family_matches_component(
+        component=component,
+        evidence=annotated,
+        evidence_family=evidence_family,
+        section_families=section_families,
+    )
     annotated["review_section"] = _package_evidence_review_section(evidence)
     annotated["section_binding"] = {
         "component_section_families": section_families,
         "package_section_family": evidence_family,
-        "matched": evidence_family in section_families or evidence_family == "general_ea",
+        "matched": section_matched,
+        "matched_substantive_core_terms": matched_substantive_core_terms,
+        "binding_policy": _package_section_binding_policy(component),
     }
     if _package_evidence_supports_restrictive_recreation_component(
         component=component,
@@ -1514,7 +1538,12 @@ def _package_evidence_matches_component(
     text = _package_evidence_text(evidence)
     if _is_negative_package_evidence(text):
         return False
-    family = _package_evidence_section_family(evidence)
+    section_binding = (
+        evidence.get("section_binding") if isinstance(evidence.get("section_binding"), dict) else {}
+    )
+    family = str(section_binding.get("package_section_family") or "").strip()
+    if not family:
+        family = _package_evidence_section_family(evidence)
     if family == "plan_consistency":
         component_key = _component_reference_key(component)
         return bool(
@@ -1533,11 +1562,58 @@ def _package_evidence_matches_component(
         return True
     if not evidence.get("matched_core_terms"):
         return False
+    if _is_nonstandard_component(component) and not _nonstandard_package_evidence_has_substantive_match(
+        evidence
+    ):
+        return False
     if family in section_families:
         return True
     if family == "general_ea":
+        if _is_nonstandard_component(component) and section_families != ["general_ea"]:
+            return False
         return len(evidence.get("matched_component_terms") or []) >= 2
     return False
+
+
+def _package_section_family_matches_component(
+    *,
+    component: dict,
+    evidence: dict,
+    evidence_family: str,
+    section_families: list[str],
+) -> bool:
+    if evidence_family in section_families:
+        if _is_nonstandard_component(component):
+            return _nonstandard_package_evidence_has_substantive_match(evidence)
+        return True
+    if evidence_family == "plan_consistency":
+        return False
+    if evidence_family != "general_ea":
+        return False
+    if not _is_nonstandard_component(component):
+        return True
+    return section_families == ["general_ea"] and _nonstandard_package_evidence_has_substantive_match(
+        evidence
+    )
+
+
+def _package_section_binding_policy(component: dict) -> str:
+    if _is_nonstandard_component(component):
+        return "strict_nonstandard_section_family"
+    return "standard_section_family_or_general_ea"
+
+
+def _is_nonstandard_component(component: dict) -> bool:
+    return component.get("component_type") != "standard"
+
+
+def _nonstandard_package_evidence_has_substantive_match(evidence: dict) -> bool:
+    terms = evidence.get("matched_substantive_core_terms") or []
+    if not terms:
+        return False
+    if any(len(TOKEN_RE.findall(_normalized_component_text(term))) >= 2 for term in terms):
+        return True
+    return len(terms) >= 2
 
 
 def _package_evidence_supports_restrictive_recreation_component(
@@ -1616,24 +1692,79 @@ def _text_supports_nonmotorized_access(text: str) -> bool:
     )
 
 
+def _section_families_from_text(text: str) -> list[str]:
+    normalized_text = str(text or "").lower()
+    tokens = set(TOKEN_RE.findall(normalized_text))
+    families = []
+    for family, keywords in SECTION_FAMILY_KEYWORDS.items():
+        if any(_section_keyword_matches(normalized_text, tokens, keyword) for keyword in keywords):
+            families.append(family)
+    return _dedupe_preserve_order(families)
+
+
+def _section_keyword_matches(text: str, tokens: set[str], keyword: str) -> bool:
+    normalized_keyword = keyword.lower()
+    if " " in normalized_keyword or "-" in normalized_keyword:
+        return normalized_keyword in text
+    return normalized_keyword in tokens
+
+
+def _substantive_core_terms(terms: list[str]) -> list[str]:
+    return [term for term in terms if _is_substantive_core_term(term)]
+
+
+def _is_substantive_core_term(term: str) -> bool:
+    tokens = TOKEN_RE.findall(_normalized_component_text(term))
+    if not tokens:
+        return False
+    broad_tokens = {
+        "access",
+        "area",
+        "conditions",
+        "component",
+        "components",
+        "general",
+        "habitat",
+        "hydrology",
+        "management",
+        "plan",
+        "project",
+        "recreation",
+        "resource",
+        "resources",
+        "scenery",
+        "scenic",
+        "section",
+        "species",
+        "sustainability",
+        "sustainable",
+        "trail",
+        "trails",
+        "water",
+        "wildlife",
+    }
+    return any(token not in broad_tokens and token not in GENERIC_COMPONENT_TERMS for token in tokens)
+
+
 def _package_evidence_section_family(evidence: dict, context_text: str | None = None) -> str:
     title = str(evidence.get("title") or "").lower()
     if "plan consistency table" in title:
         return "plan_consistency"
-    text = (context_text or _package_evidence_text(evidence)).lower()
-    if any(term in text for term in ("aquatic", "wetland", "hydrology", "water")):
-        return "hydrology"
-    if any(term in text for term in ("wildlife", "fisheries")):
-        return "wildlife"
-    if any(term in text for term in ("botany", "plant", "vegetation")):
-        return "botany"
-    if any(
-        term in text
-        for term in ("road", "trail", "access", "recreation", "special areas", "special uses")
-    ):
-        return "recreation_access"
-    if any(term in text for term in ("mineral", "geologic")):
-        return "minerals"
+    provenance = evidence.get("provenance") if isinstance(evidence.get("provenance"), dict) else {}
+    section_text = " ".join(
+        str(part or "")
+        for part in (
+            evidence.get("title"),
+            provenance.get("section"),
+            provenance.get("heading"),
+        )
+    )
+    section_families = _section_families_from_text(section_text)
+    if section_families:
+        return section_families[0]
+    text_families = _section_families_from_text(context_text or _package_evidence_text(evidence))
+    if text_families:
+        return text_families[0]
     if any(
         term in title
         for term in (

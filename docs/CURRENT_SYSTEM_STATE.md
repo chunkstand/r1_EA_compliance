@@ -400,13 +400,18 @@ Current state:
   numeric component number.
   Component-level forest-plan eval runs against `config/forest_plan_component_eval_seed.json` and
   passes all `35` adjudicated cases. The eval now covers every one of the `12` applicable standards,
-  `10` representative non-standard applicable components across desired conditions, goals,
+  `11` representative non-standard applicable components across desired conditions, goals,
   guidelines, objectives, and suitability, and `12` hard-negative not-applicable cases. Case coverage
   requirements pass, and component applicability precision/recall, applicable-standard recall,
   package-section match rate, plan-source citation correctness, package-evidence citation
   correctness, resolved compliance-status rate, compliance-status match rate, reviewer-resolution
   state match rate, false-applicable component rate, and reviewer-resolution closure rate all meet
-  their strict thresholds. The prior completed non-standard component
+  their strict thresholds. Non-standard component package evidence now uses strict section-family
+  binding: outside explicit Plan Consistency Table determinations, desired conditions, goals,
+  guidelines, objectives, and suitability components require a matching EA package section family
+  plus substantive component terms. Current regenerated findings have `79` supported components,
+  `0` gaps, and no non-plan package evidence with mismatched section binding. The prior completed
+  non-standard component
   adjudication artifact classified the old `21` items as system misses; those adjudications are
   superseded by evidence-backed resolver fixes, and phase eval now rejects stale component
   adjudication evals whose queue count differs from the current queue. `phase-eval --review-id
