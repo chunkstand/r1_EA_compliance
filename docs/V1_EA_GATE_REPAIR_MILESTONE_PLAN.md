@@ -2,12 +2,11 @@
 
 Date: 2026-05-03
 
-This plan records the `v1-ea-eval` gate repair sequence for the East Crazy Inspiration Divide V1
-compliance review. Milestones 1 through 5 have closed the original broader EA source/section
-blockers and made pending conditional adjudication explicit in the V1 gate. The active next
-milestone is final V1 gate promotion. Forest-plan scope, component coverage, standard coverage,
-component adjudication, and phase-eval readiness are already passing for the current review and
-should not be refactored as part of this sequence.
+This plan records the completed `v1-ea-eval` gate repair sequence for the East Crazy Inspiration
+Divide V1 compliance review. Milestones 1 through 6 closed the original broader EA source/section
+blockers, made pending conditional adjudication explicit in the V1 gate, and promoted the final V1
+gate after the broader EA, forest-plan, phase-eval, compliance-review-eval, and compliance-gold
+lanes all passed.
 
 Current review contract:
 
@@ -17,7 +16,7 @@ Current review contract:
 - V1 eval contract: `config/v1_ecid_real_ea_eval.json`
 - Original gate status before this sequence: `v1-ea-eval` failed with `conditional_false_positive=3` and
   `rule_section_mismatch=2`
-- Current gate status after Milestone 5: `v1-ea-eval` passes with `passed=true`,
+- Current gate status after Milestone 6: `v1-ea-eval` passes with `passed=true`,
   `broader_ea_passed=true`, `forest_plan_passed=true`, `failure_category_counts={}`,
   `failed_rule_ids=[]`, `rule_section_match_rate=1.0`, `conditional_false_positive=0`,
   `conditional_false_negative=0`, `conditional_adjudication_pending_count=14`, and
@@ -39,7 +38,7 @@ Original failing expectations:
 - `usda_nepa_subcomponent_ce_7cfr_1b4`: conditional false positive. The review marks it applicable
   where the V1 contract expects `not_applicable`.
 
-Progress through Milestone 5:
+Progress through Milestone 6:
 
 - Milestone 2 closed the three CE/FANEC conditional false positives without introducing conditional
   false negatives.
@@ -57,8 +56,10 @@ Progress through Milestone 5:
   conditional-source expectations now carry classification rationales, and the V1 contract accepts
   exactly `14` pending `adjudicate` rows as visible V1 risk under
   `conditional_adjudication_policy.mode=accepted_pending_v1`.
-- Milestone 6 is now the next milestone: rerun and promote the final V1 gate after the broader EA,
-  forest-plan, phase-eval, compliance-review-eval, and compliance-gold gates all pass.
+- Milestone 6 reran the real package review and promoted the final V1 gate. The current review is
+  reviewer-ready, `phase-eval` passes `10/10` phases, `forest-plan-component-eval` passes `35/35`
+  cases, `compliance-review-eval` passes `3/3` seed cases, and `compliance-gold-eval` passes
+  `10/10` adjudicated cases with `promotion_ready=true`.
 
 ## Sequence Rules
 
@@ -380,8 +381,8 @@ Completion status:
   and keeps source-record, document-role, citation, and package-section gates active for every
   pending row that the review marks actually applicable.
 - The Milestone 5 gap-close pass hardens the contract shape: malformed accepted pending
-  count/rule-ID fields now fail with explicit validation errors, `README.md` lists the
-  `v1_ea_eval_results.json` review artifact, and the durable handoff points to Milestone 6.
+  count/rule-ID fields now fail with explicit validation errors, and `README.md` lists the
+  `v1_ea_eval_results.json` review artifact.
 
 Required tests:
 
@@ -426,6 +427,26 @@ Required eval signal:
 - `v1-ea-eval` reports `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` still reports all phases passing.
 - Compliance review eval and gold eval remain promotion-ready.
+
+Completion status:
+
+- Implemented and verified on 2026-05-03. The real East Crazy Inspiration Divide package review
+  was regenerated for `v1-cg-ecid-compliance-review` against
+  `source-set-ba8d0feae79501b8`, rule pack `nepa-ea-v0` version `0.4.0`, and the reused package
+  cache.
+- The regenerated compliance review is reviewer-ready with `44` findings: `40` pass and `4`
+  not applicable. It evaluates all `26` baseline source records, has `191` rule-claim links, and
+  has `0` rule-claim gaps.
+- The Custer Gallatin forest-plan lane is reviewer-ready: `329` component findings, `79`
+  supported, `250` not applicable, `0` gaps, `12/12` applicable standards applied, and `0`
+  reviewer-resolution items.
+- The final promotion gate passed: `forest-plan-component-eval` passed `35/35` cases,
+  `phase-eval` passed `10/10` phases with `reviewer_ready=true`, `v1-ea-eval` passed the broader EA
+  and forest-plan lanes, `compliance-review-eval` passed `3/3` seed cases, and
+  `compliance-gold-eval` passed `10/10` adjudicated cases with `promotion_ready=true`.
+- This V1 EA gate repair plan has no remaining milestone. New work should start as a post-V1
+  milestone plan, such as broader Region 1 package coverage, embeddings/reranking, or
+  model-assisted synthesis, without weakening the promoted deterministic gates.
 
 Required tests:
 

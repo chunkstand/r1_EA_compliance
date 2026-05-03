@@ -58,8 +58,9 @@ Current run result:
   routes its package evidence to the `alternatives`/`environmental_consequences` context expected by
   the V1 contract. The rule remains source-aligned to `R1EA-005` and document-role aligned to `law`.
 - `v1-ea-eval` records separate lanes in `v1_ea_eval_results.json`: `broader_ea`, `forest_plan`,
-  and `overall` all pass. The remaining work is policy coverage for adjudication-pending
-  conditional rules, not a section/source mismatch.
+  and `overall` all pass. Pending conditional adjudication is an explicit accepted V1 risk under
+  `conditional_adjudication_policy.mode=accepted_pending_v1`, with exactly `14` pending
+  `adjudicate` rows carried in the eval output.
 
 Primary gate artifacts/checks:
 
@@ -104,6 +105,12 @@ Primary gate artifacts/checks:
   conditional-source expectations now carry classification rationales, the contract accepts exactly
   `14` pending `adjudicate` rows under `conditional_adjudication_policy.mode=accepted_pending_v1`,
   and `v1-ea-eval` emits both a summary and full pending-results queue for those rows.
+- V1 EA gate repair milestone 6 promoted the final V1 gate on 2026-05-03. The rerun compliance
+  review is reviewer-ready with `44` findings, `40` pass findings, `4` not-applicable findings,
+  all `26` baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps.
+  `forest-plan-component-eval` passes `35/35`, `phase-eval` passes `10/10`, `v1-ea-eval` passes
+  broader EA and forest-plan lanes, `compliance-review-eval` passes `3/3`, and
+  `compliance-gold-eval` passes `10/10` with `promotion_ready=true`.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the
@@ -123,10 +130,11 @@ Primary gate artifacts/checks:
 
 Next implementation target:
 
-Implement Milestone 6: final V1 gate promotion. The current V1 source/section and conditional
-adjudication gates pass; the next slice should rerun the current review and promotion gates end to
-end, confirm `phase-eval`, `v1-ea-eval`, `compliance-review-eval`, and `compliance-gold-eval`, and
-update durable docs for the promoted V1 gate.
+The V1 EA gate repair plan is complete through Milestone 6. The next implementation target should
+be a new post-V1 milestone plan, such as broader Region 1 package expansion, embeddings/reranking,
+model-assisted synthesis, or a larger adjudicated real-package eval set. Do not broaden the V1
+claim beyond the current Custer Gallatin proving package without a new evidence-backed plan and
+gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -279,21 +287,30 @@ python -m json.tool config/forest_plan_component_eval_seed.json /tmp/forest_plan
 git diff --check
 ```
 
-Earlier forest-plan sequence verification: full test suite passed with `220 passed, 5 subtests passed`; focused
-forest-plan component eval tests passed with `5 passed`; focused component-eval phase test passed;
-lint, compile, JSON validation, and whitespace checks passed. The current EA-gate milestone reran
-the compliance review and V1 EA eval; `v1-ea-eval` now passes with `broader_ea_passed=true`,
-`forest_plan_passed=true`, empty failure-category counts, `conditional_false_positive=0`,
-`conditional_false_negative=0`, and forest-plan expectation match rate `1.0`.
+Earlier forest-plan sequence verification: full test suite passed with `220 passed, 5 subtests
+passed`; focused forest-plan component eval tests passed with `5 passed`; focused component-eval
+phase test passed; lint, compile, JSON validation, and whitespace checks passed. The current
+EA-gate milestone reran the compliance review and all promotion gates; `v1-ea-eval` now passes
+with `broader_ea_passed=true`, `forest_plan_passed=true`, empty failure-category counts,
+`conditional_false_positive=0`, `conditional_false_negative=0`, and forest-plan expectation match
+rate `1.0`.
 
 ## Next Sequence
 
-Next sequence: implement V1 EA gate repair Milestone 6, final V1 gate promotion.
+Next sequence: start a new post-V1 milestone plan.
 
-Goal:
-Regenerate and verify the current East Crazy Inspiration Divide review artifacts, then promote the
-V1 EA gate only after the broader EA lane, forest-plan lane, phase eval, compliance-review eval, and
-gold eval all pass.
+The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
+were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,
+forest-plan lane, phase eval, compliance-review eval, and gold eval all passed.
+
+Candidate post-V1 goals:
+
+- Broaden from the Custer Gallatin proving package to additional real Region 1 EA packages.
+- Add embeddings/reranking behind the existing deterministic source, citation, and eval gates.
+- Add model-assisted synthesis as a report layer without changing the deterministic readiness
+  contract.
+- Expand the adjudicated real-package eval set beyond the current Custer Gallatin V1 package and
+  10-case compliance-gold fixture.
 
 Non-goals:
 
@@ -310,13 +327,13 @@ Relevant files:
 - `README.md`
 - focused source/test/config changes from the prior gate-repair milestones
 
-Required eval signal:
+Current promoted eval signal:
 
 - `v1-ea-eval` reports `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` reports all phases passing.
 - Compliance review eval and gold eval remain promotion-ready.
 
-Required tests:
+Promotion verification:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
@@ -330,15 +347,16 @@ git diff --check
 ```
 
 Commit policy:
-Stage only the current sequence files, verify, and commit atomically.
+Future post-V1 sequences should stage only their verified slice and commit atomically.
 
-Stop conditions:
+Stop conditions for the next plan:
 
-- Any source-set, rule-pack, compliance validation, forest-plan, phase-eval, or V1 EA eval identity
-  check fails.
-- `v1-ea-eval` passes only because expectations were weakened rather than because evidence routing,
-  applicability gating, and explicit pending-adjudication policy are working.
-- Full tests or lint fail for reasons related to the V1 repair.
+- The proposed post-V1 scope would weaken source-record, document-role, citation, section,
+  forest-plan, phase-eval, or validation gates.
+- The proposed work would broaden the reviewer-ready claim beyond the current evidence-backed
+  Custer Gallatin package without new eval coverage.
+- Generated `source_library/` artifacts would need to become tracked without an explicit repository
+  policy change.
 
 Expert alignment notes retained from the earlier forest-plan sequence:
 
@@ -352,5 +370,9 @@ Milestone 5 alignment closeout:
 
 - Pending conditional rows are explicit accepted V1 risk, not resolved legal conclusions.
 - Malformed conditional-adjudication policy counts or rule-ID lists fail contract validation.
-- Milestone 6 remains the next sequence: final V1 gate promotion through phase eval, V1 eval,
-  compliance-review eval, gold eval, full tests, lint, compile, and docs promotion.
+
+Milestone 6 alignment closeout:
+
+- The final V1 gate promotion passed through phase eval, V1 eval, compliance-review eval, gold eval,
+  full tests, lint, compile, JSON validation, and docs promotion.
+- The next milestone is outside the V1 EA gate repair plan.

@@ -91,6 +91,16 @@ Gallatin FEIS and ESA-supporting plan documents.
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
   Component-like labels with nonnumeric number tokens, such as cross-reference/table headings, are
   suppressed from generated component IDs and surfaced in build coverage.
+- Final V1 EA gate promotion was verified locally on 2026-05-03 for
+  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `44`
+  findings, `40` pass findings, `4` not-applicable findings, all `26` baseline source records
+  evaluated, `191` rule-claim links, and `0` rule-claim gaps.
+- Forest-plan component eval passed `35/35` adjudicated cases for the promoted review. The current
+  component findings have `329` components, `79` supported components, `250` not applicable
+  components, `0` gaps, `12/12` applicable standards applied, and `0` reviewer-resolution items.
+- The final V1 gate commands passed: `phase-eval` `10/10`, `v1-ea-eval` with
+  `broader_ea_passed=true` and `forest_plan_passed=true`, `compliance-review-eval` `3/3`, and
+  `compliance-gold-eval` `10/10` with `promotion_ready=true`.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -979,11 +989,15 @@ source/section alignment enforced for actual applicable pending rows. The gap-cl
 that policy contract so malformed accepted pending count/rule-ID fields fail with explicit contract
 validation errors.
 
-The next v1 milestone is Milestone 6: final V1 gate promotion. That slice should rerun the current
-review and promotion gates end to end, including `phase-eval`, `v1-ea-eval`,
-`compliance-review-eval`, and `compliance-gold-eval`, then update the durable docs to describe the
-promoted V1 gate. Embeddings, reranking, and model-assisted synthesis remain downstream of this
-evidence-backed real-package gate.
+The V1 EA gate repair plan is complete through Milestone 6. The promoted review is
+`v1-cg-ecid-compliance-review` for the East Crazy Inspiration Divide package on source set
+`source-set-ba8d0feae79501b8`, rule pack `nepa-ea-v0` version `0.4.0`. The gate passes with
+`passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
+`failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
+`conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
+conditional adjudication rows carried as explicit V1 reviewer risk. Embeddings, reranking,
+model-assisted synthesis, and broader Region 1 package expansion remain post-V1 work and should
+start under a new milestone plan.
 
 ## Verification Commands
 

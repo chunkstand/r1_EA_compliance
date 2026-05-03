@@ -141,7 +141,8 @@
         "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
       ],
       "package_evidence_citations": [
-        "EA-PACKAGE-042 (bebc890bc3da)"
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-012 (533c439d7ce5)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -209,7 +210,9 @@
         "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
       ],
       "package_evidence_citations": [
-        "EA-PACKAGE-042 (bebc890bc3da)"
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "EA-PACKAGE-003 (548d0c6d5f68)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -244,7 +247,8 @@
       ],
       "package_evidence_citations": [
         "EA-PACKAGE-003 (548d0c6d5f68)",
-        "EA-PACKAGE-011 (83fdda893f74)"
+        "EA-PACKAGE-011 (83fdda893f74)",
+        "EA-PACKAGE-012 (533c439d7ce5)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -262,7 +266,8 @@
       ],
       "package_evidence_citations": [
         "EA-PACKAGE-042 (bebc890bc3da)",
-        "EA-PACKAGE-033 (2259556c2475)"
+        "EA-PACKAGE-033 (2259556c2475)",
+        "EA-PACKAGE-003 (548d0c6d5f68)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -390,7 +395,8 @@
       ],
       "package_evidence_citations": [
         "EA-PACKAGE-042 (bebc890bc3da)",
-        "EA-PACKAGE-007 (9a075b74e71d)"
+        "EA-PACKAGE-007 (9a075b74e71d)",
+        "EA-PACKAGE-033 (2259556c2475)"
       ],
       "reviewer_resolution_state": "closed"
     },

@@ -41,6 +41,12 @@ standards, passing build coverage, and `2` inventory-quality warnings for suppre
 component-like labels with nonnumeric number tokens. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
+The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
+`v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
+`26` baseline source records, applies `12/12` Custer Gallatin standards, passes `phase-eval`
+`10/10`, passes `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14`
+conditional adjudication rows as explicit accepted V1 reviewer risk.
+
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan:
 a Custer Gallatin National Forest EA compliance review as the proving ground. See

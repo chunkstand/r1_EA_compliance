@@ -135,7 +135,7 @@ Already in place:
   plan-source citations, package-evidence citations, resolved compliance status, and
   reviewer-resolution closure.
 
-Current readiness state after the 2026-05-01 downstream promotion:
+Current readiness state after the 2026-05-03 V1 gate promotion:
 
 - Full-source-set downstream artifacts for `source-set-ba8d0feae79501b8` are promoted through
   extraction, retrieval, evidence graph, claim extraction, rule-claim binding, coverage, gold eval,
@@ -149,9 +149,10 @@ Current readiness state after the 2026-05-01 downstream promotion:
   nodes to the finding graph.
 - The prior `forest_service_directives_portal` / `R1EA-028` source-claim gap is closed through a
   general structural-definition claim pattern and refreshed rule-claim binding.
-- Phase eval passes `8/8` phases with `reviewer_ready: true` for the active source set.
+- Phase eval passes `10/10` phases with `reviewer_ready: true` for the active source set and
+  current review ID.
 
-Remaining blockers to complete V1 Custer Gallatin real-package readiness:
+Promoted V1 Custer Gallatin real-package gate state:
 
 - The real Custer Gallatin proving package now resolves to `scope_status: custer_gallatin` and
   produces forest-plan component artifacts. The section-aware retrieval pass resolves the package
@@ -168,11 +169,19 @@ Remaining blockers to complete V1 Custer Gallatin real-package readiness:
   of `21` pending non-standard items has been reduced to `0` by evidence-backed resolver fixes.
   The prior adjudications classified those items as system misses; phase eval now checks any
   component-adjudication eval artifact against the current queue count before accepting it.
-- Real-package failure taxonomy is now measured by `v1-ea-eval`: remaining failures are the
-  three conditional false positives and two rule/conditional section mismatches. Forest-plan
-  expectations now pass with zero open reviewer-resolution items.
-- No generated V1 review artifact should be called fully reviewer-ready until current validation
-  proves source-set, rule-pack, component, package, and finding graph alignment for that package.
+- `v1-ea-eval` now passes with `passed=true`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, empty failure-category counts, `failed_rule_ids=[]`,
+  `rule_section_match_rate=1.0`, `conditional_false_positive=0`, and
+  `conditional_false_negative=0`.
+- The promoted compliance review is reviewer-ready with `44` findings, `40` pass findings,
+  `4` not-applicable findings, all `26` baseline source records evaluated, `191` rule-claim links,
+  and `0` rule-claim gaps.
+- Pending conditional adjudications are explicit accepted V1 risk, not resolved legal conclusions:
+  the gate accepts exactly `14` pending `adjudicate` rows under
+  `conditional_adjudication_policy.mode=accepted_pending_v1`.
+- Compliance-review eval passes `3/3` seed cases, compliance-gold eval passes `10/10`
+  adjudicated cases with `promotion_ready=true`, and the current generated V1 review artifact is
+  reviewer-ready for the Custer Gallatin proving package.
 
 ## V1 Definition Of Done
 
@@ -506,9 +515,11 @@ Current milestone status:
   reviewer-resolution closure rate `1.0`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` passes `10/10` phases and reports
   `reviewer_ready=true`.
-- `v1-ea-eval` still fails on non-forest-plan residuals:
-  `conditional_false_positive=3` and `rule_section_mismatch=2`; forest-plan expectations pass
-  `11/11`.
+- `v1-ea-eval` now passes with `broader_ea_passed=true`, `forest_plan_passed=true`,
+  `conditional_false_positive=0`, `conditional_false_negative=0`, `rule_section_match_rate=1.0`,
+  empty failure-category counts, and `failed_rule_ids=[]`.
+- The final V1 gate promotion also passed `compliance-review-eval` `3/3` and
+  `compliance-gold-eval` `10/10` with `promotion_ready=true`.
 
 Verification:
 
