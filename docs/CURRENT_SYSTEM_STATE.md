@@ -419,12 +419,14 @@ Current state:
   superseded by evidence-backed resolver fixes, and phase eval now rejects stale component
   adjudication evals whose queue count differs from the current queue. `phase-eval --review-id
   v1-cg-ecid-compliance-review` now reports `10/10` passing phases and `reviewer_ready=true`.
-  The stricter V1 eval now passes all
-  forest-plan expectations, including zero open standard reviewer-resolution items and a capped
-  `0` total forest-plan reviewer-resolution items. It still fails closed on non-forest-plan
-  review quality gaps: three categorical-exclusion conditional false positives and two
-  rule/conditional section mismatches. Those are the current V1 blockers before
-  practitioner-ready completion.
+  The stricter V1 eval now passes all forest-plan expectations, including zero open standard
+  reviewer-resolution items and a capped `0` total forest-plan reviewer-resolution items. It also
+  passes the broader EA source/section gate after CE/FANEC conditional-applicability, baseline
+  section-attribution, and programmatic-tiering section-routing repairs. `v1-ea-eval` now reports
+  `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`, empty failure-category
+  counts, `failed_rule_ids=[]`, `conditional_false_positive=0`, `conditional_false_negative=0`,
+  and `rule_section_match_rate=1.0`. The remaining V1 work is explicit policy coverage for
+  adjudication-pending conditional rules, not a current source/section mismatch.
 - Forest-plan component adjudication tooling is implemented through
   `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
   template command exports one adjudication item for each open component reviewer-resolution queue
@@ -442,12 +444,12 @@ Current state:
   `forest_plan_component_adjudication` phase and now checks it against the current queue count so
   pending, stale, or mismatched adjudication work blocks reviewer readiness at the phase gate.
 - The V1 real-EA eval now records explicit diagnostic lanes in `v1_ea_eval_results.json`. The
-  overall gate remains failed for the current East Crazies package, but the lane split reports
-  `broader_ea_passed=false`, `forest_plan_passed=true`,
-  `forest_plan_component_adjudication_required=false`, non-forest-plan failure categories
-  `rule_section_mismatch=1`, and no forest-plan failure categories. The only remaining failed rule
-  ID is `nepa_4336b_programmatic_tiering`; forest-plan readiness can therefore be tracked
-  independently from the remaining conditional section-routing gap.
+  current East Crazies package passes the lane split with `broader_ea_passed=true`,
+  `forest_plan_passed=true`, `forest_plan_component_adjudication_required=false`, and no broader-EA
+  or forest-plan failure categories. `nepa_4336b_programmatic_tiering` remains visible as an
+  adjudication-pending conditional rule, but its actual package sections are `alternatives` and
+  `environmental_consequences`, its actual source record is `R1EA-005`, and its actual source
+  document role is `law`.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -957,11 +959,19 @@ eval reports `rule_source_section_expectations_met=true`, `rule_section_match_ra
 `baseline_source_record_match_rate=1.0`, `baseline_document_role_match_rate=1.0`, and
 `citation_requirement_match_rate=1.0`.
 
-The next v1 milestone is to close the remaining non-forest-plan V1 eval failure for the Custer
-Gallatin proving package: the conditional `rule_section_mismatch` on
-`nepa_4336b_programmatic_tiering`. Use that failure to decide whether the fix belongs in package
-section binding, conditional rule routing, or rule wording. Embeddings, reranking, and
-model-assisted synthesis remain downstream of that evidence-backed real-package pass.
+The V1 programmatic-tiering section-routing milestone is implemented: `nepa_4336b_programmatic_tiering`
+now declares package section term groups for alternatives and environmental consequences, and
+package evidence ranking uses those rule-declared groups as a context preference after the normal
+tiering evidence match succeeds. The live V1 eval reports actual package sections
+`alternatives` and `environmental_consequences`, actual source record `R1EA-005`, actual document
+role `law`, `adjudication_pending=true`, and no `rule_section_mismatch`.
+
+The next v1 milestone is Milestone 5: close conditional adjudication coverage. The current V1 eval
+passes, but `conditional_adjudication_pending_count=14` remains explicit. The next slice should
+decide whether those pending `adjudicate` conditionals are an accepted V1 risk surfaced in output
+and docs or whether a separate conditional-adjudication artifact/eval loop is required before final
+promotion. Embeddings, reranking, and model-assisted synthesis remain downstream of this
+evidence-backed real-package gate.
 
 ## Verification Commands
 

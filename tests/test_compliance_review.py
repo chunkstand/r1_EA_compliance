@@ -14,6 +14,7 @@ from usfs_r1_ea_sources.compliance_review import validate_rule_pack
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
+from usfs_r1_ea_sources.ea_review import _search_package_chunks
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.forest_plan_components import build_forest_plan_component_inventory
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
@@ -505,6 +506,96 @@ class ComplianceReviewTests(unittest.TestCase):
                 "purpose and need",
                 "environmental assessment",
             ],
+        )
+
+    def test_programmatic_tiering_rule_declares_expected_section_context(self) -> None:
+        rule_pack = json.loads(
+            Path("config/compliance_rule_pack_nepa_ea_v0.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        validation = validate_rule_pack(rule_pack)
+        rules_by_id = {rule["id"]: rule for rule in rule_pack["rules"]}
+        rule = rules_by_id["nepa_4336b_programmatic_tiering"]
+
+        self.assertTrue(validation["passed"])
+        self.assertEqual(
+            rule["package_section_term_groups"],
+            [
+                ["alternatives", "alternative", "no action alternative"],
+                [
+                    "environmental consequences",
+                    "environmental effects",
+                    "direct and indirect effects",
+                    "cumulative effects",
+                ],
+            ],
+        )
+
+    def test_package_search_prefers_rule_declared_section_context(self) -> None:
+        chunks = [
+            _chunk(
+                source_set_id="ea-package-unit",
+                source_record_id="EA-PACKAGE-001",
+                title="Final Environmental Assessment",
+                document_role="ea_package",
+                authority_level="project_record",
+                citation_label="EA-PACKAGE-001 | final EA | artifact abc123",
+                text=(
+                    "This environmental assessment tiers to and incorporates by reference "
+                    "the programmatic final environmental impact statement. Lands protect "
+                    "threatened and endangered species and important cultural resources."
+                ),
+            ),
+            _chunk(
+                source_set_id="ea-package-unit",
+                source_record_id="EA-PACKAGE-001",
+                title="Final Environmental Assessment",
+                document_role="ea_package",
+                authority_level="project_record",
+                citation_label="EA-PACKAGE-001 | final EA | artifact abc123",
+                text=(
+                    "## 3.0 Environmental Effects\n\n"
+                    "This section summarizes the environmental effects of the alternative "
+                    "actions, including the no action alternative. This analysis tiers to "
+                    "the Final Environmental Impact Statement for the land management plan."
+                ),
+            )
+            | {
+                "chunk_id": "chunk:EA-PACKAGE-001-env-effects",
+                "chunk_index": 1,
+            },
+        ]
+
+        result = _search_package_chunks(
+            chunks,
+            query="tiers to incorporates by reference programmatic final environmental impact statement",
+            required_terms=[
+                "tiers to",
+                "incorporates by reference",
+                "programmatic",
+                "final environmental impact statement",
+            ],
+            preferred_term_groups=[
+                ["alternatives", "alternative", "no action alternative"],
+                [
+                    "environmental consequences",
+                    "environmental effects",
+                    "direct and indirect effects",
+                    "cumulative effects",
+                ],
+            ],
+            limit=2,
+        )
+
+        self.assertEqual(result["results"][0]["chunk_id"], "chunk:EA-PACKAGE-001-env-effects")
+        self.assertIn(
+            "Environmental Effects",
+            result["results"][0]["evidence_span"]["text"],
+        )
+        self.assertIn(
+            "alternative actions",
+            result["results"][0]["evidence_span"]["text"],
         )
 
     def test_compliance_review_eval_scores_package_fixtures(self) -> None:

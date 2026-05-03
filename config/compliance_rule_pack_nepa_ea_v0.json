@@ -621,6 +621,19 @@
         "programmatic",
         "final environmental impact statement"
       ],
+      "package_section_term_groups": [
+        [
+          "alternatives",
+          "alternative",
+          "no action alternative"
+        ],
+        [
+          "environmental consequences",
+          "environmental effects",
+          "direct and indirect effects",
+          "cumulative effects"
+        ]
+      ],
       "source_query": "42 U.S.C. § 4336b - Programmatic environmental documents EA tiers to or relies on programmatic NEPA document Check age of programmatic review, reevaluation if older than 5 years, and substantial new circumstances/information",
       "source_filters": {
         "document_role": "law",

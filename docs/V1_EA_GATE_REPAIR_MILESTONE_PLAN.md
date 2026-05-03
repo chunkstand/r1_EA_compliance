@@ -32,13 +32,19 @@ Original failing expectations:
 - `usda_nepa_subcomponent_ce_7cfr_1b4`: conditional false positive. The review marks it applicable
   where the V1 contract expects `not_applicable`.
 
-Progress through Milestone 3:
+Progress through Milestone 4:
 
 - Milestone 2 closed the three CE/FANEC conditional false positives without introducing conditional
   false negatives.
 - Milestone 3 routes `nepa_statute_chapter_55` package evidence to purpose-and-need
-  environmental-assessment text. The live V1 eval now reports `rule_source_section_expectations_met`
-  passing and leaves only the `nepa_4336b_programmatic_tiering` section mismatch for Milestone 4.
+  environmental-assessment text.
+- Milestone 4 routes `nepa_4336b_programmatic_tiering` package evidence to the Environmental
+  Effects/alternative-actions context using rule-declared package section term groups. The live V1
+  eval now passes with `broader_ea_passed=true`, `forest_plan_passed=true`, no
+  `rule_section_mismatch`, and `nepa_4336b_programmatic_tiering` still source-aligned to
+  `R1EA-005` with `adjudication_pending=true`.
+- Milestone 5 is now the next milestone: make the remaining conditional adjudication policy explicit
+  so V1 does not hide material applicability uncertainty behind a passing source/section gate.
 
 ## Sequence Rules
 

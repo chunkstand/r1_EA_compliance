@@ -50,21 +50,18 @@ Current run result:
   `forest_plan_component_eval` passes, and the review is `reviewer_ready=true` at the phase gate.
   Phase eval now rejects stale component-adjudication eval artifacts whose recorded queue count
   differs from the current reviewer-resolution queue.
-- V1 real-EA eval still fails, as intended for the current gap state. Good signals: all `13`
-  required EA section families were detected, all `26` baseline authorities matched source records
-  and document roles, all baseline document roles matched, citation/source-record match rates are
-  `1.0`, and all Custer Gallatin forest-plan expectations pass, including zero open standard
-  reviewer-resolution items.
-- Remaining V1 blocker: `nepa_4336b_programmatic_tiering` is still section-mismatched. It remains
-  source-aligned to `R1EA-005` and adjudication-pending, but package section routing currently
-  lands on `biological_resources` and `cultural_resources` where the V1 contract expects
-  `alternatives` and `environmental_consequences`.
-- `v1-ea-eval` now records separate lanes in `v1_ea_eval_results.json`: `broader_ea` carries the
-  remaining programmatic-tiering section failure, while `forest_plan` passes with no
-  component-adjudication requirement. Overall V1 readiness still fails until the broader EA lane is
-  repaired.
+- V1 real-EA eval now passes the current source/section gate. All `13` required EA section families
+  were detected, all `26` baseline authorities matched source records and document roles, citation
+  requirements matched, and all Custer Gallatin forest-plan expectations pass, including zero open
+  standard reviewer-resolution items.
+- `nepa_4336b_programmatic_tiering` remains present and adjudication-pending, but Milestone 4 now
+  routes its package evidence to the `alternatives`/`environmental_consequences` context expected by
+  the V1 contract. The rule remains source-aligned to `R1EA-005` and document-role aligned to `law`.
+- `v1-ea-eval` records separate lanes in `v1_ea_eval_results.json`: `broader_ea`, `forest_plan`,
+  and `overall` all pass. The remaining work is policy coverage for adjudication-pending
+  conditional rules, not a section/source mismatch.
 
-Primary failing artifacts/checks:
+Primary gate artifacts/checks:
 
 - `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_context_summary.json` reports
   `scope_status: custer_gallatin`, `reviewer_ready: true`, `validation_passed: true`,
@@ -76,9 +73,10 @@ Primary failing artifacts/checks:
   reports `12` applicable standards, `12` applied standards, and
   `all_applicable_standards_applied=true`.
 - `source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json` passes.
-- `v1_ea_eval_results.json` failure categories:
-  `rule_section_mismatch=1`. `conditional_false_positive=0`,
-  `conditional_false_negative=0`, and forest-plan expectation match rate is now `1.0`.
+- `v1_ea_eval_results.json` now reports `passed=true`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, empty failure-category counts, `failed_rule_ids=[]`,
+  `rule_section_match_rate=1.0`, `conditional_false_positive=0`, and
+  `conditional_false_negative=0`.
 - V1 EA gate repair milestone 1 locked the failure reproduction without changing applicability,
   trigger, or section-routing behavior. The eval summary now includes
   `failed_rule_expectation_count`, `failed_rule_ids`, `failed_rule_ids_by_category`, and
@@ -94,8 +92,13 @@ Primary failing artifacts/checks:
   non-applicable evidence rather than a positive trigger.
 - V1 EA gate repair milestone 3 routes `nepa_statute_chapter_55` package evidence to
   purpose-and-need environmental-assessment text. The live V1 eval now reports
-  `rule_source_section_expectations_met=true`, `rule_section_match_rate=1.0`, and leaves only
-  `nepa_4336b_programmatic_tiering` in `failed_rule_ids`.
+  `rule_source_section_expectations_met=true`, `rule_section_match_rate=1.0`, and no
+  `nepa_statute_chapter_55` section failure.
+- V1 EA gate repair milestone 4 adds rule-declared package section term groups for
+  `nepa_4336b_programmatic_tiering` and uses them as a package-evidence ranking/span preference.
+  The live V1 eval now reports `nepa_4336b_programmatic_tiering` with actual package sections
+  `alternatives` and `environmental_consequences`, actual source record `R1EA-005`, actual source
+  document role `law`, and `adjudication_pending=true`.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the
@@ -115,12 +118,10 @@ Primary failing artifacts/checks:
 
 Next implementation target:
 
-Implement Milestone 4: fix `nepa_4336b_programmatic_tiering` package section routing so it remains
-source-aligned to `R1EA-005`, remains adjudication-pending, and routes package evidence to the
-`alternatives`/`environmental_consequences` context expected by the V1 contract. The scope,
-applicable-standard, component eval, and non-standard component adjudication blockers are closed;
-the remaining non-ready state is conditional section routing, not missing forest-plan context,
-standard coverage, or component adjudication.
+Implement Milestone 5: close conditional adjudication coverage. The current V1 source/section gate
+passes, but `conditional_adjudication_pending_count=14` remains explicit in the V1 output. The next
+slice should decide and encode whether pending `adjudicate` conditionals are an accepted V1 risk or
+whether a separate conditional-adjudication artifact/eval loop is required before final promotion.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -253,10 +254,9 @@ standards, `0` reviewer-resolution items, and zero unresolved applicable standar
 support or correct not-applicable determinations. Component-level forest-plan eval passes all `35`
 adjudicated cases with all-applicable-standard coverage. `phase-eval` passes `10/10` phases and
 reports `reviewer_ready=true`;
-`v1-ea-eval` reports forest-plan expectation match rate `1.0`,
+`v1-ea-eval` now passes with forest-plan expectation match rate `1.0`,
 section detection/source-record/document-role rates `1.0`, zero open standard reviewer-resolution
-items, and the remaining non-forest-plan failure category `rule_section_mismatch=1` for
-`nepa_4336b_programmatic_tiering`.
+items, empty failure-category counts, and `failed_rule_ids=[]`.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
@@ -277,64 +277,48 @@ git diff --check
 Earlier forest-plan sequence verification: full test suite passed with `220 passed, 5 subtests passed`; focused
 forest-plan component eval tests passed with `5 passed`; focused component-eval phase test passed;
 lint, compile, JSON validation, and whitespace checks passed. The current EA-gate milestone reran
-the compliance review and V1 EA eval; `v1-ea-eval` now fails only on
-`nepa_4336b_programmatic_tiering` with `rule_section_mismatch=1`, while
-`conditional_false_positive=0`, `conditional_false_negative=0`, and forest-plan expectation match
-rate remains `1.0`.
+the compliance review and V1 EA eval; `v1-ea-eval` now passes with `broader_ea_passed=true`,
+`forest_plan_passed=true`, empty failure-category counts, `conditional_false_positive=0`,
+`conditional_false_negative=0`, and forest-plan expectation match rate `1.0`.
 
 ## Next Sequence
 
-Next sequence: repair the remaining V1 eval issue in the conditional-source section expectation for
-`nepa_4336b_programmatic_tiering`.
+Next sequence: implement V1 EA gate repair Milestone 5, closing conditional adjudication coverage
+now that the source/section gate passes.
 
 Goal:
-Produce a reviewer-ready or explicitly fail-closed V1 Custer Gallatin compliance review from the
-real proving package, using the current source-set component inventory and downstream source-set
-promotion artifacts.
+Make the current `conditional_adjudication_pending_count=14` explicit as either an accepted V1
+risk or a separate adjudication artifact/eval requirement, without hiding material conditional-rule
+uncertainty behind the passing V1 source/section gate.
 
 Non-goals:
 
-- Do not rebuild the full 190-row downstream corpus unless the proving run exposes stale artifacts.
-- Do not add East Crazies-specific resolver branches.
-- Do not scan raw artifact filenames to decide forest-plan behavior.
-- Do not broaden the output schema unless the fixture requires a minimal test-only assertion.
+- Do not require model-generated legal conclusions.
+- Do not weaken source-record, document-role, citation, section, forest-plan, or validation gates.
+- Do not rerun the full 190-row downstream corpus unless the adjudication policy exposes stale
+  artifacts.
+- Do not treat pending conditional adjudications as resolved without explicit evidence.
 
 Relevant files:
 
-- `docs/FOREST_PLAN_REVIEW_EVALUATOR_V1.md`
-- `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md`
-- `docs/FOREST_PLAN_COMPONENT_EVALUATION_MILESTONE_PLAN.md`
-- `config/forest_plan_profiles.json`
-- `config/forest_plan_component_inventory_seed.json`
-- `src/usfs_r1_ea_sources/forest_plan_components.py`
-- `src/usfs_r1_ea_sources/forest_plan_resolver.py`
-- `tests/test_forest_plan_resolver.py`
-- Optional new fixture file under `tests/fixtures/` if a durable text fixture is cleaner than an
-  inline package string.
+- `config/v1_ecid_real_ea_eval.json`
+- `src/usfs_r1_ea_sources/v1_ea_eval.py`
+- `docs/OUTPUT_SCHEMAS.md`
+- `docs/SESSION_HANDOFF.md`
+- `tests/test_v1_ea_eval.py`
 
 Required eval signal:
 
-- The package resolves to `scope_status=custer_gallatin` through selected profile names.
-- The package resolves the Bridger, Bangtail, and Crazy Mountains Geographic Area.
-- The package resolves the Crazy Mountains Backcountry Area.
-- Required Custer Gallatin profile source records are present in retrieval readiness.
-- FEIS, Biological Assessment, and Biological Opinion routes trigger only from explicit package
-  evidence.
-- ROD evidence does not trigger from generic decision labels unless explicit ROD terms are present.
-- Reviewer-ready status remains citation/evidence gated.
-- Component findings are produced from the inventory path with plan-source evidence, package
-  evidence where present, and reviewer-resolution items for gaps.
-- Stale component inventory source-set IDs fail closed.
-- Applicable standards are represented in `forest_plan_applicable_standard_coverage.json`; missing
-  standard package evidence blocks reviewer-ready status.
+- No false positives or false negatives remain in V1 conditional expectations.
+- No unclassified conditional rules are hidden behind a pass result.
+- Any remaining `adjudicate` rows are explicit and visible in V1 output/docs.
+- Source-record, document-role, citation, section, and forest-plan rates remain `1.0`.
 
 Required tests:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_profiles.py
-PYTHONPATH=src uv run --extra dev ruff check src tests
-PYTHONPATH=src python -m compileall src
-python -m json.tool config/forest_plan_component_inventory_seed.json /tmp/forest_plan_component_inventory_seed.validated.json
+PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json
 git diff --check
 ```
 

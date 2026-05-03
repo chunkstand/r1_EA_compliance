@@ -127,6 +127,107 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(metrics["conditional_actual_applicable_count"], 2)
             self.assertLess(metrics["conditional_actual_applicable_source_record_match_rate"], 1.0)
 
+    def test_v1_eval_enforces_section_alignment_for_adjudicate_when_applicable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["section_expectations"].extend(
+                [
+                    {
+                        "section_id": "alternatives",
+                        "label": "Alternatives",
+                        "required": False,
+                        "expected_terms": ["alternatives", "alternative"],
+                    },
+                    {
+                        "section_id": "environmental_consequences",
+                        "label": "Environmental Consequences",
+                        "required": False,
+                        "expected_terms": [
+                            "environmental consequences",
+                            "environmental effects",
+                        ],
+                    },
+                    {
+                        "section_id": "cultural_resources",
+                        "label": "Cultural Resources",
+                        "required": False,
+                        "expected_terms": ["cultural resources"],
+                    },
+                ]
+            )
+            contract["conditional_source_expectations"].append(
+                {
+                    "rule_id": "nepa_4336b_programmatic_tiering",
+                    "expected_applicability": "adjudicate",
+                    "expected_package_section_ids": [
+                        "alternatives",
+                        "environmental_consequences",
+                    ],
+                    "expected_source_record_ids": ["R1EA-005"],
+                    "expected_source_document_roles": ["law"],
+                }
+            )
+            _write_json(eval_file, contract)
+            report = _read_json(review_dir / "compliance_review.json")
+            matrix = _read_json(review_dir / "compliance_matrix.json")
+            bad_evidence = {
+                "citation_label": "EA-PACKAGE-001 (abc123)",
+                "source_record_id": "EA-PACKAGE-001",
+                "title": "EA",
+                "chunk_id": "chunk-biology",
+                "evidence_span": {
+                    "text": (
+                        "Biological resources and cultural resources discuss "
+                        "programmatic tiering."
+                    ),
+                },
+                "provenance": {"section": "Biological Resources"},
+            }
+            finding = _finding(
+                rule_id="nepa_4336b_programmatic_tiering",
+                status="pass",
+                applicability_mode="conditional",
+                source_record_id="R1EA-005",
+                document_role="law",
+                package_text=bad_evidence["evidence_span"]["text"],
+                package_section="Biological Resources",
+            )
+            finding["package_evidence"] = bad_evidence
+            finding["applicability_evidence"] = bad_evidence
+            report["findings"].append(finding)
+            row = _matrix_row("v1-unit", finding)
+            row["ea_package_evidence"] = _compact_evidence_for_row(bad_evidence)
+            matrix["rows"].append(row)
+            _write_json(review_dir / "compliance_review.json", report)
+            _write_json(review_dir / "compliance_matrix.json", matrix)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["failure_category_counts"], {"rule_section_mismatch": 1})
+            self.assertEqual(
+                result.summary["failed_rule_ids_by_category"],
+                {"rule_section_mismatch": ["nepa_4336b_programmatic_tiering"]},
+            )
+            output = _read_json(result.output_path)
+            conditional_result = next(
+                item
+                for item in output["conditional_results"]
+                if item["rule_id"] == "nepa_4336b_programmatic_tiering"
+            )
+            self.assertEqual(
+                conditional_result["actual_package_section_ids"],
+                ["biological_resources", "cultural_resources"],
+            )
+
     def test_v1_eval_flags_applicable_conditional_missing_from_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -1035,6 +1136,17 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "applied_source_record_ids": [finding["authority_source_record_id"]],
         "applied_source_document_roles": [finding["authority_document_role"]],
         "citation_requirements_met": True,
+    }
+
+
+def _compact_evidence_for_row(evidence: dict) -> dict:
+    return {
+        "citation_label": evidence["citation_label"],
+        "source_record_id": evidence.get("source_record_id"),
+        "title": evidence.get("title"),
+        "chunk_id": evidence.get("chunk_id"),
+        "text": evidence["evidence_span"]["text"],
+        "section": evidence["provenance"].get("section"),
     }
 
 

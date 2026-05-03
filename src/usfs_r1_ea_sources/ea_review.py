@@ -164,6 +164,8 @@ def run_ea_review(
             query=str(item.get("package_query") or item.get("query") or item["title"]),
             required_terms=[str(term) for term in item.get("package_terms", [])],
             limit=package_top_k,
+            preferred_terms=_package_term_list(item, "package_section_terms"),
+            preferred_term_groups=_package_term_groups(item, "package_section_term_groups"),
         )
         source_filters = dict(item.get("source_filters") or {})
         source_query = query_retrieval_index(
@@ -512,6 +514,8 @@ def _search_package_chunks(
     required_terms: list[str],
     limit: int,
     required_term_groups: list[list[str]] | None = None,
+    preferred_terms: list[str] | None = None,
+    preferred_term_groups: list[list[str]] | None = None,
 ) -> dict:
     terms = _query_terms(query, required_terms)
     evidence_terms = [term.strip().lower() for term in required_terms if term.strip()]
@@ -519,17 +523,24 @@ def _search_package_chunks(
         [term.strip().lower() for term in group if term.strip()]
         for group in (required_term_groups or [])
     ]
+    section_terms = [term.strip().lower() for term in (preferred_terms or []) if term.strip()]
+    section_term_groups = [
+        [term.strip().lower() for term in group if term.strip()]
+        for group in (preferred_term_groups or [])
+    ]
     scored = []
     for chunk in chunks:
-        score, matched_terms = _score_package_chunk(
+        score, matched_terms, preferred_matches = _score_package_chunk(
             chunk,
             terms,
             evidence_terms=evidence_terms,
             evidence_term_groups=evidence_term_groups,
+            preferred_terms=section_terms,
+            preferred_term_groups=section_term_groups,
         )
         if score <= 0:
             continue
-        scored.append((score, chunk, matched_terms))
+        scored.append((score, chunk, matched_terms, preferred_matches))
     scored.sort(
         key=lambda item: (
             -item[0],
@@ -538,13 +549,27 @@ def _search_package_chunks(
         )
     )
     results = [
-        _package_result(rank=rank, score=score, chunk=chunk, terms=matched_terms or terms)
-        for rank, (score, chunk, matched_terms) in enumerate(scored[:limit], start=1)
+        _package_result(
+            rank=rank,
+            score=score,
+            chunk=chunk,
+            terms=_span_terms(
+                matched_terms=matched_terms,
+                preferred_matches=preferred_matches,
+                fallback_terms=terms,
+            ),
+        )
+        for rank, (score, chunk, matched_terms, preferred_matches) in enumerate(
+            scored[:limit],
+            start=1,
+        )
     ]
     return {
         "query": query,
         "required_terms": required_terms,
         "required_term_groups": required_term_groups or [],
+        "preferred_terms": preferred_terms or [],
+        "preferred_term_groups": preferred_term_groups or [],
         "hit_count": len(results),
         "results": results,
     }
@@ -562,7 +587,9 @@ def _score_package_chunk(
     *,
     evidence_terms: list[str] | None = None,
     evidence_term_groups: list[list[str]] | None = None,
-) -> tuple[float, list[str]]:
+    preferred_terms: list[str] | None = None,
+    preferred_term_groups: list[list[str]] | None = None,
+) -> tuple[float, list[str], list[str]]:
     text = " ".join([str(chunk.get("title") or ""), str(chunk.get("heading") or ""), chunk["text"]])
     lower = text.lower()
     token_set = set(_tokenize(text))
@@ -571,23 +598,67 @@ def _score_package_chunk(
         for group in evidence_term_groups:
             matched_group_terms = _matched_terms(lower, token_set, group)
             if not matched_group_terms:
-                return 0.0, []
+                return 0.0, [], []
             group_matches.extend(matched_group_terms)
     elif evidence_terms and not _matches_any_term(lower, token_set, evidence_terms):
-        return 0.0, []
+        return 0.0, [], []
     matched = []
     for term in terms:
         if _matches_term(lower, token_set, term):
             matched.append(term)
     if not matched:
-        return 0.0, []
+        return 0.0, [], []
     matched = sorted(set(matched) | set(group_matches))
     phrase_hits = sum(1 for term in matched if " " in term)
     score = len(matched) / max(1, len(terms))
     score += phrase_hits * 0.2
     if evidence_term_groups:
         score += len(evidence_term_groups) * 0.3
-    return score, matched
+    preferred_matches = _preferred_package_matches(
+        lower_text=lower,
+        token_set=token_set,
+        preferred_terms=preferred_terms or [],
+        preferred_term_groups=preferred_term_groups or [],
+    )
+    if preferred_matches["matched_terms"] or preferred_matches["matched_groups"]:
+        score += len(preferred_matches["matched_groups"]) * 0.55
+        score += len(preferred_matches["matched_terms"]) * 0.05
+    return score, matched, preferred_matches.get("matched_terms", [])
+
+
+def _preferred_package_matches(
+    *,
+    lower_text: str,
+    token_set: set[str],
+    preferred_terms: list[str],
+    preferred_term_groups: list[list[str]],
+) -> dict[str, list]:
+    matched_terms = _matched_terms(lower_text, token_set, preferred_terms)
+    matched_groups: list[list[str]] = []
+    for group in preferred_term_groups:
+        group_matches = _matched_terms(lower_text, token_set, group)
+        if group_matches:
+            matched_groups.append(group_matches)
+            matched_terms.extend(group_matches)
+    return {
+        "matched_terms": sorted(set(matched_terms), key=lambda term: (len(term.split()), term)),
+        "matched_groups": matched_groups,
+    }
+
+
+def _span_terms(
+    *,
+    matched_terms: list[str],
+    preferred_matches: list[str],
+    fallback_terms: list[str],
+) -> list[str]:
+    if preferred_matches:
+        return sorted(
+            set(preferred_matches) | {term for term in matched_terms if " " in term},
+            key=lambda term: (len(term.split()), term),
+            reverse=True,
+        )
+    return matched_terms or fallback_terms
 
 
 def _matched_terms(lower_text: str, token_set: set[str], terms: list[str]) -> list[str]:
@@ -632,8 +703,12 @@ def _package_result(*, rank: int, score: float, chunk: dict, terms: list[str]) -
 
 
 def _applicability_term_groups(item: dict) -> list[list[str]]:
+    return _package_term_groups(item, "applies_if_package_term_groups")
+
+
+def _package_term_groups(item: dict, key: str) -> list[list[str]]:
     groups = []
-    for group in item.get("applies_if_package_term_groups", []) or []:
+    for group in item.get(key, []) or []:
         if not isinstance(group, list):
             continue
         terms = [str(term).strip() for term in group if str(term).strip()]
@@ -693,6 +768,8 @@ def _finding_for_item(
             query=" ".join(search_terms),
             required_terms=search_terms,
             required_term_groups=applicability_term_groups,
+            preferred_terms=_package_term_list(item, "package_section_terms"),
+            preferred_term_groups=_package_term_groups(item, "package_section_term_groups"),
             limit=1,
         )
         applicability_evidence = (
