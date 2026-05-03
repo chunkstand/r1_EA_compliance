@@ -43,9 +43,9 @@ Current run result:
   package-evidence citation correctness, resolved compliance-status rate, compliance-status match
   rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
   `0.0`; reviewer-resolution closure rate is `0.875`.
-- Phase eval passes `10/11` phases after the component eval and component adjudication eval are
-  present; `forest_plan_component_eval` passes and the only failing phase remains
-  `forest_plan_component_adjudication`.
+- Phase eval passes `11/11` phases after the completed component adjudication eval is present;
+  `forest_plan_component_eval` and `forest_plan_component_adjudication` both pass, and the review
+  is `reviewer_ready=true` at the phase gate.
 - V1 real-EA eval still fails, as intended for the current gap state. Good signals: all `13`
   required EA section families were detected, all `26` baseline authorities matched source records
   and document roles, all baseline document roles matched, citation/source-record match rates are
@@ -53,8 +53,7 @@ Current run result:
   reviewer-resolution items.
 - Remaining V1 blockers: three categorical-exclusion conditionals treated as applicable where the
   V1 contract expects not-applicable, and two rule/conditional section mismatches. The forest-plan
-  adjudication worklist remains open as `21` non-standard items and is tracked separately by
-  `phase-eval`.
+  adjudication worklist is complete and no longer blocks `phase-eval`.
 
 Primary failing artifacts/checks:
 
@@ -75,12 +74,14 @@ Primary failing artifacts/checks:
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.json`.
   The companion worklist is
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication_template.md`.
-  It contains `21` pending items: `8` desired conditions, `2` goals, `7` guidelines,
-  `3` objectives, and `1` suitability component. The eval
-  against that pending template fails by design with `adjudication_pending=21`, completion rate
-  `0.0`, and expectation match rate `1.0`. `phase-eval --review-id v1-cg-ecid-compliance-review`
-  now includes that result as a
-  `forest_plan_component_adjudication` phase.
+  It contained `21` pending items: `8` desired conditions, `2` goals, `7` guidelines,
+  `3` objectives, and `1` suitability component. The completed adjudication artifact is local at
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`.
+  `forest-plan-component-adjudication-eval` passes with `21` resolved items, `0` pending items,
+  completion rate `1.0`, expectation match rate `1.0`, and disposition counts:
+  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
+  `evidence_linking_miss=9`. `phase-eval --review-id v1-cg-ecid-compliance-review` now includes
+  that passing result as the `forest_plan_component_adjudication` phase.
 - The forest-plan component eval result has been written locally at
   `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`.
   `phase-eval --review-id v1-cg-ecid-compliance-review` includes it as the passing
@@ -94,12 +95,10 @@ Primary failing artifacts/checks:
 
 Next implementation target:
 
-Complete the adjudication file for the `21` exported component queue items, then use
-`forest-plan-component-adjudication-eval` to separate true EA omissions from retrieval misses,
-section/chunking misses, component-inventory overreach, applicability false positives, and evidence
-linking misses. The scope and applicable-standard blockers are closed; the remaining non-ready state
-is non-standard component adjudication plus conditional/rule-section evaluation, not missing
-forest-plan context or standard coverage.
+Repair the remaining V1 eval issues in the conditional-source and rule-section expectations. The
+scope, applicable-standard, component eval, and non-standard component adjudication blockers are
+closed; the remaining non-ready state is conditional/rule-section evaluation, not missing
+forest-plan context, standard coverage, or component adjudication.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`; the
@@ -222,15 +221,14 @@ management area, `2` overlays, and `5` supporting plan-evidence routes. Forest-p
 validation now passes: `331` components, `58` standards, `12` applicable standards, `12` applied
 standards, `21` reviewer-resolution items, and zero unresolved applicable standards. The prior
 `AB-STD-RCREA-01` standard gap now has LMP source binding plus matching recreation/access package
-evidence. Component-level forest-plan eval passes all `8` adjudicated cases. `phase-eval` passes
-`10/11` phases, with `forest_plan_component_eval` passing and only
-`forest_plan_component_adjudication` failing; `v1-ea-eval` reports forest-plan expectation match
-rate `1.0`, section detection/source-record/document-role rates `1.0`, zero open standard
-reviewer-resolution items, and remaining non-forest-plan failure categories
-`conditional_false_positive=3` and `rule_section_mismatch=2`.
-The component adjudication template export passed with `21` pending items and produced both JSON and
-Markdown worklist artifacts. The adjudication eval against that pending template fails by design
-with `adjudication_pending=21`; this is the expected baseline before reviewer adjudication.
+evidence. Component-level forest-plan eval passes all `8` adjudicated cases. The completed
+component adjudication eval passes with `21` resolved items, zero pending items, and disposition
+counts of `applicability_false_positive=11`, `component_inventory_overreach=1`, and
+`evidence_linking_miss=9`. `phase-eval` passes `11/11` phases and reports `reviewer_ready=true`;
+`v1-ea-eval` reports forest-plan expectation match rate `1.0`,
+section detection/source-record/document-role rates `1.0`, zero open standard reviewer-resolution
+items, and remaining non-forest-plan failure categories `conditional_false_positive=3` and
+`rule_section_mismatch=2`.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
@@ -248,17 +246,17 @@ python -m json.tool config/forest_plan_component_eval_seed.json /tmp/forest_plan
 git diff --check
 ```
 
-Latest verification: full test suite passed with `208 passed, 5 subtests passed`; focused
-forest-plan resolver/component tests passed with `30 passed`; focused compliance/V1 eval tests
-passed with `42 passed`; lint, compile, and whitespace checks passed. The generated component
-inventory build passed with `331` components and `58` standards. Live compliance review now passes
-for the proving package; component-level forest-plan eval passes all `8` cases; phase eval passes
-`10/11` review phases and is blocked only by pending forest-plan component adjudication.
+Latest verification: full test suite previously passed with `208 passed, 5 subtests passed`;
+focused forest-plan resolver/component tests passed with `30 passed`; focused compliance/V1 eval
+tests passed with `42 passed`; lint, compile, and whitespace checks passed. This adjudication
+milestone reran the focused adjudication tests (`5 passed`), the completed adjudication eval
+(`passed=true`), phase eval (`11/11` phases, `reviewer_ready=true`), and V1 EA eval (`passed=false`
+only on `conditional_false_positive=3` and `rule_section_mismatch=2`).
 
 ## Next Sequence
 
-Next sequence: adjudicate the `18` remaining non-standard forest-plan component queue items, then
-repair the remaining V1 eval issues in the conditional-source and rule-section expectations.
+Next sequence: repair the remaining V1 eval issues in the conditional-source and rule-section
+expectations.
 
 Goal:
 Produce a reviewer-ready or explicitly fail-closed V1 Custer Gallatin compliance review from the

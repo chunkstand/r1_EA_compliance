@@ -493,10 +493,25 @@ Deliverables:
 - Base EA review validation/report artifacts.
 - Forest-plan context validation and summary.
 - Forest-plan component findings, NFMA matrix, and reviewer-resolution queue.
+- Completed non-standard forest-plan component adjudication artifact for the exported
+  reviewer-resolution queue.
 - Compliance validation, compliance review JSON, compliance matrix JSON/Markdown/PDF, and finding
   graph nodes/edges.
 - Concise run record with command, package path, review ID, source set, rule pack, profile, component
   inventory, validation result, and unresolved items.
+
+Current milestone status:
+
+- `forest-plan-component-adjudication-eval` passes for
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`
+  with `21` resolved items, zero pending items, completion rate `1.0`, expectation match rate
+  `1.0`, and disposition counts of `applicability_false_positive=11`,
+  `component_inventory_overreach=1`, and `evidence_linking_miss=9`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review` passes `11/11` phases and reports
+  `reviewer_ready=true`.
+- `v1-ea-eval` still fails on non-forest-plan residuals:
+  `conditional_false_positive=3` and `rule_section_mismatch=2`; forest-plan expectations pass
+  `11/11`.
 
 Verification:
 
@@ -519,6 +534,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-e
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
   --adjudication-file source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_adjudication.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_ea_review.py tests/test_compliance_review.py tests/test_forest_plan_resolver.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src

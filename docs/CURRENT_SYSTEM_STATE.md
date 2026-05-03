@@ -397,14 +397,16 @@ Current state:
   applicable-standard recall, package-section match rate, plan-source citation correctness,
   package-evidence citation correctness, resolved compliance-status rate, compliance-status match
   rate, and reviewer-resolution state match rate are `1.0`; false-applicable component rate is
-  `0.0`; reviewer-resolution closure rate is `0.875`. `phase-eval --review-id
-  v1-cg-ecid-compliance-review` now reports `10/11` passing phases, with
-  `forest_plan_component_eval` passing and `forest_plan_component_adjudication` failing only on
-  pending reviewer adjudication. The stricter V1 eval now passes all forest-plan expectations,
-  including zero open standard reviewer-resolution items and a capped `21` total non-standard
-  reviewer-resolution items. It still fails closed on non-forest-plan review quality gaps: three
-  categorical-exclusion conditional false positives and two rule/conditional section mismatches.
-  Those are the current V1 blockers before practitioner-ready completion.
+  `0.0`; reviewer-resolution closure rate is `0.875`. The completed non-standard component
+  adjudication artifact resolves all `21` reviewer-resolution items with disposition counts of
+  `9` evidence-linking misses, `11` applicability false positives, and `1`
+  component-inventory overreach. `phase-eval --review-id v1-cg-ecid-compliance-review` now reports
+  `11/11` passing phases and `reviewer_ready=true`. The stricter V1 eval now passes all
+  forest-plan expectations, including zero open standard reviewer-resolution items and a capped
+  `21` total non-standard reviewer-resolution items. It still fails closed on non-forest-plan
+  review quality gaps: three categorical-exclusion conditional false positives and two
+  rule/conditional section mismatches. Those are the current V1 blockers before
+  practitioner-ready completion.
 - Forest-plan component adjudication tooling is implemented through
   `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
   template command exports one adjudication item for each open component reviewer-resolution queue
@@ -415,11 +417,14 @@ Current state:
   `applicability_false_positive`, or `evidence_linking_miss`.
   Running the template against `v1-cg-ecid-compliance-review` produced `21` pending items:
   `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and `1` suitability
-  component. Running the eval against that pending template fails by design with
-  `adjudication_pending=21`, completion rate `0.0`, and expectation match rate `1.0`. When the
-  adjudication eval artifact is present in a review directory, `phase-eval --review-id` includes it
-  as a `forest_plan_component_adjudication` phase so pending or stale adjudication work blocks
-  reviewer readiness at the phase gate.
+  component. Those items are now completed locally in
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_adjudication.json`.
+  `forest-plan-component-adjudication-eval` passes with completion rate `1.0`, expectation match
+  rate `1.0`, `pending_adjudication_count=0`, and disposition counts of
+  `applicability_false_positive=11`, `component_inventory_overreach=1`, and
+  `evidence_linking_miss=9`. When the adjudication eval artifact is present in a review directory,
+  `phase-eval --review-id` includes it as a `forest_plan_component_adjudication` phase so pending
+  or stale adjudication work blocks reviewer readiness at the phase gate.
 - A seed retrieval eval file exists at `config/retrieval_eval_seed.json`.
 - A seed claim extraction eval file exists at `config/claim_eval_seed.json`.
 - A seed rule-claim binding eval file exists at `config/rule_claim_link_eval_seed.json`.
@@ -910,11 +915,11 @@ component/standard IDs.
 The prior 147-row downstream corpus remains useful for historical comparison only and should not be
 treated as current promotion evidence for the expanded workbook.
 
-The next v1 milestone is to run the same compliance matrix and failure-taxonomy path over the Custer
-Gallatin proving package, then use those failures to decide whether the next fix belongs in package
-extraction, package evidence search, source retrieval, source applicability, rule-claim binding, or
-rule wording. Embeddings, reranking, and model-assisted synthesis remain downstream of that
-evidence-backed real-package pass.
+The next v1 milestone is to close the remaining non-forest-plan V1 eval failures for the Custer
+Gallatin proving package: three categorical-exclusion conditional false positives and two
+rule/conditional section mismatches. Use those failures to decide whether the fix belongs in package
+section binding, source applicability, conditional rule gating, or rule wording. Embeddings,
+reranking, and model-assisted synthesis remain downstream of that evidence-backed real-package pass.
 
 ## Verification Commands
 
