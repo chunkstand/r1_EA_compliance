@@ -43,8 +43,9 @@ Current run result:
   requirements pass, and all scored accuracy/citation/section/closure metrics meet strict
   thresholds. Non-standard package evidence now uses strict section-family binding, including
   hydrology, wildlife, botany, scenery, sustainability, recreation/access, land exchange, and
-  minerals; regenerated findings have `79` supported components, `0` gaps, and no non-plan package
-  evidence with mismatched section binding.
+  minerals; regenerated findings have `79` supported components, `0` gaps, no supported package
+  evidence with mismatched section binding, and `51` explicit affirmative Plan Consistency Table
+  component-row bindings.
 - Phase eval passes `10/10` phases after stale component adjudication artifacts are removed;
   `forest_plan_component_eval` passes, and the review is `reviewer_ready=true` at the phase gate.
   Phase eval now rejects stale component-adjudication eval artifacts whose recorded queue count

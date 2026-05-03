@@ -9,6 +9,7 @@ import unittest
 from usfs_r1_ea_sources.cli import build_parser
 from usfs_r1_ea_sources.forest_plan_components import (
     _applicable_standard_coverage,
+    _check_supported_package_evidence_section_bindings,
     _component_inventory_coverage,
     _component_package_determination,
     _component_package_search,
@@ -149,6 +150,91 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             result["results"][0]["section_binding"]["binding_policy"],
             "strict_nonstandard_section_family",
         )
+
+    def test_plan_consistency_yes_rows_are_valid_section_bindings(self) -> None:
+        component = {
+            "component_id": "component-road-goal",
+            "component_type": "goal",
+            "section_heading": "Plan Components-Roads and Trails",
+            "component_text": (
+                "Goals (FW-GO-RT) 01 The road system is part of a broader public "
+                "road system that is under the jurisdiction of multiple road agencies."
+            ),
+            "package_evidence_terms": [
+                "the road system",
+                "broader public road system",
+            ],
+            "resource_topics": ["road system"],
+            "activity_tags": ["road agencies"],
+        }
+        chunks = [
+            _package_chunk(
+                title="Plan Consistency Table.pdf",
+                text=(
+                    "FW-GO-RT-01 | The road system is part of a broader public road "
+                    "system that is under the jurisdiction of multiple road agencies. | "
+                    "Yes | The proposed access easements and retained routes are "
+                    "consistent with this plan component."
+                ),
+            )
+        ]
+
+        result = _component_package_search(component=component, package_chunks=chunks, limit=3)
+
+        self.assertEqual(result["hit_count"], 1)
+        evidence = result["results"][0]
+        self.assertTrue(evidence["section_binding"]["matched"])
+        self.assertTrue(evidence["section_binding"]["explicit_plan_consistency_component_row"])
+        self.assertTrue(evidence["plan_consistency_component_row"])
+        self.assertEqual(
+            evidence["section_binding"]["binding_policy"],
+            "explicit_plan_consistency_component_row",
+        )
+
+    def test_supported_package_evidence_validation_rejects_mismatched_sections(self) -> None:
+        finding = {
+            "finding_id": "component-wildlife-guideline-finding",
+            "component_id": "component-wildlife-guideline",
+            "finding_status": "supported",
+            "package_evidence": [
+                {
+                    "citation_label": "PKG-001",
+                    "review_section": "Hydrology Report.pdf",
+                    "section_binding": {
+                        "component_section_families": ["wildlife"],
+                        "package_section_family": "hydrology",
+                        "matched": False,
+                    },
+                }
+            ],
+        }
+
+        check = _check_supported_package_evidence_section_bindings([finding])
+
+        self.assertFalse(check["passed"])
+        self.assertEqual(check["details"]["failure_count"], 1)
+        self.assertEqual(
+            check["details"]["failures"][0]["reason"],
+            "section_binding_mismatch",
+        )
+
+    def test_supported_package_evidence_validation_allows_table_determinations(self) -> None:
+        finding = {
+            "finding_id": "component-soil-dc-finding",
+            "component_id": "component-soil-dc",
+            "finding_status": "supported",
+            "package_evidence": [
+                {
+                    "citation_label": "PKG-001",
+                    "review_section": "Plan Consistency Table.pdf",
+                    "determination_source": "ea_plan_consistency_table",
+                }
+            ],
+        }
+
+        check = _check_supported_package_evidence_section_bindings([finding])
+
+        self.assertTrue(check["passed"])
 
     def test_nonstandard_package_search_binds_scenery_and_sustainability_sections(self) -> None:
         scenery_component = {

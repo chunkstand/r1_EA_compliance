@@ -409,8 +409,11 @@ Current state:
   their strict thresholds. Non-standard component package evidence now uses strict section-family
   binding: outside explicit Plan Consistency Table determinations, desired conditions, goals,
   guidelines, objectives, and suitability components require a matching EA package section family
-  plus substantive component terms. Current regenerated findings have `79` supported components,
-  `0` gaps, and no non-plan package evidence with mismatched section binding. The prior completed
+  plus substantive component terms. The component validation gate now fails supported package
+  evidence with missing or mismatched section bindings unless the evidence is an explicit Plan
+  Consistency Table determination. Current regenerated findings have `79` supported components,
+  `0` gaps, zero supported package evidence entries with mismatched section binding, and `51`
+  affirmative Plan Consistency Table component-row bindings marked explicitly. The prior completed
   non-standard component
   adjudication artifact classified the old `21` items as system misses; those adjudications are
   superseded by evidence-backed resolver fixes, and phase eval now rejects stale component

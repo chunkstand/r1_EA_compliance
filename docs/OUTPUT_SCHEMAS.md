@@ -635,10 +635,15 @@ Validation embedded in `forest_plan_component_findings.json` records gate-facing
 - valid finding and applicability statuses
 - valid compliance statuses
 - `supported` and `partial` findings having both package evidence and plan-source evidence
+- `supported` and `partial` package evidence having matched section bindings, except explicit
+  Plan Consistency Table determinations
 - `gap` findings having plan-source evidence
 - finding provenance completeness
 - reviewer-resolution queue coverage for `gap`, `partial`, and `needs_reviewer_resolution`
   findings
+- component inventory coverage passing
+- applicable standards having package evidence, plan-source evidence, and a resolved compliance
+  status before reviewer-ready status can pass
 
 Component package matching is section-aware. The package query combines component text, component
 code, package evidence terms, resource topics, activity tags, and non-generic component keywords.
@@ -654,10 +659,9 @@ Consistency Table rows are
 component-code aware, tolerate spacing variants introduced by extraction, can read rows split across
 adjacent chunks from the same package document, can recover duplicated or split component-key cells,
 and can bind conservative empty-code or plain-text rows when the row's component text matches the
-LMP component text.
-- component inventory coverage passing
-- applicable standards having package evidence, plan-source evidence, and a resolved compliance
-  status before reviewer-ready status can pass
+LMP component text. Affirmative rows are annotated with
+`section_binding.explicit_plan_consistency_component_row=true` so they are auditable as deliberate
+Plan Consistency Table bindings rather than broad section-family matches.
 
 `forest_plan_reviewer_resolution_queue.json` has schema version
 `forest-plan-reviewer-resolution-queue-v0` and includes review ID, source set, item count, and

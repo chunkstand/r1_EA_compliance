@@ -1510,14 +1510,27 @@ def _annotate_component_package_evidence(
         evidence_family=evidence_family,
         section_families=section_families,
     )
+    explicit_plan_consistency_row = _package_evidence_has_affirmative_plan_consistency_row(
+        component=component,
+        evidence=annotated,
+        context_text=evidence_text,
+        family=evidence_family,
+    )
     annotated["review_section"] = _package_evidence_review_section(evidence)
     annotated["section_binding"] = {
         "component_section_families": section_families,
         "package_section_family": evidence_family,
-        "matched": section_matched,
+        "matched": section_matched or explicit_plan_consistency_row,
         "matched_substantive_core_terms": matched_substantive_core_terms,
-        "binding_policy": _package_section_binding_policy(component),
+        "binding_policy": (
+            "explicit_plan_consistency_component_row"
+            if explicit_plan_consistency_row
+            else _package_section_binding_policy(component)
+        ),
+        "explicit_plan_consistency_component_row": explicit_plan_consistency_row,
     }
+    if explicit_plan_consistency_row:
+        annotated["plan_consistency_component_row"] = True
     if _package_evidence_supports_restrictive_recreation_component(
         component=component,
         evidence=evidence,
@@ -1545,11 +1558,11 @@ def _package_evidence_matches_component(
     if not family:
         family = _package_evidence_section_family(evidence)
     if family == "plan_consistency":
-        component_key = _component_reference_key(component)
-        return bool(
-            component_key
-            and component_key.lower() in text
-            and re.search(r"(?:\|\s*yes\s*\||(?:^|\n)\s*yes\s*(?:\n|-))", text)
+        return _package_evidence_has_affirmative_plan_consistency_row(
+            component=component,
+            evidence=evidence,
+            context_text=text,
+            family=family,
         )
     if (
         evidence.get("restrictive_access_support")
@@ -1601,6 +1614,26 @@ def _package_section_binding_policy(component: dict) -> str:
     if _is_nonstandard_component(component):
         return "strict_nonstandard_section_family"
     return "standard_section_family_or_general_ea"
+
+
+def _package_evidence_has_affirmative_plan_consistency_row(
+    *,
+    component: dict,
+    evidence: dict,
+    context_text: str | None = None,
+    family: str | None = None,
+) -> bool:
+    family = family or _package_evidence_section_family(evidence, context_text=context_text)
+    if family != "plan_consistency":
+        return False
+    component_key = _component_reference_key(component)
+    if not component_key:
+        return False
+    text = (context_text or _package_evidence_text(evidence)).lower()
+    return bool(
+        component_key.lower() in text
+        and re.search(r"(?:\|\s*yes\s*\||(?:^|\n)\s*yes\s*(?:\n|-))", text)
+    )
 
 
 def _is_nonstandard_component(component: dict) -> bool:
@@ -2738,6 +2771,7 @@ def _validation_report(
         _check_finding_statuses(findings),
         _check_compliance_statuses(findings),
         _check_supported_findings_have_dual_evidence(findings),
+        _check_supported_package_evidence_section_bindings(findings),
         _check_gap_findings_have_plan_source_evidence(findings),
         _check_finding_provenance_complete(findings),
         _check_reviewer_resolution_queue(queue, findings),
@@ -2835,6 +2869,52 @@ def _check_supported_findings_have_dual_evidence(findings: list[dict]) -> dict:
         "name": "supported_findings_have_package_and_plan_evidence",
         "passed": not failures,
         "details": {"finding_ids": failures},
+    }
+
+
+def _check_supported_package_evidence_section_bindings(findings: list[dict]) -> dict:
+    failures = []
+    for finding in findings:
+        if finding.get("finding_status") not in {"supported", "partial"}:
+            continue
+        for evidence in finding.get("package_evidence") or []:
+            section_binding = (
+                evidence.get("section_binding")
+                if isinstance(evidence.get("section_binding"), dict)
+                else None
+            )
+            if section_binding and section_binding.get("matched") is True:
+                continue
+            if evidence.get("determination_source") == "ea_plan_consistency_table":
+                continue
+            failures.append(
+                {
+                    "finding_id": finding.get("finding_id"),
+                    "component_id": finding.get("component_id"),
+                    "citation_label": evidence.get("citation_label"),
+                    "review_section": evidence.get("review_section")
+                    or _package_evidence_review_section(evidence),
+                    "package_section_family": (
+                        section_binding.get("package_section_family")
+                        if section_binding
+                        else None
+                    ),
+                    "component_section_families": (
+                        section_binding.get("component_section_families")
+                        if section_binding
+                        else None
+                    ),
+                    "reason": (
+                        "section_binding_mismatch"
+                        if section_binding
+                        else "missing_section_binding"
+                    ),
+                }
+            )
+    return {
+        "name": "supported_package_evidence_section_bindings_match",
+        "passed": not failures,
+        "details": {"failures": failures, "failure_count": len(failures)},
     }
 
 

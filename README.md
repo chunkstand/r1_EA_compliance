@@ -192,7 +192,9 @@ present; a `No` row marks the standard not applicable with citation-bearing pack
 Malformed table rows with an empty component-code cell can still bind when the row's component text
 matches the LMP component text. Standards excluded by resolved project context still retain an LMP
 component binding and plan-source citation so the coverage table is auditable instead of silently
-dropping source context.
+dropping source context. Affirmative Plan Consistency Table rows are now marked as explicit
+component-row section bindings, and supported findings fail validation when package evidence has a
+missing or mismatched section binding outside those explicit table determinations.
 
 Component package retrieval is section-aware. Queries are built from the component code, component
 text, resource topics, activity tags, geography/management context, and mandatory/prohibitive terms;
