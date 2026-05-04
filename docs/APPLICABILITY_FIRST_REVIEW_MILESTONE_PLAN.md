@@ -108,9 +108,10 @@ Optional but expected once adjudication is introduced:
 
 ## Milestone 1: Applicability Contract And Schemas
 
-Status: implemented as a docs-only schema contract. Runtime behavior remains unchanged until later
-milestones add the authority-universe, applicability-determination, validation, generated-rule-pack,
-and compliance-review gate commands.
+Status: implemented as a docs-only schema contract and gap-closed for report, adjudication, and
+freshness/hash-field alignment. Runtime behavior remains unchanged until later milestones add the
+authority-universe, applicability-determination, validation, generated-rule-pack, and
+compliance-review gate commands.
 
 Goal:
 Define the artifact contract and gate semantics before implementation.
