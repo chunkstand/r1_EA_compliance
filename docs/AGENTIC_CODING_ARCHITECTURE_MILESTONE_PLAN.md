@@ -1,9 +1,13 @@
-# Agentic Coding Architecture Milestone Plan
+# Agentic Coding Architecture Continuous Milestone Plan
 
 Date: 2026-05-04
 
-This plan turns `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md` into an implementation sequence for
-this repository. It is organized around four review lenses:
+This plan turns `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md` into a continuous implementation
+run for this repository. Once the user says to proceed, the plan should be executed start to finish
+in one Codex turn unless a stop condition is hit. The milestone labels below are checkpoint commits,
+not separate conversations or handoffs.
+
+The plan is organized around four review lenses:
 
 - Simon Brown: architecture legibility.
 - Neal Ford, Rebecca Parsons, and Patrick Kua: evolutionary architecture and fitness functions.
@@ -12,6 +16,36 @@ this repository. It is organized around four review lenses:
 
 The goal is not a broad rewrite. The goal is to make the existing workbook-driven, artifact-first,
 eval-gated system easier for humans and coding agents to understand, change, test, and govern.
+
+## Continuous Execution Model
+
+Run this as a single continuous architecture hardening session:
+
+- Start only after establishing a clean or explicitly accepted baseline.
+- Execute milestones in order without returning to the user between milestones.
+- Treat each milestone as an internal checkpoint: implement, verify, commit the verified slice, then
+  continue to the next milestone in the same turn.
+- Do not batch all changes into one large commit. Atomic checkpoint commits keep rollback,
+  review, and blame usable even though the run is continuous.
+- Push only if the user explicitly asks for push or publish.
+- If a stop condition is hit, stop immediately, preserve the worktree, and write a concise handoff
+  explaining the completed checkpoints, failed command, and next safe action.
+
+Preferred task packet for the run:
+
+```text
+Goal: execute the architecture hardening sequence start to finish in one Codex turn.
+Non-goals: corpus regeneration, network download scaling, behavior migrations outside the listed
+  architecture scope, and unrelated cleanup.
+Relevant files or surfaces: docs architecture artifacts, architecture tests, rule-pack ownership,
+  CLI registration, selected hotspot modules, ADRs, and milestone closeout docs.
+Required eval signal: architecture gate passes with no hidden exceptions; focused behavior tests
+  pass after each code-moving checkpoint.
+Required tests: each milestone-specific verification block below, plus the final closeout block.
+Commit/push policy: commit each verified milestone slice; do not push unless asked.
+Stop conditions: unrelated dirty baseline, generated-corpus requirement, failing verification,
+  unclear behavior migration, or a dependency violation that requires a design decision.
+```
 
 ## Current Boundary
 
@@ -25,6 +59,7 @@ eval-gated system easier for humans and coding agents to understand, change, tes
 - Keep domain knowledge in workbook rows, catalog metadata, rule packs, eval fixtures, generated
   ledgers, and reports rather than hidden runtime branches.
 - Stage and commit only the verified milestone slice. Do not stage unrelated dirty worktree changes.
+- Continue automatically after each successful checkpoint commit until the full sequence is done.
 
 ## Four-Lens Alignment
 
@@ -64,6 +99,13 @@ Stop conditions:
 
 - The worktree contains unrelated dirty code that overlaps architecture targets.
 - A generated-corpus operation would be required to proceed.
+- A clean architecture baseline cannot be established without deciding ownership of unrelated work.
+
+Checkpoint action:
+
+- If the baseline is clean or explicitly accepted, continue immediately to Milestone 1.
+- If it is not clean, stop and write a handoff rather than mixing unrelated work into the
+  architecture run.
 
 ## Milestone 1: Add The Architecture Map
 
@@ -91,6 +133,10 @@ Done when:
 
 - A future agent can inspect the architecture map and contract before editing code.
 - The docs identify which module family owns each generated artifact surface.
+
+Checkpoint action:
+
+- Commit the docs-only architecture map slice, then continue immediately to Milestone 2.
 
 ## Milestone 2: Add The First Architecture Fitness Gate
 
@@ -121,6 +167,10 @@ Done when:
 - The architecture gate passes on the current baseline.
 - New cycles or forbidden downstream imports fail deterministically.
 - Any temporary exception is visible, named, and scheduled for removal.
+
+Checkpoint action:
+
+- Commit the architecture-contract and test slice, then continue immediately to Milestone 3.
 
 ## Milestone 3: Split Rule-Pack Ownership From Compliance Review
 
@@ -157,6 +207,10 @@ Done when:
 - Public compliance-review and applicability outputs remain unchanged except for expected
   provenance metadata if explicitly updated.
 
+Checkpoint action:
+
+- Commit the rule-pack ownership split, then continue immediately to Milestone 4.
+
 ## Milestone 4: Group CLI Registration By Workflow Lane
 
 Primary lens: Titus Winters and Google Engineering Practices.
@@ -186,6 +240,10 @@ Done when:
 
 - Existing commands, option names, and dispatch behavior are preserved.
 - Future workflow changes can edit a narrow CLI module rather than the whole command surface.
+
+Checkpoint action:
+
+- Commit the CLI grouping slice, then continue immediately to Milestone 5.
 
 ## Milestone 5: Rank And Reduce Hotspots
 
@@ -219,6 +277,10 @@ Done when:
 - The next refactor target is justified by size plus change evidence, not preference.
 - The milestone output includes a small split plan and focused verification list.
 
+Checkpoint action:
+
+- Commit the hotspot report and selected split plan, then continue immediately to Milestone 6.
+
 ## Milestone 6: Codify Architecture Decisions And Safety Boundaries
 
 Primary lenses: Simon Brown; Winters and Google.
@@ -246,6 +308,10 @@ Done when:
 - Future code-review discussions can point to durable decisions instead of reconstructing context
   from chat history.
 
+Checkpoint action:
+
+- Commit the ADR slice, then continue immediately to Milestone 7.
+
 ## Milestone 7: Make Architecture Gates Part Of Milestone Closeout
 
 Primary lenses: Ford, Parsons, Kua; Winters and Google.
@@ -271,15 +337,37 @@ Done when:
 
 - Architecture fitness checks are part of the standard review vocabulary for future milestones.
 
-## Recommended Sequence
+Checkpoint action:
 
-1. Finish or park any unrelated dirty work.
-2. Commit Milestone 1 as docs-only architecture mapping.
-3. Commit Milestone 2 as the first architecture gate.
-4. Commit Milestone 3 as the rule-pack cycle removal.
-5. Commit Milestone 4 as behavior-preserving CLI grouping.
-6. Use Milestone 5 to choose the next large-module split.
-7. Keep Milestones 6 and 7 small and synchronized with actual implemented behavior.
+- Commit the closeout-docs slice, then run the final continuous-run closeout below.
+
+## Continuous Start-To-Finish Run
+
+When the user says to proceed, run the full sequence in this order inside one turn:
+
+1. Establish the baseline. Stop only if unrelated dirty work cannot be safely isolated.
+2. Implement Milestone 1, verify it, commit it, and continue.
+3. Implement Milestone 2, verify it, commit it, and continue.
+4. Implement Milestone 3, verify it, commit it, and continue.
+5. Implement Milestone 4, verify it, commit it, and continue.
+6. Implement Milestone 5, verify it, commit it, and continue.
+7. Implement Milestone 6, verify it, commit it, and continue.
+8. Implement Milestone 7, verify it, commit it, and run final closeout.
+
+Do not ask for approval between successful milestones. The only normal pauses are failed
+verification, unclear ownership of unrelated dirty work, or a design decision that would expand the
+scope beyond this plan.
+
+Final closeout:
+
+```bash
+git status -sb
+git log --oneline --max-count=12
+git diff --check
+```
+
+Report the checkpoint commits, verification results, skipped checks, and residual risk. If tests
+were skipped because a milestone was docs-only, say that explicitly.
 
 ## Review Checklist
 
