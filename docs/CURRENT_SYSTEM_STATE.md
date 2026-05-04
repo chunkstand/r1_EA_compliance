@@ -323,14 +323,18 @@ is implemented through `applicability-authority-universe`. The command reads the
 base rule pack, forest-plan profiles, component inventory, source-claim artifacts, and rule-claim
 links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
-rule-template candidates and Forest Plan component candidates. It does not decide package
-applicability, build the package fact graph, write per-authority retrieval traces, write graph
-expansion traces, issue search coverage certificates, generate rule packs, or run compliance review.
-Later milestones still need to write the package fact graph, hybrid retrieval traces, graph traces,
-deterministic applicability decisions, separate applicable and non-applicable authority artifacts,
-validation, provenance, and the generated compliance rule pack before `compliance-review` becomes
-gated by the applicability artifacts. Until those later milestones land, `compliance-review` remains
-the current V1 authority-first command.
+rule-template candidates and Forest Plan component candidates. Each candidate now carries required
+package fact types, positive and negative trigger groups, required source evidence, source-role
+filters, package-section filters, retrieval contracts, graph-expansion contracts,
+dependency/exception/supersession fields, and search coverage requirements for later
+non-applicability proof. It does not decide package applicability, build the package fact graph,
+write per-authority retrieval traces, write graph expansion traces, issue search coverage
+certificates, generate rule packs, or run compliance review. Later milestones still need to write
+the package fact graph, hybrid retrieval traces, graph traces, deterministic applicability
+decisions, separate applicable and non-applicable authority artifacts, validation, provenance, and
+the generated compliance rule pack before `compliance-review` becomes gated by the applicability
+artifacts. Until those later milestones land, `compliance-review` remains the current V1
+authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review

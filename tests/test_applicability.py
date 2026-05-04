@@ -80,6 +80,44 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 ],
                 ["road construction"],
             )
+            self.assertIn("resource_topic", conditional["required_package_fact_types"])
+            self.assertEqual(conditional["positive_trigger_groups"], [["road construction"]])
+            self.assertEqual(
+                conditional["negative_trigger_groups"],
+                [["no road construction"]],
+            )
+            self.assertEqual(
+                conditional["source_role_filters"]["source_record_ids"],
+                ["R1EA-COND"],
+            )
+            self.assertEqual(
+                conditional["package_section_filters"]["package_section_terms"],
+                ["transportation"],
+            )
+            self.assertTrue(
+                conditional["required_source_evidence"]["requires_source_claim_linkage"]
+            )
+            self.assertIn(
+                "metadata_filter",
+                conditional["retrieval_contract"]["required_query_types"],
+            )
+            self.assertTrue(
+                conditional["retrieval_contract"][
+                    "requires_selected_and_rejected_results"
+                ]
+            )
+            self.assertIn(
+                "dependency",
+                conditional["graph_expansion_contract"]["relationship_types"],
+            )
+            self.assertIn("dependency_rule_ids", conditional["dependency_contract"])
+            self.assertEqual(
+                {
+                    requirement["coverage_class"]
+                    for requirement in conditional["search_coverage_requirements"]
+                },
+                {"positive_trigger_miss", "explicit_negative_trigger"},
+            )
             component_candidates = [
                 candidate
                 for candidate in snapshot["candidate_authorities"]
@@ -98,6 +136,29 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                     for candidate in component_candidates
                 },
                 {"R1PLAN-custer-gallatin-nf-02"},
+            )
+            self.assertTrue(
+                all(
+                    "management_area" in candidate["required_package_fact_types"]
+                    for candidate in component_candidates
+                )
+            )
+            self.assertTrue(
+                all(
+                    candidate["search_coverage_requirements"]
+                    for candidate in component_candidates
+                )
+            )
+            pre_review_check = _check(
+                snapshot["validation"],
+                "candidates_have_pre_review_contracts",
+            )
+            self.assertTrue(pre_review_check["passed"])
+            self.assertEqual(
+                snapshot["summary"]["candidate_contract_counts"][
+                    "with_search_coverage_requirements"
+                ],
+                5,
             )
 
     def test_snapshot_validation_fails_when_rule_claim_linkage_is_missing(self) -> None:
@@ -250,6 +311,8 @@ def _write_rule_pack(directory: Path) -> Path:
                 document_role="regulation",
                 applicability_mode="conditional",
                 applies_if_package_terms=["road construction"],
+                does_not_apply_if_package_terms=["no road construction"],
+                package_section_terms=["transportation"],
             ),
             _rule(
                 rule_id="custer_gallatin_lmp_2022",
@@ -273,6 +336,8 @@ def _rule(
     document_role: str,
     applicability_mode: str,
     applies_if_package_terms: list[str] | None = None,
+    does_not_apply_if_package_terms: list[str] | None = None,
+    package_section_terms: list[str] | None = None,
 ) -> dict:
     rule = {
         "id": rule_id,
@@ -294,6 +359,10 @@ def _rule(
     }
     if applies_if_package_terms:
         rule["applies_if_package_terms"] = applies_if_package_terms
+    if does_not_apply_if_package_terms:
+        rule["does_not_apply_if_package_terms"] = does_not_apply_if_package_terms
+    if package_section_terms:
+        rule["package_section_terms"] = package_section_terms
     return rule
 
 

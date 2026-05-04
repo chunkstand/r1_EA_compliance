@@ -19,10 +19,15 @@ adjudication, and provenance-backed generated rule packs.
 
 Implemented today:
 
-- `applicability-authority-universe` writes `authority_universe_snapshot.json`.
+- `applicability-authority-universe` writes `authority_universe_snapshot.json` with the complete
+  candidate authority universe used by later applicability determination.
 - Milestone 1 schema and gate semantics are defined in `docs/OUTPUT_SCHEMAS.md` for the package
   fact graph, retrieval trace, graph trace, search coverage certificates, provenance, validated
   applicable/non-applicable authority artifacts, and generated rule-pack identity.
+- Milestone 2 authority-universe hardening is implemented: rule-template and Forest Plan component
+  candidates carry required package fact types, positive/negative trigger groups, source evidence
+  requirements, source/package filters, retrieval contracts, graph-expansion contracts,
+  dependency/exception/supersession fields, and search coverage requirements.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
@@ -338,9 +343,9 @@ Stop conditions:
 ## Milestone 2: Authority Universe Snapshot Hardening
 
 Current status:
-The first `applicability-authority-universe` command is implemented and writes only
-`authority_universe_snapshot.json`. The hardening below upgrades that snapshot into the complete
-candidate universe needed by the recommended architecture.
+Implemented. `applicability-authority-universe` now writes the complete candidate universe needed by
+the recommended architecture. It still writes only `authority_universe_snapshot.json`; it does not
+build the package fact graph or decide package applicability.
 
 Goal:
 Build the complete candidate authority universe used by applicability determination.

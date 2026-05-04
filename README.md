@@ -774,9 +774,12 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
 forest-plan profiles, source-set component inventory, source-claim artifacts, and rule-claim links.
 It writes `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with
 one rule-template candidate per rule and one forest-plan component candidate per component
-inventory record. This command does not write package fact graphs, retrieval traces, graph traces,
-search coverage certificates, applicability decisions, applicable/non-applicable authority artifacts,
-generated rule packs, or compliance findings.
+inventory record. Each candidate carries required package fact types, positive and negative trigger
+groups, source evidence requirements, source-role filters, package-section filters, retrieval
+contracts, graph-expansion contracts, dependency/exception/supersession fields, and search coverage
+requirements for later non-applicability proof. This command does not write package fact graphs,
+retrieval traces, graph traces, search coverage certificates, applicability decisions,
+applicable/non-applicable authority artifacts, generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 

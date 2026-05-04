@@ -21,6 +21,46 @@ from .rule_claim_binding import default_rule_claim_links_path
 
 AUTHORITY_UNIVERSE_SCHEMA_VERSION = "authority-universe-snapshot-v0"
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+BASE_RULE_PACKAGE_FACT_TYPES = (
+    "action",
+    "agency",
+    "decision_posture",
+    "nepa_level",
+    "package_section",
+    "evidence_span",
+)
+FOREST_PLAN_PACKAGE_FACT_TYPES = (
+    "action",
+    "agency",
+    "geography",
+    "management_area",
+    "overlay",
+    "resource_topic",
+    "package_section",
+    "evidence_span",
+)
+RULE_GRAPH_RELATIONSHIP_TYPES = (
+    "source_record",
+    "authority_category",
+    "source_claim",
+    "rule_claim_link",
+    "package_fact",
+    "evidence_span",
+    "exception",
+    "dependency",
+    "supersession",
+)
+FOREST_PLAN_GRAPH_RELATIONSHIP_TYPES = (
+    "forest_plan_profile",
+    "component_inventory",
+    "source_record",
+    "source_chunk",
+    "geography",
+    "management_area",
+    "overlay",
+    "package_fact",
+    "evidence_span",
+)
 
 
 @dataclass(frozen=True)
@@ -228,6 +268,15 @@ def _rule_template_candidates(
         source_claim_links = source_claim_links_by_rule.get(rule_id, [])
         source_claim_gaps = source_claim_gaps_by_rule.get(rule_id, [])
         document_role = _authority_document_role(rule, catalog_record)
+        source_role_filters = _rule_source_role_filters(
+            rule=rule,
+            source_record_id=source_record_id,
+            document_role=document_role,
+        )
+        package_section_filters = _rule_package_section_filters(rule)
+        positive_trigger_groups = _rule_positive_trigger_groups(rule)
+        negative_trigger_groups = _rule_negative_trigger_groups(rule)
+        required_package_fact_types = _rule_required_package_fact_types(rule)
         candidates.append(
             {
                 "candidate_authority_id": (
@@ -242,6 +291,35 @@ def _rule_template_candidates(
                 "source_records": [_source_record_summary(catalog_record)]
                 if catalog_record
                 else [],
+                "required_package_fact_types": required_package_fact_types,
+                "positive_trigger_groups": positive_trigger_groups,
+                "negative_trigger_groups": negative_trigger_groups,
+                "source_role_filters": source_role_filters,
+                "package_section_filters": package_section_filters,
+                "required_source_evidence": _rule_required_source_evidence(
+                    source_record_id=source_record_id,
+                    document_role=document_role,
+                    source_role_filters=source_role_filters,
+                    source_claim_links=source_claim_links,
+                    source_claim_gaps=source_claim_gaps,
+                ),
+                "retrieval_contract": _rule_retrieval_contract(
+                    rule=rule,
+                    rule_id=rule_id,
+                    source_role_filters=source_role_filters,
+                    package_section_filters=package_section_filters,
+                ),
+                "graph_expansion_contract": _rule_graph_expansion_contract(
+                    rule=rule,
+                    rule_id=rule_id,
+                    source_record_id=source_record_id,
+                ),
+                "dependency_contract": _rule_dependency_contract(rule),
+                "search_coverage_requirements": _rule_search_coverage_requirements(
+                    rule=rule,
+                    positive_trigger_groups=positive_trigger_groups,
+                    negative_trigger_groups=negative_trigger_groups,
+                ),
                 "rule_template": {
                     "base_rule_pack_id": rule_pack.get("rule_pack_id"),
                     "base_rule_pack_version": rule_pack.get("version"),
@@ -305,6 +383,13 @@ def _forest_plan_component_candidates(
             component.get("source_record_id") or profile.active_plan_source_record_id
         )
         catalog_record = catalog_by_source_id.get(source_record_id)
+        source_role_filters = _component_source_role_filters(
+            source_record_id=source_record_id,
+        )
+        package_section_filters = _component_package_section_filters(component)
+        positive_trigger_groups = _component_positive_trigger_groups(component)
+        negative_trigger_groups = _component_negative_trigger_groups()
+        required_package_fact_types = _component_required_package_fact_types(component)
         candidates.append(
             {
                 "candidate_authority_id": (
@@ -318,6 +403,33 @@ def _forest_plan_component_candidates(
                 "source_records": [_source_record_summary(catalog_record)]
                 if catalog_record
                 else [],
+                "required_package_fact_types": required_package_fact_types,
+                "positive_trigger_groups": positive_trigger_groups,
+                "negative_trigger_groups": negative_trigger_groups,
+                "source_role_filters": source_role_filters,
+                "package_section_filters": package_section_filters,
+                "required_source_evidence": _component_required_source_evidence(
+                    source_record_id=source_record_id,
+                    source_role_filters=source_role_filters,
+                    component=component,
+                ),
+                "retrieval_contract": _component_retrieval_contract(
+                    component=component,
+                    component_id=component_id,
+                    source_role_filters=source_role_filters,
+                    package_section_filters=package_section_filters,
+                ),
+                "graph_expansion_contract": _component_graph_expansion_contract(
+                    component=component,
+                    component_id=component_id,
+                    profile=profile,
+                    inventory_id=inventory_id,
+                ),
+                "dependency_contract": _component_dependency_contract(profile),
+                "search_coverage_requirements": _component_search_coverage_requirements(
+                    component=component,
+                    positive_trigger_groups=positive_trigger_groups,
+                ),
                 "forest_plan": {
                     "forest_unit_id": profile.forest_unit_id,
                     "forest_unit_names": list(profile.forest_unit_names),
@@ -402,6 +514,26 @@ def _component_source_evidence_availability(
     }
 
 
+def _rule_required_package_fact_types(rule: dict) -> list[str]:
+    fact_types = set(BASE_RULE_PACKAGE_FACT_TYPES)
+    if rule.get("applicability_mode") == "conditional":
+        fact_types.add("resource_topic")
+    if rule.get("authority_category") == "forest_plan":
+        fact_types.update({"geography", "management_area", "overlay"})
+    return sorted(fact_types)
+
+
+def _component_required_package_fact_types(component: dict) -> list[str]:
+    fact_types = set(FOREST_PLAN_PACKAGE_FACT_TYPES)
+    if not component.get("geographic_area_ids"):
+        fact_types.discard("geography")
+    if not component.get("management_area_ids"):
+        fact_types.discard("management_area")
+    if not component.get("overlay_ids"):
+        fact_types.discard("overlay")
+    return sorted(fact_types)
+
+
 def _rule_applicability_contract(
     *,
     rule: dict,
@@ -424,6 +556,364 @@ def _rule_applicability_contract(
         "source_filters": rule.get("source_filters", {}),
         "evidence_expectation": rule.get("evidence_expectation"),
     }
+
+
+def _rule_positive_trigger_groups(rule: dict) -> list[list[str]]:
+    groups = _string_groups(rule.get("applies_if_package_term_groups"))
+    explicit_terms = _strings(rule.get("applies_if_package_terms"))
+    if explicit_terms:
+        groups.append(explicit_terms)
+    if not groups:
+        package_terms = _strings(rule.get("package_terms"))
+        if package_terms:
+            groups.append(package_terms)
+    if not groups:
+        package_query = str(rule.get("package_query") or "").strip()
+        if package_query:
+            groups.append([package_query])
+    return groups
+
+
+def _rule_negative_trigger_groups(rule: dict) -> list[list[str]]:
+    terms = _strings(rule.get("does_not_apply_if_package_terms"))
+    return [terms] if terms else []
+
+
+def _component_positive_trigger_groups(component: dict) -> list[list[str]]:
+    groups = []
+    package_terms = _strings(component.get("package_evidence_terms"))
+    if package_terms:
+        groups.append(package_terms)
+    resource_topics = _strings(component.get("resource_topics"))
+    if resource_topics:
+        groups.append(resource_topics)
+    activity_tags = _strings(component.get("activity_tags"))
+    if activity_tags:
+        groups.append(activity_tags)
+    component_type = str(component.get("component_type") or "").strip()
+    if not groups and component_type:
+        groups.append([component_type])
+    return groups
+
+
+def _component_negative_trigger_groups() -> list[list[str]]:
+    return [["not part of the project area"]]
+
+
+def _rule_source_role_filters(
+    *,
+    rule: dict,
+    source_record_id: str | None,
+    document_role: str | None,
+) -> dict:
+    source_filters = rule.get("source_filters") if isinstance(rule.get("source_filters"), dict) else {}
+    return {
+        "source_record_ids": [source_record_id] if source_record_id else [],
+        "document_roles": [document_role] if document_role else [],
+        "authority_categories": _strings([rule.get("authority_category")]),
+        "source_filters": source_filters,
+    }
+
+
+def _component_source_role_filters(*, source_record_id: str | None) -> dict:
+    return {
+        "source_record_ids": [source_record_id] if source_record_id else [],
+        "document_roles": ["forest_plan"],
+        "authority_categories": ["forest_plan"],
+        "source_filters": {
+            "document_role": "forest_plan",
+            "source_record_id": source_record_id,
+        },
+    }
+
+
+def _rule_package_section_filters(rule: dict) -> dict:
+    return {
+        "package_query": rule.get("package_query"),
+        "package_terms": _strings(rule.get("package_terms")),
+        "package_section_terms": _strings(rule.get("package_section_terms")),
+        "package_section_term_groups": _string_groups(rule.get("package_section_term_groups")),
+        "preferred_section_families": _strings(rule.get("package_section_families")),
+    }
+
+
+def _component_package_section_filters(component: dict) -> dict:
+    return {
+        "component_section_id": component.get("section_id"),
+        "component_section_heading": component.get("section_heading"),
+        "package_evidence_terms": _strings(component.get("package_evidence_terms")),
+        "resource_topics": _strings(component.get("resource_topics")),
+        "activity_tags": _strings(component.get("activity_tags")),
+        "geographic_area_ids": _strings(component.get("geographic_area_ids")),
+        "management_area_ids": _strings(component.get("management_area_ids")),
+        "overlay_ids": _strings(component.get("overlay_ids")),
+    }
+
+
+def _rule_required_source_evidence(
+    *,
+    source_record_id: str | None,
+    document_role: str | None,
+    source_role_filters: dict,
+    source_claim_links: list[dict],
+    source_claim_gaps: list[dict],
+) -> dict:
+    return {
+        "source_record_ids": [source_record_id] if source_record_id else [],
+        "document_roles": [document_role] if document_role else [],
+        "source_role_filters": source_role_filters,
+        "requires_catalog_record": True,
+        "requires_artifact_sha256": True,
+        "requires_source_claim_linkage": True,
+        "source_claim_link_ids": [
+            str(link.get("link_id"))
+            for link in source_claim_links
+            if str(link.get("link_id") or "").strip()
+        ],
+        "rule_claim_gap_ids": [
+            str(gap.get("gap_id"))
+            for gap in source_claim_gaps
+            if str(gap.get("gap_id") or "").strip()
+        ],
+    }
+
+
+def _component_required_source_evidence(
+    *,
+    source_record_id: str | None,
+    source_role_filters: dict,
+    component: dict,
+) -> dict:
+    return {
+        "source_record_ids": [source_record_id] if source_record_id else [],
+        "document_roles": ["forest_plan"],
+        "source_role_filters": source_role_filters,
+        "requires_catalog_record": True,
+        "requires_artifact_sha256": True,
+        "requires_source_chunks": True,
+        "source_chunk_ids": _strings(component.get("source_chunk_ids")),
+    }
+
+
+def _rule_retrieval_contract(
+    *,
+    rule: dict,
+    rule_id: str,
+    source_role_filters: dict,
+    package_section_filters: dict,
+) -> dict:
+    return {
+        "contract_type": "rule_template_retrieval",
+        "query_plan_id": f"retrieval-plan:rule-template:{rule_id}",
+        "required_query_types": [
+            "exact_keyword",
+            "bm25",
+            "metadata_filter",
+            "package_section",
+            "source_role",
+        ],
+        "optional_query_types": ["vector"],
+        "source_queries": _strings([rule.get("source_query")]),
+        "package_queries": _strings([rule.get("package_query")]),
+        "source_role_filters": source_role_filters,
+        "package_section_filters": package_section_filters,
+        "fused_ranking_strategy": "reciprocal_rank_fusion",
+        "requires_selected_and_rejected_results": True,
+        "searched_index_hash_required": True,
+    }
+
+
+def _component_retrieval_contract(
+    *,
+    component: dict,
+    component_id: str,
+    source_role_filters: dict,
+    package_section_filters: dict,
+) -> dict:
+    query_terms = _strings(component.get("package_evidence_terms")) or _strings(
+        [component.get("section_heading")]
+    )
+    return {
+        "contract_type": "forest_plan_component_retrieval",
+        "query_plan_id": f"retrieval-plan:forest-plan-component:{component_id}",
+        "required_query_types": [
+            "exact_keyword",
+            "bm25",
+            "metadata_filter",
+            "package_section",
+            "source_role",
+        ],
+        "optional_query_types": ["vector"],
+        "source_queries": _strings([component.get("section_heading")]),
+        "package_queries": query_terms,
+        "source_role_filters": source_role_filters,
+        "package_section_filters": package_section_filters,
+        "fused_ranking_strategy": "reciprocal_rank_fusion",
+        "requires_selected_and_rejected_results": True,
+        "searched_index_hash_required": True,
+    }
+
+
+def _rule_graph_expansion_contract(
+    *,
+    rule: dict,
+    rule_id: str,
+    source_record_id: str | None,
+) -> dict:
+    return {
+        "contract_type": "rule_template_graph_expansion",
+        "start_node_types": ["rule_template", "source_record", "authority"],
+        "relationship_types": list(RULE_GRAPH_RELATIONSHIP_TYPES),
+        "max_depth": 2,
+        "requires_path_trace": True,
+        "required_graph_artifact_types": [
+            "source_graph",
+            "evidence_graph",
+            "claim_graph",
+            "rule_claim_graph",
+        ],
+        "neighbor_filters": {
+            "rule_ids": [rule_id] if rule_id else [],
+            "source_record_ids": [source_record_id] if source_record_id else [],
+            "authority_categories": _strings([rule.get("authority_category")]),
+        },
+    }
+
+
+def _component_graph_expansion_contract(
+    *,
+    component: dict,
+    component_id: str,
+    profile: object,
+    inventory_id: str,
+) -> dict:
+    return {
+        "contract_type": "forest_plan_component_graph_expansion",
+        "start_node_types": ["forest_plan_component", "source_record", "package_fact"],
+        "relationship_types": list(FOREST_PLAN_GRAPH_RELATIONSHIP_TYPES),
+        "max_depth": 3,
+        "requires_path_trace": True,
+        "required_graph_artifact_types": [
+            "source_graph",
+            "evidence_graph",
+            "forest_plan_component_inventory",
+        ],
+        "neighbor_filters": {
+            "forest_unit_id": getattr(profile, "forest_unit_id", None),
+            "component_inventory_id": inventory_id,
+            "component_ids": [component_id] if component_id else [],
+            "geographic_area_ids": _strings(component.get("geographic_area_ids")),
+            "management_area_ids": _strings(component.get("management_area_ids")),
+            "overlay_ids": _strings(component.get("overlay_ids")),
+        },
+    }
+
+
+def _rule_dependency_contract(rule: dict) -> dict:
+    return {
+        "dependency_rule_ids": _strings(
+            rule.get("dependency_rule_ids")
+            or rule.get("depends_on_rule_ids")
+            or rule.get("dependencies")
+        ),
+        "exception_rule_ids": _strings(
+            rule.get("exception_rule_ids") or rule.get("exceptions")
+        ),
+        "supersedes_rule_ids": _strings(rule.get("supersedes_rule_ids")),
+        "superseded_by_rule_ids": _strings(rule.get("superseded_by_rule_ids")),
+        "supporting_source_record_ids": _strings(rule.get("supporting_source_record_ids")),
+    }
+
+
+def _component_dependency_contract(profile: object) -> dict:
+    supporting_records = [
+        {
+            "role": record.role,
+            "source_record_id": record.source_record_id,
+            "required_for": record.required_for,
+        }
+        for record in getattr(profile, "supporting_source_records", ())
+    ]
+    return {
+        "dependency_rule_ids": [],
+        "exception_rule_ids": [],
+        "supersedes_rule_ids": [],
+        "superseded_by_rule_ids": [],
+        "supporting_source_record_ids": sorted(
+            {record["source_record_id"] for record in supporting_records}
+        ),
+        "supporting_source_records": supporting_records,
+    }
+
+
+def _rule_search_coverage_requirements(
+    *,
+    rule: dict,
+    positive_trigger_groups: list[list[str]],
+    negative_trigger_groups: list[list[str]],
+) -> list[dict]:
+    base = {
+        "required_artifacts": [
+            "package_fact_graph",
+            "applicability_retrieval_trace",
+            "search_coverage_certificates",
+        ],
+        "required_query_types": ["exact_keyword", "bm25", "metadata_filter", "package_section"],
+        "requires_searched_index_hash": True,
+    }
+    if rule.get("applicability_mode") == "conditional":
+        requirements = [
+            {
+                **base,
+                "coverage_class": "positive_trigger_miss",
+                "required_trigger_groups": positive_trigger_groups,
+            }
+        ]
+        if negative_trigger_groups:
+            requirements.append(
+                {
+                    **base,
+                    "coverage_class": "explicit_negative_trigger",
+                    "required_trigger_groups": negative_trigger_groups,
+                }
+            )
+        return requirements
+    return [
+        {
+            **base,
+            "coverage_class": "baseline_exclusion_requires_adjudication",
+            "requires_adjudication_for_not_applicable": True,
+        }
+    ]
+
+
+def _component_search_coverage_requirements(
+    *,
+    component: dict,
+    positive_trigger_groups: list[list[str]],
+) -> list[dict]:
+    base = {
+        "required_artifacts": [
+            "package_fact_graph",
+            "applicability_retrieval_trace",
+            "applicability_graph_trace",
+            "search_coverage_certificates",
+        ],
+        "required_query_types": ["exact_keyword", "bm25", "metadata_filter", "package_section"],
+        "requires_searched_index_hash": True,
+    }
+    return [
+        {
+            **base,
+            "coverage_class": "forest_plan_scope_miss",
+            "required_package_fact_types": _component_required_package_fact_types(component),
+        },
+        {
+            **base,
+            "coverage_class": "component_trigger_miss",
+            "required_trigger_groups": positive_trigger_groups,
+        },
+    ]
 
 
 def _authority_universe_validation(
@@ -455,6 +945,7 @@ def _authority_universe_validation(
         _check_source_evidence_available(candidate_authorities),
         _check_source_claim_linkage_recorded(candidate_authorities),
         _check_applicability_contracts(candidate_authorities),
+        _check_candidate_pre_review_contracts(candidate_authorities),
         _check_forest_plan_component_candidates(
             source_set_id=source_set_id,
             rule_pack=rule_pack,
@@ -619,6 +1110,47 @@ def _check_applicability_contracts(candidate_authorities: list[dict]) -> dict:
     }
 
 
+def _check_candidate_pre_review_contracts(candidate_authorities: list[dict]) -> dict:
+    required_fields = (
+        "required_package_fact_types",
+        "positive_trigger_groups",
+        "source_role_filters",
+        "package_section_filters",
+        "required_source_evidence",
+        "retrieval_contract",
+        "graph_expansion_contract",
+        "dependency_contract",
+        "search_coverage_requirements",
+    )
+    failures = []
+    for candidate in candidate_authorities:
+        missing = [
+            field
+            for field in required_fields
+            if not _candidate_contract_field_present(candidate, field)
+        ]
+        if not _valid_retrieval_contract(candidate.get("retrieval_contract")):
+            missing.append("valid_retrieval_contract")
+        if not _valid_graph_expansion_contract(candidate.get("graph_expansion_contract")):
+            missing.append("valid_graph_expansion_contract")
+        if not _valid_search_coverage_requirements(
+            candidate.get("search_coverage_requirements")
+        ):
+            missing.append("valid_search_coverage_requirements")
+        if missing:
+            failures.append(
+                {
+                    "candidate_authority_id": candidate.get("candidate_authority_id"),
+                    "missing_or_invalid": sorted(set(missing)),
+                }
+            )
+    return {
+        "name": "candidates_have_pre_review_contracts",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
+    }
+
+
 def _check_forest_plan_component_candidates(
     *,
     source_set_id: str,
@@ -694,6 +1226,57 @@ def _has_applicability_contract(candidate: dict) -> bool:
     return False
 
 
+def _candidate_contract_field_present(candidate: dict, field: str) -> bool:
+    value = candidate.get(field)
+    if isinstance(value, dict):
+        return bool(value)
+    if isinstance(value, list):
+        if field == "negative_trigger_groups":
+            return True
+        return bool(value)
+    return value is not None
+
+
+def _valid_retrieval_contract(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return bool(
+        value.get("contract_type")
+        and value.get("required_query_types")
+        and value.get("source_role_filters")
+        and value.get("package_section_filters")
+        and value.get("requires_selected_and_rejected_results") is True
+        and value.get("searched_index_hash_required") is True
+    )
+
+
+def _valid_graph_expansion_contract(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return bool(
+        value.get("contract_type")
+        and value.get("start_node_types")
+        and value.get("relationship_types")
+        and value.get("max_depth")
+        and value.get("requires_path_trace") is True
+    )
+
+
+def _valid_search_coverage_requirements(value: object) -> bool:
+    if not isinstance(value, list) or not value:
+        return False
+    for requirement in value:
+        if not isinstance(requirement, dict):
+            return False
+        if not requirement.get("coverage_class"):
+            return False
+        if not requirement.get("required_query_types"):
+            return False
+        if not requirement.get("required_artifacts"):
+            return False
+    return True
+
+
 def _summary(
     *,
     authority_universe_id: str,
@@ -736,6 +1319,7 @@ def _summary(
         "rule_applicability_mode_counts": {
             key: value for key, value in dict(applicability_modes).items() if key
         },
+        "candidate_contract_counts": _candidate_contract_counts(candidate_authorities),
         "source_set_manifest_path": str(source_set_manifest_path),
         "source_catalog_path": str(source_catalog_path),
         "forest_plan_profiles_path": str(forest_plan_profiles_path),
@@ -753,6 +1337,28 @@ def _summary(
         ),
         "validation_passed": bool(validation.get("passed")),
         "passed": bool(validation.get("passed")),
+    }
+
+
+def _candidate_contract_counts(candidate_authorities: list[dict]) -> dict:
+    return {
+        "with_required_package_fact_types": sum(
+            1 for candidate in candidate_authorities if candidate.get("required_package_fact_types")
+        ),
+        "with_retrieval_contract": sum(
+            1 for candidate in candidate_authorities if candidate.get("retrieval_contract")
+        ),
+        "with_graph_expansion_contract": sum(
+            1 for candidate in candidate_authorities if candidate.get("graph_expansion_contract")
+        ),
+        "with_dependency_contract": sum(
+            1 for candidate in candidate_authorities if candidate.get("dependency_contract")
+        ),
+        "with_search_coverage_requirements": sum(
+            1
+            for candidate in candidate_authorities
+            if candidate.get("search_coverage_requirements")
+        ),
     }
 
 
@@ -855,6 +1461,41 @@ def _baseline_source_record_ids(rule_pack: dict) -> list[str]:
     if not isinstance(raw, list):
         return []
     return [str(value).strip() for value in raw if str(value or "").strip()]
+
+
+def _strings(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value.strip()] if value.strip() else []
+    if isinstance(value, (list, tuple)):
+        values = []
+        for item in value:
+            if isinstance(item, (list, tuple)):
+                values.extend(_strings(item))
+                continue
+            text = str(item or "").strip()
+            if text:
+                values.append(text)
+        return values
+    text = str(value or "").strip()
+    return [text] if text else []
+
+
+def _string_groups(value: object) -> list[list[str]]:
+    if not isinstance(value, list):
+        return []
+    groups = []
+    for item in value:
+        if isinstance(item, list):
+            group = _strings(item)
+            if group:
+                groups.append(group)
+            continue
+        text = str(item or "").strip()
+        if text:
+            groups.append([text])
+    return groups
 
 
 def _validate_safe_segment(value: str, field_name: str) -> None:
