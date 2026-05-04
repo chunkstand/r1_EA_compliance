@@ -24,8 +24,14 @@ allowed_import_layers = ["foundation", "capture", "catalog"]
 [[layers]]
 name = "extraction"
 summary = "Artifact extraction, extraction accuracy, extraction reuse, and retrieval index construction."
-modules = ["extract", "extraction_accuracy", "retrieval", "reuse_inventory"]
+modules = ["extract", "extraction_accuracy", "reuse_inventory"]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review"]
+
+[[layers]]
+name = "retrieval"
+summary = "Local evidence index construction, validation, query, and retrieval eval support."
+modules = ["retrieval"]
+allowed_import_layers = ["foundation", "extraction", "retrieval"]
 
 [[layers]]
 name = "claims"
@@ -126,6 +132,7 @@ allowed_import_layers = [
   "capture",
   "catalog",
   "extraction",
+  "retrieval",
   "claims",
   "rule_packs",
   "review",
@@ -145,6 +152,24 @@ to_module = "compliance_review"
 owner = "agentic-architecture-milestone-3"
 remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
 reason = "rule_claim_binding currently imports DEFAULT_RULE_PACK_PATH, load_rule_pack, and validate_rule_pack from compliance_review; these utilities move to rule_packs.py in Milestone 3."
+
+[[temporary_exceptions]]
+id = "applicability-rule-pack-utilities-owned-by-compliance-review"
+kind = "dependency"
+from_module = "applicability"
+to_module = "compliance_review"
+owner = "agentic-architecture-milestone-3"
+remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
+reason = "applicability currently imports DEFAULT_RULE_PACK_PATH, load_rule_pack, and validate_rule_pack from compliance_review; these utilities move to rule_packs.py in Milestone 3."
+
+[[temporary_exceptions]]
+id = "applicability-generated-rule-pack-utilities-owned-by-compliance-review"
+kind = "dependency"
+from_module = "applicability_rule_pack"
+to_module = "compliance_review"
+owner = "agentic-architecture-milestone-3"
+remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
+reason = "applicability_rule_pack currently imports shared rule-pack utilities from compliance_review; these utilities move to rule_packs.py in Milestone 3."
 
 [[temporary_exceptions]]
 id = "rule-claim-compliance-cycle"
