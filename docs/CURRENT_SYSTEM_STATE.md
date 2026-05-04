@@ -68,12 +68,16 @@ Current inventory summary:
 - Current rule-pack rules crosswalked: `44/44`
 - Orphan rule IDs: none
 - Orphan workbook source record IDs: none
+- Families requiring Milestone 2 source-currentness confirmation: `21`
+- Families requiring Milestone 3 rule-template work after currentness: `19`
 
 The only current `candidate` family is environmental justice and civil-rights authority coverage;
 it is intentionally visible as a source-record gap for a later source-addition/currentness slice.
 Reserved or superseded Forest Service NEPA regulations, including former 36 CFR part 220 references,
 are represented as a `superseded` family and point reviewers back to current USDA NEPA procedure
-sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources.
+sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources. Every
+`source_only` family now carries explicit open-gap handoff text for source-currentness validation
+and rule-template promotion, so those rows are not hidden runtime assumptions.
 
 ## Verified State Snapshot
 

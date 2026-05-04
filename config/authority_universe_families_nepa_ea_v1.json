@@ -77,6 +77,22 @@
         "R1EA-025",
         "R1EA-026"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-021",
+          "R1EA-025",
+          "R1EA-026"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-021",
+          "R1EA-025",
+          "R1EA-026"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -105,7 +121,10 @@
       },
       "family_id": "clean_air_act_conformity_air_quality",
       "name": "Clean Air Act, general conformity, smoke, and air-quality coordination",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "permit",
@@ -124,6 +143,20 @@
         "R1EA-092",
         "R1EA-093"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-092",
+          "R1EA-093"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-092",
+          "R1EA-093"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -164,7 +197,10 @@
       },
       "family_id": "clean_water_act_wotus_permits",
       "name": "Clean Water Act, waters of the United States, and water permit/certification sources",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "permit",
@@ -195,6 +231,44 @@
         "R1EA-117",
         "R1EA-118"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-082",
+          "R1EA-083",
+          "R1EA-084",
+          "R1EA-085",
+          "R1EA-086",
+          "R1EA-087",
+          "R1EA-088",
+          "R1EA-089",
+          "R1EA-090",
+          "R1EA-091",
+          "R1EA-115",
+          "R1EA-116",
+          "R1EA-117",
+          "R1EA-118"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-082",
+          "R1EA-083",
+          "R1EA-084",
+          "R1EA-085",
+          "R1EA-086",
+          "R1EA-087",
+          "R1EA-088",
+          "R1EA-089",
+          "R1EA-090",
+          "R1EA-091",
+          "R1EA-115",
+          "R1EA-116",
+          "R1EA-117",
+          "R1EA-118"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -236,7 +310,10 @@
       },
       "family_id": "cultural_resource_protection_and_state_shpo_sources",
       "name": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "consultation",
         "geography",
@@ -271,6 +348,46 @@
         "R1EA-122",
         "R1EA-123"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-072",
+          "R1EA-073",
+          "R1EA-074",
+          "R1EA-075",
+          "R1EA-076",
+          "R1EA-077",
+          "R1EA-078",
+          "R1EA-079",
+          "R1EA-080",
+          "R1EA-113",
+          "R1EA-114",
+          "R1EA-120",
+          "R1EA-121",
+          "R1EA-122",
+          "R1EA-123"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-072",
+          "R1EA-073",
+          "R1EA-074",
+          "R1EA-075",
+          "R1EA-076",
+          "R1EA-077",
+          "R1EA-078",
+          "R1EA-079",
+          "R1EA-080",
+          "R1EA-113",
+          "R1EA-114",
+          "R1EA-120",
+          "R1EA-121",
+          "R1EA-122",
+          "R1EA-123"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -302,7 +419,10 @@
       },
       "family_id": "eagle_efh_and_special_wildlife_sources",
       "name": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "consultation",
         "geography",
@@ -324,6 +444,24 @@
         "R1EA-099",
         "R1EA-100"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-097",
+          "R1EA-098",
+          "R1EA-099",
+          "R1EA-100"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-097",
+          "R1EA-098",
+          "R1EA-099",
+          "R1EA-100"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -367,6 +505,16 @@
         "package evidence for affected communities, civil-rights implications, distributional effects, or EJ policy triggers"
       ],
       "source_record_ids": [],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [],
+        "mapping_status": "candidate_source_records_needed",
+        "missing_source_record_requirements": [
+          "Add or document current federal environmental-justice and civil-rights source rows before this family can become source_only or active."
+        ],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "candidate",
       "supersession": null
     },
@@ -452,6 +600,24 @@
         "R1EA-066",
         "R1EA-067"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-031",
+          "R1EA-065",
+          "R1EA-066",
+          "R1EA-067"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-031",
+          "R1EA-065",
+          "R1EA-066",
+          "R1EA-067"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -479,7 +645,10 @@
       },
       "family_id": "floodplain_management_eo11988",
       "name": "Executive Order 11988 floodplain management",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "permit",
@@ -497,6 +666,18 @@
       "source_record_ids": [
         "R1EA-103"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-103"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-103"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -557,6 +738,18 @@
       "source_record_ids": [
         "R1EA-027"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-027"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-027"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -585,7 +778,9 @@
       },
       "family_id": "forest_service_nepa_36cfr_220_reserved_superseded",
       "name": "Reserved/superseded Forest Service NEPA regulations under former 36 CFR part 220",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 currentness validation must prevent this superseded or reserved authority from silently satisfying current source requirements."
+      ],
       "package_fact_types": [
         "agency",
         "nepa_level"
@@ -604,6 +799,22 @@
         "R1EA-018",
         "R1EA-019"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-008",
+          "R1EA-018",
+          "R1EA-019"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-008",
+          "R1EA-018",
+          "R1EA-019"
+        ],
+        "mapping_status": "mapped_superseded_replacement_sources",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "superseded",
       "supersession": {
         "current_source_record_ids": [
@@ -690,6 +901,22 @@
         "R1EA-028",
         "R1EA-029"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-019",
+          "R1EA-028",
+          "R1EA-029"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-019",
+          "R1EA-028",
+          "R1EA-029"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -718,7 +945,10 @@
       },
       "family_id": "forest_service_planning_handbook_amendments",
       "name": "Forest Service planning handbook and amendment support",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "management_area",
@@ -738,6 +968,18 @@
       "source_record_ids": [
         "R1EA-032"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-032"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-032"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -767,7 +1009,10 @@
       },
       "family_id": "grassland_bankhead_jones_authorities",
       "name": "Bankhead-Jones and National Grassland administration authorities",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -787,6 +1032,22 @@
         "R1EA-038",
         "R1PLAN-region-1-grassland-overlay-01"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-037",
+          "R1EA-038",
+          "R1PLAN-region-1-grassland-overlay-01"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-037",
+          "R1EA-038",
+          "R1PLAN-region-1-grassland-overlay-01"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -817,7 +1078,10 @@
       },
       "family_id": "hazardous_materials_site_condition",
       "name": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -838,6 +1102,22 @@
         "R1EA-108",
         "R1EA-109"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-107",
+          "R1EA-108",
+          "R1EA-109"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-107",
+          "R1EA-108",
+          "R1EA-109"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -873,7 +1153,10 @@
       },
       "family_id": "invasive_pesticide_soils_farmland_drinking_water",
       "name": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -899,6 +1182,32 @@
         "R1EA-111",
         "R1EA-112"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-030",
+          "R1EA-101",
+          "R1EA-102",
+          "R1EA-105",
+          "R1EA-106",
+          "R1EA-110",
+          "R1EA-111",
+          "R1EA-112"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-030",
+          "R1EA-101",
+          "R1EA-102",
+          "R1EA-105",
+          "R1EA-106",
+          "R1EA-110",
+          "R1EA-111",
+          "R1EA-112"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -937,7 +1246,10 @@
       },
       "family_id": "land_exchange_fs_policy_and_project_references",
       "name": "Forest Service exchange policy, appraisal/title guidance, and project-reference records",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -966,6 +1278,38 @@
         "R1EA-161",
         "R1EA-162"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-150",
+          "R1EA-151",
+          "R1EA-152",
+          "R1EA-153",
+          "R1EA-154",
+          "R1EA-155",
+          "R1EA-156",
+          "R1EA-160",
+          "R1EA-161",
+          "R1EA-162"
+        ],
+        "excluded_source_record_ids": [
+          "R1EA-160"
+        ],
+        "mapped_source_record_ids": [
+          "R1EA-150",
+          "R1EA-151",
+          "R1EA-152",
+          "R1EA-153",
+          "R1EA-154",
+          "R1EA-155",
+          "R1EA-156",
+          "R1EA-160",
+          "R1EA-161",
+          "R1EA-162"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -1010,7 +1354,10 @@
       },
       "family_id": "land_exchange_regulatory_requirements",
       "name": "36 CFR part 254 land-exchange procedural and valuation requirements",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -1045,6 +1392,48 @@
         "R1EA-158",
         "R1EA-159"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-124",
+          "R1EA-125",
+          "R1EA-126",
+          "R1EA-127",
+          "R1EA-128",
+          "R1EA-129",
+          "R1EA-130",
+          "R1EA-131",
+          "R1EA-132",
+          "R1EA-133",
+          "R1EA-134",
+          "R1EA-135",
+          "R1EA-136",
+          "R1EA-157",
+          "R1EA-158",
+          "R1EA-159"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-124",
+          "R1EA-125",
+          "R1EA-126",
+          "R1EA-127",
+          "R1EA-128",
+          "R1EA-129",
+          "R1EA-130",
+          "R1EA-131",
+          "R1EA-132",
+          "R1EA-133",
+          "R1EA-134",
+          "R1EA-135",
+          "R1EA-136",
+          "R1EA-157",
+          "R1EA-158",
+          "R1EA-159"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -1086,7 +1475,10 @@
       },
       "family_id": "land_exchange_statutory_authorities",
       "name": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -1118,6 +1510,42 @@
         "R1EA-148",
         "R1EA-149"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-137",
+          "R1EA-138",
+          "R1EA-139",
+          "R1EA-140",
+          "R1EA-141",
+          "R1EA-142",
+          "R1EA-143",
+          "R1EA-144",
+          "R1EA-145",
+          "R1EA-146",
+          "R1EA-147",
+          "R1EA-148",
+          "R1EA-149"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-137",
+          "R1EA-138",
+          "R1EA-139",
+          "R1EA-140",
+          "R1EA-141",
+          "R1EA-142",
+          "R1EA-143",
+          "R1EA-144",
+          "R1EA-145",
+          "R1EA-146",
+          "R1EA-147",
+          "R1EA-148",
+          "R1EA-149"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -1186,6 +1614,22 @@
         "R1EA-095",
         "R1EA-096"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-094",
+          "R1EA-095",
+          "R1EA-096"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-094",
+          "R1EA-095",
+          "R1EA-096"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1215,7 +1659,10 @@
       },
       "family_id": "minerals_energy_authorities",
       "name": "Minerals and energy-development authorities",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -1235,6 +1682,20 @@
         "R1EA-041",
         "R1EA-063"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-041",
+          "R1EA-063"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-041",
+          "R1EA-063"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -1330,6 +1791,24 @@
         "R1EA-003",
         "R1EA-004"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-001",
+          "R1EA-002",
+          "R1EA-003",
+          "R1EA-004"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-001",
+          "R1EA-002",
+          "R1EA-003",
+          "R1EA-004"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1394,6 +1873,18 @@
       "source_record_ids": [
         "R1EA-020"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-020"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-020"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1500,6 +1991,28 @@
         "R1EA-012",
         "R1EA-016"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-005",
+          "R1EA-006",
+          "R1EA-007",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-016"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-005",
+          "R1EA-006",
+          "R1EA-007",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-016"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1590,6 +2103,26 @@
         "R1EA-067",
         "R1PLAN-custer-gallatin-nf-02"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-022",
+          "R1EA-023",
+          "R1EA-024",
+          "R1EA-067",
+          "R1PLAN-custer-gallatin-nf-02"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-022",
+          "R1EA-023",
+          "R1EA-024",
+          "R1EA-067",
+          "R1PLAN-custer-gallatin-nf-02"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1665,6 +2198,22 @@
         "R1EA-071",
         "R1EA-119"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-070",
+          "R1EA-071",
+          "R1EA-119"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-070",
+          "R1EA-071",
+          "R1EA-119"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1744,6 +2293,22 @@
         "R1EA-034",
         "R1EA-035"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-033",
+          "R1EA-034",
+          "R1EA-035"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-033",
+          "R1EA-034",
+          "R1EA-035"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1799,7 +2364,10 @@
       },
       "family_id": "region1_forest_plan_source_records",
       "name": "Region 1 forest-plan and overlay source records",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "management_area",
@@ -1845,6 +2413,72 @@
         "R1PLAN-region-1-species-overlay-01",
         "R1PLAN-region-1-species-overlay-02"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1PLAN-beaverhead-deerlodge-nf-01",
+          "R1PLAN-beaverhead-deerlodge-nf-02",
+          "R1PLAN-bitterroot-nf-01",
+          "R1PLAN-bitterroot-nf-02",
+          "R1PLAN-bitterroot-nf-03",
+          "R1PLAN-custer-gallatin-nf-01",
+          "R1PLAN-custer-gallatin-nf-02",
+          "R1PLAN-custer-gallatin-nf-03",
+          "R1PLAN-custer-gallatin-nf-04",
+          "R1PLAN-custer-gallatin-nf-05",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-dakota-prairie-grasslands-01",
+          "R1PLAN-dakota-prairie-grasslands-02",
+          "R1PLAN-flathead-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-02",
+          "R1PLAN-idaho-panhandle-nfs-01",
+          "R1PLAN-idaho-panhandle-nfs-02",
+          "R1PLAN-kootenai-nf-01",
+          "R1PLAN-lolo-nf-01",
+          "R1PLAN-nez-perce-clearwater-nfs-01",
+          "R1PLAN-nez-perce-clearwater-nfs-02",
+          "R1PLAN-region-1-grassland-overlay-01",
+          "R1PLAN-region-1-northern-region-01",
+          "R1PLAN-region-1-northern-region-02",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1PLAN-beaverhead-deerlodge-nf-01",
+          "R1PLAN-beaverhead-deerlodge-nf-02",
+          "R1PLAN-bitterroot-nf-01",
+          "R1PLAN-bitterroot-nf-02",
+          "R1PLAN-bitterroot-nf-03",
+          "R1PLAN-custer-gallatin-nf-01",
+          "R1PLAN-custer-gallatin-nf-02",
+          "R1PLAN-custer-gallatin-nf-03",
+          "R1PLAN-custer-gallatin-nf-04",
+          "R1PLAN-custer-gallatin-nf-05",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-dakota-prairie-grasslands-01",
+          "R1PLAN-dakota-prairie-grasslands-02",
+          "R1PLAN-flathead-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-02",
+          "R1PLAN-idaho-panhandle-nfs-01",
+          "R1PLAN-idaho-panhandle-nfs-02",
+          "R1PLAN-kootenai-nf-01",
+          "R1PLAN-lolo-nf-01",
+          "R1PLAN-nez-perce-clearwater-nfs-01",
+          "R1PLAN-nez-perce-clearwater-nfs-02",
+          "R1PLAN-region-1-grassland-overlay-01",
+          "R1PLAN-region-1-northern-region-01",
+          "R1PLAN-region-1-northern-region-02",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -1911,6 +2545,22 @@
         "R1EA-049",
         "R1EA-050"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-048",
+          "R1EA-049",
+          "R1EA-050"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-048",
+          "R1EA-049",
+          "R1EA-050"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -1946,7 +2596,10 @@
       },
       "family_id": "roads_access_special_use_action_authorities",
       "name": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -1972,6 +2625,32 @@
         "R1EA-044",
         "R1EA-143"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-036",
+          "R1EA-039",
+          "R1EA-040",
+          "R1EA-041",
+          "R1EA-042",
+          "R1EA-043",
+          "R1EA-044",
+          "R1EA-143"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-036",
+          "R1EA-039",
+          "R1EA-040",
+          "R1EA-041",
+          "R1EA-042",
+          "R1EA-043",
+          "R1EA-044",
+          "R1EA-143"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -2006,7 +2685,10 @@
       },
       "family_id": "species_supporting_sources_and_overlays",
       "name": "Species source-support records, sensitive species pages, and lynx/LMP support",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "consultation",
         "geography",
@@ -2032,6 +2714,30 @@
         "R1PLAN-region-1-species-overlay-01",
         "R1PLAN-region-1-species-overlay-02"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-064",
+          "R1EA-068",
+          "R1EA-069",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-064",
+          "R1EA-068",
+          "R1EA-069",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -2061,7 +2767,10 @@
       },
       "family_id": "tribal_consultation_trust_sacred_sites",
       "name": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "consultation",
         "geography",
@@ -2081,6 +2790,22 @@
         "R1EA-080",
         "R1EA-081"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-077",
+          "R1EA-080",
+          "R1EA-081"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-077",
+          "R1EA-080",
+          "R1EA-081"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -2214,6 +2939,38 @@
         "R1EA-017",
         "R1EA-018"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-008",
+          "R1EA-009",
+          "R1EA-010",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-013",
+          "R1EA-014",
+          "R1EA-015",
+          "R1EA-016",
+          "R1EA-017",
+          "R1EA-018"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-008",
+          "R1EA-009",
+          "R1EA-010",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-013",
+          "R1EA-014",
+          "R1EA-015",
+          "R1EA-016",
+          "R1EA-017",
+          "R1EA-018"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -2247,7 +3004,10 @@
       },
       "family_id": "vegetation_wildfire_forest_health_authorities",
       "name": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "action",
         "geography",
@@ -2271,6 +3031,30 @@
         "R1EA-061",
         "R1EA-062"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-056",
+          "R1EA-057",
+          "R1EA-058",
+          "R1EA-059",
+          "R1EA-060",
+          "R1EA-061",
+          "R1EA-062"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-056",
+          "R1EA-057",
+          "R1EA-058",
+          "R1EA-059",
+          "R1EA-060",
+          "R1EA-061",
+          "R1EA-062"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     },
@@ -2331,6 +3115,18 @@
       "source_record_ids": [
         "R1EA-104"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-104"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-104"
+        ],
+        "mapping_status": "mapped_active_rule_pack_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "active",
       "supersession": null
     },
@@ -2366,7 +3162,10 @@
       },
       "family_id": "wilderness_wsr_trails_designated_areas",
       "name": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas",
-      "open_inventory_gaps": [],
+      "open_inventory_gaps": [
+        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
+        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
+      ],
       "package_fact_types": [
         "geography",
         "overlay",
@@ -2393,6 +3192,32 @@
         "R1EA-054",
         "R1EA-055"
       ],
+      "source_record_mapping": {
+        "catalog_source_record_ids": [
+          "R1EA-045",
+          "R1EA-046",
+          "R1EA-047",
+          "R1EA-051",
+          "R1EA-052",
+          "R1EA-053",
+          "R1EA-054",
+          "R1EA-055"
+        ],
+        "excluded_source_record_ids": [],
+        "mapped_source_record_ids": [
+          "R1EA-045",
+          "R1EA-046",
+          "R1EA-047",
+          "R1EA-051",
+          "R1EA-052",
+          "R1EA-053",
+          "R1EA-054",
+          "R1EA-055"
+        ],
+        "mapping_status": "mapped_source_only_family",
+        "missing_source_record_requirements": [],
+        "source_set_id": "source-set-ba8d0feae79501b8"
+      },
       "status": "source_only",
       "supersession": null
     }
@@ -4363,6 +5188,8 @@
   "summary": {
     "authority_family_count": 35,
     "duplicate_rule_ids": [],
+    "families_requiring_milestone_2_source_currentness": 21,
+    "families_requiring_milestone_3_rule_template_work": 19,
     "mapped_rule_count": 44,
     "mapped_source_record_count": 190,
     "orphan_rule_ids": [],

@@ -54,8 +54,9 @@ Authority-universe completion Milestone 1 is now represented by
 `config/authority_universe_families_nepa_ea_v1.json`: `35` authority families, `18` required
 authority requirement groups, all `44/44` current rule-pack rules crosswalked, and all `190/190`
 workbook source records mapped to an authority family. The inventory keeps `source_only`,
-`candidate`, and `superseded` families explicit so later source-currentness, rule-template,
-applicability-eval, and report-integration slices have a stable contract.
+`candidate`, and `superseded` families explicit, including source-record mapping and open-gap
+handoffs, so later source-currentness, rule-template, applicability-eval, and report-integration
+slices have a stable contract.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture

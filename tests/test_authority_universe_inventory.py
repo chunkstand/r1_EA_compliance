@@ -30,12 +30,28 @@ def test_authority_inventory_has_valid_family_contract() -> None:
         assert family["rationale"]
         assert family["coverage_requirements"]["source_record_ids"] == family["source_record_ids"]
         assert family["applicability_predicates"]
+        assert family["source_record_mapping"]["mapped_source_record_ids"] == family["source_record_ids"]
+        assert family["source_record_mapping"]["catalog_source_record_ids"] == family["source_record_ids"]
         assert family["status"] == "candidate" or family["source_record_ids"]
+        if family["status"] == "active":
+            assert family["rule_ids"]
+            assert family["coverage_requirements"]["coverage_matrix_rule_ids"]
+            assert family["coverage_requirements"]["eval_case_ids"]
+        if family["status"] == "source_only":
+            assert family["source_record_ids"]
+            assert family["open_inventory_gaps"]
+            assert family["rule_ids"] == []
+            assert family["source_record_mapping"]["mapping_status"] == "mapped_source_only_family"
+        if family["status"] == "candidate":
+            assert family["open_inventory_gaps"]
+            assert family["source_record_mapping"]["missing_source_record_requirements"]
+            assert family["source_record_mapping"]["mapping_status"] == "candidate_source_records_needed"
         if family["status"] == "superseded":
             supersession = family["supersession"]
             assert supersession
             assert supersession["replacement_family_id"] in family_ids
             assert supersession["current_source_record_ids"]
+            assert family["open_inventory_gaps"]
 
     for requirement in inventory["required_authority_family_coverage"]:
         assert requirement["requirement_id"]
@@ -61,6 +77,8 @@ def test_authority_inventory_maps_every_rule_pack_rule_once() -> None:
     assert duplicated_rules == []
     assert inventory["summary"]["orphan_rule_ids"] == []
     assert inventory["summary"]["duplicate_rule_ids"] == []
+    assert inventory["summary"]["rule_count"] == len(expected_rule_ids)
+    assert inventory["summary"]["mapped_rule_count"] == len(rule_to_family)
 
     for rule in rule_pack["rules"]:
         family = family_by_id[rule_to_family[rule["id"]]]
@@ -83,8 +101,11 @@ def test_authority_inventory_maps_every_workbook_source_record() -> None:
 
     assert {row["source_record_id"] for row in crosswalk} == workbook_ids
     assert workbook_ids.issubset(family_source_ids)
+    assert family_source_ids.issubset(workbook_ids)
     assert inventory["summary"]["orphan_source_record_ids"] == []
     assert inventory["summary"]["source_record_crosswalk_count"] == len(sources)
+    assert inventory["summary"]["workbook_source_record_count"] == len(sources)
+    assert inventory["summary"]["mapped_source_record_count"] == len(workbook_ids)
 
     duplicate_crosswalk_ids = [
         source_record_id

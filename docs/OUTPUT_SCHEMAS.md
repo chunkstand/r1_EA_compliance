@@ -815,6 +815,7 @@ Each `authority_families` entry includes:
 - `rationale`
 - `source_record_ids`
 - `rule_ids`
+- `source_record_mapping`
 - `applicability_predicates`
 - `package_fact_types`
 - `coverage_requirements`
@@ -822,6 +823,15 @@ Each `authority_families` entry includes:
 - `open_inventory_gaps`
 - `supersession`, when the family is replaced, reserved, repealed, or otherwise superseded
 - `required_authority_requirement_ids`
+
+Each `source_record_mapping` includes:
+
+- `mapping_status`
+- `source_set_id`
+- `mapped_source_record_ids`
+- `catalog_source_record_ids`
+- `excluded_source_record_ids`
+- `missing_source_record_requirements`
 
 `source_record_crosswalk` contains one row per active workbook source record. Each row includes:
 
@@ -838,6 +848,8 @@ The inventory must preserve these closeout invariants:
 - every current rule-pack rule maps to exactly one authority family;
 - every rule's `authority_source_record_id` is present in that family's source-record mapping;
 - every canonical workbook source record maps to a primary family;
+- every `source_only` family carries explicit open gaps for currentness and rule-template follow-up;
+- every `candidate` family carries explicit missing source-record requirements;
 - `source_only` and `candidate` families remain visible as future work instead of being hidden in
   runtime code;
 - superseded/reserved authorities carry replacement/current-source evidence.
