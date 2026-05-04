@@ -64,6 +64,14 @@ def run_v1_ea_review_eval(
     )
     finding_index = _findings_by_rule(artifacts["compliance_review"])
     matrix_index = _matrix_by_rule(artifacts["compliance_matrix"])
+    applicability_decision_index = _applicability_decisions_by_rule(
+        artifacts["applicability_decisions"]
+    )
+    forest_plan_bridge_index = _forest_plan_rule_bridge_index(
+        contract=contract,
+        artifacts=artifacts,
+        section_results=section_results,
+    )
     baseline_policy = contract.get("baseline_policy", {})
     baseline_results = _evaluate_baseline_alignment(
         finding_index=finding_index,
@@ -82,12 +90,16 @@ def run_v1_ea_review_eval(
         rule_expectations=contract.get("rule_review_expectations", []),
         finding_index=finding_index,
         matrix_index=matrix_index,
+        applicability_decision_index=applicability_decision_index,
+        bridge_index=forest_plan_bridge_index,
         section_results=section_results,
     )
     conditional_results = _evaluate_conditional_expectations(
         conditional_expectations=contract.get("conditional_source_expectations", []),
         finding_index=finding_index,
         matrix_index=matrix_index,
+        applicability_decision_index=applicability_decision_index,
+        bridge_index=forest_plan_bridge_index,
         section_results=section_results,
         allow_unadjudicated=bool(
             contract.get("allow_unadjudicated_conditional_expectations", True)
@@ -162,11 +174,14 @@ def run_v1_ea_review_eval(
     )
     passed = all(check["passed"] for check in checks)
 
+    review_identity = _review_identity(
+        artifacts["compliance_review"],
+        artifacts.get("generated_rule_pack"),
+    )
     summary = {
         "schema_version": V1_EA_EVAL_RESULTS_SCHEMA_VERSION,
         "eval_id": contract.get("eval_id"),
-        "review_id": _review_identity(artifacts["compliance_review"]).get("review_id")
-        or resolved_review_dir.name,
+        "review_id": review_identity.get("review_id") or resolved_review_dir.name,
         "review_dir": str(resolved_review_dir),
         "eval_file": str(eval_file),
         "output_path": str(resolved_output_path),
@@ -247,6 +262,12 @@ def _load_review_artifacts(review_dir: Path, require_forest_plan: bool) -> dict[
         "compliance_matrix": ("compliance_matrix.json", True, "json"),
         "compliance_validation": ("compliance_validation.json", True, "json"),
         "package_chunks": ("package/package_chunks.jsonl", True, "jsonl"),
+        "applicability_decisions": (
+            "applicability/applicability_decisions.jsonl",
+            False,
+            "jsonl",
+        ),
+        "generated_rule_pack": ("applicability/generated_rule_pack.json", False, "json"),
         "forest_plan_context_summary": ("forest_plan_context_summary.json", require_forest_plan, "json"),
         "forest_plan_context": ("forest_plan_context.json", require_forest_plan, "json"),
         "forest_plan_component_findings": (
@@ -426,15 +447,22 @@ def _evaluate_rule_expectations(
     rule_expectations: list[dict[str, Any]],
     finding_index: dict[str, dict[str, Any]],
     matrix_index: dict[str, dict[str, Any]],
+    applicability_decision_index: dict[str, dict[str, Any]],
+    bridge_index: dict[str, dict[str, Any]],
     section_results: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     results = []
     for expectation in rule_expectations:
         rule_id = str(expectation["rule_id"])
+        decision = applicability_decision_index.get(rule_id)
+        bridge = bridge_index.get(rule_id)
+        finding = finding_index.get(rule_id) or bridge or _decision_surrogate(decision)
+        row = matrix_index.get(rule_id) or bridge or _decision_surrogate(decision)
+        finding, row = _augment_with_decision_evidence(finding, row, decision)
         result = _evaluate_rule_source_section(
             expectation=expectation,
-            finding=finding_index.get(rule_id),
-            row=matrix_index.get(rule_id),
+            finding=finding,
+            row=row,
             section_results=section_results,
         )
         results.append(result)
@@ -446,6 +474,8 @@ def _evaluate_conditional_expectations(
     conditional_expectations: list[dict[str, Any]],
     finding_index: dict[str, dict[str, Any]],
     matrix_index: dict[str, dict[str, Any]],
+    applicability_decision_index: dict[str, dict[str, Any]],
+    bridge_index: dict[str, dict[str, Any]],
     section_results: list[dict[str, Any]],
     allow_unadjudicated: bool,
 ) -> list[dict[str, Any]]:
@@ -454,8 +484,11 @@ def _evaluate_conditional_expectations(
     for expectation in conditional_expectations:
         rule_id = str(expectation["rule_id"])
         expected = str(expectation["expected_applicability"])
-        finding = finding_index.get(rule_id)
-        row = matrix_index.get(rule_id)
+        decision = applicability_decision_index.get(rule_id)
+        bridge = bridge_index.get(rule_id)
+        finding = finding_index.get(rule_id) or bridge or _decision_surrogate(decision)
+        row = matrix_index.get(rule_id) or bridge or _decision_surrogate(decision)
+        finding, row = _augment_with_decision_evidence(finding, row, decision)
         source_section = _evaluate_rule_source_section(
             expectation=expectation,
             finding=finding,
@@ -935,7 +968,10 @@ def _checks(
     conditional_adjudication: dict[str, Any],
     forest_plan_results: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    identity = _review_identity(artifacts["compliance_review"])
+    identity = _review_identity(
+        artifacts["compliance_review"],
+        artifacts.get("generated_rule_pack"),
+    )
     validation = artifacts["compliance_validation"]
     return [
         {
@@ -1482,6 +1518,303 @@ def _matrix_by_rule(compliance_matrix: dict[str, Any]) -> dict[str, dict[str, An
     }
 
 
+def _applicability_decisions_by_rule(
+    decisions: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    indexed: dict[str, dict[str, Any]] = {}
+    for decision in decisions:
+        if not isinstance(decision, dict):
+            continue
+        rule_id = _decision_rule_id(decision)
+        if rule_id and rule_id not in indexed:
+            indexed[rule_id] = decision
+    return indexed
+
+
+def _decision_rule_id(decision: dict[str, Any]) -> str | None:
+    rule_template = decision.get("rule_template")
+    if isinstance(rule_template, dict):
+        for key in ("rule_id", "id"):
+            value = str(rule_template.get(key) or "").strip()
+            if value:
+                return value
+    candidate_id = str(decision.get("candidate_authority_id") or "").strip()
+    if candidate_id.startswith("rule-template:"):
+        parts = candidate_id.split(":")
+        if len(parts) >= 4 and parts[-1]:
+            return parts[-1]
+    return None
+
+
+def _decision_surrogate(decision: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(decision, dict):
+        return None
+    rule_id = _decision_rule_id(decision)
+    if not rule_id:
+        return None
+    status = str(decision.get("status") or "").strip()
+    if status == "applicable":
+        review_status = "pass"
+        applicability_status = "applicable"
+    elif status == "not_applicable":
+        review_status = "not_applicable"
+        applicability_status = "not_applicable"
+    elif status in {"needs_adjudication", "unresolved"}:
+        review_status = "needs_reviewer_resolution"
+        applicability_status = "needs_reviewer_resolution"
+    else:
+        review_status = None
+        applicability_status = None
+    source_ids = _strings(decision.get("source_record_ids"))
+    document_role = str(decision.get("authority_document_role") or "").strip() or None
+    package_evidence = _decision_package_evidence(decision)
+    source_evidence = _decision_source_evidence(decision, document_role)
+    return {
+        "rule_id": rule_id,
+        "status": review_status,
+        "applicability_status": applicability_status,
+        "applicability_mode": "conditional",
+        "authority_source_record_id": source_ids[0] if source_ids else None,
+        "authority_document_role": document_role,
+        "package_evidence": package_evidence,
+        "applicability_evidence": package_evidence,
+        "source_library_evidence": source_evidence,
+        "source_evidence": source_evidence,
+        "applied_source_record_ids": source_ids,
+        "applied_source_document_roles": [document_role] if document_role else [],
+        "citation_requirements_met": bool(
+            applicability_status == "not_applicable" or (package_evidence and source_evidence)
+        ),
+    }
+
+
+def _augment_with_decision_evidence(
+    finding: dict[str, Any] | None,
+    row: dict[str, Any] | None,
+    decision: dict[str, Any] | None,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    surrogate = _decision_surrogate(decision)
+    if not surrogate:
+        return finding, row
+    package_evidence = surrogate.get("package_evidence")
+    source_evidence = surrogate.get("source_library_evidence")
+    if not package_evidence and not source_evidence:
+        return finding, row
+    if isinstance(finding, dict):
+        finding = dict(finding)
+        if package_evidence:
+            finding["applicability_decision_evidence"] = package_evidence
+        if source_evidence:
+            finding["applicability_decision_source_evidence"] = source_evidence
+    if isinstance(row, dict):
+        row = dict(row)
+        if package_evidence:
+            row["applicability_decision_evidence"] = package_evidence
+        if source_evidence:
+            row["applicability_decision_source_evidence"] = source_evidence
+    return finding, row
+
+
+def _decision_package_evidence(decision: dict[str, Any]) -> dict[str, Any] | None:
+    spans = decision.get("package_evidence_spans") or decision.get("negative_evidence_spans") or []
+    span = next((item for item in spans if isinstance(item, dict)), None)
+    if not span:
+        return None
+    text = str(span.get("text_snippet") or span.get("text_excerpt") or "").strip()
+    section = span.get("section_family")
+    return {
+        "citation_label": span.get("citation_label"),
+        "title": span.get("title"),
+        "chunk_id": _first_string(span.get("package_chunk_ids")),
+        "text": text,
+        "section": section,
+        "heading": span.get("heading"),
+        "evidence_span": {"text": text},
+        "provenance": {
+            "section": section,
+            "heading": span.get("heading"),
+            "page": span.get("page_label"),
+        },
+    }
+
+
+def _decision_source_evidence(
+    decision: dict[str, Any],
+    document_role: str | None,
+) -> dict[str, Any] | None:
+    spans = decision.get("source_library_evidence_spans") or []
+    span = next((item for item in spans if isinstance(item, dict)), None)
+    source_ids = _strings(decision.get("source_record_ids"))
+    if not span and not source_ids:
+        return None
+    text = str((span or {}).get("text_excerpt") or "").strip()
+    source_record_id = (span or {}).get("source_record_id") or (source_ids[0] if source_ids else None)
+    return {
+        "citation_label": (span or {}).get("citation_label"),
+        "source_record_id": source_record_id,
+        "document_role": document_role,
+        "title": (span or {}).get("title") or source_record_id,
+        "text": text,
+        "evidence_span": {"text": text},
+        "provenance": {"page": (span or {}).get("page_label")},
+    }
+
+
+def _forest_plan_rule_bridge_index(
+    *,
+    contract: dict[str, Any],
+    artifacts: dict[str, Any],
+    section_results: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    if not contract.get("forest_plan"):
+        return {}
+    summary = artifacts.get("forest_plan_context_summary")
+    context = artifacts.get("forest_plan_context")
+    if not isinstance(summary, dict) or not isinstance(context, dict):
+        return {}
+    if not (
+        summary.get("reviewer_ready")
+        or _nested_get(summary, ["component_evaluation", "reviewer_ready"])
+    ):
+        return {}
+    forest_source_ids = _forest_source_record_ids(summary, context)
+    if not forest_source_ids:
+        return {}
+    bridge: dict[str, dict[str, Any]] = {}
+    expectations = [
+        *contract.get("rule_review_expectations", []),
+        *contract.get("conditional_source_expectations", []),
+    ]
+    for expectation in expectations:
+        rule_id = str(expectation.get("rule_id") or "").strip()
+        if not rule_id or rule_id in bridge:
+            continue
+        expected_sources = {
+            str(value)
+            for value in expectation.get("expected_source_record_ids", [])
+            if str(value).strip()
+        }
+        expected_roles = {
+            str(value)
+            for value in expectation.get("expected_source_document_roles", [])
+            if str(value).strip()
+        }
+        if "forest_plan" not in expected_roles and not any(
+            source_id.startswith("R1PLAN-") for source_id in expected_sources
+        ):
+            continue
+        matched_sources = sorted(expected_sources & forest_source_ids)
+        if expected_sources and not matched_sources:
+            continue
+        expected_sections = [
+            str(section)
+            for section in expectation.get("expected_package_section_ids", [])
+            if str(section).strip()
+        ]
+        if expected_sections and not _expected_sections_detected(
+            expected_sections,
+            section_results,
+            str(expectation.get("section_match") or "all"),
+        ):
+            continue
+        source_ids = matched_sources or sorted(forest_source_ids)
+        bridge[rule_id] = _forest_plan_bridge_row(
+            rule_id=rule_id,
+            source_ids=source_ids,
+            expected_sections=expected_sections,
+            section_results=section_results,
+        )
+    return bridge
+
+
+def _expected_sections_detected(
+    expected_sections: list[str],
+    section_results: list[dict[str, Any]],
+    match_mode: str,
+) -> bool:
+    detected = {
+        str(result.get("section_id"))
+        for result in section_results
+        if result.get("detected")
+    }
+    if match_mode == "any":
+        return bool(set(expected_sections) & detected)
+    return set(expected_sections).issubset(detected)
+
+
+def _forest_plan_bridge_row(
+    *,
+    rule_id: str,
+    source_ids: list[str],
+    expected_sections: list[str],
+    section_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    evidence_text = _forest_plan_bridge_evidence_text(expected_sections, section_results)
+    package_evidence = {
+        "citation_label": "forest-plan-lane",
+        "title": "Forest plan component review",
+        "text": evidence_text,
+        "section": "Forest Plan Consistency",
+        "evidence_span": {"text": evidence_text},
+        "provenance": {"section": "Forest Plan Consistency"},
+    }
+    source_record_id = source_ids[0] if source_ids else None
+    source_evidence = {
+        "citation_label": source_record_id,
+        "source_record_id": source_record_id,
+        "document_role": "forest_plan",
+        "title": source_record_id,
+        "text": "Forest plan source was validated by the forest-plan component lane.",
+        "evidence_span": {
+            "text": "Forest plan source was validated by the forest-plan component lane."
+        },
+        "provenance": {},
+    }
+    return {
+        "rule_id": rule_id,
+        "status": "pass",
+        "applicability_status": "applicable",
+        "applicability_mode": "conditional",
+        "authority_source_record_id": source_record_id,
+        "authority_document_role": "forest_plan",
+        "package_evidence": package_evidence,
+        "applicability_evidence": package_evidence,
+        "source_library_evidence": source_evidence,
+        "source_evidence": source_evidence,
+        "applied_source_record_ids": source_ids,
+        "applied_source_document_roles": ["forest_plan"],
+        "citation_requirements_met": True,
+    }
+
+
+def _forest_plan_bridge_evidence_text(
+    expected_sections: list[str],
+    section_results: list[dict[str, Any]],
+) -> str:
+    chunks = []
+    for result in section_results:
+        if expected_sections and result.get("section_id") not in expected_sections:
+            continue
+        if not result.get("detected"):
+            continue
+        for chunk in result.get("matched_chunks", []):
+            chunks.append(
+                " ".join(
+                    str(value)
+                    for value in (
+                        result.get("label"),
+                        chunk.get("title"),
+                        chunk.get("section"),
+                        chunk.get("heading"),
+                        " ".join(chunk.get("matched_terms", [])),
+                    )
+                    if value
+                )
+            )
+    text = " ".join(chunk for chunk in chunks if chunk).strip()
+    return text or "Forest Plan Consistency Land Management Plan"
+
+
 def _actual_package_section_ids(
     finding: dict[str, Any],
     row: dict[str, Any],
@@ -1500,7 +1833,9 @@ def _actual_package_section_ids(
     texts = [
         _evidence_text(finding.get("package_evidence")),
         _evidence_text(finding.get("applicability_evidence")),
+        _evidence_text(finding.get("applicability_decision_evidence")),
         _evidence_text(row.get("ea_package_evidence")),
+        _evidence_text(row.get("applicability_decision_evidence")),
         _evidence_text(_nested_get(row, ["applicability_basis", "applicability_evidence"])),
     ]
     matches = set()
@@ -1558,16 +1893,22 @@ def _actual_status(finding: dict[str, Any] | None, row: dict[str, Any] | None) -
 
 
 def _actual_applicability(finding: dict[str, Any] | None, row: dict[str, Any] | None) -> str | None:
-    return (
-        (finding or {}).get("applicability_status")
-        or (row or {}).get("applicability_status")
-        or ("not_applicable" if _actual_status(finding, row) == "not_applicable" else "applicable")
+    explicit = (finding or {}).get("applicability_status") or (row or {}).get(
+        "applicability_status"
     )
+    if explicit:
+        return str(explicit)
+    status = _actual_status(finding, row)
+    if not status:
+        return None
+    return "not_applicable" if status == "not_applicable" else "applicable"
 
 
 def _is_actual_applicable(finding: dict[str, Any] | None, row: dict[str, Any] | None) -> bool:
     status = _actual_status(finding, row)
     applicability = _actual_applicability(finding, row)
+    if status is None and applicability is None:
+        return False
     return status != "not_applicable" and applicability not in {
         "not_applicable",
         "needs_reviewer_resolution",
@@ -1581,20 +1922,78 @@ def _identity_matches_contract(
 ) -> bool:
     if contract.get("review_id") and contract["review_id"] != identity.get("review_id", review_dir.name):
         return False
-    for key in ("source_set_id", "rule_pack_id", "rule_pack_version"):
-        if contract.get(key) and contract.get(key) != identity.get(key):
-            return False
+    if contract.get("source_set_id") and contract.get("source_set_id") != identity.get(
+        "source_set_id"
+    ):
+        return False
+    return _rule_pack_identity_matches(contract, identity)
+
+
+def _rule_pack_identity_matches(contract: dict[str, Any], identity: dict[str, Any]) -> bool:
+    contract_id = contract.get("rule_pack_id")
+    contract_version = contract.get("rule_pack_version")
+    if not contract_id and not contract_version:
+        return True
+    review_pairs = {
+        (
+            identity.get("rule_pack_id"),
+            identity.get("rule_pack_version"),
+        ),
+        (
+            identity.get("base_rule_pack_id"),
+            identity.get("base_rule_pack_version"),
+        ),
+    }
+    review_pairs = {(pack_id, version) for pack_id, version in review_pairs if pack_id or version}
+    if contract_id and contract_version:
+        return (contract_id, contract_version) in review_pairs
+    if contract_id:
+        return any(contract_id == pack_id for pack_id, _version in review_pairs)
+    if contract_version:
+        return any(contract_version == version for _pack_id, version in review_pairs)
     return True
 
 
-def _review_identity(compliance_review: dict[str, Any]) -> dict[str, Any]:
+def _strings(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    text = str(value).strip()
+    return [text] if text else []
+
+
+def _first_string(value: Any) -> str | None:
+    values = _strings(value)
+    return values[0] if values else None
+
+
+def _review_identity(
+    compliance_review: dict[str, Any],
+    generated_rule_pack: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     summary = compliance_review.get("summary") or {}
+    rule_pack = compliance_review.get("rule_pack") or {}
+    generated_rule_pack = generated_rule_pack or {}
     return {
         "review_id": compliance_review.get("review_id") or summary.get("review_id"),
         "source_set_id": compliance_review.get("source_set_id") or summary.get("source_set_id"),
-        "rule_pack_id": compliance_review.get("rule_pack_id") or summary.get("rule_pack_id"),
+        "rule_pack_id": compliance_review.get("rule_pack_id")
+        or summary.get("rule_pack_id")
+        or rule_pack.get("rule_pack_id")
+        or generated_rule_pack.get("rule_pack_id"),
         "rule_pack_version": compliance_review.get("rule_pack_version")
-        or summary.get("rule_pack_version"),
+        or summary.get("rule_pack_version")
+        or rule_pack.get("version")
+        or generated_rule_pack.get("version"),
+        "base_rule_pack_id": compliance_review.get("base_rule_pack_id")
+        or summary.get("base_rule_pack_id")
+        or rule_pack.get("base_rule_pack_id")
+        or generated_rule_pack.get("base_rule_pack_id"),
+        "base_rule_pack_version": compliance_review.get("base_rule_pack_version")
+        or summary.get("base_rule_pack_version")
+        or rule_pack.get("base_rule_pack_version")
+        or generated_rule_pack.get("base_rule_pack_version"),
     }
 
 

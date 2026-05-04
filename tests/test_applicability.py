@@ -84,7 +84,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertEqual(conditional["positive_trigger_groups"], [["road construction"]])
             self.assertEqual(
                 conditional["negative_trigger_groups"],
-                [["no road construction"]],
+                [["no road construction"], ["no new road"]],
             )
             self.assertEqual(
                 conditional["source_role_filters"]["source_record_ids"],
@@ -312,7 +312,7 @@ def _write_rule_pack(directory: Path) -> Path:
                 document_role="regulation",
                 applicability_mode="conditional",
                 applies_if_package_terms=["road construction"],
-                does_not_apply_if_package_terms=["no road construction"],
+                does_not_apply_if_package_terms=["no road construction", "no new road"],
                 package_section_terms=["transportation"],
             ),
             _rule(

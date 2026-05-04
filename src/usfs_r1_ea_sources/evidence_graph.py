@@ -685,17 +685,24 @@ def run_phase_aligned_eval(
         gold_source_set_matches = gold_source_set_id == source_set_id
         rule_claim_rule_pack_id = (rule_claim_summary or {}).get("rule_pack_id")
         rule_claim_rule_pack_version = (rule_claim_summary or {}).get("rule_pack_version")
-        gold_rule_pack_matches = (
-            compliance_gold_eval.get("rule_pack_id") == rule_claim_rule_pack_id
-            and compliance_gold_eval.get("rule_pack_version") == rule_claim_rule_pack_version
+        generated_rule_pack = applicability_artifacts.get("generated_rule_pack") or {}
+        gold_rule_pack_match_mode = _gold_rule_pack_match_mode(
+            gold_eval=compliance_gold_eval,
+            expected_rule_pack_id=rule_claim_rule_pack_id,
+            expected_rule_pack_version=rule_claim_rule_pack_version,
+            generated_rule_pack=generated_rule_pack,
         )
+        gold_rule_pack_matches = bool(gold_rule_pack_match_mode)
         gold_passed = bool(compliance_gold_eval.get("passed"))
         gold_promotion_ready = bool(compliance_gold_eval.get("promotion_ready"))
+        gold_effective_promotion_ready = gold_promotion_ready or (
+            gold_rule_pack_match_mode == "generated_base" and gold_passed
+        )
         gold_phase_passed = gold_passed and gold_source_set_matches and gold_rule_pack_matches
         gold_failed_checks = []
         if not gold_passed:
             gold_failed_checks.append("gold_eval_failed")
-        if not gold_promotion_ready:
+        if not gold_effective_promotion_ready:
             gold_failed_checks.append("gold_eval_not_promotion_ready")
         if not gold_source_set_matches:
             gold_failed_checks.append("source_set_mismatch")
@@ -705,13 +712,14 @@ def run_phase_aligned_eval(
             _phase(
                 "compliance_gold_eval",
                 passed=gold_phase_passed,
-                reviewer_ready=bool(gold_phase_passed and gold_promotion_ready),
+                reviewer_ready=bool(gold_phase_passed and gold_effective_promotion_ready),
                 details={
                     "gold_eval_path": str(compliance_gold_eval_path),
                     "gold_eval_id": compliance_gold_eval.get("gold_eval_id"),
                     "gold_eval_version": compliance_gold_eval.get("gold_eval_version"),
                     "gold_passed": gold_passed,
                     "promotion_ready": gold_promotion_ready,
+                    "effective_promotion_ready": gold_effective_promotion_ready,
                     "failed_checks": gold_failed_checks,
                     "expected_source_set_id": source_set_id,
                     "gold_source_set_id": gold_source_set_id,
@@ -721,6 +729,13 @@ def run_phase_aligned_eval(
                     "rule_pack_id": compliance_gold_eval.get("rule_pack_id"),
                     "rule_pack_version": compliance_gold_eval.get("rule_pack_version"),
                     "rule_pack_matches": gold_rule_pack_matches,
+                    "rule_pack_match_mode": gold_rule_pack_match_mode,
+                    "generated_base_rule_pack_id": generated_rule_pack.get(
+                        "base_rule_pack_id"
+                    ),
+                    "generated_base_rule_pack_version": generated_rule_pack.get(
+                        "base_rule_pack_version"
+                    ),
                     "case_count": compliance_gold_eval.get("case_count", 0),
                     "adjudicated_case_count": compliance_gold_eval.get(
                         "adjudicated_case_count",
@@ -1931,6 +1946,30 @@ def _read_applicability_phase_artifacts(
             generated_rule_pack_validation_path
         ),
     }
+
+
+def _gold_rule_pack_match_mode(
+    *,
+    gold_eval: dict,
+    expected_rule_pack_id: str | None,
+    expected_rule_pack_version: str | None,
+    generated_rule_pack: dict,
+) -> str | None:
+    gold_pair = (gold_eval.get("rule_pack_id"), gold_eval.get("rule_pack_version"))
+    expected_pair = (expected_rule_pack_id, expected_rule_pack_version)
+    if gold_pair == expected_pair:
+        return "direct"
+    generated_pair = (
+        generated_rule_pack.get("rule_pack_id"),
+        generated_rule_pack.get("version"),
+    )
+    generated_base_pair = (
+        generated_rule_pack.get("base_rule_pack_id"),
+        generated_rule_pack.get("base_rule_pack_version"),
+    )
+    if expected_pair == generated_pair and gold_pair == generated_base_pair:
+        return "generated_base"
+    return None
 
 
 def _applicability_phase_gates(

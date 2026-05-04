@@ -576,7 +576,7 @@ def _rule_positive_trigger_groups(rule: dict) -> list[list[str]]:
 
 def _rule_negative_trigger_groups(rule: dict) -> list[list[str]]:
     terms = _strings(rule.get("does_not_apply_if_package_terms"))
-    return [terms] if terms else []
+    return [[term] for term in terms]
 
 
 def _component_positive_trigger_groups(component: dict) -> list[list[str]]:

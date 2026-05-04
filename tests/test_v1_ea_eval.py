@@ -41,6 +41,151 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(result.summary["failed_rule_ids_by_category"], {})
             self.assertEqual(result.summary["failed_rule_expectations"], [])
 
+    def test_v1_eval_accepts_generated_rule_pack_base_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            report = _read_json(review_dir / "compliance_review.json")
+            generated_identity = {
+                "rule_pack_id": "generated-nepa-ea-v0-v1-unit",
+                "version": "applicability-v0",
+                "base_rule_pack_id": "nepa-ea-v0",
+                "base_rule_pack_version": "0.4.0",
+            }
+            report["rule_pack_id"] = generated_identity["rule_pack_id"]
+            report["rule_pack_version"] = generated_identity["version"]
+            report["base_rule_pack_id"] = generated_identity["base_rule_pack_id"]
+            report["base_rule_pack_version"] = generated_identity["base_rule_pack_version"]
+            report["rule_pack"] = generated_identity
+            report["summary"]["rule_pack_id"] = generated_identity["rule_pack_id"]
+            report["summary"]["rule_pack_version"] = generated_identity["version"]
+            report["summary"]["base_rule_pack_id"] = generated_identity["base_rule_pack_id"]
+            report["summary"]["base_rule_pack_version"] = generated_identity[
+                "base_rule_pack_version"
+            ]
+            _write_json(review_dir / "compliance_review.json", report)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            identity_check = _summary_check(result.summary, "review_identity_matches_contract")
+            self.assertTrue(identity_check["passed"])
+            self.assertEqual(
+                identity_check["details"]["review"]["base_rule_pack_id"],
+                "nepa-ea-v0",
+            )
+
+    def test_v1_eval_uses_applicability_decision_for_missing_not_applicable_row(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["conditional_source_expectations"].append(
+                {
+                    "rule_id": "nepa_4336c_ce_adoption_screen",
+                    "expected_applicability": "not_applicable",
+                    "classification_rationale": (
+                        "The package is an EA, so the categorical-exclusion adoption row "
+                        "should remain explicitly not applicable."
+                    ),
+                }
+            )
+            _write_json(eval_file, contract)
+            _write_jsonl(
+                review_dir / "applicability" / "applicability_decisions.jsonl",
+                [
+                    {
+                        "schema_version": "applicability-decisions-v0",
+                        "candidate_authority_id": (
+                            "rule-template:nepa-ea-v0:0.4.0:"
+                            "nepa_4336c_ce_adoption_screen"
+                        ),
+                        "rule_template": {"rule_id": "nepa_4336c_ce_adoption_screen"},
+                        "status": "not_applicable",
+                        "source_record_ids": ["R1EA-006"],
+                        "authority_document_role": "law",
+                        "negative_evidence_spans": [
+                            {
+                                "citation_label": "EA-PACKAGE-001",
+                                "text_snippet": (
+                                    "The proposal is not using a categorical exclusion."
+                                ),
+                            }
+                        ],
+                        "source_library_evidence_spans": [
+                            {
+                                "citation_label": "R1EA-006",
+                                "source_record_id": "R1EA-006",
+                                "text_excerpt": "42 U.S.C. 4336c",
+                            }
+                        ],
+                    }
+                ],
+            )
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            output = _read_json(result.output_path)
+            ce_result = next(
+                item
+                for item in output["conditional_results"]
+                if item["rule_id"] == "nepa_4336c_ce_adoption_screen"
+            )
+            self.assertEqual(ce_result["actual_status"], "not_applicable")
+            self.assertEqual(ce_result["actual_applicability"], "not_applicable")
+
+    def test_v1_eval_bridges_missing_forest_plan_matrix_row_from_component_lane(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            report = _read_json(review_dir / "compliance_review.json")
+            report["findings"] = [
+                finding
+                for finding in report["findings"]
+                if finding["rule_id"] != "custer_gallatin_lmp_2022"
+            ]
+            _write_json(review_dir / "compliance_review.json", report)
+            matrix = _read_json(review_dir / "compliance_matrix.json")
+            matrix["rows"] = [
+                row for row in matrix["rows"] if row["rule_id"] != "custer_gallatin_lmp_2022"
+            ]
+            matrix["summary"]["row_count"] = len(matrix["rows"])
+            _write_json(review_dir / "compliance_matrix.json", matrix)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            output = _read_json(result.output_path)
+            custer_rule = next(
+                item
+                for item in output["rule_results"]
+                if item["rule_id"] == "custer_gallatin_lmp_2022"
+            )
+            self.assertTrue(custer_rule["present"])
+            self.assertEqual(
+                custer_rule["actual_source_record_ids"],
+                ["R1PLAN-custer-gallatin-nf-02"],
+            )
+
     def test_v1_eval_flags_conditional_false_negative_and_section_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -1541,9 +1541,18 @@ def _result_matches_trigger_group(result: dict[str, Any], group: list[str]) -> b
 
 
 def _term_in_text(term: str, text: str) -> bool:
-    normalized_term = str(term or "").strip().lower()
-    if not normalized_term:
+    raw_term = str(term or "").strip()
+    if not raw_term:
         return False
+    if len(raw_term) <= 3 and raw_term.replace(".", "").isalnum():
+        return bool(
+            re.search(
+                rf"(?<![A-Za-z0-9]){re.escape(raw_term)}(?![A-Za-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            )
+        )
+    normalized_term = raw_term.lower()
     return normalized_term in text.lower()
 
 

@@ -1733,6 +1733,49 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
             self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
 
+    def test_phase_eval_accepts_base_gold_eval_for_generated_rule_pack(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Purpose and Need. Mitigation measures support a FONSI.",
+            )
+            base_rule_pack_path = _write_rule_pack(Path(tmp))
+            _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id="phase-review",
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            gold_path = _write_gold_eval_file(Path(tmp))
+            gold_result = run_compliance_gold_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=base_rule_pack_path,
+                gold_file=gold_path,
+            )
+            self.assertTrue(gold_result.summary["passed"])
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="phase-review",
+            )
+
+            gold_phase = _phase(result.summary, "compliance_gold_eval")
+            self.assertTrue(gold_phase["passed"])
+            self.assertTrue(gold_phase["reviewer_ready"])
+            self.assertEqual(gold_phase["details"]["rule_pack_match_mode"], "generated_base")
+            self.assertTrue(gold_phase["details"]["effective_promotion_ready"])
+            self.assertEqual(
+                gold_phase["details"]["generated_base_rule_pack_id"],
+                "unit-nepa-ea",
+            )
+
     def test_phase_eval_can_include_component_adjudication_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

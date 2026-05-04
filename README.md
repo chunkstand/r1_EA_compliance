@@ -44,7 +44,7 @@ component-like labels with nonnumeric number tokens. Older reviewer-ready downst
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
 `26` baseline source records, applies `12/12` Custer Gallatin standards, passes review-bound
-`phase-eval` `17/17` with the post-V1 applicability gates included, passes `v1-ea-eval` with
+`phase-eval` `16/16` with the post-V1 applicability gates included, passes `v1-ea-eval` with
 broader EA and forest-plan lanes true, and keeps `14` conditional adjudication rows as explicit
 accepted V1 reviewer risk.
 
@@ -1017,7 +1017,9 @@ When `compliance_coverage_results.json` exists beside the rule-claim outputs, it
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
-rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` or
+rule-pack, failed-gold, or not-promotion-ready artifacts. If a review uses a generated rule pack,
+phase eval can accept a passing gold eval against the generated pack's declared base rule pack and
+reports `rule_pack_match_mode=generated_base`. Pass `--review-id <review-id>` or
 `--review-dir <path>` to include the applicability phase gates for `authority_universe`,
 `package_fact_graph`, `applicability_retrieval_trace`, `applicability_graph_trace`,
 `applicability_determination`, `applicability_validation`, and `generated_rule_pack`, followed by

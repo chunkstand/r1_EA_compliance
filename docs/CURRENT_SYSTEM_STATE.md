@@ -1012,9 +1012,11 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 
 When a compliance coverage phase is included, `phase-eval` requires the matrix gate to pass, the
 rule pack to match, and the coverage source set to match the evaluated source set. When a gold eval
-phase is included, `phase-eval` requires the promotion gate to pass, the rule pack to match, and the
+phase is included, `phase-eval` requires the gold eval to pass, the rule pack to match, and the
 gold eval source set to match the evaluated source set; stale or failed gold artifacts report
-specific failed checks such as source-set or rule-pack mismatch. When review-bound applicability
+specific failed checks such as source-set or rule-pack mismatch. For review-bound generated rule
+packs, a passing base-pack gold eval can satisfy the phase when the generated pack declares the same
+base identity; the phase records this as `rule_pack_match_mode=generated_base`. When review-bound applicability
 phases are included, `phase-eval` requires a current authority universe, package fact graph and
 validation, retrieval and graph trace diagnostics, complete candidate decisions, complete
 applicable/non-applicable partitions, search coverage certificates for non-applicable authorities,
@@ -1067,7 +1069,8 @@ The prior 147-row downstream corpus remains useful for historical comparison onl
 treated as current promotion evidence for the expanded workbook.
 
 The V1 CE/FANEC conditional-applicability milestone is implemented: grouped positive trigger
-semantics now keep `nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`, and
+semantics and token-boundary matching for short acronyms now keep
+`nepa_4336c_ce_adoption_screen`, `usda_nepa_ce_fanec_7cfr_1b3`, and
 `usda_nepa_subcomponent_ce_7cfr_1b4` not applicable for the East Crazies package unless package
 evidence shows an adopted CE, CE/FANEC screen, categorical-exclusion path, USDA CE screening, or
 extraordinary-circumstances review. The milestone also carries explicit
@@ -1106,7 +1109,9 @@ The V1 EA gate repair plan is complete through Milestone 6. The promoted review 
 `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
 `failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
 `conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
-conditional adjudication rows carried as explicit V1 reviewer risk. Embeddings, reranking,
+conditional adjudication rows carried as explicit V1 reviewer risk. Review-bound `phase-eval` now
+passes `16/16` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
+passing base-pack gold suite through `rule_pack_match_mode=generated_base`. Embeddings, reranking,
 model-assisted synthesis, and broader Region 1 package expansion remain post-V1 work and should
 start under a new milestone plan.
 

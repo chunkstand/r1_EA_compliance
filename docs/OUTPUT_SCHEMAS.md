@@ -2318,7 +2318,9 @@ also includes a `compliance_coverage` phase for matrix, source-claim, source-cla
 eval-case coverage. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
-not-promotion-ready artifacts. When `--review-id` or `--review-dir` is supplied, phase eval also
+not-promotion-ready artifacts. For generated review rule packs, a passing gold eval against the
+generated pack's declared base rule pack can satisfy this phase and is reported with
+`rule_pack_match_mode=generated_base`. When `--review-id` or `--review-dir` is supplied, phase eval also
 requires the applicability phases `authority_universe`, `package_fact_graph`,
 `applicability_retrieval_trace`, `applicability_graph_trace`, `applicability_determination`,
 `applicability_validation`, and `generated_rule_pack` before evaluating `compliance_review`.
