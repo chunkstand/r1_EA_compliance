@@ -1716,7 +1716,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 7)
+            self.assertEqual(result.summary["phase_count"], 14)
             claim_phase = _phase(result.summary, "claim_extraction")
             self.assertTrue(claim_phase["passed"])
             self.assertTrue(claim_phase["reviewer_ready"])
@@ -1762,7 +1762,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 8)
+            self.assertEqual(result.summary["phase_count"], 15)
             adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
             self.assertTrue(adjudication_phase["passed"])
             self.assertTrue(adjudication_phase["reviewer_ready"])
@@ -1859,7 +1859,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 8)
+            self.assertEqual(result.summary["phase_count"], 15)
             component_eval_phase = _phase(result.summary, "forest_plan_component_eval")
             self.assertTrue(component_eval_phase["passed"])
             self.assertTrue(component_eval_phase["reviewer_ready"])
@@ -2477,6 +2477,14 @@ def _write_generated_review_gate(
     base_rule_pack = json.loads(base_rule_pack_path.read_text(encoding="utf-8"))
     package_manifest_path = review_dir / "package" / "package_manifest.jsonl"
     package_chunks_path = review_dir / "package" / "package_chunks.jsonl"
+    authority_universe_path = applicability_dir / "authority_universe_snapshot.json"
+    package_fact_graph_path = applicability_dir / "package_fact_graph.json"
+    package_fact_graph_validation_path = applicability_dir / "package_fact_graph_validation.json"
+    retrieval_trace_path = applicability_dir / "applicability_retrieval_trace.jsonl"
+    graph_trace_path = applicability_dir / "applicability_graph_trace.jsonl"
+    trace_diagnostics_path = applicability_dir / "applicability_retrieval_graph_diagnostics.json"
+    decisions_path = applicability_dir / "applicability_decisions.jsonl"
+    applicable_path = applicability_dir / "applicable_authorities.json"
     non_applicable_path = applicability_dir / "non_applicable_authorities.json"
     coverage_path = applicability_dir / "search_coverage_certificates.json"
     provenance_path = applicability_dir / "applicability_provenance.json"
@@ -2484,6 +2492,23 @@ def _write_generated_review_gate(
     generated_path = applicability_dir / "generated_rule_pack.json"
     generated_validation_path = applicability_dir / "generated_rule_pack_validation.json"
     applicability_run_id = f"applicability-{review_id}"
+    applicable_authorities = []
+    decisions = []
+    candidate_authorities = []
+    for rule in base_rule_pack["rules"]:
+        candidate_id = f"candidate:{rule['id']}"
+        decision_id = f"decision:{rule['id']}"
+        authority = {
+            "candidate_authority_id": candidate_id,
+            "decision_id": decision_id,
+            "status": "applicable",
+            "rule_template": {"rule_id": rule["id"]},
+            "source_record_ids": [rule.get("authority_source_record_id")],
+            "document_roles": [rule.get("authority_document_role") or "regulation"],
+        }
+        candidate_authorities.append(authority)
+        applicable_authorities.append(authority)
+        decisions.append(authority)
     non_applicable_authorities = (
         [
             {
@@ -2495,6 +2520,85 @@ def _write_generated_review_gate(
         ]
         if include_non_applicable
         else []
+    )
+    if include_non_applicable:
+        candidate_authorities.extend(non_applicable_authorities)
+        decisions.extend(non_applicable_authorities)
+    _write_json(
+        authority_universe_path,
+        {
+            "schema_version": "authority-universe-snapshot-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "validation": {"passed": True},
+            "candidate_authorities": candidate_authorities,
+        },
+    )
+    package_fact_graph_sha256 = hashlib.sha256(
+        f"{review_id}:{source_set_id}:package-facts".encode("utf-8")
+    ).hexdigest()
+    _write_json(
+        package_fact_graph_path,
+        {
+            "schema_version": "package-fact-graph-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "package_fact_graph_sha256": package_fact_graph_sha256,
+            "nodes": [{"node_id": "package-fact:purpose-need", "node_type": "package_section"}],
+            "edges": [],
+        },
+    )
+    _write_json(
+        package_fact_graph_validation_path,
+        {
+            "schema_version": "package-fact-graph-validation-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "package_fact_graph_sha256": package_fact_graph_sha256,
+            "validation": {"passed": True, "checks": []},
+        },
+    )
+    _write_jsonl(
+        retrieval_trace_path,
+        [
+            {
+                "candidate_authority_id": authority["candidate_authority_id"],
+                "trace_id": f"retrieval:{authority['candidate_authority_id']}",
+            }
+            for authority in candidate_authorities
+        ],
+    )
+    _write_jsonl(
+        graph_trace_path,
+        [
+            {
+                "candidate_authority_id": authority["candidate_authority_id"],
+                "trace_id": f"graph:{authority['candidate_authority_id']}",
+            }
+            for authority in candidate_authorities
+        ],
+    )
+    _write_json(
+        trace_diagnostics_path,
+        {
+            "schema_version": "applicability-retrieval-graph-diagnostics-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "retrieval_trace_sha256": sha256_file(retrieval_trace_path),
+            "graph_trace_sha256": sha256_file(graph_trace_path),
+            "validation": {"passed": True, "checks": []},
+        },
+    )
+    _write_jsonl(decisions_path, decisions)
+    _write_json(
+        applicable_path,
+        {
+            "schema_version": "applicable-authorities-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "authority_count": len(applicable_authorities),
+            "authorities": applicable_authorities,
+        },
     )
     _write_json(
         non_applicable_path,
@@ -2537,6 +2641,10 @@ def _write_generated_review_gate(
         },
     )
     hashes = {
+        "applicable_authorities_sha256": sha256_file(applicable_path),
+        "authority_universe_sha256": sha256_file(authority_universe_path),
+        "decisions_sha256": sha256_file(decisions_path),
+        "non_applicable_authorities_sha256": sha256_file(non_applicable_path),
         "applicability_provenance_sha256": sha256_file(provenance_path),
         "package_manifest_sha256": sha256_file(package_manifest_path),
         "package_chunks_sha256": sha256_file(package_chunks_path),
@@ -2553,6 +2661,10 @@ def _write_generated_review_gate(
             "reviewer_ready": True,
             "generated_rule_pack_ready": True,
             "artifact_paths": {
+                "applicable_authorities": str(applicable_path),
+                "authority_universe": str(authority_universe_path),
+                "decisions": str(decisions_path),
+                "non_applicable_authorities": str(non_applicable_path),
                 "search_coverage_certificates": str(coverage_path),
                 "provenance": str(provenance_path),
             },
@@ -2647,6 +2759,14 @@ def _run_generated_compliance_review(
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
+        encoding="utf-8",
+    )
 
 
 def _write_grouped_conditional_rule_pack(directory: Path) -> Path:

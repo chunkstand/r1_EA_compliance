@@ -52,6 +52,13 @@ Current completed applicability milestones:
   validation must explicitly record `generated_rule_pack_ready=true`. The base rule pack can still
   be run with `--allow-base-rule-pack-review`, but that diagnostic output is not reviewer-ready and
   cannot make compliance-gold eval promotion-ready.
+- Milestone 9 applicability eval gates: `applicability-eval` runs deterministic seed packages
+  through the full applicability sequence and checks expected statuses, package facts,
+  retrieval/graph traces, non-applicable coverage, and generated-rule-pack identity.
+  `applicability-gold-eval` requires adjudicated positive, mixed, and negative profiles before
+  promotion. `phase-eval --review-id/--review-dir` now includes authority-universe, package-fact
+  graph, applicability retrieval trace, applicability graph trace, applicability determination,
+  applicability validation, and generated-rule-pack phases before compliance review.
 
 Latest applicability commits:
 
@@ -90,37 +97,47 @@ Important current behavior:
 - `compliance-review-eval` may still score deterministic compliance fixtures with the base rule
   pack, but those runs are diagnostic and default to non-reviewer-ready validation expectations.
   `compliance-gold-eval` now emits `promotion_ready=true` only for reviewer-ready generated
-  applicability rule packs. Milestone 9 should add applicability-quality eval gates before
-  compliance quality can promote.
+  applicability rule packs. Applicability-quality evals now exist so generated review success is no
+  longer the only proxy for applicability correctness.
 
 Latest verification for the applicability-first lane:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py tests/test_rule_claim_binding.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py tests/test_rule_claim_binding.py
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval --output-dir source_library --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/applicability_gold_eval_v0.json
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 8 gap-close pass:
+Verified results from the latest Milestone 9 pass:
 
 - Compliance-review focused suite: `53 passed, 3 subtests passed`
-- Applicability plus compliance/rule-claim focused suite: `86 passed, 3 subtests passed`
-- Full repository test suite: `276 passed, 8 subtests passed`
+- Applicability eval focused suite: `5 passed`
+- Applicability plus compliance/rule-claim focused suite: `91 passed, 3 subtests passed`
+- Full repository test suite: `281 passed, 8 subtests passed`
+- `applicability-eval`: passed `2/2` seed cases with `promotion_ready`-style generated-pack
+  readiness for both cases
+- `applicability-gold-eval`: passed `3/3` adjudicated cases and emitted `promotion_ready=true`
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: failed closed on the seven new
+  applicability phases because the ignored V1 applicability artifacts were absent; upstream corpus,
+  compliance, and forest-plan phases still passed
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
 
 The local ignored `source_library/reviews/v1-cg-ecid-compliance-review/applicability/` generated-pack
-artifact set was not present during this handoff update, so the real V1 generated-pack
-`compliance-review --reuse-package-cache` command remains the first follow-up runtime check after
-regenerating the ignored applicability artifacts.
+artifact set was not present during this handoff update, so
+`phase-eval --review-id v1-cg-ecid-compliance-review` should fail closed on the new applicability
+phases until those ignored artifacts are regenerated.
 
 Next implementation target:
 
-Milestone 9 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: add applicability evaluation and
-promotion gates that score applicability decisions before compliance quality is scored.
+Milestone 10 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: expand the applicability-first
+path to real packages and capture the operating runbook.
 
 Current stop conditions for the next session:
 

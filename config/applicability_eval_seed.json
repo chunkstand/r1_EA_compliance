@@ -1,0 +1,118 @@
+{
+  "schema_version": "applicability-eval-v0",
+  "id": "applicability-seed-v0",
+  "version": "0.1.0",
+  "title": "Applicability Decision Seed Eval",
+  "source_set_id": "source-set-applicability-eval",
+  "source_chunks": [
+    {
+      "source_record_id": "R1EA-001",
+      "document_role": "law",
+      "title": "National Environmental Policy Act",
+      "text": "National Environmental Policy Act authority for environmental assessments."
+    },
+    {
+      "source_record_id": "R1EA-065",
+      "document_role": "law",
+      "title": "Endangered Species Act section 7",
+      "text": "Endangered Species Act Section 7 consultation for threatened and endangered species."
+    },
+    {
+      "source_record_id": "R1EA-011",
+      "document_role": "regulation",
+      "title": "Categorical exclusions and FANEC",
+      "text": "7 CFR part 1b categorical exclusion and FANEC screen authority."
+    }
+  ],
+  "cases": [
+    {
+      "id": "seed-mixed-applicability",
+      "profile": "mixed",
+      "candidate_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "package_text": "Purpose and Need\n\nThe USDA Forest Service proposes a land exchange and prepares this environmental assessment for the proposed action. The decision notice and FONSI will document the finding of no significant impact.\n\nEnvironmental Consequences\n\nThe project record identifies Endangered Species Act Section 7 consultation for threatened and endangered species. No categorical exclusion applies to this environmental assessment.",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": true,
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "applicable",
+        "esa_section_7": "applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable"
+      },
+      "expected_applicable_rule_ids": [
+        "esa_section_7",
+        "nepa_statute_chapter_55"
+      ],
+      "expected_non_applicable_rule_ids": [
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_generated_rule_ids": [
+        "esa_section_7",
+        "nepa_statute_chapter_55"
+      ],
+      "expected_generated_rule_count": 2,
+      "expected_package_fact_types": [
+        "action",
+        "agency",
+        "consultation",
+        "decision_posture",
+        "nepa_level"
+      ],
+      "expected_retrieval_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_negative_evidence_rule_ids": [
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ]
+    },
+    {
+      "id": "seed-negative-applicability",
+      "profile": "negative",
+      "candidate_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a land exchange proposed action. The decision notice and FONSI will document the finding of no significant impact.\n\nEnvironmental Consequences\n\nThe package does not identify protected species or habitat review triggers. No categorical exclusion applies to this environmental assessment.",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": true,
+      "expected_statuses": {
+        "nepa_statute_chapter_55": "applicable",
+        "esa_section_7": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable"
+      },
+      "expected_applicable_rule_ids": [
+        "nepa_statute_chapter_55"
+      ],
+      "expected_non_applicable_rule_ids": [
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_generated_rule_ids": [
+        "nepa_statute_chapter_55"
+      ],
+      "expected_generated_rule_count": 1,
+      "expected_package_fact_types": [
+        "action",
+        "agency",
+        "decision_posture",
+        "nepa_level"
+      ],
+      "expected_retrieval_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_negative_evidence_rule_ids": [
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_trigger_miss_rule_ids": [
+        "esa_section_7"
+      ]
+    }
+  ]
+}

@@ -1325,6 +1325,37 @@ The non-applicable authority artifact is separate from the compliance matrix. A 
 reviewer-facing report may link to `non_applicable_authorities.json`, but the target compliance
 matrix evaluates compliance findings only for generated applicable rules.
 
+### Applicability Eval Outputs
+
+`applicability-eval` writes
+`source_library/reviews/applicability_eval/applicability_eval_results.json` unless `--results-dir`
+is supplied. The result schema is `applicability-eval-results-v0` and records:
+
+- eval ID, eval version, eval file, base rule-pack path, base rule-pack ID/version, source set IDs,
+  output path, and created timestamp
+- case count, passed/failed counts, generated-rule-pack-ready case count, aggregate metrics, and
+  failure-category counts
+- one case summary per fixture, including review ID, source set ID, artifact paths, actual and
+  expected statuses, applicable/non-applicable/generated rule IDs, package fact types, coverage
+  gaps, generated-rule-pack readiness, generated-pack mismatch status, and failure taxonomy
+
+Each eval case materializes a review directory under
+`source_library/reviews/applicability-eval-<case_id>/` and runs the same applicability artifact
+sequence used by the reviewer path: authority universe, package fact graph, applicability
+retrieval/graph traces, deterministic decisions, validation, and generated-rule-pack validation.
+The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
+lack coverage certificates, expected retrieval or graph traces are missing, package facts are not
+found, negative/no-trigger evidence is absent, or generated rule-pack rules do not match validated
+applicable authorities.
+
+`applicability-gold-eval` writes
+`source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless
+`--results-dir` is supplied. The result schema is `applicability-gold-eval-results-v0` and records
+gold eval identity, adjudication checks, required profile coverage, nested applicability-eval
+metrics, failure categories, and `promotion_ready`. Promotion readiness is true only when positive,
+mixed, and negative adjudicated profiles are present, every case has adjudication metadata, and the
+nested applicability eval passes.
+
 ## Compliance Review Outputs
 
 Path: `source_library/reviews/<review_id>/`
@@ -2240,13 +2271,20 @@ also includes a `compliance_coverage` phase for matrix, source-claim, source-cla
 eval-case coverage. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
-not-promotion-ready artifacts. When
-`--review-id` or `--review-dir` is supplied, it also evaluates a `compliance_review` phase and
+not-promotion-ready artifacts. When `--review-id` or `--review-dir` is supplied, phase eval also
+requires the applicability phases `authority_universe`, `package_fact_graph`,
+`applicability_retrieval_trace`, `applicability_graph_trace`, `applicability_determination`,
+`applicability_validation`, and `generated_rule_pack` before evaluating `compliance_review`.
+Those applicability phases fail when the authority universe is missing or stale, package-fact graph
+validation is missing or hash-mismatched, retrieval/graph trace diagnostics are stale, candidate
+decisions do not exactly cover the authority universe, non-applicable authorities lack search
+coverage certificates, applicability validation is missing or failed, or generated-rule-pack rules
+do not exactly match the validated applicable-authority partition. The compliance-review phase
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
-the review source set to match the evaluated source set. The compliance-review phase also requires
-`compliance_matrix.json` to exist and match the review's schema version, review ID, source set, rule
-pack, row count, and status counts, and requires `compliance_matrix.pdf` to exist with a valid PDF
-header. If that review directory contains `forest_plan_component_eval_results.json`, phase eval
+the review source set to match the evaluated source set. It also requires `compliance_matrix.json`
+to exist and match the review's schema version, review ID, source set, rule pack, row count, and
+status counts, and requires `compliance_matrix.pdf` to exist with a valid PDF header. If that review
+directory contains `forest_plan_component_eval_results.json`, phase eval
 also includes a `forest_plan_component_eval` phase. That phase requires the component eval to exist,
 use schema version `forest-plan-component-eval-results-v0`, pass, match the evaluated source set,
 and match the supplied review ID when one is provided; its details include case counts, component

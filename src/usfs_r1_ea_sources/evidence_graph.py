@@ -322,6 +322,68 @@ def run_phase_aligned_eval(
         if review_dir is not None
         else None
     )
+    applicability_dir = review_dir / "applicability" if review_dir is not None else None
+    authority_universe_path = (
+        applicability_dir / "authority_universe_snapshot.json"
+        if applicability_dir is not None
+        else None
+    )
+    package_fact_graph_path = (
+        applicability_dir / "package_fact_graph.json" if applicability_dir is not None else None
+    )
+    package_fact_graph_validation_path = (
+        applicability_dir / "package_fact_graph_validation.json"
+        if applicability_dir is not None
+        else None
+    )
+    applicability_retrieval_trace_path = (
+        applicability_dir / "applicability_retrieval_trace.jsonl"
+        if applicability_dir is not None
+        else None
+    )
+    applicability_graph_trace_path = (
+        applicability_dir / "applicability_graph_trace.jsonl"
+        if applicability_dir is not None
+        else None
+    )
+    applicability_trace_diagnostics_path = (
+        applicability_dir / "applicability_retrieval_graph_diagnostics.json"
+        if applicability_dir is not None
+        else None
+    )
+    applicability_decisions_path = (
+        applicability_dir / "applicability_decisions.jsonl"
+        if applicability_dir is not None
+        else None
+    )
+    applicable_authorities_path = (
+        applicability_dir / "applicable_authorities.json"
+        if applicability_dir is not None
+        else None
+    )
+    non_applicable_authorities_path = (
+        applicability_dir / "non_applicable_authorities.json"
+        if applicability_dir is not None
+        else None
+    )
+    search_coverage_certificates_path = (
+        applicability_dir / "search_coverage_certificates.json"
+        if applicability_dir is not None
+        else None
+    )
+    applicability_validation_path = (
+        applicability_dir / "applicability_validation.json"
+        if applicability_dir is not None
+        else None
+    )
+    generated_rule_pack_path = (
+        applicability_dir / "generated_rule_pack.json" if applicability_dir is not None else None
+    )
+    generated_rule_pack_validation_path = (
+        applicability_dir / "generated_rule_pack_validation.json"
+        if applicability_dir is not None
+        else None
+    )
 
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
@@ -401,6 +463,21 @@ def run_phase_aligned_eval(
     )
     compliance_gold_eval = (
         _read_json(compliance_gold_eval_path) if compliance_gold_eval_path.exists() else None
+    )
+    applicability_artifacts = _read_applicability_phase_artifacts(
+        authority_universe_path=authority_universe_path,
+        package_fact_graph_path=package_fact_graph_path,
+        package_fact_graph_validation_path=package_fact_graph_validation_path,
+        applicability_retrieval_trace_path=applicability_retrieval_trace_path,
+        applicability_graph_trace_path=applicability_graph_trace_path,
+        applicability_trace_diagnostics_path=applicability_trace_diagnostics_path,
+        applicability_decisions_path=applicability_decisions_path,
+        applicable_authorities_path=applicable_authorities_path,
+        non_applicable_authorities_path=non_applicable_authorities_path,
+        search_coverage_certificates_path=search_coverage_certificates_path,
+        applicability_validation_path=applicability_validation_path,
+        generated_rule_pack_path=generated_rule_pack_path,
+        generated_rule_pack_validation_path=generated_rule_pack_validation_path,
     )
 
     phases = [
@@ -536,6 +613,14 @@ def run_phase_aligned_eval(
             },
         ),
     ]
+    if review_dir is not None:
+        phases.extend(
+            _applicability_phase_gates(
+                review_dir=review_dir,
+                source_set_id=source_set_id,
+                artifacts=applicability_artifacts,
+            )
+        )
     if compliance_coverage is not None:
         coverage_source_set_id = compliance_coverage.get("source_set_id")
         coverage_source_set_matches = coverage_source_set_id == source_set_id
@@ -1796,6 +1881,373 @@ def _freshness_status(validation: dict | None) -> str:
         return "missing"
     failed = set(_failed_check_names(validation))
     return "failed" if failed & FRESHNESS_CHECK_NAMES else "passed"
+
+
+def _read_applicability_phase_artifacts(
+    *,
+    authority_universe_path: Path | None,
+    package_fact_graph_path: Path | None,
+    package_fact_graph_validation_path: Path | None,
+    applicability_retrieval_trace_path: Path | None,
+    applicability_graph_trace_path: Path | None,
+    applicability_trace_diagnostics_path: Path | None,
+    applicability_decisions_path: Path | None,
+    applicable_authorities_path: Path | None,
+    non_applicable_authorities_path: Path | None,
+    search_coverage_certificates_path: Path | None,
+    applicability_validation_path: Path | None,
+    generated_rule_pack_path: Path | None,
+    generated_rule_pack_validation_path: Path | None,
+) -> dict:
+    return {
+        "paths": {
+            "authority_universe": authority_universe_path,
+            "package_fact_graph": package_fact_graph_path,
+            "package_fact_graph_validation": package_fact_graph_validation_path,
+            "applicability_retrieval_trace": applicability_retrieval_trace_path,
+            "applicability_graph_trace": applicability_graph_trace_path,
+            "applicability_trace_diagnostics": applicability_trace_diagnostics_path,
+            "applicability_decisions": applicability_decisions_path,
+            "applicable_authorities": applicable_authorities_path,
+            "non_applicable_authorities": non_applicable_authorities_path,
+            "search_coverage_certificates": search_coverage_certificates_path,
+            "applicability_validation": applicability_validation_path,
+            "generated_rule_pack": generated_rule_pack_path,
+            "generated_rule_pack_validation": generated_rule_pack_validation_path,
+        },
+        "authority_universe": _read_json_if_path(authority_universe_path),
+        "package_fact_graph": _read_json_if_path(package_fact_graph_path),
+        "package_fact_graph_validation": _read_json_if_path(package_fact_graph_validation_path),
+        "retrieval_rows": _read_jsonl_if_path(applicability_retrieval_trace_path),
+        "graph_rows": _read_jsonl_if_path(applicability_graph_trace_path),
+        "trace_diagnostics": _read_json_if_path(applicability_trace_diagnostics_path),
+        "decisions": _read_jsonl_if_path(applicability_decisions_path),
+        "applicable_authorities": _read_json_if_path(applicable_authorities_path),
+        "non_applicable_authorities": _read_json_if_path(non_applicable_authorities_path),
+        "search_coverage_certificates": _read_json_if_path(search_coverage_certificates_path),
+        "applicability_validation": _read_json_if_path(applicability_validation_path),
+        "generated_rule_pack": _read_json_if_path(generated_rule_pack_path),
+        "generated_rule_pack_validation": _read_json_if_path(
+            generated_rule_pack_validation_path
+        ),
+    }
+
+
+def _applicability_phase_gates(
+    *,
+    review_dir: Path,
+    source_set_id: str,
+    artifacts: dict,
+) -> list[dict]:
+    paths = artifacts["paths"]
+    authority_universe = artifacts["authority_universe"]
+    package_fact_graph = artifacts["package_fact_graph"]
+    package_fact_graph_validation = artifacts["package_fact_graph_validation"]
+    retrieval_rows = artifacts["retrieval_rows"]
+    graph_rows = artifacts["graph_rows"]
+    trace_diagnostics = artifacts["trace_diagnostics"]
+    decisions = artifacts["decisions"]
+    applicable = artifacts["applicable_authorities"]
+    non_applicable = artifacts["non_applicable_authorities"]
+    coverage = artifacts["search_coverage_certificates"]
+    applicability_validation = artifacts["applicability_validation"]
+    generated_rule_pack = artifacts["generated_rule_pack"]
+    generated_validation = artifacts["generated_rule_pack_validation"]
+    candidate_ids = _candidate_authority_ids(authority_universe)
+    decision_ids = {
+        str(row.get("candidate_authority_id") or "")
+        for row in decisions
+        if isinstance(row, dict) and row.get("candidate_authority_id")
+    }
+    applicable_ids = _authority_partition_ids(applicable)
+    non_applicable_ids = _authority_partition_ids(non_applicable)
+    coverage_ids = {
+        str(row.get("coverage_certificate_id") or row.get("certificate_id") or "")
+        for row in coverage.get("certificates") or []
+        if isinstance(row, dict)
+    }
+    non_applicable_coverage_gaps = _non_applicable_coverage_gaps(
+        non_applicable,
+        coverage_ids,
+    )
+    generated_rules = (
+        generated_rule_pack.get("rules")
+        if isinstance(generated_rule_pack.get("rules"), list)
+        else []
+    )
+    generated_candidate_ids = {
+        candidate_id
+        for rule in generated_rules
+        if isinstance(rule, dict)
+        for candidate_id in [_generated_rule_candidate_id(rule)]
+        if candidate_id
+    }
+    generated_summary = (
+        generated_validation.get("summary")
+        if isinstance(generated_validation.get("summary"), dict)
+        else {}
+    )
+    authority_ready = (
+        bool(authority_universe)
+        and authority_universe.get("schema_version") == "authority-universe-snapshot-v0"
+        and authority_universe.get("source_set_id") == source_set_id
+        and bool((authority_universe.get("validation") or {}).get("passed"))
+    )
+    package_ready = (
+        bool(package_fact_graph)
+        and bool(package_fact_graph_validation)
+        and package_fact_graph.get("source_set_id") == source_set_id
+        and bool((package_fact_graph_validation.get("validation") or {}).get("passed"))
+        and package_fact_graph.get("package_fact_graph_sha256")
+        == package_fact_graph_validation.get("package_fact_graph_sha256")
+    )
+    retrieval_ready = (
+        bool(retrieval_rows)
+        and bool(trace_diagnostics)
+        and bool((trace_diagnostics.get("validation") or {}).get("passed"))
+        and _file_hash_matches(
+            paths["applicability_retrieval_trace"],
+            trace_diagnostics.get("retrieval_trace_sha256"),
+        )
+    )
+    graph_ready = (
+        _path_exists(paths["applicability_graph_trace"])
+        and bool(trace_diagnostics)
+        and _file_hash_matches(
+            paths["applicability_graph_trace"],
+            trace_diagnostics.get("graph_trace_sha256"),
+        )
+    )
+    determination_ready = (
+        bool(decisions)
+        and bool(candidate_ids)
+        and candidate_ids == decision_ids
+        and applicable_ids.union(non_applicable_ids).issubset(candidate_ids)
+        and not non_applicable_coverage_gaps
+    )
+    validation_ready = (
+        bool(applicability_validation)
+        and applicability_validation.get("source_set_id") == source_set_id
+        and bool(applicability_validation.get("passed"))
+    )
+    generated_ready = (
+        bool(generated_rule_pack)
+        and bool(generated_validation)
+        and generated_rule_pack.get("source_set_id") == source_set_id
+        and bool(generated_validation.get("passed"))
+        and generated_summary.get("generated_rule_pack_ready") is True
+        and generated_candidate_ids == applicable_ids
+        and _file_hash_matches(
+            paths["generated_rule_pack"],
+            generated_summary.get("expected_generated_rule_pack_sha256")
+            or generated_summary.get("generated_rule_pack_sha256"),
+        )
+    )
+    return [
+        _phase(
+            "authority_universe",
+            passed=authority_ready,
+            reviewer_ready=authority_ready,
+            details={
+                "review_dir": str(review_dir),
+                "path": _path_string(paths["authority_universe"]),
+                "exists": _path_exists(paths["authority_universe"]),
+                "source_set_matches": authority_universe.get("source_set_id") == source_set_id,
+                "validation_passed": bool(
+                    (authority_universe.get("validation") or {}).get("passed")
+                ),
+                "candidate_authority_count": len(candidate_ids),
+            },
+        ),
+        _phase(
+            "package_fact_graph",
+            passed=package_ready,
+            reviewer_ready=package_ready,
+            details={
+                "path": _path_string(paths["package_fact_graph"]),
+                "validation_path": _path_string(paths["package_fact_graph_validation"]),
+                "exists": _path_exists(paths["package_fact_graph"]),
+                "validation_exists": _path_exists(paths["package_fact_graph_validation"]),
+                "source_set_matches": package_fact_graph.get("source_set_id") == source_set_id,
+                "validation_passed": bool(
+                    (package_fact_graph_validation.get("validation") or {}).get("passed")
+                ),
+                "package_fact_graph_hash_matches": package_fact_graph.get(
+                    "package_fact_graph_sha256"
+                )
+                == package_fact_graph_validation.get("package_fact_graph_sha256"),
+                "fact_count": len(package_fact_graph.get("nodes") or []),
+            },
+        ),
+        _phase(
+            "applicability_retrieval_trace",
+            passed=retrieval_ready,
+            reviewer_ready=retrieval_ready,
+            details={
+                "path": _path_string(paths["applicability_retrieval_trace"]),
+                "diagnostics_path": _path_string(paths["applicability_trace_diagnostics"]),
+                "exists": _path_exists(paths["applicability_retrieval_trace"]),
+                "trace_row_count": len(retrieval_rows),
+                "validation_passed": bool(
+                    (trace_diagnostics.get("validation") or {}).get("passed")
+                ),
+                "trace_hash_matches": _file_hash_matches(
+                    paths["applicability_retrieval_trace"],
+                    trace_diagnostics.get("retrieval_trace_sha256"),
+                ),
+            },
+        ),
+        _phase(
+            "applicability_graph_trace",
+            passed=graph_ready,
+            reviewer_ready=graph_ready,
+            details={
+                "path": _path_string(paths["applicability_graph_trace"]),
+                "exists": _path_exists(paths["applicability_graph_trace"]),
+                "trace_row_count": len(graph_rows),
+                "trace_hash_matches": _file_hash_matches(
+                    paths["applicability_graph_trace"],
+                    trace_diagnostics.get("graph_trace_sha256"),
+                ),
+            },
+        ),
+        _phase(
+            "applicability_determination",
+            passed=determination_ready,
+            reviewer_ready=determination_ready,
+            details={
+                "decisions_path": _path_string(paths["applicability_decisions"]),
+                "applicable_authorities_path": _path_string(paths["applicable_authorities"]),
+                "non_applicable_authorities_path": _path_string(
+                    paths["non_applicable_authorities"]
+                ),
+                "search_coverage_certificates_path": _path_string(
+                    paths["search_coverage_certificates"]
+                ),
+                "decision_count": len(decisions),
+                "candidate_authority_count": len(candidate_ids),
+                "all_candidates_decided": candidate_ids == decision_ids,
+                "applicable_authority_count": len(applicable_ids),
+                "non_applicable_authority_count": len(non_applicable_ids),
+                "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
+            },
+        ),
+        _phase(
+            "applicability_validation",
+            passed=validation_ready,
+            reviewer_ready=validation_ready,
+            details={
+                "path": _path_string(paths["applicability_validation"]),
+                "exists": _path_exists(paths["applicability_validation"]),
+                "source_set_matches": applicability_validation.get("source_set_id")
+                == source_set_id,
+                "passed": bool(applicability_validation.get("passed")),
+                "failed_checks": _failed_check_names(applicability_validation),
+            },
+        ),
+        _phase(
+            "generated_rule_pack",
+            passed=generated_ready,
+            reviewer_ready=generated_ready,
+            details={
+                "generated_rule_pack_path": _path_string(paths["generated_rule_pack"]),
+                "generated_rule_pack_validation_path": _path_string(
+                    paths["generated_rule_pack_validation"]
+                ),
+                "exists": _path_exists(paths["generated_rule_pack"]),
+                "validation_exists": _path_exists(paths["generated_rule_pack_validation"]),
+                "source_set_matches": generated_rule_pack.get("source_set_id") == source_set_id,
+                "validation_passed": bool(generated_validation.get("passed")),
+                "generated_rule_pack_ready": generated_summary.get(
+                    "generated_rule_pack_ready"
+                ),
+                "generated_rule_count": len(generated_rules),
+                "applicable_authority_count": len(applicable_ids),
+                "generated_rules_match_applicable_authorities": generated_candidate_ids
+                == applicable_ids,
+                "generated_rule_pack_hash_matches": _file_hash_matches(
+                    paths["generated_rule_pack"],
+                    generated_summary.get("expected_generated_rule_pack_sha256")
+                    or generated_summary.get("generated_rule_pack_sha256"),
+                ),
+            },
+        ),
+    ]
+
+
+def _read_json_if_path(path: Path | None) -> dict:
+    return _read_json(path) if path is not None and path.exists() else {}
+
+
+def _read_jsonl_if_path(path: Path | None) -> list[dict]:
+    return _read_jsonl(path) if path is not None and path.exists() else []
+
+
+def _path_exists(path: Path | None) -> bool:
+    return bool(path is not None and path.exists())
+
+
+def _path_string(path: Path | None) -> str | None:
+    return str(path) if path is not None else None
+
+
+def _file_hash_matches(path: Path | None, expected: str | None) -> bool:
+    return bool(path is not None and path.exists() and expected and _sha256_file(path) == expected)
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _candidate_authority_ids(payload: dict) -> set[str]:
+    return {
+        str(candidate.get("candidate_authority_id") or "")
+        for candidate in payload.get("candidate_authorities") or []
+        if isinstance(candidate, dict) and candidate.get("candidate_authority_id")
+    }
+
+
+def _authority_partition_ids(payload: dict) -> set[str]:
+    return {
+        str(authority.get("candidate_authority_id") or "")
+        for authority in payload.get("authorities") or []
+        if isinstance(authority, dict) and authority.get("candidate_authority_id")
+    }
+
+
+def _generated_rule_candidate_id(rule: dict) -> str:
+    if rule.get("candidate_authority_id"):
+        return str(rule["candidate_authority_id"])
+    applicability = rule.get("applicability")
+    if isinstance(applicability, dict) and applicability.get("candidate_authority_id"):
+        return str(applicability["candidate_authority_id"])
+    return ""
+
+
+def _non_applicable_coverage_gaps(payload: dict, coverage_ids: set[str]) -> list[dict]:
+    gaps = []
+    for authority in payload.get("authorities") or []:
+        if not isinstance(authority, dict):
+            gaps.append({"candidate_authority_id": None, "reason": "invalid_authority"})
+            continue
+        certificate_ids = [
+            str(value)
+            for value in authority.get("search_coverage_certificate_ids") or []
+            if str(value or "").strip()
+        ]
+        missing = [value for value in certificate_ids if value not in coverage_ids]
+        if not certificate_ids or missing:
+            gaps.append(
+                {
+                    "candidate_authority_id": authority.get("candidate_authority_id"),
+                    "missing_certificate_ids": missing,
+                }
+            )
+    return gaps
 
 
 def _node(node_id: str, node_type: str, **properties: object) -> dict:

@@ -6,6 +6,10 @@ import json
 
 from .applicability import build_authority_universe_snapshot
 from .applicability_decisions import build_applicability_decisions
+from .applicability_eval import DEFAULT_APPLICABILITY_EVAL_PATH
+from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
+from .applicability_eval import run_applicability_eval
+from .applicability_eval import run_applicability_gold_eval
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .applicability_rule_pack import generate_applicability_rule_pack
 from .applicability_rule_pack import validate_generated_rule_pack
@@ -587,6 +591,48 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Validate the existing generated rule pack without rewriting it.",
     )
+
+    applicability_eval = subparsers.add_parser(
+        "applicability-eval",
+        help="Run deterministic applicability decision-quality eval cases.",
+    )
+    applicability_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    applicability_eval.add_argument("--source-set-id")
+    applicability_eval.add_argument(
+        "--base-rule-pack",
+        default=DEFAULT_RULE_PACK_PATH,
+        type=Path,
+    )
+    applicability_eval.add_argument(
+        "--eval-file",
+        default=DEFAULT_APPLICABILITY_EVAL_PATH,
+        type=Path,
+    )
+    applicability_eval.add_argument("--results-dir", type=Path)
+    applicability_eval.add_argument("--top-k", type=int, default=5)
+
+    applicability_gold_eval = subparsers.add_parser(
+        "applicability-gold-eval",
+        help="Run adjudicated applicability gold eval cases.",
+    )
+    applicability_gold_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_gold_eval.add_argument("--source-set-id")
+    applicability_gold_eval.add_argument(
+        "--base-rule-pack",
+        default=DEFAULT_RULE_PACK_PATH,
+        type=Path,
+    )
+    applicability_gold_eval.add_argument(
+        "--gold-file",
+        default=DEFAULT_APPLICABILITY_GOLD_EVAL_PATH,
+        type=Path,
+    )
+    applicability_gold_eval.add_argument("--results-dir", type=Path)
+    applicability_gold_eval.add_argument("--top-k", type=int, default=5)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -1202,6 +1248,30 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1
 
+    if args.command == "applicability-eval":
+        result = run_applicability_eval(
+            output_dir=args.output_dir,
+            eval_file=args.eval_file,
+            base_rule_pack_path=args.base_rule_pack,
+            source_set_id=args.source_set_id,
+            results_dir=args.results_dir,
+            top_k=args.top_k,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-gold-eval":
+        result = run_applicability_gold_eval(
+            output_dir=args.output_dir,
+            gold_file=args.gold_file,
+            base_rule_pack_path=args.base_rule_pack,
+            source_set_id=args.source_set_id,
+            results_dir=args.results_dir,
+            top_k=args.top_k,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
     if args.command == "phase-eval":
         result = run_phase_aligned_eval(
             output_dir=args.output_dir,
@@ -1231,7 +1301,6 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
             reuse_package_cache=args.reuse_package_cache,
-            allow_base_rule_pack_review=args.allow_base_rule_pack_review,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1

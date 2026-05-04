@@ -359,11 +359,14 @@ duplicated candidate decisions, unresolved or `needs_adjudication` decisions, st
 missing retrieval/graph traceability, non-applicable decisions without coverage/adjudication, and
 provenance gaps. `applicability-adjudication-template`, `applicability-adjudication-eval`, and
 `applicability-adjudication-apply` provide a machine-readable replay path for resolving open
-decisions into `human_adjudication` bases before validation can pass. The applicability-first path
-still does not generate rule packs or run compliance review. Later milestones still need the
-generated compliance rule pack before `compliance-review` becomes gated by the applicability
-artifacts. Until those later milestones land, `compliance-review` remains the current V1
-authority-first command.
+decisions into `human_adjudication` bases before validation can pass.
+`applicability-generate-rule-pack` now writes and validates generated compliance rule packs from the
+validated applicable-authority partition only, and reviewer-ready `compliance-review` is gated on
+that generated pack plus current applicability validation, generated-pack validation,
+non-applicable-authority, search-coverage, package, source-set, and provenance artifacts. The base
+rule pack remains available only through an explicit non-reviewer-ready diagnostic path.
+`applicability-eval` and `applicability-gold-eval` now score applicability decision quality before
+compliance quality is promoted.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
@@ -400,8 +403,9 @@ Current state:
 - The rule-claim binding layer links compliance rules to validated source claims and records explicit
   no-claim gaps when no validated source claim matches a rule.
 - Phase eval reports catalog, extraction, retrieval, evidence-graph, claim-extraction,
-  rule-claim-binding, optional compliance-coverage, optional compliance-gold-eval, and optional
-  compliance-review readiness separately when those artifacts exist or are requested.
+  rule-claim-binding, optional compliance-coverage, optional compliance-gold-eval, and review-bound
+  applicability plus compliance-review readiness separately when those artifacts exist or are
+  requested.
 - EA review runs deterministic checklist execution against a local package and emits JSON/Markdown
   reports plus `review_validation.json`.
 - Custer Gallatin forest-plan context resolution runs against a local EA package and emits
@@ -971,6 +975,13 @@ coverage, source-artifact coverage, retrieval binding mismatches, and chunk hash
 - evidence graph
 - claim extraction
 - rule-claim binding
+- authority universe when `--review-id` or `--review-dir` is supplied
+- package fact graph when `--review-id` or `--review-dir` is supplied
+- applicability retrieval trace when `--review-id` or `--review-dir` is supplied
+- applicability graph trace when `--review-id` or `--review-dir` is supplied
+- applicability determination when `--review-id` or `--review-dir` is supplied
+- applicability validation when `--review-id` or `--review-dir` is supplied
+- generated rule pack when `--review-id` or `--review-dir` is supplied
 - optional compliance coverage when `compliance_coverage_results.json` exists beside the
   rule-claim outputs
 - optional compliance gold eval when `compliance_gold_eval_results.json` exists under
@@ -986,11 +997,16 @@ When a compliance coverage phase is included, `phase-eval` requires the matrix g
 rule pack to match, and the coverage source set to match the evaluated source set. When a gold eval
 phase is included, `phase-eval` requires the promotion gate to pass, the rule pack to match, and the
 gold eval source set to match the evaluated source set; stale or failed gold artifacts report
-specific failed checks such as source-set or rule-pack mismatch. When a compliance review phase is
-included, `phase-eval` requires the review report to exist, validation to pass, the review ID to
-match when supplied, and the review source set to match the evaluated source set. It also requires
-the compliance matrix artifact to exist and match the review's schema version, review ID, source set,
-rule pack, row count, and status counts. When a forest-plan component eval phase is included,
+specific failed checks such as source-set or rule-pack mismatch. When review-bound applicability
+phases are included, `phase-eval` requires a current authority universe, package fact graph and
+validation, retrieval and graph trace diagnostics, complete candidate decisions, complete
+applicable/non-applicable partitions, search coverage certificates for non-applicable authorities,
+a passing `applicability_validation.json`, and a generated rule pack whose rules exactly match the
+applicable-authority partition. When a compliance review phase is included, `phase-eval` requires
+the review report to exist, validation to pass, the review ID to match when supplied, and the review
+source set to match the evaluated source set. It also requires the compliance matrix artifact to
+exist and match the review's schema version, review ID, source set, rule pack, row count, and status
+counts. When a forest-plan component eval phase is included,
 `phase-eval` requires the component eval result schema version to match, pass, match the evaluated
 source set, and match the supplied review ID when one is provided. The phase reports case counts,
 component metrics, failed checks, and failure-category counts. When a forest-plan component
@@ -1196,6 +1212,20 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
   --eval-file config/compliance_review_eval_seed.json
+```
+
+Run applicability decision-quality evals:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval \
+  --output-dir source_library \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/applicability_eval_seed.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
+  --output-dir source_library \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/applicability_gold_eval_v0.json
 ```
 
 Run the adjudicated gold eval promotion gate:

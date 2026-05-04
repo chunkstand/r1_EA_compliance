@@ -924,6 +924,28 @@ freshness/provenance hashes. `--validate-only` rechecks an existing generated pa
 previously recorded generated-pack hash, and fails if the pack was edited by hand or is stale
 relative to applicability artifacts.
 
+Run applicability decision-quality evals:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval \
+  --output-dir source_library \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/applicability_eval_seed.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
+  --output-dir source_library \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/applicability_gold_eval_v0.json
+```
+
+`applicability-eval` runs deterministic seed packages through authority-universe creation,
+package-fact graph construction, applicability retrieval/graph traces, deterministic decisions,
+validation, and generated-rule-pack creation. It fails on false positive/negative applicability
+statuses, partition mismatches, missing non-applicable coverage certificates, retrieval or graph
+trace gaps, package-fact mismatches, and generated-rule-pack coverage drift. `applicability-gold-eval`
+wraps adjudicated positive, mixed, and negative package profiles and emits `promotion_ready=true`
+only when the adjudication checks and applicability eval both pass.
+
 Run rule-pack coverage:
 
 ```bash
@@ -966,17 +988,23 @@ When `compliance_coverage_results.json` exists beside the rule-claim outputs, it
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
-rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` after a
-compliance review to include `compliance_review` as an additional phase gate. If the review
-directory contains `forest_plan_component_eval_results.json`, phase eval also reports a
-`forest_plan_component_eval` phase with component-level metrics and failure categories. If the
-review directory contains `forest_plan_component_adjudication_eval.json`, or a completed
+rule-pack, failed-gold, or not-promotion-ready artifacts. Pass `--review-id <review-id>` or
+`--review-dir <path>` to include the applicability phase gates for `authority_universe`,
+`package_fact_graph`, `applicability_retrieval_trace`, `applicability_graph_trace`,
+`applicability_determination`, `applicability_validation`, and `generated_rule_pack`, followed by
+the `compliance_review` gate. If the review directory contains
+`forest_plan_component_eval_results.json`, phase eval also reports a `forest_plan_component_eval`
+phase with component-level metrics and failure categories. If the review directory contains
+`forest_plan_component_adjudication_eval.json`, or a completed
 `forest_plan_component_adjudication.json` that still needs an eval, phase eval also reports a
 `forest_plan_component_adjudication` phase with completion rate, expectation match rate,
-disposition counts, and failure categories. The compliance phase requires the review source set to
-match the evaluated source set and requires the review's `compliance_matrix.json` to exist with the
-expected schema version, review ID, source set, rule pack, row count, and status counts. It also
-requires `compliance_matrix.pdf` to exist and have a valid PDF header.
+disposition counts, and failure categories. The applicability phases require current validation,
+hash-aligned traces, complete applicable/non-applicable partitions, coverage certificates for
+non-applicable authorities, and generated-rule-pack rules that exactly match applicable
+authorities. The compliance phase requires the review source set to match the evaluated source set
+and requires the review's `compliance_matrix.json` to exist with the expected schema version,
+review ID, source set, rule pack, row count, and status counts. It also requires
+`compliance_matrix.pdf` to exist and have a valid PDF header.
 
 Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
 
