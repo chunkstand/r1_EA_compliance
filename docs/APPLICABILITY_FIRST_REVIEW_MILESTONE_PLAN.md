@@ -28,12 +28,14 @@ Implemented today:
   candidates carry required package fact types, positive/negative trigger groups, source evidence
   requirements, source/package filters, retrieval contracts, graph-expansion contracts,
   dependency/exception/supersession fields, and search coverage requirements.
+- Milestone 3 package context is implemented: `applicability-context-build` reads the existing EA
+  package cache and writes `package_fact_graph.json`, `package_applicability_context.json`, and
+  `package_fact_graph_validation.json` before any applicability decisions are attempted.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
 Not implemented yet:
 
-- package fact graph;
 - per-authority hybrid retrieval traces;
 - bounded GraphRAG-style expansion traces;
 - deterministic applicability decision ledger;
@@ -412,6 +414,15 @@ Stop conditions:
 - A candidate lacks source-record provenance, predicate metadata, or search coverage requirements.
 
 ## Milestone 3: Package Fact Graph
+
+Current status:
+Implemented. `applicability-context-build` now reads
+`source_library/reviews/<review_id>/package/package_manifest.jsonl` and
+`source_library/reviews/<review_id>/package/package_chunks.jsonl`, then writes the package fact
+graph, package applicability context, and package fact graph validation summary under
+`source_library/reviews/<review_id>/applicability/`. It does not decide authority applicability,
+write retrieval or graph traces, emit applicability decisions, generate rule packs, or run
+compliance review.
 
 Goal:
 Build a package fact graph before applicability decisions are attempted.

@@ -144,6 +144,7 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`
   - `source_library/reviews/<review_id>/applicability/package_fact_graph.json`
   - `source_library/reviews/<review_id>/applicability/package_applicability_context.json`
+  - `source_library/reviews/<review_id>/applicability/package_fact_graph_validation.json`
   - `source_library/reviews/<review_id>/applicability/applicability_retrieval_trace.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicability_graph_trace.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicability_decisions.jsonl`
@@ -780,6 +781,26 @@ contracts, graph-expansion contracts, dependency/exception/supersession fields, 
 requirements for later non-applicability proof. This command does not write package fact graphs,
 retrieval traces, graph traces, search coverage certificates, applicability decisions,
 applicable/non-applicable authority artifacts, generated rule packs, or compliance findings.
+
+Build the package fact graph and package applicability context from an existing EA package cache:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id> \
+  --package-path /path/to/ea-package
+```
+
+`applicability-context-build` reads
+`source_library/reviews/<review_id>/package/package_manifest.jsonl` and
+`source_library/reviews/<review_id>/package/package_chunks.jsonl`, which are produced by
+`ea-review`. It writes `package_fact_graph.json`, `package_applicability_context.json`, and
+`package_fact_graph_validation.json` under the review applicability directory. Facts are bound to
+package chunk IDs, section IDs, parser provenance, artifact hashes, content hashes, and evidence
+span IDs. Negative or out-of-scope location statements are recorded as negative-context facts rather
+than positive geography facts. This command does not write applicability decisions, retrieval
+traces, graph traces, generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 

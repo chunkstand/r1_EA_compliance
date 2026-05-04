@@ -38,6 +38,7 @@ from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver import run_forest_plan_resolver
+from .package_fact_graph import build_package_fact_graph
 from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
@@ -405,6 +406,33 @@ def build_parser() -> argparse.ArgumentParser:
     )
     applicability_authority_universe.add_argument("--claims-path", type=Path)
     applicability_authority_universe.add_argument("--rule-claim-links-path", type=Path)
+
+    applicability_context = subparsers.add_parser(
+        "applicability-context-build",
+        help=(
+            "Build package fact graph and applicability context artifacts from an existing "
+            "EA package cache without deciding applicability."
+        ),
+    )
+    applicability_context.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_context.add_argument("--review-id", required=True)
+    applicability_context.add_argument("--source-set-id")
+    applicability_context.add_argument(
+        "--package-path",
+        type=Path,
+        help="Optional source package path metadata. Existing review package cache is still used.",
+    )
+    applicability_context.add_argument("--package-manifest-path", type=Path)
+    applicability_context.add_argument("--package-chunks-path", type=Path)
+    applicability_context.add_argument(
+        "--forest-plan-profiles-path",
+        default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -875,6 +903,19 @@ def main(argv: list[str] | None = None) -> int:
             forest_plan_component_inventory_path=args.forest_plan_component_inventory_path,
             claims_path=args.claims_path,
             rule_claim_links_path=args.rule_claim_links_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "applicability-context-build":
+        result = build_package_fact_graph(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            package_path=args.package_path,
+            package_manifest_path=args.package_manifest_path,
+            package_chunks_path=args.package_chunks_path,
+            forest_plan_profiles_path=args.forest_plan_profiles_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1

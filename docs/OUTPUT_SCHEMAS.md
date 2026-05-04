@@ -794,17 +794,20 @@ validated applicability run and generated rule pack; it must not be the first st
 which authorities apply.
 
 The current V1 compliance-review implementation still runs the authority-first path described in the
-next section. The implemented applicability slice is the authority-universe snapshot command:
-`applicability-authority-universe` writes
-`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` without deciding
-package applicability or producing compliance findings. The remaining artifacts in this section are
-the schema and gate contract for later applicability-first milestones.
+next section. The implemented applicability slices are the authority-universe snapshot command and
+the package context command: `applicability-authority-universe` writes
+`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`, and
+`applicability-context-build` writes the package fact graph, package applicability context, and
+package fact graph validation summary. These commands do not decide package applicability or
+produce compliance findings. The remaining artifacts in this section are the schema and gate
+contract for later applicability-first milestones.
 
 Required artifacts:
 
 - `authority_universe_snapshot.json`
 - `package_fact_graph.json`
 - `package_applicability_context.json`
+- `package_fact_graph_validation.json`
 - `applicability_retrieval_trace.jsonl`
 - `applicability_graph_trace.jsonl`
 - `applicability_decisions.jsonl`
@@ -969,6 +972,13 @@ includes:
   signals used for applicability
 - extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
   source metadata
+
+`package_fact_graph_validation.json` has schema version `package-fact-graph-validation-v0` and
+summarizes the package graph validation result. It includes `review_id`, `source_set_id`,
+`package_manifest_sha256`, `package_chunks_sha256`, `package_fact_graph_sha256`,
+`package_context_sha256`, validation checks, negative-context location facts, uncertainty records,
+and fact-count summaries. It is a Milestone 3 validation artifact only; it does not contain
+applicability decisions or compliance findings.
 
 `applicability_retrieval_trace.jsonl` has schema version `applicability-retrieval-trace-v0`; each
 line records one query execution or fused result set for one candidate authority. Each trace row
