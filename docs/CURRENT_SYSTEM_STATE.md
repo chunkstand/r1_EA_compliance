@@ -318,6 +318,14 @@ Rule-pack `0.4.0` contains `44` rules. It declares `baseline_source_record_ids` 
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
+Applicability-First Review has a post-V1 schema contract but is not yet the runtime path. The
+contract requires applicability to run before compliance review, writes applicable and
+non-applicable authorities as separate artifacts under
+`source_library/reviews/<review_id>/applicability/`, blocks unresolved or stale applicability
+decisions, and derives the generated compliance rule pack from the validated applicable-authorities
+artifact. Until the implementation milestones after the schema contract land, `compliance-review`
+remains the current V1 authority-first command.
+
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
 path. The gate scores expected rule statuses, claim types, evidence presence, source-claim links,
@@ -738,6 +746,25 @@ The command writes these artifacts beside the base EA review artifacts:
 - `source_library/reviews/<review_id>/compliance_matrix.pdf`
 - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
 - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
+
+The post-V1 applicability-first artifact contract reserves
+`source_library/reviews/<review_id>/applicability/` for:
+
+- `authority_universe_snapshot.json`
+- `package_applicability_context.json`
+- `applicability_decisions.jsonl`
+- `applicable_authorities.json`
+- `non_applicable_authorities.json`
+- `applicability_validation.json`
+- `applicability_report.md`
+- `generated_rule_pack.json`
+- `generated_rule_pack_validation.json`
+
+Those artifacts are the target source of truth for applicability and non-applicability. The
+non-applicable authority list must not be buried only as compliance matrix rows, and a
+reviewer-ready compliance review must eventually consume a generated rule pack tied to a passing
+applicability validation hash. This is a documented contract at the current milestone, not yet an
+implemented command sequence.
 
 The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,
 severity, authority category, authority source record, applicability mode, package query and terms,

@@ -140,6 +140,16 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/forest_plan_applicable_standard_coverage.json`
   - `source_library/reviews/<review_id>/forest_plan_component_eval_results.json`
   - `source_library/reviews/<review_id>/v1_ea_eval_results.json`
+- Applicability-first review outputs, defined as the post-V1 pre-review contract:
+  - `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`
+  - `source_library/reviews/<review_id>/applicability/package_applicability_context.json`
+  - `source_library/reviews/<review_id>/applicability/applicability_decisions.jsonl`
+  - `source_library/reviews/<review_id>/applicability/applicable_authorities.json`
+  - `source_library/reviews/<review_id>/applicability/non_applicable_authorities.json`
+  - `source_library/reviews/<review_id>/applicability/applicability_validation.json`
+  - `source_library/reviews/<review_id>/applicability/applicability_report.md`
+  - `source_library/reviews/<review_id>/applicability/generated_rule_pack.json`
+  - `source_library/reviews/<review_id>/applicability/generated_rule_pack_validation.json`
 - Compliance review eval outputs:
   - `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`
   - `source_library/reviews/compliance_review_eval/packages/<case_id>.txt`
@@ -172,8 +182,16 @@ finding graph with source-claim support. The `v1-ea-eval` command scores the cur
 Inspiration Divide real EA review against the V1 contract, including the explicit pending
 conditional-adjudication policy. The `compliance-gold-eval` command runs the 10-case adjudication
 promotion gate. The active compliance rule pack is `0.4.0`: it declares the 26 workbook
-`Scope=Baseline` source records explicitly and contains 44 total authority rules. Embeddings and
-expanded human adjudication over real EA packages remain downstream work.
+`Scope=Baseline` source records explicitly and contains 44 total authority rules.
+
+The post-V1 applicability-first contract moves authority applicability into a pre-review artifact
+family under `source_library/reviews/<review_id>/applicability/`: candidate authorities are
+snapshotted, package applicability context is recorded, applicable and non-applicable authorities are
+separate artifacts, validation blocks unresolved or stale decisions, and the downstream review rule
+pack is generated from the validated applicable-authorities artifact. Runtime implementation of that
+sequence starts after the schema-contract milestone; the promoted V1 review remains the current
+authority-first path until the later milestones land. Embeddings and expanded human adjudication over
+real EA packages remain downstream work.
 
 ## Reviewer Engine Entry Points
 

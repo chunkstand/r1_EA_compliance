@@ -1,8 +1,8 @@
 # System Output Schemas
 
 The system writes durable, auditable outputs under `source_library/`. This file covers downloader,
-batch, catalog, EA review, extraction, retrieval, evidence graph, source claim graph, and phase-eval
-artifacts.
+batch, catalog, EA review, extraction, retrieval, evidence graph, source claim graph,
+applicability-first review, and phase-eval artifacts.
 
 ## Row Manifest JSONL
 
@@ -782,6 +782,225 @@ The eval fails closed on missing queue items, unexpected adjudications, duplicat
 dispositions, incomplete adjudication metadata, invalid dispositions, or status expectation
 mismatches. A `true_ea_omission` can be a completed adjudication; it documents a real review gap
 rather than silently marking the component supported.
+
+## Applicability-First Review Outputs
+
+Path: `source_library/reviews/<review_id>/applicability/`
+
+The applicability-first review contract is the post-V1 pre-review gate for legal-authority,
+policy-authority, and Forest Plan applicability. Later implementation milestones must determine
+applicability before compliance findings are generated. The compliance review must consume a
+validated applicability run and generated rule pack; it must not be the first stage that decides
+which authorities apply.
+
+The current V1 compliance-review implementation still runs the authority-first path described in the
+next section. This section is the schema and gate contract for the applicability-first milestone
+sequence.
+
+Required artifacts:
+
+- `authority_universe_snapshot.json`
+- `package_applicability_context.json`
+- `applicability_decisions.jsonl`
+- `applicable_authorities.json`
+- `non_applicable_authorities.json`
+- `applicability_validation.json`
+- `applicability_report.md`
+- `generated_rule_pack.json`
+- `generated_rule_pack_validation.json`
+
+Optional artifacts used once adjudication is introduced:
+
+- `applicability_adjudication_template.json`
+- `applicability_adjudication_worklist.md`
+- `applicability_adjudication_eval.json`
+
+The target review sequence is:
+
+```text
+EA package + source library + authority universe
+  -> applicability determination
+  -> applicable_authorities artifact
+  -> non_applicable_authorities artifact
+  -> applicability validation and adjudication gate
+  -> generated review rule pack
+  -> compliance review
+```
+
+`authority_universe_snapshot.json` has schema version `authority-universe-snapshot-v0` and includes:
+
+- `authority_universe_id`
+- `authority_universe_version`
+- `created_at`
+- `review_id`
+- `source_set_id`
+- `source_set_manifest_sha256`
+- `catalog_sha256`
+- `base_rule_pack_id`
+- `base_rule_pack_version`
+- `base_rule_pack_sha256`
+- forest-plan profile IDs and component inventory IDs used for candidate discovery
+- candidate authority records
+
+Each candidate authority record includes:
+
+- `candidate_authority_id`
+- `candidate_authority_type`: `rule_template`, `source_record`, or `forest_plan_component`
+- rule-template ID when derived from a base rule
+- source record IDs, citation labels, authority category, authority document role, and currentness
+  metadata
+- forest-plan profile, component inventory, component ID, and component type when applicable
+- required source-claim link IDs or an explicit no-claim expectation
+- deterministic applicability test contract, including package trigger terms, trigger term groups,
+  section expectations, negative trigger terms, source filters, and baseline-required rationale
+
+`package_applicability_context.json` has schema version `package-applicability-context-v0` and
+includes:
+
+- `review_id`
+- `package_path`
+- `package_manifest_sha256`
+- `package_chunks_sha256`
+- package section map and section-family bindings
+- project type, federal action signals, forest unit, geography, management areas, overlays,
+  consultations, permits, public-involvement signals, decision posture, and supporting-document
+  signals used for applicability
+- extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
+  source metadata
+
+`applicability_decisions.jsonl` has schema version `applicability-decisions-v0`; each line is one
+decision record for one candidate authority. Every candidate in `authority_universe_snapshot.json`
+must have exactly one decision record before validation can pass.
+
+Each applicability decision includes:
+
+- `applicability_run_id`
+- `decision_id`
+- `candidate_authority_id`
+- `status`: `applicable`, `not_applicable`, `unresolved`, or `needs_adjudication`
+- `basis_type`: `mandatory_baseline`, `positive_package_trigger`, `negative_package_evidence`,
+  `absent_trigger_evidence`, `forest_plan_profile_resolution`, `forest_plan_component`,
+  `source_set_required`, or `human_adjudication`
+- `basis`
+- source-record IDs, authority category, authority document role, and source-set identity
+- package evidence spans with package chunk IDs, citation labels, section families, page labels,
+  offsets, matched terms, and text snippets
+- source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
+  offsets, source-claim IDs, and text snippets
+- negative evidence spans or explicit no-trigger rationale when status is `not_applicable`
+- missing evidence, contradiction notes, confidence classification, adjudication state, and reviewer
+  notes
+- freshness fields: `authority_universe_sha256`, `package_manifest_sha256`,
+  `package_chunks_sha256`, `source_set_id`, and `catalog_sha256`
+
+`applicable_authorities.json` has schema version `applicable-authorities-v0` and contains only
+decision records whose final status is `applicable`. It includes:
+
+- `applicability_run_id`
+- `review_id`
+- `source_set_id`
+- `authority_universe_sha256`
+- `package_manifest_sha256`
+- `applicability_decisions_sha256`
+- applicable authority count
+- one selected-authority record per applicable decision
+
+Each selected-authority record includes:
+
+- `decision_id`
+- `candidate_authority_id`
+- generated-rule metadata, including source base rule ID when applicable
+- evidence-backed applicability basis
+- source-record IDs, document roles, authority category, source-claim link requirements, package
+  section expectations, and Forest Plan component references when relevant
+
+`non_applicable_authorities.json` has schema version `non-applicable-authorities-v0` and contains only
+decision records whose final status is `not_applicable`. It includes the same run, source-set,
+authority-universe, package, and decision hashes as `applicable_authorities.json`.
+
+Each non-applicable authority record includes:
+
+- `decision_id`
+- `candidate_authority_id`
+- `non_applicability_basis`
+- negative evidence spans, explicit trigger-miss evidence, absent-trigger rationale, or human
+  adjudication reference
+- source-record IDs, document roles, authority category, and Forest Plan component references when
+  relevant
+
+`applicability_validation.json` has schema version `applicability-validation-v0` and includes:
+
+- `applicability_run_id`
+- `review_id`
+- `source_set_id`
+- `passed`
+- status counts by applicability decision status
+- candidate, applicable, non-applicable, unresolved, and needs-adjudication counts
+- hashes for the authority universe, package manifest, package chunks, decisions, applicable
+  authorities, non-applicable authorities, and generated rule pack when present
+- validation failure records with failure category, affected authority IDs, and artifact paths
+- generated-rule-pack readiness status
+
+Hard validation failures include:
+
+- `missing_candidate_decision`: a candidate authority is missing from `applicability_decisions.jsonl`
+- `duplicate_decision`: a candidate authority has more than one decision record
+- `partition_gap`: a final decision is absent from both applicable and non-applicable artifacts
+- `partition_overlap`: an authority appears in both applicable and non-applicable artifacts
+- `unresolved_authority`: a decision with `unresolved` or `needs_adjudication` is treated as
+  review-ready
+- `non_applicable_basis_gap`: a non-applicable authority has no negative evidence, no-trigger
+  rationale, or adjudication basis
+- `applicable_evidence_gap`: an applicable authority has no package/source basis unless explicitly
+  baseline-required and the baseline-required basis is evidenced
+- `contradictory_package_evidence`: package evidence supports both applicable and non-applicable
+  outcomes without adjudication
+- `forest_plan_scope_unresolved`: Forest Plan profile or component applicability lacks required
+  source and package context
+- `source_set_stale`: source-set, catalog, source-claim, or authority-universe hashes do not match the
+  evaluated source set
+- `package_cache_stale`: package manifest or package chunk hashes do not match the applicability
+  context
+- `generated_rule_pack_mismatch`: the generated rule pack does not match the
+  `applicable_authorities.json` artifact
+- `generated_rule_pack_stale`: the generated rule pack is stale relative to package, source set, or
+  authority universe
+
+`generated_rule_pack.json` has schema version `generated-compliance-rule-pack-v0` and is the only
+rule pack accepted by the target downstream compliance-review path. It includes:
+
+- `base_rule_pack_id`
+- `base_rule_pack_version`
+- `base_rule_pack_sha256`
+- `generated_rule_pack_id`
+- `generated_rule_pack_version`
+- `applicability_run_id`
+- `applicability_validation_sha256`
+- `authority_universe_sha256`
+- `applicable_authorities_sha256`
+- `package_manifest_sha256`
+- `source_set_id`
+- `review_id`
+- generated rules
+
+Each generated rule carries:
+
+- base rule ID and generated rule ID
+- applicability decision ID
+- applicability evidence references
+- source-record IDs and document roles
+- source-claim link requirements
+- package-section expectations
+- Forest Plan component references when relevant
+
+`generated_rule_pack_validation.json` has schema version `generated-rule-pack-validation-v0` and
+records whether the generated rule count equals the validated applicable-authority count, whether all
+generated rules trace to applicable decisions, whether non-applicable authorities are absent, and
+whether source-claim links are present for claim-bearing generated rules.
+
+The non-applicable authority artifact is separate from the compliance matrix. A combined
+reviewer-facing report may link to `non_applicable_authorities.json`, but the target compliance
+matrix evaluates compliance findings only for generated applicable rules.
 
 ## Compliance Review Outputs
 
