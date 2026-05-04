@@ -1310,6 +1310,10 @@ records:
   graph-trace, search-coverage, validation, and applicable-authority hashes match the validated
   applicability artifacts
 
+`applicability-generate-rule-pack --validate-only` rechecks an existing generated pack without
+rewriting it. Validation retains the previously recorded generated-pack hash, so manual edits fail
+with `generated_rule_pack_mismatch`; upstream artifact drift fails with `generated_rule_pack_stale`.
+
 The non-applicable authority artifact is separate from the compliance matrix. A combined
 reviewer-facing report may link to `non_applicable_authorities.json`, but the target compliance
 matrix evaluates compliance findings only for generated applicable rules.

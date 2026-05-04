@@ -38,6 +38,11 @@ Current completed applicability milestones:
   partitions with `human_adjudication` bases and updates provenance. The gap-close pass hardened
   validation around package fact-graph validation status, contradiction/adjudication handling,
   adjudication eval replayability, partition/coverage freshness, and provenance entity hashes.
+- Milestone 7 generated rule pack: `applicability-generate-rule-pack` writes
+  `generated_rule_pack.json` and `generated_rule_pack_validation.json` only from a passing
+  applicability validation. Generated packs contain validated applicable authorities only and carry
+  decision, retrieval, graph, source-record, source-claim, package-section, Forest Plan, freshness,
+  and provenance metadata. `--validate-only` detects manual edits and upstream artifact drift.
 
 Latest applicability commits:
 
@@ -50,6 +55,7 @@ Latest applicability commits:
 - `08b1aae` - Add deterministic applicability decisions
 - `aa0c1da` - Close applicability decision gaps
 - `6bed025` - Add applicability validation adjudication gate
+- `a60c382` - Close applicability validation gate gaps
 
 Important current behavior:
 
@@ -67,39 +73,39 @@ Important current behavior:
   provenance entities.
 - `compliance-review` still runs the current V1 authority-first path. It is not yet gated by
   applicability artifacts, and it does not yet consume a generated applicability-derived rule pack.
-- The applicability-first path now has the validation/adjudication gate required before generated
-  rule-pack work. It still does not emit `generated_rule_pack.json` or gate `compliance-review`.
+- The applicability-first path now emits a generated rule pack after validation/adjudication. It
+  still does not gate `compliance-review`; that is the next implementation boundary.
 
 Latest verification for the applicability-first lane:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py tests/test_rule_claim_binding.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 6 validation/adjudication pass:
+Verified results from the latest Milestone 7 generated-rule-pack pass:
 
-- Applicability plus compliance focused suite: `65 passed, 3 subtests passed`
-- Full repository test suite: `261 passed, 8 subtests passed`
+- Applicability plus compliance/rule-claim focused suite: `75 passed, 3 subtests passed`
+- Full repository test suite: `265 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
 
 Next implementation target:
 
-Milestone 7 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: generated rule pack. The next
-slice should add `applicability-generate-rule-pack`, emitting `generated_rule_pack.json` and
-`generated_rule_pack_validation.json` only from a passing applicability validation. Generated rules
-must carry applicability decision IDs, trace IDs, source-record/document-role metadata,
-source-claim requirements, package-section expectations, Forest Plan component references when
-present, and freshness/provenance hashes.
+Milestone 8 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: gate compliance review behind
+the generated rule pack. The next slice should refactor `compliance-review` so reviewer-ready review
+requires a generated pack, passing applicability validation, matching generated-pack validation,
+matching package/source-set hashes, and a valid non-applicable authority artifact.
 
 Current stop conditions for the next session:
 
-- Do not generate a compliance rule pack unless `applicability_validation.json` exists and passes.
+- Do not run reviewer-ready compliance review against the base rule pack once Milestone 8 starts.
+- Do not generate or accept a compliance rule pack unless `applicability_validation.json` exists and
+  passes.
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.

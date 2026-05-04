@@ -7,6 +7,8 @@ import json
 from .applicability import build_authority_universe_snapshot
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
+from .applicability_rule_pack import generate_applicability_rule_pack
+from .applicability_rule_pack import validate_generated_rule_pack
 from .applicability_validation import apply_applicability_adjudication
 from .applicability_validation import evaluate_applicability_adjudication
 from .applicability_validation import validate_applicability_run
@@ -551,6 +553,40 @@ def build_parser() -> argparse.ArgumentParser:
     applicability_adjudication_apply.add_argument("--non-applicable-authorities-path", type=Path)
     applicability_adjudication_apply.add_argument("--provenance-path", type=Path)
     applicability_adjudication_apply.add_argument("--output-path", type=Path)
+
+    applicability_generate_rule_pack = subparsers.add_parser(
+        "applicability-generate-rule-pack",
+        help=(
+            "Generate or validate a compliance rule pack from passing applicability validation."
+        ),
+    )
+    applicability_generate_rule_pack.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_generate_rule_pack.add_argument("--review-id", required=True)
+    applicability_generate_rule_pack.add_argument("--source-set-id")
+    applicability_generate_rule_pack.add_argument(
+        "--base-rule-pack",
+        type=Path,
+        help=(
+            "Base rule pack used to derive rule templates. Defaults to the authority-universe "
+            "artifact path, or the repository default rule pack when absent."
+        ),
+    )
+    applicability_generate_rule_pack.add_argument("--authority-universe-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--decisions-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--applicable-authorities-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--non-applicable-authorities-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--applicability-validation-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--output-path", type=Path)
+    applicability_generate_rule_pack.add_argument("--validation-output-path", type=Path)
+    applicability_generate_rule_pack.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Validate the existing generated rule pack without rewriting it.",
+    )
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -1124,6 +1160,37 @@ def main(argv: list[str] | None = None) -> int:
             provenance_path=args.provenance_path,
             output_path=args.output_path,
         )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-generate-rule-pack":
+        if args.validate_only:
+            result = validate_generated_rule_pack(
+                output_dir=args.output_dir,
+                review_id=args.review_id,
+                source_set_id=args.source_set_id,
+                base_rule_pack_path=args.base_rule_pack,
+                authority_universe_path=args.authority_universe_path,
+                applicable_authorities_path=args.applicable_authorities_path,
+                non_applicable_authorities_path=args.non_applicable_authorities_path,
+                applicability_validation_path=args.applicability_validation_path,
+                generated_rule_pack_path=args.output_path,
+                validation_output_path=args.validation_output_path,
+            )
+        else:
+            result = generate_applicability_rule_pack(
+                output_dir=args.output_dir,
+                review_id=args.review_id,
+                source_set_id=args.source_set_id,
+                base_rule_pack_path=args.base_rule_pack,
+                authority_universe_path=args.authority_universe_path,
+                decisions_path=args.decisions_path,
+                applicable_authorities_path=args.applicable_authorities_path,
+                non_applicable_authorities_path=args.non_applicable_authorities_path,
+                applicability_validation_path=args.applicability_validation_path,
+                output_path=args.output_path,
+                validation_output_path=args.validation_output_path,
+            )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1
 

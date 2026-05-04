@@ -885,6 +885,29 @@ ledger and applicable/non-applicable authority artifacts with `human_adjudicatio
 `applicability_adjudication_apply.json`, and updates provenance. These commands still do not create
 a generated rule pack or compliance findings.
 
+Generate the applicability-derived rule pack:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id> \
+  --validate-only
+```
+
+`applicability-generate-rule-pack` requires a passing `applicability_validation.json`. It writes
+`generated_rule_pack.json` and `generated_rule_pack_validation.json` from validated applicable
+authorities only; non-applicable authorities remain in `non_applicable_authorities.json`. Generated
+rules carry applicability decision IDs, retrieval and graph trace IDs, source-record/document-role
+metadata, source-claim link requirements, package-section expectations, Forest Plan component
+metadata when relevant, and freshness/provenance hashes. `--validate-only` rechecks an existing
+generated pack and fails if it was edited by hand or is stale relative to applicability artifacts.
+
 Run rule-pack coverage:
 
 ```bash

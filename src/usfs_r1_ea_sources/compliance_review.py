@@ -14,6 +14,11 @@ from .forest_plan_resolver import run_forest_plan_resolver
 
 
 RULE_PACK_SCHEMA_VERSION = "compliance-rule-pack-v0"
+GENERATED_RULE_PACK_SCHEMA_VERSION = "generated-compliance-rule-pack-v0"
+SUPPORTED_RULE_PACK_SCHEMA_VERSIONS = {
+    RULE_PACK_SCHEMA_VERSION,
+    GENERATED_RULE_PACK_SCHEMA_VERSION,
+}
 COMPLIANCE_REVIEW_SCHEMA_VERSION = "compliance-review-v0"
 COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v0"
@@ -2269,8 +2274,11 @@ def _check_rule_pack_schema(rule_pack: dict) -> dict:
     actual = rule_pack.get("schema_version")
     return {
         "name": "rule_pack_schema_version",
-        "passed": actual == RULE_PACK_SCHEMA_VERSION,
-        "details": {"expected": RULE_PACK_SCHEMA_VERSION, "actual": actual},
+        "passed": actual in SUPPORTED_RULE_PACK_SCHEMA_VERSIONS,
+        "details": {
+            "expected": sorted(SUPPORTED_RULE_PACK_SCHEMA_VERSIONS),
+            "actual": actual,
+        },
     }
 
 

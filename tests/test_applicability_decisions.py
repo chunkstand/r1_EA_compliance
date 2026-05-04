@@ -8,6 +8,8 @@ import unittest
 
 from usfs_r1_ea_sources.applicability_decisions import build_applicability_decisions
 from usfs_r1_ea_sources.applicability_retrieval import build_applicability_retrieval_traces
+from usfs_r1_ea_sources.applicability_rule_pack import generate_applicability_rule_pack
+from usfs_r1_ea_sources.applicability_rule_pack import validate_generated_rule_pack
 from usfs_r1_ea_sources.applicability_validation import apply_applicability_adjudication
 from usfs_r1_ea_sources.applicability_validation import evaluate_applicability_adjudication
 from usfs_r1_ea_sources.applicability_validation import validate_applicability_run
@@ -248,6 +250,182 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertTrue(validation_result.summary["passed"])
             self.assertTrue(validation_result.summary["generated_rule_pack_ready"])
 
+    def test_generated_rule_pack_uses_only_validated_applicable_authorities(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            base_rule_pack_path = _write_generated_rule_base_pack(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+
+            result = generate_applicability_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertTrue(result.generated_rule_pack_path.exists())
+            self.assertTrue(result.generated_rule_pack_validation_path.exists())
+            generated = json.loads(
+                result.generated_rule_pack_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                generated["schema_version"],
+                "generated-compliance-rule-pack-v0",
+            )
+            self.assertEqual(generated["applicable_authority_count"], 4)
+            self.assertEqual(len(generated["rules"]), 4)
+            rule_ids = {rule["id"] for rule in generated["rules"]}
+            self.assertEqual(
+                rule_ids,
+                {
+                    "baseline_nepa",
+                    "cwa_permit",
+                    "esa_consultation",
+                    "forest_plan_component_STD-FP-01",
+                },
+            )
+            self.assertNotIn("ce_fanec", rule_ids)
+            self.assertNotIn("sioux_geography", rule_ids)
+            for rule in generated["rules"]:
+                metadata = rule["applicability"]
+                self.assertEqual(metadata["status"], "applicable")
+                self.assertTrue(metadata["decision_id"])
+                self.assertTrue(metadata["retrieval_trace_ids"])
+                self.assertTrue(metadata["source_record_ids"])
+                self.assertIn("package_section_expectations", rule)
+            applicable = json.loads(
+                (applicability_dir / "applicable_authorities.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(
+                generated["applicable_authorities_sha256"],
+                result.summary["applicable_authorities_sha256"],
+            )
+            self.assertEqual(
+                generated["applicable_authority_count"],
+                applicable["applicable_authority_count"],
+            )
+
+    def test_generated_rule_pack_requires_passing_applicability_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            validation_result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            self.assertFalse(validation_result.summary["passed"])
+
+            with self.assertRaisesRegex(ValueError, "has not passed"):
+                generate_applicability_rule_pack(
+                    output_dir=fixture["output_dir"],
+                    review_id=fixture["review_id"],
+                    source_set_id=fixture["source_set_id"],
+                    base_rule_pack_path=_write_generated_rule_base_pack(Path(tmp)),
+                )
+
+            generated_path = (
+                fixture["output_dir"]
+                / "reviews"
+                / fixture["review_id"]
+                / "applicability"
+                / "generated_rule_pack.json"
+            )
+            self.assertFalse(generated_path.exists())
+
+    def test_generated_rule_pack_validation_rejects_manual_edit_and_stale_inputs(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            base_rule_pack_path = _write_generated_rule_base_pack(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+            result = generate_applicability_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            generated = json.loads(
+                result.generated_rule_pack_path.read_text(encoding="utf-8")
+            )
+            generated["rules"][0]["title"] = "Manual edit should fail validation"
+            _write_json(result.generated_rule_pack_path, generated)
+
+            edited_validation = validate_generated_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+
+            self.assertFalse(edited_validation.summary["passed"])
+            self.assertIn(
+                "generated_rule_pack_mismatch",
+                edited_validation.summary["failure_category_counts"],
+            )
+
+            # Regenerate to refresh the expected generated-pack hash, then stale an input.
+            result = generate_applicability_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            applicable_path = applicability_dir / "applicable_authorities.json"
+            applicable = json.loads(applicable_path.read_text(encoding="utf-8"))
+            applicable["authorities"][0]["basis_type"] = "stale-after-generation"
+            _write_json(applicable_path, applicable)
+
+            stale_validation = validate_generated_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+
+            self.assertFalse(stale_validation.summary["passed"])
+            self.assertIn(
+                "generated_rule_pack_stale",
+                stale_validation.summary["failure_category_counts"],
+            )
+
+    def test_cli_writes_generated_rule_pack_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            _build_adjudicated_applicability_dir(fixture)
+            base_rule_pack_path = _write_generated_rule_base_pack(Path(tmp))
+
+            exit_code = main(
+                [
+                    "applicability-generate-rule-pack",
+                    "--output-dir",
+                    str(fixture["output_dir"]),
+                    "--review-id",
+                    fixture["review_id"],
+                    "--source-set-id",
+                    fixture["source_set_id"],
+                    "--base-rule-pack",
+                    str(base_rule_pack_path),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            applicability_dir = (
+                fixture["output_dir"] / "reviews" / fixture["review_id"] / "applicability"
+            )
+            self.assertTrue((applicability_dir / "generated_rule_pack.json").exists())
+            self.assertTrue(
+                (applicability_dir / "generated_rule_pack_validation.json").exists()
+            )
+
     def test_validation_rejects_failed_package_fact_graph_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))
@@ -485,7 +663,102 @@ def _build_adjudicated_applicability_dir(fixture: dict) -> Path:
     )
     if not apply_result.summary["passed"]:
         raise AssertionError(apply_result.summary)
+    validation_result = validate_applicability_run(
+        output_dir=fixture["output_dir"],
+        review_id=fixture["review_id"],
+        source_set_id=fixture["source_set_id"],
+    )
+    if not validation_result.summary["passed"]:
+        raise AssertionError(validation_result.summary)
     return fixture["output_dir"] / "reviews" / fixture["review_id"] / "applicability"
+
+
+def _write_generated_rule_base_pack(root: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-pack",
+        "version": "0.1.0",
+        "title": "Unit Applicability Rule Pack",
+        "domain": "Unit NEPA",
+        "jurisdiction": "Unit Test",
+        "rules": [
+            _generated_base_rule(
+                rule_id="baseline_nepa",
+                source_record_id="R1EA-BASE",
+                document_role="law",
+                authority_category="law",
+                applicability_mode="baseline",
+            ),
+            _generated_base_rule(
+                rule_id="esa_consultation",
+                source_record_id="R1EA-ESA",
+                document_role="law",
+                authority_category="law",
+                applicability_mode="conditional",
+                applies_if_package_terms=["Endangered Species Act"],
+            ),
+            _generated_base_rule(
+                rule_id="ce_fanec",
+                source_record_id="R1EA-CE",
+                document_role="regulation",
+                authority_category="regulation",
+                applicability_mode="conditional",
+                applies_if_package_terms=["Categorical Exclusion"],
+            ),
+            _generated_base_rule(
+                rule_id="cwa_permit",
+                source_record_id="R1EA-CWA",
+                document_role="law",
+                authority_category="law",
+                applicability_mode="conditional",
+                applies_if_package_terms=["Clean Water Act"],
+            ),
+            _generated_base_rule(
+                rule_id="sioux_geography",
+                source_record_id="R1EA-SIOUX",
+                document_role="forest_plan",
+                authority_category="forest_plan",
+                applicability_mode="conditional",
+                applies_if_package_terms=["Sioux Geographic Area"],
+            ),
+        ],
+    }
+    path = root / "generated-base-rule-pack.json"
+    _write_json(path, rule_pack)
+    return path
+
+
+def _generated_base_rule(
+    *,
+    rule_id: str,
+    source_record_id: str,
+    document_role: str,
+    authority_category: str,
+    applicability_mode: str,
+    applies_if_package_terms: list[str] | None = None,
+) -> dict:
+    package_terms = applies_if_package_terms or [rule_id.replace("_", " ")]
+    rule = {
+        "id": rule_id,
+        "title": f"{rule_id} title",
+        "authority_category": authority_category,
+        "authority_source_record_id": source_record_id,
+        "applicability_mode": applicability_mode,
+        "question": f"Does the package address {rule_id}?",
+        "requirement": f"The package should address {rule_id}.",
+        "severity": "medium",
+        "package_query": " ".join(package_terms),
+        "package_terms": package_terms,
+        "source_query": f"{rule_id} source authority",
+        "source_filters": {
+            "document_role": document_role,
+            "source_record_id": source_record_id,
+        },
+        "evidence_expectation": "Requires source and package evidence.",
+    }
+    if applicability_mode == "conditional":
+        rule["applies_if_package_terms"] = package_terms
+    return rule
 
 
 def _write_decision_fixture(root: Path) -> dict:
