@@ -783,6 +783,65 @@ dispositions, incomplete adjudication metadata, invalid dispositions, or status 
 mismatches. A `true_ea_omission` can be a completed adjudication; it documents a real review gap
 rather than silently marking the component supported.
 
+## Authority Universe Family Inventory Config
+
+Path: `config/authority_universe_families_nepa_ea_v1.json`
+
+The authority-family inventory is a committed configuration artifact, not a generated
+`source_library/` artifact. It is the Milestone 1 crosswalk that makes the bounded USFS Region 1 EA
+authority universe explicit before later slices add source records, currentness gates, rule
+templates, applicability evals, and report integration.
+
+The file has schema version `authority-universe-families-v1` and includes:
+
+- `authority_universe_family_inventory_id`
+- `as_of_date`
+- workbook identity and baseline source-record IDs
+- source-set/catalog paths for the current generated corpus being crosswalked
+- rule-pack identity for the current base candidate rule pack
+- status definitions for `active`, `source_only`, `candidate`, `out_of_scope`, and `superseded`
+- `required_authority_family_coverage`, mapping each required authority requirement group to one or
+  more concrete family IDs
+- `authority_families`
+- `source_record_crosswalk`
+- `summary`, including family counts, status counts, mapped rule/source counts, and orphan-rule or
+  orphan-source arrays
+
+Each `authority_families` entry includes:
+
+- `family_id`
+- `name`
+- `status`
+- `rationale`
+- `source_record_ids`
+- `rule_ids`
+- `applicability_predicates`
+- `package_fact_types`
+- `coverage_requirements`
+- `source_evidence_requirements`
+- `open_inventory_gaps`
+- `supersession`, when the family is replaced, reserved, repealed, or otherwise superseded
+- `required_authority_requirement_ids`
+
+`source_record_crosswalk` contains one row per active workbook source record. Each row includes:
+
+- `source_record_id`
+- `sheet`
+- `excel_row`
+- `scope`
+- `primary_family_id`
+- `related_family_ids`
+- `mapping_status`
+
+The inventory must preserve these closeout invariants:
+
+- every current rule-pack rule maps to exactly one authority family;
+- every rule's `authority_source_record_id` is present in that family's source-record mapping;
+- every canonical workbook source record maps to a primary family;
+- `source_only` and `candidate` families remain visible as future work instead of being hidden in
+  runtime code;
+- superseded/reserved authorities carry replacement/current-source evidence.
+
 ## Applicability-First Review Outputs
 
 Path: `source_library/reviews/<review_id>/applicability/`

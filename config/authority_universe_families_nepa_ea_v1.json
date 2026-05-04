@@ -1,0 +1,4419 @@
+{
+  "as_of_date": "2026-05-04",
+  "authority_families": [
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "agency",
+            "decision_posture",
+            "public_involvement"
+          ],
+          "predicate_id": "administrative_review_final_agency_action:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "apa_final_agency_action",
+            "postdecisional_review_36cfr_214",
+            "predecisional_review_36cfr_218"
+          ],
+          "trigger_terms": [
+            "36 CFR part 214",
+            "36 CFR part 218",
+            "FONSI",
+            "appeal",
+            "authorization",
+            "decision notice",
+            "effective date",
+            "final agency action",
+            "legal notice",
+            "objection",
+            "written authorization"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "apa_final_agency_action",
+          "postdecisional_review_36cfr_214",
+          "predecisional_review_36cfr_218"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-021",
+          "R1EA-025",
+          "R1EA-026"
+        ]
+      },
+      "family_id": "administrative_review_final_agency_action",
+      "name": "Administrative review, objection/appeal, and final agency action",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "agency",
+        "decision_posture",
+        "public_involvement"
+      ],
+      "rationale": "APA final-agency-action and 36 CFR parts 218/214 rules are represented in the current rule pack.",
+      "required_authority_requirement_ids": [
+        "administrative_review"
+      ],
+      "rule_ids": [
+        "apa_final_agency_action",
+        "postdecisional_review_36cfr_214",
+        "predecisional_review_36cfr_218"
+      ],
+      "source_evidence_requirements": [
+        "APA or Forest Service administrative-review source",
+        "package evidence for decision notice, FONSI, legal notice, objection, appeal, authorization, or final action"
+      ],
+      "source_record_ids": [
+        "R1EA-021",
+        "R1EA-025",
+        "R1EA-026"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "clean_air_act_conformity_air_quality:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-092",
+          "R1EA-093"
+        ]
+      },
+      "family_id": "clean_air_act_conformity_air_quality",
+      "name": "Clean Air Act, general conformity, smoke, and air-quality coordination",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Clean Air Act and general-conformity rows are present, but air-quality triggers and eval coverage are not active yet.",
+      "required_authority_requirement_ids": [
+        "clean_air"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "Clean Air Act or conformity regulation source",
+        "package evidence for emissions, prescribed fire smoke, conformity, nonattainment/maintenance area, or air-quality permit/coordination"
+      ],
+      "source_record_ids": [
+        "R1EA-092",
+        "R1EA-093"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "clean_water_act_wotus_permits:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-082",
+          "R1EA-083",
+          "R1EA-084",
+          "R1EA-085",
+          "R1EA-086",
+          "R1EA-087",
+          "R1EA-088",
+          "R1EA-089",
+          "R1EA-090",
+          "R1EA-091",
+          "R1EA-115",
+          "R1EA-116",
+          "R1EA-117",
+          "R1EA-118"
+        ]
+      },
+      "family_id": "clean_water_act_wotus_permits",
+      "name": "Clean Water Act, waters of the United States, and water permit/certification sources",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "CWA, Corps, FWCA, and state water-certification rows exist, but no active rule template/predicate family has been promoted yet.",
+      "required_authority_requirement_ids": [
+        "clean_water"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "CWA/Corps/state water source",
+        "package evidence for waters, wetlands, discharge, dredge/fill, stormwater/NPDES, water-quality certification, DA permit, or state permit triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-082",
+        "R1EA-083",
+        "R1EA-084",
+        "R1EA-085",
+        "R1EA-086",
+        "R1EA-087",
+        "R1EA-088",
+        "R1EA-089",
+        "R1EA-090",
+        "R1EA-091",
+        "R1EA-115",
+        "R1EA-116",
+        "R1EA-117",
+        "R1EA-118"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "cultural_resource_protection_and_state_shpo_sources:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-072",
+          "R1EA-073",
+          "R1EA-074",
+          "R1EA-075",
+          "R1EA-076",
+          "R1EA-077",
+          "R1EA-078",
+          "R1EA-079",
+          "R1EA-080",
+          "R1EA-113",
+          "R1EA-114",
+          "R1EA-120",
+          "R1EA-121",
+          "R1EA-122",
+          "R1EA-123"
+        ]
+      },
+      "family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "name": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "The workbook contains cultural, archaeological, religious-freedom, sacred-site, and state SHPO sources that need expanded predicates/evals beyond the active NHPA subset.",
+      "required_authority_requirement_ids": [
+        "nhpa_cultural",
+        "tribal_trust",
+        "archaeological_cultural_protection"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "cultural-resource law/regulation/SHPO source",
+        "package evidence for historic properties, archaeological resources, Native American remains/items, sacred sites, religious exercise, or state SHPO coordination",
+        "paleontology and cave-resource source evidence when project facts trigger those special cultural/resource protections"
+      ],
+      "source_record_ids": [
+        "R1EA-072",
+        "R1EA-073",
+        "R1EA-074",
+        "R1EA-075",
+        "R1EA-076",
+        "R1EA-077",
+        "R1EA-078",
+        "R1EA-079",
+        "R1EA-080",
+        "R1EA-113",
+        "R1EA-114",
+        "R1EA-120",
+        "R1EA-121",
+        "R1EA-122",
+        "R1EA-123"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "eagle_efh_and_special_wildlife_sources:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-097",
+          "R1EA-098",
+          "R1EA-099",
+          "R1EA-100"
+        ]
+      },
+      "family_id": "eagle_efh_and_special_wildlife_sources",
+      "name": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Eagle and essential-fish-habitat rows are present, but rule templates and positive/negative applicability cases remain to be added.",
+      "required_authority_requirement_ids": [
+        "wildlife_birds"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "eagle or EFH source",
+        "package evidence for eagle take/disturbance/nests, EFH, fish habitat, or consultation triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-097",
+        "R1EA-098",
+        "R1EA-099",
+        "R1EA-100"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "environmental_justice_civil_rights:candidate-source-needed",
+          "predicate_source": "docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md required family inventory",
+          "predicate_status": "missing_source_records",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": []
+      },
+      "family_id": "environmental_justice_civil_rights",
+      "name": "Environmental justice and civil-rights authorities",
+      "open_inventory_gaps": [
+        "Add or document current federal environmental-justice and civil-rights source rows before this family can become source_only or active."
+      ],
+      "package_fact_types": [
+        "geography",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "The required authority universe identifies EJ/Title VI/current federal EJ policy as a gap; no current workbook source row or rule template is active.",
+      "required_authority_requirement_ids": [
+        "environmental_justice_civil_rights"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "candidate current federal EJ/civil-rights source",
+        "package evidence for affected communities, civil-rights implications, distributional effects, or EJ policy triggers"
+      ],
+      "source_record_ids": [],
+      "status": "candidate",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "esa_section7_species_consultation:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "esa_consultation_50cfr_402",
+            "esa_section_7",
+            "fsm_2670_species_policy",
+            "region1_species_of_conservation_concern"
+          ],
+          "trigger_terms": [
+            "Endangered Species Act",
+            "FSM 2670",
+            "Fish and Wildlife Service",
+            "Regional Forester",
+            "Section 7",
+            "biological assessment",
+            "biological evaluation",
+            "endangered",
+            "forest plan",
+            "sensitive species",
+            "species of conservation concern",
+            "threatened"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "esa_consultation_50cfr_402",
+          "esa_section_7",
+          "fsm_2670_species_policy",
+          "region1_species_of_conservation_concern"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "seed-mixed-applicability",
+          "seed-negative-applicability",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-031",
+          "R1EA-065",
+          "R1EA-066",
+          "R1EA-067"
+        ]
+      },
+      "family_id": "esa_section7_species_consultation",
+      "name": "ESA Section 7, consultation regulations, and Forest Service sensitive-species policy",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "ESA Section 7, 50 CFR part 402, and Forest Service species-policy rows are represented by active conditional and baseline rules.",
+      "required_authority_requirement_ids": [
+        "esa_species"
+      ],
+      "rule_ids": [
+        "esa_consultation_50cfr_402",
+        "esa_section_7",
+        "fsm_2670_species_policy",
+        "region1_species_of_conservation_concern"
+      ],
+      "source_evidence_requirements": [
+        "ESA/source regulation or Forest Service species-policy source",
+        "package evidence for listed species, sensitive species, biological assessment/evaluation, consultation, concurrence, or biological opinion"
+      ],
+      "source_record_ids": [
+        "R1EA-031",
+        "R1EA-065",
+        "R1EA-066",
+        "R1EA-067"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "floodplain_management_eo11988:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-103"
+        ]
+      },
+      "family_id": "floodplain_management_eo11988",
+      "name": "Executive Order 11988 floodplain management",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "EO 11988 source coverage exists, but floodplain-specific predicates/eval cases have not been promoted.",
+      "required_authority_requirement_ids": [
+        "floodplain_wetlands_eos"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "EO 11988 source",
+        "package evidence for floodplain occupancy, alteration, or effects"
+      ],
+      "source_record_ids": [
+        "R1EA-103"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "agency",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "forest_service_directives_notice_comment:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "directives_notice_comment_36cfr_216"
+          ],
+          "trigger_terms": [
+            "36 CFR part 216",
+            "directives",
+            "notice and comment",
+            "standards"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "directives_notice_comment_36cfr_216"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-027"
+        ]
+      },
+      "family_id": "forest_service_directives_notice_comment",
+      "name": "Forest Service directives notice-and-comment requirements",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "agency",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "The conditional 36 CFR part 216 directive-notice row has an active rule template for directive changes that establish standards or criteria.",
+      "required_authority_requirement_ids": [
+        "administrative_review"
+      ],
+      "rule_ids": [
+        "directives_notice_comment_36cfr_216"
+      ],
+      "source_evidence_requirements": [
+        "36 CFR part 216 source",
+        "package or source evidence that a directive establishes standards, criteria, or guidelines"
+      ],
+      "source_record_ids": [
+        "R1EA-027"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "agency",
+            "nepa_level"
+          ],
+          "predicate_id": "forest_service_nepa_36cfr_220_reserved_superseded:superseded-by-current-source",
+          "predicate_source": "inventory supersession contract",
+          "predicate_status": "superseded",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-008",
+          "R1EA-018",
+          "R1EA-019"
+        ]
+      },
+      "family_id": "forest_service_nepa_36cfr_220_reserved_superseded",
+      "name": "Reserved/superseded Forest Service NEPA regulations under former 36 CFR part 220",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "agency",
+        "nepa_level"
+      ],
+      "rationale": "Former Forest Service NEPA regulatory references are not allowed to satisfy current USDA NEPA procedure requirements without the current 7 CFR part 1b and USDA rulemaking sources.",
+      "required_authority_requirement_ids": [
+        "core_nepa"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "replacement/current USDA NEPA regulatory source",
+        "Forest Service policy source documenting current NEPA context"
+      ],
+      "source_record_ids": [
+        "R1EA-008",
+        "R1EA-018",
+        "R1EA-019"
+      ],
+      "status": "superseded",
+      "supersession": {
+        "current_source_record_ids": [
+          "R1EA-008",
+          "R1EA-018",
+          "R1EA-019"
+        ],
+        "replacement_family_id": "usda_nepa_procedures_7cfr_part_1b",
+        "reviewer_visible_rationale": "Use current USDA NEPA procedures and Forest Service NEPA policy/currentness sources; do not treat reserved or superseded 36 CFR part 220 text as the controlling authority.",
+        "superseded_authority": "Former Forest Service NEPA regulations at 36 CFR part 220 where reserved or replaced by current USDA NEPA procedures"
+      }
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "agency",
+            "nepa_level",
+            "resource_topic"
+          ],
+          "predicate_id": "forest_service_nepa_current_policy_directives:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "forest_service_directives_portal",
+            "forest_service_nepa_policy_page",
+            "region1_directives_index"
+          ],
+          "trigger_terms": [
+            "36 CFR part 220",
+            "Forest Service",
+            "Forest Service directives",
+            "NEPA",
+            "Region 1 directives",
+            "USDA NEPA rule",
+            "current directives",
+            "field directives",
+            "handbook",
+            "manual",
+            "regional supplement"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "forest_service_directives_portal",
+          "forest_service_nepa_policy_page",
+          "region1_directives_index"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-019",
+          "R1EA-028",
+          "R1EA-029"
+        ]
+      },
+      "family_id": "forest_service_nepa_current_policy_directives",
+      "name": "Forest Service NEPA policy and current directives portals",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "agency",
+        "nepa_level",
+        "resource_topic"
+      ],
+      "rationale": "Forest Service and Region 1 directives sources are baseline authority-discovery surfaces for current manuals, handbooks, and policy context.",
+      "required_authority_requirement_ids": [
+        "core_nepa"
+      ],
+      "rule_ids": [
+        "forest_service_directives_portal",
+        "forest_service_nepa_policy_page",
+        "region1_directives_index"
+      ],
+      "source_evidence_requirements": [
+        "current Forest Service or Region 1 directives source",
+        "package or source evidence showing directives/manual/handbook relevance"
+      ],
+      "source_record_ids": [
+        "R1EA-019",
+        "R1EA-028",
+        "R1EA-029"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "management_area",
+            "nepa_level",
+            "overlay"
+          ],
+          "predicate_id": "forest_service_planning_handbook_amendments:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-032"
+        ]
+      },
+      "family_id": "forest_service_planning_handbook_amendments",
+      "name": "Forest Service planning handbook and amendment support",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "nepa_level",
+        "overlay"
+      ],
+      "rationale": "The workbook contains the planning handbook source for site-specific plan amendments, but no active rule template or predicate has been promoted yet.",
+      "required_authority_requirement_ids": [
+        "core_nepa",
+        "nfma_forest_plan"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "Forest Service planning handbook source",
+        "package evidence for a site-specific plan amendment"
+      ],
+      "source_record_ids": [
+        "R1EA-032"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "grassland_bankhead_jones_authorities:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-037",
+          "R1EA-038",
+          "R1PLAN-region-1-grassland-overlay-01"
+        ]
+      },
+      "family_id": "grassland_bankhead_jones_authorities",
+      "name": "Bankhead-Jones and National Grassland administration authorities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "National Grassland and Bankhead-Jones rows are present for grassland-specific EA triggers, but no active rule/predicate path has been promoted.",
+      "required_authority_requirement_ids": [
+        "organic_access_special_use"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "Bankhead-Jones or grassland administration source",
+        "package evidence that the action is on National Grassland or Bankhead-Jones acquired/administered land"
+      ],
+      "source_record_ids": [
+        "R1EA-037",
+        "R1EA-038",
+        "R1PLAN-region-1-grassland-overlay-01"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "hazardous_materials_site_condition:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-107",
+          "R1EA-108",
+          "R1EA-109"
+        ]
+      },
+      "family_id": "hazardous_materials_site_condition",
+      "name": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Hazardous materials/substances rows are captured, but due-diligence and site-condition predicates/evals have not been promoted.",
+      "required_authority_requirement_ids": [
+        "hazardous_site_condition"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "CERCLA/RCRA/NCP source",
+        "package evidence for hazardous substance release, solid/hazardous waste, cleanup, exposure, facility, mine feature, land acquisition/disposal, or spill response"
+      ],
+      "source_record_ids": [
+        "R1EA-107",
+        "R1EA-108",
+        "R1EA-109"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "invasive_pesticide_soils_farmland_drinking_water:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-030",
+          "R1EA-101",
+          "R1EA-102",
+          "R1EA-105",
+          "R1EA-106",
+          "R1EA-110",
+          "R1EA-111",
+          "R1EA-112"
+        ]
+      },
+      "family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "name": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Common resource and permit families are represented as workbook/catalog source rows but need active predicates and eval fixtures.",
+      "required_authority_requirement_ids": [
+        "invasive_soil_watershed_common_region1"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "resource or permit-family source",
+        "package evidence for soils, invasive species, noxious weeds, pesticide/herbicide use, farmland conversion, drinking/source water, UIC, watershed, or local/state permit triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-030",
+        "R1EA-101",
+        "R1EA-102",
+        "R1EA-105",
+        "R1EA-106",
+        "R1EA-110",
+        "R1EA-111",
+        "R1EA-112"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "decision_posture",
+            "geography",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "land_exchange_fs_policy_and_project_references:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-150",
+          "R1EA-151",
+          "R1EA-152",
+          "R1EA-153",
+          "R1EA-154",
+          "R1EA-155",
+          "R1EA-156",
+          "R1EA-160",
+          "R1EA-161",
+          "R1EA-162"
+        ]
+      },
+      "family_id": "land_exchange_fs_policy_and_project_references",
+      "name": "Forest Service exchange policy, appraisal/title guidance, and project-reference records",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "Forest Service exchange policy/handbook sources and East Crazy project-reference records are mapped as non-controlling source support; R1EA-160 remains excluded from artifact capture by Scope_Exclusions.",
+      "required_authority_requirement_ids": [
+        "land_exchange"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "Forest Service exchange policy/handbook source or non-controlling project reference",
+        "package evidence for exchange case, project documents, valuation/appraisal, title, reservations, notice, agreement, or closing"
+      ],
+      "source_record_ids": [
+        "R1EA-150",
+        "R1EA-151",
+        "R1EA-152",
+        "R1EA-153",
+        "R1EA-154",
+        "R1EA-155",
+        "R1EA-156",
+        "R1EA-160",
+        "R1EA-161",
+        "R1EA-162"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "decision_posture",
+            "permit",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "land_exchange_regulatory_requirements:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-124",
+          "R1EA-125",
+          "R1EA-126",
+          "R1EA-127",
+          "R1EA-128",
+          "R1EA-129",
+          "R1EA-130",
+          "R1EA-131",
+          "R1EA-132",
+          "R1EA-133",
+          "R1EA-134",
+          "R1EA-135",
+          "R1EA-136",
+          "R1EA-157",
+          "R1EA-158",
+          "R1EA-159"
+        ]
+      },
+      "family_id": "land_exchange_regulatory_requirements",
+      "name": "36 CFR part 254 land-exchange procedural and valuation requirements",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "permit",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "The land-exchange regulatory rows are captured for the V1 project type, but rule templates/applicability predicates are not yet promoted.",
+      "required_authority_requirement_ids": [
+        "land_exchange"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "36 CFR part 254, NEPA overlay, relocation, or administrative-review overlay source",
+        "package evidence for exchange initiation, public notice, appraisal, equalization, approval, title, closing, written authorization, or EA/FONSI overlay"
+      ],
+      "source_record_ids": [
+        "R1EA-124",
+        "R1EA-125",
+        "R1EA-126",
+        "R1EA-127",
+        "R1EA-128",
+        "R1EA-129",
+        "R1EA-130",
+        "R1EA-131",
+        "R1EA-132",
+        "R1EA-133",
+        "R1EA-134",
+        "R1EA-135",
+        "R1EA-136",
+        "R1EA-157",
+        "R1EA-158",
+        "R1EA-159"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "decision_posture",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "land_exchange_statutory_authorities:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-137",
+          "R1EA-138",
+          "R1EA-139",
+          "R1EA-140",
+          "R1EA-141",
+          "R1EA-142",
+          "R1EA-143",
+          "R1EA-144",
+          "R1EA-145",
+          "R1EA-146",
+          "R1EA-147",
+          "R1EA-148",
+          "R1EA-149"
+        ]
+      },
+      "family_id": "land_exchange_statutory_authorities",
+      "name": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Land-exchange statutes are source-covered but need source-currentness and rule-template promotion in later slices.",
+      "required_authority_requirement_ids": [
+        "land_exchange"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "exchange statute source",
+        "package evidence for public-interest determination, exchange authority, acquisition/access, reservations, equal value, congressional reporting, or statutory exchange mechanism"
+      ],
+      "source_record_ids": [
+        "R1EA-137",
+        "R1EA-138",
+        "R1EA-139",
+        "R1EA-140",
+        "R1EA-141",
+        "R1EA-142",
+        "R1EA-143",
+        "R1EA-144",
+        "R1EA-145",
+        "R1EA-146",
+        "R1EA-147",
+        "R1EA-148",
+        "R1EA-149"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "migratory_bird_authorities:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "eo_13186_migratory_birds",
+            "mbta_migratory_birds"
+          ],
+          "trigger_terms": [
+            "Executive Order 13186",
+            "Migratory Bird Treaty Act",
+            "birds",
+            "conservation measures",
+            "migratory bird"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "eo_13186_migratory_birds",
+          "mbta_migratory_birds"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-094",
+          "R1EA-095",
+          "R1EA-096"
+        ]
+      },
+      "family_id": "migratory_bird_authorities",
+      "name": "Migratory Bird Treaty Act and EO 13186 migratory-bird responsibilities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "MBTA and EO 13186 have active rules; the related permit regulation is inventoried as source support for later detailed permitting predicates.",
+      "required_authority_requirement_ids": [
+        "wildlife_birds"
+      ],
+      "rule_ids": [
+        "eo_13186_migratory_birds",
+        "mbta_migratory_birds"
+      ],
+      "source_evidence_requirements": [
+        "MBTA, migratory-bird permit, or EO 13186 source",
+        "package evidence for migratory birds, vegetation removal, construction, fire, infrastructure, habitat changes, or conservation measures"
+      ],
+      "source_record_ids": [
+        "R1EA-094",
+        "R1EA-095",
+        "R1EA-096"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "minerals_energy_authorities:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-041",
+          "R1EA-063"
+        ]
+      },
+      "family_id": "minerals_energy_authorities",
+      "name": "Minerals and energy-development authorities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Minerals regulations and current mineral-production policy are source-covered but not yet active rule families.",
+      "required_authority_requirement_ids": [
+        "organic_access_special_use"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "minerals regulation or policy source",
+        "package evidence for energy/mineral proposal, plan of operations, surface-use plan, mineral materials, reclamation, or related permit"
+      ],
+      "source_record_ids": [
+        "R1EA-041",
+        "R1EA-063"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "agency",
+            "alternative",
+            "decision_posture",
+            "nepa_level",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "nepa_core_statute:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "nepa_4332_environmental_information",
+            "nepa_4336_level_of_review",
+            "nepa_4336a_timing_unified_review",
+            "nepa_statute_chapter_55"
+          ],
+          "trigger_terms": [
+            "alternatives",
+            "consultation",
+            "environmental assessment",
+            "environmental effects",
+            "finding of no significant impact",
+            "objection period",
+            "page limit",
+            "public comment",
+            "publicly circulated",
+            "purpose and need",
+            "purpose and need for action",
+            "schedule",
+            "significant effects",
+            "unified review"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "nepa_4332_environmental_information",
+          "nepa_4336_level_of_review",
+          "nepa_4336a_timing_unified_review",
+          "nepa_statute_chapter_55"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "seed-mixed-applicability",
+          "seed-negative-applicability",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-001",
+          "R1EA-002",
+          "R1EA-003",
+          "R1EA-004"
+        ]
+      },
+      "family_id": "nepa_core_statute",
+      "name": "Core NEPA statute and EA review duties",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "agency",
+        "alternative",
+        "decision_posture",
+        "nepa_level",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "Current U.S. Code NEPA rows cover the baseline statutory EA, information-disclosure, level-of-review, and timing duties used in every review.",
+      "required_authority_requirement_ids": [
+        "core_nepa"
+      ],
+      "rule_ids": [
+        "nepa_4332_environmental_information",
+        "nepa_4336_level_of_review",
+        "nepa_4336a_timing_unified_review",
+        "nepa_statute_chapter_55"
+      ],
+      "source_evidence_requirements": [
+        "current U.S. Code source text",
+        "package evidence for EA level and decision posture"
+      ],
+      "source_record_ids": [
+        "R1EA-001",
+        "R1EA-002",
+        "R1EA-003",
+        "R1EA-004"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "agency",
+            "alternative",
+            "resource_topic"
+          ],
+          "predicate_id": "nepa_judicial_review_doctrine:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "seven_county_nepa_scope"
+          ],
+          "trigger_terms": [
+            "NEPA",
+            "agency discretion",
+            "project at hand",
+            "reasonably foreseeable effects"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "seven_county_nepa_scope"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-020"
+        ]
+      },
+      "family_id": "nepa_judicial_review_doctrine",
+      "name": "NEPA judicial-review scope and causation doctrine",
+      "open_inventory_gaps": [
+        "Broader hard-look, cumulative-effects, segmentation, stale-science, and mitigation-enforceability doctrines still need explicit source/rule inventory in later milestones."
+      ],
+      "package_fact_types": [
+        "action",
+        "agency",
+        "alternative",
+        "resource_topic"
+      ],
+      "rationale": "The current case-law row is represented by the Seven County rule and anchors NEPA scope/causation review risk.",
+      "required_authority_requirement_ids": [
+        "litigation_review_risk"
+      ],
+      "rule_ids": [
+        "seven_county_nepa_scope"
+      ],
+      "source_evidence_requirements": [
+        "case-law source record",
+        "package evidence about reasonably foreseeable effects, connected effects, or agency discretion"
+      ],
+      "source_record_ids": [
+        "R1EA-020"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "agency",
+            "alternative",
+            "decision_posture",
+            "nepa_level"
+          ],
+          "predicate_id": "nepa_tiering_ce_sponsor_documents:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "nepa_4336b_programmatic_tiering",
+            "nepa_4336c_ce_adoption_screen",
+            "nepa_4336f_sponsor_prepared_documents",
+            "usda_nepa_applicant_docs_7cfr_1b10",
+            "usda_nepa_ce_fanec_7cfr_1b3",
+            "usda_nepa_subcomponent_ce_7cfr_1b4"
+          ],
+          "trigger_terms": [
+            "CE/FANEC screen",
+            "FANEC",
+            "USDA CE screening",
+            "adopted CE",
+            "adoption of categorical exclusion",
+            "agency responsibility",
+            "applicant",
+            "categorical exclusion path",
+            "extraordinary circumstances review",
+            "final environmental impact statement",
+            "financial disclosure",
+            "financial interest",
+            "incorporates by reference",
+            "independent evaluation",
+            "programmatic",
+            "sponsor",
+            "subcomponent categorical exclusion",
+            "third party",
+            "tiers to"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "nepa_4336b_programmatic_tiering",
+          "nepa_4336c_ce_adoption_screen",
+          "nepa_4336f_sponsor_prepared_documents",
+          "usda_nepa_applicant_docs_7cfr_1b10",
+          "usda_nepa_ce_fanec_7cfr_1b3",
+          "usda_nepa_subcomponent_ce_7cfr_1b4"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "seed-mixed-applicability",
+          "seed-negative-applicability",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-005",
+          "R1EA-006",
+          "R1EA-007",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-016"
+        ]
+      },
+      "family_id": "nepa_tiering_ce_sponsor_documents",
+      "name": "NEPA tiering, categorical exclusion, and sponsor-prepared document constraints",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "agency",
+        "alternative",
+        "decision_posture",
+        "nepa_level"
+      ],
+      "rationale": "Conditional NEPA rows and USDA CE/applicant-document rules are represented as trigger-gated rule templates.",
+      "required_authority_requirement_ids": [
+        "core_nepa"
+      ],
+      "rule_ids": [
+        "nepa_4336b_programmatic_tiering",
+        "nepa_4336c_ce_adoption_screen",
+        "nepa_4336f_sponsor_prepared_documents",
+        "usda_nepa_applicant_docs_7cfr_1b10",
+        "usda_nepa_ce_fanec_7cfr_1b3",
+        "usda_nepa_subcomponent_ce_7cfr_1b4"
+      ],
+      "source_evidence_requirements": [
+        "statutory or USDA regulatory source row",
+        "package trigger evidence for tiering, CE, FANEC, applicant, or third-party document preparation"
+      ],
+      "source_record_ids": [
+        "R1EA-005",
+        "R1EA-006",
+        "R1EA-007",
+        "R1EA-011",
+        "R1EA-012",
+        "R1EA-016"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "management_area",
+            "overlay",
+            "resource_topic"
+          ],
+          "predicate_id": "nfma_forest_planning_project_consistency:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "custer_gallatin_lmp_2022",
+            "nfma_16usc_1604_plan_consistency",
+            "planning_rule_36cfr_219",
+            "planning_rule_36cfr_21915_consistency"
+          ],
+          "trigger_terms": [
+            "2022 Land Management Plan",
+            "36 CFR 219.15",
+            "36 CFR part 219",
+            "Custer Gallatin",
+            "Custer Gallatin National Forest Land Management Plan",
+            "Forest Plan",
+            "Land Management Plan",
+            "National Forest Management Act",
+            "plan components",
+            "plan consistency",
+            "planning",
+            "project consistency"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "custer_gallatin_lmp_2022",
+          "nfma_16usc_1604_plan_consistency",
+          "planning_rule_36cfr_219",
+          "planning_rule_36cfr_21915_consistency"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-022",
+          "R1EA-023",
+          "R1EA-024",
+          "R1EA-067",
+          "R1PLAN-custer-gallatin-nf-02"
+        ]
+      },
+      "family_id": "nfma_forest_planning_project_consistency",
+      "name": "NFMA, 36 CFR part 219, project consistency, and forest-plan components",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "management_area",
+        "overlay",
+        "resource_topic"
+      ],
+      "rationale": "The baseline NFMA/planning rows plus the promoted Custer Gallatin LMP rule are implemented in the current generated review path.",
+      "required_authority_requirement_ids": [
+        "nfma_forest_plan"
+      ],
+      "rule_ids": [
+        "custer_gallatin_lmp_2022",
+        "nfma_16usc_1604_plan_consistency",
+        "planning_rule_36cfr_219",
+        "planning_rule_36cfr_21915_consistency"
+      ],
+      "source_evidence_requirements": [
+        "NFMA or planning-rule source",
+        "forest-plan source record",
+        "package location/resource evidence that binds to plan components"
+      ],
+      "source_record_ids": [
+        "R1EA-022",
+        "R1EA-023",
+        "R1EA-024",
+        "R1EA-067",
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "nhpa_section106_shpo_consultation:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "montana_shpo_review",
+            "nhpa_36cfr_800",
+            "nhpa_section_106"
+          ],
+          "trigger_terms": [
+            "36 CFR part 800",
+            "Montana SHPO",
+            "National Historic Preservation Act",
+            "SHPO",
+            "Section 106",
+            "State Historic Preservation Officer",
+            "adverse effect",
+            "cultural resources",
+            "historic properties"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "montana_shpo_review",
+          "nhpa_36cfr_800",
+          "nhpa_section_106"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-070",
+          "R1EA-071",
+          "R1EA-119"
+        ]
+      },
+      "family_id": "nhpa_section106_shpo_consultation",
+      "name": "NHPA Section 106, 36 CFR part 800, and SHPO consultation",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "NHPA Section 106, ACHP regulations, and Montana SHPO review are represented by active conditional rules.",
+      "required_authority_requirement_ids": [
+        "nhpa_cultural"
+      ],
+      "rule_ids": [
+        "montana_shpo_review",
+        "nhpa_36cfr_800",
+        "nhpa_section_106"
+      ],
+      "source_evidence_requirements": [
+        "NHPA/36 CFR part 800 or SHPO source",
+        "package evidence for undertaking, historic properties, SHPO/THPO consultation, adverse effects, mitigation, or cultural resources"
+      ],
+      "source_record_ids": [
+        "R1EA-070",
+        "R1EA-071",
+        "R1EA-119"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "agency",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "organic_multiple_use_foundation:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "musuya_multiple_use_sustained_yield",
+            "organic_act_16usc_475",
+            "organic_act_16usc_551"
+          ],
+          "trigger_terms": [
+            "multiple use",
+            "national forest purposes",
+            "national forests",
+            "occupancy",
+            "outdoor recreation",
+            "protection",
+            "sustained yield",
+            "timber",
+            "use",
+            "watershed",
+            "wildlife"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "musuya_multiple_use_sustained_yield",
+          "organic_act_16usc_475",
+          "organic_act_16usc_551"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-033",
+          "R1EA-034",
+          "R1EA-035"
+        ]
+      },
+      "family_id": "organic_multiple_use_foundation",
+      "name": "MUSYA and Organic Administration Act national forest authority",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "agency",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "Multiple-use, national forest purpose, occupancy/use, and protection authorities are baseline rule-pack families.",
+      "required_authority_requirement_ids": [
+        "organic_access_special_use"
+      ],
+      "rule_ids": [
+        "musuya_multiple_use_sustained_yield",
+        "organic_act_16usc_475",
+        "organic_act_16usc_551"
+      ],
+      "source_evidence_requirements": [
+        "Organic Act or MUSYA source",
+        "package evidence for multiple use, sustained yield, watershed, timber, occupancy/use, protection, recreation, or wildlife context"
+      ],
+      "source_record_ids": [
+        "R1EA-033",
+        "R1EA-034",
+        "R1EA-035"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "management_area",
+            "overlay",
+            "resource_topic"
+          ],
+          "predicate_id": "region1_forest_plan_source_records:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1PLAN-beaverhead-deerlodge-nf-01",
+          "R1PLAN-beaverhead-deerlodge-nf-02",
+          "R1PLAN-bitterroot-nf-01",
+          "R1PLAN-bitterroot-nf-02",
+          "R1PLAN-bitterroot-nf-03",
+          "R1PLAN-custer-gallatin-nf-01",
+          "R1PLAN-custer-gallatin-nf-02",
+          "R1PLAN-custer-gallatin-nf-03",
+          "R1PLAN-custer-gallatin-nf-04",
+          "R1PLAN-custer-gallatin-nf-05",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-dakota-prairie-grasslands-01",
+          "R1PLAN-dakota-prairie-grasslands-02",
+          "R1PLAN-flathead-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-02",
+          "R1PLAN-idaho-panhandle-nfs-01",
+          "R1PLAN-idaho-panhandle-nfs-02",
+          "R1PLAN-kootenai-nf-01",
+          "R1PLAN-lolo-nf-01",
+          "R1PLAN-nez-perce-clearwater-nfs-01",
+          "R1PLAN-nez-perce-clearwater-nfs-02",
+          "R1PLAN-region-1-grassland-overlay-01",
+          "R1PLAN-region-1-northern-region-01",
+          "R1PLAN-region-1-northern-region-02",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ]
+      },
+      "family_id": "region1_forest_plan_source_records",
+      "name": "Region 1 forest-plan and overlay source records",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "overlay",
+        "resource_topic"
+      ],
+      "rationale": "The workbook/catalog contains the Region 1 forest-plan corpus; only the promoted Custer Gallatin path currently has reviewer-ready component/rule integration.",
+      "required_authority_requirement_ids": [
+        "nfma_forest_plan"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "current forest-plan source record",
+        "profile or package fact evidence that selects the forest unit, area, management area, or overlay"
+      ],
+      "source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-01",
+        "R1PLAN-beaverhead-deerlodge-nf-02",
+        "R1PLAN-bitterroot-nf-01",
+        "R1PLAN-bitterroot-nf-02",
+        "R1PLAN-bitterroot-nf-03",
+        "R1PLAN-custer-gallatin-nf-01",
+        "R1PLAN-custer-gallatin-nf-02",
+        "R1PLAN-custer-gallatin-nf-03",
+        "R1PLAN-custer-gallatin-nf-04",
+        "R1PLAN-custer-gallatin-nf-05",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-dakota-prairie-grasslands-01",
+        "R1PLAN-dakota-prairie-grasslands-02",
+        "R1PLAN-flathead-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-02",
+        "R1PLAN-idaho-panhandle-nfs-01",
+        "R1PLAN-idaho-panhandle-nfs-02",
+        "R1PLAN-kootenai-nf-01",
+        "R1PLAN-lolo-nf-01",
+        "R1PLAN-nez-perce-clearwater-nfs-01",
+        "R1PLAN-nez-perce-clearwater-nfs-02",
+        "R1PLAN-region-1-grassland-overlay-01",
+        "R1PLAN-region-1-northern-region-01",
+        "R1PLAN-region-1-northern-region-02",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "overlay",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "roadless_rule_authorities:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "roadless_rule_36cfr_294b"
+          ],
+          "trigger_terms": [
+            "Roadless Rule",
+            "inventoried roadless",
+            "roadless area",
+            "roadless characteristics"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "roadless_rule_36cfr_294b"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-048",
+          "R1EA-049",
+          "R1EA-050"
+        ]
+      },
+      "family_id": "roadless_rule_authorities",
+      "name": "Roadless Rule and inventoried roadless area authorities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "overlay",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "The 2001 Roadless Rule row has an active rule; broader special-area and Idaho roadless rows are inventoried as related source support.",
+      "required_authority_requirement_ids": [
+        "designated_areas"
+      ],
+      "rule_ids": [
+        "roadless_rule_36cfr_294b"
+      ],
+      "source_evidence_requirements": [
+        "roadless/special-area regulation source",
+        "package evidence for inventoried roadless area, Idaho Roadless Area, roadless characteristics, or special-area triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-048",
+        "R1EA-049",
+        "R1EA-050"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "roads_access_special_use_action_authorities:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-036",
+          "R1EA-039",
+          "R1EA-040",
+          "R1EA-041",
+          "R1EA-042",
+          "R1EA-043",
+          "R1EA-044",
+          "R1EA-143"
+        ]
+      },
+      "family_id": "roads_access_special_use_action_authorities",
+      "name": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Action-type roads, access, grazing, timber, minerals, special-use, ROW, closure, and retained-use authorities are captured as source rows but need data-backed predicates/evals.",
+      "required_authority_requirement_ids": [
+        "organic_access_special_use"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "roads/access/special-use/action authority source",
+        "package evidence for travel management, road/trail changes, range, timber, minerals, ROW, special uses, closures, or retained authorizations"
+      ],
+      "source_record_ids": [
+        "R1EA-036",
+        "R1EA-039",
+        "R1EA-040",
+        "R1EA-041",
+        "R1EA-042",
+        "R1EA-043",
+        "R1EA-044",
+        "R1EA-143"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "overlay",
+            "resource_topic"
+          ],
+          "predicate_id": "species_supporting_sources_and_overlays:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-064",
+          "R1EA-068",
+          "R1EA-069",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ]
+      },
+      "family_id": "species_supporting_sources_and_overlays",
+      "name": "Species source-support records, sensitive species pages, and lynx/LMP support",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "overlay",
+        "resource_topic"
+      ],
+      "rationale": "These rows supply species and plan-support evidence, but complete rule/predicate coverage beyond the active ESA Section 7 path is still a later slice.",
+      "required_authority_requirement_ids": [
+        "esa_species",
+        "nfma_forest_plan"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "species source row",
+        "package evidence for listed, sensitive, SCC, lynx, habitat, BA, BO, or consultation triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-064",
+        "R1EA-068",
+        "R1EA-069",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "consultation",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "tribal_consultation_trust_sacred_sites:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-077",
+          "R1EA-080",
+          "R1EA-081"
+        ]
+      },
+      "family_id": "tribal_consultation_trust_sacred_sites",
+      "name": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "Tribal consultation and sacred-site sources are present, but separate trust/treaty/sacred-site predicates and eval cases have not yet been promoted.",
+      "required_authority_requirement_ids": [
+        "tribal_trust"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "tribal consultation, sacred-site, or Cultural and Heritage Cooperation Authority source",
+        "package evidence for Tribal implications, treaty/trust interests, sacred sites, THPO coordination, or sensitive cultural information"
+      ],
+      "source_record_ids": [
+        "R1EA-077",
+        "R1EA-080",
+        "R1EA-081"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "agency",
+            "alternative",
+            "decision_posture",
+            "nepa_level",
+            "public_involvement",
+            "resource_topic"
+          ],
+          "predicate_id": "usda_nepa_procedures_7cfr_part_1b:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "usda_nepa_7cfr_part_1b",
+            "usda_nepa_definitions_7cfr_1b11",
+            "usda_nepa_ea_7cfr_1b5",
+            "usda_nepa_efficient_review_7cfr_1b9",
+            "usda_nepa_final_rule_91fr17092",
+            "usda_nepa_fonsi_7cfr_1b6",
+            "usda_nepa_policy_7cfr_1b2",
+            "usda_nepa_purpose_7cfr_1b1"
+          ],
+          "trigger_terms": [
+            "7 CFR part 1b",
+            "FONSI",
+            "NEPA",
+            "NEPA procedures",
+            "USDA final rule",
+            "acronyms",
+            "affected environment",
+            "alternatives",
+            "consultation",
+            "coordinated",
+            "coordination",
+            "decision notice",
+            "decision-making",
+            "definitions",
+            "discretion",
+            "effective date",
+            "environmental assessment",
+            "environmental consequences",
+            "environmental effects",
+            "environmental review",
+            "finding of no significant impact",
+            "integrated",
+            "major Federal action",
+            "mitigation",
+            "predictable",
+            "project at hand",
+            "purpose and need",
+            "significance",
+            "terminology",
+            "timely review"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "usda_nepa_7cfr_part_1b",
+          "usda_nepa_definitions_7cfr_1b11",
+          "usda_nepa_ea_7cfr_1b5",
+          "usda_nepa_efficient_review_7cfr_1b9",
+          "usda_nepa_final_rule_91fr17092",
+          "usda_nepa_fonsi_7cfr_1b6",
+          "usda_nepa_policy_7cfr_1b2",
+          "usda_nepa_purpose_7cfr_1b1"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-008",
+          "R1EA-009",
+          "R1EA-010",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-013",
+          "R1EA-014",
+          "R1EA-015",
+          "R1EA-016",
+          "R1EA-017",
+          "R1EA-018"
+        ]
+      },
+      "family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "name": "USDA NEPA procedures under 7 CFR part 1b",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "agency",
+        "alternative",
+        "decision_posture",
+        "nepa_level",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "rationale": "The current USDA NEPA rule and section-level rows are baseline/conditional rule-pack authorities for EA and FONSI review.",
+      "required_authority_requirement_ids": [
+        "core_nepa"
+      ],
+      "rule_ids": [
+        "usda_nepa_7cfr_part_1b",
+        "usda_nepa_definitions_7cfr_1b11",
+        "usda_nepa_ea_7cfr_1b5",
+        "usda_nepa_efficient_review_7cfr_1b9",
+        "usda_nepa_final_rule_91fr17092",
+        "usda_nepa_fonsi_7cfr_1b6",
+        "usda_nepa_policy_7cfr_1b2",
+        "usda_nepa_purpose_7cfr_1b1"
+      ],
+      "source_evidence_requirements": [
+        "current 7 CFR part 1b text or Federal Register rulemaking source",
+        "package evidence for EA, FONSI, review management, definitions, and applicant-document requirements"
+      ],
+      "source_record_ids": [
+        "R1EA-008",
+        "R1EA-009",
+        "R1EA-010",
+        "R1EA-011",
+        "R1EA-012",
+        "R1EA-013",
+        "R1EA-014",
+        "R1EA-015",
+        "R1EA-016",
+        "R1EA-017",
+        "R1EA-018"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "action",
+            "geography",
+            "resource_topic"
+          ],
+          "predicate_id": "vegetation_wildfire_forest_health_authorities:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-056",
+          "R1EA-057",
+          "R1EA-058",
+          "R1EA-059",
+          "R1EA-060",
+          "R1EA-061",
+          "R1EA-062"
+        ]
+      },
+      "family_id": "vegetation_wildfire_forest_health_authorities",
+      "name": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "rationale": "Vegetation/wildfire statutes and current forest-policy EOs are captured, but not yet represented as active EA applicability rule templates.",
+      "required_authority_requirement_ids": [
+        "invasive_soil_watershed_common_region1"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "forest-health, vegetation, wildfire, or policy source",
+        "package evidence for fuels, insect/disease, emergency action, restoration, CE authority, timber production, or forest-health triggers"
+      ],
+      "source_record_ids": [
+        "R1EA-056",
+        "R1EA-057",
+        "R1EA-058",
+        "R1EA-059",
+        "R1EA-060",
+        "R1EA-061",
+        "R1EA-062"
+      ],
+      "status": "source_only",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "wetlands_protection_eo11990:existing-rule-pack-terms",
+          "predicate_source": "config/compliance_rule_pack_nepa_ea_v0.json.rules[].package_terms",
+          "predicate_status": "implemented",
+          "rule_ids": [
+            "eo_11990_wetlands"
+          ],
+          "trigger_terms": [
+            "Executive Order 11990",
+            "mitigation",
+            "wetland",
+            "wetlands"
+          ]
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [
+          "eo_11990_wetlands"
+        ],
+        "eval_case_ids": [
+          "all-authorities-pass",
+          "baseline-nepa-only",
+          "unrelated-package-produces-baseline-gaps"
+        ],
+        "source_record_ids": [
+          "R1EA-104"
+        ]
+      },
+      "family_id": "wetlands_protection_eo11990",
+      "name": "Executive Order 11990 wetlands protection",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "The wetlands EO row has an active conditional rule and package-term predicate path.",
+      "required_authority_requirement_ids": [
+        "floodplain_wetlands_eos"
+      ],
+      "rule_ids": [
+        "eo_11990_wetlands"
+      ],
+      "source_evidence_requirements": [
+        "EO 11990 source",
+        "package evidence for wetlands destruction, degradation, drainage, fill, mitigation, or avoidance"
+      ],
+      "source_record_ids": [
+        "R1EA-104"
+      ],
+      "status": "active",
+      "supersession": null
+    },
+    {
+      "applicability_predicates": [
+        {
+          "package_fact_types": [
+            "geography",
+            "overlay",
+            "permit",
+            "resource_topic"
+          ],
+          "predicate_id": "wilderness_wsr_trails_designated_areas:workbook-trigger-candidate",
+          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
+          "predicate_status": "missing_rule_template",
+          "rule_ids": [],
+          "trigger_terms": []
+        }
+      ],
+      "coverage_requirements": {
+        "coverage_matrix_rule_ids": [],
+        "eval_case_ids": [],
+        "source_record_ids": [
+          "R1EA-045",
+          "R1EA-046",
+          "R1EA-047",
+          "R1EA-051",
+          "R1EA-052",
+          "R1EA-053",
+          "R1EA-054",
+          "R1EA-055"
+        ]
+      },
+      "family_id": "wilderness_wsr_trails_designated_areas",
+      "name": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas",
+      "open_inventory_gaps": [],
+      "package_fact_types": [
+        "geography",
+        "overlay",
+        "permit",
+        "resource_topic"
+      ],
+      "rationale": "Designated-area rows exist beyond the active Roadless Rule, but rules and eval cases for wilderness, WSR, trails, caves, paleontology, and WSAs are pending.",
+      "required_authority_requirement_ids": [
+        "designated_areas",
+        "archaeological_cultural_protection"
+      ],
+      "rule_ids": [],
+      "source_evidence_requirements": [
+        "designated-area source",
+        "package evidence for wilderness, WSA, Wild and Scenic River, national trail, cave, paleontology, or special-area effects"
+      ],
+      "source_record_ids": [
+        "R1EA-045",
+        "R1EA-046",
+        "R1EA-047",
+        "R1EA-051",
+        "R1EA-052",
+        "R1EA-053",
+        "R1EA-054",
+        "R1EA-055"
+      ],
+      "status": "source_only",
+      "supersession": null
+    }
+  ],
+  "authority_universe_family_inventory_id": "nepa-ea-authority-universe-families-v1",
+  "required_authority_family_coverage": [
+    {
+      "family_ids": [
+        "nepa_core_statute",
+        "nepa_tiering_ce_sponsor_documents",
+        "usda_nepa_procedures_7cfr_part_1b",
+        "forest_service_nepa_current_policy_directives",
+        "forest_service_planning_handbook_amendments",
+        "forest_service_nepa_36cfr_220_reserved_superseded"
+      ],
+      "label": "Core NEPA statute, USDA/Forest Service NEPA procedures, EA/FONSI, CE/FANEC, tiering, and sponsor-prepared documents",
+      "requirement_id": "core_nepa"
+    },
+    {
+      "family_ids": [
+        "nfma_forest_planning_project_consistency",
+        "region1_forest_plan_source_records",
+        "forest_service_planning_handbook_amendments",
+        "species_supporting_sources_and_overlays"
+      ],
+      "label": "NFMA, 36 CFR part 219, plan consistency, SCC, and Region 1 forest-plan overlays",
+      "requirement_id": "nfma_forest_plan"
+    },
+    {
+      "family_ids": [
+        "administrative_review_final_agency_action",
+        "forest_service_directives_notice_comment"
+      ],
+      "label": "Administrative review, final agency action, legal notice, objection/appeal, decision notice/FONSI, and APA final action",
+      "requirement_id": "administrative_review"
+    },
+    {
+      "family_ids": [
+        "esa_section7_species_consultation",
+        "species_supporting_sources_and_overlays"
+      ],
+      "label": "ESA Section 7, ESA regulations, BA/BE, consultation, concurrence, BO, and Forest Service sensitive-species policy",
+      "requirement_id": "esa_species"
+    },
+    {
+      "family_ids": [
+        "nhpa_section106_shpo_consultation",
+        "cultural_resource_protection_and_state_shpo_sources"
+      ],
+      "label": "NHPA Section 106, 36 CFR part 800, SHPO/THPO, historic properties, adverse effects, mitigation, and cultural documentation",
+      "requirement_id": "nhpa_cultural"
+    },
+    {
+      "family_ids": [
+        "clean_water_act_wotus_permits",
+        "wetlands_protection_eo11990"
+      ],
+      "label": "Clean Water Act Sections 401/402/404, WOTUS/wetlands, stormwater/NPDES, water-quality certification, Corps/EPA/state cues",
+      "requirement_id": "clean_water"
+    },
+    {
+      "family_ids": [
+        "clean_air_act_conformity_air_quality"
+      ],
+      "label": "Clean Air Act, smoke, prescribed fire, conformity, SIP, and air-quality permit/coordination cues",
+      "requirement_id": "clean_air"
+    },
+    {
+      "family_ids": [
+        "floodplain_management_eo11988",
+        "wetlands_protection_eo11990"
+      ],
+      "label": "EO 11988 floodplain management and EO 11990 wetlands protection as separate authorities",
+      "requirement_id": "floodplain_wetlands_eos"
+    },
+    {
+      "family_ids": [
+        "environmental_justice_civil_rights"
+      ],
+      "label": "Environmental justice and civil-rights authorities, including Title VI and current federal EJ requirements",
+      "requirement_id": "environmental_justice_civil_rights"
+    },
+    {
+      "family_ids": [
+        "tribal_consultation_trust_sacred_sites",
+        "cultural_resource_protection_and_state_shpo_sources"
+      ],
+      "label": "Tribal consultation, trust responsibility, treaty rights, sacred sites, THPO, and sensitive cultural information",
+      "requirement_id": "tribal_trust"
+    },
+    {
+      "family_ids": [
+        "cultural_resource_protection_and_state_shpo_sources",
+        "wilderness_wsr_trails_designated_areas"
+      ],
+      "label": "ARPA, NAGPRA, AIRFA, RFRA, paleontology, cave, and other cultural-resource protection authorities",
+      "requirement_id": "archaeological_cultural_protection"
+    },
+    {
+      "family_ids": [
+        "migratory_bird_authorities",
+        "eagle_efh_and_special_wildlife_sources",
+        "esa_section7_species_consultation"
+      ],
+      "label": "MBTA, EO 13186, Bald and Golden Eagle Protection Act, EFH, and species/resource-specific wildlife obligations",
+      "requirement_id": "wildlife_birds"
+    },
+    {
+      "family_ids": [
+        "roadless_rule_authorities",
+        "wilderness_wsr_trails_designated_areas",
+        "region1_forest_plan_source_records"
+      ],
+      "label": "Roadless, inventoried roadless areas, wilderness, WSR, National Trails, and designated/special areas",
+      "requirement_id": "designated_areas"
+    },
+    {
+      "family_ids": [
+        "organic_multiple_use_foundation",
+        "roads_access_special_use_action_authorities",
+        "grassland_bankhead_jones_authorities",
+        "minerals_energy_authorities"
+      ],
+      "label": "MUSYA, Organic Administration Act, roads/access, travel management, special uses, grasslands, minerals, and action authorities",
+      "requirement_id": "organic_access_special_use"
+    },
+    {
+      "family_ids": [
+        "land_exchange_regulatory_requirements",
+        "land_exchange_statutory_authorities",
+        "land_exchange_fs_policy_and_project_references",
+        "hazardous_materials_site_condition"
+      ],
+      "label": "Land-exchange-specific authorities, 36 CFR part 254, FLPMA/FLEFA, valuation/appraisal, notice, title, reservations, public-interest and equal-value requirements",
+      "requirement_id": "land_exchange"
+    },
+    {
+      "family_ids": [
+        "hazardous_materials_site_condition",
+        "land_exchange_regulatory_requirements"
+      ],
+      "label": "Hazardous materials and site-condition due diligence, including CERCLA/RCRA/NCP and land acquisition/disposal triggers",
+      "requirement_id": "hazardous_site_condition"
+    },
+    {
+      "family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water",
+        "clean_water_act_wotus_permits",
+        "eagle_efh_and_special_wildlife_sources",
+        "vegetation_wildfire_forest_health_authorities"
+      ],
+      "label": "Invasive species, noxious weeds, pesticide/herbicide, soils, watershed, riparian, fisheries, state/local permits, and common Region 1 project families",
+      "requirement_id": "invasive_soil_watershed_common_region1"
+    },
+    {
+      "family_ids": [
+        "nepa_judicial_review_doctrine",
+        "nepa_core_statute",
+        "nepa_tiering_ce_sponsor_documents",
+        "esa_section7_species_consultation",
+        "nhpa_section106_shpo_consultation"
+      ],
+      "label": "Litigation doctrine and review-risk authorities: hard look, alternatives, cumulative effects, segmentation, stale science, tiering, mitigation enforceability, and independent ESA/NHPA compliance",
+      "requirement_id": "litigation_review_risk"
+    }
+  ],
+  "rule_pack": {
+    "path": "config/compliance_rule_pack_nepa_ea_v0.json",
+    "rule_count": 44,
+    "rule_pack_id": "nepa-ea-v0",
+    "version": "0.4.0"
+  },
+  "schema_version": "authority-universe-families-v1",
+  "source_record_crosswalk": [
+    {
+      "excel_row": 5,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_core_statute",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-001"
+    },
+    {
+      "excel_row": 6,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_core_statute",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-002"
+    },
+    {
+      "excel_row": 7,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_core_statute",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-003"
+    },
+    {
+      "excel_row": 8,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_core_statute",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-004"
+    },
+    {
+      "excel_row": 9,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-005"
+    },
+    {
+      "excel_row": 10,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-006"
+    },
+    {
+      "excel_row": 11,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-007"
+    },
+    {
+      "excel_row": 12,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [
+        "forest_service_nepa_36cfr_220_reserved_superseded"
+      ],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-008"
+    },
+    {
+      "excel_row": 13,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-009"
+    },
+    {
+      "excel_row": 14,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-010"
+    },
+    {
+      "excel_row": 15,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [
+        "usda_nepa_procedures_7cfr_part_1b"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-011"
+    },
+    {
+      "excel_row": 16,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [
+        "usda_nepa_procedures_7cfr_part_1b"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-012"
+    },
+    {
+      "excel_row": 17,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-013"
+    },
+    {
+      "excel_row": 18,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-014"
+    },
+    {
+      "excel_row": 19,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-015"
+    },
+    {
+      "excel_row": 20,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_tiering_ce_sponsor_documents",
+      "related_family_ids": [
+        "usda_nepa_procedures_7cfr_part_1b"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-016"
+    },
+    {
+      "excel_row": 21,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-017"
+    },
+    {
+      "excel_row": 22,
+      "mapping_status": "mapped",
+      "primary_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "related_family_ids": [
+        "forest_service_nepa_36cfr_220_reserved_superseded"
+      ],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-018"
+    },
+    {
+      "excel_row": 23,
+      "mapping_status": "mapped",
+      "primary_family_id": "forest_service_nepa_current_policy_directives",
+      "related_family_ids": [
+        "forest_service_nepa_36cfr_220_reserved_superseded"
+      ],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-019"
+    },
+    {
+      "excel_row": 24,
+      "mapping_status": "mapped",
+      "primary_family_id": "nepa_judicial_review_doctrine",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-020"
+    },
+    {
+      "excel_row": 25,
+      "mapping_status": "mapped",
+      "primary_family_id": "administrative_review_final_agency_action",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-021"
+    },
+    {
+      "excel_row": 26,
+      "mapping_status": "mapped",
+      "primary_family_id": "nfma_forest_planning_project_consistency",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-022"
+    },
+    {
+      "excel_row": 27,
+      "mapping_status": "mapped",
+      "primary_family_id": "nfma_forest_planning_project_consistency",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-023"
+    },
+    {
+      "excel_row": 28,
+      "mapping_status": "mapped",
+      "primary_family_id": "nfma_forest_planning_project_consistency",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-024"
+    },
+    {
+      "excel_row": 29,
+      "mapping_status": "mapped",
+      "primary_family_id": "administrative_review_final_agency_action",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-025"
+    },
+    {
+      "excel_row": 30,
+      "mapping_status": "mapped",
+      "primary_family_id": "administrative_review_final_agency_action",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-026"
+    },
+    {
+      "excel_row": 31,
+      "mapping_status": "mapped",
+      "primary_family_id": "forest_service_directives_notice_comment",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-027"
+    },
+    {
+      "excel_row": 32,
+      "mapping_status": "mapped",
+      "primary_family_id": "forest_service_nepa_current_policy_directives",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-028"
+    },
+    {
+      "excel_row": 33,
+      "mapping_status": "mapped",
+      "primary_family_id": "forest_service_nepa_current_policy_directives",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-029"
+    },
+    {
+      "excel_row": 34,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-030"
+    },
+    {
+      "excel_row": 35,
+      "mapping_status": "mapped",
+      "primary_family_id": "esa_section7_species_consultation",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-031"
+    },
+    {
+      "excel_row": 36,
+      "mapping_status": "mapped",
+      "primary_family_id": "forest_service_planning_handbook_amendments",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-032"
+    },
+    {
+      "excel_row": 37,
+      "mapping_status": "mapped",
+      "primary_family_id": "organic_multiple_use_foundation",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-033"
+    },
+    {
+      "excel_row": 38,
+      "mapping_status": "mapped",
+      "primary_family_id": "organic_multiple_use_foundation",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-034"
+    },
+    {
+      "excel_row": 39,
+      "mapping_status": "mapped",
+      "primary_family_id": "organic_multiple_use_foundation",
+      "related_family_ids": [],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-035"
+    },
+    {
+      "excel_row": 40,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-036"
+    },
+    {
+      "excel_row": 41,
+      "mapping_status": "mapped",
+      "primary_family_id": "grassland_bankhead_jones_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-037"
+    },
+    {
+      "excel_row": 42,
+      "mapping_status": "mapped",
+      "primary_family_id": "grassland_bankhead_jones_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-038"
+    },
+    {
+      "excel_row": 43,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-039"
+    },
+    {
+      "excel_row": 44,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-040"
+    },
+    {
+      "excel_row": 45,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [
+        "minerals_energy_authorities"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-041"
+    },
+    {
+      "excel_row": 46,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-042"
+    },
+    {
+      "excel_row": 47,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-043"
+    },
+    {
+      "excel_row": 48,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-044"
+    },
+    {
+      "excel_row": 49,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-045"
+    },
+    {
+      "excel_row": 50,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-046"
+    },
+    {
+      "excel_row": 51,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-047"
+    },
+    {
+      "excel_row": 52,
+      "mapping_status": "mapped",
+      "primary_family_id": "roadless_rule_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-048"
+    },
+    {
+      "excel_row": 53,
+      "mapping_status": "mapped",
+      "primary_family_id": "roadless_rule_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-049"
+    },
+    {
+      "excel_row": 54,
+      "mapping_status": "mapped",
+      "primary_family_id": "roadless_rule_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-050"
+    },
+    {
+      "excel_row": 55,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-051"
+    },
+    {
+      "excel_row": 56,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-052"
+    },
+    {
+      "excel_row": 57,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-053"
+    },
+    {
+      "excel_row": 58,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-054"
+    },
+    {
+      "excel_row": 59,
+      "mapping_status": "mapped",
+      "primary_family_id": "wilderness_wsr_trails_designated_areas",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-055"
+    },
+    {
+      "excel_row": 60,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-056"
+    },
+    {
+      "excel_row": 61,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-057"
+    },
+    {
+      "excel_row": 62,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-058"
+    },
+    {
+      "excel_row": 63,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-059"
+    },
+    {
+      "excel_row": 64,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-060"
+    },
+    {
+      "excel_row": 65,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-061"
+    },
+    {
+      "excel_row": 66,
+      "mapping_status": "mapped",
+      "primary_family_id": "vegetation_wildfire_forest_health_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-062"
+    },
+    {
+      "excel_row": 67,
+      "mapping_status": "mapped",
+      "primary_family_id": "minerals_energy_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-063"
+    },
+    {
+      "excel_row": 68,
+      "mapping_status": "mapped",
+      "primary_family_id": "species_supporting_sources_and_overlays",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-064"
+    },
+    {
+      "excel_row": 69,
+      "mapping_status": "mapped",
+      "primary_family_id": "esa_section7_species_consultation",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-065"
+    },
+    {
+      "excel_row": 70,
+      "mapping_status": "mapped",
+      "primary_family_id": "esa_section7_species_consultation",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-066"
+    },
+    {
+      "excel_row": 71,
+      "mapping_status": "mapped",
+      "primary_family_id": "nfma_forest_planning_project_consistency",
+      "related_family_ids": [
+        "esa_section7_species_consultation"
+      ],
+      "scope": "Baseline",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-067"
+    },
+    {
+      "excel_row": 72,
+      "mapping_status": "mapped",
+      "primary_family_id": "species_supporting_sources_and_overlays",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-068"
+    },
+    {
+      "excel_row": 73,
+      "mapping_status": "mapped",
+      "primary_family_id": "species_supporting_sources_and_overlays",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-069"
+    },
+    {
+      "excel_row": 74,
+      "mapping_status": "mapped",
+      "primary_family_id": "nhpa_section106_shpo_consultation",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-070"
+    },
+    {
+      "excel_row": 75,
+      "mapping_status": "mapped",
+      "primary_family_id": "nhpa_section106_shpo_consultation",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-071"
+    },
+    {
+      "excel_row": 76,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-072"
+    },
+    {
+      "excel_row": 77,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-073"
+    },
+    {
+      "excel_row": 78,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-074"
+    },
+    {
+      "excel_row": 79,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-075"
+    },
+    {
+      "excel_row": 80,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-076"
+    },
+    {
+      "excel_row": 81,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [
+        "tribal_consultation_trust_sacred_sites"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-077"
+    },
+    {
+      "excel_row": 82,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-078"
+    },
+    {
+      "excel_row": 83,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-079"
+    },
+    {
+      "excel_row": 84,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [
+        "tribal_consultation_trust_sacred_sites"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-080"
+    },
+    {
+      "excel_row": 85,
+      "mapping_status": "mapped",
+      "primary_family_id": "tribal_consultation_trust_sacred_sites",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-081"
+    },
+    {
+      "excel_row": 86,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-082"
+    },
+    {
+      "excel_row": 87,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-083"
+    },
+    {
+      "excel_row": 88,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-084"
+    },
+    {
+      "excel_row": 89,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-085"
+    },
+    {
+      "excel_row": 90,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-086"
+    },
+    {
+      "excel_row": 91,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-087"
+    },
+    {
+      "excel_row": 92,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-088"
+    },
+    {
+      "excel_row": 93,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-089"
+    },
+    {
+      "excel_row": 94,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-090"
+    },
+    {
+      "excel_row": 95,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-091"
+    },
+    {
+      "excel_row": 96,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_air_act_conformity_air_quality",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-092"
+    },
+    {
+      "excel_row": 97,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_air_act_conformity_air_quality",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-093"
+    },
+    {
+      "excel_row": 98,
+      "mapping_status": "mapped",
+      "primary_family_id": "migratory_bird_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-094"
+    },
+    {
+      "excel_row": 99,
+      "mapping_status": "mapped",
+      "primary_family_id": "migratory_bird_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-095"
+    },
+    {
+      "excel_row": 100,
+      "mapping_status": "mapped",
+      "primary_family_id": "migratory_bird_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-096"
+    },
+    {
+      "excel_row": 101,
+      "mapping_status": "mapped",
+      "primary_family_id": "eagle_efh_and_special_wildlife_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-097"
+    },
+    {
+      "excel_row": 102,
+      "mapping_status": "mapped",
+      "primary_family_id": "eagle_efh_and_special_wildlife_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-098"
+    },
+    {
+      "excel_row": 103,
+      "mapping_status": "mapped",
+      "primary_family_id": "eagle_efh_and_special_wildlife_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-099"
+    },
+    {
+      "excel_row": 104,
+      "mapping_status": "mapped",
+      "primary_family_id": "eagle_efh_and_special_wildlife_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-100"
+    },
+    {
+      "excel_row": 105,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-101"
+    },
+    {
+      "excel_row": 106,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-102"
+    },
+    {
+      "excel_row": 107,
+      "mapping_status": "mapped",
+      "primary_family_id": "floodplain_management_eo11988",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-103"
+    },
+    {
+      "excel_row": 108,
+      "mapping_status": "mapped",
+      "primary_family_id": "wetlands_protection_eo11990",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-104"
+    },
+    {
+      "excel_row": 109,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-105"
+    },
+    {
+      "excel_row": 110,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-106"
+    },
+    {
+      "excel_row": 111,
+      "mapping_status": "mapped",
+      "primary_family_id": "hazardous_materials_site_condition",
+      "related_family_ids": [
+        "land_exchange_regulatory_requirements"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-107"
+    },
+    {
+      "excel_row": 112,
+      "mapping_status": "mapped",
+      "primary_family_id": "hazardous_materials_site_condition",
+      "related_family_ids": [
+        "land_exchange_regulatory_requirements"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-108"
+    },
+    {
+      "excel_row": 113,
+      "mapping_status": "mapped",
+      "primary_family_id": "hazardous_materials_site_condition",
+      "related_family_ids": [
+        "land_exchange_regulatory_requirements"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-109"
+    },
+    {
+      "excel_row": 114,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-110"
+    },
+    {
+      "excel_row": 115,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-111"
+    },
+    {
+      "excel_row": 116,
+      "mapping_status": "mapped",
+      "primary_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-112"
+    },
+    {
+      "excel_row": 117,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [
+        "wilderness_wsr_trails_designated_areas"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-113"
+    },
+    {
+      "excel_row": 118,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [
+        "wilderness_wsr_trails_designated_areas"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-114"
+    },
+    {
+      "excel_row": 119,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-115"
+    },
+    {
+      "excel_row": 120,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-116"
+    },
+    {
+      "excel_row": 121,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-117"
+    },
+    {
+      "excel_row": 122,
+      "mapping_status": "mapped",
+      "primary_family_id": "clean_water_act_wotus_permits",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-118"
+    },
+    {
+      "excel_row": 123,
+      "mapping_status": "mapped",
+      "primary_family_id": "nhpa_section106_shpo_consultation",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-119"
+    },
+    {
+      "excel_row": 124,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-120"
+    },
+    {
+      "excel_row": 125,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-121"
+    },
+    {
+      "excel_row": 126,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-122"
+    },
+    {
+      "excel_row": 127,
+      "mapping_status": "mapped",
+      "primary_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-123"
+    },
+    {
+      "excel_row": 128,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-124"
+    },
+    {
+      "excel_row": 129,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-125"
+    },
+    {
+      "excel_row": 130,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-126"
+    },
+    {
+      "excel_row": 131,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-127"
+    },
+    {
+      "excel_row": 132,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-128"
+    },
+    {
+      "excel_row": 133,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-129"
+    },
+    {
+      "excel_row": 134,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-130"
+    },
+    {
+      "excel_row": 135,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-131"
+    },
+    {
+      "excel_row": 136,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-132"
+    },
+    {
+      "excel_row": 137,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-133"
+    },
+    {
+      "excel_row": 138,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-134"
+    },
+    {
+      "excel_row": 139,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-135"
+    },
+    {
+      "excel_row": 140,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-136"
+    },
+    {
+      "excel_row": 141,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-137"
+    },
+    {
+      "excel_row": 142,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-138"
+    },
+    {
+      "excel_row": 143,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-139"
+    },
+    {
+      "excel_row": 144,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-140"
+    },
+    {
+      "excel_row": 145,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-141"
+    },
+    {
+      "excel_row": 146,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-142"
+    },
+    {
+      "excel_row": 147,
+      "mapping_status": "mapped",
+      "primary_family_id": "roads_access_special_use_action_authorities",
+      "related_family_ids": [
+        "land_exchange_statutory_authorities"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-143"
+    },
+    {
+      "excel_row": 148,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-144"
+    },
+    {
+      "excel_row": 149,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-145"
+    },
+    {
+      "excel_row": 150,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-146"
+    },
+    {
+      "excel_row": 151,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-147"
+    },
+    {
+      "excel_row": 152,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-148"
+    },
+    {
+      "excel_row": 153,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_statutory_authorities",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-149"
+    },
+    {
+      "excel_row": 154,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-150"
+    },
+    {
+      "excel_row": 155,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-151"
+    },
+    {
+      "excel_row": 156,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-152"
+    },
+    {
+      "excel_row": 157,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-153"
+    },
+    {
+      "excel_row": 158,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-154"
+    },
+    {
+      "excel_row": 159,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-155"
+    },
+    {
+      "excel_row": 160,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-156"
+    },
+    {
+      "excel_row": 161,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-157"
+    },
+    {
+      "excel_row": 162,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [
+        "usda_nepa_procedures_7cfr_part_1b"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-158"
+    },
+    {
+      "excel_row": 163,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_regulatory_requirements",
+      "related_family_ids": [
+        "administrative_review_final_agency_action"
+      ],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-159"
+    },
+    {
+      "excel_row": 164,
+      "mapping_status": "mapped_source_url_excluded",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-160"
+    },
+    {
+      "excel_row": 165,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-161"
+    },
+    {
+      "excel_row": 166,
+      "mapping_status": "mapped",
+      "primary_family_id": "land_exchange_fs_policy_and_project_references",
+      "related_family_ids": [],
+      "scope": "Conditional",
+      "sheet": "Ingest_Checklist",
+      "source_record_id": "R1EA-162"
+    },
+    {
+      "excel_row": 5,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-region-1-northern-region-01"
+    },
+    {
+      "excel_row": 6,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-region-1-northern-region-02"
+    },
+    {
+      "excel_row": 7,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01"
+    },
+    {
+      "excel_row": 8,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02"
+    },
+    {
+      "excel_row": 9,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-bitterroot-nf-01"
+    },
+    {
+      "excel_row": 10,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-bitterroot-nf-02"
+    },
+    {
+      "excel_row": 11,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-bitterroot-nf-03"
+    },
+    {
+      "excel_row": 12,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-01"
+    },
+    {
+      "excel_row": 13,
+      "mapping_status": "mapped",
+      "primary_family_id": "nfma_forest_planning_project_consistency",
+      "related_family_ids": [
+        "region1_forest_plan_source_records"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+    },
+    {
+      "excel_row": 14,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-03"
+    },
+    {
+      "excel_row": 15,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-04"
+    },
+    {
+      "excel_row": 16,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-05"
+    },
+    {
+      "excel_row": 17,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [
+        "species_supporting_sources_and_overlays"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-06"
+    },
+    {
+      "excel_row": 18,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [
+        "species_supporting_sources_and_overlays"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-07"
+    },
+    {
+      "excel_row": 19,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-dakota-prairie-grasslands-01"
+    },
+    {
+      "excel_row": 20,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-dakota-prairie-grasslands-02"
+    },
+    {
+      "excel_row": 21,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-flathead-nf-01"
+    },
+    {
+      "excel_row": 22,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-01"
+    },
+    {
+      "excel_row": 23,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02"
+    },
+    {
+      "excel_row": 24,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-idaho-panhandle-nfs-01"
+    },
+    {
+      "excel_row": 25,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-idaho-panhandle-nfs-02"
+    },
+    {
+      "excel_row": 26,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-kootenai-nf-01"
+    },
+    {
+      "excel_row": 27,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-lolo-nf-01"
+    },
+    {
+      "excel_row": 28,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01"
+    },
+    {
+      "excel_row": 29,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02"
+    },
+    {
+      "excel_row": 30,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [
+        "nfma_forest_planning_project_consistency",
+        "species_supporting_sources_and_overlays"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-region-1-species-overlay-01"
+    },
+    {
+      "excel_row": 31,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [
+        "nfma_forest_planning_project_consistency",
+        "species_supporting_sources_and_overlays"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-region-1-species-overlay-02"
+    },
+    {
+      "excel_row": 32,
+      "mapping_status": "mapped",
+      "primary_family_id": "region1_forest_plan_source_records",
+      "related_family_ids": [
+        "grassland_bankhead_jones_authorities"
+      ],
+      "scope": null,
+      "sheet": "R1_Forest_Plans",
+      "source_record_id": "R1PLAN-region-1-grassland-overlay-01"
+    }
+  ],
+  "source_set": {
+    "review_sources_sqlite_path": "source_library/catalog/review_sources.sqlite",
+    "source_catalog_path": "source_library/catalog/source_catalog.jsonl",
+    "source_set_id": "source-set-ba8d0feae79501b8"
+  },
+  "status_definitions": {
+    "active": "Source records, rule templates, trigger contracts, evidence filters, and eval coverage are implemented for the represented family slice.",
+    "candidate": "The family is required or potentially relevant, but source records still need to be added, confirmed, or explicitly excluded.",
+    "out_of_scope": "The family is intentionally excluded for Region 1 EA review with reviewer-visible rationale.",
+    "source_only": "Source records exist, but rule templates, applicability predicates, coverage requirements, or eval cases are missing or incomplete.",
+    "superseded": "The family or source has been replaced, reserved, repealed, or superseded; replacement/current-source evidence is recorded."
+  },
+  "summary": {
+    "authority_family_count": 35,
+    "duplicate_rule_ids": [],
+    "mapped_rule_count": 44,
+    "mapped_source_record_count": 190,
+    "orphan_rule_ids": [],
+    "orphan_source_record_ids": [],
+    "required_authority_requirement_count": 18,
+    "rule_count": 44,
+    "rule_pack_id": "nepa-ea-v0",
+    "rule_pack_version": "0.4.0",
+    "source_record_crosswalk_count": 190,
+    "status_counts": {
+      "active": 14,
+      "candidate": 1,
+      "source_only": 19,
+      "superseded": 1
+    },
+    "workbook_source_record_count": 190
+  },
+  "workbook": {
+    "baseline_source_record_ids": [
+      "R1EA-001",
+      "R1EA-002",
+      "R1EA-003",
+      "R1EA-004",
+      "R1EA-008",
+      "R1EA-009",
+      "R1EA-010",
+      "R1EA-013",
+      "R1EA-014",
+      "R1EA-015",
+      "R1EA-017",
+      "R1EA-018",
+      "R1EA-019",
+      "R1EA-020",
+      "R1EA-021",
+      "R1EA-022",
+      "R1EA-023",
+      "R1EA-024",
+      "R1EA-025",
+      "R1EA-028",
+      "R1EA-029",
+      "R1EA-031",
+      "R1EA-033",
+      "R1EA-034",
+      "R1EA-035",
+      "R1EA-067"
+    ],
+    "canonical_sheets": [
+      "Ingest_Checklist",
+      "R1_Forest_Plans"
+    ],
+    "path": "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx",
+    "source_record_count": 190
+  }
+}

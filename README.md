@@ -50,6 +50,13 @@ review-bound `phase-eval` `16/16` with the post-V1 applicability gates included,
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
+Authority-universe completion Milestone 1 is now represented by
+`config/authority_universe_families_nepa_ea_v1.json`: `35` authority families, `18` required
+authority requirement groups, all `44/44` current rule-pack rules crosswalked, and all `190/190`
+workbook source records mapped to an authority family. The inventory keeps `source_only`,
+`candidate`, and `superseded` families explicit so later source-currentness, rule-template,
+applicability-eval, and report-integration slices have a stable contract.
+
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
 map, layer ownership, generated-artifact ownership, command groups, and automated architecture gate.
@@ -76,6 +83,7 @@ heuristics.
 - `config/compliance_review_eval_seed.json`
 - `config/compliance_gold_eval_v0.json`
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
+- `config/authority_universe_families_nepa_ea_v1.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`

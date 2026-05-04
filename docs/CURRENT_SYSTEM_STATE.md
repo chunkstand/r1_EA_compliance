@@ -51,6 +51,30 @@ The current generated downloader/catalog corpus now covers the full 190-row work
 its URL remains in `Scope_Exclusions`. The current catalog validation passes, and the
 captured-library integrity test suite passes against these generated outputs.
 
+## Authority Universe Family Inventory
+
+Milestone 1 of the authority-universe completion plan is represented by
+`config/authority_universe_families_nepa_ea_v1.json`. This file is the machine-readable crosswalk
+between the required Region 1 EA authority families, the active workbook/catalog source records, the
+current `nepa-ea-v0` rule pack, applicability predicate surfaces, package fact types, coverage
+requirements, and eval cases.
+
+Current inventory summary:
+
+- Authority families: `35`
+- Required authority requirement groups covered: `18`
+- Family statuses: `active=14`, `source_only=19`, `candidate=1`, `superseded=1`
+- Workbook source records crosswalked: `190/190`
+- Current rule-pack rules crosswalked: `44/44`
+- Orphan rule IDs: none
+- Orphan workbook source record IDs: none
+
+The only current `candidate` family is environmental justice and civil-rights authority coverage;
+it is intentionally visible as a source-record gap for a later source-addition/currentness slice.
+Reserved or superseded Forest Service NEPA regulations, including former 36 CFR part 220 references,
+are represented as a `superseded` family and point reviewers back to current USDA NEPA procedure
+sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
