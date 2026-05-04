@@ -126,7 +126,17 @@ allowed_import_layers = [
 [[layers]]
 name = "cli"
 summary = "Stable public command registration and dispatch entrypoints."
-modules = ["__main__", "cli"]
+modules = [
+  "__main__",
+  "cli",
+  "cli_applicability",
+  "cli_capture",
+  "cli_common",
+  "cli_compliance",
+  "cli_derived",
+  "cli_eval",
+  "cli_review",
+]
 allowed_import_layers = [
   "foundation",
   "capture",
@@ -229,7 +239,15 @@ paths = [
 
 [[command_groups]]
 name = "capture"
-commands = ["dry-run", "preflight", "download", "report", "validate-run", "pilots", "batches"]
+commands = [
+  "dry-run",
+  "preflight",
+  "download",
+  "report",
+  "validate-run",
+  "pilot-hosts",
+  "batch-download",
+]
 
 [[command_groups]]
 name = "catalog_extraction_retrieval"

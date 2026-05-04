@@ -1,0 +1,113 @@
+from __future__ import annotations
+
+from pathlib import Path
+import argparse
+
+from .applicability_eval import DEFAULT_APPLICABILITY_EVAL_PATH
+from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
+from .applicability_eval import run_applicability_eval
+from .applicability_eval import run_applicability_gold_eval
+from .cli_common import print_summary
+from .evidence_graph import run_phase_aligned_eval
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
+from .v1_ea_eval import run_v1_ea_review_eval
+
+
+EVAL_COMMANDS = {"applicability-eval", "applicability-gold-eval", "phase-eval", "v1-ea-eval"}
+
+
+def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
+    applicability_eval = subparsers.add_parser(
+        "applicability-eval",
+        help="Run deterministic applicability decision-quality eval cases.",
+    )
+    applicability_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    applicability_eval.add_argument("--source-set-id")
+    applicability_eval.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    applicability_eval.add_argument("--eval-file", default=DEFAULT_APPLICABILITY_EVAL_PATH, type=Path)
+    applicability_eval.add_argument("--results-dir", type=Path)
+    applicability_eval.add_argument("--top-k", type=int, default=5)
+
+    applicability_gold_eval = subparsers.add_parser(
+        "applicability-gold-eval",
+        help="Run adjudicated applicability gold eval cases.",
+    )
+    applicability_gold_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    applicability_gold_eval.add_argument("--source-set-id")
+    applicability_gold_eval.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    applicability_gold_eval.add_argument(
+        "--gold-file",
+        default=DEFAULT_APPLICABILITY_GOLD_EVAL_PATH,
+        type=Path,
+    )
+    applicability_gold_eval.add_argument("--results-dir", type=Path)
+    applicability_gold_eval.add_argument("--top-k", type=int, default=5)
+
+    phase_eval = subparsers.add_parser(
+        "phase-eval",
+        help="Run phase-aligned readiness evals across generated artifacts.",
+    )
+    phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    phase_eval.add_argument("--source-set-id")
+    phase_eval.add_argument("--review-id")
+    phase_eval.add_argument("--review-dir", type=Path)
+
+    v1_ea_eval = subparsers.add_parser(
+        "v1-ea-eval",
+        help="Evaluate a real EA compliance review against the V1 source/section contract.",
+    )
+    v1_ea_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    v1_ea_eval.add_argument("--review-id")
+    v1_ea_eval.add_argument("--review-dir", type=Path)
+    v1_ea_eval.add_argument("--eval-file", default=DEFAULT_V1_EA_EVAL_PATH, type=Path)
+    v1_ea_eval.add_argument("--output-path", type=Path)
+
+
+def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
+    if args.command == "applicability-eval":
+        result = run_applicability_eval(
+            output_dir=args.output_dir,
+            eval_file=args.eval_file,
+            base_rule_pack_path=args.base_rule_pack,
+            source_set_id=args.source_set_id,
+            results_dir=args.results_dir,
+            top_k=args.top_k,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-gold-eval":
+        result = run_applicability_gold_eval(
+            output_dir=args.output_dir,
+            gold_file=args.gold_file,
+            base_rule_pack_path=args.base_rule_pack,
+            source_set_id=args.source_set_id,
+            results_dir=args.results_dir,
+            top_k=args.top_k,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "phase-eval":
+        result = run_phase_aligned_eval(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["reviewer_ready"] else 1
+
+    if args.command == "v1-ea-eval":
+        result = run_v1_ea_review_eval(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            review_dir=args.review_dir,
+            eval_file=args.eval_file,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    return None
