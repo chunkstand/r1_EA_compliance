@@ -62,9 +62,13 @@ requirement groups, `33` active families, all `44/44` current rule-pack rules cr
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
 confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. Milestone 3
 adds `19` data-backed authority-family rule templates with positive/negative trigger contracts,
-source evidence requirements, retrieval/graph contracts, and coverage rows. The remaining
-authority-universe work is Milestone 4 independent applicability eval and adjudication coverage for
-those expanded families.
+source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
+independent applicability eval and gold-adjudication coverage for those expanded families: seed evals
+now score positive and negative coverage for all `19` high-priority authority-family templates, a
+realistic Region 1 land-exchange fixture exercises land exchange, water/wetlands, cultural/tribal,
+wildlife/species, designated-area, and forest-plan consistency triggers, and gold evals include
+unresolved and replay-adjudicated authority-family decisions. The next authority-universe work is
+Milestone 5 reviewer report/compliance integration.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -755,6 +759,8 @@ under `source_library/reviews/promotion_suite/<suite_id>/`. It separates
 `current_promotion_ready`, `expansion_ready`, and `promotion_ready` so agents can distinguish the
 promoted East Crazy V1 evidence from post-V1 real-package expansion work. Use
 `--strict-expansion` when additional real-package slots should block the command exit status.
+The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
+authority-family positive/negative, unresolved, and adjudication coverage.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
@@ -1014,9 +1020,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
 package-fact graph construction, applicability retrieval/graph traces, deterministic decisions,
 validation, and generated-rule-pack creation. It fails on false positive/negative applicability
 statuses, partition mismatches, missing non-applicable coverage certificates, retrieval or graph
-trace gaps, package-fact mismatches, and generated-rule-pack coverage drift. `applicability-gold-eval`
-wraps adjudicated positive, mixed, and negative package profiles and emits `promotion_ready=true`
-only when the adjudication checks and applicability eval both pass.
+trace gaps, package-fact mismatches, and generated-rule-pack coverage drift. The default eval seed
+includes all `19` Milestone 3 authority-family rule templates, positive/negative coverage counts,
+unresolved weak-signal handling, and real-package coverage tags. `applicability-gold-eval` wraps
+adjudicated positive, mixed, negative, unresolved, and replay-adjudicated package profiles and emits
+`promotion_ready=true` only when the adjudication checks and applicability eval both pass.
 
 Run rule-pack coverage:
 

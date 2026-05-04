@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
 from .applicability_eval import DEFAULT_APPLICABILITY_EVAL_PATH
 from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
 from .applicability_eval import run_applicability_eval
@@ -34,6 +35,17 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     applicability_eval.add_argument("--source-set-id")
     applicability_eval.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
     applicability_eval.add_argument("--eval-file", default=DEFAULT_APPLICABILITY_EVAL_PATH, type=Path)
+    applicability_eval.add_argument(
+        "--authority-family-templates-path",
+        default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
+        type=Path,
+    )
+    applicability_eval.add_argument(
+        "--no-authority-family-templates",
+        action="store_const",
+        const=None,
+        dest="authority_family_templates_path",
+    )
     applicability_eval.add_argument("--results-dir", type=Path)
     applicability_eval.add_argument("--top-k", type=int, default=5)
 
@@ -48,6 +60,17 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
         "--gold-file",
         default=DEFAULT_APPLICABILITY_GOLD_EVAL_PATH,
         type=Path,
+    )
+    applicability_gold_eval.add_argument(
+        "--authority-family-templates-path",
+        default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
+        type=Path,
+    )
+    applicability_gold_eval.add_argument(
+        "--no-authority-family-templates",
+        action="store_const",
+        const=None,
+        dest="authority_family_templates_path",
     )
     applicability_gold_eval.add_argument("--results-dir", type=Path)
     applicability_gold_eval.add_argument("--top-k", type=int, default=5)
@@ -91,6 +114,7 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             output_dir=args.output_dir,
             eval_file=args.eval_file,
             base_rule_pack_path=args.base_rule_pack,
+            authority_family_templates_path=args.authority_family_templates_path,
             source_set_id=args.source_set_id,
             results_dir=args.results_dir,
             top_k=args.top_k,
@@ -103,6 +127,7 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             output_dir=args.output_dir,
             gold_file=args.gold_file,
             base_rule_pack_path=args.base_rule_pack,
+            authority_family_templates_path=args.authority_family_templates_path,
             source_set_id=args.source_set_id,
             results_dir=args.results_dir,
             top_k=args.top_k,

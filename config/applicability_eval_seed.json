@@ -71,17 +71,31 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_source_record_ids_by_rule_id": {
-        "nepa_statute_chapter_55": ["R1EA-001"],
-        "esa_section_7": ["R1EA-065"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ]
       },
       "expected_document_roles_by_rule_id": {
-        "nepa_statute_chapter_55": ["law"],
-        "esa_section_7": ["law"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ]
       },
       "expected_package_section_families_by_rule_id": {
-        "esa_section_7": ["consultation"]
+        "esa_section_7": [
+          "consultation"
+        ]
       },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
@@ -131,14 +145,26 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_source_record_ids_by_rule_id": {
-        "nepa_statute_chapter_55": ["R1EA-001"],
-        "esa_section_7": ["R1EA-065"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ]
       },
       "expected_document_roles_by_rule_id": {
-        "nepa_statute_chapter_55": ["law"],
-        "esa_section_7": ["law"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ]
       },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
@@ -146,6 +172,227 @@
       "expected_trigger_miss_rule_ids": [
         "esa_section_7"
       ]
+    },
+    {
+      "id": "seed-expanded-authority-positive",
+      "profile": "positive",
+      "coverage_tags": [
+        "real_package_fixture",
+        "land_exchange",
+        "water_wetlands",
+        "cultural_tribal",
+        "wildlife_species",
+        "designated_area",
+        "forest_plan_consistency"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "package_path": "fixtures/applicability/region1-land-exchange-expanded-authority.txt",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": false,
+      "expected_status_for_candidate_authority_family_rule_ids": "applicable",
+      "expected_generated_rule_count": 19,
+      "expected_retrieval_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ]
+    },
+    {
+      "id": "seed-expanded-authority-negative",
+      "profile": "negative",
+      "coverage_tags": [
+        "negative_proof",
+        "land_exchange",
+        "water_wetlands",
+        "cultural_tribal",
+        "wildlife_species",
+        "designated_area",
+        "forest_plan_consistency"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment, but this fixture negates expanded authority-family triggers for coverage testing.\n\nEnvironmental Consequences\n\nThe record states no air quality effects, no wetlands, no waters of the United States, no discharge, no historic properties, no cultural resources, no archaeological resources, no eagle habitat, no eagle nests, no essential fish habitat, no floodplains, no forest plan amendment, not National Grassland, no Bankhead-Jones lands, no hazardous materials, no contamination, no invasive species, no pesticide use, no herbicide use, no prime farmland, no drinking water source, not a land exchange, no appraisal, no title evidence, no exchange agreement, no notice of exchange, no equalization, no acquisition, no disposal, no public interest determination, no mineral activity, no mining, outside National Forest System, no forest plan components, no management area, no road changes, no trail changes, no special use, no right-of-way, no listed species, no sensitive species, no habitat, no consultation required, no tribal consultation, no tribal interests, no sacred sites, no treaty rights, no vegetation treatment, no timber harvest, no fuels treatment, no wildfire action, no wilderness, no designated areas, outside Wild and Scenic River corridor, no national trails, and no caves.",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": false,
+      "expected_status_for_candidate_authority_family_rule_ids": "not_applicable",
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ]
+    },
+    {
+      "id": "seed-expanded-authority-adjudication-required",
+      "profile": "unresolved",
+      "coverage_tags": [
+        "unresolved_adjudication",
+        "water_wetlands"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a small authorization.\n\nEnvironmental Consequences\n\nA Clean Water Act Section 404 permit may be required if wetlands are confirmed during final design.",
+      "expected_validation_passed": false,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "clean_water_act_wotus_permits_authority_template": "needs_adjudication"
+      },
+      "expected_basis_types_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ]
     }
+  ],
+  "high_priority_authority_family_ids": [
+    "clean_air_act_conformity_air_quality",
+    "clean_water_act_wotus_permits",
+    "cultural_resource_protection_and_state_shpo_sources",
+    "eagle_efh_and_special_wildlife_sources",
+    "floodplain_management_eo11988",
+    "forest_service_planning_handbook_amendments",
+    "grassland_bankhead_jones_authorities",
+    "hazardous_materials_site_condition",
+    "invasive_pesticide_soils_farmland_drinking_water",
+    "land_exchange_fs_policy_and_project_references",
+    "land_exchange_regulatory_requirements",
+    "land_exchange_statutory_authorities",
+    "minerals_energy_authorities",
+    "region1_forest_plan_source_records",
+    "roads_access_special_use_action_authorities",
+    "species_supporting_sources_and_overlays",
+    "tribal_consultation_trust_sacred_sites",
+    "vegetation_wildfire_forest_health_authorities",
+    "wilderness_wsr_trails_designated_areas"
+  ],
+  "required_real_package_coverage_tags": [
+    "land_exchange",
+    "water_wetlands",
+    "cultural_tribal",
+    "wildlife_species",
+    "designated_area",
+    "forest_plan_consistency"
   ]
 }

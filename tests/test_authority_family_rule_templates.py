@@ -74,6 +74,9 @@ def test_authority_family_template_coverage_maps_every_template() -> None:
     }
     assert coverage_rule_ids == template_rule_ids
     assert coverage["summary"]["coverage_entry_count"] == len(template_rule_ids)
+    assert coverage["summary"]["milestone_4_eval_followup_required_count"] == 0
+    assert coverage["summary"]["milestone_4_positive_eval_covered_count"] == 19
+    assert coverage["summary"]["milestone_4_negative_eval_covered_count"] == 19
 
     duplicate_families = [
         family_id
@@ -83,6 +86,12 @@ def test_authority_family_template_coverage_maps_every_template() -> None:
         if count > 1
     ]
     assert duplicate_families == []
+    for entry in coverage["coverage_entries"]:
+        assert entry["milestone_4_eval_followup_required"] is False
+        assert set(entry["required_eval_case_ids"]) == {
+            "seed-expanded-authority-positive",
+            "seed-expanded-authority-negative",
+        }
 
 
 def test_package_fact_cues_map_to_active_authority_family_templates() -> None:

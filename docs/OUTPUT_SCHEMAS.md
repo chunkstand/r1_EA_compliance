@@ -1539,14 +1539,18 @@ matrix evaluates compliance findings only for generated applicable rules.
 is supplied. The result schema is `applicability-eval-results-v0` and records:
 
 - eval ID, eval version, eval file, base rule-pack path, base rule-pack ID/version, source set IDs,
-  output path, and created timestamp
+  output path, authority-family template config path when loaded, and created timestamp
 - case count, passed/failed counts, generated-rule-pack-ready case count, aggregate metrics, and
   failure-category counts
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
   expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
   and document-role alignment status, package-section alignment status, graph path/non-path status,
-  required artifact gaps, coverage gaps, generated-rule-pack readiness, generated-pack hash and
-  coverage mismatch status, and failure taxonomy
+  basis-type alignment status, authority-family IDs by rule ID, adjudicated rule IDs, required
+  artifact gaps, coverage gaps, generated-rule-pack readiness, generated-pack hash and coverage
+  mismatch status, and failure taxonomy
+- `authority_family_template_coverage`, which records high-priority authority-family IDs,
+  positive/negative/unresolved/adjudicated coverage counts, real-package coverage tags, and missing
+  coverage lists
 
 Each eval case materializes a review directory under
 `source_library/reviews/applicability-eval-<case_id>/` and runs the same applicability artifact
@@ -1564,8 +1568,10 @@ validated applicable authorities.
 `--results-dir` is supplied. The result schema is `applicability-gold-eval-results-v0` and records
 gold eval identity, adjudication checks, required profile coverage, nested applicability-eval
 metrics, failure categories, and `promotion_ready`. Promotion readiness is true only when positive,
-mixed, and negative adjudicated profiles are present, every case has adjudication metadata, and the
-nested applicability eval passes.
+mixed, negative, unresolved, and replay-adjudicated profiles are present, every case has
+adjudication metadata, and the nested applicability eval passes. Gold evals carry forward the nested
+`authority_family_template_coverage` summary so promotion checks can prove adjudication coverage for
+expanded authority-family templates.
 
 ## Compliance Review Outputs
 
@@ -1931,7 +1937,7 @@ The manifest has schema version `promotion-suite-v0` and records:
 - review cases with review IDs, package labels, required current-promotion results, artifact paths,
   and JSON or file-header checks
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
-  compliance-review eval, and compliance-gold eval
+  applicability seed/gold eval coverage, compliance-review eval, and compliance-gold eval
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions
 
 `promotion_suite_results.json` has schema version `promotion-suite-results-v0` and records:

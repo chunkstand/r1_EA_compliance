@@ -9,10 +9,13 @@ import hashlib
 import json
 import re
 
+from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .applicability_rule_pack import generate_applicability_rule_pack
 from .applicability_validation import validate_applicability_run
+from .applicability_validation import apply_applicability_adjudication
+from .applicability_validation import write_applicability_adjudication_template
 from .package_fact_graph import build_package_fact_graph
 from .records import sha256_file
 from .retrieval import _write_sqlite_index
@@ -26,7 +29,7 @@ APPLICABILITY_GOLD_EVAL_SCHEMA_VERSION = "applicability-gold-eval-v0"
 APPLICABILITY_GOLD_EVAL_RESULT_SCHEMA_VERSION = "applicability-gold-eval-results-v0"
 DEFAULT_APPLICABILITY_EVAL_PATH = Path("config/applicability_eval_seed.json")
 DEFAULT_APPLICABILITY_GOLD_EVAL_PATH = Path("config/applicability_gold_eval_v0.json")
-REQUIRED_GOLD_PROFILES = {"positive", "mixed", "negative"}
+REQUIRED_GOLD_PROFILES = {"positive", "mixed", "negative", "unresolved", "adjudicated"}
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
@@ -51,6 +54,7 @@ def run_applicability_eval(
     output_dir: Path,
     eval_file: Path = DEFAULT_APPLICABILITY_EVAL_PATH,
     base_rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
+    authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
     source_set_id: str | None = None,
     results_dir: Path | None = None,
     top_k: int = 5,
@@ -60,8 +64,14 @@ def run_applicability_eval(
     output_dir = Path(output_dir)
     eval_file = Path(eval_file)
     base_rule_pack_path = Path(base_rule_pack_path)
+    authority_family_templates_path = (
+        Path(authority_family_templates_path) if authority_family_templates_path else None
+    )
     eval_payload = _load_eval_payload(eval_file, APPLICABILITY_EVAL_SCHEMA_VERSION)
     base_rule_pack = load_rule_pack(base_rule_pack_path)
+    authority_family_template_set = _load_authority_family_template_set(
+        authority_family_templates_path
+    )
     cases = _case_list(eval_payload)
     eval_output_dir = (
         Path(results_dir) if results_dir else output_dir / "reviews" / "applicability_eval"
@@ -79,6 +89,7 @@ def run_applicability_eval(
                 eval_payload=eval_payload,
                 base_rule_pack_path=base_rule_pack_path,
                 base_rule_pack=base_rule_pack,
+                authority_family_template_set=authority_family_template_set,
                 source_set_id=source_set_id,
                 case=case,
                 case_index=index,
@@ -103,6 +114,9 @@ def run_applicability_eval(
         "base_rule_pack_path": str(base_rule_pack_path),
         "base_rule_pack_id": base_rule_pack.get("rule_pack_id"),
         "base_rule_pack_version": base_rule_pack.get("version"),
+        "authority_family_templates_path": str(authority_family_templates_path)
+        if authority_family_templates_path
+        else None,
         "source_set_id": source_set_id or (source_set_ids[0] if len(source_set_ids) == 1 else None),
         "source_set_ids": source_set_ids,
         "case_count": case_count,
@@ -132,6 +146,11 @@ def run_applicability_eval(
                 "generated_rule_pack_matches_applicability",
             ),
         },
+        "authority_family_template_coverage": _authority_family_template_coverage(
+            eval_payload=eval_payload,
+            template_set=authority_family_template_set,
+            case_results=case_results,
+        ),
         "failure_category_counts": _failure_category_counts(case_results),
         "cases": case_results,
     }
@@ -149,6 +168,7 @@ def run_applicability_gold_eval(
     output_dir: Path,
     gold_file: Path = DEFAULT_APPLICABILITY_GOLD_EVAL_PATH,
     base_rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
+    authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
     source_set_id: str | None = None,
     results_dir: Path | None = None,
     top_k: int = 5,
@@ -158,6 +178,9 @@ def run_applicability_gold_eval(
     output_dir = Path(output_dir)
     gold_file = Path(gold_file)
     base_rule_pack_path = Path(base_rule_pack_path)
+    authority_family_templates_path = (
+        Path(authority_family_templates_path) if authority_family_templates_path else None
+    )
     gold = _load_eval_payload(gold_file, APPLICABILITY_GOLD_EVAL_SCHEMA_VERSION)
     eval_output_dir = (
         Path(results_dir) if results_dir else output_dir / "reviews" / "applicability_gold_eval"
@@ -188,6 +211,7 @@ def run_applicability_gold_eval(
                 output_dir=output_dir,
                 eval_file=eval_file,
                 base_rule_pack_path=base_rule_pack_path,
+                authority_family_templates_path=authority_family_templates_path,
                 source_set_id=source_set_id,
                 results_dir=eval_output_dir / "applicability_eval",
                 top_k=top_k,
@@ -212,6 +236,9 @@ def run_applicability_gold_eval(
             eval_output_dir / "applicability_eval" / "applicability_eval_results.json"
         ),
         "base_rule_pack_path": str(base_rule_pack_path),
+        "authority_family_templates_path": str(authority_family_templates_path)
+        if authority_family_templates_path
+        else None,
         "source_set_id": source_set_id or (eval_summary or {}).get("source_set_id"),
         "source_set_ids": (eval_summary or {}).get("source_set_ids", []),
         "case_count": len(cases),
@@ -230,6 +257,10 @@ def run_applicability_gold_eval(
         "passed": adjudication_passed and eval_passed,
         "checks": checks,
         "metrics": (eval_summary or {}).get("metrics", {}),
+        "authority_family_template_coverage": (eval_summary or {}).get(
+            "authority_family_template_coverage",
+            {},
+        ),
         "failure_category_counts": (eval_summary or {}).get("failure_category_counts", {}),
         "cases": (eval_summary or {}).get("cases", []),
     }
@@ -250,6 +281,7 @@ def _run_eval_case(
     eval_payload: dict[str, Any],
     base_rule_pack_path: Path,
     base_rule_pack: dict[str, Any],
+    authority_family_template_set: dict[str, Any] | None,
     source_set_id: str | None,
     case: dict[str, Any],
     case_index: int,
@@ -271,10 +303,15 @@ def _run_eval_case(
     applicability_dir = review_dir / "applicability"
 
     selected_rules = _selected_rules(base_rule_pack, case)
+    selected_authority_family_templates = _selected_authority_family_templates(
+        authority_family_template_set,
+        case,
+    )
     source_chunks = _case_source_chunks(
         case=case,
         inherited_source_chunks=inherited_source_chunks,
         rules=selected_rules,
+        authority_family_templates=selected_authority_family_templates,
         source_set_id=case_source_set_id,
     )
     _write_package_cache(
@@ -298,6 +335,8 @@ def _run_eval_case(
         base_rule_pack_path=base_rule_pack_path,
         base_rule_pack=base_rule_pack,
         rules=selected_rules,
+        authority_family_template_set=authority_family_template_set,
+        authority_family_templates=selected_authority_family_templates,
     )
     build_package_fact_graph(
         output_dir=output_dir,
@@ -316,6 +355,12 @@ def _run_eval_case(
         output_dir=output_dir,
         review_id=review_id,
         source_set_id=case_source_set_id,
+    )
+    adjudication_summary = _apply_case_adjudication_if_requested(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=case_source_set_id,
+        case=case,
     )
     validation_result = validate_applicability_run(
         output_dir=output_dir,
@@ -344,11 +389,83 @@ def _run_eval_case(
         source_set_id=case_source_set_id,
         review_dir=review_dir,
         retrieval_index_path=retrieval_index_path,
+        adjudication_summary=adjudication_summary,
         validation_summary=validation_result.summary,
         generated_summary=generated_summary,
         generated_error=generated_error,
         artifacts=artifacts,
     )
+
+
+def _apply_case_adjudication_if_requested(
+    *,
+    output_dir: Path,
+    review_id: str,
+    source_set_id: str,
+    case: dict[str, Any],
+) -> dict[str, Any] | None:
+    adjudication = case.get("applicability_adjudication")
+    if not isinstance(adjudication, dict):
+        return None
+    template_result = write_applicability_adjudication_template(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+    )
+    template = json.loads(template_result.output_path.read_text(encoding="utf-8"))
+    item_specs = adjudication.get("items_by_rule_id")
+    if not isinstance(item_specs, dict):
+        item_specs = {}
+    for item in template.get("items") or []:
+        if not isinstance(item, dict):
+            continue
+        rule_id = _rule_id_from_candidate_id(str(item.get("candidate_authority_id") or ""))
+        spec = (
+            item_specs.get(rule_id)
+            or item_specs.get(str(item.get("candidate_authority_id") or ""))
+            or item_specs.get(str(item.get("decision_id") or ""))
+        )
+        if not isinstance(spec, dict):
+            continue
+        item["final_status"] = spec.get("final_status", item.get("final_status"))
+        item["disposition"] = spec.get("disposition", item.get("disposition"))
+        item["adjudicated_at"] = spec.get("adjudicated_at") or adjudication.get(
+            "adjudicated_at",
+        )
+        item["adjudicated_by"] = spec.get("adjudicated_by") or adjudication.get(
+            "adjudicated_by",
+        )
+        item["source_type"] = spec.get("source_type") or adjudication.get(
+            "source_type",
+            "applicability-gold-eval",
+        )
+        item["rationale"] = spec.get("rationale") or adjudication.get(
+            "rationale",
+            "Applicability eval fixture adjudication.",
+        )
+        refs = sorted(set(_strings(item.get("supporting_citation_refs")) + _strings(
+            spec.get("supporting_citation_refs")
+        )))
+        item["supporting_citation_refs"] = refs or ["EA-PACKAGE-001"]
+    _write_json(template_result.output_path, template)
+    apply_result = apply_applicability_adjudication(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        adjudication_file=template_result.output_path,
+    )
+    return {
+        "requested": True,
+        "template_path": str(template_result.output_path),
+        "markdown_path": str(template_result.markdown_path),
+        "apply_path": str(apply_result.output_path),
+        "passed": apply_result.summary.get("passed"),
+        "applied": apply_result.summary.get("applied"),
+        "applied_item_count": apply_result.summary.get("applied_item_count", 0),
+        "remaining_unresolved_authority_count": apply_result.summary.get(
+            "remaining_unresolved_authority_count",
+        ),
+    }
 
 
 def _score_case(
@@ -359,6 +476,7 @@ def _score_case(
     source_set_id: str,
     review_dir: Path,
     retrieval_index_path: Path,
+    adjudication_summary: dict[str, Any] | None = None,
     validation_summary: dict[str, Any],
     generated_summary: dict[str, Any] | None,
     generated_error: str | None,
@@ -387,6 +505,12 @@ def _score_case(
         str(rule_id): str(status)
         for rule_id, status in (case.get("expected_statuses") or {}).items()
     }
+    default_family_status = str(
+        case.get("expected_status_for_candidate_authority_family_rule_ids") or ""
+    ).strip()
+    if default_family_status:
+        for rule_id in _strings(case.get("candidate_authority_family_rule_ids")):
+            expected_statuses.setdefault(rule_id, default_family_status)
     status_mismatches = [
         {
             "rule_id": rule_id,
@@ -400,6 +524,20 @@ def _score_case(
     non_applicable_rule_ids = _partition_rule_ids(non_applicable)
     expected_applicable = sorted(_strings(case.get("expected_applicable_rule_ids")))
     expected_non_applicable = sorted(_strings(case.get("expected_non_applicable_rule_ids")))
+    expected_applicable_specified = bool(case.get("expected_applicable_rule_ids")) or bool(
+        expected_statuses
+    )
+    expected_non_applicable_specified = bool(
+        case.get("expected_non_applicable_rule_ids")
+    ) or bool(expected_statuses)
+    if not expected_applicable and expected_statuses:
+        expected_applicable = sorted(
+            rule_id for rule_id, status in expected_statuses.items() if status == "applicable"
+        )
+    if not expected_non_applicable and expected_statuses:
+        expected_non_applicable = sorted(
+            rule_id for rule_id, status in expected_statuses.items() if status == "not_applicable"
+        )
     expected_generated = sorted(_strings(case.get("expected_generated_rule_ids")))
     generated_rule_ids = sorted(
         str(rule.get("base_rule_id") or rule.get("id"))
@@ -433,6 +571,7 @@ def _score_case(
     expected_package_sections = _string_list_mapping(
         case.get("expected_package_section_families_by_rule_id")
     )
+    expected_basis_types = _string_mapping(case.get("expected_basis_types_by_rule_id"))
     coverage_ids = _coverage_certificate_ids(coverage)
     non_applicable_coverage_gaps = []
     for authority in non_applicable.get("authorities") or []:
@@ -480,10 +619,11 @@ def _score_case(
         == bool(case.get("expected_validation_passed", True)),
         "expected_statuses_match": not status_mismatches,
         "expected_applicable_authorities_match": (
-            not expected_applicable or applicable_rule_ids == expected_applicable
+            not expected_applicable_specified or applicable_rule_ids == expected_applicable
         ),
         "expected_non_applicable_authorities_match": (
-            not expected_non_applicable or non_applicable_rule_ids == expected_non_applicable
+            not expected_non_applicable_specified
+            or non_applicable_rule_ids == expected_non_applicable
         ),
         "package_fact_types_match": set(expected_fact_types).issubset(set(actual_fact_types)),
         "retrieval_trace_coverage_matches": _rules_have_retrieval(
@@ -502,6 +642,10 @@ def _score_case(
         ),
         "package_section_alignment_matches": _rules_match_package_sections(
             expected_package_sections,
+            decisions_by_rule,
+        ),
+        "basis_type_alignment_matches": _rules_match_basis_types(
+            expected_basis_types,
             decisions_by_rule,
         ),
         "negative_evidence_matches": _rules_have_decision_field(
@@ -537,6 +681,7 @@ def _score_case(
         "review_id": review_id,
         "source_set_id": source_set_id,
         "profile": case.get("profile"),
+        "coverage_tags": sorted(_strings(case.get("coverage_tags"))),
         "review_dir": str(review_dir),
         "retrieval_index_path": str(retrieval_index_path),
         "applicability_dir": str(review_dir / "applicability"),
@@ -573,6 +718,11 @@ def _score_case(
         "expected_source_record_ids_by_rule_id": expected_source_records,
         "expected_document_roles_by_rule_id": expected_document_roles,
         "expected_package_section_families_by_rule_id": expected_package_sections,
+        "expected_basis_types_by_rule_id": expected_basis_types,
+        "basis_types_by_rule_id": _basis_types_by_rule_id(decisions_by_rule),
+        "authority_family_ids_by_rule_id": _authority_family_ids_by_rule_id(decisions_by_rule),
+        "adjudicated_rule_ids": _adjudicated_rule_ids(decisions_by_rule),
+        "adjudication_summary": adjudication_summary,
         "required_artifact_gaps": required_artifact_gaps,
         "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
         "generated_error": generated_error,
@@ -594,8 +744,10 @@ def _write_authority_universe(
     base_rule_pack_path: Path,
     base_rule_pack: dict[str, Any],
     rules: list[dict[str, Any]],
+    authority_family_template_set: dict[str, Any] | None,
+    authority_family_templates: list[dict[str, Any]],
 ) -> Path:
-    candidates = [
+    rule_candidates = [
         _candidate_from_rule(
             source_set_id=source_set_id,
             base_rule_pack=base_rule_pack,
@@ -603,6 +755,15 @@ def _write_authority_universe(
         )
         for rule in rules
     ]
+    authority_family_candidates = [
+        _candidate_from_authority_family_template(
+            source_set_id=source_set_id,
+            template_set=authority_family_template_set or {},
+            template=template,
+        )
+        for template in authority_family_templates
+    ]
+    candidates = [*rule_candidates, *authority_family_candidates]
     without_hash = {
         "schema_version": "authority-universe-snapshot-v0",
         "created_at": _utc_now(),
@@ -611,12 +772,23 @@ def _write_authority_universe(
         "base_rule_pack_id": base_rule_pack.get("rule_pack_id"),
         "base_rule_pack_version": base_rule_pack.get("version"),
         "base_rule_pack_sha256": sha256_file(base_rule_pack_path),
-        "catalog_sha256": _stable_sha256({"source_set_id": source_set_id, "rules": _rule_ids(rules)}),
+        "catalog_sha256": _stable_sha256(
+            {
+                "source_set_id": source_set_id,
+                "rules": _rule_ids(rules),
+                "authority_family_rule_ids": _template_rule_ids(authority_family_templates),
+            }
+        ),
         "source_claims_sha256": None,
         "rule_claim_links_sha256": None,
         "forest_plan_component_inventory_sha256": None,
         "artifact_paths": {
             "base_rule_pack_path": str(base_rule_pack_path),
+            "authority_family_templates_path": str(
+                authority_family_template_set.get("_path")
+            )
+            if authority_family_template_set and authority_family_template_set.get("_path")
+            else None,
         },
         "validation": {"passed": True, "checks": []},
         "candidate_authorities": candidates,
@@ -633,7 +805,12 @@ def _write_authority_universe(
             "review_id": review_id,
             "source_set_id": source_set_id,
             "candidate_authority_count": len(candidates),
-            "rule_template_candidate_count": len(candidates),
+            "rule_template_candidate_count": len(rule_candidates),
+            "authority_family_rule_template_candidate_count": len(authority_family_candidates),
+            "candidate_type_counts": {
+                "rule_template": len(rule_candidates),
+                "authority_family_rule_template": len(authority_family_candidates),
+            },
             "validation_passed": True,
         },
     }
@@ -795,6 +972,192 @@ def _candidate_from_rule(
     }
 
 
+def _candidate_from_authority_family_template(
+    *,
+    source_set_id: str,
+    template_set: dict[str, Any],
+    template: dict[str, Any],
+) -> dict[str, Any]:
+    rule_id = str(template.get("rule_id") or template.get("template_id") or "")
+    family_id = str(template.get("authority_family_id") or "")
+    source_record_id = str(
+        template.get("authority_source_record_id")
+        or (_strings(template.get("source_record_ids"))[:1] or [""])[0]
+    )
+    source_record_ids = _dedupe([source_record_id, *_strings(template.get("source_record_ids"))])
+    document_role = str(
+        template.get("authority_document_role")
+        or (template.get("source_filters") or {}).get("document_role")
+        or template.get("authority_category")
+        or "source"
+    )
+    authority_category = str(template.get("authority_category") or document_role)
+    positive_groups = _authority_family_positive_trigger_groups(template)
+    negative_groups = _authority_family_negative_trigger_groups(template)
+    source_role_filters = {
+        "source_record_ids": source_record_ids,
+        "document_roles": [document_role],
+        "authority_categories": [authority_category],
+        "primary_source_record_id": source_record_id,
+    }
+    package_section_filters = {
+        "package_query": str(template.get("package_query") or rule_id),
+        "package_terms": _strings(template.get("package_terms")),
+        "package_section_terms": _strings(template.get("package_section_terms")),
+        "preferred_section_families": _strings(template.get("package_section_families")),
+    }
+    return {
+        "candidate_authority_id": (
+            "authority-family-template:"
+            f"{template_set.get('template_set_id')}:{template_set.get('version')}:"
+            f"{family_id}:{rule_id}"
+        ),
+        "candidate_authority_type": "authority_family_rule_template",
+        "source_set_id": source_set_id,
+        "authority_family_id": family_id,
+        "authority_category": authority_category,
+        "authority_document_role": document_role,
+        "source_record_ids": source_record_ids,
+        "source_records": [
+            {
+                "source_record_id": record_id,
+                "title": template.get("title"),
+                "document_role": document_role,
+                "citation_label": f"{record_id} | {template.get('title') or rule_id}",
+            }
+            for record_id in source_record_ids
+        ],
+        "required_package_fact_types": _strings(template.get("package_fact_types")),
+        "positive_trigger_groups": positive_groups,
+        "negative_trigger_groups": negative_groups,
+        "source_role_filters": source_role_filters,
+        "package_section_filters": package_section_filters,
+        "required_source_evidence": {
+            "source_record_ids": source_record_ids,
+            "primary_source_record_id": source_record_id,
+            "supporting_source_record_ids": _strings(template.get("supporting_source_record_ids")),
+            "excluded_source_record_ids": _strings(template.get("excluded_source_record_ids")),
+            "document_roles": [document_role],
+            "source_role_filters": source_role_filters,
+            "requires_catalog_record": True,
+            "requires_artifact_sha256": True,
+            "requires_source_record": True,
+            "requires_source_claim_linkage": False,
+            "source_evidence_requirements": _strings(
+                template.get("source_evidence_requirements")
+            ),
+        },
+        "retrieval_contract": {
+            "contract_type": "authority_family_rule_template_retrieval",
+            "query_plan_id": f"retrieval-plan:authority-family-template:{rule_id}",
+            "required_query_types": [
+                "exact_keyword",
+                "bm25",
+                "metadata_filter",
+                "package_section",
+                "source_role",
+            ],
+            "optional_query_types": ["vector"],
+            "source_queries": _strings([template.get("source_query")]),
+            "package_queries": _strings([template.get("package_query")]),
+            "source_role_filters": source_role_filters,
+            "package_section_filters": package_section_filters,
+            "fused_ranking_strategy": "reciprocal_rank_fusion",
+            "requires_selected_and_rejected_results": True,
+            "searched_index_hash_required": True,
+        },
+        "graph_expansion_contract": {
+            "contract_type": "authority_family_rule_template_graph_expansion",
+            "start_node_types": ["authority_family_rule_template", "source_record", "authority"],
+            "relationship_types": [
+                "source_record",
+                "authority_category",
+                "source_claim",
+                "rule_claim_link",
+                "package_fact",
+                "evidence_span",
+            ],
+            "max_depth": 2,
+            "requires_path_trace": True,
+            "neighbor_filters": {
+                "rule_ids": [rule_id],
+                "authority_family_ids": [family_id],
+                "source_record_ids": source_record_ids,
+                "authority_categories": [authority_category],
+            },
+        },
+        "dependency_contract": _authority_family_dependency_contract(template),
+        "search_coverage_requirements": _authority_family_search_coverage_requirements(
+            template=template,
+            positive_trigger_groups=positive_groups,
+            negative_trigger_groups=negative_groups,
+        ),
+        "rule_template": {
+            "base_rule_pack_id": template_set.get("base_rule_pack_id"),
+            "base_rule_pack_version": template_set.get("base_rule_pack_version"),
+            "authority_family_template_set_id": template_set.get("template_set_id"),
+            "authority_family_template_set_version": template_set.get("version"),
+            "template_id": template.get("template_id"),
+            "authority_family_id": family_id,
+            "rule_id": rule_id,
+            "title": template.get("title"),
+            "question": template.get("question"),
+            "requirement": template.get("requirement"),
+            "severity": template.get("severity"),
+            "applicability_mode": template.get("applicability_mode"),
+            "authority_source_record_id": source_record_id,
+            "authority_category": authority_category,
+            "package_query": template.get("package_query"),
+            "package_terms": _strings(template.get("package_terms")),
+            "package_section_terms": _strings(template.get("package_section_terms")),
+            "applies_if_package_terms": _strings(template.get("applies_if_package_terms")),
+            "applies_if_package_term_groups": _string_groups(
+                template.get("applies_if_package_term_groups")
+            ),
+            "does_not_apply_if_package_terms": _strings(
+                template.get("does_not_apply_if_package_terms")
+            ),
+            "source_query": template.get("source_query"),
+            "source_filters": (
+                template.get("source_filters")
+                if isinstance(template.get("source_filters"), dict)
+                else {}
+            ),
+            "evidence_expectation": template.get("evidence_expectation"),
+        },
+        "source_evidence_availability": {
+            "available": True,
+            "catalog_record_present": True,
+            "artifact_sha256_present": True,
+            "source_claim_link_count": 0,
+            "rule_claim_gap_count": 0,
+        },
+        "deterministic_applicability_test_contract": {
+            "contract_type": "rule_template",
+            "candidate_authority_type": "authority_family_rule_template",
+            "authority_family_id": family_id,
+            "applicability_mode": template.get("applicability_mode"),
+            "baseline_required": False,
+            "package_query": template.get("package_query"),
+            "package_terms": _strings(template.get("package_terms")),
+            "positive_package_terms": _strings(template.get("applies_if_package_terms")),
+            "positive_package_term_groups": _string_groups(
+                template.get("applies_if_package_term_groups")
+            ),
+            "negative_package_terms": _strings(template.get("does_not_apply_if_package_terms")),
+            "source_query": template.get("source_query"),
+            "source_filters": (
+                template.get("source_filters")
+                if isinstance(template.get("source_filters"), dict)
+                else {}
+            ),
+            "evidence_expectation": template.get("evidence_expectation"),
+        },
+        "source_claim_link_ids": [],
+        "rule_claim_gap_ids": [],
+    }
+
+
 def _write_package_cache(
     *,
     review_dir: Path,
@@ -886,20 +1249,23 @@ def _case_source_chunks(
     case: dict[str, Any],
     inherited_source_chunks: list[dict[str, Any]],
     rules: list[dict[str, Any]],
+    authority_family_templates: list[dict[str, Any]],
     source_set_id: str,
 ) -> list[dict[str, Any]]:
     explicit = _source_chunk_specs(case.get("source_chunks"))
     specs = explicit or inherited_source_chunks
     by_source = {str(spec.get("source_record_id")): spec for spec in specs}
     chunks = []
+    emitted_source_record_ids: set[str] = set()
     for rule in rules:
         source_record_id = str(
             rule.get("authority_source_record_id")
             or (rule.get("source_filters") or {}).get("source_record_id")
             or ""
         )
-        if not source_record_id:
+        if not source_record_id or source_record_id in emitted_source_record_ids:
             continue
+        emitted_source_record_ids.add(source_record_id)
         spec = by_source.get(source_record_id, {})
         text = str(
             spec.get("text")
@@ -921,6 +1287,43 @@ def _case_source_chunks(
                 source_record_id=source_record_id,
                 document_role=role,
                 title=str(spec.get("title") or rule.get("title") or source_record_id),
+                text=text,
+            )
+        )
+    for template in authority_family_templates:
+        source_record_id = str(
+            template.get("authority_source_record_id")
+            or (_strings(template.get("source_record_ids"))[:1] or [""])[0]
+        )
+        if not source_record_id or source_record_id in emitted_source_record_ids:
+            continue
+        emitted_source_record_ids.add(source_record_id)
+        spec = by_source.get(source_record_id, {})
+        source_filters = (
+            template.get("source_filters")
+            if isinstance(template.get("source_filters"), dict)
+            else {}
+        )
+        role = str(
+            spec.get("document_role")
+            or template.get("authority_document_role")
+            or source_filters.get("document_role")
+            or template.get("authority_category")
+            or "source"
+        )
+        text = str(
+            spec.get("text")
+            or template.get("source_query")
+            or template.get("requirement")
+            or template.get("title")
+            or source_record_id
+        )
+        chunks.append(
+            _source_chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                document_role=role,
+                title=str(spec.get("title") or template.get("title") or source_record_id),
                 text=text,
             )
         )
@@ -995,19 +1398,70 @@ def _read_case_artifacts(applicability_dir: Path) -> dict[str, Any]:
         "generated_validation": _read_json_if_exists(
             applicability_dir / "generated_rule_pack_validation.json"
         ),
+        "applicability_adjudication_template": _read_json_if_exists(
+            applicability_dir / "applicability_adjudication_template.json"
+        ),
+        "applicability_adjudication_eval": _read_json_if_exists(
+            applicability_dir / "applicability_adjudication_eval.json"
+        ),
+        "applicability_adjudication_apply": _read_json_if_exists(
+            applicability_dir / "applicability_adjudication_apply.json"
+        ),
     }
 
 
 def _selected_rules(base_rule_pack: dict[str, Any], case: dict[str, Any]) -> list[dict[str, Any]]:
-    rule_ids = _strings(case.get("candidate_rule_ids")) or _strings(case.get("rule_ids"))
+    if "candidate_rule_ids" in case:
+        rule_ids = _strings(case.get("candidate_rule_ids"))
+    elif "rule_ids" in case:
+        rule_ids = _strings(case.get("rule_ids"))
+    else:
+        rule_ids = []
     rules = [rule for rule in base_rule_pack.get("rules") or [] if isinstance(rule, dict)]
-    if not rule_ids:
+    if "candidate_rule_ids" not in case and "rule_ids" not in case:
         return rules
     wanted = set(rule_ids)
     selected = [rule for rule in rules if str(rule.get("id") or "") in wanted]
     missing = sorted(wanted - {str(rule.get("id") or "") for rule in selected})
     if missing:
         raise ValueError(f"Applicability eval case references unknown rule IDs: {missing}")
+    return selected
+
+
+def _selected_authority_family_templates(
+    template_set: dict[str, Any] | None,
+    case: dict[str, Any],
+) -> list[dict[str, Any]]:
+    rule_ids = set(_strings(case.get("candidate_authority_family_rule_ids")))
+    family_ids = set(_strings(case.get("candidate_authority_family_ids")))
+    template_ids = set(_strings(case.get("candidate_authority_family_template_ids")))
+    if not (rule_ids or family_ids or template_ids):
+        return []
+    if not template_set:
+        raise ValueError("Applicability eval case references authority-family templates, but no template set is loaded.")
+    templates = [item for item in template_set.get("templates") or [] if isinstance(item, dict)]
+    selected = [
+        template
+        for template in templates
+        if (
+            str(template.get("rule_id") or "") in rule_ids
+            or str(template.get("authority_family_id") or "") in family_ids
+            or str(template.get("template_id") or "") in template_ids
+        )
+    ]
+    selected_rule_ids = {str(template.get("rule_id") or "") for template in selected}
+    selected_family_ids = {str(template.get("authority_family_id") or "") for template in selected}
+    selected_template_ids = {str(template.get("template_id") or "") for template in selected}
+    missing = {
+        "rule_ids": sorted(rule_ids - selected_rule_ids),
+        "authority_family_ids": sorted(family_ids - selected_family_ids),
+        "template_ids": sorted(template_ids - selected_template_ids),
+    }
+    if any(missing.values()):
+        raise ValueError(
+            "Applicability eval case references unknown authority-family templates: "
+            f"{missing}"
+        )
     return selected
 
 
@@ -1164,6 +1618,47 @@ def _rules_match_package_sections(
     )
 
 
+def _rules_match_basis_types(
+    expected_by_rule: dict[str, str],
+    decisions_by_rule: dict[str, dict[str, Any]],
+) -> bool:
+    if not expected_by_rule:
+        return True
+    return all(
+        str((decisions_by_rule.get(rule_id) or {}).get("basis_type") or "") == expected
+        for rule_id, expected in expected_by_rule.items()
+    )
+
+
+def _basis_types_by_rule_id(
+    decisions_by_rule: dict[str, dict[str, Any]],
+) -> dict[str, str]:
+    return {
+        rule_id: str(decision.get("basis_type") or "")
+        for rule_id, decision in sorted(decisions_by_rule.items())
+    }
+
+
+def _authority_family_ids_by_rule_id(
+    decisions_by_rule: dict[str, dict[str, Any]],
+) -> dict[str, str]:
+    family_ids = {}
+    for rule_id, decision in sorted(decisions_by_rule.items()):
+        rule_template = decision.get("rule_template")
+        if isinstance(rule_template, dict) and rule_template.get("authority_family_id"):
+            family_ids[rule_id] = str(rule_template["authority_family_id"])
+    return family_ids
+
+
+def _adjudicated_rule_ids(decisions_by_rule: dict[str, dict[str, Any]]) -> list[str]:
+    return sorted(
+        rule_id
+        for rule_id, decision in decisions_by_rule.items()
+        if str(decision.get("basis_type") or "") == "human_adjudication"
+        or bool(decision.get("human_adjudication_refs"))
+    )
+
+
 def _rules_have_decision_field(
     rule_ids: list[str],
     decisions_by_rule: dict[str, dict[str, Any]],
@@ -1275,6 +1770,7 @@ def _failure_taxonomy(
             "source_record_alignment_matches": "source_record_alignment_mismatch",
             "document_role_alignment_matches": "document_role_alignment_mismatch",
             "package_section_alignment_matches": "package_section_alignment_mismatch",
+            "basis_type_alignment_matches": "adjudication_mismatch",
             "package_fact_types_match": "package_fact_gap",
             "retrieval_trace_coverage_matches": "retrieval_trace_gap",
             "non_applicable_coverage_supported": "search_coverage_gap",
@@ -1300,6 +1796,75 @@ def _failure_category_counts(case_results: list[dict[str, Any]]) -> dict[str, in
     for case in case_results:
         counts.update(case.get("failure_category_counts") or {})
     return dict(sorted(counts.items()))
+
+
+def _authority_family_template_coverage(
+    *,
+    eval_payload: dict[str, Any],
+    template_set: dict[str, Any] | None,
+    case_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    templates = [
+        template
+        for template in (template_set or {}).get("templates", [])
+        if isinstance(template, dict)
+    ]
+    high_priority_family_ids = _strings(
+        eval_payload.get("high_priority_authority_family_ids")
+    ) or sorted(
+        str(template.get("authority_family_id") or "")
+        for template in templates
+        if template.get("authority_family_id")
+    )
+    family_by_rule_id = {
+        str(template.get("rule_id") or ""): str(template.get("authority_family_id") or "")
+        for template in templates
+        if template.get("rule_id") and template.get("authority_family_id")
+    }
+    positive: dict[str, list[str]] = {}
+    negative: dict[str, list[str]] = {}
+    unresolved: dict[str, list[str]] = {}
+    adjudicated: dict[str, list[str]] = {}
+    coverage_tags: set[str] = set()
+    for case in case_results:
+        coverage_tags.update(_strings(case.get("coverage_tags")))
+        for rule_id, family_id in family_by_rule_id.items():
+            status = (case.get("expected_statuses") or {}).get(rule_id)
+            if status == "applicable":
+                positive.setdefault(family_id, []).append(str(case.get("id")))
+            elif status == "not_applicable":
+                negative.setdefault(family_id, []).append(str(case.get("id")))
+            elif status in {"unresolved", "needs_adjudication"}:
+                unresolved.setdefault(family_id, []).append(str(case.get("id")))
+        for rule_id in _strings(case.get("adjudicated_rule_ids")):
+            family_id = family_by_rule_id.get(rule_id)
+            if family_id:
+                adjudicated.setdefault(family_id, []).append(str(case.get("id")))
+    required_tags = _strings(eval_payload.get("required_real_package_coverage_tags"))
+    missing_positive = sorted(set(high_priority_family_ids) - set(positive))
+    missing_negative = sorted(set(high_priority_family_ids) - set(negative))
+    missing_tags = sorted(set(required_tags) - coverage_tags)
+    return {
+        "schema_version": "authority-family-template-eval-coverage-v0",
+        "high_priority_family_ids": sorted(high_priority_family_ids),
+        "high_priority_family_count": len(high_priority_family_ids),
+        "positive_covered_family_ids": sorted(positive),
+        "positive_covered_family_count": len(positive),
+        "negative_covered_family_ids": sorted(negative),
+        "negative_covered_family_count": len(negative),
+        "unresolved_covered_family_ids": sorted(unresolved),
+        "unresolved_covered_family_count": len(unresolved),
+        "adjudicated_covered_family_ids": sorted(adjudicated),
+        "adjudicated_covered_family_count": len(adjudicated),
+        "required_real_package_coverage_tags": sorted(required_tags),
+        "real_package_coverage_tags": sorted(coverage_tags),
+        "missing_positive_family_ids": missing_positive,
+        "missing_negative_family_ids": missing_negative,
+        "missing_real_package_coverage_tags": missing_tags,
+        "positive_negative_coverage_passed": not missing_positive and not missing_negative,
+        "real_package_coverage_passed": not missing_tags,
+        "passed": not missing_positive and not missing_negative and not missing_tags,
+    }
 
 
 def _check_gold_identity(gold: dict[str, Any]) -> dict[str, Any]:
@@ -1405,6 +1970,145 @@ def _string_list_mapping(value: Any) -> dict[str, list[str]]:
         for key, item in value.items()
         if str(key or "").strip() and _strings(item)
     }
+
+
+def _string_mapping(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        return {}
+    return {
+        str(key): str(item)
+        for key, item in value.items()
+        if str(key or "").strip() and str(item or "").strip()
+    }
+
+
+def _string_groups(value: Any) -> list[list[str]]:
+    if not isinstance(value, list):
+        return []
+    return [
+        _strings(group)
+        for group in value
+        if isinstance(group, list) and _strings(group)
+    ]
+
+
+def _dedupe(values: list[str]) -> list[str]:
+    seen = set()
+    result = []
+    for value in values:
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+    return result
+
+
+def _template_rule_ids(templates: list[dict[str, Any]]) -> list[str]:
+    return sorted(str(template.get("rule_id") or "") for template in templates if template.get("rule_id"))
+
+
+def _load_authority_family_template_set(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    if not path.exists():
+        raise FileNotFoundError(f"Missing authority-family template file: {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Authority-family template file must be a JSON object.")
+    payload["_path"] = str(path)
+    return payload
+
+
+def _authority_family_positive_trigger_groups(template: dict[str, Any]) -> list[list[str]]:
+    groups = _string_groups(template.get("applies_if_package_term_groups"))
+    terms = _strings(template.get("applies_if_package_terms"))
+    if terms:
+        groups.append(terms)
+    if not groups:
+        package_terms = _strings(template.get("package_terms"))
+        if package_terms:
+            groups.append(package_terms)
+    return _dedupe_groups(groups)
+
+
+def _authority_family_negative_trigger_groups(template: dict[str, Any]) -> list[list[str]]:
+    return _dedupe_groups(
+        [[term] for term in _strings(template.get("does_not_apply_if_package_terms"))]
+    )
+
+
+def _dedupe_groups(groups: list[list[str]]) -> list[list[str]]:
+    seen = set()
+    result = []
+    for group in groups:
+        clean = tuple(_strings(group))
+        if not clean or clean in seen:
+            continue
+        seen.add(clean)
+        result.append(list(clean))
+    return result
+
+
+def _authority_family_dependency_contract(template: dict[str, Any]) -> dict[str, Any]:
+    dependency = (
+        template.get("dependency_contract")
+        if isinstance(template.get("dependency_contract"), dict)
+        else {}
+    )
+    supersession = (
+        template.get("supersession")
+        if isinstance(template.get("supersession"), dict)
+        else {}
+    )
+    return {
+        "dependency_rule_ids": _strings(dependency.get("dependency_rule_ids")),
+        "dependency_family_ids": _strings(dependency.get("dependency_family_ids")),
+        "exception_rule_ids": _strings(dependency.get("exception_rule_ids")),
+        "exception_family_ids": _strings(dependency.get("exception_family_ids")),
+        "supersedes_rule_ids": _strings(dependency.get("supersedes_rule_ids")),
+        "superseded_by_rule_ids": _strings(dependency.get("superseded_by_rule_ids")),
+        "superseded_by_family_ids": _strings(
+            dependency.get("superseded_by_family_ids")
+        ) or _strings([supersession.get("replacement_family_id")]),
+        "supporting_source_record_ids": _strings(template.get("supporting_source_record_ids")),
+        "excluded_source_record_ids": _strings(template.get("excluded_source_record_ids")),
+        "supersession": supersession or None,
+    }
+
+
+def _authority_family_search_coverage_requirements(
+    *,
+    template: dict[str, Any],
+    positive_trigger_groups: list[list[str]],
+    negative_trigger_groups: list[list[str]],
+) -> list[dict[str, Any]]:
+    base = {
+        "required_artifacts": [
+            "package_fact_graph",
+            "applicability_retrieval_trace",
+            "applicability_graph_trace",
+            "search_coverage_certificates",
+        ],
+        "required_query_types": ["exact_keyword", "bm25", "metadata_filter", "package_section"],
+        "requires_searched_index_hash": True,
+        "required_package_fact_types": _strings(template.get("package_fact_types")),
+    }
+    requirements = [
+        {
+            **base,
+            "coverage_class": "authority_family_positive_trigger_miss",
+            "required_trigger_groups": positive_trigger_groups,
+        }
+    ]
+    if negative_trigger_groups:
+        requirements.append(
+            {
+                **base,
+                "coverage_class": "authority_family_explicit_negative_trigger",
+                "required_trigger_groups": negative_trigger_groups,
+            }
+        )
+    return requirements
 
 
 def _rate(numerator: int, denominator: int) -> float:

@@ -86,6 +86,8 @@ def test_authority_inventory_maps_every_rule_pack_rule_once() -> None:
     assert inventory["summary"]["families_confirmed_by_milestone_2_source_currentness"] == 21
     assert inventory["summary"]["families_requiring_milestone_3_rule_template_work"] == 0
     assert inventory["summary"]["families_confirmed_by_milestone_3_rule_templates"] == 19
+    assert inventory["summary"]["families_requiring_milestone_4_applicability_eval"] == 0
+    assert inventory["summary"]["families_confirmed_by_milestone_4_applicability_eval"] == 19
     assert inventory["source_currentness_gate"]["status"] == "passed"
 
     for rule in rule_pack["rules"]:

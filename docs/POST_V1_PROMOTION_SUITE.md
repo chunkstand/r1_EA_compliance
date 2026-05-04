@@ -44,7 +44,10 @@ The result separates three statuses:
   strict mode also requires `expansion_ready`.
 
 The default manifest keeps two open real-package expansion slots. Those slots do not block the
-current V1 promotion claim, but they make broader readiness gaps visible to future agents.
+current V1 promotion claim, but they make broader readiness gaps visible to future agents. Current
+promotion does require the Milestone 4 applicability seed and gold eval artifacts that prove
+positive, negative, unresolved, and replay-adjudicated coverage for the expanded authority-family
+templates.
 
 ## Failure Taxonomy
 
@@ -75,5 +78,8 @@ The suite was run locally on 2026-05-04 after implementation:
 - `open_expansion_slot_count=2`
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
-`phase-eval --review-id`. The remaining expansion gaps are the two intentionally open real-package
-fixture slots; they are not current-promotion blockers unless `--strict-expansion` is used.
+`phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
+authority-family templates with positive and negative cases, and the gold eval includes unresolved
+and replay-adjudicated authority-family profiles. The remaining expansion gaps are the two
+intentionally open real-package fixture slots; they are not current-promotion blockers unless
+`--strict-expansion` is used.

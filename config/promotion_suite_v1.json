@@ -235,6 +235,89 @@
           "failure_category": "stale_artifact"
         }
       ]
+    },
+    {
+      "id": "applicability_eval_authority_family_coverage",
+      "label": "Applicability eval authority-family coverage",
+      "path": "reviews/applicability_eval/applicability_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "applicability_miss",
+      "checks": [
+        {
+          "name": "applicability_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "applicability_eval_case_count",
+          "json_path": "case_count",
+          "min": 5
+        },
+        {
+          "name": "authority_family_high_priority_count",
+          "json_path": "authority_family_template_coverage.high_priority_family_count",
+          "equals": 19
+        },
+        {
+          "name": "authority_family_positive_coverage",
+          "json_path": "authority_family_template_coverage.positive_covered_family_count",
+          "equals": 19
+        },
+        {
+          "name": "authority_family_negative_coverage",
+          "json_path": "authority_family_template_coverage.negative_covered_family_count",
+          "equals": 19
+        },
+        {
+          "name": "authority_family_unresolved_coverage",
+          "json_path": "authority_family_template_coverage.unresolved_covered_family_count",
+          "min": 1
+        },
+        {
+          "name": "authority_family_real_package_tags",
+          "json_path": "authority_family_template_coverage.real_package_coverage_passed",
+          "equals": true
+        }
+      ]
+    },
+    {
+      "id": "applicability_gold_eval_authority_family_adjudication",
+      "label": "Applicability gold eval authority-family adjudication coverage",
+      "path": "reviews/applicability_gold_eval/applicability_gold_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "adjudication_needed",
+      "checks": [
+        {
+          "name": "applicability_gold_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "applicability_gold_eval_promotion_ready",
+          "json_path": "promotion_ready",
+          "equals": true
+        },
+        {
+          "name": "applicability_gold_eval_case_count",
+          "json_path": "case_count",
+          "min": 5
+        },
+        {
+          "name": "applicability_gold_eval_unresolved_profile",
+          "json_path": "profile_counts.unresolved",
+          "min": 1
+        },
+        {
+          "name": "applicability_gold_eval_adjudicated_profile",
+          "json_path": "profile_counts.adjudicated",
+          "min": 1
+        },
+        {
+          "name": "authority_family_adjudicated_coverage",
+          "json_path": "authority_family_template_coverage.adjudicated_covered_family_count",
+          "min": 1
+        }
+      ]
     }
   ],
   "expansion_slots": [

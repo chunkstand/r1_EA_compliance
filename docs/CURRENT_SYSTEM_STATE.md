@@ -72,7 +72,8 @@ Current inventory summary:
 - Families still requiring Milestone 2 source-currentness confirmation: `0`
 - Families confirmed or documented by the Milestone 2 source-currentness gate: `21`
 - Families requiring Milestone 3 rule-template work after currentness: `0`
-- Families requiring Milestone 4 applicability eval expansion: `19`
+- Families confirmed by Milestone 4 applicability eval expansion: `19`
+- Families requiring Milestone 4 applicability eval expansion: `0`
 
 The only current `candidate` family is environmental justice and civil-rights authority coverage;
 Milestone 2 documents a non-addition for revoked environmental-justice executive-order text and
@@ -106,9 +107,8 @@ Use `--authority-family-templates-path` to point at a replacement template set, 
 expanded authority-family templates.
 
 The templates map Clean Water Act, floodplain, tribal consultation, wilderness/designated-area, and
-land-exchange package-fact cues to active authority families. Milestone 4 remains responsible for
-independent positive/negative package fixtures and adjudication-quality scoring for these expanded
-families.
+land-exchange package-fact cues to active authority families. Milestone 4 now supplies independent
+positive/negative package fixtures and adjudication-quality scoring for these expanded families.
 
 ## Authority Currentness Gate
 
@@ -144,8 +144,9 @@ Report summary:
 This is a source-currentness and supersession gate. It proves that active families have
 catalog-confirmed current source coverage, that reserved or superseded authority cannot silently
 satisfy current authority requirements, and that the one candidate family has an explicit
-non-addition decision. Milestone 3 now supplies the semantic rule-template promotion layer; the
-current remaining authority-universe gap is Milestone 4 applicability eval/adjudication coverage.
+non-addition decision. Milestone 3 supplies the semantic rule-template promotion layer, and
+Milestone 4 supplies independent applicability eval/adjudication coverage for that expanded
+authority universe.
 
 ## Verified State Snapshot
 
@@ -482,7 +483,14 @@ that generated pack plus current applicability validation, generated-pack valida
 non-applicable-authority, search-coverage, package, source-set, and provenance artifacts. The base
 rule pack remains available only through an explicit non-reviewer-ready diagnostic path.
 `applicability-eval` and `applicability-gold-eval` now score applicability decision quality before
-compliance quality is promoted.
+compliance quality is promoted. Milestone 4 expands those evals across the `19` authority-family
+templates added in Milestone 3. The seed eval now includes positive and negative cases for every
+high-priority authority family, an unresolved weak-signal case, and the
+`config/fixtures/applicability/region1-land-exchange-expanded-authority.txt` package fixture
+covering land exchange, water/wetlands, cultural/tribal, wildlife/species, designated-area, and
+forest-plan consistency triggers. The gold eval now requires positive, mixed, negative,
+unresolved, and replay-adjudicated profiles, including a human-adjudication replay for a weak Clean
+Water Act authority-family decision.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review

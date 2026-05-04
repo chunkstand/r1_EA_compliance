@@ -63,17 +63,31 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_source_record_ids_by_rule_id": {
-        "nepa_statute_chapter_55": ["R1EA-001"],
-        "esa_section_7": ["R1EA-065"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ]
       },
       "expected_document_roles_by_rule_id": {
-        "nepa_statute_chapter_55": ["law"],
-        "esa_section_7": ["law"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ]
       },
       "expected_package_section_families_by_rule_id": {
-        "esa_section_7": ["consultation"]
+        "esa_section_7": [
+          "consultation"
+        ]
       },
       "adjudication": {
         "status": "adjudicated",
@@ -114,17 +128,31 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_source_record_ids_by_rule_id": {
-        "nepa_statute_chapter_55": ["R1EA-001"],
-        "esa_section_7": ["R1EA-065"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ]
       },
       "expected_document_roles_by_rule_id": {
-        "nepa_statute_chapter_55": ["law"],
-        "esa_section_7": ["law"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ]
       },
       "expected_package_section_families_by_rule_id": {
-        "esa_section_7": ["consultation"]
+        "esa_section_7": [
+          "consultation"
+        ]
       },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
@@ -168,14 +196,26 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_source_record_ids_by_rule_id": {
-        "nepa_statute_chapter_55": ["R1EA-001"],
-        "esa_section_7": ["R1EA-065"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ]
       },
       "expected_document_roles_by_rule_id": {
-        "nepa_statute_chapter_55": ["law"],
-        "esa_section_7": ["law"],
-        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ]
       },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
@@ -191,6 +231,125 @@
         ],
         "adjudicated_at": "2026-05-04"
       }
+    },
+    {
+      "id": "gold-expanded-authority-unresolved",
+      "profile": "unresolved",
+      "coverage_tags": [
+        "unresolved_adjudication",
+        "water_wetlands"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a proposed authorization.\n\nEnvironmental Consequences\n\nA Clean Water Act Section 404 permit may be required if wetlands are confirmed during field verification.",
+      "expected_validation_passed": false,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "clean_water_act_wotus_permits_authority_template": "needs_adjudication"
+      },
+      "expected_basis_types_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "adjudication": {
+        "status": "adjudicated",
+        "rationale": "The gold expectation is an unresolved applicability decision because the package uses weak conditional water-permit wording.",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "adjudicated_at": "2026-05-04"
+      }
+    },
+    {
+      "id": "gold-expanded-authority-adjudicated",
+      "profile": "adjudicated",
+      "coverage_tags": [
+        "adjudicated_decision",
+        "water_wetlands"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a proposed authorization.\n\nEnvironmental Consequences\n\nA Clean Water Act Section 404 permit may be required if wetlands are confirmed during field verification.",
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-04T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "source_type": "applicability-gold-eval",
+        "rationale": "Gold adjudication resolves the weak water-permit signal as applicable for replay coverage.",
+        "items_by_rule_id": {
+          "clean_water_act_wotus_permits_authority_template": {
+            "final_status": "applicable",
+            "disposition": "human_applicable",
+            "rationale": "Wetlands and possible Section 404 permitting are treated as applicable after human adjudication.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        }
+      },
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "clean_water_act_wotus_permits_authority_template": "applicable"
+      },
+      "expected_basis_types_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_count": 1,
+      "expected_retrieval_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "adjudication": {
+        "status": "adjudicated",
+        "rationale": "The weak water-permit signal is resolved through replayable applicability adjudication.",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "adjudicated_at": "2026-05-04"
+      }
     }
+  ],
+  "high_priority_authority_family_ids": [
+    "clean_air_act_conformity_air_quality",
+    "clean_water_act_wotus_permits",
+    "cultural_resource_protection_and_state_shpo_sources",
+    "eagle_efh_and_special_wildlife_sources",
+    "floodplain_management_eo11988",
+    "forest_service_planning_handbook_amendments",
+    "grassland_bankhead_jones_authorities",
+    "hazardous_materials_site_condition",
+    "invasive_pesticide_soils_farmland_drinking_water",
+    "land_exchange_fs_policy_and_project_references",
+    "land_exchange_regulatory_requirements",
+    "land_exchange_statutory_authorities",
+    "minerals_energy_authorities",
+    "region1_forest_plan_source_records",
+    "roads_access_special_use_action_authorities",
+    "species_supporting_sources_and_overlays",
+    "tribal_consultation_trust_sacred_sites",
+    "vegetation_wildfire_forest_health_authorities",
+    "wilderness_wsr_trails_designated_areas"
+  ],
+  "required_real_package_coverage_tags": [
+    "land_exchange",
+    "water_wetlands",
+    "cultural_tribal",
+    "wildlife_species",
+    "designated_area",
+    "forest_plan_consistency"
   ]
 }

@@ -156,7 +156,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Air Act, general conformity, smoke, and air-quality coordination family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Air Act, general conformity, smoke, and air-quality coordination family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "clean_air"
       ],
@@ -265,7 +265,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Water Act, waters of the United States, and water permit/certification sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Water Act, waters of the United States, and water permit/certification sources family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "clean_water"
       ],
@@ -409,7 +409,7 @@
         "geography",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "nhpa_cultural",
         "tribal_trust",
@@ -547,7 +547,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bald and Golden Eagle Protection Act, EFH, and special wildlife sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bald and Golden Eagle Protection Act, EFH, and special wildlife sources family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "wildlife_birds"
       ],
@@ -796,7 +796,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Executive Order 11988 floodplain management family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Executive Order 11988 floodplain management family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "floodplain_wetlands_eos"
       ],
@@ -1120,7 +1120,7 @@
         "nepa_level",
         "overlay"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service planning handbook and amendment support family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service planning handbook and amendment support family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "core_nepa",
         "nfma_forest_plan"
@@ -1205,7 +1205,7 @@
         "geography",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bankhead-Jones and National Grassland administration authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bankhead-Jones and National Grassland administration authorities family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -1306,7 +1306,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "hazardous_site_condition"
       ],
@@ -1414,7 +1414,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "invasive_soil_watershed_common_region1"
       ],
@@ -1536,7 +1536,7 @@
         "public_involvement",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service exchange policy, appraisal/title guidance, and project-reference records family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service exchange policy, appraisal/title guidance, and project-reference records family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1672,7 +1672,7 @@
         "public_involvement",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed 36 CFR part 254 land-exchange procedural and valuation requirements family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed 36 CFR part 254 land-exchange procedural and valuation requirements family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1823,7 +1823,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -2032,7 +2032,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Minerals and energy-development authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Minerals and energy-development authorities family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -2763,7 +2763,7 @@
         "overlay",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Region 1 forest-plan and overlay source records family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Region 1 forest-plan and overlay source records family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "nfma_forest_plan"
       ],
@@ -3025,7 +3025,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -3144,7 +3144,7 @@
         "overlay",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Species source-support records, sensitive species pages, and lynx/LMP support family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Species source-support records, sensitive species pages, and lynx/LMP support family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "esa_species",
         "nfma_forest_plan"
@@ -3252,7 +3252,7 @@
         "geography",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "tribal_trust"
       ],
@@ -3518,7 +3518,7 @@
         "geography",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Vegetation, fuels, wildfire, forest-health, and emergency-action authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Vegetation, fuels, wildfire, forest-health, and emergency-action authorities family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "invasive_soil_watershed_common_region1"
       ],
@@ -3705,7 +3705,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Milestone 3 promotes the source-currentness-confirmed Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas family into a data-backed authority-family rule template. Milestone 4 now provides independent package-fixture applicability quality coverage.",
       "required_authority_requirement_ids": [
         "designated_areas",
         "archaeological_cultural_protection"
@@ -5757,10 +5757,13 @@
     },
     "workbook_source_record_count": 190,
     "families_confirmed_by_milestone_3_rule_templates": 19,
-    "families_requiring_milestone_4_applicability_eval": 19,
+    "families_requiring_milestone_4_applicability_eval": 0,
     "authority_family_rule_template_count": 19,
     "authority_family_rule_template_coverage_path": "config/authority_family_rule_template_coverage_nepa_ea_v1.json",
-    "authority_family_rule_template_config_path": "config/authority_family_rule_templates_nepa_ea_v1.json"
+    "authority_family_rule_template_config_path": "config/authority_family_rule_templates_nepa_ea_v1.json",
+    "families_confirmed_by_milestone_4_applicability_eval": 19,
+    "milestone_4_applicability_eval_seed_path": "config/applicability_eval_seed.json",
+    "milestone_4_applicability_gold_eval_path": "config/applicability_gold_eval_v0.json"
   },
   "workbook": {
     "baseline_source_record_ids": [

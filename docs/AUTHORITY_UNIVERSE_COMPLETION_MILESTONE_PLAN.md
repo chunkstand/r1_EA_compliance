@@ -102,8 +102,13 @@ where the package fact graph already detects related cues.
   `authority_family_rule_template` candidates. A current source-set contract build validates `19`
   expanded authority-family templates alongside the `44` base rule templates and `329` forest-plan
   component candidates.
-- The next milestone is Milestone 4: add independent applicability eval and adjudication coverage
-  for the expanded authority universe.
+- Milestone 4 is complete through expanded `config/applicability_eval_seed.json`,
+  `config/applicability_gold_eval_v0.json`, the
+  `config/fixtures/applicability/region1-land-exchange-expanded-authority.txt` package fixture,
+  applicability-eval support for authority-family templates and adjudication replay, and
+  promotion-suite checks for authority-family applicability coverage. The next milestone is
+  Milestone 5: compliance review and report integration for authority-family provenance,
+  non-applicable appendices, reviewer-resolution reporting, and litigation-risk summaries.
 
 ## Required Authority Families
 
@@ -262,6 +267,16 @@ Acceptance criteria:
 Goal:
 Add independent applicability-quality tests for the expanded authority universe before compliance
 quality is scored.
+
+Status:
+Implemented. The applicability eval harness can now materialize selected
+`authority_family_rule_template` candidates from the Milestone 3 template config and can replay
+case-declared applicability adjudications through the same template/eval/apply artifacts used by
+review runs. The seed eval includes five cases: the original mixed/negative base-rule cases, a
+positive authority-family case covering all `19` templates, a negative-proof authority-family case
+covering all `19` templates, and an unresolved weak-signal case. The gold eval now requires
+positive, mixed, negative, unresolved, and replay-adjudicated profiles. Promotion-suite manifest
+checks require the seed and gold eval artifacts before current promotion can pass.
 
 Required outputs:
 

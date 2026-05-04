@@ -32,8 +32,13 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["passed"])
-            self.assertEqual(result.summary["case_count"], 2)
+            self.assertEqual(result.summary["case_count"], 5)
             self.assertEqual(result.summary["generated_rule_pack_ready_case_count"], 2)
+            coverage = result.summary["authority_family_template_coverage"]
+            self.assertTrue(coverage["passed"])
+            self.assertEqual(coverage["positive_covered_family_count"], 19)
+            self.assertEqual(coverage["negative_covered_family_count"], 19)
+            self.assertEqual(coverage["unresolved_covered_family_count"], 1)
             mixed = _case(result.summary, "seed-mixed-applicability")
             self.assertEqual(
                 mixed["actual_statuses"]["usda_nepa_ce_fanec_7cfr_1b3"],
@@ -223,11 +228,14 @@ class ApplicabilityEvalTests(unittest.TestCase):
 
             self.assertTrue(result.summary["passed"])
             self.assertTrue(result.summary["promotion_ready"])
-            self.assertEqual(result.summary["case_count"], 3)
+            self.assertEqual(result.summary["case_count"], 5)
             self.assertEqual(
                 sorted(result.summary["profile_counts"]),
-                ["mixed", "negative", "positive"],
+                ["adjudicated", "mixed", "negative", "positive", "unresolved"],
             )
+            coverage = result.summary["authority_family_template_coverage"]
+            self.assertEqual(coverage["unresolved_covered_family_count"], 1)
+            self.assertEqual(coverage["adjudicated_covered_family_count"], 1)
 
     def test_phase_eval_reports_applicability_gates_and_fails_closed_when_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
