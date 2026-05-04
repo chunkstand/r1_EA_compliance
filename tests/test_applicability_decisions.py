@@ -38,7 +38,7 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             decisions = {
                 row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
             }
-            self.assertEqual(len(decisions), 5)
+            self.assertEqual(len(decisions), 6)
             self.assertEqual(
                 decisions["rule-template:unit-pack:0.1.0:baseline_nepa"]["status"],
                 "applicable",
@@ -52,6 +52,12 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(ce_decision["basis_type"], "absent_trigger_evidence")
             self.assertTrue(ce_decision["search_coverage_certificate_ids"])
             self.assertTrue(ce_decision["explicit_trigger_miss_evidence"])
+            self.assertTrue(ce_decision["source_library_evidence_spans"])
+
+            sioux_decision = decisions["rule-template:unit-pack:0.1.0:sioux_geography"]
+            self.assertEqual(sioux_decision["status"], "not_applicable")
+            self.assertEqual(sioux_decision["basis_type"], "negative_package_evidence")
+            self.assertTrue(sioux_decision["negative_evidence_spans"])
 
             weak_decision = decisions["rule-template:unit-pack:0.1.0:cwa_permit"]
             self.assertEqual(weak_decision["status"], "needs_adjudication")
@@ -74,10 +80,13 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(applicable["schema_version"], "applicable-authorities-v0")
             self.assertEqual(non_applicable["schema_version"], "non-applicable-authorities-v0")
             self.assertEqual(applicable["applicable_authority_count"], 3)
-            self.assertEqual(non_applicable["non_applicable_authority_count"], 1)
+            self.assertEqual(non_applicable["non_applicable_authority_count"], 2)
             self.assertEqual(
                 {row["candidate_authority_id"] for row in non_applicable["authorities"]},
-                {"rule-template:unit-pack:0.1.0:ce_fanec"},
+                {
+                    "rule-template:unit-pack:0.1.0:ce_fanec",
+                    "rule-template:unit-pack:0.1.0:sioux_geography",
+                },
             )
             ce_certificates = [
                 cert
@@ -88,6 +97,12 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(len(ce_certificates), 1)
             self.assertEqual(ce_certificates[0]["coverage_result"], "sufficient")
             self.assertIn("package_section", ce_certificates[0]["executed_query_variants"])
+            self.assertTrue(ce_certificates[0]["searched_artifact_hashes"])
+            provenance = json.loads(result.provenance_path.read_text(encoding="utf-8"))
+            entity_ids = {entity["entity_id"] for entity in provenance["entities"]}
+            self.assertIn("package_manifest", entity_ids)
+            self.assertIn("package_chunks", entity_ids)
+            self.assertIn("decision_ledger", entity_ids)
 
     def test_cli_writes_decision_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -211,6 +226,17 @@ def _candidate_authorities(source_set_id: str) -> list[dict]:
             package_query="Clean Water Act",
             positive_trigger_groups=[["Clean Water Act"]],
         ),
+        _rule_candidate(
+            source_set_id=source_set_id,
+            rule_id="sioux_geography",
+            source_record_id="R1EA-SIOUX",
+            authority_category="forest_plan",
+            applicability_mode="conditional",
+            source_query="Sioux Geographic Area forest plan direction",
+            package_query="Sioux Geographic Area",
+            positive_trigger_groups=[["Sioux Geographic Area"]],
+            negative_trigger_groups=[["Sioux Geographic Area"]],
+        ),
         _forest_plan_candidate(source_set_id),
     ]
 
@@ -225,6 +251,7 @@ def _rule_candidate(
     source_query: str,
     package_query: str,
     positive_trigger_groups: list[list[str]] | None = None,
+    negative_trigger_groups: list[list[str]] | None = None,
 ) -> dict:
     candidate_id = f"rule-template:unit-pack:0.1.0:{rule_id}"
     return {
@@ -243,7 +270,7 @@ def _rule_candidate(
         ],
         "required_package_fact_types": ["action", "nepa_level", "resource_topic"],
         "positive_trigger_groups": positive_trigger_groups or [],
-        "negative_trigger_groups": [],
+        "negative_trigger_groups": negative_trigger_groups or [],
         "source_role_filters": {
             "source_record_ids": [source_record_id],
             "document_roles": [authority_category],
@@ -332,7 +359,7 @@ def _rule_candidate(
             "applicability_mode": applicability_mode,
             "baseline_required": applicability_mode == "baseline",
             "positive_package_term_groups": positive_trigger_groups or [],
-            "negative_package_terms": [],
+            "negative_package_terms": [term for group in negative_trigger_groups or [] for term in group],
         },
     }
 
@@ -489,7 +516,8 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
             text=(
                 "The project area is in the Bridger, Bangtail, and Crazy Mountains "
                 "Geographic Area and the Crazy Mountains Backcountry Area. It also "
-                "intersects an Inventoried Roadless Area."
+                "intersects an Inventoried Roadless Area. The Sioux Geographic Area "
+                "is not part of the project area."
             ),
         ),
         _package_chunk(
@@ -550,6 +578,12 @@ def _source_chunks(source_set_id: str) -> list[dict]:
         _source_chunk(source_set_id, "R1EA-ESA", "law", "Endangered Species Act consultation."),
         _source_chunk(source_set_id, "R1EA-CE", "regulation", "FANEC categorical exclusion."),
         _source_chunk(source_set_id, "R1EA-CWA", "law", "Clean Water Act permit authority."),
+        _source_chunk(
+            source_set_id,
+            "R1EA-SIOUX",
+            "forest_plan",
+            "Sioux Geographic Area forest plan direction.",
+        ),
         _source_chunk(
             source_set_id,
             "R1PLAN-CG",

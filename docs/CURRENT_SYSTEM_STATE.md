@@ -346,11 +346,12 @@ records, package facts, and Forest Plan component provenance when those artifact
 `search_coverage_certificates.json`, `applicability_provenance.json`, and
 `applicability_report.md` with one deterministic decision row per authority candidate. Weak or
 conflicting trigger evidence is recorded as `needs_adjudication`, and not-applicable decisions cite
-search coverage certificates. The applicability-first path still does not validate adjudication
-readiness, generate rule packs, or run compliance review. Later milestones still need hard
-validation/adjudication gates and the generated compliance rule pack before `compliance-review`
-becomes gated by the applicability artifacts. Until those later milestones land,
-`compliance-review` remains the current V1 authority-first command.
+search coverage certificates with required source-index hashes. Decision rows retain inspected
+source-library evidence spans, and provenance includes package manifest/chunk entities. The
+applicability-first path still does not validate adjudication readiness, generate rule packs, or run
+compliance review. Later milestones still need hard validation/adjudication gates and the generated
+compliance rule pack before `compliance-review` becomes gated by the applicability artifacts. Until
+those later milestones land, `compliance-review` remains the current V1 authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review

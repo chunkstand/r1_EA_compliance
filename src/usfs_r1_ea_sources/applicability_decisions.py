@@ -84,6 +84,8 @@ def build_applicability_decisions(
     )
     retrieval_rows = _read_required_jsonl(retrieval_trace_path, "applicability retrieval trace")
     graph_rows = _read_required_jsonl(graph_trace_path, "applicability graph trace")
+    package_chunks_path = _optional_artifact_path(package_fact_graph, "package_chunks_path")
+    package_chunks = _read_jsonl_if_exists(package_chunks_path)
 
     if source_set_id is None:
         source_set_id = str(authority_universe.get("source_set_id") or "").strip()
@@ -151,6 +153,7 @@ def build_applicability_decisions(
             package_nodes=package_nodes,
             package_fact_graph=package_fact_graph,
             package_context=package_context,
+            package_chunks=package_chunks,
             retrieval_rows=candidate_retrieval_rows,
             graph_rows=candidate_graph_rows,
             coverage_boundary=coverage_boundary,
@@ -278,7 +281,15 @@ def build_applicability_decisions(
         applicable_authorities_path=applicable_authorities_path,
         non_applicable_authorities_path=non_applicable_authorities_path,
         search_coverage_certificates_path=search_coverage_certificates_path,
+        package_manifest_path=_optional_artifact_path(package_fact_graph, "package_manifest_path"),
+        package_chunks_path=package_chunks_path,
+        source_set_manifest_path=_optional_artifact_path(
+            authority_universe,
+            "source_set_manifest_path",
+        ),
+        source_catalog_path=_optional_artifact_path(authority_universe, "source_catalog_path"),
         authority_universe_sha256=authority_universe_sha256,
+        source_set_manifest_sha256=str(authority_universe.get("source_set_manifest_sha256") or ""),
         package_manifest_sha256=package_manifest_sha256,
         package_chunks_sha256=package_chunks_sha256,
         package_fact_graph_sha256=package_fact_graph_sha256,
@@ -328,6 +339,7 @@ def _decision_for_candidate(
     package_nodes: list[dict[str, Any]],
     package_fact_graph: dict[str, Any],
     package_context: dict[str, Any],
+    package_chunks: list[dict[str, Any]],
     retrieval_rows: list[dict[str, Any]],
     graph_rows: list[dict[str, Any]],
     coverage_boundary: dict[str, Any],
@@ -348,12 +360,15 @@ def _decision_for_candidate(
     positive_match = _trigger_match(
         groups=positive_groups,
         package_nodes=package_nodes,
+        package_chunks=package_chunks,
         package_results=package_results,
     )
     negative_match = _trigger_match(
         groups=negative_groups,
         package_nodes=package_nodes,
+        package_chunks=package_chunks,
         package_results=package_results,
+        include_negative_context=True,
     )
     source_available = _source_evidence_available(candidate) or bool(source_evidence)
     missing_evidence: list[str] = []
@@ -529,7 +544,7 @@ def _decision_for_candidate(
         "rule_template": candidate.get("rule_template"),
         "forest_plan": candidate.get("forest_plan"),
         "package_evidence_spans": package_evidence,
-        "source_library_evidence_spans": source_evidence if status == "applicable" else [],
+        "source_library_evidence_spans": source_evidence,
         "retrieval_trace_ids": trace_ids,
         "selected_retrieval_result_ids": selected_result_ids,
         "rejected_retrieval_result_ids": rejected_result_ids,
@@ -668,6 +683,13 @@ def _coverage_boundary(
             and (row.get("searched_index") or {}).get("graph_artifact_hash")
         }
     )
+    requires_source_index_hash = any(
+        bool(requirement.get("requires_searched_index_hash"))
+        for requirement in requirements
+    )
+    source_index_hash_required = requires_source_index_hash or any(
+        query_type in SOURCE_QUERY_TYPES for query_type in required_query_types
+    )
     graph_required = any(
         "applicability_graph_trace" in set(_strings(requirement.get("required_artifacts")))
         for requirement in requirements
@@ -675,6 +697,7 @@ def _coverage_boundary(
     coverage_sufficient = (
         bool(retrieval_rows)
         and not missing_query_types
+        and (not source_index_hash_required or bool(source_hashes))
         and bool(package_hashes)
         and (not graph_required or bool(graph_rows))
     )
@@ -714,6 +737,9 @@ def _coverage_boundary(
             }
         ),
         "searched_artifact_hashes": sorted(set(source_hashes + package_hashes)),
+        "source_index_hash_required": source_index_hash_required,
+        "source_index_hash_present": bool(source_hashes),
+        "package_graph_hash_present": bool(package_hashes),
         "required_artifacts": sorted(
             {
                 artifact
@@ -790,15 +816,7 @@ def _coverage_certificate(
         "negative_trigger_terms_searched": _flatten_groups(
             candidate.get("negative_trigger_groups")
         ),
-        "missing_trigger_groups": (
-            decision.get("basis", {}).get("missing_trigger_groups")
-            or decision.get("explicit_trigger_miss_evidence", [{}])[0].get(
-                "missing_trigger_groups",
-                [],
-            )
-            if decision.get("explicit_trigger_miss_evidence")
-            else []
-        ),
+        "missing_trigger_groups": _missing_trigger_groups(decision),
         "rejected_evidence_ids": sorted(set(rejected_ids)),
         "graph_path_ids": [
             str(row.get("graph_path_id"))
@@ -820,11 +838,24 @@ def _coverage_rationale(decision: dict[str, Any], coverage_result: str) -> str:
     return "Required retrieval variants or graph neighborhoods were missing."
 
 
+def _missing_trigger_groups(decision: dict[str, Any]) -> list[list[str]]:
+    basis_groups = decision.get("basis", {}).get("missing_trigger_groups")
+    if basis_groups:
+        return basis_groups
+    for evidence in decision.get("explicit_trigger_miss_evidence") or []:
+        groups = evidence.get("missing_trigger_groups")
+        if groups:
+            return groups
+    return []
+
+
 def _trigger_match(
     *,
     groups: list[list[str]],
     package_nodes: list[dict[str, Any]],
+    package_chunks: list[dict[str, Any]],
     package_results: list[dict[str, Any]],
+    include_negative_context: bool = False,
 ) -> dict[str, Any]:
     if not groups:
         return {
@@ -835,32 +866,47 @@ def _trigger_match(
             "adjudication_notes": [],
         }
     searchable_nodes = [
-        node for node in package_nodes if node.get("confidence_class") != "negative_context"
+        node
+        for node in package_nodes
+        if include_negative_context or node.get("confidence_class") != "negative_context"
     ]
-    corpus_text = "\n".join(_package_node_text(node) for node in searchable_nodes)
     matched_groups = []
     evidence_by_id: dict[str, dict[str, Any]] = {}
     adjudication_notes = []
     for group in groups:
-        if not all(_term_in_text(term, corpus_text) for term in group):
-            continue
-        matched_groups.append(group)
+        group_matched = False
         for node in searchable_nodes:
-            if any(_term_in_text(term, _package_node_text(node)) for term in group):
-                evidence = _package_evidence_span(node)
-                evidence_by_id[evidence["evidence_id"]] = evidence
-                if node.get("confidence_class") == "weak_signal":
-                    adjudication_notes.append(
-                        f"weak package signal for {node.get('node_id')}"
-                    )
-    for result in package_results:
-        if any(set(group) & set(_strings(result.get("matched_terms"))) for group in groups):
+            node_text = _package_node_text(node)
+            if not all(_term_in_text(term, node_text) for term in group):
+                continue
+            group_matched = True
+            evidence = _package_evidence_span(node)
+            evidence_by_id[evidence["evidence_id"]] = evidence
+            if node.get("confidence_class") == "weak_signal":
+                adjudication_notes.append(f"weak package signal for {node.get('node_id')}")
+        for chunk in package_chunks:
+            chunk_text = str(chunk.get("text") or "")
+            if not all(_term_in_text(term, chunk_text) for term in group):
+                continue
+            group_matched = True
+            evidence = _package_chunk_evidence_span(chunk, group)
+            evidence_by_id[evidence["evidence_id"]] = evidence
+            if evidence.get("confidence_class") == "weak_signal":
+                adjudication_notes.append(
+                    f"weak package chunk signal for {chunk.get('chunk_id')}"
+                )
+        for result in package_results:
+            if not _result_matches_trigger_group(result, group):
+                continue
+            group_matched = True
             evidence = _package_result_span(result)
             evidence_by_id[evidence["evidence_id"]] = evidence
             if (result.get("provenance") or {}).get("confidence_class") == "weak_signal":
                 adjudication_notes.append(
                     f"weak retrieval result for {result.get('result_id')}"
                 )
+        if group_matched:
+            matched_groups.append(group)
     return {
         "matched": bool(matched_groups),
         "matched_groups": matched_groups,
@@ -988,6 +1034,55 @@ def _package_result_span(result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _package_chunk_evidence_span(chunk: dict[str, Any], group: list[str]) -> dict[str, Any]:
+    text = str(chunk.get("text") or "")
+    first_match = _first_trigger_match(text, group)
+    chunk_start = first_match[1] if first_match else 0
+    chunk_end = first_match[2] if first_match else min(len(text), 200)
+    absolute_start = _absolute_offset(chunk.get("char_start"), chunk_start)
+    absolute_end = _absolute_offset(chunk.get("char_start"), chunk_end)
+    evidence_id = _stable_id(
+        "package-trigger-span",
+        str(chunk.get("chunk_id") or ""),
+        str(chunk_start),
+        str(chunk_end),
+        hashlib.sha256("|".join(group).encode("utf-8")).hexdigest(),
+    )
+    confidence = (
+        "weak_signal"
+        if first_match and _is_weak_signal_text(text, chunk_start, chunk_end)
+        else "observed"
+    )
+    return {
+        "evidence_id": evidence_id,
+        "package_fact_node_id": None,
+        "package_chunk_ids": _strings([chunk.get("chunk_id")]),
+        "citation_label": chunk.get("citation_label"),
+        "section_family": _section_family_from_chunk(chunk),
+        "page_label": _page_label(chunk),
+        "char_start": absolute_start,
+        "char_end": absolute_end,
+        "matched_terms": group,
+        "text_snippet": _context_excerpt(text, chunk_start, chunk_end),
+        "confidence_class": confidence,
+        "evidence_span_ids": [],
+        "text_hash": chunk.get("content_sha256"),
+    }
+
+
+def _first_trigger_match(text: str, group: list[str]) -> tuple[str, int, int] | None:
+    lower_text = text.lower()
+    matches = []
+    for term in group:
+        normalized = term.lower()
+        index = lower_text.find(normalized)
+        if index >= 0:
+            matches.append((term, index, index + len(term)))
+    if not matches:
+        return None
+    return sorted(matches, key=lambda item: item[1])[0]
+
+
 def _present_package_values(package_nodes: list[dict[str, Any]]) -> dict[str, set[str]]:
     values: dict[str, set[str]] = defaultdict(set)
     for node in package_nodes:
@@ -1076,7 +1171,12 @@ def _provenance(
     applicable_authorities_path: Path,
     non_applicable_authorities_path: Path,
     search_coverage_certificates_path: Path,
+    package_manifest_path: Path | None,
+    package_chunks_path: Path | None,
+    source_set_manifest_path: Path | None,
+    source_catalog_path: Path | None,
     authority_universe_sha256: str,
+    source_set_manifest_sha256: str,
     package_manifest_sha256: str,
     package_chunks_sha256: str,
     package_fact_graph_sha256: str,
@@ -1088,6 +1188,18 @@ def _provenance(
     non_applicable_authorities_sha256: str,
 ) -> dict[str, Any]:
     entities = [
+        _prov_optional_entity(
+            "package_manifest",
+            package_manifest_path,
+            package_manifest_sha256,
+        ),
+        _prov_optional_entity("package_chunks", package_chunks_path, package_chunks_sha256),
+        _prov_optional_entity(
+            "source_set_manifest",
+            source_set_manifest_path,
+            source_set_manifest_sha256,
+        ),
+        _prov_optional_entity("catalog", source_catalog_path, None),
         _prov_entity("authority_universe", authority_universe_path, authority_universe_sha256),
         _prov_entity("package_fact_graph", package_fact_graph_path, package_fact_graph_sha256),
         _prov_entity(
@@ -1129,6 +1241,10 @@ def _provenance(
                 "started_at": created_at,
                 "ended_at": _utc_now(),
                 "used_entity_ids": [
+                    "package_manifest",
+                    "package_chunks",
+                    "source_set_manifest",
+                    "catalog",
                     "authority_universe",
                     "package_fact_graph",
                     "package_applicability_context",
@@ -1163,6 +1279,10 @@ def _provenance(
                 "non_applicable_authorities",
             )
             for used in (
+                "package_manifest",
+                "package_chunks",
+                "source_set_manifest",
+                "catalog",
                 "authority_universe",
                 "package_fact_graph",
                 "package_applicability_context",
@@ -1188,6 +1308,21 @@ def _prov_entity(entity_id: str, path: Path, sha256: str | None) -> dict[str, An
         "sha256": sha256,
         "exists": path.exists(),
     }
+
+
+def _prov_optional_entity(
+    entity_id: str,
+    path: Path | None,
+    sha256: str | None,
+) -> dict[str, Any]:
+    if path is None:
+        return {
+            "entity_id": entity_id,
+            "path": None,
+            "sha256": sha256 or None,
+            "exists": False,
+        }
+    return _prov_entity(entity_id, path, sha256 or (sha256_file(path) if path.exists() else None))
 
 
 def _summary(
@@ -1289,11 +1424,94 @@ def _package_node_text(node: dict[str, Any]) -> str:
     )
 
 
+def _result_matches_trigger_group(result: dict[str, Any], group: list[str]) -> bool:
+    matched_terms = " ".join(_strings(result.get("matched_terms")))
+    result_text = " ".join(
+        str(value or "")
+        for value in (
+            matched_terms,
+            result.get("text_excerpt"),
+            (result.get("provenance") or {}).get("normalized_value"),
+            (result.get("provenance") or {}).get("fact_subtype"),
+        )
+    )
+    return all(_term_in_text(term, result_text) for term in group)
+
+
 def _term_in_text(term: str, text: str) -> bool:
     normalized_term = str(term or "").strip().lower()
     if not normalized_term:
         return False
     return normalized_term in text.lower()
+
+
+def _is_weak_signal_text(text: str, start: int, end: int) -> bool:
+    window = _sentence_around(text, start, end).lower()
+    weak_phrases = (
+        "may require",
+        "may be required",
+        "might require",
+        "could require",
+        "could be required",
+        "potentially",
+        "possible",
+        "if present",
+        "if needed",
+        "if required",
+        "not yet determined",
+        "unknown whether",
+    )
+    return any(phrase in window for phrase in weak_phrases)
+
+
+def _sentence_around(text: str, start: int, end: int) -> str:
+    sentence_start = max(
+        text.rfind(".", 0, start),
+        text.rfind("\n", 0, start),
+        text.rfind(";", 0, start),
+    )
+    sentence_end_candidates = [
+        index for index in (text.find(".", end), text.find("\n", end), text.find(";", end)) if index >= 0
+    ]
+    sentence_end = min(sentence_end_candidates) if sentence_end_candidates else len(text)
+    return text[sentence_start + 1 : sentence_end + 1]
+
+
+def _context_excerpt(text: str, start: int, end: int, radius: int = 160) -> str:
+    excerpt_start = max(0, start - radius)
+    excerpt_end = min(len(text), end + radius)
+    prefix = "..." if excerpt_start > 0 else ""
+    suffix = "..." if excerpt_end < len(text) else ""
+    return f"{prefix}{text[excerpt_start:excerpt_end].strip()}{suffix}"
+
+
+def _absolute_offset(base: Any, offset: int) -> int:
+    try:
+        return int(base) + offset
+    except (TypeError, ValueError):
+        return offset
+
+
+def _page_label(chunk: dict[str, Any]) -> str | None:
+    value = chunk.get("page_label") or chunk.get("page")
+    return str(value) if value is not None else None
+
+
+def _section_family_from_chunk(chunk: dict[str, Any]) -> str | None:
+    values = " ".join(str(chunk.get(key) or "").lower() for key in ("section", "heading"))
+    if "purpose" in values or "need" in values:
+        return "purpose_need"
+    if "affected" in values or "environment" in values:
+        return "affected_environment"
+    if "consequence" in values or "effect" in values:
+        return "environmental_consequences"
+    if "alternative" in values:
+        return "alternatives"
+    if "public" in values or "scoping" in values:
+        return "public_involvement"
+    if "decision" in values or "finding" in values:
+        return "finding_decision"
+    return None
 
 
 def _assert_source_set_matches(
@@ -1341,6 +1559,26 @@ def _read_required_jsonl(path: Path, label: str) -> list[dict[str, Any]]:
     if not rows:
         raise ValueError(f"{label} is empty: {path}")
     return rows
+
+
+def _read_jsonl_if_exists(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _optional_artifact_path(payload: dict[str, Any], key: str) -> Path | None:
+    artifacts = payload.get("artifact_paths")
+    if not isinstance(artifacts, dict):
+        return None
+    value = artifacts.get(key)
+    if not value:
+        return None
+    return Path(str(value))
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:

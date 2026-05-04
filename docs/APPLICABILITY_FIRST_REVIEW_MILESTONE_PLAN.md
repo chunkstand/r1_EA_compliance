@@ -586,8 +586,11 @@ Implemented. `applicability-determine` now consumes `authority_universe_snapshot
 `applicability_provenance.json`, and `applicability_report.md`. The predicate engine records
 mandatory baseline, positive package trigger, absent-trigger, negative-evidence, Forest Plan
 component, source-required, and unresolved-conflict bases. Weak package evidence becomes
-`needs_adjudication`; not-applicable decisions cite search coverage certificates. The command does
-not emit compliance findings, generate a rule pack, or validate adjudication readiness.
+`needs_adjudication`; not-applicable decisions cite search coverage certificates. Gap closure added
+raw package-chunk trigger checks for explicit negative evidence, source-index hash requirements for
+sufficient coverage, retained source-library evidence spans on non-applicable decisions, and
+package manifest/chunk provenance entities. The command does not emit compliance findings, generate
+a rule pack, or validate adjudication readiness.
 
 Goal:
 Add the pre-review decision command that writes all first-class applicability artifacts without

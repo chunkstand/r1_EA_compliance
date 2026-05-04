@@ -1112,7 +1112,8 @@ includes:
   candidate authority when class-level coverage is not sufficient
 - `coverage_certificate_id`, covered candidate authority IDs, covered decision IDs, coverage class,
   required query variants, executed query variants, package sections searched, source indexes
-  searched, metadata filters searched, graph neighborhoods searched, and searched artifact hashes
+  searched, metadata filters searched, graph neighborhoods searched, searched artifact hashes, and
+  source-index hash presence when the authority contract requires hashed source search
 - `coverage_result`: `sufficient`, `insufficient`, or `adjudication_required`
 - trigger terms searched, negative trigger terms searched, missing trigger groups, rejected
   evidence IDs, and rationale for why the search boundary is sufficient for the authority predicate

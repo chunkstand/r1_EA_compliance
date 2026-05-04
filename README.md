@@ -837,8 +837,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine \
 and graph trace. It writes `applicability_decisions.jsonl`, `applicable_authorities.json`,
 `non_applicable_authorities.json`, `search_coverage_certificates.json`,
 `applicability_provenance.json`, and `applicability_report.md`. The command records deterministic
-applicability bases and marks weak or conflicting package triggers as `needs_adjudication`. It does
-not write a generated rule pack, compliance matrix, or compliance findings.
+applicability bases, preserves inspected source-library evidence spans, requires source-index hashes
+for sufficient coverage, and marks weak or conflicting package triggers as `needs_adjudication`. It
+does not write a generated rule pack, compliance matrix, or compliance findings.
 
 Run rule-pack coverage:
 
