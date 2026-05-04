@@ -824,7 +824,7 @@ Optional artifacts used once adjudication is introduced:
 - `applicability_adjudication_eval.json`
 - `llm_evidence_proposals.jsonl`
 
-All applicability artifacts share these run identity fields:
+All applicability artifacts share these run identity fields when known:
 
 - `applicability_run_id`
 - `review_id`
@@ -840,6 +840,10 @@ All applicability artifacts share these run identity fields:
 - `base_rule_pack_id`
 - `base_rule_pack_version`
 - `base_rule_pack_sha256`
+
+Hash fields identify upstream inputs and previously generated artifacts. An artifact's own SHA256 is
+recorded by downstream artifacts, validation, and `applicability_provenance.json`; it is not
+required to embed a self-referential hash over its own final bytes.
 
 The target review sequence is:
 
@@ -1240,6 +1244,20 @@ records:
 - `generated_rule_pack_sha256`
 - `applicability_run_id`
 - `applicability_validation_sha256`
+- `base_rule_pack_id`
+- `base_rule_pack_version`
+- `base_rule_pack_sha256`
+- `authority_universe_sha256`
+- `applicable_authorities_sha256`
+- `package_fact_graph_sha256`
+- `retrieval_trace_sha256`
+- `graph_trace_sha256`
+- `search_coverage_certificates_sha256`
+- `package_manifest_sha256`
+- `package_chunks_sha256`
+- `catalog_sha256`
+- `source_set_id`
+- `review_id`
 - `passed`
 - whether the generated rule count equals the validated applicable-authority count
 - whether all generated rules trace to applicable decisions
