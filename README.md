@@ -197,12 +197,12 @@ snapshotted, package facts are graphed, per-authority retrieval and graph expans
 persisted, applicable and non-applicable authorities are separate artifacts, not-applicable decisions
 carry search coverage or adjudication, validation blocks unresolved or stale decisions, and the
 downstream review rule pack is generated from the validated applicable-authorities artifact. The
-authority-universe snapshot slice is implemented through `applicability-authority-universe`; it
-writes the candidate authority snapshot only and does not decide package applicability. The promoted
-V1 review remains the current authority-first path until the later package fact graph, retrieval
-trace, graph trace, deterministic decision, validation, generated-rule-pack, and compliance-review
-gate milestones land. Embeddings and expanded human adjudication over real EA packages remain
-downstream work.
+implemented staged path now includes `applicability-authority-universe`,
+`applicability-context-build`, `applicability-retrieve`, `applicability-determine`,
+`applicability-validate`, and replayable applicability adjudication template/apply/eval commands.
+The promoted V1 review remains the current authority-first path until the later generated-rule-pack
+and compliance-review gate milestones land. Embeddings and expanded human adjudication over real EA
+packages remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -840,6 +840,50 @@ and graph trace. It writes `applicability_decisions.jsonl`, `applicable_authorit
 applicability bases, preserves inspected source-library evidence spans, requires source-index hashes
 for sufficient coverage, and marks weak or conflicting package triggers as `needs_adjudication`. It
 does not write a generated rule pack, compliance matrix, or compliance findings.
+
+Validate the applicability run before generated rule-pack creation:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
+```
+
+`applicability-validate` reads all applicability artifacts through the decision ledger and writes
+`applicability_validation.json`. It fails closed when candidate decisions are missing or duplicated,
+applicable/non-applicable artifacts do not partition the authority universe, unresolved or
+`needs_adjudication` rows remain, retrieval or graph traceability is missing, non-applicable
+decisions lack coverage or adjudication, artifact hashes are stale, or provenance does not cover
+the required artifacts.
+
+Create, evaluate, and apply applicability adjudication records:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-template \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id> \
+  --adjudication-file source_library/reviews/<review-id>/applicability/applicability_adjudication_template.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id> \
+  --adjudication-file source_library/reviews/<review-id>/applicability/applicability_adjudication_template.json
+```
+
+The template command writes `applicability_adjudication_template.json` and
+`applicability_adjudication_worklist.md` for unresolved decisions. The eval command proves the
+completed adjudication is current, complete, and replayable. The apply command rewrites the decision
+ledger and applicable/non-applicable authority artifacts with `human_adjudication` bases, writes
+`applicability_adjudication_apply.json`, and updates provenance. These commands still do not create
+a generated rule pack or compliance findings.
 
 Run rule-pack coverage:
 

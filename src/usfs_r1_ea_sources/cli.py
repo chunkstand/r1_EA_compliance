@@ -7,6 +7,10 @@ import json
 from .applicability import build_authority_universe_snapshot
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
+from .applicability_validation import apply_applicability_adjudication
+from .applicability_validation import evaluate_applicability_adjudication
+from .applicability_validation import validate_applicability_run
+from .applicability_validation import write_applicability_adjudication_template
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
 from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
@@ -477,6 +481,76 @@ def build_parser() -> argparse.ArgumentParser:
     applicability_determine.add_argument("--package-applicability-context-path", type=Path)
     applicability_determine.add_argument("--retrieval-trace-path", type=Path)
     applicability_determine.add_argument("--graph-trace-path", type=Path)
+
+    applicability_validate = subparsers.add_parser(
+        "applicability-validate",
+        help=(
+            "Validate applicability decisions, coverage, provenance, and adjudication readiness "
+            "before generated rule-pack creation."
+        ),
+    )
+    applicability_validate.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    applicability_validate.add_argument("--review-id", required=True)
+    applicability_validate.add_argument("--source-set-id")
+    applicability_validate.add_argument("--authority-universe-path", type=Path)
+    applicability_validate.add_argument("--package-fact-graph-path", type=Path)
+    applicability_validate.add_argument("--package-applicability-context-path", type=Path)
+    applicability_validate.add_argument("--package-fact-graph-validation-path", type=Path)
+    applicability_validate.add_argument("--retrieval-trace-path", type=Path)
+    applicability_validate.add_argument("--graph-trace-path", type=Path)
+    applicability_validate.add_argument("--decisions-path", type=Path)
+    applicability_validate.add_argument("--applicable-authorities-path", type=Path)
+    applicability_validate.add_argument("--non-applicable-authorities-path", type=Path)
+    applicability_validate.add_argument("--search-coverage-certificates-path", type=Path)
+    applicability_validate.add_argument("--provenance-path", type=Path)
+    applicability_validate.add_argument("--validation-path", type=Path)
+
+    applicability_adjudication_template = subparsers.add_parser(
+        "applicability-adjudication-template",
+        help="Write a reviewer-fillable adjudication template for unresolved applicability decisions.",
+    )
+    applicability_adjudication_template.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_adjudication_template.add_argument("--review-id", required=True)
+    applicability_adjudication_template.add_argument("--source-set-id")
+    applicability_adjudication_template.add_argument("--decisions-path", type=Path)
+    applicability_adjudication_template.add_argument("--output-path", type=Path)
+
+    applicability_adjudication_eval = subparsers.add_parser(
+        "applicability-adjudication-eval",
+        help="Evaluate a completed applicability adjudication file against current decisions.",
+    )
+    applicability_adjudication_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_adjudication_eval.add_argument("--review-id", required=True)
+    applicability_adjudication_eval.add_argument("--source-set-id")
+    applicability_adjudication_eval.add_argument("--adjudication-file", type=Path)
+    applicability_adjudication_eval.add_argument("--decisions-path", type=Path)
+    applicability_adjudication_eval.add_argument("--output-path", type=Path)
+
+    applicability_adjudication_apply = subparsers.add_parser(
+        "applicability-adjudication-apply",
+        help="Replay a completed applicability adjudication into decision and partition artifacts.",
+    )
+    applicability_adjudication_apply.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_adjudication_apply.add_argument("--review-id", required=True)
+    applicability_adjudication_apply.add_argument("--source-set-id")
+    applicability_adjudication_apply.add_argument("--adjudication-file", type=Path)
+    applicability_adjudication_apply.add_argument("--decisions-path", type=Path)
+    applicability_adjudication_apply.add_argument("--applicable-authorities-path", type=Path)
+    applicability_adjudication_apply.add_argument("--non-applicable-authorities-path", type=Path)
+    applicability_adjudication_apply.add_argument("--provenance-path", type=Path)
+    applicability_adjudication_apply.add_argument("--output-path", type=Path)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -993,6 +1067,65 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "applicability-validate":
+        result = validate_applicability_run(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            authority_universe_path=args.authority_universe_path,
+            package_fact_graph_path=args.package_fact_graph_path,
+            package_applicability_context_path=args.package_applicability_context_path,
+            package_fact_graph_validation_path=args.package_fact_graph_validation_path,
+            retrieval_trace_path=args.retrieval_trace_path,
+            graph_trace_path=args.graph_trace_path,
+            decisions_path=args.decisions_path,
+            applicable_authorities_path=args.applicable_authorities_path,
+            non_applicable_authorities_path=args.non_applicable_authorities_path,
+            search_coverage_certificates_path=args.search_coverage_certificates_path,
+            provenance_path=args.provenance_path,
+            validation_path=args.validation_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-adjudication-template":
+        result = write_applicability_adjudication_template(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            decisions_path=args.decisions_path,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "applicability-adjudication-eval":
+        result = evaluate_applicability_adjudication(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            adjudication_file=args.adjudication_file,
+            decisions_path=args.decisions_path,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-adjudication-apply":
+        result = apply_applicability_adjudication(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            adjudication_file=args.adjudication_file,
+            decisions_path=args.decisions_path,
+            applicable_authorities_path=args.applicable_authorities_path,
+            non_applicable_authorities_path=args.non_applicable_authorities_path,
+            provenance_path=args.provenance_path,
+            output_path=args.output_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "phase-eval":
         result = run_phase_aligned_eval(

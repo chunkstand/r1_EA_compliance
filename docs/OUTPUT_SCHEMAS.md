@@ -794,14 +794,12 @@ validated applicability run and generated rule pack; it must not be the first st
 which authorities apply.
 
 The current V1 compliance-review implementation still runs the authority-first path described in the
-next section. The implemented applicability slices are the authority-universe snapshot command and
-the package context command: `applicability-authority-universe` writes
-`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`, and
-`applicability-context-build` writes the package fact graph, package applicability context, and
-package fact graph validation summary, and `applicability-retrieve` writes retrieval traces, graph
-traces, and retrieval/graph diagnostics. These commands do not decide package applicability or
-produce compliance findings. The remaining artifacts in this section are the schema and gate
-contract for later applicability-first milestones.
+next section. Implemented applicability slices now include `applicability-authority-universe`,
+`applicability-context-build`, `applicability-retrieve`, `applicability-determine`,
+`applicability-validate`, and replayable applicability adjudication template/apply/eval commands.
+These commands determine and validate authority applicability before review, but they do not produce
+compliance findings or generated rule packs. Generated rule-pack production and compliance-review
+gating remain later applicability-first milestones.
 
 Required artifacts:
 
@@ -827,6 +825,7 @@ Optional artifacts used once adjudication is introduced:
 - `applicability_adjudication_template.json`
 - `applicability_adjudication_worklist.md`
 - `applicability_adjudication_eval.json`
+- `applicability_adjudication_apply.json`
 - `llm_evidence_proposals.jsonl`
 
 All applicability artifacts share these run identity fields when known:
@@ -1226,6 +1225,13 @@ context, and missing evidence type.
 records whether every adjudication item was completed, whether the adjudicated final statuses are
 valid, whether required rationale/citations are present, and whether the completed adjudication can be
 replayed deterministically into `applicability_decisions.jsonl`.
+
+`applicability_adjudication_apply.json` has schema version `applicability-adjudication-apply-v0` and
+records the replay result when a completed adjudication is applied to the decision ledger. It
+includes original and applied decision-ledger hashes, applied item count, remaining unresolved count,
+and the adjudication/eval artifact paths. Applying adjudication rewrites
+`applicability_decisions.jsonl`, `applicable_authorities.json`, and
+`non_applicable_authorities.json` with `human_adjudication` bases and updates provenance.
 
 `llm_evidence_proposals.jsonl`, when present, is diagnostic-only. It may propose evidence spans,
 query expansions, graph neighbors, or reviewer questions, but it cannot write final applicability

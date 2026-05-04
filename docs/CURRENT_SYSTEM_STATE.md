@@ -318,10 +318,11 @@ Rule-pack `0.4.0` contains `44` rules. It declares `baseline_source_record_ids` 
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
-Applicability-First Review has a post-V1 schema contract, an implemented authority-universe
-snapshot slice, an implemented package fact graph slice, and an implemented retrieval/graph trace
-slice. `applicability-authority-universe` reads the current catalog, base rule pack, forest-plan
-profiles, component inventory, source-claim artifacts, and rule-claim links, then writes
+Applicability-First Review has a post-V1 schema contract and implemented slices for authority
+universe snapshotting, package fact graph/context building, retrieval/graph tracing, deterministic
+decisions, validation, and adjudication replay. `applicability-authority-universe` reads the current
+catalog, base rule pack, forest-plan profiles, component inventory, source-claim artifacts, and
+rule-claim links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
 rule-template candidates and Forest Plan component candidates. Each candidate carries required
 package fact types, positive and negative trigger groups, required source evidence, source-role
@@ -347,11 +348,17 @@ records, package facts, and Forest Plan component provenance when those artifact
 `applicability_report.md` with one deterministic decision row per authority candidate. Weak or
 conflicting trigger evidence is recorded as `needs_adjudication`, and not-applicable decisions cite
 search coverage certificates with required source-index hashes. Decision rows retain inspected
-source-library evidence spans, and provenance includes package manifest/chunk entities. The
-applicability-first path still does not validate adjudication readiness, generate rule packs, or run
-compliance review. Later milestones still need hard validation/adjudication gates and the generated
-compliance rule pack before `compliance-review` becomes gated by the applicability artifacts. Until
-those later milestones land, `compliance-review` remains the current V1 authority-first command.
+source-library evidence spans, and provenance includes package manifest/chunk entities.
+`applicability-validate` now writes `applicability_validation.json` and fails closed on missing or
+duplicated candidate decisions, unresolved or `needs_adjudication` decisions, stale artifacts,
+missing retrieval/graph traceability, non-applicable decisions without coverage/adjudication, and
+provenance gaps. `applicability-adjudication-template`, `applicability-adjudication-eval`, and
+`applicability-adjudication-apply` provide a machine-readable replay path for resolving open
+decisions into `human_adjudication` bases before validation can pass. The applicability-first path
+still does not generate rule packs or run compliance review. Later milestones still need the
+generated compliance rule pack before `compliance-review` becomes gated by the applicability
+artifacts. Until those later milestones land, `compliance-review` remains the current V1
+authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review

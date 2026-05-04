@@ -30,6 +30,12 @@ Current completed applicability milestones:
   `non_applicable_authorities.json`, `search_coverage_certificates.json`,
   `applicability_provenance.json`, and `applicability_report.md` without producing compliance
   findings or a generated rule pack.
+- Milestone 6 validation/adjudication: `applicability-validate` writes
+  `applicability_validation.json` and fails closed on missing, duplicated, stale, unsupported, or
+  unresolved decisions. `applicability-adjudication-template`,
+  `applicability-adjudication-eval`, and `applicability-adjudication-apply` provide replayable
+  machine-readable adjudication; apply rewrites the decision ledger and applicable/non-applicable
+  partitions with `human_adjudication` bases and updates provenance.
 
 Latest applicability commits:
 
@@ -54,6 +60,8 @@ Important current behavior:
   provenance entities.
 - `compliance-review` still runs the current V1 authority-first path. It is not yet gated by
   applicability artifacts, and it does not yet consume a generated applicability-derived rule pack.
+- The applicability-first path now has the validation/adjudication gate required before generated
+  rule-pack work. It still does not emit `generated_rule_pack.json` or gate `compliance-review`.
 
 Latest verification for the applicability-first lane:
 
@@ -65,25 +73,26 @@ git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 5 gap-close pass:
+Verified results from the latest Milestone 6 validation/adjudication pass:
 
-- Applicability plus compliance focused suite: `57 passed`
-- Full repository test suite: `253 passed`
+- Applicability plus compliance focused suite: `61 passed, 3 subtests passed`
+- Full repository test suite: `257 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
 
 Next implementation target:
 
-Milestone 6 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: validation, coverage, and
-adjudication gate. The next slice should add `applicability-validate` plus replayable adjudication
-template/apply/eval surfaces. Validation should fail closed when decisions are missing, duplicated,
-stale, unsupported by retrieval/graph traces, unsupported by search coverage, or still unresolved at
-generated-pack time.
+Milestone 7 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: generated rule pack. The next
+slice should add `applicability-generate-rule-pack`, emitting `generated_rule_pack.json` and
+`generated_rule_pack_validation.json` only from a passing applicability validation. Generated rules
+must carry applicability decision IDs, trace IDs, source-record/document-role metadata,
+source-claim requirements, package-section expectations, Forest Plan component references when
+present, and freshness/provenance hashes.
 
 Current stop conditions for the next session:
 
-- Do not generate a compliance rule pack until applicability validation/adjudication gates exist.
+- Do not generate a compliance rule pack unless `applicability_validation.json` exists and passes.
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.

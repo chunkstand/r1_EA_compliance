@@ -40,12 +40,16 @@ Implemented today:
   authority universe, package fact graph/context, retrieval trace, and graph trace, then writes
   `applicability_decisions.jsonl`, applicable/non-applicable authority artifacts, search coverage
   certificates, provenance, and a reviewer report without producing compliance findings.
+- Milestone 6 validation and adjudication is implemented: `applicability-validate` writes
+  `applicability_validation.json` and fails closed on missing, duplicated, stale, unsupported, or
+  unresolved decisions; `applicability-adjudication-template`,
+  `applicability-adjudication-eval`, and `applicability-adjudication-apply` provide a replayable
+  machine-readable adjudication path for resolving open decisions.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
 Not implemented yet:
 
-- adjudication replay for unresolved applicability;
 - generated rule pack as the only reviewer-ready compliance input; and
 - compliance-review gate that refuses base rule-pack review in reviewer-ready mode.
 
@@ -258,6 +262,7 @@ Optional but expected once adjudication and model-assisted evidence proposal are
 - `applicability_adjudication_template.json`
 - `applicability_adjudication_worklist.md`
 - `applicability_adjudication_eval.json`
+- `applicability_adjudication_apply.json`
 - `llm_evidence_proposals.jsonl`
   - diagnostic-only model proposals for evidence or query expansion; never authoritative
     applicability decisions.
@@ -670,6 +675,16 @@ Stop conditions:
 - Pending conditional applicability is accepted as review-ready.
 
 ## Milestone 6: Validation, Coverage, And Adjudication Gate
+
+Current status:
+Implemented. `applicability-validate` validates required artifacts, candidate decision coverage,
+applicable/non-applicable partitioning, unresolved/needs-adjudication status, evidence sufficiency,
+search coverage, retrieval/graph traceability, source/package freshness, Forest Plan component
+scope, and provenance. `applicability-adjudication-template`,
+`applicability-adjudication-eval`, and `applicability-adjudication-apply` provide a replayable
+adjudication route; apply rewrites decision and partition artifacts with `human_adjudication` bases
+and updates provenance. This milestone still does not generate a rule pack or gate
+`compliance-review`.
 
 Goal:
 Make applicability validation a hard gate that must pass before a generated rule pack can be used.
