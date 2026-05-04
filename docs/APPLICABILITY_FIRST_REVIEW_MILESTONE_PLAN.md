@@ -56,14 +56,16 @@ Implemented today:
   `applicability-gold-eval` score applicability decision quality before compliance quality is
   promoted, and `phase-eval --review-id/--review-dir` includes the seven applicability phases before
   compliance review.
+- The separate authority-universe completion plan is implemented through Milestone 5:
+  compliance-review outputs now expose authority-family provenance, non-applicable authority
+  appendices, reviewer-resolution reports, and deterministic litigation-risk summaries.
 
 Current remaining work:
 
-- Milestone 10 real-package expansion and operating runbook work remains open.
-- The separate `docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md` milestone remains open for
-  expanding the bounded authority-family inventory, source currentness gates, rule templates,
-  applicability eval coverage, and reviewer-facing authority-family reporting beyond the V1 proving
-  path.
+- Milestone 10 real-package expansion remains open. The first expansion pass now has local evidence
+  for `region1-expansion-ecid-preliminary-ea`, but it is intentionally blocked by three
+  applicability decisions requiring adjudication before generated rule-pack or compliance-review
+  promotion.
 
 ## Target Invariant
 

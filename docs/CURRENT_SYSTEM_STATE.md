@@ -74,6 +74,9 @@ Current inventory summary:
 - Families requiring Milestone 3 rule-template work after currentness: `0`
 - Families confirmed by Milestone 4 applicability eval expansion: `19`
 - Families requiring Milestone 4 applicability eval expansion: `0`
+- Milestone 5 compliance/report integration: implemented for generated compliance reviews through
+  authority-family provenance, non-applicable authority appendix, reviewer-resolution report, and
+  deterministic litigation-risk summary artifacts.
 
 The only current `candidate` family is environmental justice and civil-rights authority coverage;
 Milestone 2 documents a non-addition for revoked environmental-justice executive-order text and
@@ -210,13 +213,25 @@ Gallatin FEIS and ESA-supporting plan documents.
   candidate authorities, `33` applicable authorities, `340` not-applicable authorities, no
   unresolved/adjudication decisions, and `generated_rule_pack_ready=true`; the generated rule pack
   contains `33` rules and validates against the applicability artifacts.
+- Authority-universe Milestone 5 is implemented in the compliance review layer. Generated review
+  findings now carry candidate authority IDs, applicability decision IDs, authority-family IDs,
+  generated applicability provenance, and coverage/adjudication references. The promoted review
+  writes `authority_family_provenance.json`, `non_applicable_authority_appendix.json/.md`,
+  `authority_reviewer_resolution_report.json`, and `litigation_risk_summary.json`; promotion
+  checks require those artifacts before current promotion can pass.
 - The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest stored
   local run reported `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"package_fixture_missing": 2}`, and
-  `open_expansion_slot_count=2`. The manifest now checks the generated-pack V1 review ID, version,
-  rule count, and matrix row count. Broader readiness remains blocked when strict expansion requires
-  the two additional real Region 1 EA package fixtures.
+  `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  and `open_expansion_slot_count=2`. The manifest now checks the generated-pack V1 review ID,
+  version, rule count, matrix row count, Milestone 5 authority provenance outputs, and the first
+  real-package expansion pass. Broader readiness remains blocked when strict expansion requires the
+  preliminary-EA adjudication to be completed and one additional real Region 1 EA package fixture.
+- The first Milestone 10 expansion pass has a local review ID:
+  `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
+  Applicability determination covered `392` candidate authorities, with `40` applicable, `349`
+  non-applicable, and `3` `needs_adjudication` authorities. Validation correctly remains
+  not reviewer-ready until the generated adjudication template is completed and replayed.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

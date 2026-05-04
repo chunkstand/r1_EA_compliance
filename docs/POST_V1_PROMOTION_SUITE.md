@@ -47,7 +47,9 @@ The default manifest keeps two open real-package expansion slots. Those slots do
 current V1 promotion claim, but they make broader readiness gaps visible to future agents. Current
 promotion does require the Milestone 4 applicability seed and gold eval artifacts that prove
 positive, negative, unresolved, and replay-adjudicated coverage for the expanded authority-family
-templates.
+templates. It also requires the Milestone 5 reviewer-report artifacts for the promoted V1 review:
+authority-family provenance, non-applicable authority appendix, reviewer-resolution report, and
+deterministic litigation-risk summary.
 
 ## Failure Taxonomy
 
@@ -74,12 +76,19 @@ The suite was run locally on 2026-05-04 after implementation:
 - `promotion_ready=true`
 - `expansion_ready=false`
 - `failure_category_counts={}`
-- `expansion_failure_category_counts={"package_fixture_missing": 2}`
+- `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`
 - `open_expansion_slot_count=2`
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
 authority-family templates with positive and negative cases, and the gold eval includes unresolved
-and replay-adjudicated authority-family profiles. The remaining expansion gaps are the two
-intentionally open real-package fixture slots; they are not current-promotion blockers unless
-`--strict-expansion` is used.
+and replay-adjudicated authority-family profiles. The promoted review also writes the Milestone 5
+authority-family sidecars and the promotion manifest requires them before current promotion passes.
+
+The first expansion slot is now a concrete local pass:
+`region1-expansion-ecid-preliminary-ea`, using the preliminary EA package under the ECID intake.
+The package cache extracted `7` PDFs into `160` chunks, and applicability determination produced
+`40` applicable authorities, `349` non-applicable authorities, and `3` decisions requiring
+adjudication. The slot remains `ready=false` because validation correctly blocks generated rule-pack
+creation until those decisions are adjudicated and replayed. The second real-package slot remains
+open with `package_fixture_missing`.

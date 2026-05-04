@@ -100,13 +100,127 @@ class ComplianceReviewTests(unittest.TestCase):
                 result.summary["applicability_gate"]["mode"],
                 "generated_rule_pack",
             )
+            self.assertTrue(result.authority_provenance_path.exists())
+            self.assertTrue(result.non_applicable_authority_appendix_path.exists())
+            self.assertTrue(result.non_applicable_authority_appendix_markdown_path.exists())
+            self.assertTrue(result.reviewer_resolution_report_path.exists())
+            self.assertTrue(result.litigation_risk_summary_path.exists())
             matrix = json.loads(result.compliance_matrix_path.read_text(encoding="utf-8"))
             self.assertTrue(matrix["summary"]["non_applicable_authorities_path"])
+            self.assertEqual(
+                matrix["summary"]["authority_provenance_path"],
+                str(result.authority_provenance_path),
+            )
+            self.assertEqual(
+                matrix["summary"]["reviewer_resolution_report_path"],
+                str(result.reviewer_resolution_report_path),
+            )
+            matrix_row = matrix["rows"][0]
+            self.assertEqual(matrix_row["candidate_authority_id"], "candidate:purpose_need")
+            self.assertEqual(matrix_row["applicability_decision_id"], "decision:purpose_need")
+            self.assertEqual(matrix_row["authority_family_ids"], ["unit_purpose_need"])
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
             )
             self.assertTrue(
                 _check(validation, "applicability_generated_rule_pack_gate")["passed"]
+            )
+            self.assertTrue(
+                _check(
+                    validation,
+                    "compliance_findings_have_applicability_provenance",
+                )["passed"]
+            )
+            self.assertTrue(
+                _check(validation, "non_applicable_authority_appendix_ready")["passed"]
+            )
+            self.assertTrue(
+                _check(validation, "authority_reviewer_resolution_report_ready")["passed"]
+            )
+            self.assertTrue(
+                _check(validation, "litigation_risk_summary_deterministic")["passed"]
+            )
+
+    def test_compliance_review_emits_authority_integration_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Purpose and Need\n\nThe proposed action improves trail access.",
+            )
+            rule_pack_path = _write_rule_pack(Path(tmp))
+
+            result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id="authority-integration-unit",
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+                include_non_applicable=True,
+            )
+
+            provenance = json.loads(
+                result.authority_provenance_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(provenance["schema_version"], "authority-family-provenance-v0")
+            self.assertEqual(
+                provenance["summary"]["finding_authority_provenance_count"],
+                2,
+            )
+            self.assertEqual(provenance["summary"]["findings_missing_authority_family_ids"], [])
+            self.assertTrue(
+                all(
+                    row["candidate_authority_id"]
+                    and row["applicability_decision_id"]
+                    and row["authority_family_ids"]
+                    for row in provenance["finding_authority_provenance"]
+                )
+            )
+
+            appendix = json.loads(
+                result.non_applicable_authority_appendix_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                appendix["schema_version"],
+                "non-applicable-authority-appendix-v0",
+            )
+            self.assertEqual(appendix["summary"]["non_applicable_authority_count"], 1)
+            self.assertTrue(appendix["summary"]["all_have_coverage_certificates"])
+            self.assertTrue(appendix["summary"]["all_have_rationale"])
+            self.assertEqual(
+                appendix["authorities"][0]["authority_family_ids"],
+                ["unit_not_applicable"],
+            )
+            self.assertEqual(
+                appendix["authorities"][0]["search_coverage_certificate_ids"],
+                ["coverage:not-applicable"],
+            )
+
+            resolution = json.loads(
+                result.reviewer_resolution_report_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                resolution["schema_version"],
+                "authority-reviewer-resolution-report-v0",
+            )
+            self.assertEqual(resolution["summary"]["pending_resolution_count"], 0)
+            self.assertTrue(resolution["summary"]["passed"])
+
+            risk = json.loads(result.litigation_risk_summary_path.read_text(encoding="utf-8"))
+            self.assertEqual(risk["schema_version"], "litigation-risk-summary-v0")
+            self.assertEqual(risk["summary"]["legal_conclusion_count"], 0)
+            categories = {flag["risk_category"] for flag in risk["risk_flags"]}
+            self.assertIn("package_evidence_gap", categories)
+            self.assertIn("non_applicable_authority_coverage_boundary", categories)
+            self.assertTrue(
+                all(
+                    flag["legal_conclusion"] is False
+                    and flag["deterministic_basis"] is True
+                    and flag["artifact_refs"]
+                    for flag in risk["risk_flags"]
+                )
             )
 
     def test_generated_rule_pack_gate_requires_non_applicable_artifact(self) -> None:
@@ -2564,11 +2678,22 @@ def _write_generated_review_gate(
     for rule in base_rule_pack["rules"]:
         candidate_id = f"candidate:{rule['id']}"
         decision_id = f"decision:{rule['id']}"
+        authority_family_id = rule.get("authority_family_id")
         authority = {
             "candidate_authority_id": candidate_id,
+            "candidate_authority_type": "rule_template",
             "decision_id": decision_id,
+            "authority_family_id": authority_family_id,
+            "authority_family_ids": [authority_family_id] if authority_family_id else [],
             "status": "applicable",
-            "rule_template": {"rule_id": rule["id"]},
+            "basis_type": "mandatory_baseline",
+            "applicability_basis": {
+                "rationale": "Unit generated gate marks baseline rule applicable.",
+            },
+            "rule_template": {
+                "rule_id": rule["id"],
+                "authority_family_id": authority_family_id,
+            },
             "source_record_ids": [rule.get("authority_source_record_id")],
             "document_roles": [rule.get("authority_document_role") or "regulation"],
         }
@@ -2579,8 +2704,18 @@ def _write_generated_review_gate(
         [
             {
                 "candidate_authority_id": "candidate:not-applicable",
+                "candidate_authority_type": "rule_template",
                 "decision_id": "decision:not-applicable",
+                "authority_family_id": "unit_not_applicable",
+                "authority_family_ids": ["unit_not_applicable"],
                 "status": "not_applicable",
+                "basis_type": "absent_trigger_evidence",
+                "applicability_basis": {
+                    "rationale": "Unit package did not include the conditional trigger.",
+                },
+                "non_applicability_basis": {
+                    "rationale": "Unit package did not include the conditional trigger.",
+                },
                 "search_coverage_certificate_ids": ["coverage:not-applicable"],
             }
         ]
@@ -2681,7 +2816,11 @@ def _write_generated_review_gate(
             {
                 "coverage_certificate_id": "coverage:not-applicable",
                 "candidate_authority_id": "candidate:not-applicable",
+                "covered_candidate_authority_ids": ["candidate:not-applicable"],
+                "covered_decision_ids": ["decision:not-applicable"],
                 "coverage_class": "non_applicable_authority",
+                "coverage_result": "sufficient",
+                "rationale": "Unit coverage certificate for not-applicable authority.",
             }
         ]
         if include_non_applicable
@@ -2747,11 +2886,19 @@ def _write_generated_review_gate(
         generated_rule["generated_from_applicability"] = True
         generated_rule["applicability_decision_id"] = f"decision:{rule['id']}"
         generated_rule["candidate_authority_id"] = f"candidate:{rule['id']}"
+        generated_rule["authority_family_id"] = rule.get("authority_family_id")
+        generated_rule["authority_family_ids"] = [rule.get("authority_family_id")]
         generated_rule["applicability"] = {
             "decision_id": generated_rule["applicability_decision_id"],
             "candidate_authority_id": generated_rule["candidate_authority_id"],
             "candidate_authority_type": "rule_template",
+            "authority_family_id": rule.get("authority_family_id"),
+            "authority_family_ids": [rule.get("authority_family_id")],
             "status": "applicable",
+            "basis_type": "mandatory_baseline",
+            "applicability_basis": {
+                "rationale": "Unit generated gate marks baseline rule applicable.",
+            },
             "source_record_ids": [rule.get("authority_source_record_id")],
             "document_roles": [rule.get("authority_document_role") or "regulation"],
         }
@@ -2893,6 +3040,7 @@ def _write_custer_rule_pack(directory: Path) -> Path:
                 "id": "custer_gallatin_lmp_2022",
                 "title": "Custer Gallatin forest-plan standard is addressed",
                 "authority_category": "forest_plan",
+                "authority_family_id": "unit_custer_forest_plan",
                 "authority_source_record_id": "R1PLAN-custer-gallatin-nf-02",
                 "authority_document_role": "forest_plan",
                 "applicability_mode": "baseline",
@@ -3063,6 +3211,7 @@ def _rule_pack() -> dict:
                 "id": "purpose_need",
                 "title": "Purpose and need are stated",
                 "authority_category": "regulation",
+                "authority_family_id": "unit_purpose_need",
                 "authority_source_record_id": "R1EA-001",
                 "applicability_mode": "baseline",
                 "question": "Does the EA package identify the purpose and need?",
@@ -3077,6 +3226,7 @@ def _rule_pack() -> dict:
                 "id": "mitigation",
                 "title": "Mitigation is addressed",
                 "authority_category": "regulation",
+                "authority_family_id": "unit_mitigation",
                 "authority_source_record_id": "R1EA-002",
                 "applicability_mode": "baseline",
                 "question": "Does the EA package address mitigation?",

@@ -386,6 +386,15 @@ def _generated_rule_pack(
         rule["base_rule_pack_version"] = base_rule_pack.get("version")
         rule["applicability_decision_id"] = authority.get("decision_id")
         rule["candidate_authority_id"] = candidate_id
+        authority_family_ids = _authority_family_ids_for_authority(
+            authority=authority,
+            candidate=candidate,
+            decision=decision,
+        )
+        rule["authority_family_ids"] = authority_family_ids
+        rule["authority_family_id"] = (
+            authority_family_ids[0] if authority_family_ids else None
+        )
         rule["applicability_artifact_hashes"] = dict(artifact_hashes)
         rule["generated_from_applicability"] = True
         rules.append(rule)
@@ -1022,10 +1031,17 @@ def _rule_applicability_metadata(
     decision: dict[str, Any],
     artifact_hashes: dict[str, Any],
 ) -> dict[str, Any]:
+    authority_family_ids = _authority_family_ids_for_authority(
+        authority=authority,
+        candidate=candidate,
+        decision=decision,
+    )
     return {
         "decision_id": authority.get("decision_id"),
         "candidate_authority_id": authority.get("candidate_authority_id"),
         "candidate_authority_type": authority.get("candidate_authority_type"),
+        "authority_family_ids": authority_family_ids,
+        "authority_family_id": authority_family_ids[0] if authority_family_ids else None,
         "status": authority.get("status"),
         "basis_type": authority.get("basis_type"),
         "applicability_basis": authority.get("applicability_basis"),
@@ -1151,6 +1167,23 @@ def _authority_family_template_rule(
         ),
         "evidence_expectation": rule_template.get("evidence_expectation"),
     }
+
+
+def _authority_family_ids_for_authority(
+    *,
+    authority: dict[str, Any],
+    candidate: dict[str, Any],
+    decision: dict[str, Any],
+) -> list[str]:
+    family_ids: set[str] = set()
+    for payload in (authority, candidate, decision):
+        family_ids.update(_strings(payload.get("authority_family_ids")))
+        family_ids.update(_strings([payload.get("authority_family_id")]))
+        rule_template = payload.get("rule_template")
+        if isinstance(rule_template, dict):
+            family_ids.update(_strings(rule_template.get("authority_family_ids")))
+            family_ids.update(_strings([rule_template.get("authority_family_id")]))
+    return sorted(family_ids)
 
 
 def _source_claim_link_requirements(candidate: dict[str, Any]) -> dict[str, Any]:

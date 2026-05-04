@@ -25,6 +25,7 @@ DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH = Path(
     "config/authority_family_rule_templates_nepa_ea_v1.json"
 )
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID = "nfma_forest_planning_project_consistency"
 BASE_RULE_PACKAGE_FACT_TYPES = (
     "action",
     "agency",
@@ -538,6 +539,8 @@ def _forest_plan_component_candidates(
                 "candidate_authority_type": "forest_plan_component",
                 "source_set_id": source_set_id,
                 "authority_category": "forest_plan",
+                "authority_family_id": FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID,
+                "authority_family_ids": [FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID],
                 "authority_document_role": "forest_plan",
                 "source_record_ids": [source_record_id] if source_record_id else [],
                 "source_records": [_source_record_summary(catalog_record)]

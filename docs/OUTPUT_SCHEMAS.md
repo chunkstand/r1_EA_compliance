@@ -1584,6 +1584,11 @@ The `compliance-review` command writes the base EA review outputs plus:
 - `compliance_matrix.json`
 - `compliance_matrix.md`
 - `compliance_matrix.pdf`
+- `authority_family_provenance.json`
+- `non_applicable_authority_appendix.json`
+- `non_applicable_authority_appendix.md`
+- `authority_reviewer_resolution_report.json`
+- `litigation_risk_summary.json`
 - `finding_graph_nodes.jsonl`
 - `finding_graph_edges.jsonl`
 
@@ -1691,6 +1696,9 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
   component-evaluation artifact paths when applicable
 - `applicability_gate`, with generated-pack validation, applicability validation,
   non-applicable-authority, search-coverage, provenance, and package-manifest gate paths/status
+- authority integration paths and summary counts for authority-family provenance,
+  non-applicable appendices, reviewer-resolution reporting, and deterministic litigation-risk
+  categories
 - validation
 - compliance findings
 
@@ -1699,6 +1707,9 @@ Each compliance finding includes:
 - rule-pack ID and version
 - rule ID, title, question, requirement, and severity
 - authority category, authority source record ID, authority document role, and applicability mode
+- candidate authority ID, applicability decision ID, candidate authority type, authority-family IDs,
+  generated-applicability marker, search-coverage certificate IDs, and adjudication references when
+  present
 - status: `pass`, `gap`, or `uncertain` for generated applicable rules; base diagnostic runs may
   still emit `not_applicable`
 - claim type: `supported_compliance_finding`, `package_evidence_gap`, or `no_compliance_claim`
@@ -1716,8 +1727,9 @@ Each compliance finding includes:
 
 - review ID, package path, source set, rule-pack summary, and matrix summary
 - status counts, applicability counts, applicable source records, claim row count, validation status,
-  reviewer-ready status, PDF path, `applicability_gate`, `non_applicable_authorities.json`,
-  `search_coverage_certificates.json`, and `forest_plan_review` links when present
+  reviewer-ready status, PDF path, `applicability_gate`, authority integration paths,
+  `non_applicable_authorities.json`, `search_coverage_certificates.json`, and
+  `forest_plan_review` links when present
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
 - one NEPA/authority table row per compliance finding
@@ -1731,7 +1743,8 @@ Each matrix row includes:
 
 - rule ID, rule title, question, requirement, severity, status, claim type, confidence, and rationale
 - authority category, authority source record ID, authority document role, applicability mode,
-  applicability status, and applicability basis
+  applicability status, candidate authority ID, applicability decision ID, authority-family IDs,
+  search-coverage certificate IDs, adjudication references, and applicability basis
 - applicability basis fields including source filters, package terms, conditional applicability
   terms, optional conditional applicability term groups, optional explicit non-applicability terms,
   source query, applied source record IDs, and applied source document roles
@@ -1752,6 +1765,39 @@ into the NEPA/generated-rule compliance table.
 table plus the separate `Forest Plan Compliance` table when available.
 `compliance_matrix.pdf` is generated for every compliance review from the same JSON matrix data. The
 JSON matrix is the stable machine contract.
+
+Authority integration sidecars are generated for every compliance review. In diagnostic base-pack
+runs they are present but marked non-reviewer-ready through validation; in generated-pack runs they
+are required promotion artifacts.
+
+`authority_family_provenance.json` has schema version `authority-family-provenance-v0` and records:
+
+- review/source-set/rule-pack identity and links back to compliance review, matrix, and validation
+- one finding-provenance row per generated compliance finding
+- rule ID, finding ID, candidate authority ID, applicability decision ID, candidate authority type,
+  authority-family IDs, basis type, source record IDs, applicability status/mode, coverage
+  certificate IDs, and adjudication references
+- summary lists for findings missing candidate authority IDs or authority-family IDs
+
+`non_applicable_authority_appendix.json` has schema version
+`non-applicable-authority-appendix-v0`; `.md` renders the same appendix for reviewers. Each row
+records candidate authority ID/type, decision ID, authority-family IDs when known, status, basis
+type, rationale, source records, search-coverage certificate IDs, compact coverage-certificate
+details, negative evidence spans, trigger-miss evidence, and adjudication references. Generated
+review validation requires every row to have coverage certificates and rationale.
+
+`authority_reviewer_resolution_report.json` has schema version
+`authority-reviewer-resolution-report-v0`. Its summary records pending-resolution count,
+adjudicated-authority count, whether reviewer-ready output is blocked, and a pass flag. Pending
+`unresolved` or `needs_adjudication` items block reviewer-ready compliance output until an
+adjudication artifact resolves them.
+
+`litigation_risk_summary.json` has schema version `litigation-risk-summary-v0`. It records
+deterministic risk categories such as `package_evidence_gap`,
+`non_applicable_authority_coverage_boundary`, `unresolved_authority_family_requires_resolution`,
+and `human_adjudicated_authority_family`. Each flag has rule IDs, authority-family IDs, candidate
+authority IDs, evidence/artifact refs, rationale, `deterministic_basis=true`, and
+`legal_conclusion=false`; this artifact is not a legal conclusion generator.
 
 `finding_graph_nodes.jsonl` contains:
 

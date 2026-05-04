@@ -39,6 +39,60 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     assert gold_checks["authority_family_adjudicated_coverage"]["min"] == 1
 
 
+def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    review_case = manifest["review_cases"][0]
+    results = {result["id"]: result for result in review_case["results"]}
+
+    provenance = results["authority_family_provenance"]
+    assert provenance["required_for_current_promotion"] is True
+    assert provenance["path"] == "reviews/{review_id}/authority_family_provenance.json"
+    provenance_checks = {check["name"]: check for check in provenance["checks"]}
+    assert provenance_checks["authority_provenance_generated_mode"]["equals"] is True
+    assert provenance_checks["authority_provenance_finding_count"]["equals"] == 33
+    assert provenance_checks["authority_provenance_family_ids_present"]["equals"] == []
+    assert provenance_checks["authority_provenance_candidate_ids_present"]["equals"] == []
+
+    appendix = results["non_applicable_authority_appendix"]
+    assert appendix["required_for_current_promotion"] is True
+    assert appendix["path"] == "reviews/{review_id}/non_applicable_authority_appendix.json"
+    appendix_checks = {check["name"]: check for check in appendix["checks"]}
+    assert appendix_checks["non_applicable_authority_count"]["min"] == 1
+    assert appendix_checks["non_applicable_authorities_have_coverage"]["equals"] is True
+    assert appendix_checks["non_applicable_authorities_have_rationale"]["equals"] is True
+
+    resolution = results["authority_reviewer_resolution_report"]
+    assert resolution["required_for_current_promotion"] is True
+    assert resolution["path"] == "reviews/{review_id}/authority_reviewer_resolution_report.json"
+    resolution_checks = {check["name"]: check for check in resolution["checks"]}
+    assert resolution_checks["authority_resolution_pending_count"]["equals"] == 0
+    assert resolution_checks["authority_resolution_report_passed"]["equals"] is True
+
+    risk = results["litigation_risk_summary"]
+    assert risk["required_for_current_promotion"] is True
+    assert risk["path"] == "reviews/{review_id}/litigation_risk_summary.json"
+    risk_checks = {check["name"]: check for check in risk["checks"]}
+    assert risk_checks["litigation_risk_flags_present"]["min"] == 1
+    assert risk_checks["litigation_risk_no_legal_conclusions"]["equals"] == 0
+    assert risk_checks["litigation_risk_deterministic_only"]["equals"] is True
+
+
+def test_committed_promotion_suite_records_expansion_pass_blocker() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
+    slot = slots["region1-real-ea-slot-1"]
+
+    assert slot["status"] == "blocked_needs_adjudication"
+    assert slot["ready"] is False
+    assert slot["failure_category"] == "adjudication_needed"
+    assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
+    assert "Preliminary Environmental Assessment" in slot["package_path"]
+    assert slot["last_local_signal"]["package_chunk_count"] == 160
+    assert slot["last_local_signal"]["candidate_authority_count"] == 392
+    assert slot["last_local_signal"]["needs_adjudication_authority_count"] == 3
+    assert slot["last_local_signal"]["applicability_validation_passed"] is False
+
+
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:
     manifest_path, output_dir = _write_suite_fixture(tmp_path)
 

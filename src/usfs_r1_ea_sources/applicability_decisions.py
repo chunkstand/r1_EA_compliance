@@ -346,6 +346,7 @@ def _decision_for_candidate(
     freshness: dict[str, Any],
 ) -> dict[str, Any]:
     candidate_id = str(candidate.get("candidate_authority_id") or "")
+    authority_family_ids = _authority_family_ids_for_candidate(candidate)
     source_record_ids = _strings(candidate.get("source_record_ids"))
     source_evidence = _source_library_evidence(retrieval_rows, source_record_ids)
     if not source_evidence:
@@ -514,6 +515,8 @@ def _decision_for_candidate(
         "decision_id": decision_id,
         "candidate_authority_id": candidate_id,
         "candidate_authority_type": candidate.get("candidate_authority_type"),
+        "authority_family_ids": authority_family_ids,
+        "authority_family_id": authority_family_ids[0] if authority_family_ids else None,
         "status": status,
         "basis_type": basis_type,
         "basis": basis,
@@ -1207,11 +1210,23 @@ def _source_evidence_available(candidate: dict[str, Any]) -> bool:
     return False
 
 
+def _authority_family_ids_for_candidate(candidate: dict[str, Any]) -> list[str]:
+    family_ids = set(_strings(candidate.get("authority_family_ids")))
+    family_ids.update(_strings([candidate.get("authority_family_id")]))
+    rule_template = candidate.get("rule_template")
+    if isinstance(rule_template, dict):
+        family_ids.update(_strings(rule_template.get("authority_family_ids")))
+        family_ids.update(_strings([rule_template.get("authority_family_id")]))
+    return sorted(family_ids)
+
+
 def _partition_authority_record(decision: dict[str, Any]) -> dict[str, Any]:
     return {
         "decision_id": decision["decision_id"],
         "candidate_authority_id": decision["candidate_authority_id"],
         "candidate_authority_type": decision.get("candidate_authority_type"),
+        "authority_family_ids": decision.get("authority_family_ids") or [],
+        "authority_family_id": decision.get("authority_family_id"),
         "status": decision["status"],
         "applicability_basis": decision["basis"],
         "non_applicability_basis": decision["basis"]
@@ -1241,6 +1256,9 @@ def _generated_rule_metadata(decision: dict[str, Any]) -> dict[str, Any]:
     if isinstance(rule_template, dict):
         return {
             "source_base_rule_id": rule_template.get("rule_id"),
+            "authority_family_ids": decision.get("authority_family_ids") or [],
+            "authority_family_id": decision.get("authority_family_id")
+            or rule_template.get("authority_family_id"),
             "base_rule_pack_id": rule_template.get("base_rule_pack_id"),
             "base_rule_pack_version": rule_template.get("base_rule_pack_version"),
             "title": rule_template.get("title"),

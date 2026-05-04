@@ -113,6 +113,102 @@
           ]
         },
         {
+          "id": "authority_family_provenance",
+          "label": "Authority-family provenance",
+          "path": "reviews/{review_id}/authority_family_provenance.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "authority_provenance_generated_mode",
+              "json_path": "summary.generated_mode",
+              "equals": true
+            },
+            {
+              "name": "authority_provenance_finding_count",
+              "json_path": "summary.finding_authority_provenance_count",
+              "equals": 33
+            },
+            {
+              "name": "authority_provenance_family_ids_present",
+              "json_path": "summary.findings_missing_authority_family_ids",
+              "equals": []
+            },
+            {
+              "name": "authority_provenance_candidate_ids_present",
+              "json_path": "summary.findings_missing_candidate_authority_ids",
+              "equals": []
+            }
+          ]
+        },
+        {
+          "id": "non_applicable_authority_appendix",
+          "label": "Non-applicable authority appendix",
+          "path": "reviews/{review_id}/non_applicable_authority_appendix.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "non_applicable_authority_count",
+              "json_path": "summary.non_applicable_authority_count",
+              "min": 1
+            },
+            {
+              "name": "non_applicable_authorities_have_coverage",
+              "json_path": "summary.all_have_coverage_certificates",
+              "equals": true
+            },
+            {
+              "name": "non_applicable_authorities_have_rationale",
+              "json_path": "summary.all_have_rationale",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "authority_reviewer_resolution_report",
+          "label": "Authority reviewer-resolution report",
+          "path": "reviews/{review_id}/authority_reviewer_resolution_report.json",
+          "required_for_current_promotion": true,
+          "failure_category": "adjudication_needed",
+          "checks": [
+            {
+              "name": "authority_resolution_pending_count",
+              "json_path": "summary.pending_resolution_count",
+              "equals": 0
+            },
+            {
+              "name": "authority_resolution_report_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "litigation_risk_summary",
+          "label": "Litigation-risk summary",
+          "path": "reviews/{review_id}/litigation_risk_summary.json",
+          "required_for_current_promotion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "litigation_risk_flags_present",
+              "json_path": "summary.risk_flag_count",
+              "min": 1
+            },
+            {
+              "name": "litigation_risk_no_legal_conclusions",
+              "json_path": "summary.legal_conclusion_count",
+              "equals": 0
+            },
+            {
+              "name": "litigation_risk_deterministic_only",
+              "json_path": "summary.deterministic_only",
+              "equals": true
+            }
+          ]
+        },
+        {
           "id": "v1_ea_eval",
           "label": "V1 real EA eval",
           "path": "reviews/{review_id}/v1_ea_eval_results.json",
@@ -323,13 +419,26 @@
   "expansion_slots": [
     {
       "id": "region1-real-ea-slot-1",
-      "label": "Second real Region 1 EA package",
-      "status": "open",
+      "label": "Second real Region 1 EA package: ECID preliminary EA",
+      "status": "blocked_needs_adjudication",
       "ready": false,
       "required_for_current_promotion": false,
-      "failure_category": "package_fixture_missing",
-      "next_action": "Add a local package fixture, review ID, eval contract, and phase-eval evidence before broadening readiness beyond the East Crazy Inspiration Divide case.",
-      "acceptance_signal": "phase-eval and package-specific eval pass without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
+      "failure_category": "adjudication_needed",
+      "review_id": "region1-expansion-ecid-preliminary-ea",
+      "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
+      "last_local_signal": {
+        "package_file_count": 7,
+        "package_chunk_count": 160,
+        "candidate_authority_count": 392,
+        "applicable_authority_count": 40,
+        "non_applicable_authority_count": 349,
+        "needs_adjudication_authority_count": 3,
+        "applicability_validation_passed": false,
+        "adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/applicability_adjudication_template.json",
+        "phase_eval_reviewer_ready": false
+      },
+      "next_action": "Complete and replay the three-item applicability adjudication template, then rerun applicability validation, generated rule-pack creation, compliance review, and phase eval for this review ID.",
+      "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {
       "id": "region1-real-ea-slot-2",

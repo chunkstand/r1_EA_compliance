@@ -109,9 +109,12 @@ litigation-risk categories without turning non-applicable authorities into compl
   `config/applicability_gold_eval_v0.json`, the
   `config/fixtures/applicability/region1-land-exchange-expanded-authority.txt` package fixture,
   applicability-eval support for authority-family templates and adjudication replay, and
-  promotion-suite checks for authority-family applicability coverage. The next milestone is
-  Milestone 5: compliance review and report integration for authority-family provenance,
-  non-applicable appendices, reviewer-resolution reporting, and litigation-risk summaries.
+- Milestone 5 is complete through generated compliance-review authority provenance fields,
+  compliance-matrix authority-family columns, non-applicable authority appendix artifacts,
+  reviewer-resolution reporting, deterministic litigation-risk summaries, validation checks, and
+  promotion-suite gates. The authority-universe completion sequence has no Milestone 6; the next
+  implementation pass returns to the broader applicability-first Milestone 10 real-package
+  expansion lane.
 
 ## Required Authority Families
 
@@ -304,6 +307,15 @@ Acceptance criteria:
 Goal:
 Make authority-universe completion visible in reviewer outputs without turning non-applicable
 authorities into compliance findings.
+
+Status:
+Implemented. Generated compliance findings now cite candidate authority IDs, applicability decision
+IDs, and authority-family IDs. Compliance matrices expose those identifiers in rows and summary
+paths. Non-applicable authorities are written to JSON/Markdown appendices with coverage
+certificates and rationale. Unresolved authority families are reported in
+`authority_reviewer_resolution_report.json` and block reviewer-ready validation unless adjudicated.
+`litigation_risk_summary.json` records deterministic evidence-risk categories and explicitly
+does not emit legal conclusions.
 
 Required outputs:
 

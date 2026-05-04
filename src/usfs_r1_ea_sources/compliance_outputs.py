@@ -59,6 +59,17 @@ def build_compliance_matrix(
             "compliance_review_path": summary.get("compliance_review_path"),
             "compliance_validation_path": summary.get("compliance_validation_path"),
             "compliance_matrix_pdf_path": summary.get("compliance_matrix_pdf_path"),
+            "authority_provenance_path": summary.get("authority_provenance_path"),
+            "non_applicable_authority_appendix_path": summary.get(
+                "non_applicable_authority_appendix_path"
+            ),
+            "non_applicable_authority_appendix_markdown_path": summary.get(
+                "non_applicable_authority_appendix_markdown_path"
+            ),
+            "reviewer_resolution_report_path": summary.get(
+                "reviewer_resolution_report_path"
+            ),
+            "litigation_risk_summary_path": summary.get("litigation_risk_summary_path"),
             "finding_graph_nodes_path": summary.get("finding_nodes_path"),
             "finding_graph_edges_path": summary.get("finding_edges_path"),
             "forest_plan_review": summary.get("forest_plan_review"),
@@ -78,6 +89,7 @@ def build_compliance_matrix(
                 )
             ),
             "applicability_gate": summary.get("applicability_gate"),
+            "authority_integration": summary.get("authority_integration"),
             "non_applicable_authorities_path": applicability_gate.get(
                 "non_applicable_authorities_path"
             ),
@@ -93,9 +105,15 @@ def build_compliance_matrix(
             "rule_title",
             "authority_category",
             "authority_source_record_id",
+            "authority_family_ids",
+            "candidate_authority_id",
+            "applicability_decision_id",
+            "candidate_authority_type",
             "status",
             "applicability_status",
             "applicability_mode",
+            "search_coverage_certificate_ids",
+            "human_adjudication_refs",
             "requirement",
             "ea_package_citation",
             "source_library_citation",
@@ -153,9 +171,7 @@ def matrix_markdown(matrix: dict) -> str:
             + " | ".join(
                 [
                     _md_cell(
-                        f"{row['rule_id']} - {row['rule_title']} "
-                        f"({row.get('authority_category')}: "
-                        f"{row.get('authority_source_record_id')})"
+                        _authority_markdown_cell(row)
                     ),
                     _md_cell(
                         f"{row.get('applicability_status')} / "
@@ -208,6 +224,15 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "authority_category": finding.get("authority_category"),
         "authority_source_record_id": finding.get("authority_source_record_id"),
         "authority_document_role": finding.get("authority_document_role"),
+        "authority_family_ids": _strings(finding.get("authority_family_ids")),
+        "authority_family_id": finding.get("authority_family_id"),
+        "candidate_authority_id": finding.get("candidate_authority_id"),
+        "candidate_authority_type": finding.get("candidate_authority_type"),
+        "applicability_decision_id": finding.get("applicability_decision_id"),
+        "search_coverage_certificate_ids": _strings(
+            finding.get("search_coverage_certificate_ids")
+        ),
+        "human_adjudication_refs": finding.get("human_adjudication_refs") or [],
         "question": finding.get("question"),
         "requirement": finding.get("requirement"),
         "severity": finding.get("severity"),
@@ -241,6 +266,10 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
             "source_query": finding.get("source_query"),
             "applied_source_record_ids": applied_source_record_ids,
             "applied_source_document_roles": applied_source_document_roles,
+            "candidate_authority_id": finding.get("candidate_authority_id"),
+            "applicability_decision_id": finding.get("applicability_decision_id"),
+            "authority_family_ids": _strings(finding.get("authority_family_ids")),
+            "basis_type": finding.get("applicability_basis_type"),
         },
         "package_query": finding.get("package_query"),
         "source_query": finding.get("source_query"),
@@ -258,6 +287,17 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "limitations": finding.get("limitations", []),
         "failure_category": _matrix_failure_category(finding),
     }
+
+
+def _authority_markdown_cell(row: dict) -> str:
+    family_ids = ", ".join(row.get("authority_family_ids") or []) or "none"
+    source = row.get("authority_source_record_id") or "none"
+    candidate = row.get("candidate_authority_id") or "none"
+    return (
+        f"{row['rule_id']} - {row['rule_title']} "
+        f"(family: {family_ids}; candidate: {candidate}; "
+        f"{row.get('authority_category')}: {source})"
+    )
 
 
 def _forest_plan_compliance_section(
@@ -490,6 +530,14 @@ def _optional_path(value: object) -> Path | None:
     if not value:
         return None
     return Path(str(value))
+
+
+def _strings(value: object) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item or "").strip()]
+    if str(value or "").strip():
+        return [str(value).strip()]
+    return []
 
 
 def _read_json_if_exists(path: Path | None, load_errors: list[str]) -> dict | None:

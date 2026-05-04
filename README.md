@@ -70,7 +70,9 @@ now score positive and negative coverage for all `19` high-priority authority-fa
 realistic Region 1 land-exchange fixture exercises land exchange, water/wetlands, cultural/tribal,
 wildlife/species, designated-area, and forest-plan consistency triggers, and gold evals include
 unresolved and replay-adjudicated authority-family decisions. The next authority-universe work is
-Milestone 5 reviewer report/compliance integration.
+now complete: reviewer-facing compliance outputs carry authority-family provenance,
+non-applicable authority appendices, reviewer-resolution status, and deterministic litigation-risk
+categories tied to evidence artifacts.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -168,6 +170,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/compliance_matrix.json`
   - `source_library/reviews/<review_id>/compliance_matrix.md`
   - `source_library/reviews/<review_id>/compliance_matrix.pdf`
+  - `source_library/reviews/<review_id>/authority_family_provenance.json`
+  - `source_library/reviews/<review_id>/non_applicable_authority_appendix.json`
+  - `source_library/reviews/<review_id>/non_applicable_authority_appendix.md`
+  - `source_library/reviews/<review_id>/authority_reviewer_resolution_report.json`
+  - `source_library/reviews/<review_id>/litigation_risk_summary.json`
   - `source_library/reviews/<review_id>/finding_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/finding_graph_edges.jsonl`
   - `source_library/reviews/<review_id>/forest_plan_context.json`

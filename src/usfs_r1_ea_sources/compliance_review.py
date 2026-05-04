@@ -29,6 +29,10 @@ COMPLIANCE_REVIEW_SCHEMA_VERSION = "compliance-review-v0"
 COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v0"
 DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH = Path("config/compliance_review_eval_seed.json")
+DEFAULT_AUTHORITY_FAMILY_INVENTORY_PATH = Path(
+    "config/authority_universe_families_nepa_ea_v1.json"
+)
+FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID = "nfma_forest_planning_project_consistency"
 VALID_FINDING_STATUSES = {"pass", "gap", "uncertain", "not_applicable"}
 CLAIM_STATUSES = {"pass", "gap"}
 VALID_CLAIM_TYPES = {
@@ -53,6 +57,11 @@ class ComplianceReviewResult:
     compliance_matrix_markdown_path: Path
     compliance_matrix_pdf_path: Path
     compliance_validation_path: Path
+    authority_provenance_path: Path
+    non_applicable_authority_appendix_path: Path
+    non_applicable_authority_appendix_markdown_path: Path
+    reviewer_resolution_report_path: Path
+    litigation_risk_summary_path: Path
     finding_nodes_path: Path
     finding_edges_path: Path
     rule_claim_links_path: Path
@@ -119,6 +128,13 @@ def run_compliance_review(
     compliance_matrix_markdown_path = review_dir / "compliance_matrix.md"
     compliance_matrix_pdf_path = review_dir / "compliance_matrix.pdf"
     compliance_validation_path = review_dir / "compliance_validation.json"
+    authority_provenance_path = review_dir / "authority_family_provenance.json"
+    non_applicable_authority_appendix_path = review_dir / "non_applicable_authority_appendix.json"
+    non_applicable_authority_appendix_markdown_path = (
+        review_dir / "non_applicable_authority_appendix.md"
+    )
+    reviewer_resolution_report_path = review_dir / "authority_reviewer_resolution_report.json"
+    litigation_risk_summary_path = review_dir / "litigation_risk_summary.json"
     finding_nodes_path = review_dir / "finding_graph_nodes.jsonl"
     finding_edges_path = review_dir / "finding_graph_edges.jsonl"
     _prepare_outputs(
@@ -127,6 +143,11 @@ def run_compliance_review(
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_validation_path=compliance_validation_path,
+        authority_provenance_path=authority_provenance_path,
+        non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
+        non_applicable_authority_appendix_markdown_path=non_applicable_authority_appendix_markdown_path,
+        reviewer_resolution_report_path=reviewer_resolution_report_path,
+        litigation_risk_summary_path=litigation_risk_summary_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
     )
@@ -154,6 +175,7 @@ def run_compliance_review(
     )
     rule_claim_links = _read_jsonl(rule_claim_result.links_path)
     rule_claim_links_by_rule = links_by_rule(rule_claim_links, limit=source_top_k)
+    authority_family_index = _authority_family_index(DEFAULT_AUTHORITY_FAMILY_INVENTORY_PATH)
 
     ea_result = run_ea_review(
         package_path=package_path,
@@ -194,9 +216,22 @@ def run_compliance_review(
             rule=rules_by_id[str(finding["id"])],
             finding=finding,
             source_claim_links=rule_claim_links_by_rule.get(str(finding["id"]), []),
+            authority_family_index=authority_family_index,
         )
         for finding in ea_report["findings"]
     ]
+    authority_integration = _authority_integration_context(
+        review_id=review_id,
+        source_set_id=source_set_id or str(ea_report["summary"].get("source_set_id") or ""),
+        rule_pack=rule_pack,
+        findings=findings,
+        applicability_gate=applicability_gate,
+        authority_provenance_path=authority_provenance_path,
+        non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
+        non_applicable_authority_appendix_markdown_path=non_applicable_authority_appendix_markdown_path,
+        reviewer_resolution_report_path=reviewer_resolution_report_path,
+        litigation_risk_summary_path=litigation_risk_summary_path,
+    )
     nodes, edges = _finding_graph(
         review_id=review_id,
         rule_pack=rule_pack,
@@ -218,6 +253,7 @@ def run_compliance_review(
         applicability_gate=applicability_gate,
         package_manifest_path=ea_result.package_manifest_path,
         package_chunks_path=ea_result.package_chunks_path,
+        authority_integration=authority_integration,
         findings=findings,
         nodes=nodes,
         edges=edges,
@@ -241,6 +277,7 @@ def run_compliance_review(
         ea_result=ea_result,
         forest_plan_result=forest_plan_result,
         applicability_gate=applicability_gate,
+        authority_integration=authority_integration,
         validation=validation,
         nodes=nodes,
         edges=edges,
@@ -262,6 +299,11 @@ def run_compliance_review(
         validation=validation,
         applicability_gate=applicability_gate,
     )
+    _write_authority_integration_artifacts(
+        context=authority_integration,
+        summary=summary,
+        validation=validation,
+    )
     _write_jsonl(finding_nodes_path, nodes)
     _write_jsonl(finding_edges_path, edges)
     _write_json(compliance_matrix_path, matrix)
@@ -281,6 +323,11 @@ def run_compliance_review(
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_validation_path=compliance_validation_path,
+        authority_provenance_path=authority_provenance_path,
+        non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
+        non_applicable_authority_appendix_markdown_path=non_applicable_authority_appendix_markdown_path,
+        reviewer_resolution_report_path=reviewer_resolution_report_path,
+        litigation_risk_summary_path=litigation_risk_summary_path,
         finding_nodes_path=finding_nodes_path,
         finding_edges_path=finding_edges_path,
         rule_claim_links_path=rule_claim_result.links_path,
@@ -506,6 +553,16 @@ def _applicability_gate_context(
         "search_coverage_certificates",
         applicability_dir / "search_coverage_certificates.json",
     )
+    decisions_path = _path_from_artifact_paths(
+        validation_paths,
+        "decisions",
+        applicability_dir / "applicability_decisions.jsonl",
+    )
+    applicable_path = _path_from_artifact_paths(
+        validation_paths,
+        "applicable_authorities",
+        applicability_dir / "applicable_authorities.json",
+    )
     provenance_path = _path_from_artifact_paths(
         validation_paths,
         "provenance",
@@ -668,6 +725,8 @@ def _applicability_gate_context(
         "applicability_dir": str(applicability_dir),
         "applicability_validation_path": str(validation_path),
         "generated_rule_pack_validation_path": str(generated_validation_path),
+        "applicability_decisions_path": str(decisions_path),
+        "applicable_authorities_path": str(applicable_path),
         "non_applicable_authorities_path": str(non_applicable_path),
         "non_applicable_authority_count": len(non_applicable.get("authorities") or []),
         "search_coverage_certificates_path": str(coverage_path),
@@ -767,6 +826,8 @@ def _applicability_gate_summary(applicability_gate: dict) -> dict:
         "generated_rule_pack_validation_path": applicability_gate.get(
             "generated_rule_pack_validation_path"
         ),
+        "applicability_decisions_path": applicability_gate.get("applicability_decisions_path"),
+        "applicable_authorities_path": applicability_gate.get("applicable_authorities_path"),
         "non_applicable_authorities_path": applicability_gate.get(
             "non_applicable_authorities_path"
         ),
@@ -777,6 +838,641 @@ def _applicability_gate_summary(applicability_gate: dict) -> dict:
         "search_coverage_certificates_path": applicability_gate.get(
             "search_coverage_certificates_path"
         ),
+    }
+
+
+def _authority_integration_context(
+    *,
+    review_id: str,
+    source_set_id: str,
+    rule_pack: dict,
+    findings: list[dict],
+    applicability_gate: dict,
+    authority_provenance_path: Path,
+    non_applicable_authority_appendix_path: Path,
+    non_applicable_authority_appendix_markdown_path: Path,
+    reviewer_resolution_report_path: Path,
+    litigation_risk_summary_path: Path,
+) -> dict:
+    generated_mode = bool(applicability_gate.get("is_generated_rule_pack"))
+    decisions = _read_jsonl_if_exists(
+        _optional_path(applicability_gate.get("applicability_decisions_path"))
+    )
+    applicable = _read_json_if_exists_or_empty(
+        _optional_path(applicability_gate.get("applicable_authorities_path"))
+    )
+    non_applicable = _read_json_if_exists_or_empty(
+        _optional_path(applicability_gate.get("non_applicable_authorities_path"))
+    )
+    coverage = _read_json_if_exists_or_empty(
+        _optional_path(applicability_gate.get("search_coverage_certificates_path"))
+    )
+    coverage_by_id = _coverage_certificates_by_id(coverage)
+    finding_provenance = [
+        _finding_authority_provenance(finding) for finding in findings
+    ]
+    non_applicable_rows = [
+        _non_applicable_authority_row(authority, coverage_by_id)
+        for authority in non_applicable.get("authorities") or []
+        if isinstance(authority, dict)
+    ]
+    pending_resolution = [
+        _reviewer_resolution_item(decision)
+        for decision in decisions
+        if str(decision.get("status") or "") in {"unresolved", "needs_adjudication"}
+    ]
+    adjudicated = [
+        _reviewer_resolution_item(decision)
+        for decision in decisions
+        if _decision_is_adjudicated(decision)
+    ]
+    risk_flags = _litigation_risk_flags(
+        findings=findings,
+        non_applicable_rows=non_applicable_rows,
+        pending_resolution=pending_resolution,
+        adjudicated=adjudicated,
+    )
+    summary = {
+        "schema_version": "authority-review-integration-summary-v0",
+        "generated_mode": generated_mode,
+        "applicable_authority_count": len(applicable.get("authorities") or []),
+        "non_applicable_authority_count": len(non_applicable_rows),
+        "pending_resolution_count": len(pending_resolution),
+        "adjudicated_authority_count": len(adjudicated),
+        "risk_flag_count": len(risk_flags),
+        "finding_authority_provenance_count": len(finding_provenance),
+        "findings_missing_candidate_authority_ids": [
+            row["rule_id"] for row in finding_provenance if not row["candidate_authority_id"]
+        ],
+        "findings_missing_authority_family_ids": [
+            row["rule_id"] for row in finding_provenance if not row["authority_family_ids"]
+        ],
+        "non_applicable_authorities_missing_coverage": [
+            row["candidate_authority_id"]
+            for row in non_applicable_rows
+            if not row["search_coverage_certificate_ids"]
+        ],
+        "non_applicable_authorities_missing_rationale": [
+            row["candidate_authority_id"] for row in non_applicable_rows if not row["rationale"]
+        ],
+        "legal_conclusion_count": sum(
+            1 for flag in risk_flags if bool(flag.get("legal_conclusion"))
+        ),
+    }
+    return {
+        "review_id": review_id,
+        "source_set_id": source_set_id,
+        "rule_pack_id": rule_pack.get("rule_pack_id"),
+        "rule_pack_version": rule_pack.get("version"),
+        "generated_mode": generated_mode,
+        "authority_provenance_path": str(authority_provenance_path),
+        "non_applicable_authority_appendix_path": str(
+            non_applicable_authority_appendix_path
+        ),
+        "non_applicable_authority_appendix_markdown_path": str(
+            non_applicable_authority_appendix_markdown_path
+        ),
+        "reviewer_resolution_report_path": str(reviewer_resolution_report_path),
+        "litigation_risk_summary_path": str(litigation_risk_summary_path),
+        "applicable_authorities_path": applicability_gate.get("applicable_authorities_path"),
+        "non_applicable_authorities_path": applicability_gate.get(
+            "non_applicable_authorities_path"
+        ),
+        "search_coverage_certificates_path": applicability_gate.get(
+            "search_coverage_certificates_path"
+        ),
+        "applicability_decisions_path": applicability_gate.get("applicability_decisions_path"),
+        "finding_provenance": finding_provenance,
+        "non_applicable_rows": non_applicable_rows,
+        "pending_resolution": pending_resolution,
+        "adjudicated": adjudicated,
+        "risk_flags": risk_flags,
+        "summary": summary,
+    }
+
+
+def _finding_authority_provenance(finding: dict) -> dict:
+    source_record_ids = set(_strings([finding.get("authority_source_record_id")]))
+    source_record_ids.update(finding_source_record_ids(finding))
+    return {
+        "finding_id": finding.get("id"),
+        "rule_id": finding.get("rule_id"),
+        "status": finding.get("status"),
+        "candidate_authority_id": finding.get("candidate_authority_id"),
+        "candidate_authority_type": finding.get("candidate_authority_type"),
+        "applicability_decision_id": finding.get("applicability_decision_id"),
+        "authority_family_ids": _strings(finding.get("authority_family_ids")),
+        "basis_type": finding.get("applicability_basis_type"),
+        "authority_source_record_id": finding.get("authority_source_record_id"),
+        "source_record_ids": sorted(source_record_ids),
+        "authority_document_role": finding.get("authority_document_role"),
+        "applicability_status": finding.get("applicability_status"),
+        "applicability_mode": finding.get("applicability_mode"),
+        "generated_from_applicability": bool(finding.get("generated_from_applicability")),
+        "human_adjudication_refs": finding.get("human_adjudication_refs") or [],
+        "search_coverage_certificate_ids": _strings(
+            finding.get("search_coverage_certificate_ids")
+        ),
+    }
+
+
+def _non_applicable_authority_row(authority: dict, coverage_by_id: dict[str, dict]) -> dict:
+    certificate_ids = _strings(authority.get("search_coverage_certificate_ids"))
+    certificates = [
+        _compact_coverage_certificate(coverage_by_id[certificate_id])
+        for certificate_id in certificate_ids
+        if certificate_id in coverage_by_id
+    ]
+    basis = authority.get("non_applicability_basis") or authority.get("applicability_basis") or {}
+    authority_family_ids = _strings(authority.get("authority_family_ids"))
+    authority_family_ids.extend(
+        _strings(
+            [
+                authority.get("authority_family_id"),
+                (authority.get("rule_template") or {}).get("authority_family_id"),
+            ]
+        )
+    )
+    if (
+        not authority_family_ids
+        and authority.get("candidate_authority_type") == "forest_plan_component"
+    ):
+        authority_family_ids.append(FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID)
+    authority_family_ids = sorted(set(authority_family_ids))
+    return {
+        "decision_id": authority.get("decision_id"),
+        "candidate_authority_id": authority.get("candidate_authority_id"),
+        "candidate_authority_type": authority.get("candidate_authority_type"),
+        "authority_family_ids": authority_family_ids,
+        "authority_family_id": authority_family_ids[0] if authority_family_ids else None,
+        "status": authority.get("status"),
+        "basis_type": authority.get("basis_type"),
+        "rationale": basis.get("rationale") if isinstance(basis, dict) else None,
+        "source_record_ids": _strings(authority.get("source_record_ids")),
+        "authority_category": authority.get("authority_category"),
+        "authority_document_role": authority.get("authority_document_role"),
+        "search_coverage_certificate_ids": certificate_ids,
+        "coverage_certificates": certificates,
+        "negative_evidence_spans": authority.get("negative_evidence_spans") or [],
+        "explicit_trigger_miss_evidence": authority.get("explicit_trigger_miss_evidence") or [],
+        "human_adjudication_refs": authority.get("human_adjudication_refs") or [],
+    }
+
+
+def _reviewer_resolution_item(decision: dict) -> dict:
+    rule_template = (
+        decision.get("rule_template")
+        if isinstance(decision.get("rule_template"), dict)
+        else {}
+    )
+    basis = decision.get("basis") if isinstance(decision.get("basis"), dict) else {}
+    authority_family_ids = _strings(decision.get("authority_family_ids"))
+    authority_family_ids.extend(
+        _strings([decision.get("authority_family_id"), rule_template.get("authority_family_id")])
+    )
+    if (
+        not authority_family_ids
+        and decision.get("candidate_authority_type") == "forest_plan_component"
+    ):
+        authority_family_ids.append(FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID)
+    authority_family_ids = sorted(set(authority_family_ids))
+    return {
+        "decision_id": decision.get("decision_id"),
+        "candidate_authority_id": decision.get("candidate_authority_id"),
+        "candidate_authority_type": decision.get("candidate_authority_type"),
+        "authority_family_ids": authority_family_ids,
+        "authority_family_id": authority_family_ids[0] if authority_family_ids else None,
+        "rule_id": rule_template.get("rule_id"),
+        "status": decision.get("status"),
+        "basis_type": decision.get("basis_type"),
+        "rationale": basis.get("rationale"),
+        "adjudication_state": decision.get("adjudication_state"),
+        "human_adjudication_refs": decision.get("human_adjudication_refs") or [],
+        "missing_evidence": decision.get("missing_evidence") or [],
+        "contradiction_notes": decision.get("contradiction_notes") or [],
+        "search_coverage_certificate_ids": _strings(
+            decision.get("search_coverage_certificate_ids")
+        ),
+    }
+
+
+def _decision_is_adjudicated(decision: dict) -> bool:
+    return (
+        str(decision.get("basis_type") or "") == "human_adjudication"
+        or bool(decision.get("human_adjudication_refs"))
+        or str(decision.get("adjudication_state") or "") == "adjudicated"
+    )
+
+
+def _litigation_risk_flags(
+    *,
+    findings: list[dict],
+    non_applicable_rows: list[dict],
+    pending_resolution: list[dict],
+    adjudicated: list[dict],
+) -> list[dict]:
+    flags = []
+    for finding in findings:
+        if finding.get("status") != "gap":
+            continue
+        flags.append(
+            _risk_flag(
+                category="package_evidence_gap",
+                severity=str(finding.get("severity") or "medium"),
+                rule_ids=[str(finding.get("rule_id"))],
+                authority_family_ids=_strings(finding.get("authority_family_ids")),
+                candidate_authority_ids=_strings([finding.get("candidate_authority_id")]),
+                evidence_refs=_evidence_refs_for_finding(finding),
+                rationale=(
+                    "The deterministic compliance review found source authority support but "
+                    "did not find matching package evidence for this generated applicable rule."
+                ),
+            )
+        )
+    for row in non_applicable_rows:
+        flags.append(
+            _risk_flag(
+                category="non_applicable_authority_coverage_boundary",
+                severity="informational",
+                rule_ids=[],
+                authority_family_ids=_strings([row.get("authority_family_id")]),
+                candidate_authority_ids=_strings([row.get("candidate_authority_id")]),
+                evidence_refs=row.get("search_coverage_certificate_ids") or [],
+                rationale=(
+                    "The authority was excluded from compliance findings by a deterministic "
+                    "not-applicable decision with recorded search-coverage certificates."
+                ),
+            )
+        )
+    for item in pending_resolution:
+        flags.append(
+            _risk_flag(
+                category="unresolved_authority_family_requires_resolution",
+                severity="blocking",
+                rule_ids=_strings([item.get("rule_id")]),
+                authority_family_ids=_strings([item.get("authority_family_id")]),
+                candidate_authority_ids=_strings([item.get("candidate_authority_id")]),
+                evidence_refs=item.get("search_coverage_certificate_ids") or [],
+                rationale=(
+                    "An applicability decision remains unresolved or needs adjudication; "
+                    "reviewer-ready compliance output must stay blocked until resolved."
+                ),
+            )
+        )
+    for item in adjudicated:
+        flags.append(
+            _risk_flag(
+                category="human_adjudicated_authority_family",
+                severity="reviewer_record",
+                rule_ids=_strings([item.get("rule_id")]),
+                authority_family_ids=_strings([item.get("authority_family_id")]),
+                candidate_authority_ids=_strings([item.get("candidate_authority_id")]),
+                evidence_refs=[
+                    str(ref.get("adjudication_id") or ref.get("source_type") or ref)
+                    for ref in item.get("human_adjudication_refs") or []
+                ],
+                rationale=(
+                    "A deterministic weak or conflicting applicability decision was resolved "
+                    "through a recorded human-adjudication artifact."
+                ),
+            )
+        )
+    return flags
+
+
+def _risk_flag(
+    *,
+    category: str,
+    severity: str,
+    rule_ids: list[str],
+    authority_family_ids: list[str],
+    candidate_authority_ids: list[str],
+    evidence_refs: list[str],
+    rationale: str,
+) -> dict:
+    return {
+        "risk_category": category,
+        "severity": severity,
+        "rule_ids": sorted(set(rule_ids)),
+        "authority_family_ids": sorted(set(authority_family_ids)),
+        "candidate_authority_ids": sorted(set(candidate_authority_ids)),
+        "evidence_refs": sorted({str(ref) for ref in evidence_refs if str(ref or "").strip()}),
+        "artifact_refs": sorted({str(ref) for ref in evidence_refs if str(ref or "").strip()}),
+        "rationale": rationale,
+        "deterministic_basis": True,
+        "legal_conclusion": False,
+    }
+
+
+def _evidence_refs_for_finding(finding: dict) -> list[str]:
+    refs = _strings(
+        [
+            finding.get("package_evidence_citation"),
+            finding.get("source_library_evidence_citation"),
+        ]
+    )
+    refs.extend(_strings(finding.get("source_claim_evidence_citations")))
+    return refs
+
+
+def _coverage_certificates_by_id(coverage: dict) -> dict[str, dict]:
+    certificates = coverage.get("certificates")
+    if not isinstance(certificates, list):
+        certificates = coverage.get("search_coverage_certificates")
+    if not isinstance(certificates, list):
+        return {}
+    result = {}
+    for certificate in certificates:
+        if not isinstance(certificate, dict):
+            continue
+        certificate_id = _coverage_certificate_id(certificate)
+        if certificate_id:
+            result[certificate_id] = certificate
+    return result
+
+
+def _compact_coverage_certificate(certificate: dict) -> dict:
+    return {
+        "coverage_certificate_id": _coverage_certificate_id(certificate),
+        "coverage_class": certificate.get("coverage_class"),
+        "coverage_result": certificate.get("coverage_result"),
+        "covered_candidate_authority_ids": _strings(
+            certificate.get("covered_candidate_authority_ids")
+        ),
+        "covered_decision_ids": _strings(certificate.get("covered_decision_ids")),
+        "executed_query_variants": _strings(certificate.get("executed_query_variants")),
+        "missing_query_variants": _strings(certificate.get("missing_query_variants")),
+        "rationale": certificate.get("rationale"),
+    }
+
+
+def _coverage_certificate_id(certificate: dict) -> str:
+    return str(
+        certificate.get("coverage_certificate_id")
+        or certificate.get("certificate_id")
+        or certificate.get("search_coverage_certificate_id")
+        or ""
+    ).strip()
+
+
+def _write_authority_integration_artifacts(
+    *,
+    context: dict,
+    summary: dict,
+    validation: dict,
+) -> None:
+    created_at = _utc_now()
+    common = {
+        "created_at": created_at,
+        "review_id": context["review_id"],
+        "source_set_id": context["source_set_id"],
+        "rule_pack_id": context.get("rule_pack_id"),
+        "rule_pack_version": context.get("rule_pack_version"),
+        "compliance_review_path": summary.get("compliance_review_path"),
+        "compliance_matrix_path": summary.get("compliance_matrix_path"),
+        "compliance_validation_path": summary.get("compliance_validation_path"),
+    }
+    _write_json(
+        Path(context["authority_provenance_path"]),
+        {
+            "schema_version": "authority-family-provenance-v0",
+            **common,
+            "summary": context["summary"],
+            "finding_authority_provenance": context["finding_provenance"],
+        },
+    )
+    appendix = {
+        "schema_version": "non-applicable-authority-appendix-v0",
+        **common,
+        "summary": {
+            "non_applicable_authority_count": len(context["non_applicable_rows"]),
+            "coverage_certificate_count": sum(
+                len(row.get("coverage_certificates") or [])
+                for row in context["non_applicable_rows"]
+            ),
+            "all_have_coverage_certificates": not context["summary"][
+                "non_applicable_authorities_missing_coverage"
+            ],
+            "all_have_rationale": not context["summary"][
+                "non_applicable_authorities_missing_rationale"
+            ],
+            "source_artifact_path": context.get("non_applicable_authorities_path"),
+            "search_coverage_certificates_path": context.get(
+                "search_coverage_certificates_path"
+            ),
+        },
+        "authorities": context["non_applicable_rows"],
+    }
+    _write_json(Path(context["non_applicable_authority_appendix_path"]), appendix)
+    _write_non_applicable_appendix_markdown(
+        Path(context["non_applicable_authority_appendix_markdown_path"]),
+        appendix,
+    )
+    _write_json(
+        Path(context["reviewer_resolution_report_path"]),
+        {
+            "schema_version": "authority-reviewer-resolution-report-v0",
+            **common,
+            "summary": {
+                "pending_resolution_count": len(context["pending_resolution"]),
+                "adjudicated_authority_count": len(context["adjudicated"]),
+                "reviewer_ready_blocked": bool(context["pending_resolution"]),
+                "passed": not context["pending_resolution"],
+            },
+            "pending_resolution_items": context["pending_resolution"],
+            "adjudicated_authorities": context["adjudicated"],
+        },
+    )
+    _write_json(
+        Path(context["litigation_risk_summary_path"]),
+        {
+            "schema_version": "litigation-risk-summary-v0",
+            **common,
+            "summary": {
+                "risk_flag_count": len(context["risk_flags"]),
+                "risk_category_counts": dict(
+                    sorted(
+                        Counter(
+                            flag["risk_category"] for flag in context["risk_flags"]
+                        ).items()
+                    )
+                ),
+                "legal_conclusion_count": context["summary"]["legal_conclusion_count"],
+                "deterministic_only": context["summary"]["legal_conclusion_count"] == 0,
+                "validation_passed": bool(validation.get("passed")),
+            },
+            "risk_flags": context["risk_flags"],
+        },
+    )
+
+
+def _write_non_applicable_appendix_markdown(path: Path, appendix: dict) -> None:
+    summary = appendix.get("summary") or {}
+    lines = [
+        "# Non-Applicable Authority Appendix",
+        "",
+        f"- Review ID: `{appendix.get('review_id')}`",
+        f"- Source set: `{appendix.get('source_set_id')}`",
+        f"- Non-applicable authorities: `{summary.get('non_applicable_authority_count', 0)}`",
+        f"- Coverage certificates: `{summary.get('coverage_certificate_count', 0)}`",
+        "",
+        "| Authority | Basis | Coverage | Rationale |",
+        "| --- | --- | --- | --- |",
+    ]
+    for row in appendix.get("authorities") or []:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row.get("candidate_authority_id") or ""),
+                    str(row.get("basis_type") or ""),
+                    ", ".join(row.get("search_coverage_certificate_ids") or []),
+                    str(row.get("rationale") or ""),
+                ]
+            )
+            + " |"
+        )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _check_compliance_findings_have_applicability_provenance(
+    findings: list[dict],
+    applicability_gate: dict,
+) -> dict:
+    missing = []
+    if not applicability_gate.get("is_generated_rule_pack"):
+        return {
+            "name": "compliance_findings_have_applicability_provenance",
+            "passed": True,
+            "details": {
+                "mode": applicability_gate.get("mode"),
+                "required": False,
+                "missing": missing,
+            },
+        }
+    for finding in findings:
+        missing_fields = []
+        if not finding.get("candidate_authority_id"):
+            missing_fields.append("candidate_authority_id")
+        if not finding.get("applicability_decision_id"):
+            missing_fields.append("applicability_decision_id")
+        if not _strings(finding.get("authority_family_ids")):
+            missing_fields.append("authority_family_ids")
+        if missing_fields:
+            missing.append(
+                {
+                    "rule_id": finding.get("rule_id"),
+                    "finding_id": finding.get("id"),
+                    "missing_fields": missing_fields,
+                }
+            )
+    return {
+        "name": "compliance_findings_have_applicability_provenance",
+        "passed": not missing,
+        "details": {
+            "mode": applicability_gate.get("mode"),
+            "required": True,
+            "finding_count": len(findings),
+            "missing": missing,
+        },
+    }
+
+
+def _check_non_applicable_authority_appendix(authority_integration: dict) -> dict:
+    summary = authority_integration.get("summary") or {}
+    if not authority_integration.get("generated_mode"):
+        return {
+            "name": "non_applicable_authority_appendix_ready",
+            "passed": True,
+            "details": {
+                "generated_mode": False,
+                "required": False,
+                "path": authority_integration.get("non_applicable_authority_appendix_path"),
+            },
+        }
+    missing_coverage = summary.get("non_applicable_authorities_missing_coverage") or []
+    missing_rationale = summary.get("non_applicable_authorities_missing_rationale") or []
+    return {
+        "name": "non_applicable_authority_appendix_ready",
+        "passed": not missing_coverage and not missing_rationale,
+        "details": {
+            "generated_mode": True,
+            "required": True,
+            "path": authority_integration.get("non_applicable_authority_appendix_path"),
+            "markdown_path": authority_integration.get(
+                "non_applicable_authority_appendix_markdown_path"
+            ),
+            "non_applicable_authority_count": summary.get(
+                "non_applicable_authority_count",
+                0,
+            ),
+            "missing_coverage": missing_coverage,
+            "missing_rationale": missing_rationale,
+        },
+    }
+
+
+def _check_reviewer_resolution_report(authority_integration: dict) -> dict:
+    summary = authority_integration.get("summary") or {}
+    pending_count = int(summary.get("pending_resolution_count") or 0)
+    if not authority_integration.get("generated_mode"):
+        return {
+            "name": "authority_reviewer_resolution_report_ready",
+            "passed": True,
+            "details": {
+                "generated_mode": False,
+                "required": False,
+                "path": authority_integration.get("reviewer_resolution_report_path"),
+            },
+        }
+    return {
+        "name": "authority_reviewer_resolution_report_ready",
+        "passed": pending_count == 0,
+        "details": {
+            "generated_mode": True,
+            "required": True,
+            "path": authority_integration.get("reviewer_resolution_report_path"),
+            "pending_resolution_count": pending_count,
+            "adjudicated_authority_count": summary.get("adjudicated_authority_count", 0),
+            "pending_resolution": authority_integration.get("pending_resolution") or [],
+        },
+    }
+
+
+def _check_litigation_risk_summary(authority_integration: dict) -> dict:
+    flags = authority_integration.get("risk_flags") or []
+    malformed = []
+    for index, flag in enumerate(flags):
+        missing_fields = []
+        if not flag.get("risk_category"):
+            missing_fields.append("risk_category")
+        if flag.get("deterministic_basis") is not True:
+            missing_fields.append("deterministic_basis")
+        if flag.get("legal_conclusion") is not False:
+            missing_fields.append("legal_conclusion")
+        if not flag.get("artifact_refs"):
+            missing_fields.append("artifact_refs")
+        if missing_fields:
+            malformed.append(
+                {
+                    "index": index,
+                    "risk_category": flag.get("risk_category"),
+                    "missing_or_invalid_fields": missing_fields,
+                }
+            )
+    return {
+        "name": "litigation_risk_summary_deterministic",
+        "passed": not malformed,
+        "details": {
+            "path": authority_integration.get("litigation_risk_summary_path"),
+            "risk_flag_count": len(flags),
+            "legal_conclusion_count": (authority_integration.get("summary") or {}).get(
+                "legal_conclusion_count",
+                0,
+            ),
+            "malformed": malformed,
+        },
     }
 
 
@@ -910,6 +1606,24 @@ def _read_json_if_exists(path: Path) -> dict:
     return _read_json(path)
 
 
+def _read_json_if_exists_or_empty(path: Path | None) -> dict:
+    if path is None or not path.exists():
+        return {}
+    return _read_json(path)
+
+
+def _read_jsonl_if_exists(path: Path | None) -> list[dict]:
+    if path is None or not path.exists():
+        return []
+    return _read_jsonl(path)
+
+
+def _optional_path(value: object) -> Path | None:
+    if not value:
+        return None
+    return Path(str(value))
+
+
 def _first_present(*values):
     for value in values:
         if str(value or "").strip():
@@ -925,6 +1639,63 @@ def _strings(value) -> list[str]:
     return []
 
 
+def _authority_family_index(path: Path) -> dict[str, list[str]]:
+    if not path.exists():
+        return {}
+    payload = _read_json(path)
+    index: dict[str, set[str]] = {}
+    for family in payload.get("authority_families") or []:
+        if not isinstance(family, dict):
+            continue
+        family_id = str(family.get("family_id") or "").strip()
+        if not family_id:
+            continue
+        for rule_id in _strings(family.get("rule_ids")):
+            index.setdefault(rule_id, set()).add(family_id)
+        for rule_id in _strings(family.get("rule_template_ids")):
+            index.setdefault(rule_id, set()).add(family_id)
+        coverage = family.get("coverage_requirements")
+        if isinstance(coverage, dict):
+            for rule_id in _strings(coverage.get("authority_family_rule_template_ids")):
+                index.setdefault(rule_id, set()).add(family_id)
+            for rule_id in _strings(coverage.get("coverage_matrix_rule_ids")):
+                index.setdefault(rule_id, set()).add(family_id)
+    return {rule_id: sorted(family_ids) for rule_id, family_ids in index.items()}
+
+
+def _authority_family_ids_for_rule(
+    *,
+    rule: dict,
+    applicability: dict,
+    authority_family_index: dict[str, list[str]],
+) -> list[str]:
+    family_ids = set(_strings(rule.get("authority_family_ids")))
+    family_ids.update(_strings([rule.get("authority_family_id")]))
+    family_ids.update(_strings(applicability.get("authority_family_ids")))
+    family_ids.update(_strings([applicability.get("authority_family_id")]))
+    basis = applicability.get("applicability_basis")
+    if isinstance(basis, dict):
+        family_ids.update(_strings(basis.get("authority_family_ids")))
+        family_ids.update(_strings([basis.get("authority_family_id")]))
+    candidate_rule_ids = [
+        rule.get("id"),
+        rule.get("base_rule_id"),
+        rule.get("generated_rule_id"),
+    ]
+    rule_template = applicability.get("rule_template")
+    if isinstance(rule_template, dict):
+        candidate_rule_ids.extend(
+            [
+                rule_template.get("rule_id"),
+                rule_template.get("template_id"),
+                rule_template.get("source_base_rule_id"),
+            ]
+        )
+    for rule_id in _strings(candidate_rule_ids):
+        family_ids.update(authority_family_index.get(rule_id, []))
+    return sorted(family_ids)
+
+
 def _prepare_outputs(
     *,
     compliance_review_path: Path,
@@ -932,6 +1703,11 @@ def _prepare_outputs(
     compliance_matrix_markdown_path: Path,
     compliance_matrix_pdf_path: Path,
     compliance_validation_path: Path,
+    authority_provenance_path: Path,
+    non_applicable_authority_appendix_path: Path,
+    non_applicable_authority_appendix_markdown_path: Path,
+    reviewer_resolution_report_path: Path,
+    litigation_risk_summary_path: Path,
     finding_nodes_path: Path,
     finding_edges_path: Path,
 ) -> None:
@@ -941,6 +1717,11 @@ def _prepare_outputs(
         compliance_matrix_markdown_path,
         compliance_matrix_pdf_path,
         compliance_validation_path,
+        authority_provenance_path,
+        non_applicable_authority_appendix_path,
+        non_applicable_authority_appendix_markdown_path,
+        reviewer_resolution_report_path,
+        litigation_risk_summary_path,
         finding_nodes_path,
         finding_edges_path,
     ):
@@ -953,6 +1734,7 @@ def _compliance_finding(
     rule: dict,
     finding: dict,
     source_claim_links: list[dict],
+    authority_family_index: dict[str, list[str]],
 ) -> dict:
     status = str(finding["status"])
     package_evidence = finding.get("package_evidence")
@@ -971,6 +1753,20 @@ def _compliance_finding(
     authority_document_role = str(
         rule.get("authority_document_role") or (source_filters or {}).get("document_role") or ""
     ).strip()
+    applicability = rule.get("applicability") if isinstance(rule.get("applicability"), dict) else {}
+    authority_family_ids = _authority_family_ids_for_rule(
+        rule=rule,
+        applicability=applicability,
+        authority_family_index=authority_family_index,
+    )
+    candidate_authority_id = _first_present(
+        rule.get("candidate_authority_id"),
+        applicability.get("candidate_authority_id"),
+    )
+    applicability_decision_id = _first_present(
+        rule.get("applicability_decision_id"),
+        applicability.get("decision_id"),
+    )
     return {
         "id": finding["id"],
         "rule_id": rule["id"],
@@ -979,8 +1775,21 @@ def _compliance_finding(
         "authority_category": rule.get("authority_category"),
         "authority_source_record_id": authority_source_record_id or None,
         "authority_document_role": authority_document_role or None,
+        "candidate_authority_id": candidate_authority_id,
+        "candidate_authority_type": applicability.get("candidate_authority_type"),
+        "applicability_decision_id": applicability_decision_id,
+        "authority_family_ids": authority_family_ids,
+        "authority_family_id": authority_family_ids[0] if authority_family_ids else None,
+        "applicability_basis_type": applicability.get("basis_type"),
+        "generated_from_applicability": bool(rule.get("generated_from_applicability")),
+        "search_coverage_certificate_ids": _strings(
+            applicability.get("search_coverage_certificate_ids")
+        ),
+        "human_adjudication_refs": applicability.get("human_adjudication_refs") or [],
         "applicability_mode": rule.get("applicability_mode")
         or finding.get("applicability_mode"),
+        "pre_review_applicability_mode": rule.get("pre_review_applicability_mode"),
+        "pre_review_applicability": rule.get("pre_review_applicability"),
         "applies_if_package_terms": rule.get("applies_if_package_terms", []),
         "applies_if_package_term_groups": rule.get("applies_if_package_term_groups", []),
         "does_not_apply_if_package_terms": rule.get("does_not_apply_if_package_terms", []),
@@ -1291,6 +2100,7 @@ def _validation_report(
     applicability_gate: dict,
     package_manifest_path: Path,
     package_chunks_path: Path,
+    authority_integration: dict,
     findings: list[dict],
     nodes: list[dict],
     edges: list[dict],
@@ -1337,6 +2147,13 @@ def _validation_report(
         _check_claim_findings_have_source_claim_links(findings),
         _check_no_unsupported_compliance_claims(findings),
         _check_applicable_findings_have_authority_source_records(findings),
+        _check_compliance_findings_have_applicability_provenance(
+            findings,
+            applicability_gate,
+        ),
+        _check_non_applicable_authority_appendix(authority_integration),
+        _check_reviewer_resolution_report(authority_integration),
+        _check_litigation_risk_summary(authority_integration),
         _check_baseline_source_documents_evaluated(rule_pack, findings),
         _check_finding_graph_evidence_edges(review_id, findings, nodes, edges),
         _check_graph_integrity(nodes, edges),
@@ -1370,6 +2187,7 @@ def _summary(
     ea_result,
     forest_plan_result,
     applicability_gate: dict,
+    authority_integration: dict,
     validation: dict,
     nodes: list[dict],
     edges: list[dict],
@@ -1435,6 +2253,19 @@ def _summary(
         "compliance_matrix_markdown_path": str(compliance_matrix_markdown_path),
         "compliance_matrix_pdf_path": str(compliance_matrix_pdf_path),
         "compliance_validation_path": str(compliance_validation_path),
+        "authority_provenance_path": authority_integration.get("authority_provenance_path"),
+        "non_applicable_authority_appendix_path": authority_integration.get(
+            "non_applicable_authority_appendix_path"
+        ),
+        "non_applicable_authority_appendix_markdown_path": authority_integration.get(
+            "non_applicable_authority_appendix_markdown_path"
+        ),
+        "reviewer_resolution_report_path": authority_integration.get(
+            "reviewer_resolution_report_path"
+        ),
+        "litigation_risk_summary_path": authority_integration.get(
+            "litigation_risk_summary_path"
+        ),
         "finding_nodes_path": str(finding_nodes_path),
         "finding_edges_path": str(finding_edges_path),
         "rule_claim_links_path": str(rule_claim_result.links_path),
@@ -1450,6 +2281,7 @@ def _summary(
         "ea_review_reviewer_ready": bool(ea_summary.get("reviewer_ready")),
         "forest_plan_review": _forest_plan_summary_for_compliance(forest_plan_result),
         "applicability_gate": _applicability_gate_summary(applicability_gate),
+        "authority_integration": authority_integration.get("summary", {}),
         "validation_passed": validation["passed"],
         "reviewer_ready": validation["passed"]
         and bool(applicability_gate.get("reviewer_ready_eligible")),
