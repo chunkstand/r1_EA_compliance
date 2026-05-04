@@ -100,7 +100,12 @@ allowed_import_layers = [
 [[layers]]
 name = "compliance"
 summary = "Compliance review, compliance coverage, and compliance gold eval."
-modules = ["compliance_coverage", "compliance_gold_eval", "compliance_review"]
+modules = [
+  "compliance_coverage",
+  "compliance_gold_eval",
+  "compliance_outputs",
+  "compliance_review",
+]
 allowed_import_layers = [
   "foundation",
   "extraction",
@@ -116,7 +121,7 @@ allowed_import_layers = [
 [[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
-modules = ["applicability_eval", "v1_ea_eval"]
+modules = ["applicability_eval", "promotion_suite", "v1_ea_eval"]
 allowed_import_layers = [
   "foundation",
   "extraction",
@@ -251,10 +256,12 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
-  "source_library/reviews/<review_id>/phase_eval_results.json",
+  "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",
   "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
-  "source_library/reviews/compliance_gold_eval/compliance_review_eval_results.json",
+  "source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json",
+  "source_library/reviews/promotion_suite/<suite_id>/promotion_suite_results.json",
+  "source_library/reviews/promotion_suite/<suite_id>/promotion_suite_report.md",
 ]
 
 [[command_groups]]
@@ -316,4 +323,10 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 
 [[command_groups]]
 name = "eval"
-commands = ["applicability-eval", "applicability-gold-eval", "phase-eval", "v1-ea-eval"]
+commands = [
+  "applicability-eval",
+  "applicability-gold-eval",
+  "phase-eval",
+  "v1-ea-eval",
+  "promotion-suite",
+]

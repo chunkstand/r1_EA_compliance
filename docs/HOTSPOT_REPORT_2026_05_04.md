@@ -2,9 +2,9 @@
 
 Date: 2026-05-04
 
-This report ranks the next refactoring target using size, recent churn, documented test/eval pain,
-and reviewer risk. It does not move hotspot code. The output is a bounded next split plan with
-focused verification.
+This report ranked the next refactoring target using size, recent churn, documented test/eval pain,
+and reviewer risk. The first bounded split has now moved compliance matrix and PDF rendering into
+`src/usfs_r1_ea_sources/compliance_outputs.py` without changing output artifact contracts.
 
 ## Evidence Commands
 
@@ -16,7 +16,7 @@ rg -n "failed|gap|hotspot|pain|large|compliance_review.py|forest_plan_components
 
 ## Size And Churn Signals
 
-Largest current source files after the CLI split:
+Largest source files after the CLI split and before the compliance-output split:
 
 | Module | Lines | Recent Churn Signal | Notes |
 | --- | ---: | ---: | --- |
@@ -59,8 +59,8 @@ CLI behavior or generated artifact contracts.
 
 ## Bounded Split Plan
 
-Next refactor: move compliance matrix and report rendering helpers from `compliance_review.py` into
-`src/usfs_r1_ea_sources/compliance_outputs.py`.
+Implemented first refactor: move compliance matrix and report rendering helpers from
+`compliance_review.py` into `src/usfs_r1_ea_sources/compliance_outputs.py`.
 
 Initial ownership for the new module:
 
@@ -82,7 +82,7 @@ Non-goals for that split:
 - Do not rename output files or alter compliance matrix JSON/Markdown/PDF schema.
 - Do not stage generated `source_library/` artifacts.
 
-Focused verification for the next split:
+Focused verification for the split:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py

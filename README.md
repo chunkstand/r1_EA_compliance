@@ -54,9 +54,10 @@ See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system
 Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority
 applicability, non-applicability, validation, and generated rule packs first-class pre-review
-artifacts. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer
-engine biased toward scalable search, learning, evidence, and eval loops instead of hidden
-domain-specific heuristics.
+artifacts. See `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook.
+See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine
+biased toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
+heuristics.
 
 ## Current Inputs
 
@@ -76,6 +77,7 @@ domain-specific heuristics.
 - `config/forest_plan_component_inventory_seed.json`
 - `config/forest_plan_component_eval_seed.json`
 - `config/v1_ecid_real_ea_eval.json`
+- `config/promotion_suite_v1.json`
 
 ## Stored Data
 
@@ -167,6 +169,9 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
   - `source_library/reviews/compliance_gold_eval/adjudicated_cases.compliance_review_eval.json`
   - `source_library/reviews/compliance_gold_eval/compliance_review_eval/`
+- Promotion suite outputs:
+  - `source_library/reviews/promotion_suite/<suite_id>/promotion_suite_results.json`
+  - `source_library/reviews/promotion_suite/<suite_id>/promotion_suite_report.md`
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
 `extract-build` command builds a derived text/chunk layer from the catalog. The
@@ -190,8 +195,10 @@ rule pack, evaluates the EA against each applicable authority, and emits a compl
 finding graph with source-claim support. The `v1-ea-eval` command scores the current East Crazy
 Inspiration Divide real EA review against the V1 contract, including the explicit pending
 conditional-adjudication policy. The `compliance-gold-eval` command runs the 10-case adjudication
-promotion gate. The active compliance rule pack is `0.4.0`: it declares the 26 workbook
-`Scope=Baseline` source records explicitly and contains 44 total authority rules.
+promotion gate. The `promotion-suite` command checks manifest-declared readiness evidence for the
+current V1 review and post-V1 expansion slots. The active compliance rule pack is `0.4.0`: it
+declares the 26 workbook `Scope=Baseline` source records explicitly and contains 44 total authority
+rules.
 
 The post-V1 applicability-first contract moves authority applicability into a pre-review artifact
 family under `source_library/reviews/<review_id>/applicability/`: candidate authorities are
@@ -699,6 +706,23 @@ review artifacts outside the forest-plan set; and `forest_plan` for Custer Galla
 scope, component coverage, applicable standards, reviewer readiness, and component adjudication.
 This allows the real V1 eval to fail overall on non-forest-plan gaps while still reporting
 `forest_plan_passed=true` when the forest-plan review lane is complete.
+
+Run the manifest-driven promotion suite:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
+```
+
+`promotion-suite` reads existing promotion artifacts and writes an aggregate JSON/Markdown report
+under `source_library/reviews/promotion_suite/<suite_id>/`. It separates
+`current_promotion_ready`, `expansion_ready`, and `promotion_ready` so agents can distinguish the
+promoted East Crazy V1 evidence from post-V1 real-package expansion work. Use
+`--strict-expansion` when additional real-package slots should block the command exit status.
+Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
+`applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`, and
+`package_fixture_missing`.
 
 Run the seed retrieval eval gate:
 

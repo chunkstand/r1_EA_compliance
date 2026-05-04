@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from usfs_r1_ea_sources import cli_compliance
+from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources.cli import build_parser
 
 
@@ -75,6 +76,38 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
     assert captured["reuse_package_cache"] is True
     assert captured["docling_timeout_seconds"] is None
     assert captured["package_path"] == Path("package")
+
+
+def test_promotion_suite_handler_propagates_manifest_and_strict_mode(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_promotion_suite(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"promotion_ready": True})
+
+    monkeypatch.setattr(cli_eval, "run_promotion_suite", fake_run_promotion_suite)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "promotion-suite",
+            "--output-dir",
+            "library",
+            "--manifest",
+            "config/custom_suite.json",
+            "--results-dir",
+            "suite-results",
+            "--strict-expansion",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["manifest_path"] == Path("config/custom_suite.json")
+    assert captured["results_dir"] == Path("suite-results")
+    assert captured["strict_expansion"] is True
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

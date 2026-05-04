@@ -1,0 +1,256 @@
+{
+  "schema_version": "promotion-suite-v0",
+  "id": "post-v1-region1-ea-promotion-suite",
+  "label": "Post-V1 Region 1 EA promotion suite",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
+  "rule_pack_id": "nepa-ea-v0",
+  "rule_pack_version": "0.4.0",
+  "expected_rule_count": 44,
+  "expected_baseline_source_record_count": 26,
+  "review_cases": [
+    {
+      "id": "v1-cg-ecid",
+      "label": "East Crazy Inspiration Divide V1 review",
+      "review_id": "v1-cg-ecid-compliance-review",
+      "package_label": "East Crazy Inspiration Divide Land Exchange",
+      "required_for_current_promotion": true,
+      "results": [
+        {
+          "id": "compliance_validation",
+          "label": "Compliance validation",
+          "path": "reviews/{review_id}/compliance_validation.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "compliance_validation_passed",
+              "json_path": "passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_review",
+          "label": "Compliance review summary",
+          "path": "reviews/{review_id}/compliance_review.json",
+          "required_for_current_promotion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "source_set_matches",
+              "json_path": "summary.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "rule_pack_version_matches",
+              "json_path": "summary.rule_pack_version",
+              "equals": "0.4.0",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "rule_count",
+              "json_path": "summary.rule_count",
+              "equals": 44
+            },
+            {
+              "name": "baseline_source_record_count",
+              "json_path": "summary.baseline_source_record_count",
+              "equals": 26,
+              "failure_category": "missing_source"
+            },
+            {
+              "name": "rule_claim_gaps",
+              "json_path": "summary.rule_claim_gap_count",
+              "equals": 0,
+              "failure_category": "missing_source"
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix",
+          "label": "Compliance matrix JSON",
+          "path": "reviews/{review_id}/compliance_matrix.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "matrix_row_count",
+              "json_path": "summary.row_count",
+              "equals": 44
+            },
+            {
+              "name": "matrix_reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix_pdf",
+          "label": "Compliance matrix PDF",
+          "path": "reviews/{review_id}/compliance_matrix.pdf",
+          "format": "binary",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "matrix_pdf_header_valid",
+              "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
+          "id": "v1_ea_eval",
+          "label": "V1 real EA eval",
+          "path": "reviews/{review_id}/v1_ea_eval_results.json",
+          "required_for_current_promotion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "v1_eval_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "broader_ea_passed",
+              "json_path": "summary.broader_ea_passed",
+              "equals": true
+            },
+            {
+              "name": "forest_plan_passed",
+              "json_path": "summary.forest_plan_passed",
+              "equals": true
+            },
+            {
+              "name": "eval_source_set_matches",
+              "json_path": "contract.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "suite_results": [
+    {
+      "id": "phase_eval_core",
+      "label": "Core phase eval readiness",
+      "path": "derived/{source_set_id}/evidence_graph/phase_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "stale_artifact",
+      "checks": [
+        {
+          "name": "phase_source_set_matches",
+          "json_path": "source_set_id",
+          "equals": "source-set-ba8d0feae79501b8"
+        },
+        {
+          "name": "core_passed_phase_count",
+          "json_path": "passed_phase_count",
+          "min": 10
+        },
+        {
+          "name": "core_reviewer_ready_phase_count",
+          "json_path": "reviewer_ready_phase_count",
+          "min": 10
+        }
+      ]
+    },
+    {
+      "id": "post_v1_applicability_phase",
+      "label": "Post-V1 applicability phase readiness",
+      "path": "derived/{source_set_id}/evidence_graph/phase_eval_results.json",
+      "required_for_current_promotion": false,
+      "required_for_expansion": true,
+      "failure_category": "applicability_miss",
+      "checks": [
+        {
+          "name": "phase_eval_reviewer_ready_with_applicability",
+          "json_path": "reviewer_ready",
+          "equals": true,
+          "failure_category": "applicability_miss"
+        }
+      ]
+    },
+    {
+      "id": "compliance_review_eval",
+      "label": "Compliance review eval",
+      "path": "reviews/compliance_review_eval/compliance_review_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "unsupported_package_evidence",
+      "checks": [
+        {
+          "name": "compliance_review_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "compliance_review_eval_cases",
+          "json_path": "passed_count",
+          "min": 3
+        },
+        {
+          "name": "compliance_review_eval_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-ba8d0feae79501b8",
+          "failure_category": "stale_artifact"
+        }
+      ]
+    },
+    {
+      "id": "compliance_gold_eval",
+      "label": "Compliance gold eval",
+      "path": "reviews/compliance_gold_eval/compliance_gold_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "adjudication_needed",
+      "checks": [
+        {
+          "name": "compliance_gold_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "compliance_gold_eval_cases",
+          "json_path": "passed_case_count",
+          "min": 10
+        },
+        {
+          "name": "compliance_gold_rule_pack_version",
+          "json_path": "rule_pack_version",
+          "equals": "0.4.0",
+          "failure_category": "stale_artifact"
+        }
+      ]
+    }
+  ],
+  "expansion_slots": [
+    {
+      "id": "region1-real-ea-slot-1",
+      "label": "Second real Region 1 EA package",
+      "status": "open",
+      "ready": false,
+      "required_for_current_promotion": false,
+      "failure_category": "package_fixture_missing",
+      "next_action": "Add a local package fixture, review ID, eval contract, and phase-eval evidence before broadening readiness beyond the East Crazy Inspiration Divide case.",
+      "acceptance_signal": "phase-eval and package-specific eval pass without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
+    },
+    {
+      "id": "region1-real-ea-slot-2",
+      "label": "Third real Region 1 EA package",
+      "status": "open",
+      "ready": false,
+      "required_for_current_promotion": false,
+      "failure_category": "package_fixture_missing",
+      "next_action": "Add a package from a different forest/profile or document shape to expose extraction, retrieval, applicability, and adjudication gaps.",
+      "acceptance_signal": "Typed failures are either closed through general retrieval/eval improvements or retained as explicit reviewer work."
+    }
+  ]
+}

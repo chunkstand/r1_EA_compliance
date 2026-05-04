@@ -9,12 +9,20 @@ from .applicability_eval import run_applicability_eval
 from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
 from .evidence_graph import run_phase_aligned_eval
+from .promotion_suite import DEFAULT_PROMOTION_SUITE_PATH
+from .promotion_suite import run_promotion_suite
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
 from .v1_ea_eval import run_v1_ea_review_eval
 
 
-EVAL_COMMANDS = {"applicability-eval", "applicability-gold-eval", "phase-eval", "v1-ea-eval"}
+EVAL_COMMANDS = {
+    "applicability-eval",
+    "applicability-gold-eval",
+    "phase-eval",
+    "v1-ea-eval",
+    "promotion-suite",
+}
 
 
 def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
@@ -63,6 +71,19 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     v1_ea_eval.add_argument("--eval-file", default=DEFAULT_V1_EA_EVAL_PATH, type=Path)
     v1_ea_eval.add_argument("--output-path", type=Path)
 
+    promotion_suite = subparsers.add_parser(
+        "promotion-suite",
+        help="Check manifest-declared promotion evidence and write an aggregate readiness report.",
+    )
+    promotion_suite.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    promotion_suite.add_argument("--manifest", default=DEFAULT_PROMOTION_SUITE_PATH, type=Path)
+    promotion_suite.add_argument("--results-dir", type=Path)
+    promotion_suite.add_argument(
+        "--strict-expansion",
+        action="store_true",
+        help="Require expansion slots to be ready before returning promotion-ready.",
+    )
+
 
 def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
     if args.command == "applicability-eval":
@@ -109,5 +130,15 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1
+
+    if args.command == "promotion-suite":
+        result = run_promotion_suite(
+            output_dir=args.output_dir,
+            manifest_path=args.manifest,
+            results_dir=args.results_dir,
+            strict_expansion=args.strict_expansion,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["promotion_ready"] else 1
 
     return None

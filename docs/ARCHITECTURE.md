@@ -42,8 +42,8 @@ instructions for agents or privileged tools.
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `claim_extraction.py`, `rule_claim_binding.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
-| Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
-| Eval | Score promoted review contracts and applicability quality. | `applicability_eval.py`, `v1_ea_eval.py` |
+| Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
+| Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
 | CLI | Stable public command surface. | `cli.py`, `__main__.py` |
 
 The machine-readable contract for these containers is
@@ -102,8 +102,9 @@ family.
 
 Review layers produce package-level findings, forest-plan component findings, compliance matrices,
 PDF reports, and finding graphs. Compliance findings remain evidence-backed and citation-bearing.
-Eval layers check deterministic fixture contracts, phase readiness, V1 real-EA expectations, and
-applicability quality.
+Eval layers check deterministic fixture contracts, phase readiness, V1 real-EA expectations,
+applicability quality, and promotion-suite manifests that tell agents which artifacts support or
+block a readiness claim.
 
 ## Public CLI Surface
 

@@ -105,6 +105,12 @@ Gallatin FEIS and ESA-supporting plan documents.
   `broader_ea_passed=true` and `forest_plan_passed=true`, `compliance-review-eval` `3/3`, and
   `compliance-gold-eval` `10/10`. Current Milestone 8 code excludes base-pack gold eval outputs
   from promotion readiness until generated applicability artifacts are present.
+- The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. A local run on
+  2026-05-04 reported `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, and failure categories `applicability_miss=1` plus
+  `non_blocking_package_fixture_missing=2`. This means the current East Crazy V1 evidence remains
+  promotable while post-V1 applicability artifacts and additional real-package fixtures are still
+  explicit expansion gaps.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -523,6 +529,7 @@ Current state:
 - A seed forest-plan component eval file exists at
   `config/forest_plan_component_eval_seed.json`.
 - A V1 real-EA review eval contract exists at `config/v1_ecid_real_ea_eval.json`.
+- A post-V1 promotion-suite manifest exists at `config/promotion_suite_v1.json`.
 - A seed EA review checklist exists at `config/ea_review_checklist_seed.json`.
 - A seed NEPA EA compliance rule pack exists at `config/compliance_rule_pack_nepa_ea_v0.json`.
 - Catalog graph seed files exist for source-level relationships.
@@ -1244,4 +1251,12 @@ Run phase-aligned readiness evaluation:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library
+```
+
+Run the manifest-driven post-V1 promotion suite:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
 ```

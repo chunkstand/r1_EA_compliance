@@ -1694,6 +1694,45 @@ missing conditional expectation count, conditional false positive and false nega
 forest-plan expectation match rate, reviewer-resolution item count, and standard reviewer-resolution
 item count.
 
+## Promotion Suite Outputs
+
+Default manifest: `config/promotion_suite_v1.json`
+
+Default path:
+`source_library/reviews/promotion_suite/<suite_id>/`
+
+The `promotion-suite` command writes:
+
+- `promotion_suite_results.json`
+- `promotion_suite_report.md`
+
+The manifest has schema version `promotion-suite-v0` and records:
+
+- suite ID, source-set ID, rule-pack path, rule-pack ID, rule-pack version, expected rule count, and
+  expected baseline source-record count
+- review cases with review IDs, package labels, required current-promotion results, artifact paths,
+  and JSON or file-header checks
+- suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
+  compliance-review eval, and compliance-gold eval
+- expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions
+
+`promotion_suite_results.json` has schema version `promotion-suite-results-v0` and records:
+
+- `current_promotion_ready`, `expansion_ready`, and `promotion_ready`
+- manifest path, output path, Markdown report path, source set, rule-pack identity, and strict mode
+- rule-pack check results
+- per-review artifact checks, including compliance validation, compliance review, compliance
+  matrix, compliance matrix PDF header, and V1 real-EA eval
+- suite-level eval artifact checks
+- open expansion slots and their required next actions
+- failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
+  `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
+  and `package_fixture_missing`
+
+By default, open expansion slots do not block `promotion_ready`; they are reported with
+`non_blocking_` failure-category prefixes. With `--strict-expansion`, open expansion slots block
+`promotion_ready` and return their normal failure categories.
+
 ## Compliance Coverage Outputs
 
 Default path:
