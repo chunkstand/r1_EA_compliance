@@ -104,32 +104,59 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "clean_air_act_conformity_air_quality:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "clean_air_act_conformity_air_quality:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "air quality",
+            "emissions",
+            "prescribed fire smoke",
+            "smoke",
+            "conformity",
+            "general conformity",
+            "nonattainment area",
+            "maintenance area",
+            "state implementation plan",
+            "air quality permit"
+          ],
+          "rule_template_ids": [
+            "clean_air_act_conformity_air_quality_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no air quality effects",
+            "no emissions",
+            "no prescribed fire",
+            "outside nonattainment area",
+            "no conformity determination",
+            "no air permit"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "clean_air_act_conformity_air_quality_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-092",
           "R1EA-093"
+        ],
+        "authority_family_rule_template_ids": [
+          "clean_air_act_conformity_air_quality_authority_template"
         ]
       },
       "family_id": "clean_air_act_conformity_air_quality",
       "name": "Clean Air Act, general conformity, smoke, and air-quality coordination",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Clean Air Act and general-conformity rows are present, but air-quality triggers and eval coverage are not active yet.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Air Act, general conformity, smoke, and air-quality coordination family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "clean_air"
       ],
@@ -152,12 +179,15 @@
           "R1EA-092",
           "R1EA-093"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "clean_air_act_conformity_air_quality_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -167,16 +197,46 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "clean_water_act_wotus_permits:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "clean_water_act_wotus_permits:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "Clean Water Act",
+            "CWA",
+            "waters of the United States",
+            "wetlands",
+            "stream",
+            "discharge",
+            "dredge",
+            "fill",
+            "stormwater",
+            "NPDES",
+            "Section 401",
+            "Section 404",
+            "water quality certification",
+            "Corps permit"
+          ],
+          "rule_template_ids": [
+            "clean_water_act_wotus_permits_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no wetlands",
+            "no waters of the United States",
+            "no discharge",
+            "no dredge or fill",
+            "no stormwater discharge",
+            "no water permit"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "clean_water_act_wotus_permits_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-082",
           "R1EA-083",
@@ -192,19 +252,20 @@
           "R1EA-116",
           "R1EA-117",
           "R1EA-118"
+        ],
+        "authority_family_rule_template_ids": [
+          "clean_water_act_wotus_permits_authority_template"
         ]
       },
       "family_id": "clean_water_act_wotus_permits",
       "name": "Clean Water Act, waters of the United States, and water permit/certification sources",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "CWA, Corps, FWCA, and state water-certification rows exist, but no active rule template/predicate family has been promoted yet.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Clean Water Act, waters of the United States, and water permit/certification sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "clean_water"
       ],
@@ -263,12 +324,15 @@
           "R1EA-117",
           "R1EA-118"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -278,16 +342,44 @@
             "geography",
             "resource_topic"
           ],
-          "predicate_id": "cultural_resource_protection_and_state_shpo_sources:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "cultural_resource_protection_and_state_shpo_sources:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "historic property",
+            "cultural resource",
+            "archaeological resource",
+            "archeological resource",
+            "SHPO",
+            "THPO",
+            "NAGPRA",
+            "Native American remains",
+            "sacred site",
+            "AIRFA",
+            "RFRA",
+            "paleontological resource",
+            "cave resource"
+          ],
+          "rule_template_ids": [
+            "cultural_resource_protection_and_state_shpo_sources_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no historic properties",
+            "no cultural resources",
+            "no archaeological resources",
+            "no SHPO consultation",
+            "no tribal cultural resources"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "cultural_resource_protection_and_state_shpo_sources_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-072",
           "R1EA-073",
@@ -304,19 +396,20 @@
           "R1EA-121",
           "R1EA-122",
           "R1EA-123"
+        ],
+        "authority_family_rule_template_ids": [
+          "cultural_resource_protection_and_state_shpo_sources_authority_template"
         ]
       },
       "family_id": "cultural_resource_protection_and_state_shpo_sources",
       "name": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "consultation",
         "geography",
         "resource_topic"
       ],
-      "rationale": "The workbook contains cultural, archaeological, religious-freedom, sacred-site, and state SHPO sources that need expanded predicates/evals beyond the active NHPA subset.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "nhpa_cultural",
         "tribal_trust",
@@ -381,12 +474,15 @@
           "R1EA-122",
           "R1EA-123"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "cultural_resource_protection_and_state_shpo_sources_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -397,35 +493,61 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "eagle_efh_and_special_wildlife_sources:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "eagle_efh_and_special_wildlife_sources:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "bald eagle",
+            "golden eagle",
+            "eagle nest",
+            "eagle take",
+            "eagle disturbance",
+            "essential fish habitat",
+            "EFH",
+            "fish habitat",
+            "Magnuson-Stevens",
+            "NOAA Fisheries"
+          ],
+          "rule_template_ids": [
+            "eagle_efh_and_special_wildlife_sources_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no eagle habitat",
+            "no eagle nests",
+            "no eagle take",
+            "no essential fish habitat",
+            "no fish habitat"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "eagle_efh_and_special_wildlife_sources_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-097",
           "R1EA-098",
           "R1EA-099",
           "R1EA-100"
+        ],
+        "authority_family_rule_template_ids": [
+          "eagle_efh_and_special_wildlife_sources_authority_template"
         ]
       },
       "family_id": "eagle_efh_and_special_wildlife_sources",
       "name": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "consultation",
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Eagle and essential-fish-habitat rows are present, but rule templates and positive/negative applicability cases remain to be added.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bald and Golden Eagle Protection Act, EFH, and special wildlife sources family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "wildlife_birds"
       ],
@@ -454,12 +576,15 @@
           "R1EA-099",
           "R1EA-100"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -625,31 +750,53 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "floodplain_management_eo11988:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "floodplain_management_eo11988:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "floodplain",
+            "floodplain occupancy",
+            "floodplain alteration",
+            "base flood",
+            "100-year flood",
+            "flood hazard area",
+            "flood-prone area"
+          ],
+          "rule_template_ids": [
+            "floodplain_management_eo11988_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no floodplains",
+            "outside floodplain",
+            "no floodplain occupancy",
+            "no flood hazard area"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "floodplain_management_eo11988_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-103"
+        ],
+        "authority_family_rule_template_ids": [
+          "floodplain_management_eo11988_authority_template"
         ]
       },
       "family_id": "floodplain_management_eo11988",
       "name": "Executive Order 11988 floodplain management",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "EO 11988 source coverage exists, but floodplain-specific predicates/eval cases have not been promoted.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Executive Order 11988 floodplain management family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "floodplain_wetlands_eos"
       ],
@@ -669,12 +816,15 @@
         "mapped_source_record_ids": [
           "R1EA-103"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "floodplain_management_eo11988_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -924,32 +1074,53 @@
             "nepa_level",
             "overlay"
           ],
-          "predicate_id": "forest_service_planning_handbook_amendments:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "forest_service_planning_handbook_amendments:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "forest plan amendment",
+            "land management plan amendment",
+            "site-specific plan amendment",
+            "plan component amendment",
+            "management area change",
+            "LMP amendment"
+          ],
+          "rule_template_ids": [
+            "forest_service_planning_handbook_amendments_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no plan amendment",
+            "no forest plan amendment",
+            "consistent with forest plan without amendment",
+            "no management area change"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "forest_service_planning_handbook_amendments_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-032"
+        ],
+        "authority_family_rule_template_ids": [
+          "forest_service_planning_handbook_amendments_authority_template"
         ]
       },
       "family_id": "forest_service_planning_handbook_amendments",
       "name": "Forest Service planning handbook and amendment support",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "management_area",
         "nepa_level",
         "overlay"
       ],
-      "rationale": "The workbook contains the planning handbook source for site-specific plan amendments, but no active rule template or predicate has been promoted yet.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service planning handbook and amendment support family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "core_nepa",
         "nfma_forest_plan"
@@ -970,12 +1141,15 @@
         "mapped_source_record_ids": [
           "R1EA-032"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "forest_service_planning_handbook_amendments_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -985,33 +1159,53 @@
             "geography",
             "resource_topic"
           ],
-          "predicate_id": "grassland_bankhead_jones_authorities:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "grassland_bankhead_jones_authorities:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "National Grassland",
+            "Bankhead-Jones",
+            "Farm Tenant Act",
+            "grassland plan",
+            "acquired lands",
+            "grassland administration"
+          ],
+          "rule_template_ids": [
+            "grassland_bankhead_jones_authorities_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "not National Grassland",
+            "outside National Grassland",
+            "no Bankhead-Jones lands"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "grassland_bankhead_jones_authorities_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-037",
           "R1EA-038",
           "R1PLAN-region-1-grassland-overlay-01"
+        ],
+        "authority_family_rule_template_ids": [
+          "grassland_bankhead_jones_authorities_authority_template"
         ]
       },
       "family_id": "grassland_bankhead_jones_authorities",
       "name": "Bankhead-Jones and National Grassland administration authorities",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "resource_topic"
       ],
-      "rationale": "National Grassland and Bankhead-Jones rows are present for grassland-specific EA triggers, but no active rule/predicate path has been promoted.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Bankhead-Jones and National Grassland administration authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -1037,12 +1231,15 @@
           "R1EA-038",
           "R1PLAN-region-1-grassland-overlay-01"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "grassland_bankhead_jones_authorities_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1053,34 +1250,63 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "hazardous_materials_site_condition:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "hazardous_materials_site_condition:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "hazardous substance",
+            "hazardous waste",
+            "solid waste",
+            "CERCLA",
+            "RCRA",
+            "contamination",
+            "recognized environmental condition",
+            "mine waste",
+            "landfill",
+            "release",
+            "spill",
+            "phase I environmental site assessment",
+            "due diligence"
+          ],
+          "rule_template_ids": [
+            "hazardous_materials_site_condition_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no hazardous materials",
+            "no contamination",
+            "no recognized environmental conditions",
+            "no waste sites",
+            "no mine features"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "hazardous_materials_site_condition_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-107",
           "R1EA-108",
           "R1EA-109"
+        ],
+        "authority_family_rule_template_ids": [
+          "hazardous_materials_site_condition_authority_template"
         ]
       },
       "family_id": "hazardous_materials_site_condition",
       "name": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Hazardous materials/substances rows are captured, but due-diligence and site-condition predicates/evals have not been promoted.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "hazardous_site_condition"
       ],
@@ -1106,12 +1332,15 @@
           "R1EA-108",
           "R1EA-109"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "hazardous_materials_site_condition_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1122,16 +1351,46 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "invasive_pesticide_soils_farmland_drinking_water:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "invasive_pesticide_soils_farmland_drinking_water:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "invasive species",
+            "noxious weeds",
+            "pesticide",
+            "herbicide",
+            "soil productivity",
+            "prime farmland",
+            "farmland conversion",
+            "drinking water",
+            "sole source aquifer",
+            "underground injection control",
+            "UIC",
+            "watershed",
+            "state permit",
+            "local permit"
+          ],
+          "rule_template_ids": [
+            "invasive_pesticide_soils_farmland_drinking_water_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no invasive species",
+            "no pesticide use",
+            "no herbicide use",
+            "no prime farmland",
+            "no drinking water source",
+            "no state permit"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "invasive_pesticide_soils_farmland_drinking_water_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-030",
           "R1EA-101",
@@ -1141,20 +1400,21 @@
           "R1EA-110",
           "R1EA-111",
           "R1EA-112"
+        ],
+        "authority_family_rule_template_ids": [
+          "invasive_pesticide_soils_farmland_drinking_water_authority_template"
         ]
       },
       "family_id": "invasive_pesticide_soils_farmland_drinking_water",
       "name": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Common resource and permit families are represented as workbook/catalog source rows but need active predicates and eval fixtures.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "invasive_soil_watershed_common_region1"
       ],
@@ -1195,12 +1455,15 @@
           "R1EA-111",
           "R1EA-112"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1212,16 +1475,41 @@
             "public_involvement",
             "resource_topic"
           ],
-          "predicate_id": "land_exchange_fs_policy_and_project_references:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "land_exchange_fs_policy_and_project_references:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "land exchange",
+            "exchange case",
+            "appraisal",
+            "title evidence",
+            "reservations",
+            "outstanding rights",
+            "exchange agreement",
+            "feasibility analysis",
+            "notice of exchange",
+            "closing"
+          ],
+          "rule_template_ids": [
+            "land_exchange_fs_policy_and_project_references_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "not a land exchange",
+            "no appraisal",
+            "no title evidence",
+            "no reservations",
+            "no outstanding rights"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "land_exchange_fs_policy_and_project_references_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-150",
           "R1EA-151",
@@ -1233,13 +1521,14 @@
           "R1EA-160",
           "R1EA-161",
           "R1EA-162"
+        ],
+        "authority_family_rule_template_ids": [
+          "land_exchange_fs_policy_and_project_references_authority_template"
         ]
       },
       "family_id": "land_exchange_fs_policy_and_project_references",
       "name": "Forest Service exchange policy, appraisal/title guidance, and project-reference records",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -1247,7 +1536,7 @@
         "public_involvement",
         "resource_topic"
       ],
-      "rationale": "Forest Service exchange policy/handbook sources and East Crazy project-reference records are mapped as non-controlling source support; R1EA-160 remains excluded from artifact capture by Scope_Exclusions.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Forest Service exchange policy, appraisal/title guidance, and project-reference records family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1296,12 +1585,15 @@
           "R1EA-161",
           "R1EA-162"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "land_exchange_fs_policy_and_project_references_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1313,16 +1605,41 @@
             "public_involvement",
             "resource_topic"
           ],
-          "predicate_id": "land_exchange_regulatory_requirements:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "land_exchange_regulatory_requirements:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "land exchange",
+            "36 CFR part 254",
+            "agreement to initiate",
+            "notice of exchange proposal",
+            "appraisal",
+            "equal value",
+            "cash equalization",
+            "segregation",
+            "exchange approval",
+            "title approval"
+          ],
+          "rule_template_ids": [
+            "land_exchange_regulatory_requirements_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "not a land exchange",
+            "no exchange agreement",
+            "no appraisal",
+            "no notice of exchange",
+            "no equalization"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "land_exchange_regulatory_requirements_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-124",
           "R1EA-125",
@@ -1340,13 +1657,14 @@
           "R1EA-157",
           "R1EA-158",
           "R1EA-159"
+        ],
+        "authority_family_rule_template_ids": [
+          "land_exchange_regulatory_requirements_authority_template"
         ]
       },
       "family_id": "land_exchange_regulatory_requirements",
       "name": "36 CFR part 254 land-exchange procedural and valuation requirements",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -1354,7 +1672,7 @@
         "public_involvement",
         "resource_topic"
       ],
-      "rationale": "The land-exchange regulatory rows are captured for the V1 project type, but rule templates/applicability predicates are not yet promoted.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed 36 CFR part 254 land-exchange procedural and valuation requirements family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1419,12 +1737,15 @@
           "R1EA-158",
           "R1EA-159"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "land_exchange_regulatory_requirements_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1436,16 +1757,43 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "land_exchange_statutory_authorities:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "land_exchange_statutory_authorities:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "land exchange",
+            "exchange of lands",
+            "FLPMA",
+            "public interest determination",
+            "equal value",
+            "cash equalization",
+            "reservation",
+            "mineral reservation",
+            "easement",
+            "acquisition",
+            "disposal",
+            "congressional report"
+          ],
+          "rule_template_ids": [
+            "land_exchange_statutory_authorities_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "not a land exchange",
+            "no acquisition",
+            "no disposal",
+            "no public interest determination",
+            "no reservations"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "land_exchange_statutory_authorities_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-137",
           "R1EA-138",
@@ -1460,13 +1808,14 @@
           "R1EA-147",
           "R1EA-148",
           "R1EA-149"
+        ],
+        "authority_family_rule_template_ids": [
+          "land_exchange_statutory_authorities_authority_template"
         ]
       },
       "family_id": "land_exchange_statutory_authorities",
       "name": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "decision_posture",
@@ -1474,7 +1823,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Land-exchange statutes are source-currentness-confirmed and need rule-template promotion in Milestone 3.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1530,12 +1879,15 @@
           "R1EA-148",
           "R1EA-149"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "land_exchange_statutory_authorities_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -1630,33 +1982,57 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "minerals_energy_authorities:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "minerals_energy_authorities:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "minerals",
+            "mining",
+            "plan of operations",
+            "mineral materials",
+            "energy development",
+            "surface use",
+            "reclamation",
+            "oil and gas",
+            "mineral production"
+          ],
+          "rule_template_ids": [
+            "minerals_energy_authorities_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no mineral activity",
+            "no mining",
+            "no energy development",
+            "no plan of operations"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "minerals_energy_authorities_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-041",
           "R1EA-063"
+        ],
+        "authority_family_rule_template_ids": [
+          "minerals_energy_authorities_authority_template"
         ]
       },
       "family_id": "minerals_energy_authorities",
       "name": "Minerals and energy-development authorities",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Minerals regulations and current mineral-production policy are source-covered but not yet active rule families.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Minerals and energy-development authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -1679,12 +2055,15 @@
           "R1EA-041",
           "R1EA-063"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "minerals_energy_authorities_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -2308,16 +2687,39 @@
             "overlay",
             "resource_topic"
           ],
-          "predicate_id": "region1_forest_plan_source_records:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "region1_forest_plan_source_records:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "forest plan",
+            "land management plan",
+            "management area",
+            "desired condition",
+            "standard",
+            "guideline",
+            "geographic area",
+            "overlay",
+            "species of conservation concern"
+          ],
+          "rule_template_ids": [
+            "region1_forest_plan_source_records_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "outside National Forest System",
+            "no forest plan components",
+            "no management area",
+            "no overlay"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "region1_forest_plan_source_records_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1PLAN-beaverhead-deerlodge-nf-01",
           "R1PLAN-beaverhead-deerlodge-nf-02",
@@ -2347,20 +2749,21 @@
           "R1PLAN-region-1-northern-region-02",
           "R1PLAN-region-1-species-overlay-01",
           "R1PLAN-region-1-species-overlay-02"
+        ],
+        "authority_family_rule_template_ids": [
+          "region1_forest_plan_source_records_authority_template"
         ]
       },
       "family_id": "region1_forest_plan_source_records",
       "name": "Region 1 forest-plan and overlay source records",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "management_area",
         "overlay",
         "resource_topic"
       ],
-      "rationale": "The workbook/catalog contains the Region 1 forest-plan corpus; only the promoted Custer Gallatin path currently has reviewer-ready component/rule integration.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Region 1 forest-plan and overlay source records family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "nfma_forest_plan"
       ],
@@ -2461,12 +2864,15 @@
           "R1PLAN-region-1-species-overlay-01",
           "R1PLAN-region-1-species-overlay-02"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -2559,16 +2965,43 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "roads_access_special_use_action_authorities:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "roads_access_special_use_action_authorities:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "road",
+            "trail",
+            "travel management",
+            "special use",
+            "right-of-way",
+            "ROW",
+            "closure order",
+            "timber sale",
+            "range permit",
+            "grazing",
+            "access authorization"
+          ],
+          "rule_template_ids": [
+            "roads_access_special_use_action_authorities_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no road changes",
+            "no trail changes",
+            "no special use",
+            "no right-of-way",
+            "no closure",
+            "no timber or range action"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "roads_access_special_use_action_authorities_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-036",
           "R1EA-039",
@@ -2578,20 +3011,21 @@
           "R1EA-043",
           "R1EA-044",
           "R1EA-143"
+        ],
+        "authority_family_rule_template_ids": [
+          "roads_access_special_use_action_authorities_authority_template"
         ]
       },
       "family_id": "roads_access_special_use_action_authorities",
       "name": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Action-type roads, access, grazing, timber, minerals, special-use, ROW, closure, and retained-use authorities are captured as source rows but need data-backed predicates/evals.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "organic_access_special_use"
       ],
@@ -2632,12 +3066,15 @@
           "R1EA-044",
           "R1EA-143"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -2648,16 +3085,43 @@
             "overlay",
             "resource_topic"
           ],
-          "predicate_id": "species_supporting_sources_and_overlays:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "species_supporting_sources_and_overlays:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "listed species",
+            "threatened species",
+            "endangered species",
+            "proposed species",
+            "candidate species",
+            "sensitive species",
+            "species of conservation concern",
+            "lynx",
+            "biological assessment",
+            "biological opinion",
+            "Section 7 consultation",
+            "habitat"
+          ],
+          "rule_template_ids": [
+            "species_supporting_sources_and_overlays_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no listed species",
+            "no sensitive species",
+            "no habitat",
+            "no consultation required",
+            "no effect"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "species_supporting_sources_and_overlays_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-064",
           "R1EA-068",
@@ -2666,20 +3130,21 @@
           "R1PLAN-custer-gallatin-nf-07",
           "R1PLAN-region-1-species-overlay-01",
           "R1PLAN-region-1-species-overlay-02"
+        ],
+        "authority_family_rule_template_ids": [
+          "species_supporting_sources_and_overlays_authority_template"
         ]
       },
       "family_id": "species_supporting_sources_and_overlays",
       "name": "Species source-support records, sensitive species pages, and lynx/LMP support",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "consultation",
         "geography",
         "overlay",
         "resource_topic"
       ],
-      "rationale": "These rows supply species and plan-support evidence, but complete rule/predicate coverage beyond the active ESA Section 7 path is still a later slice.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Species source-support records, sensitive species pages, and lynx/LMP support family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "esa_species",
         "nfma_forest_plan"
@@ -2718,12 +3183,15 @@
           "R1PLAN-region-1-species-overlay-01",
           "R1PLAN-region-1-species-overlay-02"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "species_supporting_sources_and_overlays_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -2733,33 +3201,58 @@
             "geography",
             "resource_topic"
           ],
-          "predicate_id": "tribal_consultation_trust_sacred_sites:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "tribal_consultation_trust_sacred_sites:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "tribal consultation",
+            "Tribal",
+            "tribe",
+            "treaty rights",
+            "trust responsibility",
+            "sacred site",
+            "government-to-government",
+            "THPO",
+            "cultural confidentiality",
+            "traditional cultural property"
+          ],
+          "rule_template_ids": [
+            "tribal_consultation_trust_sacred_sites_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no tribal consultation",
+            "no tribal interests",
+            "no sacred sites",
+            "no treaty rights"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "tribal_consultation_trust_sacred_sites_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-077",
           "R1EA-080",
           "R1EA-081"
+        ],
+        "authority_family_rule_template_ids": [
+          "tribal_consultation_trust_sacred_sites_authority_template"
         ]
       },
       "family_id": "tribal_consultation_trust_sacred_sites",
       "name": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "consultation",
         "geography",
         "resource_topic"
       ],
-      "rationale": "Tribal consultation and sacred-site sources are present, but separate trust/treaty/sacred-site predicates and eval cases have not yet been promoted.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "tribal_trust"
       ],
@@ -2785,12 +3278,15 @@
           "R1EA-080",
           "R1EA-081"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "tribal_consultation_trust_sacred_sites_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -2965,16 +3461,42 @@
             "geography",
             "resource_topic"
           ],
-          "predicate_id": "vegetation_wildfire_forest_health_authorities:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "vegetation_wildfire_forest_health_authorities:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "vegetation management",
+            "fuels treatment",
+            "wildfire",
+            "prescribed fire",
+            "timber production",
+            "forest health",
+            "insect",
+            "disease",
+            "restoration",
+            "emergency action",
+            "fuel break"
+          ],
+          "rule_template_ids": [
+            "vegetation_wildfire_forest_health_authorities_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no vegetation treatment",
+            "no timber harvest",
+            "no fuels treatment",
+            "no wildfire action",
+            "no restoration"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "vegetation_wildfire_forest_health_authorities_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-056",
           "R1EA-057",
@@ -2983,19 +3505,20 @@
           "R1EA-060",
           "R1EA-061",
           "R1EA-062"
+        ],
+        "authority_family_rule_template_ids": [
+          "vegetation_wildfire_forest_health_authorities_authority_template"
         ]
       },
       "family_id": "vegetation_wildfire_forest_health_authorities",
       "name": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "action",
         "geography",
         "resource_topic"
       ],
-      "rationale": "Vegetation/wildfire statutes and current forest-policy EOs are captured, but not yet represented as active EA applicability rule templates.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Vegetation, fuels, wildfire, forest-health, and emergency-action authorities family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "invasive_soil_watershed_common_region1"
       ],
@@ -3033,12 +3556,15 @@
           "R1EA-061",
           "R1EA-062"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "vegetation_wildfire_forest_health_authorities_authority_template"
+      ]
     },
     {
       "applicability_predicates": [
@@ -3121,16 +3647,41 @@
             "permit",
             "resource_topic"
           ],
-          "predicate_id": "wilderness_wsr_trails_designated_areas:workbook-trigger-candidate",
-          "predicate_source": "workbook Trigger / When to Apply and Review_Engine_Checks columns",
-          "predicate_status": "missing_rule_template",
+          "predicate_id": "wilderness_wsr_trails_designated_areas:authority-family-rule-template",
+          "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
+          "predicate_status": "implemented",
           "rule_ids": [],
-          "trigger_terms": []
+          "trigger_terms": [
+            "wilderness",
+            "recommended wilderness",
+            "wilderness study area",
+            "WSA",
+            "Wild and Scenic River",
+            "national trail",
+            "designated area",
+            "special area",
+            "cave resource",
+            "paleontological resource"
+          ],
+          "rule_template_ids": [
+            "wilderness_wsr_trails_designated_areas_authority_template"
+          ],
+          "negative_trigger_terms": [
+            "no wilderness",
+            "no designated areas",
+            "outside Wild and Scenic River corridor",
+            "no national trails",
+            "no caves"
+          ]
         }
       ],
       "coverage_requirements": {
-        "coverage_matrix_rule_ids": [],
-        "eval_case_ids": [],
+        "coverage_matrix_rule_ids": [
+          "wilderness_wsr_trails_designated_areas_authority_template"
+        ],
+        "eval_case_ids": [
+          "authority-family-template-contract"
+        ],
         "source_record_ids": [
           "R1EA-045",
           "R1EA-046",
@@ -3140,20 +3691,21 @@
           "R1EA-053",
           "R1EA-054",
           "R1EA-055"
+        ],
+        "authority_family_rule_template_ids": [
+          "wilderness_wsr_trails_designated_areas_authority_template"
         ]
       },
       "family_id": "wilderness_wsr_trails_designated_areas",
       "name": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas",
-      "open_inventory_gaps": [
-        "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
-      ],
+      "open_inventory_gaps": [],
       "package_fact_types": [
         "geography",
         "overlay",
         "permit",
         "resource_topic"
       ],
-      "rationale": "Designated-area rows exist beyond the active Roadless Rule, but rules and eval cases for wilderness, WSR, trails, caves, paleontology, and WSAs are pending.",
+      "rationale": "Milestone 3 promotes the source-currentness-confirmed Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas family into a data-backed authority-family rule template. Milestone 4 remains responsible for independent package-fixture applicability quality expansion.",
       "required_authority_requirement_ids": [
         "designated_areas",
         "archaeological_cultural_protection"
@@ -3195,12 +3747,15 @@
           "R1EA-054",
           "R1EA-055"
         ],
-        "mapping_status": "mapped_source_only_family",
+        "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
-      "status": "source_only",
-      "supersession": null
+      "status": "active",
+      "supersession": null,
+      "rule_template_ids": [
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ]
     }
   ],
   "authority_universe_family_inventory_id": "nepa-ea-authority-universe-families-v1",
@@ -5183,7 +5738,7 @@
     "duplicate_rule_ids": [],
     "families_confirmed_by_milestone_2_source_currentness": 21,
     "families_requiring_milestone_2_source_currentness": 0,
-    "families_requiring_milestone_3_rule_template_work": 19,
+    "families_requiring_milestone_3_rule_template_work": 0,
     "mapped_rule_count": 44,
     "mapped_source_record_count": 190,
     "milestone_2_source_currentness_gate_status": "passed",
@@ -5196,12 +5751,16 @@
     "rule_pack_version": "0.4.0",
     "source_record_crosswalk_count": 190,
     "status_counts": {
-      "active": 14,
+      "active": 33,
       "candidate": 1,
-      "source_only": 19,
       "superseded": 1
     },
-    "workbook_source_record_count": 190
+    "workbook_source_record_count": 190,
+    "families_confirmed_by_milestone_3_rule_templates": 19,
+    "families_requiring_milestone_4_applicability_eval": 19,
+    "authority_family_rule_template_count": 19,
+    "authority_family_rule_template_coverage_path": "config/authority_family_rule_template_coverage_nepa_ea_v1.json",
+    "authority_family_rule_template_config_path": "config/authority_family_rule_templates_nepa_ea_v1.json"
   },
   "workbook": {
     "baseline_source_record_ids": [

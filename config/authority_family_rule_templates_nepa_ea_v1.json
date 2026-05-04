@@ -1,0 +1,2735 @@
+{
+  "schema_version": "authority-family-rule-templates-v1",
+  "template_set_id": "nepa-ea-authority-family-rule-templates-v1",
+  "version": "0.1.0",
+  "as_of_date": "2026-05-04",
+  "base_rule_pack_id": "nepa-ea-v0",
+  "base_rule_pack_version": "0.4.0",
+  "authority_inventory_path": "config/authority_universe_families_nepa_ea_v1.json",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "description": "Milestone 3 data-backed authority-family rule templates for source-currentness-confirmed Region 1 EA authority families that are not base compliance-rule-pack rules.",
+  "templates": [
+    {
+      "template_id": "clean_air_act_conformity_air_quality_m3_template",
+      "authority_family_id": "clean_air_act_conformity_air_quality",
+      "rule_id": "clean_air_act_conformity_air_quality_authority_template",
+      "title": "Clean Air Act, general conformity, smoke, and air-quality coordination applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-092",
+      "source_record_ids": [
+        "R1EA-092",
+        "R1EA-093"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-093"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Clean Air Act, general conformity, smoke, and air-quality coordination?",
+      "requirement": "When package facts trigger Clean Air Act, general conformity, smoke, and air-quality coordination, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "air quality OR emissions OR prescribed fire smoke OR smoke OR conformity OR general conformity OR nonattainment area OR maintenance area",
+      "package_terms": [
+        "air quality",
+        "emissions",
+        "prescribed fire smoke",
+        "smoke",
+        "conformity",
+        "general conformity",
+        "nonattainment area",
+        "maintenance area",
+        "state implementation plan",
+        "air quality permit"
+      ],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "air quality",
+        "emissions",
+        "prescribed fire",
+        "conformity"
+      ],
+      "package_section_families": [
+        "air quality",
+        "emissions",
+        "prescribed fire",
+        "conformity"
+      ],
+      "applies_if_package_terms": [
+        "air quality",
+        "emissions",
+        "prescribed fire smoke",
+        "smoke",
+        "conformity",
+        "general conformity",
+        "nonattainment area",
+        "maintenance area",
+        "state implementation plan",
+        "air quality permit"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "air quality"
+        ],
+        [
+          "emissions"
+        ],
+        [
+          "prescribed fire smoke"
+        ],
+        [
+          "smoke"
+        ],
+        [
+          "conformity"
+        ],
+        [
+          "general conformity"
+        ],
+        [
+          "nonattainment area"
+        ],
+        [
+          "maintenance area"
+        ],
+        [
+          "state implementation plan"
+        ],
+        [
+          "air quality permit"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no air quality effects",
+        "no emissions",
+        "no prescribed fire",
+        "outside nonattainment area",
+        "no conformity determination",
+        "no air permit"
+      ],
+      "source_query": "Clean Air Act, general conformity, smoke, and air-quality coordination Clean Air Act, 42 U.S.C. chapter 85",
+      "source_filters": {
+        "source_record_id": "R1EA-092",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "clean_air_act_conformity_air_quality"
+      },
+      "source_evidence_requirements": [
+        "Clean Air Act or conformity regulation source",
+        "package evidence for emissions, prescribed fire smoke, conformity, nonattainment/maintenance area, or air-quality permit/coordination"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-093"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "clean_water_act_wotus_permits_m3_template",
+      "authority_family_id": "clean_water_act_wotus_permits",
+      "rule_id": "clean_water_act_wotus_permits_authority_template",
+      "title": "Clean Water Act, waters of the United States, and water permit/certification sources applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-082",
+      "source_record_ids": [
+        "R1EA-082",
+        "R1EA-083",
+        "R1EA-084",
+        "R1EA-085",
+        "R1EA-086",
+        "R1EA-087",
+        "R1EA-088",
+        "R1EA-089",
+        "R1EA-090",
+        "R1EA-091",
+        "R1EA-115",
+        "R1EA-116",
+        "R1EA-117",
+        "R1EA-118"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-083",
+        "R1EA-084",
+        "R1EA-085",
+        "R1EA-086",
+        "R1EA-087",
+        "R1EA-088",
+        "R1EA-089",
+        "R1EA-090",
+        "R1EA-091",
+        "R1EA-115",
+        "R1EA-116",
+        "R1EA-117",
+        "R1EA-118"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Clean Water Act, waters of the United States, and water permit/certification sources?",
+      "requirement": "When package facts trigger Clean Water Act, waters of the United States, and water permit/certification sources, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "Clean Water Act OR CWA OR waters of the United States OR wetlands OR stream OR discharge OR dredge OR fill",
+      "package_terms": [
+        "Clean Water Act",
+        "CWA",
+        "waters of the United States",
+        "wetlands",
+        "stream",
+        "discharge",
+        "dredge",
+        "fill",
+        "stormwater",
+        "NPDES",
+        "Section 401",
+        "Section 404",
+        "water quality certification",
+        "Corps permit"
+      ],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "water resources",
+        "wetlands",
+        "permits",
+        "water quality"
+      ],
+      "package_section_families": [
+        "water resources",
+        "wetlands",
+        "permits",
+        "water quality"
+      ],
+      "applies_if_package_terms": [
+        "Clean Water Act",
+        "CWA",
+        "waters of the United States",
+        "wetlands",
+        "stream",
+        "discharge",
+        "dredge",
+        "fill",
+        "stormwater",
+        "NPDES",
+        "Section 401",
+        "Section 404",
+        "water quality certification",
+        "Corps permit"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "Clean Water Act"
+        ],
+        [
+          "CWA"
+        ],
+        [
+          "waters of the United States"
+        ],
+        [
+          "wetlands"
+        ],
+        [
+          "stream"
+        ],
+        [
+          "discharge"
+        ],
+        [
+          "dredge"
+        ],
+        [
+          "fill"
+        ],
+        [
+          "stormwater"
+        ],
+        [
+          "NPDES"
+        ],
+        [
+          "Section 401"
+        ],
+        [
+          "Section 404"
+        ],
+        [
+          "water quality certification"
+        ],
+        [
+          "Corps permit"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no wetlands",
+        "no waters of the United States",
+        "no discharge",
+        "no dredge or fill",
+        "no stormwater discharge",
+        "no water permit"
+      ],
+      "source_query": "Clean Water Act, waters of the United States, and water permit/certification sources Clean Water Act, 33 U.S.C. chapter 26",
+      "source_filters": {
+        "source_record_id": "R1EA-082",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "clean_water_act_wotus_permits"
+      },
+      "source_evidence_requirements": [
+        "CWA/Corps/state water source",
+        "package evidence for waters, wetlands, discharge, dredge/fill, stormwater/NPDES, water-quality certification, DA permit, or state permit triggers"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-083",
+          "R1EA-084",
+          "R1EA-085",
+          "R1EA-086",
+          "R1EA-087",
+          "R1EA-088",
+          "R1EA-089",
+          "R1EA-090",
+          "R1EA-091",
+          "R1EA-115",
+          "R1EA-116",
+          "R1EA-117",
+          "R1EA-118"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "cultural_resource_protection_and_state_shpo_sources_m3_template",
+      "authority_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template",
+      "title": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-072",
+      "source_record_ids": [
+        "R1EA-072",
+        "R1EA-073",
+        "R1EA-074",
+        "R1EA-075",
+        "R1EA-076",
+        "R1EA-077",
+        "R1EA-078",
+        "R1EA-079",
+        "R1EA-080",
+        "R1EA-113",
+        "R1EA-114",
+        "R1EA-120",
+        "R1EA-121",
+        "R1EA-122",
+        "R1EA-123"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-073",
+        "R1EA-074",
+        "R1EA-075",
+        "R1EA-076",
+        "R1EA-077",
+        "R1EA-078",
+        "R1EA-079",
+        "R1EA-080",
+        "R1EA-113",
+        "R1EA-114",
+        "R1EA-120",
+        "R1EA-121",
+        "R1EA-122",
+        "R1EA-123"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources?",
+      "requirement": "When package facts trigger Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "historic property OR cultural resource OR archaeological resource OR archeological resource OR SHPO OR THPO OR NAGPRA OR Native American remains",
+      "package_terms": [
+        "historic property",
+        "cultural resource",
+        "archaeological resource",
+        "archeological resource",
+        "SHPO",
+        "THPO",
+        "NAGPRA",
+        "Native American remains",
+        "sacred site",
+        "AIRFA",
+        "RFRA",
+        "paleontological resource",
+        "cave resource"
+      ],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "heritage",
+        "cultural resources",
+        "consultation",
+        "tribal"
+      ],
+      "package_section_families": [
+        "heritage",
+        "cultural resources",
+        "consultation",
+        "tribal"
+      ],
+      "applies_if_package_terms": [
+        "historic property",
+        "cultural resource",
+        "archaeological resource",
+        "archeological resource",
+        "SHPO",
+        "THPO",
+        "NAGPRA",
+        "Native American remains",
+        "sacred site",
+        "AIRFA",
+        "RFRA",
+        "paleontological resource",
+        "cave resource"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "historic property"
+        ],
+        [
+          "cultural resource"
+        ],
+        [
+          "archaeological resource"
+        ],
+        [
+          "archeological resource"
+        ],
+        [
+          "SHPO"
+        ],
+        [
+          "THPO"
+        ],
+        [
+          "NAGPRA"
+        ],
+        [
+          "Native American remains"
+        ],
+        [
+          "sacred site"
+        ],
+        [
+          "AIRFA"
+        ],
+        [
+          "RFRA"
+        ],
+        [
+          "paleontological resource"
+        ],
+        [
+          "cave resource"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no historic properties",
+        "no cultural resources",
+        "no archaeological resources",
+        "no SHPO consultation",
+        "no tribal cultural resources"
+      ],
+      "source_query": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources NHPA \u00a7 110 federal agency preservation responsibilities, 54 U.S.C. chapter 3061",
+      "source_filters": {
+        "source_record_id": "R1EA-072",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "cultural_resource_protection_and_state_shpo_sources"
+      },
+      "source_evidence_requirements": [
+        "cultural-resource law/regulation/SHPO source",
+        "package evidence for historic properties, archaeological resources, Native American remains/items, sacred sites, religious exercise, or state SHPO coordination",
+        "paleontology and cave-resource source evidence when project facts trigger those special cultural/resource protections"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-073",
+          "R1EA-074",
+          "R1EA-075",
+          "R1EA-076",
+          "R1EA-077",
+          "R1EA-078",
+          "R1EA-079",
+          "R1EA-080",
+          "R1EA-113",
+          "R1EA-114",
+          "R1EA-120",
+          "R1EA-121",
+          "R1EA-122",
+          "R1EA-123"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "eagle_efh_and_special_wildlife_sources_m3_template",
+      "authority_family_id": "eagle_efh_and_special_wildlife_sources",
+      "rule_id": "eagle_efh_and_special_wildlife_sources_authority_template",
+      "title": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-097",
+      "source_record_ids": [
+        "R1EA-097",
+        "R1EA-098",
+        "R1EA-099",
+        "R1EA-100"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-098",
+        "R1EA-099",
+        "R1EA-100"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Bald and Golden Eagle Protection Act, EFH, and special wildlife sources?",
+      "requirement": "When package facts trigger Bald and Golden Eagle Protection Act, EFH, and special wildlife sources, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "bald eagle OR golden eagle OR eagle nest OR eagle take OR eagle disturbance OR essential fish habitat OR EFH OR fish habitat",
+      "package_terms": [
+        "bald eagle",
+        "golden eagle",
+        "eagle nest",
+        "eagle take",
+        "eagle disturbance",
+        "essential fish habitat",
+        "EFH",
+        "fish habitat",
+        "Magnuson-Stevens",
+        "NOAA Fisheries"
+      ],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "wildlife",
+        "fisheries",
+        "consultation",
+        "habitat"
+      ],
+      "package_section_families": [
+        "wildlife",
+        "fisheries",
+        "consultation",
+        "habitat"
+      ],
+      "applies_if_package_terms": [
+        "bald eagle",
+        "golden eagle",
+        "eagle nest",
+        "eagle take",
+        "eagle disturbance",
+        "essential fish habitat",
+        "EFH",
+        "fish habitat",
+        "Magnuson-Stevens",
+        "NOAA Fisheries"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "bald eagle"
+        ],
+        [
+          "golden eagle"
+        ],
+        [
+          "eagle nest"
+        ],
+        [
+          "eagle take"
+        ],
+        [
+          "eagle disturbance"
+        ],
+        [
+          "essential fish habitat"
+        ],
+        [
+          "EFH"
+        ],
+        [
+          "fish habitat"
+        ],
+        [
+          "Magnuson-Stevens"
+        ],
+        [
+          "NOAA Fisheries"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no eagle habitat",
+        "no eagle nests",
+        "no eagle take",
+        "no essential fish habitat",
+        "no fish habitat"
+      ],
+      "source_query": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources Bald and Golden Eagle Protection Act, 16 U.S.C. \u00a7 668",
+      "source_filters": {
+        "source_record_id": "R1EA-097",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "eagle_efh_and_special_wildlife_sources"
+      },
+      "source_evidence_requirements": [
+        "eagle or EFH source",
+        "package evidence for eagle take/disturbance/nests, EFH, fish habitat, or consultation triggers"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-098",
+          "R1EA-099",
+          "R1EA-100"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "floodplain_management_eo11988_m3_template",
+      "authority_family_id": "floodplain_management_eo11988",
+      "rule_id": "floodplain_management_eo11988_authority_template",
+      "title": "Executive Order 11988 floodplain management applicability template",
+      "authority_category": "executive_order",
+      "authority_document_role": "executive_order",
+      "authority_source_record_id": "R1EA-103",
+      "source_record_ids": [
+        "R1EA-103"
+      ],
+      "supporting_source_record_ids": [],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Executive Order 11988 floodplain management?",
+      "requirement": "When package facts trigger Executive Order 11988 floodplain management, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "floodplain OR floodplain occupancy OR floodplain alteration OR base flood OR 100-year flood OR flood hazard area OR flood-prone area",
+      "package_terms": [
+        "floodplain",
+        "floodplain occupancy",
+        "floodplain alteration",
+        "base flood",
+        "100-year flood",
+        "flood hazard area",
+        "flood-prone area"
+      ],
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "floodplains",
+        "water resources",
+        "hazards"
+      ],
+      "package_section_families": [
+        "floodplains",
+        "water resources",
+        "hazards"
+      ],
+      "applies_if_package_terms": [
+        "floodplain",
+        "floodplain occupancy",
+        "floodplain alteration",
+        "base flood",
+        "100-year flood",
+        "flood hazard area",
+        "flood-prone area"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "floodplain"
+        ],
+        [
+          "floodplain occupancy"
+        ],
+        [
+          "floodplain alteration"
+        ],
+        [
+          "base flood"
+        ],
+        [
+          "100-year flood"
+        ],
+        [
+          "flood hazard area"
+        ],
+        [
+          "flood-prone area"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no floodplains",
+        "outside floodplain",
+        "no floodplain occupancy",
+        "no flood hazard area"
+      ],
+      "source_query": "Executive Order 11988 floodplain management Executive Order 11988 - Floodplain Management",
+      "source_filters": {
+        "source_record_id": "R1EA-103",
+        "document_role": "executive_order",
+        "authority_level": "federal",
+        "topic": "floodplain_management_eo11988"
+      },
+      "source_evidence_requirements": [
+        "EO 11988 source",
+        "package evidence for floodplain occupancy, alteration, or effects"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "forest_service_planning_handbook_amendments_m3_template",
+      "authority_family_id": "forest_service_planning_handbook_amendments",
+      "rule_id": "forest_service_planning_handbook_amendments_authority_template",
+      "title": "Forest Service planning handbook and amendment support applicability template",
+      "authority_category": "agency_policy",
+      "authority_document_role": "agency_policy",
+      "authority_source_record_id": "R1EA-032",
+      "source_record_ids": [
+        "R1EA-032"
+      ],
+      "supporting_source_record_ids": [],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Forest Service planning handbook and amendment support?",
+      "requirement": "When package facts trigger Forest Service planning handbook and amendment support, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "forest plan amendment OR land management plan amendment OR site-specific plan amendment OR plan component amendment OR management area change OR LMP amendment",
+      "package_terms": [
+        "forest plan amendment",
+        "land management plan amendment",
+        "site-specific plan amendment",
+        "plan component amendment",
+        "management area change",
+        "LMP amendment"
+      ],
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "nepa_level",
+        "overlay"
+      ],
+      "package_section_terms": [
+        "forest plan consistency",
+        "plan amendment",
+        "management areas"
+      ],
+      "package_section_families": [
+        "forest plan consistency",
+        "plan amendment",
+        "management areas"
+      ],
+      "applies_if_package_terms": [
+        "forest plan amendment",
+        "land management plan amendment",
+        "site-specific plan amendment",
+        "plan component amendment",
+        "management area change",
+        "LMP amendment"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "forest plan amendment"
+        ],
+        [
+          "land management plan amendment"
+        ],
+        [
+          "site-specific plan amendment"
+        ],
+        [
+          "plan component amendment"
+        ],
+        [
+          "management area change"
+        ],
+        [
+          "LMP amendment"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no plan amendment",
+        "no forest plan amendment",
+        "consistent with forest plan without amendment",
+        "no management area change"
+      ],
+      "source_query": "Forest Service planning handbook and amendment support FSH 1909.12 - Land Management Planning Handbook",
+      "source_filters": {
+        "source_record_id": "R1EA-032",
+        "document_role": "agency_policy",
+        "authority_level": "federal",
+        "topic": "forest_service_planning_handbook_amendments"
+      },
+      "source_evidence_requirements": [
+        "Forest Service planning handbook source",
+        "package evidence for a site-specific plan amendment"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "grassland_bankhead_jones_authorities_m3_template",
+      "authority_family_id": "grassland_bankhead_jones_authorities",
+      "rule_id": "grassland_bankhead_jones_authorities_authority_template",
+      "title": "Bankhead-Jones and National Grassland administration authorities applicability template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "authority_source_record_id": "R1EA-037",
+      "source_record_ids": [
+        "R1EA-037",
+        "R1EA-038",
+        "R1PLAN-region-1-grassland-overlay-01"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-038",
+        "R1PLAN-region-1-grassland-overlay-01"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Bankhead-Jones and National Grassland administration authorities?",
+      "requirement": "When package facts trigger Bankhead-Jones and National Grassland administration authorities, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "National Grassland OR Bankhead-Jones OR Farm Tenant Act OR grassland plan OR acquired lands OR grassland administration",
+      "package_terms": [
+        "National Grassland",
+        "Bankhead-Jones",
+        "Farm Tenant Act",
+        "grassland plan",
+        "acquired lands",
+        "grassland administration"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "grassland",
+        "project location",
+        "land status"
+      ],
+      "package_section_families": [
+        "grassland",
+        "project location",
+        "land status"
+      ],
+      "applies_if_package_terms": [
+        "National Grassland",
+        "Bankhead-Jones",
+        "Farm Tenant Act",
+        "grassland plan",
+        "acquired lands",
+        "grassland administration"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "National Grassland"
+        ],
+        [
+          "Bankhead-Jones"
+        ],
+        [
+          "Farm Tenant Act"
+        ],
+        [
+          "grassland plan"
+        ],
+        [
+          "acquired lands"
+        ],
+        [
+          "grassland administration"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "not National Grassland",
+        "outside National Grassland",
+        "no Bankhead-Jones lands"
+      ],
+      "source_query": "Bankhead-Jones and National Grassland administration authorities 36 CFR part 213 - Administration under Bankhead-Jones Farm Tenant Act",
+      "source_filters": {
+        "source_record_id": "R1EA-037",
+        "document_role": "regulation",
+        "authority_level": "federal",
+        "topic": "grassland_bankhead_jones_authorities"
+      },
+      "source_evidence_requirements": [
+        "Bankhead-Jones or grassland administration source",
+        "package evidence that the action is on National Grassland or Bankhead-Jones acquired/administered land"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-038",
+          "R1PLAN-region-1-grassland-overlay-01"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "hazardous_materials_site_condition_m3_template",
+      "authority_family_id": "hazardous_materials_site_condition",
+      "rule_id": "hazardous_materials_site_condition_authority_template",
+      "title": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-107",
+      "source_record_ids": [
+        "R1EA-107",
+        "R1EA-108",
+        "R1EA-109"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-108",
+        "R1EA-109"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence?",
+      "requirement": "When package facts trigger Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "hazardous substance OR hazardous waste OR solid waste OR CERCLA OR RCRA OR contamination OR recognized environmental condition OR mine waste",
+      "package_terms": [
+        "hazardous substance",
+        "hazardous waste",
+        "solid waste",
+        "CERCLA",
+        "RCRA",
+        "contamination",
+        "recognized environmental condition",
+        "mine waste",
+        "landfill",
+        "release",
+        "spill",
+        "phase I environmental site assessment",
+        "due diligence"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "hazardous materials",
+        "site conditions",
+        "environmental due diligence"
+      ],
+      "package_section_families": [
+        "hazardous materials",
+        "site conditions",
+        "environmental due diligence"
+      ],
+      "applies_if_package_terms": [
+        "hazardous substance",
+        "hazardous waste",
+        "solid waste",
+        "CERCLA",
+        "RCRA",
+        "contamination",
+        "recognized environmental condition",
+        "mine waste",
+        "landfill",
+        "release",
+        "spill",
+        "phase I environmental site assessment",
+        "due diligence"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "hazardous substance"
+        ],
+        [
+          "hazardous waste"
+        ],
+        [
+          "solid waste"
+        ],
+        [
+          "CERCLA"
+        ],
+        [
+          "RCRA"
+        ],
+        [
+          "contamination"
+        ],
+        [
+          "recognized environmental condition"
+        ],
+        [
+          "mine waste"
+        ],
+        [
+          "landfill"
+        ],
+        [
+          "release"
+        ],
+        [
+          "spill"
+        ],
+        [
+          "phase I environmental site assessment"
+        ],
+        [
+          "due diligence"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no hazardous materials",
+        "no contamination",
+        "no recognized environmental conditions",
+        "no waste sites",
+        "no mine features"
+      ],
+      "source_query": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence Resource Conservation and Recovery Act, 42 U.S.C. chapter 82",
+      "source_filters": {
+        "source_record_id": "R1EA-107",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "hazardous_materials_site_condition"
+      },
+      "source_evidence_requirements": [
+        "CERCLA/RCRA/NCP source",
+        "package evidence for hazardous substance release, solid/hazardous waste, cleanup, exposure, facility, mine feature, land acquisition/disposal, or spill response"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-108",
+          "R1EA-109"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "invasive_pesticide_soils_farmland_drinking_water_m3_template",
+      "authority_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "rule_id": "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+      "title": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families applicability template",
+      "authority_category": "executive_order",
+      "authority_document_role": "executive_order",
+      "authority_source_record_id": "R1EA-112",
+      "source_record_ids": [
+        "R1EA-030",
+        "R1EA-101",
+        "R1EA-102",
+        "R1EA-105",
+        "R1EA-106",
+        "R1EA-110",
+        "R1EA-111",
+        "R1EA-112"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-030",
+        "R1EA-101",
+        "R1EA-102",
+        "R1EA-105",
+        "R1EA-106",
+        "R1EA-110",
+        "R1EA-111"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families?",
+      "requirement": "When package facts trigger Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "invasive species OR noxious weeds OR pesticide OR herbicide OR soil productivity OR prime farmland OR farmland conversion OR drinking water",
+      "package_terms": [
+        "invasive species",
+        "noxious weeds",
+        "pesticide",
+        "herbicide",
+        "soil productivity",
+        "prime farmland",
+        "farmland conversion",
+        "drinking water",
+        "sole source aquifer",
+        "underground injection control",
+        "UIC",
+        "watershed",
+        "state permit",
+        "local permit"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "invasive species",
+        "soils",
+        "water",
+        "permits"
+      ],
+      "package_section_families": [
+        "invasive species",
+        "soils",
+        "water",
+        "permits"
+      ],
+      "applies_if_package_terms": [
+        "invasive species",
+        "noxious weeds",
+        "pesticide",
+        "herbicide",
+        "soil productivity",
+        "prime farmland",
+        "farmland conversion",
+        "drinking water",
+        "sole source aquifer",
+        "underground injection control",
+        "UIC",
+        "watershed",
+        "state permit",
+        "local permit"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "invasive species"
+        ],
+        [
+          "noxious weeds"
+        ],
+        [
+          "pesticide"
+        ],
+        [
+          "herbicide"
+        ],
+        [
+          "soil productivity"
+        ],
+        [
+          "prime farmland"
+        ],
+        [
+          "farmland conversion"
+        ],
+        [
+          "drinking water"
+        ],
+        [
+          "sole source aquifer"
+        ],
+        [
+          "underground injection control"
+        ],
+        [
+          "UIC"
+        ],
+        [
+          "watershed"
+        ],
+        [
+          "state permit"
+        ],
+        [
+          "local permit"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no invasive species",
+        "no pesticide use",
+        "no herbicide use",
+        "no prime farmland",
+        "no drinking water source",
+        "no state permit"
+      ],
+      "source_query": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families Executive Order 13112 as amended by EO 13751 - Invasive species",
+      "source_filters": {
+        "source_record_id": "R1EA-112",
+        "document_role": "executive_order",
+        "authority_level": "federal",
+        "topic": "invasive_pesticide_soils_farmland_drinking_water"
+      },
+      "source_evidence_requirements": [
+        "resource or permit-family source",
+        "package evidence for soils, invasive species, noxious weeds, pesticide/herbicide use, farmland conversion, drinking/source water, UIC, watershed, or local/state permit triggers"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-030",
+          "R1EA-101",
+          "R1EA-102",
+          "R1EA-105",
+          "R1EA-106",
+          "R1EA-110",
+          "R1EA-111"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "land_exchange_fs_policy_and_project_references_m3_template",
+      "authority_family_id": "land_exchange_fs_policy_and_project_references",
+      "rule_id": "land_exchange_fs_policy_and_project_references_authority_template",
+      "title": "Forest Service exchange policy, appraisal/title guidance, and project-reference records applicability template",
+      "authority_category": "agency_policy",
+      "authority_document_role": "agency_policy",
+      "authority_source_record_id": "R1EA-150",
+      "source_record_ids": [
+        "R1EA-150",
+        "R1EA-151",
+        "R1EA-152",
+        "R1EA-153",
+        "R1EA-154",
+        "R1EA-155",
+        "R1EA-156",
+        "R1EA-160",
+        "R1EA-161",
+        "R1EA-162"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-151",
+        "R1EA-152",
+        "R1EA-153",
+        "R1EA-154",
+        "R1EA-155",
+        "R1EA-156",
+        "R1EA-161",
+        "R1EA-162"
+      ],
+      "excluded_source_record_ids": [
+        "R1EA-160"
+      ],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Forest Service exchange policy, appraisal/title guidance, and project-reference records?",
+      "requirement": "When package facts trigger Forest Service exchange policy, appraisal/title guidance, and project-reference records, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "land exchange OR exchange case OR appraisal OR title evidence OR reservations OR outstanding rights OR exchange agreement OR feasibility analysis",
+      "package_terms": [
+        "land exchange",
+        "exchange case",
+        "appraisal",
+        "title evidence",
+        "reservations",
+        "outstanding rights",
+        "exchange agreement",
+        "feasibility analysis",
+        "notice of exchange",
+        "closing"
+      ],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "land exchange",
+        "appraisal",
+        "title",
+        "public notice"
+      ],
+      "package_section_families": [
+        "land exchange",
+        "appraisal",
+        "title",
+        "public notice"
+      ],
+      "applies_if_package_terms": [
+        "land exchange",
+        "exchange case",
+        "appraisal",
+        "title evidence",
+        "reservations",
+        "outstanding rights",
+        "exchange agreement",
+        "feasibility analysis",
+        "notice of exchange",
+        "closing"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "land exchange"
+        ],
+        [
+          "exchange case"
+        ],
+        [
+          "appraisal"
+        ],
+        [
+          "title evidence"
+        ],
+        [
+          "reservations"
+        ],
+        [
+          "outstanding rights"
+        ],
+        [
+          "exchange agreement"
+        ],
+        [
+          "feasibility analysis"
+        ],
+        [
+          "notice of exchange"
+        ],
+        [
+          "closing"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "not a land exchange",
+        "no appraisal",
+        "no title evidence",
+        "no reservations",
+        "no outstanding rights"
+      ],
+      "source_query": "Forest Service exchange policy, appraisal/title guidance, and project-reference records FSM 5430 \u2014 Exchanges",
+      "source_filters": {
+        "source_record_id": "R1EA-150",
+        "document_role": "agency_policy",
+        "authority_level": "federal",
+        "topic": "land_exchange_fs_policy_and_project_references"
+      },
+      "source_evidence_requirements": [
+        "Forest Service exchange policy/handbook source or non-controlling project reference",
+        "package evidence for exchange case, project documents, valuation/appraisal, title, reservations, notice, agreement, or closing"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-151",
+          "R1EA-152",
+          "R1EA-153",
+          "R1EA-154",
+          "R1EA-155",
+          "R1EA-156",
+          "R1EA-161",
+          "R1EA-162"
+        ],
+        "excluded_source_record_ids": [
+          "R1EA-160"
+        ]
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "land_exchange_regulatory_requirements_m3_template",
+      "authority_family_id": "land_exchange_regulatory_requirements",
+      "rule_id": "land_exchange_regulatory_requirements_authority_template",
+      "title": "36 CFR part 254 land-exchange procedural and valuation requirements applicability template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "authority_source_record_id": "R1EA-124",
+      "source_record_ids": [
+        "R1EA-124",
+        "R1EA-125",
+        "R1EA-126",
+        "R1EA-127",
+        "R1EA-128",
+        "R1EA-129",
+        "R1EA-130",
+        "R1EA-131",
+        "R1EA-132",
+        "R1EA-133",
+        "R1EA-134",
+        "R1EA-135",
+        "R1EA-136",
+        "R1EA-157",
+        "R1EA-158",
+        "R1EA-159"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-125",
+        "R1EA-126",
+        "R1EA-127",
+        "R1EA-128",
+        "R1EA-129",
+        "R1EA-130",
+        "R1EA-131",
+        "R1EA-132",
+        "R1EA-133",
+        "R1EA-134",
+        "R1EA-135",
+        "R1EA-136",
+        "R1EA-157",
+        "R1EA-158",
+        "R1EA-159"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger 36 CFR part 254 land-exchange procedural and valuation requirements?",
+      "requirement": "When package facts trigger 36 CFR part 254 land-exchange procedural and valuation requirements, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "land exchange OR 36 CFR part 254 OR agreement to initiate OR notice of exchange proposal OR appraisal OR equal value OR cash equalization OR segregation",
+      "package_terms": [
+        "land exchange",
+        "36 CFR part 254",
+        "agreement to initiate",
+        "notice of exchange proposal",
+        "appraisal",
+        "equal value",
+        "cash equalization",
+        "segregation",
+        "exchange approval",
+        "title approval"
+      ],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "permit",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "land exchange",
+        "appraisal",
+        "equal value",
+        "public notice"
+      ],
+      "package_section_families": [
+        "land exchange",
+        "appraisal",
+        "equal value",
+        "public notice"
+      ],
+      "applies_if_package_terms": [
+        "land exchange",
+        "36 CFR part 254",
+        "agreement to initiate",
+        "notice of exchange proposal",
+        "appraisal",
+        "equal value",
+        "cash equalization",
+        "segregation",
+        "exchange approval",
+        "title approval"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "land exchange"
+        ],
+        [
+          "36 CFR part 254"
+        ],
+        [
+          "agreement to initiate"
+        ],
+        [
+          "notice of exchange proposal"
+        ],
+        [
+          "appraisal"
+        ],
+        [
+          "equal value"
+        ],
+        [
+          "cash equalization"
+        ],
+        [
+          "segregation"
+        ],
+        [
+          "exchange approval"
+        ],
+        [
+          "title approval"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "not a land exchange",
+        "no exchange agreement",
+        "no appraisal",
+        "no notice of exchange",
+        "no equalization"
+      ],
+      "source_query": "36 CFR part 254 land-exchange procedural and valuation requirements 36 CFR part 254, subpart A \u2014 Land Exchanges",
+      "source_filters": {
+        "source_record_id": "R1EA-124",
+        "document_role": "regulation",
+        "authority_level": "federal",
+        "topic": "land_exchange_regulatory_requirements"
+      },
+      "source_evidence_requirements": [
+        "36 CFR part 254, NEPA overlay, relocation, or administrative-review overlay source",
+        "package evidence for exchange initiation, public notice, appraisal, equalization, approval, title, closing, written authorization, or EA/FONSI overlay"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-125",
+          "R1EA-126",
+          "R1EA-127",
+          "R1EA-128",
+          "R1EA-129",
+          "R1EA-130",
+          "R1EA-131",
+          "R1EA-132",
+          "R1EA-133",
+          "R1EA-134",
+          "R1EA-135",
+          "R1EA-136",
+          "R1EA-157",
+          "R1EA-158",
+          "R1EA-159"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "land_exchange_statutory_authorities_m3_template",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "rule_id": "land_exchange_statutory_authorities_authority_template",
+      "title": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-137",
+      "source_record_ids": [
+        "R1EA-137",
+        "R1EA-138",
+        "R1EA-139",
+        "R1EA-140",
+        "R1EA-141",
+        "R1EA-142",
+        "R1EA-143",
+        "R1EA-144",
+        "R1EA-145",
+        "R1EA-146",
+        "R1EA-147",
+        "R1EA-148",
+        "R1EA-149"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-138",
+        "R1EA-139",
+        "R1EA-140",
+        "R1EA-141",
+        "R1EA-142",
+        "R1EA-143",
+        "R1EA-144",
+        "R1EA-145",
+        "R1EA-146",
+        "R1EA-147",
+        "R1EA-148",
+        "R1EA-149"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight?",
+      "requirement": "When package facts trigger Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "land exchange OR exchange of lands OR FLPMA OR public interest determination OR equal value OR cash equalization OR reservation OR mineral reservation",
+      "package_terms": [
+        "land exchange",
+        "exchange of lands",
+        "FLPMA",
+        "public interest determination",
+        "equal value",
+        "cash equalization",
+        "reservation",
+        "mineral reservation",
+        "easement",
+        "acquisition",
+        "disposal",
+        "congressional report"
+      ],
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "land exchange",
+        "public interest",
+        "acquisition",
+        "disposal"
+      ],
+      "package_section_families": [
+        "land exchange",
+        "public interest",
+        "acquisition",
+        "disposal"
+      ],
+      "applies_if_package_terms": [
+        "land exchange",
+        "exchange of lands",
+        "FLPMA",
+        "public interest determination",
+        "equal value",
+        "cash equalization",
+        "reservation",
+        "mineral reservation",
+        "easement",
+        "acquisition",
+        "disposal",
+        "congressional report"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "land exchange"
+        ],
+        [
+          "exchange of lands"
+        ],
+        [
+          "FLPMA"
+        ],
+        [
+          "public interest determination"
+        ],
+        [
+          "equal value"
+        ],
+        [
+          "cash equalization"
+        ],
+        [
+          "reservation"
+        ],
+        [
+          "mineral reservation"
+        ],
+        [
+          "easement"
+        ],
+        [
+          "acquisition"
+        ],
+        [
+          "disposal"
+        ],
+        [
+          "congressional report"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "not a land exchange",
+        "no acquisition",
+        "no disposal",
+        "no public interest determination",
+        "no reservations"
+      ],
+      "source_query": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight 16 U.S.C. \u00a7 485 \u2014 Exchange of lands in national forests",
+      "source_filters": {
+        "source_record_id": "R1EA-137",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "land_exchange_statutory_authorities"
+      },
+      "source_evidence_requirements": [
+        "exchange statute source",
+        "package evidence for public-interest determination, exchange authority, acquisition/access, reservations, equal value, congressional reporting, or statutory exchange mechanism"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-138",
+          "R1EA-139",
+          "R1EA-140",
+          "R1EA-141",
+          "R1EA-142",
+          "R1EA-143",
+          "R1EA-144",
+          "R1EA-145",
+          "R1EA-146",
+          "R1EA-147",
+          "R1EA-148",
+          "R1EA-149"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "minerals_energy_authorities_m3_template",
+      "authority_family_id": "minerals_energy_authorities",
+      "rule_id": "minerals_energy_authorities_authority_template",
+      "title": "Minerals and energy-development authorities applicability template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "authority_source_record_id": "R1EA-041",
+      "source_record_ids": [
+        "R1EA-041",
+        "R1EA-063"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-063"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Minerals and energy-development authorities?",
+      "requirement": "When package facts trigger Minerals and energy-development authorities, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "minerals OR mining OR plan of operations OR mineral materials OR energy development OR surface use OR reclamation OR oil and gas",
+      "package_terms": [
+        "minerals",
+        "mining",
+        "plan of operations",
+        "mineral materials",
+        "energy development",
+        "surface use",
+        "reclamation",
+        "oil and gas",
+        "mineral production"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "minerals",
+        "energy",
+        "reclamation",
+        "permits"
+      ],
+      "package_section_families": [
+        "minerals",
+        "energy",
+        "reclamation",
+        "permits"
+      ],
+      "applies_if_package_terms": [
+        "minerals",
+        "mining",
+        "plan of operations",
+        "mineral materials",
+        "energy development",
+        "surface use",
+        "reclamation",
+        "oil and gas",
+        "mineral production"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "minerals"
+        ],
+        [
+          "mining"
+        ],
+        [
+          "plan of operations"
+        ],
+        [
+          "mineral materials"
+        ],
+        [
+          "energy development"
+        ],
+        [
+          "surface use"
+        ],
+        [
+          "reclamation"
+        ],
+        [
+          "oil and gas"
+        ],
+        [
+          "mineral production"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no mineral activity",
+        "no mining",
+        "no energy development",
+        "no plan of operations"
+      ],
+      "source_query": "Minerals and energy-development authorities 36 CFR part 228 - Minerals",
+      "source_filters": {
+        "source_record_id": "R1EA-041",
+        "document_role": "regulation",
+        "authority_level": "federal",
+        "topic": "minerals_energy_authorities"
+      },
+      "source_evidence_requirements": [
+        "minerals regulation or policy source",
+        "package evidence for energy/mineral proposal, plan of operations, surface-use plan, mineral materials, reclamation, or related permit"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-063"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "region1_forest_plan_source_records_m3_template",
+      "authority_family_id": "region1_forest_plan_source_records",
+      "rule_id": "region1_forest_plan_source_records_authority_template",
+      "title": "Region 1 forest-plan and overlay source records applicability template",
+      "authority_category": "forest_plan",
+      "authority_document_role": "forest_plan",
+      "authority_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-01",
+        "R1PLAN-beaverhead-deerlodge-nf-02",
+        "R1PLAN-bitterroot-nf-01",
+        "R1PLAN-bitterroot-nf-02",
+        "R1PLAN-bitterroot-nf-03",
+        "R1PLAN-custer-gallatin-nf-01",
+        "R1PLAN-custer-gallatin-nf-02",
+        "R1PLAN-custer-gallatin-nf-03",
+        "R1PLAN-custer-gallatin-nf-04",
+        "R1PLAN-custer-gallatin-nf-05",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-dakota-prairie-grasslands-01",
+        "R1PLAN-dakota-prairie-grasslands-02",
+        "R1PLAN-flathead-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-02",
+        "R1PLAN-idaho-panhandle-nfs-01",
+        "R1PLAN-idaho-panhandle-nfs-02",
+        "R1PLAN-kootenai-nf-01",
+        "R1PLAN-lolo-nf-01",
+        "R1PLAN-nez-perce-clearwater-nfs-01",
+        "R1PLAN-nez-perce-clearwater-nfs-02",
+        "R1PLAN-region-1-grassland-overlay-01",
+        "R1PLAN-region-1-northern-region-01",
+        "R1PLAN-region-1-northern-region-02",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "supporting_source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-01",
+        "R1PLAN-beaverhead-deerlodge-nf-02",
+        "R1PLAN-bitterroot-nf-01",
+        "R1PLAN-bitterroot-nf-02",
+        "R1PLAN-bitterroot-nf-03",
+        "R1PLAN-custer-gallatin-nf-01",
+        "R1PLAN-custer-gallatin-nf-03",
+        "R1PLAN-custer-gallatin-nf-04",
+        "R1PLAN-custer-gallatin-nf-05",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-dakota-prairie-grasslands-01",
+        "R1PLAN-dakota-prairie-grasslands-02",
+        "R1PLAN-flathead-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-02",
+        "R1PLAN-idaho-panhandle-nfs-01",
+        "R1PLAN-idaho-panhandle-nfs-02",
+        "R1PLAN-kootenai-nf-01",
+        "R1PLAN-lolo-nf-01",
+        "R1PLAN-nez-perce-clearwater-nfs-01",
+        "R1PLAN-nez-perce-clearwater-nfs-02",
+        "R1PLAN-region-1-grassland-overlay-01",
+        "R1PLAN-region-1-northern-region-01",
+        "R1PLAN-region-1-northern-region-02",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Region 1 forest-plan and overlay source records?",
+      "requirement": "When package facts trigger Region 1 forest-plan and overlay source records, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "forest plan OR land management plan OR management area OR desired condition OR standard OR guideline OR geographic area OR overlay",
+      "package_terms": [
+        "forest plan",
+        "land management plan",
+        "management area",
+        "desired condition",
+        "standard",
+        "guideline",
+        "geographic area",
+        "overlay",
+        "species of conservation concern"
+      ],
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "overlay",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "forest plan consistency",
+        "management areas",
+        "standards",
+        "guidelines"
+      ],
+      "package_section_families": [
+        "forest plan consistency",
+        "management areas",
+        "standards",
+        "guidelines"
+      ],
+      "applies_if_package_terms": [
+        "forest plan",
+        "land management plan",
+        "management area",
+        "desired condition",
+        "standard",
+        "guideline",
+        "geographic area",
+        "overlay",
+        "species of conservation concern"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "forest plan"
+        ],
+        [
+          "land management plan"
+        ],
+        [
+          "management area"
+        ],
+        [
+          "desired condition"
+        ],
+        [
+          "standard"
+        ],
+        [
+          "guideline"
+        ],
+        [
+          "geographic area"
+        ],
+        [
+          "overlay"
+        ],
+        [
+          "species of conservation concern"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "outside National Forest System",
+        "no forest plan components",
+        "no management area",
+        "no overlay"
+      ],
+      "source_query": "Region 1 forest-plan and overlay source records 2022 Custer Gallatin Land Management Plan PDF",
+      "source_filters": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "document_role": "forest_plan",
+        "authority_level": "forest",
+        "topic": "region1_forest_plan_source_records"
+      },
+      "source_evidence_requirements": [
+        "current forest-plan source record",
+        "profile or package fact evidence that selects the forest unit, area, management area, or overlay"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1PLAN-beaverhead-deerlodge-nf-01",
+          "R1PLAN-beaverhead-deerlodge-nf-02",
+          "R1PLAN-bitterroot-nf-01",
+          "R1PLAN-bitterroot-nf-02",
+          "R1PLAN-bitterroot-nf-03",
+          "R1PLAN-custer-gallatin-nf-01",
+          "R1PLAN-custer-gallatin-nf-03",
+          "R1PLAN-custer-gallatin-nf-04",
+          "R1PLAN-custer-gallatin-nf-05",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-dakota-prairie-grasslands-01",
+          "R1PLAN-dakota-prairie-grasslands-02",
+          "R1PLAN-flathead-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-01",
+          "R1PLAN-helena-lewis-and-clark-nf-02",
+          "R1PLAN-idaho-panhandle-nfs-01",
+          "R1PLAN-idaho-panhandle-nfs-02",
+          "R1PLAN-kootenai-nf-01",
+          "R1PLAN-lolo-nf-01",
+          "R1PLAN-nez-perce-clearwater-nfs-01",
+          "R1PLAN-nez-perce-clearwater-nfs-02",
+          "R1PLAN-region-1-grassland-overlay-01",
+          "R1PLAN-region-1-northern-region-01",
+          "R1PLAN-region-1-northern-region-02",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "roads_access_special_use_action_authorities_m3_template",
+      "authority_family_id": "roads_access_special_use_action_authorities",
+      "rule_id": "roads_access_special_use_action_authorities_authority_template",
+      "title": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities applicability template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "authority_source_record_id": "R1EA-036",
+      "source_record_ids": [
+        "R1EA-036",
+        "R1EA-039",
+        "R1EA-040",
+        "R1EA-041",
+        "R1EA-042",
+        "R1EA-043",
+        "R1EA-044",
+        "R1EA-143"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-039",
+        "R1EA-040",
+        "R1EA-041",
+        "R1EA-042",
+        "R1EA-043",
+        "R1EA-044",
+        "R1EA-143"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities?",
+      "requirement": "When package facts trigger National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "road OR trail OR travel management OR special use OR right-of-way OR ROW OR closure order OR timber sale",
+      "package_terms": [
+        "road",
+        "trail",
+        "travel management",
+        "special use",
+        "right-of-way",
+        "ROW",
+        "closure order",
+        "timber sale",
+        "range permit",
+        "grazing",
+        "access authorization"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "transportation",
+        "access",
+        "special uses",
+        "range",
+        "timber"
+      ],
+      "package_section_families": [
+        "transportation",
+        "access",
+        "special uses",
+        "range",
+        "timber"
+      ],
+      "applies_if_package_terms": [
+        "road",
+        "trail",
+        "travel management",
+        "special use",
+        "right-of-way",
+        "ROW",
+        "closure order",
+        "timber sale",
+        "range permit",
+        "grazing",
+        "access authorization"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "road"
+        ],
+        [
+          "trail"
+        ],
+        [
+          "travel management"
+        ],
+        [
+          "special use"
+        ],
+        [
+          "right-of-way"
+        ],
+        [
+          "ROW"
+        ],
+        [
+          "closure order"
+        ],
+        [
+          "timber sale"
+        ],
+        [
+          "range permit"
+        ],
+        [
+          "grazing"
+        ],
+        [
+          "access authorization"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no road changes",
+        "no trail changes",
+        "no special use",
+        "no right-of-way",
+        "no closure",
+        "no timber or range action"
+      ],
+      "source_query": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities 36 CFR part 212 - Travel management",
+      "source_filters": {
+        "source_record_id": "R1EA-036",
+        "document_role": "regulation",
+        "authority_level": "federal",
+        "topic": "roads_access_special_use_action_authorities"
+      },
+      "source_evidence_requirements": [
+        "roads/access/special-use/action authority source",
+        "package evidence for travel management, road/trail changes, range, timber, minerals, ROW, special uses, closures, or retained authorizations"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-039",
+          "R1EA-040",
+          "R1EA-041",
+          "R1EA-042",
+          "R1EA-043",
+          "R1EA-044",
+          "R1EA-143"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "species_supporting_sources_and_overlays_m3_template",
+      "authority_family_id": "species_supporting_sources_and_overlays",
+      "rule_id": "species_supporting_sources_and_overlays_authority_template",
+      "title": "Species source-support records, sensitive species pages, and lynx/LMP support applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-064",
+      "source_record_ids": [
+        "R1EA-064",
+        "R1EA-068",
+        "R1EA-069",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-068",
+        "R1EA-069",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Species source-support records, sensitive species pages, and lynx/LMP support?",
+      "requirement": "When package facts trigger Species source-support records, sensitive species pages, and lynx/LMP support, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "listed species OR threatened species OR endangered species OR proposed species OR candidate species OR sensitive species OR species of conservation concern OR lynx",
+      "package_terms": [
+        "listed species",
+        "threatened species",
+        "endangered species",
+        "proposed species",
+        "candidate species",
+        "sensitive species",
+        "species of conservation concern",
+        "lynx",
+        "biological assessment",
+        "biological opinion",
+        "Section 7 consultation",
+        "habitat"
+      ],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "overlay",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "wildlife",
+        "botany",
+        "species",
+        "consultation",
+        "habitat"
+      ],
+      "package_section_families": [
+        "wildlife",
+        "botany",
+        "species",
+        "consultation",
+        "habitat"
+      ],
+      "applies_if_package_terms": [
+        "listed species",
+        "threatened species",
+        "endangered species",
+        "proposed species",
+        "candidate species",
+        "sensitive species",
+        "species of conservation concern",
+        "lynx",
+        "biological assessment",
+        "biological opinion",
+        "Section 7 consultation",
+        "habitat"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "listed species"
+        ],
+        [
+          "threatened species"
+        ],
+        [
+          "endangered species"
+        ],
+        [
+          "proposed species"
+        ],
+        [
+          "candidate species"
+        ],
+        [
+          "sensitive species"
+        ],
+        [
+          "species of conservation concern"
+        ],
+        [
+          "lynx"
+        ],
+        [
+          "biological assessment"
+        ],
+        [
+          "biological opinion"
+        ],
+        [
+          "Section 7 consultation"
+        ],
+        [
+          "habitat"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no listed species",
+        "no sensitive species",
+        "no habitat",
+        "no consultation required",
+        "no effect"
+      ],
+      "source_query": "Species source-support records, sensitive species pages, and lynx/LMP support Endangered Species Act, 16 U.S.C. chapter 35",
+      "source_filters": {
+        "source_record_id": "R1EA-064",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "species_supporting_sources_and_overlays"
+      },
+      "source_evidence_requirements": [
+        "species source row",
+        "package evidence for listed, sensitive, SCC, lynx, habitat, BA, BO, or consultation triggers"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-068",
+          "R1EA-069",
+          "R1PLAN-custer-gallatin-nf-06",
+          "R1PLAN-custer-gallatin-nf-07",
+          "R1PLAN-region-1-species-overlay-01",
+          "R1PLAN-region-1-species-overlay-02"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "tribal_consultation_trust_sacred_sites_m3_template",
+      "authority_family_id": "tribal_consultation_trust_sacred_sites",
+      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template",
+      "title": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality applicability template",
+      "authority_category": "executive_order",
+      "authority_document_role": "executive_order",
+      "authority_source_record_id": "R1EA-081",
+      "source_record_ids": [
+        "R1EA-077",
+        "R1EA-080",
+        "R1EA-081"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-077",
+        "R1EA-080"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality?",
+      "requirement": "When package facts trigger Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "tribal consultation OR Tribal OR tribe OR treaty rights OR trust responsibility OR sacred site OR government-to-government OR THPO",
+      "package_terms": [
+        "tribal consultation",
+        "Tribal",
+        "tribe",
+        "treaty rights",
+        "trust responsibility",
+        "sacred site",
+        "government-to-government",
+        "THPO",
+        "cultural confidentiality",
+        "traditional cultural property"
+      ],
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "tribal consultation",
+        "cultural resources",
+        "treaty rights"
+      ],
+      "package_section_families": [
+        "tribal consultation",
+        "cultural resources",
+        "treaty rights"
+      ],
+      "applies_if_package_terms": [
+        "tribal consultation",
+        "Tribal",
+        "tribe",
+        "treaty rights",
+        "trust responsibility",
+        "sacred site",
+        "government-to-government",
+        "THPO",
+        "cultural confidentiality",
+        "traditional cultural property"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "tribal consultation"
+        ],
+        [
+          "Tribal"
+        ],
+        [
+          "tribe"
+        ],
+        [
+          "treaty rights"
+        ],
+        [
+          "trust responsibility"
+        ],
+        [
+          "sacred site"
+        ],
+        [
+          "government-to-government"
+        ],
+        [
+          "THPO"
+        ],
+        [
+          "cultural confidentiality"
+        ],
+        [
+          "traditional cultural property"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no tribal consultation",
+        "no tribal interests",
+        "no sacred sites",
+        "no treaty rights"
+      ],
+      "source_query": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality Executive Order 13175 - Consultation and Coordination With Indian Tribal Governments",
+      "source_filters": {
+        "source_record_id": "R1EA-081",
+        "document_role": "executive_order",
+        "authority_level": "federal",
+        "topic": "tribal_consultation_trust_sacred_sites"
+      },
+      "source_evidence_requirements": [
+        "tribal consultation, sacred-site, or Cultural and Heritage Cooperation Authority source",
+        "package evidence for Tribal implications, treaty/trust interests, sacred sites, THPO coordination, or sensitive cultural information"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-077",
+          "R1EA-080"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "vegetation_wildfire_forest_health_authorities_m3_template",
+      "authority_family_id": "vegetation_wildfire_forest_health_authorities",
+      "rule_id": "vegetation_wildfire_forest_health_authorities_authority_template",
+      "title": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities applicability template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "authority_source_record_id": "R1EA-056",
+      "source_record_ids": [
+        "R1EA-056",
+        "R1EA-057",
+        "R1EA-058",
+        "R1EA-059",
+        "R1EA-060",
+        "R1EA-061",
+        "R1EA-062"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-057",
+        "R1EA-058",
+        "R1EA-059",
+        "R1EA-060",
+        "R1EA-061",
+        "R1EA-062"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Vegetation, fuels, wildfire, forest-health, and emergency-action authorities?",
+      "requirement": "When package facts trigger Vegetation, fuels, wildfire, forest-health, and emergency-action authorities, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "vegetation management OR fuels treatment OR wildfire OR prescribed fire OR timber production OR forest health OR insect OR disease",
+      "package_terms": [
+        "vegetation management",
+        "fuels treatment",
+        "wildfire",
+        "prescribed fire",
+        "timber production",
+        "forest health",
+        "insect",
+        "disease",
+        "restoration",
+        "emergency action",
+        "fuel break"
+      ],
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "vegetation",
+        "fuels",
+        "wildfire",
+        "forest health"
+      ],
+      "package_section_families": [
+        "vegetation",
+        "fuels",
+        "wildfire",
+        "forest health"
+      ],
+      "applies_if_package_terms": [
+        "vegetation management",
+        "fuels treatment",
+        "wildfire",
+        "prescribed fire",
+        "timber production",
+        "forest health",
+        "insect",
+        "disease",
+        "restoration",
+        "emergency action",
+        "fuel break"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "vegetation management"
+        ],
+        [
+          "fuels treatment"
+        ],
+        [
+          "wildfire"
+        ],
+        [
+          "prescribed fire"
+        ],
+        [
+          "timber production"
+        ],
+        [
+          "forest health"
+        ],
+        [
+          "insect"
+        ],
+        [
+          "disease"
+        ],
+        [
+          "restoration"
+        ],
+        [
+          "emergency action"
+        ],
+        [
+          "fuel break"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no vegetation treatment",
+        "no timber harvest",
+        "no fuels treatment",
+        "no wildfire action",
+        "no restoration"
+      ],
+      "source_query": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities Healthy Forests Restoration Act and related forest management authorities, 16 U.S.C. chapter 84",
+      "source_filters": {
+        "source_record_id": "R1EA-056",
+        "document_role": "law",
+        "authority_level": "federal",
+        "topic": "vegetation_wildfire_forest_health_authorities"
+      },
+      "source_evidence_requirements": [
+        "forest-health, vegetation, wildfire, or policy source",
+        "package evidence for fuels, insect/disease, emergency action, restoration, CE authority, timber production, or forest-health triggers"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-057",
+          "R1EA-058",
+          "R1EA-059",
+          "R1EA-060",
+          "R1EA-061",
+          "R1EA-062"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    },
+    {
+      "template_id": "wilderness_wsr_trails_designated_areas_m3_template",
+      "authority_family_id": "wilderness_wsr_trails_designated_areas",
+      "rule_id": "wilderness_wsr_trails_designated_areas_authority_template",
+      "title": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas applicability template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "authority_source_record_id": "R1EA-047",
+      "source_record_ids": [
+        "R1EA-045",
+        "R1EA-046",
+        "R1EA-047",
+        "R1EA-051",
+        "R1EA-052",
+        "R1EA-053",
+        "R1EA-054",
+        "R1EA-055"
+      ],
+      "supporting_source_record_ids": [
+        "R1EA-045",
+        "R1EA-046",
+        "R1EA-051",
+        "R1EA-052",
+        "R1EA-053",
+        "R1EA-054",
+        "R1EA-055"
+      ],
+      "excluded_source_record_ids": [],
+      "applicability_mode": "conditional",
+      "severity": "medium",
+      "question": "Does the EA package contain project facts that trigger Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas?",
+      "requirement": "When package facts trigger Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas, reviewers should evaluate the applicable authority using cited source-library evidence before creating compliance findings.",
+      "package_query": "wilderness OR recommended wilderness OR wilderness study area OR WSA OR Wild and Scenic River OR national trail OR designated area OR special area",
+      "package_terms": [
+        "wilderness",
+        "recommended wilderness",
+        "wilderness study area",
+        "WSA",
+        "Wild and Scenic River",
+        "national trail",
+        "designated area",
+        "special area",
+        "cave resource",
+        "paleontological resource"
+      ],
+      "package_fact_types": [
+        "geography",
+        "overlay",
+        "permit",
+        "resource_topic"
+      ],
+      "package_section_terms": [
+        "wilderness",
+        "designated areas",
+        "wild and scenic rivers",
+        "trails"
+      ],
+      "package_section_families": [
+        "wilderness",
+        "designated areas",
+        "wild and scenic rivers",
+        "trails"
+      ],
+      "applies_if_package_terms": [
+        "wilderness",
+        "recommended wilderness",
+        "wilderness study area",
+        "WSA",
+        "Wild and Scenic River",
+        "national trail",
+        "designated area",
+        "special area",
+        "cave resource",
+        "paleontological resource"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "wilderness"
+        ],
+        [
+          "recommended wilderness"
+        ],
+        [
+          "wilderness study area"
+        ],
+        [
+          "WSA"
+        ],
+        [
+          "Wild and Scenic River"
+        ],
+        [
+          "national trail"
+        ],
+        [
+          "designated area"
+        ],
+        [
+          "special area"
+        ],
+        [
+          "cave resource"
+        ],
+        [
+          "paleontological resource"
+        ]
+      ],
+      "does_not_apply_if_package_terms": [
+        "no wilderness",
+        "no designated areas",
+        "outside Wild and Scenic River corridor",
+        "no national trails",
+        "no caves"
+      ],
+      "source_query": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas 36 CFR part 293 - Wilderness",
+      "source_filters": {
+        "source_record_id": "R1EA-047",
+        "document_role": "regulation",
+        "authority_level": "federal",
+        "topic": "wilderness_wsr_trails_designated_areas"
+      },
+      "source_evidence_requirements": [
+        "designated-area source",
+        "package evidence for wilderness, WSA, Wild and Scenic River, national trail, cave, paleontology, or special-area effects"
+      ],
+      "evidence_expectation": "A supported applicability decision requires a catalog-confirmed authority source and package evidence matching the positive or negative trigger contract.",
+      "dependency_contract": {
+        "dependency_family_ids": [],
+        "exception_family_ids": [],
+        "supporting_source_record_ids": [
+          "R1EA-045",
+          "R1EA-046",
+          "R1EA-051",
+          "R1EA-052",
+          "R1EA-053",
+          "R1EA-054",
+          "R1EA-055"
+        ],
+        "excluded_source_record_ids": []
+      },
+      "supersession": null
+    }
+  ]
+}

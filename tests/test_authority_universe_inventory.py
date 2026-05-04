@@ -37,7 +37,7 @@ def test_authority_inventory_has_valid_family_contract() -> None:
         assert family["source_record_mapping"]["catalog_source_record_ids"] == family["source_record_ids"]
         assert family["status"] == "candidate" or family["source_record_ids"]
         if family["status"] == "active":
-            assert family["rule_ids"]
+            assert family["rule_ids"] or family.get("rule_template_ids")
             assert family["coverage_requirements"]["coverage_matrix_rule_ids"]
             assert family["coverage_requirements"]["eval_case_ids"]
         if family["status"] == "source_only":
@@ -84,6 +84,8 @@ def test_authority_inventory_maps_every_rule_pack_rule_once() -> None:
     assert inventory["summary"]["mapped_rule_count"] == len(rule_to_family)
     assert inventory["summary"]["families_requiring_milestone_2_source_currentness"] == 0
     assert inventory["summary"]["families_confirmed_by_milestone_2_source_currentness"] == 21
+    assert inventory["summary"]["families_requiring_milestone_3_rule_template_work"] == 0
+    assert inventory["summary"]["families_confirmed_by_milestone_3_rule_templates"] == 19
     assert inventory["source_currentness_gate"]["status"] == "passed"
 
     for rule in rule_pack["rules"]:

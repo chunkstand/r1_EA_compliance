@@ -417,6 +417,44 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 applicable["applicable_authority_count"],
             )
 
+    def test_generated_rule_pack_can_materialize_applicable_family_template(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[_authority_family_candidate(source_set_id)],
+            )
+            base_rule_pack_path = _write_generated_rule_base_pack(Path(tmp))
+            _build_adjudicated_applicability_dir(fixture)
+
+            result = generate_applicability_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            generated = json.loads(
+                result.generated_rule_pack_path.read_text(encoding="utf-8")
+            )
+            generated_by_id = {rule["id"]: rule for rule in generated["rules"]}
+            family_rule = generated_by_id["clean_water_family_authority_template"]
+            self.assertIsNone(family_rule["base_rule_id"])
+            self.assertEqual(
+                family_rule["applicability"]["candidate_authority_type"],
+                "authority_family_rule_template",
+            )
+            self.assertEqual(
+                family_rule["authority_source_record_id"],
+                "R1EA-CWA",
+            )
+            self.assertEqual(family_rule["applies_if_package_terms"], ["wetlands"])
+            self.assertFalse(family_rule["source_claim_link_requirements"]["required"])
+            self.assertNotIn("ce_fanec", generated_by_id)
+
     def test_generated_rule_pack_requires_passing_applicability_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))
@@ -944,7 +982,10 @@ def _generated_base_rule(
     return rule
 
 
-def _write_decision_fixture(root: Path) -> dict:
+def _write_decision_fixture(
+    root: Path,
+    extra_candidates: list[dict] | None = None,
+) -> dict:
     output_dir = root / "source_library"
     review_id = "east-crazy-applicability"
     source_set_id = "source-set-unit"
@@ -978,7 +1019,10 @@ def _write_decision_fixture(root: Path) -> dict:
         "source_set_id": source_set_id,
         "catalog_sha256": "catalog-sha",
         "artifact_paths": {},
-        "candidate_authorities": _candidate_authorities(source_set_id),
+        "candidate_authorities": [
+            *_candidate_authorities(source_set_id),
+            *(extra_candidates or []),
+        ],
         "validation": {"passed": True, "checks": []},
     }
     _write_json(applicability_dir / "authority_universe_snapshot.json", authority_universe)
@@ -1051,6 +1095,51 @@ def _candidate_authorities(source_set_id: str) -> list[dict]:
         ),
         _forest_plan_candidate(source_set_id),
     ]
+
+
+def _authority_family_candidate(source_set_id: str) -> dict:
+    candidate = _rule_candidate(
+        source_set_id=source_set_id,
+        rule_id="clean_water_family_authority_template",
+        source_record_id="R1EA-CWA",
+        authority_category="law",
+        applicability_mode="conditional",
+        source_query="Clean Water Act source authority",
+        package_query="wetlands",
+        positive_trigger_groups=[["wetlands"]],
+    )
+    candidate["candidate_authority_id"] = (
+        "authority-family-template:unit-authority-families:0.1.0:"
+        "clean_water:clean_water_family_authority_template"
+    )
+    candidate["candidate_authority_type"] = "authority_family_rule_template"
+    candidate["authority_family_id"] = "clean_water"
+    candidate["package_section_filters"]["package_section_terms"] = ["water resources"]
+    candidate["rule_template"].update(
+        {
+            "authority_family_template_set_id": "unit-authority-families",
+            "authority_family_template_set_version": "0.1.0",
+            "template_id": "clean_water_template",
+            "authority_family_id": "clean_water",
+            "authority_source_record_id": "R1EA-CWA",
+            "authority_category": "law",
+            "package_query": "wetlands",
+            "package_terms": ["wetlands"],
+            "package_section_terms": ["water resources"],
+            "applies_if_package_terms": ["wetlands"],
+            "applies_if_package_term_groups": [["wetlands"]],
+            "does_not_apply_if_package_terms": ["no wetlands"],
+            "source_query": "Clean Water Act source authority",
+            "source_filters": {
+                "document_role": "law",
+                "source_record_id": "R1EA-CWA",
+            },
+            "evidence_expectation": "Requires source and package evidence.",
+        }
+    )
+    candidate["required_source_evidence"]["requires_source_claim_linkage"] = False
+    candidate["source_claim_link_ids"] = []
+    return candidate
 
 
 def _rule_candidate(

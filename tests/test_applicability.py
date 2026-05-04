@@ -162,6 +162,94 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 5,
             )
 
+    def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-test"
+            rule_pack_path = _write_rule_pack(root)
+            template_path = _write_authority_family_templates(root)
+            _write_catalog(
+                output_dir,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(source_set_id, "R1EA-FAMILY", "law", "law"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_component_inventory(output_dir, source_set_id)
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id="family-template-unit",
+                source_set_id=source_set_id,
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=template_path,
+                forest_plan_component_inventory_path=component_inventory_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["rule_template_candidate_count"], 3)
+            self.assertEqual(
+                result.summary["authority_family_rule_template_candidate_count"],
+                1,
+            )
+            self.assertEqual(result.summary["candidate_authority_count"], 6)
+            self.assertEqual(
+                result.summary["authority_family_template_applicability_mode_counts"],
+                {"conditional": 1},
+            )
+
+            snapshot = json.loads(result.snapshot_path.read_text(encoding="utf-8"))
+            family_candidates = [
+                candidate
+                for candidate in snapshot["candidate_authorities"]
+                if candidate["candidate_authority_type"]
+                == "authority_family_rule_template"
+            ]
+            self.assertEqual(len(family_candidates), 1)
+            candidate = family_candidates[0]
+            self.assertEqual(candidate["authority_family_id"], "clean_water_unit")
+            self.assertEqual(
+                candidate["rule_template"]["rule_id"],
+                "clean_water_unit_authority_template",
+            )
+            self.assertEqual(candidate["positive_trigger_groups"], [["wetlands"]])
+            self.assertEqual(candidate["negative_trigger_groups"], [["no wetlands"]])
+            self.assertFalse(
+                candidate["required_source_evidence"][
+                    "requires_source_claim_linkage"
+                ]
+            )
+            self.assertTrue(candidate["source_evidence_availability"]["available"])
+            self.assertEqual(
+                candidate["retrieval_contract"]["contract_type"],
+                "authority_family_rule_template_retrieval",
+            )
+            self.assertEqual(
+                candidate["deterministic_applicability_test_contract"][
+                    "candidate_authority_type"
+                ],
+                "authority_family_rule_template",
+            )
+            template_check = _check(
+                snapshot["validation"],
+                "authority_family_template_candidates_cover_config",
+            )
+            self.assertTrue(template_check["passed"])
+            self.assertEqual(
+                template_check["details"]["actual_template_candidate_count"],
+                1,
+            )
+
     def test_snapshot_validation_fails_when_rule_claim_linkage_is_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -326,6 +414,53 @@ def _write_rule_pack(directory: Path) -> Path:
     }
     path = directory / "rule-pack.json"
     _write_json(path, rule_pack)
+    return path
+
+
+def _write_authority_family_templates(directory: Path) -> Path:
+    payload = {
+        "schema_version": "authority-family-rule-templates-v1",
+        "template_set_id": "unit-authority-family-templates",
+        "version": "0.1.0",
+        "base_rule_pack_id": "unit-nepa-ea",
+        "base_rule_pack_version": "0.1.0",
+        "templates": [
+            {
+                "template_id": "clean_water_unit_template",
+                "authority_family_id": "clean_water_unit",
+                "rule_id": "clean_water_unit_authority_template",
+                "title": "Clean Water Unit applicability template",
+                "authority_category": "law",
+                "authority_document_role": "law",
+                "authority_source_record_id": "R1EA-FAMILY",
+                "source_record_ids": ["R1EA-FAMILY"],
+                "supporting_source_record_ids": [],
+                "excluded_source_record_ids": [],
+                "applicability_mode": "conditional",
+                "severity": "medium",
+                "question": "Does the package trigger Clean Water Act review?",
+                "requirement": "Evaluate source-backed Clean Water Act applicability.",
+                "package_query": "wetlands",
+                "package_terms": ["wetlands"],
+                "package_fact_types": ["permit", "resource_topic"],
+                "package_section_terms": ["water resources"],
+                "applies_if_package_terms": ["wetlands"],
+                "applies_if_package_term_groups": [["wetlands"]],
+                "does_not_apply_if_package_terms": ["no wetlands"],
+                "source_query": "Clean Water Act source",
+                "source_filters": {
+                    "document_role": "law",
+                    "source_record_id": "R1EA-FAMILY",
+                },
+                "source_evidence_requirements": ["catalog-confirmed source"],
+                "evidence_expectation": (
+                    "A supported decision requires source evidence and package wetlands evidence."
+                ),
+            }
+        ],
+    }
+    path = directory / "authority-family-templates.json"
+    _write_json(path, payload)
     return path
 
 

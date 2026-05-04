@@ -20,6 +20,10 @@ from .rule_packs import validate_rule_pack
 
 
 AUTHORITY_UNIVERSE_SCHEMA_VERSION = "authority-universe-snapshot-v0"
+AUTHORITY_FAMILY_RULE_TEMPLATES_SCHEMA_VERSION = "authority-family-rule-templates-v1"
+DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH = Path(
+    "config/authority_family_rule_templates_nepa_ea_v1.json"
+)
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 BASE_RULE_PACKAGE_FACT_TYPES = (
     "action",
@@ -79,6 +83,7 @@ def build_authority_universe_snapshot(
     source_set_id: str | None = None,
     base_rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
+    authority_family_templates_path: Path | None = None,
     forest_plan_component_inventory_path: Path | None = None,
     claims_path: Path | None = None,
     rule_claim_links_path: Path | None = None,
@@ -109,6 +114,22 @@ def build_authority_universe_snapshot(
     forest_plan_profiles_path = Path(forest_plan_profiles_path)
     profiles = load_forest_plan_profiles(forest_plan_profiles_path)
     profiles_sha256 = sha256_file(forest_plan_profiles_path)
+
+    authority_family_templates_path = (
+        Path(authority_family_templates_path)
+        if authority_family_templates_path
+        else None
+    )
+    authority_family_templates = (
+        _load_authority_family_templates(authority_family_templates_path)
+        if authority_family_templates_path
+        else None
+    )
+    authority_family_templates_sha256 = (
+        sha256_file(authority_family_templates_path)
+        if authority_family_templates_path and authority_family_templates_path.exists()
+        else None
+    )
 
     claims_path = claims_path or default_claims_path(output_dir, source_set_id)
     rule_claim_links_path = rule_claim_links_path or default_rule_claim_links_path(
@@ -142,6 +163,11 @@ def build_authority_universe_snapshot(
         source_claim_links_by_rule=source_claim_links_by_rule,
         source_claim_gaps_by_rule=source_claim_gaps_by_rule,
     )
+    authority_family_candidates = _authority_family_template_candidates(
+        source_set_id=source_set_id,
+        template_set=authority_family_templates,
+        catalog_by_source_id=catalog_by_source_id,
+    )
     component_candidates = _forest_plan_component_candidates(
         source_set_id=source_set_id,
         profiles=profiles,
@@ -151,7 +177,7 @@ def build_authority_universe_snapshot(
         catalog_by_source_id=catalog_by_source_id,
     )
     candidate_authorities = sorted(
-        [*rule_candidates, *component_candidates],
+        [*rule_candidates, *authority_family_candidates, *component_candidates],
         key=lambda candidate: str(candidate["candidate_authority_id"]),
     )
     authority_universe_sha256 = _stable_sha256(
@@ -162,6 +188,7 @@ def build_authority_universe_snapshot(
             "source_set_manifest_sha256": _optional_file_sha256(source_set_manifest_path),
             "catalog_sha256": _optional_file_sha256(source_catalog_path),
             "profiles_sha256": profiles_sha256,
+            "authority_family_templates_sha256": authority_family_templates_sha256,
             "component_inventory_sha256": component_inventory_sha256,
             "source_claims_sha256": _optional_file_sha256(claims_path),
             "rule_claim_links_sha256": _optional_file_sha256(rule_claim_links_path),
@@ -179,6 +206,7 @@ def build_authority_universe_snapshot(
         candidate_authorities=candidate_authorities,
         profiles=profiles,
         component_inventory=component_inventory,
+        authority_family_templates=authority_family_templates,
     )
     summary = _summary(
         authority_universe_id=authority_universe_id,
@@ -193,6 +221,7 @@ def build_authority_universe_snapshot(
         claims_path=claims_path,
         rule_claim_links_path=rule_claim_links_path,
         rule_claim_gaps_path=rule_claim_gaps_path,
+        authority_family_templates_path=authority_family_templates_path,
         candidate_authorities=candidate_authorities,
         validation=validation,
     )
@@ -211,6 +240,12 @@ def build_authority_universe_snapshot(
         "base_rule_pack_sha256": base_rule_pack_sha256,
         "forest_plan_profiles_sha256": profiles_sha256,
         "forest_plan_profile_ids": _forest_plan_profile_ids(profiles),
+        "authority_family_templates_sha256": authority_family_templates_sha256,
+        "authority_family_template_set_id": (
+            authority_family_templates.get("template_set_id")
+            if isinstance(authority_family_templates, dict)
+            else None
+        ),
         "forest_plan_component_inventory_id": _component_inventory_id(component_inventory),
         "forest_plan_component_inventory_sha256": component_inventory_sha256,
         "source_claims_sha256": _optional_file_sha256(claims_path),
@@ -221,6 +256,11 @@ def build_authority_universe_snapshot(
             "source_catalog_path": str(source_catalog_path),
             "base_rule_pack_path": str(base_rule_pack_path),
             "forest_plan_profiles_path": str(forest_plan_profiles_path),
+            "authority_family_templates_path": (
+                str(authority_family_templates_path)
+                if authority_family_templates_path
+                else None
+            ),
             "forest_plan_component_inventory_path": (
                 str(forest_plan_component_inventory_path)
                 if forest_plan_component_inventory_path.exists()
@@ -347,6 +387,106 @@ def _rule_template_candidates(
                 "rule_claim_gap_ids": [
                     str(gap.get("gap_id")) for gap in source_claim_gaps if gap.get("gap_id")
                 ],
+            }
+        )
+    return candidates
+
+
+def _authority_family_template_candidates(
+    *,
+    source_set_id: str,
+    template_set: dict | None,
+    catalog_by_source_id: dict[str, dict],
+) -> list[dict]:
+    if not isinstance(template_set, dict):
+        return []
+    templates = template_set.get("templates")
+    if not isinstance(templates, list):
+        return []
+    candidates = []
+    template_set_id = str(template_set.get("template_set_id") or "")
+    template_set_version = str(template_set.get("version") or "")
+    for template in templates:
+        if not isinstance(template, dict):
+            continue
+        template_id = str(template.get("template_id") or "")
+        family_id = str(template.get("authority_family_id") or "")
+        rule_id = str(template.get("rule_id") or template_id)
+        source_record_id = str(template.get("authority_source_record_id") or "").strip()
+        catalog_record = catalog_by_source_id.get(source_record_id)
+        document_role = _authority_family_document_role(template, catalog_record)
+        authority_category = str(template.get("authority_category") or "").strip()
+        source_record_ids = _template_source_record_ids(template, source_record_id)
+        source_records = [
+            _source_record_summary(catalog_by_source_id.get(record_id))
+            for record_id in source_record_ids
+            if catalog_by_source_id.get(record_id)
+        ]
+        source_role_filters = _authority_family_source_role_filters(
+            template=template,
+            source_record_ids=source_record_ids,
+            document_role=document_role,
+            authority_category=authority_category,
+        )
+        package_section_filters = _authority_family_package_section_filters(template)
+        positive_trigger_groups = _authority_family_positive_trigger_groups(template)
+        negative_trigger_groups = _authority_family_negative_trigger_groups(template)
+        required_package_fact_types = _strings(template.get("package_fact_types"))
+        candidates.append(
+            {
+                "candidate_authority_id": (
+                    "authority-family-template:"
+                    f"{template_set_id}:{template_set_version}:{family_id}:{rule_id}"
+                ),
+                "candidate_authority_type": "authority_family_rule_template",
+                "source_set_id": source_set_id,
+                "authority_family_id": family_id,
+                "authority_category": authority_category,
+                "authority_document_role": document_role,
+                "source_record_ids": source_record_ids,
+                "source_records": source_records,
+                "required_package_fact_types": required_package_fact_types,
+                "positive_trigger_groups": positive_trigger_groups,
+                "negative_trigger_groups": negative_trigger_groups,
+                "source_role_filters": source_role_filters,
+                "package_section_filters": package_section_filters,
+                "required_source_evidence": _authority_family_required_source_evidence(
+                    template=template,
+                    source_record_id=source_record_id,
+                    document_role=document_role,
+                    source_role_filters=source_role_filters,
+                ),
+                "retrieval_contract": _authority_family_retrieval_contract(
+                    template=template,
+                    rule_id=rule_id,
+                    source_role_filters=source_role_filters,
+                    package_section_filters=package_section_filters,
+                ),
+                "graph_expansion_contract": _authority_family_graph_expansion_contract(
+                    template=template,
+                    rule_id=rule_id,
+                    source_record_id=source_record_id,
+                ),
+                "dependency_contract": _authority_family_dependency_contract(template),
+                "search_coverage_requirements": _authority_family_search_coverage_requirements(
+                    template=template,
+                    positive_trigger_groups=positive_trigger_groups,
+                    negative_trigger_groups=negative_trigger_groups,
+                ),
+                "rule_template": _authority_family_rule_template_metadata(
+                    template=template,
+                    template_set=template_set,
+                    rule_id=rule_id,
+                ),
+                "source_evidence_availability": _authority_family_source_evidence_availability(
+                    catalog_record=catalog_record,
+                    source_records=source_records,
+                ),
+                "deterministic_applicability_test_contract": (
+                    _authority_family_applicability_contract(template=template)
+                ),
+                "source_claim_link_ids": [],
+                "rule_claim_gap_ids": [],
             }
         )
     return candidates
@@ -514,6 +654,23 @@ def _component_source_evidence_availability(
     }
 
 
+def _authority_family_source_evidence_availability(
+    *,
+    catalog_record: dict | None,
+    source_records: list[dict],
+) -> dict:
+    return {
+        "available": catalog_record is not None
+        and bool(catalog_record.get("artifact_sha256")),
+        "catalog_record_present": catalog_record is not None,
+        "artifact_sha256_present": bool((catalog_record or {}).get("artifact_sha256")),
+        "source_record_count": len(source_records),
+        "source_status": str((catalog_record or {}).get("source_status") or "") or None,
+        "source_claim_linkage_recorded": False,
+        "source_claim_linkage_required": False,
+    }
+
+
 def _rule_required_package_fact_types(rule: dict) -> list[str]:
     fact_types = set(BASE_RULE_PACKAGE_FACT_TYPES)
     if rule.get("applicability_mode") == "conditional":
@@ -532,6 +689,312 @@ def _component_required_package_fact_types(component: dict) -> list[str]:
     if not component.get("overlay_ids"):
         fact_types.discard("overlay")
     return sorted(fact_types)
+
+
+def _authority_family_document_role(
+    template: dict,
+    catalog_record: dict | None,
+) -> str | None:
+    filters = (
+        template.get("source_filters")
+        if isinstance(template.get("source_filters"), dict)
+        else {}
+    )
+    value = (
+        template.get("authority_document_role")
+        or filters.get("document_role")
+        or (catalog_record or {}).get("document_role")
+    )
+    return str(value).strip() if str(value or "").strip() else None
+
+
+def _template_source_record_ids(template: dict, source_record_id: str) -> list[str]:
+    explicit = _strings(template.get("source_record_ids"))
+    if explicit:
+        return explicit
+    return _dedupe_strings(
+        [
+            source_record_id,
+            *_strings(template.get("supporting_source_record_ids")),
+            *_strings(template.get("excluded_source_record_ids")),
+        ]
+    )
+
+
+def _authority_family_source_role_filters(
+    *,
+    template: dict,
+    source_record_ids: list[str],
+    document_role: str | None,
+    authority_category: str | None,
+) -> dict:
+    source_filters = (
+        template.get("source_filters")
+        if isinstance(template.get("source_filters"), dict)
+        else {}
+    )
+    supporting_source_record_ids = _strings(template.get("supporting_source_record_ids"))
+    return {
+        "source_record_ids": source_record_ids,
+        "primary_source_record_id": template.get("authority_source_record_id"),
+        "supporting_source_record_ids": supporting_source_record_ids,
+        "excluded_source_record_ids": _strings(template.get("excluded_source_record_ids")),
+        "document_roles": [document_role] if document_role else [],
+        "authority_categories": _strings([authority_category]),
+        "source_filters": source_filters,
+    }
+
+
+def _authority_family_package_section_filters(template: dict) -> dict:
+    return {
+        "package_query": template.get("package_query"),
+        "package_terms": _strings(template.get("package_terms")),
+        "package_section_terms": _strings(template.get("package_section_terms")),
+        "package_section_term_groups": _string_groups(
+            template.get("package_section_term_groups")
+        ),
+        "preferred_section_families": _strings(template.get("package_section_families")),
+        "package_fact_types": _strings(template.get("package_fact_types")),
+    }
+
+
+def _authority_family_positive_trigger_groups(template: dict) -> list[list[str]]:
+    groups = _string_groups(template.get("applies_if_package_term_groups"))
+    terms = _strings(template.get("applies_if_package_terms"))
+    if terms:
+        groups.append(terms)
+    if not groups:
+        package_terms = _strings(template.get("package_terms"))
+        if package_terms:
+            groups.append(package_terms)
+    return _dedupe_groups(groups)
+
+
+def _authority_family_negative_trigger_groups(template: dict) -> list[list[str]]:
+    return _dedupe_groups(
+        [[term] for term in _strings(template.get("does_not_apply_if_package_terms"))]
+    )
+
+
+def _authority_family_required_source_evidence(
+    *,
+    template: dict,
+    source_record_id: str | None,
+    document_role: str | None,
+    source_role_filters: dict,
+) -> dict:
+    return {
+        "source_record_ids": _template_source_record_ids(template, source_record_id or ""),
+        "primary_source_record_id": source_record_id,
+        "supporting_source_record_ids": _strings(template.get("supporting_source_record_ids")),
+        "excluded_source_record_ids": _strings(template.get("excluded_source_record_ids")),
+        "document_roles": [document_role] if document_role else [],
+        "source_role_filters": source_role_filters,
+        "requires_catalog_record": True,
+        "requires_artifact_sha256": True,
+        "requires_source_record": True,
+        "requires_source_claim_linkage": False,
+        "source_evidence_requirements": _strings(template.get("source_evidence_requirements")),
+    }
+
+
+def _authority_family_retrieval_contract(
+    *,
+    template: dict,
+    rule_id: str,
+    source_role_filters: dict,
+    package_section_filters: dict,
+) -> dict:
+    return {
+        "contract_type": "authority_family_rule_template_retrieval",
+        "query_plan_id": f"retrieval-plan:authority-family-template:{rule_id}",
+        "required_query_types": [
+            "exact_keyword",
+            "bm25",
+            "metadata_filter",
+            "package_section",
+            "source_role",
+        ],
+        "optional_query_types": ["vector"],
+        "source_queries": _strings([template.get("source_query")]),
+        "package_queries": _strings([template.get("package_query")]),
+        "source_role_filters": source_role_filters,
+        "package_section_filters": package_section_filters,
+        "fused_ranking_strategy": "reciprocal_rank_fusion",
+        "requires_selected_and_rejected_results": True,
+        "searched_index_hash_required": True,
+    }
+
+
+def _authority_family_graph_expansion_contract(
+    *,
+    template: dict,
+    rule_id: str,
+    source_record_id: str | None,
+) -> dict:
+    dependency_contract = _authority_family_dependency_contract(template)
+    return {
+        "contract_type": "authority_family_rule_template_graph_expansion",
+        "start_node_types": ["authority_family_rule_template", "source_record", "authority"],
+        "relationship_types": list(RULE_GRAPH_RELATIONSHIP_TYPES),
+        "max_depth": 2,
+        "requires_path_trace": True,
+        "required_graph_artifact_types": [
+            "source_graph",
+            "evidence_graph",
+            "claim_graph",
+            "authority_family_template_graph",
+        ],
+        "neighbor_filters": {
+            "rule_ids": [rule_id] if rule_id else [],
+            "authority_family_ids": _strings([template.get("authority_family_id")]),
+            "source_record_ids": _template_source_record_ids(
+                template,
+                source_record_id or "",
+            ),
+            "authority_categories": _strings([template.get("authority_category")]),
+            "supporting_source_record_ids": dependency_contract[
+                "supporting_source_record_ids"
+            ],
+            "superseded_by_family_ids": dependency_contract["superseded_by_family_ids"],
+        },
+    }
+
+
+def _authority_family_dependency_contract(template: dict) -> dict:
+    dependency = (
+        template.get("dependency_contract")
+        if isinstance(template.get("dependency_contract"), dict)
+        else {}
+    )
+    supersession = (
+        template.get("supersession")
+        if isinstance(template.get("supersession"), dict)
+        else {}
+    )
+    return {
+        "dependency_rule_ids": _strings(dependency.get("dependency_rule_ids")),
+        "dependency_family_ids": _strings(dependency.get("dependency_family_ids")),
+        "exception_rule_ids": _strings(dependency.get("exception_rule_ids")),
+        "exception_family_ids": _strings(dependency.get("exception_family_ids")),
+        "supersedes_rule_ids": _strings(dependency.get("supersedes_rule_ids")),
+        "superseded_by_rule_ids": _strings(dependency.get("superseded_by_rule_ids")),
+        "superseded_by_family_ids": _strings(
+            dependency.get("superseded_by_family_ids")
+        )
+        or _strings([supersession.get("replacement_family_id")]),
+        "supporting_source_record_ids": _strings(template.get("supporting_source_record_ids")),
+        "excluded_source_record_ids": _strings(template.get("excluded_source_record_ids")),
+        "supersession": supersession or None,
+    }
+
+
+def _authority_family_search_coverage_requirements(
+    *,
+    template: dict,
+    positive_trigger_groups: list[list[str]],
+    negative_trigger_groups: list[list[str]],
+) -> list[dict]:
+    base = {
+        "required_artifacts": [
+            "package_fact_graph",
+            "applicability_retrieval_trace",
+            "applicability_graph_trace",
+            "search_coverage_certificates",
+        ],
+        "required_query_types": ["exact_keyword", "bm25", "metadata_filter", "package_section"],
+        "requires_searched_index_hash": True,
+        "required_package_fact_types": _strings(template.get("package_fact_types")),
+    }
+    requirements = [
+        {
+            **base,
+            "coverage_class": "authority_family_positive_trigger_miss",
+            "required_trigger_groups": positive_trigger_groups,
+        }
+    ]
+    if negative_trigger_groups:
+        requirements.append(
+            {
+                **base,
+                "coverage_class": "authority_family_explicit_negative_trigger",
+                "required_trigger_groups": negative_trigger_groups,
+            }
+        )
+    return requirements
+
+
+def _authority_family_rule_template_metadata(
+    *,
+    template: dict,
+    template_set: dict,
+    rule_id: str,
+) -> dict:
+    return {
+        "base_rule_pack_id": template_set.get("base_rule_pack_id"),
+        "base_rule_pack_version": template_set.get("base_rule_pack_version"),
+        "authority_family_template_set_id": template_set.get("template_set_id"),
+        "authority_family_template_set_version": template_set.get("version"),
+        "template_id": template.get("template_id"),
+        "authority_family_id": template.get("authority_family_id"),
+        "rule_id": rule_id,
+        "title": template.get("title"),
+        "question": template.get("question"),
+        "requirement": template.get("requirement"),
+        "severity": template.get("severity"),
+        "applicability_mode": template.get("applicability_mode"),
+        "authority_source_record_id": template.get("authority_source_record_id"),
+        "authority_category": template.get("authority_category"),
+        "package_query": template.get("package_query"),
+        "package_terms": _strings(template.get("package_terms")),
+        "package_section_terms": _strings(template.get("package_section_terms")),
+        "applies_if_package_terms": _strings(template.get("applies_if_package_terms")),
+        "applies_if_package_term_groups": _string_groups(
+            template.get("applies_if_package_term_groups")
+        ),
+        "does_not_apply_if_package_terms": _strings(
+            template.get("does_not_apply_if_package_terms")
+        ),
+        "source_query": template.get("source_query"),
+        "source_filters": (
+            template.get("source_filters")
+            if isinstance(template.get("source_filters"), dict)
+            else {}
+        ),
+        "evidence_expectation": template.get("evidence_expectation"),
+    }
+
+
+def _authority_family_applicability_contract(*, template: dict) -> dict:
+    return {
+        "contract_type": "rule_template",
+        "candidate_authority_type": "authority_family_rule_template",
+        "authority_family_id": template.get("authority_family_id"),
+        "applicability_mode": template.get("applicability_mode"),
+        "baseline_required": False,
+        "baseline_source_record_ids": [],
+        "package_query": template.get("package_query"),
+        "package_terms": _strings(template.get("package_terms")),
+        "package_section_terms": _strings(template.get("package_section_terms")),
+        "package_section_term_groups": _string_groups(
+            template.get("package_section_term_groups")
+        ),
+        "positive_package_terms": _strings(template.get("applies_if_package_terms")),
+        "positive_package_term_groups": _string_groups(
+            template.get("applies_if_package_term_groups")
+        ),
+        "negative_package_terms": _strings(
+            template.get("does_not_apply_if_package_terms")
+        ),
+        "source_query": template.get("source_query"),
+        "source_filters": (
+            template.get("source_filters")
+            if isinstance(template.get("source_filters"), dict)
+            else {}
+        ),
+        "source_evidence_requirements": _strings(template.get("source_evidence_requirements")),
+        "evidence_expectation": template.get("evidence_expectation"),
+    }
 
 
 def _rule_applicability_contract(
@@ -924,6 +1387,7 @@ def _authority_universe_validation(
     candidate_authorities: list[dict],
     profiles: ForestPlanProfileCollection,
     component_inventory: dict | None,
+    authority_family_templates: dict | None,
 ) -> dict:
     checks = [
         {
@@ -946,6 +1410,10 @@ def _authority_universe_validation(
         _check_source_claim_linkage_recorded(candidate_authorities),
         _check_applicability_contracts(candidate_authorities),
         _check_candidate_pre_review_contracts(candidate_authorities),
+        _check_authority_family_template_candidates(
+            authority_family_templates=authority_family_templates,
+            candidate_authorities=candidate_authorities,
+        ),
         _check_forest_plan_component_candidates(
             source_set_id=source_set_id,
             rule_pack=rule_pack,
@@ -1152,6 +1620,70 @@ def _check_candidate_pre_review_contracts(candidate_authorities: list[dict]) -> 
     }
 
 
+def _check_authority_family_template_candidates(
+    *,
+    authority_family_templates: dict | None,
+    candidate_authorities: list[dict],
+) -> dict:
+    if not isinstance(authority_family_templates, dict):
+        return {
+            "name": "authority_family_template_candidates_cover_config",
+            "passed": True,
+            "details": {"configured": False, "expected_template_count": 0},
+        }
+    templates = [
+        template
+        for template in authority_family_templates.get("templates", [])
+        if isinstance(template, dict)
+    ]
+    expected_rule_ids = {str(template.get("rule_id") or "") for template in templates}
+    actual_rule_ids = {
+        str(candidate.get("rule_template", {}).get("rule_id") or "")
+        for candidate in candidate_authorities
+        if candidate.get("candidate_authority_type") == "authority_family_rule_template"
+    }
+    missing_predicates = [
+        template.get("template_id")
+        for template in templates
+        if not (
+            _strings(template.get("applies_if_package_terms"))
+            or _string_groups(template.get("applies_if_package_term_groups"))
+        )
+    ]
+    missing_negative_triggers = [
+        template.get("template_id")
+        for template in templates
+        if not _strings(template.get("does_not_apply_if_package_terms"))
+    ]
+    candidates_without_family = [
+        candidate.get("candidate_authority_id")
+        for candidate in candidate_authorities
+        if candidate.get("candidate_authority_type") == "authority_family_rule_template"
+        and not candidate.get("authority_family_id")
+    ]
+    passed = (
+        expected_rule_ids == actual_rule_ids
+        and bool(expected_rule_ids)
+        and not missing_predicates
+        and not missing_negative_triggers
+        and not candidates_without_family
+    )
+    return {
+        "name": "authority_family_template_candidates_cover_config",
+        "passed": passed,
+        "details": {
+            "configured": True,
+            "expected_template_count": len(expected_rule_ids),
+            "actual_template_candidate_count": len(actual_rule_ids),
+            "missing_rule_ids": sorted(expected_rule_ids - actual_rule_ids),
+            "unexpected_rule_ids": sorted(actual_rule_ids - expected_rule_ids),
+            "missing_predicate_template_ids": missing_predicates,
+            "missing_negative_trigger_template_ids": missing_negative_triggers,
+            "candidates_without_authority_family_id": candidates_without_family,
+        },
+    }
+
+
 def _check_forest_plan_component_candidates(
     *,
     source_set_id: str,
@@ -1292,6 +1824,7 @@ def _summary(
     claims_path: Path,
     rule_claim_links_path: Path,
     rule_claim_gaps_path: Path,
+    authority_family_templates_path: Path | None,
     candidate_authorities: list[dict],
     validation: dict,
 ) -> dict:
@@ -1304,6 +1837,11 @@ def _summary(
         for candidate in candidate_authorities
         if candidate.get("candidate_authority_type") == "rule_template"
     )
+    authority_family_template_modes = Counter(
+        str(candidate.get("rule_template", {}).get("applicability_mode") or "")
+        for candidate in candidate_authorities
+        if candidate.get("candidate_authority_type") == "authority_family_rule_template"
+    )
     return {
         "schema_version": "authority-universe-summary-v0",
         "authority_universe_id": authority_universe_id,
@@ -1315,10 +1853,19 @@ def _summary(
         "base_rule_count": len(base_rule_pack.get("rules", [])),
         "candidate_authority_count": len(candidate_authorities),
         "rule_template_candidate_count": type_counts.get("rule_template", 0),
+        "authority_family_rule_template_candidate_count": type_counts.get(
+            "authority_family_rule_template",
+            0,
+        ),
         "forest_plan_component_candidate_count": type_counts.get("forest_plan_component", 0),
         "candidate_type_counts": dict(type_counts),
         "rule_applicability_mode_counts": {
             key: value for key, value in dict(applicability_modes).items() if key
+        },
+        "authority_family_template_applicability_mode_counts": {
+            key: value
+            for key, value in dict(authority_family_template_modes).items()
+            if key
         },
         "candidate_contract_counts": _candidate_contract_counts(candidate_authorities),
         "source_set_manifest_path": str(source_set_manifest_path),
@@ -1335,6 +1882,9 @@ def _summary(
         ),
         "rule_claim_gaps_path": (
             str(rule_claim_gaps_path) if rule_claim_gaps_path.exists() else None
+        ),
+        "authority_family_templates_path": (
+            str(authority_family_templates_path) if authority_family_templates_path else None
         ),
         "validation_passed": bool(validation.get("passed")),
         "passed": bool(validation.get("passed")),
@@ -1399,6 +1949,84 @@ def _component_inventory_id(component_inventory: dict | None) -> str | None:
         return None
     value = str(component_inventory.get("inventory_id") or "").strip()
     return value or None
+
+
+def _load_authority_family_templates(path: Path) -> dict:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing authority-family templates: {path}")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("Authority-family templates must be a JSON object.")
+    if value.get("schema_version") != AUTHORITY_FAMILY_RULE_TEMPLATES_SCHEMA_VERSION:
+        raise ValueError(
+            "Authority-family templates schema_version must be "
+            f"{AUTHORITY_FAMILY_RULE_TEMPLATES_SCHEMA_VERSION}."
+        )
+    templates = value.get("templates")
+    if not isinstance(templates, list) or not templates:
+        raise ValueError("Authority-family templates must contain a non-empty templates list.")
+    failures = []
+    seen_rule_ids = set()
+    for index, template in enumerate(templates):
+        if not isinstance(template, dict):
+            failures.append({"index": index, "missing": ["template_object"]})
+            continue
+        required = {
+            "template_id",
+            "authority_family_id",
+            "rule_id",
+            "title",
+            "authority_category",
+            "authority_source_record_id",
+            "applicability_mode",
+            "question",
+            "requirement",
+            "severity",
+            "package_query",
+            "package_terms",
+            "source_query",
+            "source_filters",
+            "evidence_expectation",
+        }
+        missing = sorted(
+            field for field in required if not _template_field_present(template, field)
+        )
+        if not (
+            _strings(template.get("applies_if_package_terms"))
+            or _string_groups(template.get("applies_if_package_term_groups"))
+        ):
+            missing.append("positive_applicability_predicate")
+        if not _strings(template.get("does_not_apply_if_package_terms")):
+            missing.append("does_not_apply_if_package_terms")
+        if not _strings(template.get("package_fact_types")):
+            missing.append("package_fact_types")
+        rule_id = str(template.get("rule_id") or "")
+        if rule_id in seen_rule_ids:
+            missing.append("unique_rule_id")
+        seen_rule_ids.add(rule_id)
+        if missing:
+            failures.append(
+                {
+                    "index": index,
+                    "template_id": template.get("template_id"),
+                    "missing_or_invalid": sorted(set(missing)),
+                }
+            )
+    if failures:
+        raise ValueError(
+            "Authority-family templates are invalid: "
+            + json.dumps(failures[:20], sort_keys=True)
+        )
+    return value
+
+
+def _template_field_present(template: dict, field: str) -> bool:
+    value = template.get(field)
+    if isinstance(value, dict):
+        return bool(value)
+    if isinstance(value, list):
+        return any(str(item or "").strip() for item in value)
+    return bool(str(value or "").strip())
 
 
 def _load_source_catalog(path: Path, source_set_id: str) -> list[dict]:
@@ -1481,6 +2109,29 @@ def _strings(value: object) -> list[str]:
         return values
     text = str(value or "").strip()
     return [text] if text else []
+
+
+def _dedupe_strings(values: list[str]) -> list[str]:
+    seen = set()
+    result = []
+    for value in _strings(values):
+        if value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+    return result
+
+
+def _dedupe_groups(groups: list[list[str]]) -> list[list[str]]:
+    seen = set()
+    result = []
+    for group in groups:
+        normalized = tuple(_strings(group))
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        result.append(list(normalized))
+    return result
 
 
 def _string_groups(value: object) -> list[list[str]]:

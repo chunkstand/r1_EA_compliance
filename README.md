@@ -50,17 +50,21 @@ review-bound `phase-eval` `16/16` with the post-V1 applicability gates included,
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
-Authority-universe completion Milestones 1 and 2 are now represented by
+Authority-universe completion Milestones 1 through 3 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,
-`config/authority_source_addition_decisions_nepa_ea_v1.json`, and the
+`config/authority_source_addition_decisions_nepa_ea_v1.json`,
+`config/authority_family_rule_templates_nepa_ea_v1.json`,
+`config/authority_family_rule_template_coverage_nepa_ea_v1.json`, and the
 `authority-currentness` command. The inventory has `35` authority families, `18` required authority
-requirement groups, all `44/44` current rule-pack rules crosswalked, and all `190/190` workbook
-source records mapped to an authority family. The currentness gate validates
+requirement groups, `33` active families, all `44/44` current rule-pack rules crosswalked, and all
+`190/190` workbook source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
-confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. The
-remaining authority-universe work is rule-template and applicability-contract promotion for the
-`19` source-only families.
+confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. Milestone 3
+adds `19` data-backed authority-family rule templates with positive/negative trigger contracts,
+source evidence requirements, retrieval/graph contracts, and coverage rows. The remaining
+authority-universe work is Milestone 4 independent applicability eval and adjudication coverage for
+those expanded families.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -88,6 +92,8 @@ heuristics.
 - `config/compliance_review_eval_seed.json`
 - `config/compliance_gold_eval_v0.json`
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
+- `config/authority_family_rule_templates_nepa_ea_v1.json`
+- `config/authority_family_rule_template_coverage_nepa_ea_v1.json`
 - `config/authority_universe_families_nepa_ea_v1.json`
 - `config/authority_source_addition_decisions_nepa_ea_v1.json`
 - `config/ea_review_checklist_seed.json`
@@ -196,7 +202,7 @@ Generated outputs are written under `source_library/` and ignored by git:
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
 `authority-currentness` command validates the authority-family inventory against the catalog source
-set before source-only or candidate authority families are promoted. The `extract-build` command
+set before candidate or template-backed authority families are promoted. The `extract-build` command
 builds a derived text/chunk layer from the catalog. The
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
@@ -841,19 +847,22 @@ Build the applicability-first authority universe snapshot:
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
   --output-dir source_library \
   --review-id <review-id> \
-  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --authority-family-templates-path config/authority_family_rule_templates_nepa_ea_v1.json
 ```
 
 `applicability-authority-universe` reads the source catalog, source-set manifest, base rule pack,
-forest-plan profiles, source-set component inventory, source-claim artifacts, and rule-claim links.
-It writes `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with
-one rule-template candidate per rule and one forest-plan component candidate per component
-inventory record. Each candidate carries required package fact types, positive and negative trigger
-groups, source evidence requirements, source-role filters, package-section filters, retrieval
-contracts, graph-expansion contracts, dependency/exception/supersession fields, and search coverage
-requirements for later non-applicability proof. This command does not write package fact graphs,
-retrieval traces, graph traces, search coverage certificates, applicability decisions,
-applicable/non-applicable authority artifacts, generated rule packs, or compliance findings.
+optional Milestone 3 authority-family template config, forest-plan profiles, source-set component
+inventory, source-claim artifacts, and rule-claim links. It writes
+`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with one
+rule-template candidate per base rule, one authority-family rule-template candidate per Milestone 3
+template, and one forest-plan component candidate per component inventory record. Each candidate
+carries required package fact types, positive and negative trigger groups, source evidence
+requirements, source-role filters, package-section filters, retrieval contracts, graph-expansion
+contracts, dependency/exception/supersession fields, and search coverage requirements for later
+non-applicability proof. This command does not write package fact graphs, retrieval traces, graph
+traces, search coverage certificates, applicability decisions, applicable/non-applicable authority
+artifacts, generated rule packs, or compliance findings.
 
 Build the package fact graph and package applicability context from an existing EA package cache:
 

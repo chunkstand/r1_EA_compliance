@@ -1,0 +1,910 @@
+{
+  "schema_version": "authority-family-rule-template-coverage-v1",
+  "coverage_set_id": "nepa-ea-authority-family-template-coverage-v1",
+  "as_of_date": "2026-05-04",
+  "template_set_id": "nepa-ea-authority-family-rule-templates-v1",
+  "template_set_version": "0.1.0",
+  "authority_inventory_path": "config/authority_universe_families_nepa_ea_v1.json",
+  "coverage_entries": [
+    {
+      "authority_family_id": "clean_air_act_conformity_air_quality",
+      "rule_template_id": "clean_air_act_conformity_air_quality_authority_template",
+      "template_id": "clean_air_act_conformity_air_quality_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-092",
+        "R1EA-093"
+      ],
+      "primary_source_record_id": "R1EA-092",
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "air quality",
+        "emissions",
+        "prescribed fire smoke",
+        "smoke",
+        "conformity",
+        "general conformity",
+        "nonattainment area",
+        "maintenance area",
+        "state implementation plan",
+        "air quality permit"
+      ],
+      "negative_trigger_terms": [
+        "no air quality effects",
+        "no emissions",
+        "no prescribed fire",
+        "outside nonattainment area",
+        "no conformity determination",
+        "no air permit"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "clean_water_act_wotus_permits",
+      "rule_template_id": "clean_water_act_wotus_permits_authority_template",
+      "template_id": "clean_water_act_wotus_permits_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-082",
+        "R1EA-083",
+        "R1EA-084",
+        "R1EA-085",
+        "R1EA-086",
+        "R1EA-087",
+        "R1EA-088",
+        "R1EA-089",
+        "R1EA-090",
+        "R1EA-091",
+        "R1EA-115",
+        "R1EA-116",
+        "R1EA-117",
+        "R1EA-118"
+      ],
+      "primary_source_record_id": "R1EA-082",
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "Clean Water Act",
+        "CWA",
+        "waters of the United States",
+        "wetlands",
+        "stream",
+        "discharge",
+        "dredge",
+        "fill",
+        "stormwater",
+        "NPDES",
+        "Section 401",
+        "Section 404",
+        "water quality certification",
+        "Corps permit"
+      ],
+      "negative_trigger_terms": [
+        "no wetlands",
+        "no waters of the United States",
+        "no discharge",
+        "no dredge or fill",
+        "no stormwater discharge",
+        "no water permit"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "rule_template_id": "cultural_resource_protection_and_state_shpo_sources_authority_template",
+      "template_id": "cultural_resource_protection_and_state_shpo_sources_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-072",
+        "R1EA-073",
+        "R1EA-074",
+        "R1EA-075",
+        "R1EA-076",
+        "R1EA-077",
+        "R1EA-078",
+        "R1EA-079",
+        "R1EA-080",
+        "R1EA-113",
+        "R1EA-114",
+        "R1EA-120",
+        "R1EA-121",
+        "R1EA-122",
+        "R1EA-123"
+      ],
+      "primary_source_record_id": "R1EA-072",
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "historic property",
+        "cultural resource",
+        "archaeological resource",
+        "archeological resource",
+        "SHPO",
+        "THPO",
+        "NAGPRA",
+        "Native American remains",
+        "sacred site",
+        "AIRFA",
+        "RFRA",
+        "paleontological resource",
+        "cave resource"
+      ],
+      "negative_trigger_terms": [
+        "no historic properties",
+        "no cultural resources",
+        "no archaeological resources",
+        "no SHPO consultation",
+        "no tribal cultural resources"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "eagle_efh_and_special_wildlife_sources",
+      "rule_template_id": "eagle_efh_and_special_wildlife_sources_authority_template",
+      "template_id": "eagle_efh_and_special_wildlife_sources_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-097",
+        "R1EA-098",
+        "R1EA-099",
+        "R1EA-100"
+      ],
+      "primary_source_record_id": "R1EA-097",
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "bald eagle",
+        "golden eagle",
+        "eagle nest",
+        "eagle take",
+        "eagle disturbance",
+        "essential fish habitat",
+        "EFH",
+        "fish habitat",
+        "Magnuson-Stevens",
+        "NOAA Fisheries"
+      ],
+      "negative_trigger_terms": [
+        "no eagle habitat",
+        "no eagle nests",
+        "no eagle take",
+        "no essential fish habitat",
+        "no fish habitat"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "floodplain_management_eo11988",
+      "rule_template_id": "floodplain_management_eo11988_authority_template",
+      "template_id": "floodplain_management_eo11988_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-103"
+      ],
+      "primary_source_record_id": "R1EA-103",
+      "package_fact_types": [
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "floodplain",
+        "floodplain occupancy",
+        "floodplain alteration",
+        "base flood",
+        "100-year flood",
+        "flood hazard area",
+        "flood-prone area"
+      ],
+      "negative_trigger_terms": [
+        "no floodplains",
+        "outside floodplain",
+        "no floodplain occupancy",
+        "no flood hazard area"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "forest_service_planning_handbook_amendments",
+      "rule_template_id": "forest_service_planning_handbook_amendments_authority_template",
+      "template_id": "forest_service_planning_handbook_amendments_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-032"
+      ],
+      "primary_source_record_id": "R1EA-032",
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "nepa_level",
+        "overlay"
+      ],
+      "positive_trigger_terms": [
+        "forest plan amendment",
+        "land management plan amendment",
+        "site-specific plan amendment",
+        "plan component amendment",
+        "management area change",
+        "LMP amendment"
+      ],
+      "negative_trigger_terms": [
+        "no plan amendment",
+        "no forest plan amendment",
+        "consistent with forest plan without amendment",
+        "no management area change"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "grassland_bankhead_jones_authorities",
+      "rule_template_id": "grassland_bankhead_jones_authorities_authority_template",
+      "template_id": "grassland_bankhead_jones_authorities_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-037",
+        "R1EA-038",
+        "R1PLAN-region-1-grassland-overlay-01"
+      ],
+      "primary_source_record_id": "R1EA-037",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "National Grassland",
+        "Bankhead-Jones",
+        "Farm Tenant Act",
+        "grassland plan",
+        "acquired lands",
+        "grassland administration"
+      ],
+      "negative_trigger_terms": [
+        "not National Grassland",
+        "outside National Grassland",
+        "no Bankhead-Jones lands"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "hazardous_materials_site_condition",
+      "rule_template_id": "hazardous_materials_site_condition_authority_template",
+      "template_id": "hazardous_materials_site_condition_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-107",
+        "R1EA-108",
+        "R1EA-109"
+      ],
+      "primary_source_record_id": "R1EA-107",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "hazardous substance",
+        "hazardous waste",
+        "solid waste",
+        "CERCLA",
+        "RCRA",
+        "contamination",
+        "recognized environmental condition",
+        "mine waste",
+        "landfill",
+        "release",
+        "spill",
+        "phase I environmental site assessment",
+        "due diligence"
+      ],
+      "negative_trigger_terms": [
+        "no hazardous materials",
+        "no contamination",
+        "no recognized environmental conditions",
+        "no waste sites",
+        "no mine features"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "rule_template_id": "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+      "template_id": "invasive_pesticide_soils_farmland_drinking_water_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-030",
+        "R1EA-101",
+        "R1EA-102",
+        "R1EA-105",
+        "R1EA-106",
+        "R1EA-110",
+        "R1EA-111",
+        "R1EA-112"
+      ],
+      "primary_source_record_id": "R1EA-112",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "invasive species",
+        "noxious weeds",
+        "pesticide",
+        "herbicide",
+        "soil productivity",
+        "prime farmland",
+        "farmland conversion",
+        "drinking water",
+        "sole source aquifer",
+        "underground injection control",
+        "UIC",
+        "watershed",
+        "state permit",
+        "local permit"
+      ],
+      "negative_trigger_terms": [
+        "no invasive species",
+        "no pesticide use",
+        "no herbicide use",
+        "no prime farmland",
+        "no drinking water source",
+        "no state permit"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "land_exchange_fs_policy_and_project_references",
+      "rule_template_id": "land_exchange_fs_policy_and_project_references_authority_template",
+      "template_id": "land_exchange_fs_policy_and_project_references_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-150",
+        "R1EA-151",
+        "R1EA-152",
+        "R1EA-153",
+        "R1EA-154",
+        "R1EA-155",
+        "R1EA-156",
+        "R1EA-160",
+        "R1EA-161",
+        "R1EA-162"
+      ],
+      "primary_source_record_id": "R1EA-150",
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "land exchange",
+        "exchange case",
+        "appraisal",
+        "title evidence",
+        "reservations",
+        "outstanding rights",
+        "exchange agreement",
+        "feasibility analysis",
+        "notice of exchange",
+        "closing"
+      ],
+      "negative_trigger_terms": [
+        "not a land exchange",
+        "no appraisal",
+        "no title evidence",
+        "no reservations",
+        "no outstanding rights"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "land_exchange_regulatory_requirements",
+      "rule_template_id": "land_exchange_regulatory_requirements_authority_template",
+      "template_id": "land_exchange_regulatory_requirements_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-124",
+        "R1EA-125",
+        "R1EA-126",
+        "R1EA-127",
+        "R1EA-128",
+        "R1EA-129",
+        "R1EA-130",
+        "R1EA-131",
+        "R1EA-132",
+        "R1EA-133",
+        "R1EA-134",
+        "R1EA-135",
+        "R1EA-136",
+        "R1EA-157",
+        "R1EA-158",
+        "R1EA-159"
+      ],
+      "primary_source_record_id": "R1EA-124",
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "permit",
+        "public_involvement",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "land exchange",
+        "36 CFR part 254",
+        "agreement to initiate",
+        "notice of exchange proposal",
+        "appraisal",
+        "equal value",
+        "cash equalization",
+        "segregation",
+        "exchange approval",
+        "title approval"
+      ],
+      "negative_trigger_terms": [
+        "not a land exchange",
+        "no exchange agreement",
+        "no appraisal",
+        "no notice of exchange",
+        "no equalization"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "rule_template_id": "land_exchange_statutory_authorities_authority_template",
+      "template_id": "land_exchange_statutory_authorities_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-137",
+        "R1EA-138",
+        "R1EA-139",
+        "R1EA-140",
+        "R1EA-141",
+        "R1EA-142",
+        "R1EA-143",
+        "R1EA-144",
+        "R1EA-145",
+        "R1EA-146",
+        "R1EA-147",
+        "R1EA-148",
+        "R1EA-149"
+      ],
+      "primary_source_record_id": "R1EA-137",
+      "package_fact_types": [
+        "action",
+        "decision_posture",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "land exchange",
+        "exchange of lands",
+        "FLPMA",
+        "public interest determination",
+        "equal value",
+        "cash equalization",
+        "reservation",
+        "mineral reservation",
+        "easement",
+        "acquisition",
+        "disposal",
+        "congressional report"
+      ],
+      "negative_trigger_terms": [
+        "not a land exchange",
+        "no acquisition",
+        "no disposal",
+        "no public interest determination",
+        "no reservations"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "minerals_energy_authorities",
+      "rule_template_id": "minerals_energy_authorities_authority_template",
+      "template_id": "minerals_energy_authorities_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-041",
+        "R1EA-063"
+      ],
+      "primary_source_record_id": "R1EA-041",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "minerals",
+        "mining",
+        "plan of operations",
+        "mineral materials",
+        "energy development",
+        "surface use",
+        "reclamation",
+        "oil and gas",
+        "mineral production"
+      ],
+      "negative_trigger_terms": [
+        "no mineral activity",
+        "no mining",
+        "no energy development",
+        "no plan of operations"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "region1_forest_plan_source_records",
+      "rule_template_id": "region1_forest_plan_source_records_authority_template",
+      "template_id": "region1_forest_plan_source_records_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-01",
+        "R1PLAN-beaverhead-deerlodge-nf-02",
+        "R1PLAN-bitterroot-nf-01",
+        "R1PLAN-bitterroot-nf-02",
+        "R1PLAN-bitterroot-nf-03",
+        "R1PLAN-custer-gallatin-nf-01",
+        "R1PLAN-custer-gallatin-nf-02",
+        "R1PLAN-custer-gallatin-nf-03",
+        "R1PLAN-custer-gallatin-nf-04",
+        "R1PLAN-custer-gallatin-nf-05",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-dakota-prairie-grasslands-01",
+        "R1PLAN-dakota-prairie-grasslands-02",
+        "R1PLAN-flathead-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-01",
+        "R1PLAN-helena-lewis-and-clark-nf-02",
+        "R1PLAN-idaho-panhandle-nfs-01",
+        "R1PLAN-idaho-panhandle-nfs-02",
+        "R1PLAN-kootenai-nf-01",
+        "R1PLAN-lolo-nf-01",
+        "R1PLAN-nez-perce-clearwater-nfs-01",
+        "R1PLAN-nez-perce-clearwater-nfs-02",
+        "R1PLAN-region-1-grassland-overlay-01",
+        "R1PLAN-region-1-northern-region-01",
+        "R1PLAN-region-1-northern-region-02",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "primary_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "package_fact_types": [
+        "geography",
+        "management_area",
+        "overlay",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "forest plan",
+        "land management plan",
+        "management area",
+        "desired condition",
+        "standard",
+        "guideline",
+        "geographic area",
+        "overlay",
+        "species of conservation concern"
+      ],
+      "negative_trigger_terms": [
+        "outside National Forest System",
+        "no forest plan components",
+        "no management area",
+        "no overlay"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "roads_access_special_use_action_authorities",
+      "rule_template_id": "roads_access_special_use_action_authorities_authority_template",
+      "template_id": "roads_access_special_use_action_authorities_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-036",
+        "R1EA-039",
+        "R1EA-040",
+        "R1EA-041",
+        "R1EA-042",
+        "R1EA-043",
+        "R1EA-044",
+        "R1EA-143"
+      ],
+      "primary_source_record_id": "R1EA-036",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "road",
+        "trail",
+        "travel management",
+        "special use",
+        "right-of-way",
+        "ROW",
+        "closure order",
+        "timber sale",
+        "range permit",
+        "grazing",
+        "access authorization"
+      ],
+      "negative_trigger_terms": [
+        "no road changes",
+        "no trail changes",
+        "no special use",
+        "no right-of-way",
+        "no closure",
+        "no timber or range action"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "species_supporting_sources_and_overlays",
+      "rule_template_id": "species_supporting_sources_and_overlays_authority_template",
+      "template_id": "species_supporting_sources_and_overlays_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-064",
+        "R1EA-068",
+        "R1EA-069",
+        "R1PLAN-custer-gallatin-nf-06",
+        "R1PLAN-custer-gallatin-nf-07",
+        "R1PLAN-region-1-species-overlay-01",
+        "R1PLAN-region-1-species-overlay-02"
+      ],
+      "primary_source_record_id": "R1EA-064",
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "overlay",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "listed species",
+        "threatened species",
+        "endangered species",
+        "proposed species",
+        "candidate species",
+        "sensitive species",
+        "species of conservation concern",
+        "lynx",
+        "biological assessment",
+        "biological opinion",
+        "Section 7 consultation",
+        "habitat"
+      ],
+      "negative_trigger_terms": [
+        "no listed species",
+        "no sensitive species",
+        "no habitat",
+        "no consultation required",
+        "no effect"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "tribal_consultation_trust_sacred_sites",
+      "rule_template_id": "tribal_consultation_trust_sacred_sites_authority_template",
+      "template_id": "tribal_consultation_trust_sacred_sites_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-077",
+        "R1EA-080",
+        "R1EA-081"
+      ],
+      "primary_source_record_id": "R1EA-081",
+      "package_fact_types": [
+        "consultation",
+        "geography",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "tribal consultation",
+        "Tribal",
+        "tribe",
+        "treaty rights",
+        "trust responsibility",
+        "sacred site",
+        "government-to-government",
+        "THPO",
+        "cultural confidentiality",
+        "traditional cultural property"
+      ],
+      "negative_trigger_terms": [
+        "no tribal consultation",
+        "no tribal interests",
+        "no sacred sites",
+        "no treaty rights"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "vegetation_wildfire_forest_health_authorities",
+      "rule_template_id": "vegetation_wildfire_forest_health_authorities_authority_template",
+      "template_id": "vegetation_wildfire_forest_health_authorities_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-056",
+        "R1EA-057",
+        "R1EA-058",
+        "R1EA-059",
+        "R1EA-060",
+        "R1EA-061",
+        "R1EA-062"
+      ],
+      "primary_source_record_id": "R1EA-056",
+      "package_fact_types": [
+        "action",
+        "geography",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "vegetation management",
+        "fuels treatment",
+        "wildfire",
+        "prescribed fire",
+        "timber production",
+        "forest health",
+        "insect",
+        "disease",
+        "restoration",
+        "emergency action",
+        "fuel break"
+      ],
+      "negative_trigger_terms": [
+        "no vegetation treatment",
+        "no timber harvest",
+        "no fuels treatment",
+        "no wildfire action",
+        "no restoration"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    },
+    {
+      "authority_family_id": "wilderness_wsr_trails_designated_areas",
+      "rule_template_id": "wilderness_wsr_trails_designated_areas_authority_template",
+      "template_id": "wilderness_wsr_trails_designated_areas_m3_template",
+      "coverage_status": "contract_covered",
+      "coverage_source": "config/authority_family_rule_templates_nepa_ea_v1.json",
+      "source_record_ids": [
+        "R1EA-045",
+        "R1EA-046",
+        "R1EA-047",
+        "R1EA-051",
+        "R1EA-052",
+        "R1EA-053",
+        "R1EA-054",
+        "R1EA-055"
+      ],
+      "primary_source_record_id": "R1EA-047",
+      "package_fact_types": [
+        "geography",
+        "overlay",
+        "permit",
+        "resource_topic"
+      ],
+      "positive_trigger_terms": [
+        "wilderness",
+        "recommended wilderness",
+        "wilderness study area",
+        "WSA",
+        "Wild and Scenic River",
+        "national trail",
+        "designated area",
+        "special area",
+        "cave resource",
+        "paleontological resource"
+      ],
+      "negative_trigger_terms": [
+        "no wilderness",
+        "no designated areas",
+        "outside Wild and Scenic River corridor",
+        "no national trails",
+        "no caves"
+      ],
+      "required_eval_case_ids": [
+        "authority-family-template-contract"
+      ],
+      "milestone_4_eval_followup_required": true
+    }
+  ],
+  "summary": {
+    "coverage_entry_count": 19,
+    "authority_family_count": 19,
+    "rule_template_count": 19,
+    "milestone_4_eval_followup_required_count": 19
+  }
+}

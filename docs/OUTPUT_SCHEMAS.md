@@ -789,8 +789,8 @@ Path: `config/authority_universe_families_nepa_ea_v1.json`
 
 The authority-family inventory is a committed configuration artifact, not a generated
 `source_library/` artifact. It is the Milestone 1 crosswalk that makes the bounded USFS Region 1 EA
-authority universe explicit before later slices add source records, currentness gates, rule
-templates, applicability evals, and report integration.
+authority universe explicit and now records the Milestone 3 authority-family rule templates that
+promote source-currentness-confirmed families into active applicability contracts.
 
 The file has schema version `authority-universe-families-v1` and includes:
 
@@ -815,6 +815,8 @@ Each `authority_families` entry includes:
 - `rationale`
 - `source_record_ids`
 - `rule_ids`
+- `rule_template_ids`, when the family is represented by a Milestone 3 authority-family template
+  rather than a base rule-pack rule
 - `source_record_mapping`
 - `applicability_predicates`
 - `package_fact_types`
@@ -848,11 +850,52 @@ The inventory must preserve these closeout invariants:
 - every current rule-pack rule maps to exactly one authority family;
 - every rule's `authority_source_record_id` is present in that family's source-record mapping;
 - every canonical workbook source record maps to a primary family;
-- every `source_only` family carries explicit open gaps for currentness and rule-template follow-up;
+- every active family carries either base rule-pack IDs or authority-family rule-template IDs;
+- every Milestone 3 authority-family template has source evidence, package fact requirements,
+  positive and negative triggers, and coverage metadata;
 - every `candidate` family carries explicit missing source-record requirements;
-- `source_only` and `candidate` families remain visible as future work instead of being hidden in
-  runtime code;
+- `candidate` families remain visible as future work instead of being hidden in runtime code;
 - superseded/reserved authorities carry replacement/current-source evidence.
+
+## Authority Family Rule Templates Config
+
+Path: `config/authority_family_rule_templates_nepa_ea_v1.json`
+
+The authority-family rule-template config is a committed Milestone 3 builder input. It does not
+replace `config/compliance_rule_pack_nepa_ea_v0.json`; it adds conditional, applicability-first
+templates for source-currentness-confirmed authority families that were not base compliance
+findings. The authority universe builder uses it only when passed through
+`--authority-family-templates-path`.
+
+The file has schema version `authority-family-rule-templates-v1` and includes:
+
+- `template_set_id`
+- `version`
+- `base_rule_pack_id` and `base_rule_pack_version`
+- `authority_inventory_path`
+- `source_set_id`
+- `templates`
+
+Each template includes:
+
+- `template_id`
+- `authority_family_id`
+- `rule_id`
+- `authority_category`, `authority_document_role`, and `authority_source_record_id`
+- `source_record_ids`, `supporting_source_record_ids`, and `excluded_source_record_ids`
+- `applicability_mode`
+- `question`, `requirement`, `severity`, `package_query`, `package_terms`, and
+  `package_fact_types`
+- `applies_if_package_terms` or `applies_if_package_term_groups`
+- `does_not_apply_if_package_terms`
+- `source_query`, `source_filters`, `source_evidence_requirements`, and `evidence_expectation`
+- `dependency_contract` and `supersession`
+
+Path: `config/authority_family_rule_template_coverage_nepa_ea_v1.json`
+
+The coverage config has schema version `authority-family-rule-template-coverage-v1` and maps each
+template to an authority family, source-record set, package fact types, positive and negative
+trigger terms, and the Milestone 4 eval follow-up flag.
 
 ## Authority Source Addition Decisions Config
 
@@ -1045,8 +1088,11 @@ EA package + source library + authority universe
 Each candidate authority record includes:
 
 - `candidate_authority_id`
-- `candidate_authority_type`: `rule_template`, `source_record`, or `forest_plan_component`
+- `candidate_authority_type`: `rule_template`, `authority_family_rule_template`, or
+  `forest_plan_component`
 - rule-template ID when derived from a base rule
+- authority-family ID and rule-template metadata when derived from the Milestone 3
+  authority-family template config
 - source record IDs, citation labels, authority category, authority document role, and currentness
   metadata
 - forest-plan profile, component inventory, component ID, and component type when applicable

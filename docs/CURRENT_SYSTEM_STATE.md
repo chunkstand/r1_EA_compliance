@@ -63,23 +63,48 @@ Current inventory summary:
 
 - Authority families: `35`
 - Required authority requirement groups covered: `18`
-- Family statuses: `active=14`, `source_only=19`, `candidate=1`, `superseded=1`
+- Family statuses: `active=33`, `candidate=1`, `superseded=1`
 - Workbook source records crosswalked: `190/190`
 - Current rule-pack rules crosswalked: `44/44`
+- Authority-family rule templates: `19`
 - Orphan rule IDs: none
 - Orphan workbook source record IDs: none
 - Families still requiring Milestone 2 source-currentness confirmation: `0`
 - Families confirmed or documented by the Milestone 2 source-currentness gate: `21`
-- Families requiring Milestone 3 rule-template work after currentness: `19`
+- Families requiring Milestone 3 rule-template work after currentness: `0`
+- Families requiring Milestone 4 applicability eval expansion: `19`
 
 The only current `candidate` family is environmental justice and civil-rights authority coverage;
 Milestone 2 documents a non-addition for revoked environmental-justice executive-order text and
 keeps the family visible as a source-record gap for a later scoped workbook/source delta.
 Reserved or superseded Forest Service NEPA regulations, including former 36 CFR part 220 references,
 are represented as a `superseded` family and point reviewers back to current USDA NEPA procedure
-sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources. Every
-`source_only` family now carries explicit open-gap handoff text for Milestone 3 rule-template
-promotion, so those rows are not hidden runtime assumptions.
+sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources.
+
+## Authority Family Rule Templates
+
+Milestone 3 is implemented by `config/authority_family_rule_templates_nepa_ea_v1.json` and
+`config/authority_family_rule_template_coverage_nepa_ea_v1.json`. The template config promotes the
+`19` source-currentness-confirmed former `source_only` families into active, data-backed
+authority-family rule templates without modifying the base `nepa-ea-v0` rule pack. Each template
+records the authority-family ID, rule-template ID, primary and supporting source records, package
+fact types, positive and negative package triggers, source filters, evidence expectations,
+dependency/exception/supersession fields, and coverage follow-up metadata.
+
+A current real-source authority-universe contract build for
+`authority-universe-m3-contract-check` passed locally with `392` candidate authorities:
+`44` base rule-template candidates, `19` authority-family rule-template candidates, and `329`
+forest-plan component candidates. The `19` template candidates are conditional and are included
+only when `applicability-authority-universe` is run with:
+
+```text
+--authority-family-templates-path config/authority_family_rule_templates_nepa_ea_v1.json
+```
+
+The templates map Clean Water Act, floodplain, tribal consultation, wilderness/designated-area, and
+land-exchange package-fact cues to active authority families. Milestone 4 remains responsible for
+independent positive/negative package fixtures and adjudication-quality scoring for these expanded
+families.
 
 ## Authority Currentness Gate
 
@@ -101,7 +126,7 @@ Report summary:
 
 - Schema: `authority-currentness-report-v0`
 - Authority families checked: `35`
-- Family status counts: `active=14`, `source_only=19`, `candidate=1`, `superseded=1`
+- Family status counts: `active=33`, `candidate=1`, `superseded=1`
 - Family/source currentness records: `207`
 - Current authority family/source mappings confirmed from catalog: `203`
 - Excluded source mappings that do not count as current authority: `1`
@@ -112,11 +137,11 @@ Report summary:
 - Failed families: `0`
 - Validation: passed
 
-This is a source-currentness and supersession gate, not a semantic rule-promotion gate. It proves
-that existing active/source-only families have catalog-confirmed current source coverage, that
-reserved or superseded authority cannot silently satisfy current authority requirements, and that
-the one candidate family has an explicit non-addition decision. Milestone 3 remains responsible for
-promoting source-only families into data-backed rule templates and applicability predicates.
+This is a source-currentness and supersession gate. It proves that active families have
+catalog-confirmed current source coverage, that reserved or superseded authority cannot silently
+satisfy current authority requirements, and that the one candidate family has an explicit
+non-addition decision. Milestone 3 now supplies the semantic rule-template promotion layer; the
+current remaining authority-universe gap is Milestone 4 applicability eval/adjudication coverage.
 
 ## Verified State Snapshot
 
@@ -408,12 +433,13 @@ source record has a corresponding `applicability_mode=baseline` rule.
 Applicability-First Review has a post-V1 schema contract and implemented slices for authority
 universe snapshotting, package fact graph/context building, retrieval/graph tracing, deterministic
 decisions, validation, and adjudication replay. `applicability-authority-universe` reads the current
-catalog, base rule pack, forest-plan profiles, component inventory, source-claim artifacts, and
-rule-claim links, then writes
+catalog, base rule pack, optional authority-family template config, forest-plan profiles, component
+inventory, source-claim artifacts, and rule-claim links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
-rule-template candidates and Forest Plan component candidates. Each candidate carries required
-package fact types, positive and negative trigger groups, required source evidence, source-role
-filters, package-section filters, retrieval contracts, graph-expansion contracts,
+base rule-template candidates, authority-family rule-template candidates when configured, and
+Forest Plan component candidates. Each candidate carries required package fact types, positive and
+negative trigger groups, required source evidence, source-role filters, package-section filters,
+retrieval contracts, graph-expansion contracts,
 dependency/exception/supersession fields, and search coverage requirements for later
 non-applicability proof. `applicability-context-build` reads the existing EA package cache and
 writes `package_fact_graph.json`, `package_applicability_context.json`, and

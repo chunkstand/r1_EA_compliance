@@ -96,8 +96,14 @@ where the package fact graph already detects related cues.
   `33` source-currentness-confirmed families, `1` documented candidate non-addition, and `1`
   superseded replacement-source family with `21` Milestone 2 families closed or documented and `0`
   failed families.
-- The next milestone is Milestone 3: promote the source-confirmed authority families into
-  data-backed rule templates and applicability contracts.
+- Milestone 3 is complete through `config/authority_family_rule_templates_nepa_ea_v1.json`,
+  `config/authority_family_rule_template_coverage_nepa_ea_v1.json`, package fact graph cue
+  coverage for designated areas, and authority-universe builder support for
+  `authority_family_rule_template` candidates. A current source-set contract build validates `19`
+  expanded authority-family templates alongside the `44` base rule templates and `329` forest-plan
+  component candidates.
+- The next milestone is Milestone 4: add independent applicability eval and adjudication coverage
+  for the expanded authority universe.
 
 ## Required Authority Families
 
@@ -224,12 +230,21 @@ Represent each active authority family as data-backed rule templates and applica
 with positive triggers, negative triggers, package fact requirements, source evidence requirements,
 retrieval filters, graph expansion contracts, dependencies, exceptions, and supersession links.
 
+Status:
+Implemented. The source-currentness-confirmed former `source_only` families are now active through
+`19` Milestone 3 authority-family rule templates. The base `nepa-ea-v0` rule pack remains stable;
+the expanded templates are loaded into `applicability-authority-universe` through
+`--authority-family-templates-path` and are materialized into generated rule packs only after
+applicability validation marks the corresponding candidate authority applicable.
+
 Required outputs:
 
-- updated `config/compliance_rule_pack_nepa_ea_v0.json` or a new versioned rule pack;
-- updated applicability authority-universe builder inputs;
-- updated package fact graph term specs only where they represent general reusable fact types;
-- updated coverage matrix entries.
+- new builder input: `config/authority_family_rule_templates_nepa_ea_v1.json`;
+- new coverage matrix: `config/authority_family_rule_template_coverage_nepa_ea_v1.json`;
+- updated applicability authority-universe builder support for `authority_family_rule_template`;
+- updated package fact graph term specs for reusable designated-area cues;
+- updated inventory/docs/tests reflecting `33` active families and `0` remaining Milestone 3
+  template gaps.
 
 Acceptance criteria:
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
 from .applicability import build_authority_universe_snapshot
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
@@ -37,6 +38,15 @@ def register_applicability_commands(subparsers: argparse._SubParsersAction) -> N
     )
     _add_review_source_args(authority_universe)
     authority_universe.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    authority_universe.add_argument(
+        "--authority-family-templates-path",
+        default=None,
+        type=Path,
+        help=(
+            "Optional Milestone 3 authority-family rule-template config. "
+            f"Use {DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH} for the current expanded universe."
+        ),
+    )
     authority_universe.add_argument(
         "--forest-plan-profiles-path",
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
@@ -157,6 +167,7 @@ def handle_applicability_command(
             review_id=args.review_id,
             source_set_id=args.source_set_id,
             base_rule_pack_path=args.base_rule_pack,
+            authority_family_templates_path=args.authority_family_templates_path,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
             forest_plan_component_inventory_path=args.forest_plan_component_inventory_path,
             claims_path=args.claims_path,

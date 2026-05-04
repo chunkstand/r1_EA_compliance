@@ -326,6 +326,7 @@ def _base_term_specs() -> list[dict[str, Any]]:
         _term_spec("permit", "roadless", "roadless", "Roadless area cue", ["roadless", "inventoried roadless area"]),
         _term_spec("permit", "wilderness", "wilderness", "Wilderness cue", ["wilderness", "wilderness study area"]),
         _term_spec("permit", "permit", "permit", "Permit cue", ["permit", "permits", "authorization"]),
+        _term_spec("overlay", "designated_area", "designated_area", "Designated area", ["designated area", "special area", "Wild and Scenic River", "National Trail", "recommended wilderness"]),
         _term_spec("public_involvement", "public_involvement", "public_comment", "Public comment", ["public comment", "public comments", "comment period"]),
         _term_spec("public_involvement", "public_involvement", "scoping", "Scoping", ["public scoping", "scoping"]),
         _term_spec("alternative", "alternative", "no_action", "No Action Alternative", ["no action alternative", "no action"]),

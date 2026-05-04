@@ -74,6 +74,7 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertIn(("geography", "geo-bridger-bangtail-crazy"), observed_pairs)
             self.assertIn(("management_area", "mgmt-crazy-mountains-bca"), observed_pairs)
             self.assertIn(("overlay", "overlay-inventoried-roadless"), observed_pairs)
+            self.assertIn(("overlay", "designated_area"), observed_pairs)
             self.assertIn(("resource_topic", "wildlife"), observed_pairs)
             self.assertIn(("consultation", "esa"), observed_pairs)
             self.assertIn(("consultation", "nhpa"), observed_pairs)
@@ -291,8 +292,8 @@ def _write_package_cache(
             text=(
                 "The project area is in the Bridger, Bangtail, and Crazy Mountains "
                 "Geographic Area and the Crazy Mountains Backcountry Area. It also "
-                "intersects an Inventoried Roadless Area. The Sioux Geographic Area is "
-                "not part of the project area."
+                "intersects an Inventoried Roadless Area and a designated area. "
+                "The Sioux Geographic Area is not part of the project area."
             ),
         ),
         _chunk(

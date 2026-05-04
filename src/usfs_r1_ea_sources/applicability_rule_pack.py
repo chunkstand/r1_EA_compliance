@@ -362,6 +362,9 @@ def _generated_rule_pack(
         if authority.get("candidate_authority_type") == "forest_plan_component":
             rule = _forest_plan_component_rule(authority=authority, candidate=candidate)
             base_rule_id = None
+        elif authority.get("candidate_authority_type") == "authority_family_rule_template":
+            rule = _authority_family_template_rule(authority=authority, candidate=candidate)
+            base_rule_id = None
         else:
             rule_id = str((authority.get("rule_template") or {}).get("rule_id") or "")
             base_rule = base_rules_by_id.get(rule_id)
@@ -867,7 +870,8 @@ def _check_generated_rules_carry_required_metadata(
         if "base_rule_id" not in rule:
             missing_rule_fields.append("base_rule_id")
         elif (
-            metadata.get("candidate_authority_type") != "forest_plan_component"
+            metadata.get("candidate_authority_type")
+            not in {"forest_plan_component", "authority_family_rule_template"}
             and not rule.get("base_rule_id")
         ):
             missing_rule_fields.append("base_rule_id")
@@ -1084,6 +1088,68 @@ def _forest_plan_component_rule(
         "evidence_expectation": (
             "A supported finding requires one source-library Forest Plan span and one package span."
         ),
+    }
+
+
+def _authority_family_template_rule(
+    *,
+    authority: dict[str, Any],
+    candidate: dict[str, Any],
+) -> dict[str, Any]:
+    rule_template = (
+        authority.get("rule_template")
+        if isinstance(authority.get("rule_template"), dict)
+        else {}
+    )
+    source_record_id = (
+        str(rule_template.get("authority_source_record_id") or "").strip()
+        or _first_present(_strings(authority.get("source_record_ids")))
+    )
+    package_filters = (
+        candidate.get("package_section_filters")
+        if isinstance(candidate.get("package_section_filters"), dict)
+        else {}
+    )
+    source_filters = (
+        rule_template.get("source_filters")
+        if isinstance(rule_template.get("source_filters"), dict)
+        else {}
+    )
+    if source_record_id and "source_record_id" not in source_filters:
+        source_filters = {**source_filters, "source_record_id": source_record_id}
+    return {
+        "id": _safe_id(str(rule_template.get("rule_id") or authority["candidate_authority_id"])),
+        "title": rule_template.get("title"),
+        "authority_category": rule_template.get("authority_category")
+        or authority.get("authority_category"),
+        "authority_source_record_id": source_record_id,
+        "applicability_mode": rule_template.get("applicability_mode") or "conditional",
+        "question": rule_template.get("question"),
+        "requirement": rule_template.get("requirement"),
+        "severity": rule_template.get("severity") or "medium",
+        "package_query": rule_template.get("package_query")
+        or package_filters.get("package_query")
+        or rule_template.get("title"),
+        "package_terms": _strings(rule_template.get("package_terms"))
+        or _strings(package_filters.get("package_terms")),
+        "package_section_terms": _strings(rule_template.get("package_section_terms"))
+        or _strings(package_filters.get("package_section_terms")),
+        "applies_if_package_terms": _strings(
+            rule_template.get("applies_if_package_terms")
+        ),
+        "applies_if_package_term_groups": rule_template.get(
+            "applies_if_package_term_groups",
+            [],
+        ),
+        "does_not_apply_if_package_terms": _strings(
+            rule_template.get("does_not_apply_if_package_terms")
+        ),
+        "source_query": rule_template.get("source_query") or rule_template.get("title"),
+        "source_filters": source_filters,
+        "supporting_source_record_ids": _strings(
+            (candidate.get("dependency_contract") or {}).get("supporting_source_record_ids")
+        ),
+        "evidence_expectation": rule_template.get("evidence_expectation"),
     }
 
 
