@@ -42,7 +42,7 @@ allowed_import_layers = ["foundation", "extraction", "claims", "rule_packs"]
 [[layers]]
 name = "rule_packs"
 summary = "Shared compliance rule-pack loading, schema validation, and rule-pack helper contracts."
-modules = []
+modules = ["rule_packs"]
 allowed_import_layers = ["foundation", "rule_packs"]
 
 [[layers]]
@@ -143,41 +143,6 @@ allowed_import_layers = [
   "eval",
   "cli",
 ]
-
-[[temporary_exceptions]]
-id = "rule-pack-utilities-owned-by-compliance-review"
-kind = "dependency"
-from_module = "rule_claim_binding"
-to_module = "compliance_review"
-owner = "agentic-architecture-milestone-3"
-remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
-reason = "rule_claim_binding currently imports DEFAULT_RULE_PACK_PATH, load_rule_pack, and validate_rule_pack from compliance_review; these utilities move to rule_packs.py in Milestone 3."
-
-[[temporary_exceptions]]
-id = "applicability-rule-pack-utilities-owned-by-compliance-review"
-kind = "dependency"
-from_module = "applicability"
-to_module = "compliance_review"
-owner = "agentic-architecture-milestone-3"
-remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
-reason = "applicability currently imports DEFAULT_RULE_PACK_PATH, load_rule_pack, and validate_rule_pack from compliance_review; these utilities move to rule_packs.py in Milestone 3."
-
-[[temporary_exceptions]]
-id = "applicability-generated-rule-pack-utilities-owned-by-compliance-review"
-kind = "dependency"
-from_module = "applicability_rule_pack"
-to_module = "compliance_review"
-owner = "agentic-architecture-milestone-3"
-remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
-reason = "applicability_rule_pack currently imports shared rule-pack utilities from compliance_review; these utilities move to rule_packs.py in Milestone 3."
-
-[[temporary_exceptions]]
-id = "rule-claim-compliance-cycle"
-kind = "cycle"
-modules = ["compliance_review", "rule_claim_binding"]
-owner = "agentic-architecture-milestone-3"
-remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
-reason = "compliance_review builds rule-claim links while rule_claim_binding imports shared rule-pack helpers from compliance_review; the shared helpers move to rule_packs.py in Milestone 3."
 
 [[artifacts]]
 owner_layer = "capture"

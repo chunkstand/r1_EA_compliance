@@ -9,11 +9,11 @@ import json
 import re
 
 from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import load_rule_pack
-from .compliance_review import validate_rule_pack
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import _load_validated_links_for_eval
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import load_rule_pack
+from .rule_packs import validate_rule_pack
 
 
 COVERAGE_MATRIX_SCHEMA_VERSION = "compliance-rule-pack-coverage-v0"

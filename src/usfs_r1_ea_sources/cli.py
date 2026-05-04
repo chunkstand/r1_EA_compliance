@@ -28,7 +28,6 @@ from .compliance_coverage import run_compliance_coverage
 from .compliance_gold_eval import DEFAULT_COMPLIANCE_GOLD_EVAL_PATH
 from .compliance_gold_eval import run_compliance_gold_eval
 from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
-from .compliance_review import DEFAULT_RULE_PACK_PATH
 from .compliance_review import run_compliance_review
 from .compliance_review import run_compliance_review_eval
 from .config import DEFAULT_CONFIG_PATH, load_config
@@ -63,6 +62,7 @@ from .rule_claim_binding import DEFAULT_RULE_CLAIM_EVAL_PATH
 from .rule_claim_binding import build_rule_claim_links
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import run_rule_claim_link_eval
+from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
 from .v1_ea_eval import run_v1_ea_review_eval
 from .validate_run import validate_run

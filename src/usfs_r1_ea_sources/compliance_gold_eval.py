@@ -8,12 +8,12 @@ from pathlib import Path
 import json
 import re
 
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import GENERATED_RULE_PACK_SCHEMA_VERSION
 from .compliance_review import VALID_FINDING_STATUSES
-from .compliance_review import load_rule_pack
 from .compliance_review import run_compliance_review_eval
-from .compliance_review import validate_rule_pack
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import GENERATED_RULE_PACK_SCHEMA_VERSION
+from .rule_packs import load_rule_pack
+from .rule_packs import validate_rule_pack
 
 
 COMPLIANCE_GOLD_EVAL_SCHEMA_VERSION = "compliance-gold-eval-v0"

@@ -15,10 +15,10 @@ from .claim_extraction import SUPPORTED_CLAIM_TYPES
 from .claim_extraction import _load_validated_claims_for_eval
 from .claim_extraction import _source_set_id_from_catalog
 from .claim_extraction import default_claims_path
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import load_rule_pack
-from .compliance_review import validate_rule_pack
 from .extract import _source_derived_dir
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import load_rule_pack
+from .rule_packs import validate_rule_pack
 
 
 RULE_CLAIM_LINK_SCHEMA_VERSION = "rule-claim-links-v0"

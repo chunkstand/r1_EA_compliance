@@ -9,14 +9,14 @@ import json
 import re
 
 from .claim_extraction import default_claims_path
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import load_rule_pack
-from .compliance_review import validate_rule_pack
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import ForestPlanProfileCollection
 from .forest_plan_profiles import load_forest_plan_profiles
 from .records import sha256_file
 from .rule_claim_binding import default_rule_claim_links_path
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import load_rule_pack
+from .rule_packs import validate_rule_pack
 
 
 AUTHORITY_UNIVERSE_SCHEMA_VERSION = "authority-universe-snapshot-v0"

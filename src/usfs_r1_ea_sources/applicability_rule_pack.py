@@ -10,11 +10,11 @@ import hashlib
 import json
 import re
 
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import GENERATED_RULE_PACK_SCHEMA_VERSION
-from .compliance_review import load_rule_pack
-from .compliance_review import validate_rule_pack
 from .records import sha256_file
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import GENERATED_RULE_PACK_SCHEMA_VERSION
+from .rule_packs import load_rule_pack
+from .rule_packs import validate_rule_pack
 
 
 GENERATED_RULE_PACK_VALIDATION_SCHEMA_VERSION = "generated-rule-pack-validation-v0"

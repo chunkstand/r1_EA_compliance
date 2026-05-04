@@ -80,9 +80,10 @@ The evidence graph and source-claim layers convert extracted/retrieved evidence 
 claim artifacts. Rule-claim binding connects versioned compliance rule packs to validated source
 claims before compliance findings can rely on them.
 
-Shared rule-pack loading and validation are upstream concerns. Milestone 3 of the agentic coding
-architecture plan moves that ownership into `rule_packs.py` so rule binding and applicability do
-not import downstream compliance-review behavior for shared rule-pack utilities.
+Shared rule-pack loading and validation are upstream concerns owned by `rule_packs.py`. Rule
+binding, applicability, generated-rule-pack validation, compliance coverage, and compliance evals
+import shared rule-pack behavior from that neutral module rather than from downstream compliance
+review.
 
 ### Applicability Before Compliance
 

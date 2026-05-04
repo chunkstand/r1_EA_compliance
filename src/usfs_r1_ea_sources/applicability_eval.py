@@ -13,11 +13,11 @@ from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .applicability_rule_pack import generate_applicability_rule_pack
 from .applicability_validation import validate_applicability_run
-from .compliance_review import DEFAULT_RULE_PACK_PATH
-from .compliance_review import load_rule_pack
 from .package_fact_graph import build_package_fact_graph
 from .records import sha256_file
 from .retrieval import _write_sqlite_index
+from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .rule_packs import load_rule_pack
 
 
 APPLICABILITY_EVAL_SCHEMA_VERSION = "applicability-eval-v0"

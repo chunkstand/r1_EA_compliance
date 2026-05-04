@@ -10,7 +10,6 @@ import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.compliance_review import run_compliance_review_eval
-from usfs_r1_ea_sources.compliance_review import validate_rule_pack
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
@@ -21,6 +20,7 @@ from usfs_r1_ea_sources.forest_plan_components import build_forest_plan_componen
 from usfs_r1_ea_sources.records import sha256_file
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
+from usfs_r1_ea_sources.rule_packs import validate_rule_pack
 
 
 class ComplianceReviewTests(unittest.TestCase):
