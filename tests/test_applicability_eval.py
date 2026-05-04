@@ -18,9 +18,56 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 EVAL_SEED = REPO_ROOT / "config" / "applicability_eval_seed.json"
 GOLD_SEED = REPO_ROOT / "config" / "applicability_gold_eval_v0.json"
 RULE_PACK = REPO_ROOT / "config" / "compliance_rule_pack_nepa_ea_v0.json"
+AUTHORITY_FAMILY_TEMPLATES = (
+    REPO_ROOT / "config" / "authority_family_rule_templates_nepa_ea_v1.json"
+)
 
 
 class ApplicabilityEvalTests(unittest.TestCase):
+    def test_applicability_eval_seed_covers_milestone_4_contract(self) -> None:
+        seed = json.loads(EVAL_SEED.read_text(encoding="utf-8"))
+        templates = json.loads(AUTHORITY_FAMILY_TEMPLATES.read_text(encoding="utf-8"))
+        template_rule_ids = sorted(
+            template["rule_id"] for template in templates["templates"]
+        )
+        template_family_ids = sorted(
+            template["authority_family_id"] for template in templates["templates"]
+        )
+
+        self.assertEqual(sorted(seed["high_priority_authority_family_ids"]), template_family_ids)
+        self.assertEqual(
+            sorted(seed["required_real_package_coverage_tags"]),
+            [
+                "cultural_tribal",
+                "designated_area",
+                "forest_plan_consistency",
+                "land_exchange",
+                "water_wetlands",
+                "wildlife_species",
+            ],
+        )
+
+        positive = _case_payload(EVAL_SEED, "seed-expanded-authority-positive")
+        negative = _case_payload(EVAL_SEED, "seed-expanded-authority-negative")
+        unresolved = _case_payload(EVAL_SEED, "seed-expanded-authority-adjudication-required")
+        self.assertEqual(sorted(positive["candidate_authority_family_rule_ids"]), template_rule_ids)
+        self.assertEqual(sorted(negative["candidate_authority_family_rule_ids"]), template_rule_ids)
+        self.assertEqual(positive["expected_status_for_candidate_authority_family_rule_ids"], "applicable")
+        self.assertEqual(
+            negative["expected_status_for_candidate_authority_family_rule_ids"],
+            "not_applicable",
+        )
+        self.assertEqual(unresolved["profile"], "unresolved")
+        self.assertFalse(unresolved["expected_validation_passed"])
+        self.assertEqual(
+            unresolved["expected_statuses"],
+            {"clean_water_act_wotus_permits_authority_template": "needs_adjudication"},
+        )
+        self.assertTrue(
+            (EVAL_SEED.parent / positive["package_path"]).exists(),
+            positive["package_path"],
+        )
+
     def test_applicability_eval_scores_decisions_and_generated_pack(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -39,6 +86,21 @@ class ApplicabilityEvalTests(unittest.TestCase):
             self.assertEqual(coverage["positive_covered_family_count"], 19)
             self.assertEqual(coverage["negative_covered_family_count"], 19)
             self.assertEqual(coverage["unresolved_covered_family_count"], 1)
+            unresolved = _case(result.summary, "seed-expanded-authority-adjudication-required")
+            self.assertEqual(
+                unresolved["actual_statuses"],
+                {"clean_water_act_wotus_permits_authority_template": "needs_adjudication"},
+            )
+            self.assertFalse(unresolved["validation_passed"])
+            self.assertFalse(unresolved["generated_rule_pack_ready"])
+            self.assertEqual(
+                unresolved["basis_types_by_rule_id"],
+                {
+                    "clean_water_act_wotus_permits_authority_template": (
+                        "unresolved_evidence_conflict"
+                    )
+                },
+            )
             mixed = _case(result.summary, "seed-mixed-applicability")
             self.assertEqual(
                 mixed["actual_statuses"]["usda_nepa_ce_fanec_7cfr_1b3"],
@@ -236,6 +298,20 @@ class ApplicabilityEvalTests(unittest.TestCase):
             coverage = result.summary["authority_family_template_coverage"]
             self.assertEqual(coverage["unresolved_covered_family_count"], 1)
             self.assertEqual(coverage["adjudicated_covered_family_count"], 1)
+            adjudicated = _case(result.summary, "gold-expanded-authority-adjudicated")
+            self.assertEqual(
+                adjudicated["actual_statuses"],
+                {"clean_water_act_wotus_permits_authority_template": "applicable"},
+            )
+            self.assertEqual(
+                adjudicated["basis_types_by_rule_id"],
+                {"clean_water_act_wotus_permits_authority_template": "human_adjudication"},
+            )
+            self.assertEqual(
+                adjudicated["adjudicated_rule_ids"],
+                ["clean_water_act_wotus_permits_authority_template"],
+            )
+            self.assertTrue(adjudicated["validation_passed"])
 
     def test_phase_eval_reports_applicability_gates_and_fails_closed_when_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

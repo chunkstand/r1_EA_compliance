@@ -7,6 +7,38 @@ from usfs_r1_ea_sources.promotion_suite import PROMOTION_SUITE_SCHEMA_VERSION
 from usfs_r1_ea_sources.promotion_suite import run_promotion_suite
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
+
+
+def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    suite_results = {result["id"]: result for result in manifest["suite_results"]}
+
+    seed_gate = suite_results["applicability_eval_authority_family_coverage"]
+    assert seed_gate["required_for_current_promotion"] is True
+    assert seed_gate["path"] == "reviews/applicability_eval/applicability_eval_results.json"
+    seed_checks = {check["name"]: check for check in seed_gate["checks"]}
+    assert seed_checks["applicability_eval_passed"]["equals"] is True
+    assert seed_checks["applicability_eval_case_count"]["min"] == 5
+    assert seed_checks["authority_family_high_priority_count"]["equals"] == 19
+    assert seed_checks["authority_family_positive_coverage"]["equals"] == 19
+    assert seed_checks["authority_family_negative_coverage"]["equals"] == 19
+    assert seed_checks["authority_family_unresolved_coverage"]["min"] == 1
+    assert seed_checks["authority_family_real_package_tags"]["equals"] is True
+
+    gold_gate = suite_results["applicability_gold_eval_authority_family_adjudication"]
+    assert gold_gate["required_for_current_promotion"] is True
+    assert gold_gate["path"] == "reviews/applicability_gold_eval/applicability_gold_eval_results.json"
+    gold_checks = {check["name"]: check for check in gold_gate["checks"]}
+    assert gold_checks["applicability_gold_eval_passed"]["equals"] is True
+    assert gold_checks["applicability_gold_eval_promotion_ready"]["equals"] is True
+    assert gold_checks["applicability_gold_eval_case_count"]["min"] == 5
+    assert gold_checks["applicability_gold_eval_unresolved_profile"]["min"] == 1
+    assert gold_checks["applicability_gold_eval_adjudicated_profile"]["min"] == 1
+    assert gold_checks["authority_family_adjudicated_coverage"]["min"] == 1
+
+
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:
     manifest_path, output_dir = _write_suite_fixture(tmp_path)
 

@@ -83,9 +83,12 @@ Gallatin land-exchange review path. The post-V1 applicability machinery can buil
 universe, package fact graph, retrieval trace, graph trace, decision ledger, non-applicable
 authority artifact, coverage certificates, and generated rule pack.
 
-The remaining gap is authority-universe completeness. Several common USFS EA authority families are
-not yet represented as first-class active authority families in the generated review path, even
-where the package fact graph already detects related cues.
+Authority-universe Milestones 1 through 4 now close the inventory, source-currentness,
+rule-template, applicability-eval, and adjudication-coverage layers for the current bounded
+Region 1 EA authority universe. The remaining authority-universe gap is reviewer-facing
+integration: compliance outputs must expose applicable authority-family provenance,
+non-applicable coverage, unresolved/adjudicated reviewer resolutions, and evidence-backed
+litigation-risk categories without turning non-applicable authorities into compliance findings.
 
 ## Implementation Status
 

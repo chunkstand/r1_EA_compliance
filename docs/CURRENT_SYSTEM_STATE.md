@@ -1158,6 +1158,15 @@ data artifacts such as workbook rows, review topics, eval fixtures, rule packs, 
 matrix. Runtime code performs general capture, extraction, retrieval, graph construction, rule
 binding, coverage validation, and phase evaluation.
 
+Authority-universe Milestone 4 is aligned with that design because applicability quality is scored
+before compliance quality: the seed eval covers positive and negative outcomes for all `19`
+high-priority authority-family templates, includes an unresolved weak-signal validation-failure
+case, and the gold eval replays an adjudicated Clean Water Act decision through the same
+applicability adjudication artifacts used by review runs. The next authority-universe milestone is
+Milestone 5: compliance review and report integration for authority-family provenance,
+non-applicable authority appendices, reviewer-resolution reporting, and evidence-backed
+litigation-risk summaries.
+
 The Authority-First Compliance Matrix V0.4 milestone is implemented for the current local source-set
 promotion gate. The active rule pack contains 44 authority rows and explicitly requires all 26
 workbook `Scope=Baseline` source records in every EA review, with additional conditional rules for

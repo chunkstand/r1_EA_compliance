@@ -50,12 +50,14 @@ review-bound `phase-eval` `16/16` with the post-V1 applicability gates included,
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
-Authority-universe completion Milestones 1 through 3 are now represented by
+Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,
 `config/authority_source_addition_decisions_nepa_ea_v1.json`,
 `config/authority_family_rule_templates_nepa_ea_v1.json`,
-`config/authority_family_rule_template_coverage_nepa_ea_v1.json`, and the
-`authority-currentness` command. The inventory has `35` authority families, `18` required authority
+`config/authority_family_rule_template_coverage_nepa_ea_v1.json`,
+`config/applicability_eval_seed.json`, `config/applicability_gold_eval_v0.json`, the expanded
+applicability fixture under `config/fixtures/applicability/`, and the `authority-currentness`
+command. The inventory has `35` authority families, `18` required authority
 requirement groups, `33` active families, all `44/44` current rule-pack rules crosswalked, and all
 `190/190` workbook source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
@@ -93,6 +95,9 @@ heuristics.
 - `config/retrieval_eval_seed.json`
 - `config/claim_eval_seed.json`
 - `config/rule_claim_link_eval_seed.json`
+- `config/applicability_eval_seed.json`
+- `config/applicability_gold_eval_v0.json`
+- `config/fixtures/applicability/region1-land-exchange-expanded-authority.txt`
 - `config/compliance_review_eval_seed.json`
 - `config/compliance_gold_eval_v0.json`
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
