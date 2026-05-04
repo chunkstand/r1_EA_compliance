@@ -370,6 +370,11 @@ def _score_case(
     applicable = artifacts["applicable_authorities"]
     non_applicable = artifacts["non_applicable_authorities"]
     coverage = artifacts["search_coverage_certificates"]
+    generated_validation_summary = (
+        generated_validation.get("summary")
+        if isinstance(generated_validation.get("summary"), dict)
+        else {}
+    )
     package_fact_graph = artifacts["package_fact_graph"]
     retrieval_rows = artifacts["retrieval_rows"]
     graph_rows = artifacts["graph_rows"]
@@ -413,8 +418,21 @@ def _score_case(
     )
     expected_retrieval = sorted(_strings(case.get("expected_retrieval_rule_ids")))
     expected_graph = sorted(_strings(case.get("expected_graph_rule_ids")))
+    expected_absent_graph = sorted(
+        _strings(case.get("expected_absent_graph_rule_ids"))
+        or _strings(case.get("expected_graph_non_path_rule_ids"))
+    )
     expected_negative = sorted(_strings(case.get("expected_negative_evidence_rule_ids")))
     expected_trigger_miss = sorted(_strings(case.get("expected_trigger_miss_rule_ids")))
+    expected_source_records = _string_list_mapping(
+        case.get("expected_source_record_ids_by_rule_id")
+    )
+    expected_document_roles = _string_list_mapping(
+        case.get("expected_document_roles_by_rule_id")
+    )
+    expected_package_sections = _string_list_mapping(
+        case.get("expected_package_section_families_by_rule_id")
+    )
     coverage_ids = _coverage_certificate_ids(coverage)
     non_applicable_coverage_gaps = []
     for authority in non_applicable.get("authorities") or []:
@@ -431,10 +449,26 @@ def _score_case(
                     "missing_certificate_ids": missing,
                 }
             )
+    expected_generated_ready = bool(case.get("expected_generated_rule_pack_ready", True))
     generated_validation_passed = bool(
         generated_summary
         and generated_summary.get("passed")
-        and (generated_validation.get("summary") or {}).get("generated_rule_pack_ready") is True
+        and generated_validation_summary.get("generated_rule_pack_ready") is True
+    )
+    required_artifact_gaps = _required_artifact_gaps(
+        artifacts,
+        generated_rule_pack_required=expected_generated_ready,
+    )
+    generated_rule_pack_hash_matches_validation = (
+        not expected_generated_ready
+        or _file_hash_matches(
+            review_dir / "applicability" / "generated_rule_pack.json",
+            str(
+                generated_validation_summary.get("expected_generated_rule_pack_sha256")
+                or generated_validation_summary.get("generated_rule_pack_sha256")
+                or ""
+            ),
+        )
     )
     expected_generated_count = case.get("expected_generated_rule_count")
     if expected_generated_count is not None:
@@ -457,6 +491,19 @@ def _score_case(
             retrieval_rows,
         ),
         "graph_trace_coverage_matches": _rules_have_graph(expected_graph, graph_rows),
+        "graph_non_path_matches": _rules_lack_graph(expected_absent_graph, graph_rows),
+        "source_record_alignment_matches": _rules_match_retrieval_source_records(
+            expected_source_records,
+            retrieval_rows,
+        ),
+        "document_role_alignment_matches": _rules_match_retrieval_document_roles(
+            expected_document_roles,
+            retrieval_rows,
+        ),
+        "package_section_alignment_matches": _rules_match_package_sections(
+            expected_package_sections,
+            decisions_by_rule,
+        ),
         "negative_evidence_matches": _rules_have_decision_field(
             expected_negative,
             decisions_by_rule,
@@ -468,13 +515,15 @@ def _score_case(
             "explicit_trigger_miss_evidence",
         ),
         "non_applicable_coverage_supported": not non_applicable_coverage_gaps,
+        "required_applicability_artifacts_present": not required_artifact_gaps,
         "generated_rule_pack_ready_matches": generated_validation_passed
-        == bool(case.get("expected_generated_rule_pack_ready", True)),
+        == expected_generated_ready,
         "generated_rule_pack_matches_applicability": (
             generated_rule_ids == expected_generated
             and generated_count_matches
             and generated_rule_ids == applicable_rule_ids
         ),
+        "generated_rule_pack_hash_matches_validation": generated_rule_pack_hash_matches_validation,
     }
     failure_reasons = [name for name, passed in result_flags.items() if not passed]
     failure_taxonomy = _failure_taxonomy(
@@ -520,6 +569,11 @@ def _score_case(
         "expected_generated_rule_ids": expected_generated,
         "package_fact_types": actual_fact_types,
         "expected_package_fact_types": expected_fact_types,
+        "expected_absent_graph_rule_ids": expected_absent_graph,
+        "expected_source_record_ids_by_rule_id": expected_source_records,
+        "expected_document_roles_by_rule_id": expected_document_roles,
+        "expected_package_section_families_by_rule_id": expected_package_sections,
+        "required_artifact_gaps": required_artifact_gaps,
         "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
         "generated_error": generated_error,
         "generated_rule_pack_ready": generated_validation_passed,
@@ -920,6 +974,9 @@ def _read_case_artifacts(applicability_dir: Path) -> dict[str, Any]:
             applicability_dir / "authority_universe_snapshot.json"
         ),
         "package_fact_graph": _read_json_if_exists(applicability_dir / "package_fact_graph.json"),
+        "applicability_validation": _read_json_if_exists(
+            applicability_dir / "applicability_validation.json"
+        ),
         "decisions": _read_jsonl_if_exists(applicability_dir / "applicability_decisions.jsonl"),
         "retrieval_rows": _read_jsonl_if_exists(
             applicability_dir / "applicability_retrieval_trace.jsonl"
@@ -1054,12 +1111,113 @@ def _rules_have_graph(rule_ids: list[str], rows: list[dict[str, Any]]) -> bool:
     return all(any(candidate_id.endswith(f":{rule_id}") for candidate_id in candidate_ids) for rule_id in rule_ids)
 
 
+def _rules_lack_graph(rule_ids: list[str], rows: list[dict[str, Any]]) -> bool:
+    if not rule_ids:
+        return True
+    candidate_ids = {
+        str(row.get("candidate_authority_id") or "")
+        for row in rows
+        if row.get("candidate_authority_id")
+    }
+    return all(not any(candidate_id.endswith(f":{rule_id}") for candidate_id in candidate_ids) for rule_id in rule_ids)
+
+
+def _rules_match_retrieval_source_records(
+    expected_by_rule: dict[str, list[str]],
+    rows: list[dict[str, Any]],
+) -> bool:
+    if not expected_by_rule:
+        return True
+    actual = _retrieval_source_record_ids_by_rule(rows)
+    return all(
+        set(expected).issubset(actual.get(rule_id, set()))
+        for rule_id, expected in expected_by_rule.items()
+    )
+
+
+def _rules_match_retrieval_document_roles(
+    expected_by_rule: dict[str, list[str]],
+    rows: list[dict[str, Any]],
+) -> bool:
+    if not expected_by_rule:
+        return True
+    actual = _retrieval_document_roles_by_rule(rows)
+    return all(
+        set(expected).issubset(actual.get(rule_id, set()))
+        for rule_id, expected in expected_by_rule.items()
+    )
+
+
+def _rules_match_package_sections(
+    expected_by_rule: dict[str, list[str]],
+    decisions_by_rule: dict[str, dict[str, Any]],
+) -> bool:
+    if not expected_by_rule:
+        return True
+    actual = {
+        rule_id: _decision_package_section_families(decision)
+        for rule_id, decision in decisions_by_rule.items()
+    }
+    return all(
+        set(expected).issubset(actual.get(rule_id, set()))
+        for rule_id, expected in expected_by_rule.items()
+    )
+
+
 def _rules_have_decision_field(
     rule_ids: list[str],
     decisions_by_rule: dict[str, dict[str, Any]],
     field: str,
 ) -> bool:
     return all(bool((decisions_by_rule.get(rule_id) or {}).get(field)) for rule_id in rule_ids)
+
+
+def _retrieval_source_record_ids_by_rule(rows: list[dict[str, Any]]) -> dict[str, set[str]]:
+    actual: dict[str, set[str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        rule_id = _rule_id_from_candidate_id(str(row.get("candidate_authority_id") or ""))
+        if not rule_id:
+            continue
+        values = actual.setdefault(rule_id, set())
+        values.update(_strings(row.get("source_record_filters")))
+        source_filters = row.get("source_filters") if isinstance(row.get("source_filters"), dict) else {}
+        values.update(_strings(source_filters.get("source_record_ids")))
+        for result in row.get("ranked_results") or []:
+            if isinstance(result, dict) and result.get("source_record_id"):
+                values.add(str(result["source_record_id"]))
+    return actual
+
+
+def _retrieval_document_roles_by_rule(rows: list[dict[str, Any]]) -> dict[str, set[str]]:
+    actual: dict[str, set[str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        rule_id = _rule_id_from_candidate_id(str(row.get("candidate_authority_id") or ""))
+        if not rule_id:
+            continue
+        source_filters = row.get("source_filters") if isinstance(row.get("source_filters"), dict) else {}
+        actual.setdefault(rule_id, set()).update(_strings(source_filters.get("document_roles")))
+    return actual
+
+
+def _decision_package_section_families(decision: dict[str, Any]) -> set[str]:
+    sections = set()
+    for field in (
+        "package_evidence_spans",
+        "negative_evidence_spans",
+        "explicit_trigger_miss_evidence",
+    ):
+        for span in decision.get(field) or []:
+            if isinstance(span, dict) and span.get("section_family"):
+                sections.add(str(span["section_family"]))
+    return sections
+
+
+def _rule_id_from_candidate_id(candidate_id: str) -> str:
+    return candidate_id.rsplit(":", 1)[-1] if candidate_id else ""
 
 
 def _coverage_certificate_ids(payload: dict[str, Any]) -> set[str]:
@@ -1069,6 +1227,32 @@ def _coverage_certificate_ids(payload: dict[str, Any]) -> set[str]:
         if isinstance(certificate, dict)
         and str(certificate.get("coverage_certificate_id") or certificate.get("certificate_id") or "").strip()
     }
+
+
+def _required_artifact_gaps(
+    artifacts: dict[str, Any],
+    *,
+    generated_rule_pack_required: bool,
+) -> list[str]:
+    required: dict[str, Any] = {
+        "authority_universe": artifacts["authority_universe"],
+        "package_fact_graph": artifacts["package_fact_graph"],
+        "applicability_validation": artifacts["applicability_validation"],
+        "applicability_decisions": artifacts["decisions"],
+        "applicability_retrieval_trace": artifacts["retrieval_rows"],
+        "applicability_graph_trace": artifacts["graph_rows"],
+        "applicable_authorities": artifacts["applicable_authorities"],
+        "non_applicable_authorities": artifacts["non_applicable_authorities"],
+        "search_coverage_certificates": artifacts["search_coverage_certificates"],
+    }
+    if generated_rule_pack_required:
+        required["generated_rule_pack"] = artifacts["generated_rule_pack"]
+        required["generated_rule_pack_validation"] = artifacts["generated_validation"]
+    return sorted(name for name, value in required.items() if not value)
+
+
+def _file_hash_matches(path: Path, expected_sha256: str) -> bool:
+    return bool(path.exists() and expected_sha256 and sha256_file(path) == expected_sha256)
 
 
 def _failure_taxonomy(
@@ -1086,8 +1270,17 @@ def _failure_taxonomy(
             "expected_statuses_match": "applicability_status_mismatch",
             "expected_applicable_authorities_match": "applicable_partition_mismatch",
             "expected_non_applicable_authorities_match": "non_applicable_partition_mismatch",
+            "graph_trace_coverage_matches": "graph_trace_gap",
+            "graph_non_path_matches": "graph_trace_gap",
+            "source_record_alignment_matches": "source_record_alignment_mismatch",
+            "document_role_alignment_matches": "document_role_alignment_mismatch",
+            "package_section_alignment_matches": "package_section_alignment_mismatch",
+            "package_fact_types_match": "package_fact_gap",
+            "retrieval_trace_coverage_matches": "retrieval_trace_gap",
             "non_applicable_coverage_supported": "search_coverage_gap",
+            "required_applicability_artifacts_present": "missing_applicability_artifact",
             "generated_rule_pack_matches_applicability": "generated_rule_pack_mismatch",
+            "generated_rule_pack_hash_matches_validation": "generated_rule_pack_mismatch",
             "generated_rule_pack_ready_matches": "generated_rule_pack_not_ready",
             "validation_passed_matches": "applicability_validation_mismatch",
         }.get(name, "applicability_eval_mismatch")
@@ -1202,6 +1395,16 @@ def _strings(value: Any) -> list[str]:
     if isinstance(value, list):
         return [str(item) for item in value if str(item or "").strip()]
     return [str(value)] if str(value or "").strip() else []
+
+
+def _string_list_mapping(value: Any) -> dict[str, list[str]]:
+    if not isinstance(value, dict):
+        return {}
+    return {
+        str(key): sorted(_strings(item))
+        for key, item in value.items()
+        if str(key or "").strip() and _strings(item)
+    }
 
 
 def _rate(numerator: int, denominator: int) -> float:

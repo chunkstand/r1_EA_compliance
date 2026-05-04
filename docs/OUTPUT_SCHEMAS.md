@@ -1336,17 +1336,21 @@ is supplied. The result schema is `applicability-eval-results-v0` and records:
 - case count, passed/failed counts, generated-rule-pack-ready case count, aggregate metrics, and
   failure-category counts
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
-  expected statuses, applicable/non-applicable/generated rule IDs, package fact types, coverage
-  gaps, generated-rule-pack readiness, generated-pack mismatch status, and failure taxonomy
+  expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
+  and document-role alignment status, package-section alignment status, graph path/non-path status,
+  required artifact gaps, coverage gaps, generated-rule-pack readiness, generated-pack hash and
+  coverage mismatch status, and failure taxonomy
 
 Each eval case materializes a review directory under
 `source_library/reviews/applicability-eval-<case_id>/` and runs the same applicability artifact
 sequence used by the reviewer path: authority universe, package fact graph, applicability
 retrieval/graph traces, deterministic decisions, validation, and generated-rule-pack validation.
 The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
-lack coverage certificates, expected retrieval or graph traces are missing, package facts are not
-found, negative/no-trigger evidence is absent, or generated rule-pack rules do not match validated
-applicable authorities.
+lack coverage certificates, expected retrieval or graph traces are missing, expected graph non-paths
+are violated, package facts are not found, source-record/document-role/package-section alignment
+fails, negative/no-trigger evidence is absent, required applicability artifacts are missing, the
+generated rule-pack hash differs from validation, or generated rule-pack rules do not match
+validated applicable authorities.
 
 `applicability-gold-eval` writes
 `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless
@@ -2279,7 +2283,10 @@ Those applicability phases fail when the authority universe is missing or stale,
 validation is missing or hash-mismatched, retrieval/graph trace diagnostics are stale, candidate
 decisions do not exactly cover the authority universe, non-applicable authorities lack search
 coverage certificates, applicability validation is missing or failed, or generated-rule-pack rules
-do not exactly match the validated applicable-authority partition. The compliance-review phase
+do not exactly match the validated applicable-authority partition. The applicability-validation
+phase also rechecks file-backed validation hashes for decision, partition, retrieval/graph trace,
+search-coverage, and provenance artifacts so reviewer-ready phase output cannot rely on stale
+validation. The compliance-review phase
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. It also requires `compliance_matrix.json`
 to exist and match the review's schema version, review ID, source set, rule pack, row count, and

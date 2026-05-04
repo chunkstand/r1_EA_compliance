@@ -946,6 +946,10 @@ negative profiles and promotes only when both adjudication checks and nested app
 `phase-eval --review-id/--review-dir` now includes the seven applicability phases before the
 compliance phase and fails closed on missing/stale validation, missing non-applicable coverage,
 trace gaps, incomplete candidate decisions, or generated-rule-pack coverage drift.
+Gap closure added explicit failure checks for missing required applicability artifacts,
+source-record and document-role retrieval alignment, package-section evidence alignment, graph
+trace gaps, generated-rule-pack hash mismatch, and stale file-backed applicability validation
+hashes.
 
 Goal:
 Add eval coverage that proves applicability decisions are correct before compliance quality is

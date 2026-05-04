@@ -57,6 +57,24 @@
       ],
       "expected_non_applicable_rule_ids": [],
       "expected_generated_rule_count": 3,
+      "expected_graph_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_source_record_ids_by_rule_id": {
+        "nepa_statute_chapter_55": ["R1EA-001"],
+        "esa_section_7": ["R1EA-065"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+      },
+      "expected_document_roles_by_rule_id": {
+        "nepa_statute_chapter_55": ["law"],
+        "esa_section_7": ["law"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+      },
+      "expected_package_section_families_by_rule_id": {
+        "esa_section_7": ["consultation"]
+      },
       "adjudication": {
         "status": "adjudicated",
         "rationale": "All three candidate authorities are triggered by the package facts.",
@@ -90,6 +108,24 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_generated_rule_count": 2,
+      "expected_graph_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_source_record_ids_by_rule_id": {
+        "nepa_statute_chapter_55": ["R1EA-001"],
+        "esa_section_7": ["R1EA-065"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+      },
+      "expected_document_roles_by_rule_id": {
+        "nepa_statute_chapter_55": ["law"],
+        "esa_section_7": ["law"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+      },
+      "expected_package_section_families_by_rule_id": {
+        "esa_section_7": ["consultation"]
+      },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
@@ -126,6 +162,21 @@
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],
       "expected_generated_rule_count": 1,
+      "expected_graph_rule_ids": [
+        "nepa_statute_chapter_55",
+        "esa_section_7",
+        "usda_nepa_ce_fanec_7cfr_1b3"
+      ],
+      "expected_source_record_ids_by_rule_id": {
+        "nepa_statute_chapter_55": ["R1EA-001"],
+        "esa_section_7": ["R1EA-065"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["R1EA-011"]
+      },
+      "expected_document_roles_by_rule_id": {
+        "nepa_statute_chapter_55": ["law"],
+        "esa_section_7": ["law"],
+        "usda_nepa_ce_fanec_7cfr_1b3": ["regulation"]
+      },
       "expected_negative_evidence_rule_ids": [
         "usda_nepa_ce_fanec_7cfr_1b3"
       ],

@@ -54,11 +54,15 @@ Current completed applicability milestones:
   cannot make compliance-gold eval promotion-ready.
 - Milestone 9 applicability eval gates: `applicability-eval` runs deterministic seed packages
   through the full applicability sequence and checks expected statuses, package facts,
-  retrieval/graph traces, non-applicable coverage, and generated-rule-pack identity.
+  retrieval/graph traces, source-record/document-role/package-section alignment, non-applicable
+  coverage, required artifact presence, and generated-rule-pack identity/hash alignment.
   `applicability-gold-eval` requires adjudicated positive, mixed, and negative profiles before
   promotion. `phase-eval --review-id/--review-dir` now includes authority-universe, package-fact
   graph, applicability retrieval trace, applicability graph trace, applicability determination,
-  applicability validation, and generated-rule-pack phases before compliance review.
+  applicability validation, and generated-rule-pack phases before compliance review. The
+  gap-closure pass added regression coverage for missing non-applicable artifacts, graph trace gaps,
+  generated-pack hash edits, source/document-role/package-section mismatches, and stale
+  file-backed applicability validation hashes.
 
 Latest applicability commits:
 
@@ -116,9 +120,9 @@ PYTHONPATH=src uv run --extra dev pytest
 Verified results from the latest Milestone 9 pass:
 
 - Compliance-review focused suite: `53 passed, 3 subtests passed`
-- Applicability eval focused suite: `5 passed`
-- Applicability plus compliance/rule-claim focused suite: `91 passed, 3 subtests passed`
-- Full repository test suite: `281 passed, 8 subtests passed`
+- Applicability eval focused suite: `10 passed`
+- Applicability plus compliance/rule-claim focused suite: `96 passed, 3 subtests passed`
+- Full repository test suite: `286 passed, 8 subtests passed`
 - `applicability-eval`: passed `2/2` seed cases with `promotion_ready`-style generated-pack
   readiness for both cases
 - `applicability-gold-eval`: passed `3/3` adjudicated cases and emitted `promotion_ready=true`

@@ -1987,6 +1987,7 @@ def _applicability_phase_gates(
         if isinstance(generated_validation.get("summary"), dict)
         else {}
     )
+    validation_hash_gaps = _applicability_validation_hash_gaps(applicability_validation)
     authority_ready = (
         bool(authority_universe)
         and authority_universe.get("schema_version") == "authority-universe-snapshot-v0"
@@ -2029,6 +2030,7 @@ def _applicability_phase_gates(
         bool(applicability_validation)
         and applicability_validation.get("source_set_id") == source_set_id
         and bool(applicability_validation.get("passed"))
+        and not validation_hash_gaps
     )
     generated_ready = (
         bool(generated_rule_pack)
@@ -2142,6 +2144,7 @@ def _applicability_phase_gates(
                 "source_set_matches": applicability_validation.get("source_set_id")
                 == source_set_id,
                 "passed": bool(applicability_validation.get("passed")),
+                "hash_gaps": validation_hash_gaps,
                 "failed_checks": _failed_check_names(applicability_validation),
             },
         ),
@@ -2226,6 +2229,51 @@ def _generated_rule_candidate_id(rule: dict) -> str:
     if isinstance(applicability, dict) and applicability.get("candidate_authority_id"):
         return str(applicability["candidate_authority_id"])
     return ""
+
+
+def _applicability_validation_hash_gaps(validation: dict) -> list[dict]:
+    artifact_paths = (
+        validation.get("artifact_paths")
+        if isinstance(validation.get("artifact_paths"), dict)
+        else {}
+    )
+    hashes = validation.get("hashes") if isinstance(validation.get("hashes"), dict) else {}
+    expected_hash_fields = {
+        "applicable_authorities": "applicable_authorities_sha256",
+        "decisions": "applicability_decisions_sha256",
+        "graph_trace": "graph_trace_sha256",
+        "non_applicable_authorities": "non_applicable_authorities_sha256",
+        "provenance": "applicability_provenance_sha256",
+        "retrieval_trace": "retrieval_trace_sha256",
+        "search_coverage_certificates": "search_coverage_certificates_sha256",
+    }
+    gaps = []
+    for artifact_name, hash_field in expected_hash_fields.items():
+        artifact_path = artifact_paths.get(artifact_name)
+        expected_hash = hashes.get(hash_field)
+        if not artifact_path and expected_hash:
+            gaps.append(
+                {
+                    "artifact": artifact_name,
+                    "reason": "missing_artifact_path",
+                    "hash_field": hash_field,
+                }
+            )
+            continue
+        if artifact_path and expected_hash and not _file_hash_matches(
+            Path(str(artifact_path)),
+            str(expected_hash),
+        ):
+            gaps.append(
+                {
+                    "artifact": artifact_name,
+                    "reason": "hash_mismatch",
+                    "path": str(artifact_path),
+                    "hash_field": hash_field,
+                    "expected_sha256": str(expected_hash),
+                }
+            )
+    return gaps
 
 
 def _non_applicable_coverage_gaps(payload: dict, coverage_ids: set[str]) -> list[dict]:

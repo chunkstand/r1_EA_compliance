@@ -1002,7 +1002,9 @@ phases are included, `phase-eval` requires a current authority universe, package
 validation, retrieval and graph trace diagnostics, complete candidate decisions, complete
 applicable/non-applicable partitions, search coverage certificates for non-applicable authorities,
 a passing `applicability_validation.json`, and a generated rule pack whose rules exactly match the
-applicable-authority partition. When a compliance review phase is included, `phase-eval` requires
+applicable-authority partition. It also rechecks file-backed applicability-validation hashes for
+decision, partition, retrieval/graph trace, search-coverage, and provenance artifacts. When a
+compliance review phase is included, `phase-eval` requires
 the review report to exist, validation to pass, the review ID to match when supplied, and the review
 source set to match the evaluated source set. It also requires the compliance matrix artifact to
 exist and match the review's schema version, review ID, source set, rule pack, row count, and status
