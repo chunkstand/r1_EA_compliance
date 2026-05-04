@@ -61,6 +61,22 @@ Stop conditions: unrelated dirty baseline, generated-corpus requirement, failing
 - Stage and commit only the verified milestone slice. Do not stage unrelated dirty worktree changes.
 - Continue automatically after each successful checkpoint commit until the full sequence is done.
 
+## Readiness Notes
+
+These notes are part of the implementation contract for the first run:
+
+- The current known source-level import cycle is
+  `compliance_review -> rule_claim_binding -> compliance_review`. Milestone 2 may record this as a
+  temporary contract exception only if it names the owner and removal milestone. Milestone 3 must
+  remove the exception by moving shared rule-pack ownership to `rule_packs.py`.
+- The architecture contract should be `docs/architecture_contract.toml` and should be parsed with
+  Python's standard-library `tomllib` in `tests/test_architecture_contract.py`. Do not add a YAML
+  parser dependency solely for this gate.
+- `tests/test_cli.py` does not exist yet. Milestone 4 owns creating it as the parser smoke-test
+  surface.
+- Any placeholder command in Milestone 5 must be replaced by concrete focused tests in the hotspot
+  report before the milestone can be closed.
+
 ## Four-Lens Alignment
 
 | Lens | What It Asks | Local Application |
@@ -118,7 +134,7 @@ Work:
 - Add `docs/ARCHITECTURE.md` with a C4-style map for the local CLI system:
   workbook/config, capture, catalog, extraction, retrieval, evidence graph, claims, rule packs,
   applicability, EA review, compliance review, eval, and CLI entrypoints.
-- Add `docs/architecture_contract.yaml` with workflow layers, allowed import direction, owned
+- Add `docs/architecture_contract.toml` with workflow layers, allowed import direction, owned
   artifact surfaces, and current public command groups.
 - Add a short ADR under `docs/adr/` explaining why architecture is enforced through small fitness
   checks rather than broad rewrites.
@@ -149,9 +165,14 @@ Work:
 - Add `tests/test_architecture_contract.py`.
 - Parse source imports with Python AST rather than string matching.
 - Fail on new source-level import cycles.
-- Fail on direct dependency violations against `docs/architecture_contract.yaml`.
+- Parse `docs/architecture_contract.toml` with `tomllib` rather than adding a new parser
+  dependency.
+- Fail on direct dependency violations against `docs/architecture_contract.toml`.
 - If the current baseline has a known violation, record the exact temporary exception in the
-  contract with an owner and removal milestone instead of hiding it in test code.
+  contract with an owner and removal milestone instead of hiding it in test code. The only expected
+  exception at the start of this run is the `compliance_review -> rule_claim_binding ->
+  compliance_review` cycle. Discovery of additional source cycles is a stop condition unless the
+  user explicitly accepts broadening the architecture run.
 
 Required verification:
 
@@ -186,6 +207,9 @@ Work:
   helper validation out of `compliance_review.py`.
 - Update rule binding, applicability rule-pack generation, compliance review, eval modules, and
   tests to import shared rule-pack behavior from `rule_packs.py`.
+- Keep public CLI and generated artifact behavior stable. If a short compatibility re-export from
+  `compliance_review.py` is needed for external import stability, it must not be used by upstream
+  internal modules and must be documented in the architecture contract.
 - Remove the temporary architecture exception for the rule-pack/compliance-review dependency if it
   was needed in Milestone 2.
 
@@ -222,7 +246,8 @@ Work:
 - Keep `src/usfs_r1_ea_sources/cli.py` as the public entrypoint.
 - Move command registration and dispatch helpers into workflow-lane modules such as capture,
   catalog/extraction, applicability, review, compliance, and eval.
-- Add parser smoke tests for command existence and critical option propagation.
+- Add `tests/test_cli.py` with parser smoke tests for command existence and critical option
+  propagation.
 - Include a regression test for options that gate review authority, including
   `--allow-base-rule-pack-review` if that option remains part of the command surface.
 
@@ -245,11 +270,12 @@ Checkpoint action:
 
 - Commit the CLI grouping slice, then continue immediately to Milestone 5.
 
-## Milestone 5: Rank And Reduce Hotspots
+## Milestone 5: Rank Hotspots And Plan The First Reduction
 
 Primary lens: Adam Tornhill.
 
-Goal: use behavioral evidence to choose the next refactoring target.
+Goal: use behavioral evidence to choose the next refactoring target and define a bounded,
+test-backed reduction plan.
 
 Work:
 
@@ -260,13 +286,15 @@ Work:
   `claim_extraction.py`, `extract.py`, and `cli.py`.
 - Select one module family for a bounded split plan.
 - Define behavior-preserving tests before moving code.
+- Do not move hotspot code in this milestone unless the selected split is small enough to complete,
+  verify, and commit without expanding scope. If it is not that small, the output is the hotspot
+  report plus the concrete next-milestone test list.
 
 Required verification:
 
 ```bash
 git log --name-only --since="90 days ago" -- src tests
 wc -l src/usfs_r1_ea_sources/*.py
-PYTHONPATH=src uv run --extra dev pytest <focused-tests-for-selected-hotspot>
 PYTHONPATH=src uv run --extra dev ruff check src tests
 python -m compileall src
 git diff --check
@@ -276,6 +304,8 @@ Done when:
 
 - The next refactor target is justified by size plus change evidence, not preference.
 - The milestone output includes a small split plan and focused verification list.
+- Any code movement performed in this milestone has concrete focused tests named in the hotspot
+  report and those tests have passed.
 
 Checkpoint action:
 
