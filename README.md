@@ -847,13 +847,12 @@ Build the applicability-first authority universe snapshot:
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
   --output-dir source_library \
   --review-id <review-id> \
-  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
-  --authority-family-templates-path config/authority_family_rule_templates_nepa_ea_v1.json
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json
 ```
 
 `applicability-authority-universe` reads the source catalog, source-set manifest, base rule pack,
-optional Milestone 3 authority-family template config, forest-plan profiles, source-set component
-inventory, source-claim artifacts, and rule-claim links. It writes
+Milestone 3 authority-family template config, forest-plan profiles, source-set component inventory,
+source-claim artifacts, and rule-claim links. It writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with one
 rule-template candidate per base rule, one authority-family rule-template candidate per Milestone 3
 template, and one forest-plan component candidate per component inventory record. Each candidate
@@ -863,6 +862,12 @@ contracts, dependency/exception/supersession fields, and search coverage require
 non-applicability proof. This command does not write package fact graphs, retrieval traces, graph
 traces, search coverage certificates, applicability decisions, applicable/non-applicable authority
 artifacts, generated rule packs, or compliance findings.
+
+The default authority-family template config is
+`config/authority_family_rule_templates_nepa_ea_v1.json`. Use
+`--authority-family-templates-path <path>` to test a replacement template set, or
+`--no-authority-family-templates` only for narrow legacy/unit runs that intentionally exclude the
+expanded Milestone 3 authority universe.
 
 Build the package fact graph and package applicability context from an existing EA package cache:
 

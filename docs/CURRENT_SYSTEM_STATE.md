@@ -94,12 +94,16 @@ dependency/exception/supersession fields, and coverage follow-up metadata.
 A current real-source authority-universe contract build for
 `authority-universe-m3-contract-check` passed locally with `392` candidate authorities:
 `44` base rule-template candidates, `19` authority-family rule-template candidates, and `329`
-forest-plan component candidates. The `19` template candidates are conditional and are included
-only when `applicability-authority-universe` is run with:
+forest-plan component candidates. The `19` template candidates are conditional and are included by
+default when `applicability-authority-universe` runs from the repo with:
 
 ```text
---authority-family-templates-path config/authority_family_rule_templates_nepa_ea_v1.json
+config/authority_family_rule_templates_nepa_ea_v1.json
 ```
+
+Use `--authority-family-templates-path` to point at a replacement template set, or
+`--no-authority-family-templates` only for narrow legacy/unit runs that intentionally exclude the
+expanded authority-family templates.
 
 The templates map Clean Water Act, floodplain, tribal consultation, wilderness/designated-area, and
 land-exchange package-fact cues to active authority families. Milestone 4 remains responsible for
@@ -433,7 +437,7 @@ source record has a corresponding `applicability_mode=baseline` rule.
 Applicability-First Review has a post-V1 schema contract and implemented slices for authority
 universe snapshotting, package fact graph/context building, retrieval/graph tracing, deterministic
 decisions, validation, and adjudication replay. `applicability-authority-universe` reads the current
-catalog, base rule pack, optional authority-family template config, forest-plan profiles, component
+catalog, base rule pack, default authority-family template config, forest-plan profiles, component
 inventory, source-claim artifacts, and rule-claim links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
 base rule-template candidates, authority-family rule-template candidates when configured, and

@@ -6,6 +6,7 @@ import json
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
 from usfs_r1_ea_sources.applicability import build_authority_universe_snapshot
 from usfs_r1_ea_sources.cli import main
 
@@ -39,6 +40,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 review_id="applicability-unit",
                 source_set_id=source_set_id,
                 base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
                 forest_plan_component_inventory_path=component_inventory_path,
             )
 
@@ -277,6 +279,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 review_id="missing-links-unit",
                 source_set_id=source_set_id,
                 base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
                 forest_plan_component_inventory_path=component_inventory_path,
             )
 
@@ -325,6 +328,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                     str(rule_pack_path),
                     "--forest-plan-component-inventory-path",
                     str(component_inventory_path),
+                    "--no-authority-family-templates",
                 ]
             )
 
@@ -340,12 +344,101 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertTrue(snapshot["validation"]["passed"])
             self.assertEqual(snapshot["summary"]["candidate_authority_count"], 5)
 
+    def test_cli_loads_default_authority_family_templates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-test"
+            rule_pack_path = _write_rule_pack(root)
+            records = [
+                _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                _catalog_record(
+                    source_set_id,
+                    "R1PLAN-custer-gallatin-nf-02",
+                    "forest_plan",
+                    "forest_plan",
+                ),
+                *_default_template_catalog_records(source_set_id),
+            ]
+            _write_catalog(output_dir, source_set_id, records)
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_component_inventory(output_dir, source_set_id)
+
+            exit_code = main(
+                [
+                    "applicability-authority-universe",
+                    "--output-dir",
+                    str(output_dir),
+                    "--review-id",
+                    "cli-default-template-unit",
+                    "--source-set-id",
+                    source_set_id,
+                    "--base-rule-pack",
+                    str(rule_pack_path),
+                    "--forest-plan-component-inventory-path",
+                    str(component_inventory_path),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            snapshot_path = (
+                output_dir
+                / "reviews"
+                / "cli-default-template-unit"
+                / "applicability"
+                / "authority_universe_snapshot.json"
+            )
+            snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            self.assertTrue(snapshot["validation"]["passed"])
+            self.assertEqual(
+                snapshot["summary"]["authority_family_rule_template_candidate_count"],
+                19,
+            )
+            self.assertEqual(snapshot["summary"]["candidate_authority_count"], 24)
+
 
 def _write_catalog(output_dir: Path, source_set_id: str, records: list[dict]) -> None:
     catalog_dir = output_dir / "catalog"
     catalog_dir.mkdir(parents=True, exist_ok=True)
     _write_json(catalog_dir / "source_set_manifest.json", {"source_set_id": source_set_id})
     _write_jsonl(catalog_dir / "source_catalog.jsonl", records)
+
+
+def _default_template_catalog_records(source_set_id: str) -> list[dict]:
+    template_set = json.loads(
+        DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH.read_text(encoding="utf-8")
+    )
+    existing_source_ids = {
+        "R1EA-BASE",
+        "R1EA-COND",
+        "R1PLAN-custer-gallatin-nf-02",
+    }
+    source_roles = {}
+    for template in template_set["templates"]:
+        for source_record_id in template["source_record_ids"]:
+            source_roles.setdefault(
+                source_record_id,
+                _default_document_role(source_record_id, template),
+            )
+    return [
+        _catalog_record(
+            source_set_id,
+            source_record_id,
+            document_role,
+            document_role,
+        )
+        for source_record_id, document_role in sorted(source_roles.items())
+        if source_record_id not in existing_source_ids
+    ]
+
+
+def _default_document_role(source_record_id: str, template: dict) -> str:
+    if source_record_id.startswith("R1PLAN-"):
+        return "forest_plan"
+    if source_record_id == template.get("authority_source_record_id"):
+        return str(template.get("authority_document_role") or "law")
+    return "law"
 
 
 def _catalog_record(

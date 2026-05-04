@@ -233,9 +233,10 @@ retrieval filters, graph expansion contracts, dependencies, exceptions, and supe
 Status:
 Implemented. The source-currentness-confirmed former `source_only` families are now active through
 `19` Milestone 3 authority-family rule templates. The base `nepa-ea-v0` rule pack remains stable;
-the expanded templates are loaded into `applicability-authority-universe` through
-`--authority-family-templates-path` and are materialized into generated rule packs only after
-applicability validation marks the corresponding candidate authority applicable.
+the expanded templates are loaded by default into `applicability-authority-universe` and are
+materialized into generated rule packs only after applicability validation marks the corresponding
+candidate authority applicable. `--authority-family-templates-path` can point at a replacement
+template set, and `--no-authority-family-templates` is reserved for narrow legacy/unit runs.
 
 Required outputs:
 

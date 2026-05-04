@@ -40,12 +40,19 @@ def register_applicability_commands(subparsers: argparse._SubParsersAction) -> N
     authority_universe.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
     authority_universe.add_argument(
         "--authority-family-templates-path",
-        default=None,
+        default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
         type=Path,
         help=(
-            "Optional Milestone 3 authority-family rule-template config. "
-            f"Use {DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH} for the current expanded universe."
+            "Milestone 3 authority-family rule-template config. "
+            f"Defaults to {DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH}."
         ),
+    )
+    authority_universe.add_argument(
+        "--no-authority-family-templates",
+        action="store_const",
+        const=None,
+        dest="authority_family_templates_path",
+        help="Disable Milestone 3 authority-family templates for narrow legacy or unit runs.",
     )
     authority_universe.add_argument(
         "--forest-plan-profiles-path",

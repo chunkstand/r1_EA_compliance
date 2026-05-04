@@ -864,8 +864,9 @@ Path: `config/authority_family_rule_templates_nepa_ea_v1.json`
 The authority-family rule-template config is a committed Milestone 3 builder input. It does not
 replace `config/compliance_rule_pack_nepa_ea_v0.json`; it adds conditional, applicability-first
 templates for source-currentness-confirmed authority families that were not base compliance
-findings. The authority universe builder uses it only when passed through
-`--authority-family-templates-path`.
+findings. The authority universe builder loads this repo default automatically. Use
+`--authority-family-templates-path` to test a replacement template set, or
+`--no-authority-family-templates` only for narrow legacy/unit runs.
 
 The file has schema version `authority-family-rule-templates-v1` and includes:
 

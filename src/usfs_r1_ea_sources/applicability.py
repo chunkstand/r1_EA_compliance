@@ -83,7 +83,7 @@ def build_authority_universe_snapshot(
     source_set_id: str | None = None,
     base_rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
-    authority_family_templates_path: Path | None = None,
+    authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
     forest_plan_component_inventory_path: Path | None = None,
     claims_path: Path | None = None,
     rule_claim_links_path: Path | None = None,
@@ -1661,12 +1661,31 @@ def _check_authority_family_template_candidates(
         if candidate.get("candidate_authority_type") == "authority_family_rule_template"
         and not candidate.get("authority_family_id")
     ]
+    missing_source_records = []
+    for candidate in candidate_authorities:
+        if candidate.get("candidate_authority_type") != "authority_family_rule_template":
+            continue
+        expected_source_ids = set(_strings(candidate.get("source_record_ids")))
+        actual_source_ids = {
+            str(record.get("source_record_id") or "")
+            for record in candidate.get("source_records") or []
+            if isinstance(record, dict) and record.get("source_record_id")
+        }
+        missing = sorted(expected_source_ids - actual_source_ids)
+        if missing:
+            missing_source_records.append(
+                {
+                    "candidate_authority_id": candidate.get("candidate_authority_id"),
+                    "source_record_ids": missing,
+                }
+            )
     passed = (
         expected_rule_ids == actual_rule_ids
         and bool(expected_rule_ids)
         and not missing_predicates
         and not missing_negative_triggers
         and not candidates_without_family
+        and not missing_source_records
     )
     return {
         "name": "authority_family_template_candidates_cover_config",
@@ -1680,6 +1699,8 @@ def _check_authority_family_template_candidates(
             "missing_predicate_template_ids": missing_predicates,
             "missing_negative_trigger_template_ids": missing_negative_triggers,
             "candidates_without_authority_family_id": candidates_without_family,
+            "missing_source_records": missing_source_records[:50],
+            "missing_source_record_count": len(missing_source_records),
         },
     }
 
