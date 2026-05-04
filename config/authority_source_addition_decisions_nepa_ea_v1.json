@@ -1,0 +1,50 @@
+{
+  "as_of_date": "2026-05-04",
+  "authority_inventory_id": "nepa-ea-authority-universe-families-v1",
+  "decisions": [
+    {
+      "authority_family_id": "environmental_justice_civil_rights",
+      "decision_date": "2026-05-04",
+      "decision_status": "documented_non_addition_for_milestone_2",
+      "family_status_at_decision": "candidate",
+      "next_action": "Create a scoped workbook/source delta for Title VI and USDA nondiscrimination sources if this candidate family is promoted to source_only or active in a later milestone.",
+      "not_current_source_candidates": [
+        {
+          "official_url": "https://www.federalregister.gov/documents/2025/01/28/2025-01953/initial-rescissions-of-harmful-executive-orders-and-actions",
+          "reason_not_current": "Executive Order 14148 revoked Executive Order 12898; do not add revoked environmental-justice executive-order text as a current controlling authority.",
+          "title": "Executive Order 12898 environmental justice text"
+        },
+        {
+          "official_url": "https://www.federalregister.gov/documents/2025/01/31/2025-02097/ending-illegal-discrimination-and-restoring-merit-based-opportunity",
+          "reason_not_current": "Executive Order 14173 revoked Executive Order 14096; do not add revoked environmental-justice executive-order text as a current controlling authority.",
+          "title": "Executive Order 14096 environmental justice text"
+        }
+      ],
+      "rationale": "Milestone 2 documents the source gap rather than adding rows because the current authoritative civil-rights coverage should not be satisfied by revoked environmental-justice executive orders. A later source delta should add official Title VI and USDA nondiscrimination sources with workbook row identity, downloader provenance, and catalog validation.",
+      "recommended_source_records": [
+        {
+          "authority_level": "federal",
+          "document_role": "law",
+          "issuer": "Congress",
+          "official_url": "https://uscode.house.gov/view.xhtml?req=(title:42%20section:2000d%20edition:prelim)",
+          "recommended_scope": "Conditional",
+          "title": "Civil Rights Act of 1964 Title VI, 42 U.S.C. 2000d"
+        },
+        {
+          "authority_level": "federal",
+          "document_role": "regulation",
+          "issuer": "USDA Office of the Secretary",
+          "official_url": "https://www.ecfr.gov/current/title-7/subtitle-A/part-15",
+          "recommended_scope": "Conditional",
+          "title": "7 CFR part 15 - Nondiscrimination"
+        }
+      ]
+    }
+  ],
+  "schema_version": "authority-source-addition-decisions-v1",
+  "summary": {
+    "decision_count": 1,
+    "documented_non_addition_count": 1,
+    "recommended_source_record_count": 2
+  }
+}

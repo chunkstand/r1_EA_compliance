@@ -3,6 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .authority_currentness import DEFAULT_AUTHORITY_INVENTORY_PATH
+from .authority_currentness import DEFAULT_SOURCE_ADDITION_DECISIONS_PATH
+from .authority_currentness import build_authority_currentness_report
 from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
 from .claim_extraction import build_claim_extraction
 from .claim_extraction import default_claims_path
@@ -27,6 +30,7 @@ DERIVED_COMMANDS = {
     "extract-build",
     "reuse-inventory",
     "extraction-accuracy-audit",
+    "authority-currentness",
     "retrieval-build",
     "retrieval-query",
     "retrieval-eval",
@@ -73,6 +77,26 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     extraction_accuracy.add_argument("--output-dir", default=Path("source_library"), type=Path)
     extraction_accuracy.add_argument("--source-set-id")
     extraction_accuracy.add_argument("--output-path", type=Path)
+
+    authority_currentness = subparsers.add_parser(
+        "authority-currentness",
+        help="Build a source-currentness validation report for the authority-family inventory.",
+    )
+    authority_currentness.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    authority_currentness.add_argument("--source-set-id")
+    authority_currentness.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+    authority_currentness.add_argument(
+        "--source-addition-decisions",
+        default=DEFAULT_SOURCE_ADDITION_DECISIONS_PATH,
+        type=Path,
+    )
+    authority_currentness.add_argument("--catalog-path", type=Path)
+    authority_currentness.add_argument("--source-set-manifest-path", type=Path)
+    authority_currentness.add_argument("--output-path", type=Path)
 
     retrieval_build = subparsers.add_parser(
         "retrieval-build",
@@ -202,6 +226,19 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1
+
+    if args.command == "authority-currentness":
+        result = build_authority_currentness_report(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            authority_inventory_path=args.authority_inventory,
+            source_addition_decisions_path=args.source_addition_decisions,
+            catalog_path=args.catalog_path,
+            source_set_manifest_path=args.source_set_manifest_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["validation_passed"] else 1
 
     if args.command == "retrieval-build":
         result = build_retrieval_index(

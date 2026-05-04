@@ -50,13 +50,16 @@ review-bound `phase-eval` `16/16` with the post-V1 applicability gates included,
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
-Authority-universe completion Milestone 1 is now represented by
-`config/authority_universe_families_nepa_ea_v1.json`: `35` authority families, `18` required
-authority requirement groups, all `44/44` current rule-pack rules crosswalked, and all `190/190`
-workbook source records mapped to an authority family. The inventory keeps `source_only`,
-`candidate`, and `superseded` families explicit, including source-record mapping and open-gap
-handoffs, so later source-currentness, rule-template, applicability-eval, and report-integration
-slices have a stable contract.
+Authority-universe completion Milestones 1 and 2 are now represented by
+`config/authority_universe_families_nepa_ea_v1.json`,
+`config/authority_source_addition_decisions_nepa_ea_v1.json`, and the
+`authority-currentness` command. The inventory has `35` authority families, `18` required authority
+requirement groups, all `44/44` current rule-pack rules crosswalked, and all `190/190` workbook
+source records mapped to an authority family. The currentness gate validates
+`source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
+confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
+confirmation, and `0` failed families. The remaining authority-universe work is rule-template and
+applicability-contract promotion for the source-only families.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -85,6 +88,7 @@ heuristics.
 - `config/compliance_gold_eval_v0.json`
 - `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
 - `config/authority_universe_families_nepa_ea_v1.json`
+- `config/authority_source_addition_decisions_nepa_ea_v1.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`
@@ -107,6 +111,8 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/catalog/source_graph_nodes.jsonl`
   - `source_library/catalog/source_graph_edges.jsonl`
 - Derived extraction outputs: `source_library/derived/<source_set_id>/`
+- Authority currentness outputs:
+  - `source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json`
 - Retrieval index and eval outputs:
   - `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
   - `source_library/derived/<source_set_id>/retrieval/retrieval_manifest.json`
@@ -188,7 +194,9 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/promotion_suite/<suite_id>/promotion_suite_report.md`
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
-`extract-build` command builds a derived text/chunk layer from the catalog. The
+`authority-currentness` command validates the authority-family inventory against the catalog source
+set before source-only or candidate authority families are promoted. The `extract-build` command
+builds a derived text/chunk layer from the catalog. The
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
 links into a local graph artifact. The `claim-extract` command extracts deterministic source-text

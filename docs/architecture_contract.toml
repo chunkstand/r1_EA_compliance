@@ -61,7 +61,7 @@ allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]
 [[layers]]
 name = "review_support"
 summary = "Cross-source-set reuse planning helpers that may inspect review-derived source-set requirements without writing review outputs."
-modules = ["reuse_inventory"]
+modules = ["authority_currentness", "reuse_inventory"]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
 [[layers]]
@@ -202,6 +202,7 @@ paths = [
 [[artifacts]]
 owner_layer = "review_support"
 paths = [
+  "source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json",
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory.json",
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl",
   "source_library/derived/<source_set_id>/reuse_inventory/summary.json",
@@ -280,6 +281,7 @@ commands = [
 name = "catalog_extraction_retrieval"
 commands = [
   "catalog-build",
+  "authority-currentness",
   "extract-build",
   "reuse-inventory",
   "extraction-accuracy-audit",

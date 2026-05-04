@@ -10,6 +10,9 @@ from usfs_r1_ea_sources.workbook import load_canonical_sources
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 INVENTORY_PATH = REPO_ROOT / "config" / "authority_universe_families_nepa_ea_v1.json"
+SOURCE_ADDITION_DECISIONS_PATH = (
+    REPO_ROOT / "config" / "authority_source_addition_decisions_nepa_ea_v1.json"
+)
 RULE_PACK_PATH = REPO_ROOT / "config" / "compliance_rule_pack_nepa_ea_v0.json"
 WORKBOOK_PATH = REPO_ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 DOWNLOADER_CONFIG_PATH = REPO_ROOT / "config" / "downloader.toml"
@@ -121,6 +124,27 @@ def test_authority_inventory_maps_every_workbook_source_record() -> None:
     excluded_project_reference = next(row for row in crosswalk if row["source_record_id"] == "R1EA-160")
     assert excluded_project_reference["mapping_status"] == "mapped_source_url_excluded"
     assert excluded_project_reference["primary_family_id"] == "land_exchange_fs_policy_and_project_references"
+
+
+def test_authority_source_addition_decisions_cover_candidate_source_gaps() -> None:
+    inventory = _load_json(INVENTORY_PATH)
+    decisions = _load_json(SOURCE_ADDITION_DECISIONS_PATH)
+    decisions_by_family_id = {
+        decision["authority_family_id"]: decision for decision in decisions["decisions"]
+    }
+    candidate_families_without_sources = [
+        family["family_id"]
+        for family in inventory["authority_families"]
+        if family["status"] == "candidate" and not family["source_record_ids"]
+    ]
+
+    assert decisions["schema_version"] == "authority-source-addition-decisions-v1"
+    assert set(candidate_families_without_sources).issubset(decisions_by_family_id)
+
+    environmental_justice = decisions_by_family_id["environmental_justice_civil_rights"]
+    assert environmental_justice["decision_status"] == "documented_non_addition_for_milestone_2"
+    assert environmental_justice["recommended_source_records"]
+    assert environmental_justice["not_current_source_candidates"]
 
 
 def _load_json(path: Path) -> dict:

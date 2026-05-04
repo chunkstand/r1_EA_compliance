@@ -87,6 +87,17 @@ The remaining gap is authority-universe completeness. Several common USFS EA aut
 not yet represented as first-class active authority families in the generated review path, even
 where the package fact graph already detects related cues.
 
+## Implementation Status
+
+- Milestone 1 is complete in `config/authority_universe_families_nepa_ea_v1.json`.
+- Milestone 2 is complete through `config/authority_source_addition_decisions_nepa_ea_v1.json` and
+  the derived `authority-currentness` gate. The latest local report for
+  `source-set-ba8d0feae79501b8` validates `35` families, `207` family/source currentness records,
+  `33` source-currentness-confirmed families, `1` documented candidate non-addition, and `1`
+  superseded replacement-source family with `0` failed families.
+- The next milestone is Milestone 3: promote the source-confirmed authority families into
+  data-backed rule templates and applicability contracts.
+
 ## Required Authority Families
 
 This milestone should produce an explicit authority-family inventory. Each family must have one of
@@ -181,6 +192,13 @@ Acceptance criteria:
 Goal:
 Add or confirm source records for missing `candidate` and `source_only` families, then validate
 that the active source set contains current authoritative sources.
+
+Status:
+Implemented. The environmental-justice/civil-rights candidate has a documented non-addition rather
+than silent current-source coverage, because revoked environmental-justice executive orders are not
+accepted as current controlling sources. The current source set passes the authority-currentness
+gate without counting excluded, failed, reserved, repealed, or superseded records as current
+authority.
 
 Required outputs:
 

@@ -854,6 +854,92 @@ The inventory must preserve these closeout invariants:
   runtime code;
 - superseded/reserved authorities carry replacement/current-source evidence.
 
+## Authority Source Addition Decisions Config
+
+Path: `config/authority_source_addition_decisions_nepa_ea_v1.json`
+
+The source-addition decisions file is a committed Milestone 2 configuration artifact. It documents
+source additions, documented non-additions, and not-current source candidates for authority families
+whose inventory status is `candidate` or whose source coverage needs explicit currentness review.
+It is not a replacement for workbook row identity; when new sources are added, they still must move
+through the workbook, downloader, catalog, and validation gates.
+
+The file has schema version `authority-source-addition-decisions-v1` and includes:
+
+- `authority_inventory_id`
+- `as_of_date`
+- `decisions`
+- `summary`
+
+Each decision includes:
+
+- `authority_family_id`
+- `family_status_at_decision`
+- `decision_status`
+- `decision_date`
+- `rationale`
+- `recommended_source_records`, when a later workbook/source delta is recommended
+- `not_current_source_candidates`, when revoked, repealed, superseded, or otherwise not-current
+  sources must not satisfy authority coverage
+- `next_action`
+
+## Authority Currentness Report
+
+Path:
+`source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json`
+
+The `authority-currentness` command writes the Milestone 2 source-currentness gate for the
+authority-family inventory. It reads:
+
+- `config/authority_universe_families_nepa_ea_v1.json`, or the path passed with
+  `--authority-inventory`
+- `config/authority_source_addition_decisions_nepa_ea_v1.json`, or the path passed with
+  `--source-addition-decisions`
+- `source_library/catalog/source_catalog.jsonl`
+- `source_library/catalog/source_set_manifest.json`
+
+The report has schema version `authority-currentness-report-v0` and includes:
+
+- `created_at`
+- `source_set_id`
+- `inputs` with paths and SHA256 hashes for the authority inventory, source-addition decisions,
+  source catalog, and source-set manifest
+- `source_addition_decisions`
+- `family_currentness`
+- `source_currentness_records`
+- `validation`
+- `summary`
+
+Each `source_currentness_records` entry records one authority-family/source-record mapping and
+includes:
+
+- `authority_family_id`
+- `family_status`
+- `source_record_id`
+- `source_title`
+- `citation_label`
+- `url`
+- `effective_date`, when a row-level date can be parsed from catalog metadata
+- `capture_date`, using row-level capture metadata when available and the source-set manifest
+  `created_at` as a fallback
+- `supersession_status`
+- `source_status`
+- `currentness_status`
+- `counts_as_current_authority`
+- document role, authority level, issuer, scope, currentness notes, and artifact path/hash
+
+`source_status` values `downloaded`, `downloaded_existing`, `duplicate_content`, and
+`duplicate_url` are the only statuses allowed to count as current source coverage. `skipped_excluded`
+records are reported as excluded and do not count as current authority. Live-web failure or
+unverified statuses such as `blocked`, `challenge_page`, `not_found`, `timeout`, `empty_body`, and
+`unsupported_content_type` fail validation and cannot count as current authority. Families marked
+`superseded` must carry replacement metadata and their records are reported as replacement sources,
+not as current controlling authority for the superseded family.
+
+The validation block checks source-set identity, inventory/catalog alignment, candidate-family
+source-addition decisions, required currentness fields, successful-status-only current coverage,
+excluded-source handling, failed-capture handling, and superseded replacement metadata.
+
 ## Applicability-First Review Outputs
 
 Path: `source_library/reviews/<review_id>/applicability/`

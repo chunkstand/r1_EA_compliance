@@ -79,6 +79,42 @@ sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sour
 `source_only` family now carries explicit open-gap handoff text for source-currentness validation
 and rule-template promotion, so those rows are not hidden runtime assumptions.
 
+## Authority Currentness Gate
+
+Milestone 2 of the authority-universe completion plan is implemented by
+`config/authority_source_addition_decisions_nepa_ea_v1.json` and the `authority-currentness`
+command. The decision config documents the current non-addition for the
+`environmental_justice_civil_rights` candidate family: the system should not satisfy current
+environmental-justice/civil-rights coverage with revoked executive-order text, and a later scoped
+workbook delta should add official Title VI and USDA nondiscrimination sources if this family is
+promoted.
+
+The latest local report was generated for `source-set-ba8d0feae79501b8` at:
+
+```text
+source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json
+```
+
+Report summary:
+
+- Schema: `authority-currentness-report-v0`
+- Authority families checked: `35`
+- Family status counts: `active=14`, `source_only=19`, `candidate=1`, `superseded=1`
+- Family/source currentness records: `207`
+- Current authority family/source mappings confirmed from catalog: `203`
+- Excluded source mappings that do not count as current authority: `1`
+- Superseded replacement-source mappings confirmed without counting as current authority: `3`
+- Family currentness: `source_currentness_confirmed=33`,
+  `documented_source_non_addition=1`, `superseded_replacement_sources_confirmed=1`
+- Failed families: `0`
+- Validation: passed
+
+This is a source-currentness and supersession gate, not a semantic rule-promotion gate. It proves
+that existing active/source-only families have catalog-confirmed current source coverage, that
+reserved or superseded authority cannot silently satisfy current authority requirements, and that
+the one candidate family has an explicit non-addition decision. Milestone 3 remains responsible for
+promoting source-only families into data-backed rule templates and applicability predicates.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
