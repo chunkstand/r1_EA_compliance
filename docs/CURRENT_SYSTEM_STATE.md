@@ -340,13 +340,17 @@ fact graph, local retrieval index, and available graph/link artifacts, then writ
 `applicability_retrieval_graph_diagnostics.json` with replayable per-candidate query rows, fused RRF
 result rows, bounded graph paths, and retrieval/graph diagnostics. Graph trace rows now explicitly
 preserve authority-category hierarchy, source-claim/rule-claim-link bindings, supporting source
-records, package facts, and Forest Plan component provenance when those artifacts are available. The
-applicability-first path still does not issue search coverage certificates, make applicability
-decisions, generate rule packs, or run compliance review. Later milestones still need deterministic
-applicability decisions, separate applicable and non-applicable authority artifacts, validation,
-provenance, and the generated compliance rule pack before `compliance-review` becomes gated by the
-applicability artifacts. Until those later milestones land, `compliance-review` remains the current V1
-authority-first command.
+records, package facts, and Forest Plan component provenance when those artifacts are available.
+`applicability-determine` reads those artifacts and writes `applicability_decisions.jsonl`,
+`applicable_authorities.json`, `non_applicable_authorities.json`,
+`search_coverage_certificates.json`, `applicability_provenance.json`, and
+`applicability_report.md` with one deterministic decision row per authority candidate. Weak or
+conflicting trigger evidence is recorded as `needs_adjudication`, and not-applicable decisions cite
+search coverage certificates. The applicability-first path still does not validate adjudication
+readiness, generate rule packs, or run compliance review. Later milestones still need hard
+validation/adjudication gates and the generated compliance rule pack before `compliance-review`
+becomes gated by the applicability artifacts. Until those later milestones land,
+`compliance-review` remains the current V1 authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review

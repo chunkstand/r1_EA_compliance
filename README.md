@@ -824,6 +824,22 @@ fact, and Forest Plan component provenance when those artifacts are available. T
 evidence discovery only; it does not write applicability decisions, search coverage certificates,
 generated rule packs, or compliance findings.
 
+Write deterministic applicability decisions before review:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
+```
+
+`applicability-determine` reads the authority universe, package fact graph/context, retrieval trace,
+and graph trace. It writes `applicability_decisions.jsonl`, `applicable_authorities.json`,
+`non_applicable_authorities.json`, `search_coverage_certificates.json`,
+`applicability_provenance.json`, and `applicability_report.md`. The command records deterministic
+applicability bases and marks weak or conflicting package triggers as `needs_adjudication`. It does
+not write a generated rule pack, compliance matrix, or compliance findings.
+
 Run rule-pack coverage:
 
 ```bash

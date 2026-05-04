@@ -36,14 +36,15 @@ Implemented today:
   `applicability_retrieval_graph_diagnostics.json` without deciding applicability. Graph traces
   explicitly carry authority-category, source-claim/rule-claim-link, supporting-source, package
   fact, and Forest Plan component provenance when those artifacts are available.
+- Milestone 5 deterministic decisions are implemented: `applicability-determine` consumes the
+  authority universe, package fact graph/context, retrieval trace, and graph trace, then writes
+  `applicability_decisions.jsonl`, applicable/non-applicable authority artifacts, search coverage
+  certificates, provenance, and a reviewer report without producing compliance findings.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
 Not implemented yet:
 
-- deterministic applicability decision ledger;
-- separate validated applicable and non-applicable authority artifacts produced before review;
-- search coverage certificates for not-applicable determinations;
 - adjudication replay for unresolved applicability;
 - generated rule pack as the only reviewer-ready compliance input; and
 - compliance-review gate that refuses base rule-pack review in reviewer-ready mode.
@@ -575,6 +576,18 @@ Stop conditions:
 - Search results are selected without source-record, package-section, or graph-path provenance.
 
 ## Milestone 5: Deterministic Applicability Decision Ledger
+
+Current status:
+Implemented. `applicability-determine` now consumes `authority_universe_snapshot.json`,
+`package_fact_graph.json`, `package_applicability_context.json`,
+`applicability_retrieval_trace.jsonl`, and `applicability_graph_trace.jsonl`, then writes
+`applicability_decisions.jsonl`, `applicable_authorities.json`,
+`non_applicable_authorities.json`, `search_coverage_certificates.json`,
+`applicability_provenance.json`, and `applicability_report.md`. The predicate engine records
+mandatory baseline, positive package trigger, absent-trigger, negative-evidence, Forest Plan
+component, source-required, and unresolved-conflict bases. Weak package evidence becomes
+`needs_adjudication`; not-applicable decisions cite search coverage certificates. The command does
+not emit compliance findings, generate a rule pack, or validate adjudication readiness.
 
 Goal:
 Add the pre-review decision command that writes all first-class applicability artifacts without

@@ -1039,7 +1039,7 @@ Each applicability decision includes:
 - `status`: `applicable`, `not_applicable`, `unresolved`, or `needs_adjudication`
 - `basis_type`: `mandatory_baseline`, `positive_package_trigger`, `negative_package_evidence`,
   `absent_trigger_evidence`, `forest_plan_profile_resolution`, `forest_plan_component`,
-  `source_set_required`, or `human_adjudication`
+  `source_set_required`, `unresolved_evidence_conflict`, or `human_adjudication`
 - `basis`
 - deterministic predicate name, predicate version, predicate input hashes, and predicate result
 - source-record IDs, authority category, authority document role, and source-set identity

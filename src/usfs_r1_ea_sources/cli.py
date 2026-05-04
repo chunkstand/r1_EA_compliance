@@ -5,6 +5,7 @@ import argparse
 import json
 
 from .applicability import build_authority_universe_snapshot
+from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
@@ -456,6 +457,26 @@ def build_parser() -> argparse.ArgumentParser:
     applicability_retrieve.add_argument("--graph-edges-path", type=Path)
     applicability_retrieve.add_argument("--top-k", type=int, default=5)
     applicability_retrieve.add_argument("--max-graph-paths-per-candidate", type=int, default=25)
+
+    applicability_determine = subparsers.add_parser(
+        "applicability-determine",
+        help=(
+            "Write deterministic applicability decisions and first-class authority artifacts "
+            "without running compliance review."
+        ),
+    )
+    applicability_determine.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_determine.add_argument("--review-id", required=True)
+    applicability_determine.add_argument("--source-set-id")
+    applicability_determine.add_argument("--authority-universe-path", type=Path)
+    applicability_determine.add_argument("--package-fact-graph-path", type=Path)
+    applicability_determine.add_argument("--package-applicability-context-path", type=Path)
+    applicability_determine.add_argument("--retrieval-trace-path", type=Path)
+    applicability_determine.add_argument("--graph-trace-path", type=Path)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -955,6 +976,20 @@ def main(argv: list[str] | None = None) -> int:
             graph_edges_path=args.graph_edges_path,
             top_k=args.top_k,
             max_graph_paths_per_candidate=args.max_graph_paths_per_candidate,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "applicability-determine":
+        result = build_applicability_decisions(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            authority_universe_path=args.authority_universe_path,
+            package_fact_graph_path=args.package_fact_graph_path,
+            package_applicability_context_path=args.package_applicability_context_path,
+            retrieval_trace_path=args.retrieval_trace_path,
+            graph_trace_path=args.graph_trace_path,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1
