@@ -131,10 +131,11 @@ Primary gate artifacts/checks:
 Next implementation target:
 
 The V1 EA gate repair plan is complete through Milestone 6. The next implementation target should
-be a new post-V1 milestone plan, such as broader Region 1 package expansion, embeddings/reranking,
-model-assisted synthesis, or a larger adjudicated real-package eval set. Do not broaden the V1
-claim beyond the current Custer Gallatin proving package without a new evidence-backed plan and
-gate.
+start from `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: split authority applicability into
+a first-class pre-review stage, emit separate applicable and non-applicable authority artifacts,
+validate those artifacts, generate the review rule pack from the validated applicability result, and
+only then run compliance review. Do not broaden the V1 claim beyond the current Custer Gallatin
+proving package without a new evidence-backed plan and gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`, and

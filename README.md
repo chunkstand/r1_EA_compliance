@@ -50,9 +50,11 @@ conditional adjudication rows as explicit accepted V1 reviewer risk.
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan:
 a Custer Gallatin National Forest EA compliance review as the proving ground. See
-`docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
-toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
-heuristics.
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority
+applicability, non-applicability, validation, and generated rule packs first-class pre-review
+artifacts. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer
+engine biased toward scalable search, learning, evidence, and eval loops instead of hidden
+domain-specific heuristics.
 
 ## Current Inputs
 
