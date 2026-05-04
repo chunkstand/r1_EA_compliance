@@ -20,7 +20,9 @@ adjudication, and provenance-backed generated rule packs.
 Implemented today:
 
 - `applicability-authority-universe` writes `authority_universe_snapshot.json`.
-- The original docs-only applicability artifact contract exists in `docs/OUTPUT_SCHEMAS.md`.
+- Milestone 1 schema and gate semantics are defined in `docs/OUTPUT_SCHEMAS.md` for the package
+  fact graph, retrieval trace, graph trace, search coverage certificates, provenance, validated
+  applicable/non-applicable authority artifacts, and generated rule-pack identity.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 

@@ -324,11 +324,13 @@ base rule pack, forest-plan profiles, component inventory, source-claim artifact
 links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
 rule-template candidates and Forest Plan component candidates. It does not decide package
-applicability, generate rule packs, or run compliance review. Later milestones still need to write
-applicability decisions, separate applicable and non-applicable authority artifacts, validation, and
-the generated compliance rule pack before `compliance-review` becomes gated by the applicability
-artifacts. Until those later milestones land, `compliance-review` remains the current V1
-authority-first command.
+applicability, build the package fact graph, write per-authority retrieval traces, write graph
+expansion traces, issue search coverage certificates, generate rule packs, or run compliance review.
+Later milestones still need to write the package fact graph, hybrid retrieval traces, graph traces,
+deterministic applicability decisions, separate applicable and non-applicable authority artifacts,
+validation, provenance, and the generated compliance rule pack before `compliance-review` becomes
+gated by the applicability artifacts. Until those later milestones land, `compliance-review` remains
+the current V1 authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
@@ -755,19 +757,26 @@ The post-V1 applicability-first artifact contract reserves
 `source_library/reviews/<review_id>/applicability/` for:
 
 - `authority_universe_snapshot.json`
+- `package_fact_graph.json`
 - `package_applicability_context.json`
+- `applicability_retrieval_trace.jsonl`
+- `applicability_graph_trace.jsonl`
 - `applicability_decisions.jsonl`
 - `applicable_authorities.json`
 - `non_applicable_authorities.json`
+- `search_coverage_certificates.json`
 - `applicability_validation.json`
+- `applicability_provenance.json`
 - `applicability_report.md`
 - `generated_rule_pack.json`
 - `generated_rule_pack_validation.json`
 
 Those artifacts are the target source of truth for applicability and non-applicability. The
-non-applicable authority list must not be buried only as compliance matrix rows, and a
-reviewer-ready compliance review must eventually consume a generated rule pack tied to a passing
-applicability validation hash. This is a documented contract at the current milestone, not yet an
+non-applicable authority list must not be buried only as compliance matrix rows. A not-applicable
+decision must carry negative evidence, trigger-miss rationale, search coverage, or adjudication, and
+a reviewer-ready compliance review must eventually consume a generated rule pack tied to a passing
+applicability validation hash plus the package fact graph, retrieval trace, graph trace, search
+coverage, and provenance hashes. This is a documented contract at the current milestone, not yet an
 implemented command sequence.
 
 The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,

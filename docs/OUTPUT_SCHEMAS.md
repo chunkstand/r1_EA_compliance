@@ -794,7 +794,7 @@ validated applicability run and generated rule pack; it must not be the first st
 which authorities apply.
 
 The current V1 compliance-review implementation still runs the authority-first path described in the
-next section. Milestone 2 implements the authority-universe snapshot command only:
+next section. The implemented applicability slice is the authority-universe snapshot command:
 `applicability-authority-universe` writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` without deciding
 package applicability or producing compliance findings. The remaining artifacts in this section are
@@ -803,11 +803,16 @@ the schema and gate contract for later applicability-first milestones.
 Required artifacts:
 
 - `authority_universe_snapshot.json`
+- `package_fact_graph.json`
 - `package_applicability_context.json`
+- `applicability_retrieval_trace.jsonl`
+- `applicability_graph_trace.jsonl`
 - `applicability_decisions.jsonl`
 - `applicable_authorities.json`
 - `non_applicable_authorities.json`
+- `search_coverage_certificates.json`
 - `applicability_validation.json`
+- `applicability_provenance.json`
 - `applicability_report.md`
 - `generated_rule_pack.json`
 - `generated_rule_pack_validation.json`
@@ -817,6 +822,7 @@ Optional artifacts used once adjudication is introduced:
 - `applicability_adjudication_template.json`
 - `applicability_adjudication_worklist.md`
 - `applicability_adjudication_eval.json`
+- `llm_evidence_proposals.jsonl`
 
 All applicability artifacts share these run identity fields:
 
@@ -824,6 +830,10 @@ All applicability artifacts share these run identity fields:
 - `review_id`
 - `source_set_id`
 - `authority_universe_sha256`
+- `package_fact_graph_sha256`
+- `retrieval_trace_sha256`
+- `graph_trace_sha256`
+- `search_coverage_certificates_sha256`
 - `package_manifest_sha256`
 - `package_chunks_sha256`
 - `catalog_sha256`
@@ -835,9 +845,13 @@ The target review sequence is:
 
 ```text
 EA package + source library + authority universe
-  -> applicability determination
+  -> package fact graph
+  -> per-authority hybrid retrieval
+  -> graph expansion and dependency tracing
+  -> deterministic applicability decision ledger
   -> applicable_authorities artifact
   -> non_applicable_authorities artifact
+  -> search coverage certificates
   -> applicability validation and adjudication gate
   -> generated review rule pack
   -> compliance review
@@ -876,6 +890,58 @@ Each candidate authority record includes:
   no-claim expectation
 - deterministic applicability test contract, including package trigger terms, trigger term groups,
   section expectations, negative trigger terms, source filters, and baseline-required rationale
+- retrieval contract, including exact keyword, citation, optional vector, metadata-filter, and
+  package-section query requirements
+- graph expansion contract, including allowed start nodes, relationship types, traversal depth,
+  dependency, exception, supersession, Forest Plan profile, geography, overlay, rule-claim, and
+  source-record neighbor requirements
+- search coverage requirements for each allowed `not_applicable` decision class
+
+`package_fact_graph.json` has schema version `package-fact-graph-v0` and includes the typed package
+facts used before applicability decisions are attempted. It includes:
+
+- `applicability_run_id`, `review_id`, `source_set_id`, `package_manifest_sha256`,
+  `package_chunks_sha256`, and `package_fact_graph_sha256`
+- package fact graph metadata: `package_fact_graph_id`, `created_at`, extraction method versions,
+  source package path, and extraction summary
+- `nodes`, where each node has `node_id`, `node_type`, `label`, normalized value fields,
+  confidence class, extraction method, package chunk IDs, section family, citation label, page
+  label, character offsets, text hash, and evidence-span IDs
+- required package fact node types:
+  - `action`
+  - `agency`
+  - `decision_posture`
+  - `nepa_level`
+  - `geography`
+  - `management_area`
+  - `overlay`
+  - `consultation`
+  - `permit`
+  - `public_involvement`
+  - `alternative`
+  - `resource_topic`
+  - `package_section`
+  - `evidence_span`
+- `edges`, where each edge has `edge_id`, `edge_type`, `from_node_id`, `to_node_id`,
+  evidence-span IDs, path rationale, and selected/rejected status when the edge was considered for
+  applicability
+- expected package fact edge types:
+  - `describes`
+  - `located_in`
+  - `intersects_management_area`
+  - `has_overlay`
+  - `requires_consultation`
+  - `mentions_permit`
+  - `analyzes_resource_topic`
+  - `evaluates_alternative`
+  - `supports_fact`
+  - `contradicts_fact`
+  - `derived_from_section`
+- validation fields proving every asserted fact has package evidence spans and hashes
+
+Unsupported inferred facts cannot make an applicability run reviewer-ready. A fact can be proposed
+by a later model-assisted evidence layer, but the reviewer-ready graph must bind final facts to
+deterministic package spans or human adjudication.
 
 `package_applicability_context.json` has schema version `package-applicability-context-v0` and
 includes:
@@ -884,6 +950,7 @@ includes:
 - `package_path`
 - `package_manifest_sha256`
 - `package_chunks_sha256`
+- `package_fact_graph_sha256`
 - `package_context_sha256`
 - package section map and section-family bindings
 - project type, federal action signals, forest unit, geography, management areas, overlays,
@@ -891,6 +958,43 @@ includes:
   signals used for applicability
 - extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
   source metadata
+
+`applicability_retrieval_trace.jsonl` has schema version `applicability-retrieval-trace-v0`; each
+line records one query execution or fused result set for one candidate authority. Each trace row
+includes:
+
+- `applicability_run_id`, `review_id`, `source_set_id`, `candidate_authority_id`, and
+  `retrieval_trace_id`
+- `query_plan_id`, query text, query type, query terms, query timestamp, and query source
+- allowed query types: `exact_keyword`, `citation`, `bm25`, `vector`, `metadata_filter`,
+  `package_section`, `source_role`, `authority_category`, and `graph_seed`
+- source filters, package-section filters, source-record filters, authority-category filters,
+  forest-plan component filters, and currentness filters
+- searched index identity, including index path, index type, index build ID, and searched index hash
+- ranked results with result ID, result kind, rank, score, fused score, selected/rejected status,
+  rejection reason, source record ID, package chunk ID, source chunk ID, claim ID, section family,
+  citation label, page label, offsets, matched terms, and text hash
+- fusion metadata when multiple searches are combined, including the fusion strategy, input result
+  sets, reciprocal-rank-fusion parameters when used, and final rank order
+
+Retrieval traces are evidence-discovery records only. A high retrieval rank, vector score, fused
+score, or model-proposed query expansion cannot by itself decide applicability.
+
+`applicability_graph_trace.jsonl` has schema version `applicability-graph-trace-v0`; each line
+records an inspected graph path for one candidate authority. Each graph trace row includes:
+
+- `applicability_run_id`, `review_id`, `source_set_id`, `candidate_authority_id`, and
+  `graph_path_id`
+- graph artifact identity, graph build ID, graph artifact path, and graph artifact hash
+- start node ID, end node ID, traversed node IDs, relationship types, traversal depth, and path
+  rationale
+- selected/rejected status and rejection reason
+- evidence references to authority universe candidates, source records, source claims, Forest Plan
+  components, package facts, geography, overlays, exceptions, dependencies, supersession
+  relationships, permits, consultations, and generated-rule-pack links when present
+
+Graph traces are bounded evidence-discovery records only. Graph paths may support a deterministic
+predicate or an adjudication item, but graph expansion is not the final legal decision maker.
 
 `applicability_decisions.jsonl` has schema version `applicability-decisions-v0`; each line is one
 decision record for one candidate authority. Every candidate in `authority_universe_snapshot.json`
@@ -906,16 +1010,22 @@ Each applicability decision includes:
   `absent_trigger_evidence`, `forest_plan_profile_resolution`, `forest_plan_component`,
   `source_set_required`, or `human_adjudication`
 - `basis`
+- deterministic predicate name, predicate version, predicate input hashes, and predicate result
 - source-record IDs, authority category, authority document role, and source-set identity
 - package evidence spans with package chunk IDs, citation labels, section families, page labels,
   offsets, matched terms, and text snippets
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
   offsets, source-claim IDs, and text snippets
-- negative evidence spans or explicit no-trigger rationale when status is `not_applicable`
+- retrieval trace IDs and selected/rejected retrieval-result IDs that support the decision
+- graph path IDs and selected/rejected graph-path IDs when graph evidence supports the decision
+- negative evidence spans, explicit trigger-miss evidence, search coverage certificate IDs, or
+  human adjudication references when status is `not_applicable`
 - missing evidence, contradiction notes, confidence classification, adjudication state, and reviewer
   notes
 - freshness fields: `authority_universe_sha256`, `package_manifest_sha256`,
-  `package_chunks_sha256`, `source_set_id`, and `catalog_sha256`
+  `package_chunks_sha256`, `package_fact_graph_sha256`, `retrieval_trace_sha256`,
+  `graph_trace_sha256`, `search_coverage_certificates_sha256`, `source_set_id`, and
+  `catalog_sha256`
 
 `applicable_authorities.json` has schema version `applicable-authorities-v0` and contains only
 decision records whose final status is `applicable`. It includes:
@@ -927,6 +1037,10 @@ decision records whose final status is `applicable`. It includes:
 - `package_manifest_sha256`
 - `applicability_decisions_sha256`
 - `package_chunks_sha256`
+- `package_fact_graph_sha256`
+- `retrieval_trace_sha256`
+- `graph_trace_sha256`
+- `search_coverage_certificates_sha256`
 - `catalog_sha256`
 - applicable authority count
 - one selected-authority record per applicable decision
@@ -937,6 +1051,7 @@ Each selected-authority record includes:
 - `candidate_authority_id`
 - generated-rule metadata, including source base rule ID when applicable
 - evidence-backed applicability basis
+- predicate result, retrieval trace IDs, and graph path IDs used for applicability
 - source-record IDs, document roles, authority category, source-claim link requirements, package
   section expectations, and Forest Plan component references when relevant
 
@@ -949,10 +1064,49 @@ Each non-applicable authority record includes:
 - `decision_id`
 - `candidate_authority_id`
 - `non_applicability_basis`
-- negative evidence spans, explicit trigger-miss evidence, absent-trigger rationale, or human
-  adjudication reference
+- negative evidence spans, explicit trigger-miss evidence, absent-trigger rationale, and search
+  coverage certificate IDs
+- human adjudication reference when the final non-applicability decision is adjudicated
+- retrieval trace IDs and graph path IDs inspected before exclusion
 - source-record IDs, document roles, authority category, and Forest Plan component references when
   relevant
+
+`search_coverage_certificates.json` has schema version `search-coverage-certificates-v0` and records
+the replayable negative-proof boundary for not-applicable or unresolved decision classes. It
+includes:
+
+- `applicability_run_id`, `review_id`, `source_set_id`, `authority_universe_sha256`,
+  `package_fact_graph_sha256`, `retrieval_trace_sha256`, and `graph_trace_sha256`
+- one certificate per not-applicable or unresolved decision class, authority category, or explicit
+  candidate authority when class-level coverage is not sufficient
+- `coverage_certificate_id`, covered candidate authority IDs, covered decision IDs, coverage class,
+  required query variants, executed query variants, package sections searched, source indexes
+  searched, metadata filters searched, graph neighborhoods searched, and searched artifact hashes
+- `coverage_result`: `sufficient`, `insufficient`, or `adjudication_required`
+- trigger terms searched, negative trigger terms searched, missing trigger groups, rejected
+  evidence IDs, and rationale for why the search boundary is sufficient for the authority predicate
+
+A `not_applicable` decision cannot be reviewer-ready unless it cites a sufficient coverage
+certificate or a completed human adjudication. Affirmative negative evidence and explicit trigger
+misses still require enough search coverage to show the predicate was actually tested.
+
+`applicability_provenance.json` has schema version `applicability-provenance-v0` and records
+W3C PROV-style run lineage. It includes:
+
+- entities for the EA package manifest, package chunks, source-set manifest, catalog, authority
+  universe, package fact graph, retrieval trace, graph trace, decision ledger, coverage
+  certificates, adjudication artifacts, validation artifact, applicable/non-applicable artifacts,
+  generated rule pack, and generated rule-pack validation
+- activities for package fact extraction, retrieval, graph expansion, deterministic predicate
+  evaluation, adjudication replay, validation, and generated-rule-pack production
+- agents for deterministic commands, software versions, configured rule packs, and human
+  adjudicators when adjudication is present
+- relations such as `used`, `wasGeneratedBy`, `wasDerivedFrom`, and `wasAttributedTo`
+- artifact paths, SHA256 hashes, command names, configuration hashes, start/end timestamps, and
+  replay notes
+
+Provenance proves lineage and replayability; it does not replace evidence spans, search coverage,
+deterministic predicates, or adjudication.
 
 `applicability_report.md` is the reviewer-facing rendering of the same machine artifacts. It
 includes:
@@ -961,12 +1115,14 @@ includes:
   universe hash
 - counts for candidate, applicable, non-applicable, unresolved, needs-adjudication, and adjudicated
   authorities
-- links to `authority_universe_snapshot.json`, `applicability_decisions.jsonl`,
-  `applicable_authorities.json`, `non_applicable_authorities.json`, and
-  `applicability_validation.json`
+- links to `authority_universe_snapshot.json`, `package_fact_graph.json`,
+  `applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`,
+  `applicability_decisions.jsonl`, `applicable_authorities.json`,
+  `non_applicable_authorities.json`, `search_coverage_certificates.json`,
+  `applicability_validation.json`, and `applicability_provenance.json`
 - applicable authority summaries with evidence citations and generated-rule metadata
-- non-applicable authority summaries with negative evidence, trigger-miss rationale, absent-trigger
-  rationale, or adjudication references
+- non-applicable authority summaries with negative evidence, trigger-miss rationale, coverage
+  certificate references, or adjudication references
 - unresolved or needs-adjudication summaries with missing evidence and contradiction notes
 - validation status and failure categories
 
@@ -980,7 +1136,8 @@ includes:
 - status counts by applicability decision status
 - candidate, applicable, non-applicable, unresolved, and needs-adjudication counts
 - hashes for the authority universe, package manifest, package chunks, decisions, applicable
-  authorities, non-applicable authorities, generated rule pack when present, catalog, source claims,
+  authorities, non-applicable authorities, package fact graph, retrieval trace, graph trace, search
+  coverage certificates, provenance, generated rule pack when present, catalog, source claims,
   rule-claim links, and Forest Plan component inventory when present
 - validation failure records with failure category, affected authority IDs, and artifact paths
 - generated-rule-pack readiness status
@@ -995,21 +1152,33 @@ Hard validation failures include:
 - `unresolved_authority`: a decision with `unresolved` or `needs_adjudication` is treated as
   review-ready
 - `non_applicable_basis_gap`: a non-applicable authority has no negative evidence, no-trigger
-  rationale, or adjudication basis
+  rationale, search coverage certificate, or adjudication basis
 - `applicable_evidence_gap`: an applicable authority has no package/source basis unless explicitly
   baseline-required and the baseline-required basis is evidenced
+- `retrieval_trace_gap`: retrieval-backed evidence lacks query, result, rank, selected/rejected, or
+  searched-index traceability
+- `graph_trace_gap`: graph-supported evidence lacks graph path, traversal depth, selected/rejected,
+  or graph-artifact traceability
+- `search_coverage_gap`: a not-applicable or unresolved authority lacks a sufficient search
+  coverage certificate or completed adjudication
 - `contradictory_package_evidence`: package evidence supports both applicable and non-applicable
   outcomes without adjudication
 - `forest_plan_scope_unresolved`: Forest Plan profile or component applicability lacks required
   source and package context
 - `source_set_stale`: source-set, catalog, source-claim, or authority-universe hashes do not match the
   evaluated source set
-- `package_cache_stale`: package manifest or package chunk hashes do not match the applicability
-  context
+- `package_cache_stale`: package manifest, package chunk, or package fact graph hashes do not match
+  the applicability context
+- `retrieval_trace_stale`: retrieval trace hashes do not match the searched package, source, or index
+  artifacts
+- `graph_trace_stale`: graph trace hashes do not match the searched graph artifacts
+- `search_coverage_stale`: search coverage certificates do not match the retrieval trace, graph
+  trace, package fact graph, or authority universe
 - `generated_rule_pack_mismatch`: the generated rule pack does not match the
   `applicable_authorities.json` artifact
-- `generated_rule_pack_stale`: the generated rule pack is stale relative to package, source set, or
-  authority universe
+- `generated_rule_pack_stale`: the generated rule pack is stale relative to package, source set,
+  authority universe, package fact graph, retrieval trace, graph trace, search coverage
+  certificates, or validation artifact
 
 `applicability_adjudication_template.json` has schema version `applicability-adjudication-template-v0`
 and contains one editable adjudication item per `unresolved` or `needs_adjudication` decision. Each
@@ -1026,6 +1195,10 @@ records whether every adjudication item was completed, whether the adjudicated f
 valid, whether required rationale/citations are present, and whether the completed adjudication can be
 replayed deterministically into `applicability_decisions.jsonl`.
 
+`llm_evidence_proposals.jsonl`, when present, is diagnostic-only. It may propose evidence spans,
+query expansions, graph neighbors, or reviewer questions, but it cannot write final applicability
+statuses, satisfy search coverage by itself, or make generated rule packs reviewer-ready.
+
 `generated_rule_pack.json` has schema version `generated-compliance-rule-pack-v0` and is the only
 rule pack accepted by the target downstream compliance-review path. It includes:
 
@@ -1038,6 +1211,10 @@ rule pack accepted by the target downstream compliance-review path. It includes:
 - `applicability_validation_sha256`
 - `authority_universe_sha256`
 - `applicable_authorities_sha256`
+- `package_fact_graph_sha256`
+- `retrieval_trace_sha256`
+- `graph_trace_sha256`
+- `search_coverage_certificates_sha256`
 - `package_manifest_sha256`
 - `package_chunks_sha256`
 - `catalog_sha256`
@@ -1049,7 +1226,8 @@ Each generated rule carries:
 
 - base rule ID and generated rule ID
 - applicability decision ID
-- applicability evidence references
+- applicability evidence references, including package fact node IDs, retrieval trace IDs, graph path
+  IDs, and search coverage certificate IDs when relevant
 - source-record IDs and document roles
 - source-claim link requirements
 - package-section expectations
@@ -1067,8 +1245,9 @@ records:
 - whether all generated rules trace to applicable decisions
 - whether non-applicable authorities are absent
 - whether source-claim links are present for claim-bearing generated rules
-- whether package, source-set, catalog, authority-universe, and applicable-authority hashes match the
-  validated applicability artifacts
+- whether package, source-set, catalog, authority-universe, package-fact-graph, retrieval-trace,
+  graph-trace, search-coverage, validation, and applicable-authority hashes match the validated
+  applicability artifacts
 
 The non-applicable authority artifact is separate from the compliance matrix. A combined
 reviewer-facing report may link to `non_applicable_authorities.json`, but the target compliance

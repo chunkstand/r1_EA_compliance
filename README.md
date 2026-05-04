@@ -142,11 +142,16 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/v1_ea_eval_results.json`
 - Applicability-first review outputs, defined as the post-V1 pre-review contract:
   - `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`
+  - `source_library/reviews/<review_id>/applicability/package_fact_graph.json`
   - `source_library/reviews/<review_id>/applicability/package_applicability_context.json`
+  - `source_library/reviews/<review_id>/applicability/applicability_retrieval_trace.jsonl`
+  - `source_library/reviews/<review_id>/applicability/applicability_graph_trace.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicability_decisions.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicable_authorities.json`
   - `source_library/reviews/<review_id>/applicability/non_applicable_authorities.json`
+  - `source_library/reviews/<review_id>/applicability/search_coverage_certificates.json`
   - `source_library/reviews/<review_id>/applicability/applicability_validation.json`
+  - `source_library/reviews/<review_id>/applicability/applicability_provenance.json`
   - `source_library/reviews/<review_id>/applicability/applicability_report.md`
   - `source_library/reviews/<review_id>/applicability/generated_rule_pack.json`
   - `source_library/reviews/<review_id>/applicability/generated_rule_pack_validation.json`
@@ -186,14 +191,16 @@ promotion gate. The active compliance rule pack is `0.4.0`: it declares the 26 w
 
 The post-V1 applicability-first contract moves authority applicability into a pre-review artifact
 family under `source_library/reviews/<review_id>/applicability/`: candidate authorities are
-snapshotted, package applicability context is recorded, applicable and non-applicable authorities are
-separate artifacts, validation blocks unresolved or stale decisions, and the downstream review rule
-pack is generated from the validated applicable-authorities artifact. The authority-universe
-snapshot slice is implemented through `applicability-authority-universe`; it writes the candidate
-authority snapshot only and does not decide package applicability. The promoted V1 review remains
-the current authority-first path until the later applicability determination, validation, generated
-rule-pack, and compliance-review gate milestones land. Embeddings and expanded human adjudication
-over real EA packages remain downstream work.
+snapshotted, package facts are graphed, per-authority retrieval and graph expansion traces are
+persisted, applicable and non-applicable authorities are separate artifacts, not-applicable decisions
+carry search coverage or adjudication, validation blocks unresolved or stale decisions, and the
+downstream review rule pack is generated from the validated applicable-authorities artifact. The
+authority-universe snapshot slice is implemented through `applicability-authority-universe`; it
+writes the candidate authority snapshot only and does not decide package applicability. The promoted
+V1 review remains the current authority-first path until the later package fact graph, retrieval
+trace, graph trace, deterministic decision, validation, generated-rule-pack, and compliance-review
+gate milestones land. Embeddings and expanded human adjudication over real EA packages remain
+downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -767,8 +774,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
 forest-plan profiles, source-set component inventory, source-claim artifacts, and rule-claim links.
 It writes `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with
 one rule-template candidate per rule and one forest-plan component candidate per component
-inventory record. This command does not write applicability decisions, applicable/non-applicable
-authority artifacts, generated rule packs, or compliance findings.
+inventory record. This command does not write package fact graphs, retrieval traces, graph traces,
+search coverage certificates, applicability decisions, applicable/non-applicable authority artifacts,
+generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 
