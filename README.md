@@ -572,7 +572,9 @@ Run a versioned compliance rule pack and emit the compliance matrix and finding 
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path /absolute/path/to/ea-package-or-folder \
   --output-dir source_library \
-  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+  --rule-pack source_library/reviews/<review-id>/applicability/generated_rule_pack.json \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
 ```
 
 To refresh rules against an already extracted package, keep the same review ID and add
@@ -582,10 +584,18 @@ To refresh rules against an already extracted package, keep the same review ID a
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path /absolute/path/to/ea-package-or-folder \
   --output-dir source_library \
-  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --rule-pack source_library/reviews/<review-id>/applicability/generated_rule_pack.json \
   --review-id <existing-review-id> \
+  --source-set-id <source-set-id> \
   --reuse-package-cache
 ```
+
+Reviewer-ready `compliance-review` requires the generated applicability rule pack, a passing
+`applicability_validation.json`, matching `generated_rule_pack_validation.json`, matching package and
+source-set hashes, valid `non_applicable_authorities.json`, search coverage for non-applicable
+decisions, and matching applicability provenance. The base rule pack under `config/` remains the
+candidate-authority template; pass `--allow-base-rule-pack-review` only for a non-reviewer-ready
+diagnostic run.
 
 `compliance-review` reuses the package extraction and source retrieval gates from `ea-review`, then
 writes:
@@ -604,10 +614,11 @@ component-evaluation artifacts. `compliance_validation.json` includes the
 `forest_plan_review`, and the finding graph includes `ForestPlanReview` and
 `ForestPlanComponentEvaluation` nodes.
 
-The command follows an authority-first workflow: baseline authorities always apply, conditional
-authorities are marked applicable only when configured EA package terms are found, and not-applicable
-authorities are carried through the matrix without source or EA compliance citations. The rule pack
-declares `baseline_source_record_ids`; for the active workbook this list is the 26
+The command follows an applicability-first workflow: compliance findings evaluate generated
+applicable rules only, while non-applicable authorities remain in
+`non_applicable_authorities.json`. The compliance matrix links to that artifact as the source of
+truth rather than recreating non-applicability decisions. The generated rule pack declares
+`baseline_source_record_ids`; for the active workbook this list is the 26
 `Ingest_Checklist` rows where `Scope=Baseline`, not the first rows in workbook order. Rule-pack
 validation fails when a declared baseline source record has no rule or when its rule is not
 `applicability_mode=baseline`. Every

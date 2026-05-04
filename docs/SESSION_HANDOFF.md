@@ -45,6 +45,11 @@ Current completed applicability milestones:
   source-claim, package-section, Forest Plan, per-rule artifact hashes, freshness, and provenance
   metadata. `--validate-only` requires a previously recorded generated-pack hash and detects manual
   edits, stale applicability validation, and upstream artifact drift.
+- Milestone 8 compliance-review gate: reviewer-ready `compliance-review` now requires a generated
+  applicability rule pack plus passing applicability/generated-pack validation, matching package
+  manifest/source-set/provenance hashes, a valid `non_applicable_authorities.json`, and search
+  coverage for non-applicable authorities. The base rule pack can still be run with
+  `--allow-base-rule-pack-review`, but that diagnostic output is not reviewer-ready.
 
 Latest applicability commits:
 
@@ -59,6 +64,7 @@ Latest applicability commits:
 - `6bed025` - Add applicability validation adjudication gate
 - `a60c382` - Close applicability validation gate gaps
 - `99ae407` - Add applicability generated rule pack
+- `53061f6` - Close generated rule pack gate gaps
 
 Important current behavior:
 
@@ -74,12 +80,13 @@ Important current behavior:
   source-index hash requirements for sufficient coverage, retained source-library evidence spans on
   non-applicable decisions, local-evidence trigger-group matching, and package manifest/chunk
   provenance entities.
-- `compliance-review` still runs the current V1 authority-first path. It is not yet gated by
-  applicability artifacts, and it does not yet consume a generated applicability-derived rule pack.
-- The applicability-first path now emits a generated rule pack after validation/adjudication. It
-  refuses stale applicability validation, requires a recorded generated-pack hash during
-  validate-only checks, and still does not gate `compliance-review`; that is the next implementation
-  boundary.
+- `compliance-review` no longer runs reviewer-ready reviews directly against the base rule pack.
+  Generated-rule-pack review evaluates generated applicable rules only; non-applicable authorities
+  stay in `non_applicable_authorities.json`, which the compliance matrix links as the source of
+  truth.
+- `compliance-review-eval` still has a legacy base-pack eval bridge for existing deterministic
+  compliance fixtures. Milestone 9 should replace promotion readiness with applicability-quality
+  eval gates instead of treating generated review success as proof of applicability correctness.
 
 Latest verification for the applicability-first lane:
 
@@ -91,26 +98,29 @@ git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 7 generated-rule-pack gap-close pass:
+Verified results from the latest Milestone 8 compliance-review gate pass:
 
-- Applicability plus compliance/rule-claim focused suite: `78 passed, 3 subtests passed`
-- Full repository test suite: `268 passed, 8 subtests passed`
+- Compliance-review focused suite: `50 passed, 3 subtests passed`
+- Applicability plus compliance/rule-claim focused suite: `83 passed, 3 subtests passed`
+- Full repository test suite: `273 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
 
+The local ignored `source_library/reviews/v1-cg-ecid-compliance-review/applicability/` generated-pack
+artifact set was not present during this handoff update, so the real V1 generated-pack
+`compliance-review --reuse-package-cache` command remains the first follow-up runtime check after
+regenerating the ignored applicability artifacts.
+
 Next implementation target:
 
-Milestone 8 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: gate compliance review behind
-the generated rule pack. The next slice should refactor `compliance-review` so reviewer-ready review
-requires a generated pack, passing applicability validation, matching generated-pack validation,
-matching package/source-set hashes, and a valid non-applicable authority artifact.
+Milestone 9 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: add applicability evaluation and
+promotion gates that score applicability decisions before compliance quality is scored.
 
 Current stop conditions for the next session:
 
-- Do not run reviewer-ready compliance review against the base rule pack once Milestone 8 starts.
-- Do not generate or accept a compliance rule pack unless `applicability_validation.json` exists and
-  passes.
+- Do not treat generated review success as proof of applicability correctness.
+- Do not promote compliance-review eval outputs without applicability decision-quality evals.
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.

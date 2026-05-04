@@ -793,13 +793,11 @@ applicability before compliance findings are generated. The compliance review mu
 validated applicability run and generated rule pack; it must not be the first stage that decides
 which authorities apply.
 
-The current V1 compliance-review implementation still runs the authority-first path described in the
-next section. Implemented applicability slices now include `applicability-authority-universe`,
-`applicability-context-build`, `applicability-retrieve`, `applicability-determine`,
-`applicability-validate`, and replayable applicability adjudication template/apply/eval commands.
-These commands determine and validate authority applicability before review, but they do not produce
-compliance findings or generated rule packs. Generated rule-pack production and compliance-review
-gating remain later applicability-first milestones.
+The reviewer-ready compliance-review path now consumes the generated rule pack from this
+applicability directory. The base authority rule pack remains a candidate-authority template and can
+be run only as an explicit non-reviewer-ready diagnostic. Applicability commands determine and
+validate authority applicability before review; compliance findings evaluate generated applicable
+rules only.
 
 Required artifacts:
 
@@ -1350,8 +1348,12 @@ that forest-plan component evaluation is absent, stale, or not reviewer-ready.
 `compliance-review` reads:
 
 - a local EA package file or directory passed with `--package-path`
-- a versioned compliance rule pack, defaulting to
-  `config/compliance_rule_pack_nepa_ea_v0.json`
+- a generated applicability rule pack, normally
+  `source_library/reviews/<review_id>/applicability/generated_rule_pack.json`
+- adjacent applicability artifacts:
+  `applicability_validation.json`, `generated_rule_pack_validation.json`,
+  `non_applicable_authorities.json`, `search_coverage_certificates.json`, and
+  `applicability_provenance.json`
 - reviewer-ready source claim artifacts and rule-claim bindings under
   `source_library/derived/<source_set_id>/claims/` and
   `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
@@ -1369,7 +1371,10 @@ When `--reuse-package-cache` is supplied, the review directory must already cont
 In that mode the command preserves those package cache files and reruns checklist/compliance
 evaluation without re-extracting the package files.
 
-The rule pack has schema version `compliance-rule-pack-v0` and includes:
+Reviewer-ready runs reject the base `compliance-rule-pack-v0` rule pack. Passing
+`--allow-base-rule-pack-review` allows a diagnostic run, but that output is not reviewer-ready and
+is excluded from promotion readiness. The reviewer-ready generated rule pack has schema version
+`generated-compliance-rule-pack-v0` and includes the generated-pack fields above.
 
 - `rule_pack_id`
 - `version`
@@ -1436,6 +1441,8 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
 - unsupported finding IDs
 - `forest_plan_review`, with forest-plan resolver paths, scope status, reviewer-ready status, and
   component-evaluation artifact paths when applicable
+- `applicability_gate`, with generated-pack validation, applicability validation,
+  non-applicable-authority, search-coverage, provenance, and package-manifest gate paths/status
 - validation
 - compliance findings
 
@@ -1444,7 +1451,8 @@ Each compliance finding includes:
 - rule-pack ID and version
 - rule ID, title, question, requirement, and severity
 - authority category, authority source record ID, authority document role, and applicability mode
-- status: `pass`, `gap`, `uncertain`, or `not_applicable`
+- status: `pass`, `gap`, or `uncertain` for generated applicable rules; base diagnostic runs may
+  still emit `not_applicable`
 - claim type: `supported_compliance_finding`, `package_evidence_gap`, or `no_compliance_claim`
 - package query, package terms, source query, and source filters
 - applicability status, applicability terms, optional applicability term groups, optional
@@ -1460,7 +1468,8 @@ Each compliance finding includes:
 
 - review ID, package path, source set, rule-pack summary, and matrix summary
 - status counts, applicability counts, applicable source records, claim row count, validation status,
-  reviewer-ready status, PDF path, and `forest_plan_review` links when present
+  reviewer-ready status, PDF path, `applicability_gate`, `non_applicable_authorities.json`,
+  `search_coverage_certificates.json`, and `forest_plan_review` links when present
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
 - one row per compliance finding

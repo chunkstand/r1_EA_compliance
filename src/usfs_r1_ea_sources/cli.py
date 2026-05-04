@@ -787,6 +787,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     compliance_review.add_argument(
+        "--allow-base-rule-pack-review",
+        action="store_true",
+        help=(
+            "Run the base rule pack as a non-reviewer-ready diagnostic. Reviewer-ready "
+            "compliance review requires a generated applicability rule pack."
+        ),
+    )
+    compliance_review.add_argument(
         "--docling-ocr",
         action="store_true",
         help="Enable Docling OCR for PDF EA package files.",
@@ -1223,6 +1231,7 @@ def main(argv: list[str] | None = None) -> int:
             docling_ocr=args.docling_ocr,
             docling_timeout_seconds=timeout,
             reuse_package_cache=args.reuse_package_cache,
+            allow_base_rule_pack_review=args.allow_base_rule_pack_review,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["reviewer_ready"] else 1

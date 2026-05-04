@@ -847,6 +847,14 @@ Stop conditions:
 
 ## Milestone 8: Gate Compliance Review Behind Generated Rule Pack
 
+Current status:
+Implemented. Reviewer-ready `compliance-review` now requires a generated applicability rule pack and
+the adjacent applicability validation, generated-pack validation, non-applicable authority,
+search-coverage, provenance, source-set, and package-manifest hash gates. The base rule pack remains
+available only through an explicit diagnostic flag; diagnostic outputs are not reviewer-ready.
+Generated-rule-pack review evaluates the generated applicable rules only and records the
+applicability gate plus non-applicable authority artifact links in the compliance matrix.
+
 Goal:
 Refactor `compliance-review` so reviewer-ready review can only occur after applicability
 validation and generated-rule-pack creation.
