@@ -82,9 +82,12 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Compliance coverage has been refreshed for the `44`-rule matrix and `3` seed eval cases.
 - Compliance review eval passed `3/3` seed cases. The Custer-scoped all-authorities fixture now
   expects `reviewer_ready: false` when the full forest-plan component gate is unmet.
-- Compliance gold eval passed `10/10` adjudicated cases and is `promotion_ready`. Custer-scoped gold
-  fixtures likewise preserve rule-level expected statuses while expecting the overall forest-plan
-  component gate to fail readiness unless component evidence coverage is complete.
+- Compliance gold eval passed `10/10` adjudicated cases in the pre-applicability V1 artifact set.
+  Under the current Milestone 8 gate, base-rule-pack gold eval reruns are diagnostic and are not
+  `promotion_ready`; promotion readiness now requires a reviewer-ready generated applicability rule
+  pack. Custer-scoped gold fixtures likewise preserve rule-level expected statuses while expecting
+  the overall forest-plan component gate to fail readiness unless component evidence coverage is
+  complete.
 - Phase eval passed `10/10` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
   chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
@@ -98,9 +101,10 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Forest-plan component eval passed `35/35` adjudicated cases for the promoted review. The current
   component findings have `329` components, `79` supported components, `250` not applicable
   components, `0` gaps, `12/12` applicable standards applied, and `0` reviewer-resolution items.
-- The final V1 gate commands passed: `phase-eval` `10/10`, `v1-ea-eval` with
+- The final pre-applicability V1 gate commands passed: `phase-eval` `10/10`, `v1-ea-eval` with
   `broader_ea_passed=true` and `forest_plan_passed=true`, `compliance-review-eval` `3/3`, and
-  `compliance-gold-eval` `10/10` with `promotion_ready=true`.
+  `compliance-gold-eval` `10/10`. Current Milestone 8 code excludes base-pack gold eval outputs
+  from promotion readiness until generated applicability artifacts are present.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -127,7 +131,8 @@ Previous full downstream promotion snapshot was verified locally on 2026-04-30 b
   and `compliance_matrix.pdf` passed for
   `demo-compliance-matrix-authority-v03-ecid-2026-04-30` under the pre-`0.4.0` 20-rule pack
 - Compliance review eval seed: passed, `3/3` cases
-- Compliance gold eval: passed, `10/10` adjudicated cases, `promotion_ready`
+- Compliance gold eval: passed, `10/10` adjudicated cases in the pre-applicability gate; base-pack
+  reruns are now diagnostic and not `promotion_ready`
 - Unit suite: `132` tests passed
 
 Post-baseline-expansion verification on 2026-04-30:
@@ -369,7 +374,8 @@ IDs, failure taxonomy, compact reproduction paths, and finding-graph coverage.
 Compliance Gold Eval V0.4 is implemented through `compliance-gold-eval`. It validates a structured
 adjudication file, requires positive, mixed, and negative package profiles, runs ten adjudicated
 package fixtures through the real compliance-review eval path, and emits `promotion_ready` only
-when both adjudication checks and generated findings pass.
+when the rule pack is a reviewer-ready generated applicability rule pack and both adjudication
+checks and generated findings pass.
 
 Compliance Coverage V0 is implemented through `compliance-coverage`. It validates the coverage
 matrix, rule-pack identity, eval-case coverage, current source-claim links, source-claim terms, and

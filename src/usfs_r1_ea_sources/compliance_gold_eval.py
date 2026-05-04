@@ -9,6 +9,7 @@ import json
 import re
 
 from .compliance_review import DEFAULT_RULE_PACK_PATH
+from .compliance_review import GENERATED_RULE_PACK_SCHEMA_VERSION
 from .compliance_review import VALID_FINDING_STATUSES
 from .compliance_review import load_rule_pack
 from .compliance_review import run_compliance_review_eval
@@ -103,6 +104,12 @@ def run_compliance_gold_eval(
     passed_case_count = int((review_eval_summary or {}).get("passed_count") or 0)
     source_set_ids = list((review_eval_summary or {}).get("source_set_ids") or [])
     profile_counts = _profile_counts(cases)
+    compliance_review_eval_passed = bool(
+        review_eval_summary and review_eval_summary.get("passed")
+    )
+    reviewer_ready_rule_pack = (
+        rule_pack.get("schema_version") == GENERATED_RULE_PACK_SCHEMA_VERSION
+    )
     summary = {
         "schema_version": COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -132,14 +139,13 @@ def run_compliance_gold_eval(
             REQUIRED_CASE_PROFILES.intersection(profile_counts)
         ),
         "adjudication_checks_passed": adjudication_passed,
-        "compliance_review_eval_passed": bool(
-            review_eval_summary and review_eval_summary.get("passed")
-        ),
+        "compliance_review_eval_passed": compliance_review_eval_passed,
         "compliance_review_eval_error": review_eval_error,
-        "promotion_ready": adjudication_passed
-        and bool(review_eval_summary and review_eval_summary.get("passed")),
-        "passed": adjudication_passed
-        and bool(review_eval_summary and review_eval_summary.get("passed")),
+        "reviewer_ready_rule_pack": reviewer_ready_rule_pack,
+        "promotion_ready": reviewer_ready_rule_pack
+        and adjudication_passed
+        and compliance_review_eval_passed,
+        "passed": adjudication_passed and compliance_review_eval_passed,
         "checks": checks,
         "metrics": (review_eval_summary or {}).get("metrics", {}),
         "failure_category_counts": (review_eval_summary or {}).get(

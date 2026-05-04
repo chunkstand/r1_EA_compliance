@@ -650,7 +650,9 @@ statuses for every rule in the rule pack, claim types, package evidence, source-
 source-claim links, expected source record IDs, expected source document roles, finding status
 counts, unsupported finding IDs, citation coverage, failure taxonomy, and finding-graph coverage.
 Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched status counts fail
-fast so typoed or incomplete fixtures cannot silently broaden scoring.
+fast so typoed or incomplete fixtures cannot silently broaden scoring. When this eval is run against
+the base rule pack during the applicability-first transition, those case outputs are diagnostic:
+they can score finding quality, but they are not reviewer-ready promotion artifacts.
 
 Run the adjudicated gold eval promotion gate:
 
@@ -665,7 +667,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
 case profiles, verifies every case covers the active rule pack, then runs those cases through the
 real `compliance-review-eval` path. The current gold file contains 10 realistic adjudicated package
 profiles with expected status counts, applicable source rows, and source document classes. It emits
-`promotion_ready` only when adjudication checks and the underlying compliance-review eval both pass.
+`promotion_ready` only when the rule pack is a reviewer-ready generated applicability rule pack and
+adjudication checks plus the underlying compliance-review eval both pass.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 

@@ -179,6 +179,146 @@ class ComplianceReviewTests(unittest.TestCase):
                     reuse_package_cache=True,
                 )
 
+    def test_generated_rule_pack_gate_requires_empty_coverage_artifact(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "generated-missing-empty-coverage"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            base_rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            generated_rule_pack_path = _write_generated_review_gate(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            (
+                output_dir
+                / "reviews"
+                / review_id
+                / "applicability"
+                / "search_coverage_certificates.json"
+            ).unlink()
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "non_applicable_authority_search_coverage_exists",
+            ):
+                run_compliance_review(
+                    package_path=package_path,
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    rule_pack_path=generated_rule_pack_path,
+                    review_id=review_id,
+                    reuse_package_cache=True,
+                )
+
+    def test_generated_rule_pack_gate_requires_explicit_generated_readiness(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "generated-missing-ready"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            base_rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            generated_rule_pack_path = _write_generated_review_gate(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            generated_validation_path = (
+                output_dir
+                / "reviews"
+                / review_id
+                / "applicability"
+                / "generated_rule_pack_validation.json"
+            )
+            generated_validation = json.loads(
+                generated_validation_path.read_text(encoding="utf-8")
+            )
+            generated_validation["summary"].pop("generated_rule_pack_ready")
+            generated_validation_path.write_text(
+                json.dumps(generated_validation, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "generated_rule_pack_validation_passed"):
+                run_compliance_review(
+                    package_path=package_path,
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    rule_pack_path=generated_rule_pack_path,
+                    review_id=review_id,
+                    reuse_package_cache=True,
+                )
+
+    def test_generated_rule_pack_gate_requires_package_chunks_hash_alignment(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "generated-stale-package-chunks"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            base_rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            generated_rule_pack_path = _write_generated_review_gate(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            generated_pack = json.loads(generated_rule_pack_path.read_text(encoding="utf-8"))
+            generated_pack["package_chunks_sha256"] = "0" * 64
+            generated_rule_pack_path.write_text(
+                json.dumps(generated_pack, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            generated_sha = sha256_file(generated_rule_pack_path)
+            generated_validation_path = (
+                output_dir
+                / "reviews"
+                / review_id
+                / "applicability"
+                / "generated_rule_pack_validation.json"
+            )
+            generated_validation = json.loads(
+                generated_validation_path.read_text(encoding="utf-8")
+            )
+            generated_validation["summary"][
+                "generated_rule_pack_sha256"
+            ] = generated_sha
+            generated_validation["summary"][
+                "expected_generated_rule_pack_sha256"
+            ] = generated_sha
+            generated_validation_path.write_text(
+                json.dumps(generated_validation, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=generated_rule_pack_path,
+                review_id=review_id,
+                reuse_package_cache=True,
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            gate = _check(validation, "applicability_generated_rule_pack_gate")
+            self.assertFalse(gate["passed"])
+            self.assertIn(
+                "package_chunks_match_applicability_run",
+                gate["details"]["failed_checks"],
+            )
+
     def test_compliance_review_emits_rule_pack_findings_and_graph(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -190,14 +330,12 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             rule_pack_path = _write_rule_pack(Path(tmp))
 
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="compliance-unit",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
 
             self.assertTrue(result.compliance_review_path.exists())
@@ -319,14 +457,12 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             rule_pack_path = _write_custer_rule_pack(Path(tmp))
 
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="custer-compliance-unit",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
@@ -403,14 +539,12 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             rule_pack_path = _write_custer_rule_pack(Path(tmp))
 
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="custer-stale-component-unit",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
 
             self.assertFalse(result.summary["reviewer_ready"])
@@ -526,25 +660,29 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
 
+            generated_rule_pack_path = _write_generated_review_gate(
+                output_dir=output_dir,
+                review_id="reuse-cache-unit",
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
             first = run_compliance_review(
                 package_path=package_path,
                 output_dir=output_dir,
                 source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
+                rule_pack_path=generated_rule_pack_path,
                 review_id="reuse-cache-unit",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                reuse_package_cache=True,
             )
             package_path.write_text("Routing slip. No package evidence.", encoding="utf-8")
             second = run_compliance_review(
                 package_path=package_path,
                 output_dir=output_dir,
                 source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
+                rule_pack_path=generated_rule_pack_path,
                 review_id="reuse-cache-unit",
                 reuse_package_cache=True,
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
             )
 
             self.assertEqual(first.summary["finding_status_counts"], {"pass": 1})
@@ -583,7 +721,6 @@ class ComplianceReviewTests(unittest.TestCase):
                 rule_pack_path=rule_pack_path,
                 review_id="grouped-trigger-negative",
                 allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
             )
             positive = run_compliance_review(
                 package_path=positive_package,
@@ -592,7 +729,6 @@ class ComplianceReviewTests(unittest.TestCase):
                 rule_pack_path=rule_pack_path,
                 review_id="grouped-trigger-positive",
                 allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
             )
 
             negative_report = json.loads(
@@ -1341,7 +1477,8 @@ class ComplianceReviewTests(unittest.TestCase):
 
             self.assertTrue(result.output_path.exists())
             self.assertTrue(result.summary["passed"])
-            self.assertTrue(result.summary["promotion_ready"])
+            self.assertFalse(result.summary["reviewer_ready_rule_pack"])
+            self.assertFalse(result.summary["promotion_ready"])
             self.assertEqual(result.summary["case_count"], 3)
             self.assertEqual(result.summary["adjudicated_case_count"], 3)
             self.assertEqual(
@@ -1358,8 +1495,9 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             gold_phase = _phase(phase_result.summary, "compliance_gold_eval")
             self.assertTrue(gold_phase["passed"])
-            self.assertTrue(gold_phase["reviewer_ready"])
+            self.assertFalse(gold_phase["reviewer_ready"])
             self.assertEqual(gold_phase["details"]["case_count"], 3)
+            self.assertIn("gold_eval_not_promotion_ready", gold_phase["details"]["failed_checks"])
 
     def test_compliance_gold_eval_fails_missing_required_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1563,14 +1701,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="phase-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
 
             result = run_phase_aligned_eval(
@@ -1590,7 +1726,7 @@ class ComplianceReviewTests(unittest.TestCase):
             compliance_phase = _phase(result.summary, "compliance_review")
             self.assertTrue(compliance_phase["passed"])
             self.assertTrue(compliance_phase["reviewer_ready"])
-            self.assertEqual(compliance_phase["details"]["rule_pack_id"], "unit-nepa-ea")
+            self.assertEqual(compliance_phase["details"]["rule_pack_id"], "generated-unit-nepa-ea")
             self.assertTrue(compliance_phase["details"]["matrix_exists"])
             self.assertTrue(compliance_phase["details"]["matrix_pdf_exists"])
             self.assertTrue(compliance_phase["details"]["matrix_pdf_header_valid"])
@@ -1605,14 +1741,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="phase-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             _write_component_adjudication_eval(
                 output_dir / "reviews" / "phase-review",
@@ -1652,14 +1786,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="stale-adjudication-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             review_dir = output_dir / "reviews" / "stale-adjudication-review"
             _write_component_adjudication_eval(
@@ -1706,14 +1838,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="phase-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             _write_component_eval(
                 output_dir / "reviews" / "phase-review",
@@ -1747,14 +1877,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="phase-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             _write_component_eval(
                 output_dir / "reviews" / "phase-review",
@@ -1786,14 +1914,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            run_compliance_review(
-                package_path=package_path,
+            _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="pending-adjudication-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             _write_component_adjudication_eval(
                 output_dir / "reviews" / "pending-adjudication-review",
@@ -1828,14 +1954,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="missing-matrix-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             result.compliance_matrix_path.unlink()
 
@@ -1863,14 +1987,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="missing-matrix-pdf-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             result.compliance_matrix_pdf_path.unlink()
 
@@ -1898,14 +2020,12 @@ class ComplianceReviewTests(unittest.TestCase):
             _write_graph_phase_outputs(output_dir, source_set_id)
             package_path = _write_package(Path(tmp), "Purpose and Need")
             rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
-            result = run_compliance_review(
-                package_path=package_path,
+            result = _run_generated_compliance_review(
                 output_dir=output_dir,
-                source_set_id=source_set_id,
-                rule_pack_path=rule_pack_path,
                 review_id="stale-review",
-                allow_base_rule_pack_review=True,
-                base_rule_pack_outputs_reviewer_ready=True,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
             )
             report = json.loads(result.compliance_review_path.read_text(encoding="utf-8"))
             report["summary"]["source_set_id"] = "source-set-other"
@@ -2495,6 +2615,33 @@ def _write_generated_review_gate(
         },
     )
     return generated_path
+
+
+def _run_generated_compliance_review(
+    *,
+    output_dir: Path,
+    review_id: str,
+    source_set_id: str,
+    package_path: Path,
+    base_rule_pack_path: Path,
+    include_non_applicable: bool = False,
+):
+    generated_rule_pack_path = _write_generated_review_gate(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        package_path=package_path,
+        base_rule_pack_path=base_rule_pack_path,
+        include_non_applicable=include_non_applicable,
+    )
+    return run_compliance_review(
+        package_path=package_path,
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        rule_pack_path=generated_rule_pack_path,
+        review_id=review_id,
+        reuse_package_cache=True,
+    )
 
 
 def _write_json(path: Path, payload: dict) -> None:

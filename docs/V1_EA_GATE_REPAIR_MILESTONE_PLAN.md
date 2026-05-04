@@ -56,10 +56,11 @@ Progress through Milestone 6:
   conditional-source expectations now carry classification rationales, and the V1 contract accepts
   exactly `14` pending `adjudicate` rows as visible V1 risk under
   `conditional_adjudication_policy.mode=accepted_pending_v1`.
-- Milestone 6 reran the real package review and promoted the final V1 gate. The current review is
-  reviewer-ready, `phase-eval` passes `10/10` phases, `forest-plan-component-eval` passes `35/35`
-  cases, `compliance-review-eval` passes `3/3` seed cases, and `compliance-gold-eval` passes
-  `10/10` adjudicated cases with `promotion_ready=true`.
+- Milestone 6 reran the real package review and promoted the final pre-applicability V1 gate. The
+  review was reviewer-ready, `phase-eval` passed `10/10` phases,
+  `forest-plan-component-eval` passed `35/35` cases, `compliance-review-eval` passed `3/3` seed
+  cases, and `compliance-gold-eval` passed `10/10` adjudicated cases before the Milestone 8
+  generated-rule-pack promotion gate made base-pack gold eval runs diagnostic.
 
 ## Sequence Rules
 
@@ -440,10 +441,11 @@ Completion status:
 - The Custer Gallatin forest-plan lane is reviewer-ready: `329` component findings, `79`
   supported, `250` not applicable, `0` gaps, `12/12` applicable standards applied, and `0`
   reviewer-resolution items.
-- The final promotion gate passed: `forest-plan-component-eval` passed `35/35` cases,
+- The final pre-applicability promotion gate passed: `forest-plan-component-eval` passed `35/35` cases,
   `phase-eval` passed `10/10` phases with `reviewer_ready=true`, `v1-ea-eval` passed the broader EA
   and forest-plan lanes, `compliance-review-eval` passed `3/3` seed cases, and
-  `compliance-gold-eval` passed `10/10` adjudicated cases with `promotion_ready=true`.
+  `compliance-gold-eval` passed `10/10` adjudicated cases before the Milestone 8 generated-pack
+  promotion gate made base-pack gold eval runs diagnostic.
 - This V1 EA gate repair plan has no remaining milestone. New work should start as a post-V1
   milestone plan, such as broader Region 1 package coverage, embeddings/reranking, or
   model-assisted synthesis, without weakening the promoted deterministic gates.

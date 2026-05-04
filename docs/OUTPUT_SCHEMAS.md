@@ -1727,11 +1727,13 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
 - adjudication check status and underlying compliance-review eval pass status
 - `compliance_review_eval_error` when the underlying eval could not execute because of a contract
   or missing-fixture problem
+- `reviewer_ready_rule_pack`, which is true only for generated applicability rule packs accepted by
+  the reviewer-ready compliance-review gate
 - case count, adjudicated case count, passed/failed case counts, profile counts, and required
   profiles present
 - aggregate failure-category counts from the underlying compliance-review eval
-- `promotion_ready`, which is true only when adjudication checks and the underlying compliance-review
-  eval both pass
+- `promotion_ready`, which is true only when the rule pack is reviewer-ready and adjudication checks
+  plus the underlying compliance-review eval pass
 - per-case adjudication metadata, expected and actual statuses, finding counts, review paths,
   matrix paths, failure taxonomy, failure reasons, and pass/fail status
 

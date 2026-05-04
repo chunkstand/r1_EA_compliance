@@ -47,9 +47,11 @@ Current completed applicability milestones:
   edits, stale applicability validation, and upstream artifact drift.
 - Milestone 8 compliance-review gate: reviewer-ready `compliance-review` now requires a generated
   applicability rule pack plus passing applicability/generated-pack validation, matching package
-  manifest/source-set/provenance hashes, a valid `non_applicable_authorities.json`, and search
-  coverage for non-applicable authorities. The base rule pack can still be run with
-  `--allow-base-rule-pack-review`, but that diagnostic output is not reviewer-ready.
+  manifest, package-chunk, source-set, and provenance hashes, a valid
+  `non_applicable_authorities.json`, and search coverage for non-applicable authorities. Generated
+  validation must explicitly record `generated_rule_pack_ready=true`. The base rule pack can still
+  be run with `--allow-base-rule-pack-review`, but that diagnostic output is not reviewer-ready and
+  cannot make compliance-gold eval promotion-ready.
 
 Latest applicability commits:
 
@@ -65,6 +67,7 @@ Latest applicability commits:
 - `a60c382` - Close applicability validation gate gaps
 - `99ae407` - Add applicability generated rule pack
 - `53061f6` - Close generated rule pack gate gaps
+- `75672da` - Gate compliance review on generated rule pack
 
 Important current behavior:
 
@@ -84,9 +87,11 @@ Important current behavior:
   Generated-rule-pack review evaluates generated applicable rules only; non-applicable authorities
   stay in `non_applicable_authorities.json`, which the compliance matrix links as the source of
   truth.
-- `compliance-review-eval` still has a legacy base-pack eval bridge for existing deterministic
-  compliance fixtures. Milestone 9 should replace promotion readiness with applicability-quality
-  eval gates instead of treating generated review success as proof of applicability correctness.
+- `compliance-review-eval` may still score deterministic compliance fixtures with the base rule
+  pack, but those runs are diagnostic and default to non-reviewer-ready validation expectations.
+  `compliance-gold-eval` now emits `promotion_ready=true` only for reviewer-ready generated
+  applicability rule packs. Milestone 9 should add applicability-quality eval gates before
+  compliance quality can promote.
 
 Latest verification for the applicability-first lane:
 
@@ -98,11 +103,11 @@ git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 8 compliance-review gate pass:
+Verified results from the latest Milestone 8 gap-close pass:
 
-- Compliance-review focused suite: `50 passed, 3 subtests passed`
-- Applicability plus compliance/rule-claim focused suite: `83 passed, 3 subtests passed`
-- Full repository test suite: `273 passed, 8 subtests passed`
+- Compliance-review focused suite: `53 passed, 3 subtests passed`
+- Applicability plus compliance/rule-claim focused suite: `86 passed, 3 subtests passed`
+- Full repository test suite: `276 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
@@ -233,7 +238,9 @@ Primary gate artifacts/checks:
   all `26` baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps.
   `forest-plan-component-eval` passes `35/35`, `phase-eval` passes `10/10`, `v1-ea-eval` passes
   broader EA and forest-plan lanes, `compliance-review-eval` passes `3/3`, and
-  `compliance-gold-eval` passes `10/10` with `promotion_ready=true`.
+  `compliance-gold-eval` passes `10/10` in the pre-applicability V1 artifact set. Under the
+  current Milestone 8 gate, base-pack reruns of that gold eval are diagnostic and no longer
+  promotion-ready until a reviewer-ready generated applicability rule pack is used.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the

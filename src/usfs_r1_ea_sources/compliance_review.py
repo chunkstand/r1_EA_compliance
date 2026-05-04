@@ -104,7 +104,6 @@ def run_compliance_review(
     docling_timeout_seconds: float | None = 120.0,
     reuse_package_cache: bool = False,
     allow_base_rule_pack_review: bool = False,
-    base_rule_pack_outputs_reviewer_ready: bool = False,
 ) -> ComplianceReviewResult:
     """Run a versioned compliance rule pack against a local EA package."""
 
@@ -155,7 +154,6 @@ def run_compliance_review(
         rule_pack_path=rule_pack_path,
         rule_pack=rule_pack,
         allow_base_rule_pack_review=allow_base_rule_pack_review,
-        base_rule_pack_outputs_reviewer_ready=base_rule_pack_outputs_reviewer_ready,
     )
     evaluation_rule_pack_path = _write_evaluation_rule_pack(
         review_dir=review_dir,
@@ -236,6 +234,7 @@ def run_compliance_review(
         forest_plan_summary=forest_plan_result.summary,
         applicability_gate=applicability_gate,
         package_manifest_path=ea_result.package_manifest_path,
+        package_chunks_path=ea_result.package_chunks_path,
         findings=findings,
         nodes=nodes,
         edges=edges,
@@ -411,7 +410,6 @@ def run_compliance_review_eval(
             docling_ocr=docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
             allow_base_rule_pack_review=True,
-            base_rule_pack_outputs_reviewer_ready=True,
         )
         report = _read_json(result.compliance_review_path)
         validation = _read_json(result.compliance_validation_path)
@@ -508,7 +506,6 @@ def _applicability_gate_context(
     rule_pack_path: Path,
     rule_pack: dict,
     allow_base_rule_pack_review: bool,
-    base_rule_pack_outputs_reviewer_ready: bool,
 ) -> dict:
     is_generated = rule_pack.get("schema_version") == GENERATED_RULE_PACK_SCHEMA_VERSION
     if not is_generated:
@@ -519,21 +516,18 @@ def _applicability_gate_context(
                 "--allow-base-rule-pack-review for a non-reviewer-ready diagnostic run."
             )
         return {
-            "mode": "base_rule_pack_legacy_eval"
-            if base_rule_pack_outputs_reviewer_ready
-            else "base_rule_pack_diagnostic",
+            "mode": "base_rule_pack_diagnostic",
             "is_generated_rule_pack": False,
-            "reviewer_ready_eligible": bool(base_rule_pack_outputs_reviewer_ready),
+            "reviewer_ready_eligible": False,
             "rule_pack_path": str(rule_pack_path),
             "checks": [
                 _gate_check(
                     "generated_rule_pack_required",
-                    bool(base_rule_pack_outputs_reviewer_ready),
+                    False,
                     {
                         "rule_pack_path": str(rule_pack_path),
                         "rule_pack_schema_version": rule_pack.get("schema_version"),
-                        "diagnostic_mode": not base_rule_pack_outputs_reviewer_ready,
-                        "legacy_eval_mode": bool(base_rule_pack_outputs_reviewer_ready),
+                        "diagnostic_mode": True,
                     },
                 )
             ],
@@ -593,14 +587,12 @@ def _applicability_gate_context(
         _gate_check(
             "generated_rule_pack_validation_passed",
             bool(generated_validation.get("passed"))
-            and bool(generated_summary.get("generated_rule_pack_ready", True)),
+            and generated_summary.get("generated_rule_pack_ready") is True,
             {
                 "path": str(generated_validation_path),
                 "exists": generated_validation_path.exists(),
                 "passed": bool(generated_validation.get("passed")),
-                "generated_rule_pack_ready": bool(
-                    generated_summary.get("generated_rule_pack_ready")
-                ),
+                "generated_rule_pack_ready": generated_summary.get("generated_rule_pack_ready"),
             },
         ),
         _gate_check(
@@ -762,6 +754,7 @@ def _check_applicability_generated_rule_pack_gate(
     *,
     applicability_gate: dict,
     package_manifest_path: Path,
+    package_chunks_path: Path,
 ) -> dict:
     checks = list(applicability_gate.get("checks") or [])
     if applicability_gate.get("is_generated_rule_pack"):
@@ -770,6 +763,10 @@ def _check_applicability_generated_rule_pack_gate(
         )
         actual_package_manifest_sha = (
             sha256_file(package_manifest_path) if package_manifest_path.exists() else None
+        )
+        expected_package_chunks_sha = applicability_gate.get("expected_package_chunks_sha256")
+        actual_package_chunks_sha = (
+            sha256_file(package_chunks_path) if package_chunks_path.exists() else None
         )
         checks.append(
             _gate_check(
@@ -780,6 +777,18 @@ def _check_applicability_generated_rule_pack_gate(
                     "expected": expected_package_manifest_sha,
                     "actual": actual_package_manifest_sha,
                     "path": str(package_manifest_path),
+                },
+            )
+        )
+        checks.append(
+            _gate_check(
+                "package_chunks_match_applicability_run",
+                bool(expected_package_chunks_sha)
+                and expected_package_chunks_sha == actual_package_chunks_sha,
+                {
+                    "expected": expected_package_chunks_sha,
+                    "actual": actual_package_chunks_sha,
+                    "path": str(package_chunks_path),
                 },
             )
         )
@@ -843,6 +852,8 @@ def _non_applicable_coverage_passed(non_applicable: dict, coverage: dict) -> boo
     authorities = non_applicable.get("authorities")
     if not isinstance(authorities, list):
         return False
+    if not _coverage_payload_has_certificate_list(coverage):
+        return False
     if not authorities:
         return True
     certificates = _coverage_certificate_ids(coverage)
@@ -887,6 +898,13 @@ def _non_applicable_coverage_details(
         "coverage_certificate_count": len(certificate_ids),
         "missing": missing,
     }
+
+
+def _coverage_payload_has_certificate_list(coverage: dict) -> bool:
+    return isinstance(coverage.get("certificates"), list) or isinstance(
+        coverage.get("search_coverage_certificates"),
+        list,
+    )
 
 
 def _generated_provenance_matches(
@@ -1314,6 +1332,7 @@ def _validation_report(
     forest_plan_summary: dict,
     applicability_gate: dict,
     package_manifest_path: Path,
+    package_chunks_path: Path,
     findings: list[dict],
     nodes: list[dict],
     edges: list[dict],
@@ -1327,6 +1346,7 @@ def _validation_report(
         _check_applicability_generated_rule_pack_gate(
             applicability_gate=applicability_gate,
             package_manifest_path=package_manifest_path,
+            package_chunks_path=package_chunks_path,
         ),
         {
             "name": "rule_claim_binding_reviewer_ready",
@@ -2412,11 +2432,23 @@ def _compliance_review_eval_case_result(
         for value in report.get("summary", {}).get("unsupported_finding_ids", [])
     )
     unsupported_finding_ids_match = actual_unsupported == expected_unsupported
-    expected_validation_passed = bool(case.get("expected_validation_passed", True))
+    summary = report.get("summary", {})
+    applicability_gate = summary.get("applicability_gate")
+    diagnostic_base_rule_pack = (
+        isinstance(applicability_gate, dict)
+        and applicability_gate.get("mode") == "base_rule_pack_diagnostic"
+    )
+    if "expected_validation_passed" in case:
+        expected_validation_passed = bool(case.get("expected_validation_passed"))
+    else:
+        expected_validation_passed = not diagnostic_base_rule_pack
     validation_passed_matches = bool(validation.get("passed")) == expected_validation_passed
-    expected_reviewer_ready = bool(case.get("expected_reviewer_ready", True))
+    if "expected_reviewer_ready" in case:
+        expected_reviewer_ready = bool(case.get("expected_reviewer_ready"))
+    else:
+        expected_reviewer_ready = not diagnostic_base_rule_pack
     reviewer_ready_matches = (
-        bool(report.get("summary", {}).get("reviewer_ready")) == expected_reviewer_ready
+        bool(summary.get("reviewer_ready")) == expected_reviewer_ready
     )
     require_graph_coverage = bool(case.get("require_graph_coverage", True))
     graph_coverage_supported = (

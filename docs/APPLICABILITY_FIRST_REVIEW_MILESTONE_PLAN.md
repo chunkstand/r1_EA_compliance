@@ -45,13 +45,18 @@ Implemented today:
   unresolved decisions; `applicability-adjudication-template`,
   `applicability-adjudication-eval`, and `applicability-adjudication-apply` provide a replayable
   machine-readable adjudication path for resolving open decisions.
-- `compliance-review` still runs the current V1 authority-first path and still decides conditional
-  applicability during review.
+- Milestone 7 generated rule pack is implemented: `applicability-generate-rule-pack` writes and
+  validates a generated compliance rule pack from validated applicable authorities only.
+- Milestone 8 compliance-review gate is implemented and gap-closed: reviewer-ready
+  `compliance-review` requires a generated rule pack plus passing applicability/generated-pack
+  validation, non-applicable authority, coverage, provenance, source-set, package-manifest, and
+  package-chunk hash gates. Base rule packs can run only as non-reviewer-ready diagnostics and are
+  excluded from promotion readiness.
 
 Not implemented yet:
 
-- generated rule pack as the only reviewer-ready compliance input; and
-- compliance-review gate that refuses base rule-pack review in reviewer-ready mode.
+- applicability decision-quality evals and gold evals that independently promote applicability
+  correctness before compliance quality is scored.
 
 ## Target Invariant
 
@@ -848,12 +853,16 @@ Stop conditions:
 ## Milestone 8: Gate Compliance Review Behind Generated Rule Pack
 
 Current status:
-Implemented. Reviewer-ready `compliance-review` now requires a generated applicability rule pack and
-the adjacent applicability validation, generated-pack validation, non-applicable authority,
-search-coverage, provenance, source-set, and package-manifest hash gates. The base rule pack remains
-available only through an explicit diagnostic flag; diagnostic outputs are not reviewer-ready.
-Generated-rule-pack review evaluates the generated applicable rules only and records the
-applicability gate plus non-applicable authority artifact links in the compliance matrix.
+Implemented and gap-closed. Reviewer-ready `compliance-review` now requires a generated
+applicability rule pack and the adjacent applicability validation, generated-pack validation,
+non-applicable authority, search-coverage, provenance, source-set, package-manifest, and
+package-chunk hash gates. Generated-pack validation must explicitly set
+`generated_rule_pack_ready=true`; missing readiness no longer defaults to passing. The base rule
+pack remains available only through the explicit diagnostic flag, and there is no internal
+reviewer-ready bypass for base-pack API or eval callers. Diagnostic base-pack outputs are not
+reviewer-ready and are excluded from compliance-gold promotion readiness. Generated-rule-pack
+review evaluates the generated applicable rules only and records the applicability gate plus
+non-applicable authority artifact links in the compliance matrix.
 
 Goal:
 Refactor `compliance-review` so reviewer-ready review can only occur after applicability
@@ -884,6 +893,7 @@ Implementation direction:
   - applicability validation passed;
   - generated pack hash matches applicability validation;
   - package manifest hash matches;
+  - package chunks hash matches;
   - source set matches;
   - non-applicable artifact exists and validates;
   - search coverage certificates exist for non-applicable decisions; and

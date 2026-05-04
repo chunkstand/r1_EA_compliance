@@ -180,8 +180,9 @@ Promoted V1 Custer Gallatin real-package gate state:
   the gate accepts exactly `14` pending `adjudicate` rows under
   `conditional_adjudication_policy.mode=accepted_pending_v1`.
 - Compliance-review eval passes `3/3` seed cases, compliance-gold eval passes `10/10`
-  adjudicated cases with `promotion_ready=true`, and the current generated V1 review artifact is
-  reviewer-ready for the Custer Gallatin proving package.
+  adjudicated cases in the pre-applicability gate, and the generated V1 review artifact is
+  reviewer-ready for the Custer Gallatin proving package. Under the current Milestone 8 gate,
+  base-pack gold eval reruns are diagnostic until generated applicability artifacts are used.
 
 ## V1 Definition Of Done
 
@@ -519,8 +520,9 @@ Current milestone status:
 - `v1-ea-eval` now passes with `broader_ea_passed=true`, `forest_plan_passed=true`,
   `conditional_false_positive=0`, `conditional_false_negative=0`, `rule_section_match_rate=1.0`,
   empty failure-category counts, and `failed_rule_ids=[]`.
-- The final V1 gate promotion also passed `compliance-review-eval` `3/3` and
-  `compliance-gold-eval` `10/10` with `promotion_ready=true`.
+- The final pre-applicability V1 gate promotion also passed `compliance-review-eval` `3/3` and
+  `compliance-gold-eval` `10/10`. Under the current Milestone 8 gate, base-pack gold eval reruns
+  are diagnostic until generated applicability artifacts are used.
 
 Verification:
 
