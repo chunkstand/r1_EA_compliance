@@ -35,7 +35,9 @@ Current completed applicability milestones:
   unresolved decisions. `applicability-adjudication-template`,
   `applicability-adjudication-eval`, and `applicability-adjudication-apply` provide replayable
   machine-readable adjudication; apply rewrites the decision ledger and applicable/non-applicable
-  partitions with `human_adjudication` bases and updates provenance.
+  partitions with `human_adjudication` bases and updates provenance. The gap-close pass hardened
+  validation around package fact-graph validation status, contradiction/adjudication handling,
+  adjudication eval replayability, partition/coverage freshness, and provenance entity hashes.
 
 Latest applicability commits:
 
@@ -47,6 +49,7 @@ Latest applicability commits:
 - `e9e3abe` - Close applicability retrieval graph gaps
 - `08b1aae` - Add deterministic applicability decisions
 - `aa0c1da` - Close applicability decision gaps
+- `6bed025` - Add applicability validation adjudication gate
 
 Important current behavior:
 
@@ -54,6 +57,10 @@ Important current behavior:
   `uncertain` compliance findings.
 - Weak or conflicting package trigger evidence is recorded as `needs_adjudication`.
 - Not-applicable decisions cite search coverage certificates.
+- Validation now fails if a final contradictory decision lacks human adjudication, if a
+  human-adjudicated decision cannot be replayed from a passing adjudication eval, if
+  `package_fact_graph_validation.json` is stale or failed, or if partition/coverage/provenance
+  hashes drift from current applicability artifacts.
 - Milestone 5 gap closure added raw package-chunk checks for explicit negative evidence,
   source-index hash requirements for sufficient coverage, retained source-library evidence spans on
   non-applicable decisions, local-evidence trigger-group matching, and package manifest/chunk
@@ -75,8 +82,8 @@ PYTHONPATH=src uv run --extra dev pytest
 
 Verified results from the latest Milestone 6 validation/adjudication pass:
 
-- Applicability plus compliance focused suite: `61 passed, 3 subtests passed`
-- Full repository test suite: `257 passed, 8 subtests passed`
+- Applicability plus compliance focused suite: `65 passed, 3 subtests passed`
+- Full repository test suite: `261 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed

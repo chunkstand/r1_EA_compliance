@@ -1173,6 +1173,11 @@ includes:
 - validation failure records with failure category, affected authority IDs, and artifact paths
 - generated-rule-pack readiness status
 
+The validation gate also proves that `package_fact_graph_validation.json` passed for the current
+package artifacts, human-adjudicated decisions can be replayed from a passing adjudication eval,
+contradictory final package evidence has a human adjudication record, partition and coverage hashes
+match the current upstream artifacts, and required provenance entities point at non-stale hashes.
+
 Hard validation failures include:
 
 - `missing_applicability_artifact`: a required applicability artifact is absent
@@ -1205,6 +1210,9 @@ Hard validation failures include:
 - `graph_trace_stale`: graph trace hashes do not match the searched graph artifacts
 - `search_coverage_stale`: search coverage certificates do not match the retrieval trace, graph
   trace, package fact graph, or authority universe
+- `adjudication_missing`: a human-adjudicated decision lacks a complete adjudication reference or a
+  passing replayable adjudication eval
+- `provenance_gap`: required provenance entities, paths, or entity hashes are missing or stale
 - `generated_rule_pack_mismatch`: the generated rule pack does not match the
   `applicable_authorities.json` artifact
 - `generated_rule_pack_stale`: the generated rule pack is stale relative to package, source set,
@@ -1229,9 +1237,10 @@ replayed deterministically into `applicability_decisions.jsonl`.
 `applicability_adjudication_apply.json` has schema version `applicability-adjudication-apply-v0` and
 records the replay result when a completed adjudication is applied to the decision ledger. It
 includes original and applied decision-ledger hashes, applied item count, remaining unresolved count,
-and the adjudication/eval artifact paths. Applying adjudication rewrites
-`applicability_decisions.jsonl`, `applicable_authorities.json`, and
-`non_applicable_authorities.json` with `human_adjudication` bases and updates provenance.
+applicable/non-applicable partition hashes, and the adjudication/eval artifact paths. Applying
+adjudication rewrites `applicability_decisions.jsonl`, `applicable_authorities.json`, and
+`non_applicable_authorities.json` with `human_adjudication` bases and updates provenance after the
+apply artifact is written so provenance records the final apply-artifact hash.
 
 `llm_evidence_proposals.jsonl`, when present, is diagnostic-only. It may propose evidence spans,
 query expansions, graph neighbors, or reviewer questions, but it cannot write final applicability

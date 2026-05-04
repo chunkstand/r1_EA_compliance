@@ -44,6 +44,17 @@ REQUIRED_PROVENANCE_ENTITY_IDS = {
     "applicable_authorities",
     "non_applicable_authorities",
 }
+FILE_HASH_PROVENANCE_ENTITY_IDS = {
+    "package_applicability_context",
+    "retrieval_trace",
+    "graph_trace",
+    "decision_ledger",
+    "applicable_authorities",
+    "non_applicable_authorities",
+    "applicability_adjudication",
+    "applicability_adjudication_eval",
+    "applicability_adjudication_apply",
+}
 
 
 @dataclass(frozen=True)
@@ -513,6 +524,8 @@ def apply_applicability_adjudication(
         ),
     )
     _write_report(applicability_dir / "applicability_report.md", report_summary, applied_decisions)
+    applicable_authorities_sha256 = sha256_file(applicable_authorities_path)
+    non_applicable_authorities_sha256 = sha256_file(non_applicable_authorities_path)
     summary = {
         "schema_version": APPLICABILITY_ADJUDICATION_APPLY_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -531,6 +544,8 @@ def apply_applicability_adjudication(
             for decision in applied_decisions
             if _decision_status(decision) in UNRESOLVED_STATUSES
         ),
+        "applicable_authorities_sha256": applicable_authorities_sha256,
+        "non_applicable_authorities_sha256": non_applicable_authorities_sha256,
     }
     payload = {
         "schema_version": APPLICABILITY_ADJUDICATION_APPLY_SCHEMA_VERSION,
@@ -546,21 +561,8 @@ def apply_applicability_adjudication(
         adjudication_eval_path=eval_result.output_path,
         adjudication_apply_path=output_path,
         decisions_path=decisions_path,
-    )
-    summary["applicable_authorities_sha256"] = sha256_file(applicable_authorities_path)
-    summary["non_applicable_authorities_sha256"] = sha256_file(non_applicable_authorities_path)
-    summary["applicability_provenance_sha256"] = (
-        sha256_file(provenance_path) if provenance_path.exists() else None
-    )
-    _write_json(
-        output_path,
-        {
-            "schema_version": APPLICABILITY_ADJUDICATION_APPLY_SCHEMA_VERSION,
-            "created_at": payload["created_at"],
-            "review_id": review_id,
-            "source_set_id": eval_result.source_set_id,
-            "summary": summary,
-        },
+        applicable_authorities_path=applicable_authorities_path,
+        non_applicable_authorities_path=non_applicable_authorities_path,
     )
     return ApplicabilityAdjudicationApplyResult(
         review_id=review_id,
@@ -671,6 +673,7 @@ def _validation_checks(
             source_set_id=source_set_id,
             artifacts=artifacts,
         ),
+        _check_package_fact_graph_validation(paths=paths, artifacts=artifacts),
         _check_candidate_decisions(candidates, decisions),
         _check_partition(
             candidates=candidates,
@@ -684,8 +687,10 @@ def _validation_checks(
         _check_retrieval_traceability(decisions, retrieval_by_id),
         _check_graph_traceability(decisions, graph_by_id),
         _check_forest_plan_scope(decisions),
+        _check_contradictory_package_evidence(decisions),
+        _check_human_adjudication_replay(decisions),
         _check_artifact_freshness(paths=paths, artifacts=artifacts, decisions=decisions),
-        _check_provenance(artifacts["provenance"], paths),
+        _check_provenance(artifacts["provenance"], paths, artifacts),
     ]
 
 
@@ -762,6 +767,89 @@ def _check_review_and_source_identity(
         not failures,
         failures,
         {"review_id": review_id, "source_set_id": source_set_id},
+    )
+
+
+def _check_package_fact_graph_validation(
+    *,
+    paths: dict[str, Path],
+    artifacts: dict[str, Any],
+) -> dict[str, Any]:
+    validation = artifacts["package_fact_graph_validation"]
+    nested_validation = (
+        validation.get("validation")
+        if isinstance(validation.get("validation"), dict)
+        else {}
+    )
+    summary = (
+        validation.get("summary")
+        if isinstance(validation.get("summary"), dict)
+        else {}
+    )
+    passed = bool(
+        nested_validation.get("passed")
+        if "passed" in nested_validation
+        else summary.get("validation_passed")
+    )
+    expected_pairs = {
+        "package_manifest_sha256": _first_present(
+            artifacts["package_applicability_context"].get("package_manifest_sha256"),
+            artifacts["package_fact_graph"].get("package_manifest_sha256"),
+        ),
+        "package_chunks_sha256": _first_present(
+            artifacts["package_applicability_context"].get("package_chunks_sha256"),
+            artifacts["package_fact_graph"].get("package_chunks_sha256"),
+        ),
+        "package_fact_graph_sha256": artifacts["package_fact_graph"].get(
+            "package_fact_graph_sha256"
+        ),
+        "package_context_sha256": artifacts["package_applicability_context"].get(
+            "package_context_sha256"
+        ),
+    }
+    failures = []
+    if not paths["package_fact_graph_validation"].exists():
+        failures.append(
+            _failure(
+                "missing_applicability_artifact",
+                artifact="package_fact_graph_validation",
+                path=str(paths["package_fact_graph_validation"]),
+            )
+        )
+    elif validation.get("schema_version") != "package-fact-graph-validation-v0":
+        failures.append(
+            _failure(
+                "package_cache_stale",
+                artifact="package_fact_graph_validation",
+                details={
+                    "field": "schema_version",
+                    "actual": validation.get("schema_version"),
+                },
+            )
+        )
+    elif not passed:
+        failures.append(
+            _failure(
+                "package_cache_stale",
+                artifact="package_fact_graph_validation",
+                details={"field": "validation.passed", "actual": False},
+            )
+        )
+    for field, expected in expected_pairs.items():
+        actual = validation.get(field)
+        if expected and actual and actual != expected:
+            failures.append(
+                _failure(
+                    "package_cache_stale",
+                    artifact="package_fact_graph_validation",
+                    details={"field": field, "expected": expected, "actual": actual},
+                )
+            )
+    return _check(
+        "package_fact_graph_validation_passes_current_artifacts",
+        not failures,
+        failures,
+        {"path": str(paths["package_fact_graph_validation"])},
     )
 
 
@@ -886,7 +974,8 @@ def _check_applicable_evidence(decisions: list[dict[str, Any]]) -> dict[str, Any
         )
         has_package = bool(decision.get("package_evidence_spans"))
         has_source = bool(decision.get("source_library_evidence_spans"))
-        if not (has_mandatory_basis or (has_package and has_source)):
+        has_validated_mandatory_basis = has_mandatory_basis and has_source
+        if not (has_validated_mandatory_basis or (has_package and has_source)):
             failures.append(
                 _failure(
                     "applicable_evidence_gap",
@@ -1056,6 +1145,247 @@ def _check_forest_plan_scope(decisions: list[dict[str, Any]]) -> dict[str, Any]:
     )
 
 
+def _check_contradictory_package_evidence(decisions: list[dict[str, Any]]) -> dict[str, Any]:
+    failures = []
+    for decision in decisions:
+        if _decision_status(decision) not in FINAL_STATUSES:
+            continue
+        has_positive = bool(decision.get("package_evidence_spans"))
+        has_negative = bool(decision.get("negative_evidence_spans"))
+        has_contradiction_notes = bool(decision.get("contradiction_notes"))
+        has_adjudication = bool(decision.get("human_adjudication_refs"))
+        if (has_contradiction_notes or (has_positive and has_negative)) and not has_adjudication:
+            failures.append(
+                _failure(
+                    "contradictory_package_evidence",
+                    candidate_authority_id=str(
+                        decision.get("candidate_authority_id") or ""
+                    ),
+                    details={
+                        "has_package_evidence": has_positive,
+                        "has_negative_evidence": has_negative,
+                        "has_contradiction_notes": has_contradiction_notes,
+                    },
+                )
+            )
+    return _check(
+        "contradictory_package_evidence_requires_adjudication",
+        not failures,
+        failures,
+        {"failure_count": len(failures)},
+    )
+
+
+def _check_human_adjudication_replay(decisions: list[dict[str, Any]]) -> dict[str, Any]:
+    failures = []
+    eval_cache: dict[Path, dict[str, Any]] = {}
+    for decision in decisions:
+        refs = [
+            ref
+            for ref in decision.get("human_adjudication_refs") or []
+            if isinstance(ref, dict)
+        ]
+        requires_replay = str(decision.get("basis_type") or "") == "human_adjudication" or bool(
+            refs
+        )
+        if not requires_replay:
+            continue
+        candidate_id = str(decision.get("candidate_authority_id") or "")
+        if not refs:
+            failures.append(
+                _failure(
+                    "adjudication_missing",
+                    candidate_authority_id=candidate_id,
+                    details={"reason": "human_adjudication_basis_without_reference"},
+                )
+            )
+            continue
+        for ref in refs:
+            failures.extend(
+                _adjudication_ref_failures(
+                    decision=decision,
+                    ref=ref,
+                    eval_cache=eval_cache,
+                )
+            )
+    return _check(
+        "human_adjudication_references_are_replayable",
+        not failures,
+        failures,
+        {"failure_count": len(failures)},
+    )
+
+
+def _adjudication_ref_failures(
+    *,
+    decision: dict[str, Any],
+    ref: dict[str, Any],
+    eval_cache: dict[Path, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    failures = []
+    candidate_id = str(decision.get("candidate_authority_id") or "")
+    decision_status = _decision_status(decision)
+    required_strings = (
+        "adjudication_id",
+        "item_id",
+        "decision_id",
+        "candidate_authority_id",
+        "adjudication_eval_path",
+        "final_status",
+        "disposition",
+        "adjudicated_at",
+        "source_type",
+        "rationale",
+    )
+    missing_fields = [
+        field
+        for field in required_strings
+        if not str(ref.get(field) or "").strip()
+    ]
+    if not _string_list(ref.get("adjudicated_by")):
+        missing_fields.append("adjudicated_by")
+    if not _string_list(ref.get("supporting_citation_refs")):
+        missing_fields.append("supporting_citation_refs")
+    if missing_fields:
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                details={"reason": "adjudication_reference_incomplete", "fields": missing_fields},
+            )
+        )
+    if ref.get("decision_id") != decision.get("decision_id"):
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                details={
+                    "field": "decision_id",
+                    "expected": decision.get("decision_id"),
+                    "actual": ref.get("decision_id"),
+                },
+            )
+        )
+    if ref.get("candidate_authority_id") != decision.get("candidate_authority_id"):
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                details={
+                    "field": "candidate_authority_id",
+                    "expected": decision.get("candidate_authority_id"),
+                    "actual": ref.get("candidate_authority_id"),
+                },
+            )
+        )
+    if ref.get("final_status") != decision_status:
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                details={
+                    "field": "final_status",
+                    "expected": decision_status,
+                    "actual": ref.get("final_status"),
+                },
+            )
+        )
+    expected_disposition = (
+        "human_applicable" if decision_status == "applicable" else "human_not_applicable"
+    )
+    if decision_status in FINAL_STATUSES and ref.get("disposition") != expected_disposition:
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                details={
+                    "field": "disposition",
+                    "expected": expected_disposition,
+                    "actual": ref.get("disposition"),
+                },
+            )
+        )
+    adjudication_file = str(ref.get("adjudication_file") or "").strip()
+    if adjudication_file and not Path(adjudication_file).exists():
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                path=adjudication_file,
+                details={"reason": "adjudication_file_missing"},
+            )
+        )
+    eval_path_text = str(ref.get("adjudication_eval_path") or "").strip()
+    if not eval_path_text:
+        return failures
+    eval_path = Path(eval_path_text)
+    if not eval_path.exists():
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                path=eval_path_text,
+                details={"reason": "adjudication_eval_missing"},
+            )
+        )
+        return failures
+    eval_payload = eval_cache.get(eval_path)
+    if eval_payload is None:
+        eval_payload = _read_json_if_exists(eval_path)
+        eval_cache[eval_path] = eval_payload
+    if eval_payload.get("schema_version") != APPLICABILITY_ADJUDICATION_EVAL_SCHEMA_VERSION:
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                path=eval_path_text,
+                details={
+                    "field": "schema_version",
+                    "actual": eval_payload.get("schema_version"),
+                },
+            )
+        )
+    summary = eval_payload.get("summary") if isinstance(eval_payload.get("summary"), dict) else {}
+    if not summary.get("passed"):
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                path=eval_path_text,
+                details={"field": "summary.passed", "actual": summary.get("passed")},
+            )
+        )
+    item_result = _matching_adjudication_item_result(eval_payload, ref)
+    if not item_result or not item_result.get("passed"):
+        failures.append(
+            _failure(
+                "adjudication_missing",
+                candidate_authority_id=candidate_id,
+                path=eval_path_text,
+                details={
+                    "reason": "adjudication_item_not_replayable",
+                    "item_id": ref.get("item_id"),
+                    "decision_id": ref.get("decision_id"),
+                },
+            )
+        )
+    return failures
+
+
+def _matching_adjudication_item_result(
+    eval_payload: dict[str, Any],
+    ref: dict[str, Any],
+) -> dict[str, Any] | None:
+    for result in eval_payload.get("item_results") or []:
+        if not isinstance(result, dict):
+            continue
+        if ref.get("item_id") and result.get("item_id") == ref.get("item_id"):
+            return result
+        if ref.get("decision_id") and result.get("decision_id") == ref.get("decision_id"):
+            return result
+    return None
+
+
 def _check_artifact_freshness(
     *,
     paths: dict[str, Path],
@@ -1105,6 +1435,50 @@ def _check_artifact_freshness(
                 details={"field": "applicability_decisions_sha256"},
             )
         )
+    expected_partition_pairs = {
+        "authority_universe_sha256": (universe_hash, "source_set_stale"),
+        "package_manifest_sha256": (package_manifest_hash, "package_cache_stale"),
+        "package_chunks_sha256": (package_chunks_hash, "package_cache_stale"),
+        "package_fact_graph_sha256": (package_fact_graph_hash, "package_cache_stale"),
+        "retrieval_trace_sha256": (retrieval_hash, "retrieval_trace_stale"),
+        "graph_trace_sha256": (graph_hash, "graph_trace_stale"),
+        "search_coverage_certificates_sha256": (
+            coverage_hash,
+            "search_coverage_stale",
+        ),
+        "catalog_sha256": (
+            artifacts["authority_universe"].get("catalog_sha256"),
+            "source_set_stale",
+        ),
+    }
+    for artifact_name in ("applicable_authorities", "non_applicable_authorities"):
+        artifact = artifacts[artifact_name]
+        for field, (expected, category) in expected_partition_pairs.items():
+            actual = artifact.get(field)
+            if expected and actual and actual != expected:
+                failures.append(
+                    _failure(
+                        category,
+                        artifact=artifact_name,
+                        details={"field": field, "expected": expected, "actual": actual},
+                    )
+                )
+    expected_coverage_pairs = {
+        "authority_universe_sha256": (universe_hash, "source_set_stale"),
+        "package_fact_graph_sha256": (package_fact_graph_hash, "package_cache_stale"),
+        "retrieval_trace_sha256": (retrieval_hash, "retrieval_trace_stale"),
+        "graph_trace_sha256": (graph_hash, "graph_trace_stale"),
+    }
+    for field, (expected, category) in expected_coverage_pairs.items():
+        actual = artifacts["search_coverage_certificates"].get(field)
+        if expected and actual and actual != expected:
+            failures.append(
+                _failure(
+                    category,
+                    artifact="search_coverage_certificates",
+                    details={"field": field, "expected": expected, "actual": actual},
+                )
+            )
     for decision in decisions:
         freshness = decision.get("freshness") if isinstance(decision.get("freshness"), dict) else {}
         candidate_id = str(decision.get("candidate_authority_id") or "")
@@ -1138,8 +1512,13 @@ def _check_artifact_freshness(
     )
 
 
-def _check_provenance(provenance: dict[str, Any], paths: dict[str, Path]) -> dict[str, Any]:
+def _check_provenance(
+    provenance: dict[str, Any],
+    paths: dict[str, Path],
+    artifacts: dict[str, Any],
+) -> dict[str, Any]:
     entities = provenance.get("entities") if isinstance(provenance.get("entities"), list) else []
+    expected_hashes = _expected_provenance_hashes(paths=paths, artifacts=artifacts)
     entity_ids = {
         str(entity.get("entity_id") or "")
         for entity in entities
@@ -1150,28 +1529,94 @@ def _check_provenance(provenance: dict[str, Any], paths: dict[str, Path]) -> dic
         _failure("provenance_gap", artifact=entity_id) for entity_id in missing
     ]
     missing_paths = []
+    stale_hashes = []
     for entity in entities:
         if not isinstance(entity, dict):
             continue
         entity_id = str(entity.get("entity_id") or "")
-        if entity_id not in REQUIRED_PROVENANCE_ENTITY_IDS:
-            continue
         path = entity.get("path")
-        if path and not Path(str(path)).exists():
+        if entity_id in REQUIRED_PROVENANCE_ENTITY_IDS and path and not Path(str(path)).exists():
             missing_paths.append({"entity_id": entity_id, "path": str(path)})
+        if entity_id in REQUIRED_PROVENANCE_ENTITY_IDS and not entity.get("exists", True):
+            missing_paths.append({"entity_id": entity_id, "path": str(path or "")})
+        expected_hash = expected_hashes.get(entity_id)
+        if (
+            not expected_hash
+            and entity_id in FILE_HASH_PROVENANCE_ENTITY_IDS
+            and path
+            and Path(str(path)).exists()
+        ):
+            expected_hash = sha256_file(Path(str(path)))
+        actual_hash = str(entity.get("sha256") or "")
+        if expected_hash and actual_hash != expected_hash:
+            stale_hashes.append(
+                {
+                    "entity_id": entity_id,
+                    "expected": expected_hash,
+                    "actual": actual_hash or None,
+                }
+            )
     failures = [
         *missing_entity_failures,
         *[
             _failure("provenance_gap", artifact=row["entity_id"], path=row["path"])
             for row in missing_paths
         ],
+        *[
+            _failure(
+                "provenance_gap",
+                artifact=row["entity_id"],
+                details={"expected": row["expected"], "actual": row["actual"]},
+            )
+            for row in stale_hashes
+        ],
     ]
     return _check(
         "provenance_covers_required_applicability_artifacts",
         not failures and paths["provenance"].exists(),
         failures,
-        {"missing_entity_ids": missing, "missing_entity_paths": missing_paths},
+        {
+            "missing_entity_ids": missing,
+            "missing_entity_paths": missing_paths,
+            "stale_entity_hashes": stale_hashes,
+        },
     )
+
+
+def _expected_provenance_hashes(
+    *,
+    paths: dict[str, Path],
+    artifacts: dict[str, Any],
+) -> dict[str, str | None]:
+    return {
+        "authority_universe": artifacts["authority_universe"].get(
+            "authority_universe_sha256"
+        ),
+        "package_fact_graph": artifacts["package_fact_graph"].get(
+            "package_fact_graph_sha256"
+        ),
+        "package_applicability_context": _optional_file_sha256(
+            paths["package_applicability_context"]
+        ),
+        "retrieval_trace": _optional_file_sha256(paths["retrieval_trace"]),
+        "graph_trace": _optional_file_sha256(paths["graph_trace"]),
+        "decision_ledger": _optional_file_sha256(paths["decisions"]),
+        "search_coverage_certificates": artifacts[
+            "search_coverage_certificates"
+        ].get("search_coverage_certificates_sha256"),
+        "applicable_authorities": _optional_file_sha256(paths["applicable_authorities"]),
+        "non_applicable_authorities": _optional_file_sha256(
+            paths["non_applicable_authorities"]
+        ),
+        "package_manifest": _first_present(
+            artifacts["package_applicability_context"].get("package_manifest_sha256"),
+            artifacts["package_fact_graph"].get("package_manifest_sha256"),
+        ),
+        "package_chunks": _first_present(
+            artifacts["package_applicability_context"].get("package_chunks_sha256"),
+            artifacts["package_fact_graph"].get("package_chunks_sha256"),
+        ),
+    }
 
 
 def _adjudication_template_item(decision: dict[str, Any]) -> dict[str, Any]:
@@ -1628,13 +2073,15 @@ def _update_provenance_for_adjudication(
     adjudication_eval_path: Path,
     adjudication_apply_path: Path,
     decisions_path: Path,
+    applicable_authorities_path: Path,
+    non_applicable_authorities_path: Path,
 ) -> None:
     if not provenance_path.exists():
         return
     provenance = _read_required_json(provenance_path, "applicability provenance")
     entities = provenance.setdefault("entities", [])
-    existing_ids = {
-        str(entity.get("entity_id") or "")
+    entities_by_id = {
+        str(entity.get("entity_id") or ""): entity
         for entity in entities
         if isinstance(entity, dict)
     }
@@ -1643,15 +2090,14 @@ def _update_provenance_for_adjudication(
         ("applicability_adjudication_eval", adjudication_eval_path),
         ("applicability_adjudication_apply", adjudication_apply_path),
     ):
-        if entity_id not in existing_ids:
-            entities.append(
-                {
-                    "entity_id": entity_id,
-                    "path": str(path),
-                    "sha256": sha256_file(path) if path.exists() else None,
-                    "exists": path.exists(),
-                }
-            )
+        entity = entities_by_id.get(entity_id)
+        if entity is None:
+            entity = {"entity_id": entity_id}
+            entities.append(entity)
+            entities_by_id[entity_id] = entity
+        entity["path"] = str(path)
+        entity["sha256"] = sha256_file(path) if path.exists() else None
+        entity["exists"] = path.exists()
     provenance.setdefault("activities", []).append(
         {
             "activity_id": f"activity:{provenance.get('applicability_run_id')}:adjudication-replay",
@@ -1666,6 +2112,8 @@ def _update_provenance_for_adjudication(
             ],
             "generated_entity_ids": [
                 "decision_ledger",
+                "applicable_authorities",
+                "non_applicable_authorities",
                 "applicability_adjudication_apply",
             ],
         }
@@ -1674,21 +2122,30 @@ def _update_provenance_for_adjudication(
         [
             {
                 "relation_type": "wasDerivedFrom",
-                "generated_entity_id": "decision_ledger",
-                "used_entity_id": "applicability_adjudication",
-            },
-            {
-                "relation_type": "wasDerivedFrom",
-                "generated_entity_id": "decision_ledger",
-                "used_entity_id": "applicability_adjudication_eval",
-            },
+                "generated_entity_id": generated,
+                "used_entity_id": used,
+            }
+            for generated in (
+                "decision_ledger",
+                "applicable_authorities",
+                "non_applicable_authorities",
+            )
+            for used in ("applicability_adjudication", "applicability_adjudication_eval")
         ]
     )
-    for entity in entities:
-        if isinstance(entity, dict) and entity.get("entity_id") == "decision_ledger":
-            entity["path"] = str(decisions_path)
-            entity["sha256"] = sha256_file(decisions_path)
-            entity["exists"] = decisions_path.exists()
+    for entity_id, path in (
+        ("decision_ledger", decisions_path),
+        ("applicable_authorities", applicable_authorities_path),
+        ("non_applicable_authorities", non_applicable_authorities_path),
+    ):
+        entity = entities_by_id.get(entity_id)
+        if entity is None:
+            entity = {"entity_id": entity_id}
+            entities.append(entity)
+            entities_by_id[entity_id] = entity
+        entity["path"] = str(path)
+        entity["sha256"] = sha256_file(path) if path.exists() else None
+        entity["exists"] = path.exists()
     _write_json(provenance_path, provenance)
 
 

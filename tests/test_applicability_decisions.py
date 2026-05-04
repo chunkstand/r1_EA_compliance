@@ -248,6 +248,115 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertTrue(validation_result.summary["passed"])
             self.assertTrue(validation_result.summary["generated_rule_pack_ready"])
 
+    def test_validation_rejects_failed_package_fact_graph_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+            validation_path = applicability_dir / "package_fact_graph_validation.json"
+            validation = json.loads(validation_path.read_text(encoding="utf-8"))
+            validation["validation"]["passed"] = False
+            validation["summary"]["validation_passed"] = False
+            _write_json(validation_path, validation)
+
+            result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertIn("package_cache_stale", result.summary["failure_category_counts"])
+
+    def test_validation_rejects_stale_coverage_partition_and_provenance_hashes(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+
+            coverage_path = applicability_dir / "search_coverage_certificates.json"
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+            coverage["retrieval_trace_sha256"] = "stale-retrieval-trace"
+            _write_json(coverage_path, coverage)
+
+            applicable_path = applicability_dir / "applicable_authorities.json"
+            applicable = json.loads(applicable_path.read_text(encoding="utf-8"))
+            applicable["package_fact_graph_sha256"] = "stale-package-graph"
+            _write_json(applicable_path, applicable)
+
+            provenance_path = applicability_dir / "applicability_provenance.json"
+            provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+            for entity in provenance["entities"]:
+                if entity["entity_id"] == "decision_ledger":
+                    entity["sha256"] = "stale-decision-ledger"
+            _write_json(provenance_path, provenance)
+
+            result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            categories = result.summary["failure_category_counts"]
+            self.assertFalse(result.summary["passed"])
+            self.assertIn("retrieval_trace_stale", categories)
+            self.assertIn("package_cache_stale", categories)
+            self.assertIn("provenance_gap", categories)
+
+    def test_validation_rejects_unreplayable_human_adjudication(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+            eval_path = applicability_dir / "applicability_adjudication_eval.json"
+            eval_payload = json.loads(eval_path.read_text(encoding="utf-8"))
+            eval_payload["summary"]["passed"] = False
+            _write_json(eval_path, eval_payload)
+
+            result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertIn("adjudication_missing", result.summary["failure_category_counts"])
+
+    def test_validation_rejects_contradictory_final_decision_without_adjudication(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+            decisions_path = applicability_dir / "applicability_decisions.jsonl"
+            decisions = _read_jsonl(decisions_path)
+            for decision in decisions:
+                if (
+                    decision["candidate_authority_id"]
+                    == "rule-template:unit-pack:0.1.0:cwa_permit"
+                ):
+                    decision["human_adjudication_refs"] = []
+                    decision["basis_type"] = "package_positive_trigger"
+                    decision["adjudication_state"] = "not_required"
+                    decision["negative_evidence_spans"] = [
+                        {
+                            "evidence_id": "unit-negative-span",
+                            "citation_label": "EA-PACKAGE-001",
+                        }
+                    ]
+            _write_jsonl(decisions_path, decisions)
+
+            result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertIn(
+                "contradictory_package_evidence",
+                result.summary["failure_category_counts"],
+            )
+
     def test_validation_reports_candidate_basis_and_trace_failures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))
@@ -335,6 +444,48 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 (applicability_dir / "applicability_adjudication_worklist.md").exists()
             )
             self.assertTrue((applicability_dir / "applicability_validation.json").exists())
+
+
+def _build_adjudicated_applicability_dir(fixture: dict) -> Path:
+    build_applicability_decisions(
+        output_dir=fixture["output_dir"],
+        review_id=fixture["review_id"],
+        source_set_id=fixture["source_set_id"],
+    )
+    template_result = write_applicability_adjudication_template(
+        output_dir=fixture["output_dir"],
+        review_id=fixture["review_id"],
+        source_set_id=fixture["source_set_id"],
+    )
+    template = json.loads(template_result.output_path.read_text(encoding="utf-8"))
+    item = template["items"][0]
+    item["final_status"] = "applicable"
+    item["disposition"] = "human_applicable"
+    item["adjudicated_at"] = "2026-05-04T00:00:00Z"
+    item["adjudicated_by"] = ["unit-reviewer"]
+    item["source_type"] = "test-adjudication"
+    item["rationale"] = "The weak Clean Water Act signal is applicable for replay."
+    item["supporting_citation_refs"] = sorted(
+        set(item["supporting_citation_refs"] + ["EA-PACKAGE-001"])
+    )
+    _write_json(template_result.output_path, template)
+    eval_result = evaluate_applicability_adjudication(
+        output_dir=fixture["output_dir"],
+        review_id=fixture["review_id"],
+        source_set_id=fixture["source_set_id"],
+        adjudication_file=template_result.output_path,
+    )
+    if not eval_result.summary["passed"]:
+        raise AssertionError(eval_result.summary)
+    apply_result = apply_applicability_adjudication(
+        output_dir=fixture["output_dir"],
+        review_id=fixture["review_id"],
+        source_set_id=fixture["source_set_id"],
+        adjudication_file=template_result.output_path,
+    )
+    if not apply_result.summary["passed"]:
+        raise AssertionError(apply_result.summary)
+    return fixture["output_dir"] / "reviews" / fixture["review_id"] / "applicability"
 
 
 def _write_decision_fixture(root: Path) -> dict:

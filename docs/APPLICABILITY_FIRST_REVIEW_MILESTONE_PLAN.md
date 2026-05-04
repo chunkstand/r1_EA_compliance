@@ -677,14 +677,15 @@ Stop conditions:
 ## Milestone 6: Validation, Coverage, And Adjudication Gate
 
 Current status:
-Implemented. `applicability-validate` validates required artifacts, candidate decision coverage,
-applicable/non-applicable partitioning, unresolved/needs-adjudication status, evidence sufficiency,
-search coverage, retrieval/graph traceability, source/package freshness, Forest Plan component
-scope, and provenance. `applicability-adjudication-template`,
-`applicability-adjudication-eval`, and `applicability-adjudication-apply` provide a replayable
-adjudication route; apply rewrites decision and partition artifacts with `human_adjudication` bases
-and updates provenance. This milestone still does not generate a rule pack or gate
-`compliance-review`.
+Implemented and gap-closed. `applicability-validate` validates required artifacts, candidate
+decision coverage, applicable/non-applicable partitioning, unresolved/needs-adjudication status,
+evidence sufficiency, search coverage, retrieval/graph traceability, source/package freshness,
+Forest Plan component scope, package fact-graph validation status, contradiction/adjudication
+handling, human-adjudication replayability, partition/coverage freshness, and provenance hash
+alignment. `applicability-adjudication-template`, `applicability-adjudication-eval`, and
+`applicability-adjudication-apply` provide a replayable adjudication route; apply rewrites decision
+and partition artifacts with `human_adjudication` bases and updates provenance. This milestone still
+does not generate a rule pack or gate `compliance-review`.
 
 Goal:
 Make applicability validation a hard gate that must pass before a generated rule pack can be used.
@@ -720,7 +721,7 @@ Implementation direction:
   - every decision that used graph expansion has graph path IDs;
   - Forest Plan profile/component applicability has required source and package context;
   - artifact hashes match current package/source-set inputs; and
-  - provenance lineage covers every required artifact.
+  - provenance lineage covers every required artifact with non-stale entity hashes.
 - Add failure taxonomy:
   - `missing_candidate_decision`
   - `duplicate_decision`
