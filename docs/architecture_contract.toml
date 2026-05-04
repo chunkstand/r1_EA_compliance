@@ -1,0 +1,291 @@
+[contract]
+version = "architecture-contract-v1"
+source_root = "src/usfs_r1_ea_sources"
+description = "Layer ownership, import boundaries, generated artifacts, command groups, and temporary architecture exceptions for the USFS Region 1 EA reviewer engine."
+
+[[layers]]
+name = "foundation"
+summary = "Workbook, config, overrides, adapters, and source-row records."
+modules = ["__init__", "adapters", "config", "overrides", "records", "workbook"]
+allowed_import_layers = ["foundation"]
+
+[[layers]]
+name = "capture"
+summary = "Dry-run, preflight, download, batch, report, pilot, and run validation workflows."
+modules = ["batches", "download", "dry_run", "pilots", "preflight", "report", "validate_run"]
+allowed_import_layers = ["foundation", "capture"]
+
+[[layers]]
+name = "catalog"
+summary = "Reviewer catalog and source-set promotion surfaces."
+modules = ["catalog"]
+allowed_import_layers = ["foundation", "capture", "catalog"]
+
+[[layers]]
+name = "extraction"
+summary = "Artifact extraction, extraction accuracy, extraction reuse, and retrieval index construction."
+modules = ["extract", "extraction_accuracy", "retrieval", "reuse_inventory"]
+allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review"]
+
+[[layers]]
+name = "claims"
+summary = "Source-claim extraction and rule-claim binding."
+modules = ["claim_extraction", "rule_claim_binding"]
+allowed_import_layers = ["foundation", "extraction", "claims", "rule_packs"]
+
+[[layers]]
+name = "rule_packs"
+summary = "Shared compliance rule-pack loading, schema validation, and rule-pack helper contracts."
+modules = []
+allowed_import_layers = ["foundation", "rule_packs"]
+
+[[layers]]
+name = "review"
+summary = "EA package review and forest-plan context, component, profile, adjudication, and eval helpers."
+modules = [
+  "ea_review",
+  "forest_plan_component_adjudication",
+  "forest_plan_component_eval",
+  "forest_plan_components",
+  "forest_plan_profiles",
+  "forest_plan_resolver",
+]
+allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]
+
+[[layers]]
+name = "evidence_graph"
+summary = "Document evidence graph build and validation."
+modules = ["evidence_graph"]
+allowed_import_layers = ["foundation", "extraction", "claims", "review", "evidence_graph"]
+
+[[layers]]
+name = "package_context"
+summary = "Package fact graph context used by applicability."
+modules = ["package_fact_graph"]
+allowed_import_layers = ["foundation", "review", "package_context"]
+
+[[layers]]
+name = "applicability"
+summary = "Authority universe, retrieval traces, decisions, validation, adjudication, and generated rule packs."
+modules = [
+  "applicability",
+  "applicability_decisions",
+  "applicability_retrieval",
+  "applicability_rule_pack",
+  "applicability_validation",
+]
+allowed_import_layers = [
+  "foundation",
+  "extraction",
+  "retrieval",
+  "claims",
+  "rule_packs",
+  "review",
+  "package_context",
+  "applicability",
+]
+
+[[layers]]
+name = "compliance"
+summary = "Compliance review, compliance coverage, and compliance gold eval."
+modules = ["compliance_coverage", "compliance_gold_eval", "compliance_review"]
+allowed_import_layers = [
+  "foundation",
+  "extraction",
+  "retrieval",
+  "claims",
+  "rule_packs",
+  "review",
+  "package_context",
+  "applicability",
+  "compliance",
+]
+
+[[layers]]
+name = "eval"
+summary = "Applicability and V1 EA promotion/evaluation commands."
+modules = ["applicability_eval", "v1_ea_eval"]
+allowed_import_layers = [
+  "foundation",
+  "extraction",
+  "retrieval",
+  "rule_packs",
+  "package_context",
+  "applicability",
+  "review",
+  "compliance",
+  "eval",
+]
+
+[[layers]]
+name = "cli"
+summary = "Stable public command registration and dispatch entrypoints."
+modules = ["__main__", "cli"]
+allowed_import_layers = [
+  "foundation",
+  "capture",
+  "catalog",
+  "extraction",
+  "claims",
+  "rule_packs",
+  "review",
+  "evidence_graph",
+  "package_context",
+  "applicability",
+  "compliance",
+  "eval",
+  "cli",
+]
+
+[[temporary_exceptions]]
+id = "rule-pack-utilities-owned-by-compliance-review"
+kind = "dependency"
+from_module = "rule_claim_binding"
+to_module = "compliance_review"
+owner = "agentic-architecture-milestone-3"
+remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
+reason = "rule_claim_binding currently imports DEFAULT_RULE_PACK_PATH, load_rule_pack, and validate_rule_pack from compliance_review; these utilities move to rule_packs.py in Milestone 3."
+
+[[temporary_exceptions]]
+id = "rule-claim-compliance-cycle"
+kind = "cycle"
+modules = ["compliance_review", "rule_claim_binding"]
+owner = "agentic-architecture-milestone-3"
+remove_by = "Milestone 3: Split Rule-Pack Ownership From Compliance Review"
+reason = "compliance_review builds rule-claim links while rule_claim_binding imports shared rule-pack helpers from compliance_review; the shared helpers move to rule_packs.py in Milestone 3."
+
+[[artifacts]]
+owner_layer = "capture"
+paths = [
+  "source_library/manifests/download_<run_id>.jsonl",
+  "source_library/runs/<run_id>/batch_ledger.json",
+  "source_library/runs/<run_id>/operator_report.md",
+  "source_library/runs/<run_id>/repair_queue.csv",
+]
+
+[[artifacts]]
+owner_layer = "catalog"
+paths = [
+  "source_library/catalog/source_catalog.jsonl",
+  "source_library/catalog/source_set_manifest.json",
+  "source_library/catalog/review_sources.sqlite",
+  "source_library/catalog/source_graph_nodes.jsonl",
+  "source_library/catalog/source_graph_edges.jsonl",
+]
+
+[[artifacts]]
+owner_layer = "extraction"
+paths = [
+  "source_library/derived/<source_set_id>/extraction_manifest.jsonl",
+  "source_library/derived/<source_set_id>/chunks.jsonl",
+  "source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite",
+  "source_library/derived/<source_set_id>/retrieval/retrieval_validation.json",
+]
+
+[[artifacts]]
+owner_layer = "evidence_graph"
+paths = [
+  "source_library/derived/<source_set_id>/evidence_graph/document_graph_nodes.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph/document_graph_edges.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite",
+]
+
+[[artifacts]]
+owner_layer = "claims"
+paths = [
+  "source_library/derived/<source_set_id>/claims/claims.jsonl",
+  "source_library/derived/<source_set_id>/claims/claim_graph.sqlite",
+  "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.jsonl",
+]
+
+[[artifacts]]
+owner_layer = "applicability"
+paths = [
+  "source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json",
+  "source_library/reviews/<review_id>/applicability/package_fact_graph.json",
+  "source_library/reviews/<review_id>/applicability/applicability_decisions.jsonl",
+  "source_library/reviews/<review_id>/applicability/applicable_authorities.json",
+  "source_library/reviews/<review_id>/applicability/non_applicable_authorities.json",
+  "source_library/reviews/<review_id>/applicability/generated_rule_pack.json",
+]
+
+[[artifacts]]
+owner_layer = "review"
+paths = [
+  "source_library/reviews/<review_id>/review_report.json",
+  "source_library/reviews/<review_id>/forest_plan_context.json",
+  "source_library/reviews/<review_id>/forest_plan_component_findings.json",
+]
+
+[[artifacts]]
+owner_layer = "compliance"
+paths = [
+  "source_library/reviews/<review_id>/compliance_review.json",
+  "source_library/reviews/<review_id>/compliance_matrix.json",
+  "source_library/reviews/<review_id>/compliance_matrix.md",
+  "source_library/reviews/<review_id>/compliance_matrix.pdf",
+  "source_library/reviews/<review_id>/finding_graph_nodes.jsonl",
+  "source_library/reviews/<review_id>/finding_graph_edges.jsonl",
+]
+
+[[artifacts]]
+owner_layer = "eval"
+paths = [
+  "source_library/reviews/<review_id>/phase_eval_results.json",
+  "source_library/reviews/<review_id>/v1_ea_eval_results.json",
+  "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
+  "source_library/reviews/compliance_gold_eval/compliance_review_eval_results.json",
+]
+
+[[command_groups]]
+name = "capture"
+commands = ["dry-run", "preflight", "download", "report", "validate-run", "pilots", "batches"]
+
+[[command_groups]]
+name = "catalog_extraction_retrieval"
+commands = [
+  "catalog-build",
+  "extract-build",
+  "reuse-inventory",
+  "extraction-accuracy-audit",
+  "retrieval-build",
+  "retrieval-query",
+  "retrieval-eval",
+]
+
+[[command_groups]]
+name = "graph_claims_rules"
+commands = ["evidence-graph-build", "claim-extract", "claim-eval", "rule-claim-link", "rule-claim-eval"]
+
+[[command_groups]]
+name = "applicability"
+commands = [
+  "applicability-authority-universe",
+  "applicability-context-build",
+  "applicability-retrieve",
+  "applicability-determine",
+  "applicability-validate",
+  "applicability-adjudication-template",
+  "applicability-adjudication-eval",
+  "applicability-adjudication-apply",
+  "applicability-generate-rule-pack",
+]
+
+[[command_groups]]
+name = "review"
+commands = [
+  "ea-review",
+  "forest-plan-components-build",
+  "forest-plan-component-adjudication-template",
+  "forest-plan-component-adjudication-eval",
+  "forest-plan-component-eval",
+  "forest-plan-resolve",
+]
+
+[[command_groups]]
+name = "compliance"
+commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval", "compliance-coverage"]
+
+[[command_groups]]
+name = "eval"
+commands = ["applicability-eval", "applicability-gold-eval", "phase-eval", "v1-ea-eval"]
