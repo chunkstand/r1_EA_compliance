@@ -799,8 +799,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build \
 `package_fact_graph_validation.json` under the review applicability directory. Facts are bound to
 package chunk IDs, section IDs, parser provenance, artifact hashes, content hashes, and evidence
 span IDs. Negative or out-of-scope location statements are recorded as negative-context facts rather
-than positive geography facts. This command does not write applicability decisions, retrieval
-traces, graph traces, generated rule packs, or compliance findings.
+than positive geography facts. Weakly worded facts and missing common fact types are recorded as
+graph uncertainty for later applicability stages instead of being resolved inside the package
+context command. This command does not write applicability decisions, retrieval traces, graph
+traces, generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 

@@ -61,9 +61,15 @@ class PackageFactGraphTests(unittest.TestCase):
                 for node in fact_nodes
                 if node["confidence_class"] != "negative_context"
             }
+            weak_pairs = {
+                (node["node_type"], node["normalized_value"])
+                for node in fact_nodes
+                if node["confidence_class"] == "weak_signal"
+            }
             self.assertIn(("action", "land_exchange"), observed_pairs)
             self.assertIn(("agency", "usfs"), observed_pairs)
             self.assertIn(("nepa_level", "environmental_assessment"), observed_pairs)
+            self.assertIn(("geography", "project_area"), observed_pairs)
             self.assertIn(("geography", "custer-gallatin-nf"), observed_pairs)
             self.assertIn(("geography", "geo-bridger-bangtail-crazy"), observed_pairs)
             self.assertIn(("management_area", "mgmt-crazy-mountains-bca"), observed_pairs)
@@ -74,6 +80,7 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertIn(("permit", "clean_water_act"), observed_pairs)
             self.assertIn(("public_involvement", "public_comment"), observed_pairs)
             self.assertIn(("alternative", "no_action"), observed_pairs)
+            self.assertIn(("permit", "clean_water_act"), weak_pairs)
 
             sioux_positive = [
                 node
@@ -106,10 +113,100 @@ class PackageFactGraphTests(unittest.TestCase):
             )
             self.assertFalse((result.applicability_dir / "generated_rule_pack.json").exists())
             self.assertTrue(context["forest_units"])
+            self.assertTrue(context["project_locations"])
             self.assertTrue(context["geography"])
             self.assertTrue(context["management_areas"])
             self.assertTrue(context["consultations"])
             self.assertTrue(context["permits"])
+            uncertainty_check = _check(
+                graph["validation"],
+                "uncertain_facts_are_recorded_without_applicability_decisions",
+            )
+            self.assertTrue(uncertainty_check["passed"])
+            self.assertGreater(
+                uncertainty_check["details"]["uncertainty_classes"].get("weak_signal", 0),
+                0,
+            )
+
+    def test_contradictory_location_facts_are_uncertainty_records(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "contradiction-unit"
+            _write_package_cache(
+                output_dir,
+                review_id,
+                extra_chunks=[
+                    _chunk(
+                        review_id=review_id,
+                        artifact_sha256=hashlib.sha256(review_id.encode("utf-8")).hexdigest(),
+                        index=4,
+                        section="Affected Environment",
+                        heading="Conflicting Location Notes",
+                        text=(
+                            "The Sioux Geographic Area contains a project access route. "
+                            "The Sioux Geographic Area is outside the project area."
+                        ),
+                    )
+                ],
+            )
+
+            result = build_package_fact_graph(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id="source-set-unit",
+            )
+
+            graph = json.loads(result.package_fact_graph_path.read_text(encoding="utf-8"))
+            uncertainty_records = graph["validation"]["uncertainty_records"]
+            contradiction_records = [
+                record
+                for record in uncertainty_records
+                if record.get("uncertainty_class") == "contradictory_package_evidence"
+                and record.get("normalized_value") == "geo-sioux"
+            ]
+            self.assertTrue(contradiction_records)
+            self.assertTrue(
+                any(edge["edge_type"] == "contradicts_fact" for edge in graph["edges"])
+            )
+
+    def test_missing_common_fact_types_are_recorded_as_context_uncertainty(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "missing-context-unit"
+            _write_package_cache(
+                output_dir,
+                review_id,
+                chunks=[
+                    _chunk(
+                        review_id=review_id,
+                        artifact_sha256=hashlib.sha256(review_id.encode("utf-8")).hexdigest(),
+                        index=0,
+                        section="Package Location",
+                        heading="Package Location",
+                        text="The project area is described in this package.",
+                    )
+                ],
+            )
+
+            result = build_package_fact_graph(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id="source-set-unit",
+            )
+
+            graph = json.loads(result.package_fact_graph_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["validation_passed"])
+            missing_records = [
+                record
+                for record in graph["validation"]["uncertainty_records"]
+                if record.get("uncertainty_class") == "missing_package_fact_type"
+            ]
+            missing_types = {record["node_type"] for record in missing_records}
+            self.assertIn("action", missing_types)
+            self.assertIn("agency", missing_types)
+            self.assertIn("permit", missing_types)
 
     def test_cli_writes_package_context_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -142,7 +239,13 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertTrue(validation["validation"]["passed"])
 
 
-def _write_package_cache(output_dir: Path, review_id: str) -> None:
+def _write_package_cache(
+    output_dir: Path,
+    review_id: str,
+    *,
+    chunks: list[dict] | None = None,
+    extra_chunks: list[dict] | None = None,
+) -> None:
     package_dir = output_dir / "reviews" / review_id / "package"
     package_dir.mkdir(parents=True, exist_ok=True)
     artifact_sha256 = hashlib.sha256(review_id.encode("utf-8")).hexdigest()
@@ -166,7 +269,7 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
             "chunk_count": 4,
         }
     ]
-    chunks = [
+    chunks = chunks or [
         _chunk(
             review_id=review_id,
             artifact_sha256=artifact_sha256,
@@ -203,8 +306,8 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
                 "heritage resources, botany, fire, scenery, and grazing. The package "
                 "identifies Endangered Species Act Section 7 consultation, National "
                 "Historic Preservation Act Section 106 review, the Migratory Bird "
-                "Treaty Act, tribal consultation, wetlands, floodplains, and a Clean "
-                "Water Act Section 404 permit."
+                "Treaty Act, tribal consultation, wetlands, and floodplains. A Clean "
+                "Water Act Section 404 permit may be required."
             ),
         ),
         _chunk(
@@ -220,6 +323,10 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
             ),
         ),
     ]
+    if extra_chunks:
+        chunks.extend(extra_chunks)
+    manifest[0]["chunk_count"] = len(chunks)
+    manifest[0]["text_char_count"] = sum(len(chunk["text"]) for chunk in chunks)
     _write_jsonl(package_dir / "package_manifest.jsonl", manifest)
     _write_jsonl(package_dir / "package_chunks.jsonl", chunks)
 

@@ -21,6 +21,19 @@ PACKAGE_FACT_GRAPH_VALIDATION_SCHEMA_VERSION = "package-fact-graph-validation-v0
 PACKAGE_FACT_EXTRACTION_METHOD_VERSION = "deterministic-package-fact-extraction-v0"
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 LOCATION_NODE_TYPES = {"geography", "management_area", "overlay"}
+COMMON_PACKAGE_FACT_TYPES = {
+    "action",
+    "agency",
+    "nepa_level",
+    "geography",
+    "resource_topic",
+    "consultation",
+    "permit",
+}
+UNCERTAINTY_RECORD_STATUSES = {
+    "requires_adjudication_before_applicability_decision",
+    "missing_package_fact_type_recorded_for_later_applicability_context",
+}
 
 
 @dataclass(frozen=True)
@@ -229,10 +242,14 @@ def _extract_package_facts(
                                 "label": spec["label"],
                                 "matched_text": match.group(0),
                                 "chunk_id": chunk.get("chunk_id"),
+                                "chunk_char_start": match.start(),
+                                "chunk_char_end": match.end(),
                                 "section_id": section_id,
                                 "reason": "negative_or_out_of_scope_location_context",
                             }
                         )
+                    elif _is_weak_signal_match(chunk_text, match.start(), match.end()):
+                        confidence_class = "weak_signal"
                     _add_fact_node(
                         nodes=nodes,
                         edges=edges,
@@ -274,6 +291,7 @@ def _extract_package_facts(
 
 def _base_term_specs() -> list[dict[str, Any]]:
     return [
+        _term_spec("geography", "project_location", "project_area", "Project area", ["project area", "analysis area", "project location"]),
         _term_spec("action", "project_action_type", "land_exchange", "Land exchange", ["land exchange", "exchange of lands"]),
         _term_spec("action", "project_action_type", "road_action", "Road action", ["road construction", "new road", "road realignment", "road decommissioning"]),
         _term_spec("action", "project_action_type", "trail_action", "Trail action", ["trail construction", "trail relocation", "trail reroute"]),
@@ -591,18 +609,42 @@ def _build_uncertainty_records(
             if node.get("confidence_class") == "negative_context"
         ]
         if not positive or not negative:
+            weak_nodes = [
+                node
+                for node in grouped_nodes
+                if node.get("confidence_class") == "weak_signal"
+            ]
+            for weak_node in weak_nodes:
+                uncertainty_records.append(
+                    {
+                        "uncertainty_id": _node_id(
+                            "uncertainty",
+                            "weak-signal",
+                            str(weak_node["node_id"]),
+                        ),
+                        "uncertainty_class": "weak_signal",
+                        "node_type": key[0],
+                        "fact_subtype": key[1],
+                        "normalized_value": key[2],
+                        "weak_fact_node_ids": [str(weak_node["node_id"])],
+                        "status": "requires_adjudication_before_applicability_decision",
+                        "rationale": "Package fact was extracted from conditional or uncertain wording.",
+                    }
+                )
             continue
-        record = {
-            "uncertainty_id": _node_id("uncertainty", *key),
-            "node_type": key[0],
-            "fact_subtype": key[1],
-            "normalized_value": key[2],
-            "positive_fact_node_ids": [str(node["node_id"]) for node in positive],
-            "negative_fact_node_ids": [str(node["node_id"]) for node in negative],
-            "status": "requires_adjudication_before_applicability_decision",
-            "rationale": "Package contains both observed and negative-context facts for the same value.",
-        }
-        uncertainty_records.append(record)
+        uncertainty_records.append(
+            {
+                "uncertainty_id": _node_id("uncertainty", "contradiction", *key),
+                "uncertainty_class": "contradictory_package_evidence",
+                "node_type": key[0],
+                "fact_subtype": key[1],
+                "normalized_value": key[2],
+                "positive_fact_node_ids": [str(node["node_id"]) for node in positive],
+                "negative_fact_node_ids": [str(node["node_id"]) for node in negative],
+                "status": "requires_adjudication_before_applicability_decision",
+                "rationale": "Package contains both observed and negative-context facts for the same value.",
+            }
+        )
         for positive_node in positive:
             for negative_node in negative:
                 contradiction_edges.append(
@@ -620,6 +662,29 @@ def _build_uncertainty_records(
                         "selected_status": "selected",
                     }
                 )
+    present_positive = {
+        str(node.get("node_type"))
+        for grouped_nodes in fact_groups.values()
+        for node in grouped_nodes
+        if node.get("confidence_class") != "negative_context"
+    }
+    for fact_type in sorted(COMMON_PACKAGE_FACT_TYPES - present_positive):
+        uncertainty_records.append(
+            {
+                "uncertainty_id": _node_id("uncertainty", "missing-fact-type", fact_type),
+                "uncertainty_class": "missing_package_fact_type",
+                "node_type": fact_type,
+                "fact_subtype": None,
+                "normalized_value": None,
+                "positive_fact_node_ids": [],
+                "negative_fact_node_ids": [],
+                "status": "missing_package_fact_type_recorded_for_later_applicability_context",
+                "rationale": (
+                    "No positive package fact of this common type was extracted; later "
+                    "applicability stages must treat it as missing context, not a decision."
+                ),
+            }
+        )
     return uncertainty_records, contradiction_edges
 
 
@@ -653,6 +718,12 @@ def _build_extraction_summary(
         "confidence_class_counts": dict(sorted(confidence_counts.items())),
         "negative_location_fact_count": len(extraction["suppressed_location_facts"]),
         "uncertainty_record_count": len(extraction["uncertainty_records"]),
+        "weak_signal_fact_count": confidence_counts.get("weak_signal", 0),
+        "missing_common_fact_type_count": sum(
+            1
+            for record in extraction["uncertainty_records"]
+            if record.get("uncertainty_class") == "missing_package_fact_type"
+        ),
     }
 
 
@@ -725,10 +796,17 @@ def _check_negative_location_context(
                 continue
             if node.get("normalized_value") != negative["normalized_value"]:
                 continue
-            if negative["chunk_id"] in (node.get("package_chunk_ids") or []):
+            same_chunk = negative["chunk_id"] in (node.get("package_chunk_ids") or [])
+            same_span = (
+                node.get("chunk_char_start") == negative.get("chunk_char_start")
+                and node.get("chunk_char_end") == negative.get("chunk_char_end")
+            )
+            if same_chunk and same_span:
                 failures.append(
                     {
                         "negative_chunk_id": negative["chunk_id"],
+                        "negative_chunk_char_start": negative.get("chunk_char_start"),
+                        "negative_chunk_char_end": negative.get("chunk_char_end"),
                         "positive_node_id": node["node_id"],
                         "normalized_value": negative["normalized_value"],
                     }
@@ -748,28 +826,27 @@ def _check_uncertainty_records(extraction: dict[str, Any]) -> dict[str, Any]:
     unresolved = [
         record
         for record in extraction["uncertainty_records"]
-        if record.get("status") != "requires_adjudication_before_applicability_decision"
+        if record.get("status") not in UNCERTAINTY_RECORD_STATUSES
     ]
     return {
-        "name": "contradictory_facts_are_recorded_as_uncertainty",
+        "name": "uncertain_facts_are_recorded_without_applicability_decisions",
         "passed": not unresolved,
         "details": {
             "uncertainty_record_count": len(extraction["uncertainty_records"]),
             "invalid_record_count": len(unresolved),
+            "uncertainty_classes": dict(
+                sorted(
+                    Counter(
+                        str(record.get("uncertainty_class") or "unspecified")
+                        for record in extraction["uncertainty_records"]
+                    ).items()
+                )
+            ),
         },
     }
 
 
 def _check_common_fact_type_coverage(fact_nodes: list[dict[str, Any]]) -> dict[str, Any]:
-    required = {
-        "action",
-        "agency",
-        "nepa_level",
-        "geography",
-        "resource_topic",
-        "consultation",
-        "permit",
-    }
     present = {
         str(node.get("node_type"))
         for node in fact_nodes
@@ -780,7 +857,7 @@ def _check_common_fact_type_coverage(fact_nodes: list[dict[str, Any]]) -> dict[s
         "passed": True,
         "details": {
             "present_fact_types": sorted(present),
-            "missing_common_fact_types": sorted(required - present),
+            "missing_common_fact_types": sorted(COMMON_PACKAGE_FACT_TYPES - present),
         },
     }
 
@@ -826,6 +903,7 @@ def _build_applicability_context(
             {"action", "agency", "nepa_level"},
         ),
         "forest_units": _facts_by_subtype(compact_facts, "geography", "forest_unit"),
+        "project_locations": _facts_by_subtype(compact_facts, "geography", "project_location"),
         "geography": _facts_by_type(compact_facts, "geography"),
         "management_areas": _facts_by_type(compact_facts, "management_area"),
         "overlays": _facts_by_type(compact_facts, "overlay"),
@@ -1058,6 +1136,25 @@ def _is_negative_location_match(text: str, start: int, end: int) -> bool:
             window,
         )
     )
+
+
+def _is_weak_signal_match(text: str, start: int, end: int) -> bool:
+    window = _sentence_around(text, start, end).lower()
+    weak_phrases = (
+        "may require",
+        "may be required",
+        "might require",
+        "could require",
+        "could be required",
+        "potentially",
+        "possible",
+        "if present",
+        "if needed",
+        "if required",
+        "not yet determined",
+        "unknown whether",
+    )
+    return any(phrase in window for phrase in weak_phrases)
 
 
 def _sentence_around(text: str, start: int, end: int) -> str:

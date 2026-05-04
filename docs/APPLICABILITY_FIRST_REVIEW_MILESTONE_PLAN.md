@@ -422,7 +422,9 @@ Implemented. `applicability-context-build` now reads
 graph, package applicability context, and package fact graph validation summary under
 `source_library/reviews/<review_id>/applicability/`. It does not decide authority applicability,
 write retrieval or graph traces, emit applicability decisions, generate rule packs, or run
-compliance review.
+compliance review. The gap-closure pass added explicit project-location facts, weak-signal
+uncertainty records, missing-common-fact uncertainty records, and contradiction tests that prove
+negative-context facts create `contradicts_fact` edges instead of silent resolution.
 
 Goal:
 Build a package fact graph before applicability decisions are attempted.

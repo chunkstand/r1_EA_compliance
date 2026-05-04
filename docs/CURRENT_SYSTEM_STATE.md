@@ -332,10 +332,12 @@ writes `package_fact_graph.json`, `package_applicability_context.json`, and
 `package_fact_graph_validation.json` with typed, span-bound package facts for project/action,
 agency, NEPA level, geography, Forest Plan areas/overlays, resource topics, consultations, permits,
 public involvement, alternatives, and decision/finding signals. It records negative or
-out-of-scope location statements as negative-context facts instead of positive geography facts. The
-applicability-first path still does not write per-authority retrieval traces, write graph expansion
-traces, issue search coverage certificates, make applicability decisions, generate rule packs, or
-run compliance review. Later milestones still need hybrid retrieval traces, graph traces,
+out-of-scope location statements as negative-context facts instead of positive geography facts, and
+records weakly worded or missing common fact types as graph uncertainty rather than resolving them
+as package applicability decisions. The applicability-first path still does not write per-authority
+retrieval traces, write graph expansion traces, issue search coverage certificates, make
+applicability decisions, generate rule packs, or run compliance review. Later milestones still need
+hybrid retrieval traces, graph traces,
 deterministic applicability decisions, separate applicable and non-applicable authority artifacts,
 validation, provenance, and the generated compliance rule pack before `compliance-review` becomes
 gated by the applicability artifacts. Until those later milestones land, `compliance-review`

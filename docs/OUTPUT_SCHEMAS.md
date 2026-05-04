@@ -967,9 +967,9 @@ includes:
 - `package_fact_graph_sha256`
 - `package_context_sha256`
 - package section map and section-family bindings
-- project type, federal action signals, forest unit, geography, management areas, overlays,
-  consultations, permits, public-involvement signals, decision posture, and supporting-document
-  signals used for applicability
+- project type, federal action signals, forest unit, project location signals, geography,
+  management areas, overlays, consultations, permits, public-involvement signals, decision posture,
+  and supporting-document signals used for applicability
 - extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
   source metadata
 
@@ -977,8 +977,9 @@ includes:
 summarizes the package graph validation result. It includes `review_id`, `source_set_id`,
 `package_manifest_sha256`, `package_chunks_sha256`, `package_fact_graph_sha256`,
 `package_context_sha256`, validation checks, negative-context location facts, uncertainty records,
-and fact-count summaries. It is a Milestone 3 validation artifact only; it does not contain
-applicability decisions or compliance findings.
+and fact-count summaries. Uncertainty records include contradictory package evidence, weakly worded
+facts, and missing common fact types that later applicability stages must handle. It is a Milestone
+3 validation artifact only; it does not contain applicability decisions or compliance findings.
 
 `applicability_retrieval_trace.jsonl` has schema version `applicability-retrieval-trace-v0`; each
 line records one query execution or fused result set for one candidate authority. Each trace row
