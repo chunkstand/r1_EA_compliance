@@ -68,16 +68,18 @@ Current inventory summary:
 - Current rule-pack rules crosswalked: `44/44`
 - Orphan rule IDs: none
 - Orphan workbook source record IDs: none
-- Families requiring Milestone 2 source-currentness confirmation: `21`
+- Families still requiring Milestone 2 source-currentness confirmation: `0`
+- Families confirmed or documented by the Milestone 2 source-currentness gate: `21`
 - Families requiring Milestone 3 rule-template work after currentness: `19`
 
 The only current `candidate` family is environmental justice and civil-rights authority coverage;
-it is intentionally visible as a source-record gap for a later source-addition/currentness slice.
+Milestone 2 documents a non-addition for revoked environmental-justice executive-order text and
+keeps the family visible as a source-record gap for a later scoped workbook/source delta.
 Reserved or superseded Forest Service NEPA regulations, including former 36 CFR part 220 references,
 are represented as a `superseded` family and point reviewers back to current USDA NEPA procedure
 sources under 7 CFR part 1b plus the Forest Service NEPA policy/currentness sources. Every
-`source_only` family now carries explicit open-gap handoff text for source-currentness validation
-and rule-template promotion, so those rows are not hidden runtime assumptions.
+`source_only` family now carries explicit open-gap handoff text for Milestone 3 rule-template
+promotion, so those rows are not hidden runtime assumptions.
 
 ## Authority Currentness Gate
 
@@ -106,6 +108,7 @@ Report summary:
 - Superseded replacement-source mappings confirmed without counting as current authority: `3`
 - Family currentness: `source_currentness_confirmed=33`,
   `documented_source_non_addition=1`, `superseded_replacement_sources_confirmed=1`
+- Milestone 2 source-currentness families closed or documented: `21`
 - Failed families: `0`
 - Validation: passed
 

@@ -178,6 +178,48 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             checks = {check["name"]: check for check in report["validation"]["checks"]}
             self.assertFalse(checks["candidate_families_have_source_addition_decisions"]["passed"])
 
+    def test_stale_milestone_2_inventory_gap_fails_alignment(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[_catalog_row(source_record_id="R1EA-001")],
+            )
+            inventory = _inventory(
+                families=[
+                    {
+                        "family_id": "source_only_family",
+                        "status": "source_only",
+                        "source_record_ids": ["R1EA-001"],
+                        "open_inventory_gaps": [
+                            "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion."
+                        ],
+                    }
+                ]
+            )
+            inventory["summary"]["families_requiring_milestone_2_source_currentness"] = 1
+            _write_json(inventory_path, inventory)
+            _write_json(decisions_path, {"schema_version": "test-decisions", "decisions": []})
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            self.assertFalse(report["validation"]["passed"])
+            checks = {check["name"]: check for check in report["validation"]["checks"]}
+            self.assertFalse(checks["inventory_has_no_stale_milestone_2_currentness_gaps"]["passed"])
+            self.assertFalse(
+                checks[
+                    "inventory_summary_has_no_remaining_milestone_2_currentness_requirements"
+                ]["passed"]
+            )
+
 
 def _write_catalog(output_dir: Path, *, rows: list[dict]) -> None:
     catalog_dir = output_dir / "catalog"

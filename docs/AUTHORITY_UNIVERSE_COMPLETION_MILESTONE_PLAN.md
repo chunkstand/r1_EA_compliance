@@ -94,7 +94,8 @@ where the package fact graph already detects related cues.
   the derived `authority-currentness` gate. The latest local report for
   `source-set-ba8d0feae79501b8` validates `35` families, `207` family/source currentness records,
   `33` source-currentness-confirmed families, `1` documented candidate non-addition, and `1`
-  superseded replacement-source family with `0` failed families.
+  superseded replacement-source family with `21` Milestone 2 families closed or documented and `0`
+  failed families.
 - The next milestone is Milestone 3: promote the source-confirmed authority families into
   data-backed rule templates and applicability contracts.
 

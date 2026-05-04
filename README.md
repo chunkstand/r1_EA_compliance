@@ -58,8 +58,9 @@ requirement groups, all `44/44` current rule-pack rules crosswalked, and all `19
 source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
-confirmation, and `0` failed families. The remaining authority-universe work is rule-template and
-applicability-contract promotion for the source-only families.
+confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. The
+remaining authority-universe work is rule-template and applicability-contract promotion for the
+`19` source-only families.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture

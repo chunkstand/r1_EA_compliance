@@ -122,7 +122,6 @@
       "family_id": "clean_air_act_conformity_air_quality",
       "name": "Clean Air Act, general conformity, smoke, and air-quality coordination",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -198,7 +197,6 @@
       "family_id": "clean_water_act_wotus_permits",
       "name": "Clean Water Act, waters of the United States, and water permit/certification sources",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -311,7 +309,6 @@
       "family_id": "cultural_resource_protection_and_state_shpo_sources",
       "name": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -420,7 +417,6 @@
       "family_id": "eagle_efh_and_special_wildlife_sources",
       "name": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -488,14 +484,14 @@
       "family_id": "environmental_justice_civil_rights",
       "name": "Environmental justice and civil-rights authorities",
       "open_inventory_gaps": [
-        "Add or document current federal environmental-justice and civil-rights source rows before this family can become source_only or active."
+        "Milestone 2 documented the current source non-addition for this candidate; a later scoped workbook/source delta must add official Title VI and USDA nondiscrimination sources before this family can become source_only or active."
       ],
       "package_fact_types": [
         "geography",
         "public_involvement",
         "resource_topic"
       ],
-      "rationale": "The required authority universe identifies EJ/Title VI/current federal EJ policy as a gap; no current workbook source row or rule template is active.",
+      "rationale": "The required authority universe identifies EJ/Title VI/civil-rights coverage as a candidate source gap. Milestone 2 documents a non-addition for revoked EJ executive orders; no current workbook source row or rule template is active yet.",
       "required_authority_requirement_ids": [
         "environmental_justice_civil_rights"
       ],
@@ -511,7 +507,7 @@
         "mapped_source_record_ids": [],
         "mapping_status": "candidate_source_records_needed",
         "missing_source_record_requirements": [
-          "Add or document current federal environmental-justice and civil-rights source rows before this family can become source_only or active."
+          "Milestone 2 documented the current source non-addition for this candidate; a later scoped workbook/source delta must add official Title VI and USDA nondiscrimination sources before this family can become source_only or active."
         ],
         "source_set_id": "source-set-ba8d0feae79501b8"
       },
@@ -646,7 +642,6 @@
       "family_id": "floodplain_management_eo11988",
       "name": "Executive Order 11988 floodplain management",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -779,7 +774,7 @@
       "family_id": "forest_service_nepa_36cfr_220_reserved_superseded",
       "name": "Reserved/superseded Forest Service NEPA regulations under former 36 CFR part 220",
       "open_inventory_gaps": [
-        "Milestone 2 currentness validation must prevent this superseded or reserved authority from silently satisfying current source requirements."
+        "Milestone 3 must preserve supersession links in applicability contracts so former or reserved authority text cannot become active controlling authority."
       ],
       "package_fact_types": [
         "agency",
@@ -946,7 +941,6 @@
       "family_id": "forest_service_planning_handbook_amendments",
       "name": "Forest Service planning handbook and amendment support",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1010,7 +1004,6 @@
       "family_id": "grassland_bankhead_jones_authorities",
       "name": "Bankhead-Jones and National Grassland administration authorities",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1079,7 +1072,6 @@
       "family_id": "hazardous_materials_site_condition",
       "name": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1154,7 +1146,6 @@
       "family_id": "invasive_pesticide_soils_farmland_drinking_water",
       "name": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1247,7 +1238,6 @@
       "family_id": "land_exchange_fs_policy_and_project_references",
       "name": "Forest Service exchange policy, appraisal/title guidance, and project-reference records",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1355,7 +1345,6 @@
       "family_id": "land_exchange_regulatory_requirements",
       "name": "36 CFR part 254 land-exchange procedural and valuation requirements",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1476,7 +1465,6 @@
       "family_id": "land_exchange_statutory_authorities",
       "name": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -1486,7 +1474,7 @@
         "permit",
         "resource_topic"
       ],
-      "rationale": "Land-exchange statutes are source-covered but need source-currentness and rule-template promotion in later slices.",
+      "rationale": "Land-exchange statutes are source-currentness-confirmed and need rule-template promotion in Milestone 3.",
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
@@ -1660,7 +1648,6 @@
       "family_id": "minerals_energy_authorities",
       "name": "Minerals and energy-development authorities",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -2365,7 +2352,6 @@
       "family_id": "region1_forest_plan_source_records",
       "name": "Region 1 forest-plan and overlay source records",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -2597,7 +2583,6 @@
       "family_id": "roads_access_special_use_action_authorities",
       "name": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -2686,7 +2671,6 @@
       "family_id": "species_supporting_sources_and_overlays",
       "name": "Species source-support records, sensitive species pages, and lynx/LMP support",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -2768,7 +2752,6 @@
       "family_id": "tribal_consultation_trust_sacred_sites",
       "name": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -3005,7 +2988,6 @@
       "family_id": "vegetation_wildfire_forest_health_authorities",
       "name": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -3163,7 +3145,6 @@
       "family_id": "wilderness_wsr_trails_designated_areas",
       "name": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas",
       "open_inventory_gaps": [
-        "Milestone 2 must confirm current authoritative source coverage and supersession status for this family before promotion.",
         "Milestone 3 must add data-backed rule templates, applicability predicates, coverage-matrix entries, and eval cases before this family can become active."
       ],
       "package_fact_types": [
@@ -3391,6 +3372,18 @@
     "version": "0.4.0"
   },
   "schema_version": "authority-universe-families-v1",
+  "source_currentness_gate": {
+    "authority_family_count": 35,
+    "documented_source_non_addition_count": 1,
+    "failed_family_count": 0,
+    "report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
+    "schema_version": "authority-currentness-report-v0",
+    "source_currentness_confirmed_family_count": 33,
+    "source_currentness_record_count": 207,
+    "source_set_id": "source-set-ba8d0feae79501b8",
+    "status": "passed",
+    "superseded_replacement_confirmed_family_count": 1
+  },
   "source_record_crosswalk": [
     {
       "excel_row": 5,
@@ -5188,10 +5181,13 @@
   "summary": {
     "authority_family_count": 35,
     "duplicate_rule_ids": [],
-    "families_requiring_milestone_2_source_currentness": 21,
+    "families_confirmed_by_milestone_2_source_currentness": 21,
+    "families_requiring_milestone_2_source_currentness": 0,
     "families_requiring_milestone_3_rule_template_work": 19,
     "mapped_rule_count": 44,
     "mapped_source_record_count": 190,
+    "milestone_2_source_currentness_gate_status": "passed",
+    "milestone_2_source_currentness_report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
     "orphan_rule_ids": [],
     "orphan_source_record_ids": [],
     "required_authority_requirement_count": 18,

@@ -82,6 +82,9 @@ def test_authority_inventory_maps_every_rule_pack_rule_once() -> None:
     assert inventory["summary"]["duplicate_rule_ids"] == []
     assert inventory["summary"]["rule_count"] == len(expected_rule_ids)
     assert inventory["summary"]["mapped_rule_count"] == len(rule_to_family)
+    assert inventory["summary"]["families_requiring_milestone_2_source_currentness"] == 0
+    assert inventory["summary"]["families_confirmed_by_milestone_2_source_currentness"] == 21
+    assert inventory["source_currentness_gate"]["status"] == "passed"
 
     for rule in rule_pack["rules"]:
         family = family_by_id[rule_to_family[rule["id"]]]
@@ -126,6 +129,20 @@ def test_authority_inventory_maps_every_workbook_source_record() -> None:
     assert excluded_project_reference["primary_family_id"] == "land_exchange_fs_policy_and_project_references"
 
 
+def test_authority_inventory_has_no_stale_milestone_2_gap_text() -> None:
+    inventory = _load_json(INVENTORY_PATH)
+    stale_gap_family_ids = []
+    for family in inventory["authority_families"]:
+        gap_values = list(family["open_inventory_gaps"])
+        gap_values.extend(
+            family["source_record_mapping"].get("missing_source_record_requirements", [])
+        )
+        if any(_is_stale_milestone_2_gap(gap) for gap in gap_values):
+            stale_gap_family_ids.append(family["family_id"])
+
+    assert stale_gap_family_ids == []
+
+
 def test_authority_source_addition_decisions_cover_candidate_source_gaps() -> None:
     inventory = _load_json(INVENTORY_PATH)
     decisions = _load_json(SOURCE_ADDITION_DECISIONS_PATH)
@@ -149,3 +166,10 @@ def test_authority_source_addition_decisions_cover_candidate_source_gaps() -> No
 
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _is_stale_milestone_2_gap(value: str) -> bool:
+    return (
+        value.startswith("Milestone 2 must confirm current authoritative source coverage")
+        or value.startswith("Milestone 2 currentness validation must prevent")
+    )

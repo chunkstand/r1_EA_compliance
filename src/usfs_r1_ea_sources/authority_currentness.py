@@ -405,6 +405,21 @@ def _validation(
             and family["supersession"].get("current_source_record_ids")
         )
     ]
+    stale_milestone_2_gap_family_ids = [
+        family["family_id"]
+        for family in inventory["authority_families"]
+        if any(_is_stale_milestone_2_gap(gap) for gap in family.get("open_inventory_gaps", []))
+        or any(
+            _is_stale_milestone_2_gap(gap)
+            for gap in family.get("source_record_mapping", {}).get(
+                "missing_source_record_requirements",
+                [],
+            )
+        )
+    ]
+    milestone_2_requirement_count = int(
+        inventory.get("summary", {}).get("families_requiring_milestone_2_source_currentness") or 0
+    )
     non_candidate_current_source_gaps = [
         family["authority_family_id"]
         for family in family_currentness
@@ -483,6 +498,18 @@ def _validation(
             not superseded_families_without_metadata,
             [],
             superseded_families_without_metadata,
+        ),
+        _check(
+            "inventory_has_no_stale_milestone_2_currentness_gaps",
+            not stale_milestone_2_gap_family_ids,
+            [],
+            stale_milestone_2_gap_family_ids,
+        ),
+        _check(
+            "inventory_summary_has_no_remaining_milestone_2_currentness_requirements",
+            milestone_2_requirement_count == 0,
+            0,
+            milestone_2_requirement_count,
         ),
         _check(
             "non_candidate_families_have_current_source_coverage",
@@ -582,6 +609,15 @@ def _currentness_status(*, family: dict, source_status: str) -> str:
     if family.get("status") == "superseded":
         return "replacement_source_confirmed"
     return "confirmed_from_catalog"
+
+
+def _is_stale_milestone_2_gap(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    return (
+        value.startswith("Milestone 2 must confirm current authoritative source coverage")
+        or value.startswith("Milestone 2 currentness validation must prevent")
+    )
 
 
 def _effective_date(row: dict) -> str | None:

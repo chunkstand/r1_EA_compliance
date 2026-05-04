@@ -938,7 +938,8 @@ not as current controlling authority for the superseded family.
 
 The validation block checks source-set identity, inventory/catalog alignment, candidate-family
 source-addition decisions, required currentness fields, successful-status-only current coverage,
-excluded-source handling, failed-capture handling, and superseded replacement metadata.
+excluded-source handling, failed-capture handling, superseded replacement metadata, and inventory
+alignment so stale Milestone 2 currentness gap text cannot remain after the gate passes.
 
 ## Applicability-First Review Outputs
 
