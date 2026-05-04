@@ -2613,7 +2613,7 @@ def _write_generated_review_gate(
     coverage_certificates = (
         [
             {
-                "certificate_id": "coverage:not-applicable",
+                "coverage_certificate_id": "coverage:not-applicable",
                 "candidate_authority_id": "candidate:not-applicable",
                 "coverage_class": "non_applicable_authority",
             }

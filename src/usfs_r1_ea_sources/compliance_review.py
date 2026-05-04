@@ -878,11 +878,17 @@ def _coverage_certificate_ids(coverage: dict) -> set[str]:
     if not isinstance(certificates, list):
         return set()
     return {
-        str(certificate.get("certificate_id") or certificate.get("search_coverage_certificate_id") or "")
+        str(
+            certificate.get("coverage_certificate_id")
+            or certificate.get("certificate_id")
+            or certificate.get("search_coverage_certificate_id")
+            or ""
+        )
         for certificate in certificates
         if isinstance(certificate, dict)
         and str(
-            certificate.get("certificate_id")
+            certificate.get("coverage_certificate_id")
+            or certificate.get("certificate_id")
             or certificate.get("search_coverage_certificate_id")
             or ""
         ).strip()
