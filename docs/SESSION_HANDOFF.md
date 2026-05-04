@@ -1,8 +1,94 @@
 # Session Handoff
 
-Date: 2026-05-03
+Date: 2026-05-04
 
-## Current State
+## Current Applicability-First State
+
+The current active implementation lane is the post-V1 applicability-first review architecture in
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`. The V1 EA gate remains promoted for the Custer
+Gallatin East Crazy proving package, but new work has moved into a pre-review applicability
+pipeline that separates authority applicability from compliance findings.
+
+Current completed applicability milestones:
+
+- Milestone 1 schema plan: artifact contracts for package fact graph, retrieval trace, graph trace,
+  search coverage certificates, applicability decisions, provenance, validation/adjudication, and
+  generated rule pack are documented in `docs/OUTPUT_SCHEMAS.md`.
+- Milestone 2 authority universe: `applicability-authority-universe` writes
+  `authority_universe_snapshot.json` with rule-template and Forest Plan component candidates,
+  source evidence requirements, package/source filters, retrieval contracts, graph-expansion
+  contracts, dependency/exception/supersession fields, and search coverage requirements.
+- Milestone 3 package context: `applicability-context-build` reads the existing EA package cache and
+  writes `package_fact_graph.json`, `package_applicability_context.json`, and
+  `package_fact_graph_validation.json` with typed, span-bound package facts and uncertainty records.
+- Milestone 4 retrieval/graph traces: `applicability-retrieve` writes
+  `applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`, and
+  `applicability_retrieval_graph_diagnostics.json` with replayable per-candidate retrieval rows,
+  RRF fused result rows, bounded graph paths, and diagnostics.
+- Milestone 5 deterministic decisions: `applicability-determine` writes
+  `applicability_decisions.jsonl`, `applicable_authorities.json`,
+  `non_applicable_authorities.json`, `search_coverage_certificates.json`,
+  `applicability_provenance.json`, and `applicability_report.md` without producing compliance
+  findings or a generated rule pack.
+
+Latest applicability commits:
+
+- `8018648` - Harden applicability authority universe
+- `f5a3db1` - Close authority universe contract gaps
+- `0f4a851` - Add applicability package fact graph
+- `4656283` - Close package fact graph gaps
+- `0f30761` - Add applicability retrieval traces
+- `e9e3abe` - Close applicability retrieval graph gaps
+- `08b1aae` - Add deterministic applicability decisions
+- `aa0c1da` - Close applicability decision gaps
+
+Important current behavior:
+
+- Applicability artifacts are produced before compliance review and do not contain `pass`, `gap`, or
+  `uncertain` compliance findings.
+- Weak or conflicting package trigger evidence is recorded as `needs_adjudication`.
+- Not-applicable decisions cite search coverage certificates.
+- Milestone 5 gap closure added raw package-chunk checks for explicit negative evidence,
+  source-index hash requirements for sufficient coverage, retained source-library evidence spans on
+  non-applicable decisions, local-evidence trigger-group matching, and package manifest/chunk
+  provenance entities.
+- `compliance-review` still runs the current V1 authority-first path. It is not yet gated by
+  applicability artifacts, and it does not yet consume a generated applicability-derived rule pack.
+
+Latest verification for the applicability-first lane:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+git diff --check
+PYTHONPATH=src uv run --extra dev pytest
+```
+
+Verified results from the latest Milestone 5 gap-close pass:
+
+- Applicability plus compliance focused suite: `57 passed`
+- Full repository test suite: `253 passed`
+- Ruff: passed
+- Compileall: passed
+- `git diff --check`: passed
+
+Next implementation target:
+
+Milestone 6 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: validation, coverage, and
+adjudication gate. The next slice should add `applicability-validate` plus replayable adjudication
+template/apply/eval surfaces. Validation should fail closed when decisions are missing, duplicated,
+stale, unsupported by retrieval/graph traces, unsupported by search coverage, or still unresolved at
+generated-pack time.
+
+Current stop conditions for the next session:
+
+- Do not generate a compliance rule pack until applicability validation/adjudication gates exist.
+- Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
+- Do not let `compliance-review` override applicability decisions.
+- Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.
+
+## Historical V1 Gate State
 
 The East Crazy Inspiration Divide V1 compliance review has been rerun against the real package at
 `source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)`.
@@ -128,15 +214,14 @@ Primary gate artifacts/checks:
   fails if any selected standard loses LMP plan-source evidence, even when the standard is not
   applicable.
 
-Next implementation target:
+Historical next implementation target, now partially completed:
 
-The V1 EA gate repair plan is complete through Milestone 6. The next implementation target should
-start from the revised `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: split authority
-applicability into a first-class pre-review stage backed by an explicit authority universe, package
-fact graph, per-authority hybrid retrieval traces, bounded graph expansion traces, deterministic
-decision ledger, search coverage certificates, validation/adjudication gate, and generated rule pack.
-Only then should compliance review run. Do not broaden the V1 claim beyond the current Custer
-Gallatin proving package without a new evidence-backed plan and gate.
+The V1 EA gate repair plan is complete through Milestone 6. This historical handoff originally
+pointed to the revised `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` as the next target.
+Milestones 1 through 5 of that applicability-first plan are now implemented. The remaining target is
+Milestone 6 validation/adjudication, followed by generated rule-pack production and compliance-review
+gating. Do not broaden the V1 claim beyond the current Custer Gallatin proving package without a new
+evidence-backed plan and gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`, and
