@@ -338,12 +338,14 @@ as package applicability decisions. `applicability-retrieve` reads the authority
 fact graph, local retrieval index, and available graph/link artifacts, then writes
 `applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`, and
 `applicability_retrieval_graph_diagnostics.json` with replayable per-candidate query rows, fused RRF
-result rows, bounded graph paths, and retrieval/graph diagnostics. The applicability-first path
-still does not issue search coverage certificates, make applicability decisions, generate rule
-packs, or run compliance review. Later milestones still need deterministic applicability decisions,
-separate applicable and non-applicable authority artifacts, validation, provenance, and the
-generated compliance rule pack before `compliance-review` becomes gated by the applicability
-artifacts. Until those later milestones land, `compliance-review` remains the current V1
+result rows, bounded graph paths, and retrieval/graph diagnostics. Graph trace rows now explicitly
+preserve authority-category hierarchy, source-claim/rule-claim-link bindings, supporting source
+records, package facts, and Forest Plan component provenance when those artifacts are available. The
+applicability-first path still does not issue search coverage certificates, make applicability
+decisions, generate rule packs, or run compliance review. Later milestones still need deterministic
+applicability decisions, separate applicable and non-applicable authority artifacts, validation,
+provenance, and the generated compliance rule pack before `compliance-review` becomes gated by the
+applicability artifacts. Until those later milestones land, `compliance-review` remains the current V1
 authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures

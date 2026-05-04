@@ -33,7 +33,9 @@ Implemented today:
   `package_fact_graph_validation.json` before any applicability decisions are attempted.
 - Milestone 4 retrieval and graph tracing is implemented: `applicability-retrieve` writes
   `applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`, and
-  `applicability_retrieval_graph_diagnostics.json` without deciding applicability.
+  `applicability_retrieval_graph_diagnostics.json` without deciding applicability. Graph traces
+  explicitly carry authority-category, source-claim/rule-claim-link, supporting-source, package
+  fact, and Forest Plan component provenance when those artifacts are available.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
@@ -498,8 +500,10 @@ Current status:
 Implemented. `applicability-retrieve` now consumes the authority universe, package fact graph, and
 local retrieval index, then writes replayable per-candidate retrieval rows, RRF fused result rows,
 bounded graph path rows, and diagnostics under
-`source_library/reviews/<review_id>/applicability/`. The command does not decide final
-applicability, emit coverage certificates, generate rule packs, or run compliance review.
+`source_library/reviews/<review_id>/applicability/`. Gap closure added explicit graph paths and
+evidence references for authority-category hierarchy, source-claim/rule-claim-link bindings,
+supporting source records, package facts, and Forest Plan components. The command does not decide
+final applicability, emit coverage certificates, generate rule packs, or run compliance review.
 
 Goal:
 Run replayable per-authority evidence discovery using hybrid search and bounded graph traversal.

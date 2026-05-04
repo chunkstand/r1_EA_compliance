@@ -1013,9 +1013,9 @@ records an inspected graph path for one candidate authority. Each graph trace ro
 - start node ID, end node ID, traversed node IDs, relationship types, traversal depth, and path
   rationale
 - selected/rejected status and rejection reason
-- evidence references to authority universe candidates, source records, source claims, Forest Plan
-  components, package facts, geography, overlays, exceptions, dependencies, supersession
-  relationships, permits, consultations, and generated-rule-pack links when present
+- evidence references to authority categories, source records, source claims, rule-claim links,
+  Forest Plan components, package facts, package chunks, evidence spans, retrieval result IDs, and
+  retrieval trace IDs when present
 
 Graph traces are bounded evidence-discovery records only. Graph paths may support a deterministic
 predicate or an adjudication item, but graph expansion is not the final legal decision maker.

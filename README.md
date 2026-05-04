@@ -819,8 +819,10 @@ index, and available graph/link artifacts. It writes `applicability_retrieval_tr
 `applicability_graph_trace.jsonl`, and `applicability_retrieval_graph_diagnostics.json`. Retrieval
 rows include exact/keyword, metadata/source-role, package-section, graph-seed, and fused RRF result
 sets with selected and rejected results. Graph rows are bounded by each candidate's declared graph
-contract. This command records evidence discovery only; it does not write applicability decisions,
-search coverage certificates, generated rule packs, or compliance findings.
+contract and preserve authority-category, source-claim/rule-claim-link, supporting-source, package
+fact, and Forest Plan component provenance when those artifacts are available. This command records
+evidence discovery only; it does not write applicability decisions, search coverage certificates,
+generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 

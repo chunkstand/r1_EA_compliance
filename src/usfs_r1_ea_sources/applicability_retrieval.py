@@ -859,10 +859,18 @@ def _candidate_trace_graph(
         if relationship in allowed_relationships:
             adjacency[source].append((relationship, target))
 
+    authority_category = str(candidate.get("authority_category") or "").strip()
+    if authority_category:
+        node_id = f"authority-category:{authority_category}"
+        add_node(node_id, node_type="authority_category", authority_category=authority_category)
+        add_edge(start_node_id, "authority_category", node_id)
+
     for source_record_id in _strings(candidate.get("source_record_ids")):
         node_id = f"source-record:{source_record_id}"
         add_node(node_id, node_type="source_record", source_record_id=source_record_id)
         add_edge(start_node_id, "source_record", node_id)
+        if authority_category:
+            add_edge(f"authority-category:{authority_category}", "source_record", node_id)
 
     for result in _selected_results(retrieval_trace_rows):
         if result.get("source_chunk_id"):
@@ -926,7 +934,12 @@ def _candidate_trace_graph(
             continue
         link_id = str(link.get("link_id") or _stable_id("rule-claim-link", json.dumps(link, sort_keys=True)))
         link_node_id = f"rule-claim-link:{link_id}"
-        add_node(link_node_id, node_type="rule_claim_link", rule_id=link.get("rule_id"))
+        add_node(
+            link_node_id,
+            node_type="rule_claim_link",
+            link_id=link_id,
+            rule_id=link.get("rule_id"),
+        )
         add_edge(start_node_id, "rule_claim_link", link_node_id)
         claim_id = str(link.get("claim_id") or link.get("source_claim_id") or "")
         if claim_id:
@@ -967,6 +980,31 @@ def _candidate_trace_graph(
                 node_id = f"{relationship}:{value}"
                 add_node(node_id, node_type=relationship, rule_id=value)
                 add_edge(start_node_id, relationship, node_id)
+        for value in _strings(dependency_contract.get("supporting_source_record_ids")):
+            node_id = f"source-record:{value}"
+            add_node(
+                node_id,
+                node_type="source_record",
+                source_record_id=value,
+                source_record_relationship="supporting",
+            )
+            add_edge(start_node_id, "source_record", node_id)
+        for record in dependency_contract.get("supporting_source_records") or []:
+            if not isinstance(record, dict):
+                continue
+            source_record_id = str(record.get("source_record_id") or "").strip()
+            if not source_record_id:
+                continue
+            node_id = f"source-record:{source_record_id}"
+            add_node(
+                node_id,
+                node_type="source_record",
+                source_record_id=source_record_id,
+                source_record_relationship="supporting",
+                source_record_role=record.get("role"),
+                source_record_required_for=record.get("required_for"),
+            )
+            add_edge(start_node_id, "source_record", node_id)
 
     _merge_external_graph(
         nodes=nodes,
@@ -992,11 +1030,11 @@ def _merge_external_graph(
         return
     allowed_node_ids = set(nodes)
     for node in graph_nodes:
-        node_source_id = str(
-            node.get("source_record_id") or node.get("source_record_ids") or ""
-        )
         node_id = str(node.get("node_id") or "")
-        if node_id and node_source_id in candidate_source_record_ids:
+        node_source_ids = set(_strings(node.get("source_record_id"))) | set(
+            _strings(node.get("source_record_ids"))
+        )
+        if node_id and node_source_ids & candidate_source_record_ids:
             allowed_node_ids.add(node_id)
             nodes.setdefault(node_id, node)
     for edge in graph_edges:
@@ -1532,8 +1570,11 @@ def _path_rationale(path: list[str], nodes: dict[str, dict[str, Any]]) -> str:
 
 def _path_evidence_references(path: list[str], nodes: dict[str, dict[str, Any]]) -> dict[str, Any]:
     refs: dict[str, set[str]] = {
+        "authority_categories": set(),
         "source_record_ids": set(),
         "source_claim_ids": set(),
+        "rule_claim_link_ids": set(),
+        "forest_plan_component_ids": set(),
         "package_fact_node_ids": set(),
         "package_chunk_ids": set(),
         "evidence_span_ids": set(),
@@ -1545,6 +1586,9 @@ def _path_evidence_references(path: list[str], nodes: dict[str, dict[str, Any]])
         for key, ref_key in (
             ("source_record_id", "source_record_ids"),
             ("claim_id", "source_claim_ids"),
+            ("link_id", "rule_claim_link_ids"),
+            ("authority_category", "authority_categories"),
+            ("component_id", "forest_plan_component_ids"),
             ("package_fact_node_id", "package_fact_node_ids"),
             ("package_chunk_id", "package_chunk_ids"),
             ("retrieval_result_id", "retrieval_result_ids"),

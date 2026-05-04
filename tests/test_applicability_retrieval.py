@@ -25,7 +25,7 @@ class ApplicabilityRetrievalTraceTests(unittest.TestCase):
                 source_set_id=fixture["source_set_id"],
                 retrieval_index_path=fixture["retrieval_index_path"],
                 top_k=2,
-                max_graph_paths_per_candidate=8,
+                max_graph_paths_per_candidate=25,
             )
 
             self.assertTrue(result.summary["validation_passed"])
@@ -81,6 +81,33 @@ class ApplicabilityRetrievalTraceTests(unittest.TestCase):
                 ]
                 self.assertLessEqual(row["traversal_depth"], max_depth)
                 self.assertTrue(set(row["relationship_types"]) <= set(allowed))
+
+            self.assertTrue(
+                any("authority_category" in row["relationship_types"] for row in graph_rows)
+            )
+            self.assertTrue(
+                any("rule_claim_link" in row["relationship_types"] for row in graph_rows)
+            )
+            self.assertTrue(any("source_claim" in row["relationship_types"] for row in graph_rows))
+            self.assertTrue(
+                any(
+                    row["evidence_references"]["rule_claim_link_ids"]
+                    for row in graph_rows
+                )
+            )
+            self.assertTrue(
+                any(
+                    row["evidence_references"]["authority_categories"]
+                    for row in graph_rows
+                )
+            )
+            supporting_source_ids = {
+                source_record_id
+                for row in graph_rows
+                for source_record_id in row["evidence_references"]["source_record_ids"]
+                if source_record_id.endswith("-SUPPORT") or source_record_id == "R1PLAN-CG"
+            }
+            self.assertTrue(supporting_source_ids)
 
     def test_cli_writes_trace_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -168,6 +195,11 @@ def _write_trace_fixture(root: Path, *, extra_package_fact_count: int = 0) -> di
         extra_package_fact_count=extra_package_fact_count,
     )
     _write_json(applicability_dir / "package_fact_graph.json", package_graph)
+    claims_dir = output_dir / "derived" / source_set_id / "claims"
+    rule_claim_links_path = claims_dir / "rule_claim_links.jsonl"
+    claims_path = claims_dir / "claims.jsonl"
+    _write_jsonl(rule_claim_links_path, _rule_claim_links())
+    _write_jsonl(claims_path, _source_claims())
     candidate_contracts = _candidate_contracts()
     authority_universe = {
         "schema_version": "authority-universe-snapshot-v0",
@@ -175,7 +207,10 @@ def _write_trace_fixture(root: Path, *, extra_package_fact_count: int = 0) -> di
         "authority_universe_sha256": "authority-universe-sha",
         "review_id": review_id,
         "source_set_id": source_set_id,
-        "artifact_paths": {},
+        "artifact_paths": {
+            "rule_claim_links_path": str(rule_claim_links_path),
+            "claims_path": str(claims_path),
+        },
         "candidate_authorities": list(candidate_contracts.values()),
     }
     _write_json(applicability_dir / "authority_universe_snapshot.json", authority_universe)
@@ -237,6 +272,7 @@ def _rule_candidate(
     candidate_id = f"rule-template:unit-pack:0.1.0:{rule_id}"
     relationship_types = [
         "source_record",
+        "authority_category",
         "source_claim",
         "rule_claim_link",
         "package_fact",
@@ -309,6 +345,7 @@ def _rule_candidate(
             "dependency_rule_ids": [],
             "exception_rule_ids": [],
             "supersedes_rule_ids": [],
+            "supporting_source_record_ids": [f"{source_record_id}-SUPPORT"],
         },
         "rule_template": {
             "base_rule_pack_id": "unit-pack",
@@ -515,6 +552,37 @@ def _package_fact_graph(
         "edges": [],
         "validation": {"passed": True, "checks": []},
     }
+
+
+def _rule_claim_links() -> list[dict]:
+    return [
+        {
+            "link_id": "link-ce",
+            "rule_id": "ce_fanec",
+            "claim_id": "claim-ce",
+            "source_record_id": "R1EA-CE",
+        },
+        {
+            "link_id": "link-esa",
+            "rule_id": "esa_nhpa_mbta",
+            "claim_id": "claim-esa",
+            "source_record_id": "R1EA-ESA",
+        },
+        {
+            "link_id": "link-wet",
+            "rule_id": "wetlands_roadless",
+            "claim_id": "claim-wet",
+            "source_record_id": "R1EA-WET",
+        },
+    ]
+
+
+def _source_claims() -> list[dict]:
+    return [
+        {"claim_id": "claim-ce", "source_record_id": "R1EA-CE"},
+        {"claim_id": "claim-esa", "source_record_id": "R1EA-ESA"},
+        {"claim_id": "claim-wet", "source_record_id": "R1EA-WET"},
+    ]
 
 
 def _package_fact(node_type: str, fact_subtype: str, normalized_value: str, raw: str) -> dict:
