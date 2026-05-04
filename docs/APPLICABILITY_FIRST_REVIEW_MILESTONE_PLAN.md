@@ -175,6 +175,12 @@ Stop conditions:
 
 ## Milestone 2: Authority Universe Snapshot
 
+Implementation status:
+Implemented through the `applicability-authority-universe` command and
+`src/usfs_r1_ea_sources/applicability.py`. This milestone writes only
+`authority_universe_snapshot.json`; package applicability decisions and compliance findings remain
+out of scope.
+
 Goal:
 Build the complete candidate authority universe used by applicability determination.
 

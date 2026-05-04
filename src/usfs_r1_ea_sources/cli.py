@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse
 import json
 
+from .applicability import build_authority_universe_snapshot
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
 from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
@@ -376,6 +377,34 @@ def build_parser() -> argparse.ArgumentParser:
     )
     rule_claim_eval.add_argument("--top-k", type=int, default=5)
     rule_claim_eval.add_argument("--results-dir", type=Path)
+
+    applicability_authority_universe = subparsers.add_parser(
+        "applicability-authority-universe",
+        help="Build the pre-review authority-universe snapshot without deciding applicability.",
+    )
+    applicability_authority_universe.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_authority_universe.add_argument("--review-id", required=True)
+    applicability_authority_universe.add_argument("--source-set-id")
+    applicability_authority_universe.add_argument(
+        "--base-rule-pack",
+        default=DEFAULT_RULE_PACK_PATH,
+        type=Path,
+    )
+    applicability_authority_universe.add_argument(
+        "--forest-plan-profiles-path",
+        default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
+    applicability_authority_universe.add_argument(
+        "--forest-plan-component-inventory-path",
+        type=Path,
+    )
+    applicability_authority_universe.add_argument("--claims-path", type=Path)
+    applicability_authority_universe.add_argument("--rule-claim-links-path", type=Path)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -835,6 +864,20 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["passed"] else 1
+
+    if args.command == "applicability-authority-universe":
+        result = build_authority_universe_snapshot(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            base_rule_pack_path=args.base_rule_pack,
+            forest_plan_profiles_path=args.forest_plan_profiles_path,
+            forest_plan_component_inventory_path=args.forest_plan_component_inventory_path,
+            claims_path=args.claims_path,
+            rule_claim_links_path=args.rule_claim_links_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
 
     if args.command == "phase-eval":
         result = run_phase_aligned_eval(

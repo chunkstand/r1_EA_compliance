@@ -794,8 +794,11 @@ validated applicability run and generated rule pack; it must not be the first st
 which authorities apply.
 
 The current V1 compliance-review implementation still runs the authority-first path described in the
-next section. This section is the schema and gate contract for the applicability-first milestone
-sequence.
+next section. Milestone 2 implements the authority-universe snapshot command only:
+`applicability-authority-universe` writes
+`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` without deciding
+package applicability or producing compliance findings. The remaining artifacts in this section are
+the schema and gate contract for later applicability-first milestones.
 
 Required artifacts:
 
@@ -852,6 +855,9 @@ EA package + source library + authority universe
 - `base_rule_pack_id`
 - `base_rule_pack_version`
 - `base_rule_pack_sha256`
+- `artifact_paths`
+- `summary`
+- `validation`
 - source-claim artifact hashes when source claims are part of candidate evidence
 - rule-claim binding artifact hashes when claim-bearing rules are part of the candidate universe
 - forest-plan profile IDs and component inventory IDs used for candidate discovery

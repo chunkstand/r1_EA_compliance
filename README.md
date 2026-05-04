@@ -188,10 +188,12 @@ The post-V1 applicability-first contract moves authority applicability into a pr
 family under `source_library/reviews/<review_id>/applicability/`: candidate authorities are
 snapshotted, package applicability context is recorded, applicable and non-applicable authorities are
 separate artifacts, validation blocks unresolved or stale decisions, and the downstream review rule
-pack is generated from the validated applicable-authorities artifact. Runtime implementation of that
-sequence starts after the schema-contract milestone; the promoted V1 review remains the current
-authority-first path until the later milestones land. Embeddings and expanded human adjudication over
-real EA packages remain downstream work.
+pack is generated from the validated applicable-authorities artifact. The authority-universe
+snapshot slice is implemented through `applicability-authority-universe`; it writes the candidate
+authority snapshot only and does not decide package applicability. The promoted V1 review remains
+the current authority-first path until the later applicability determination, validation, generated
+rule-pack, and compliance-review gate milestones land. Embeddings and expanded human adjudication
+over real EA packages remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -751,6 +753,22 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
 
 `rule-claim-eval` revalidates current link artifacts before scoring cases and refuses stale,
 tampered, or non-reviewer-ready bindings.
+
+Build the applicability-first authority universe snapshot:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json
+```
+
+`applicability-authority-universe` reads the source catalog, source-set manifest, base rule pack,
+forest-plan profiles, source-set component inventory, source-claim artifacts, and rule-claim links.
+It writes `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with
+one rule-template candidate per rule and one forest-plan component candidate per component
+inventory record. This command does not write applicability decisions, applicable/non-applicable
+authority artifacts, generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 

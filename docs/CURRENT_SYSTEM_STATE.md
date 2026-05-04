@@ -318,13 +318,17 @@ Rule-pack `0.4.0` contains `44` rules. It declares `baseline_source_record_ids` 
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
-Applicability-First Review has a post-V1 schema contract but is not yet the runtime path. The
-contract requires applicability to run before compliance review, writes applicable and
-non-applicable authorities as separate artifacts under
-`source_library/reviews/<review_id>/applicability/`, blocks unresolved or stale applicability
-decisions, and derives the generated compliance rule pack from the validated applicable-authorities
-artifact. Until the implementation milestones after the schema contract land, `compliance-review`
-remains the current V1 authority-first command.
+Applicability-First Review has a post-V1 schema contract and the authority-universe snapshot slice
+is implemented through `applicability-authority-universe`. The command reads the current catalog,
+base rule pack, forest-plan profiles, component inventory, source-claim artifacts, and rule-claim
+links, then writes
+`source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
+rule-template candidates and Forest Plan component candidates. It does not decide package
+applicability, generate rule packs, or run compliance review. Later milestones still need to write
+applicability decisions, separate applicable and non-applicable authority artifacts, validation, and
+the generated compliance rule pack before `compliance-review` becomes gated by the applicability
+artifacts. Until those later milestones land, `compliance-review` remains the current V1
+authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
