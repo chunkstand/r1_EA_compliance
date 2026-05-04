@@ -57,6 +57,83 @@ codebase easier for humans and coding agents to understand, change, verify, and 
   agent-readable infrastructure:
   <https://rosetta.to/u/ycombinator/andrej-karpathy-software-is-changing-again>.
 
+## Code Architecture And Review Lenses
+
+The broad thought-leader field for code architecture includes Simon Brown, Neal Ford, Rebecca
+Parsons, Patrick Kua, Titus Winters, Hyrum Wright, Adam Tornhill, Martin Fowler, Gregor Hohpe,
+Michael Nygard, Vaughn Vernon, Sam Newman, Sandi Metz, and Mark Richards. For this repository, the
+four most useful review lenses are below because each maps directly to a current risk in the code
+and workflow.
+
+### Simon Brown: Architecture Legibility
+
+Simon Brown's C4 and Structurizr work asks whether a system can be understood at multiple levels of
+abstraction and whether diagrams, decisions, and code stay synchronized. Through that lens, this
+repository has a strong story but needs a more executable map.
+
+- Positive signal: the pipeline is conceptually clear: workbook, capture, catalog, extraction,
+  retrieval, evidence graph, claims, rule links, applicability, compliance review, and eval gates.
+- Review concern: the pipeline is mostly documented in prose and artifacts, not enforced as a
+  dependency model.
+- Likely recommendation: add `docs/ARCHITECTURE.md`, a machine-readable architecture contract, and
+  a dependency fitness test so agents and reviewers can answer where a change belongs before they
+  edit.
+
+### Ford, Parsons, And Kua: Evolutionary Architecture
+
+Neal Ford, Rebecca Parsons, and Patrick Kua focus on incremental change guided by automated
+architecture fitness functions. This repository already follows the spirit through milestones,
+handoffs, evals, and atomic commits, but the architecture checks need to catch structural drift.
+
+- Positive signal: the repo has strong functional gates: pytest, ruff, compileall, `git diff
+  --check`, phase evals, compliance evals, gold evals, and generated artifact validation.
+- Review concern: architecture intent is not yet a first-class test target; import cycles and
+  layer violations can exist even when functional tests pass.
+- Likely recommendation: start with a small architecture fitness gate that rejects source import
+  cycles, then grow it into layer-boundary checks for capture, catalog, extraction, retrieval,
+  graph, claims, rule packs, applicability, review, and eval.
+
+### Titus Winters And Google Engineering Practices: Code Health Over Time
+
+Titus Winters' "programming over time" framing and Google's code-review practice treat review as a
+way to preserve shared understanding and code health. From that lens, the core issue is not whether
+the current system works; it is whether each future change remains reviewable.
+
+- Positive signal: the repo has unusually good durable context for reviewers: `AGENTS.md`,
+  `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, milestone plans, and focused tests.
+- Review concern: large orchestration files such as `cli.py`, `compliance_review.py`,
+  `forest_plan_components.py`, `evidence_graph.py`, and `applicability_validation.py` are becoming
+  too large for narrow, high-confidence review.
+- Likely recommendation: split command registration and review-lane orchestration by workflow while
+  preserving public command names, then require focused tests for each lane.
+
+### Adam Tornhill: Hotspots And Behavioral Code Analysis
+
+Adam Tornhill's behavioral-code-analysis lens prioritizes the code that is both complex and
+frequently changed. It avoids broad cleanup and instead asks where maintenance risk is compounding.
+
+- Positive signal: this repo's generated artifacts and tests make targeted refactoring feasible.
+- Review concern: size alone already points to likely hotspots: `compliance_review.py`,
+  `forest_plan_components.py`, `evidence_graph.py`, `applicability_validation.py`,
+  `claim_extraction.py`, `extract.py`, and `cli.py`. The next step is to combine size with git
+  churn and bug/eval history.
+- Likely recommendation: rank module hotspots before refactoring and only split files that are
+  active, risky, and hard to review.
+
+## Cross-Lens Findings
+
+Across these four lenses, the same conclusions repeat:
+
+- The system's core architecture is sound: it is workbook-driven, artifact-first, provenance-heavy,
+  and eval-gated.
+- The main architecture debt is not missing features; it is missing architecture enforcement.
+- The highest-value near-term change is a small dependency fitness gate, not a sweeping rewrite.
+- The second priority is isolating shared rule-pack concerns so upstream rule binding does not
+  depend on downstream compliance review.
+- The third priority is reducing review friction in `cli.py` and large orchestration modules.
+- Every architecture improvement should preserve current artifact contracts and public CLI
+  behavior unless a separate migration explicitly changes them.
+
 ## What This Repo Already Gets Right
 
 - The workbook is the contract. That gives agents a durable source of truth instead of forcing
@@ -256,3 +333,6 @@ Commit the verified architecture-contract sequence. Push only when explicitly re
 Stop conditions:
 Stop if the contract exposes additional dependency cycles that require broader design decisions, or
 if moving rule-pack helpers changes generated rule-pack or compliance-review behavior.
+
+See `docs/AGENTIC_CODING_ARCHITECTURE_MILESTONE_PLAN.md` for the sequenced milestone plan that
+aligns the implementation path with the four review lenses above.

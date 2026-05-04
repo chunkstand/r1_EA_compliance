@@ -1,0 +1,295 @@
+# Agentic Coding Architecture Milestone Plan
+
+Date: 2026-05-04
+
+This plan turns `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md` into an implementation sequence for
+this repository. It is organized around four review lenses:
+
+- Simon Brown: architecture legibility.
+- Neal Ford, Rebecca Parsons, and Patrick Kua: evolutionary architecture and fitness functions.
+- Titus Winters and Google Engineering Practices: code health over time.
+- Adam Tornhill: hotspot-driven code review and refactoring.
+
+The goal is not a broad rewrite. The goal is to make the existing workbook-driven, artifact-first,
+eval-gated system easier for humans and coding agents to understand, change, test, and govern.
+
+## Current Boundary
+
+- Preserve the workbook contract, source-row identity, artifact hashes, citation labels, and
+  generated evidence surfaces described in `AGENTS.md`, `README.md`, `DOWNLOADER_RULES.md`, and
+  `docs/CURRENT_SYSTEM_STATE.md`.
+- Preserve public CLI command names and generated artifact contracts unless a milestone explicitly
+  defines a migration.
+- Keep `source_library/` ignored and treat it as generated local evidence unless repository policy
+  changes.
+- Keep domain knowledge in workbook rows, catalog metadata, rule packs, eval fixtures, generated
+  ledgers, and reports rather than hidden runtime branches.
+- Stage and commit only the verified milestone slice. Do not stage unrelated dirty worktree changes.
+
+## Four-Lens Alignment
+
+| Lens | What It Asks | Local Application |
+| --- | --- | --- |
+| Simon Brown | Can reviewers and agents see the system shape at useful levels of detail? | Add a compact architecture map and machine-readable contract for workflow layers, generated artifacts, and ownership boundaries. |
+| Ford, Parsons, and Kua | Can architecture rules evolve through automated fitness functions? | Add import-cycle and dependency-boundary tests beside existing pytest, ruff, compileall, phase-eval, and artifact validation gates. |
+| Winters and Google | Will this code still be reviewable after many changes? | Split large command and orchestration surfaces only where it reduces future review risk while preserving behavior. |
+| Tornhill | Which code should change first based on complexity and change history? | Use size, churn, and eval/test-failure history to rank hotspots before refactoring large modules. |
+
+## Milestone 0: Settle The Baseline
+
+Goal: start architecture work from a clean, known baseline.
+
+Non-goals:
+
+- Do not refactor architecture in the same commit as unrelated applicability, corpus, downloader,
+  or review-engine work.
+- Do not regenerate `source_library/` or run large network workflows.
+
+Work:
+
+- Run `git status -sb` and identify any existing dirty files.
+- If dirty work exists, either finish and commit that lane first, or park it outside the
+  architecture milestone.
+- Re-check `docs/SESSION_HANDOFF.md` and `docs/CURRENT_SYSTEM_STATE.md` before making readiness or
+  corpus-state claims.
+
+Required verification:
+
+```bash
+git status -sb
+git diff --check
+```
+
+Stop conditions:
+
+- The worktree contains unrelated dirty code that overlaps architecture targets.
+- A generated-corpus operation would be required to proceed.
+
+## Milestone 1: Add The Architecture Map
+
+Primary lens: Simon Brown.
+
+Goal: make the pipeline architecture explicit, searchable, and agent-legible.
+
+Work:
+
+- Add `docs/ARCHITECTURE.md` with a C4-style map for the local CLI system:
+  workbook/config, capture, catalog, extraction, retrieval, evidence graph, claims, rule packs,
+  applicability, EA review, compliance review, eval, and CLI entrypoints.
+- Add `docs/architecture_contract.yaml` with workflow layers, allowed import direction, owned
+  artifact surfaces, and current public command groups.
+- Add a short ADR under `docs/adr/` explaining why architecture is enforced through small fitness
+  checks rather than broad rewrites.
+
+Required verification:
+
+```bash
+git diff --check
+```
+
+Done when:
+
+- A future agent can inspect the architecture map and contract before editing code.
+- The docs identify which module family owns each generated artifact surface.
+
+## Milestone 2: Add The First Architecture Fitness Gate
+
+Primary lens: Ford, Parsons, and Kua.
+
+Goal: turn architecture intent into an automated test.
+
+Work:
+
+- Add `tests/test_architecture_contract.py`.
+- Parse source imports with Python AST rather than string matching.
+- Fail on new source-level import cycles.
+- Fail on direct dependency violations against `docs/architecture_contract.yaml`.
+- If the current baseline has a known violation, record the exact temporary exception in the
+  contract with an owner and removal milestone instead of hiding it in test code.
+
+Required verification:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+python -m compileall src
+git diff --check
+```
+
+Done when:
+
+- The architecture gate passes on the current baseline.
+- New cycles or forbidden downstream imports fail deterministically.
+- Any temporary exception is visible, named, and scheduled for removal.
+
+## Milestone 3: Split Rule-Pack Ownership From Compliance Review
+
+Primary lenses: Simon Brown; Ford, Parsons, and Kua.
+
+Goal: align dependency direction with the domain model by moving shared rule-pack concerns upstream
+of compliance review.
+
+Work:
+
+- Add `src/usfs_r1_ea_sources/rule_packs.py`.
+- Move shared rule-pack constants, schema loading, `load_rule_pack`, `validate_rule_pack`, and
+  helper validation out of `compliance_review.py`.
+- Update rule binding, applicability rule-pack generation, compliance review, eval modules, and
+  tests to import shared rule-pack behavior from `rule_packs.py`.
+- Remove the temporary architecture exception for the rule-pack/compliance-review dependency if it
+  was needed in Milestone 2.
+
+Required verification:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_rule_claim_binding.py tests/test_compliance_review.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_decisions.py tests/test_applicability_retrieval.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+python -m compileall src
+git diff --check
+```
+
+Done when:
+
+- Rule binding no longer imports downstream compliance-review behavior for shared rule-pack logic.
+- The architecture fitness gate has no exception for this boundary.
+- Public compliance-review and applicability outputs remain unchanged except for expected
+  provenance metadata if explicitly updated.
+
+## Milestone 4: Group CLI Registration By Workflow Lane
+
+Primary lens: Titus Winters and Google Engineering Practices.
+
+Goal: keep the CLI as a stable public interface while reducing review friction in `cli.py`.
+
+Work:
+
+- Keep `src/usfs_r1_ea_sources/cli.py` as the public entrypoint.
+- Move command registration and dispatch helpers into workflow-lane modules such as capture,
+  catalog/extraction, applicability, review, compliance, and eval.
+- Add parser smoke tests for command existence and critical option propagation.
+- Include a regression test for options that gate review authority, including
+  `--allow-base-rule-pack-review` if that option remains part of the command surface.
+
+Required verification:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+python -m compileall src
+git diff --check
+```
+
+Done when:
+
+- Existing commands, option names, and dispatch behavior are preserved.
+- Future workflow changes can edit a narrow CLI module rather than the whole command surface.
+
+## Milestone 5: Rank And Reduce Hotspots
+
+Primary lens: Adam Tornhill.
+
+Goal: use behavioral evidence to choose the next refactoring target.
+
+Work:
+
+- Generate a hotspot report that combines source file size, recent git churn, test/eval failures,
+  and reviewer pain points.
+- Start with likely candidates only as hypotheses: `compliance_review.py`,
+  `forest_plan_components.py`, `evidence_graph.py`, `applicability_validation.py`,
+  `claim_extraction.py`, `extract.py`, and `cli.py`.
+- Select one module family for a bounded split plan.
+- Define behavior-preserving tests before moving code.
+
+Required verification:
+
+```bash
+git log --name-only --since="90 days ago" -- src tests
+wc -l src/usfs_r1_ea_sources/*.py
+PYTHONPATH=src uv run --extra dev pytest <focused-tests-for-selected-hotspot>
+PYTHONPATH=src uv run --extra dev ruff check src tests
+python -m compileall src
+git diff --check
+```
+
+Done when:
+
+- The next refactor target is justified by size plus change evidence, not preference.
+- The milestone output includes a small split plan and focused verification list.
+
+## Milestone 6: Codify Architecture Decisions And Safety Boundaries
+
+Primary lenses: Simon Brown; Winters and Google.
+
+Goal: make important review decisions durable and easy to enforce later.
+
+Work:
+
+- Add ADRs for:
+  - applicability-before-compliance review;
+  - rule-pack ownership outside compliance review;
+  - untrusted source content as evidence data, not privileged instructions;
+  - architecture fitness gates as required milestone checks.
+- Link ADRs from `docs/ARCHITECTURE.md`, `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md`, and
+  `docs/SESSION_HANDOFF.md` when they become operationally relevant.
+
+Required verification:
+
+```bash
+git diff --check
+```
+
+Done when:
+
+- Future code-review discussions can point to durable decisions instead of reconstructing context
+  from chat history.
+
+## Milestone 7: Make Architecture Gates Part Of Milestone Closeout
+
+Primary lenses: Ford, Parsons, Kua; Winters and Google.
+
+Goal: include architecture checks in normal completion criteria.
+
+Work:
+
+- Add architecture-gate commands to the relevant repo docs once the tests exist.
+- Update milestone plans so architecture checks are required for module-boundary, CLI,
+  review-engine, applicability, and compliance changes.
+- Keep docs-only changes lightweight: do not claim corpus or downstream readiness unless verified
+  from manifests, catalog, SQLite, or eval artifacts.
+
+Required verification:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+git diff --check
+```
+
+Done when:
+
+- Architecture fitness checks are part of the standard review vocabulary for future milestones.
+
+## Recommended Sequence
+
+1. Finish or park any unrelated dirty work.
+2. Commit Milestone 1 as docs-only architecture mapping.
+3. Commit Milestone 2 as the first architecture gate.
+4. Commit Milestone 3 as the rule-pack cycle removal.
+5. Commit Milestone 4 as behavior-preserving CLI grouping.
+6. Use Milestone 5 to choose the next large-module split.
+7. Keep Milestones 6 and 7 small and synchronized with actual implemented behavior.
+
+## Review Checklist
+
+Use this checklist when reviewing future architecture milestones:
+
+- Does this change preserve workbook row identity and generated artifact contracts?
+- Does this change keep source evidence and model/agent instructions separated?
+- Does this change reduce architecture ambiguity for future agents?
+- Does an automated test or eval now enforce the intended boundary?
+- Is any domain knowledge represented as data, config, rule pack, fixture, or report rather than
+  hidden code?
+- Is the changed surface small enough for a focused review?
+- If a large module is split, was it selected because it is a measured hotspot?
