@@ -48,8 +48,10 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 conditional adjudication rows as explicit accepted V1 reviewer risk.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
-read path. See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan:
-a Custer Gallatin National Forest EA compliance review as the proving ground. See
+read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
+map, layer ownership, generated-artifact ownership, command groups, and automated architecture gate.
+See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan: a Custer
+Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority
 applicability, non-applicability, validation, and generated rule packs first-class pre-review
 artifacts. See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer

@@ -118,6 +118,7 @@ entry point.
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 git diff --check
@@ -144,6 +145,10 @@ PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accurac
 Scale verification to the changed surface:
 
 - Source-only Python changes: run focused tests plus `ruff check src tests`.
+- Module-boundary, CLI registration, architecture-contract, review/compliance, applicability, or
+  generated-artifact ownership changes: run
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py` in addition to
+  focused behavior tests.
 - Downloader, catalog, manifest, or artifact-link changes: run relevant unit tests and the
   acceptance/integrity gate named in `DOWNLOADER_RULES.md`.
 - Docs that describe implemented behavior: run `git diff --check` and, when behavior references are

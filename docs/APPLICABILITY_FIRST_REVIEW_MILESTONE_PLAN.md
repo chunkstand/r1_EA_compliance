@@ -81,6 +81,18 @@ The compliance review stage must consume the generated review rule pack and the 
 applicability run identity. It must not decide whether laws, regulations, policies, or Forest Plan
 components apply.
 
+## Architecture Closeout Gate
+
+Future applicability, generated-rule-pack, compliance-review, CLI, or module-boundary milestones
+must include the architecture fitness gate before commit:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+```
+
+Keep this gate alongside the focused applicability/compliance tests, ruff, compileall, eval
+commands, and `git diff --check` required by the specific milestone.
+
 ## Research Basis
 
 The recommended architecture treats applicability as legal issue spotting over a complete authority

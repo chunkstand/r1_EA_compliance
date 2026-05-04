@@ -366,6 +366,9 @@ git diff --check
 Done when:
 
 - Architecture fitness checks are part of the standard review vocabulary for future milestones.
+- `AGENTS.md`, `README.md`, and active milestone plans point future module-boundary, CLI,
+  review-engine, applicability, and compliance changes at
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py`.
 
 Checkpoint action:
 

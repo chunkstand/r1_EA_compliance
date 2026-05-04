@@ -14,6 +14,15 @@ V1 is not the final Region 1 product boundary. Custer Gallatin is the first conc
 the system architecture must remain profile-driven, source-driven, and reusable for other forests
 and EA packages.
 
+Architecture-changing V1 follow-up milestones must also run:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+```
+
+This applies when a change moves module boundaries, CLI registration, review/compliance behavior,
+applicability behavior, or generated-artifact ownership.
+
 ## V1 Goals
 
 - Produce a local compliance review for a Custer Gallatin National Forest EA package.

@@ -19,6 +19,15 @@ The output is an evidence-backed NFMA compliance review aid. It must not pretend
 advice, but it must be strong enough to show the basis for a project/activity consistency review and
 to prove that the system did not skip applicable standards.
 
+Architecture-changing forest-plan milestones must also run:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+```
+
+This applies when a change moves module boundaries, CLI registration, review/compliance behavior,
+applicability behavior, or generated-artifact ownership.
+
 ## NFMA Compliance Basis
 
 Primary authority:
