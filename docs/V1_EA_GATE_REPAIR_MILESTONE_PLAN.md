@@ -435,9 +435,11 @@ Completion status:
   was regenerated for `v1-cg-ecid-compliance-review` against
   `source-set-ba8d0feae79501b8`, rule pack `nepa-ea-v0` version `0.4.0`, and the reused package
   cache.
-- The regenerated compliance review is reviewer-ready with `44` findings: `40` pass and `4`
-  not applicable. It evaluates all `26` baseline source records, has `191` rule-claim links, and
-  has `0` rule-claim gaps.
+- The 2026-05-03 pre-applicability regenerated compliance review was reviewer-ready with `44`
+  findings: `40` pass and `4` not applicable. It evaluated all `26` baseline source records, had
+  `191` rule-claim links, and had `0` rule-claim gaps. The current post-V1 generated-pack review
+  supersedes that output with `33` generated findings, all `33` pass, `142` generated-pack
+  rule-claim links, and `0` rule-claim gaps.
 - The Custer Gallatin forest-plan lane is reviewer-ready: `329` component findings, `79`
   supported, `250` not applicable, `0` gaps, `12/12` applicable standards applied, and `0`
   reviewer-resolution items.

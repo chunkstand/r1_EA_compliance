@@ -141,22 +141,24 @@ Verified results from the latest Milestone 9 pass:
 - `applicability-eval`: passed `2/2` seed cases with `promotion_ready`-style generated-pack
   readiness for both cases
 - `applicability-gold-eval`: passed `3/3` adjudicated cases and emitted `promotion_ready=true`
-- `phase-eval --review-id v1-cg-ecid-compliance-review`: failed closed on the seven new
-  applicability phases because the ignored V1 applicability artifacts were absent; upstream corpus,
-  compliance, and forest-plan phases still passed
+- A later local V1 applicability artifact refresh is now present under
+  `source_library/reviews/v1-cg-ecid-compliance-review/applicability/`: applicability validation is
+  reviewer-ready with `373` candidates, `33` applicable authorities, `340` non-applicable
+  authorities, no unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
+- The current stored `phase-eval` artifact for `source-set-ba8d0feae79501b8` reports `16/16`
+  phases passed with the review-bound applicability phases and generated-rule-pack gate included.
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed
 
-The local ignored `source_library/reviews/v1-cg-ecid-compliance-review/applicability/` generated-pack
-artifact set was not present during this handoff update, so
-`phase-eval --review-id v1-cg-ecid-compliance-review` should fail closed on the new applicability
-phases until those ignored artifacts are regenerated.
-
 Next implementation target:
 
-Milestone 10 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: expand the applicability-first
-path to real packages and capture the operating runbook.
+The immediate next implementation target is
+`docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md`: add the authority-family inventory,
+currentness gate, expanded rule templates/applicability predicates, eval/adjudication coverage, and
+reviewer-facing authority-family reporting. Milestone 10 in
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` remains the broader real-package expansion and
+operating-runbook track.
 
 Current stop conditions for the next session:
 
@@ -180,7 +182,7 @@ Current cached rerun command:
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" \
   --output-dir source_library \
-  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --rule-pack source_library/reviews/v1-cg-ecid-compliance-review/applicability/generated_rule_pack.json \
   --source-set-id source-set-ba8d0feae79501b8 \
   --review-id v1-cg-ecid-compliance-review \
   --reuse-package-cache \
@@ -191,7 +193,9 @@ Current run result:
 
 - Package extraction wrote `43` manifest rows and `1,265` package chunks.
 - Compliance review wrote JSON, Markdown, PDF matrix, and finding graph artifacts.
-- Compliance findings: `44` total, with `40` pass and `4` not applicable.
+- Applicability validation covers `373` candidates with `33` applicable and `340` non-applicable
+  authorities, no unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
+- Compliance findings: `33` generated-pack findings, all `33` pass.
 - All `26` baseline source records were evaluated.
 - The profile-driven forest-plan resolver now resolves the package to `scope_status:
   custer_gallatin`; context validation passes and `needs_reviewer_resolution` is `false`.
@@ -269,14 +273,15 @@ Primary gate artifacts/checks:
   conditional-source expectations now carry classification rationales, the contract accepts exactly
   `14` pending `adjudicate` rows under `conditional_adjudication_policy.mode=accepted_pending_v1`,
   and `v1-ea-eval` emits both a summary and full pending-results queue for those rows.
-- V1 EA gate repair milestone 6 promoted the final V1 gate on 2026-05-03. The rerun compliance
-  review is reviewer-ready with `44` findings, `40` pass findings, `4` not-applicable findings,
-  all `26` baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps.
-  `forest-plan-component-eval` passes `35/35`, `phase-eval` passes `10/10`, `v1-ea-eval` passes
-  broader EA and forest-plan lanes, `compliance-review-eval` passes `3/3`, and
-  `compliance-gold-eval` passes `10/10` in the pre-applicability V1 artifact set. Under the
-  current Milestone 8 gate, base-pack reruns of that gold eval are diagnostic and no longer
-  promotion-ready until a reviewer-ready generated applicability rule pack is used.
+- V1 EA gate repair milestone 6 promoted the final pre-applicability V1 gate on 2026-05-03. That
+  base-pack rerun had `44` findings, `40` pass findings, `4` not-applicable findings, all `26`
+  baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps. The current
+  generated-pack V1 review supersedes it with `33` generated findings, `33` pass findings, `142`
+  generated-pack rule-claim links, and `0` rule-claim gaps. `forest-plan-component-eval` passes
+  `35/35`, review-bound `phase-eval` passes `16/16`, and `v1-ea-eval` passes broader EA and
+  forest-plan lanes. Base-pack compliance-gold eval outputs remain useful through
+  `rule_pack_match_mode=generated_base`, but direct base-pack compliance-review reruns are
+  diagnostic unless explicitly allowed.
 - The forest-plan component adjudication template from the prior run contained `21` pending
   non-standard items: `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and
   `1` suitability component. Those adjudications classified every item as a system miss, and the
@@ -428,11 +433,14 @@ python -m json.tool config/v1_ecid_real_ea_eval.json /private/tmp/v1_ecid_real_e
 git diff --check
 ```
 
-Results from the latest live rerun: compliance review still passes with `40` pass findings and `4`
-not applicable findings; forest-plan context validation passes with `2` geographic areas, `1`
-management area, `2` overlays, and `5` supporting plan-evidence routes. Forest-plan component
-validation now passes: `329` components, `58` standards, `12` applicable standards, `12` applied
-standards, `0` reviewer-resolution items, and zero unresolved applicable standards. The prior
+Results from the latest pre-applicability live rerun: compliance review passed with `40` pass
+findings and `4` not applicable findings; the current generated-pack review supersedes that with
+`33` pass findings and `0` compliance not-applicable rows because non-applicable authorities now
+live in `non_applicable_authorities.json`. Forest-plan context validation passes with `2`
+geographic areas, `1` management area, `2` overlays, and `5` supporting plan-evidence routes.
+Forest-plan component validation now passes: `329` components, `58` standards, `12` applicable
+standards, `12` applied standards, `0` reviewer-resolution items, and zero unresolved applicable
+standards. The prior
 `AB-STD-RCREA-01` standard gap and the prior `21` non-standard queue items now have evidence-backed
 support or correct not-applicable determinations. Component-level forest-plan eval passes all `35`
 adjudicated cases with all-applicable-standard coverage. `phase-eval` passes `10/10` phases and

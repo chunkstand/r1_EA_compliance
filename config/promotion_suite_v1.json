@@ -49,15 +49,21 @@
               "failure_category": "stale_artifact"
             },
             {
-              "name": "rule_pack_version_matches",
+              "name": "generated_rule_pack_id_matches",
+              "json_path": "summary.rule_pack_id",
+              "equals": "generated-nepa-ea-v0-v1-cg-ecid-compliance-review",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "generated_rule_pack_version_matches",
               "json_path": "summary.rule_pack_version",
-              "equals": "0.4.0",
+              "equals": "applicability-v0",
               "failure_category": "stale_artifact"
             },
             {
               "name": "rule_count",
               "json_path": "summary.rule_count",
-              "equals": 44
+              "equals": 33
             },
             {
               "name": "baseline_source_record_count",
@@ -83,7 +89,7 @@
             {
               "name": "matrix_row_count",
               "json_path": "summary.row_count",
-              "equals": 44
+              "equals": 33
             },
             {
               "name": "matrix_reviewer_ready",

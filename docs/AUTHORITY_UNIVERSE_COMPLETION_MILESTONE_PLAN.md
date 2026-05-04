@@ -284,8 +284,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
-  --strict-expansion
+  --manifest config/promotion_suite_v1.json
 ```
+
+Do not use `promotion-suite --strict-expansion` as a required closeout gate until the authority
+inventory/eval milestones intentionally update or fill the expansion slots in
+`config/promotion_suite_v1.json`. In the current manifest, strict expansion is designed to fail on
+two open real-package slots with `package_fixture_missing`; that is broader real-package readiness,
+not evidence that an authority-universe slice failed.
 
 If source records are added, also run the downloader/catalog acceptance and integrity gates named in
 `DOWNLOADER_RULES.md`.

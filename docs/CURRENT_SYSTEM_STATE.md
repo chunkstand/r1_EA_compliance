@@ -88,7 +88,7 @@ Gallatin FEIS and ESA-supporting plan documents.
   pack. Custer-scoped gold fixtures likewise preserve rule-level expected statuses while expecting
   the overall forest-plan component gate to fail readiness unless component evidence coverage is
   complete.
-- Phase eval passed `17/17` phases with `reviewer_ready: true` for
+- Phase eval passed `16/16` phases with `reviewer_ready: true` for
   `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`, including the post-V1
   applicability artifact family and generated rule-pack gate.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
@@ -96,27 +96,30 @@ Gallatin FEIS and ESA-supporting plan documents.
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
   Component-like labels with nonnumeric number tokens, such as cross-reference/table headings, are
   suppressed from generated component IDs and surfaced in build coverage.
-- Final V1 EA gate promotion was verified locally on 2026-05-03 for
-  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `44`
-  findings, `40` pass findings, `4` not-applicable findings, all `26` baseline source records
-  evaluated, `191` rule-claim links, and `0` rule-claim gaps.
+- Current generated-pack V1 EA gate artifacts were verified locally on 2026-05-04 for
+  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `33`
+  generated compliance findings, `33` pass findings, all `26` baseline source records evaluated
+  through the generated applicability rule pack, `142` generated-pack rule-claim links, and `0`
+  rule-claim gaps.
 - Forest-plan component eval passed `35/35` adjudicated cases for the promoted review. The current
   component findings have `329` components, `79` supported components, `250` not applicable
   components, `0` gaps, `12/12` applicable standards applied, and `0` reviewer-resolution items.
 - The final pre-applicability V1 gate commands passed: `phase-eval` `10/10`, `v1-ea-eval` with
   `broader_ea_passed=true` and `forest_plan_passed=true`, `compliance-review-eval` `3/3`, and
-  `compliance-gold-eval` `10/10`. Current Milestone 8 code excludes base-pack gold eval outputs
-  from promotion readiness until generated applicability artifacts are present.
+  `compliance-gold-eval` `10/10`. Direct base-pack review/gold reruns are diagnostic; the current
+  generated-pack review-bound phase eval can use the passing base-pack gold suite through
+  `rule_pack_match_mode=generated_base`.
 - The post-V1 applicability run for `v1-cg-ecid-compliance-review` validates cleanly with `373`
-  candidate authorities, `34` applicable authorities, `339` not-applicable authorities, no
-  unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
-- The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. A local run on
-  2026-05-04 reported `current_promotion_ready=true`, `promotion_ready=true`,
+  candidate authorities, `33` applicable authorities, `340` not-applicable authorities, no
+  unresolved/adjudication decisions, and `generated_rule_pack_ready=true`; the generated rule pack
+  contains `33` rules and validates against the applicability artifacts.
+- The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest stored
+  local run reported `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `failure_category_counts={}`,
   `expansion_failure_category_counts={"package_fixture_missing": 2}`, and
-  `open_expansion_slot_count=2`. This means the current East Crazy V1 evidence and post-V1
-  applicability artifacts are promotable; broader readiness is blocked only when strict expansion
-  requires additional real Region 1 EA package fixtures.
+  `open_expansion_slot_count=2`. The manifest now checks the generated-pack V1 review ID, version,
+  rule count, and matrix row count. Broader readiness remains blocked when strict expansion requires
+  the two additional real Region 1 EA package fixtures.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -1110,8 +1113,10 @@ validation errors.
 
 The V1 EA gate repair plan is complete through Milestone 6. The promoted review is
 `v1-cg-ecid-compliance-review` for the East Crazy Inspiration Divide package on source set
-`source-set-ba8d0feae79501b8`, rule pack `nepa-ea-v0` version `0.4.0`. The gate passes with
-`passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
+`source-set-ba8d0feae79501b8`. The V1 eval contract still references base rule pack `nepa-ea-v0`
+version `0.4.0`, while the reviewer-ready compliance review consumes the generated applicability
+rule pack `generated-nepa-ea-v0-v1-cg-ecid-compliance-review` version `applicability-v0`. The gate
+passes with `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
 `failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
 `conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
 conditional adjudication rows carried as explicit V1 reviewer risk. Review-bound `phase-eval` now

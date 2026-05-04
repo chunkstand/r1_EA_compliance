@@ -52,11 +52,18 @@ Implemented today:
   validation, non-applicable authority, coverage, provenance, source-set, package-manifest, and
   package-chunk hash gates. Base rule packs can run only as non-reviewer-ready diagnostics and are
   excluded from promotion readiness.
+- Milestone 9 applicability eval gates are implemented: `applicability-eval` and
+  `applicability-gold-eval` score applicability decision quality before compliance quality is
+  promoted, and `phase-eval --review-id/--review-dir` includes the seven applicability phases before
+  compliance review.
 
-Not implemented yet:
+Current remaining work:
 
-- applicability decision-quality evals and gold evals that independently promote applicability
-  correctness before compliance quality is scored.
+- Milestone 10 real-package expansion and operating runbook work remains open.
+- The separate `docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md` milestone remains open for
+  expanding the bounded authority-family inventory, source currentness gates, rule templates,
+  applicability eval coverage, and reviewer-facing authority-family reporting beyond the V1 proving
+  path.
 
 ## Target Invariant
 

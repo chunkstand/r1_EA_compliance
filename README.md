@@ -43,10 +43,12 @@ component-like labels with nonnumeric number tokens. Older reviewer-ready downst
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
-`26` baseline source records, applies `12/12` Custer Gallatin standards, passes review-bound
-`phase-eval` `16/16` with the post-V1 applicability gates included, passes `v1-ea-eval` with
-broader EA and forest-plan lanes true, and keeps `14` conditional adjudication rows as explicit
-accepted V1 reviewer risk.
+`26` baseline source records through the generated applicability rule pack, validates a
+`373`-candidate authority universe with `33` applicable and `340` non-applicable authorities,
+emits `33` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
+review-bound `phase-eval` `16/16` with the post-V1 applicability gates included, passes
+`v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
+rows as explicit accepted V1 reviewer risk.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -55,9 +57,11 @@ See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system
 Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority
 applicability, non-applicability, validation, and generated rule packs first-class pre-review
-artifacts. See `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook.
-See `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine
-biased toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
+artifacts. See `docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md` for the current completion
+milestone that expands the bounded authority-family inventory beyond the V1 proving path. See
+`docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
+`docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
+toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
 heuristics.
 
 ## Current Inputs
@@ -209,10 +213,12 @@ carry search coverage or adjudication, validation blocks unresolved or stale dec
 downstream review rule pack is generated from the validated applicable-authorities artifact. The
 implemented staged path now includes `applicability-authority-universe`,
 `applicability-context-build`, `applicability-retrieve`, `applicability-determine`,
-`applicability-validate`, and replayable applicability adjudication template/apply/eval commands.
-The promoted V1 review remains the current authority-first path until the later generated-rule-pack
-and compliance-review gate milestones land. Embeddings and expanded human adjudication over real EA
-packages remain downstream work.
+`applicability-validate`, replayable applicability adjudication template/apply/eval commands,
+`applicability-generate-rule-pack`, generated-pack validation, and reviewer-ready
+`compliance-review` gating on the generated rule pack. The promoted V1 review now uses the
+generated applicability rule pack; the base rule pack remains the candidate-authority template and
+can only be used for explicit non-reviewer-ready diagnostics. Embeddings and expanded human
+adjudication over real EA packages remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -795,8 +801,9 @@ writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summ
 carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
 and exact source offsets. Rule-claim outputs are versioned by rule-pack ID and version. Old
 `0.3.0`/20-rule link, coverage, compliance-eval, and gold-eval artifacts should be treated as stale
-for promotion. Current promotion evidence must come from the regenerated `0.4.0`/44-rule artifacts
-for `source-set-ba8d0feae79501b8`.
+for base-pack diagnostics. Current base rule-claim and coverage evidence must come from the
+regenerated `0.4.0`/44-rule artifacts for `source-set-ba8d0feae79501b8`; reviewer-ready V1
+compliance evidence must come from the generated applicability rule pack for the review.
 
 Run the seed rule-claim eval gate:
 

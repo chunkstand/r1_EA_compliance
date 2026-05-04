@@ -182,9 +182,12 @@ Promoted V1 Custer Gallatin real-package gate state:
   `forest_plan_passed=true`, empty failure-category counts, `failed_rule_ids=[]`,
   `rule_section_match_rate=1.0`, `conditional_false_positive=0`, and
   `conditional_false_negative=0`.
-- The promoted compliance review is reviewer-ready with `44` findings, `40` pass findings,
-  `4` not-applicable findings, all `26` baseline source records evaluated, `191` rule-claim links,
-  and `0` rule-claim gaps.
+- The pre-applicability promoted compliance review was reviewer-ready with `44` findings, `40` pass
+  findings, `4` not-applicable findings, all `26` baseline source records evaluated, `191`
+  rule-claim links, and `0` rule-claim gaps. The current post-V1 generated-pack review supersedes
+  that output with `33` generated compliance findings, all `33` pass, all `26` baseline source
+  records evaluated through the generated applicability rule pack, `142` generated-pack rule-claim
+  links, and `0` rule-claim gaps.
 - Pending conditional adjudications are explicit accepted V1 risk, not resolved legal conclusions:
   the gate accepts exactly `14` pending `adjudicate` rows under
   `conditional_adjudication_policy.mode=accepted_pending_v1`.
