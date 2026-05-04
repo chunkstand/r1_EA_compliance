@@ -31,13 +31,14 @@ Implemented today:
 - Milestone 3 package context is implemented: `applicability-context-build` reads the existing EA
   package cache and writes `package_fact_graph.json`, `package_applicability_context.json`, and
   `package_fact_graph_validation.json` before any applicability decisions are attempted.
+- Milestone 4 retrieval and graph tracing is implemented: `applicability-retrieve` writes
+  `applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`, and
+  `applicability_retrieval_graph_diagnostics.json` without deciding applicability.
 - `compliance-review` still runs the current V1 authority-first path and still decides conditional
   applicability during review.
 
 Not implemented yet:
 
-- per-authority hybrid retrieval traces;
-- bounded GraphRAG-style expansion traces;
 - deterministic applicability decision ledger;
 - separate validated applicable and non-applicable authority artifacts produced before review;
 - search coverage certificates for not-applicable determinations;
@@ -492,6 +493,13 @@ Stop conditions:
 - Contradictory facts are silently resolved without trace or adjudication path.
 
 ## Milestone 4: Hybrid Retrieval And Graph Expansion Traces
+
+Current status:
+Implemented. `applicability-retrieve` now consumes the authority universe, package fact graph, and
+local retrieval index, then writes replayable per-candidate retrieval rows, RRF fused result rows,
+bounded graph path rows, and diagnostics under
+`source_library/reviews/<review_id>/applicability/`. The command does not decide final
+applicability, emit coverage certificates, generate rule packs, or run compliance review.
 
 Goal:
 Run replayable per-authority evidence discovery using hybrid search and bounded graph traversal.

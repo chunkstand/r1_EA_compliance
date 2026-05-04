@@ -319,9 +319,9 @@ workbook rows where `Scope=Baseline`, and rule-pack validation enforces that eac
 source record has a corresponding `applicability_mode=baseline` rule.
 
 Applicability-First Review has a post-V1 schema contract, an implemented authority-universe
-snapshot slice, and an implemented package fact graph slice. `applicability-authority-universe`
-reads the current catalog, base rule pack, forest-plan profiles, component inventory, source-claim
-artifacts, and rule-claim links, then writes
+snapshot slice, an implemented package fact graph slice, and an implemented retrieval/graph trace
+slice. `applicability-authority-universe` reads the current catalog, base rule pack, forest-plan
+profiles, component inventory, source-claim artifacts, and rule-claim links, then writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json` with all
 rule-template candidates and Forest Plan component candidates. Each candidate carries required
 package fact types, positive and negative trigger groups, required source evidence, source-role
@@ -334,14 +334,17 @@ agency, NEPA level, geography, Forest Plan areas/overlays, resource topics, cons
 public involvement, alternatives, and decision/finding signals. It records negative or
 out-of-scope location statements as negative-context facts instead of positive geography facts, and
 records weakly worded or missing common fact types as graph uncertainty rather than resolving them
-as package applicability decisions. The applicability-first path still does not write per-authority
-retrieval traces, write graph expansion traces, issue search coverage certificates, make
-applicability decisions, generate rule packs, or run compliance review. Later milestones still need
-hybrid retrieval traces, graph traces,
-deterministic applicability decisions, separate applicable and non-applicable authority artifacts,
-validation, provenance, and the generated compliance rule pack before `compliance-review` becomes
-gated by the applicability artifacts. Until those later milestones land, `compliance-review`
-remains the current V1 authority-first command.
+as package applicability decisions. `applicability-retrieve` reads the authority universe, package
+fact graph, local retrieval index, and available graph/link artifacts, then writes
+`applicability_retrieval_trace.jsonl`, `applicability_graph_trace.jsonl`, and
+`applicability_retrieval_graph_diagnostics.json` with replayable per-candidate query rows, fused RRF
+result rows, bounded graph paths, and retrieval/graph diagnostics. The applicability-first path
+still does not issue search coverage certificates, make applicability decisions, generate rule
+packs, or run compliance review. Later milestones still need deterministic applicability decisions,
+separate applicable and non-applicable authority artifacts, validation, provenance, and the
+generated compliance rule pack before `compliance-review` becomes gated by the applicability
+artifacts. Until those later milestones land, `compliance-review` remains the current V1
+authority-first command.
 
 Compliance Review Eval V0 is implemented through `compliance-review-eval`. The current seed fixtures
 target rule pack `0.4.0` and run deterministic package fixtures through the real compliance-review
@@ -773,6 +776,7 @@ The post-V1 applicability-first artifact contract reserves
 - `package_fact_graph_validation.json`
 - `applicability_retrieval_trace.jsonl`
 - `applicability_graph_trace.jsonl`
+- `applicability_retrieval_graph_diagnostics.json`
 - `applicability_decisions.jsonl`
 - `applicable_authorities.json`
 - `non_applicable_authorities.json`

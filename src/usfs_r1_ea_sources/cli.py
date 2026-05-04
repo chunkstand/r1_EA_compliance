@@ -5,6 +5,7 @@ import argparse
 import json
 
 from .applicability import build_authority_universe_snapshot
+from .applicability_retrieval import build_applicability_retrieval_traces
 from .batches import run_batch_downloads
 from .catalog import build_review_catalog
 from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
@@ -433,6 +434,28 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
         type=Path,
     )
+
+    applicability_retrieve = subparsers.add_parser(
+        "applicability-retrieve",
+        help=(
+            "Write per-authority applicability retrieval and bounded graph traces without "
+            "deciding applicability."
+        ),
+    )
+    applicability_retrieve.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    applicability_retrieve.add_argument("--review-id", required=True)
+    applicability_retrieve.add_argument("--source-set-id")
+    applicability_retrieve.add_argument("--authority-universe-path", type=Path)
+    applicability_retrieve.add_argument("--package-fact-graph-path", type=Path)
+    applicability_retrieve.add_argument("--retrieval-index-path", type=Path)
+    applicability_retrieve.add_argument("--graph-nodes-path", type=Path)
+    applicability_retrieve.add_argument("--graph-edges-path", type=Path)
+    applicability_retrieve.add_argument("--top-k", type=int, default=5)
+    applicability_retrieve.add_argument("--max-graph-paths-per-candidate", type=int, default=25)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -916,6 +939,22 @@ def main(argv: list[str] | None = None) -> int:
             package_manifest_path=args.package_manifest_path,
             package_chunks_path=args.package_chunks_path,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
+        )
+        print(json.dumps(result.summary, indent=2, sort_keys=True))
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "applicability-retrieve":
+        result = build_applicability_retrieval_traces(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            authority_universe_path=args.authority_universe_path,
+            package_fact_graph_path=args.package_fact_graph_path,
+            retrieval_index_path=args.retrieval_index_path,
+            graph_nodes_path=args.graph_nodes_path,
+            graph_edges_path=args.graph_edges_path,
+            top_k=args.top_k,
+            max_graph_paths_per_candidate=args.max_graph_paths_per_candidate,
         )
         print(json.dumps(result.summary, indent=2, sort_keys=True))
         return 0 if result.summary["validation_passed"] else 1

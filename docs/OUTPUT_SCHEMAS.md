@@ -798,7 +798,8 @@ next section. The implemented applicability slices are the authority-universe sn
 the package context command: `applicability-authority-universe` writes
 `source_library/reviews/<review_id>/applicability/authority_universe_snapshot.json`, and
 `applicability-context-build` writes the package fact graph, package applicability context, and
-package fact graph validation summary. These commands do not decide package applicability or
+package fact graph validation summary, and `applicability-retrieve` writes retrieval traces, graph
+traces, and retrieval/graph diagnostics. These commands do not decide package applicability or
 produce compliance findings. The remaining artifacts in this section are the schema and gate
 contract for later applicability-first milestones.
 
@@ -810,6 +811,7 @@ Required artifacts:
 - `package_fact_graph_validation.json`
 - `applicability_retrieval_trace.jsonl`
 - `applicability_graph_trace.jsonl`
+- `applicability_retrieval_graph_diagnostics.json`
 - `applicability_decisions.jsonl`
 - `applicable_authorities.json`
 - `non_applicable_authorities.json`
@@ -989,7 +991,7 @@ includes:
   `retrieval_trace_id`
 - `query_plan_id`, query text, query type, query terms, query timestamp, and query source
 - allowed query types: `exact_keyword`, `citation`, `bm25`, `vector`, `metadata_filter`,
-  `package_section`, `source_role`, `authority_category`, and `graph_seed`
+  `package_section`, `source_role`, `authority_category`, `graph_seed`, and `fused`
 - source filters, package-section filters, source-record filters, authority-category filters,
   forest-plan component filters, and currentness filters
 - searched index identity, including index path, index type, index build ID, and searched index hash
@@ -1017,6 +1019,13 @@ records an inspected graph path for one candidate authority. Each graph trace ro
 
 Graph traces are bounded evidence-discovery records only. Graph paths may support a deterministic
 predicate or an adjudication item, but graph expansion is not the final legal decision maker.
+
+`applicability_retrieval_graph_diagnostics.json` has schema version
+`applicability-trace-diagnostics-v0` and records the Milestone 4 trace-build validation summary,
+diagnostics, and trace artifact hashes. Diagnostics include retrieval misses, low-confidence
+retrieval, graph dead ends, excessive graph fan-out, and missing local retrieval indexes. It is an
+evidence-discovery diagnostic artifact only; it does not contain applicability decisions or
+compliance findings.
 
 `applicability_decisions.jsonl` has schema version `applicability-decisions-v0`; each line is one
 decision record for one candidate authority. Every candidate in `authority_universe_snapshot.json`

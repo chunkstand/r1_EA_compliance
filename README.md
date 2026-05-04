@@ -147,6 +147,7 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/<review_id>/applicability/package_fact_graph_validation.json`
   - `source_library/reviews/<review_id>/applicability/applicability_retrieval_trace.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicability_graph_trace.jsonl`
+  - `source_library/reviews/<review_id>/applicability/applicability_retrieval_graph_diagnostics.json`
   - `source_library/reviews/<review_id>/applicability/applicability_decisions.jsonl`
   - `source_library/reviews/<review_id>/applicability/applicable_authorities.json`
   - `source_library/reviews/<review_id>/applicability/non_applicable_authorities.json`
@@ -803,6 +804,23 @@ than positive geography facts. Weakly worded facts and missing common fact types
 graph uncertainty for later applicability stages instead of being resolved inside the package
 context command. This command does not write applicability decisions, retrieval traces, graph
 traces, generated rule packs, or compliance findings.
+
+Build per-authority retrieval and bounded graph traces:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-retrieve \
+  --output-dir source_library \
+  --review-id <review-id> \
+  --source-set-id <source-set-id>
+```
+
+`applicability-retrieve` reads the authority universe snapshot, package fact graph, local retrieval
+index, and available graph/link artifacts. It writes `applicability_retrieval_trace.jsonl`,
+`applicability_graph_trace.jsonl`, and `applicability_retrieval_graph_diagnostics.json`. Retrieval
+rows include exact/keyword, metadata/source-role, package-section, graph-seed, and fused RRF result
+sets with selected and rejected results. Graph rows are bounded by each candidate's declared graph
+contract. This command records evidence discovery only; it does not write applicability decisions,
+search coverage certificates, generated rule packs, or compliance findings.
 
 Run rule-pack coverage:
 
