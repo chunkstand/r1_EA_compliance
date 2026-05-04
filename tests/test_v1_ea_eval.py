@@ -147,7 +147,7 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(ce_result["actual_status"], "not_applicable")
             self.assertEqual(ce_result["actual_applicability"], "not_applicable")
 
-    def test_v1_eval_bridges_missing_forest_plan_matrix_row_from_component_lane(self) -> None:
+    def test_v1_eval_bridges_missing_forest_plan_authority_row_from_component_lane(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             review_dir = root / "source_library" / "reviews" / "v1-unit"
@@ -1189,8 +1189,34 @@ def _write_positive_review(review_dir: Path) -> None:
         review_dir / "compliance_matrix.json",
         {
             "schema_version": "compliance-matrix-v0",
-            "summary": {"row_count": len(findings)},
+            "summary": {
+                "row_count": len(findings),
+                "forest_plan_compliance_row_count": 1,
+                "forest_plan_compliance_applicable_standard_row_count": 1,
+            },
             "rows": [_matrix_row("v1-unit", finding) for finding in findings],
+            "forest_plan_compliance": {
+                "schema_version": "forest-plan-compliance-matrix-v0",
+                "summary": {
+                    "row_count": 1,
+                    "applicable_standard_row_count": 1,
+                    "compliance_status_counts": {"complies": 1},
+                    "load_errors": [],
+                },
+                "rows": [
+                    {
+                        "row_id": (
+                            "forest-plan-matrix:v1-unit:"
+                            "cg-lmp-2022-cmbca-std-01"
+                        ),
+                        "component_id": "cg-lmp-2022-cmbca-std-01",
+                        "component_type": "standard",
+                        "applicability_status": "applicable",
+                        "compliance_status": "complies",
+                        "finding_status": "supported",
+                    }
+                ],
+            },
         },
     )
     _write_json(

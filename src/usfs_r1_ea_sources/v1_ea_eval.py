@@ -807,6 +807,7 @@ def _evaluate_forest_plan(
     component_findings = artifacts["forest_plan_component_findings"]
     standard_coverage = artifacts["forest_plan_applicable_standard_coverage"]
     queue = artifacts["forest_plan_reviewer_resolution_queue"]
+    compliance_matrix = artifacts["compliance_matrix"]
     source_record_ids = _forest_source_record_ids(summary, context)
     geo_ids = _collect_values_by_key(context, {"geographic_area_id", "entry_id", "area_id"})
     management_ids = _collect_values_by_key(context, {"management_area_id", "entry_id"})
@@ -952,6 +953,27 @@ def _evaluate_forest_plan(
             actual=actual_count,
             passed=actual_count <= maximum,
             failure_category="forest_plan_standard_reviewer_resolution_open",
+        )
+    if expectations.get("require_matrix_forest_plan_compliance", True):
+        matrix_details = _forest_plan_compliance_matrix_details(compliance_matrix)
+        expected_standard_count = int(
+            _nested_get(component_findings, ["summary", "applicable_standard_count"])
+            or _nested_get(summary, ["component_evaluation", "applicable_standard_count"])
+            or len(expected_standards)
+        )
+        matrix_visible = matrix_details["row_count"] > 0 and (
+            expected_standard_count == 0
+            or matrix_details["applicable_standard_row_count"] >= expected_standard_count
+        )
+        add_result(
+            expectation_id="forest_plan_compliance_matrix",
+            expected={
+                "min_rows": 1,
+                "applicable_standard_row_count": expected_standard_count,
+            },
+            actual=matrix_details,
+            passed=matrix_visible,
+            failure_category="forest_plan_matrix_miss",
         )
     return results
 
@@ -2123,6 +2145,29 @@ def _applicable_standard_ids(
                 if finding.get(key):
                     values.add(str(finding[key]))
     return values
+
+
+def _forest_plan_compliance_matrix_details(compliance_matrix: dict[str, Any]) -> dict[str, Any]:
+    section = compliance_matrix.get("forest_plan_compliance") or {}
+    summary = section.get("summary") or {}
+    rows = section.get("rows") or []
+    applicable_standard_rows = [
+        row
+        for row in rows
+        if row.get("component_type") == "standard"
+        and row.get("applicability_status") == "applicable"
+    ]
+    return {
+        "section_present": bool(section),
+        "schema_version": section.get("schema_version"),
+        "row_count": int(summary.get("row_count") or len(rows)),
+        "applicable_standard_row_count": int(
+            summary.get("applicable_standard_row_count")
+            or len(applicable_standard_rows)
+        ),
+        "compliance_status_counts": summary.get("compliance_status_counts", {}),
+        "load_errors": summary.get("load_errors", []),
+    }
 
 
 def _reviewer_resolution_count(queue: dict[str, Any]) -> int:

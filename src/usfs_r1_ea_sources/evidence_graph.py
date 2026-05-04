@@ -765,6 +765,41 @@ def run_phase_aligned_eval(
         )
         matrix_summary = (compliance_matrix or {}).get("summary", {})
         matrix_rule_pack = (compliance_matrix or {}).get("rule_pack", {})
+        matrix_forest_plan = (compliance_matrix or {}).get("forest_plan_compliance") or {}
+        matrix_forest_plan_summary = matrix_forest_plan.get("summary", {})
+        forest_plan_summary = (
+            matrix_summary.get("forest_plan_review")
+            or compliance_summary.get("forest_plan_review")
+            or {}
+        )
+        forest_plan_component_evaluation = (
+            forest_plan_summary.get("component_evaluation") or {}
+        )
+        forest_plan_matrix_required = bool(
+            forest_plan_summary.get("scope_status") == "custer_gallatin"
+            and (
+                forest_plan_summary.get("reviewer_ready")
+                or forest_plan_component_evaluation.get("reviewer_ready")
+            )
+        )
+        forest_plan_matrix_exists = bool(matrix_forest_plan)
+        forest_plan_matrix_schema_matches = (
+            not forest_plan_matrix_required
+            or matrix_forest_plan.get("schema_version") == "forest-plan-compliance-matrix-v0"
+        )
+        forest_plan_matrix_rows_visible = (
+            not forest_plan_matrix_required
+            or int(matrix_forest_plan_summary.get("row_count") or 0) > 0
+        )
+        expected_standard_count = int(
+            forest_plan_component_evaluation.get("applicable_standard_count") or 0
+        )
+        forest_plan_matrix_standards_visible = (
+            not forest_plan_matrix_required
+            or expected_standard_count == 0
+            or int(matrix_forest_plan_summary.get("applicable_standard_row_count") or 0)
+            >= expected_standard_count
+        )
         compliance_matrix_exists = compliance_matrix is not None
         compliance_matrix_pdf_exists = (
             compliance_matrix_pdf_path is not None and compliance_matrix_pdf_path.exists()
@@ -791,6 +826,9 @@ def run_phase_aligned_eval(
             == compliance_summary.get("finding_count"),
             "matrix_status_counts_match": matrix_summary.get("status_counts")
             == compliance_summary.get("finding_status_counts"),
+            "forest_plan_matrix_schema_matches": forest_plan_matrix_schema_matches,
+            "forest_plan_matrix_rows_visible": forest_plan_matrix_rows_visible,
+            "forest_plan_matrix_standards_visible": forest_plan_matrix_standards_visible,
         }
         compliance_matrix_passed = all(matrix_checks.values())
         compliance_phase_passed = (
@@ -819,6 +857,16 @@ def run_phase_aligned_eval(
                     "matrix_exists": compliance_matrix_exists,
                     "matrix_pdf_exists": compliance_matrix_pdf_exists,
                     "matrix_pdf_header_valid": compliance_matrix_pdf_valid,
+                    "forest_plan_matrix_required": forest_plan_matrix_required,
+                    "forest_plan_matrix_exists": forest_plan_matrix_exists,
+                    "forest_plan_matrix_row_count": matrix_forest_plan_summary.get(
+                        "row_count",
+                        0,
+                    ),
+                    "forest_plan_matrix_applicable_standard_row_count": (
+                        matrix_forest_plan_summary.get("applicable_standard_row_count", 0)
+                    ),
+                    "forest_plan_expected_applicable_standard_count": expected_standard_count,
                     "validation_passed": compliance_validation_passed,
                     "reviewer_ready": bool(compliance_summary.get("reviewer_ready")),
                     "expected_source_set_id": source_set_id,

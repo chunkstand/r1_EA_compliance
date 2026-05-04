@@ -1509,7 +1509,9 @@ Each compliance finding includes:
   `search_coverage_certificates.json`, and `forest_plan_review` links when present
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
   limitations
-- one row per compliance finding
+- one NEPA/authority table row per compliance finding
+- a separate `forest_plan_compliance` section when forest-plan component review artifacts are
+  present
 
 The matrix rule-pack summary includes `baseline_source_record_ids` when the active rule pack
 declares them.
@@ -1527,7 +1529,16 @@ Each matrix row includes:
 - source-claim IDs, source-claim citations, source-claim count, citation-gate status, limitations,
   and failure category when applicable
 
-`compliance_matrix.md` is a compact human-readable rendering of the same rows.
+When present, `forest_plan_compliance` has schema version `forest-plan-compliance-matrix-v0` and
+contains a separate Forest Plan Compliance table. Its rows are derived from
+`forest_plan_component_findings.json` and `forest_plan_applicable_standard_coverage.json`; each row
+records component ID/type, applicability status, compliance status, finding status, EA-package
+evidence, Forest Plan source evidence, plan-consistency determination text, rationale, and reviewer
+resolution count. This keeps Forest Plan component compliance visible without mixing component rows
+into the NEPA/generated-rule compliance table.
+
+`compliance_matrix.md` is a compact human-readable rendering with a `NEPA / Authority Compliance`
+table plus the separate `Forest Plan Compliance` table when available.
 `compliance_matrix.pdf` is generated for every compliance review from the same JSON matrix data. The
 JSON matrix is the stable machine contract.
 

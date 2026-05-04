@@ -441,8 +441,9 @@ Current state:
   `finding_graph_nodes.jsonl`, and `finding_graph_edges.jsonl`.
 - Compliance review now invokes the forest-plan resolver against the same package cache. For Custer
   Gallatin packages, `forest_plan_component_gate_reviewer_ready` must pass, the matrix summary links
-  to `forest_plan_review`, and the finding graph includes forest-plan review/component-evaluation
-  nodes.
+  to `forest_plan_review`, `compliance_matrix.json/md/pdf` render Forest Plan Compliance as a
+  separate table from NEPA/generated-rule compliance, and the finding graph includes forest-plan
+  review/component-evaluation nodes.
 - EA review and compliance review can rerun checklist/rule evaluation against existing
   `package_manifest.jsonl` and `package_chunks.jsonl` with `--reuse-package-cache`; use this for
   rule-pack refreshes when the EA package was already extracted.
@@ -855,11 +856,13 @@ The finding graph contains:
 - `PackageEvidence`
 - `PackageEvidenceGap`
 
-The compliance matrix is the first reviewer-facing matrix artifact. Each row records the authority,
+The compliance matrix is the first reviewer-facing matrix artifact. Its `NEPA / Authority
+Compliance` table records one NEPA/generated-rule compliance row per finding: authority,
 applicability mode and status, rule status, requirement, applicability basis, package evidence
 citation, source evidence citation, source-claim IDs, applied source record IDs, applied source
 document roles, citation-gate status, limitations, and failure category when an applicable finding is
-not a supported pass.
+not a supported pass. For Custer Gallatin Forest Plan reviews, the matrix also includes a separate
+`Forest Plan Compliance` table from component findings and applicable-standard coverage.
 
 `compliance_validation.json` checks rule-pack validity, base EA review validation, all-rules
 coverage, valid finding statuses, dual evidence for `pass`, source evidence for `gap`, source
@@ -1027,7 +1030,9 @@ compliance review phase is included, `phase-eval` requires
 the review report to exist, validation to pass, the review ID to match when supplied, and the review
 source set to match the evaluated source set. It also requires the compliance matrix artifact to
 exist and match the review's schema version, review ID, source set, rule pack, row count, and status
-counts. When a forest-plan component eval phase is included,
+counts. For reviewer-ready Custer Gallatin Forest Plan reviews, it also requires the separate Forest
+Plan Compliance matrix section to exist and expose applicable standard rows. When a forest-plan
+component eval phase is included,
 `phase-eval` requires the component eval result schema version to match, pass, match the evaluated
 source set, and match the supplied review ID when one is provided. The phase reports case counts,
 component metrics, failed checks, and failure-category counts. When a forest-plan component

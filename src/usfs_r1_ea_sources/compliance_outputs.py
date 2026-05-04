@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from datetime import UTC, datetime
+import json
 from pathlib import Path
 import textwrap
 
@@ -9,6 +10,7 @@ from .rule_packs import _baseline_source_record_ids
 
 
 COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
+FOREST_PLAN_COMPLIANCE_SCHEMA_VERSION = "forest-plan-compliance-matrix-v0"
 CLAIM_STATUSES = {"pass", "gap"}
 VALID_FINDING_STATUSES = {"pass", "gap", "uncertain", "not_applicable"}
 
@@ -24,9 +26,13 @@ def build_compliance_matrix(
     applicability_gate: dict,
 ) -> dict:
     rows = [_matrix_row(review_id, finding) for finding in findings]
+    forest_plan_compliance = _forest_plan_compliance_section(
+        review_id=review_id,
+        forest_plan_review=summary.get("forest_plan_review"),
+    )
     status_counts = dict(Counter(row["status"] for row in rows))
     applicability_counts = dict(Counter(row["applicability_status"] for row in rows))
-    return {
+    matrix = {
         "schema_version": COMPLIANCE_MATRIX_SCHEMA_VERSION,
         "created_at": _utc_now(),
         "review_id": review_id,
@@ -56,6 +62,21 @@ def build_compliance_matrix(
             "finding_graph_nodes_path": summary.get("finding_nodes_path"),
             "finding_graph_edges_path": summary.get("finding_edges_path"),
             "forest_plan_review": summary.get("forest_plan_review"),
+            "forest_plan_compliance_row_count": _section_row_count(
+                forest_plan_compliance,
+            ),
+            "forest_plan_compliance_status_counts": _section_summary_value(
+                forest_plan_compliance,
+                "compliance_status_counts",
+                {},
+            ),
+            "forest_plan_compliance_applicable_standard_row_count": (
+                _section_summary_value(
+                    forest_plan_compliance,
+                    "applicable_standard_row_count",
+                    0,
+                )
+            ),
             "applicability_gate": summary.get("applicability_gate"),
             "non_applicable_authorities_path": applicability_gate.get(
                 "non_applicable_authorities_path"
@@ -84,6 +105,9 @@ def build_compliance_matrix(
         ],
         "rows": rows,
     }
+    if forest_plan_compliance is not None:
+        matrix["forest_plan_compliance"] = forest_plan_compliance
+    return matrix
 
 
 def matrix_markdown(matrix: dict) -> str:
@@ -114,6 +138,8 @@ def matrix_markdown(matrix: dict) -> str:
         )
     lines.extend(
         [
+            "",
+            "## NEPA / Authority Compliance",
             "",
             "| Authority | Applicability | Status | EA evidence | Source evidence | Source claims | Limitations |",
             "| --- | --- | --- | --- | --- | --- | --- |",
@@ -156,6 +182,9 @@ def matrix_markdown(matrix: dict) -> str:
             )
             + " |"
         )
+    forest_plan_compliance = matrix.get("forest_plan_compliance")
+    if forest_plan_compliance:
+        lines.extend(_forest_plan_compliance_markdown_lines(forest_plan_compliance))
     return "\n".join(lines) + "\n"
 
 
@@ -229,6 +258,310 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "limitations": finding.get("limitations", []),
         "failure_category": _matrix_failure_category(finding),
     }
+
+
+def _forest_plan_compliance_section(
+    *,
+    review_id: str,
+    forest_plan_review: dict | None,
+) -> dict | None:
+    if not forest_plan_review:
+        return None
+    component_findings_path = _optional_path(
+        forest_plan_review.get("component_findings_path"),
+    )
+    standard_coverage_path = _optional_path(
+        forest_plan_review.get("applicable_standard_coverage_path"),
+    )
+    load_errors: list[str] = []
+    component_findings = _read_json_if_exists(component_findings_path, load_errors)
+    standard_coverage = _read_json_if_exists(standard_coverage_path, load_errors)
+    coverage_by_component_id = _standard_coverage_by_component_id(standard_coverage)
+    rows = _forest_plan_compliance_rows(
+        review_id=review_id,
+        component_findings=component_findings,
+        coverage_by_component_id=coverage_by_component_id,
+    )
+    compliance_status_counts = dict(
+        Counter(row["compliance_status"] for row in rows)
+    )
+    applicability_counts = dict(
+        Counter(row["applicability_status"] for row in rows)
+    )
+    component_type_counts = dict(Counter(row["component_type"] for row in rows))
+    applicable_standard_row_count = sum(
+        1
+        for row in rows
+        if row["component_type"] == "standard"
+        and row["applicability_status"] == "applicable"
+    )
+    return {
+        "schema_version": FOREST_PLAN_COMPLIANCE_SCHEMA_VERSION,
+        "summary": {
+            "scope_status": forest_plan_review.get("scope_status"),
+            "reviewer_ready": bool(forest_plan_review.get("reviewer_ready")),
+            "component_findings_path": forest_plan_review.get(
+                "component_findings_path",
+            ),
+            "applicable_standard_coverage_path": forest_plan_review.get(
+                "applicable_standard_coverage_path",
+            ),
+            "component_evaluation": forest_plan_review.get("component_evaluation"),
+            "row_filter": (
+                "applicable forest-plan component findings and compliance-evaluated "
+                "standards"
+            ),
+            "row_count": len(rows),
+            "applicability_counts": applicability_counts,
+            "compliance_status_counts": compliance_status_counts,
+            "component_type_counts": component_type_counts,
+            "applicable_standard_row_count": applicable_standard_row_count,
+            "load_errors": load_errors,
+        },
+        "columns": [
+            "component_id",
+            "component_type",
+            "applicability_status",
+            "compliance_status",
+            "finding_status",
+            "ea_package_citation",
+            "forest_plan_citation",
+            "determination",
+            "rationale",
+        ],
+        "rows": rows,
+    }
+
+
+def _forest_plan_compliance_rows(
+    *,
+    review_id: str,
+    component_findings: dict | None,
+    coverage_by_component_id: dict[str, dict],
+) -> list[dict]:
+    if not component_findings:
+        return []
+    rows = []
+    for finding in component_findings.get("findings", []):
+        if not _include_forest_plan_compliance_finding(finding):
+            continue
+        component_id = str(finding.get("component_id") or "").strip()
+        if not component_id:
+            continue
+        package_evidence = _first_dict(finding.get("package_evidence"))
+        plan_source_evidence = _first_dict(finding.get("plan_source_evidence"))
+        coverage = coverage_by_component_id.get(component_id, {})
+        component_type = str(finding.get("component_type") or "unknown")
+        applicability_status = str(
+            finding.get("applicability_status") or "unknown",
+        )
+        compliance_status = str(
+            finding.get("compliance_status")
+            or coverage.get("compliance_status")
+            or "not_evaluated_for_compliance",
+        )
+        finding_status = str(finding.get("finding_status") or "unknown")
+        rows.append(
+            {
+                "row_id": f"forest-plan-matrix:{review_id}:{component_id}",
+                "component_id": component_id,
+                "component_key": _component_key(finding, coverage),
+                "component_type": component_type,
+                "applicability_status": applicability_status,
+                "compliance_status": compliance_status,
+                "finding_status": finding_status,
+                "standard_applied": _standard_applied(finding, coverage),
+                "ea_package_citation": package_evidence.get("citation_label"),
+                "ea_package_evidence": _compact_evidence(package_evidence),
+                "forest_plan_citation": plan_source_evidence.get("citation_label"),
+                "forest_plan_evidence": _compact_evidence(plan_source_evidence),
+                "determination": _forest_plan_determination(finding, package_evidence),
+                "rationale": finding.get("rationale"),
+                "reviewer_resolution_count": len(
+                    finding.get("reviewer_resolution_items", []),
+                ),
+            }
+        )
+    rows.sort(
+        key=lambda row: (
+            _forest_plan_component_type_sort_key(row["component_type"]),
+            row["component_id"],
+        )
+    )
+    return rows
+
+
+def _include_forest_plan_compliance_finding(finding: dict) -> bool:
+    compliance_status = finding.get("compliance_status")
+    return finding.get("applicability_status") == "applicable" or compliance_status in {
+        "complies",
+        "does_not_comply",
+        "partial",
+        "uncertain",
+    }
+
+
+def _forest_plan_determination(finding: dict, package_evidence: dict) -> dict:
+    basis = finding.get("applicability_basis") or {}
+    package_determination = basis.get("package_component_determination") or {}
+    return {
+        "component_applies": package_evidence.get("component_applies")
+        or package_determination.get("component_applies"),
+        "review_section": package_evidence.get("review_section")
+        or package_determination.get("review_section"),
+        "source": package_evidence.get("determination_source")
+        or package_determination.get("determination_source"),
+        "component_text": package_evidence.get("determination_component_text"),
+        "explanation": package_evidence.get("determination_explanation")
+        or package_determination.get("determination_explanation"),
+    }
+
+
+def _forest_plan_compliance_markdown_lines(section: dict) -> list[str]:
+    summary = section.get("summary", {})
+    lines = [
+        "",
+        "## Forest Plan Compliance",
+        "",
+        f"- Rows: `{summary.get('row_count', 0)}`",
+        f"- Status counts: `{summary.get('compliance_status_counts', {})}`",
+        f"- Applicable standard rows: `{summary.get('applicable_standard_row_count', 0)}`",
+        "",
+    ]
+    if summary.get("load_errors"):
+        lines.append(
+            f"- Load errors: `{summary.get('load_errors')}`",
+        )
+        lines.append("")
+    lines.extend(
+        [
+            "| Component | Type | Applicability | Compliance | EA evidence | Forest Plan evidence | Notes |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    for row in section.get("rows", []):
+        ea_evidence = row.get("ea_package_evidence") or {}
+        plan_evidence = row.get("forest_plan_evidence") or {}
+        determination = row.get("determination") or {}
+        notes = determination.get("explanation") or row.get("rationale") or ""
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    _md_cell(row.get("component_id")),
+                    _md_cell(row.get("component_type")),
+                    _md_cell(row.get("applicability_status")),
+                    _md_cell(row.get("compliance_status")),
+                    _md_cell(
+                        _markdown_evidence_cell(
+                            row.get("ea_package_citation"),
+                            ea_evidence.get("title"),
+                            ea_evidence.get("text"),
+                        )
+                    ),
+                    _md_cell(
+                        _markdown_evidence_cell(
+                            row.get("forest_plan_citation"),
+                            plan_evidence.get("title"),
+                            plan_evidence.get("text"),
+                        )
+                    ),
+                    _md_cell(notes or "None"),
+                ]
+            )
+            + " |"
+        )
+    return lines
+
+
+def _section_row_count(section: dict | None) -> int:
+    if not section:
+        return 0
+    return int((section.get("summary") or {}).get("row_count") or 0)
+
+
+def _section_summary_value(section: dict | None, key: str, default):
+    if not section:
+        return default
+    return (section.get("summary") or {}).get(key, default)
+
+
+def _optional_path(value: object) -> Path | None:
+    if not value:
+        return None
+    return Path(str(value))
+
+
+def _read_json_if_exists(path: Path | None, load_errors: list[str]) -> dict | None:
+    if path is None:
+        return None
+    if not path.exists():
+        load_errors.append(f"missing:{path}")
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        load_errors.append(f"unreadable:{path}:{exc}")
+        return None
+    if not isinstance(payload, dict):
+        load_errors.append(f"invalid_json_object:{path}")
+        return None
+    return payload
+
+
+def _standard_coverage_by_component_id(standard_coverage: dict | None) -> dict[str, dict]:
+    if not standard_coverage:
+        return {}
+    coverage = {}
+    for row in standard_coverage.get("standards", []):
+        if not isinstance(row, dict):
+            continue
+        component_id = str(
+            row.get("component_id") or row.get("standard_id") or "",
+        ).strip()
+        if component_id:
+            coverage[component_id] = row
+    return coverage
+
+
+def _first_dict(values: object) -> dict:
+    if isinstance(values, list):
+        for value in values:
+            if isinstance(value, dict):
+                return value
+    if isinstance(values, dict):
+        return values
+    return {}
+
+
+def _component_key(finding: dict, coverage: dict) -> str | None:
+    basis = finding.get("applicability_basis") or {}
+    value = (
+        finding.get("component_key")
+        or coverage.get("component_key")
+        or basis.get("component_key")
+    )
+    return str(value) if value else None
+
+
+def _standard_applied(finding: dict, coverage: dict) -> bool | None:
+    for key in ("standard_applied", "applied"):
+        if key in finding:
+            return bool(finding.get(key))
+        if key in coverage:
+            return bool(coverage.get(key))
+    return None
+
+
+def _forest_plan_component_type_sort_key(component_type: str) -> int:
+    order = {
+        "standard": 0,
+        "guideline": 1,
+        "desired_condition": 2,
+        "objective": 3,
+        "suitability": 4,
+    }
+    return order.get(component_type, 99)
 
 
 def _compact_evidence(evidence: dict | None) -> dict | None:
@@ -347,11 +680,32 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
                 "authority, and cite both EA-package and source-library evidence."
             ),
             "",
+            "NEPA / Authority Compliance",
+            "",
         ]
     )
     for index, row in enumerate(matrix["rows"], start=1):
         lines.extend(_matrix_pdf_row_lines(index, row))
         lines.append("")
+    forest_plan_compliance = matrix.get("forest_plan_compliance")
+    if forest_plan_compliance:
+        summary = forest_plan_compliance.get("summary", {})
+        lines.extend(
+            [
+                "",
+                "Forest Plan Compliance",
+                f"Rows: {summary.get('row_count', 0)}",
+                f"Status counts: {summary.get('compliance_status_counts', {})}",
+                (
+                    "Applicable standard rows: "
+                    f"{summary.get('applicable_standard_row_count', 0)}"
+                ),
+                "",
+            ]
+        )
+        for index, row in enumerate(forest_plan_compliance.get("rows", []), start=1):
+            lines.extend(_forest_plan_pdf_row_lines(index, row))
+            lines.append("")
     return _paginate_pdf_lines(lines, max_lines=45)
 
 
@@ -395,6 +749,37 @@ def _pdf_evidence_cell(citation: str | None, evidence: dict) -> str:
     if evidence.get("text"):
         parts.append(_truncate(str(evidence["text"]), 260))
     return " - ".join(parts) if parts else "N/A"
+
+
+def _forest_plan_pdf_row_lines(index: int, row: dict) -> list[str]:
+    ea_evidence = row.get("ea_package_evidence") or {}
+    plan_evidence = row.get("forest_plan_evidence") or {}
+    determination = row.get("determination") or {}
+    notes = determination.get("explanation") or row.get("rationale") or "None"
+    lines = [
+        (
+            f"{index}. {row.get('component_id')} "
+            f"({row.get('component_type')})"
+        ),
+        (
+            f"   Applicability: {row.get('applicability_status')} | "
+            f"Compliance: {row.get('compliance_status')} | "
+            f"Finding: {row.get('finding_status')}"
+        ),
+        (
+            "   EA evidence: "
+            + _pdf_evidence_cell(row.get("ea_package_citation"), ea_evidence)
+        ),
+        (
+            "   Forest Plan evidence: "
+            + _pdf_evidence_cell(row.get("forest_plan_citation"), plan_evidence)
+        ),
+        "   Notes: " + notes,
+    ]
+    wrapped: list[str] = []
+    for line in lines:
+        wrapped.extend(_wrap_pdf_line(line))
+    return wrapped
 
 
 def _wrap_pdf_line(line: str, width: int = 150) -> list[str]:

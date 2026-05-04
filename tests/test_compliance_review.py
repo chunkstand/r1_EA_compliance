@@ -482,6 +482,29 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(
                 matrix["summary"]["forest_plan_review"]["component_findings_path"]
             )
+            forest_matrix = matrix["forest_plan_compliance"]
+            self.assertEqual(
+                forest_matrix["schema_version"],
+                "forest-plan-compliance-matrix-v0",
+            )
+            self.assertGreater(forest_matrix["summary"]["row_count"], 0)
+            self.assertGreater(
+                forest_matrix["summary"]["applicable_standard_row_count"],
+                0,
+            )
+            forest_rows = forest_matrix["rows"]
+            self.assertTrue(
+                any(
+                    row["component_type"] == "standard"
+                    and row["compliance_status"] == "complies"
+                    for row in forest_rows
+                )
+            )
+            markdown = result.compliance_matrix_markdown_path.read_text(
+                encoding="utf-8",
+            )
+            self.assertIn("## Forest Plan Compliance", markdown)
+            self.assertIn("BC-STD-CMBCA", markdown)
 
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
