@@ -2,6 +2,21 @@
 
 Date: 2026-05-04
 
+## Current Architecture Hardening State
+
+The agentic coding architecture sequence has implemented the architecture map, contract, first
+fitness gate, rule-pack ownership split, CLI lane split, hotspot report, and ADR set through
+Milestone 6. The operative architecture references are:
+
+- `docs/ARCHITECTURE.md`
+- `docs/architecture_contract.toml`
+- `docs/HOTSPOT_REPORT_2026_05_04.md`
+- `docs/adr/0001-architecture-fitness-gates.md`
+- `docs/adr/0002-applicability-before-compliance.md`
+- `docs/adr/0003-rule-pack-ownership.md`
+- `docs/adr/0004-untrusted-source-content.md`
+- `docs/adr/0005-architecture-gates-in-milestone-closeout.md`
+
 ## Current Applicability-First State
 
 The current active implementation lane is the post-V1 applicability-first review architecture in

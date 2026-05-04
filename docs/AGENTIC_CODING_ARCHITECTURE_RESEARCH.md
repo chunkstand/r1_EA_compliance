@@ -199,6 +199,14 @@ The codebase should become explicitly agent-legible:
 - Prefer single-agent implementation sequences for tightly coupled code changes; use parallel
   agents only for independent research, audits, fixture expansion, or disjoint module work.
 
+Operational ADRs now capture the first architecture decisions:
+
+- `docs/adr/0001-architecture-fitness-gates.md`
+- `docs/adr/0002-applicability-before-compliance.md`
+- `docs/adr/0003-rule-pack-ownership.md`
+- `docs/adr/0004-untrusted-source-content.md`
+- `docs/adr/0005-architecture-gates-in-milestone-closeout.md`
+
 ## Concrete Application To This Codebase
 
 ### Sequence 1: Architecture Contract And Fitness Gate

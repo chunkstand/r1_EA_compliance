@@ -127,9 +127,13 @@ Architecture enforcement is deliberately small:
 - fail dependency-boundary violations against `docs/architecture_contract.toml`;
 - keep exceptions visible with owner and removal milestone.
 
-See `docs/adr/0001-architecture-fitness-gates.md` for the initial decision. Future ADRs record
-applicability-before-compliance, rule-pack ownership, and untrusted-source boundaries as they become
-operationally enforced.
+Relevant ADRs:
+
+- `docs/adr/0001-architecture-fitness-gates.md`
+- `docs/adr/0002-applicability-before-compliance.md`
+- `docs/adr/0003-rule-pack-ownership.md`
+- `docs/adr/0004-untrusted-source-content.md`
+- `docs/adr/0005-architecture-gates-in-milestone-closeout.md`
 
 ## Change Rules For Agents
 
