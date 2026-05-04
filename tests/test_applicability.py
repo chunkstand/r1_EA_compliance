@@ -154,6 +154,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 "candidates_have_pre_review_contracts",
             )
             self.assertTrue(pre_review_check["passed"])
+            self.assertEqual(pre_review_check["details"]["failure_count"], 0)
             self.assertEqual(
                 snapshot["summary"]["candidate_contract_counts"][
                     "with_search_coverage_requirements"

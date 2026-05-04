@@ -892,6 +892,11 @@ Each candidate authority record includes:
 - forest-plan profile, component inventory, component ID, and component type when applicable
 - source evidence availability, required source-claim link IDs, rule-claim link IDs, or an explicit
   no-claim expectation
+- required package fact types, such as action, agency, decision posture, NEPA level, geography,
+  management area, overlay, resource topic, package section, and evidence span
+- positive trigger groups and negative trigger groups carried as explicit candidate-universe data,
+  not hidden runtime branches
+- required source evidence, source-role filters, and package-section filters
 - deterministic applicability test contract, including package trigger terms, trigger term groups,
   section expectations, negative trigger terms, source filters, and baseline-required rationale
 - retrieval contract, including exact keyword, citation, optional vector, metadata-filter, and
@@ -899,6 +904,8 @@ Each candidate authority record includes:
 - graph expansion contract, including allowed start nodes, relationship types, traversal depth,
   dependency, exception, supersession, Forest Plan profile, geography, overlay, rule-claim, and
   source-record neighbor requirements
+- dependency, exception, and supersession contract fields, even when the candidate has no known
+  dependencies, exceptions, or superseded authorities
 - search coverage requirements for each allowed `not_applicable` decision class
 
 `package_fact_graph.json` has schema version `package-fact-graph-v0` and includes the typed package

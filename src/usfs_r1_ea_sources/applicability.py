@@ -1114,6 +1114,7 @@ def _check_candidate_pre_review_contracts(candidate_authorities: list[dict]) -> 
     required_fields = (
         "required_package_fact_types",
         "positive_trigger_groups",
+        "negative_trigger_groups",
         "source_role_filters",
         "package_section_filters",
         "required_source_evidence",
