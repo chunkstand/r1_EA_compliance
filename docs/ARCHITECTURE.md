@@ -37,7 +37,8 @@ instructions for agents or privileged tools.
 | Workbook/config | Load workbook rows, overrides, settings, and record identity. | `workbook.py`, `records.py`, `config.py`, `overrides.py`, `adapters.py` |
 | Capture | Dry-run, preflight, download, batch, report, and run validation. | `dry_run.py`, `preflight.py`, `download.py`, `batches.py`, `report.py`, `validate_run.py`, `pilots.py` |
 | Catalog | Promote workbook rows and artifacts into reviewer-facing catalog surfaces. | `catalog.py` |
-| Extraction/retrieval | Build text chunks, accuracy checks, reuse inventory, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `reuse_inventory.py`, `retrieval.py` |
+| Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
+| Review support | Build cross-source-set reuse planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py` |
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `claim_extraction.py`, `rule_claim_binding.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
@@ -71,8 +72,9 @@ Catalog code owns reviewer catalog surfaces:
 
 Extraction reads catalog records and raw artifacts, then writes derived text/chunk surfaces under
 `source_library/derived/<source_set_id>/`. Retrieval reads extracted chunks and writes the evidence
-index and validation outputs. Raw artifacts are source bytes and provenance only; semantic work
-starts in derived layers.
+index and validation outputs. Reuse planning is a review-support helper because it can inspect
+forest-plan source-set requirements while writing only reuse inventory artifacts. Raw artifacts are
+source bytes and provenance only; semantic work starts in derived layers.
 
 ### Evidence, Claims, And Rule Packs
 

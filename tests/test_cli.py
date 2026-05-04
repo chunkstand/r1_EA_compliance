@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = REPO_ROOT / "docs" / "architecture_contract.toml"
 
 
-def test_contract_command_groups_are_registered() -> None:
+def test_contract_command_groups_match_registered_commands() -> None:
     parser = build_parser()
     registered = _registered_commands(parser)
     contract = tomllib.loads(CONTRACT_PATH.read_text())
@@ -23,7 +23,7 @@ def test_contract_command_groups_are_registered() -> None:
         for command in group.get("commands", [])
     }
 
-    assert expected <= registered
+    assert expected == registered
 
 
 def test_compliance_review_parser_preserves_authority_gate_options() -> None:

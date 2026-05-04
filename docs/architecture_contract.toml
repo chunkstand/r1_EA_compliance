@@ -23,9 +23,9 @@ allowed_import_layers = ["foundation", "capture", "catalog"]
 
 [[layers]]
 name = "extraction"
-summary = "Artifact extraction, extraction accuracy, extraction reuse, and retrieval index construction."
-modules = ["extract", "extraction_accuracy", "reuse_inventory"]
-allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review"]
+summary = "Artifact extraction, extraction accuracy, and extraction-derived text surfaces."
+modules = ["extract", "extraction_accuracy"]
+allowed_import_layers = ["foundation", "capture", "catalog", "extraction"]
 
 [[layers]]
 name = "retrieval"
@@ -57,6 +57,12 @@ modules = [
   "forest_plan_resolver",
 ]
 allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]
+
+[[layers]]
+name = "review_support"
+summary = "Cross-source-set reuse planning helpers that may inspect review-derived source-set requirements without writing review outputs."
+modules = ["reuse_inventory"]
+allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
 [[layers]]
 name = "evidence_graph"
@@ -146,6 +152,7 @@ allowed_import_layers = [
   "claims",
   "rule_packs",
   "review",
+  "review_support",
   "evidence_graph",
   "package_context",
   "applicability",
@@ -176,10 +183,23 @@ paths = [
 [[artifacts]]
 owner_layer = "extraction"
 paths = [
-  "source_library/derived/<source_set_id>/extraction_manifest.jsonl",
-  "source_library/derived/<source_set_id>/chunks.jsonl",
+  "source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl",
+  "source_library/derived/<source_set_id>/chunks/chunks.jsonl",
+]
+
+[[artifacts]]
+owner_layer = "retrieval"
+paths = [
   "source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite",
   "source_library/derived/<source_set_id>/retrieval/retrieval_validation.json",
+]
+
+[[artifacts]]
+owner_layer = "review_support"
+paths = [
+  "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory.json",
+  "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl",
+  "source_library/derived/<source_set_id>/reuse_inventory/summary.json",
 ]
 
 [[artifacts]]
