@@ -1258,6 +1258,8 @@ rule pack accepted by the target downstream compliance-review path. It includes:
 - `applicability_validation_sha256`
 - `authority_universe_sha256`
 - `applicable_authorities_sha256`
+- `non_applicable_authorities_sha256`
+- `applicability_provenance_sha256`
 - `package_fact_graph_sha256`
 - `retrieval_trace_sha256`
 - `graph_trace_sha256`
@@ -1271,7 +1273,7 @@ rule pack accepted by the target downstream compliance-review path. It includes:
 
 Each generated rule carries:
 
-- base rule ID and generated rule ID
+- explicit base rule ID and generated rule ID
 - applicability decision ID
 - applicability evidence references, including package fact node IDs, retrieval trace IDs, graph path
   IDs, and search coverage certificate IDs when relevant
@@ -1279,6 +1281,8 @@ Each generated rule carries:
 - source-claim link requirements
 - package-section expectations
 - Forest Plan component references when relevant
+- per-rule source, package, authority-universe, applicability-validation, applicable-authorities,
+  non-applicable-authorities, and provenance hashes
 
 `generated_rule_pack_validation.json` has schema version `generated-rule-pack-validation-v0` and
 records:
@@ -1292,6 +1296,8 @@ records:
 - `base_rule_pack_sha256`
 - `authority_universe_sha256`
 - `applicable_authorities_sha256`
+- `non_applicable_authorities_sha256`
+- `applicability_provenance_sha256`
 - `package_fact_graph_sha256`
 - `retrieval_trace_sha256`
 - `graph_trace_sha256`
@@ -1306,13 +1312,16 @@ records:
 - whether all generated rules trace to applicable decisions
 - whether non-applicable authorities are absent
 - whether source-claim links are present for claim-bearing generated rules
+- whether the applicability validation still matches current upstream artifacts
 - whether package, source-set, catalog, authority-universe, package-fact-graph, retrieval-trace,
-  graph-trace, search-coverage, validation, and applicable-authority hashes match the validated
-  applicability artifacts
+  graph-trace, search-coverage, validation, provenance, applicable-authority, and
+  non-applicable-authority hashes match the validated applicability artifacts
 
 `applicability-generate-rule-pack --validate-only` rechecks an existing generated pack without
-rewriting it. Validation retains the previously recorded generated-pack hash, so manual edits fail
-with `generated_rule_pack_mismatch`; upstream artifact drift fails with `generated_rule_pack_stale`.
+rewriting it. Validation requires the previously recorded generated-pack hash, so a hand-written pack
+cannot be blessed by its first validate-only run. Manual edits fail with
+`generated_rule_pack_mismatch`; upstream artifact drift or stale applicability validation fails with
+`generated_rule_pack_stale`.
 
 The non-applicable authority artifact is separate from the compliance matrix. A combined
 reviewer-facing report may link to `non_applicable_authorities.json`, but the target compliance

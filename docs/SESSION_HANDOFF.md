@@ -39,10 +39,12 @@ Current completed applicability milestones:
   validation around package fact-graph validation status, contradiction/adjudication handling,
   adjudication eval replayability, partition/coverage freshness, and provenance entity hashes.
 - Milestone 7 generated rule pack: `applicability-generate-rule-pack` writes
-  `generated_rule_pack.json` and `generated_rule_pack_validation.json` only from a passing
-  applicability validation. Generated packs contain validated applicable authorities only and carry
-  decision, retrieval, graph, source-record, source-claim, package-section, Forest Plan, freshness,
-  and provenance metadata. `--validate-only` detects manual edits and upstream artifact drift.
+  `generated_rule_pack.json` and `generated_rule_pack_validation.json` only from a passing and
+  current applicability validation. Generated packs contain validated applicable authorities only
+  and carry explicit base/generated rule IDs, decision, retrieval, graph, source-record,
+  source-claim, package-section, Forest Plan, per-rule artifact hashes, freshness, and provenance
+  metadata. `--validate-only` requires a previously recorded generated-pack hash and detects manual
+  edits, stale applicability validation, and upstream artifact drift.
 
 Latest applicability commits:
 
@@ -56,6 +58,7 @@ Latest applicability commits:
 - `aa0c1da` - Close applicability decision gaps
 - `6bed025` - Add applicability validation adjudication gate
 - `a60c382` - Close applicability validation gate gaps
+- `99ae407` - Add applicability generated rule pack
 
 Important current behavior:
 
@@ -74,7 +77,9 @@ Important current behavior:
 - `compliance-review` still runs the current V1 authority-first path. It is not yet gated by
   applicability artifacts, and it does not yet consume a generated applicability-derived rule pack.
 - The applicability-first path now emits a generated rule pack after validation/adjudication. It
-  still does not gate `compliance-review`; that is the next implementation boundary.
+  refuses stale applicability validation, requires a recorded generated-pack hash during
+  validate-only checks, and still does not gate `compliance-review`; that is the next implementation
+  boundary.
 
 Latest verification for the applicability-first lane:
 
@@ -86,10 +91,10 @@ git diff --check
 PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 7 generated-rule-pack pass:
+Verified results from the latest Milestone 7 generated-rule-pack gap-close pass:
 
-- Applicability plus compliance/rule-claim focused suite: `75 passed, 3 subtests passed`
-- Full repository test suite: `265 passed, 8 subtests passed`
+- Applicability plus compliance/rule-claim focused suite: `78 passed, 3 subtests passed`
+- Full repository test suite: `268 passed, 8 subtests passed`
 - Ruff: passed
 - Compileall: passed
 - `git diff --check`: passed

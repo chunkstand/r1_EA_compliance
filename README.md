@@ -900,13 +900,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
   --validate-only
 ```
 
-`applicability-generate-rule-pack` requires a passing `applicability_validation.json`. It writes
-`generated_rule_pack.json` and `generated_rule_pack_validation.json` from validated applicable
-authorities only; non-applicable authorities remain in `non_applicable_authorities.json`. Generated
-rules carry applicability decision IDs, retrieval and graph trace IDs, source-record/document-role
-metadata, source-claim link requirements, package-section expectations, Forest Plan component
-metadata when relevant, and freshness/provenance hashes. `--validate-only` rechecks an existing
-generated pack and fails if it was edited by hand or is stale relative to applicability artifacts.
+`applicability-generate-rule-pack` requires a passing, current `applicability_validation.json`. It
+writes `generated_rule_pack.json` and `generated_rule_pack_validation.json` from validated
+applicable authorities only; non-applicable authorities remain in `non_applicable_authorities.json`.
+Generated rules carry explicit base/generated rule IDs, applicability decision IDs, retrieval and
+graph trace IDs, source-record/document-role metadata, source-claim link requirements,
+package-section expectations, Forest Plan component metadata when relevant, and per-rule
+freshness/provenance hashes. `--validate-only` rechecks an existing generated pack, requires the
+previously recorded generated-pack hash, and fails if the pack was edited by hand or is stale
+relative to applicability artifacts.
 
 Run rule-pack coverage:
 

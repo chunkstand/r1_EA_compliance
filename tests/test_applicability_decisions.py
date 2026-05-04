@@ -293,7 +293,31 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 self.assertTrue(metadata["decision_id"])
                 self.assertTrue(metadata["retrieval_trace_ids"])
                 self.assertTrue(metadata["source_record_ids"])
+                self.assertEqual(rule["generated_rule_id"], rule["id"])
                 self.assertIn("package_section_expectations", rule)
+                self.assertIn("applicability_artifact_hashes", rule)
+                for hash_field in {
+                    "base_rule_pack_sha256",
+                    "applicability_validation_sha256",
+                    "authority_universe_sha256",
+                    "applicable_authorities_sha256",
+                    "non_applicable_authorities_sha256",
+                    "package_fact_graph_sha256",
+                    "retrieval_trace_sha256",
+                    "graph_trace_sha256",
+                    "search_coverage_certificates_sha256",
+                    "package_manifest_sha256",
+                    "package_chunks_sha256",
+                    "catalog_sha256",
+                    "applicability_provenance_sha256",
+                }:
+                    self.assertTrue(rule["applicability_artifact_hashes"][hash_field])
+                self.assertEqual(
+                    metadata["artifact_hashes"],
+                    rule["applicability_artifact_hashes"],
+                )
+                if rule["id"] != "forest_plan_component_STD-FP-01":
+                    self.assertTrue(rule["base_rule_id"])
             applicable = json.loads(
                 (applicability_dir / "applicable_authorities.json").read_text(
                     encoding="utf-8"
@@ -338,6 +362,52 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 / "applicability"
                 / "generated_rule_pack.json"
             )
+            self.assertFalse(generated_path.exists())
+
+    def test_generated_rule_pack_refuses_stale_applicability_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            _build_adjudicated_applicability_dir(fixture)
+            applicable_path = (
+                fixture["output_dir"]
+                / "reviews"
+                / fixture["review_id"]
+                / "applicability"
+                / "applicable_authorities.json"
+            )
+            applicable = json.loads(applicable_path.read_text(encoding="utf-8"))
+            applicable["authorities"][0]["basis_type"] = "changed-after-validation"
+            _write_json(applicable_path, applicable)
+
+            with self.assertRaisesRegex(ValueError, "stale"):
+                generate_applicability_rule_pack(
+                    output_dir=fixture["output_dir"],
+                    review_id=fixture["review_id"],
+                    source_set_id=fixture["source_set_id"],
+                    base_rule_pack_path=_write_generated_rule_base_pack(Path(tmp)),
+                )
+
+            generated_path = applicable_path.parent / "generated_rule_pack.json"
+            self.assertFalse(generated_path.exists())
+
+    def test_generated_rule_pack_refuses_stale_package_context_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = _build_adjudicated_applicability_dir(fixture)
+            context_path = applicability_dir / "package_applicability_context.json"
+            context = json.loads(context_path.read_text(encoding="utf-8"))
+            context["package_manifest_sha256"] = "changed-after-validation"
+            _write_json(context_path, context)
+
+            with self.assertRaisesRegex(ValueError, "stale"):
+                generate_applicability_rule_pack(
+                    output_dir=fixture["output_dir"],
+                    review_id=fixture["review_id"],
+                    source_set_id=fixture["source_set_id"],
+                    base_rule_pack_path=_write_generated_rule_base_pack(Path(tmp)),
+                )
+
+            generated_path = applicability_dir / "generated_rule_pack.json"
             self.assertFalse(generated_path.exists())
 
     def test_generated_rule_pack_validation_rejects_manual_edit_and_stale_inputs(
@@ -395,6 +465,34 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertIn(
                 "generated_rule_pack_stale",
                 stale_validation.summary["failure_category_counts"],
+            )
+
+    def test_generated_rule_pack_validate_only_requires_recorded_generated_hash(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            base_rule_pack_path = _write_generated_rule_base_pack(Path(tmp))
+            _build_adjudicated_applicability_dir(fixture)
+            result = generate_applicability_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            result.generated_rule_pack_validation_path.unlink()
+
+            validation = validate_generated_rule_pack(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                base_rule_pack_path=base_rule_pack_path,
+            )
+
+            self.assertFalse(validation.summary["passed"])
+            self.assertIn(
+                "generated_rule_pack_mismatch",
+                validation.summary["failure_category_counts"],
             )
 
     def test_cli_writes_generated_rule_pack_artifacts(self) -> None:

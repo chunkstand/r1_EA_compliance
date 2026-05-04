@@ -765,14 +765,15 @@ Stop conditions:
 ## Milestone 7: Generated Rule Pack
 
 Current status:
-Implemented. `applicability-generate-rule-pack` reads a passing `applicability_validation.json`,
-the validated `applicable_authorities.json`, `non_applicable_authorities.json`, the authority
-universe snapshot, the decision ledger, and the base rule pack, then writes
-`generated_rule_pack.json` and `generated_rule_pack_validation.json`. Generated packs include only
-validated applicable authorities, carry decision/evidence/trace/source metadata, synthesize
-Forest Plan component rules when applicable, and fail validation if the pack is manually edited or
-stale relative to current applicability artifacts. This milestone still does not gate
-`compliance-review`; that boundary is Milestone 8.
+Implemented and gap-closed. `applicability-generate-rule-pack` reads a passing and current
+`applicability_validation.json`, the validated `applicable_authorities.json`,
+`non_applicable_authorities.json`, the authority universe snapshot, the decision ledger, and the base
+rule pack, then writes `generated_rule_pack.json` and `generated_rule_pack_validation.json`.
+Generated packs include only validated applicable authorities, carry decision/evidence/trace/source
+metadata, explicit base/generated rule IDs, per-rule artifact hashes, and synthesize Forest Plan
+component rules when applicable. Validation fails if the pack lacks a recorded generated-pack hash,
+is manually edited, or is stale relative to current applicability artifacts. This milestone still
+does not gate `compliance-review`; that boundary is Milestone 8.
 
 Goal:
 Generate the review rule pack from the validated applicable-authorities artifact.
