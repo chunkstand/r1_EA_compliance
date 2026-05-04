@@ -619,9 +619,8 @@ def _check_applicability_validation_matches_current_artifacts(
             _validation_artifact_path(validation_paths, "package_fact_graph"),
             "package_fact_graph_sha256",
         ),
-        "search_coverage_certificates_sha256": _json_field_from_path(
-            _validation_artifact_path(validation_paths, "search_coverage_certificates"),
-            "search_coverage_certificates_sha256",
+        "search_coverage_certificates_sha256": _optional_file_sha256(
+            _validation_artifact_path(validation_paths, "search_coverage_certificates")
         ),
         "applicability_provenance_sha256": _optional_file_sha256(
             _validation_artifact_path(validation_paths, "provenance")

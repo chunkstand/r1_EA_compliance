@@ -59,8 +59,9 @@ The suite uses explicit failure categories so a failed run points at the next en
 - `adjudication_needed`
 - `package_fixture_missing`
 
-Non-blocking expansion-slot failures are reported with a `non_blocking_` prefix unless strict mode
-is used.
+Current-promotion failures are reported in `failure_category_counts`. Expansion-only failures are
+reported separately in `expansion_failure_category_counts`; they enter `failure_category_counts`
+only when strict mode is used.
 
 ## Current Local Result
 
@@ -69,9 +70,10 @@ The suite was run locally on 2026-05-04 after implementation:
 - `current_promotion_ready=true`
 - `promotion_ready=true`
 - `expansion_ready=false`
-- failure categories: `applicability_miss=1`,
-  `non_blocking_package_fixture_missing=2`
+- `failure_category_counts={}`
+- `expansion_failure_category_counts={"package_fixture_missing": 2}`
+- `open_expansion_slot_count=2`
 
-The `applicability_miss` is expected until the post-V1 applicability artifact family exists for the
-promoted review. The open package-slot gaps are expected until additional real Region 1 EA packages
-are added with package-specific eval contracts.
+The post-V1 applicability artifact family exists for the promoted review and is included in
+`phase-eval --review-id`. The remaining expansion gaps are the two intentionally open real-package
+fixture slots; they are not current-promotion blockers unless `--strict-expansion` is used.

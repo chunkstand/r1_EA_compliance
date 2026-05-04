@@ -43,9 +43,10 @@ component-like labels with nonnumeric number tokens. Older reviewer-ready downst
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
-`26` baseline source records, applies `12/12` Custer Gallatin standards, passes `phase-eval`
-`10/10`, passes `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14`
-conditional adjudication rows as explicit accepted V1 reviewer risk.
+`26` baseline source records, applies `12/12` Custer Gallatin standards, passes review-bound
+`phase-eval` `17/17` with the post-V1 applicability gates included, passes `v1-ea-eval` with
+broader EA and forest-plan lanes true, and keeps `14` conditional adjudication rows as explicit
+accepted V1 reviewer risk.
 
 See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
 read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
@@ -720,6 +721,8 @@ under `source_library/reviews/promotion_suite/<suite_id>/`. It separates
 `current_promotion_ready`, `expansion_ready`, and `promotion_ready` so agents can distinguish the
 promoted East Crazy V1 evidence from post-V1 real-package expansion work. Use
 `--strict-expansion` when additional real-package slots should block the command exit status.
+Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
+`expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`, and
 `package_fixture_missing`.

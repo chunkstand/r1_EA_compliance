@@ -1043,7 +1043,9 @@ Each applicability decision includes:
 - package evidence spans with package chunk IDs, citation labels, section families, page labels,
   offsets, matched terms, and text snippets
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
-  offsets, source-claim IDs, and text snippets
+  offsets, source-claim IDs, text snippets, and `evidence_origin` when the span is carried forward
+  from the authority universe because source retrieval recorded coverage but selected no source
+  chunk
 - retrieval trace IDs and selected/rejected retrieval-result IDs that support the decision
 - graph path IDs and selected/rejected graph-path IDs when graph evidence supports the decision
 - negative evidence spans, explicit trigger-miss evidence, search coverage certificate IDs, or
@@ -1725,13 +1727,15 @@ The manifest has schema version `promotion-suite-v0` and records:
   matrix, compliance matrix PDF header, and V1 real-EA eval
 - suite-level eval artifact checks
 - open expansion slots and their required next actions
+- current-promotion `failure_category_counts` and expansion-only
+  `expansion_failure_category_counts`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
   `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
   and `package_fixture_missing`
 
-By default, open expansion slots do not block `promotion_ready`; they are reported with
-`non_blocking_` failure-category prefixes. With `--strict-expansion`, open expansion slots block
-`promotion_ready` and return their normal failure categories.
+By default, open expansion slots do not block `promotion_ready`; they are reported in
+`expansion_failure_category_counts` and `open_expansion_slot_count`. With `--strict-expansion`, open
+expansion slots block `promotion_ready` and enter `failure_category_counts`.
 
 ## Compliance Coverage Outputs
 

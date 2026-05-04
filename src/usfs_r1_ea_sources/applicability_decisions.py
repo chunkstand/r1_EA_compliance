@@ -348,6 +348,8 @@ def _decision_for_candidate(
     candidate_id = str(candidate.get("candidate_authority_id") or "")
     source_record_ids = _strings(candidate.get("source_record_ids"))
     source_evidence = _source_library_evidence(retrieval_rows, source_record_ids)
+    if not source_evidence:
+        source_evidence = _declared_source_library_evidence(candidate, source_record_ids)
     graph_path_ids = [
         str(row.get("graph_path_id"))
         for row in graph_rows
@@ -390,6 +392,7 @@ def _decision_for_candidate(
             candidate=candidate,
             package_nodes=package_nodes,
             positive_match=positive_match,
+            negative_match=negative_match,
             coverage_boundary=coverage_boundary,
         )
         status = component_result["status"]
@@ -575,6 +578,7 @@ def _forest_plan_component_result(
     candidate: dict[str, Any],
     package_nodes: list[dict[str, Any]],
     positive_match: dict[str, Any],
+    negative_match: dict[str, Any],
     coverage_boundary: dict[str, Any],
 ) -> dict[str, Any]:
     forest_plan = candidate.get("forest_plan") if isinstance(candidate.get("forest_plan"), dict) else {}
@@ -591,6 +595,46 @@ def _forest_plan_component_result(
                 missing.append(f"{fact_type}:{value}")
     trigger_required = bool(_trigger_groups(candidate.get("positive_trigger_groups")))
     trigger_matched = positive_match["matched"] if trigger_required else True
+    if negative_match["requires_adjudication"]:
+        return {
+            "status": "needs_adjudication",
+            "basis_type": "unresolved_evidence_conflict",
+            "basis": {
+                "rationale": "Forest Plan component negative scope evidence is weak or conflicting.",
+                "matched_negative_trigger_groups": negative_match["matched_groups"],
+            },
+            "missing_evidence": missing,
+            "contradiction_notes": negative_match["adjudication_notes"],
+            "confidence": "needs_adjudication",
+        }
+    if negative_match["matched"]:
+        basis = {
+            "rationale": (
+                "Package evidence matched an explicit negative Forest Plan component "
+                "scope trigger."
+            ),
+            "matched_negative_trigger_groups": negative_match["matched_groups"],
+            "matched_package_values": required_values if not missing else {},
+            "matched_positive_trigger_groups": positive_match["matched_groups"],
+            "missing_package_values": missing,
+        }
+        if coverage_boundary["coverage_sufficient"]:
+            return {
+                "status": "not_applicable",
+                "basis_type": "negative_package_evidence",
+                "basis": basis,
+                "missing_evidence": [],
+                "contradiction_notes": [],
+                "confidence": "deterministic_high",
+            }
+        return {
+            "status": "unresolved",
+            "basis_type": "forest_plan_profile_resolution",
+            "basis": basis,
+            "missing_evidence": [*missing, "sufficient forest-plan search coverage"],
+            "contradiction_notes": [],
+            "confidence": "low",
+        }
     if positive_match["requires_adjudication"]:
         return {
             "status": "needs_adjudication",
@@ -947,6 +991,64 @@ def _source_library_evidence(
                 "text_hash": result.get("text_hash"),
             }
     return sorted(evidence_by_id.values(), key=lambda item: item["evidence_id"])
+
+
+def _declared_source_library_evidence(
+    candidate: dict[str, Any],
+    source_record_ids: list[str],
+) -> list[dict[str, Any]]:
+    if not source_record_ids or not _source_evidence_available(candidate):
+        return []
+    required = candidate.get("required_source_evidence")
+    if not isinstance(required, dict):
+        required = {}
+    chunk_ids = _strings(required.get("source_chunk_ids"))
+    if not chunk_ids:
+        evidence_pairs = [(source_record_id, None) for source_record_id in source_record_ids]
+    elif len(source_record_ids) == 1:
+        evidence_pairs = [
+            (source_record_ids[0], chunk_id) for chunk_id in chunk_ids
+        ]
+    else:
+        padded_chunk_ids = [*chunk_ids]
+        if len(padded_chunk_ids) < len(source_record_ids):
+            padded_chunk_ids = [
+                *padded_chunk_ids,
+                *([None] * (len(source_record_ids) - len(padded_chunk_ids))),
+            ]
+        evidence_pairs = list(zip(source_record_ids, padded_chunk_ids, strict=False))
+    records_by_id = {
+        str(record.get("source_record_id") or ""): record
+        for record in candidate.get("source_records") or []
+        if isinstance(record, dict)
+    }
+    evidence = []
+    for source_record_id, chunk_id in evidence_pairs:
+        source_record = records_by_id.get(source_record_id, {})
+        evidence_id = _stable_id(
+            "declared-source-evidence",
+            str(candidate.get("candidate_authority_id") or ""),
+            source_record_id,
+            str(chunk_id or ""),
+        )
+        evidence.append(
+            {
+                "evidence_id": evidence_id,
+                "evidence_origin": "authority_universe",
+                "retrieval_trace_id": None,
+                "retrieval_result_id": None,
+                "source_record_id": source_record_id,
+                "source_chunk_id": chunk_id,
+                "citation_label": source_record.get("citation_label"),
+                "page_label": None,
+                "char_start": None,
+                "char_end": None,
+                "source_claim_ids": [],
+                "text_excerpt": source_record.get("title"),
+                "text_hash": None,
+            }
+        )
+    return evidence
 
 
 def _selected_package_results(retrieval_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

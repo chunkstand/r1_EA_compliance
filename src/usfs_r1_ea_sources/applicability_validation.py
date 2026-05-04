@@ -2264,9 +2264,9 @@ def _artifact_hashes(paths: dict[str, Path], artifacts: dict[str, Any]) -> dict[
         ),
         "retrieval_trace_sha256": _optional_file_sha256(paths["retrieval_trace"]),
         "graph_trace_sha256": _optional_file_sha256(paths["graph_trace"]),
-        "search_coverage_certificates_sha256": artifacts[
-            "search_coverage_certificates"
-        ].get("search_coverage_certificates_sha256"),
+        "search_coverage_certificates_sha256": _optional_file_sha256(
+            paths["search_coverage_certificates"]
+        ),
         "applicability_decisions_sha256": _optional_file_sha256(paths["decisions"]),
         "applicable_authorities_sha256": _optional_file_sha256(
             paths["applicable_authorities"]

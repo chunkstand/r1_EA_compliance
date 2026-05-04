@@ -75,6 +75,7 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             component_id = "forest-plan-component:unit-inventory:STD-FP-01"
             self.assertEqual(decisions[component_id]["status"], "applicable")
             self.assertEqual(decisions[component_id]["basis_type"], "forest_plan_component")
+            self.assertTrue(decisions[component_id]["source_library_evidence_spans"])
 
             applicable = json.loads(
                 result.applicable_authorities_path.read_text(encoding="utf-8")
@@ -111,6 +112,80 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertIn("package_manifest", entity_ids)
             self.assertIn("package_chunks", entity_ids)
             self.assertIn("decision_ledger", entity_ids)
+
+    def test_uses_declared_source_evidence_when_source_retrieval_has_no_selected_hits(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            applicability_dir = (
+                fixture["output_dir"] / "reviews" / fixture["review_id"] / "applicability"
+            )
+            retrieval_trace_path = applicability_dir / "applicability_retrieval_trace.jsonl"
+            rows = _read_jsonl(retrieval_trace_path)
+            for row in rows:
+                row["ranked_results"] = [
+                    result
+                    for result in row.get("ranked_results", [])
+                    if result.get("result_kind") != "source_chunk"
+                ]
+            _write_jsonl(retrieval_trace_path, rows)
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            baseline = decisions["rule-template:unit-pack:0.1.0:baseline_nepa"]
+            self.assertTrue(baseline["source_library_evidence_spans"])
+            self.assertEqual(
+                baseline["source_library_evidence_spans"][0]["evidence_origin"],
+                "authority_universe",
+            )
+            component = decisions["forest-plan-component:unit-inventory:STD-FP-01"]
+            self.assertTrue(component["source_library_evidence_spans"])
+
+    def test_forest_plan_negative_scope_evidence_overrides_component_positive(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            authority_universe_path = (
+                fixture["output_dir"]
+                / "reviews"
+                / fixture["review_id"]
+                / "applicability"
+                / "authority_universe_snapshot.json"
+            )
+            authority_universe = json.loads(
+                authority_universe_path.read_text(encoding="utf-8")
+            )
+            for candidate in authority_universe["candidate_authorities"]:
+                if (
+                    candidate["candidate_authority_id"]
+                    == "forest-plan-component:unit-inventory:STD-FP-01"
+                ):
+                    candidate["negative_trigger_groups"] = [["not part of the project area"]]
+            _write_json(authority_universe_path, authority_universe)
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            component = decisions["forest-plan-component:unit-inventory:STD-FP-01"]
+            self.assertEqual(component["status"], "not_applicable")
+            self.assertEqual(component["basis_type"], "negative_package_evidence")
+            self.assertFalse(component["package_evidence_spans"])
+            self.assertTrue(component["negative_evidence_spans"])
 
     def test_cli_writes_decision_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -18,10 +18,12 @@ def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path)
     assert result.summary["current_promotion_ready"] is True
     assert result.summary["expansion_ready"] is False
     assert result.summary["promotion_ready"] is True
-    assert result.summary["failure_category_counts"] == {
+    assert result.summary["failure_category_counts"] == {}
+    assert result.summary["expansion_failure_category_counts"] == {
         "applicability_miss": 1,
-        "non_blocking_package_fixture_missing": 1,
+        "package_fixture_missing": 1,
     }
+    assert result.summary["open_expansion_slot_count"] == 1
     assert result.output_path.exists()
     assert result.markdown_path.exists()
 
@@ -39,6 +41,10 @@ def test_promotion_suite_strict_expansion_blocks_promotion(tmp_path: Path) -> No
     assert result.summary["expansion_ready"] is False
     assert result.summary["promotion_ready"] is False
     assert result.summary["failure_category_counts"] == {
+        "applicability_miss": 1,
+        "package_fixture_missing": 1,
+    }
+    assert result.summary["expansion_failure_category_counts"] == {
         "applicability_miss": 1,
         "package_fixture_missing": 1,
     }

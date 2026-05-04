@@ -84,6 +84,11 @@ def run_promotion_suite(
         expansion_slots=expansion_slots,
         strict_expansion=strict_expansion,
     )
+    expansion_failure_category_counts = _expansion_failure_category_counts(
+        review_results=review_results,
+        suite_results=suite_results,
+        expansion_slots=expansion_slots,
+    )
     summary = {
         "schema_version": PROMOTION_SUITE_RESULTS_SCHEMA_VERSION,
         "suite_schema_version": manifest.get("schema_version"),
@@ -113,6 +118,10 @@ def run_promotion_suite(
         )
         + int(rule_pack_result["passed"]),
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "expansion_failure_category_counts": dict(
+            sorted(expansion_failure_category_counts.items())
+        ),
+        "open_expansion_slot_count": sum(1 for slot in expansion_slots if not slot["ready"]),
         "rule_pack_result": rule_pack_result,
         "review_cases": review_results,
         "suite_results": suite_results,
@@ -469,16 +478,40 @@ def _failure_category_counts(
     counts.update(rule_pack_result.get("failure_categories", []))
     for case in review_results:
         for result in case["results"]:
-            if not result["passed"]:
+            if not result["passed"] and (
+                result["required_for_current_promotion"]
+                or (strict_expansion and result["required_for_expansion"])
+            ):
                 counts.update(result.get("failure_categories", []))
     for result in suite_results:
-        if not result["passed"]:
+        if not result["passed"] and (
+            result["required_for_current_promotion"]
+            or (strict_expansion and result["required_for_expansion"])
+        ):
             counts.update(result.get("failure_categories", []))
     for slot in expansion_slots:
         if strict_expansion or slot.get("required_for_current_promotion"):
             counts.update(slot.get("failure_categories", []))
-        elif not slot.get("ready"):
-            counts.update({f"non_blocking_{category}": 1 for category in slot["failure_categories"]})
+    return counts
+
+
+def _expansion_failure_category_counts(
+    *,
+    review_results: list[dict[str, Any]],
+    suite_results: list[dict[str, Any]],
+    expansion_slots: list[dict[str, Any]],
+) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for case in review_results:
+        for result in case["results"]:
+            if not result["passed"] and result["required_for_expansion"]:
+                counts.update(result.get("failure_categories", []))
+    for result in suite_results:
+        if not result["passed"] and result["required_for_expansion"]:
+            counts.update(result.get("failure_categories", []))
+    for slot in expansion_slots:
+        if not slot.get("ready"):
+            counts.update(slot.get("failure_categories", []))
     return counts
 
 
@@ -603,6 +636,8 @@ def _markdown_report(summary: dict[str, Any]) -> str:
         f"- Promotion ready: `{summary['promotion_ready']}`",
         f"- Strict expansion: `{summary['strict_expansion']}`",
         f"- Failure categories: `{summary['failure_category_counts']}`",
+        f"- Expansion failure categories: `{summary['expansion_failure_category_counts']}`",
+        f"- Open expansion slots: `{summary['open_expansion_slot_count']}`",
         "",
         "## Review Cases",
         "",

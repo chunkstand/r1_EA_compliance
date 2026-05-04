@@ -88,7 +88,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   pack. Custer-scoped gold fixtures likewise preserve rule-level expected statuses while expecting
   the overall forest-plan component gate to fail readiness unless component evidence coverage is
   complete.
-- Phase eval passed `10/10` phases with `reviewer_ready: true` for `source-set-ba8d0feae79501b8`.
+- Phase eval passed `17/17` phases with `reviewer_ready: true` for
+  `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`, including the post-V1
+  applicability artifact family and generated rule-pack gate.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
   chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
@@ -105,12 +107,16 @@ Gallatin FEIS and ESA-supporting plan documents.
   `broader_ea_passed=true` and `forest_plan_passed=true`, `compliance-review-eval` `3/3`, and
   `compliance-gold-eval` `10/10`. Current Milestone 8 code excludes base-pack gold eval outputs
   from promotion readiness until generated applicability artifacts are present.
+- The post-V1 applicability run for `v1-cg-ecid-compliance-review` validates cleanly with `373`
+  candidate authorities, `34` applicable authorities, `339` not-applicable authorities, no
+  unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
 - The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. A local run on
   2026-05-04 reported `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=false`, and failure categories `applicability_miss=1` plus
-  `non_blocking_package_fixture_missing=2`. This means the current East Crazy V1 evidence remains
-  promotable while post-V1 applicability artifacts and additional real-package fixtures are still
-  explicit expansion gaps.
+  `expansion_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"package_fixture_missing": 2}`, and
+  `open_expansion_slot_count=2`. This means the current East Crazy V1 evidence and post-V1
+  applicability artifacts are promotable; broader readiness is blocked only when strict expansion
+  requires additional real Region 1 EA package fixtures.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -359,7 +365,11 @@ records, package facts, and Forest Plan component provenance when those artifact
 `applicability_report.md` with one deterministic decision row per authority candidate. Weak or
 conflicting trigger evidence is recorded as `needs_adjudication`, and not-applicable decisions cite
 search coverage certificates with required source-index hashes. Decision rows retain inspected
-source-library evidence spans, and provenance includes package manifest/chunk entities.
+source-library evidence spans or declared authority-universe source evidence when source retrieval
+records coverage without selecting a source chunk. Explicit negative Forest Plan scope evidence,
+such as package statements that a component area is not part of the project area, overrides broad
+component-text positives instead of producing contradictory ready decisions. Provenance includes
+package manifest/chunk entities.
 `applicability-validate` now writes `applicability_validation.json` and fails closed on missing or
 duplicated candidate decisions, unresolved or `needs_adjudication` decisions, stale artifacts,
 missing retrieval/graph traceability, non-applicable decisions without coverage/adjudication, and
