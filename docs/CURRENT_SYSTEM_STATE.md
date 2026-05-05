@@ -232,6 +232,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   Applicability determination covered `392` candidate authorities, with `40` applicable, `349`
   non-applicable, and `3` `needs_adjudication` authorities. Validation correctly remains
   not reviewer-ready until the generated adjudication template is completed and replayed.
+- The ECID roads/access/special-use adjudication item also exposed a general evidence-arbitration
+  gap: weak auxiliary trigger evidence can currently block an authority family even when strong
+  independent roads/access/right-of-way evidence is present. The repair sequence is documented in
+  `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
