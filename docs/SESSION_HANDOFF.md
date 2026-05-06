@@ -244,6 +244,12 @@ next-target lanes:
     review artifacts exist and parse, validation-owned artifact hashes match current files, the
     review/source-set/package boundary agrees, and the Plan Consistency Table hash baseline records
     both raw-file and normalized-text hash shapes. The next preflight pass is current gate replay.
+  - Sequence 0 pass 3 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_3_CURRENT_GATE_REPLAY.md`: `phase-eval`
+    passed `16/16` with `reviewer_ready=true`, `promotion-suite` reported
+    `current_promotion_ready=true` and `promotion_ready=true`, and broader expansion blockers
+    remain separated from the current East Crazies promotion gate. The next preflight pass is Forest
+    Plan consistency baseline.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
