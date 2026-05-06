@@ -344,10 +344,11 @@ records that layout does not change readiness.
 
 ## EA Consistency Decision-Support Generator
 
-The East Crazies decision-support lane is complete through Sequence 3. Sequence 0 preflight recorded
+The East Crazies decision-support lane is complete through Sequence 4. Sequence 0 preflight recorded
 the current artifact/count/hash baseline and closed with `go`; Sequence 1 added the tracked report
 contract; Sequence 2 added the deterministic generator and public CLI command; Sequence 3 generated
-the first local report family for the promoted East Crazies review. The tracked surfaces
+the first local report family for the promoted East Crazies review; Sequence 4 made that family a
+checked validation, phase-eval, and promotion-suite gate. The tracked surfaces
 are:
 
 - `config/ea_consistency_decision_support_v1.json`
@@ -364,6 +365,15 @@ The command is:
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
+```
+
+The existing generated report can be validated without rewriting it with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --validate-only
 ```
 
 The generator reads existing audited review artifacts and tracked config/fixture contracts, compares
@@ -385,15 +395,18 @@ ignored local report family under
 - `ea_consistency_decision_support.pdf`
 - `ea_consistency_decision_support_manifest.json`
 
-That run returned `passed=true` and rendered all `33` applicable authority findings with
-package/source evidence, the `340` non-applicable authority boundary with search coverage, the `329`
-Forest Plan component rows, all `12/12` applicable standards with package and plan evidence, `9`
-implementation-confirmation rows with evidence, and `3` residual-risk notes with `0`
-legal-conclusion risk flags. The report PDF has a valid `%PDF-` header. The same closeout replayed
-`phase-eval --review-id v1-cg-ecid-compliance-review`, which passed `16/16` phases with
-`reviewer_ready=true`. Generated `source_library/` outputs remain ignored and are not staged. The
-next boundary is Sequence 4: make the generated decision-support report a checked validation/phase
-gate instead of an optional side output.
+The latest Sequence 4 closeout regenerated and then validated that ignored local report family.
+Validation returned `passed=true` and `reviewer_ready=true`, rechecked all current input hashes and
+required report sections, kept all `33` applicable authority findings with package/source evidence,
+kept the `340` non-applicable authority boundary with search coverage, represented all `329` Forest
+Plan component rows, covered all `12/12` applicable standards with package and plan evidence, kept
+`9` implementation-confirmation rows with evidence and `3` residual-risk notes with `0`
+legal-conclusion risk flags, and confirmed the PDF starts with `%PDF-`. The same closeout replayed
+`phase-eval --review-id v1-cg-ecid-compliance-review`, which now includes
+`decision_support_report` and passed `17/17` phases with `reviewer_ready=true`; `promotion-suite`
+also reports the decision-support JSON, manifest, and PDF as required current-promotion artifacts.
+Generated `source_library/` outputs remain ignored and are not staged. The next boundary is
+Sequence 5: supervisor review polish for the Markdown/PDF rendering.
 
 ## Verified State Snapshot
 
@@ -432,9 +445,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   pack. Custer-scoped gold fixtures likewise preserve rule-level expected statuses while expecting
   the overall forest-plan component gate to fail readiness unless component evidence coverage is
   complete.
-- Phase eval passed `16/16` phases with `reviewer_ready: true` for
+- Phase eval passed `17/17` phases with `reviewer_ready: true` for
   `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`, including the post-V1
-  applicability artifact family and generated rule-pack gate.
+  applicability artifact family, generated rule-pack gate, and decision-support-report gate.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
   chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
@@ -1539,7 +1552,7 @@ passes with `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
 `failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
 `conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
 conditional adjudication rows carried as explicit V1 reviewer risk. Review-bound `phase-eval` now
-passes `16/16` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
+passes `17/17` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
 passing base-pack gold suite through `rule_pack_match_mode=generated_base`. Embeddings, reranking,
 model-assisted synthesis, and broader Region 1 package expansion remain post-V1 work and should
 start under a new milestone plan.

@@ -302,11 +302,12 @@ The generated report validation passed with all `33` applicable authority findin
 component rows represented, the `EA-PACKAGE-042` Plan Consistency Table linked, all `12/12`
 applicable Forest Plan standards covered with package and plan evidence, `9` implementation
 confirmation rows with evidence, `3` residual-risk notes, `0` legal-conclusion risk flags, and a
-valid `%PDF-` output header. `phase-eval` for `v1-cg-ecid-compliance-review` passed `16/16` phases
-with `reviewer_ready=true`. The report remains a generated local artifact until Sequence 4 promotes
-it into a validation gate.
+valid `%PDF-` output header. Sequence 4 now promotes the report into a validation gate.
 
 ## Sequence 4: Decision-Support Gate
+
+Status:
+Complete.
 
 Goal:
 Make the report a checked readiness artifact instead of an optional side output.
@@ -345,6 +346,19 @@ git diff --check
 
 Commit policy:
 Commit Sequence 4 as a focused gate/test/docs commit after verification passes.
+
+Closeout result:
+The implementation adds `--validate-only` to `ea-consistency-document`, a reusable
+decision-support report validator, a `decision_support_report` phase in `phase-eval`, and required
+promotion-suite checks for the report JSON, manifest, and PDF. The gate validates current input
+hashes, required report sections, applicable and non-applicable authority counts, Forest Plan
+component counts, applicable-standard counts, reviewer-ready source artifact status, PDF validity,
+manual-draft quarantine, implementation-confirmation completeness, and residual-risk
+legal-conclusion boundaries. The 2026-05-06 closeout regenerated the ignored local report family,
+validated it with `passed=true` and `reviewer_ready=true`, replayed `phase-eval` at `17/17` phases
+with `reviewer_ready=true`, and ran `promotion-suite` with `current_promotion_ready=true`,
+`promotion_ready=true`, and `expansion_ready=false`. Generated `source_library/` outputs remain
+ignored and were not staged.
 
 ## Sequence 5: Supervisor Review Polish
 

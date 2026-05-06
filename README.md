@@ -46,7 +46,8 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `26` baseline source records through the generated applicability rule pack, validates a
 `373`-candidate authority universe with `33` applicable and `340` non-applicable authorities,
 emits `33` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
-review-bound `phase-eval` `16/16` with the post-V1 applicability gates included, passes
+review-bound `phase-eval` `17/17` with the post-V1 applicability and decision-support gates
+included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
@@ -119,8 +120,9 @@ milestone that expands the bounded authority-family inventory beyond the V1 prov
 sequence covering USDA/Forest Service Region 1 EA authority families, applicability, evidence, and
 readiness blockers. See
 `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md` for the East Crazies decision-support
-report sequence; Sequence 3 has generated the first local East Crazies JSON/Markdown/PDF
-decision-support report family under the ignored review `decision_support/` directory. See
+report sequence; Sequence 4 has made the generated East Crazies JSON/Markdown/PDF
+decision-support report family a `phase-eval` and promotion-suite readiness gate while keeping the
+ignored outputs under the review `decision_support/` directory. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific

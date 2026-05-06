@@ -151,6 +151,47 @@ def test_decision_support_handler_propagates_report_options(monkeypatch) -> None
     assert captured["results_dir"] == Path("decision-output")
 
 
+def test_decision_support_handler_propagates_validate_only(monkeypatch) -> None:
+    captured = {}
+
+    def fake_validate_ea_consistency_decision_support_report(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_decision_support,
+        "validate_ea_consistency_decision_support_report",
+        fake_validate_ea_consistency_decision_support_report,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "ea-consistency-document",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_decision_support.json",
+            "--expected-summary",
+            "config/custom_expected_summary.json",
+            "--results-dir",
+            "decision-output",
+            "--validate-only",
+        ]
+    )
+
+    result = cli_decision_support.handle_decision_support_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_decision_support.json")
+    assert captured["expected_summary_path"] == Path("config/custom_expected_summary.json")
+    assert captured["results_dir"] == Path("decision-output")
+
+
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):

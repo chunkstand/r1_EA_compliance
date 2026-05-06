@@ -29,6 +29,16 @@ class EAConsistencyDecisionSupportResult:
     summary: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class EAConsistencyDecisionSupportValidationResult:
+    output_dir: Path
+    report_path: Path
+    markdown_path: Path
+    pdf_path: Path
+    manifest_path: Path
+    summary: dict[str, Any]
+
+
 def run_ea_consistency_decision_support(
     *,
     output_dir: Path = Path("source_library"),
@@ -104,6 +114,149 @@ def run_ea_consistency_decision_support(
         pdf_path=pdf_path,
         manifest_path=manifest_path,
         summary=summary,
+    )
+
+
+def validate_ea_consistency_decision_support_report(
+    *,
+    output_dir: Path = Path("source_library"),
+    review_id: str | None = None,
+    config_path: Path | None = DEFAULT_CONFIG_PATH,
+    expected_summary_path: Path | None = DEFAULT_EXPECTED_SUMMARY_PATH,
+    results_dir: Path | None = None,
+) -> EAConsistencyDecisionSupportValidationResult:
+    output_dir = Path(output_dir)
+    selected_review_id = _selected_review_id_for_validation(
+        review_id=review_id,
+        config_path=config_path,
+        expected_summary_path=expected_summary_path,
+    )
+    review_dir = output_dir / "reviews" / selected_review_id
+    report_dir = Path(results_dir) if results_dir is not None else review_dir / "decision_support"
+    report_path, markdown_path, pdf_path, manifest_path = _report_paths(report_dir)
+    report_artifacts = _load_report_artifacts(
+        report_path=report_path,
+        markdown_path=markdown_path,
+        pdf_path=pdf_path,
+        manifest_path=manifest_path,
+    )
+    config_path, expected_summary_path = _resolve_validation_contract_paths(
+        report_artifacts=report_artifacts,
+        config_path=config_path,
+        expected_summary_path=expected_summary_path,
+    )
+    config_artifact = _load_artifact(
+        key="decision_support_config",
+        path=Path(config_path),
+        artifact_type="json",
+        required=True,
+    )
+    expected_artifact = _load_artifact(
+        key="decision_support_expected_summary",
+        path=Path(expected_summary_path),
+        artifact_type="json",
+        required=True,
+    )
+    source_validation: dict[str, Any] | None = None
+    context: _DecisionSupportContext | None = None
+    source_set_id = _report_source_set_id(report_artifacts)
+    if (
+        config_artifact.exists
+        and config_artifact.parse_ok
+        and expected_artifact.exists
+        and expected_artifact.parse_ok
+    ):
+        config = _dict(config_artifact.payload)
+        expected = _dict(expected_artifact.payload)
+        selected_review_id = str(
+            review_id
+            or config.get("review_id")
+            or expected.get("review_id")
+            or selected_review_id
+        )
+        source_set_id = str(
+            config.get("source_set_id")
+            or expected.get("source_set_id")
+            or source_set_id
+            or ""
+        )
+        review_dir = output_dir / "reviews" / selected_review_id
+        report_dir = (
+            Path(results_dir) if results_dir is not None else review_dir / "decision_support"
+        )
+        report_path, markdown_path, pdf_path, manifest_path = _report_paths(report_dir)
+        if report_path != report_artifacts["report"].path:
+            report_artifacts = _load_report_artifacts(
+                report_path=report_path,
+                markdown_path=markdown_path,
+                pdf_path=pdf_path,
+                manifest_path=manifest_path,
+            )
+        artifacts = _load_required_artifacts(
+            output_dir=output_dir,
+            review_dir=review_dir,
+            review_id=selected_review_id,
+        )
+        context = _DecisionSupportContext(
+            output_dir=output_dir,
+            review_dir=review_dir,
+            review_id=selected_review_id,
+            source_set_id=source_set_id,
+            config_path=Path(config_path),
+            expected_summary_path=Path(expected_summary_path),
+            config=config,
+            expected=expected,
+            artifacts=artifacts,
+        )
+        source_validation = _validate_inputs(context)
+
+    summary = _validate_report_artifact_family(
+        output_dir=output_dir,
+        report_dir=report_dir,
+        report_artifacts=report_artifacts,
+        config_artifact=config_artifact,
+        expected_artifact=expected_artifact,
+        context=context,
+        source_validation=source_validation,
+        selected_review_id=selected_review_id,
+        source_set_id=source_set_id,
+    )
+    return EAConsistencyDecisionSupportValidationResult(
+        output_dir=report_dir,
+        report_path=report_path,
+        markdown_path=markdown_path,
+        pdf_path=pdf_path,
+        manifest_path=manifest_path,
+        summary=summary,
+    )
+
+
+def infer_decision_support_contract_paths(
+    report_dir: Path,
+) -> tuple[Path | None, Path | None]:
+    report_path, _, _, manifest_path = _report_paths(Path(report_dir))
+    manifest = None
+    if manifest_path.exists():
+        try:
+            manifest = _read_json(manifest_path)
+        except (OSError, ValueError, json.JSONDecodeError):
+            manifest = None
+    if manifest is None and report_path.exists():
+        try:
+            report = _read_json(report_path)
+            manifest = _dict(report.get("manifest"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            manifest = None
+    if not isinstance(manifest, dict):
+        return None, None
+    paths_by_key = {
+        str(row.get("artifact_key")): Path(str(row.get("artifact_path")))
+        for row in _dict_list(manifest.get("source_dependencies"))
+        if row.get("artifact_path")
+    }
+    return (
+        paths_by_key.get("decision_support_config"),
+        paths_by_key.get("decision_support_expected_summary"),
     )
 
 
@@ -229,6 +382,113 @@ def _load_required_artifacts(
         key: _load_artifact(key=key, path=path, artifact_type=artifact_type, required=required)
         for key, (path, artifact_type, required) in specs.items()
     }
+
+
+def _report_paths(report_dir: Path) -> tuple[Path, Path, Path, Path]:
+    return (
+        report_dir / "ea_consistency_decision_support.json",
+        report_dir / "ea_consistency_decision_support.md",
+        report_dir / "ea_consistency_decision_support.pdf",
+        report_dir / "ea_consistency_decision_support_manifest.json",
+    )
+
+
+def _load_report_artifacts(
+    *,
+    report_path: Path,
+    markdown_path: Path,
+    pdf_path: Path,
+    manifest_path: Path,
+) -> dict[str, _LoadedArtifact]:
+    return {
+        "report": _load_artifact(
+            key="decision_support_report",
+            path=report_path,
+            artifact_type="json",
+            required=True,
+        ),
+        "markdown": _load_artifact(
+            key="decision_support_markdown",
+            path=markdown_path,
+            artifact_type="text",
+            required=True,
+        ),
+        "pdf": _load_artifact(
+            key="decision_support_pdf",
+            path=pdf_path,
+            artifact_type="pdf",
+            required=True,
+        ),
+        "manifest": _load_artifact(
+            key="decision_support_manifest",
+            path=manifest_path,
+            artifact_type="json",
+            required=True,
+        ),
+    }
+
+
+def _selected_review_id_for_validation(
+    *,
+    review_id: str | None,
+    config_path: Path | None,
+    expected_summary_path: Path | None,
+) -> str:
+    if review_id:
+        return str(review_id)
+    for path in (config_path, expected_summary_path):
+        if path is None or not Path(path).exists():
+            continue
+        try:
+            payload = _read_json(Path(path))
+        except (OSError, ValueError, json.JSONDecodeError):
+            continue
+        candidate = payload.get("review_id")
+        if candidate:
+            return str(candidate)
+    raise ValueError("review_id is required when no readable decision-support contract exists.")
+
+
+def _resolve_validation_contract_paths(
+    *,
+    report_artifacts: dict[str, _LoadedArtifact],
+    config_path: Path | None,
+    expected_summary_path: Path | None,
+) -> tuple[Path, Path]:
+    inferred_config, inferred_expected = _contract_paths_from_loaded_report(report_artifacts)
+    return (
+        Path(config_path or inferred_config or DEFAULT_CONFIG_PATH),
+        Path(expected_summary_path or inferred_expected or DEFAULT_EXPECTED_SUMMARY_PATH),
+    )
+
+
+def _contract_paths_from_loaded_report(
+    report_artifacts: dict[str, _LoadedArtifact],
+) -> tuple[Path | None, Path | None]:
+    manifest = _dict(report_artifacts.get("manifest").payload if report_artifacts.get("manifest") else None)
+    if not manifest:
+        report = _dict(report_artifacts.get("report").payload if report_artifacts.get("report") else None)
+        manifest = _dict(report.get("manifest"))
+    paths_by_key = {
+        str(row.get("artifact_key")): Path(str(row.get("artifact_path")))
+        for row in _dict_list(manifest.get("source_dependencies"))
+        if row.get("artifact_path")
+    }
+    return (
+        paths_by_key.get("decision_support_config"),
+        paths_by_key.get("decision_support_expected_summary"),
+    )
+
+
+def _report_source_set_id(report_artifacts: dict[str, _LoadedArtifact]) -> str:
+    for key in ("report", "manifest"):
+        payload = _dict(report_artifacts.get(key).payload if report_artifacts.get(key) else None)
+        if payload.get("source_set_id"):
+            return str(payload["source_set_id"])
+        manifest = _dict(payload.get("manifest"))
+        if manifest.get("source_set_id"):
+            return str(manifest["source_set_id"])
+    return ""
 
 
 def _load_artifact(
@@ -1256,6 +1516,503 @@ def _generation_summary(
         "failure_count": len(validation["failures"]),
         "counts": validation["counts"],
     }
+
+
+def _validate_report_artifact_family(
+    *,
+    output_dir: Path,
+    report_dir: Path,
+    report_artifacts: dict[str, _LoadedArtifact],
+    config_artifact: _LoadedArtifact,
+    expected_artifact: _LoadedArtifact,
+    context: _DecisionSupportContext | None,
+    source_validation: dict[str, Any] | None,
+    selected_review_id: str,
+    source_set_id: str,
+) -> dict[str, Any]:
+    checks: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+
+    _record_check(
+        checks,
+        failures,
+        name="decision_support_config_exists_and_parses",
+        passed=config_artifact.exists and config_artifact.parse_ok,
+        failure_category=config_artifact.failure_category or "missing_required_artifact",
+        source_selector="decision_support_config",
+        expected=True,
+        actual=config_artifact.exists and config_artifact.parse_ok,
+        message=config_artifact.error,
+    )
+    _record_check(
+        checks,
+        failures,
+        name="decision_support_expected_summary_exists_and_parses",
+        passed=expected_artifact.exists and expected_artifact.parse_ok,
+        failure_category=expected_artifact.failure_category or "missing_required_artifact",
+        source_selector="decision_support_expected_summary",
+        expected=True,
+        actual=expected_artifact.exists and expected_artifact.parse_ok,
+        message=expected_artifact.error,
+    )
+    for key, artifact in report_artifacts.items():
+        failure_category = artifact.failure_category or "missing_required_artifact"
+        if key == "pdf" and not artifact.exists:
+            failure_category = "missing_report_pdf"
+        elif key == "pdf" and artifact.exists and not artifact.parse_ok:
+            failure_category = "invalid_report_pdf_header"
+        _record_check(
+            checks,
+            failures,
+            name=f"decision_support_{key}_exists_and_parses",
+            passed=artifact.exists and artifact.parse_ok,
+            failure_category=failure_category,
+            source_selector=f"decision_support.{key}",
+            expected=True,
+            actual=artifact.exists and artifact.parse_ok,
+            message=artifact.error,
+        )
+
+    if source_validation is not None:
+        _record_check(
+            checks,
+            failures,
+            name="decision_support_source_artifacts_revalidate",
+            passed=source_validation["passed"],
+            failure_category=(
+                source_validation["failure_categories"][0]
+                if source_validation["failure_categories"]
+                else "stale_artifact"
+            ),
+            source_selector="decision_support.source_artifacts",
+            expected=[],
+            actual=source_validation["failure_categories"],
+        )
+        failures.extend(source_validation["failures"])
+    else:
+        _record_check(
+            checks,
+            failures,
+            name="decision_support_source_artifacts_revalidate",
+            passed=False,
+            failure_category="missing_required_artifact",
+            source_selector="decision_support.source_artifacts",
+            expected=True,
+            actual=False,
+        )
+
+    report = _dict(report_artifacts["report"].payload)
+    manifest = _dict(report_artifacts["manifest"].payload)
+    embedded_manifest = _dict(report.get("manifest"))
+    expected = _dict(expected_artifact.payload)
+    config = _dict(config_artifact.payload)
+    counts = _dict(source_validation.get("counts") if source_validation else {})
+
+    _validate_report_identity(
+        checks=checks,
+        failures=failures,
+        report=report,
+        manifest=manifest,
+        embedded_manifest=embedded_manifest,
+        selected_review_id=selected_review_id,
+        source_set_id=source_set_id,
+    )
+    _validate_report_sections(
+        checks=checks,
+        failures=failures,
+        report=report,
+        expected=expected,
+        config=config,
+    )
+    _validate_report_counts(
+        checks=checks,
+        failures=failures,
+        report=report,
+        counts=counts,
+    )
+    if context is not None:
+        _validate_report_manifest_hashes(
+            checks=checks,
+            failures=failures,
+            manifest=manifest,
+            embedded_manifest=embedded_manifest,
+            context=context,
+        )
+    _validate_report_content_boundaries(
+        checks=checks,
+        failures=failures,
+        report=report,
+        config=config,
+        expected=expected,
+    )
+
+    failure_categories = sorted(
+        {
+            failure["failure_category"]
+            for failure in failures
+            if failure.get("failure_category")
+        }
+    )
+    return {
+        "schema_version": "ea-consistency-decision-support-validation-summary-v1",
+        "created_at": _utc_now(),
+        "review_id": selected_review_id,
+        "source_set_id": source_set_id,
+        "output_dir": str(report_dir),
+        "report_path": str(report_artifacts["report"].path),
+        "markdown_path": str(report_artifacts["markdown"].path),
+        "pdf_path": str(report_artifacts["pdf"].path),
+        "manifest_path": str(report_artifacts["manifest"].path),
+        "passed": not failures,
+        "reviewer_ready": not failures,
+        "source_artifact_validation_passed": bool(
+            source_validation and source_validation["passed"]
+        ),
+        "pdf_header_valid": bool(
+            report_artifacts["pdf"].exists and report_artifacts["pdf"].parse_ok
+        ),
+        "failure_categories": failure_categories,
+        "failure_count": len(failures),
+        "counts": counts,
+        "checks": checks,
+        "failures": failures,
+        "validation_status": "passed" if not failures else "failed",
+        "phase_eval_integration": {
+            "phase_name": "decision_support_report",
+            "output_dir": str(output_dir),
+            "report_dir": str(report_dir),
+        },
+    }
+
+
+def _validate_report_identity(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    report: dict[str, Any],
+    manifest: dict[str, Any],
+    embedded_manifest: dict[str, Any],
+    selected_review_id: str,
+    source_set_id: str,
+) -> None:
+    identity_checks = {
+        "report_schema_version": (
+            report.get("schema_version"),
+            REPORT_SCHEMA_VERSION,
+            "decision_support_report.schema_version",
+        ),
+        "report_review_id": (
+            report.get("review_id"),
+            selected_review_id,
+            "decision_support_report.review_id",
+        ),
+        "report_source_set_id": (
+            report.get("source_set_id"),
+            source_set_id,
+            "decision_support_report.source_set_id",
+        ),
+        "manifest_schema_version": (
+            manifest.get("schema_version"),
+            MANIFEST_SCHEMA_VERSION,
+            "decision_support_manifest.schema_version",
+        ),
+        "manifest_review_id": (
+            manifest.get("review_id"),
+            selected_review_id,
+            "decision_support_manifest.review_id",
+        ),
+        "manifest_source_set_id": (
+            manifest.get("source_set_id"),
+            source_set_id,
+            "decision_support_manifest.source_set_id",
+        ),
+        "manifest_validation_status": (
+            manifest.get("validation_status"),
+            "passed",
+            "decision_support_manifest.validation_status",
+        ),
+        "embedded_manifest_validation_status": (
+            embedded_manifest.get("validation_status"),
+            "passed",
+            "decision_support_report.manifest.validation_status",
+        ),
+        "validation_and_replay_passed": (
+            _dict(report.get("validation_and_replay")).get("passed"),
+            True,
+            "decision_support_report.validation_and_replay.passed",
+        ),
+        "decision_support_status": (
+            _dict(report.get("executive_determination")).get("decision_support_status"),
+            "reviewer_ready",
+            "decision_support_report.executive_determination.decision_support_status",
+        ),
+    }
+    for name, (actual, expected, selector) in identity_checks.items():
+        _record_check(
+            checks,
+            failures,
+            name=name,
+            passed=actual == expected,
+            failure_category="stale_artifact",
+            source_selector=selector,
+            expected=expected,
+            actual=actual,
+        )
+    _record_check(
+        checks,
+        failures,
+        name="manifest_file_matches_embedded_manifest",
+        passed=bool(manifest) and manifest == embedded_manifest,
+        failure_category="input_hash_mismatch",
+        source_selector="decision_support_report.manifest",
+        expected="manifest file equals report.manifest",
+        actual="matched" if bool(manifest) and manifest == embedded_manifest else "mismatch",
+    )
+
+
+def _validate_report_sections(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    report: dict[str, Any],
+    expected: dict[str, Any],
+    config: dict[str, Any],
+) -> None:
+    required_sections = _strings(expected.get("required_sections")) or _strings(
+        config.get("section_order")
+    )
+    missing_sections = [section for section in required_sections if section not in report]
+    _record_check(
+        checks,
+        failures,
+        name="required_report_sections_present",
+        passed=not missing_sections,
+        failure_category="missing_required_report_section",
+        source_selector="decision_support_report.required_sections",
+        expected=required_sections,
+        actual=sorted(set(required_sections) - set(missing_sections)),
+    )
+
+
+def _validate_report_counts(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    report: dict[str, Any],
+    counts: dict[str, Any],
+) -> None:
+    forest = _dict(report.get("forest_plan_consistency"))
+    non_applicable = _dict(report.get("non_applicable_authority_boundary"))
+    summary = _dict(report.get("applicable_authority_summary"))
+    actual_counts = {
+        "authority_finding_count": len(_dict_list(report.get("authority_findings"))),
+        "applicable_authority_count": summary.get("applicable_authority_count"),
+        "non_applicable_authority_count": non_applicable.get(
+            "non_applicable_authority_count"
+        ),
+        "non_applicable_summary_row_count": len(
+            _dict_list(non_applicable.get("summary_rows"))
+        ),
+        "forest_plan_component_finding_count": forest.get("component_finding_count"),
+        "forest_plan_component_row_count": len(_dict_list(forest.get("component_rows"))),
+        "forest_plan_applicable_standard_count": forest.get("applicable_standard_count"),
+        "forest_plan_applied_standard_count": forest.get("applied_standard_count"),
+        "applicable_forest_plan_standard_row_count": len(
+            _dict_list(report.get("applicable_forest_plan_standards"))
+        ),
+    }
+    expected_counts = {
+        "authority_finding_count": counts.get("authority_finding_count"),
+        "applicable_authority_count": counts.get("applicable_authority_count"),
+        "non_applicable_authority_count": counts.get("non_applicable_authority_count"),
+        "non_applicable_summary_row_count": counts.get("non_applicable_authority_count"),
+        "forest_plan_component_finding_count": counts.get(
+            "forest_plan_component_finding_count"
+        ),
+        "forest_plan_component_row_count": counts.get("forest_plan_component_finding_count"),
+        "forest_plan_applicable_standard_count": counts.get(
+            "forest_plan_applicable_standard_count"
+        ),
+        "forest_plan_applied_standard_count": counts.get("forest_plan_applied_standard_count"),
+        "applicable_forest_plan_standard_row_count": counts.get(
+            "forest_plan_applicable_standard_count"
+        ),
+    }
+    for key, expected_count in expected_counts.items():
+        _record_check(
+            checks,
+            failures,
+            name=f"report_{key}_matches_current_artifacts",
+            passed=actual_counts[key] == expected_count,
+            failure_category=(
+                "non_applicable_summary_missing"
+                if key == "non_applicable_summary_row_count"
+                else "count_drift"
+            ),
+            source_selector=f"decision_support_report.counts.{key}",
+            expected=expected_count,
+            actual=actual_counts[key],
+        )
+
+
+def _validate_report_manifest_hashes(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    embedded_manifest: dict[str, Any],
+    context: _DecisionSupportContext,
+) -> None:
+    current_hashes = _current_input_hashes(context)
+    for manifest_name, manifest_payload in (
+        ("manifest_file", manifest),
+        ("embedded_manifest", embedded_manifest),
+    ):
+        manifest_hashes = _dict(manifest_payload.get("input_hashes"))
+        missing_keys = sorted(set(current_hashes) - set(manifest_hashes))
+        mismatches = sorted(
+            key
+            for key, value in current_hashes.items()
+            if manifest_hashes.get(key) != value
+        )
+        _record_check(
+            checks,
+            failures,
+            name=f"{manifest_name}_input_hashes_are_current",
+            passed=not missing_keys and not mismatches,
+            failure_category="input_hash_mismatch",
+            source_selector=f"decision_support_{manifest_name}.input_hashes",
+            expected="current input hashes",
+            actual={"missing_keys": missing_keys, "mismatched_keys": mismatches},
+        )
+
+
+def _validate_report_content_boundaries(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    report: dict[str, Any],
+    config: dict[str, Any],
+    expected: dict[str, Any],
+) -> None:
+    non_applicable = _dict(report.get("non_applicable_authority_boundary"))
+    non_applicable_rows = _dict_list(non_applicable.get("summary_rows"))
+    missing_search_coverage = [
+        str(row.get("candidate_authority_id") or row.get("decision_id"))
+        for row in non_applicable_rows
+        if not row.get("search_coverage")
+    ]
+    _record_check(
+        checks,
+        failures,
+        name="report_non_applicable_rows_have_search_coverage",
+        passed=bool(non_applicable_rows) and not missing_search_coverage,
+        failure_category="non_applicable_missing_search_coverage",
+        source_selector="decision_support_report.non_applicable_authority_boundary.summary_rows",
+        expected=[],
+        actual=missing_search_coverage,
+    )
+
+    expected_standard_keys = {
+        str(row.get("component_key"))
+        for row in _dict_list(expected.get("applicable_standards"))
+        if row.get("component_key")
+    }
+    standard_keys = {
+        str(row.get("component_key"))
+        for row in _dict_list(report.get("applicable_forest_plan_standards"))
+        if row.get("component_key")
+    }
+    missing_standard_keys = sorted(expected_standard_keys - standard_keys)
+    _record_check(
+        checks,
+        failures,
+        name="report_applicable_standards_complete",
+        passed=not missing_standard_keys,
+        failure_category="applicable_standard_missing",
+        source_selector="decision_support_report.applicable_forest_plan_standards",
+        expected=sorted(expected_standard_keys),
+        actual=sorted(standard_keys),
+    )
+
+    missing_standard_evidence = [
+        str(row.get("component_key") or row.get("component_id"))
+        for row in _dict_list(report.get("applicable_forest_plan_standards"))
+        if not row.get("package_evidence") or not row.get("forest_plan_evidence")
+    ]
+    _record_check(
+        checks,
+        failures,
+        name="report_applicable_standards_have_evidence",
+        passed=not missing_standard_evidence,
+        failure_category="applicable_standard_missing_evidence",
+        source_selector="decision_support_report.applicable_forest_plan_standards.evidence",
+        expected=[],
+        actual=missing_standard_evidence,
+    )
+
+    expected_confirmation_ids = {
+        str(row.get("confirmation_id"))
+        for row in _dict_list(config.get("implementation_confirmations"))
+        if row.get("confirmation_id")
+    }
+    report_confirmation_ids = {
+        str(row.get("confirmation_id"))
+        for row in _dict_list(report.get("implementation_confirmation_checklist"))
+        if row.get("confirmation_id")
+    }
+    missing_confirmation_ids = sorted(expected_confirmation_ids - report_confirmation_ids)
+    _record_check(
+        checks,
+        failures,
+        name="report_implementation_confirmations_complete",
+        passed=not missing_confirmation_ids,
+        failure_category="implementation_confirmation_selector_unresolved",
+        source_selector="decision_support_report.implementation_confirmation_checklist",
+        expected=sorted(expected_confirmation_ids),
+        actual=sorted(report_confirmation_ids),
+    )
+
+    legal_conclusion_risks = [
+        str(row.get("risk_id"))
+        for row in _dict_list(report.get("residual_risk_register"))
+        if row.get("legal_conclusion") is not False
+    ]
+    _record_check(
+        checks,
+        failures,
+        name="report_residual_risks_are_not_legal_conclusions",
+        passed=not legal_conclusion_risks,
+        failure_category="residual_risk_legal_conclusion",
+        source_selector="decision_support_report.residual_risk_register",
+        expected=[],
+        actual=legal_conclusion_risks,
+    )
+    _record_check(
+        checks,
+        failures,
+        name="report_does_not_reference_manual_root_drafts",
+        passed="East_Crazies_" not in json.dumps(report, sort_keys=True),
+        failure_category="manual_draft_dependency",
+        source_selector="decision_support_report",
+        expected="no East_Crazies_ manual draft references",
+        actual="contains East_Crazies_"
+        if "East_Crazies_" in json.dumps(report, sort_keys=True)
+        else "clean",
+    )
+
+
+def _current_input_hashes(context: _DecisionSupportContext) -> dict[str, str]:
+    input_hashes = {
+        f"{key}_sha256": str(artifact.sha256)
+        for key, artifact in sorted(context.artifacts.items())
+        if artifact.sha256 is not None
+    }
+    input_hashes["decision_support_config_sha256"] = _sha256_file(context.config_path)
+    input_hashes["decision_support_expected_summary_sha256"] = _sha256_file(
+        context.expected_summary_path
+    )
+    return input_hashes
 
 
 def _validation_result(

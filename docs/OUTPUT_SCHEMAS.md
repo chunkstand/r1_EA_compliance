@@ -2180,6 +2180,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
   --review-id v1-cg-ecid-compliance-review
 ```
 
+Validate an existing generated family without rewriting it with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --validate-only
+```
+
 The generated artifact family includes:
 
 - `ea_consistency_decision_support.json`
@@ -2229,6 +2238,14 @@ non-reviewer-ready, missing required package/source evidence, missing non-applic
 coverage, carrying unresolved implementation selectors, or carrying residual-risk legal
 conclusions.
 
+Sequence 4 makes the generated family a readiness gate. `phase-eval --review-id` includes a
+`decision_support_report` phase for a review with a generated decision-support directory and for the
+configured East Crazies proving review. That phase revalidates current source-artifact hashes,
+required report sections, applicable and non-applicable authority counts, Forest Plan component
+counts, applicable-standard counts, PDF validity, reviewer-ready source status, residual-risk
+boundaries, and manual-draft quarantine. The promotion suite also checks the report JSON, manifest,
+and PDF as required current-promotion artifacts for `v1-cg-ecid-compliance-review`.
+
 `config/ea_consistency_decision_support_v1.json` has schema version
 `ea-consistency-decision-support-config-v1`. It owns synthesis-only labels, grouping, display order,
 allowed caveat text, residual-risk grouping, report-quality eval expectations, and
@@ -2257,6 +2274,7 @@ Decision-support validation must fail closed on:
 - review/source-set mismatch;
 - input hash mismatch;
 - count drift;
+- missing required report sections;
 - missing or duplicated applicable authority rows;
 - applicable authorities missing package or source evidence;
 - missing non-applicable summaries or search coverage;

@@ -113,6 +113,113 @@
           ]
         },
         {
+          "id": "decision_support_report",
+          "label": "EA consistency decision-support report",
+          "path": "reviews/{review_id}/decision_support/ea_consistency_decision_support.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "decision_support_schema",
+              "json_path": "schema_version",
+              "equals": "ea-consistency-decision-support-report-v1"
+            },
+            {
+              "name": "decision_support_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "decision_support_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "decision_support_status",
+              "json_path": "executive_determination.decision_support_status",
+              "equals": "reviewer_ready"
+            },
+            {
+              "name": "decision_support_validation_passed",
+              "json_path": "validation_and_replay.passed",
+              "equals": true
+            },
+            {
+              "name": "decision_support_manifest_passed",
+              "json_path": "manifest.validation_status",
+              "equals": "passed"
+            },
+            {
+              "name": "decision_support_applicable_authorities",
+              "json_path": "applicable_authority_summary.applicable_authority_count",
+              "equals": 33
+            },
+            {
+              "name": "decision_support_non_applicable_authorities",
+              "json_path": "non_applicable_authority_boundary.non_applicable_authority_count",
+              "equals": 340
+            },
+            {
+              "name": "decision_support_forest_plan_components",
+              "json_path": "forest_plan_consistency.component_finding_count",
+              "equals": 329
+            },
+            {
+              "name": "decision_support_applicable_standards",
+              "json_path": "forest_plan_consistency.applicable_standard_count",
+              "equals": 12
+            },
+            {
+              "name": "decision_support_legal_conclusion_boundary",
+              "json_path": "executive_determination.legal_conclusion",
+              "equals": false
+            }
+          ]
+        },
+        {
+          "id": "decision_support_manifest",
+          "label": "EA consistency decision-support manifest",
+          "path": "reviews/{review_id}/decision_support/ea_consistency_decision_support_manifest.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "decision_support_manifest_schema",
+              "json_path": "schema_version",
+              "equals": "ea-consistency-decision-support-manifest-v1"
+            },
+            {
+              "name": "decision_support_manifest_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "decision_support_manifest_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "decision_support_manifest_validation_status",
+              "json_path": "validation_status",
+              "equals": "passed"
+            }
+          ]
+        },
+        {
+          "id": "decision_support_pdf",
+          "label": "EA consistency decision-support PDF",
+          "path": "reviews/{review_id}/decision_support/ea_consistency_decision_support.pdf",
+          "format": "binary",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "decision_support_pdf_header_valid",
+              "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
           "id": "authority_family_provenance",
           "label": "Authority-family provenance",
           "path": "reviews/{review_id}/authority_family_provenance.json",
@@ -257,12 +364,12 @@
         {
           "name": "core_passed_phase_count",
           "json_path": "passed_phase_count",
-          "min": 10
+          "min": 17
         },
         {
           "name": "core_reviewer_ready_phase_count",
           "json_path": "reviewer_ready_phase_count",
-          "min": 10
+          "min": 17
         },
         {
           "name": "phase_eval_arbitration_summary_schema",

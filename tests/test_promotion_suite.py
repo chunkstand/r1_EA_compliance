@@ -51,10 +51,51 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     phase = suite_results["phase_eval_core"]
     phase_checks = {check["name"]: check for check in phase["checks"]}
+    assert phase_checks["core_passed_phase_count"]["min"] == 17
+    assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 17
     assert phase_checks["phase_eval_arbitration_summary_schema"]["equals"] == (
         "applicability-arbitration-summary-v0"
     )
     assert phase_checks["phase_eval_arbitration_decision_count"]["min"] == 1
+
+    decision_support = results["decision_support_report"]
+    assert decision_support["required_for_current_promotion"] is True
+    assert (
+        decision_support["path"]
+        == "reviews/{review_id}/decision_support/ea_consistency_decision_support.json"
+    )
+    decision_checks = {check["name"]: check for check in decision_support["checks"]}
+    assert decision_checks["decision_support_schema"]["equals"] == (
+        "ea-consistency-decision-support-report-v1"
+    )
+    assert decision_checks["decision_support_status"]["equals"] == "reviewer_ready"
+    assert decision_checks["decision_support_validation_passed"]["equals"] is True
+    assert decision_checks["decision_support_applicable_authorities"]["equals"] == 33
+    assert decision_checks["decision_support_non_applicable_authorities"]["equals"] == 340
+    assert decision_checks["decision_support_forest_plan_components"]["equals"] == 329
+    assert decision_checks["decision_support_applicable_standards"]["equals"] == 12
+    assert decision_checks["decision_support_legal_conclusion_boundary"]["equals"] is False
+
+    decision_manifest = results["decision_support_manifest"]
+    assert decision_manifest["required_for_current_promotion"] is True
+    assert (
+        decision_manifest["path"]
+        == "reviews/{review_id}/decision_support/ea_consistency_decision_support_manifest.json"
+    )
+    manifest_checks = {check["name"]: check for check in decision_manifest["checks"]}
+    assert manifest_checks["decision_support_manifest_schema"]["equals"] == (
+        "ea-consistency-decision-support-manifest-v1"
+    )
+    assert manifest_checks["decision_support_manifest_validation_status"]["equals"] == "passed"
+
+    decision_pdf = results["decision_support_pdf"]
+    assert decision_pdf["required_for_current_promotion"] is True
+    assert (
+        decision_pdf["path"]
+        == "reviews/{review_id}/decision_support/ea_consistency_decision_support.pdf"
+    )
+    pdf_checks = {check["name"]: check for check in decision_pdf["checks"]}
+    assert pdf_checks["decision_support_pdf_header_valid"]["starts_with"] == "%PDF-"
 
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True

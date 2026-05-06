@@ -231,8 +231,8 @@ next-target lanes:
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
   and implementation confirmation checklist. Sequence 0 preflight is complete in
   `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below. Sequences 1
-  through 3 are complete; the next boundary is Sequence 4 Decision-Support Gate, which should make
-  the generated report a checked readiness artifact instead of an optional side output.
+  through 4 are complete; the next boundary is Sequence 5 Supervisor Review Polish, which should
+  improve Markdown/PDF readability while preserving machine traceability.
   - Sequence 0 pass 1 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
@@ -319,8 +319,8 @@ next-target lanes:
     `v1-cg-ecid-compliance-review` passed and wrote the ignored generated report family with `33`
     applicable authority findings, `340` non-applicable authorities, `329` Forest Plan component
     rows, `12/12` applicable standards applied, `0` open authority/Forest Plan resolution items, and
-    a valid `%PDF-` PDF header. Sequence 3 closed out that first real report output; no phase-eval or
-    promotion-suite gate has been added yet.
+    a valid `%PDF-` PDF header. Sequence 3 closed out that first real report output; Sequence 4 now
+    owns gate integration.
   - Sequence 3 is complete: the 2026-05-06 local closeout run generated the ignored East Crazies
     decision-support family under
     `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/`:
@@ -329,9 +329,16 @@ next-target lanes:
     non-applicable authorities summarized with search coverage, `329` Forest Plan component rows,
     all `12/12` applicable Forest Plan standards carrying package and plan evidence, `9`
     implementation-confirmation rows with evidence, `3` residual-risk notes, `0` legal-conclusion
-    risk flags, and a valid `%PDF-` PDF header. `phase-eval --review-id
-    v1-cg-ecid-compliance-review` passed `16/16` phases with `reviewer_ready=true`. No
-    `source_library/` outputs were staged. The next boundary is Sequence 4 gate integration.
+    risk flags, and a valid `%PDF-` PDF header. No `source_library/` outputs were staged.
+  - Sequence 4 is complete: `ea-consistency-document --validate-only` validates the existing
+    generated report family without rewriting it; `phase-eval --review-id
+    v1-cg-ecid-compliance-review` now includes the `decision_support_report` phase and passed
+    `17/17` phases with `reviewer_ready=true`; `promotion-suite` requires the decision-support
+    report JSON, manifest, and PDF for current promotion and reports `current_promotion_ready=true`,
+    `promotion_ready=true`, and `expansion_ready=false`. The validator fails closed on stale input
+    hashes, missing sections, missing non-applicable summaries, missing applicable standards,
+    invalid PDF output, manual-draft dependency, unresolved implementation confirmations, and
+    residual-risk legal conclusions. The next boundary is Sequence 5 Supervisor Review Polish.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
@@ -402,7 +409,8 @@ Current stop conditions for the next session:
 - Do not let `compliance-review` override applicability decisions.
 - Do not call the raw generated matrix or root-level manual review exports a Forest
   Supervisor-ready EA consistency decision-support document. The generated decision-support report
-  now exists locally, but it is not a phase-eval or promotion-suite readiness gate until Sequence 4.
+  is now the gated readiness artifact; root-level `East_Crazies_*` files remain non-canonical manual
+  comparison material.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.
 
 ## Historical V1 Gate State
@@ -514,8 +522,8 @@ Primary gate artifacts/checks:
   base-pack rerun had `44` findings, `40` pass findings, `4` not-applicable findings, all `26`
   baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps. The current
   generated-pack V1 review supersedes it with `33` generated findings, `33` pass findings, `142`
-  generated-pack rule-claim links, and `0` rule-claim gaps. `forest-plan-component-eval` passes
-  `35/35`, review-bound `phase-eval` passes `16/16`, and `v1-ea-eval` passes broader EA and
+generated-pack rule-claim links, and `0` rule-claim gaps. `forest-plan-component-eval` passes
+  `35/35`, review-bound `phase-eval` passes `17/17`, and `v1-ea-eval` passes broader EA and
   forest-plan lanes. Base-pack compliance-gold eval outputs remain useful through
   `rule_pack_match_mode=generated_base`, but direct base-pack compliance-review reruns are
   diagnostic unless explicitly allowed.

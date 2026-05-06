@@ -228,6 +228,7 @@
     "review_source_set_mismatch",
     "input_hash_mismatch",
     "count_drift",
+    "missing_required_report_section",
     "missing_applicable_authority_row",
     "duplicate_applicable_authority_row",
     "applicable_authority_missing_dual_evidence",

@@ -7,6 +7,7 @@ from .cli_common import print_summary
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH
 from .ea_consistency_decision_support import DEFAULT_EXPECTED_SUMMARY_PATH
 from .ea_consistency_decision_support import run_ea_consistency_decision_support
+from .ea_consistency_decision_support import validate_ea_consistency_decision_support_report
 
 
 DECISION_SUPPORT_COMMANDS = {"ea-consistency-document"}
@@ -28,6 +29,11 @@ def register_decision_support_commands(
         type=Path,
     )
     document.add_argument("--results-dir", type=Path)
+    document.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Validate the existing generated report family without rewriting it.",
+    )
 
 
 def handle_decision_support_command(
@@ -35,6 +41,16 @@ def handle_decision_support_command(
     parser: argparse.ArgumentParser,
 ) -> int | None:
     if args.command == "ea-consistency-document":
+        if args.validate_only:
+            result = validate_ea_consistency_decision_support_report(
+                output_dir=args.output_dir,
+                review_id=args.review_id,
+                config_path=args.config,
+                expected_summary_path=args.expected_summary,
+                results_dir=args.results_dir,
+            )
+            print_summary(result.summary)
+            return 0 if result.summary["passed"] else 1
         result = run_ea_consistency_decision_support(
             output_dir=args.output_dir,
             review_id=args.review_id,

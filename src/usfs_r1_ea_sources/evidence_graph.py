@@ -5,6 +5,7 @@ from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 import hashlib
 import json
 import re
@@ -12,6 +13,12 @@ import sqlite3
 
 from .extract import _source_derived_dir
 from .forest_plan_component_eval import FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
+from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUPPORT_CONFIG_PATH
+from .ea_consistency_decision_support import (
+    DEFAULT_EXPECTED_SUMMARY_PATH as DECISION_SUPPORT_EXPECTED_SUMMARY_PATH,
+)
+from .ea_consistency_decision_support import infer_decision_support_contract_paths
+from .ea_consistency_decision_support import validate_ea_consistency_decision_support_report
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -383,6 +390,9 @@ def run_phase_aligned_eval(
         applicability_dir / "generated_rule_pack_validation.json"
         if applicability_dir is not None
         else None
+    )
+    decision_support_dir = (
+        review_dir / "decision_support" if review_dir is not None else None
     )
 
     catalog_validation = (
@@ -1100,6 +1110,17 @@ def run_phase_aligned_eval(
                     },
                 )
             )
+    if review_dir is not None and _should_include_decision_support_phase(
+        review_id=review_id or review_dir.name,
+        decision_support_dir=decision_support_dir,
+    ):
+        phases.append(
+            _decision_support_phase(
+                output_dir=output_dir,
+                review_id=review_id or review_dir.name,
+                decision_support_dir=decision_support_dir,
+            )
+        )
     blockers = [
         {"phase": phase["name"], "reason": reason}
         for phase in phases
@@ -1921,6 +1942,110 @@ def _sqlite_graph_checks(
     ]
 
 
+def _should_include_decision_support_phase(
+    *,
+    review_id: str | None,
+    decision_support_dir: Path | None,
+) -> bool:
+    if decision_support_dir is not None and decision_support_dir.exists():
+        return True
+    if not review_id:
+        return False
+    for path in (DECISION_SUPPORT_CONFIG_PATH, DECISION_SUPPORT_EXPECTED_SUMMARY_PATH):
+        if not path.exists():
+            continue
+        try:
+            payload = _read_json(path)
+        except (OSError, ValueError, json.JSONDecodeError):
+            continue
+        if payload.get("review_id") == review_id:
+            return True
+    return False
+
+
+def _decision_support_phase(
+    *,
+    output_dir: Path,
+    review_id: str,
+    decision_support_dir: Path | None,
+) -> dict:
+    config_path: Path | None = DECISION_SUPPORT_CONFIG_PATH
+    expected_summary_path: Path | None = DECISION_SUPPORT_EXPECTED_SUMMARY_PATH
+    if decision_support_dir is not None and decision_support_dir.exists():
+        inferred_config, inferred_expected = infer_decision_support_contract_paths(
+            decision_support_dir
+        )
+        config_path = inferred_config or config_path
+        expected_summary_path = inferred_expected or expected_summary_path
+    try:
+        result = validate_ea_consistency_decision_support_report(
+            output_dir=output_dir,
+            review_id=review_id,
+            config_path=config_path,
+            expected_summary_path=expected_summary_path,
+        )
+        summary = result.summary
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        summary = {
+            "passed": False,
+            "reviewer_ready": False,
+            "failure_categories": ["stale_artifact"],
+            "failure_count": 1,
+            "counts": {},
+            "checks": [],
+            "failures": [{"name": "decision_support_validation_error", "message": str(error)}],
+            "report_path": str(
+                (decision_support_dir or output_dir / "reviews" / review_id / "decision_support")
+                / "ea_consistency_decision_support.json"
+            ),
+            "markdown_path": str(
+                (decision_support_dir or output_dir / "reviews" / review_id / "decision_support")
+                / "ea_consistency_decision_support.md"
+            ),
+            "pdf_path": str(
+                (decision_support_dir or output_dir / "reviews" / review_id / "decision_support")
+                / "ea_consistency_decision_support.pdf"
+            ),
+            "manifest_path": str(
+                (decision_support_dir or output_dir / "reviews" / review_id / "decision_support")
+                / "ea_consistency_decision_support_manifest.json"
+            ),
+            "pdf_header_valid": False,
+        }
+    return _phase(
+        "decision_support_report",
+        passed=bool(summary.get("passed")),
+        reviewer_ready=bool(summary.get("reviewer_ready")),
+        details={
+            "report_path": summary.get("report_path"),
+            "markdown_path": summary.get("markdown_path"),
+            "pdf_path": summary.get("pdf_path"),
+            "manifest_path": summary.get("manifest_path"),
+            "validation_passed": bool(summary.get("passed")),
+            "reviewer_ready": bool(summary.get("reviewer_ready")),
+            "pdf_header_valid": bool(summary.get("pdf_header_valid")),
+            "failure_categories": summary.get("failure_categories", []),
+            "failure_count": summary.get("failure_count", 0),
+            "counts": summary.get("counts", {}),
+            "failed_checks": _decision_support_failed_check_names(summary),
+        },
+    )
+
+
+def _decision_support_failed_check_names(summary: dict[str, Any]) -> list[str]:
+    failed_checks = [
+        str(check.get("name"))
+        for check in _dict_list(summary.get("checks"))
+        if check.get("passed") is False
+    ]
+    failed_checks.extend(
+        str(failure.get("name"))
+        for failure in _dict_list(summary.get("failures"))
+        if failure.get("name")
+    )
+    return sorted(set(failed_checks))
+
+
 def _phase(name: str, *, passed: bool, reviewer_ready: bool, details: dict) -> dict:
     failure_reasons = []
     if not passed:
@@ -2625,6 +2750,12 @@ def _safe_int(value: object) -> int:
         return int(value or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _dict_list(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
 
 
 def _safe_detail_value(value: object) -> object:
