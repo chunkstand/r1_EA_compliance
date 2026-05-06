@@ -341,8 +341,11 @@ implemented staged path now includes `applicability-authority-universe`,
 `applicability-generate-rule-pack`, generated-pack validation, and reviewer-ready
 `compliance-review` gating on the generated rule pack. The promoted V1 review now uses the
 generated applicability rule pack; the base rule pack remains the candidate-authority template and
-can only be used for explicit non-reviewer-ready diagnostics. Embeddings and expanded human
-adjudication over real EA packages remain downstream work.
+can only be used for explicit non-reviewer-ready diagnostics. The ECID preliminary-EA expansion pass
+has replayed the three pending applicability adjudications and now validates with `46` applicable
+authorities, `346` non-applicable authorities, no unresolved or `needs_adjudication` decisions, and
+`generated_rule_pack_ready=true`; ECID generated-rule-pack review, broader embeddings, and further
+real-package adjudication remain downstream work.
 
 ## Reviewer Engine Entry Points
 
@@ -862,6 +865,13 @@ Default runs keep current-promotion failures in `failure_category_counts` and ex
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`, and
 `package_fixture_missing`.
+
+As of the latest post-V1 real-package expansion pass, the ECID preliminary-EA applicability
+adjudication blocker is closed locally: `applicability-adjudication-eval`,
+`applicability-adjudication-apply`, and `applicability-validate` pass for
+`region1-expansion-ecid-preliminary-ea`. The ECID expansion slot still must go through generated
+rule-pack creation, compliance review, phase eval, and promotion-suite artifact checks before it can
+be marked ready.
 
 Run the seed retrieval eval gate:
 

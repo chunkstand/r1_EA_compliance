@@ -1,15 +1,20 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequence 0 complete
+Status: in progress; Sequences 0 and 1 complete
 
 ## Weakness
 
-Broader post-V1 expansion is not ready. The promotion suite currently reports
+Broader post-V1 expansion is not ready. The Sequence 0 promotion-suite baseline reported
 `expansion_ready=false` because:
 
 - the ECID preliminary-EA expansion slot is blocked by `adjudication_needed`; and
 - the third real-package expansion slot is still `package_fixture_missing`.
+
+Sequence 1 has since closed the ECID applicability-adjudication blocker locally. The remaining ECID
+work is Sequence 2: generate the ECID rule pack, run compliance review and phase eval, and update
+the promotion-suite expansion signal from verified artifacts. The third real-package expansion slot
+still remains `package_fixture_missing`.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -49,7 +54,7 @@ Completion means:
 - ECID package path:
   `source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment`
 - ECID source set: `source-set-ba8d0feae79501b8`
-- Current ECID unresolved families:
+- Sequence 0 ECID unresolved families:
   `cultural_resource_protection_and_state_shpo_sources`,
   `minerals_energy_authorities`, and
   `species_supporting_sources_and_overlays`
@@ -80,7 +85,7 @@ Baseline evidence:
   `failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
   `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
   and `open_expansion_slot_count=2`.
-- ECID adjudication worklist remains exactly three pending items:
+- At the Sequence 0 baseline, the ECID adjudication worklist had exactly three pending items:
   `cultural_resource_protection_and_state_shpo_sources`,
   `minerals_energy_authorities`, and `species_supporting_sources_and_overlays`.
 
@@ -116,6 +121,22 @@ Acceptance:
 
 Purpose: resolve the three ECID preliminary-EA positive/negative authority conflicts with a
 replayable adjudication record.
+
+Status:
+Complete as of 2026-05-06. The three pending ECID adjudication items were completed as
+`human_applicable`, evaluated, applied to the decision ledger, and validated.
+
+Closure evidence:
+
+- `applicability-adjudication-eval`: passed with `3` resolved adjudications, `0` pending
+  adjudications, and `failure_category_counts={}`.
+- `applicability-adjudication-apply`: passed with `applied_item_count=3` and
+  `remaining_unresolved_authority_count=0`.
+- `applicability-validate`: passed with `46` applicable authorities, `346` non-applicable
+  authorities, `0` unresolved, `0` `needs_adjudication`, `generated_rule_pack_ready=true`, and
+  `reviewer_ready=true`.
+- The applied decision-ledger hash is
+  `207f2c17c8e13708dc46b6b50581183f5ea6af523cc3aeb76d585557fcfb77cd`.
 
 Actions:
 

@@ -303,17 +303,38 @@ Latest post-V1 real-package expansion Sequence 0 baseline lock:
   `failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
   `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
   and `open_expansion_slot_count=2`.
-- The ECID adjudication template/worklist remains at
-  `source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/` with three pending
+- At Sequence 0, the ECID adjudication template/worklist at
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/` had three pending
   `needs_adjudication` items: `cultural_resource_protection_and_state_shpo_sources`
   (`decision_id=6f349222ecfa557b7d163d68`), `minerals_energy_authorities`
   (`decision_id=add0df8c2b513d6068b4edcc`), and
   `species_supporting_sources_and_overlays` (`decision_id=58df28f23d0b2222f32eb687`).
 
+Latest post-V1 real-package expansion Sequence 1 adjudication closure:
+
+- `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 1 is complete. The ECID
+  adjudication template was completed for the three pending authority-family conflicts and left in
+  ignored `source_library/` evidence artifacts.
+- The three adjudicated families are now `human_applicable`:
+  `cultural_resource_protection_and_state_shpo_sources`,
+  `minerals_energy_authorities`, and `species_supporting_sources_and_overlays`.
+- `applicability-adjudication-eval` passed with `3` resolved adjudications, `0` pending
+  adjudications, and `failure_category_counts={}`.
+- `applicability-adjudication-apply` passed with `applied_item_count=3`,
+  `remaining_unresolved_authority_count=0`, and applied decision-ledger hash
+  `207f2c17c8e13708dc46b6b50581183f5ea6af523cc3aeb76d585557fcfb77cd`.
+- `applicability-validate` passed with `46` applicable authorities, `346` non-applicable
+  authorities, `0` unresolved, `0` `needs_adjudication`, `generated_rule_pack_ready=true`,
+  `reviewer_ready=true`, and `failure_category_counts={}`.
+- Sequence 1 did not generate the ECID rule pack, run compliance review, run phase eval, update the
+  promotion manifest, or add the missing third real-package fixture. Those remain Sequence 2 and
+  Sequence 3+ work.
+
 Next implementation target:
 
-The evidence-arbitration milestone plan is complete through Milestone 5. There are now two explicit
-next-target lanes:
+The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2. The
+older lane notes below are retained for continuity, but they are not the current next pass unless
+the user redirects.
 
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
   East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
@@ -446,10 +467,10 @@ next-target lanes:
     `false_negative_synthesis_omission` with `decision_support_markdown.*` or
     `decision_support_pdf.*` source selectors. This closes the gap against the
     thought-leader review's report-quality eval guidance without adding a new sequence.
-- `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
-  three-item ECID applicability adjudication worklist for
-  `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
-  user wants to broaden expansion coverage first.
+- `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: the ECID three-item
+  applicability adjudication worklist is complete. The next implementation slice is ECID
+  generated-rule-pack creation, compliance review, phase eval, and promotion-suite artifact
+  checks/signals; after that, add the third real Region 1 EA package fixture.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
   `expansion_ready=false` by closing the ECID adjudication blocker and replacing the
   `package_fixture_missing` slot with a verified third real-package fixture.
@@ -862,10 +883,10 @@ rate `1.0`.
 ## Next Sequence
 
 Next sequence for the current applicability lane:
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 1. Sequence 0 baseline lock is
-complete; the outstanding expansion blocker is the three-item ECID applicability adjudication
-worklist, followed by replaying applicability validation, generated-rule-pack creation, compliance
-review, phase eval, and promotion-suite checks for `region1-expansion-ecid-preliminary-ea`.
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2. Sequence 1 adjudication closure
+is complete; the next pass should generate and validate the ECID applicability-derived rule pack,
+run compliance review with `--reuse-package-cache`, run phase eval, and update promotion-suite
+artifact checks/signals for `region1-expansion-ecid-preliminary-ea`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

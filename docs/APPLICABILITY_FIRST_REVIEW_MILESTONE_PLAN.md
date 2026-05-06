@@ -1089,20 +1089,21 @@ Current state as of 2026-05-06:
   `340` non-applicable authorities, no unresolved/adjudication decisions, and a generated
   applicability rule pack with `33` rules.
 - The first real-package expansion slot is `region1-expansion-ecid-preliminary-ea`. It has local
-  package evidence and an applicability replay with `43` applicable authorities, `346`
-  non-applicable authorities, and `3` `needs_adjudication` decisions. The remaining blockers are
-  genuine positive/negative conflicts in cultural-resource/SHPO, minerals/energy, and
-  species-supporting authority families.
+  package evidence. Sequence 1 of the focused post-V1 expansion plan replayed the three
+  applicability adjudications for cultural-resource/SHPO, minerals/energy, and species-supporting
+  authority families. The ECID applicability run now validates with `46` applicable authorities,
+  `346` non-applicable authorities, `0` unresolved decisions, `0` `needs_adjudication` decisions,
+  and `generated_rule_pack_ready=true`.
 - `config/promotion_suite_v1.json` reports current promotion ready by default while broader
-  expansion remains not ready. The expansion blockers are `adjudication_needed` for the ECID
-  preliminary-EA slot and `package_fixture_missing` for the third real-package slot.
+  expansion remains not ready. After Sequence 1, the remaining ECID work is generated-rule-pack
+  creation, compliance review, phase eval, and promotion-suite artifact checks; the third
+  real-package slot remains `package_fixture_missing`.
 - The focused closure plan for these blockers is
   `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
 
 Implementation direction:
 
-- Complete and replay the ECID three-item applicability adjudication worklist, then rerun
-  applicability validation, generated rule-pack creation, compliance review, phase eval, and
+- Generate the ECID applicability-derived rule pack, run compliance review, phase eval, and
   promotion-suite checks for `region1-expansion-ecid-preliminary-ea`.
 - If the user chooses to broaden coverage first, add the third real Region 1 EA package fixture and
   keep any uncovered applicability uncertainty as explicit typed readiness blockers.

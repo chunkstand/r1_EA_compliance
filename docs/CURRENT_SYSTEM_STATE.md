@@ -511,19 +511,23 @@ Gallatin FEIS and ESA-supporting plan documents.
   writes `authority_family_provenance.json`, `non_applicable_authority_appendix.json/.md`,
   `authority_reviewer_resolution_report.json`, and `litigation_risk_summary.json`; promotion
   checks require those artifacts before current promotion can pass.
-- The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest stored
-  local run reported `current_promotion_ready=true`, `promotion_ready=true`,
+- The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest
+  Sequence 0 baseline run reported `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `failure_category_counts={}`,
   `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
-  and `open_expansion_slot_count=2`. The manifest now checks the generated-pack V1 review ID,
-  version, rule count, matrix row count, Milestone 5 authority provenance outputs, and the first
-  real-package expansion pass. Broader readiness remains blocked when strict expansion requires the
-  preliminary-EA adjudication to be completed and one additional real Region 1 EA package fixture.
+  and `open_expansion_slot_count=2`. Sequence 1 has since closed the ECID applicability
+  adjudication blocker locally, but the promotion manifest has not yet been updated to mark the ECID
+  expansion slot ready. Broader readiness remains blocked until the ECID generated rule pack,
+  compliance review, phase eval, and promotion-suite artifact checks pass, and until one additional
+  real Region 1 EA package fixture replaces the missing third slot.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
-  applicable, `346` non-applicable, and `3` `needs_adjudication` authorities. Validation correctly
-  remains not reviewer-ready until the generated adjudication template is completed and replayed.
+  applicable, `346` non-applicable, and `3` `needs_adjudication` authorities. The Sequence 1
+  adjudication replay resolved cultural-resource/SHPO, minerals/energy, and species-supporting
+  sources/overlays to `human_applicable`; `applicability-validate` now passes with `46` applicable
+  authorities, `346` non-applicable authorities, `0` unresolved, `0` `needs_adjudication`,
+  `generated_rule_pack_ready=true`, and `reviewer_ready=true`.
 - The ECID roads/access/special-use adjudication item exposed the pre-Milestone-3
   evidence-arbitration gap: weak auxiliary trigger evidence could block an authority family even
   when strong independent roads/access/right-of-way evidence was present. The repair sequence is
@@ -544,11 +548,11 @@ Gallatin FEIS and ESA-supporting plan documents.
   requires adjudication by default.
 - Evidence-arbitration Milestone 4 is implemented as the real-package replay/gate-alignment slice.
   ECID roads/access/special-use, Clean Water Act/WOTUS, and EO 11988 floodplain authority-family
-  templates now resolve to `applicable` from strong independent trigger evidence. The remaining
-  ECID adjudication worklist is cultural-resource/SHPO sources, minerals/energy authorities, and
-  species-supporting sources/overlays, each blocked by explicit positive/negative evidence
-  conflicts. Forest Plan component non-applicable decisions now carry explicit scope-miss evidence
-  so validation fails only on the three unresolved authority conflicts.
+  templates now resolve to `applicable` from strong independent trigger evidence. The later
+  post-V1 expansion Sequence 1 replay resolved the remaining ECID cultural-resource/SHPO,
+  minerals/energy, and species-supporting sources/overlays conflicts through replayable
+  adjudication. Forest Plan component non-applicable decisions carry explicit scope-miss evidence,
+  and ECID applicability validation now passes with no unresolved authority conflicts.
 - Evidence-arbitration Milestone 5 is implemented as the eval and promotion/phase reporting slice.
   `applicability-eval` now has `9` seed cases with explicit arbitration expectations covering
   strong-positive plus weak auxiliary evidence, weak-only evidence, positive/negative conflicts,
@@ -565,9 +569,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
   gates.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The active remaining
-  milestone boundary is `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10:
-  adjudicate/replay the three ECID preliminary-EA positive/negative authority conflicts or add the
-  third real Region 1 EA package fixture.
+  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2:
+  generate the ECID preliminary-EA rule pack, run compliance review and phase eval, update
+  promotion-suite artifact checks/signals, and then continue to the third real Region 1 EA package
+  fixture.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

@@ -70,7 +70,8 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The suite was run locally on 2026-05-06 after the evidence-arbitration Milestone 5 closeout:
+The Sequence 0 baseline suite was run locally on 2026-05-06 after the evidence-arbitration
+Milestone 5 closeout:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
@@ -92,10 +93,13 @@ The first expansion slot is now a concrete local pass:
 `region1-expansion-ecid-preliminary-ea`, using the preliminary EA package under the ECID intake.
 The package cache extracted `7` PDFs into `160` chunks, and applicability determination produced
 `43` applicable authorities, `346` non-applicable authorities, and `3` decisions requiring
-adjudication after the evidence-arbitration replay. The slot remains `ready=false` because
-validation correctly blocks generated rule-pack creation until the cultural-resource/SHPO,
-minerals/energy, and species-supporting positive/negative conflicts are adjudicated and replayed.
-The second real-package slot remains open with `package_fixture_missing`.
+adjudication after the evidence-arbitration replay. Sequence 1 completed and replayed those three
+adjudications as `human_applicable`; `applicability-validate` now passes with `46` applicable
+authorities, `346` non-applicable authorities, `0` unresolved, `0` `needs_adjudication`,
+`generated_rule_pack_ready=true`, and `reviewer_ready=true`. The slot remains `ready=false` until
+Sequence 2 generates and validates the ECID rule pack, runs compliance review and phase eval, and
+updates the promotion-suite expansion signal from verified artifacts. The second real-package slot
+remains open with `package_fixture_missing`.
 
 Resolution plan:
 
