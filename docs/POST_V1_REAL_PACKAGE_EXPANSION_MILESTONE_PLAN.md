@@ -1,16 +1,16 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0, 1, 2, 2A, and 2B complete; Sequence 3 third real-package
-fixture contract is the active blocker
+Status: in progress; Sequences 0, 1, 2, 2A, 2B, and 3 complete; Sequence 4 South Plateau
+applicability-first run is the active blocker
 
 ## Weakness
 
-Broader post-V1 expansion is not ready. The Sequence 0 promotion-suite baseline reported
+Broader post-V1 expansion is not ready. The Sequence 0 promotion-suite baseline originally reported
 `expansion_ready=false` because:
 
 - the ECID preliminary-EA expansion slot is blocked by `adjudication_needed`; and
-- the third real-package expansion slot is still `package_fixture_missing`.
+- the third real-package expansion slot was still `package_fixture_missing`.
 
 Sequence 1 closed the ECID applicability-adjudication blocker locally. Sequence 2 then generated
 and validated the ECID rule pack, ran compliance review and review-scoped phase eval, generated a
@@ -23,8 +23,9 @@ topic slugs. ECID now reports `rule_claim_gap_count=0`, `rule_claim_link_count=2
 `missing_source` promotion-suite blocker. Sequence 2B then completed the `158`-row Forest Plan
 component adjudication replay over the existing ECID package cache. The adjudication eval resolves
 all `158` rows as true EA package-evidence omissions with `0` system misses, compliance review now
-reports `reviewer_ready=true`, and review-scoped phase eval passes. The third real-package
-expansion slot still remains `package_fixture_missing`.
+reports `reviewer_ready=true`, and review-scoped phase eval passes. Sequence 3 replaced the
+unknown third-package placeholder with the selected South Plateau fixture contract. The remaining
+broader expansion blocker is `applicability_miss` for that selected-but-not-run package.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -358,6 +359,15 @@ Expert-panel alignment checks:
 Purpose: replace `package_fixture_missing` with a concrete third real-package fixture and a typed
 readiness contract.
 
+Status:
+Complete as of 2026-05-06. `region1-real-ea-slot-2` now selects the South Plateau Area Landscape
+Treatment Project as `region1-expansion-south-plateau-landscape-treatment`, records official
+project/document-page metadata, declares the local package intake path, keeps the package inside the
+promoted `custer_gallatin` forest-plan profile, lists the expected package/applicability/generated
+rule/compliance/phase-eval artifacts, and reports a typed `applicability_miss` blocker until the
+package is imported and run. Normal promotion remains current-ready; strict expansion fails only on
+that typed not-run slot.
+
 Actions:
 
 - Select a real Region 1 EA package that adds coverage beyond the promoted V1 review and the ECID
@@ -377,6 +387,20 @@ Acceptance:
   next action for any remaining typed blocker.
 - Focused promotion-suite tests pass.
 
+Latest local result:
+
+- Selected package: South Plateau Area Landscape Treatment Project, Custer Gallatin National
+  Forest, Hebgen Lake Ranger District, project `57353`.
+- Review ID: `region1-expansion-south-plateau-landscape-treatment`.
+- Declared package path:
+  `source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment`.
+- Non-strict promotion suite: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=true`,
+  `expansion_failure_category_counts={"applicability_miss": 1}`, and
+  `open_expansion_slot_count=1`.
+- Strict expansion suite: expected command failure with `promotion_ready=false` and
+  `failure_category_counts={"applicability_miss": 1}`.
+
 ### Sequence 4: Third Package Applicability-First Run
 
 Purpose: run the complete applicability-first sequence on the third package and either close or
@@ -384,6 +408,8 @@ type every blocker.
 
 Actions:
 
+- Import the official South Plateau project documents into
+  `source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment`.
 - Run package context build, applicability retrieval, applicability determination, validation, and
   adjudication as needed.
 - Generate the rule pack only after validation passes.

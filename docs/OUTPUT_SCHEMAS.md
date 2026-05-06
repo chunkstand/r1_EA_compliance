@@ -2508,7 +2508,9 @@ The manifest has schema version `promotion-suite-v0` and records:
 - arbitration diagnostics from applicability eval, applicability gold eval, and review-bound
   phase-eval artifacts so promotion reports distinguish weak/conservative arbitration blockers from
   positive/negative adjudication conflicts
-- open expansion slots and their required next actions
+- open expansion slots and their required next actions, including selected package metadata such as
+  review ID, source set, package path, forest-plan profile, official project metadata, expected gate
+  artifacts, and last local signal fields when the manifest provides them
 - current-promotion `failure_category_counts` and expansion-only
   `expansion_failure_category_counts`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,

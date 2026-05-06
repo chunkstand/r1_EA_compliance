@@ -483,7 +483,7 @@ def _check_result(
 def _expansion_slot_result(slot: dict[str, Any]) -> dict[str, Any]:
     ready = bool(slot.get("ready", False))
     category = str(slot.get("failure_category") or "package_fixture_missing")
-    return {
+    result = {
         "id": slot["id"],
         "label": slot.get("label"),
         "status": slot.get("status", "open"),
@@ -495,6 +495,18 @@ def _expansion_slot_result(slot: dict[str, Any]) -> dict[str, Any]:
         "next_action": slot.get("next_action"),
         "acceptance_signal": slot.get("acceptance_signal"),
     }
+    for key in (
+        "review_id",
+        "source_set_id",
+        "package_path",
+        "forest_plan_profile",
+        "project_metadata",
+        "expected_gate_artifacts",
+        "last_local_signal",
+    ):
+        if key in slot:
+            result[key] = slot[key]
+    return result
 
 
 def _failure_category_counts(

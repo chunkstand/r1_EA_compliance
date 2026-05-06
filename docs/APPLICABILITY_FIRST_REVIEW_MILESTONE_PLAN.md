@@ -1100,7 +1100,8 @@ Current state as of 2026-05-06:
   component adjudication worklist, and added ECID expansion artifact checks. Sequence 2A closed the
   ECID source-claim gap set. Sequence 2B completed the component adjudication replay and reran ECID
   compliance review, review-scoped phase eval, and promotion-suite checks; the ECID slot is now
-  `ready=true`. The third real-package slot remains `package_fixture_missing`.
+  `ready=true`. Sequence 3 selected the South Plateau third package fixture, so the remaining
+  expansion blocker is a typed `applicability_miss` for a selected-but-not-run package.
 - The focused closure plan for these blockers is
   `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
 

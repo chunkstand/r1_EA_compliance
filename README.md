@@ -883,8 +883,11 @@ current `158`-row queue, resolves all rows as true EA package-evidence omissions
 system misses; those rows remain visible as gaps rather than being converted into support or legal
 conclusions. Normal promotion reports `current_promotion_ready=true`, `promotion_ready=true`,
 `expansion_artifacts_ready=true`, `open_expansion_artifact_count=0`, and
-`open_expansion_slot_count=1`. Strict expansion still fails only because the third real-package
-fixture remains `package_fixture_missing`.
+`open_expansion_slot_count=1`. The third real package is now selected as the South Plateau Area
+Landscape Treatment Project under review ID
+`region1-expansion-south-plateau-landscape-treatment`; strict expansion still fails because that
+selected package has not been imported and run through the applicability-first gates, reported as
+`applicability_miss`.
 
 Run the seed retrieval eval gate:
 

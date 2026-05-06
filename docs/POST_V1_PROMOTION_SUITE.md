@@ -51,13 +51,14 @@ The result separates three statuses:
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
   strict mode also requires `expansion_ready`.
 
-The default manifest keeps two open real-package expansion slots. Those slots do not block the
-current V1 promotion claim, but they make broader readiness gaps visible to future agents. Current
-promotion does require the applicability seed and gold eval artifacts that prove positive, negative,
+The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
+and the South Plateau slot is selected but not run. Open expansion slots do not block the current V1
+promotion claim, but they make broader readiness gaps visible to future agents. Current promotion
+does require the applicability seed and gold eval artifacts that prove positive, negative,
 unresolved, replay-adjudicated, and arbitration-field coverage for the expanded authority-family
-templates. It also requires the authority-family reviewer-report artifacts for the promoted V1 review:
-authority-family provenance, non-applicable authority appendix, reviewer-resolution report, and
-deterministic litigation-risk summary.
+templates. It also requires the authority-family reviewer-report artifacts for the promoted V1
+review: authority-family provenance, non-applicable authority appendix, reviewer-resolution report,
+and deterministic litigation-risk summary.
 
 ## Failure Taxonomy
 
@@ -79,21 +80,20 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The latest Sequence 2B promotion-suite pass was run locally on 2026-05-06 after ECID Forest Plan
-component adjudication, compliance-review, review-scoped phase-eval, promotion-manifest artifact
-checks, and expert-panel source-traceability alignment checks were updated:
+The latest Sequence 3 promotion-suite pass was run locally on 2026-05-06 after the third
+real-package slot was replaced with a selected South Plateau fixture contract:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
 - `expansion_ready=false`
 - `expansion_artifacts_ready=true`
 - `failure_category_counts={}`
-- `expansion_failure_category_counts={"package_fixture_missing": 1}`
+- `expansion_failure_category_counts={"applicability_miss": 1}`
 - `open_expansion_artifact_count=0`
 - `open_expansion_slot_count=1`
 
 Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
-`failure_category_counts={"package_fixture_missing": 1}`.
+`failure_category_counts={"applicability_miss": 1}`.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -120,8 +120,12 @@ the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_co
 `forest-plan-component-adjudication-eval` reports `resolved_adjudication_count=158`,
 `real_ea_omission_count=158`, `pending_adjudication_count=0`, and `system_miss_count=0`. ECID
 compliance review now reports `reviewer_ready=true`, review-scoped phase eval passes, and the ECID
-expansion slot is `ready=true`. The second real-package slot remains open with
-`package_fixture_missing`.
+expansion slot is `ready=true`. The second real-package slot is now selected but not run:
+`region1-expansion-south-plateau-landscape-treatment` points at the South Plateau Area Landscape
+Treatment Project, official project/document pages, the `custer_gallatin` forest-plan profile, and
+the expected package/applicability/generated-rule/compliance/phase-eval artifacts. Its typed
+remaining blocker is `applicability_miss` until Sequence 4 imports the package and runs the
+applicability-first gates.
 
 Resolution plan:
 
@@ -131,7 +135,6 @@ docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md
 
 That plan closes the weakness in sequence: lock the current promotion-suite blocker baseline,
 complete the three-item ECID adjudication replay, generate and review the ECID expansion rule pack,
-close the ECID source-claim gaps, close the ECID Forest Plan component adjudication blocker, replace
-the missing third package slot
-with a concrete fixture contract, run that package through the applicability-first sequence, and
-close with strict expansion promotion.
+close the ECID source-claim gaps, close the ECID Forest Plan component adjudication blocker, select
+the third package fixture, run that package through the applicability-first sequence, and close with
+strict expansion promotion.

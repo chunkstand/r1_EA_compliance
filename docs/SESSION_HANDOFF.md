@@ -4,27 +4,29 @@ Date: 2026-05-06
 
 ## Current Applicability/Expansion Handoff
 
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2B is complete. The ECID
-preliminary-EA expansion slot now has a completed Forest Plan component adjudication eval for the
-current `158`-row queue: all `158` rows are resolved as true EA package-evidence omissions,
-`pending_adjudication_count=0`, and `system_miss_count=0`. These adjudications keep the missing
-package evidence visible as gaps; they do not mark the components supported or create legal
-conclusions. The closeout gap pass tightened the adjudication template/eval contract so resolved
-items carry compact source trace refs and fail eval if source-record IDs, citations, hashes,
-chunk/page fields, or available offset/span fields are dropped.
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 3 is complete. The third
+real-package slot now selects the South Plateau Area Landscape Treatment Project as
+`region1-expansion-south-plateau-landscape-treatment`, with official project/document-page metadata,
+the declared local intake path, the `custer_gallatin` forest-plan profile, expected gate artifacts,
+and a typed `applicability_miss` not-ready signal. The old `package_fixture_missing` placeholder is
+gone; the package is selected but not imported or run.
 
-ECID compliance review was rerun with `--reuse-package-cache` against
-`region1-expansion-ecid-preliminary-ea` and now reports `reviewer_ready=true` with validation
-passing. ECID review-scoped phase eval reports `passed=true`, `reviewer_ready=true`, and `16/16`
-phases passing. The normal promotion suite reports `current_promotion_ready=true`,
-`promotion_ready=true`, `expansion_artifacts_ready=true`, `open_expansion_artifact_count=0`, and
-`open_expansion_slot_count=1`. Strict expansion is expected to fail only on
-`package_fixture_missing`.
+The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
+for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
+`pending_adjudication_count=0`, and `system_miss_count=0`; those adjudications keep the missing
+package evidence visible as gaps and do not mark components supported or create legal conclusions.
+ECID compliance review reports `reviewer_ready=true`, ECID review-scoped phase eval passes `16/16`,
+and the required ECID expansion artifacts pass.
 
-Next sequence: Sequence 3, the third real-package fixture contract. Replace the
-`region1-real-ea-slot-2` placeholder with a concrete Region 1 EA package fixture, manifest contract,
-and focused promotion-suite tests before running that package through the applicability-first
-sequence.
+The normal promotion suite now reports `current_promotion_ready=true`, `promotion_ready=true`,
+`expansion_artifacts_ready=true`, `expansion_failure_category_counts={"applicability_miss": 1}`,
+`open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`. Strict expansion fails as
+expected with `promotion_ready=false` and `failure_category_counts={"applicability_miss": 1}`.
+
+Next sequence: Sequence 4, the South Plateau applicability-first run. Import the official project
+documents into the declared package path, then run package context build, applicability retrieval,
+applicability determination, validation/adjudication, generated rule-pack creation, compliance
+review, and review-scoped phase eval before changing the slot to ready.
 
 ## Current Architecture Hardening State
 
@@ -354,7 +356,7 @@ Latest post-V1 real-package expansion Sequence 1 adjudication closure:
   promotion manifest, or add the missing third real-package fixture. Sequence 2 has since completed
   the artifact-generation and promotion-manifest pass described below.
 
-Latest post-V1 real-package expansion Sequence 2 artifact pass:
+Latest post-V1 real-package expansion Sequence 2B/3 status:
 
 - `applicability-generate-rule-pack` passed for
   `region1-expansion-ecid-preliminary-ea`, producing a generated ECID rule pack with `46` rules and
@@ -384,17 +386,17 @@ Latest post-V1 real-package expansion Sequence 2 artifact pass:
   `adjudication_needed`, or `missing_source`.
 - Non-strict promotion suite now reports `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"package_fixture_missing": 1}`,
+  `expansion_failure_category_counts={"applicability_miss": 1}`,
   `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`.
 - Strict expansion promotion suite fails as expected with `promotion_ready=false` and
-  `failure_category_counts={"package_fixture_missing": 1}`.
+  `failure_category_counts={"applicability_miss": 1}`.
 
 Next implementation target:
 
-The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 3:
-replace the `package_fixture_missing` third real-package slot with a concrete Region 1 EA fixture
-contract and focused promotion-suite tests. The older lane notes below are retained for continuity,
-but they are not the current next pass unless the user redirects.
+The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 4:
+import and run the selected South Plateau package through the applicability-first sequence. The
+older lane notes below are retained for continuity, but they are not the current next pass unless
+the user redirects.
 
 Sequence 2B alignment/gap close note: strict and non-strict promotion-suite evidence were kept
 separate, and non-strict was rerun last so the default suite output remains the current-promotion
@@ -535,14 +537,12 @@ legal conclusion.
     `decision_support_pdf.*` source selectors. This closes the gap against the
     thought-leader review's report-quality eval guidance without adding a new sequence.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: the ECID three-item
-  applicability adjudication worklist is complete, and the ECID generated-rule-pack/artifact-check
-  pass exposed a Forest Plan component blocker. The next implementation slice is the ECID
-  `158`-item Forest Plan component adjudication worklist; after that, rerun ECID compliance review,
-  review-scoped phase eval, and promotion-suite checks before adding the third real Region 1 EA
-  package fixture.
+  applicability adjudication worklist, generated-rule-pack/artifact-check pass, source-claim gap
+  closure, Forest Plan component adjudication replay, and third package fixture selection are
+  complete. The next implementation slice is the selected South Plateau applicability-first run.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false` by closing the ECID Forest Plan component blocker and replacing the
-  `package_fixture_missing` slot with a verified third real-package fixture.
+  `expansion_ready=false` by running the selected South Plateau package through the
+  applicability-first sequence and then strict expansion promotion.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
@@ -952,12 +952,12 @@ rate `1.0`.
 ## Next Sequence
 
 Next sequence for the current applicability lane:
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 3. Sequence 2B closed the ECID
-Forest Plan component blocker: the generated rule pack now has `211` rule-claim links, `0` gaps, no
-`missing_source` promotion-suite blocker, and a passing `158`-row Forest Plan component
-adjudication eval with `0` system misses. The next pass should replace the
-`package_fixture_missing` third real-package slot with a concrete Region 1 EA package fixture
-contract and focused promotion-suite tests.
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 4. Sequence 3 selected the South
+Plateau Area Landscape Treatment Project as the third real package and replaced the
+`package_fixture_missing` placeholder with a typed `applicability_miss` not-ready contract. The
+next pass should import the official South Plateau project documents into the declared local package
+path and run package context, applicability retrieval, applicability determination, validation and
+adjudication, generated rule-pack creation, compliance review, and review-scoped phase eval.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

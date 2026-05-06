@@ -198,6 +198,26 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
         == 0
     )
 
+    third_slot = slots["region1-real-ea-slot-2"]
+    gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}
+
+    assert third_slot["status"] == "selected_not_run"
+    assert third_slot["ready"] is False
+    assert third_slot["failure_category"] == "applicability_miss"
+    assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
+    assert third_slot["source_set_id"] == "source-set-ba8d0feae79501b8"
+    assert third_slot["forest_plan_profile"] == "custer_gallatin"
+    assert "South Plateau" in third_slot["label"]
+    assert "South Plateau" in third_slot["project_metadata"]["project_name"]
+    assert third_slot["project_metadata"]["project_number"] == "57353"
+    assert third_slot["project_metadata"]["expected_analysis_type"] == (
+        "Environmental Assessment"
+    )
+    assert "package_manifest" in gate_artifacts
+    assert "applicability_validation" in gate_artifacts
+    assert "generated_rule_pack_validation" in gate_artifacts
+    assert "phase_eval" in gate_artifacts
+
 
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:
     manifest_path, output_dir = _write_suite_fixture(tmp_path)
@@ -240,6 +260,47 @@ def test_promotion_suite_strict_expansion_blocks_promotion(tmp_path: Path) -> No
         "applicability_miss": 1,
         "package_fixture_missing": 1,
     }
+
+
+def test_promotion_suite_reports_selected_not_ready_slot_metadata(tmp_path: Path) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "label": "Selected package fixture",
+        "status": "selected_not_run",
+        "ready": False,
+        "failure_category": "applicability_miss",
+        "review_id": "selected-review",
+        "package_path": "source_library/reviews/_intake/selected-review",
+        "source_set_id": "source-set-1",
+        "expected_gate_artifacts": [
+            {
+                "id": "package_manifest",
+                "path": "reviews/{review_id}/package/package_manifest.jsonl",
+            }
+        ],
+        "next_action": "Run package context and applicability gates.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    _write_json(
+        output_dir / "derived" / "source-set-1" / "evidence_graph" / "phase_eval_results.json",
+        {"source_set_id": "source-set-1", "passed_phase_count": 2, "reviewer_ready": True},
+    )
+
+    result = run_promotion_suite(
+        output_dir=output_dir,
+        manifest_path=manifest_path,
+    )
+    slot = result.summary["expansion_slots"][0]
+
+    assert result.summary["expansion_failure_category_counts"] == {"applicability_miss": 1}
+    assert result.summary["open_expansion_slot_count"] == 1
+    assert slot["failure_categories"] == ["applicability_miss"]
+    assert slot["review_id"] == "selected-review"
+    assert slot["package_path"] == "source_library/reviews/_intake/selected-review"
+    assert slot["source_set_id"] == "source-set-1"
+    assert slot["expected_gate_artifacts"][0]["id"] == "package_manifest"
 
 
 def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_path: Path) -> None:

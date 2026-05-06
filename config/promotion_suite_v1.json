@@ -938,13 +938,63 @@
     },
     {
       "id": "region1-real-ea-slot-2",
-      "label": "Third real Region 1 EA package",
-      "status": "open",
+      "label": "Third real Region 1 EA package: South Plateau Area Landscape Treatment Project",
+      "status": "selected_not_run",
       "ready": false,
       "required_for_current_promotion": false,
-      "failure_category": "package_fixture_missing",
-      "next_action": "Add a package from a different forest/profile or document shape to expose extraction, retrieval, applicability, and adjudication gaps.",
-      "acceptance_signal": "Typed failures are either closed through general retrieval/eval improvements or retained as explicit reviewer work."
+      "failure_category": "applicability_miss",
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "forest_plan_profile": "custer_gallatin",
+      "project_metadata": {
+        "official_project_page": "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/158226525704",
+        "project_number": "57353",
+        "project_name": "South Plateau Area Landscape Treatment Project",
+        "forest": "Custer Gallatin National Forest",
+        "district": "Hebgen Lake Ranger District",
+        "expected_analysis_type": "Environmental Assessment",
+        "project_status": "Completed",
+        "decision_signed_date": "2023-08-07",
+        "coverage_rationale": "Vegetation, fuels, road, and timber activities exercise a different package shape than the East Crazy land-exchange packages while staying inside the promoted Custer Gallatin forest-plan profile."
+      },
+      "expected_gate_artifacts": [
+        {
+          "id": "package_manifest",
+          "path": "reviews/{review_id}/package/package_manifest.jsonl"
+        },
+        {
+          "id": "package_fact_graph_validation",
+          "path": "reviews/{review_id}/applicability/package_fact_graph_validation.json"
+        },
+        {
+          "id": "applicability_validation",
+          "path": "reviews/{review_id}/applicability/applicability_validation.json"
+        },
+        {
+          "id": "generated_rule_pack_validation",
+          "path": "reviews/{review_id}/applicability/generated_rule_pack_validation.json"
+        },
+        {
+          "id": "compliance_validation",
+          "path": "reviews/{review_id}/compliance_validation.json"
+        },
+        {
+          "id": "phase_eval",
+          "path": "reviews/{review_id}/phase_eval_results.json"
+        }
+      ],
+      "last_local_signal": {
+        "fixture_contract_selected": true,
+        "package_imported": false,
+        "applicability_validation_passed": false,
+        "generated_rule_pack_ready": false,
+        "compliance_review_reviewer_ready": false,
+        "phase_eval_passed": false
+      },
+      "next_action": "Import the South Plateau official project documents into the declared package path, then run package-context build, applicability retrieval, applicability determination, validation, and adjudication before changing this slot to ready.",
+      "acceptance_signal": "This selected third package is not ready until its package manifest, applicability validation, generated rule pack, compliance validation, and review-scoped phase eval pass from generated artifacts."
     }
   ]
 }

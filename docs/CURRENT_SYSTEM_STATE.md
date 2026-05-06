@@ -512,14 +512,16 @@ Gallatin FEIS and ESA-supporting plan documents.
   `authority_reviewer_resolution_report.json`, and `litigation_risk_summary.json`; promotion
   checks require those artifacts before current promotion can pass.
 - The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest
-  Sequence 2B pass reported `current_promotion_ready=true`, `promotion_ready=true`,
+  Sequence 3 pass reported `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"package_fixture_missing": 1}`,
+  `expansion_failure_category_counts={"applicability_miss": 1}`,
   `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`. Strict expansion is
   expected to fail at this boundary with `promotion_ready=false` and
-  `failure_category_counts={"package_fixture_missing": 1}`. Sequences 1, 2, 2A, and 2B have closed
+  `failure_category_counts={"applicability_miss": 1}`. Sequences 1, 2, 2A, and 2B have closed
   the ECID `adjudication_needed`, `missing_source`, and `forest_plan_reviewer_not_ready` expansion
-  blockers. The only remaining expansion slot blocker is the third real-package fixture contract.
+  blockers. Sequence 3 selected the South Plateau Area Landscape Treatment Project as the third
+  real package under review ID `region1-expansion-south-plateau-landscape-treatment`; its remaining
+  blocker is an explicit not-run applicability-first package path, not an unknown fixture.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
@@ -584,8 +586,8 @@ Gallatin FEIS and ESA-supporting plan documents.
   promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
   gates.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The active remaining
-  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 3: replace
-  the `package_fixture_missing` slot with a concrete third real Region 1 EA fixture contract.
+  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 4: run the
+  selected South Plateau third package through package intake and the applicability-first sequence.
   Closeout runs should capture strict promotion output in a separate results directory or rerun
   non-strict promotion last so the default promotion-suite artifact remains aligned with the
   current-promotion readiness claim.
