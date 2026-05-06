@@ -15,7 +15,7 @@ def test_nepa_3d_viewer_manifest_points_to_source_set_and_review_exports() -> No
     assert manifest["schema_version"] == "nepa-3d-viewer-manifest-v1"
     assert manifest["runtime"]["graph_runtime"] == "3d-force-graph"
     assert manifest["default_source_set_id"] == "source-set-ba8d0feae79501b8"
-    assert manifest["default_review_id"] is None
+    assert manifest["default_review_id"] == "v1-cg-ecid-compliance-review"
 
     datasets = {dataset["dataset_id"]: dataset for dataset in manifest["datasets"]}
     source_set = datasets["source-set-ba8d0feae79501b8"]
@@ -48,7 +48,10 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
         "source-set-select",
         "review-select",
         "graph-file-input",
+        "demo-reset",
+        "demo-scenes",
         "lens-select",
+        "advanced-filters",
         "graph-search",
         "status-filter",
         "authority-category-filter",
@@ -70,6 +73,7 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
         "export-shot",
         "export-state",
         "graph-root",
+        "capability-panel",
         "detail-panel",
         "validation-panel",
         "legend",
@@ -86,6 +90,10 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
 
     for required in [
         "ForceGraph3D",
+        "DEFAULT_DEMO_REVIEW_ID",
+        "DEMO_START_SCENE_ID",
+        "DEMO_SCENES",
+        "v1-cg-ecid-compliance-review",
         "authority_currentness",
         "forest_plan",
         "package_applicability",
@@ -101,6 +109,10 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
         "evidenceKind",
         "forestUnit",
         "reviewPhase",
+        "applyDemoScene",
+        "buildEvidencePathSpotlight",
+        "spotlightNodeIds",
+        "renderCapabilityPanel",
         "clearFilters",
         "exportScreenshot",
         "exportViewerState",
@@ -141,6 +153,8 @@ def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:
     assert "currentness_metadata?.basis_type" in evidence_kind
     assert "Node / edge type" in html
     assert "Evidence / basis" in html
+    assert "Capability shown" in html
+    assert "Advanced filters" in html
     assert "Status / readiness" in html
     assert "Currentness / partition" in html
     assert "Clear filters" in html
@@ -154,6 +168,10 @@ def test_nepa_3d_viewer_styles_define_desktop_and_mobile_graph_surfaces() -> Non
     assert ".viewer-shell" in styles
     assert ".graph-root" in styles
     assert ".detail-rail" in styles
+    assert ".demo-scenes" in styles
+    assert ".advanced-filters" in styles
+    assert ".capability-panel" in styles
+    assert ".path-step" in styles
     assert ".filter-actions" in styles
     assert "@media (max-width: 1020px)" in styles
     assert "@media (max-width: 620px)" in styles

@@ -1,7 +1,7 @@
 {
   "schema_version": "nepa-3d-viewer-manifest-v1",
   "default_source_set_id": "source-set-ba8d0feae79501b8",
-  "default_review_id": null,
+  "default_review_id": "v1-cg-ecid-compliance-review",
   "runtime": {
     "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
     "graph_runtime": "3d-force-graph",

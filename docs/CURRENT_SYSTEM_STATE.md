@@ -332,16 +332,21 @@ Then open:
 http://127.0.0.1:8765/viewer/nepa-3d/
 ```
 
-The first viewport opens directly into the graph experience. It defaults to a bounded readiness
-blocker lens over the source-set graph, while the V1 review overlay remains selectable. Controls
-cover source set, review, lens, search, status/readiness, authority category, authority family,
-document role, currentness/partition, readiness blocker, node/edge type, evidence/basis, forest
-unit, review phase, neighbor depth, high-degree hiding, selected-node pinning, fit/reset, Clear
-filters, PNG export, and viewer-state JSON export. Lens and filter dropdowns use graph-export
-counts and grounding metadata, separate authority category from authority family, keep node/edge
-type distinct from evidence and basis fields, read forest-unit values from exported forest codes,
-and treat selections as context seeds so matching nodes remain visible even when the selected lens
-has no matching edges. The
+The first viewport opens directly into the graph experience. It now defaults to the
+`v1-cg-ecid-compliance-review` review overlay and its Applicability demo scene. Demo buttons above
+the Lens dropdown switch among source library, authority universe, applicability, evidence path,
+forest plan, readiness, and full graph scenes; Reset demo returns to the starting review and scene.
+The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
+source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
+edges, then exposes each step as a clickable item in the right-side Capability shown panel. Advanced
+search and category controls remain available under Advanced filters. Controls cover source set,
+review, lens, search, status/readiness, authority category, authority family, document role,
+currentness/partition, readiness blocker, node/edge type, evidence/basis, forest unit, review phase,
+neighbor depth, high-degree hiding, selected-node pinning, fit/reset, Clear filters, PNG export, and
+viewer-state JSON export. Lens and filter dropdowns use graph-export counts and grounding metadata,
+separate authority category from authority family, keep node/edge type distinct from evidence and
+basis fields, read forest-unit values from exported forest codes, and treat selections as context
+seeds so matching nodes remain visible even when the selected lens has no matching edges. The
 detail panel shows node/edge provenance, citation labels, artifact hashes, source paths, currentness
 metadata, and validation status. Static tests now lock the runtime URLs, relative graph-export
 manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by

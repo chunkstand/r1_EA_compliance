@@ -300,6 +300,12 @@ next-target lanes:
   review-overlay lens/filter dropdown selections with `0` zero-node selections; some selections
   still show nodes without edges when the active lens has no matching edge path, and the status line
   now tells reviewers to try All validated graph data or clear filters.
+- NEPA 3D Milestone 6 demo-mode closeout is implemented in the same isolated worktree branch. The
+  viewer defaults to `v1-cg-ecid-compliance-review`, adds client scene buttons above Lens, keeps the
+  original dropdowns under Advanced filters, adds Reset demo, adds a right-side Capability shown
+  panel with rendered graph counts and proof labels, and derives the evidence-path spotlight from
+  actual graph edges so source record, artifact, chunk, evidence span, source claim, rule, decision,
+  generated rule, and compliance finding steps are clickable rather than hard-coded.
 - The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
   unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
   first.

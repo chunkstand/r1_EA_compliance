@@ -1,6 +1,9 @@
 const MANIFEST_PATH = "manifest.json";
 const DEFAULT_LENS_SOURCE_SET = "readiness_blockers";
 const DEFAULT_LENS_REVIEW = "package_applicability";
+const DEFAULT_DEMO_REVIEW_ID = "v1-cg-ecid-compliance-review";
+const DEMO_START_SCENE_ID = "applicability";
+const CUSTOM_DEMO_SCENE_ID = "custom";
 const REQUIRED_EXPORT_LENSES = [
   "authority_currentness",
   "forest_plan",
@@ -146,6 +149,107 @@ const FILTER_DEFINITIONS = [
   }
 ];
 const CONTEXT_SEED_FILTER_IDS = new Set(FILTER_DEFINITIONS.map((filter) => filter.id));
+const DEMO_SCENES = [
+  {
+    id: "source_library",
+    label: "Source library",
+    reviewId: "",
+    lensId: "all",
+    filters: { nodeEdgeType: "source_record" },
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    capabilityTitle: "Auditable source library",
+    capabilityCopy:
+      "Shows workbook source-row identity, source records, and artifact links before the review overlay adds applicability decisions.",
+    proofLabels: ["one source record per catalog row", "artifact links remain visible", "source-set boundary is explicit"]
+  },
+  {
+    id: "authority_universe",
+    label: "Authority universe",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "authority_currentness",
+    filters: {},
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    capabilityTitle: "Current authority universe",
+    capabilityCopy:
+      "Shows the authority families and source records used to make currentness and supersession status reviewable.",
+    proofLabels: ["authority families are graph nodes", "currentness is data-backed", "superseded material is separated"]
+  },
+  {
+    id: "applicability",
+    label: "Applicability",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "package_applicability",
+    filters: {},
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    capabilityTitle: "Package-specific applicability",
+    capabilityCopy:
+      "Shows how the V1 review partitions candidate authorities into applicable and not-applicable decisions for the Custer Gallatin package.",
+    proofLabels: ["applicability is explicit", "non-applicable authorities stay visible", "decisions are tied to the review id"]
+  },
+  {
+    id: "evidence_path",
+    label: "Evidence path",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "evidence_path",
+    filters: {},
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    spotlight: "evidence_path",
+    capabilityTitle: "Evidence-to-finding trace",
+    capabilityCopy:
+      "Spotlights one graph-derived path from source record to artifact, chunk, evidence span, claim, rule, and compliance finding.",
+    proofLabels: ["citation path is clickable", "rule support is traceable", "finding support is evidence-backed"]
+  },
+  {
+    id: "forest_plan",
+    label: "Forest Plan",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "forest_plan",
+    filters: { forestUnit: "custer-gallatin-nf" },
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    capabilityTitle: "Forest-plan legibility",
+    capabilityCopy:
+      "Shows Region 1 forest-plan profiles and Custer Gallatin components as graph-visible review evidence, with other profiles kept distinct.",
+    proofLabels: ["forest units are filterable", "plan components stay linked", "scope is visible to reviewers"]
+  },
+  {
+    id: "readiness",
+    label: "Readiness",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "readiness_blockers",
+    filters: {},
+    neighborDepth: 1,
+    degreeThreshold: 90,
+    hideHighDegree: false,
+    capabilityTitle: "Promotion-risk view",
+    capabilityCopy:
+      "Shows readiness blockers and graph-visible reasons why broader Region 1 expansion remains separate from the promoted V1 review.",
+    proofLabels: ["readiness is an artifact field", "blockers are not hidden", "layout cannot promote the review"]
+  },
+  {
+    id: "full_graph",
+    label: "Full graph",
+    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    lensId: "all",
+    filters: {},
+    neighborDepth: 1,
+    degreeThreshold: 120,
+    hideHighDegree: false,
+    capabilityTitle: "Full validated graph",
+    capabilityCopy:
+      "Shows the complete validated review overlay when a client wants to see the breadth behind the curated scenes.",
+    proofLabels: ["all node and edge tables are loaded", "validation remains visible", "advanced filters can narrow the view"]
+  }
+];
 
 const state = {
   graphApi: null,
@@ -160,7 +264,13 @@ const state = {
   filterValues: {},
   selectedNodeId: null,
   selectedEdgeId: null,
-  currentRender: { nodes: [], edges: [] }
+  currentRender: { nodes: [], edges: [] },
+  activeDemoSceneId: DEMO_START_SCENE_ID,
+  applyingDemoScene: false,
+  spotlightNodeIds: new Set(),
+  spotlightEdgeIds: new Set(),
+  spotlightSteps: [],
+  spotlightTitle: ""
 };
 
 const els = {};
@@ -198,7 +308,10 @@ function bindElements() {
     "source-set-select",
     "review-select",
     "graph-file-input",
+    "demo-reset",
+    "demo-scenes",
     "lens-select",
+    "advanced-filters",
     "graph-search",
     "status-filter",
     "authority-category-filter",
@@ -226,6 +339,7 @@ function bindElements() {
     "graph-root",
     "status-line",
     "legend",
+    "capability-panel",
     "detail-panel",
     "validation-panel"
   ];
@@ -236,33 +350,64 @@ function bindElements() {
 
 function bindEvents() {
   els.sourceSetSelect.addEventListener("change", () => {
+    markCustomScene();
     populateReviewSelector();
     loadSelectedDataset();
   });
-  els.reviewSelect.addEventListener("change", loadSelectedDataset);
+  els.reviewSelect.addEventListener("change", () => {
+    markCustomScene();
+    loadSelectedDataset();
+  });
   els.lensSelect.addEventListener("change", () => {
+    markCustomScene();
     populateFilterOptions({ preserveSelected: true });
     renderGraph();
   });
-  els.graphSearch.addEventListener("input", renderGraph);
+  els.graphSearch.addEventListener("input", () => {
+    markCustomScene();
+    renderGraph();
+  });
   els.graphFileInput.addEventListener("change", loadFileDataset);
   els.neighborDepth.addEventListener("input", () => {
+    markCustomScene({ keepSpotlight: true });
     els.neighborDepthValue.value = els.neighborDepth.value;
     renderGraph();
   });
   els.degreeThreshold.addEventListener("input", () => {
+    markCustomScene({ keepSpotlight: true });
     els.degreeThresholdValue.value = els.degreeThreshold.value;
     renderGraph();
   });
-  els.hideHighDegree.addEventListener("change", renderGraph);
+  els.hideHighDegree.addEventListener("change", () => {
+    markCustomScene({ keepSpotlight: true });
+    renderGraph();
+  });
   els.pinSelected.addEventListener("change", updatePinnedSelection);
   els.fitGraph.addEventListener("click", fitGraph);
   els.resetLayout.addEventListener("click", resetLayout);
   els.clearFilters.addEventListener("click", clearFilters);
+  els.demoReset.addEventListener("click", () => {
+    applyDemoScene(DEMO_START_SCENE_ID);
+  });
+  els.demoScenes.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-demo-scene-id]");
+    if (button) {
+      applyDemoScene(button.dataset.demoSceneId);
+    }
+  });
+  els.capabilityPanel.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-node-id]");
+    if (button) {
+      selectCapabilityNode(button.dataset.nodeId);
+    }
+  });
   els.exportShot.addEventListener("click", exportScreenshot);
   els.exportState.addEventListener("click", exportViewerState);
   for (const filter of FILTER_DEFINITIONS) {
-    document.getElementById(filter.selector).addEventListener("change", renderGraph);
+    document.getElementById(filter.selector).addEventListener("change", () => {
+      markCustomScene();
+      renderGraph();
+    });
   }
   window.addEventListener("resize", () => {
     if (state.graphApi) {
@@ -298,10 +443,14 @@ function createGraph() {
       const material = new window.THREE.MeshLambertMaterial({
         color: nodeColor(node),
         transparent: true,
-        opacity: node.node_type === "readiness_blocker" ? 0.95 : 0.82
+        opacity: state.spotlightNodeIds.has(node.node_id) || node.node_type === "readiness_blocker" ? 0.95 : 0.82
       });
       const mesh = new window.THREE.Mesh(sphereGeometry, material);
-      const scale = node.node_type === "readiness_blocker" || node.display_status === "applicable" ? 2.2 : 1;
+      const scale = state.spotlightNodeIds.has(node.node_id)
+        ? 2.7
+        : node.node_type === "readiness_blocker" || node.display_status === "applicable"
+          ? 2.2
+          : 1;
       mesh.scale.setScalar(scale);
       return mesh;
     });
@@ -333,10 +482,13 @@ async function loadManifest() {
     }
     state.manifest = await response.json();
     populateSourceSetSelector();
-    populateReviewSelector();
-    await loadSelectedDataset();
+    populateReviewSelector(DEFAULT_DEMO_REVIEW_ID);
+    renderDemoScenes();
+    await applyDemoScene(DEMO_START_SCENE_ID);
   } catch (error) {
     setStatus(`Manifest unavailable: ${error.message}. Use Graph JSON file input.`);
+    renderDemoScenes();
+    renderCapabilityPanel();
     renderEmptyDetails();
   }
 }
@@ -348,7 +500,7 @@ function populateSourceSetSelector() {
   replaceOptions(els.sourceSetSelect, sourceSetIds, state.manifest.default_source_set_id);
 }
 
-function populateReviewSelector() {
+function populateReviewSelector(selectedReviewId = state.manifest.default_review_id || "") {
   const sourceSetId = els.sourceSetSelect.value;
   const reviewDatasets = state.manifest.datasets.filter(
     (dataset) => dataset.scope === "review_overlay" && dataset.source_set_id === sourceSetId
@@ -359,7 +511,7 @@ function populateReviewSelector() {
       label: dataset.review_id
     }))
   );
-  replaceOptionsFromPairs(els.reviewSelect, options, state.manifest.default_review_id || "");
+  replaceOptionsFromPairs(els.reviewSelect, options, selectedReviewId);
 }
 
 async function loadSelectedDataset() {
@@ -396,6 +548,7 @@ async function loadFileDataset() {
   if (!file) {
     return;
   }
+  markCustomScene();
   const text = await file.text();
   const graph = JSON.parse(text);
   const dataset = {
@@ -407,6 +560,134 @@ async function loadFileDataset() {
     graph_path: file.name
   };
   ingestGraph(graph, dataset);
+}
+
+function renderDemoScenes() {
+  if (!els.demoScenes) {
+    return;
+  }
+  els.demoScenes.innerHTML = DEMO_SCENES.map(
+    (scene) =>
+      `<button class="demo-scene-button" type="button" data-demo-scene-id="${escapeHtml(scene.id)}" aria-pressed="false">${escapeHtml(scene.label)}</button>`
+  ).join("");
+  setActiveDemoButton();
+}
+
+async function applyDemoScene(sceneId) {
+  const scene = demoSceneById(sceneId) || demoSceneById(DEMO_START_SCENE_ID);
+  if (!scene) {
+    return;
+  }
+  state.applyingDemoScene = true;
+  state.activeDemoSceneId = scene.id;
+  clearSpotlight();
+  state.selectedNodeId = null;
+  state.selectedEdgeId = null;
+  renderEmptyDetails();
+  setActiveDemoButton();
+  try {
+    if (state.manifest) {
+      const sourceSetId = scene.sourceSetId || state.manifest.default_source_set_id;
+      if (sourceSetId && els.sourceSetSelect.value !== sourceSetId) {
+        els.sourceSetSelect.value = sourceSetId;
+        populateReviewSelector(scene.reviewId || "");
+      }
+      const reviewId = scene.reviewId ?? DEFAULT_DEMO_REVIEW_ID;
+      if (els.reviewSelect.value !== reviewId) {
+        els.reviewSelect.value = reviewId;
+      }
+      const expectedReviewId = reviewId || null;
+      const needsDataset =
+        !state.dataset ||
+        state.dataset.source_set_id !== sourceSetId ||
+        (state.dataset.review_id || null) !== expectedReviewId;
+      if (needsDataset) {
+        await loadSelectedDataset();
+      }
+    }
+    setLensControl(scene.lensId);
+    populateFilterOptions();
+    resetFilterControls();
+    setLayoutControls(scene);
+    setFilterControls(scene.filters || {});
+    if (scene.spotlight === "evidence_path") {
+      buildEvidencePathSpotlight();
+    }
+    renderGraph();
+  } finally {
+    state.applyingDemoScene = false;
+    setActiveDemoButton();
+  }
+}
+
+function demoSceneById(sceneId) {
+  return DEMO_SCENES.find((scene) => scene.id === sceneId);
+}
+
+function activeDemoScene() {
+  return demoSceneById(state.activeDemoSceneId);
+}
+
+function markCustomScene({ keepSpotlight = false } = {}) {
+  if (state.applyingDemoScene) {
+    return;
+  }
+  state.activeDemoSceneId = CUSTOM_DEMO_SCENE_ID;
+  if (!keepSpotlight) {
+    clearSpotlight();
+  }
+  setActiveDemoButton();
+}
+
+function setActiveDemoButton() {
+  if (!els.demoScenes) {
+    return;
+  }
+  for (const button of els.demoScenes.querySelectorAll("[data-demo-scene-id]")) {
+    const active = button.dataset.demoSceneId === state.activeDemoSceneId;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  }
+}
+
+function resetFilterControls() {
+  els.graphSearch.value = "";
+  for (const filter of FILTER_DEFINITIONS) {
+    document.getElementById(filter.selector).value = "";
+  }
+}
+
+function setFilterControls(filterValues) {
+  for (const [filterId, value] of Object.entries(filterValues)) {
+    const filter = FILTER_DEFINITIONS.find((candidate) => candidate.id === filterId);
+    if (!filter) {
+      continue;
+    }
+    const select = document.getElementById(filter.selector);
+    if ([...select.options].some((option) => option.value === value)) {
+      select.value = value;
+    }
+  }
+}
+
+function setLensControl(lensId) {
+  const nextLens = [...els.lensSelect.options].some((option) => option.value === lensId) ? lensId : "all";
+  els.lensSelect.value = nextLens;
+}
+
+function setLayoutControls(scene) {
+  els.neighborDepth.value = String(scene.neighborDepth ?? 1);
+  els.neighborDepthValue.value = els.neighborDepth.value;
+  els.degreeThreshold.value = String(scene.degreeThreshold ?? 90);
+  els.degreeThresholdValue.value = els.degreeThreshold.value;
+  els.hideHighDegree.checked = scene.hideHighDegree === true;
+}
+
+function clearSpotlight() {
+  state.spotlightNodeIds = new Set();
+  state.spotlightEdgeIds = new Set();
+  state.spotlightSteps = [];
+  state.spotlightTitle = "";
 }
 
 function ingestGraph(graph, dataset) {
@@ -427,6 +708,7 @@ function ingestGraph(graph, dataset) {
   renderValidation();
   renderEmptyDetails();
   setStatus("Graph loaded from validated export data. Viewer layout does not change readiness.");
+  setActiveDemoButton();
   renderGraph();
 }
 
@@ -446,6 +728,120 @@ function buildGraphIndexes() {
     state.degree.set(edge.source_node_id, (state.degree.get(edge.source_node_id) || 0) + 1);
     state.degree.set(edge.target_node_id, (state.degree.get(edge.target_node_id) || 0) + 1);
   }
+}
+
+function buildEvidencePathSpotlight() {
+  clearSpotlight();
+  const findings = state.nodes.filter((node) => node.node_type === "compliance_finding");
+  for (const finding of findings) {
+    const sourceClaimIds = finding.metadata?.source_claim_ids || [];
+    const claimIds = compactValues([
+      ...(Array.isArray(sourceClaimIds) ? sourceClaimIds : [sourceClaimIds]),
+      finding.metadata?.source_claim_id
+    ]);
+    const findingSupportEdges = incomingEdges(finding.node_id, "SUPPORTS_COMPLIANCE_FINDING");
+    for (const claimId of claimIds) {
+      const sourceClaim = sourceClaimNode(claimId);
+      if (!sourceClaim) {
+        continue;
+      }
+      const evidenceEdge = incomingEdges(sourceClaim.node_id, "SUPPORTS_SOURCE_CLAIM")[0];
+      const evidenceSpan = evidenceEdge ? state.nodeIndex.get(evidenceEdge.source_node_id) : null;
+      const chunkEdge = evidenceSpan ? incomingEdges(evidenceSpan.node_id, "HAS_EVIDENCE_SPAN")[0] : null;
+      const chunk = chunkEdge ? state.nodeIndex.get(chunkEdge.source_node_id) : null;
+      const artifactEdge = chunk ? incomingEdges(chunk.node_id, "HAS_CHUNK")[0] : null;
+      const artifact = artifactEdge ? state.nodeIndex.get(artifactEdge.source_node_id) : null;
+      const sourceRecordEdge = artifact ? incomingEdges(artifact.node_id, "HAS_ARTIFACT")[0] : null;
+      const sourceRecord = sourceRecordEdge ? state.nodeIndex.get(sourceRecordEdge.source_node_id) : null;
+      if (!sourceRecord || !artifact || !chunk || !evidenceSpan) {
+        continue;
+      }
+      for (const findingEdge of findingSupportEdges) {
+        const generatedRule = state.nodeIndex.get(findingEdge.source_node_id);
+        const generatedRuleEdge = generatedRule ? incomingEdges(generatedRule.node_id, "GENERATES_RULE")[0] : null;
+        const decision = generatedRuleEdge ? state.nodeIndex.get(generatedRuleEdge.source_node_id) : null;
+        const decisionEdge = decision ? incomingEdges(decision.node_id, "PRODUCES_APPLICABILITY_DECISION")[0] : null;
+        const candidateRule = decisionEdge ? state.nodeIndex.get(decisionEdge.source_node_id) : null;
+        const claimRuleEdge = outgoingEdges(sourceClaim.node_id, "SUPPORTS_RULE_TEMPLATE").find(
+          (edge) => !candidateRule || edge.target_node_id === candidateRule.node_id
+        );
+        const ruleTemplate = claimRuleEdge ? state.nodeIndex.get(claimRuleEdge.target_node_id) : candidateRule;
+        if (!generatedRule || !decision || !decisionEdge || !ruleTemplate || !claimRuleEdge) {
+          continue;
+        }
+        const pathNodes = [
+          sourceRecord,
+          artifact,
+          chunk,
+          evidenceSpan,
+          sourceClaim,
+          ruleTemplate,
+          decision,
+          generatedRule,
+          finding
+        ];
+        const pathEdges = [
+          sourceRecordEdge,
+          artifactEdge,
+          chunkEdge,
+          evidenceEdge,
+          claimRuleEdge,
+          decisionEdge,
+          generatedRuleEdge,
+          findingEdge
+        ];
+        const nodeIds = new Set(pathNodes.map((node) => node.node_id));
+        const edgeIds = new Set(pathEdges.map((edge) => edge.edge_id));
+        state.spotlightNodeIds = nodeIds;
+        state.spotlightEdgeIds = edgeIds;
+        state.spotlightSteps = pathNodes.map((node) => ({
+          node_id: node.node_id,
+          label: `${formatOptionLabel(node.node_type, "nodeEdgeType")}: ${node.label || node.node_id}`
+        }));
+        state.spotlightTitle = finding.label || "evidence path";
+        return;
+      }
+    }
+  }
+  setStatus("No complete evidence-to-finding path was found in this graph export.");
+}
+
+function spotlightGraph() {
+  const nodes = state.nodes.filter((node) => state.spotlightNodeIds.has(node.node_id));
+  const nodeIds = new Set(nodes.map((node) => node.node_id));
+  const edges = state.edges.filter(
+    (edge) =>
+      state.spotlightEdgeIds.has(edge.edge_id) &&
+      nodeIds.has(edge.source_node_id) &&
+      nodeIds.has(edge.target_node_id)
+  );
+  return { nodes, edges };
+}
+
+function incomingEdges(nodeId, edgeType = "") {
+  return state.edges.filter(
+    (edge) => edge.target_node_id === nodeId && (!edgeType || edge.edge_type === edgeType)
+  );
+}
+
+function outgoingEdges(nodeId, edgeType = "") {
+  return state.edges.filter(
+    (edge) => edge.source_node_id === nodeId && (!edgeType || edge.edge_type === edgeType)
+  );
+}
+
+function sourceClaimNode(claimId) {
+  const normalized = String(claimId).replace(/^claim:/, "");
+  return (
+    state.nodeIndex.get(`source_claim:${normalized}`) ||
+    state.nodes.find(
+      (node) =>
+        node.node_type === "source_claim" &&
+        [node.node_id, node.provenance?.source_claim_id, node.metadata?.source_claim_id]
+          .filter(Boolean)
+          .some((value) => String(value).endsWith(normalized))
+    )
+  );
 }
 
 function populateLensSelector() {
@@ -521,10 +917,14 @@ function renderGraph() {
   renderTitle();
   renderLegend(filtered.nodes);
   renderCounts(filtered);
+  renderCapabilityPanel(filtered);
   updateViewerReadyState(filtered);
 }
 
 function filteredGraph() {
+  if (state.spotlightNodeIds.size > 0) {
+    return spotlightGraph();
+  }
   const lens = selectedLens();
   const baseGraph = baseLensGraph(lens);
   const baseNodeIds = new Set(baseGraph.nodes.map((node) => node.node_id));
@@ -754,6 +1154,12 @@ function renderCounts(filtered) {
   const summary = state.graph.summary || {};
   const totalNodes = summary.node_count ?? state.nodes.length;
   const totalEdges = summary.edge_count ?? state.edges.length;
+  if (state.spotlightNodeIds.size > 0) {
+    setStatus(
+      `Spotlighting ${state.spotlightTitle || "evidence path"} with ${filtered.nodes.length}/${totalNodes} nodes and ${filtered.edges.length}/${totalEdges} edges from validated graph data.`
+    );
+    return;
+  }
   const activeContext = activeContextLabels();
   let hint = "";
   if (activeContext.length > 0 && filtered.nodes.length === 0) {
@@ -815,6 +1221,100 @@ function renderValidation() {
 
 function renderEmptyDetails() {
   els.detailPanel.innerHTML = '<div class="detail-empty">Select a node or edge.</div>';
+}
+
+function renderCapabilityPanel(filtered = state.currentRender) {
+  if (!els.capabilityPanel) {
+    return;
+  }
+  const scene = activeDemoScene();
+  const title = scene?.capabilityTitle || "Custom graph view";
+  const copy =
+    scene?.capabilityCopy ||
+    "Shows a reviewer-defined combination of graph lens, search, filters, and layout controls over the validated export.";
+  const rows = sceneMetricRows(scene, filtered);
+  const metrics = rows
+    .map(
+      ([label, value]) =>
+        `<div class="capability-metric"><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong></div>`
+    )
+    .join("");
+  const proofLabels = scene?.proofLabels || activeContextLabels();
+  const proof = proofLabels.length
+    ? `<div class="capability-proof">${proofLabels.map((label) => `<span>${escapeHtml(label)}</span>`).join("")}</div>`
+    : "";
+  const pathMarkup =
+    state.spotlightSteps.length > 0
+      ? `<div class="path-steps">${state.spotlightSteps
+          .map(
+            (step, index) =>
+              `<button class="path-step" type="button" data-node-id="${escapeHtml(step.node_id)}"><span>${index + 1}</span>${escapeHtml(step.label)}</button>`
+          )
+          .join("")}</div>`
+      : "";
+  els.capabilityPanel.innerHTML = [
+    `<div class="capability-title">${escapeHtml(title)}</div>`,
+    `<p class="capability-copy">${escapeHtml(copy)}</p>`,
+    metrics ? `<div class="capability-metrics">${metrics}</div>` : "",
+    proof,
+    pathMarkup
+  ].join("");
+}
+
+function sceneMetricRows(scene, filtered) {
+  const rows = [
+    ["rendered nodes", filtered.nodes.length],
+    ["rendered edges", filtered.edges.length]
+  ];
+  if (!state.graph) {
+    return rows;
+  }
+  if (scene?.id === "source_library") {
+    rows.push(["source records", countNodes("source_record")]);
+    rows.push(["artifacts", countNodes("artifact")]);
+  } else if (scene?.id === "authority_universe") {
+    rows.push(["authority families", countNodes("authority_family")]);
+    rows.push(["source records", countNodes("source_record")]);
+  } else if (scene?.id === "applicability") {
+    rows.push(["applicable decisions", countNodes("applicability_decision", (node) => node.display_status === "applicable")]);
+    rows.push([
+      "non-applicable decisions",
+      countNodes("applicability_decision", (node) => node.display_status === "not_applicable")
+    ]);
+  } else if (scene?.id === "evidence_path") {
+    rows.push(["path steps", state.spotlightSteps.length]);
+    rows.push(["path edges", state.spotlightEdgeIds.size]);
+  } else if (scene?.id === "forest_plan") {
+    rows.push(["forest units", countNodes("forest_unit")]);
+    rows.push(["plan components", countNodes("forest_plan_component")]);
+  } else if (scene?.id === "readiness") {
+    rows.push(["readiness blockers", countNodes("readiness_blocker")]);
+    rows.push(["blocker edges", countEdges("HAS_READINESS_BLOCKER")]);
+  } else if (scene?.id === "full_graph") {
+    rows.push(["total graph nodes", state.nodes.length]);
+    rows.push(["total graph edges", state.edges.length]);
+  }
+  return rows;
+}
+
+function countNodes(nodeType, predicate = () => true) {
+  return state.nodes.filter((node) => node.node_type === nodeType && predicate(node)).length;
+}
+
+function countEdges(edgeType, predicate = () => true) {
+  return state.edges.filter((edge) => edge.edge_type === edgeType && predicate(edge)).length;
+}
+
+function selectCapabilityNode(nodeId) {
+  const node = state.nodeIndex.get(nodeId);
+  if (!node) {
+    return;
+  }
+  state.selectedNodeId = node.node_id;
+  state.selectedEdgeId = null;
+  updatePinnedSelection(node);
+  renderNodeDetails(node);
+  renderGraph();
 }
 
 function renderNodeDetails(node) {
@@ -923,10 +1423,8 @@ function resetLayout() {
 }
 
 function clearFilters() {
-  els.graphSearch.value = "";
-  for (const filter of FILTER_DEFINITIONS) {
-    document.getElementById(filter.selector).value = "";
-  }
+  resetFilterControls();
+  markCustomScene();
   state.selectedNodeId = null;
   state.selectedEdgeId = null;
   renderEmptyDetails();
@@ -949,12 +1447,16 @@ function exportViewerState() {
   const payload = {
     exported_at: new Date().toISOString(),
     dataset: state.dataset,
+    demo_scene_id: state.activeDemoSceneId,
     lens_id: els.lensSelect.value,
     filters: selectedFilterValues(),
     search: els.graphSearch.value,
     neighbor_depth: Number(els.neighborDepth.value),
     hide_high_degree_nodes: els.hideHighDegree.checked,
     degree_threshold: Number(els.degreeThreshold.value),
+    spotlight_title: state.spotlightTitle || null,
+    spotlight_node_ids: [...state.spotlightNodeIds],
+    spotlight_edge_ids: [...state.spotlightEdgeIds],
     rendered_node_count: state.currentRender.nodes.length,
     rendered_edge_count: state.currentRender.edges.length,
     graph_summary: state.graph?.summary || null
@@ -973,7 +1475,10 @@ function updateViewerReadyState(filtered) {
     dataset_id: state.dataset?.dataset_id || null,
     source_set_id: state.graph?.summary?.source_set_id || null,
     review_id: state.graph?.summary?.review_id || null,
+    demo_scene_id: state.activeDemoSceneId,
     lens_id: els.lensSelect.value,
+    spotlight_node_count: state.spotlightNodeIds.size,
+    spotlight_edge_count: state.spotlightEdgeIds.size,
     rendered_node_count: filtered.nodes.length,
     rendered_edge_count: filtered.edges.length,
     canvas_count: els.graphRoot.querySelectorAll("canvas").length,
@@ -983,6 +1488,9 @@ function updateViewerReadyState(filtered) {
 
 function nodeValue(node) {
   const degree = state.degree.get(node.node_id) || 1;
+  if (state.spotlightNodeIds.has(node.node_id)) {
+    return 2.4;
+  }
   if (node.node_type === "readiness_blocker") {
     return 1.6;
   }
@@ -1041,10 +1549,16 @@ function stableHash(value) {
 }
 
 function nodeColor(node) {
+  if (state.spotlightNodeIds.has(node.node_id)) {
+    return "#d7932f";
+  }
   return STATUS_COLORS[node.display_status] || NODE_TYPE_COLORS[node.node_type] || "#7f7b73";
 }
 
 function edgeColor(edge) {
+  if (state.spotlightEdgeIds.has(edge.edge_id)) {
+    return "rgba(215, 147, 47, 0.92)";
+  }
   if (edge.edge_type === "HAS_READINESS_BLOCKER" || edge.display_status === "readiness_blocked") {
     return "rgba(177, 61, 56, 0.72)";
   }
@@ -1061,6 +1575,9 @@ function edgeWidth(edge) {
   if (state.selectedEdgeId && state.selectedEdgeId === edge.edge_id) {
     return 3;
   }
+  if (state.spotlightEdgeIds.has(edge.edge_id)) {
+    return 3;
+  }
   if (edge.edge_type === "HAS_READINESS_BLOCKER") {
     return 2;
   }
@@ -1071,6 +1588,9 @@ function edgeWidth(edge) {
 }
 
 function linkParticles(edge) {
+  if (state.spotlightEdgeIds.has(edge.edge_id)) {
+    return 3;
+  }
   if (state.selectedEdgeId === edge.edge_id) {
     return 3;
   }

@@ -91,14 +91,20 @@ hard-negative applicability fixture contracts, renders `3` field-directive requi
 overlay requirement groups as graph-visible nodes with source links, and leaves component inventory
 validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the
 checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
-the normalized source-set and review overlay JSON exports, defaults to a bounded readiness-blocker
-lens, and keeps validation/readiness status tied to the exported artifacts rather than viewer layout
-while tests lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
+the normalized source-set and review overlay JSON exports, defaults to the
+`v1-cg-ecid-compliance-review` demo review with client scene buttons above Lens, and keeps
+validation/readiness status tied to the exported artifacts rather than viewer layout while tests
+lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
 dropdown gap passes separate authority category from authority family, split node/edge type from
 evidence/basis semantics, read forest-unit values from exported forest codes, ground lens and filter
 options with graph-export counts, treat filter selections as context seeds instead of strict
 edge-endpoint requirements, add a Clear filters action, and live sweep source-set/review dropdown
-selections so populated options no longer blank the graph. The earlier
+selections so populated options no longer blank the graph. A demo-mode pass now adds one-click
+client scenes for source library, authority universe, applicability, evidence path, forest plan,
+readiness, and full graph views; the evidence-path scene derives a clickable source-to-finding
+spotlight from the graph itself, and a right-side Capability shown panel keeps demo claims grounded
+in rendered graph counts. Advanced search and category filters remain available under a visually
+subordinate Advanced filters disclosure. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
