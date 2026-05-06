@@ -234,6 +234,11 @@ next-target lanes:
   artifact freshness, expected counts, phase-eval/promotion readiness, Plan Consistency Table
   ownership, manual-draft quarantine, residual-risk/checklist source mapping, and
   CLI/module/renderer ownership.
+  - Sequence 0 pass 1 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
+    worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
+    non-canonical manual draft comparison material, and `source_library/` remains ignored. The next
+    preflight pass is artifact freshness and hash baseline.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
