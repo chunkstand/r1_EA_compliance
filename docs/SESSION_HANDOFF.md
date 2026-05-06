@@ -271,9 +271,16 @@ next-target lanes:
   before graph promotion. The source-set graph passed `57` validation checks with `1,401` nodes and
   `2,552` edges, `1` graph-ready profile, and `9` broader Region 1 profiles blocked from
   completeness claims.
-- The next NEPA 3D implementation boundary is Milestone 6 local 3D viewer over the normalized graph
-  export, unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory
-  build first.
+- NEPA 3D Milestone 6 is implemented. `viewer/nepa-3d/` is a checked-in static viewer over the
+  normalized graph export. It uses `viewer/nepa-3d/manifest.json` to load the current source-set
+  graph and selectable V1 review overlay graph, uses Three.js plus `3d-force-graph`, defaults to a
+  bounded readiness-blocker lens, exposes the required selectors/search/filters/layout controls,
+  and keeps readiness tied to graph validation rather than layout. Local browser verification
+  covered desktop source-set, desktop review overlay, and mobile graph canvas screenshots with
+  nonblank graph-root pixel checks.
+- The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
+  unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
+  first.
   The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
   claim handbook completeness.
 

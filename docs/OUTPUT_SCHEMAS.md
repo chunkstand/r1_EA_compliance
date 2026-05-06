@@ -1224,6 +1224,49 @@ Validation example:
 }
 ```
 
+## NEPA 3D Static Viewer
+
+NEPA 3D Milestone 6 adds a checked-in static viewer under `viewer/nepa-3d/`. The viewer is a
+projection over the normalized graph export files; it does not write legal conclusions, does not
+promote readiness, and does not replace export validation. Its local manifest has schema version
+`nepa-3d-viewer-manifest-v1`:
+
+```json
+{
+  "schema_version": "nepa-3d-viewer-manifest-v1",
+  "default_source_set_id": "source-set-ba8d0feae79501b8",
+  "default_review_id": null,
+  "runtime": {
+    "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
+    "graph_runtime": "3d-force-graph",
+    "graph_runtime_url": "https://unpkg.com/3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
+  },
+  "datasets": [
+    {
+      "dataset_id": "source-set-ba8d0feae79501b8",
+      "scope": "source_set",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "review_id": null,
+      "graph_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json"
+    },
+    {
+      "dataset_id": "v1-cg-ecid-compliance-review",
+      "scope": "review_overlay",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "review_id": "v1-cg-ecid-compliance-review",
+      "graph_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json"
+    }
+  ]
+}
+```
+
+The viewer expects each dataset target to use the `nepa-3d-knowledge-graph-v1` export contract. It
+derives selectors from `lens_metadata`, graph node fields, edge fields, `provenance`,
+`currentness_metadata`, `metadata`, and `readiness_blockers`. It also exposes
+`window.__NEPA_3D_VIEWER_READY__` in the browser for local smoke checks; that marker reports the
+loaded dataset ID, source set, review, selected lens, rendered node and edge counts, canvas count,
+and export validation status.
+
 Committed fixtures for the smallest contract slices live under
 `tests/fixtures/nepa_3d_graph/`. `minimal_source_set_graph.json` proves source-set currentness and
 source partition display. `minimal_review_graph.json` proves review-specific applicability,

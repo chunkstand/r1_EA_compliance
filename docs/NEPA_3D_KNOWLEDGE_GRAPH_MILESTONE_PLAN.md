@@ -525,6 +525,17 @@ git diff --check
 Goal:
 Create a local 3D viewer that renders the normalized graph export with useful reviewer lenses.
 
+Implementation status:
+Completed on 2026-05-06. The implementation chooses the checked-in static viewer option under
+`viewer/nepa-3d/`. The viewer reads `viewer/nepa-3d/manifest.json`, loads the current source-set
+graph and selectable `v1-cg-ecid-compliance-review` overlay graph from the existing
+`source_library/` export paths, uses Three.js plus `3d-force-graph`, and opens directly into the
+graph surface. It defaults to the bounded readiness-blocker lens, exposes source-set/review/lens
+selectors, search and status/provenance filters, neighbor-depth and high-degree layout controls,
+selected-node pinning, fit/reset controls, PNG export, viewer-state JSON export, legends, and
+click-through provenance/validation panels. The viewer preserves the readiness boundary: validation
+and reviewer-readiness status come from the graph export, not from layout.
+
 Implementation options:
 
 - a static viewer checked into the repo and pointed at graph export JSON;

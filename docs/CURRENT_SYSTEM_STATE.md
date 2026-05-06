@@ -298,6 +298,42 @@ readiness matrix, added profiles have source requirements and eval fixture contr
 profiles have catalog-confirmed sources and component inventory coverage, and
 `region1_completeness_claim=false` while any tracked profile remains blocked.
 
+## NEPA 3D Local Viewer
+
+NEPA 3D Milestone 6 is implemented as a checked-in static viewer under `viewer/nepa-3d/`. The
+chosen option is a repo-local browser surface over the normalized graph exports, not a generated
+`source_library/` artifact and not a second knowledge base. The viewer uses Three.js plus
+`3d-force-graph` from pinned CDN URLs, reads `viewer/nepa-3d/manifest.json`, and can load either
+the source-set graph or the V1 review overlay graph. It also accepts a local graph JSON file through
+the browser file picker for ad hoc inspection.
+
+Current default viewer manifest entries:
+
+- source-set graph:
+  `source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json`
+- V1 review overlay:
+  `source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json`
+
+Launch locally from the repo root:
+
+```bash
+python3 -m http.server 8765 --bind 127.0.0.1
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8765/viewer/nepa-3d/
+```
+
+The first viewport opens directly into the graph experience. It defaults to a bounded readiness
+blocker lens over the source-set graph, while the V1 review overlay remains selectable. Controls
+cover source set, review, lens, search, status, authority category, document role, currentness,
+readiness blocker, evidence type, forest unit, review phase, neighbor depth, high-degree hiding,
+selected-node pinning, fit/reset, PNG export, and viewer-state JSON export. The detail panel shows
+node/edge provenance, citation labels, artifact hashes, source paths, currentness metadata, and
+validation status. The viewer status line explicitly records that layout does not change readiness.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

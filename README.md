@@ -87,7 +87,10 @@ graph tracks `10` Region 1 forest/grassland profiles, keeps `1` Custer Gallatin 
 graph-ready, blocks `9` broader Region 1 profiles from completeness claims, adds the
 Beaverhead-Deerlodge profile with catalog-confirmed planning page/LMP sources plus positive and
 hard-negative applicability fixture contracts, and leaves component inventory validation as a
-reviewer-visible blocker before graph promotion. The earlier
+reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the checked-in local
+viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads the normalized
+source-set and review overlay JSON exports, defaults to a bounded readiness-blocker lens, and keeps
+validation/readiness status tied to the exported artifacts rather than viewer layout. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
@@ -181,6 +184,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
   - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json`
+- NEPA 3D static viewer:
+  - `viewer/nepa-3d/index.html`
+  - `viewer/nepa-3d/manifest.json`
+  - `viewer/nepa-3d/app.js`
+  - `viewer/nepa-3d/styles.css`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
   - `source_library/derived/<source_set_id>/claims/entities.jsonl`

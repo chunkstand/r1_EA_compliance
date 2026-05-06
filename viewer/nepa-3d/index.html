@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NEPA 3D Graph Viewer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      defer
+      src="https://unpkg.com/three@0.149.0/build/three.min.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
+    ></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <main class="viewer-shell" aria-label="NEPA 3D knowledge graph viewer">
+      <aside class="control-rail" aria-label="Graph controls">
+        <section class="rail-section">
+          <h1>NEPA 3D</h1>
+          <div class="field-group">
+            <label for="source-set-select">Source set</label>
+            <select id="source-set-select"></select>
+          </div>
+          <div class="field-group">
+            <label for="review-select">Review</label>
+            <select id="review-select"></select>
+          </div>
+          <div class="field-group">
+            <label for="graph-file-input">Graph JSON</label>
+            <input id="graph-file-input" type="file" accept="application/json,.json" />
+          </div>
+        </section>
+
+        <section class="rail-section">
+          <div class="field-group">
+            <label for="lens-select">Lens</label>
+            <select id="lens-select"></select>
+          </div>
+          <div class="field-group">
+            <label for="graph-search">Search</label>
+            <input
+              id="graph-search"
+              type="search"
+              autocomplete="off"
+              placeholder="Authority, citation, source, rule, component, fact"
+            />
+          </div>
+          <div class="filter-grid">
+            <div class="field-group">
+              <label for="status-filter">Status</label>
+              <select id="status-filter" data-filter="status"></select>
+            </div>
+            <div class="field-group">
+              <label for="authority-category-filter">Authority category</label>
+              <select id="authority-category-filter" data-filter="authorityCategory"></select>
+            </div>
+            <div class="field-group">
+              <label for="document-role-filter">Document role</label>
+              <select id="document-role-filter" data-filter="documentRole"></select>
+            </div>
+            <div class="field-group">
+              <label for="currentness-filter">Currentness</label>
+              <select id="currentness-filter" data-filter="currentness"></select>
+            </div>
+            <div class="field-group">
+              <label for="blocker-filter">Readiness blocker</label>
+              <select id="blocker-filter" data-filter="readinessBlocker"></select>
+            </div>
+            <div class="field-group">
+              <label for="evidence-type-filter">Evidence type</label>
+              <select id="evidence-type-filter" data-filter="evidenceType"></select>
+            </div>
+            <div class="field-group">
+              <label for="forest-unit-filter">Forest unit</label>
+              <select id="forest-unit-filter" data-filter="forestUnit"></select>
+            </div>
+            <div class="field-group">
+              <label for="review-phase-filter">Review phase</label>
+              <select id="review-phase-filter" data-filter="reviewPhase"></select>
+            </div>
+          </div>
+        </section>
+
+        <section class="rail-section">
+          <div class="slider-row">
+            <label for="neighbor-depth">Depth</label>
+            <input id="neighbor-depth" type="range" min="0" max="4" step="1" value="1" />
+            <output id="neighbor-depth-value" for="neighbor-depth">1</output>
+          </div>
+          <div class="slider-row">
+            <label for="degree-threshold">High degree cap</label>
+            <input id="degree-threshold" type="range" min="20" max="240" step="10" value="90" />
+            <output id="degree-threshold-value" for="degree-threshold">90</output>
+          </div>
+          <label class="toggle-row" for="hide-high-degree">
+            <input id="hide-high-degree" type="checkbox" />
+            <span>Hide high-degree nodes</span>
+          </label>
+          <label class="toggle-row" for="pin-selected">
+            <input id="pin-selected" type="checkbox" />
+            <span>Pin selected node</span>
+          </label>
+          <div class="button-row">
+            <button id="fit-graph" type="button">Fit</button>
+            <button id="reset-layout" type="button">Reset</button>
+            <button id="export-shot" type="button">PNG</button>
+            <button id="export-state" type="button">JSON</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="graph-stage" aria-label="Graph canvas">
+        <div class="graph-toolbar">
+          <div id="dataset-title" class="dataset-title">Loading graph</div>
+          <div id="graph-counts" class="graph-counts"></div>
+        </div>
+        <div id="graph-root" class="graph-root" aria-label="3D force graph"></div>
+        <div id="status-line" class="status-line" role="status"></div>
+        <div id="legend" class="legend" aria-label="Graph legend"></div>
+      </section>
+
+      <aside class="detail-rail" aria-label="Graph details">
+        <section class="rail-section">
+          <h2>Selection</h2>
+          <div id="detail-panel" class="detail-panel"></div>
+        </section>
+        <section class="rail-section">
+          <h2>Validation</h2>
+          <div id="validation-panel" class="detail-panel"></div>
+        </section>
+      </aside>
+    </main>
+  </body>
+</html>

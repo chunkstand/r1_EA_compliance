@@ -1,0 +1,32 @@
+{
+  "schema_version": "nepa-3d-viewer-manifest-v1",
+  "default_source_set_id": "source-set-ba8d0feae79501b8",
+  "default_review_id": null,
+  "runtime": {
+    "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
+    "graph_runtime": "3d-force-graph",
+    "graph_runtime_url": "https://unpkg.com/3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
+  },
+  "datasets": [
+    {
+      "dataset_id": "source-set-ba8d0feae79501b8",
+      "label": "Source Set: source-set-ba8d0feae79501b8",
+      "scope": "source_set",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "review_id": null,
+      "graph_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph_validation.json"
+    },
+    {
+      "dataset_id": "v1-cg-ecid-compliance-review",
+      "label": "Review Overlay: v1-cg-ecid-compliance-review",
+      "scope": "review_overlay",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "review_id": "v1-cg-ecid-compliance-review",
+      "graph_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph_validation.json"
+    }
+  ]
+}
