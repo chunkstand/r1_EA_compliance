@@ -52,8 +52,9 @@ The result separates three statuses:
   strict mode also requires `expansion_ready`.
 
 The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
-and the South Plateau slot is selected but not run. Open expansion slots do not block the current V1
-promotion claim, but they make broader readiness gaps visible to future agents. Current promotion
+and the South Plateau slot is imported but blocked on applicability adjudication. Open expansion
+slots do not block the current V1 promotion claim, but they make broader readiness gaps visible to
+future agents. Current promotion
 does require the applicability seed and gold eval artifacts that prove positive, negative,
 unresolved, replay-adjudicated, and arbitration-field coverage for the expanded authority-family
 templates. It also requires the authority-family reviewer-report artifacts for the promoted V1
@@ -86,22 +87,34 @@ failure categories so the typed blocker is visible without inspecting raw JSON.
 
 ## Current Local Result
 
-The latest Sequence 3 promotion-suite pass was run locally on 2026-05-06 after the third
-real-package slot was replaced with a selected South Plateau fixture contract:
+The latest Sequence 4 pass was run locally on 2026-05-06 for the selected South Plateau fixture
+contract. The package import and applicability-first run completed through validation, but the slot
+is intentionally not ready:
 
-- `current_promotion_ready=true`
-- `promotion_ready=true`
-- `expansion_ready=false`
-- `expansion_artifacts_ready=true`
-- `failure_category_counts={}`
-- `expansion_failure_category_counts={"applicability_miss": 1}`
-- `open_expansion_artifact_count=0`
-- `open_expansion_slot_count=1`
+- imported `26` official South Plateau PDFs from the project Box folder;
+- extracted `26/26` package files into `3,671` chunks with `.venv-docling`;
+- `applicability-authority-universe`: passed with `392` candidate authorities;
+- `applicability-context-build`: passed package fact/context validation;
+- `applicability-retrieve`: passed trace validation, with diagnostics retained for all candidates;
+- `applicability-determine`: `55` applicable, `331` non-applicable, and `6`
+  `needs_adjudication` authority-family decisions;
+- `applicability-validate`: failed as designed with `generated_rule_pack_ready=false` and
+  `failure_category_counts={"unresolved_authority": 12}`;
+- `applicability-adjudication-template`: wrote a `6`-item worklist.
+- non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1}`,
+  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`;
+- strict expansion `promotion-suite`: expected command failure with `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`,
+  `failure_category_counts={"adjudication_needed": 1}`, and
+  `expansion_failure_category_counts={"adjudication_needed": 1}`.
 
-Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
-`failure_category_counts={"applicability_miss": 1}`.
-The generated Markdown report now surfaces the South Plateau review ID, declared package path, and
-`applicability_miss` blocker in the expansion-slot table.
+The South Plateau expansion slot now carries `failure_category="adjudication_needed"` rather than
+`applicability_miss`. Strict expansion is expected to fail at this boundary until those six
+adjudications are completed, evaluated, applied, and validation passes. Generated rule-pack,
+compliance review, and review-scoped phase eval have not been run for South Plateau because
+applicability validation did not pass.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -128,12 +141,10 @@ the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_co
 `forest-plan-component-adjudication-eval` reports `resolved_adjudication_count=158`,
 `real_ea_omission_count=158`, `pending_adjudication_count=0`, and `system_miss_count=0`. ECID
 compliance review now reports `reviewer_ready=true`, review-scoped phase eval passes, and the ECID
-expansion slot is `ready=true`. The second real-package slot is now selected but not run:
-`region1-expansion-south-plateau-landscape-treatment` points at the South Plateau Area Landscape
-Treatment Project, official project/document pages, the `custer_gallatin` forest-plan profile, and
-the expected package/applicability/generated-rule/compliance/phase-eval artifacts. Its typed
-remaining blocker is `applicability_miss` until Sequence 4 imports the package and runs the
-applicability-first gates.
+expansion slot is `ready=true`. The second real-package slot is South Plateau Area Landscape
+Treatment Project. It now has an imported package, package cache, applicability context, retrieval
+trace, decision ledger, validation artifact, and adjudication worklist. Its typed remaining blocker
+is `adjudication_needed` for six authority-family positive/negative trigger conflicts.
 
 Resolution plan:
 

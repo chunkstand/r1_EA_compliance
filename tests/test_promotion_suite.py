@@ -203,9 +203,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     third_slot = slots["region1-real-ea-slot-2"]
     gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}
 
-    assert third_slot["status"] == "selected_not_run"
+    assert third_slot["status"] == "blocked_needs_adjudication"
     assert third_slot["ready"] is False
-    assert third_slot["failure_category"] == "applicability_miss"
+    assert third_slot["failure_category"] == "adjudication_needed"
     assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
     assert third_slot["source_set_id"] == "source-set-ba8d0feae79501b8"
     assert third_slot["forest_plan_profile"] == "custer_gallatin"
@@ -214,6 +214,22 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert third_slot["project_metadata"]["project_number"] == "57353"
     assert third_slot["project_metadata"]["expected_analysis_type"] == (
         "Environmental Assessment"
+    )
+    assert third_slot["last_local_signal"]["package_imported"] is True
+    assert third_slot["last_local_signal"]["official_document_count"] == 26
+    assert third_slot["last_local_signal"]["package_file_count"] == 26
+    assert third_slot["last_local_signal"]["package_failed_count"] == 0
+    assert third_slot["last_local_signal"]["package_chunk_count"] == 3671
+    assert third_slot["last_local_signal"]["candidate_authority_count"] == 392
+    assert third_slot["last_local_signal"]["applicable_authority_count"] == 55
+    assert third_slot["last_local_signal"]["non_applicable_authority_count"] == 331
+    assert third_slot["last_local_signal"]["needs_adjudication_authority_count"] == 6
+    assert third_slot["last_local_signal"]["unresolved_authority_count"] == 6
+    assert third_slot["last_local_signal"]["applicability_validation_passed"] is False
+    assert third_slot["last_local_signal"]["generated_rule_pack_ready"] is False
+    assert (
+        "wilderness_wsr_trails_designated_areas"
+        in third_slot["last_local_signal"]["remaining_adjudication_authority_family_ids"]
     )
     assert "package_manifest" in gate_artifacts
     assert "applicability_validation" in gate_artifacts

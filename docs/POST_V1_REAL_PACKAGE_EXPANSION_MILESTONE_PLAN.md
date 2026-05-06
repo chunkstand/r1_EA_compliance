@@ -1,8 +1,8 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0, 1, 2, 2A, 2B, and 3 complete; Sequence 4 South Plateau
-applicability-first run is the active blocker
+Status: in progress; Sequences 0, 1, 2, 2A, 2B, 3, and 4 complete; Sequence 5 South Plateau
+applicability adjudication closure is the active blocker
 
 ## Weakness
 
@@ -24,8 +24,12 @@ topic slugs. ECID now reports `rule_claim_gap_count=0`, `rule_claim_link_count=2
 component adjudication replay over the existing ECID package cache. The adjudication eval resolves
 all `158` rows as true EA package-evidence omissions with `0` system misses, compliance review now
 reports `reviewer_ready=true`, and review-scoped phase eval passes. Sequence 3 replaced the
-unknown third-package placeholder with the selected South Plateau fixture contract. The remaining
-broader expansion blocker is `applicability_miss` for that selected-but-not-run package.
+unknown third-package placeholder with the selected South Plateau fixture contract. Sequence 4
+imported the South Plateau package and ran the applicability-first path through validation. The
+remaining broader expansion blocker is now typed `adjudication_needed`: six South Plateau
+authority-family positive/negative trigger conflicts must be resolved through the replayable
+adjudication path before generated rule-pack, compliance review, phase eval, or strict expansion
+promotion can pass.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -413,6 +417,12 @@ Latest local result:
 Purpose: run the complete applicability-first sequence on the third package and either close or
 type every blocker.
 
+Status:
+Complete as of 2026-05-06. The official South Plateau project package was imported and the
+applicability-first path ran through validation. Validation exposed a typed adjudication blocker,
+so generated rule-pack creation, compliance review, and review-scoped phase eval were correctly not
+run.
+
 Actions:
 
 - Import the official South Plateau project documents into
@@ -428,6 +438,88 @@ Acceptance:
 
 - Third package has a passing applicability validation and generated rule pack, or a typed blocker
   that is accepted as the next milestone and leaves `expansion_ready=false`.
+
+Latest local result:
+
+- Imported `26` official PDFs from the South Plateau project Box folder into
+  `source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment`; the ignored
+  intake manifest records `70,145,951` bytes.
+- Package cache build with `.venv-docling`: `26/26` files extracted, `0` failed, `3,671` chunks,
+  parser counts `docling=25` and `pypdf_text_fallback=1`; `ea-review` returned
+  `reviewer_ready=true` for the package cache/checklist gate.
+- `applicability-authority-universe`: passed with `392` candidates.
+- `applicability-context-build`: passed package fact graph validation for `3,671` chunks.
+- `applicability-retrieve`: passed trace validation and retained diagnostics for all `392`
+  candidates (`low_confidence_retrieval`, `retrieval_miss`, and `excessive_graph_fan_out`).
+- `applicability-determine`: `55` applicable authorities, `331` non-applicable authorities, and
+  `6` `needs_adjudication` authorities; `generated_rule_pack_ready=false`.
+- `applicability-validate`: expected command failure with `passed=false`, `reviewer_ready=false`,
+  `generated_rule_pack_ready=false`, `failure_category_counts={"unresolved_authority": 12}`, and
+  `6` unresolved/needs-adjudication authorities.
+- `applicability-adjudication-template`: wrote
+  `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json`
+  and matching worklist with `6` pending items.
+- The promotion-suite slot now carries `failure_category="adjudication_needed"` and remains
+  `ready=false`.
+- Non-strict promotion-suite rerun: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1}`,
+  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`.
+- Strict expansion promotion-suite rerun: expected command failure with `promotion_ready=false` and
+  `failure_category_counts={"adjudication_needed": 1}`.
+
+Pending authority-family adjudication items:
+
+- `cultural_resource_protection_and_state_shpo_sources`
+- `invasive_pesticide_soils_farmland_drinking_water`
+- `roads_access_special_use_action_authorities`
+- `species_supporting_sources_and_overlays`
+- `vegetation_wildfire_forest_health_authorities`
+- `wilderness_wsr_trails_designated_areas`
+
+### Sequence 5: South Plateau Applicability Adjudication Closure
+
+Purpose: resolve the six South Plateau applicability conflicts with a replayable adjudication
+record, then rerun validation before any generated-rule or compliance-review work.
+
+Actions:
+
+- Complete
+  `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json`
+  for the six pending authority-family conflicts.
+- Run `applicability-adjudication-eval`.
+- Apply the adjudication with `applicability-adjudication-apply`.
+- Rerun `applicability-validate`.
+- Only if validation passes, continue to generated rule-pack validation, compliance review, and
+  review-scoped phase eval in the next sequence.
+
+Verification:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --adjudication-file source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --adjudication-file source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment \
+  --source-set-id source-set-ba8d0feae79501b8
+```
+
+Acceptance:
+
+- Adjudication eval passes with no pending items.
+- Adjudication apply records replayed adjudication bases and leaves `0` unresolved authorities.
+- Applicability validation passes with no `needs_adjudication` decisions and
+  `generated_rule_pack_ready=true`.
 - To close this weakness, the third package must reach reviewer-ready status and the slot must be
   marked ready only after artifact checks pass.
 

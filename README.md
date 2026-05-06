@@ -348,7 +348,7 @@ authorities, `346` non-applicable authorities, no unresolved or `needs_adjudicat
 generated rule-claim binding has `211` links and `0` gaps, and the Forest Plan component
 adjudication eval resolves the current `158`-row queue as true EA package-evidence omissions with
 `0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready; broader
-strict expansion is still blocked by the missing third real-package fixture.
+strict expansion is now blocked by the South Plateau six-item applicability adjudication worklist.
 
 ## Reviewer Engine Entry Points
 
@@ -884,13 +884,13 @@ adjudication eval, and review-scoped phase eval all pass for
 `region1-expansion-ecid-preliminary-ea`. The Forest Plan component adjudication eval matches the
 current `158`-row queue, resolves all rows as true EA package-evidence omissions, and records `0`
 system misses; those rows remain visible as gaps rather than being converted into support or legal
-conclusions. Normal promotion reports `current_promotion_ready=true`, `promotion_ready=true`,
-`expansion_artifacts_ready=true`, `open_expansion_artifact_count=0`, and
-`open_expansion_slot_count=1`. The third real package is now selected as the South Plateau Area
-Landscape Treatment Project under review ID
-`region1-expansion-south-plateau-landscape-treatment`; strict expansion still fails because that
-selected package has not been imported and run through the applicability-first gates, reported as
-`applicability_miss`.
+conclusions. The third real package is South Plateau Area Landscape Treatment Project under review
+ID `region1-expansion-south-plateau-landscape-treatment`. Sequence 4 imported `26` official PDFs,
+extracted `26/26` files into `3,671` package chunks, and ran the applicability-first path through
+validation. The slot remains not ready with `adjudication_needed`: applicability determination found
+`55` applicable authorities, `331` non-applicable authorities, and `6` authority-family
+positive/negative trigger conflicts requiring replayable adjudication before generated rule-pack,
+compliance-review, or phase-eval promotion.
 
 Run the seed retrieval eval gate:
 

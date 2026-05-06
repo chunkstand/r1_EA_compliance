@@ -939,10 +939,10 @@
     {
       "id": "region1-real-ea-slot-2",
       "label": "Third real Region 1 EA package: South Plateau Area Landscape Treatment Project",
-      "status": "selected_not_run",
+      "status": "blocked_needs_adjudication",
       "ready": false,
       "required_for_current_promotion": false,
-      "failure_category": "applicability_miss",
+      "failure_category": "adjudication_needed",
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
       "source_set_id": "source-set-ba8d0feae79501b8",
@@ -987,14 +987,47 @@
       ],
       "last_local_signal": {
         "fixture_contract_selected": true,
-        "package_imported": false,
+        "package_imported": true,
+        "official_document_count": 26,
+        "official_document_total_byte_size": 70145951,
+        "package_file_count": 26,
+        "package_extracted_count": 26,
+        "package_failed_count": 0,
+        "package_chunk_count": 3671,
+        "package_parser_counts": {
+          "docling": 25,
+          "pypdf_text_fallback": 1
+        },
+        "authority_universe_validation_passed": true,
+        "package_fact_graph_validation_passed": true,
+        "applicability_retrieval_validation_passed": true,
+        "candidate_authority_count": 392,
+        "applicable_authority_count": 55,
+        "non_applicable_authority_count": 331,
+        "needs_adjudication_authority_count": 6,
+        "unresolved_authority_count": 6,
+        "remaining_adjudication_authority_family_ids": [
+          "cultural_resource_protection_and_state_shpo_sources",
+          "invasive_pesticide_soils_farmland_drinking_water",
+          "roads_access_special_use_action_authorities",
+          "species_supporting_sources_and_overlays",
+          "vegetation_wildfire_forest_health_authorities",
+          "wilderness_wsr_trails_designated_areas"
+        ],
         "applicability_validation_passed": false,
+        "applicability_validation_failure_category_counts": {
+          "unresolved_authority": 12
+        },
         "generated_rule_pack_ready": false,
         "compliance_review_reviewer_ready": false,
-        "phase_eval_passed": false
+        "phase_eval_passed": false,
+        "import_manifest_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment/box_import_manifest.json",
+        "applicability_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_validation.json",
+        "adjudication_template_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json",
+        "adjudication_worklist_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_worklist.md"
       },
-      "next_action": "Import the South Plateau official project documents into the declared package path, then run package-context build, applicability retrieval, applicability determination, validation, and adjudication before changing this slot to ready.",
-      "acceptance_signal": "This selected third package is not ready until its package manifest, applicability validation, generated rule pack, compliance validation, and review-scoped phase eval pass from generated artifacts."
+      "next_action": "Complete the South Plateau applicability adjudication template for the six unresolved authority-family positive/negative trigger conflicts, then run applicability-adjudication-eval, applicability-adjudication-apply, applicability-validate, generated-rule-pack validation, compliance review, and review-scoped phase eval before changing this slot to ready.",
+      "acceptance_signal": "This selected third package remains blocked until the six applicability adjudications are resolved and the generated rule-pack, compliance validation, and review-scoped phase eval pass."
     }
   ]
 }
