@@ -39,6 +39,8 @@ Build a reviewer-facing 3D knowledge graph that can show:
   the evidence or coverage certificates that support those determinations.
 - Do not bury new domain logic in visualization code. Authority relationships, triggers, source
   evidence requirements, dependencies, exceptions, and supersession links must remain data-backed.
+- Do not mix rescinded, revoked, superseded, or reserved source material into the active review
+  corpus. Non-current material may be retained only as separate currentness/supersession evidence.
 - Do not stage ignored `source_library/` artifacts unless repository policy changes explicitly.
 
 ## Current Baseline
@@ -75,7 +77,8 @@ environmental law in the United States. The graph must cover at least these auth
   agency-procedure implications;
 - USDA NEPA procedures under `7 CFR part 1b`, including EA, FONSI, EIS, categorical exclusion,
   applicant/third-party document, lead/cooperating agency, timing, and emergency-action provisions;
-- Forest Service national NEPA directives and guidance, including FSM 1950 and FSH 1909.15;
+- Forest Service national NEPA directives and guidance, including FSM 1950 and FSH 1909.15, with
+  FSH handbook chapters represented as separate source records when they are used by EA review;
 - current reserved/superseded status for `36 CFR part 220`, with replacement links to current USDA
   and Forest Service NEPA procedures;
 - NFMA and land management planning authorities, including `36 CFR part 219`, project consistency,
@@ -97,8 +100,9 @@ environmental law in the United States. The graph must cover at least these auth
 
 Initial official source anchors that must be reverified at implementation time include the eCFR
 current `7 CFR part 1b`, eCFR current `36 CFR part 219`, eCFR current reserved `36 CFR part 220`,
-the Forest Service Directives System, Forest Service NEPA Procedures and Guidance, FSH 1909.15,
-FSM 1950, USDA civil-rights directives and regulations, and CEQ NEPA rulemaking/guidance pages.
+the Forest Service Directives System, Forest Service NEPA Procedures and Guidance, chapter-level
+FSH 1909.15 records, FSM 1950, USDA civil-rights directives and regulations, and CEQ NEPA
+rulemaking/guidance pages.
 
 Initial anchor URLs:
 
@@ -118,6 +122,7 @@ The graph export must be replayable from durable artifacts:
 
 ```text
 workbook/catalog/source set
+  -> source partition check (active corpus versus currentness/supersession archive)
   -> authority inventory/currentness
   -> evidence graph/source claims/rule-claim links
   -> authority universe snapshot
@@ -148,6 +153,7 @@ Minimum node types:
 - `ForestPlan`
 - `ForestPlanComponent`
 - `SourceRecord`
+- `SourcePartition`
 - `RawArtifact`
 - `ExtractedDocument`
 - `DocumentSection`
@@ -174,6 +180,7 @@ Minimum node types:
 Minimum edge types:
 
 - `SUPPORTED_BY_SOURCE`
+- `BELONGS_TO_SOURCE_PARTITION`
 - `CAPTURED_AS_ARTIFACT`
 - `EXTRACTED_TO`
 - `HAS_CHUNK`
@@ -263,6 +270,8 @@ Required outputs:
 - source-currentness checklist for official USDA, Forest Service, CEQ, eCFR, Federal Register,
   Region 1, and forest-plan sources;
 - scoped workbook/source delta plan for any missing current sources;
+- scoped source-partition plan for separating active review-corpus source records from
+  rescinded, revoked, superseded, reserved, and currentness-only source records;
 - explicit decision for the `environmental_justice_civil_rights` candidate family: promote through
   official Title VI/USDA nondiscrimination sources, keep candidate-blocked, or mark out of scope
   with reviewer-visible rationale;
@@ -275,6 +284,8 @@ Acceptance criteria:
 
 - No active authority family depends on revoked, reserved, superseded, excluded, failed, or
   challenge-page source material.
+- Rescinded, revoked, superseded, and reserved source material is not part of the active
+  review-corpus partition and is available only through separate currentness/supersession records.
 - Candidate families remain visible as graph blockers rather than hidden runtime gaps.
 - Source additions preserve workbook row identity and pass downloader/catalog/currentness gates.
 - Currentness output records source title, citation, URL, effective date when available, capture
@@ -291,6 +302,50 @@ git diff --check
 
 If workbook/source rows are added, also run the downloader/catalog acceptance gates named in
 `DOWNLOADER_RULES.md`.
+
+## Milestone 2A: Source Partitioning And Handbook Chapter Records
+
+Goal:
+Make source-record boundaries explicit before graph export work begins, so the graph can show
+currentness and supersession without letting non-current material enter the active review corpus.
+
+Required outputs:
+
+- source-partition contract that distinguishes at least the active review corpus, the
+  currentness/supersession archive, and candidate or blocked-source records that are visible to the
+  graph but not eligible for active review rules;
+- workbook/source delta plan for moving any existing rescinded, revoked, superseded, or reserved
+  material out of the active review corpus while preserving source record IDs, citation labels,
+  provenance, capture metadata, and replacement/supersession links;
+- separate Forest Service handbook source records for the FSH 1909.15 chapters used by EA review,
+  including contents/zero-code records and chapter records such as environmental analysis, EIS,
+  EA, and related-document chapters when current official chapter pages are available;
+- graph rules that allow archived non-current records to support only `SUPERSEDED_BY`,
+  `REPLACES_RESERVED_AUTHORITY`, `HAS_CURRENTNESS_STATUS`, and blocker/currentness relationships,
+  not active rule derivation;
+- catalog/export validation fixtures for one active USDA NEPA regulation, one reserved/superseded
+  Forest Service NEPA regulation, and at least two separate FSH 1909.15 chapter records.
+
+Acceptance criteria:
+
+- Every source record has an explicit `source_partition` or equivalent graph-export field.
+- Validation fails if any rescinded, revoked, superseded, or reserved source record is included in
+  the active review-corpus partition.
+- Validation fails if `36 CFR part 220` or any other reserved/superseded record is treated as an
+  active controlling authority rather than a currentness/supersession node.
+- Validation fails if FSH 1909.15 is represented only as a single collapsed handbook source when
+  chapter-level official records are available and used by EA review.
+- The graph can still display non-current records and their replacement relationships, but they are
+  visually and semantically separate from current active source records.
+
+Required verification:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness \
+  --output-dir source_library \
+  --source-set-id <source-set-id>
+git diff --check
+```
 
 ## Milestone 3: Source-Set Knowledge Graph Export Builder
 
@@ -483,11 +538,14 @@ Required failure categories:
 - `graph_missing_authority_family`
 - `graph_missing_candidate_authority`
 - `graph_missing_source_record`
+- `graph_missing_source_partition`
 - `graph_missing_currentness_status`
 - `graph_missing_applicability_decision`
 - `graph_dangling_edge`
 - `graph_stale_artifact`
+- `graph_noncurrent_document_in_main_corpus`
 - `graph_superseded_as_current`
+- `graph_handbook_chapter_collapsed`
 - `graph_viewer_export_invalid`
 - `graph_region1_profile_gap`
 
@@ -496,6 +554,10 @@ Acceptance criteria:
 - Validation fails when authority families, candidates, decisions, source records, or currentness
   statuses are missing.
 - Validation fails when a superseded/reserved authority is rendered as current active authority.
+- Validation fails when a rescinded, revoked, superseded, or reserved source record appears in the
+  active review-corpus partition.
+- Validation fails when FSH 1909.15 chapter records are collapsed into one source record despite
+  chapter-level official records being available and used by EA review.
 - Validation reports graph counts by node type, edge type, authority category, source status,
   applicability status, and readiness blocker.
 - Promotion can distinguish current V1 graph readiness from broader Region 1 graph readiness.

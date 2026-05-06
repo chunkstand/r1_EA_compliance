@@ -233,6 +233,10 @@ next-target lanes:
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
   blockers. This lane must start as a visualization/export layer over existing audited artifacts,
   not as a separate legal knowledge base.
+- The NEPA 3D graph lane now has Milestone 2A as a hard source-boundary prerequisite: rescinded,
+  revoked, superseded, and reserved documents must be separated from the active review corpus, and
+  FSH 1909.15 handbook chapters used by EA review must be separate source records rather than one
+  collapsed handbook record.
 
 Current stop conditions for the next session:
 
