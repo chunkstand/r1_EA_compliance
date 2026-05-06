@@ -542,6 +542,15 @@ def _decision_for_candidate(
                 "executed_query_variants": coverage_boundary["executed_query_variants"],
             }
         )
+    if status == "not_applicable" and basis_type == "forest_plan_component":
+        trigger_miss_evidence.append(
+            {
+                "missing_trigger_groups": basis.get("missing_trigger_groups") or [],
+                "missing_package_values": basis.get("missing_package_values") or [],
+                "coverage_sufficient": coverage_boundary["coverage_sufficient"],
+                "executed_query_variants": coverage_boundary["executed_query_variants"],
+            }
+        )
     decision_id = _stable_id(
         "applicability-decision",
         applicability_run_id,

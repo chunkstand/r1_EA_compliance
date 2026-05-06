@@ -66,10 +66,10 @@ Current remaining work:
   for `region1-expansion-ecid-preliminary-ea`, but it is intentionally blocked by three
   applicability decisions requiring adjudication before generated rule-pack or compliance-review
   promotion.
-- The roads/access/special-use blocker exposed a general evidence-arbitration gap: weak auxiliary
-  trigger evidence can currently force `needs_adjudication` even when strong independent trigger
-  evidence is present. The fix is scoped in
-  `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
+- The roads/access/special-use blocker exposed a general evidence-arbitration gap. That gap is now
+  closed through Evidence Arbitration Milestones 1-4: roads/access no longer blocks on weak
+  auxiliary evidence, and the remaining ECID expansion blockers are genuine positive/negative
+  conflicts in cultural-resource/SHPO, minerals/energy, and species-supporting authorities.
 
 ## Target Invariant
 

@@ -301,7 +301,7 @@ Commit Milestone 3 as the behavior-changing predicate slice.
 
 ## Milestone 4: Real-Package Replay And Gate Alignment
 
-Status: planned
+Status: implemented
 
 Replay the ECID preliminary EA applicability run and prove the new arbitration behavior closes only
 the roads/access gap it is designed to close.
@@ -326,12 +326,32 @@ Acceptance signal:
 - Any remaining blocker is a genuine unresolved authority decision, not an arbitration artifact.
 - `applicability_validation.json` and promotion-suite status accurately reflect the replay.
 
+Implemented state:
+
+- The ECID preliminary EA applicability decision ledger has been replayed against the active
+  trigger-arbitration predicate. The decision partition is now `43` applicable, `346`
+  non-applicable, and `3` `needs_adjudication` out of `392` candidates.
+- `roads_access_special_use_action_authorities` is now `applicable` with decisive road, trail,
+  travel-management, special-use, right-of-way, and grazing trigger groups. Weak and negated
+  auxiliary evidence remains visible in reviewer notes.
+- Clean Water Act/WOTUS and EO 11988 floodplain authorities are now `applicable` because their own
+  strong package evidence independently satisfies the same general arbitration rule.
+- The remaining adjudication worklist is no longer the roads/access arbitration artifact. It is
+  limited to positive/negative evidence conflicts for cultural-resource/SHPO sources,
+  minerals/energy authorities, and species-supporting sources/overlays.
+- Forest Plan component not-applicable decisions now emit explicit scope-miss evidence with
+  `missing_package_values` and search coverage, so applicability validation reports only the three
+  unresolved authority conflicts instead of noisy component basis gaps.
+- `config/promotion_suite_v1.json` records the updated expansion-slot local signal while keeping
+  `status=blocked_needs_adjudication`, `ready=false`, and `expansion_ready=false`.
+
 Verification:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine \
   --output-dir source_library \
-  --review-id region1-expansion-ecid-preliminary-ea
+  --review-id region1-expansion-ecid-preliminary-ea \
+  --source-set-id source-set-ba8d0feae79501b8
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate \
   --output-dir source_library \
@@ -343,10 +363,32 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-template 
   --review-id region1-expansion-ecid-preliminary-ea \
   --source-set-id source-set-ba8d0feae79501b8
 
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
+
 PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+python -m json.tool config/promotion_suite_v1.json /tmp/promotion_suite_v1.validated.json
 git diff --check
 ```
+
+Closeout verification on 2026-05-06:
+
+- `applicability-determine` replayed `392` candidate authorities to `43` applicable, `346`
+  non-applicable, and `3` `needs_adjudication`.
+- `applicability-validate` correctly failed reviewer readiness only on unresolved authority
+  decisions: failure categories were limited to `unresolved_authority`.
+- `applicability-adjudication-template` emitted the three-item worklist for cultural-resource/SHPO,
+  minerals/energy, and species-supporting authority conflicts.
+- `promotion-suite` kept current promotion ready and expansion not ready with
+  `adjudication_needed` and `package_fixture_missing` as the expansion failure categories.
+- Focused tests, architecture contract, ruff, compileall, JSON validation, and whitespace checks
+  passed.
 
 If all decisions validate after replay or adjudication:
 
@@ -433,8 +475,8 @@ Stop and report instead of continuing if:
 
 ## Next Implementation Pass
 
-Start with Milestone 4. Milestones 1 and 2 created the diagnostic/strength foundation, and
-Milestone 3 now applies active trigger arbitration in `applicability-determine`. The next pass is to
-replay the ECID preliminary EA applicability run, confirm the roads/access authority no longer
-blocks on weak auxiliary evidence, and keep any remaining adjudication items tied to genuine
-authority-specific uncertainty.
+Start with Milestone 5. Milestones 1 through 4 now cover diagnostics, structured evidence strength,
+active trigger arbitration, and the ECID real-package replay/gate-alignment pass. The next pass is
+to make arbitration outcomes a permanent eval and phase-reporting dimension so future expansion
+packages expose decisive, weak-only, weak-auxiliary, and positive/negative conflict cases without
+manual ledger inspection.

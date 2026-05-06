@@ -88,7 +88,8 @@ authority-family sidecars and the promotion manifest requires them before curren
 The first expansion slot is now a concrete local pass:
 `region1-expansion-ecid-preliminary-ea`, using the preliminary EA package under the ECID intake.
 The package cache extracted `7` PDFs into `160` chunks, and applicability determination produced
-`40` applicable authorities, `349` non-applicable authorities, and `3` decisions requiring
-adjudication. The slot remains `ready=false` because validation correctly blocks generated rule-pack
-creation until those decisions are adjudicated and replayed. The second real-package slot remains
-open with `package_fixture_missing`.
+`43` applicable authorities, `346` non-applicable authorities, and `3` decisions requiring
+adjudication after the evidence-arbitration replay. The slot remains `ready=false` because
+validation correctly blocks generated rule-pack creation until the cultural-resource/SHPO,
+minerals/energy, and species-supporting positive/negative conflicts are adjudicated and replayed.
+The second real-package slot remains open with `package_fixture_missing`.

@@ -430,9 +430,14 @@
         "package_file_count": 7,
         "package_chunk_count": 160,
         "candidate_authority_count": 392,
-        "applicable_authority_count": 40,
-        "non_applicable_authority_count": 349,
+        "applicable_authority_count": 43,
+        "non_applicable_authority_count": 346,
         "needs_adjudication_authority_count": 3,
+        "remaining_adjudication_authority_family_ids": [
+          "cultural_resource_protection_and_state_shpo_sources",
+          "minerals_energy_authorities",
+          "species_supporting_sources_and_overlays"
+        ],
         "applicability_validation_passed": false,
         "adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/applicability_adjudication_template.json",
         "phase_eval_reviewer_ready": false

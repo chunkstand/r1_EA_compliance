@@ -1101,6 +1101,56 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertIn("search_coverage_gap", categories)
             self.assertIn("graph_trace_gap", categories)
 
+    def test_forest_plan_scope_miss_records_trigger_miss_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[
+                    _forest_plan_scope_miss_candidate("source-set-unit"),
+                ],
+            )
+
+            decision_result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            decisions = {
+                decision["candidate_authority_id"]: decision
+                for decision in _read_jsonl(decision_result.decisions_path)
+            }
+            missed = decisions[
+                "forest-plan-component:unit-inventory:STD-FP-MISS"
+            ]
+            self.assertEqual(missed["status"], "not_applicable")
+            self.assertEqual(missed["basis_type"], "forest_plan_component")
+            self.assertTrue(missed["source_library_evidence_spans"])
+            self.assertEqual(len(missed["explicit_trigger_miss_evidence"]), 1)
+            trigger_miss = missed["explicit_trigger_miss_evidence"][0]
+            self.assertTrue(trigger_miss["coverage_sufficient"])
+            self.assertEqual(
+                trigger_miss["missing_package_values"],
+                [
+                    "geography:geo-absent",
+                    "management_area:mgmt-absent",
+                ],
+            )
+            self.assertEqual(
+                trigger_miss["missing_trigger_groups"],
+                [["Absent Forest Plan Area"]],
+            )
+            self.assertIn("bm25", trigger_miss["executed_query_variants"])
+            self.assertIn("metadata_filter", trigger_miss["executed_query_variants"])
+
+            validation = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            categories = validation.summary["failure_category_counts"]
+            self.assertNotIn("forest_plan_scope_unresolved", categories)
+            self.assertNotIn("non_applicable_basis_gap", categories)
+
     def test_cli_writes_validation_and_adjudication_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))
@@ -1726,6 +1776,42 @@ def _forest_plan_candidate(source_set_id: str) -> dict:
             "overlay_ids": ["overlay-inventoried-roadless"],
         },
     }
+
+
+def _forest_plan_scope_miss_candidate(source_set_id: str) -> dict:
+    candidate = _forest_plan_candidate(source_set_id)
+    candidate["candidate_authority_id"] = (
+        "forest-plan-component:unit-inventory:STD-FP-MISS"
+    )
+    candidate["positive_trigger_groups"] = [["Absent Forest Plan Area"]]
+    candidate["package_section_filters"] = {
+        "package_evidence_terms": ["Absent Forest Plan Area"],
+        "geographic_area_ids": ["geo-absent"],
+        "management_area_ids": ["mgmt-absent"],
+        "overlay_ids": [],
+    }
+    candidate["retrieval_contract"]["query_plan_id"] = (
+        "retrieval-plan:forest-plan-component:STD-FP-MISS"
+    )
+    candidate["retrieval_contract"]["source_queries"] = [
+        "Crazy Mountains Backcountry Area"
+    ]
+    candidate["retrieval_contract"]["package_queries"] = ["Absent Forest Plan Area"]
+    candidate["forest_plan"] = {
+        **candidate["forest_plan"],
+        "component_id": "STD-FP-MISS",
+        "geographic_area_ids": ["geo-absent"],
+        "management_area_ids": ["mgmt-absent"],
+        "overlay_ids": [],
+    }
+    candidate["deterministic_applicability_test_contract"] = {
+        **candidate["deterministic_applicability_test_contract"],
+        "package_evidence_terms": ["Absent Forest Plan Area"],
+        "geographic_area_ids": ["geo-absent"],
+        "management_area_ids": ["mgmt-absent"],
+        "overlay_ids": [],
+    }
+    return candidate
 
 
 def _write_package_cache(output_dir: Path, review_id: str) -> None:

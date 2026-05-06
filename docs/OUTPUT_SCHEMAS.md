@@ -1276,6 +1276,9 @@ Each applicability decision includes:
 - graph path IDs and selected/rejected graph-path IDs when graph evidence supports the decision
 - negative evidence spans, explicit trigger-miss evidence, search coverage certificate IDs, or
   human adjudication references when status is `not_applicable`
+- Forest Plan component scope-miss decisions record `explicit_trigger_miss_evidence` with
+  `missing_package_values`, `missing_trigger_groups`, coverage sufficiency, and executed query
+  variants so validation can distinguish supported component non-applicability from a basis gap
 - missing evidence, contradiction notes, confidence classification, adjudication state, and reviewer
   notes
 - freshness fields: `authority_universe_sha256`, `package_manifest_sha256`,

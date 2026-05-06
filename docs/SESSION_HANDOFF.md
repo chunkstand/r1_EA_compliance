@@ -173,11 +173,28 @@ Latest evidence-arbitration Milestone 3 closeout verification:
 - `python -m compileall src`: passed
 - `git diff --check`: passed
 
+Latest evidence-arbitration Milestone 4 closeout verification:
+
+- `applicability-determine`: replayed `392` ECID candidate authorities to `43` applicable, `346`
+  non-applicable, and `3` `needs_adjudication`.
+- `applicability-validate`: expected reviewer-readiness failure; failure categories were limited to
+  `unresolved_authority` for the three positive/negative authority conflicts.
+- `applicability-adjudication-template`: emitted the three-item worklist for cultural-resource/SHPO,
+  minerals/energy, and species-supporting authorities.
+- `promotion-suite`: kept current promotion ready and expansion not ready; expansion blockers are
+  `adjudication_needed` and `package_fixture_missing`.
+- `tests/test_applicability_decisions.py`: `25 passed`
+- `tests/test_promotion_suite.py`: `6 passed`
+- `tests/test_applicability_eval.py`: `11 passed`
+- `tests/test_architecture_contract.py`: `5 passed`
+- `ruff check src tests`, `python -m compileall src`, JSON validation, and `git diff --check`:
+  passed.
+
 Next implementation target:
 
-The immediate next implementation target is Milestone 4 in
-`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: replay the ECID preliminary EA applicability run and
-align the local gates with the active trigger-arbitration predicate. Milestone 10 in
+The immediate next implementation target is Milestone 5 in
+`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: add permanent eval and promotion/phase reporting
+coverage for arbitration statuses. Milestone 10 in
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` remains the broader real-package expansion and
 operating-runbook track.
 
@@ -496,7 +513,7 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 4 in
+Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 5 in
 `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts

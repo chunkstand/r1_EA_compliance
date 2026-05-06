@@ -89,7 +89,14 @@ def test_committed_promotion_suite_records_expansion_pass_blocker() -> None:
     assert "Preliminary Environmental Assessment" in slot["package_path"]
     assert slot["last_local_signal"]["package_chunk_count"] == 160
     assert slot["last_local_signal"]["candidate_authority_count"] == 392
+    assert slot["last_local_signal"]["applicable_authority_count"] == 43
+    assert slot["last_local_signal"]["non_applicable_authority_count"] == 346
     assert slot["last_local_signal"]["needs_adjudication_authority_count"] == 3
+    assert slot["last_local_signal"]["remaining_adjudication_authority_family_ids"] == [
+        "cultural_resource_protection_and_state_shpo_sources",
+        "minerals_energy_authorities",
+        "species_supporting_sources_and_overlays",
+    ]
     assert slot["last_local_signal"]["applicability_validation_passed"] is False
 
 

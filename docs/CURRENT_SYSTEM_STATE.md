@@ -229,9 +229,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   preliminary-EA adjudication to be completed and one additional real Region 1 EA package fixture.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
-  Applicability determination covered `392` candidate authorities, with `40` applicable, `349`
-  non-applicable, and `3` `needs_adjudication` authorities. Validation correctly remains
-  not reviewer-ready until the generated adjudication template is completed and replayed.
+  Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
+  applicable, `346` non-applicable, and `3` `needs_adjudication` authorities. Validation correctly
+  remains not reviewer-ready until the generated adjudication template is completed and replayed.
 - The ECID roads/access/special-use adjudication item exposed the pre-Milestone-3
   evidence-arbitration gap: weak auxiliary trigger evidence could block an authority family even
   when strong independent roads/access/right-of-way evidence was present. The repair sequence is
@@ -249,11 +249,18 @@ Gallatin FEIS and ESA-supporting plan documents.
   `applicable` decision while weak auxiliary trigger evidence stays visible in arbitration notes,
   reviewer notes, report diagnostics, and decision evidence. All-weak positives still require
   adjudication, and strong positive evidence plus explicit negative/out-of-scope evidence still
-  requires adjudication by default. Milestone 4 is the planned real-package replay/gate-alignment
-  slice.
-- Latest Milestone 3 local verification on 2026-05-06 passed focused applicability decision,
-  applicability eval, architecture-contract, package fact graph, ruff, compileall, and
-  `git diff --check` gates.
+  requires adjudication by default.
+- Evidence-arbitration Milestone 4 is implemented as the real-package replay/gate-alignment slice.
+  ECID roads/access/special-use, Clean Water Act/WOTUS, and EO 11988 floodplain authority-family
+  templates now resolve to `applicable` from strong independent trigger evidence. The remaining
+  ECID adjudication worklist is cultural-resource/SHPO sources, minerals/energy authorities, and
+  species-supporting sources/overlays, each blocked by explicit positive/negative evidence
+  conflicts. Forest Plan component non-applicable decisions now carry explicit scope-miss evidence
+  so validation fails only on the three unresolved authority conflicts.
+- Latest Milestone 4 local verification on 2026-05-06 replayed the ECID applicability ledger,
+  confirmed the expected reviewer-readiness block on the three unresolved authority conflicts, and
+  passed focused applicability decision, promotion-suite, applicability eval, architecture-contract,
+  ruff, compileall, JSON validation, and `git diff --check` gates.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
