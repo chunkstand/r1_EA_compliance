@@ -108,8 +108,9 @@ node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, an
 larger set of node labels without changing the validated graph data. Advanced search and category
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
 4-page service capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
-with graph figures that frame USFS Region 1 as the worked example for reviewing NEPA document
-packages, authority graph updates with the most current applicable regulations and procedures,
+with graph figures that frame USFS Region 1 as the current implementation evidence for reviewing
+NEPA document packages, authority graph updates with the most current applicable regulations and
+procedures,
 reverse compliance, source-to-finding traceability,
 Forest Plan and full profile consistency review, responsible-official decision support, and
 readiness blockers from the validated V1 graph export. The earlier

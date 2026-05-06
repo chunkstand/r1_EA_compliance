@@ -45,7 +45,7 @@
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
-    <text x="30" y="75" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">USFS Region 1 is the worked example. The same process can be run against another NEPA document package by refreshing the authority</text><text x="30" y="96" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency</text>
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Example validation passed: 75 graph checks on the USFS Region 1 graph export.</text>
+    <text x="30" y="75" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">USFS Region 1 is the current implementation evidence. The same process can be run against another NEPA document package by</text><text x="30" y="96" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance,</text>
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: 75 graph checks on the USFS Region 1 graph export.</text>
   </g>
 </svg>

@@ -10,7 +10,7 @@
   </defs>
   <rect width="1800" height="1080" rx="34" fill="#f7f6f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">A finding is a traceable evidence path</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This Region 1 example is generated from one actual graph trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This Region 1 graph view is generated from an actual trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
   <path d="M 240 360 L 512 360" stroke="#356a9b" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(276 336)">
       <rect width="200" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
       <text x="100" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">supports rule</text>

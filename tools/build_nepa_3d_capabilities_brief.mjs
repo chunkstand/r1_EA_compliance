@@ -224,7 +224,7 @@ function evidenceTraceServiceGraphSvg(trace, metrics) {
   ${serviceGraphDefs()}
   <rect width="1800" height="1080" rx="34" fill="#f7f6f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">A finding is a traceable evidence path</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This Region 1 example is generated from one actual graph trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This Region 1 graph view is generated from an actual trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
   ${graphEdge(240, 360, 512, 360, "#356a9b", 8, "supports rule")}
   ${graphEdge(692, 360, 960, 360, "#7a6e3d", 8, "produces decision")}
   ${graphEdge(1140, 360, 1396, 360, "#26786f", 8, "generates rule")}
@@ -296,11 +296,11 @@ function readinessServiceGraphSvg(readiness, metrics) {
   ${serviceGraphDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 example shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 graph shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
   ${graphEdge(780, 650, 780, 310, "#26786f", 8, "")}
   ${blockedNodes}
   ${graphNode(780, 650, 126, "#7a6e3d", "Review scope", "Custer Gallatin EA", "")}
-  ${graphNode(780, 310, 98, "#26786f", "Ready forest profile", compactSvgLabel(ready.label || ready.node_id, 42), "example scope")}
+  ${graphNode(780, 310, 98, "#26786f", "Ready forest profile", compactSvgLabel(ready.label || ready.node_id, 42), "review scope")}
   <g transform="translate(1220 196)" filter="url(#serviceShadow)">
     <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
     <text x="35" y="55" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Blockers remain visible</text>
@@ -311,7 +311,7 @@ function readinessServiceGraphSvg(readiness, metrics) {
     <rect width="1656" height="132" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value</text>
     ${bulletText(32, 84, `${readiness.readyUnits.length} graph-ready forest profile and ${readiness.blockedUnits.length} blocked forest profiles are visible in one view.`)}
-    ${bulletText(32, 118, "The review process can show capability now without implying that every Region 1 profile is ready for service delivery.")}
+    ${bulletText(32, 118, "The review process shows current capability without implying that every Region 1 profile is ready for service delivery.")}
   </g>
 </svg>`;
 }
@@ -418,8 +418,8 @@ function currentAuthorityStackSvg(metrics) {
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
-    ${wrapSvgText("USFS Region 1 is the worked example. The same process can be run against another NEPA document package by refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency documentation, and packaging decision-support evidence.", 30, 75, 1088, 16, "#4f554e", 2)}
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Example validation passed: ${metrics.validationChecks} graph checks on the USFS Region 1 graph export.</text>
+    ${wrapSvgText("USFS Region 1 is the current implementation evidence. The same process can be run against another NEPA document package by refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency documentation, and packaging decision-support evidence.", 30, 75, 1088, 16, "#4f554e", 2)}
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: ${metrics.validationChecks} graph checks on the USFS Region 1 graph export.</text>
   </g>
 </svg>`;
 }
@@ -657,11 +657,11 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Standing Framework / Capabilities Brief</div>
       <h1>NEPA review service, made auditable</h1>
-      <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the worked example: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
-      <p class="metric-context">Service capabilities shown; Region 1 counts are example graph evidence.</p>
+      <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the current implementation evidence: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
+      <p class="metric-context">Service capabilities shown; Region 1 counts are operational graph evidence.</p>
       <div class="metric-grid">
-        ${metric(metrics.nodeCount.toLocaleString(), "Region 1 example nodes")}
-        ${metric(metrics.edgeCount.toLocaleString(), "Region 1 example edges")}
+        ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
+        ${metric(metrics.edgeCount.toLocaleString(), "Region 1 graph edges")}
         ${metric("Any", "NEPA document package")}
         ${metric("Full", "authority profile review")}
       </div>
@@ -675,12 +675,12 @@ function briefHtml(metrics) {
         </div>
         <div class="callout">
           <strong>Decision-support model</strong>
-          <p>Each service finding is backed by graph-export validation. The V1 Region 1 example passed ${metrics.validationChecks} graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
+          <p>Each service finding is backed by graph-export validation. The V1 Region 1 graph passed ${metrics.validationChecks} graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from internal example graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
+      <span>Generated from validated internal graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
       <span>Sources checked: Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
     </footer>
   </section>
@@ -745,7 +745,7 @@ function briefHtml(metrics) {
     </header>
     <main>
       <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
-      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The USFS Region 1 example shows Custer Gallatin as ready while preventing broader Region 1 completeness claims.</p>
+      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The USFS Region 1 graph shows Custer Gallatin as ready while preventing broader Region 1 completeness claims.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="scene-list">
           ${scene("Document intake", "Draft NEPA package, appendices, catalog records, and provenance.")}
@@ -757,7 +757,7 @@ function briefHtml(metrics) {
         </div>
         <div>
           <div class="callout">
-            <strong>What this service demonstrates</strong>
+            <strong>What this service delivers</strong>
             <ul>
               <li>Review any NEPA document package against an authority graph updated with the most current applicable regulations.</li>
               <li>Identify unsupported or older-regulation-based statements through reverse compliance.</li>

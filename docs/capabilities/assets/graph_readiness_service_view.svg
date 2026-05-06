@@ -10,7 +10,7 @@
   </defs>
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 example shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 graph shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
   <path d="M 780 650 L 780 310" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
   <path d="M 780 650 L 330 430" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(330 430)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
@@ -61,7 +61,7 @@
     <circle r="79" fill="#26786f" opacity="0.10"/>
     <text y="-125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Ready forest profile</text>
     <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Custer</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Gallatin</text>
-    <text y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">example scope</text>
+    <text y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">review scope</text>
   </g>
   <g transform="translate(1220 196)" filter="url(#serviceShadow)">
     <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
@@ -95,6 +95,6 @@
     <circle cx="39" cy="77" r="5" fill="#26786f"/>
   <text x="56" y="84" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">1 graph-ready forest profile and 9 blocked forest profiles are visible in one view.</text>
     <circle cx="39" cy="111" r="5" fill="#26786f"/>
-  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">The review process can show capability now without implying that every Region 1 profile is ready for service delivery.</text>
+  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">The review process shows current capability without implying that every Region 1 profile is ready for service delivery.</text>
   </g>
 </svg>
