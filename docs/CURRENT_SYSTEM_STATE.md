@@ -583,7 +583,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2B:
   complete the ECID Forest Plan component adjudication worklist, rerun ECID compliance review and
   review-scoped phase eval, clear the `forest_plan_reviewer_not_ready` promotion-suite blocker, and
-  then continue to the third real Region 1 EA package fixture.
+  then continue to the third real Region 1 EA package fixture. Closeout runs should capture strict
+  promotion output in a separate results directory or rerun non-strict promotion last so the default
+  promotion-suite artifact remains aligned with the current-promotion readiness claim.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

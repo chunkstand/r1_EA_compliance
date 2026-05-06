@@ -311,6 +311,8 @@ Plan component gate.
 
 Actions:
 
+- Preserve the existing ECID package cache and source-set artifacts; do not rerun full corpus,
+  download, or extraction workflows unless a freshness/hash gate requires it.
 - Complete the generated `forest_plan_component_adjudication_template.json` as a reviewer
   adjudication file, classifying each of the `158` missing-package-evidence rows with an allowed
   disposition.
@@ -328,6 +330,18 @@ Acceptance:
 - ECID review-scoped phase eval reports `passed=true` and `reviewer_ready=true`.
 - Promotion suite has no ECID `forest_plan_reviewer_not_ready` or `adjudication_needed` expansion
   blocker.
+
+Expert-panel alignment checks:
+
+- Scott Vandegrift: keep this as a targeted replay over the existing ECID cache and make readiness
+  status explicit through the Forest Plan component eval, compliance validation, phase eval, and
+  promotion-suite gates.
+- Chuck Nicholson: treat the `158` rows as practitioner QA/QC work items; every accepted
+  disposition must explain whether the package supplies component evidence or whether the row is a
+  true package-evidence omission.
+- Liz Esposito: preserve component IDs, source-record IDs, package citations, source citations,
+  hashes/offsets/pages when available, and keep any unresolved or missing evidence visible instead
+  of converting it into a legal conclusion.
 
 ### Sequence 3: Third Real-Package Fixture Contract
 

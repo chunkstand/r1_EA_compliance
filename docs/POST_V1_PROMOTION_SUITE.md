@@ -1,6 +1,6 @@
 # Post-V1 Promotion Suite
 
-Date: 2026-05-04
+Date: 2026-05-06
 
 The post-V1 promotion suite is the manifest-driven readiness path for agents. It does not replace
 the underlying deterministic gates. It records which review artifacts, eval artifacts, source set,
@@ -30,8 +30,15 @@ Run it as a strict post-V1 expansion gate:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
+  --manifest config/promotion_suite_v1.json \
+  --results-dir source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion \
   --strict-expansion
 ```
+
+When capturing normal and strict expansion signals in the same closeout pass, write the strict run
+to a separate `--results-dir` or rerun the normal suite last. Otherwise both modes write to the
+default `<suite_id>/promotion_suite_results.json` path, which can leave the default local result in
+strict mode even though current promotion remains ready without `--strict-expansion`.
 
 ## Readiness Semantics
 

@@ -374,6 +374,14 @@ phase-eval, then rerun promotion-suite checks before marking the ECID slot ready
 notes below are retained for continuity, but they are not the current next pass unless the user
 redirects.
 
+Sequence 2B alignment/gap close note: keep strict and non-strict promotion-suite evidence in
+separate results directories, or rerun non-strict last so the default suite output remains the
+current-promotion signal. The next implementation must also satisfy the forest-plan expert panel:
+reuse the existing ECID package/cache unless freshness gates require otherwise, turn each of the
+`158` rows into an actionable QA/QC disposition, and preserve source-record IDs, component IDs,
+package/source citations, hashes, offsets, and unresolved evidence without converting the review
+into a legal conclusion.
+
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
   East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
   decision-support document. This lane must generate a report from audited review artifacts,

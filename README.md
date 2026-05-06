@@ -860,6 +860,9 @@ under `source_library/reviews/promotion_suite/<suite_id>/`. It separates
 `current_promotion_ready`, `expansion_ready`, and `promotion_ready` so agents can distinguish the
 promoted East Crazy V1 evidence from post-V1 real-package expansion work. Use
 `--strict-expansion` when additional real-package slots should block the command exit status.
+When recording both normal and strict expansion results, send the strict run to a separate
+`--results-dir` or rerun the normal suite last so the default suite output remains the current
+promotion signal.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
