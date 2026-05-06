@@ -1036,9 +1036,13 @@ validation, and generated-rule-pack creation. It fails on false positive/negativ
 statuses, partition mismatches, missing non-applicable coverage certificates, retrieval or graph
 trace gaps, package-fact mismatches, and generated-rule-pack coverage drift. The default eval seed
 includes all `19` Milestone 3 authority-family rule templates, positive/negative coverage counts,
-unresolved weak-signal handling, and real-package coverage tags. `applicability-gold-eval` wraps
-adjudicated positive, mixed, negative, unresolved, and replay-adjudicated package profiles and emits
-`promotion_ready=true` only when the adjudication checks and applicability eval both pass.
+unresolved weak-signal handling, arbitration status/effect expectations, and real-package coverage
+tags. The current seed has `9` cases and explicitly covers strong-positive plus weak auxiliary
+evidence, weak-only evidence, positive/negative conflicts, no-action/background-only evidence, and
+rule-template-specific trigger sufficiency. `applicability-gold-eval` wraps adjudicated positive,
+mixed, negative, unresolved, and replay-adjudicated package profiles; it now carries
+arbitration-field expectations and emits `promotion_ready=true` only when the adjudication checks
+and applicability eval both pass.
 
 Run rule-pack coverage:
 

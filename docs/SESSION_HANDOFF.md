@@ -79,7 +79,7 @@ Current completed applicability milestones:
   generated-pack hash edits, source/document-role/package-section mismatches, and stale
   file-backed applicability validation hashes.
 
-Latest applicability commits:
+Latest applicability and evidence-arbitration commits:
 
 - `8018648` - Harden applicability authority universe
 - `f5a3db1` - Close authority universe contract gaps
@@ -94,6 +94,15 @@ Latest applicability commits:
 - `99ae407` - Add applicability generated rule pack
 - `53061f6` - Close generated rule pack gate gaps
 - `75672da` - Gate compliance review on generated rule pack
+- `69e83bb` - Implement authority applicability eval coverage
+- `0d48d4b` - Close authority applicability milestone gaps
+- `992a079` - Implement authority report integration
+- `9a9d256` - Implement evidence arbitration diagnostics
+- `a3c967a` - Implement evidence strength model
+- `8f8b15d` - Close evidence arbitration diagnostic gaps
+- `cf325ba` - Implement trigger arbitration predicate
+- `34fca93` - Implement ECID arbitration replay
+- `f304e2e` - Add arbitration eval reporting coverage
 
 Important current behavior:
 
@@ -131,37 +140,38 @@ Important current behavior:
   applicability rule packs. Applicability-quality evals now exist so generated review success is no
   longer the only proxy for applicability correctness.
 
-Latest verification for the applicability-first lane:
+Latest verification for the current applicability/evidence-arbitration lane:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py tests/test_rule_claim_binding.py
-PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_applicability_decisions.py tests/test_applicability_retrieval.py tests/test_package_fact_graph.py tests/test_applicability.py tests/test_compliance_review.py tests/test_rule_claim_binding.py
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval --output-dir source_library --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/applicability_gold_eval_v0.json
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_promotion_suite.py tests/test_applicability_decisions.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/applicability_gold_eval_v0.json
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
+python -m json.tool config/applicability_eval_seed.json /tmp/applicability_eval_seed.validated.json
+python -m json.tool config/applicability_gold_eval_v0.json /tmp/applicability_gold_eval_v0.validated.json
+python -m json.tool config/promotion_suite_v1.json /tmp/promotion_suite_v1.validated.json
 git diff --check
-PYTHONPATH=src uv run --extra dev pytest
 ```
 
-Verified results from the latest Milestone 9 pass:
+Verified results from the latest Milestone 5 arbitration coverage pass:
 
-- Compliance-review focused suite: `53 passed, 3 subtests passed`
-- Applicability eval focused suite: `10 passed`
-- Applicability plus compliance/rule-claim focused suite: `96 passed, 3 subtests passed`
-- Full repository test suite: `286 passed, 8 subtests passed`
-- `applicability-eval`: passed `2/2` seed cases with `promotion_ready`-style generated-pack
-  readiness for both cases
-- `applicability-gold-eval`: passed `3/3` adjudicated cases and emitted `promotion_ready=true`
-- A later local V1 applicability artifact refresh is now present under
-  `source_library/reviews/v1-cg-ecid-compliance-review/applicability/`: applicability validation is
-  reviewer-ready with `373` candidates, `33` applicable authorities, `340` non-applicable
-  authorities, no unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
-- The current stored `phase-eval` artifact for `source-set-ba8d0feae79501b8` reports `16/16`
-  phases passed with the review-bound applicability phases and generated-rule-pack gate included.
-- Ruff: passed
-- Compileall: passed
-- `git diff --check`: passed
+- Focused applicability/promotion regression suite: `42 passed`
+- Architecture contract: `5 passed`
+- `applicability-eval`: passed `9/9` seed cases; arbitration status/effect match rates were `1.0`
+- `applicability-gold-eval`: passed `5/5` adjudicated cases and emitted `promotion_ready=true`
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `16/16` phases with
+  `applicability_arbitration_summary` emitted
+- `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`; expansion blockers remain `adjudication_needed` and
+  `package_fixture_missing`
+- The current V1 applicability artifact family remains reviewer-ready with `373` candidates, `33`
+  applicable authorities, `340` non-applicable authorities, no unresolved/adjudication decisions,
+  and `generated_rule_pack_ready=true`.
+- Ruff, compileall, JSON validation, and `git diff --check`: passed
 
 Latest evidence-arbitration Milestone 3 closeout verification:
 
@@ -356,14 +366,15 @@ Primary gate artifacts/checks:
   fails if any selected standard loses LMP plan-source evidence, even when the standard is not
   applicable.
 
-Historical next implementation target, now partially completed:
+Historical next implementation target, now superseded:
 
 The V1 EA gate repair plan is complete through Milestone 6. This historical handoff originally
 pointed to the revised `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` as the next target.
-Milestones 1 through 5 of that applicability-first plan are now implemented. The remaining target is
-Milestone 6 validation/adjudication, followed by generated rule-pack production and compliance-review
-gating. Do not broaden the V1 claim beyond the current Custer Gallatin proving package without a new
-evidence-backed plan and gate.
+Milestones 1 through 9 of that applicability-first plan are now implemented, and the separate
+evidence-arbitration gap plan is complete through Milestone 5. The remaining target is Milestone 10
+real-package expansion: resolve the ECID preliminary-EA adjudication worklist or add the third real
+package fixture. Do not broaden the V1 claim beyond the current Custer Gallatin proving package
+without a new evidence-backed plan and gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`, and

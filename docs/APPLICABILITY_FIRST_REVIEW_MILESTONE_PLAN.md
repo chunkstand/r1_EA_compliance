@@ -1,6 +1,7 @@
 # Applicability-First Review Milestone Plan
 
 Date: 2026-05-04
+Last updated: 2026-05-06
 
 This plan defines the post-V1 architecture change needed to make legal-authority applicability a
 first-class, pre-review stage. The critical system function is not merely to evaluate a static rule
@@ -1056,6 +1057,8 @@ Stop conditions:
 
 ## Milestone 10: Real-Package Expansion And Operating Runbook
 
+Status: open / active next pass
+
 Goal:
 Prove the applicability-first architecture on a broader set of real EA packages and document the
 operator workflow.
@@ -1075,8 +1078,32 @@ Relevant files or surfaces:
 - real package intake directories under `source_library/reviews/_intake/`
 - applicability and compliance eval artifacts
 
+Current state as of 2026-05-06:
+
+- Applicability-first Milestones 1 through 9 are implemented and verified.
+- The separate evidence-arbitration gap plan is complete through Milestone 5. Roads/access and
+  related reserved-access authorities no longer block solely because weak auxiliary evidence is
+  present; arbitration behavior now has seed, gold, phase-eval, and promotion-suite coverage.
+- The current promoted V1 review remains `v1-cg-ecid-compliance-review` against
+  `source-set-ba8d0feae79501b8`, with `373` applicability candidates, `33` applicable authorities,
+  `340` non-applicable authorities, no unresolved/adjudication decisions, and a generated
+  applicability rule pack with `33` rules.
+- The first real-package expansion slot is `region1-expansion-ecid-preliminary-ea`. It has local
+  package evidence and an applicability replay with `43` applicable authorities, `346`
+  non-applicable authorities, and `3` `needs_adjudication` decisions. The remaining blockers are
+  genuine positive/negative conflicts in cultural-resource/SHPO, minerals/energy, and
+  species-supporting authority families.
+- `config/promotion_suite_v1.json` reports current promotion ready by default while broader
+  expansion remains not ready. The expansion blockers are `adjudication_needed` for the ECID
+  preliminary-EA slot and `package_fixture_missing` for the third real-package slot.
+
 Implementation direction:
 
+- Complete and replay the ECID three-item applicability adjudication worklist, then rerun
+  applicability validation, generated rule-pack creation, compliance review, phase eval, and
+  promotion-suite checks for `region1-expansion-ecid-preliminary-ea`.
+- If the user chooses to broaden coverage first, add the third real Region 1 EA package fixture and
+  keep any uncovered applicability uncertainty as explicit typed readiness blockers.
 - Select a small real-package set covering:
   - Custer Gallatin;
   - at least one additional Region 1 forest profile once implemented;

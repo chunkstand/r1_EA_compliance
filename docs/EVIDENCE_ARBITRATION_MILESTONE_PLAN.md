@@ -1,6 +1,7 @@
 # Evidence Arbitration Milestone Plan
 
 Date: 2026-05-05
+Last updated: 2026-05-06
 
 This plan fixes the applicability decision gap exposed by the first Milestone 10 real-package
 expansion pass for `region1-expansion-ecid-preliminary-ea`. The issue is not missing retrieval or
@@ -530,8 +531,12 @@ Stop and report instead of continuing if:
 
 ## Next Implementation Pass
 
-The evidence-arbitration milestone plan is complete through Milestone 5. The next implementation
-pass should return to the broader real-package expansion lane: complete the three-item ECID
+The evidence-arbitration milestone plan is complete through Milestone 5. The closeout commit is
+`f304e2e` (`Add arbitration eval reporting coverage`). No further evidence-arbitration milestone is
+currently open.
+
+The next implementation pass should return to the broader real-package expansion lane in
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: complete the three-item ECID
 applicability adjudication worklist, replay validation/generated-rule-pack/compliance/phase gates
 for `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if
 the user chooses to advance expansion coverage first.

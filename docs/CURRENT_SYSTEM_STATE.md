@@ -272,6 +272,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   `expansion_ready=false`, and passed focused applicability decision, applicability eval,
   promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
   gates.
+- The evidence-arbitration plan is complete through commit `f304e2e`. The active remaining
+  milestone boundary is `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10:
+  adjudicate/replay the three ECID preliminary-EA positive/negative authority conflicts or add the
+  third real Region 1 EA package fixture.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
