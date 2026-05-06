@@ -21,14 +21,20 @@ def test_nepa_3d_viewer_manifest_points_to_source_set_and_review_exports() -> No
     source_set = datasets["source-set-ba8d0feae79501b8"]
     review = datasets["v1-cg-ecid-compliance-review"]
 
+    assert manifest["runtime"]["three_runtime_url"].endswith("three@0.149.0/build/three.min.js")
+    assert manifest["runtime"]["graph_runtime_url"].endswith(
+        "3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
+    )
     assert source_set["scope"] == "source_set"
     assert source_set["review_id"] is None
+    assert source_set["graph_path"].startswith("../../source_library/")
     assert source_set["graph_path"].endswith(
         "source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json"
     )
     assert review["scope"] == "review_overlay"
     assert review["source_set_id"] == source_set["source_set_id"]
     assert review["review_id"] == "v1-cg-ecid-compliance-review"
+    assert review["graph_path"].startswith("../../source_library/")
     assert review["graph_path"].endswith(
         "source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json"
     )
@@ -96,6 +102,12 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
     ]:
         assert required in script
 
+    assert '.nodeId("node_id")' in script
+    assert "source: edge.source_node_id" in script
+    assert "target: edge.target_node_id" in script
+    assert '"artifact hash"' in script
+    assert '"artifact path"' in script
+    assert "validation_passed" in script
     assert "Viewer layout does not change readiness" in script
 
 

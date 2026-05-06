@@ -260,24 +260,26 @@ next-target lanes:
 - NEPA 3D Milestone 4 is implemented. `nepa-knowledge-graph-export --review-id` writes the
   review-specific graph under `source_library/reviews/<review_id>/knowledge_graph/` from existing
   applicability-first and compliance artifacts. The refreshed `v1-cg-ecid-compliance-review`
-  overlay passed `67` validation checks with `1,907` nodes, `3,430` edges, `373` candidate
+  overlay passed `75` validation checks with `1,916` nodes, `3,442` edges, `373` candidate
   authorities/decisions, `33` generated rules and compliance findings, and `340` non-applicable
-  authorities with search coverage.
+  authorities with search coverage. The gap-close checks now also require hashed review artifact
+  inputs and resolving search-coverage, retrieval-trace, and graph-trace references.
 - NEPA 3D Milestone 5 is implemented. `config/region1_forest_plan_readiness_nepa_3d_v1.json`
   tracks `10` Region 1 forest/grassland profiles, `3` field-directive requirements, and `5`
   overlay requirement groups. `config/forest_plan_profiles.json` now contains the first added
   Beaverhead-Deerlodge profile contract with catalog-confirmed planning page/LMP source rows,
   positive and hard-negative applicability fixture contracts, and a component-inventory blocker
-  before graph promotion. The source-set graph passed `57` validation checks with `1,401` nodes and
-  `2,552` edges, `1` graph-ready profile, and `9` broader Region 1 profiles blocked from
-  completeness claims.
+  before graph promotion. The source-set graph passed `61` validation checks with `1,410` nodes and
+  `2,564` edges, `1` graph-ready profile, `9` broader Region 1 profiles blocked from completeness
+  claims, and graph-visible field-directive/overlay requirement nodes linked to catalog sources.
 - NEPA 3D Milestone 6 is implemented. `viewer/nepa-3d/` is a checked-in static viewer over the
   normalized graph export. It uses `viewer/nepa-3d/manifest.json` to load the current source-set
   graph and selectable V1 review overlay graph, uses Three.js plus `3d-force-graph`, defaults to a
   bounded readiness-blocker lens, exposes the required selectors/search/filters/layout controls,
-  and keeps readiness tied to graph validation rather than layout. Local browser verification
-  covered desktop source-set, desktop review overlay, and mobile graph canvas screenshots with
-  nonblank graph-root pixel checks.
+  and keeps readiness tied to graph validation rather than layout. Static tests now lock the pinned
+  runtime URLs, relative graph paths, and `node_id`/edge endpoint mapping; local browser
+  verification covered desktop source-set, desktop review overlay, and mobile graph canvas
+  screenshots with nonblank graph-root pixel checks.
 - The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
   unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
   first.

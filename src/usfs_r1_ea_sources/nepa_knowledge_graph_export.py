@@ -28,6 +28,18 @@ DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH = Path(
 SOURCE_SET_EXPORT_SCHEMA_VERSION = NEPA_3D_GRAPH_SCHEMA_VERSION
 BASE_RULE_NODE_PREFIX = "rule_template:base"
 AUTHORITY_TEMPLATE_NODE_PREFIX = "rule_template:authority_family"
+REQUIRED_REVIEW_ARTIFACT_INPUT_NAMES = (
+    "review_authority_universe_snapshot",
+    "review_package_fact_graph",
+    "review_applicability_retrieval_trace",
+    "review_applicability_graph_trace",
+    "review_applicability_decisions",
+    "review_search_coverage_certificates",
+    "review_generated_rule_pack",
+    "review_compliance_matrix",
+    "review_finding_graph_nodes",
+    "review_finding_graph_edges",
+)
 
 
 @dataclass(frozen=True)
@@ -1142,6 +1154,12 @@ def _add_forest_plan_nodes(
                     readiness_blockers=blockers,
                 )
 
+    _add_region1_requirement_nodes(
+        builder,
+        source_set_id=source_set_id,
+        region1_forest_plan_readiness=region1_forest_plan_readiness,
+    )
+
     for component in sorted(
         forest_components.get("components", []),
         key=lambda item: str(item.get("component_id") or ""),
@@ -1213,6 +1231,137 @@ def _add_forest_plan_nodes(
                     "component_id": component_id,
                 },
             )
+
+
+def _add_region1_requirement_nodes(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    region1_forest_plan_readiness: dict[str, Any],
+) -> None:
+    for requirement in _dict_list(region1_forest_plan_readiness.get("field_directive_requirements")):
+        requirement_id = str(requirement.get("requirement_id") or "")
+        if not requirement_id:
+            continue
+        source_record_ids = _region1_requirement_source_record_ids(requirement)
+        blockers = _region1_requirement_blockers(requirement, source_record_ids)
+        component_id = _region1_field_directive_component_id(requirement)
+        component_node_id = _region1_component_node_id(component_id)
+        builder.add_node(
+            node_id=component_node_id,
+            node_type="forest_plan_component",
+            label=f"Region 1 field directive: {requirement_id}",
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "component_id": component_id,
+                "forest_code": "region1",
+                "requirement_id": requirement_id,
+                "source_record_ids": source_record_ids,
+            },
+            readiness_blockers=blockers,
+            metadata={
+                "component_type": "field_directive_requirement",
+                "term_source": "region1_forest_plan_readiness",
+                "requirement_type": requirement.get("requirement_type"),
+                "readiness_status": requirement.get("readiness_status"),
+            },
+        )
+        if blockers:
+            _add_blocker(
+                builder,
+                source_set_id=source_set_id,
+                subject_node_id=component_node_id,
+                blockers=blockers,
+            )
+        _add_region1_requirement_source_edges(
+            builder,
+            source_set_id=source_set_id,
+            component_node_id=component_node_id,
+            source_record_ids=source_record_ids,
+            requirement_kind="field_directive_requirement",
+            requirement_id=requirement_id,
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            blockers=blockers,
+        )
+
+    for requirement in _dict_list(region1_forest_plan_readiness.get("overlay_requirements")):
+        overlay_id = str(requirement.get("overlay_id") or "")
+        if not overlay_id:
+            continue
+        source_record_ids = _region1_requirement_source_record_ids(requirement)
+        blockers = _region1_requirement_blockers(requirement, source_record_ids)
+        component_id = _region1_overlay_component_id(requirement)
+        component_node_id = _region1_component_node_id(component_id)
+        builder.add_node(
+            node_id=component_node_id,
+            node_type="forest_plan_component",
+            label=f"Region 1 overlay: {overlay_id}",
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "component_id": component_id,
+                "forest_code": "region1",
+                "overlay_id": overlay_id,
+                "source_record_ids": source_record_ids,
+            },
+            readiness_blockers=blockers,
+            metadata={
+                "component_type": "overlay",
+                "term_source": "region1_forest_plan_readiness",
+                "readiness_status": requirement.get("readiness_status"),
+            },
+        )
+        if blockers:
+            _add_blocker(
+                builder,
+                source_set_id=source_set_id,
+                subject_node_id=component_node_id,
+                blockers=blockers,
+            )
+        _add_region1_requirement_source_edges(
+            builder,
+            source_set_id=source_set_id,
+            component_node_id=component_node_id,
+            source_record_ids=source_record_ids,
+            requirement_kind="overlay_requirement",
+            requirement_id=overlay_id,
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            blockers=blockers,
+        )
+
+
+def _add_region1_requirement_source_edges(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    component_node_id: str,
+    source_record_ids: list[str],
+    requirement_kind: str,
+    requirement_id: str,
+    display_status: str,
+    review_readiness_status: str,
+    blockers: list[str],
+) -> None:
+    for source_record_id in source_record_ids:
+        builder.add_edge(
+            edge_type="HAS_FOREST_COMPONENT",
+            source_node_id=_source_node_id(source_record_id),
+            target_node_id=component_node_id,
+            display_status=display_status,
+            review_readiness_status=review_readiness_status,
+            provenance={
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "requirement_kind": requirement_kind,
+                "requirement_id": requirement_id,
+            },
+            readiness_blockers=blockers,
+        )
 
 
 def _add_profile_term_nodes(
@@ -1352,6 +1501,7 @@ def _add_review_overlay(
             "compliance_validation_passed": compliance_validation.get("passed"),
             "authority_universe_sha256": authority_universe.get("authority_universe_sha256"),
             "generated_rule_pack_id": generated_rule_pack.get("generated_rule_pack_id"),
+            "review_artifact_counts": _review_artifact_counts(review_artifacts),
         },
     )
 
@@ -1545,6 +1695,7 @@ def _add_review_overlay(
         generated_rules=_dict_list(generated_rule_pack.get("rules")),
         compliance_rows=_dict_list(compliance_matrix.get("rows")),
         search_coverage=search_coverage,
+        review_artifacts=review_artifacts,
     )
 
 
@@ -1833,11 +1984,122 @@ def _region1_profile_display(row: dict[str, Any]) -> dict[str, str]:
     return {"display_status": "active", "review_readiness_status": "not_review_specific"}
 
 
+def _region1_requirement_source_record_ids(requirement: dict[str, Any]) -> list[str]:
+    source_record_ids = set(_strings(requirement.get("source_record_ids")))
+    source_record_id = str(requirement.get("source_record_id") or "")
+    if source_record_id:
+        source_record_ids.add(source_record_id)
+    return sorted(source_record_ids)
+
+
+def _region1_requirement_blockers(
+    requirement: dict[str, Any], source_record_ids: list[str]
+) -> list[str]:
+    if str(requirement.get("readiness_status") or "") != "catalog_confirmed":
+        return ["missing_source"]
+    if not source_record_ids:
+        return ["missing_source"]
+    return []
+
+
+def _region1_component_node_id(component_id: str) -> str:
+    return f"forest_plan_component:{component_id}"
+
+
+def _region1_field_directive_component_id(requirement: dict[str, Any]) -> str:
+    return f"region1-field-directive:{requirement.get('requirement_id')}"
+
+
+def _region1_overlay_component_id(requirement: dict[str, Any]) -> str:
+    return f"region1-overlay:{requirement.get('overlay_id')}"
+
+
+def _region1_requirement_source_gaps(
+    readiness: dict[str, Any],
+    *,
+    catalog_source_ids: set[str],
+) -> dict[str, list[str]]:
+    gaps = {}
+    for requirement in _dict_list(readiness.get("field_directive_requirements")):
+        if str(requirement.get("readiness_status") or "") != "catalog_confirmed":
+            continue
+        missing = _region1_missing_requirement_source_ids(requirement, catalog_source_ids)
+        if missing:
+            gaps[f"field_directive:{requirement.get('requirement_id')}"] = missing
+    for requirement in _dict_list(readiness.get("overlay_requirements")):
+        if str(requirement.get("readiness_status") or "") != "catalog_confirmed":
+            continue
+        missing = _region1_missing_requirement_source_ids(requirement, catalog_source_ids)
+        if missing:
+            gaps[f"overlay:{requirement.get('overlay_id')}"] = missing
+    return gaps
+
+
+def _region1_missing_requirement_source_ids(
+    requirement: dict[str, Any],
+    catalog_source_ids: set[str],
+) -> list[str]:
+    source_record_ids = _region1_requirement_source_record_ids(requirement)
+    if not source_record_ids:
+        return ["<missing source_record_id>"]
+    return sorted(source_record_id for source_record_id in source_record_ids if source_record_id not in catalog_source_ids)
+
+
+def _region1_requirement_edge_gaps(
+    readiness: dict[str, Any],
+    *,
+    edge_tuples: set[tuple[str, str, str]],
+) -> dict[str, list[str]]:
+    gaps = {}
+    for requirement in _dict_list(readiness.get("field_directive_requirements")):
+        requirement_id = str(requirement.get("requirement_id") or "")
+        if not requirement_id:
+            continue
+        component_node_id = _region1_component_node_id(
+            _region1_field_directive_component_id(requirement)
+        )
+        missing = _region1_missing_requirement_source_edges(
+            requirement,
+            component_node_id=component_node_id,
+            edge_tuples=edge_tuples,
+        )
+        if missing:
+            gaps[f"field_directive:{requirement_id}"] = missing
+    for requirement in _dict_list(readiness.get("overlay_requirements")):
+        overlay_id = str(requirement.get("overlay_id") or "")
+        if not overlay_id:
+            continue
+        component_node_id = _region1_component_node_id(_region1_overlay_component_id(requirement))
+        missing = _region1_missing_requirement_source_edges(
+            requirement,
+            component_node_id=component_node_id,
+            edge_tuples=edge_tuples,
+        )
+        if missing:
+            gaps[f"overlay:{overlay_id}"] = missing
+    return gaps
+
+
+def _region1_missing_requirement_source_edges(
+    requirement: dict[str, Any],
+    *,
+    component_node_id: str,
+    edge_tuples: set[tuple[str, str, str]],
+) -> list[str]:
+    missing = []
+    for source_record_id in _region1_requirement_source_record_ids(requirement):
+        if ("HAS_FOREST_COMPONENT", _source_node_id(source_record_id), component_node_id) not in edge_tuples:
+            missing.append(source_record_id)
+    return sorted(missing)
+
+
 def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
     rows = _region1_profile_readiness_rows(readiness)
     added_rows = [row for row in rows if row.get("milestone_5_added_profile")]
     promoted_rows = [row for row in rows if row.get("graph_promotion_status") == "promoted"]
     blocked_rows = [row for row in rows if row.get("graph_promotion_status") != "promoted"]
+    field_directive_requirements = _dict_list(readiness.get("field_directive_requirements"))
+    overlay_requirements = _dict_list(readiness.get("overlay_requirements"))
     return {
         "region1_forest_plan_readiness_profile_count": len(rows),
         "region1_forest_plan_graph_ready_profile_count": len(promoted_rows),
@@ -1849,11 +2111,15 @@ def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
         "region1_forest_plan_completeness_claim": bool(
             readiness.get("region1_completeness_claim")
         ),
-        "region1_field_directive_requirement_count": len(
-            _dict_list(readiness.get("field_directive_requirements"))
+        "region1_field_directive_requirement_count": len(field_directive_requirements),
+        "region1_overlay_requirement_count": len(overlay_requirements),
+        "region1_field_directive_requirement_graph_node_count": sum(
+            1
+            for requirement in field_directive_requirements
+            if requirement.get("requirement_id")
         ),
-        "region1_overlay_requirement_count": len(
-            _dict_list(readiness.get("overlay_requirements"))
+        "region1_overlay_requirement_graph_node_count": sum(
+            1 for requirement in overlay_requirements if requirement.get("overlay_id")
         ),
     }
 
@@ -2042,6 +2308,14 @@ def _milestone_validation_checks(
     catalog_graph_edge_count: int,
 ) -> list[dict[str, Any]]:
     node_ids = {node["node_id"] for node in graph["nodes"]}
+    edge_tuples = {
+        (
+            str(edge.get("edge_type") or ""),
+            str(edge.get("source_node_id") or ""),
+            str(edge.get("target_node_id") or ""),
+        )
+        for edge in _dict_list(graph.get("edges"))
+    }
     display_status_by_node_id = {node["node_id"]: node["display_status"] for node in graph["nodes"]}
     family_ids = {str(family.get("family_id")) for family in inventory.get("authority_families", [])}
     source_record_ids = {str(row.get("source_record_id")) for row in catalog_rows}
@@ -2145,6 +2419,26 @@ def _milestone_validation_checks(
     input_failures = [
         input_record["name"] for input_record in inputs if not input_record.get("exists")
     ]
+    field_directive_requirement_node_ids = {
+        _region1_component_node_id(_region1_field_directive_component_id(requirement))
+        for requirement in _dict_list(
+            region1_forest_plan_readiness.get("field_directive_requirements")
+        )
+        if requirement.get("requirement_id")
+    }
+    overlay_requirement_node_ids = {
+        _region1_component_node_id(_region1_overlay_component_id(requirement))
+        for requirement in _dict_list(region1_forest_plan_readiness.get("overlay_requirements"))
+        if requirement.get("overlay_id")
+    }
+    region1_requirement_source_gaps = _region1_requirement_source_gaps(
+        region1_forest_plan_readiness,
+        catalog_source_ids=catalog_source_ids,
+    )
+    region1_requirement_edge_gaps = _region1_requirement_edge_gaps(
+        region1_forest_plan_readiness,
+        edge_tuples=edge_tuples,
+    )
     return [
         _check("nepa_3d_graph_inputs_exist", not input_failures, [], input_failures),
         _check(
@@ -2279,6 +2573,30 @@ def _milestone_validation_checks(
             promoted_missing_sources,
         ),
         _check(
+            "nepa_3d_graph_exports_region1_field_directive_requirements",
+            field_directive_requirement_node_ids <= node_ids,
+            sorted(field_directive_requirement_node_ids),
+            sorted(field_directive_requirement_node_ids - node_ids),
+        ),
+        _check(
+            "nepa_3d_graph_exports_region1_overlay_requirements",
+            overlay_requirement_node_ids <= node_ids,
+            sorted(overlay_requirement_node_ids),
+            sorted(overlay_requirement_node_ids - node_ids),
+        ),
+        _check(
+            "nepa_3d_graph_region1_requirement_sources_are_cataloged",
+            not region1_requirement_source_gaps,
+            "catalog-confirmed field directive and overlay source records exist",
+            region1_requirement_source_gaps,
+        ),
+        _check(
+            "nepa_3d_graph_region1_requirement_sources_are_linked",
+            not region1_requirement_edge_gaps,
+            "HAS_FOREST_COMPONENT edges from source records to field directive and overlay nodes",
+            region1_requirement_edge_gaps,
+        ),
+        _check(
             "nepa_3d_graph_region1_blocked_profiles_have_blockers",
             not blocked_profile_ids_without_blockers,
             "readiness blockers for each non-promoted profile",
@@ -2302,11 +2620,38 @@ def _review_overlay_validation_checks(
     authority_universe = _dict(review_artifacts.get("authority_universe_snapshot"))
     candidate_authorities = _dict_list(authority_universe.get("candidate_authorities"))
     decisions = _dict_list(review_artifacts.get("applicability_decisions"))
+    search_coverage = _dict(review_artifacts.get("search_coverage_certificates"))
     generated_rule_pack = _dict(review_artifacts.get("generated_rule_pack"))
     compliance_matrix = _dict(review_artifacts.get("compliance_matrix"))
     applicability_validation = _dict(review_artifacts.get("applicability_validation"))
     generated_rule_pack_validation = _dict(review_artifacts.get("generated_rule_pack_validation"))
     compliance_validation = _dict(review_artifacts.get("compliance_validation"))
+    review_input_gaps = _review_required_input_gaps(graph)
+    coverage_reference_gaps = _search_coverage_reference_gaps(
+        decisions,
+        certificates_by_id={
+            str(certificate.get("coverage_certificate_id")): certificate
+            for certificate in _dict_list(search_coverage.get("certificates"))
+            if certificate.get("coverage_certificate_id")
+        },
+    )
+    retrieval_trace_reference_gaps = _trace_reference_gaps(
+        decisions,
+        trace_field="retrieval_trace_ids",
+        available_ids={
+            str(record.get("retrieval_trace_id"))
+            for record in _dict_list(review_artifacts.get("applicability_retrieval_trace"))
+            if record.get("retrieval_trace_id")
+        },
+    )
+    graph_trace_reference_gaps = _graph_trace_reference_gaps(
+        decisions,
+        available_ids={
+            str(record.get("graph_path_id"))
+            for record in _dict_list(review_artifacts.get("applicability_graph_trace"))
+            if record.get("graph_path_id")
+        },
+    )
 
     node_ids = {str(node.get("node_id")) for node in _dict_list(graph.get("nodes"))}
     edges = _dict_list(graph.get("edges"))
@@ -2416,6 +2761,12 @@ def _review_overlay_validation_checks(
             finding_evidence_edge_gaps.append(finding_id)
     return [
         _check(
+            "nepa_3d_review_graph_links_required_review_artifacts",
+            not review_input_gaps,
+            "required review artifact inputs exist and are hashed",
+            review_input_gaps,
+        ),
+        _check(
             "nepa_3d_review_graph_inputs_are_validated",
             bool(
                 applicability_validation.get("passed")
@@ -2464,6 +2815,24 @@ def _review_overlay_validation_checks(
             unsupported_non_applicable,
         ),
         _check(
+            "nepa_3d_review_graph_search_coverage_references_resolve",
+            not coverage_reference_gaps,
+            "decision search coverage certificate IDs resolve and cover the decision",
+            coverage_reference_gaps,
+        ),
+        _check(
+            "nepa_3d_review_graph_retrieval_trace_references_resolve",
+            not retrieval_trace_reference_gaps,
+            "decision retrieval_trace_ids resolve to applicability retrieval trace records",
+            retrieval_trace_reference_gaps,
+        ),
+        _check(
+            "nepa_3d_review_graph_graph_trace_references_resolve",
+            not graph_trace_reference_gaps,
+            "decision graph path IDs resolve to applicability graph trace records",
+            graph_trace_reference_gaps,
+        ),
+        _check(
             "nepa_3d_review_graph_generated_rules_from_applicable_decisions",
             not invalid_generated_rules,
             "generated rules derive only from applicable decisions",
@@ -2490,6 +2859,90 @@ def _review_overlay_validation_checks(
     ]
 
 
+def _review_required_input_gaps(graph: dict[str, Any]) -> dict[str, str]:
+    inputs_by_name = {
+        str(input_record.get("name") or ""): input_record
+        for input_record in _dict_list(graph.get("inputs"))
+    }
+    gaps = {}
+    for input_name in REQUIRED_REVIEW_ARTIFACT_INPUT_NAMES:
+        input_record = inputs_by_name.get(input_name)
+        if not input_record:
+            gaps[input_name] = "missing_input_record"
+        elif not input_record.get("exists"):
+            gaps[input_name] = "missing_file"
+        elif not input_record.get("sha256"):
+            gaps[input_name] = "missing_hash"
+    return gaps
+
+
+def _search_coverage_reference_gaps(
+    decisions: list[dict[str, Any]],
+    *,
+    certificates_by_id: dict[str, dict[str, Any]],
+) -> dict[str, list[str]]:
+    gaps = {}
+    for decision in decisions:
+        decision_id = str(decision.get("decision_id") or "")
+        candidate_id = str(decision.get("candidate_authority_id") or "")
+        decision_gaps = []
+        for certificate_id in _strings(decision.get("search_coverage_certificate_ids")):
+            certificate = certificates_by_id.get(certificate_id)
+            if not certificate:
+                decision_gaps.append(f"{certificate_id}:missing_certificate")
+                continue
+            covered_decision_ids = set(_strings(certificate.get("covered_decision_ids")))
+            covered_candidate_ids = set(
+                _strings(certificate.get("covered_candidate_authority_ids"))
+            )
+            if decision_id and decision_id not in covered_decision_ids:
+                decision_gaps.append(f"{certificate_id}:decision_not_covered")
+            if candidate_id and candidate_id not in covered_candidate_ids:
+                decision_gaps.append(f"{certificate_id}:candidate_not_covered")
+            if str(certificate.get("coverage_result") or "") != "sufficient":
+                decision_gaps.append(f"{certificate_id}:coverage_not_sufficient")
+        if decision_gaps:
+            gaps[decision_id] = sorted(decision_gaps)
+    return gaps
+
+
+def _trace_reference_gaps(
+    decisions: list[dict[str, Any]],
+    *,
+    trace_field: str,
+    available_ids: set[str],
+) -> dict[str, list[str]]:
+    gaps = {}
+    for decision in decisions:
+        missing = sorted(
+            trace_id
+            for trace_id in _strings(decision.get(trace_field))
+            if trace_id not in available_ids
+        )
+        if missing:
+            gaps[str(decision.get("decision_id") or "")] = missing
+    return gaps
+
+
+def _graph_trace_reference_gaps(
+    decisions: list[dict[str, Any]],
+    *,
+    available_ids: set[str],
+) -> dict[str, list[str]]:
+    gaps = {}
+    for decision in decisions:
+        decision_graph_path_ids = set(_strings(decision.get("selected_graph_path_ids")))
+        decision_graph_path_ids.update(_strings(decision.get("graph_path_ids")))
+        missing = sorted(
+            graph_path_id
+            for graph_path_id in decision_graph_path_ids
+            if graph_path_id not in available_ids
+        )
+        if missing:
+            gaps[str(decision.get("decision_id") or "")] = missing
+    return gaps
+
+
 def _review_overlay_summary(
     *,
     review_id: str,
@@ -2498,8 +2951,10 @@ def _review_overlay_summary(
     generated_rules: list[dict[str, Any]],
     compliance_rows: list[dict[str, Any]],
     search_coverage: dict[str, Any],
+    review_artifacts: dict[str, Any],
 ) -> dict[str, Any]:
     decision_status_counts = Counter(_decision_status(decision) for decision in decisions)
+    artifact_counts = _review_artifact_counts(review_artifacts)
     return {
         "review_id": review_id,
         "review_candidate_authority_count": len(candidate_authorities),
@@ -2517,6 +2972,32 @@ def _review_overlay_summary(
         "search_coverage_certificate_count": len(_dict_list(search_coverage.get("certificates"))),
         "review_blocker_count": sum(
             1 for decision in decisions if _decision_readiness_blockers(decision)
+        ),
+        "review_required_artifact_count": len(REQUIRED_REVIEW_ARTIFACT_INPUT_NAMES),
+        **artifact_counts,
+    }
+
+
+def _review_artifact_counts(review_artifacts: dict[str, Any]) -> dict[str, int]:
+    package_fact_graph = _dict(review_artifacts.get("package_fact_graph"))
+    search_coverage = _dict(review_artifacts.get("search_coverage_certificates"))
+    return {
+        "review_package_fact_node_count": len(_dict_list(package_fact_graph.get("nodes"))),
+        "review_package_fact_edge_count": len(_dict_list(package_fact_graph.get("edges"))),
+        "review_retrieval_trace_count": len(
+            _dict_list(review_artifacts.get("applicability_retrieval_trace"))
+        ),
+        "review_graph_trace_count": len(
+            _dict_list(review_artifacts.get("applicability_graph_trace"))
+        ),
+        "review_search_coverage_certificate_count": len(
+            _dict_list(search_coverage.get("certificates"))
+        ),
+        "review_finding_graph_node_count": len(
+            _dict_list(review_artifacts.get("finding_graph_nodes"))
+        ),
+        "review_finding_graph_edge_count": len(
+            _dict_list(review_artifacts.get("finding_graph_edges"))
         ),
     }
 

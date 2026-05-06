@@ -459,6 +459,8 @@ Acceptance criteria:
 - Every candidate authority in `authority_universe_snapshot.json` has a graph node.
 - Every decision in `applicability_decisions.jsonl` maps to exactly one candidate authority node.
 - Non-applicable decisions stay visible with search coverage or adjudication support.
+- Referenced search-coverage certificate IDs, retrieval trace IDs, and graph path IDs resolve to
+  the review artifact records they cite.
 - Generated rules are linked only from validated applicable decisions.
 - Compliance findings link to generated rules and evidence, not directly to arbitrary source text.
 - The V1 review export validates cleanly before any broader readiness claim.
@@ -487,9 +489,11 @@ first non-Custer-Gallatin profile contract for Beaverhead-Deerlodge using catalo
 page and 2009 Forest Plan rows. The NEPA 3D exporter renders all tracked Region 1 profiles as graph
 forest-unit/plan nodes, keeps Custer Gallatin graph-ready, blocks the other `9` profiles from Region
 1 completeness claims, and validates that the Milestone 5 added profile has source requirements,
-component-inventory gating, and positive plus hard-negative applicability fixture contracts. The
-live source-set export now passes `57` checks with `1,401` nodes and `2,552` edges; the V1 review
-overlay passes `67` checks with `1,907` nodes and `3,430` edges.
+component-inventory gating, and positive plus hard-negative applicability fixture contracts. A
+gap-close pass renders the `3` field-directive requirements and `5` overlay requirement groups as
+graph-visible requirement nodes with source links, and validates that catalog-confirmed requirement
+sources resolve. The live source-set export now passes `61` checks with `1,410` nodes and `2,564`
+edges; the V1 review overlay passes `75` checks with `1,916` nodes and `3,442` edges.
 
 Required outputs:
 
@@ -506,6 +510,8 @@ Acceptance criteria:
 - The graph does not claim Region 1 forest-plan completeness from Custer Gallatin artifacts alone.
 - Each added profile has source-record readiness, component inventory validation, and
   applicability eval coverage.
+- Field-directive and overlay readiness requirements are graph-visible and linked to
+  catalog-confirmed source records where the matrix provides them.
 - Forest Plan profile expansion remains data-driven and profile-driven; no forest-specific hidden
   code branches are added.
 
@@ -534,7 +540,9 @@ graph surface. It defaults to the bounded readiness-blocker lens, exposes source
 selectors, search and status/provenance filters, neighbor-depth and high-degree layout controls,
 selected-node pinning, fit/reset controls, PNG export, viewer-state JSON export, legends, and
 click-through provenance/validation panels. The viewer preserves the readiness boundary: validation
-and reviewer-readiness status come from the graph export, not from layout.
+and reviewer-readiness status come from the graph export, not from layout. A gap-close pass added
+static coverage for pinned runtime URLs, relative graph-export manifest paths, and the `node_id`
+plus edge-endpoint mapping required by `3d-force-graph`.
 
 Implementation options:
 

@@ -230,8 +230,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live export for `source-set-ba8d0feae79501b8` now records:
 
-- `validation_passed=true`, `57` validation checks, `0` failed checks;
-- `1,401` nodes and `2,552` edges;
+- `validation_passed=true`, `61` validation checks, `0` failed checks;
+- `1,410` nodes and `2,564` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
   `44` base rules, `19` authority-family templates, `191` source-claim nodes, and `329`
   forest-plan component nodes;
@@ -239,8 +239,9 @@ The live export for `source-set-ba8d0feae79501b8` now records:
   rule-claim links, current authority-currentness validation, evidence graph node/edge inputs, and
   forest-plan component inventory;
 - Region 1 profile readiness: `10` tracked forest/grassland profiles, `1` graph-ready profile, `9`
-  blocked broader Region 1 profiles, and `1` Milestone 5 added profile with positive and
-  hard-negative applicability fixture contracts;
+  blocked broader Region 1 profiles, `1` Milestone 5 added profile with positive and hard-negative
+  applicability fixture contracts, `3` graph-visible field-directive requirements, and `5`
+  graph-visible overlay requirement groups;
 - readiness blockers remain visible as graph nodes and edges, including the scoped
   `fsh_chapter_delta_required`, `forest_profile_not_ready`, and `missing_source` blockers.
 
@@ -263,14 +264,16 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live overlay for `v1-cg-ecid-compliance-review` now records:
 
-- `validation_passed=true`, `67` validation checks, `0` failed checks;
-- `1,907` nodes and `3,430` edges;
+- `validation_passed=true`, `75` validation checks, `0` failed checks;
+- `1,916` nodes and `3,442` edges;
 - review content: `373` candidate authority nodes/decisions, `33` applicable decisions, `340`
   non-applicable decisions, `33` generated rules, `33` compliance findings, and `340` search
   coverage certificates;
 - review graph checks that every candidate maps to exactly one decision, every non-applicable
-  decision has search coverage or adjudication support, generated rules derive only from applicable
-  decisions, and compliance findings link to generated rules plus evidence spans.
+  decision has search coverage or adjudication support, search-coverage certificate IDs resolve to
+  covering certificate records, referenced retrieval and graph trace IDs resolve, generated rules
+  derive only from applicable decisions, and compliance findings link to generated rules plus
+  evidence spans.
 
 ## NEPA 3D Region 1 Forest-Plan Readiness Expansion
 
@@ -291,12 +294,15 @@ The readiness matrix now records:
   contracts, and `component_inventory_build_required` before graph promotion;
 - `9` blocked broader Region 1 profiles, visible through `forest_profile_not_ready` and
   `missing_source` graph blockers;
-- `3` field-directive requirements and `5` overlay requirement groups.
+- `3` field-directive requirements and `5` overlay requirement groups, now rendered as
+  graph-visible requirement nodes with source-record links where the readiness matrix has
+  catalog-confirmed sources.
 
 The graph export now validates that configured profiles and known Region 1 units are covered by the
 readiness matrix, added profiles have source requirements and eval fixture contracts, promoted
-profiles have catalog-confirmed sources and component inventory coverage, and
-`region1_completeness_claim=false` while any tracked profile remains blocked.
+profiles have catalog-confirmed sources and component inventory coverage, field-directive and
+overlay requirements have graph nodes and source links, and `region1_completeness_claim=false`
+while any tracked profile remains blocked.
 
 ## NEPA 3D Local Viewer
 
@@ -332,7 +338,9 @@ cover source set, review, lens, search, status, authority category, document rol
 readiness blocker, evidence type, forest unit, review phase, neighbor depth, high-degree hiding,
 selected-node pinning, fit/reset, PNG export, and viewer-state JSON export. The detail panel shows
 node/edge provenance, citation labels, artifact hashes, source paths, currentness metadata, and
-validation status. The viewer status line explicitly records that layout does not change readiness.
+validation status. Static tests now lock the runtime URLs, relative graph-export manifest paths, and
+the `node_id`/edge endpoint mapping used by `3d-force-graph`. The viewer status line explicitly
+records that layout does not change readiness.
 
 ## Verified State Snapshot
 

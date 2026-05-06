@@ -75,22 +75,25 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes, `2,552` edges, all
+`source-set-ba8d0feae79501b8` passes `61` validation checks with `1,410` nodes, `2,564` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
-under `source_library/reviews/<review_id>/knowledge_graph/` passes `67` validation checks with
-`1,907` nodes, `3,430` edges, `373` candidate authorities/decisions, `33` generated rules and
-compliance findings, and `340` non-applicable authorities with search coverage. NEPA 3D Milestone 5
-now adds the Region 1 forest-plan readiness matrix and first added profile contract: the source-set
-graph tracks `10` Region 1 forest/grassland profiles, keeps `1` Custer Gallatin profile
-graph-ready, blocks `9` broader Region 1 profiles from completeness claims, adds the
+under `source_library/reviews/<review_id>/knowledge_graph/` passes `75` validation checks with
+`1,916` nodes, `3,442` edges, `373` candidate authorities/decisions, `33` generated rules and
+compliance findings, `340` non-applicable authorities with search coverage, and explicit validation
+that review artifact, search-coverage, retrieval-trace, and graph-trace references resolve. NEPA 3D
+Milestone 5 now adds the Region 1 forest-plan readiness matrix and first added profile contract:
+the source-set graph tracks `10` Region 1 forest/grassland profiles, keeps `1` Custer Gallatin
+profile graph-ready, blocks `9` broader Region 1 profiles from completeness claims, adds the
 Beaverhead-Deerlodge profile with catalog-confirmed planning page/LMP sources plus positive and
-hard-negative applicability fixture contracts, and leaves component inventory validation as a
-reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the checked-in local
-viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads the normalized
-source-set and review overlay JSON exports, defaults to a bounded readiness-blocker lens, and keeps
-validation/readiness status tied to the exported artifacts rather than viewer layout. The earlier
+hard-negative applicability fixture contracts, renders `3` field-directive requirements and `5`
+overlay requirement groups as graph-visible nodes with source links, and leaves component inventory
+validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the
+checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
+the normalized source-set and review overlay JSON exports, defaults to a bounded readiness-blocker
+lens, and keeps validation/readiness status tied to the exported artifacts rather than viewer layout
+while tests lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds

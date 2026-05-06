@@ -35,6 +35,8 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert result.summary["region1_forest_plan_added_profile_count"] == 1
         assert result.summary["region1_forest_plan_blocked_profile_count"] == 1
         assert result.summary["forest_plan_component_count"] == 1
+        assert result.summary["region1_field_directive_requirement_graph_node_count"] == 1
+        assert result.summary["region1_overlay_requirement_graph_node_count"] == 1
         assert result.summary["catalog_graph_node_count"] == 1
         assert result.summary["catalog_graph_edge_count"] == 1
 
@@ -59,6 +61,10 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_region1_readiness_prevents_overclaim"]["passed"]
         assert checks["nepa_3d_graph_exports_region1_forest_units"]["passed"]
         assert checks["nepa_3d_graph_region1_added_profiles_have_eval_fixtures"]["passed"]
+        assert checks["nepa_3d_graph_exports_region1_field_directive_requirements"]["passed"]
+        assert checks["nepa_3d_graph_exports_region1_overlay_requirements"]["passed"]
+        assert checks["nepa_3d_graph_region1_requirement_sources_are_cataloged"]["passed"]
+        assert checks["nepa_3d_graph_region1_requirement_sources_are_linked"]["passed"]
         assert checks["nepa_3d_graph_lens_metadata_shape"]["passed"]
         assert checks["nepa_3d_graph_lens_metadata_required_lenses_present"]["passed"]
         assert "forest_plan_component" in graph["summary"]["node_type_counts"]
@@ -68,9 +74,35 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
             nodes_by_id["forest_unit:other-test-forest"]["display_status"]
             == "readiness_blocked"
         )
+        assert (
+            nodes_by_id[
+                "forest_plan_component:region1-field-directive:field-directives"
+            ]["metadata"]["component_type"]
+            == "field_directive_requirement"
+        )
+        assert (
+            nodes_by_id[
+                "forest_plan_component:region1-overlay:inventoried-roadless-area"
+            ]["metadata"]["component_type"]
+            == "overlay"
+        )
         assert any(
             edge["edge_type"] == "HAS_READINESS_BLOCKER"
             and edge["source_node_id"] == "forest_unit:other-test-forest"
+            for edge in edges
+        )
+        assert any(
+            edge["edge_type"] == "HAS_FOREST_COMPONENT"
+            and edge["source_node_id"] == "source_record:R1EA-002"
+            and edge["target_node_id"]
+            == "forest_plan_component:region1-field-directive:field-directives"
+            for edge in edges
+        )
+        assert any(
+            edge["edge_type"] == "HAS_FOREST_COMPONENT"
+            and edge["source_node_id"] == "source_record:R1EA-002"
+            and edge["target_node_id"]
+            == "forest_plan_component:region1-overlay:inventoried-roadless-area"
             for edge in edges
         )
 
@@ -125,10 +157,33 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert result.summary["non_applicable_decision_count"] == 1
         assert result.summary["generated_rule_count"] == 1
         assert result.summary["compliance_finding_count"] == 1
+        assert result.summary["review_required_artifact_count"] == 10
+        assert result.summary["review_package_fact_node_count"] == 1
+        assert result.summary["review_retrieval_trace_count"] == 2
+        assert result.summary["review_graph_trace_count"] == 2
         assert checks["nepa_3d_review_graph_exports_all_candidate_authorities"]["passed"]
         assert checks["nepa_3d_review_graph_maps_each_candidate_to_one_decision"]["passed"]
+        assert checks["nepa_3d_review_graph_links_required_review_artifacts"]["passed"]
+        assert checks["nepa_3d_review_graph_search_coverage_references_resolve"]["passed"]
+        assert checks["nepa_3d_review_graph_retrieval_trace_references_resolve"]["passed"]
+        assert checks["nepa_3d_review_graph_graph_trace_references_resolve"]["passed"]
         assert checks["nepa_3d_review_graph_generated_rules_from_applicable_decisions"]["passed"]
         assert checks["nepa_3d_review_graph_links_findings_to_evidence"]["passed"]
+        inputs = {input_record["name"]: input_record for input_record in graph["inputs"]}
+        for input_name in [
+            "review_authority_universe_snapshot",
+            "review_package_fact_graph",
+            "review_applicability_retrieval_trace",
+            "review_applicability_graph_trace",
+            "review_applicability_decisions",
+            "review_search_coverage_certificates",
+            "review_generated_rule_pack",
+            "review_compliance_matrix",
+            "review_finding_graph_nodes",
+            "review_finding_graph_edges",
+        ]:
+            assert inputs[input_name]["exists"]
+            assert inputs[input_name]["sha256"]
         assert nodes["rule_template:base:nepa_rule"]["display_status"] == "applicable"
         assert (
             nodes["forest_plan_component:R1PLAN-001-FW-STD-01"]["display_status"]
@@ -598,6 +653,8 @@ def _write_minimal_review_overlay(
                 "adjudication_state": "not_required",
                 "rule_template": {"rule_id": "nepa_rule"},
                 "search_coverage_certificate_ids": [],
+                "retrieval_trace_ids": ["retrieval-trace-applicable"],
+                "selected_graph_path_ids": ["graph-path-applicable"],
                 "human_adjudication_refs": [],
             },
             {
@@ -617,6 +674,8 @@ def _write_minimal_review_overlay(
                     "forest_unit_id": "test-forest",
                 },
                 "search_coverage_certificate_ids": ["coverage-not-applicable"],
+                "retrieval_trace_ids": ["retrieval-trace-not-applicable"],
+                "selected_graph_path_ids": ["graph-path-not-applicable"],
                 "human_adjudication_refs": [],
             },
         ],
@@ -689,12 +748,56 @@ def _write_minimal_review_overlay(
             "schema_version": "package-fact-graph-v0",
             "review_id": review_id,
             "source_set_id": source_set_id,
-            "nodes": [],
-            "edges": [],
+            "nodes": [
+                {
+                    "node_id": "package-fact:test-action",
+                    "node_type": "package_fact",
+                    "fact_type": "action",
+                }
+            ],
+            "edges": [
+                {
+                    "edge_id": "package-fact:test-action:source",
+                    "source_node_id": "package-fact:test-action",
+                    "target_node_id": "chunk:EA-PACKAGE-001",
+                }
+            ],
         },
     )
-    _write_jsonl(applicability_dir / "applicability_retrieval_trace.jsonl", [])
-    _write_jsonl(applicability_dir / "applicability_graph_trace.jsonl", [])
+    _write_jsonl(
+        applicability_dir / "applicability_retrieval_trace.jsonl",
+        [
+            {
+                "schema_version": "applicability-retrieval-trace-v0",
+                "retrieval_trace_id": "retrieval-trace-applicable",
+                "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+            },
+            {
+                "schema_version": "applicability-retrieval-trace-v0",
+                "retrieval_trace_id": "retrieval-trace-not-applicable",
+                "candidate_authority_id": (
+                    "forest-plan-component:test-inventory:R1PLAN-001-FW-STD-01"
+                ),
+            },
+        ],
+    )
+    _write_jsonl(
+        applicability_dir / "applicability_graph_trace.jsonl",
+        [
+            {
+                "schema_version": "applicability-graph-trace-v0",
+                "graph_path_id": "graph-path-applicable",
+                "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+            },
+            {
+                "schema_version": "applicability-graph-trace-v0",
+                "graph_path_id": "graph-path-not-applicable",
+                "candidate_authority_id": (
+                    "forest-plan-component:test-inventory:R1PLAN-001-FW-STD-01"
+                ),
+            },
+        ],
+    )
     _write_json(
         review_dir / "compliance_matrix.json",
         {
