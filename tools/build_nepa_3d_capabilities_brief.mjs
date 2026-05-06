@@ -419,7 +419,7 @@ function currentAuthorityStackSvg(metrics) {
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
     ${wrapSvgText("USFS Region 1 is the worked example. The same process can be run against another NEPA document package by refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency documentation, and packaging decision-support evidence.", 30, 75, 1088, 16, "#4f554e", 2)}
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Example validation passed: ${metrics.validationChecks} graph checks; ${metrics.applicableDecisions} applicable and ${metrics.nonApplicableDecisions} non-applicable authority decisions.</text>
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Example validation passed: ${metrics.validationChecks} graph checks on the USFS Region 1 graph export.</text>
   </g>
 </svg>`;
 }
@@ -658,12 +658,12 @@ function briefHtml(metrics) {
       <div class="kicker">Standing Framework / Capabilities Brief</div>
       <h1>NEPA review service, made auditable</h1>
       <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the worked example: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
-      <p class="metric-context">Example metrics: validated USFS Region 1 graph export.</p>
+      <p class="metric-context">Service capabilities shown; Region 1 counts are example graph evidence.</p>
       <div class="metric-grid">
-        ${metric(metrics.nodeCount.toLocaleString(), "USFS Region 1 graph nodes")}
-        ${metric(metrics.edgeCount.toLocaleString(), "USFS Region 1 graph edges")}
-        ${metric(metrics.applicableDecisions, "applicable authorities")}
-        ${metric(metrics.nonApplicableDecisions, "screened-out authorities")}
+        ${metric(metrics.nodeCount.toLocaleString(), "Region 1 example nodes")}
+        ${metric(metrics.edgeCount.toLocaleString(), "Region 1 example edges")}
+        ${metric("Any", "NEPA document package")}
+        ${metric("Full", "authority profile review")}
       </div>
     </header>
     <main>
