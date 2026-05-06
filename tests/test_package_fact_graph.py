@@ -55,6 +55,15 @@ class PackageFactGraphTests(unittest.TestCase):
                 self.assertTrue(node["content_sha256"], node["node_id"])
                 self.assertTrue(node["artifact_sha256"], node["node_id"])
                 self.assertTrue(node["parser_provenance"], node["node_id"])
+                self.assertEqual(
+                    node["evidence_strength"]["schema_version"],
+                    "evidence-strength-v0",
+                )
+                self.assertEqual(
+                    node["evidence_strength"]["confidence_class"],
+                    node["confidence_class"],
+                )
+                self.assertTrue(node["evidence_strength"]["evidence_window"], node["node_id"])
 
             observed_pairs = {
                 (node["node_type"], node["normalized_value"])
@@ -82,6 +91,22 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertIn(("public_involvement", "public_comment"), observed_pairs)
             self.assertIn(("alternative", "no_action"), observed_pairs)
             self.assertIn(("permit", "clean_water_act"), weak_pairs)
+            weak_permit_nodes = [
+                node
+                for node in fact_nodes
+                if node["node_type"] == "permit"
+                and node["normalized_value"] == "clean_water_act"
+                and node["confidence_class"] == "weak_signal"
+            ]
+            self.assertTrue(weak_permit_nodes)
+            self.assertTrue(
+                any(
+                    node["evidence_strength"]["strength_class"] == "conditional"
+                    and node["evidence_strength"].get("matched_phrase") == "may be required"
+                    and "Clean Water Act" in node["evidence_strength"]["evidence_window"]
+                    for node in weak_permit_nodes
+                )
+            )
 
             sioux_positive = [
                 node
@@ -99,6 +124,14 @@ class PackageFactGraphTests(unittest.TestCase):
             ]
             self.assertEqual(sioux_positive, [])
             self.assertTrue(sioux_negative)
+            self.assertTrue(
+                any(
+                    node["evidence_strength"]["strength_class"] == "negative_context"
+                    and node["evidence_strength"].get("matched_phrase")
+                    == "not part of the project area"
+                    for node in sioux_negative
+                )
+            )
 
             validation_check = _check(
                 graph["validation"],
@@ -127,6 +160,24 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertGreater(
                 uncertainty_check["details"]["uncertainty_classes"].get("weak_signal", 0),
                 0,
+            )
+            weak_uncertainties = [
+                record
+                for record in graph["validation"]["uncertainty_records"]
+                if record.get("uncertainty_class") == "weak_signal"
+            ]
+            self.assertTrue(weak_uncertainties)
+            self.assertTrue(
+                any(
+                    record.get("weak_signal_reason") == "conditional_phrase"
+                    and record.get("matched_phrase") == "may be required"
+                    and "Clean Water Act" in record.get("evidence_window", "")
+                    for record in weak_uncertainties
+                )
+            )
+            context_facts = context["extracted_package_facts"]
+            self.assertTrue(
+                all("evidence_strength" in fact for fact in context_facts)
             )
 
     def test_contradictory_location_facts_are_uncertainty_records(self) -> None:

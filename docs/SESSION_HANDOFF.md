@@ -103,7 +103,9 @@ Important current behavior:
 - Evidence-arbitration Milestones 1 and 2 are implemented as behavior-preserving diagnostics:
   decisions carry `arbitration_summary`, evidence spans carry structured `evidence_strength`, and
   reports show weak/auxiliary/conflicting trigger-group diagnostics without changing final
-  applicability status outcomes.
+  applicability status outcomes. The gap-close pass added structured weak-signal reason notes,
+  broader no-action/no-change background classification, negative-phrase preservation, and package
+  graph assertions for fact/context/uncertainty evidence-strength propagation.
 - Not-applicable decisions cite search coverage certificates.
 - Validation now fails if a final contradictory decision lacks human adjudication, if a
   human-adjudicated decision cannot be replayed from a passing adjudication eval, if

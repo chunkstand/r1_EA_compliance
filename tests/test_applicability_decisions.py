@@ -87,6 +87,29 @@ class ApplicabilityDecisionTests(unittest.TestCase):
         self.assertEqual(no_action["strength_class"], "background")
         self.assertEqual(no_action["matched_phrase"], "no action alternative")
 
+        no_change_text = "Trail construction would not occur under the current proposal."
+        no_change = classify_evidence_strength(
+            text=no_change_text,
+            start=no_change_text.index("Trail construction"),
+            end=no_change_text.index("Trail construction") + len("Trail construction"),
+            matched_text="Trail construction",
+        )
+        self.assertEqual(no_change["confidence_class"], "weak_signal")
+        self.assertEqual(no_change["strength_class"], "background")
+        self.assertEqual(no_change["matched_phrase"], "would not occur")
+
+        does_not_include_text = "The project does not include trail construction."
+        does_not_include = classify_evidence_strength(
+            text=does_not_include_text,
+            start=does_not_include_text.index("trail construction"),
+            end=does_not_include_text.index("trail construction")
+            + len("trail construction"),
+            matched_text="trail construction",
+        )
+        self.assertEqual(does_not_include["confidence_class"], "weak_signal")
+        self.assertEqual(does_not_include["strength_class"], "background")
+        self.assertEqual(does_not_include["matched_phrase"], "does not include")
+
         decisive_text = "The Proposed Action reserves Right-of-Way for Big Timber Creek Road No. 197."
         decisive = classify_evidence_strength(
             text=decisive_text,
@@ -146,6 +169,14 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 any(
                     span["evidence_strength"]["strength_class"] == "negative_context"
                     for span in sioux_decision["negative_evidence_spans"]
+                )
+            )
+            self.assertTrue(
+                any(
+                    span["evidence_strength"].get("matched_phrase")
+                    == "not part of the project area"
+                    for span in sioux_decision["negative_evidence_spans"]
+                    if span["evidence_strength"]["strength_class"] == "negative_context"
                 )
             )
 
@@ -264,6 +295,12 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             )
             self.assertTrue(groups[("trail",)]["weak_signal_reasons"])
             self.assertTrue(groups[("grazing",)]["weak_signal_reasons"])
+            self.assertTrue(
+                any("matched `" in note for note in groups[("trail",)]["weak_signal_reasons"])
+            )
+            self.assertTrue(
+                any("may be possible" in note for note in groups[("grazing",)]["weak_signal_reasons"])
+            )
             trail_details = groups[("trail",)]["weak_signal_details"]
             self.assertTrue(
                 {

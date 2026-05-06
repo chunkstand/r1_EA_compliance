@@ -240,8 +240,11 @@ Gallatin FEIS and ESA-supporting plan documents.
   Applicability decision rows include `arbitration_summary` records, `applicability_report.md`
   renders arbitration diagnostics for `needs_adjudication` rows, and package/decision evidence now
   carries structured `evidence_strength` details while preserving existing `confidence_class`
-  values. This does not change applicability status outcomes yet; Milestone 3 is the planned
-  behavior-changing predicate slice.
+  values. The Milestone 1/2 gap-close pass tightened weak-signal reason strings, expanded
+  no-action/no-change background classification, preserved matched negative phrases when available,
+  and added package graph assertions for fact/context/uncertainty `evidence_strength` fields. This
+  does not change applicability status outcomes yet; Milestone 3 is the planned behavior-changing
+  predicate slice.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

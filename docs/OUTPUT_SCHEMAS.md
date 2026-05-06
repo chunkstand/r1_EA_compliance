@@ -1260,9 +1260,10 @@ Each applicability decision includes:
   trigger group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength
   counts, structured evidence-strength class counts, weak-signal reasons/details, source evidence
   IDs, selected retrieval result IDs, graph path IDs, the current decision effect, and whether weak
-  evidence made adjudication necessary. Milestone 1/2 diagnostics do not change status outcomes;
-  they explain why the current predicate did or did not mark an authority as
-  `needs_adjudication`.
+  evidence made adjudication necessary. Weak-signal reasons include classifier strength class,
+  reason, and matched phrase when available; `weak_signal_details` carries the local evidence
+  window. Milestone 1/2 diagnostics do not change status outcomes; they explain why the current
+  predicate did or did not mark an authority as `needs_adjudication`.
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
   offsets, source-claim IDs, text snippets, and `evidence_origin` when the span is carried forward
   from the authority universe because source retrieval recorded coverage but selected no source

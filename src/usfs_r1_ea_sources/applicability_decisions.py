@@ -949,8 +949,8 @@ def _trigger_match(
             evidence = _package_evidence_span(node)
             evidence_by_id[evidence["evidence_id"]] = evidence
             group_evidence_by_id[evidence["evidence_id"]] = evidence
-            if node.get("confidence_class") == "weak_signal":
-                note = f"weak package signal for {node.get('node_id')}"
+            if evidence.get("confidence_class") == "weak_signal":
+                note = _weak_signal_note("package fact", node.get("node_id"), evidence)
                 adjudication_notes.append(note)
                 weak_signal_reasons.append(note)
         for chunk in package_chunks:
@@ -962,7 +962,7 @@ def _trigger_match(
             evidence_by_id[evidence["evidence_id"]] = evidence
             group_evidence_by_id[evidence["evidence_id"]] = evidence
             if evidence.get("confidence_class") == "weak_signal":
-                note = f"weak package chunk signal for {chunk.get('chunk_id')}"
+                note = _weak_signal_note("package chunk", chunk.get("chunk_id"), evidence)
                 adjudication_notes.append(note)
                 weak_signal_reasons.append(note)
         for result in package_results:
@@ -972,8 +972,8 @@ def _trigger_match(
             evidence = _package_result_span(result)
             evidence_by_id[evidence["evidence_id"]] = evidence
             group_evidence_by_id[evidence["evidence_id"]] = evidence
-            if (result.get("provenance") or {}).get("confidence_class") == "weak_signal":
-                note = f"weak retrieval result for {result.get('result_id')}"
+            if evidence.get("confidence_class") == "weak_signal":
+                note = _weak_signal_note("retrieval result", result.get("result_id"), evidence)
                 adjudication_notes.append(note)
                 weak_signal_reasons.append(note)
         if group_matched:
@@ -1127,6 +1127,21 @@ def _weak_signal_details(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]
             str(item.get("reason") or ""),
         ),
     )
+
+
+def _weak_signal_note(source: str, ref: Any, evidence: dict[str, Any]) -> str:
+    strength = evidence.get("evidence_strength") or evidence_strength_for_confidence(
+        evidence.get("confidence_class"),
+        section_family=evidence.get("section_family"),
+    )
+    note = (
+        f"weak {source} signal for {ref}: "
+        f"{strength.get('strength_class') or 'weak_signal'}/"
+        f"{strength.get('reason') or 'weak_signal'}"
+    )
+    if strength.get("matched_phrase"):
+        note = f"{note} matched `{strength['matched_phrase']}`"
+    return note
 
 
 def _arbitration_summary(

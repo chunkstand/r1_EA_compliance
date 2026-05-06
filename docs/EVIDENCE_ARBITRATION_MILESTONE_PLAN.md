@@ -206,6 +206,18 @@ Implemented state:
 - The milestone remains behavior-preserving for applicability status outcomes. Milestone 3 is the
   first planned behavior-changing trigger-arbitration predicate.
 
+Milestone 1/2 gap-close state:
+
+- Weak-signal reason strings now include the structured strength class, classifier reason, and
+  matched phrase when available instead of only generic evidence IDs.
+- No-action/no-change background classification covers explicit action-negating phrases such as
+  `would not occur` and `does not include`, not only headings or `No Action Alternative` labels.
+- Negative-context evidence records preserve the matched negative phrase when the classifier can
+  identify it.
+- Package fact graph tests now assert that fact nodes, compact context facts, and uncertainty
+  records carry `evidence_strength` details, including matched phrases and evidence windows for
+  weak facts.
+
 Verification:
 
 ```bash
