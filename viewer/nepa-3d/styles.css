@@ -309,6 +309,40 @@ button:hover {
   font-weight: 760;
 }
 
+.graph-scene-label {
+  position: absolute;
+  z-index: 2;
+  top: 74px;
+  left: 14px;
+  max-width: min(420px, calc(100% - 28px));
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(38, 120, 111, 0.28);
+  border-left: 5px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.graph-scene-title {
+  font-size: 16px;
+  line-height: 1.15;
+  font-weight: 820;
+}
+
+.graph-scene-subtitle,
+.graph-label-mode {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.graph-label-mode {
+  color: var(--accent-strong);
+  font-weight: 720;
+}
+
 .graph-counts,
 .status-line {
   font-size: 12px;
@@ -563,6 +597,10 @@ button:hover {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .graph-scene-label {
+    top: 100px;
+  }
 }
 
 @media (max-width: 620px) {
@@ -591,5 +629,9 @@ button:hover {
     left: 14px;
     right: 14px;
     bottom: 56px;
+  }
+
+  .graph-scene-label {
+    top: 118px;
   }
 }

@@ -73,6 +73,7 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
         "export-shot",
         "export-state",
         "graph-root",
+        "graph-scene-label",
         "capability-panel",
         "detail-panel",
         "validation-panel",
@@ -113,6 +114,12 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
         "buildEvidencePathSpotlight",
         "spotlightNodeIds",
         "renderCapabilityPanel",
+        "buildLabelPlan",
+        "graphNodeObject",
+        "makeTextSprite",
+        "updateLabelVisibility",
+        "LABEL_NODE_BUDGETS",
+        "label_zoom_tier",
         "clearFilters",
         "exportScreenshot",
         "exportViewerState",
@@ -154,6 +161,7 @@ def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:
     assert "Node / edge type" in html
     assert "Evidence / basis" in html
     assert "Capability shown" in html
+    assert "graph-scene-label" in html
     assert "Advanced filters" in html
     assert "Status / readiness" in html
     assert "Currentness / partition" in html
@@ -168,6 +176,7 @@ def test_nepa_3d_viewer_styles_define_desktop_and_mobile_graph_surfaces() -> Non
     assert ".viewer-shell" in styles
     assert ".graph-root" in styles
     assert ".detail-rail" in styles
+    assert ".graph-scene-label" in styles
     assert ".demo-scenes" in styles
     assert ".advanced-filters" in styles
     assert ".capability-panel" in styles

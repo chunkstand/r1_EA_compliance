@@ -306,6 +306,11 @@ next-target lanes:
   panel with rendered graph counts and proof labels, and derives the evidence-path spotlight from
   actual graph edges so source record, artifact, chunk, evidence span, source claim, rule, decision,
   generated rule, and compliance finding steps are clickable rather than hard-coded.
+- NEPA 3D graph legibility closeout adds scene labels and progressive node labels to the graph
+  surface. Labels are generated from rendered graph nodes as Three.js sprites, show scene/anchor
+  labels while zoomed out, reveal focus labels at mid zoom, and reveal additional node labels when
+  zoomed closer. This is a visual legibility layer only; it does not alter graph validation,
+  readiness, or source evidence.
 - The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
   unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
   first.

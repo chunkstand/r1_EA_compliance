@@ -103,8 +103,10 @@ selections so populated options no longer blank the graph. A demo-mode pass now 
 client scenes for source library, authority universe, applicability, evidence path, forest plan,
 readiness, and full graph views; the evidence-path scene derives a clickable source-to-finding
 spotlight from the graph itself, and a right-side Capability shown panel keeps demo claims grounded
-in rendered graph counts. Advanced search and category filters remain available under a visually
-subordinate Advanced filters disclosure. The earlier
+in rendered graph counts. The graph surface now adds human-readable scene labels plus graph-native
+node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
+larger set of node labels without changing the validated graph data. Advanced search and category
+filters remain available under a visually subordinate Advanced filters disclosure. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds

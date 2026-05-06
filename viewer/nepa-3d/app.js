@@ -149,6 +149,21 @@ const FILTER_DEFINITIONS = [
   }
 ];
 const CONTEXT_SEED_FILTER_IDS = new Set(FILTER_DEFINITIONS.map((filter) => filter.id));
+const LABEL_TIER_ORDER = ["overview", "focus", "detail"];
+const LABEL_TIER_COPY = {
+  overview: "Overview labels",
+  focus: "Focus labels",
+  detail: "Detail labels"
+};
+const LABEL_NODE_BUDGETS = {
+  overview: 7,
+  focus: 22,
+  detail: 70
+};
+const LABEL_DISTANCE_THRESHOLDS = {
+  focus: 540,
+  detail: 330
+};
 const DEMO_SCENES = [
   {
     id: "source_library",
@@ -162,7 +177,10 @@ const DEMO_SCENES = [
     capabilityTitle: "Auditable source library",
     capabilityCopy:
       "Shows workbook source-row identity, source records, and artifact links before the review overlay adds applicability decisions.",
-    proofLabels: ["one source record per catalog row", "artifact links remain visible", "source-set boundary is explicit"]
+    proofLabels: ["one source record per catalog row", "artifact links remain visible", "source-set boundary is explicit"],
+    graphLabel: "Source library",
+    graphSubLabel: "Catalog records and source artifacts",
+    labelNodeTypes: ["source_set", "source_record", "artifact"]
   },
   {
     id: "authority_universe",
@@ -176,7 +194,10 @@ const DEMO_SCENES = [
     capabilityTitle: "Current authority universe",
     capabilityCopy:
       "Shows the authority families and source records used to make currentness and supersession status reviewable.",
-    proofLabels: ["authority families are graph nodes", "currentness is data-backed", "superseded material is separated"]
+    proofLabels: ["authority families are graph nodes", "currentness is data-backed", "superseded material is separated"],
+    graphLabel: "Authority universe",
+    graphSubLabel: "Authority families, sources, currentness",
+    labelNodeTypes: ["authority_family", "source_record", "readiness_blocker"]
   },
   {
     id: "applicability",
@@ -190,7 +211,10 @@ const DEMO_SCENES = [
     capabilityTitle: "Package-specific applicability",
     capabilityCopy:
       "Shows how the V1 review partitions candidate authorities into applicable and not-applicable decisions for the Custer Gallatin package.",
-    proofLabels: ["applicability is explicit", "non-applicable authorities stay visible", "decisions are tied to the review id"]
+    proofLabels: ["applicability is explicit", "non-applicable authorities stay visible", "decisions are tied to the review id"],
+    graphLabel: "Applicability",
+    graphSubLabel: "Applicable and non-applicable authority decisions",
+    labelNodeTypes: ["review", "authority_family", "rule_template", "applicability_decision"]
   },
   {
     id: "evidence_path",
@@ -205,7 +229,20 @@ const DEMO_SCENES = [
     capabilityTitle: "Evidence-to-finding trace",
     capabilityCopy:
       "Spotlights one graph-derived path from source record to artifact, chunk, evidence span, claim, rule, and compliance finding.",
-    proofLabels: ["citation path is clickable", "rule support is traceable", "finding support is evidence-backed"]
+    proofLabels: ["citation path is clickable", "rule support is traceable", "finding support is evidence-backed"],
+    graphLabel: "Evidence path",
+    graphSubLabel: "Source record to compliance finding",
+    labelNodeTypes: [
+      "source_record",
+      "artifact",
+      "chunk",
+      "evidence_span",
+      "source_claim",
+      "rule_template",
+      "applicability_decision",
+      "generated_rule",
+      "compliance_finding"
+    ]
   },
   {
     id: "forest_plan",
@@ -219,7 +256,10 @@ const DEMO_SCENES = [
     capabilityTitle: "Forest-plan legibility",
     capabilityCopy:
       "Shows Region 1 forest-plan profiles and Custer Gallatin components as graph-visible review evidence, with other profiles kept distinct.",
-    proofLabels: ["forest units are filterable", "plan components stay linked", "scope is visible to reviewers"]
+    proofLabels: ["forest units are filterable", "plan components stay linked", "scope is visible to reviewers"],
+    graphLabel: "Forest Plan",
+    graphSubLabel: "Forest units, plans, and components",
+    labelNodeTypes: ["forest_unit", "forest_plan", "forest_plan_component"]
   },
   {
     id: "readiness",
@@ -233,7 +273,10 @@ const DEMO_SCENES = [
     capabilityTitle: "Promotion-risk view",
     capabilityCopy:
       "Shows readiness blockers and graph-visible reasons why broader Region 1 expansion remains separate from the promoted V1 review.",
-    proofLabels: ["readiness is an artifact field", "blockers are not hidden", "layout cannot promote the review"]
+    proofLabels: ["readiness is an artifact field", "blockers are not hidden", "layout cannot promote the review"],
+    graphLabel: "Readiness",
+    graphSubLabel: "Promotion blockers remain visible",
+    labelNodeTypes: ["readiness_blocker", "source_record", "forest_unit", "authority_family"]
   },
   {
     id: "full_graph",
@@ -247,7 +290,18 @@ const DEMO_SCENES = [
     capabilityTitle: "Full validated graph",
     capabilityCopy:
       "Shows the complete validated review overlay when a client wants to see the breadth behind the curated scenes.",
-    proofLabels: ["all node and edge tables are loaded", "validation remains visible", "advanced filters can narrow the view"]
+    proofLabels: ["all node and edge tables are loaded", "validation remains visible", "advanced filters can narrow the view"],
+    graphLabel: "Full graph",
+    graphSubLabel: "Complete validated review overlay",
+    labelNodeTypes: [
+      "review",
+      "authority_family",
+      "applicability_decision",
+      "generated_rule",
+      "compliance_finding",
+      "forest_unit",
+      "readiness_blocker"
+    ]
   }
 ];
 
@@ -256,6 +310,7 @@ const state = {
   manifest: null,
   dataset: null,
   graph: null,
+  graphControls: null,
   nodes: [],
   edges: [],
   nodeIndex: new Map(),
@@ -270,7 +325,11 @@ const state = {
   spotlightNodeIds: new Set(),
   spotlightEdgeIds: new Set(),
   spotlightSteps: [],
-  spotlightTitle: ""
+  spotlightTitle: "",
+  labelNodeLevels: new Map(),
+  labelSprites: new Map(),
+  labelZoomTier: "overview",
+  labelStats: { overview: 0, focus: 0, detail: 0 }
 };
 
 const els = {};
@@ -336,6 +395,7 @@ function bindElements() {
     "export-state",
     "dataset-title",
     "graph-counts",
+    "graph-scene-label",
     "graph-root",
     "status-line",
     "legend",
@@ -439,21 +499,7 @@ function createGraph() {
     .onBackgroundClick(clearSelection);
   if (window.THREE) {
     const sphereGeometry = new window.THREE.SphereGeometry(0.42, 8, 8);
-    state.graphApi.nodeThreeObject((node) => {
-      const material = new window.THREE.MeshLambertMaterial({
-        color: nodeColor(node),
-        transparent: true,
-        opacity: state.spotlightNodeIds.has(node.node_id) || node.node_type === "readiness_blocker" ? 0.95 : 0.82
-      });
-      const mesh = new window.THREE.Mesh(sphereGeometry, material);
-      const scale = state.spotlightNodeIds.has(node.node_id)
-        ? 2.7
-        : node.node_type === "readiness_blocker" || node.display_status === "applicable"
-          ? 2.2
-          : 1;
-      mesh.scale.setScalar(scale);
-      return mesh;
-    });
+    state.graphApi.nodeThreeObject((node) => graphNodeObject(node, sphereGeometry));
   }
   const chargeForce = state.graphApi.d3Force("charge");
   if (chargeForce?.strength) {
@@ -472,6 +518,11 @@ function createGraph() {
     });
   }
   state.graphApi.d3VelocityDecay(0.34);
+  const controls = state.graphApi.controls?.();
+  state.graphControls = controls || null;
+  if (controls?.addEventListener) {
+    controls.addEventListener("change", updateLabelVisibility);
+  }
 }
 
 async function loadManifest() {
@@ -902,6 +953,8 @@ function renderGraph() {
   }
   const filtered = filteredGraph();
   state.currentRender = filtered;
+  buildLabelPlan(filtered);
+  state.labelSprites = new Map();
   const preparedNodes = seededLayoutNodes(filtered.nodes);
   state.graphApi.graphData({
     nodes: preparedNodes,
@@ -912,13 +965,16 @@ function renderGraph() {
   window.setTimeout(() => {
     if (state.graphApi && filtered.nodes.length > 0) {
       state.graphApi.cameraPosition({ x: 0, y: 0, z: 620 }, { x: 0, y: 0, z: 0 }, 500);
+      window.setTimeout(updateLabelVisibility, 650);
     }
   }, 900);
   renderTitle();
   renderLegend(filtered.nodes);
   renderCounts(filtered);
+  renderGraphSceneLabel(filtered);
   renderCapabilityPanel(filtered);
   updateViewerReadyState(filtered);
+  updateLabelVisibility();
 }
 
 function filteredGraph() {
@@ -1170,6 +1226,20 @@ function renderCounts(filtered) {
   setStatus(
     `Showing ${filtered.nodes.length}/${totalNodes} nodes and ${filtered.edges.length}/${totalEdges} edges with ${selectedLens()?.label || "selected lens"}.${hint}`
   );
+}
+
+function renderGraphSceneLabel(filtered = state.currentRender) {
+  if (!els.graphSceneLabel) {
+    return;
+  }
+  const scene = activeDemoScene();
+  const title = scene?.graphLabel || scene?.label || "Custom graph view";
+  const subtitle = scene?.graphSubLabel || selectedLens()?.label || "Validated graph export";
+  els.graphSceneLabel.innerHTML = [
+    `<div class="graph-scene-title">${escapeHtml(title)}</div>`,
+    `<div class="graph-scene-subtitle">${escapeHtml(subtitle)}</div>`,
+    `<div class="graph-label-mode">${escapeHtml(LABEL_TIER_COPY[state.labelZoomTier] || "Overview labels")}: ${state.labelStats[state.labelZoomTier] || 0} visible of ${filtered.nodes.length} nodes</div>`
+  ].join("");
 }
 
 function activeContextLabels() {
@@ -1477,6 +1547,8 @@ function updateViewerReadyState(filtered) {
     review_id: state.graph?.summary?.review_id || null,
     demo_scene_id: state.activeDemoSceneId,
     lens_id: els.lensSelect.value,
+    label_zoom_tier: state.labelZoomTier,
+    visible_label_count: state.labelStats[state.labelZoomTier] || 0,
     spotlight_node_count: state.spotlightNodeIds.size,
     spotlight_edge_count: state.spotlightEdgeIds.size,
     rendered_node_count: filtered.nodes.length,
@@ -1484,6 +1556,312 @@ function updateViewerReadyState(filtered) {
     canvas_count: els.graphRoot.querySelectorAll("canvas").length,
     validation_passed: state.graph?.summary?.validation_passed === true
   };
+}
+
+function graphNodeObject(node, sphereGeometry) {
+  const group = new window.THREE.Group();
+  const material = new window.THREE.MeshLambertMaterial({
+    color: nodeColor(node),
+    transparent: true,
+    opacity: state.spotlightNodeIds.has(node.node_id) || node.node_type === "readiness_blocker" ? 0.95 : 0.82
+  });
+  const mesh = new window.THREE.Mesh(sphereGeometry, material);
+  const scale = state.spotlightNodeIds.has(node.node_id)
+    ? 2.7
+    : node.node_type === "readiness_blocker" || node.display_status === "applicable"
+      ? 2.2
+      : 1;
+  mesh.scale.setScalar(scale);
+  group.add(mesh);
+
+  const descriptor = nodeLabelDescriptor(node);
+  if (descriptor) {
+    const sprite = makeTextSprite(descriptor.text, descriptor);
+    sprite.position.set(0, descriptor.level === 0 ? 24 : 18, 0);
+    sprite.userData.labelLevel = descriptor.level;
+    sprite.userData.nodeId = node.node_id;
+    group.add(sprite);
+    state.labelSprites.set(node.node_id, sprite);
+  }
+  return group;
+}
+
+function buildLabelPlan(filtered) {
+  const descriptors = new Map();
+  const addLabel = (node, level, reason = "") => {
+    if (!node) {
+      return;
+    }
+    const current = descriptors.get(node.node_id);
+    if (!current || level < current.level) {
+      descriptors.set(node.node_id, { level, reason });
+    }
+  };
+
+  const scene = activeDemoScene();
+  const renderedIds = new Set(filtered.nodes.map((node) => node.node_id));
+  for (const node of filtered.nodes) {
+    if (node.node_type === "source_set" || node.node_type === "review") {
+      addLabel(node, 0, "graph root");
+    }
+    if (state.selectedNodeId === node.node_id || state.spotlightNodeIds.has(node.node_id)) {
+      addLabel(node, 0, "selected path");
+    }
+  }
+
+  for (const node of topLabelCandidates(filtered.nodes, scene, LABEL_NODE_BUDGETS.overview)) {
+    addLabel(node, 0, "overview");
+  }
+  for (const node of topLabelCandidates(filtered.nodes, scene, LABEL_NODE_BUDGETS.focus)) {
+    addLabel(node, 1, "focus");
+  }
+  for (const node of topLabelCandidates(filtered.nodes, scene, LABEL_NODE_BUDGETS.detail)) {
+    addLabel(node, 2, "detail");
+  }
+
+  state.labelNodeLevels = new Map(
+    [...descriptors.entries()].filter(([nodeId]) => renderedIds.has(nodeId))
+  );
+  state.labelStats = {
+    overview: [...state.labelNodeLevels.values()].filter((descriptor) => descriptor.level <= 0).length,
+    focus: [...state.labelNodeLevels.values()].filter((descriptor) => descriptor.level <= 1).length,
+    detail: [...state.labelNodeLevels.values()].filter((descriptor) => descriptor.level <= 2).length
+  };
+}
+
+function topLabelCandidates(nodes, scene, limit) {
+  return nodes
+    .map((node) => ({ node, score: labelScore(node, scene) }))
+    .filter(({ score }) => score > 0)
+    .sort((left, right) => right.score - left.score || left.node.label.localeCompare(right.node.label))
+    .slice(0, limit)
+    .map(({ node }) => node);
+}
+
+function labelScore(node, scene) {
+  const labelTypes = new Set(scene?.labelNodeTypes || []);
+  let score = 0;
+  if (labelTypes.has(node.node_type)) {
+    score += 90;
+  }
+  if (node.node_type === "source_set" || node.node_type === "review") {
+    score += 120;
+  }
+  if (state.spotlightNodeIds.has(node.node_id) || state.selectedNodeId === node.node_id) {
+    score += 160;
+  }
+  if (node.display_status === "applicable") {
+    score += 30;
+  }
+  if (node.display_status === "readiness_blocked" || node.node_type === "readiness_blocker") {
+    score += 55;
+  }
+  if (node.node_type === "forest_unit" || node.node_type === "compliance_finding") {
+    score += 28;
+  }
+  if (node.node_type === "authority_family" || node.node_type === "generated_rule") {
+    score += 18;
+  }
+  score += Math.min(35, state.degree.get(node.node_id) || 0);
+  return score;
+}
+
+function nodeLabelDescriptor(node) {
+  const labelPlan = state.labelNodeLevels.get(node.node_id);
+  if (!labelPlan) {
+    return null;
+  }
+  return {
+    level: labelPlan.level,
+    text: nodeLabelText(node, labelPlan),
+    fill: nodeLabelFill(node, labelPlan.level),
+    accent: nodeColor(node),
+    scale: labelPlan.level === 0 ? 0.2 : labelPlan.level === 1 ? 0.17 : 0.145,
+    maxWidth: labelPlan.level === 0 ? 360 : labelPlan.level === 1 ? 300 : 250,
+    fontSize: labelPlan.level === 0 ? 24 : labelPlan.level === 1 ? 21 : 18
+  };
+}
+
+function nodeLabelText(node, labelPlan) {
+  if (state.spotlightNodeIds.has(node.node_id)) {
+    const pathIndex = state.spotlightSteps.findIndex((step) => step.node_id === node.node_id);
+    const prefix = pathIndex >= 0 ? `${pathIndex + 1}. ` : "";
+    return `${prefix}${shortNodeType(node.node_type)}: ${compactLabel(node.label || node.node_id)}`;
+  }
+  if (state.selectedNodeId === node.node_id) {
+    return `Selected: ${compactLabel(node.label || node.node_id)}`;
+  }
+  if (node.node_type === "review") {
+    return activeDemoScene()?.graphLabel || "Review overlay";
+  }
+  if (node.node_type === "source_set") {
+    return "Source set";
+  }
+  const type = labelPlan.level <= 1 ? `${shortNodeType(node.node_type)}: ` : "";
+  return `${type}${compactLabel(node.label || node.node_id)}`;
+}
+
+function compactLabel(value) {
+  return String(value)
+    .replace(/^rule-template:nepa-ea-v0:[^:]+:/, "")
+    .replace(/^source-set-/, "source-set ")
+    .replace(/^v1-cg-ecid-compliance-review:?/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function shortNodeType(nodeType) {
+  const labels = {
+    applicability_decision: "decision",
+    authority_family: "authority",
+    compliance_finding: "finding",
+    evidence_span: "evidence",
+    forest_plan_component: "component",
+    forest_unit: "forest",
+    generated_rule: "rule",
+    readiness_blocker: "blocker",
+    rule_template: "authority rule",
+    source_claim: "claim",
+    source_record: "source"
+  };
+  return labels[nodeType] || nodeType.replaceAll("_", " ");
+}
+
+function nodeLabelFill(node, level) {
+  if (state.spotlightNodeIds.has(node.node_id)) {
+    return "rgba(255, 250, 236, 0.96)";
+  }
+  if (level === 0) {
+    return "rgba(255, 255, 255, 0.94)";
+  }
+  if (level === 1) {
+    return "rgba(247, 246, 241, 0.9)";
+  }
+  return "rgba(255, 255, 255, 0.84)";
+}
+
+function makeTextSprite(text, descriptor) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  const fontSize = descriptor.fontSize;
+  context.font = `700 ${fontSize}px Inter, ui-sans-serif, system-ui, sans-serif`;
+  const paddingX = 16;
+  const paddingY = 10;
+  const lineHeight = Math.round(fontSize * 1.18);
+  const lines = wrapLabelText(context, text, descriptor.maxWidth - paddingX * 2, descriptor.level === 2 ? 2 : 3);
+  const textWidth = Math.min(
+    descriptor.maxWidth - paddingX * 2,
+    Math.max(...lines.map((line) => context.measureText(line).width), 80)
+  );
+  canvas.width = Math.ceil(textWidth + paddingX * 2);
+  canvas.height = Math.ceil(lines.length * lineHeight + paddingY * 2);
+  context.font = `700 ${fontSize}px Inter, ui-sans-serif, system-ui, sans-serif`;
+  context.textBaseline = "top";
+  context.fillStyle = descriptor.fill;
+  roundRect(context, 0, 0, canvas.width, canvas.height, 12);
+  context.fill();
+  context.strokeStyle = descriptor.accent;
+  context.lineWidth = descriptor.level === 0 ? 4 : 3;
+  roundRect(context, 1.5, 1.5, canvas.width - 3, canvas.height - 3, 11);
+  context.stroke();
+  context.fillStyle = "#171713";
+  lines.forEach((line, index) => {
+    context.fillText(line, paddingX, paddingY + index * lineHeight);
+  });
+
+  const texture = new window.THREE.CanvasTexture(canvas);
+  texture.minFilter = window.THREE.LinearFilter;
+  const material = new window.THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false
+  });
+  const sprite = new window.THREE.Sprite(material);
+  sprite.scale.set(canvas.width * descriptor.scale, canvas.height * descriptor.scale, 1);
+  sprite.renderOrder = 999;
+  return sprite;
+}
+
+function wrapLabelText(context, text, maxWidth, maxLines) {
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if (context.measureText(next).width <= maxWidth || !current) {
+      current = next;
+    } else {
+      lines.push(current);
+      current = word;
+      if (lines.length === maxLines - 1) {
+        break;
+      }
+    }
+  }
+  if (current && lines.length < maxLines) {
+    lines.push(current);
+  }
+  const consumed = lines.join(" ").split(/\s+/).filter(Boolean).length;
+  if (consumed < words.length && lines.length > 0) {
+    lines[lines.length - 1] = `${lines[lines.length - 1].replace(/[.,;:]+$/, "")}...`;
+  }
+  return lines.length > 0 ? lines : [String(text).slice(0, 48)];
+}
+
+function roundRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.arcTo(x + width, y, x + width, y + height, radius);
+  context.arcTo(x + width, y + height, x, y + height, radius);
+  context.arcTo(x, y + height, x, y, radius);
+  context.arcTo(x, y, x + width, y, radius);
+  context.closePath();
+}
+
+function updateLabelVisibility() {
+  const nextTier = labelTierForCamera();
+  const changed = nextTier !== state.labelZoomTier;
+  state.labelZoomTier = nextTier;
+  const visibleLevel = LABEL_TIER_ORDER.indexOf(nextTier);
+  for (const sprite of state.labelSprites.values()) {
+    const show = sprite.userData.labelLevel <= visibleLevel;
+    sprite.visible = show;
+    if (sprite.material) {
+      sprite.material.opacity = show ? 1 : 0;
+    }
+  }
+  if (changed) {
+    renderGraphSceneLabel();
+    updateViewerReadyState(state.currentRender);
+  }
+}
+
+function labelTierForCamera() {
+  const distance = cameraDistance();
+  if (distance <= LABEL_DISTANCE_THRESHOLDS.detail) {
+    return "detail";
+  }
+  if (distance <= LABEL_DISTANCE_THRESHOLDS.focus) {
+    return "focus";
+  }
+  return "overview";
+}
+
+function cameraDistance() {
+  const controlsCamera = state.graphControls?.object;
+  if (controlsCamera?.position) {
+    return Math.hypot(controlsCamera.position.x, controlsCamera.position.y, controlsCamera.position.z);
+  }
+  const position = state.graphApi?.cameraPosition?.();
+  if (position && typeof position.x === "number") {
+    return Math.hypot(position.x, position.y, position.z);
+  }
+  const camera = state.graphApi?.camera?.();
+  if (camera?.position) {
+    return Math.hypot(camera.position.x, camera.position.y, camera.position.z);
+  }
+  return 620;
 }
 
 function nodeValue(node) {

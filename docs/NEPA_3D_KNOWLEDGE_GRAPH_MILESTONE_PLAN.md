@@ -553,7 +553,10 @@ the Lens dropdown for source library, authority universe, applicability, evidenc
 readiness, and full graph views. The evidence-path scene derives a clickable evidence-to-finding
 spotlight from graph edges, the right rail includes a Capability shown panel with rendered counts
 and proof labels, Reset demo restores the starting Applicability scene, and the advanced dropdowns
-are visually subordinated under Advanced filters.
+are visually subordinated under Advanced filters. A follow-on legibility pass adds graph-surface
+scene labels for every client scene and graph-native node labels that reveal progressively by camera
+distance: overview anchors while zoomed out, focus labels at mid zoom, and additional node labels
+when the client zooms closer.
 
 Implementation options:
 
@@ -569,6 +572,7 @@ Required controls:
 - source set selector;
 - review selector;
 - client scene buttons and one-click reset for the demo starting scene;
+- graph-surface scene labels and progressive node labels for client-legible demos;
 - lens selector;
 - search by authority family, citation, source record, rule ID, component ID, or package fact;
 - filters for status/readiness, authority category, authority family, document role,

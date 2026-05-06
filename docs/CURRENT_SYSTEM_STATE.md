@@ -339,11 +339,15 @@ forest plan, readiness, and full graph scenes; Reset demo returns to the startin
 The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
 source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
 edges, then exposes each step as a clickable item in the right-side Capability shown panel. Advanced
-search and category controls remain available under Advanced filters. Controls cover source set,
-review, lens, search, status/readiness, authority category, authority family, document role,
-currentness/partition, readiness blocker, node/edge type, evidence/basis, forest unit, review phase,
-neighbor depth, high-degree hiding, selected-node pinning, fit/reset, Clear filters, PNG export, and
-viewer-state JSON export. Lens and filter dropdowns use graph-export counts and grounding metadata,
+search and category controls remain available under Advanced filters. The graph surface now includes
+scene labels for each demo scene and graph-native node labels rendered as Three.js sprites. Label
+visibility is camera-distance aware: zoomed-out views show scene anchors, mid-zoom adds focus
+labels, and close zoom adds additional node labels while preserving the same graph export and
+readiness boundary. Controls cover source set, review, lens, search, status/readiness, authority
+category, authority family, document role, currentness/partition, readiness blocker, node/edge type,
+evidence/basis, forest unit, review phase, neighbor depth, high-degree hiding, selected-node
+pinning, fit/reset, Clear filters, PNG export, and viewer-state JSON export. Lens and filter
+dropdowns use graph-export counts and grounding metadata,
 separate authority category from authority family, keep node/edge type distinct from evidence and
 basis fields, read forest-unit values from exported forest codes, and treat selections as context
 seeds so matching nodes remain visible even when the selected lens has no matching edges. The
