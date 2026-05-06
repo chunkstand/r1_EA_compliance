@@ -229,7 +229,11 @@ next-target lanes:
   decision-support document. This lane must generate a report from audited review artifacts,
   not from root-level manual draft prose, and must preserve the applicable/non-applicable authority
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
-  and implementation confirmation checklist.
+  and implementation confirmation checklist. Before Sequence 1 starts, complete
+  `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` as the Sequence 0 go/no-go gate for
+  artifact freshness, expected counts, phase-eval/promotion readiness, Plan Consistency Table
+  ownership, manual-draft quarantine, residual-risk/checklist source mapping, and
+  CLI/module/renderer ownership.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
@@ -299,7 +303,7 @@ Current stop conditions for the next session:
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
 - Do not call the raw generated matrix or root-level manual review exports a Forest
-  Supervisor-ready EA consistency decision-support document until the new decision-support report
+  Supervisor-ready EA consistency decision-support document until the new preflight, report
   contract, generator, validation gate, and East Crazies proving output are implemented.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.
 

@@ -69,6 +69,19 @@ The gap is presentation and contract ownership:
 - non-applicable authority coverage is not summarized in a way a supervisor can quickly inspect
   without losing the full appendix.
 
+## Preflight Prerequisite
+
+Before Sequence 1 begins, complete
+`docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md`. That preflight is the Sequence 0 gate for
+this milestone. It verifies the current review boundary, required artifact presence, artifact hash
+baseline, count baseline, phase-eval and promotion-suite readiness, Plan Consistency Table
+ownership, manual-draft quarantine, residual-risk/checklist source mapping, and the chosen
+CLI/module/renderer implementation surface.
+
+Do not start the report contract or generator work if the preflight result is `stop`. Convert the
+blocker into a scoped follow-up milestone instead of patching around it inside the decision-support
+report.
+
 ## Target Artifact Contract
 
 Implement a generated artifact family under:
