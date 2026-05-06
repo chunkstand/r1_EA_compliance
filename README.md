@@ -92,9 +92,29 @@ hard-negative applicability fixture contracts, renders `3` field-directive requi
 overlay requirement groups as graph-visible nodes with source links, and leaves component inventory
 validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the
 checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
-the normalized source-set and review overlay JSON exports, defaults to a bounded readiness-blocker
-lens, and keeps validation/readiness status tied to the exported artifacts rather than viewer layout
-while tests lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The earlier
+the normalized source-set and review overlay JSON exports, defaults to the
+`v1-cg-ecid-compliance-review` demo review with scene buttons above Lens, and keeps
+validation/readiness status tied to the exported artifacts rather than viewer layout while tests
+lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
+dropdown gap passes separate authority category from authority family, split node/edge type from
+evidence/basis semantics, read forest-unit values from exported forest codes, ground lens and filter
+options with graph-export counts, treat filter selections as context seeds instead of strict
+edge-endpoint requirements, add a Clear filters action, and live sweep source-set/review dropdown
+selections so populated options no longer blank the graph. A demo-mode pass now adds one-click
+scene buttons for source library, authority graph, applicability, evidence path, forest plan,
+readiness, and full graph views; the evidence-path scene derives a clickable source-to-finding
+spotlight from the graph itself, and a right-side Capability shown panel keeps demo claims grounded
+in rendered graph counts. The graph surface now adds human-readable scene labels plus graph-native
+node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
+larger set of node labels without changing the validated graph data. Advanced search and category
+filters remain available under a visually subordinate Advanced filters disclosure. A generated
+4-page service capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+with graph figures that frame USFS Region 1 as the current implementation evidence for reviewing
+NEPA document packages, authority graph updates with the most current applicable regulations and
+procedures,
+reverse compliance, source-to-finding traceability,
+Forest Plan and full profile consistency review, responsible-official decision support, and
+readiness blockers from the validated V1 graph export. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
@@ -199,6 +219,13 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `viewer/nepa-3d/manifest.json`
   - `viewer/nepa-3d/app.js`
   - `viewer/nepa-3d/styles.css`
+- NEPA 3D service capabilities brief:
+  - `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+  - `docs/capabilities/nepa_3d_capabilities_brief.html`
+  - `docs/capabilities/assets/graph_applicability_service_view.png`
+  - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
+  - `docs/capabilities/assets/graph_readiness_service_view.png`
+  - `tools/build_nepa_3d_capabilities_brief.mjs`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
   - `source_library/derived/<source_set_id>/claims/entities.jsonl`

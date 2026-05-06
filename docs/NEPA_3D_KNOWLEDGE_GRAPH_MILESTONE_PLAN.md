@@ -542,7 +542,21 @@ selected-node pinning, fit/reset controls, PNG export, viewer-state JSON export,
 click-through provenance/validation panels. The viewer preserves the readiness boundary: validation
 and reviewer-readiness status come from the graph export, not from layout. A gap-close pass added
 static coverage for pinned runtime URLs, relative graph-export manifest paths, and the `node_id`
-plus edge-endpoint mapping required by `3d-force-graph`.
+plus edge-endpoint mapping required by `3d-force-graph`. A first-pass dropdown gap closure now
+separates authority category from authority family, labels status/readiness and
+currentness/partition filters more accurately, splits node/edge type from evidence/basis values,
+reads forest-unit filters from exported forest codes, grounds lens and filter options with
+graph-export counts, adds Clear filters, and treats dropdown/search selections as context seeds so
+matching nodes stay visible even when the active lens has no matching edges. A demo-mode closeout
+now defaults the viewer to the `v1-cg-ecid-compliance-review` overlay and adds scene buttons above
+the Lens dropdown for source library, authority universe, applicability, evidence path, forest plan,
+readiness, and full graph views. The evidence-path scene derives a clickable evidence-to-finding
+spotlight from graph edges, the right rail includes a Capability shown panel with rendered counts
+and proof labels, Reset demo restores the starting Applicability scene, and the advanced dropdowns
+are visually subordinated under Advanced filters. A follow-on legibility pass adds graph-surface
+scene labels for every client scene and graph-native node labels that reveal progressively by camera
+distance: overview anchors while zoomed out, focus labels at mid zoom, and additional node labels
+when the client zooms closer.
 
 Implementation options:
 
@@ -557,10 +571,15 @@ Required controls:
 
 - source set selector;
 - review selector;
+- client scene buttons and one-click reset for the demo starting scene;
+- graph-surface scene labels and progressive node labels for client-legible demos;
 - lens selector;
 - search by authority family, citation, source record, rule ID, component ID, or package fact;
-- filters for status, authority category, document role, source currentness, readiness blocker,
-  evidence type, forest unit, and review phase;
+- filters for status/readiness, authority category, authority family, document role,
+  currentness/partition, readiness blocker, node/edge type, evidence/basis, forest unit, and review
+  phase;
+- Clear filters control that resets search and all filter dropdowns without changing the selected
+  source set, review, or lens;
 - click-through detail panel with provenance, artifact hashes, source paths, citations, and
   validation status;
 - layout controls for depth, neighbor expansion, pinned nodes, hidden high-degree nodes, and

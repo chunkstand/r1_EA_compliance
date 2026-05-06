@@ -332,15 +332,41 @@ Then open:
 http://127.0.0.1:8765/viewer/nepa-3d/
 ```
 
-The first viewport opens directly into the graph experience. It defaults to a bounded readiness
-blocker lens over the source-set graph, while the V1 review overlay remains selectable. Controls
-cover source set, review, lens, search, status, authority category, document role, currentness,
-readiness blocker, evidence type, forest unit, review phase, neighbor depth, high-degree hiding,
-selected-node pinning, fit/reset, PNG export, and viewer-state JSON export. The detail panel shows
-node/edge provenance, citation labels, artifact hashes, source paths, currentness metadata, and
-validation status. Static tests now lock the runtime URLs, relative graph-export manifest paths, and
-the `node_id`/edge endpoint mapping used by `3d-force-graph`. The viewer status line explicitly
-records that layout does not change readiness.
+The first viewport opens directly into the graph experience. It now defaults to the
+`v1-cg-ecid-compliance-review` review overlay and its Applicability demo scene. Demo buttons above
+the Lens dropdown switch among source library, authority graph, applicability, evidence path,
+forest plan, readiness, and full graph scenes; Reset demo returns to the starting review and scene.
+The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
+source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
+edges, then exposes each step as a clickable item in the right-side Capability shown panel. Advanced
+search and category controls remain available under Advanced filters. The graph surface now includes
+scene labels for each demo scene and graph-native node labels rendered as Three.js sprites. Label
+visibility is camera-distance aware: zoomed-out views show scene anchors, mid-zoom adds focus
+labels, and close zoom adds additional node labels while preserving the same graph export and
+readiness boundary. Controls cover source set, review, lens, search, status/readiness, authority
+category, authority family, document role, currentness/partition, readiness blocker, node/edge type,
+evidence/basis, forest unit, review phase, neighbor depth, high-degree hiding, selected-node
+pinning, fit/reset, Clear filters, PNG export, and viewer-state JSON export. Lens and filter
+dropdowns use graph-export counts and grounding metadata,
+separate authority category from authority family, keep node/edge type distinct from evidence and
+basis fields, read forest-unit values from exported forest codes, and treat selections as context
+seeds so matching nodes remain visible even when the selected lens has no matching edges. The
+detail panel shows node/edge provenance, citation labels, artifact hashes, source paths, currentness
+metadata, and validation status. Static tests now lock the runtime URLs, relative graph-export
+manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
+`3d-force-graph`. The viewer status line explicitly records that layout does not change readiness.
+
+A NEPA 3D service capabilities brief is generated at
+`docs/capabilities/nepa_3d_capabilities_brief.pdf` with matching HTML at
+`docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
+`tools/build_nepa_3d_capabilities_brief.mjs` reads the validated
+`v1-cg-ecid-compliance-review` graph export and writes high-resolution graph figures for
+applicability, evidence-path traceability, and readiness blockers. The brief explains how we perform
+professional NEPA reviews for projects: document intake, authority graph construction and
+updates with the most current applicable regulations and procedures, applicability, reverse
+compliance, Forest Plan and full profile consistency review,
+responsible-official decision support, and evidence traceability.
+The brief is four pages so each graph image stays legible at service-brief scale.
 
 ## EA Consistency Decision-Support Generator
 

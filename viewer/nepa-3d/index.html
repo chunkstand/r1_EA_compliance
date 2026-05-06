@@ -35,53 +35,75 @@
         </section>
 
         <section class="rail-section">
+          <div class="demo-header">
+            <div>
+              <div class="section-kicker">Demo mode</div>
+              <h2>Client scenes</h2>
+            </div>
+            <button id="demo-reset" type="button">Reset demo</button>
+          </div>
+          <div id="demo-scenes" class="demo-scenes" aria-label="Demo scenes"></div>
           <div class="field-group">
             <label for="lens-select">Lens</label>
             <select id="lens-select"></select>
           </div>
-          <div class="field-group">
-            <label for="graph-search">Search</label>
-            <input
-              id="graph-search"
-              type="search"
-              autocomplete="off"
-              placeholder="Authority, citation, source, rule, component, fact"
-            />
-          </div>
-          <div class="filter-grid">
+          <details id="advanced-filters" class="advanced-filters">
+            <summary>Advanced filters</summary>
             <div class="field-group">
-              <label for="status-filter">Status</label>
-              <select id="status-filter" data-filter="status"></select>
+              <label for="graph-search">Search</label>
+              <input
+                id="graph-search"
+                type="search"
+                autocomplete="off"
+                placeholder="Authority, citation, source, rule, component, fact"
+              />
             </div>
-            <div class="field-group">
-              <label for="authority-category-filter">Authority category</label>
-              <select id="authority-category-filter" data-filter="authorityCategory"></select>
+            <div class="filter-grid">
+              <div class="field-group">
+                <label for="status-filter">Status / readiness</label>
+                <select id="status-filter" data-filter="status"></select>
+              </div>
+              <div class="field-group">
+                <label for="authority-category-filter">Authority category</label>
+                <select id="authority-category-filter" data-filter="authorityCategory"></select>
+              </div>
+              <div class="field-group">
+                <label for="authority-family-filter">Authority family</label>
+                <select id="authority-family-filter" data-filter="authorityFamily"></select>
+              </div>
+              <div class="field-group">
+                <label for="document-role-filter">Document role</label>
+                <select id="document-role-filter" data-filter="documentRole"></select>
+              </div>
+              <div class="field-group">
+                <label for="currentness-filter">Currentness / partition</label>
+                <select id="currentness-filter" data-filter="currentness"></select>
+              </div>
+              <div class="field-group">
+                <label for="blocker-filter">Readiness blocker</label>
+                <select id="blocker-filter" data-filter="readinessBlocker"></select>
+              </div>
+              <div class="field-group">
+                <label for="node-edge-type-filter">Node / edge type</label>
+                <select id="node-edge-type-filter" data-filter="nodeEdgeType"></select>
+              </div>
+              <div class="field-group">
+                <label for="evidence-kind-filter">Evidence / basis</label>
+                <select id="evidence-kind-filter" data-filter="evidenceKind"></select>
+              </div>
+              <div class="field-group">
+                <label for="forest-unit-filter">Forest unit</label>
+                <select id="forest-unit-filter" data-filter="forestUnit"></select>
+              </div>
+              <div class="field-group">
+                <label for="review-phase-filter">Review phase</label>
+                <select id="review-phase-filter" data-filter="reviewPhase"></select>
+              </div>
             </div>
-            <div class="field-group">
-              <label for="document-role-filter">Document role</label>
-              <select id="document-role-filter" data-filter="documentRole"></select>
+            <div class="filter-actions">
+              <button id="clear-filters" type="button">Clear filters</button>
             </div>
-            <div class="field-group">
-              <label for="currentness-filter">Currentness</label>
-              <select id="currentness-filter" data-filter="currentness"></select>
-            </div>
-            <div class="field-group">
-              <label for="blocker-filter">Readiness blocker</label>
-              <select id="blocker-filter" data-filter="readinessBlocker"></select>
-            </div>
-            <div class="field-group">
-              <label for="evidence-type-filter">Evidence type</label>
-              <select id="evidence-type-filter" data-filter="evidenceType"></select>
-            </div>
-            <div class="field-group">
-              <label for="forest-unit-filter">Forest unit</label>
-              <select id="forest-unit-filter" data-filter="forestUnit"></select>
-            </div>
-            <div class="field-group">
-              <label for="review-phase-filter">Review phase</label>
-              <select id="review-phase-filter" data-filter="reviewPhase"></select>
-            </div>
-          </div>
+          </details>
         </section>
 
         <section class="rail-section">
@@ -117,12 +139,17 @@
           <div id="dataset-title" class="dataset-title">Loading graph</div>
           <div id="graph-counts" class="graph-counts"></div>
         </div>
+        <div id="graph-scene-label" class="graph-scene-label" aria-live="polite"></div>
         <div id="graph-root" class="graph-root" aria-label="3D force graph"></div>
         <div id="status-line" class="status-line" role="status"></div>
         <div id="legend" class="legend" aria-label="Graph legend"></div>
       </section>
 
       <aside class="detail-rail" aria-label="Graph details">
+        <section class="rail-section">
+          <h2>Capability shown</h2>
+          <div id="capability-panel" class="capability-panel"></div>
+        </section>
         <section class="rail-section">
           <h2>Selection</h2>
           <div id="detail-panel" class="detail-panel"></div>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Applicability graph view with authority decisions">
+  <defs>
+    <filter id="serviceShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#141713" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrowService" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#70726c"/>
+    </marker>
+  </defs>
+  <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Applicability is the first review gate</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out authority, and generates evidence-backed findings.</text>
+  <path d="M 305 540 L 570 540" stroke="#739bb6" stroke-width="9" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(337.5 516)">
+      <rect width="200" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="100" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">373 decisions</text>
+    </g>
+  <path d="M 820 425 L 1085 320" stroke="#26786f" stroke-width="9" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(875.5 348.5)">
+      <rect width="154" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="77" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">33 apply</text>
+    </g>
+  <path d="M 820 635 L 1085 735" stroke="#8b8a82" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(834.5 661)">
+      <rect width="236" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="118" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">340 screened out</text>
+    </g>
+  <path d="M 1288 320 L 1490 430" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <path d="M 1490 530 L 1545 735" stroke="#356a9b" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <g transform="translate(210 540)" filter="url(#serviceShadow)">
+    <circle r="112" fill="#ffffff" stroke="#356a9b" stroke-width="9"/>
+    <circle r="93" fill="#356a9b" opacity="0.10"/>
+    <text y="-139" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Candidate authorities</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">373 review</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">candidates</text>
+    <text y="150" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#356a9b">rule templates + forest-plan components</text>
+  </g>
+  <g transform="translate(690 540)" filter="url(#serviceShadow)">
+    <circle r="132" fill="#ffffff" stroke="#7a6e3d" stroke-width="9"/>
+    <circle r="113" fill="#7a6e3d" opacity="0.10"/>
+    <text y="-159" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Applicability decisions</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">373 decisions</text>
+    <text y="170" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#7a6e3d">review-specific</text>
+  </g>
+  <g transform="translate(1190 320)" filter="url(#serviceShadow)">
+    <circle r="104" fill="#ffffff" stroke="#26786f" stroke-width="9"/>
+    <circle r="85" fill="#26786f" opacity="0.10"/>
+    <text y="-131" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Applicable</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">33 authorities</text>
+    <text y="142" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">kept for rule generation</text>
+  </g>
+  <g transform="translate(1190 735)" filter="url(#serviceShadow)">
+    <circle r="104" fill="#ffffff" stroke="#70726c" stroke-width="9"/>
+    <circle r="85" fill="#70726c" opacity="0.10"/>
+    <text y="-131" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Not applicable</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">340</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">authorities</text>
+    <text y="142" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#70726c">retained for audit</text>
+  </g>
+  <g transform="translate(1490 430)" filter="url(#serviceShadow)">
+    <circle r="96" fill="#ffffff" stroke="#26786f" stroke-width="9"/>
+    <circle r="77" fill="#26786f" opacity="0.10"/>
+    <text y="-123" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Generated rules</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">33 rules</text>
+    <text y="134" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">review package</text>
+  </g>
+  <g transform="translate(1545 735)" filter="url(#serviceShadow)">
+    <circle r="96" fill="#ffffff" stroke="#356a9b" stroke-width="9"/>
+    <circle r="77" fill="#356a9b" opacity="0.10"/>
+    <text y="-123" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Compliance findings</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">33 findings</text>
+    <text y="134" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#356a9b">evidence-backed</text>
+  </g>
+  <g transform="translate(72 890)" filter="url(#serviceShadow)">
+    <rect width="1656" height="166" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
+    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value shown</text>
+    <circle cx="39" cy="77" r="5" fill="#26786f"/>
+  <text x="56" y="84" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">Defensibility: non-applicable and screened-out authorities are preserved, so the review explains what was considered and why it was not used.</text>
+    <circle cx="39" cy="111" r="5" fill="#26786f"/>
+  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">Reverse compliance: draft document claims can be checked against the authority graph and flagged when unsupported or based on older regulation language.</text>
+    <circle cx="39" cy="145" r="5" fill="#26786f"/>
+  <text x="56" y="152" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">Validation: 75 graph checks passed before this view was exported.</text>
+  </g>
+</svg>
