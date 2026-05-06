@@ -344,9 +344,10 @@ records that layout does not change readiness.
 
 ## EA Consistency Decision-Support Generator
 
-The East Crazies decision-support lane is complete through Sequence 2. Sequence 0 preflight recorded
+The East Crazies decision-support lane is complete through Sequence 3. Sequence 0 preflight recorded
 the current artifact/count/hash baseline and closed with `go`; Sequence 1 added the tracked report
-contract; Sequence 2 adds the deterministic generator and public CLI command. The tracked surfaces
+contract; Sequence 2 added the deterministic generator and public CLI command; Sequence 3 generated
+the first local report family for the promoted East Crazies review. The tracked surfaces
 are:
 
 - `config/ea_consistency_decision_support_v1.json`
@@ -375,13 +376,24 @@ hash-mismatched inputs, and writes:
 - `source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support_manifest.json`
 
 The generated report keeps applicability status, compliance status, implementation-confirmation
-status, and residual risk/legal-conclusion flags separate. It includes all `33` applicable authority
-findings with package/source evidence, the `340` non-applicable authority boundary with search
-coverage, the `329` Forest Plan component rows, all `12` applicable standards, implementation
-confirmation rows from tracked config, and a residual-risk register sourced from generated
-risk/resolution artifacts. Generated `source_library/` outputs remain ignored and are not staged.
-The next boundary is Sequence 3: East Crazies Generated Decision-Support Report closeout, unless the
-user chooses to proceed directly to the Sequence 4 validation/phase gate.
+status, and residual risk/legal-conclusion flags separate. The 2026-05-06 East Crazies run wrote the
+ignored local report family under
+`source_library/reviews/v1-cg-ecid-compliance-review/decision_support/`:
+
+- `ea_consistency_decision_support.json`
+- `ea_consistency_decision_support.md`
+- `ea_consistency_decision_support.pdf`
+- `ea_consistency_decision_support_manifest.json`
+
+That run returned `passed=true` and rendered all `33` applicable authority findings with
+package/source evidence, the `340` non-applicable authority boundary with search coverage, the `329`
+Forest Plan component rows, all `12/12` applicable standards with package and plan evidence, `9`
+implementation-confirmation rows with evidence, and `3` residual-risk notes with `0`
+legal-conclusion risk flags. The report PDF has a valid `%PDF-` header. The same closeout replayed
+`phase-eval --review-id v1-cg-ecid-compliance-review`, which passed `16/16` phases with
+`reviewer_ready=true`. Generated `source_library/` outputs remain ignored and are not staged. The
+next boundary is Sequence 4: make the generated decision-support report a checked validation/phase
+gate instead of an optional side output.
 
 ## Verified State Snapshot
 

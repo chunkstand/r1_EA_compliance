@@ -230,10 +230,9 @@ next-target lanes:
   not from root-level manual draft prose, and must preserve the applicable/non-applicable authority
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
   and implementation confirmation checklist. Sequence 0 preflight is complete in
-  `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below. Sequence 1
-  Report Contract And Fixtures and Sequence 2 Report Generator are complete; the next boundary is
-  Sequence 3 East Crazies Generated Decision-Support Report closeout, or Sequence 4 if the user wants
-  to make the report a readiness gate first.
+  `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below. Sequences 1
+  through 3 are complete; the next boundary is Sequence 4 Decision-Support Gate, which should make
+  the generated report a checked readiness artifact instead of an optional side output.
   - Sequence 0 pass 1 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
@@ -320,8 +319,19 @@ next-target lanes:
     `v1-cg-ecid-compliance-review` passed and wrote the ignored generated report family with `33`
     applicable authority findings, `340` non-applicable authorities, `329` Forest Plan component
     rows, `12/12` applicable standards applied, `0` open authority/Forest Plan resolution items, and
-    a valid `%PDF-` PDF header. No phase-eval or promotion-suite gate has been added yet. The next
-    boundary is Sequence 3 report-output closeout or Sequence 4 gate integration.
+    a valid `%PDF-` PDF header. Sequence 3 closed out that first real report output; no phase-eval or
+    promotion-suite gate has been added yet.
+  - Sequence 3 is complete: the 2026-05-06 local closeout run generated the ignored East Crazies
+    decision-support family under
+    `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/`:
+    `ea_consistency_decision_support.json`, `.md`, `.pdf`, and `_manifest.json`. The generated
+    report validation passed with `33` applicable authority findings rendered as `pass`, `340`
+    non-applicable authorities summarized with search coverage, `329` Forest Plan component rows,
+    all `12/12` applicable Forest Plan standards carrying package and plan evidence, `9`
+    implementation-confirmation rows with evidence, `3` residual-risk notes, `0` legal-conclusion
+    risk flags, and a valid `%PDF-` PDF header. `phase-eval --review-id
+    v1-cg-ecid-compliance-review` passed `16/16` phases with `reviewer_ready=true`. No
+    `source_library/` outputs were staged. The next boundary is Sequence 4 gate integration.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the

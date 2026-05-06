@@ -249,6 +249,9 @@ and returns nonzero through the CLI when fail-closed checks do not pass.
 
 ## Sequence 3: East Crazies Generated Decision-Support Report
 
+Status:
+Complete for the promoted East Crazies review.
+
 Goal:
 Generate the first real supervisor-facing report for the promoted East Crazies review.
 
@@ -271,7 +274,7 @@ Acceptance criteria:
 Verification:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources <decision-support-command> \
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
@@ -284,6 +287,24 @@ Commit policy:
 Do not stage generated `source_library/` files unless the repository policy changes or the user
 explicitly asks to track the generated report. Commit any code, tests, schemas, and docs that make
 the generated output reproducible.
+
+Closeout result:
+The 2026-05-06 local run wrote the ignored report family under
+`source_library/reviews/v1-cg-ecid-compliance-review/decision_support/`:
+
+- `ea_consistency_decision_support.json`
+- `ea_consistency_decision_support.md`
+- `ea_consistency_decision_support.pdf`
+- `ea_consistency_decision_support_manifest.json`
+
+The generated report validation passed with all `33` applicable authority findings rendered as
+`pass`, all `340` non-applicable authorities summarized with search coverage, all `329` Forest Plan
+component rows represented, the `EA-PACKAGE-042` Plan Consistency Table linked, all `12/12`
+applicable Forest Plan standards covered with package and plan evidence, `9` implementation
+confirmation rows with evidence, `3` residual-risk notes, `0` legal-conclusion risk flags, and a
+valid `%PDF-` output header. `phase-eval` for `v1-cg-ecid-compliance-review` passed `16/16` phases
+with `reviewer_ready=true`. The report remains a generated local artifact until Sequence 4 promotes
+it into a validation gate.
 
 ## Sequence 4: Decision-Support Gate
 
