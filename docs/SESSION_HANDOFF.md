@@ -250,6 +250,14 @@ next-target lanes:
     `current_promotion_ready=true` and `promotion_ready=true`, and broader expansion blockers
     remain separated from the current East Crazies promotion gate. The next preflight pass is Forest
     Plan consistency baseline.
+  - Sequence 0 pass 4 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_4_FOREST_PLAN_CONSISTENCY_BASELINE.md`:
+    `EA-PACKAGE-042` is present once as extracted Plan Consistency Table package evidence,
+    generated Forest Plan artifacts remain canonical, component findings report `329` findings with
+    `79` supported/applicable and `250` not applicable, applicable-standard coverage reports `58`
+    standards with `12/12` applied, Custer Gallatin context remains reviewer-ready, and manual
+    root-level East Crazies prose remains quarantined. The next preflight pass is Authority Universe
+    Boundary.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
