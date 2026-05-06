@@ -266,6 +266,17 @@ next-target lanes:
     generated rules derive only from applicable authorities, and the compliance matrix linking to
     non-applicable artifacts instead of double-counting them as findings. The next preflight pass is
     Residual Risk And Implementation Confirmation Source Mapping.
+  - Sequence 0 pass 6 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_6_RESIDUAL_RISK_IMPLEMENTATION_SOURCE_MAPPING.md`:
+    residual-risk rows are mapped to `litigation_risk_summary.json`,
+    `authority_reviewer_resolution_report.json`, compliance limitation fields, Forest Plan
+    applicable-standard limitations, and Forest Plan reviewer-resolution artifacts; the current
+    risk state has `340` deterministic informational non-applicable-boundary flags, `0` legal
+    conclusion flags, `0` open authority-resolution items, `0` open Forest Plan reviewer-resolution
+    items, no compliance limitations, and no applicable-standard failure reasons. Every required
+    implementation-confirmation checklist item has current generated evidence selectors plus a
+    planned tracked configuration owner in `config/ea_consistency_decision_support_v1.json` for
+    Sequence 1. The next preflight pass is CLI, Module, And Renderer Ownership.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
