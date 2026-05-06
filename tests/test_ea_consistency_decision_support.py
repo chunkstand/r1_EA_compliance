@@ -280,6 +280,8 @@ def test_output_schema_docs_record_decision_support_contract() -> None:
         "source_selectors[]",
         "false_positive_synthesis_claim",
         "false_negative_synthesis_omission",
+        "How To Use This Document",
+        "does not replace responsible official",
         "East_Crazies_*",
     ]:
         assert required_text in docs
@@ -325,6 +327,48 @@ def test_sequence_2_generator_writes_canonical_report_family(tmp_path: Path) -> 
     assert non_applicable["status"] == "not_applicable"
     assert non_applicable["search_coverage"][0]["coverage_result"] == "sufficient"
     _assert_traceable_row(non_applicable)
+
+
+def test_sequence_5_rendering_frontloads_supervisor_review_context(tmp_path: Path) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+
+    result = run_ea_consistency_decision_support(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    assert "## How To Use This Document" in markdown
+    assert "does not replace responsible official, line officer, counsel" in markdown
+    assert "## Review Snapshot" in markdown
+    assert markdown.index("## Review Snapshot") < markdown.index("## Authority Findings")
+    assert "Bottom-line determination: reviewer_ready decision-support status" in markdown
+    assert "Authority categories: executive_order=1" in markdown
+    assert "Forest Plan basis: EA-PACKAGE-042 Plan Consistency Table" in markdown
+    assert "Applicable standards: 1 of 1 applicable Forest Plan standards" in markdown
+    assert "Non-applicable boundary: 1 authorities remain non-applicable" in markdown
+    assert "Implementation confirmations: 1 evidence-linked checklist rows" in markdown
+    assert "Residual risks: 3 deterministic decision-support notes; 0 legal-conclusion flags." in markdown
+    assert "Summary: generated applicable authority findings with package and source citations" in markdown
+    assert "Summary: non-applicable authorities stay out of compliance findings" in markdown
+    assert (
+        "| Rule | Category | Status | EA evidence | Source evidence | Implementation confirmations |"
+        in markdown
+    )
+    assert "| Confirmation | Status | Decision-support wording | Evidence selectors |" in markdown
+    assert "source_library/reviews/review-test/compliance_matrix.json :: rule_id=sample_authority" in markdown
+    assert "Source: `" in markdown
+    assert "litigation_risk_summary.json" in markdown
+
+    pdf_text = result.pdf_path.read_bytes().decode("latin-1", errors="ignore")
+    assert "How To Use This Document" in pdf_text
+    assert "Review Snapshot" in pdf_text
+    assert "Table Summaries" in pdf_text
+    assert "Non-Applicable Authority Boundary" in pdf_text
+    assert "Implementation Confirmations" in pdf_text
+    assert "Residual Risks" in pdf_text
 
 
 def test_sequence_4_validation_gate_accepts_current_generated_report_family(

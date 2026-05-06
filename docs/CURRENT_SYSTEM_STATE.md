@@ -344,11 +344,12 @@ records that layout does not change readiness.
 
 ## EA Consistency Decision-Support Generator
 
-The East Crazies decision-support lane is complete through Sequence 4. Sequence 0 preflight recorded
+The East Crazies decision-support lane is complete through Sequence 5. Sequence 0 preflight recorded
 the current artifact/count/hash baseline and closed with `go`; Sequence 1 added the tracked report
 contract; Sequence 2 added the deterministic generator and public CLI command; Sequence 3 generated
 the first local report family for the promoted East Crazies review; Sequence 4 made that family a
-checked validation, phase-eval, and promotion-suite gate. The tracked surfaces
+checked validation, phase-eval, and promotion-suite gate; Sequence 5 polished the Markdown/PDF
+renderings for supervisor review without changing the canonical JSON schema. The tracked surfaces
 are:
 
 - `config/ea_consistency_decision_support_v1.json`
@@ -395,18 +396,22 @@ ignored local report family under
 - `ea_consistency_decision_support.pdf`
 - `ea_consistency_decision_support_manifest.json`
 
-The latest Sequence 4 closeout regenerated and then validated that ignored local report family.
+The latest Sequence 5 closeout regenerated and then validated that ignored local report family.
 Validation returned `passed=true` and `reviewer_ready=true`, rechecked all current input hashes and
 required report sections, kept all `33` applicable authority findings with package/source evidence,
 kept the `340` non-applicable authority boundary with search coverage, represented all `329` Forest
 Plan component rows, covered all `12/12` applicable standards with package and plan evidence, kept
 `9` implementation-confirmation rows with evidence and `3` residual-risk notes with `0`
-legal-conclusion risk flags, and confirmed the PDF starts with `%PDF-`. The same closeout replayed
-`phase-eval --review-id v1-cg-ecid-compliance-review`, which now includes
+legal-conclusion risk flags, and confirmed the PDF starts with `%PDF-`. The Markdown/PDF now
+front-load a use note, bottom-line reviewer-ready status, authority categories, Forest Plan basis,
+applicable standards, non-applicable boundary, implementation confirmations, residual risks,
+validation status, and concise table summaries before long evidence sections. The same closeout
+replayed `phase-eval --review-id v1-cg-ecid-compliance-review`, which includes
 `decision_support_report` and passed `17/17` phases with `reviewer_ready=true`; `promotion-suite`
 also reports the decision-support JSON, manifest, and PDF as required current-promotion artifacts.
-Generated `source_library/` outputs remain ignored and are not staged. The next boundary is
-Sequence 5: supervisor review polish for the Markdown/PDF rendering.
+Generated `source_library/` outputs remain ignored and are not staged. The EA consistency
+decision-support milestone has no remaining planned sequence; future work should be a new milestone
+or a targeted copy-review pass.
 
 ## Verified State Snapshot
 

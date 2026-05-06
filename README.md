@@ -120,9 +120,9 @@ milestone that expands the bounded authority-family inventory beyond the V1 prov
 sequence covering USDA/Forest Service Region 1 EA authority families, applicability, evidence, and
 readiness blockers. See
 `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md` for the East Crazies decision-support
-report sequence; Sequence 4 has made the generated East Crazies JSON/Markdown/PDF
-decision-support report family a `phase-eval` and promotion-suite readiness gate while keeping the
-ignored outputs under the review `decision_support/` directory. See
+report sequence; Sequence 5 has closed the milestone by making the generated East Crazies
+JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
+keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific

@@ -362,6 +362,9 @@ ignored and were not staged.
 
 ## Sequence 5: Supervisor Review Polish
 
+Status:
+Complete.
+
 Goal:
 Make the Markdown/PDF suitable for actual decision-support reading while preserving machine
 traceability.
@@ -387,21 +390,45 @@ Acceptance criteria:
 Verification:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources <decision-support-command> \
+PYTHONPATH=src uv run --extra dev pytest tests/test_ea_consistency_decision_support.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_promotion_suite.py \
+  tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --validate-only
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
 git diff --check
 ```
 
 Commit policy:
 Commit Sequence 5 as a focused renderer/report-polish commit.
 
+Closeout result:
+The Sequence 5 renderer pass upgrades the generated Markdown and PDF from a raw evidence table
+export into a supervisor-readable decision-support document while keeping JSON as the canonical
+machine contract. The generated renderings now front-load a "How To Use This Document" note,
+bottom-line reviewer-ready status, authority category/status counts, Forest Plan basis and
+applicable-standard coverage, non-applicable authority boundary, implementation-confirmation count,
+residual-risk count, validation status, and table summaries before long evidence sections. The
+authority and Forest Plan tables remain citation-bearing; implementation-confirmation rows now show
+constrained decision-support wording plus evidence selectors; residual-risk rows preserve source
+artifact and selector pointers. The wording continues to state that the report supports review and
+does not replace responsible official, line officer, counsel, or specialist judgment.
+
 ## Final Definition Of Done
 
-The milestone is complete when:
+The milestone is complete. The closeout state satisfies:
 
 - a deterministic command generates the East Crazies EA consistency decision-support report from
   current audited review artifacts;

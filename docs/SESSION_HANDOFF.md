@@ -231,8 +231,9 @@ next-target lanes:
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
   and implementation confirmation checklist. Sequence 0 preflight is complete in
   `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below. Sequences 1
-  through 4 are complete; the next boundary is Sequence 5 Supervisor Review Polish, which should
-  improve Markdown/PDF readability while preserving machine traceability.
+  through 5 are complete; the EA consistency decision-support milestone has no remaining planned
+  sequence. Future work should be a new milestone or a targeted copy-review pass, not a continuation
+  of this implementation lane.
   - Sequence 0 pass 1 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
@@ -338,7 +339,16 @@ next-target lanes:
     `promotion_ready=true`, and `expansion_ready=false`. The validator fails closed on stale input
     hashes, missing sections, missing non-applicable summaries, missing applicable standards,
     invalid PDF output, manual-draft dependency, unresolved implementation confirmations, and
-    residual-risk legal conclusions. The next boundary is Sequence 5 Supervisor Review Polish.
+    residual-risk legal conclusions.
+  - Sequence 5 is complete: the Markdown/PDF renderer now front-loads a "How To Use This Document"
+    note, bottom-line reviewer-ready status, authority categories/status counts, Forest Plan basis,
+    applicable-standard coverage, non-applicable authority boundary, implementation confirmations,
+    residual risks, validation status, and concise table summaries before the long authority and
+    Forest Plan evidence sections. Implementation-confirmation rows show constrained
+    decision-support wording plus evidence selectors; residual-risk rows preserve source artifact
+    and selector pointers; and the caveat states the document supports review but does not replace
+    responsible official, line officer, counsel, or specialist judgment. The generated
+    `source_library/` report family remains ignored and should not be staged unless policy changes.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the

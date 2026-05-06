@@ -12,7 +12,7 @@ import textwrap
 
 REPORT_SCHEMA_VERSION = "ea-consistency-decision-support-report-v1"
 MANIFEST_SCHEMA_VERSION = "ea-consistency-decision-support-manifest-v1"
-GENERATOR_VERSION = "ea-consistency-decision-support-generator-v0"
+GENERATOR_VERSION = "ea-consistency-decision-support-generator-v1"
 DEFAULT_CONFIG_PATH = Path("config/ea_consistency_decision_support_v1.json")
 DEFAULT_EXPECTED_SUMMARY_PATH = Path(
     "config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json"
@@ -2263,6 +2263,9 @@ def _report_markdown(report: dict[str, Any]) -> str:
     authority_summary = report["applicable_authority_summary"]
     forest = report["forest_plan_consistency"]
     non_applicable = report["non_applicable_authority_boundary"]
+    confirmation_count = len(report["implementation_confirmation_checklist"])
+    residual_risk_count = len(report["residual_risk_register"])
+    legal_risk_count = _legal_conclusion_risk_count(report)
     lines = [
         "# EA Consistency Decision Support",
         "",
@@ -2271,23 +2274,52 @@ def _report_markdown(report: dict[str, Any]) -> str:
         f"- Status: `{executive['decision_support_status']}`",
         f"- Caveat: {executive['decision_use_caveat']}",
         "",
-        "## Record and Artifact Inventory",
+        "## How To Use This Document",
         "",
-        f"- Package files: `{inventory['package_file_count']}`",
-        f"- Package chunks: `{inventory['package_chunk_count']}`",
-        f"- Generated rule pack ready: `{inventory['generated_rule_pack_ready']}`",
+        _decision_support_use_note(),
         "",
-        "## Applicable Authority Summary",
+        "## Review Snapshot",
         "",
-        f"- Applicable authorities: `{authority_summary['applicable_authority_count']}`",
-        f"- Status counts: `{authority_summary['status_counts']}`",
-        f"- Category counts: `{authority_summary['category_counts']}`",
-        "",
-        "## Authority Findings",
-        "",
-        "| Rule | Category | Status | EA evidence | Source evidence | Implementation confirmations |",
-        "| --- | --- | --- | --- | --- | --- |",
     ]
+    lines.extend(f"- {item}" for item in _review_snapshot_items(report))
+    lines.extend(
+        [
+            "",
+            "## Record and Artifact Inventory",
+            "",
+            (
+                "This inventory identifies the generated review package and validation-owned "
+                "artifacts used to build the decision-support rendering."
+            ),
+            "",
+            f"- Package files: `{inventory['package_file_count']}`",
+            f"- Package chunks: `{inventory['package_chunk_count']}`",
+            f"- Generated rule pack ready: `{inventory['generated_rule_pack_ready']}`",
+            "",
+            "## Applicable Authority Summary",
+            "",
+            (
+                "The authority summary groups generated applicable findings before the full "
+                "evidence table. The table is ordered by rule ID and keeps EA package evidence "
+                "separate from source-library evidence."
+            ),
+            "",
+            f"- Applicable authorities: `{authority_summary['applicable_authority_count']}`",
+            f"- Status counts: `{_format_counts(authority_summary['status_counts'])}`",
+            f"- Category counts: `{_format_counts(authority_summary['category_counts'])}`",
+            "",
+            "## Authority Findings",
+            "",
+            (
+                "Summary: generated applicable authority findings with package and source "
+                "citations; implementation-confirmation IDs identify follow-up checks without "
+                "creating additional compliance findings."
+            ),
+            "",
+            "| Rule | Category | Status | EA evidence | Source evidence | Implementation confirmations |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+    )
     for row in report["authority_findings"]:
         lines.append(
             "| "
@@ -2311,11 +2343,18 @@ def _report_markdown(report: dict[str, Any]) -> str:
             f"- Component findings: `{forest['component_finding_count']}`",
             f"- Supported/applicable components: `{forest['supported_component_count']}`",
             f"- Not-applicable components: `{forest['not_applicable_component_count']}`",
+            f"- Gap count: `{forest['gap_count']}`",
             f"- Applicable standards: `{forest['applicable_standard_count']}`",
             f"- Applied standards: `{forest['applied_standard_count']}`",
             f"- Plan Consistency Table source: `{forest['plan_consistency_table_package_record_id']}`",
             "",
             "## Applicable Forest Plan Standards",
+            "",
+            (
+                "Summary: generated applicable Forest Plan standards with package evidence "
+                "and Forest Plan source evidence; standards remain separate from broader "
+                "not-applicable component rows."
+            ),
             "",
             "| Standard | Compliance | Package evidence | Forest Plan evidence |",
             "| --- | --- | --- | --- |",
@@ -2339,44 +2378,66 @@ def _report_markdown(report: dict[str, Any]) -> str:
             "",
             "## Non-Applicable Authority Boundary",
             "",
+            (
+                "Summary: non-applicable authorities stay out of compliance findings and remain "
+                "available through the generated appendix and search-coverage certificates."
+            ),
+            "",
             f"- Non-applicable authorities: `{non_applicable['non_applicable_authority_count']}`",
-            f"- Category counts: `{non_applicable['category_counts']}`",
+            f"- Category counts: `{_format_counts(non_applicable['category_counts'])}`",
             f"- Full appendix: `{non_applicable['appendix_path']}`",
             f"- Coverage certificates: `{non_applicable['coverage_certificates_path']}`",
             "",
             "## Implementation Confirmation Checklist",
             "",
-            "| Confirmation | Status | Evidence selectors |",
-            "| --- | --- | --- |",
+            (
+                f"Summary: `{confirmation_count}` evidence-linked implementation confirmations "
+                "require reviewer confirmation. These rows are not compliance findings and do "
+                "not prove final implementation completion."
+            ),
+            "",
+            "| Confirmation | Status | Decision-support wording | Evidence selectors |",
+            "| --- | --- | --- | --- |",
         ]
     )
     for row in report["implementation_confirmation_checklist"]:
-        selectors = [
-            str(selector.get("selector"))
-            for selector in row.get("source_selectors", [])
-            if selector.get("selector")
-        ]
         lines.append(
             "| "
             + " | ".join(
                 [
                     _md_cell(row.get("label")),
                     _md_cell(row.get("status")),
-                    _md_cell("; ".join(selectors)),
+                    _md_cell(row.get("allowed_report_wording")),
+                    _md_cell(_selector_cell(row.get("source_selectors", []))),
                 ]
             )
             + " |"
         )
-    lines.extend(["", "## Residual Risk Register", ""])
+    lines.extend(
+        [
+            "",
+            "## Residual Risk Register",
+            "",
+            (
+                f"Summary: `{residual_risk_count}` deterministic decision-support risk notes; "
+                f"legal-conclusion flags: `{legal_risk_count}`. Risk notes preserve source "
+                "artifact pointers and do not replace responsible official or counsel judgment."
+            ),
+            "",
+        ]
+    )
     for risk in report["residual_risk_register"]:
         lines.append(
             f"- `{risk['risk_id']}`: `{risk['category']}` / `{risk['severity']}` - "
-            f"{risk['rationale']}"
+            f"{risk['rationale']} Source: `{risk['source_artifact_path']}` selector "
+            f"`{risk['source_selector']}`."
         )
     lines.extend(
         [
             "",
             "## Validation and Replay",
+            "",
+            "Summary: replay commands regenerate or re-evaluate this report from audited artifacts.",
             "",
             f"- Passed: `{report['validation_and_replay']['passed']}`",
             f"- Manifest: `{report['manifest']['schema_version']}`",
@@ -2389,42 +2450,94 @@ def _report_markdown(report: dict[str, Any]) -> str:
 
 def _report_pdf_pages(report: dict[str, Any]) -> list[list[str]]:
     forest = report["forest_plan_consistency"]
+    authority_summary = report["applicable_authority_summary"]
+    non_applicable = report["non_applicable_authority_boundary"]
     lines = [
         "EA Consistency Decision Support",
         f"Review ID: {report['review_id']}",
         f"Source set: {report['source_set_id']}",
-        f"Status: {report['executive_determination']['decision_support_status']}",
+        (
+            "Bottom-line determination: "
+            f"{report['executive_determination']['decision_support_status']} "
+            "decision support from generated artifacts."
+        ),
         "Caveat: " + report["executive_determination"]["decision_use_caveat"],
         "",
-        "Summary",
-        f"Applicable authority findings: {len(report['authority_findings'])}",
-        (
-            "Non-applicable authorities: "
-            f"{report['non_applicable_authority_boundary']['non_applicable_authority_count']}"
-        ),
-        (
-            "Forest Plan findings: "
-            f"{forest['component_finding_count']} "
-            f"({forest['supported_component_count']} supported, "
-            f"{forest['not_applicable_component_count']} not applicable)"
-        ),
-        (
-            "Applicable standards: "
-            f"{forest['applicable_standard_count']} / applied {forest['applied_standard_count']}"
-        ),
-        "",
-        "Applicable Authority Findings",
+        "How To Use This Document",
     ]
+    lines.extend(_wrap_pdf_line(_decision_support_use_note()))
+    lines.extend(["", "Review Snapshot"])
+    for item in _review_snapshot_items(report):
+        lines.extend(_wrap_pdf_line("- " + item))
+    lines.extend(
+        [
+            "",
+            "Table Summaries",
+            (
+                "Authority Findings: "
+                f"{authority_summary['applicable_authority_count']} generated applicable "
+                f"findings, categories {_format_counts(authority_summary['category_counts'])}."
+            ),
+            (
+                "Forest Plan Standards: "
+                f"{forest['applied_standard_count']} of {forest['applicable_standard_count']} "
+                "applicable standards applied with package and plan evidence."
+            ),
+            (
+                "Non-Applicable Authority Boundary: "
+                f"{non_applicable['non_applicable_authority_count']} authorities; appendix "
+                f"{non_applicable['appendix_path']}."
+            ),
+            (
+                "Implementation Confirmations: "
+                f"{len(report['implementation_confirmation_checklist'])} evidence-linked rows "
+                "requiring reviewer confirmation."
+            ),
+            (
+                "Residual Risks: "
+                f"{len(report['residual_risk_register'])} decision-support notes; "
+                f"{_legal_conclusion_risk_count(report)} legal-conclusion flags."
+            ),
+        ]
+    )
+    lines.extend(
+        [
+            "",
+            "Record and Artifact Inventory",
+            f"Package files: {report['record_and_artifact_inventory']['package_file_count']}",
+            f"Package chunks: {report['record_and_artifact_inventory']['package_chunk_count']}",
+            (
+                "Generated rule pack ready: "
+                f"{report['record_and_artifact_inventory']['generated_rule_pack_ready']}"
+            ),
+        ]
+    )
+    lines.extend(
+        [
+            "",
+            "Applicable Authority Findings (ordered by rule ID)",
+        ]
+    )
     for index, row in enumerate(report["authority_findings"], start=1):
         lines.extend(
             _wrap_pdf_line(
                 f"{index}. {row['rule_id']} ({row.get('authority_category')}) - "
                 f"{row.get('compliance_status')} - EA: "
                 f"{_evidence_cell(row.get('ea_package_evidence', []))} - Source: "
-                f"{_evidence_cell(row.get('source_library_evidence', []))}"
+                f"{_evidence_cell(row.get('source_library_evidence', []))} - Confirmations: "
+                f"{', '.join(row.get('implementation_confirmation_ids', [])) or 'None'}"
             )
         )
-    lines.extend(["", "Applicable Forest Plan Standards"])
+    lines.extend(
+        [
+            "",
+            "Applicable Forest Plan Standards",
+            (
+                "Summary: standards shown here are the applicable subset from generated "
+                "Forest Plan coverage."
+            ),
+        ]
+    )
     for index, row in enumerate(report["applicable_forest_plan_standards"], start=1):
         lines.extend(
             _wrap_pdf_line(
@@ -2433,7 +2546,20 @@ def _report_pdf_pages(report: dict[str, Any]) -> list[list[str]]:
                 f"Plan: {_evidence_cell(row.get('forest_plan_evidence', []))}"
             )
         )
-    lines.extend(["", "Implementation Confirmations"])
+    lines.extend(
+        [
+            "",
+            "Non-Applicable Authority Boundary",
+            (
+                "Summary: non-applicable authorities are excluded from compliance findings; "
+                f"full appendix {non_applicable['appendix_path']} and coverage certificates "
+                f"{non_applicable['coverage_certificates_path']}."
+            ),
+            "",
+            "Implementation Confirmations",
+            "Summary: confirmation rows require reviewer confirmation and are not findings.",
+        ]
+    )
     for index, row in enumerate(report["implementation_confirmation_checklist"], start=1):
         lines.extend(
             _wrap_pdf_line(
@@ -2441,10 +2567,117 @@ def _report_pdf_pages(report: dict[str, Any]) -> list[list[str]]:
                 f"{row.get('allowed_report_wording')}"
             )
         )
-    lines.extend(["", "Residual Risks"])
+    lines.extend(
+        [
+            "",
+            "Residual Risks",
+            (
+                "Summary: deterministic decision-support risk notes with source artifact "
+                "pointers, not legal conclusions."
+            ),
+        ]
+    )
     for row in report["residual_risk_register"]:
-        lines.extend(_wrap_pdf_line(f"{row['risk_id']} - {row['rationale']}"))
+        lines.extend(
+            _wrap_pdf_line(
+                f"{row['risk_id']} - {row['rationale']} Source: "
+                f"{row['source_artifact_path']} selector {row['source_selector']}."
+            )
+        )
     return _paginate_pdf_lines(lines, max_lines=44)
+
+
+def _decision_support_use_note() -> str:
+    return (
+        "Use this document to inspect generated authority, Forest Plan, implementation "
+        "confirmation, residual-risk, and validation evidence for the review. It supports "
+        "review and does not replace responsible official, line officer, counsel, or "
+        "specialist judgment."
+    )
+
+
+def _review_snapshot_items(report: dict[str, Any]) -> list[str]:
+    executive = report["executive_determination"]
+    authority_summary = report["applicable_authority_summary"]
+    forest = report["forest_plan_consistency"]
+    non_applicable = report["non_applicable_authority_boundary"]
+    confirmations = report["implementation_confirmation_checklist"]
+    residual_risks = report["residual_risk_register"]
+    return [
+        (
+            "Bottom-line determination: "
+            f"{executive['decision_support_status']} decision-support status from generated "
+            "artifacts; not a legal sufficiency determination or final agency decision."
+        ),
+        (
+            "Authority categories: "
+            f"{_format_counts(authority_summary['category_counts'])}; applicable authority "
+            f"findings: {authority_summary['applicable_authority_count']}; status counts: "
+            f"{_format_counts(authority_summary['status_counts'])}."
+        ),
+        (
+            "Forest Plan basis: "
+            f"{forest['plan_consistency_table_package_record_id']} Plan Consistency Table plus "
+            f"{forest['component_finding_count']} generated component rows "
+            f"({forest['supported_component_count']} supported/applicable, "
+            f"{forest['not_applicable_component_count']} not applicable, "
+            f"{forest['gap_count']} gaps)."
+        ),
+        (
+            "Applicable standards: "
+            f"{forest['applied_standard_count']} of {forest['applicable_standard_count']} "
+            "applicable Forest Plan standards are applied with package and plan evidence."
+        ),
+        (
+            "Non-applicable boundary: "
+            f"{non_applicable['non_applicable_authority_count']} authorities remain "
+            "non-applicable with search coverage and appendix pointers."
+        ),
+        (
+            "Implementation confirmations: "
+            f"{len(confirmations)} evidence-linked checklist rows require confirmation and "
+            "are not additional compliance findings."
+        ),
+        (
+            "Residual risks: "
+            f"{len(residual_risks)} deterministic decision-support notes; "
+            f"{_legal_conclusion_risk_count(report)} legal-conclusion flags."
+        ),
+        (
+            "Validation: "
+            f"report validation passed={report['validation_and_replay']['passed']}; "
+            f"manifest schema {report['manifest']['schema_version']}."
+        ),
+    ]
+
+
+def _legal_conclusion_risk_count(report: dict[str, Any]) -> int:
+    return sum(
+        1
+        for risk in report["residual_risk_register"]
+        if risk.get("legal_conclusion") is True
+    )
+
+
+def _format_counts(counts: Any) -> str:
+    rows = _dict(counts)
+    if not rows:
+        return "none"
+    return ", ".join(f"{key}={value}" for key, value in rows.items())
+
+
+def _selector_cell(selectors: Any) -> str:
+    parts = []
+    for selector in _dict_list(selectors):
+        artifact_path = str(selector.get("artifact_path") or "").strip()
+        selector_text = str(selector.get("selector") or "").strip()
+        if artifact_path and selector_text:
+            parts.append(f"{artifact_path} :: {selector_text}")
+        elif artifact_path:
+            parts.append(artifact_path)
+        elif selector_text:
+            parts.append(selector_text)
+    return "; ".join(parts) or "N/A"
 
 
 def _evidence_cell(evidence_rows: list[dict[str, Any]]) -> str:

@@ -2211,6 +2211,16 @@ must derive from that JSON. The report must include these top-level sections:
 - `residual_risk_register`
 - `validation_and_replay`
 
+Sequence 5 defines the supervisor-readable rendering contract for the Markdown/PDF derivatives.
+Those renderings must front-load a "How To Use This Document" note, bottom-line
+decision-support status, authority category/status counts, Forest Plan basis, applicable-standard
+coverage, non-applicable authority boundary, implementation-confirmation count, residual-risk count,
+validation status, and concise table summaries before long evidence sections. The note must state
+that the document supports review and does not replace responsible official, line officer, counsel,
+or specialist judgment. Implementation-confirmation tables must preserve constrained
+decision-support wording plus evidence selectors, and residual-risk rows must preserve source
+artifact and selector pointers.
+
 The schema keeps four statuses separate:
 
 - applicability status, sourced from applicability artifacts;
