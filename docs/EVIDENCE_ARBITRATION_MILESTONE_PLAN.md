@@ -106,7 +106,7 @@ conflicts with the decisive evidence.
 
 ## Milestone 1: Diagnostic Arbitration Artifact
 
-Status: planned
+Status: implemented
 
 Add a behavior-preserving diagnostic layer that makes the current arbitration failure explicit
 without changing status outcomes.
@@ -133,6 +133,16 @@ Acceptance signal:
 - The synthetic fixture produces an arbitration summary explaining why the current predicate blocks
   the decision.
 - Focused tests prove the diagnostic artifact is deterministic and stable.
+
+Implemented state:
+
+- `applicability_decisions.jsonl` decision rows include diagnostic-only `arbitration_summary`
+  records with per-trigger evidence IDs, package chunk/fact refs, selected retrieval refs, evidence
+  strength counts, weak-signal reasons, and trigger-group diagnostic treatments.
+- `applicability_report.md` renders arbitration diagnostics for `needs_adjudication` decisions.
+- `tests/test_applicability_decisions.py` includes a roads/access synthetic fixture with strong
+  road and right-of-way evidence plus weak trail and grazing evidence, preserving the current
+  `needs_adjudication` status while making the current failure mode explicit.
 
 Verification:
 

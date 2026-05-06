@@ -1247,6 +1247,13 @@ Each applicability decision includes:
 - source-record IDs, authority category, authority document role, and source-set identity
 - package evidence spans with package chunk IDs, citation labels, section families, page labels,
   offsets, matched terms, and text snippets
+- `arbitration_summary` with schema version `applicability-evidence-arbitration-v0`, recording
+  diagnostic-only per-trigger evidence accounting. The summary includes positive and negative
+  trigger group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength
+  counts, weak-signal reasons, source evidence IDs, selected retrieval result IDs, graph path IDs,
+  the current decision effect, and whether weak evidence made adjudication necessary. Milestone 1
+  diagnostics do not change status outcomes; they explain why the current predicate did or did not
+  mark an authority as `needs_adjudication`.
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
   offsets, source-claim IDs, text snippets, and `evidence_origin` when the span is carried forward
   from the authority universe because source retrieval recorded coverage but selected no source

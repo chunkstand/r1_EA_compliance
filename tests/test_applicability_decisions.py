@@ -81,6 +81,17 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(weak_decision["status"], "needs_adjudication")
             self.assertEqual(weak_decision["basis_type"], "unresolved_evidence_conflict")
             self.assertTrue(weak_decision["contradiction_notes"])
+            weak_arbitration = weak_decision["arbitration_summary"]
+            self.assertEqual(
+                weak_arbitration["schema_version"],
+                "applicability-evidence-arbitration-v0",
+            )
+            self.assertTrue(weak_arbitration["diagnostic_only"])
+            self.assertEqual(
+                weak_arbitration["decision_effect"],
+                "blocked_by_weak_positive_trigger",
+            )
+            self.assertTrue(weak_arbitration["positive_trigger_groups"])
 
             component_id = "forest-plan-component:unit-inventory:STD-FP-01"
             self.assertEqual(decisions[component_id]["status"], "applicable")
@@ -122,6 +133,65 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertIn("package_manifest", entity_ids)
             self.assertIn("package_chunks", entity_ids)
             self.assertIn("decision_ledger", entity_ids)
+
+            report_text = result.report_path.read_text(encoding="utf-8")
+            self.assertIn("Arbitration: `blocked_by_weak_positive_trigger`", report_text)
+
+    def test_arbitration_diagnostic_captures_mixed_strong_and_weak_triggers(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[_roads_access_arbitration_candidate(source_set_id)],
+            )
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions["rule-template:unit-pack:0.1.0:roads_access_arbitration"]
+            self.assertEqual(decision["status"], "needs_adjudication")
+            self.assertEqual(decision["basis_type"], "unresolved_evidence_conflict")
+            arbitration = decision["arbitration_summary"]
+            self.assertEqual(
+                arbitration["decision_effect"],
+                "blocked_by_weak_positive_trigger",
+            )
+            groups = {
+                tuple(group["trigger_group"]): group
+                for group in arbitration["positive_trigger_groups"]
+            }
+            self.assertEqual(groups[("road",)]["diagnostic_treatment"], "auxiliary")
+            self.assertEqual(
+                groups[("right-of-way",)]["diagnostic_treatment"],
+                "auxiliary",
+            )
+            self.assertEqual(groups[("trail",)]["diagnostic_treatment"], "weak_only")
+            self.assertEqual(groups[("grazing",)]["diagnostic_treatment"], "weak_only")
+            self.assertGreater(groups[("road",)]["evidence_strength_counts"]["observed"], 0)
+            self.assertNotIn("weak_signal", groups[("road",)]["evidence_strength_counts"])
+            self.assertIn("weak_signal", groups[("trail",)]["evidence_strength_counts"])
+            self.assertTrue(groups[("trail",)]["weak_signal_reasons"])
+            self.assertTrue(groups[("grazing",)]["weak_signal_reasons"])
+            self.assertTrue(arbitration["source_evidence_ids"])
+            self.assertTrue(arbitration["selected_retrieval_result_ids"])
+
+            report_text = result.report_path.read_text(encoding="utf-8")
+            self.assertIn(
+                "`rule-template:unit-pack:0.1.0:roads_access_arbitration`: "
+                "`needs_adjudication` / `unresolved_evidence_conflict`",
+                report_text,
+            )
+            self.assertIn("Positive trigger diagnostics:", report_text)
+            self.assertIn("`road`: `auxiliary`", report_text)
+            self.assertIn("`trail`: `weak_only`", report_text)
 
     def test_uses_declared_source_evidence_when_source_retrieval_has_no_selected_hits(
         self,
@@ -1142,6 +1212,32 @@ def _authority_family_candidate(source_set_id: str) -> dict:
     return candidate
 
 
+def _roads_access_arbitration_candidate(source_set_id: str) -> dict:
+    candidate = _rule_candidate(
+        source_set_id=source_set_id,
+        rule_id="roads_access_arbitration",
+        source_record_id="R1EA-ROAD",
+        authority_category="regulation",
+        applicability_mode="conditional",
+        source_query="National Forest roads access right-of-way special use authority",
+        package_query="road trail right-of-way grazing",
+        positive_trigger_groups=[
+            ["road"],
+            ["trail"],
+            ["right-of-way"],
+            ["grazing"],
+        ],
+    )
+    candidate["rule_template"].update(
+        {
+            "title": "Roads and access arbitration fixture",
+            "question": "Does the package trigger roads/access authorities?",
+            "requirement": "Apply roads/access authority when triggered.",
+        }
+    )
+    return candidate
+
+
 def _rule_candidate(
     *,
     source_set_id: str,
@@ -1433,8 +1529,42 @@ def _write_package_cache(output_dir: Path, review_id: str) -> None:
                 "be required."
             ),
         ),
+        _package_chunk(
+            review_id=review_id,
+            artifact_sha256=artifact_sha256,
+            index=3,
+            section="Proposed Action",
+            heading="Roads and Access",
+            text=(
+                "The Proposed Action reserves Right-of-Way for Big Timber Creek Road "
+                "No. 197."
+            ),
+        ),
+        _package_chunk(
+            review_id=review_id,
+            artifact_sha256=artifact_sha256,
+            index=4,
+            section="Proposed Action",
+            heading="Trail Access",
+            text=(
+                "Trail easements could be required if needed for final design across "
+                "private land."
+            ),
+        ),
+        _package_chunk(
+            review_id=review_id,
+            artifact_sha256=artifact_sha256,
+            index=5,
+            section="Environmental Consequences",
+            heading="Cumulative Effects",
+            text=(
+                "Effects from livestock grazing may be possible in the cumulative "
+                "effects area."
+            ),
+        ),
     ]
     manifest[0]["text_char_count"] = sum(len(chunk["text"]) for chunk in chunks)
+    manifest[0]["chunk_count"] = len(chunks)
     _write_jsonl(package_dir / "package_manifest.jsonl", manifest)
     _write_jsonl(package_dir / "package_chunks.jsonl", chunks)
 
@@ -1484,6 +1614,12 @@ def _source_chunks(source_set_id: str) -> list[dict]:
             "R1EA-SIOUX",
             "forest_plan",
             "Sioux Geographic Area forest plan direction.",
+        ),
+        _source_chunk(
+            source_set_id,
+            "R1EA-ROAD",
+            "regulation",
+            "National Forest roads access right-of-way special use authority.",
         ),
         _source_chunk(
             source_set_id,

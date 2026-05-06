@@ -236,6 +236,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   gap: weak auxiliary trigger evidence can currently block an authority family even when strong
   independent roads/access/right-of-way evidence is present. The repair sequence is documented in
   `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
+- Evidence-arbitration Milestone 1 is implemented as a behavior-preserving diagnostic. Applicability
+  decision rows now include `arbitration_summary` records, and `applicability_report.md` renders
+  arbitration diagnostics for `needs_adjudication` rows. This does not change applicability status
+  outcomes yet; Milestone 3 is the planned behavior-changing predicate slice.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

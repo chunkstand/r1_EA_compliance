@@ -506,6 +506,17 @@ def _decision_for_candidate(
         "package_fact_graph_sha256": package_fact_graph.get("package_fact_graph_sha256"),
         "package_context_sha256": package_context.get("package_context_sha256"),
     }
+    arbitration_summary = _arbitration_summary(
+        status=status,
+        basis_type=basis_type,
+        predicate_name=predicate_name,
+        positive_match=positive_match,
+        negative_match=negative_match,
+        source_evidence=source_evidence,
+        selected_retrieval_result_ids=selected_result_ids,
+        retrieval_trace_ids=trace_ids,
+        graph_path_ids=graph_path_ids,
+    )
     return {
         "schema_version": APPLICABILITY_DECISIONS_SCHEMA_VERSION,
         "applicability_run_id": applicability_run_id,
@@ -544,6 +555,7 @@ def _decision_for_candidate(
             "negative_trigger_matched": negative_match["matched"],
             "coverage_sufficient": coverage_boundary["coverage_sufficient"],
         },
+        "arbitration_summary": arbitration_summary,
         "source_record_ids": source_record_ids,
         "authority_category": candidate.get("authority_category"),
         "authority_document_role": candidate.get("authority_document_role"),
@@ -909,6 +921,7 @@ def _trigger_match(
             "matched": False,
             "matched_groups": [],
             "evidence_spans": [],
+            "trigger_group_results": [],
             "requires_adjudication": False,
             "adjudication_notes": [],
         }
@@ -920,8 +933,11 @@ def _trigger_match(
     matched_groups = []
     evidence_by_id: dict[str, dict[str, Any]] = {}
     adjudication_notes = []
+    group_results = []
     for group in groups:
         group_matched = False
+        group_evidence_by_id: dict[str, dict[str, Any]] = {}
+        weak_signal_reasons = []
         for node in searchable_nodes:
             node_text = _package_node_text(node)
             if not all(_term_in_text(term, node_text) for term in group):
@@ -929,8 +945,11 @@ def _trigger_match(
             group_matched = True
             evidence = _package_evidence_span(node)
             evidence_by_id[evidence["evidence_id"]] = evidence
+            group_evidence_by_id[evidence["evidence_id"]] = evidence
             if node.get("confidence_class") == "weak_signal":
-                adjudication_notes.append(f"weak package signal for {node.get('node_id')}")
+                note = f"weak package signal for {node.get('node_id')}"
+                adjudication_notes.append(note)
+                weak_signal_reasons.append(note)
         for chunk in package_chunks:
             chunk_text = str(chunk.get("text") or "")
             if not all(_term_in_text(term, chunk_text) for term in group):
@@ -938,29 +957,198 @@ def _trigger_match(
             group_matched = True
             evidence = _package_chunk_evidence_span(chunk, group)
             evidence_by_id[evidence["evidence_id"]] = evidence
+            group_evidence_by_id[evidence["evidence_id"]] = evidence
             if evidence.get("confidence_class") == "weak_signal":
-                adjudication_notes.append(
-                    f"weak package chunk signal for {chunk.get('chunk_id')}"
-                )
+                note = f"weak package chunk signal for {chunk.get('chunk_id')}"
+                adjudication_notes.append(note)
+                weak_signal_reasons.append(note)
         for result in package_results:
             if not _result_matches_trigger_group(result, group):
                 continue
             group_matched = True
             evidence = _package_result_span(result)
             evidence_by_id[evidence["evidence_id"]] = evidence
+            group_evidence_by_id[evidence["evidence_id"]] = evidence
             if (result.get("provenance") or {}).get("confidence_class") == "weak_signal":
-                adjudication_notes.append(
-                    f"weak retrieval result for {result.get('result_id')}"
-                )
+                note = f"weak retrieval result for {result.get('result_id')}"
+                adjudication_notes.append(note)
+                weak_signal_reasons.append(note)
         if group_matched:
             matched_groups.append(group)
+        group_results.append(
+            _trigger_group_diagnostic(
+                group=group,
+                matched=group_matched,
+                evidence=list(group_evidence_by_id.values()),
+                weak_signal_reasons=weak_signal_reasons,
+            )
+        )
+    requires_adjudication = bool(adjudication_notes)
     return {
         "matched": bool(matched_groups),
         "matched_groups": matched_groups,
         "evidence_spans": sorted(evidence_by_id.values(), key=lambda item: item["evidence_id"]),
-        "requires_adjudication": bool(adjudication_notes),
+        "trigger_group_results": [
+            _finalize_trigger_group_diagnostic(
+                result,
+                requires_adjudication=requires_adjudication,
+            )
+            for result in group_results
+        ],
+        "requires_adjudication": requires_adjudication,
         "adjudication_notes": sorted(set(adjudication_notes)),
     }
+
+
+def _trigger_group_diagnostic(
+    *,
+    group: list[str],
+    matched: bool,
+    evidence: list[dict[str, Any]],
+    weak_signal_reasons: list[str],
+) -> dict[str, Any]:
+    evidence_ids = sorted(str(item.get("evidence_id") or "") for item in evidence if item.get("evidence_id"))
+    package_chunk_ids = sorted(
+        {
+            chunk_id
+            for item in evidence
+            for chunk_id in _strings(item.get("package_chunk_ids"))
+        }
+    )
+    package_fact_node_ids = sorted(
+        {
+            str(item.get("package_fact_node_id"))
+            for item in evidence
+            if item.get("package_fact_node_id")
+        }
+    )
+    retrieval_result_ids = sorted(
+        {
+            str(item.get("retrieval_result_id"))
+            for item in evidence
+            if item.get("retrieval_result_id")
+        }
+    )
+    return {
+        "trigger_group": list(group),
+        "matched": matched,
+        "diagnostic_treatment": "unmatched",
+        "evidence_ids": evidence_ids,
+        "package_evidence_ids": sorted(
+            set(evidence_ids) - set(retrieval_result_ids)
+        ),
+        "package_chunk_ids": package_chunk_ids,
+        "package_fact_node_ids": package_fact_node_ids,
+        "retrieval_result_ids": retrieval_result_ids,
+        "evidence_strength_counts": _evidence_strength_counts(evidence),
+        "weak_signal_reasons": sorted(set(weak_signal_reasons)),
+    }
+
+
+def _finalize_trigger_group_diagnostic(
+    result: dict[str, Any],
+    *,
+    requires_adjudication: bool,
+) -> dict[str, Any]:
+    if not result["matched"]:
+        treatment = "unmatched"
+    else:
+        strength_counts = result.get("evidence_strength_counts") or {}
+        weak_count = int(strength_counts.get("weak_signal") or 0)
+        strong_count = sum(
+            int(count)
+            for strength, count in strength_counts.items()
+            if strength != "weak_signal"
+        )
+        if weak_count and strong_count:
+            treatment = "conflicting"
+        elif weak_count:
+            treatment = "weak_only"
+        elif requires_adjudication:
+            treatment = "auxiliary"
+        else:
+            treatment = "decisive"
+    return {
+        **result,
+        "diagnostic_treatment": treatment,
+    }
+
+
+def _evidence_strength_counts(evidence: list[dict[str, Any]]) -> dict[str, int]:
+    counts = Counter(
+        str(item.get("confidence_class") or "observed")
+        for item in evidence
+    )
+    return dict(sorted(counts.items()))
+
+
+def _arbitration_summary(
+    *,
+    status: str,
+    basis_type: str,
+    predicate_name: str,
+    positive_match: dict[str, Any],
+    negative_match: dict[str, Any],
+    source_evidence: list[dict[str, Any]],
+    selected_retrieval_result_ids: list[str],
+    retrieval_trace_ids: list[str],
+    graph_path_ids: list[str],
+) -> dict[str, Any]:
+    requires_adjudication = bool(
+        positive_match.get("requires_adjudication")
+        or negative_match.get("requires_adjudication")
+    )
+    notes = sorted(
+        set(
+            _strings(positive_match.get("adjudication_notes"))
+            + _strings(negative_match.get("adjudication_notes"))
+        )
+    )
+    return {
+        "schema_version": "applicability-evidence-arbitration-v0",
+        "diagnostic_only": True,
+        "decision_effect": _arbitration_decision_effect(
+            status=status,
+            positive_match=positive_match,
+            negative_match=negative_match,
+        ),
+        "status": status,
+        "basis_type": basis_type,
+        "predicate_name": predicate_name,
+        "positive_trigger_matched": bool(positive_match.get("matched")),
+        "negative_trigger_matched": bool(negative_match.get("matched")),
+        "requires_adjudication": requires_adjudication,
+        "positive_trigger_groups": positive_match.get("trigger_group_results") or [],
+        "negative_trigger_groups": negative_match.get("trigger_group_results") or [],
+        "arbitration_notes": notes,
+        "source_evidence_ids": sorted(
+            str(item.get("evidence_id"))
+            for item in source_evidence
+            if item.get("evidence_id")
+        ),
+        "selected_retrieval_result_ids": selected_retrieval_result_ids,
+        "retrieval_trace_ids": retrieval_trace_ids,
+        "graph_path_ids": graph_path_ids,
+    }
+
+
+def _arbitration_decision_effect(
+    *,
+    status: str,
+    positive_match: dict[str, Any],
+    negative_match: dict[str, Any],
+) -> str:
+    if status == "needs_adjudication" and positive_match.get("requires_adjudication"):
+        return "blocked_by_weak_positive_trigger"
+    if status == "needs_adjudication" and negative_match.get("requires_adjudication"):
+        return "blocked_by_weak_negative_trigger"
+    if status == "applicable" and positive_match.get("matched"):
+        return "positive_trigger_decisive"
+    if status == "not_applicable" and negative_match.get("matched"):
+        return "negative_trigger_decisive"
+    if status == "not_applicable":
+        return "trigger_absence_decisive"
+    return "diagnostic_no_effect"
 
 
 def _source_library_evidence(
@@ -1505,8 +1693,44 @@ def _write_report(path: Path, summary: dict[str, Any], decisions: list[dict[str,
             f"`{decision['candidate_authority_id']}`: "
             f"`{decision['status']}` / `{decision['basis_type']}`"
         )
+        if decision["status"] == "needs_adjudication":
+            lines.extend(_arbitration_report_lines(decision))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _arbitration_report_lines(decision: dict[str, Any]) -> list[str]:
+    summary = decision.get("arbitration_summary")
+    if not isinstance(summary, dict):
+        return []
+    lines = [
+        f"  - Arbitration: `{summary.get('decision_effect')}`",
+    ]
+    positive_groups = summary.get("positive_trigger_groups") or []
+    interesting_groups = [
+        group
+        for group in positive_groups
+        if group.get("matched")
+        and group.get("diagnostic_treatment") in {"auxiliary", "weak_only", "conflicting"}
+    ]
+    if interesting_groups:
+        lines.append("  - Positive trigger diagnostics:")
+        for group in interesting_groups:
+            lines.append(
+                "    - "
+                f"`{_format_trigger_group(group.get('trigger_group'))}`: "
+                f"`{group.get('diagnostic_treatment')}` "
+                f"evidence=`{len(group.get('evidence_ids') or [])}` "
+                f"strengths=`{group.get('evidence_strength_counts') or {}}`"
+            )
+    notes = _strings(summary.get("arbitration_notes"))
+    if notes:
+        lines.append(f"  - Weak-signal notes: `{notes}`")
+    return lines
+
+
+def _format_trigger_group(value: Any) -> str:
+    return " + ".join(_strings(value))
 
 
 def _records_by_candidate(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
