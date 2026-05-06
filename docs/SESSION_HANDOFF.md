@@ -248,7 +248,14 @@ next-target lanes:
   `tests/fixtures/nepa_3d_graph/` now define and validate the source-set/review graph export schema,
   node and edge types, display states, review-readiness states, provenance fields, lens metadata,
   currentness metadata, validation shape, and readiness blockers before exporter implementation.
-- The next NEPA 3D implementation boundary is Milestone 3 source-set knowledge graph export builder.
+- NEPA 3D Milestone 3 is implemented. `nepa_knowledge_graph_export.py` and the
+  `nepa-knowledge-graph-export` CLI command build the source-set graph from catalog graph seeds,
+  authority inventory/currentness, evidence graph inputs, source claims, rule-claim links, the base
+  rule pack, authority-family templates, forest-plan profiles, and forest-plan component inventory.
+  The live `source-set-ba8d0feae79501b8` export passed with `1,307` nodes, `2,400` edges, all `35`
+  authority families, all `190` catalog source records, all `44` base rules, all `19`
+  authority-family templates, `191` rule-claim links, and `329` forest-plan components.
+- The next NEPA 3D implementation boundary is Milestone 4 review-specific applicability overlay.
   The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
   claim handbook completeness.
 

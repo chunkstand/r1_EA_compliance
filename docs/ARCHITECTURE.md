@@ -40,7 +40,7 @@ instructions for agents or privileged tools.
 | Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
 | Review support | Build cross-source-set reuse planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py` |
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `claim_extraction.py`, `rule_claim_binding.py` |
-| NEPA 3D knowledge graph | Define and later assemble source-set and review graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py` |
+| NEPA 3D knowledge graph | Define and assemble source-set graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
 | Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
@@ -82,9 +82,10 @@ active review-corpus records from currentness/supersession archive records and c
 records before graph-export work joins catalog, currentness, evidence, claim, applicability, and
 finding artifacts.
 
-The NEPA 3D graph contract is owned separately from the document evidence graph. It defines the
-source-set and review-specific visualization schema over audited artifacts; later export commands
-must read catalog, derived, applicability, and compliance surfaces rather than raw filenames.
+The NEPA 3D graph contract and source-set exporter are owned separately from the document evidence
+graph. They define and build the source-set visualization schema over audited artifacts; export
+commands must read catalog, derived, applicability, and compliance surfaces rather than raw
+filenames.
 
 ### Evidence, Claims, And Rule Packs
 

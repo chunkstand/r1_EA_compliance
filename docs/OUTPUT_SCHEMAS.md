@@ -1060,7 +1060,7 @@ Review-specific export paths:
 - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_validation.json`
 
 The NEPA 3D graph export has schema version `nepa-3d-knowledge-graph-v1`. Milestone 1 defines the
-contract only; Milestone 3 will build the source-set exporter and later milestones will add review
+contract, and Milestone 3 implements the source-set exporter. Later milestones will add review
 overlays and the viewer. The graph is a visualization/export layer over audited artifacts, not a
 separate legal knowledge base.
 
@@ -1224,6 +1224,22 @@ Committed fixtures for the smallest contract slices live under
 `tests/fixtures/nepa_3d_graph/`. `minimal_source_set_graph.json` proves source-set currentness and
 source partition display. `minimal_review_graph.json` proves review-specific applicability,
 generated-rule, compliance-finding, and adjudication-blocker display.
+
+The Milestone 3 source-set builder is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8
+```
+
+It reads catalog and derived review surfaces, including source graph seeds, authority currentness,
+authority inventory, evidence graph nodes/edges, source claims, rule-claim links, the base rule
+pack, authority-family templates, forest-plan profiles, and forest-plan component inventory. It
+does not scan raw artifact filenames. The live source-set export for
+`source-set-ba8d0feae79501b8` validates with `1,307` nodes, `2,400` edges, `35` authority-family
+nodes, `190` source-record nodes, `63` rule-template nodes, `191` source-claim nodes, `329`
+forest-plan component nodes, and zero failed validation checks.
 
 ## Applicability-First Review Outputs
 

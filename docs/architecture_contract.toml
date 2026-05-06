@@ -81,8 +81,8 @@ allowed_import_layers = ["foundation", "extraction", "claims", "review", "eviden
 
 [[layers]]
 name = "knowledge_graph"
-summary = "NEPA 3D graph contract and future source-set/review export assembly."
-modules = ["nepa_3d_graph_contract"]
+summary = "NEPA 3D graph contract and source-set/review export assembly."
+modules = ["nepa_3d_graph_contract", "nepa_knowledge_graph_export"]
 allowed_import_layers = [
   "foundation",
   "catalog",
@@ -337,7 +337,14 @@ commands = [
 
 [[command_groups]]
 name = "graph_claims_rules"
-commands = ["evidence-graph-build", "claim-extract", "claim-eval", "rule-claim-link", "rule-claim-eval"]
+commands = [
+  "evidence-graph-build",
+  "nepa-knowledge-graph-export",
+  "claim-extract",
+  "claim-eval",
+  "rule-claim-link",
+  "rule-claim-eval",
+]
 
 [[command_groups]]
 name = "applicability"

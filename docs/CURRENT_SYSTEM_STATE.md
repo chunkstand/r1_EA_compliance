@@ -207,6 +207,35 @@ The contract validates:
 - review-readiness states and blocker types so graph display status cannot be confused with
   reviewer readiness.
 
+## NEPA 3D Source-Set Knowledge Graph Export
+
+NEPA 3D Milestone 3 is implemented by `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`, the
+`nepa-knowledge-graph-export` CLI command, `tests/test_nepa_knowledge_graph_export.py`, and the
+generated source-set graph outputs under
+`source_library/derived/<source_set_id>/knowledge_graph/`. The builder is read-only over audited
+catalog and derived surfaces; it does not scan raw artifact filenames.
+
+The live export command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8
+```
+
+The live export for `source-set-ba8d0feae79501b8` now records:
+
+- `validation_passed=true`, `39` validation checks, `0` failed checks;
+- `1,307` nodes and `2,400` edges;
+- source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
+  `44` base rules, `19` authority-family templates, `191` source-claim nodes, and `329`
+  forest-plan component nodes;
+- source input joins: `740` catalog graph seed nodes, `759` catalog graph seed edges, `191`
+  rule-claim links, current authority-currentness validation, evidence graph node/edge inputs, and
+  forest-plan component inventory;
+- readiness blockers remain visible as graph nodes and edges, including the scoped
+  `fsh_chapter_delta_required` blocker.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

@@ -14,6 +14,10 @@ from .cli_common import print_summary
 from .evidence_graph import build_evidence_graph
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
+from .nepa_knowledge_graph_export import DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH
+from .nepa_knowledge_graph_export import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 from .retrieval import build_retrieval_index
 from .retrieval import default_index_path
 from .retrieval import query_retrieval_index
@@ -36,6 +40,7 @@ DERIVED_COMMANDS = {
     "retrieval-query",
     "retrieval-eval",
     "evidence-graph-build",
+    "nepa-knowledge-graph-export",
     "claim-extract",
     "claim-eval",
     "rule-claim-link",
@@ -149,6 +154,44 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     evidence_graph.add_argument("--output-dir", default=Path("source_library"), type=Path)
     evidence_graph.add_argument("--source-set-id")
     evidence_graph.add_argument("--allow-partial-retrieval", action="store_true")
+
+    nepa_graph = subparsers.add_parser(
+        "nepa-knowledge-graph-export",
+        help="Build the source-set NEPA 3D knowledge graph export from audited artifacts.",
+    )
+    nepa_graph.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    nepa_graph.add_argument("--source-set-id")
+    nepa_graph.add_argument(
+        "--graph-contract",
+        default=DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH,
+        type=Path,
+    )
+    nepa_graph.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+    nepa_graph.add_argument(
+        "--authority-family-rule-templates",
+        default=DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH,
+        type=Path,
+    )
+    nepa_graph.add_argument(
+        "--forest-plan-profiles",
+        default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
+    nepa_graph.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
+    nepa_graph.add_argument("--catalog-path", type=Path)
+    nepa_graph.add_argument("--catalog-graph-nodes-path", type=Path)
+    nepa_graph.add_argument("--catalog-graph-edges-path", type=Path)
+    nepa_graph.add_argument("--source-set-manifest-path", type=Path)
+    nepa_graph.add_argument("--authority-currentness-path", type=Path)
+    nepa_graph.add_argument("--evidence-graph-nodes-path", type=Path)
+    nepa_graph.add_argument("--evidence-graph-edges-path", type=Path)
+    nepa_graph.add_argument("--claims-path", type=Path)
+    nepa_graph.add_argument("--rule-claim-links-path", type=Path)
+    nepa_graph.add_argument("--forest-plan-components-path", type=Path)
 
     claim_extract = subparsers.add_parser(
         "claim-extract",
@@ -291,6 +334,29 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             allow_partial_retrieval=args.allow_partial_retrieval,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "nepa-knowledge-graph-export":
+        result = build_nepa_knowledge_graph_export(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            graph_contract_path=args.graph_contract,
+            authority_inventory_path=args.authority_inventory,
+            authority_family_rule_templates_path=args.authority_family_rule_templates,
+            forest_plan_profiles_path=args.forest_plan_profiles,
+            rule_pack_path=args.rule_pack,
+            catalog_path=args.catalog_path,
+            catalog_graph_nodes_path=args.catalog_graph_nodes_path,
+            catalog_graph_edges_path=args.catalog_graph_edges_path,
+            source_set_manifest_path=args.source_set_manifest_path,
+            authority_currentness_path=args.authority_currentness_path,
+            evidence_graph_nodes_path=args.evidence_graph_nodes_path,
+            evidence_graph_edges_path=args.evidence_graph_edges_path,
+            claims_path=args.claims_path,
+            rule_claim_links_path=args.rule_claim_links_path,
+            forest_plan_components_path=args.forest_plan_components_path,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1

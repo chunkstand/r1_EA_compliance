@@ -371,6 +371,14 @@ Build a read-only export command that joins catalog graph seeds, authority inven
 currentness, evidence graph, source claims, rule packs, rule-claim links, Forest Plan component
 inventory, and authority-family templates into one source-set-level graph.
 
+Implementation status:
+Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
+`nepa-knowledge-graph-export` CLI command, and `tests/test_nepa_knowledge_graph_export.py`
+implement the source-set graph builder over audited catalog/derived surfaces. The live export for
+`source-set-ba8d0feae79501b8` passes validation with `1,307` nodes, `2,400` edges, all `35`
+authority families, all `190` catalog source records, all `44` base rules, all `19`
+authority-family templates, `191` rule-claim links, and `329` forest-plan components.
+
 Candidate command:
 
 ```bash
