@@ -106,7 +106,10 @@ spotlight from the graph itself, and a right-side Capability shown panel keeps d
 in rendered graph counts. The graph surface now adds human-readable scene labels plus graph-native
 node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
 larger set of node labels without changing the validated graph data. Advanced search and category
-filters remain available under a visually subordinate Advanced filters disclosure. The earlier
+filters remain available under a visually subordinate Advanced filters disclosure. A generated
+4-page client capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+with graph figures that explain current authority mapping, applicability partitioning,
+source-to-finding traceability, and readiness blockers from the validated V1 graph export. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
@@ -205,6 +208,13 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `viewer/nepa-3d/manifest.json`
   - `viewer/nepa-3d/app.js`
   - `viewer/nepa-3d/styles.css`
+- NEPA 3D client capabilities brief:
+  - `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+  - `docs/capabilities/nepa_3d_capabilities_brief.html`
+  - `docs/capabilities/assets/graph_applicability_client_view.png`
+  - `docs/capabilities/assets/graph_evidence_trace_client_view.png`
+  - `docs/capabilities/assets/graph_readiness_client_view.png`
+  - `tools/build_nepa_3d_capabilities_brief.mjs`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
   - `source_library/derived/<source_set_id>/claims/entities.jsonl`

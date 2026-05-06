@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-label="Evidence path graph from source record to compliance finding">
+  <defs>
+    <filter id="clientShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#141713" flood-opacity="0.13"/>
+    </filter>
+    <marker id="arrowClient" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#70726c"/>
+    </marker>
+  </defs>
+  <rect width="1800" height="1080" rx="34" fill="#f7f6f1"/>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">A defensible finding is a clickable path</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This image is generated from one actual graph trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
+  <path d="M 240 360 L 512 360" stroke="#356a9b" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(276 336)">
+      <rect width="200" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="100" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">supports rule</text>
+    </g>
+  <path d="M 692 360 L 960 360" stroke="#7a6e3d" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(702 336)">
+      <rect width="248" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="124" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">produces decision</text>
+    </g>
+  <path d="M 1140 360 L 1396 360" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(1162 336)">
+      <rect width="212" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="106" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">generates rule</text>
+    </g>
+  <path d="M 1490 455 L 1490 610" stroke="#356a9b" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(1372 508.5)">
+      <rect width="236" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="118" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">supports finding</text>
+    </g>
+  <path d="M 450 645 L 1225 645" stroke="#a75a22" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(737.5 621)">
+      <rect width="200" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
+      <text x="100" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">evidence span</text>
+    </g>
+  <g transform="translate(190 360)" filter="url(#clientShadow)">
+    <circle r="104" fill="#ffffff" stroke="#356a9b" stroke-width="9"/>
+    <circle r="85" fill="#356a9b" opacity="0.10"/>
+    <text y="-131" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Source record</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Administrative</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Procedure Act</text>
+    <text y="142" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#356a9b">R1EA-021 (c05d819e514a)</text>
+  </g>
+  <g transform="translate(602 360)" filter="url(#clientShadow)">
+    <circle r="100" fill="#ffffff" stroke="#5c6f8c" stroke-width="9"/>
+    <circle r="81" fill="#5c6f8c" opacity="0.10"/>
+    <text y="-127" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Rule template</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">APA final</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">agency action</text>
+    <text y="138" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#5c6f8c">authority basis</text>
+  </g>
+  <g transform="translate(1050 360)" filter="url(#clientShadow)">
+    <circle r="104" fill="#ffffff" stroke="#7a6e3d" stroke-width="9"/>
+    <circle r="85" fill="#7a6e3d" opacity="0.10"/>
+    <text y="-131" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Decision</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">APA final</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">agency action</text>
+    <text y="142" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#7a6e3d">applicable</text>
+  </g>
+  <g transform="translate(1490 360)" filter="url(#clientShadow)">
+    <circle r="104" fill="#ffffff" stroke="#26786f" stroke-width="9"/>
+    <circle r="85" fill="#26786f" opacity="0.10"/>
+    <text y="-131" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Generated rule</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">APA final</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">agency action</text>
+    <text y="142" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">review overlay</text>
+  </g>
+  <g transform="translate(1490 715)" filter="url(#clientShadow)">
+    <circle r="100" fill="#ffffff" stroke="#356a9b" stroke-width="9"/>
+    <circle r="81" fill="#356a9b" opacity="0.10"/>
+    <text y="-127" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Finding</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">APA final</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">agency action</text>
+    <text y="138" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#356a9b">compliance matrix</text>
+  </g>
+  <g transform="translate(410 645)" filter="url(#clientShadow)">
+    <circle r="88" fill="#ffffff" stroke="#a75a22" stroke-width="9"/>
+    <circle r="69" fill="#a75a22" opacity="0.10"/>
+    <text y="-115" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Evidence span</text>
+    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">R1EA-021</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">(c05d819e514a)</text>
+    <text y="126" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#a75a22">source bytes</text>
+  </g>
+  <g transform="translate(72 860)" filter="url(#clientShadow)">
+    <rect width="1656" height="174" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
+    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">What the client can inspect</text>
+    <circle cx="39" cy="78" r="5" fill="#26786f"/>
+  <text x="56" y="85" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">Authority family: Administrative review, objection/appeal, and final agency action</text>
+    <circle cx="39" cy="112" r="5" fill="#26786f"/>
+  <text x="56" y="119" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">Source citation: R1EA-021 (c05d819e514a)</text>
+    <circle cx="39" cy="146" r="5" fill="#26786f"/>
+  <text x="56" y="153" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">99 support edges link generated rules or evidence spans to compliance findings across the V1 overlay.</text>
+  </g>
+</svg>

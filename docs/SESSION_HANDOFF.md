@@ -311,6 +311,12 @@ next-target lanes:
   labels while zoomed out, reveal focus labels at mid zoom, and reveal additional node labels when
   zoomed closer. This is a visual legibility layer only; it does not alter graph validation,
   readiness, or source evidence.
+- NEPA 3D client capabilities brief closeout adds a generated 4-page brief at
+  `docs/capabilities/nepa_3d_capabilities_brief.pdf` with a matching HTML source and high-resolution
+  graph figures under `docs/capabilities/assets/`. The brief is built by
+  `tools/build_nepa_3d_capabilities_brief.mjs` from the validated
+  `v1-cg-ecid-compliance-review` graph export and presents current authority mapping,
+  applicability, evidence-path traceability, and readiness blockers as client-facing graph images.
 - The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
   unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
   first.

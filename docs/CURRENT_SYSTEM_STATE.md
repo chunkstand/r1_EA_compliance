@@ -356,6 +356,14 @@ metadata, and validation status. Static tests now lock the runtime URLs, relativ
 manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
 `3d-force-graph`. The viewer status line explicitly records that layout does not change readiness.
 
+A client-facing NEPA 3D capabilities brief is generated at
+`docs/capabilities/nepa_3d_capabilities_brief.pdf` with matching HTML at
+`docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
+`tools/build_nepa_3d_capabilities_brief.mjs` reads the validated
+`v1-cg-ecid-compliance-review` graph export and writes high-resolution graph figures for
+applicability, evidence-path traceability, and readiness blockers.
+The brief is four pages so each graph image stays legible at client-demo scale.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
