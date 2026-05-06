@@ -748,6 +748,9 @@ version `forest-plan-component-adjudication-v0` and includes:
 - current and expected finding/applicability/compliance status values
 - queue reason, component type, matched context, component context, evidence counts, component text,
   and package evidence terms
+- compact trace references for the component, plan-source evidence, and package evidence when
+  available, including source-record IDs, citation labels, artifact/content hashes, chunk IDs,
+  pages, and evidence-span offsets/text
 
 The Markdown worklist is a human-readable rendering of the same queue items for review and triage.
 The JSON template remains the authoritative contract consumed by the adjudication eval.
@@ -774,14 +777,14 @@ writes `forest_plan_component_adjudication_eval.json` by default. The eval resul
   are counted as system misses to feed improvement work. Outcome rates are calculated over the
   current reviewer-resolution queue item count.
 - checks for review/source-set identity, adjudication coverage of the current queue, completed
-  adjudication metadata, and status expectation matches
+  adjudication metadata, required trace references, and status expectation matches
 - per-item results with current statuses, expected statuses, disposition, adjudication outcome, and
-  failure categories
+  failure categories, plus compact current evidence trace references for source audit
 
 The eval fails closed on missing queue items, unexpected adjudications, duplicate items, pending
-dispositions, incomplete adjudication metadata, invalid dispositions, or status expectation
-mismatches. A `true_ea_omission` can be a completed adjudication; it documents a real review gap
-rather than silently marking the component supported.
+dispositions, incomplete adjudication metadata, missing trace references, invalid dispositions, or
+status expectation mismatches. A `true_ea_omission` can be a completed adjudication; it documents a
+real review gap rather than silently marking the component supported.
 
 ## Authority Universe Family Inventory Config
 

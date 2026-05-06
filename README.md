@@ -705,9 +705,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-e
 
 The template command reads `forest_plan_component_findings.json` and
 `forest_plan_reviewer_resolution_queue.json`, then writes a reviewer-fillable JSON adjudication file
-and a Markdown worklist with one item per open queue item. The eval command fails until each item
-has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
-`retrieval_miss`,
+and a Markdown worklist with one item per open queue item. Each item carries compact component and
+evidence trace references from the current finding, including source-record IDs, citations, hashes,
+chunk/page fields, and available offsets/spans. The eval command fails until each item has explicit
+adjudication metadata, preserves required trace refs, and has a resolved disposition such as
+`true_ea_omission`, `retrieval_miss`,
 `package_section_chunking_miss`, `component_inventory_overreach`, `applicability_false_positive`, or
 `evidence_linking_miss`. This keeps model or code guesses out of the legal conclusion while turning
 reviewer decisions into measurable improvement data.

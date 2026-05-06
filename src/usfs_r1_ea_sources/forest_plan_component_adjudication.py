@@ -275,10 +275,17 @@ def _template_item(
 ) -> dict[str, Any]:
     finding = finding or {}
     component = component or {}
+    plan_source_evidence_refs = _evidence_refs(finding.get("plan_source_evidence") or [])
+    package_evidence_refs = _evidence_refs(finding.get("package_evidence") or [])
+    component_source_ref = _component_source_ref(
+        component=component,
+        plan_source_evidence_refs=plan_source_evidence_refs,
+    )
     return {
         "item_id": item.get("item_id"),
         "finding_id": item.get("finding_id"),
         "component_id": item.get("component_id"),
+        "component_source_ref": component_source_ref,
         "component_type": finding.get("component_type") or component.get("component_type"),
         "queue_reason": item.get("reason"),
         "severity": item.get("severity"),
@@ -296,11 +303,120 @@ def _template_item(
             "plan_source_evidence_count": len(finding.get("plan_source_evidence") or []),
             "package_evidence_count": len(finding.get("package_evidence") or []),
         },
+        "plan_source_record_ids": _unique_ref_values(
+            plan_source_evidence_refs,
+            "source_record_id",
+        ),
+        "package_source_record_ids": _unique_ref_values(
+            package_evidence_refs,
+            "source_record_id",
+        ),
+        "plan_source_citations": _unique_ref_values(
+            plan_source_evidence_refs,
+            "citation_label",
+        ),
+        "package_evidence_citations": _unique_ref_values(
+            package_evidence_refs,
+            "citation_label",
+        ),
+        "plan_source_evidence_refs": plan_source_evidence_refs,
+        "package_evidence_refs": package_evidence_refs,
         "component_text": component.get("component_text"),
         "package_evidence_terms": (
             (finding.get("applicability_basis") or {}).get("package_evidence_terms") or []
         ),
     }
+
+
+def _component_source_ref(
+    *,
+    component: dict[str, Any],
+    plan_source_evidence_refs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    provenance = component.get("provenance") if isinstance(component.get("provenance"), dict) else {}
+    entity = provenance.get("entity") if isinstance(provenance.get("entity"), dict) else {}
+    first_plan_ref = plan_source_evidence_refs[0] if plan_source_evidence_refs else {}
+    return _compact_dict(
+        {
+            "source_record_id": component.get("source_record_id")
+            or entity.get("source_record_id")
+            or first_plan_ref.get("source_record_id"),
+            "citation_label": component.get("citation_label")
+            or first_plan_ref.get("citation_label"),
+            "artifact_sha256": component.get("artifact_sha256")
+            or entity.get("artifact_sha256")
+            or first_plan_ref.get("artifact_sha256"),
+            "content_sha256": component.get("content_sha256")
+            or entity.get("content_sha256")
+            or first_plan_ref.get("content_sha256"),
+            "source_chunk_ids": _string_values(
+                component.get("source_chunk_ids")
+                or entity.get("source_chunk_ids")
+                or first_plan_ref.get("source_chunk_ids")
+                or []
+            ),
+            "page": component.get("page") or first_plan_ref.get("page"),
+        }
+    )
+
+
+def _evidence_refs(evidence_items: list[Any]) -> list[dict[str, Any]]:
+    refs: list[dict[str, Any]] = []
+    for item in evidence_items:
+        if not isinstance(item, dict):
+            continue
+        provenance = item.get("provenance") if isinstance(item.get("provenance"), dict) else {}
+        span = item.get("evidence_span") if isinstance(item.get("evidence_span"), dict) else {}
+        refs.append(
+            _compact_dict(
+                {
+                    "source_record_id": item.get("source_record_id")
+                    or provenance.get("source_record_id"),
+                    "citation_label": item.get("citation_label"),
+                    "title": item.get("title"),
+                    "document_role": item.get("document_role"),
+                    "authority_level": item.get("authority_level"),
+                    "chunk_id": item.get("chunk_id"),
+                    "page": item.get("page"),
+                    "rank": item.get("rank"),
+                    "score": item.get("score"),
+                    "artifact_sha256": provenance.get("artifact_sha256"),
+                    "content_sha256": provenance.get("content_sha256"),
+                    "source_chunk_ids": _string_values(provenance.get("source_chunk_ids")),
+                    "source_text_path": provenance.get("source_text_path"),
+                    "evidence_span": _compact_dict(
+                        {
+                            "chunk_char_start": span.get("chunk_char_start"),
+                            "chunk_char_end": span.get("chunk_char_end"),
+                            "source_char_start": span.get("source_char_start"),
+                            "source_char_end": span.get("source_char_end"),
+                            "text": span.get("text"),
+                        }
+                    ),
+                }
+            )
+        )
+    return refs
+
+
+def _unique_ref_values(refs: list[dict[str, Any]], field: str) -> list[str]:
+    values: list[str] = []
+    seen: set[str] = set()
+    for ref in refs:
+        value = str(ref.get(field) or "").strip()
+        if value and value not in seen:
+            seen.add(value)
+            values.append(value)
+    return values
+
+
+def _compact_dict(value: dict[str, Any]) -> dict[str, Any]:
+    compact: dict[str, Any] = {}
+    for key, item in value.items():
+        if item is None or item == "" or item == [] or item == {}:
+            continue
+        compact[key] = item
+    return compact
 
 
 def _current_status(*, finding: dict[str, Any], item: dict[str, Any]) -> dict[str, Any]:
@@ -497,12 +613,21 @@ def _item_result(
         if missing:
             failure_categories.append("adjudication_incomplete")
             details["missing_fields"] = missing
+        missing_trace_refs = _missing_trace_refs(
+            adjudication=adjudication,
+            finding=finding,
+        )
+        if missing_trace_refs:
+            failure_categories.append("adjudication_trace_incomplete")
+            details["missing_trace_refs"] = missing_trace_refs
 
     mismatches = _status_mismatches(current=current, expected=expected_current)
     if mismatches:
         failure_categories.append("adjudication_expectation_mismatch")
         details["status_mismatches"] = mismatches
 
+    plan_source_evidence_refs = _evidence_refs(finding.get("plan_source_evidence") or [])
+    package_evidence_refs = _evidence_refs(finding.get("package_evidence") or [])
     return {
         "item_id": queue_item.get("item_id"),
         "finding_id": queue_item.get("finding_id"),
@@ -516,6 +641,24 @@ def _item_result(
         "passed": not failure_categories,
         "failure_categories": failure_categories,
         "details": details,
+        "plan_source_record_ids": _unique_ref_values(
+            plan_source_evidence_refs,
+            "source_record_id",
+        ),
+        "package_source_record_ids": _unique_ref_values(
+            package_evidence_refs,
+            "source_record_id",
+        ),
+        "plan_source_citations": _unique_ref_values(
+            plan_source_evidence_refs,
+            "citation_label",
+        ),
+        "package_evidence_citations": _unique_ref_values(
+            package_evidence_refs,
+            "citation_label",
+        ),
+        "plan_source_evidence_refs": plan_source_evidence_refs,
+        "package_evidence_refs": package_evidence_refs,
     }
 
 
@@ -567,6 +710,33 @@ def _missing_adjudication_fields(adjudication: dict[str, Any]) -> list[str]:
     if not _string_list(adjudication.get("adjudicated_by")):
         missing.append("adjudicated_by")
     return sorted(missing)
+
+
+def _missing_trace_refs(
+    *,
+    adjudication: dict[str, Any],
+    finding: dict[str, Any],
+) -> list[str]:
+    missing: list[str] = []
+    if not _has_source_record_ref(adjudication.get("component_source_ref")):
+        missing.append("component_source_ref.source_record_id")
+    if finding.get("plan_source_evidence") and not _has_source_record_ref(
+        adjudication.get("plan_source_evidence_refs")
+    ):
+        missing.append("plan_source_evidence_refs.source_record_id")
+    if finding.get("package_evidence") and not _has_source_record_ref(
+        adjudication.get("package_evidence_refs")
+    ):
+        missing.append("package_evidence_refs.source_record_id")
+    return missing
+
+
+def _has_source_record_ref(value: Any) -> bool:
+    if isinstance(value, dict):
+        return bool(str(value.get("source_record_id") or "").strip())
+    if isinstance(value, list):
+        return any(_has_source_record_ref(item) for item in value)
+    return False
 
 
 def _status_mismatches(
@@ -676,6 +846,7 @@ def _check_adjudication_items_complete(item_results: list[dict[str, Any]]) -> di
                 "adjudication_invalid_disposition",
                 "adjudication_pending",
                 "adjudication_incomplete",
+                "adjudication_trace_incomplete",
                 "adjudication_unexpected",
             }
             for category in result.get("failure_categories", [])

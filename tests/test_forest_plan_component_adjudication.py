@@ -35,6 +35,22 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
             self.assertEqual(template["summary"]["markdown_path"], str(result.markdown_path))
             self.assertEqual(template["items"][0]["disposition"], "pending")
             self.assertEqual(
+                template["items"][0]["component_source_ref"]["source_record_id"],
+                "R1PLAN-unit-fp-std-01",
+            )
+            self.assertEqual(
+                template["items"][0]["plan_source_record_ids"],
+                ["R1PLAN-unit-fp-std-01"],
+            )
+            self.assertEqual(
+                template["items"][0]["plan_source_citations"],
+                ["Plan Citation fp-std-01"],
+            )
+            self.assertEqual(
+                template["items"][0]["plan_source_evidence_refs"][0]["artifact_sha256"],
+                "artifact-fp-std-01",
+            )
+            self.assertEqual(
                 template["items"][0]["expected_current"],
                 {
                     "applicability_status": "applicable",
@@ -89,6 +105,15 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
             }
             self.assertEqual(outcomes["fp-std-01"], "real_ea_omission")
             self.assertEqual(outcomes["fp-gdl-01"], "system_miss")
+            first_result = report["item_results"][0]
+            self.assertEqual(
+                first_result["plan_source_record_ids"],
+                ["R1PLAN-unit-fp-std-01"],
+            )
+            self.assertEqual(
+                first_result["plan_source_evidence_refs"][0]["citation_label"],
+                "Plan Citation fp-std-01",
+            )
 
     def test_eval_fails_pending_or_mismatched_adjudications(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -144,6 +169,35 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
                 1,
             )
 
+    def test_eval_fails_resolved_adjudication_without_trace_refs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_review_artifacts(root)
+            adjudication_file = root / "adjudication.json"
+            _write_adjudication(
+                adjudication_file,
+                item_updates={
+                    "fp-std-01-missing_package_evidence": {
+                        "component_source_ref": {},
+                        "plan_source_evidence_refs": [],
+                    }
+                },
+            )
+
+            result = run_forest_plan_component_adjudication_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                adjudication_file=adjudication_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(
+                result.summary["failure_category_counts"]["adjudication_trace_incomplete"],
+                1,
+            )
+            missing = result.summary["checks"][2]["details"]["component_ids"]
+            self.assertIn("fp-std-01", missing)
+
     def test_cli_accepts_component_adjudication_commands(self) -> None:
         parser = build_parser()
         template_args = parser.parse_args(
@@ -179,11 +233,21 @@ def _write_review_artifacts(root: Path) -> Path:
             "component_id": "fp-std-01",
             "component_type": "standard",
             "component_text": "Standard 01 requires mitigation.",
+            "source_record_id": "R1PLAN-unit-fp-std-01",
+            "citation_label": "Plan Citation fp-std-01",
+            "artifact_sha256": "artifact-fp-std-01",
+            "content_sha256": "content-fp-std-01",
+            "source_chunk_ids": ["chunk-plan-fp-std-01"],
         },
         {
             "component_id": "fp-gdl-01",
             "component_type": "guideline",
             "component_text": "Guideline 01 should be considered.",
+            "source_record_id": "R1PLAN-unit-fp-gdl-01",
+            "citation_label": "Plan Citation fp-gdl-01",
+            "artifact_sha256": "artifact-fp-gdl-01",
+            "content_sha256": "content-fp-gdl-01",
+            "source_chunk_ids": ["chunk-plan-fp-gdl-01"],
         },
     ]
     findings = [
@@ -235,7 +299,27 @@ def _finding(component_id: str, component_type: str, compliance_status: str) -> 
             "component_context": {"management_area_ids": ["mgmt-test"]},
             "package_evidence_terms": ["mitigation"],
         },
-        "plan_source_evidence": [{"chunk_id": "chunk-plan"}],
+        "plan_source_evidence": [
+            {
+                "chunk_id": f"chunk-plan-{component_id}",
+                "citation_label": f"Plan Citation {component_id}",
+                "source_record_id": f"R1PLAN-unit-{component_id}",
+                "title": "Unit Forest Plan",
+                "document_role": "forest_plan",
+                "page": 12,
+                "provenance": {
+                    "artifact_sha256": f"artifact-{component_id}",
+                    "content_sha256": f"content-{component_id}",
+                    "source_chunk_ids": [f"chunk-plan-{component_id}"],
+                    "source_record_id": f"R1PLAN-unit-{component_id}",
+                },
+                "evidence_span": {
+                    "source_char_start": 10,
+                    "source_char_end": 40,
+                    "text": "Plan component evidence.",
+                },
+            }
+        ],
         "package_evidence": [],
     }
 
@@ -301,6 +385,27 @@ def _adjudication_item(
         "adjudicated_by": ["unit-test"],
         "source_type": "unit_fixture",
         "rationale": "Unit fixture adjudication.",
+        "component_source_ref": {
+            "source_record_id": f"R1PLAN-unit-{component_id}",
+            "citation_label": f"Plan Citation {component_id}",
+            "artifact_sha256": f"artifact-{component_id}",
+            "content_sha256": f"content-{component_id}",
+            "source_chunk_ids": [f"chunk-plan-{component_id}"],
+        },
+        "plan_source_record_ids": [f"R1PLAN-unit-{component_id}"],
+        "plan_source_citations": [f"Plan Citation {component_id}"],
+        "plan_source_evidence_refs": [
+            {
+                "source_record_id": f"R1PLAN-unit-{component_id}",
+                "citation_label": f"Plan Citation {component_id}",
+                "chunk_id": f"chunk-plan-{component_id}",
+                "artifact_sha256": f"artifact-{component_id}",
+                "content_sha256": f"content-{component_id}",
+            }
+        ],
+        "package_source_record_ids": [],
+        "package_evidence_citations": [],
+        "package_evidence_refs": [],
         "expected_current": {
             "finding_status": "gap",
             "applicability_status": "applicable",

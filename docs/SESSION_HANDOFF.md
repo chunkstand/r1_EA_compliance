@@ -9,7 +9,9 @@ preliminary-EA expansion slot now has a completed Forest Plan component adjudica
 current `158`-row queue: all `158` rows are resolved as true EA package-evidence omissions,
 `pending_adjudication_count=0`, and `system_miss_count=0`. These adjudications keep the missing
 package evidence visible as gaps; they do not mark the components supported or create legal
-conclusions.
+conclusions. The closeout gap pass tightened the adjudication template/eval contract so resolved
+items carry compact source trace refs and fail eval if source-record IDs, citations, hashes,
+chunk/page fields, or available offset/span fields are dropped.
 
 ECID compliance review was rerun with `--reuse-package-cache` against
 `region1-expansion-ecid-preliminary-ea` and now reports `reviewer_ready=true` with validation
@@ -397,8 +399,9 @@ but they are not the current next pass unless the user redirects.
 Sequence 2B alignment/gap close note: strict and non-strict promotion-suite evidence were kept
 separate, and non-strict was rerun last so the default suite output remains the current-promotion
 signal. The ECID implementation reused the existing package/cache, turned each of the `158` rows
-into an actionable QA/QC disposition, and preserved the missing evidence as visible gaps rather than
-converting the review into a legal conclusion.
+into an actionable QA/QC disposition, preserved compact component/source refs on every resolved
+item, and preserved the missing evidence as visible gaps rather than converting the review into a
+legal conclusion.
 
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
   East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency

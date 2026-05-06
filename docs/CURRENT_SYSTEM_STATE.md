@@ -540,7 +540,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   `--reuse-package-cache`, and reran review-scoped phase eval. The adjudication eval resolved all
   `158` rows as true EA package-evidence omissions with `0` system misses; compliance review now
   reports `reviewer_ready=true` and validation passes without treating those omissions as component
-  support.
+  support. The Sequence 2B closeout pass also tightened the adjudication template/eval contract so
+  resolved items carry compact component/source trace references and fail if source-record,
+  citation, hash, chunk/page, or available offset/span fields are dropped.
 - The ECID roads/access/special-use adjudication item exposed the pre-Milestone-3
   evidence-arbitration gap: weak auxiliary trigger evidence could block an authority family even
   when strong independent roads/access/right-of-way evidence was present. The repair sequence is
@@ -990,11 +992,12 @@ Current state:
 - Forest-plan component adjudication tooling is implemented through
   `forest-plan-component-adjudication-template` and `forest-plan-component-adjudication-eval`. The
   template command exports one adjudication item for each open component reviewer-resolution queue
-  item, with current status expectations and reviewer-fillable dispositions, and writes a companion
-  Markdown worklist for human triage. The eval command fails closed until every current queue item
-  has explicit adjudication metadata and a resolved disposition such as `true_ea_omission`,
-  `retrieval_miss`, `package_section_chunking_miss`, `component_inventory_overreach`,
-  `applicability_false_positive`, or `evidence_linking_miss`.
+  item, with current status expectations, compact component/source trace refs, and
+  reviewer-fillable dispositions, and writes a companion Markdown worklist for human triage. The
+  eval command fails closed until every current queue item has explicit adjudication metadata,
+  required trace refs, and a resolved disposition such as `true_ea_omission`, `retrieval_miss`,
+  `package_section_chunking_miss`, `component_inventory_overreach`, `applicability_false_positive`,
+  or `evidence_linking_miss`.
   Earlier runs against `v1-cg-ecid-compliance-review` produced `21` pending non-standard items:
   `8` desired conditions, `2` goals, `7` guidelines, `3` objectives, and `1` suitability
   component. Those items were adjudicated as system misses, then closed by the resolver and

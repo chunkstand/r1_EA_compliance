@@ -310,7 +310,11 @@ Status: complete as of 2026-05-06. The ECID Forest Plan component adjudication e
 the current `158`-row queue with `resolved_adjudication_count=158`, `real_ea_omission_count=158`,
 `pending_adjudication_count=0`, and `system_miss_count=0`. ECID compliance review now reports
 `reviewer_ready=true`, the ECID review-scoped phase eval passes, and the promotion suite has no ECID
-`forest_plan_reviewer_not_ready`, `missing_source`, or `adjudication_needed` blocker.
+`forest_plan_reviewer_not_ready`, `missing_source`, or `adjudication_needed` blocker. The sequence
+closeout gap pass tightened the adjudication artifact contract so resolved items preserve compact
+component/source trace references, including source-record IDs, citations, hashes, chunk IDs, pages,
+and offsets/text spans when available; resolved adjudications now fail eval if those trace
+references are dropped.
 
 Purpose: close the ECID reviewer-ready blocker exposed by Sequence 2 without weakening the Forest
 Plan component gate.
