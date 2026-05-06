@@ -1096,6 +1096,8 @@ Current state as of 2026-05-06:
 - `config/promotion_suite_v1.json` reports current promotion ready by default while broader
   expansion remains not ready. The expansion blockers are `adjudication_needed` for the ECID
   preliminary-EA slot and `package_fixture_missing` for the third real-package slot.
+- The focused closure plan for these blockers is
+  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
 
 Implementation direction:
 

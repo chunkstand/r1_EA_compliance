@@ -96,3 +96,14 @@ adjudication after the evidence-arbitration replay. The slot remains `ready=fals
 validation correctly blocks generated rule-pack creation until the cultural-resource/SHPO,
 minerals/energy, and species-supporting positive/negative conflicts are adjudicated and replayed.
 The second real-package slot remains open with `package_fixture_missing`.
+
+Resolution plan:
+
+```text
+docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md
+```
+
+That plan closes the weakness in sequence: lock the current promotion-suite blocker baseline,
+complete the three-item ECID adjudication replay, generate and review the ECID expansion rule pack,
+replace the missing third package slot with a concrete fixture contract, run that package through
+the applicability-first sequence, and close with strict expansion promotion.

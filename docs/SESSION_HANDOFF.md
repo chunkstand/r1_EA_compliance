@@ -426,6 +426,9 @@ next-target lanes:
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
   user wants to broaden expansion coverage first.
+- `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
+  `expansion_ready=false` by closing the ECID adjudication blocker and replacing the
+  `package_fixture_missing` slot with a verified third real-package fixture.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
