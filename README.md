@@ -874,9 +874,9 @@ adjudication blocker is closed locally: `applicability-adjudication-eval`,
 `region1-expansion-ecid-preliminary-ea`. The ECID generated rule pack also validates, compliance
 review writes the expected matrix/PDF artifacts, and review-scoped phase eval writes
 `source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json`. The ECID
-expansion slot still cannot be marked ready because Forest Plan component adjudication has not been
-completed for the `158` pending component rows; strict expansion also remains blocked by the missing
-third real-package fixture.
+expansion slot still cannot be marked ready because the compliance artifact has `17` rule-claim
+gaps and Forest Plan component adjudication has not been completed for the `158` pending component
+rows; strict expansion also remains blocked by the missing third real-package fixture.
 
 Run the seed retrieval eval gate:
 

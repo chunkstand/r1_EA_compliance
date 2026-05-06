@@ -485,7 +485,7 @@
             {
               "name": "rule_claim_gap_count",
               "json_path": "summary.rule_claim_gap_count",
-              "equals": 17,
+              "equals": 0,
               "failure_category": "missing_source"
             },
             {
@@ -858,7 +858,7 @@
     {
       "id": "region1-real-ea-slot-1",
       "label": "Second real Region 1 EA package: ECID preliminary EA",
-      "status": "blocked_forest_plan_component_adjudication",
+      "status": "blocked_source_claim_and_forest_plan_component_adjudication",
       "ready": false,
       "required_for_current_promotion": false,
       "failure_category": "forest_plan_reviewer_not_ready",
@@ -878,6 +878,8 @@
         "generated_rule_count": 46,
         "compliance_validation_passed": false,
         "compliance_review_reviewer_ready": false,
+        "rule_claim_link_count": 127,
+        "rule_claim_gap_count": 17,
         "forest_plan_applicable_standard_count": 29,
         "forest_plan_applied_standard_count": 7,
         "forest_plan_component_reviewer_resolution_count": 158,
@@ -887,7 +889,7 @@
         "phase_eval_passed": false,
         "phase_eval_reviewer_ready": false
       },
-      "next_action": "Complete the 158-item forest-plan component adjudication worklist, run forest-plan-component-adjudication-eval, then rerun ECID compliance review and review-scoped phase eval before marking this slot ready.",
+      "next_action": "Close the 17 ECID rule-claim gaps first, then complete the 158-item forest-plan component adjudication worklist, run forest-plan-component-adjudication-eval, and rerun ECID compliance review and review-scoped phase eval before marking this slot ready.",
       "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {

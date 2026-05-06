@@ -339,7 +339,7 @@ Latest post-V1 real-package expansion Sequence 2 artifact pass:
   `compliance_review.json`, `compliance_validation.json`, `compliance_matrix.json/.md/.pdf`,
   authority-family provenance, non-applicable authority appendix, authority reviewer-resolution,
   litigation-risk, rule-claim, and finding-graph artifacts, but exited nonzero because
-  `forest_plan_component_gate_reviewer_ready` failed.
+  `rule_claim_gap_count=17` and `forest_plan_component_gate_reviewer_ready` failed.
 - ECID Forest Plan component status: `29` applicable standards, `7` applied standards, `158`
   reviewer-resolution rows, all queued as `missing_package_evidence`.
 - `phase-eval --review-id region1-expansion-ecid-preliminary-ea` now writes a review-scoped copy at
@@ -354,23 +354,24 @@ Latest post-V1 real-package expansion Sequence 2 artifact pass:
   and `.md`.
 - `config/promotion_suite_v1.json` now includes ECID `required_for_expansion` artifact checks and
   treats expansion readiness as both slot readiness and required expansion artifact readiness. The
-  ECID slot is blocked with `forest_plan_reviewer_not_ready`, not `adjudication_needed`.
+  ECID slot is blocked with `missing_source` and `forest_plan_reviewer_not_ready`, not
+  `adjudication_needed`.
 - Non-strict promotion suite now reports `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
-  "package_fixture_missing": 1}`, `open_expansion_artifact_count=4`, and
+  "missing_source": 1, "package_fixture_missing": 1}`, `open_expansion_artifact_count=4`, and
   `open_expansion_slot_count=2`.
 - Strict expansion promotion suite fails as expected with `promotion_ready=false` and
-  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "missing_source": 1,
+  "package_fixture_missing": 1}`.
 
 Next implementation target:
 
 The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2A:
-complete the ECID `158`-item Forest Plan component adjudication worklist, run
-`forest-plan-component-adjudication-eval`, rerun ECID compliance review and review-scoped
-phase-eval, then rerun promotion-suite checks before marking the ECID slot ready. The older lane
-notes below are retained for continuity, but they are not the current next pass unless the user
-redirects.
+close the ECID source-claim gap set so `rule_claim_gap_count=0`, rerun ECID compliance review and
+promotion-suite checks, then proceed to Sequence 2B for the `158`-item Forest Plan component
+adjudication worklist. The older lane notes below are retained for continuity, but they are not the
+current next pass unless the user redirects.
 
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
   East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
@@ -923,11 +924,12 @@ rate `1.0`.
 Next sequence for the current applicability lane:
 `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2A. Sequence 2 generated and
 validated the ECID applicability-derived rule pack, ran compliance review, wrote review-scoped
-phase eval, and added ECID promotion-suite artifact checks. The next pass should complete the
-`158`-item ECID Forest Plan component adjudication worklist, run
-`forest-plan-component-adjudication-eval`, rerun ECID compliance review with `--reuse-package-cache`,
-rerun review-scoped phase eval, and clear the ECID `forest_plan_reviewer_not_ready` promotion-suite
-blocker before marking the slot ready.
+phase eval, and added ECID promotion-suite artifact checks. The next pass should close the `17`
+ECID rule-claim gaps so `rule_claim_gap_count=0`, rerun ECID compliance review with
+`--reuse-package-cache`, and clear the ECID `missing_source` promotion-suite blocker. After that,
+Sequence 2B should complete the `158`-item ECID Forest Plan component adjudication worklist, run
+`forest-plan-component-adjudication-eval`, rerun review-scoped phase eval, and clear the
+`forest_plan_reviewer_not_ready` blocker before marking the slot ready.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,
