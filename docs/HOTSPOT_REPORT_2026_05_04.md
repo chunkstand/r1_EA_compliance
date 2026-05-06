@@ -240,3 +240,39 @@ Extract authority-integration artifact assembly for authority provenance, non-ap
 reviewer-resolution report, and deterministic litigation-risk summary. Keep the same boundary rule:
 one ownership slice, no output schema change, and no downstream compliance-review execution unless
 explicitly requested.
+
+## 2026-05-06 Sequence 3 Authority-Integration Split
+
+Sequence 3 creates `src/usfs_r1_ea_sources/compliance_authority_integration.py` and moves
+authority-integration artifact assembly out of `compliance_review.py`. The split owns
+authority-family provenance, the non-applicable authority appendix JSON and Markdown, the authority
+reviewer-resolution report, deterministic litigation-risk summary assembly, and the private
+authority row/risk helpers needed by those artifacts.
+
+Current post-split source line counts:
+
+| Surface | Lines | Sequence 3 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 1,851 | Review orchestration, finding construction, graph construction, eval, and file writes remain. |
+| `src/usfs_r1_ea_sources/compliance_authority_integration.py` | 493 | New narrow owner for authority-integration artifact assembly. |
+| `src/usfs_r1_ea_sources/compliance_validation.py` | 762 | Sequence 2 validation/report-summary owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_inputs.py` | 561 | Sequence 1 input/gate owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_outputs.py` | 1,019 | Existing rendering split remains unchanged. |
+
+Sequence 3 preserves the existing generated artifact contracts: no finding selection, compliance
+status decision, generated rule-pack semantic, Forest Plan component evaluation, matrix/PDF output,
+finding graph output, eval scoring, CLI flag, or schema behavior is intentionally changed.
+
+Sequence 3 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Next target:
+
+No Sequence 4 split is selected yet. Rerank remaining hotspots and choose another bounded slice
+before moving more compliance-review code.

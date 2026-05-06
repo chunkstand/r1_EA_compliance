@@ -137,6 +137,7 @@ allowed_import_layers = [
 name = "compliance"
 summary = "Compliance review, compliance input gates, compliance coverage, and compliance gold eval."
 modules = [
+  "compliance_authority_integration",
   "compliance_coverage",
   "compliance_gold_eval",
   "compliance_inputs",
