@@ -91,67 +91,67 @@
   <path d="M 642 500 L 682 500" stroke="#8a8f84" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
   <path d="M 932 500 L 972 500" stroke="#8a8f84" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
   <text x="1430" y="152" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Forest plans at graph edge</text>
-  <text x="1385" y="184" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">10 tracked Region 1 forest or grassland</text><text x="1385" y="206" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">profiles are visible. Custer Gallatin</text><text x="1385" y="228" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">is operational; the others stay as</text><text x="1385" y="250" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">expansion gates until their source and</text>
-  <path d="M 1180 570 L 1291 218" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <text x="1385" y="184" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">10 tracked Region 1 forest or grassland</text><text x="1385" y="206" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">profiles sit at the edge of the</text><text x="1385" y="228" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">authority graph. Source/profile</text><text x="1385" y="250" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">validation gates control expansion for</text>
+  <path d="M 1180 570 L 1291 218" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1385 218)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Beaverhead-Deerlodge</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1486 285" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1486 285" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1580 285)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Bitterroot plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1326 352" stroke="#6da89d" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1326 352" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1420 352)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#26786f" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#26786f"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Custer Gallatin</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#26786f">operational</text>
-  </g><path d="M 1180 570 L 1511 419" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1511 419" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1605 419)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Dakota Prairie</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Grasslands plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1296 486" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1296 486" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1390 486)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Flathead plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1506 553" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1506 553" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1600 553)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Helena-Lewis</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Clark plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1326 620" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1326 620" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1420 620)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Idaho Panhandle</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1494 687" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1494 687" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1588 687)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Kootenai plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1301 754" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1301 754" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1395 754)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Lolo plan</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
-  </g><path d="M 1180 570 L 1491 821" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
+  </g><path d="M 1180 570 L 1491 821" stroke="#b9a88c" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
       <g transform="translate(1585 821)" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#7a6e3d" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#7a6e3d"/>
     <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Nez</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Perce-Clearwater</text>
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#7a6e3d">forest plan</text>
   </g>
 
   <text x="92" y="1015" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#26786f">Decision risk is checked across the whole authority stack, not only against a single NEPA citation.</text>

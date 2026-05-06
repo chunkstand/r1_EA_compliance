@@ -354,11 +354,8 @@ function readinessServiceGraphSvg(readiness, metrics) {
       [1585, 821]
     ];
     const [x, y] = positions[index] || [1500, 220 + index * 72];
-    const isReady = node.display_status !== "readiness_blocked";
-    const color = isReady ? "#26786f" : "#b13d38";
-    const status = isReady ? "operational" : "expansion gate";
-    return `${graphEdge(1180, 570, x - 94, y, isReady ? "#6da89d" : "#d9a19a", 4, "")}
-      ${forestPlanNode(x, y, color, `${shortForestLabel(node.label || node.node_id)} plan`, status)}`;
+    return `${graphEdge(1180, 570, x - 94, y, "#b9a88c", 4, "")}
+      ${forestPlanNode(x, y, "#7a6e3d", `${shortForestLabel(node.label || node.node_id)} plan`, "forest plan")}`;
   }).join("");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -391,7 +388,7 @@ function readinessServiceGraphSvg(readiness, metrics) {
   ${graphEdge(642, 500, 682, 500, "#8a8f84", 7, "")}
   ${graphEdge(932, 500, 972, 500, "#8a8f84", 7, "")}
   <text x="1430" y="152" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Forest plans at graph edge</text>
-  ${wrapSvgText(`${readiness.forestUnits.length} tracked Region 1 forest or grassland profiles are visible. Custer Gallatin is operational; the others stay as expansion gates until their source and component coverage is validated.`, 1385, 184, 350, 17, "#5f625b", 4)}
+  ${wrapSvgText(`${readiness.forestUnits.length} tracked Region 1 forest or grassland profiles sit at the edge of the authority graph. Source/profile validation gates control expansion for each profile.`, 1385, 184, 350, 17, "#5f625b", 4)}
   ${forestPlans}
 
   <text x="92" y="1015" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#26786f">Decision risk is checked across the whole authority stack, not only against a single NEPA citation.</text>
