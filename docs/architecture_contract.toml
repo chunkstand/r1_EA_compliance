@@ -148,6 +148,15 @@ allowed_import_layers = [
 ]
 
 [[layers]]
+name = "decision_support"
+summary = "Supervisor-facing EA consistency report synthesis over audited review artifacts."
+modules = ["ea_consistency_decision_support"]
+allowed_import_layers = [
+  "foundation",
+  "decision_support",
+]
+
+[[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = ["applicability_eval", "promotion_suite", "v1_ea_eval"]
@@ -160,6 +169,7 @@ allowed_import_layers = [
   "applicability",
   "review",
   "compliance",
+  "decision_support",
   "eval",
 ]
 
@@ -173,6 +183,7 @@ modules = [
   "cli_capture",
   "cli_common",
   "cli_compliance",
+  "cli_decision_support",
   "cli_derived",
   "cli_eval",
   "cli_review",
@@ -192,6 +203,7 @@ allowed_import_layers = [
   "package_context",
   "applicability",
   "compliance",
+  "decision_support",
   "eval",
   "cli",
 ]
@@ -300,6 +312,15 @@ paths = [
 ]
 
 [[artifacts]]
+owner_layer = "decision_support"
+paths = [
+  "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.json",
+  "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.md",
+  "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.pdf",
+  "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support_manifest.json",
+]
+
+[[artifacts]]
 owner_layer = "eval"
 paths = [
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
@@ -374,6 +395,10 @@ commands = [
 [[command_groups]]
 name = "compliance"
 commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval", "compliance-coverage"]
+
+[[command_groups]]
+name = "decision_support"
+commands = ["ea-consistency-document"]
 
 [[command_groups]]
 name = "eval"

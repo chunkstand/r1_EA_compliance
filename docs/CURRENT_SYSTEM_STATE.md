@@ -342,29 +342,46 @@ validation status. Static tests now lock the runtime URLs, relative graph-export
 the `node_id`/edge endpoint mapping used by `3d-force-graph`. The viewer status line explicitly
 records that layout does not change readiness.
 
-## EA Consistency Decision-Support Contract
+## EA Consistency Decision-Support Generator
 
-The East Crazies decision-support lane is complete through Sequence 1. Sequence 0 preflight recorded
-the current artifact/count/hash baseline and closed with `go`; Sequence 1 adds the tracked report
-contract before generator implementation. The tracked contract surfaces are:
+The East Crazies decision-support lane is complete through Sequence 2. Sequence 0 preflight recorded
+the current artifact/count/hash baseline and closed with `go`; Sequence 1 added the tracked report
+contract; Sequence 2 adds the deterministic generator and public CLI command. The tracked surfaces
+are:
 
 - `config/ea_consistency_decision_support_v1.json`
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
 - `tests/fixtures/decision_support/minimal_decision_support_report.json`
 - `tests/test_ea_consistency_decision_support.py`
+- `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
+- `src/usfs_r1_ea_sources/cli_decision_support.py`
 - `docs/OUTPUT_SCHEMAS.md`
 
-The contract defines schema version `ea-consistency-decision-support-report-v1`, the required
-top-level report sections, manifest lineage, row-level `trace_ids` and `source_selectors`,
-implementation-confirmation selector ownership, residual-risk handling with
-`legal_conclusion=false`, all `12` current applicable standards, the current East Crazies
-count/hash baseline, and fail-closed categories for missing/stale inputs, count drift, missing
-evidence, manual-draft dependency, invalid PDF output, synthesis overclaims, and synthesis
-omissions.
+The command is:
 
-No decision-support generator, renderer, validation phase, or generated
-`source_library/reviews/v1-cg-ecid-compliance-review/decision_support/` output exists yet. The next
-boundary is Sequence 2: Report Generator.
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+The generator reads existing audited review artifacts and tracked config/fixture contracts, compares
+the Sequence 1 hash/count baseline, fails closed on stale, missing, non-reviewer-ready, or
+hash-mismatched inputs, and writes:
+
+- `source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.json`
+- `source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.md`
+- `source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.pdf`
+- `source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support_manifest.json`
+
+The generated report keeps applicability status, compliance status, implementation-confirmation
+status, and residual risk/legal-conclusion flags separate. It includes all `33` applicable authority
+findings with package/source evidence, the `340` non-applicable authority boundary with search
+coverage, the `329` Forest Plan component rows, all `12` applicable standards, implementation
+confirmation rows from tracked config, and a residual-risk register sourced from generated
+risk/resolution artifacts. Generated `source_library/` outputs remain ignored and are not staged.
+The next boundary is Sequence 3: East Crazies Generated Decision-Support Report closeout, unless the
+user chooses to proceed directly to the Sequence 4 validation/phase gate.
 
 ## Verified State Snapshot
 

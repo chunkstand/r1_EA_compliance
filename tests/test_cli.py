@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from usfs_r1_ea_sources import cli_compliance
+from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources.cli import build_parser
 
@@ -108,6 +109,46 @@ def test_promotion_suite_handler_propagates_manifest_and_strict_mode(monkeypatch
     assert captured["manifest_path"] == Path("config/custom_suite.json")
     assert captured["results_dir"] == Path("suite-results")
     assert captured["strict_expansion"] is True
+
+
+def test_decision_support_handler_propagates_report_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_ea_consistency_decision_support(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_decision_support,
+        "run_ea_consistency_decision_support",
+        fake_run_ea_consistency_decision_support,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "ea-consistency-document",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_decision_support.json",
+            "--expected-summary",
+            "config/custom_expected_summary.json",
+            "--results-dir",
+            "decision-output",
+        ]
+    )
+
+    result = cli_decision_support.handle_decision_support_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_decision_support.json")
+    assert captured["expected_summary_path"] == Path("config/custom_expected_summary.json")
+    assert captured["results_dir"] == Path("decision-output")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

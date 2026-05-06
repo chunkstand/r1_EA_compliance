@@ -231,7 +231,9 @@ next-target lanes:
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
   and implementation confirmation checklist. Sequence 0 preflight is complete in
   `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below. Sequence 1
-  Report Contract And Fixtures is also complete; the next boundary is Sequence 2 Report Generator.
+  Report Contract And Fixtures and Sequence 2 Report Generator are complete; the next boundary is
+  Sequence 3 East Crazies Generated Decision-Support Report closeout, or Sequence 4 if the user wants
+  to make the report a readiness gate first.
   - Sequence 0 pass 1 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
@@ -306,9 +308,20 @@ next-target lanes:
     categories; `tests/fixtures/decision_support/minimal_decision_support_report.json` proves the
     synthetic schema boundary; and `tests/test_ea_consistency_decision_support.py` validates
     schema/config/fixture contracts including row-level `trace_ids`, `source_selectors`,
-    false-positive synthesis claims, and false-negative synthesis omissions. No generator, renderer,
-    validation phase, or generated `source_library/.../decision_support/` output exists yet. The
-    next boundary is Sequence 2 Report Generator.
+    false-positive synthesis claims, and false-negative synthesis omissions.
+  - Sequence 2 is complete: `src/usfs_r1_ea_sources/ea_consistency_decision_support.py` implements
+    the deterministic report generator, `src/usfs_r1_ea_sources/cli_decision_support.py` registers
+    `ea-consistency-document`, and `docs/architecture_contract.toml` now owns the
+    `decision_support` layer, command group, and generated artifact family. The generator validates
+    required audited inputs, compares the Sequence 1 hash/count contract, fails closed on missing,
+    stale, hash-mismatched, non-reviewer-ready, unresolved-selector, missing-evidence, or
+    legal-conclusion conditions, and writes canonical JSON plus Markdown, PDF, and manifest outputs
+    under `source_library/reviews/<review_id>/decision_support/`. A local run for
+    `v1-cg-ecid-compliance-review` passed and wrote the ignored generated report family with `33`
+    applicable authority findings, `340` non-applicable authorities, `329` Forest Plan component
+    rows, `12/12` applicable standards applied, `0` open authority/Forest Plan resolution items, and
+    a valid `%PDF-` PDF header. No phase-eval or promotion-suite gate has been added yet. The next
+    boundary is Sequence 3 report-output closeout or Sequence 4 gate integration.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
@@ -378,8 +391,8 @@ Current stop conditions for the next session:
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
 - Do not call the raw generated matrix or root-level manual review exports a Forest
-  Supervisor-ready EA consistency decision-support document until the generator, validation gate,
-  and East Crazies proving output are implemented.
+  Supervisor-ready EA consistency decision-support document. The generated decision-support report
+  now exists locally, but it is not a phase-eval or promotion-suite readiness gate until Sequence 4.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.
 
 ## Historical V1 Gate State

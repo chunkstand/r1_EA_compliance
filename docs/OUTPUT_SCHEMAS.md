@@ -2163,13 +2163,24 @@ layer over existing audited review artifacts. It is decision support only: it do
 advice, a legal sufficiency determination, or a final agency decision. It must read generated review
 artifacts and tracked config/fixtures, not root-level manual East Crazies draft exports.
 
-Sequence 1 defines the tracked report contract before the generator exists:
+Sequence 1 defines the tracked report contract, and Sequence 2 adds the deterministic generator and
+CLI command:
 
 - `config/ea_consistency_decision_support_v1.json`
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
 - `tests/fixtures/decision_support/minimal_decision_support_report.json`
+- `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
+- `src/usfs_r1_ea_sources/cli_decision_support.py`
 
-The eventual generated artifact family must include:
+Generate the artifact family with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+The generated artifact family includes:
 
 - `ea_consistency_decision_support.json`
 - `ea_consistency_decision_support.md`
@@ -2212,7 +2223,11 @@ and SHA-256 values for the package manifest/chunks, applicability validation, ap
 non-applicable authority artifacts, search coverage, generated rule-pack validation, compliance
 matrix/review, Forest Plan component findings, applicable-standard coverage, Forest Plan context,
 authority reviewer-resolution report, litigation-risk summary, Plan Consistency Table text, and
-tracked decision-support config.
+tracked decision-support config. The generator fails closed before writing outputs when required
+artifacts are missing, unparsable, stale against the expected hash baseline, count-drifted,
+non-reviewer-ready, missing required package/source evidence, missing non-applicable search
+coverage, carrying unresolved implementation selectors, or carrying residual-risk legal
+conclusions.
 
 `config/ea_consistency_decision_support_v1.json` has schema version
 `ea-consistency-decision-support-config-v1`. It owns synthesis-only labels, grouping, display order,

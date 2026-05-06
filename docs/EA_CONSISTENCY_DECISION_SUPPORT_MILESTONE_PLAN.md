@@ -188,6 +188,8 @@ Commit Sequence 1 as a focused schema/fixture/doc commit.
 
 ## Sequence 2: Report Generator
 
+Status: complete.
+
 Goal:
 Implement a deterministic generator that reads existing audited review artifacts and writes the
 decision-support JSON/Markdown/PDF family.
@@ -231,6 +233,19 @@ git diff --check
 
 Commit policy:
 Commit Sequence 2 as a focused implementation/test/docs commit.
+
+Implemented surface:
+
+- CLI command: `ea-consistency-document`
+- Command lane: `src/usfs_r1_ea_sources/cli_decision_support.py`
+- Generator module: `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
+- Architecture owner: `decision_support` layer, command group, and generated artifact family in
+  `docs/architecture_contract.toml`
+
+The generator validates all Sequence 2 required inputs, compares the Sequence 1 expected
+hash/count baseline, keeps root-level manual `East_Crazies_*` drafts out of the source path, writes
+canonical JSON plus Markdown/PDF/manifest outputs under the review `decision_support/` directory,
+and returns nonzero through the CLI when fail-closed checks do not pass.
 
 ## Sequence 3: East Crazies Generated Decision-Support Report
 

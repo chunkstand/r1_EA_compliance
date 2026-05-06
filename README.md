@@ -119,8 +119,9 @@ milestone that expands the bounded authority-family inventory beyond the V1 prov
 sequence covering USDA/Forest Service Region 1 EA authority families, applicability, evidence, and
 readiness blockers. See
 `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md` for the East Crazies decision-support
-report sequence; Sequence 1 now defines the tracked schema, config, and fixture contract before
-generator implementation. See
+report sequence; Sequence 2 now adds the `ea-consistency-document` generator that renders audited
+review artifacts into a local JSON/Markdown/PDF decision-support report family under the review
+directory. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific

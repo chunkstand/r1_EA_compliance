@@ -11,6 +11,8 @@ from .cli_compliance import handle_compliance_command
 from .cli_compliance import register_compliance_commands
 from .cli_derived import handle_derived_command
 from .cli_derived import register_derived_commands
+from .cli_decision_support import handle_decision_support_command
+from .cli_decision_support import register_decision_support_commands
 from .cli_eval import handle_eval_command
 from .cli_eval import register_eval_commands
 from .cli_review import handle_review_command
@@ -25,6 +27,7 @@ COMMAND_HANDLERS: tuple[CommandHandler, ...] = (
     handle_eval_command,
     handle_review_command,
     handle_compliance_command,
+    handle_decision_support_command,
 )
 
 
@@ -41,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_eval_commands(subparsers)
     register_review_commands(subparsers)
     register_compliance_commands(subparsers)
+    register_decision_support_commands(subparsers)
 
     return parser
 

@@ -22,6 +22,7 @@ Workbook and config
   -> rule packs and rule-claim binding
   -> package facts and applicability
   -> EA, forest-plan, and compliance review
+  -> decision support reports
   -> eval and promotion gates
   -> CLI entrypoints for operators and agents
 ```
@@ -44,8 +45,9 @@ instructions for agents or privileged tools.
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
 | Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
+| Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
-| CLI | Stable public command surface. | `cli.py`, `__main__.py` |
+| CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
 The machine-readable contract for these containers is
 `docs/architecture_contract.toml`. That contract is the input to the architecture fitness test and
@@ -117,6 +119,13 @@ Eval layers check deterministic fixture contracts, phase readiness, V1 real-EA e
 applicability quality, and promotion-suite manifests that tell agents which artifacts support or
 block a readiness claim.
 
+Decision-support synthesis is its own layer over audited review artifacts. The
+`ea-consistency-document` command reads generated applicability, compliance, Forest Plan,
+non-applicable authority, risk, resolution, package, and tracked config/fixture artifacts, then
+writes the local `decision_support/` JSON, Markdown, PDF, and manifest family. It must fail closed on
+missing, stale, hash-mismatched, or non-reviewer-ready inputs and must not promote manual root-level
+draft prose as canonical evidence.
+
 ## Public CLI Surface
 
 `src/usfs_r1_ea_sources/cli.py` remains the public entrypoint. Command registration can be split by
@@ -130,6 +139,7 @@ Current command groups are recorded in `docs/architecture_contract.toml`:
 - applicability;
 - review and forest-plan;
 - compliance;
+- decision support;
 - eval and promotion.
 
 ## Architecture Fitness Gates
