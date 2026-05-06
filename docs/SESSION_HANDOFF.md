@@ -258,6 +258,14 @@ next-target lanes:
     standards with `12/12` applied, Custer Gallatin context remains reviewer-ready, and manual
     root-level East Crazies prose remains quarantined. The next preflight pass is Authority Universe
     Boundary.
+  - Sequence 0 pass 5 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_5_AUTHORITY_UNIVERSE_BOUNDARY.md`:
+    applicable and non-applicable authority partitions are disjoint and cover all `373` candidates,
+    with `33` applicable authorities, `340` non-applicable authorities, `340` search coverage
+    certificates, exact non-applicable appendix alignment, generated-rule-pack validation proving
+    generated rules derive only from applicable authorities, and the compliance matrix linking to
+    non-applicable artifacts instead of double-counting them as findings. The next preflight pass is
+    Residual Risk And Implementation Confirmation Source Mapping.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
