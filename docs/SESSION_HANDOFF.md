@@ -257,7 +257,14 @@ next-target lanes:
   `2,400` edges, all `35` authority families, all `190` catalog source records, all `44` base
   rules, all `19` authority-family templates, `191` rule-claim links, and `329` forest-plan
   components.
-- The next NEPA 3D implementation boundary is Milestone 4 review-specific applicability overlay.
+- NEPA 3D Milestone 4 is implemented. `nepa-knowledge-graph-export --review-id` writes the
+  review-specific graph under `source_library/reviews/<review_id>/knowledge_graph/` from existing
+  applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` overlay
+  passed `58` validation checks with `1,813` nodes, `3,278` edges, `373` candidate
+  authorities/decisions, `33` generated rules and compliance findings, and `340` non-applicable
+  authorities with search coverage.
+- The next NEPA 3D implementation boundary is Milestone 5 Region 1 forest-plan and field-directive
+  expansion.
   The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
   claim handbook completeness.
 

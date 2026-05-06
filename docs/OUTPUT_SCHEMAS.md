@@ -1245,6 +1245,24 @@ does not scan raw artifact filenames. The live source-set export for
 `35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes, `191`
 source-claim nodes, `329` forest-plan component nodes, and zero failed validation checks.
 
+The Milestone 4 review overlay uses the same command with `--review-id`:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+Review overlays are written to `source_library/reviews/<review_id>/knowledge_graph/`. The overlay
+adds `review`, `applicability_decision`, `generated_rule`, `compliance_finding`, and review evidence
+span nodes over the source-set graph, then validates that every candidate authority in
+`authority_universe_snapshot.json` has a graph node and exactly one decision, non-applicable
+decisions carry search coverage or adjudication support, generated rules derive only from validated
+applicable decisions, and compliance findings link to generated rules plus evidence spans. The live
+V1 review export passes `58` validation checks with `1,813` nodes, `3,278` edges, `373` candidate
+authorities/decisions, `33` generated rules/findings, and `340` non-applicable authorities.
+
 ## Applicability-First Review Outputs
 
 Path: `source_library/reviews/<review_id>/applicability/`

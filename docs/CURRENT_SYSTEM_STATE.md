@@ -241,6 +241,34 @@ The live export for `source-set-ba8d0feae79501b8` now records:
 - readiness blockers remain visible as graph nodes and edges, including the scoped
   `fsh_chapter_delta_required` blocker.
 
+## NEPA 3D Review-Specific Applicability Overlay
+
+NEPA 3D Milestone 4 is implemented by the same
+`nepa-knowledge-graph-export` CLI command with `--review-id`. The review overlay writes
+`nepa_3d_graph.json`, nodes, edges, summary, and validation files under
+`source_library/reviews/<review_id>/knowledge_graph/`. It reads the existing applicability-first and
+compliance artifacts for the selected review; it does not rerun applicability or compliance review.
+
+The live review overlay command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+The live overlay for `v1-cg-ecid-compliance-review` now records:
+
+- `validation_passed=true`, `58` validation checks, `0` failed checks;
+- `1,813` nodes and `3,278` edges;
+- review content: `373` candidate authority nodes/decisions, `33` applicable decisions, `340`
+  non-applicable decisions, `33` generated rules, `33` compliance findings, and `340` search
+  coverage certificates;
+- review graph checks that every candidate maps to exactly one decision, every non-applicable
+  decision has search coverage or adjudication support, generated rules derive only from applicable
+  decisions, and compliance findings link to generated rules plus evidence spans.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

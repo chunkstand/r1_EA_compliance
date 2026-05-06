@@ -77,7 +77,11 @@ and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
 `source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
-authority-family templates, `191` rule-claim links, and `329` forest-plan components. The earlier
+authority-family templates, `191` rule-claim links, and `329` forest-plan components. NEPA 3D
+Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
+under `source_library/reviews/<review_id>/knowledge_graph/` passes `58` validation checks with
+`1,813` nodes, `3,278` edges, `373` candidate authorities/decisions, `33` generated rules and
+compliance findings, and `340` non-applicable authorities with search coverage. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds

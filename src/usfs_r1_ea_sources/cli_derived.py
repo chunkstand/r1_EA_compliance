@@ -161,6 +161,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     nepa_graph.add_argument("--output-dir", default=Path("source_library"), type=Path)
     nepa_graph.add_argument("--source-set-id")
+    nepa_graph.add_argument("--review-id")
     nepa_graph.add_argument(
         "--graph-contract",
         default=DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH,
@@ -342,6 +343,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         result = build_nepa_knowledge_graph_export(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
+            review_id=args.review_id,
             graph_contract_path=args.graph_contract,
             authority_inventory_path=args.authority_inventory,
             authority_family_rule_templates_path=args.authority_family_rule_templates,

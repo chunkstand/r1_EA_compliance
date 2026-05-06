@@ -69,6 +69,59 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert second.graph_path.read_bytes() == first_bytes
 
 
+def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        review_id = "review-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _write_minimal_review_overlay(output_dir, source_set_id=source_set_id, review_id=review_id)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            review_id=review_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            authority_family_rule_templates_path=paths["templates"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            rule_pack_path=paths["rule_pack"],
+        )
+
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+        nodes = {node["node_id"]: node for node in _read_jsonl(result.nodes_path)}
+        edges = _read_jsonl(result.edges_path)
+
+        assert result.graph_dir == output_dir / "reviews" / review_id / "knowledge_graph"
+        assert result.summary["validation_passed"]
+        assert graph["export_scope"] == {
+            "scope_type": "review",
+            "source_set_id": source_set_id,
+            "review_id": review_id,
+        }
+        assert result.summary["review_candidate_authority_count"] == 2
+        assert result.summary["applicable_decision_count"] == 1
+        assert result.summary["non_applicable_decision_count"] == 1
+        assert result.summary["generated_rule_count"] == 1
+        assert result.summary["compliance_finding_count"] == 1
+        assert checks["nepa_3d_review_graph_exports_all_candidate_authorities"]["passed"]
+        assert checks["nepa_3d_review_graph_maps_each_candidate_to_one_decision"]["passed"]
+        assert checks["nepa_3d_review_graph_generated_rules_from_applicable_decisions"]["passed"]
+        assert checks["nepa_3d_review_graph_links_findings_to_evidence"]["passed"]
+        assert nodes["rule_template:base:nepa_rule"]["display_status"] == "applicable"
+        assert (
+            nodes["forest_plan_component:R1PLAN-001-FW-STD-01"]["display_status"]
+            == "not_applicable"
+        )
+        assert any(edge["edge_type"] == "GENERATES_RULE" for edge in edges)
+        assert any(
+            edge["edge_type"] == "SUPPORTS_COMPLIANCE_FINDING"
+            and edge["source_node_id"].startswith("evidence_span:review:")
+            for edge in edges
+        )
+
+
 def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[str, Path]:
     catalog_dir = output_dir / "catalog"
     derived_dir = output_dir / "derived" / source_set_id
@@ -370,6 +423,229 @@ def _currentness_report(source_set_id: str) -> dict:
             ),
             _source_currentness(source_set_id, "active_family", "active", "R1PLAN-001"),
         ],
+    }
+
+
+def _write_minimal_review_overlay(
+    output_dir: Path,
+    *,
+    source_set_id: str,
+    review_id: str,
+) -> None:
+    review_dir = output_dir / "reviews" / review_id
+    applicability_dir = review_dir / "applicability"
+    authority_universe_sha256 = "authority-universe-sha"
+    _write_json(
+        applicability_dir / "authority_universe_snapshot.json",
+        {
+            "schema_version": "applicability-authority-universe-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "authority_universe_sha256": authority_universe_sha256,
+            "candidate_authorities": [
+                {
+                    "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+                    "candidate_authority_type": "rule_template",
+                    "authority_category": "law",
+                    "source_record_ids": ["R1EA-001"],
+                    "deterministic_applicability_test_contract": {
+                        "rule_id": "nepa_rule",
+                        "applicability_mode": "baseline",
+                    },
+                },
+                {
+                    "candidate_authority_id": (
+                        "forest-plan-component:test-inventory:R1PLAN-001-FW-STD-01"
+                    ),
+                    "candidate_authority_type": "forest_plan_component",
+                    "authority_category": "forest_plan",
+                    "source_record_ids": ["R1PLAN-001"],
+                    "forest_plan": {
+                        "component_id": "R1PLAN-001-FW-STD-01",
+                        "component_inventory_id": "test-inventory",
+                        "forest_unit_id": "test-forest",
+                        "component_type": "standard",
+                    },
+                },
+            ],
+            "validation": {"passed": True, "checks": []},
+        },
+    )
+    _write_jsonl(
+        applicability_dir / "applicability_decisions.jsonl",
+        [
+            {
+                "schema_version": "applicability-decision-v0",
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "decision_id": "decision-applicable",
+                "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+                "candidate_authority_type": "rule_template",
+                "status": "applicable",
+                "basis_type": "baseline",
+                "adjudication_state": "not_required",
+                "rule_template": {"rule_id": "nepa_rule"},
+                "search_coverage_certificate_ids": [],
+                "human_adjudication_refs": [],
+            },
+            {
+                "schema_version": "applicability-decision-v0",
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "decision_id": "decision-not-applicable",
+                "candidate_authority_id": (
+                    "forest-plan-component:test-inventory:R1PLAN-001-FW-STD-01"
+                ),
+                "candidate_authority_type": "forest_plan_component",
+                "status": "not_applicable",
+                "basis_type": "negative_package_evidence",
+                "adjudication_state": "not_required",
+                "forest_plan": {
+                    "component_id": "R1PLAN-001-FW-STD-01",
+                    "forest_unit_id": "test-forest",
+                },
+                "search_coverage_certificate_ids": ["coverage-not-applicable"],
+                "human_adjudication_refs": [],
+            },
+        ],
+    )
+    _write_json(
+        applicability_dir / "search_coverage_certificates.json",
+        {
+            "schema_version": "search-coverage-certificates-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "certificates": [
+                {
+                    "coverage_certificate_id": "coverage-not-applicable",
+                    "covered_candidate_authority_ids": [
+                        "forest-plan-component:test-inventory:R1PLAN-001-FW-STD-01"
+                    ],
+                    "covered_decision_ids": ["decision-not-applicable"],
+                    "coverage_result": "sufficient",
+                }
+            ],
+        },
+    )
+    _write_json(
+        applicability_dir / "generated_rule_pack.json",
+        {
+            "schema_version": "generated-rule-pack-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "generated_rule_pack_id": "generated-review-test",
+            "rules": [
+                {
+                    "id": "nepa_rule",
+                    "generated_rule_id": "nepa_rule",
+                    "applicability_decision_id": "decision-applicable",
+                    "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+                    "authority_category": "law",
+                    "authority_source_record_id": "R1EA-001",
+                    "title": "NEPA applies",
+                    "severity": "high",
+                    "applicability_mode": "baseline",
+                }
+            ],
+        },
+    )
+    _write_json(
+        applicability_dir / "applicability_validation.json",
+        {
+            "schema_version": "applicability-validation-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "passed": True,
+            "reviewer_ready": True,
+            "generated_rule_pack_ready": True,
+            "checks": [],
+        },
+    )
+    _write_json(
+        applicability_dir / "generated_rule_pack_validation.json",
+        {
+            "schema_version": "generated-rule-pack-validation-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "passed": True,
+            "checks": [],
+        },
+    )
+    _write_json(
+        applicability_dir / "package_fact_graph.json",
+        {
+            "schema_version": "package-fact-graph-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "nodes": [],
+            "edges": [],
+        },
+    )
+    _write_jsonl(applicability_dir / "applicability_retrieval_trace.jsonl", [])
+    _write_jsonl(applicability_dir / "applicability_graph_trace.jsonl", [])
+    _write_json(
+        review_dir / "compliance_matrix.json",
+        {
+            "schema_version": "compliance-matrix-v0",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "rows": [
+                {
+                    "row_id": "nepa_rule",
+                    "rule_id": "nepa_rule",
+                    "rule_title": "NEPA applies",
+                    "status": "pass",
+                    "applicability_status": "applicable",
+                    "applicability_decision_id": "decision-applicable",
+                    "candidate_authority_id": "rule-template:nepa-ea-v0:0.1.0:nepa_rule",
+                    "candidate_authority_type": "rule_template",
+                    "authority_family_id": "active_family",
+                    "authority_category": "law",
+                    "source_claim_ids": ["claim:001"],
+                    "source_library_evidence": _evidence(
+                        source_set_id,
+                        source_record_id="R1EA-001",
+                        citation_label="R1EA-001 citation",
+                    ),
+                    "ea_package_evidence": _evidence(
+                        source_set_id,
+                        source_record_id="EA-PACKAGE-001",
+                        citation_label="EA package citation",
+                    ),
+                }
+            ],
+        },
+    )
+    _write_json(
+        review_dir / "compliance_validation.json",
+        {
+            "schema_version": "compliance-validation-v0",
+            "passed": True,
+            "checks": [],
+        },
+    )
+    _write_jsonl(
+        review_dir / "finding_graph_nodes.jsonl",
+        [{"id": "compliance_finding:review-test:nepa_rule", "type": "ComplianceFinding"}],
+    )
+    _write_jsonl(
+        review_dir / "finding_graph_edges.jsonl",
+        [{"id": "edge:review-test:nepa_rule", "relationship": "RULE_PRODUCED_FINDING"}],
+    )
+
+
+def _evidence(source_set_id: str, *, source_record_id: str, citation_label: str) -> dict:
+    return {
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "citation_label": citation_label,
+        "artifact_sha256": f"sha-{source_record_id}",
+        "chunk_id": f"chunk:{source_record_id}",
+        "content_sha256": f"content-{source_record_id}",
+        "source_char_start": 0,
+        "source_char_end": 64,
+        "chunk_char_start": 0,
+        "chunk_char_end": 64,
     }
 
 

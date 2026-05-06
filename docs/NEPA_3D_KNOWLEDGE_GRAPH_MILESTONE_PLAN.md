@@ -425,6 +425,15 @@ Goal:
 Add a review overlay that connects the source-set graph to a selected EA package and shows exactly
 which authorities were applicable, not applicable, adjudicated, or blocked.
 
+Implementation status:
+Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
+`nepa-knowledge-graph-export --review-id` CLI path, and
+`tests/test_nepa_knowledge_graph_export.py` now implement the review overlay over existing
+applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` export under
+`source_library/reviews/<review_id>/knowledge_graph/` passes `58` validation checks with `1,813`
+nodes, `3,278` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
+findings, and `340` non-applicable decisions with search coverage.
+
 Candidate command:
 
 ```bash

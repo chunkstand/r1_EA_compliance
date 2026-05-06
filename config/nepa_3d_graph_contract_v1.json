@@ -278,7 +278,8 @@
       "edge_type": "PRODUCES_APPLICABILITY_DECISION",
       "source_node_types": [
         "rule_template",
-        "authority_family"
+        "authority_family",
+        "forest_plan_component"
       ],
       "target_node_types": [
         "applicability_decision"
