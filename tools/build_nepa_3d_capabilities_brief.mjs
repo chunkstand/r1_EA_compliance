@@ -30,11 +30,38 @@ const graphPath = path.join(
   "knowledge_graph",
   "nepa_3d_graph.json"
 );
+const decisionSupportReportPath = path.join(
+  repoRoot,
+  "source_library",
+  "reviews",
+  "v1-cg-ecid-compliance-review",
+  "decision_support",
+  "ea_consistency_decision_support.json"
+);
+const decisionSupportManifestPath = path.join(
+  repoRoot,
+  "source_library",
+  "reviews",
+  "v1-cg-ecid-compliance-review",
+  "decision_support",
+  "ea_consistency_decision_support_manifest.json"
+);
+const phaseEvalPath = path.join(
+  repoRoot,
+  "source_library",
+  "derived",
+  "source-set-ba8d0feae79501b8",
+  "evidence_graph",
+  "phase_eval_results.json"
+);
 
 async function main() {
   await fs.mkdir(assetDir, { recursive: true });
   const graph = JSON.parse(await fs.readFile(graphPath, "utf8"));
-  const metrics = graphMetrics(graph);
+  const decisionSupportReport = await readJsonIfExists(decisionSupportReportPath);
+  const decisionSupportManifest = await readJsonIfExists(decisionSupportManifestPath);
+  const phaseEval = await readJsonIfExists(phaseEvalPath);
+  const metrics = graphMetrics(graph, { decisionSupportReport, decisionSupportManifest, phaseEval });
   const browser = await launchBrowser();
   try {
     await writeSvgAssets(graph, metrics);
@@ -53,11 +80,47 @@ async function main() {
   }
 }
 
-function graphMetrics(graph) {
+async function readJsonIfExists(filePath) {
+  try {
+    return JSON.parse(await fs.readFile(filePath, "utf8"));
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      return null;
+    }
+    throw error;
+  }
+}
+
+function graphMetrics(graph, artifacts = {}) {
   const countNodes = (type, predicate = () => true) =>
     (graph.nodes || []).filter((node) => node.node_type === type && predicate(node)).length;
   const countEdges = (type) => (graph.edges || []).filter((edge) => edge.edge_type === type).length;
+  const decisionSupport = artifacts.decisionSupportReport || {};
+  const decisionSupportManifest = artifacts.decisionSupportManifest || {};
+  const phaseEval = artifacts.phaseEval || {};
+  const executiveDetermination = decisionSupport.executive_determination || {};
+  const reviewBoundary = executiveDetermination.review_boundary || {};
+  const authoritySummary = decisionSupport.applicable_authority_summary || {};
+  const forestPlanConsistency = decisionSupport.forest_plan_consistency || {};
+  const nonApplicableBoundary = decisionSupport.non_applicable_authority_boundary || {};
+  const recordInventory = decisionSupport.record_and_artifact_inventory || {};
+  const validationReplay = decisionSupport.validation_and_replay || {};
+  const implementationConfirmations = Array.isArray(decisionSupport.implementation_confirmation_checklist)
+    ? decisionSupport.implementation_confirmation_checklist
+    : [];
+  const residualRiskRows = Array.isArray(decisionSupport.residual_risk_register)
+    ? decisionSupport.residual_risk_register
+    : [];
+  const phaseCount = phaseEval.phase_count || (Array.isArray(phaseEval.phases) ? phaseEval.phases.length : 0);
+  const passedPhaseCount = phaseEval.passed_phase_count || 0;
+  const decisionSupportPhaseIncluded = Array.isArray(phaseEval.phases)
+    ? phaseEval.phases.some(
+        (phase) => phase.phase_id === "decision_support_report" || phase.name === "decision_support_report"
+      )
+    : false;
   return {
+    reviewId: decisionSupport.review_id || graph.export_scope?.review_id || "v1-cg-ecid-compliance-review",
+    sourceSetId: decisionSupport.source_set_id || graph.export_scope?.source_set_id || "source-set-ba8d0feae79501b8",
     nodeCount: graph.summary?.node_count ?? graph.nodes?.length ?? 0,
     edgeCount: graph.summary?.edge_count ?? graph.edges?.length ?? 0,
     validationChecks: graph.summary?.validation_check_count ?? graph.validation?.checks?.length ?? 0,
@@ -77,8 +140,38 @@ function graphMetrics(graph) {
     forestUnits: countNodes("forest_unit"),
     forestPlans: countNodes("forest_plan"),
     forestPlanComponents: countNodes("forest_plan_component"),
+    forestPlanComponentFindings: forestPlanConsistency.component_finding_count || 0,
+    supportedForestPlanComponents: forestPlanConsistency.supported_component_count || 0,
+    notApplicableForestPlanComponents: forestPlanConsistency.not_applicable_component_count || 0,
+    forestPlanGapCount: forestPlanConsistency.gap_count || 0,
+    applicableStandards: forestPlanConsistency.applicable_standard_count || 0,
+    appliedStandards: forestPlanConsistency.applied_standard_count || 0,
     hasReadinessBlockerEdges: countEdges("HAS_READINESS_BLOCKER"),
-    supportsFindingEdges: countEdges("SUPPORTS_COMPLIANCE_FINDING")
+    supportsFindingEdges: countEdges("SUPPORTS_COMPLIANCE_FINDING"),
+    decisionSupportStatus: executiveDetermination.decision_support_status || "unknown",
+    decisionSupportPassed:
+      validationReplay.passed === true || decisionSupportManifest.validation_status === "passed",
+    decisionSupportValidationChecks:
+      (Array.isArray(validationReplay.checks) && validationReplay.checks.length) ||
+      (Array.isArray(decisionSupportManifest.checks) && decisionSupportManifest.checks.length) ||
+      0,
+    decisionSupportArtifactCount: Array.isArray(decisionSupportManifest.source_dependencies)
+      ? decisionSupportManifest.source_dependencies.length
+      : recordInventory.source_dependencies?.length || 0,
+    packageFileCount: recordInventory.package_file_count || 0,
+    packageChunkCount: recordInventory.package_chunk_count || 0,
+    applicableAuthorityFindings:
+      authoritySummary.applicable_authority_count || reviewBoundary.authority_finding_count || 0,
+    nonApplicableAuthorityCount:
+      nonApplicableBoundary.non_applicable_authority_count || reviewBoundary.non_applicable_authority_count || 0,
+    implementationConfirmationCount: implementationConfirmations.length,
+    residualRiskCount: residualRiskRows.length,
+    legalConclusionRiskCount: residualRiskRows.filter((row) => row.legal_conclusion === true).length,
+    phaseEvalPassed: phaseEval.passed === true,
+    phaseEvalReviewerReady: phaseEval.reviewer_ready === true,
+    phaseCount,
+    passedPhaseCount,
+    decisionSupportPhaseIncluded
   };
 }
 
@@ -186,7 +279,7 @@ function applicabilityServiceGraphSvg(metrics) {
   ${serviceGraphDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Applicability is the first review gate</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out authority, and generates evidence-backed findings.</text>
+  ${wrapSvgText("For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out authority, and generates evidence-backed findings.", 72, 140, 1580, 22, "#555b54", 2)}
   ${graphEdge(305, 540, 570, 540, "#739bb6", 9, "373 decisions")}
   ${graphEdge(820, 425, 1085, 320, "#26786f", 9, "33 apply")}
   ${graphEdge(820, 635, 1085, 735, "#8b8a82", 8, "340 screened out")}
@@ -411,15 +504,15 @@ function currentAuthorityStackSvg(metrics) {
   ${stackBox(64, 172, "Document package", "EA, FONSI, ROD, appendices, and supporting biological, cultural, and forest-plan records.", "#171713")}
   ${stackBox(336, 172, "Current authority graph", "Current regulations, agency procedures, Forest Plan components, and project authorities.", "#216a60")}
   ${stackBox(608, 172, "Consistency review", "Full profile consistency document across Forest Plan direction and applicable laws.", "#7c493c")}
-  ${stackBox(880, 172, "Decision support", "Responsible-official briefing with applicable authorities, gaps, risks, and evidence paths.", "#356a9b")}
+  ${stackBox(880, 172, "Decision support", "Responsible-official briefing with findings, gaps, risks, and evidence paths.", "#356a9b")}
   ${arrow(292, 268, 326, 268)}
   ${arrow(564, 268, 598, 268)}
   ${arrow(836, 268, 870, 268)}
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
-    ${wrapSvgText("USFS Region 1 is the current implementation evidence. The same process can be run against another NEPA document package by refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency documentation, and packaging decision-support evidence.", 30, 75, 1088, 16, "#4f554e", 2)}
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: ${metrics.validationChecks} graph checks on the USFS Region 1 graph export.</text>
+    ${wrapSvgText("USFS Region 1 is the current operational proof. The same system pattern can be built for another NEPA package by adding source/profile coverage, mapping project evidence, testing reverse compliance, and replaying validation gates.", 30, 75, 1088, 16, "#4f554e", 2)}
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: ${metrics.validationChecks} graph checks and ${metrics.decisionSupportValidationChecks} decision-support checks.</text>
   </g>
 </svg>`;
 }
@@ -578,7 +671,7 @@ function briefHtml(metrics) {
       box-shadow: 0 12px 30px rgba(24,28,26,0.12);
     }
     .graph-figure.trace { height: 2.92in; object-position: center 48%; }
-    .graph-figure.readiness { height: 4.78in; object-fit: contain; }
+    .graph-figure.readiness { height: 4.1in; object-fit: contain; }
     .graph-figure.full {
       height: 5.22in;
       object-fit: contain;
@@ -656,9 +749,9 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Standing Framework / Capabilities Brief</div>
-      <h1>NEPA review service, made auditable</h1>
-      <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the current implementation evidence: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
-      <p class="metric-context">Service capabilities shown; Region 1 counts are operational graph evidence.</p>
+      <h1>Decision Ready NEPA Analysis</h1>
+      <p class="lede">We provide professional NEPA reviews and build decision-ready NEPA analysis systems using a graph-backed evidence process. The current operational proof is USFS Region 1: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
+      <p class="metric-context">Service capabilities apply to NEPA document packages; Region 1 counts are current operational evidence.</p>
       <div class="metric-grid">
         ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
         ${metric(metrics.edgeCount.toLocaleString(), "Region 1 graph edges")}
@@ -680,8 +773,8 @@ function briefHtml(metrics) {
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from validated internal graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
-      <span>Sources checked: Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
+      <span>Generated from validated internal graph export: <strong>${metrics.reviewId}</strong></span>
+      <span>Current proof: USFS Region 1; expansion by source/profile gates and validation.</span>
     </footer>
   </section>
 
@@ -765,13 +858,13 @@ function briefHtml(metrics) {
               <li>Provide responsible-official decision support with evidence paths and residual risks.</li>
             </ul>
           </div>
-          <p class="source-note" style="margin-top:0.09in">Currentness boundary: older implementing-regulation language is treated as a review risk and flagged outside the current NEPA review basis unless supported by current agency procedure or another current project-specific authority. The graph visualizes the validated USFS Region 1 source set and review overlay; it is not a substitute for legal review.</p>
+          <p class="source-note" style="margin-top:0.08in">Currentness boundary: older implementing-regulation language is treated as a review risk and flagged outside the current NEPA review basis unless supported by current agency procedure or another current project-specific authority. The graph visualizes the validated USFS Region 1 source set and review overlay; it is not a substitute for legal review.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
       <span>Deliverable: graph-backed professional NEPA review process plus service capabilities brief.</span>
-      <span>Boundary: Region 1 expansion waits on missing sources.</span>
+      <span>Boundary: Region 1 is the current operational proof; new systems require source/profile gates.</span>
     </footer>
   </section>
 </body>

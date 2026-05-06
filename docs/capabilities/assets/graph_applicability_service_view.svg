@@ -10,7 +10,7 @@
   </defs>
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Applicability is the first review gate</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out authority, and generates evidence-backed findings.</text>
+  <text x="72" y="140" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out</text><text x="72" y="167" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">authority, and generates evidence-backed findings.</text>
   <path d="M 305 540 L 570 540" stroke="#739bb6" stroke-width="9" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(337.5 516)">
       <rect width="200" height="42" rx="21" fill="#ffffff" stroke="#d8d3c6" opacity="0.95"/>
       <text x="100" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">373 decisions</text>

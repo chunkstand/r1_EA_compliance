@@ -34,7 +34,7 @@
     <rect width="240" height="190" rx="18" fill="#ffffff" stroke="#d8d3c6"/>
     <rect width="240" height="9" rx="4" fill="#356a9b"/>
     <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Decision support</text>
-    <text x="20" y="82" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">Responsible-official</text><text x="20" y="104" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">briefing with</text><text x="20" y="126" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">applicable</text><text x="20" y="148" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">authorities, gaps,</text><text x="20" y="170" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">risks, and evidence</text>
+    <text x="20" y="82" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">Responsible-official</text><text x="20" y="104" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">briefing with</text><text x="20" y="126" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">findings, gaps, risks,</text><text x="20" y="148" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4f554e">and evidence paths.</text>
   </g>
   <path d="M 292 268 L 326 268" stroke="#8a8f84" stroke-width="4" stroke-linecap="round"/>
   <path d="M 316 259 L 326 268 L 316 277" fill="none" stroke="#8a8f84" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -45,7 +45,7 @@
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
-    <text x="30" y="75" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">USFS Region 1 is the current implementation evidence. The same process can be run against another NEPA document package by</text><text x="30" y="96" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance,</text>
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: 75 graph checks on the USFS Region 1 graph export.</text>
+    <text x="30" y="75" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">USFS Region 1 is the current operational proof. The same system pattern can be built for another NEPA package by adding</text><text x="30" y="96" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" fill="#4f554e">source/profile coverage, mapping project evidence, testing reverse compliance, and replaying validation gates.</text>
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: 75 graph checks and 107 decision-support checks.</text>
   </g>
 </svg>
