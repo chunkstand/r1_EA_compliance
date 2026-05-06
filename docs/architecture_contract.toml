@@ -145,6 +145,7 @@ modules = [
   "compliance_inputs",
   "compliance_outputs",
   "compliance_review",
+  "compliance_review_eval",
   "compliance_validation",
 ]
 allowed_import_layers = [

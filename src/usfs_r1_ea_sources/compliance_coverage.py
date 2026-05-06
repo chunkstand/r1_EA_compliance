@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 import re
 
-from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
+from .compliance_review_eval import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import _load_validated_links_for_eval
 from .rule_packs import DEFAULT_RULE_PACK_PATH

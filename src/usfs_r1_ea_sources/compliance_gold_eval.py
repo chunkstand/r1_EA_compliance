@@ -8,8 +8,8 @@ from pathlib import Path
 import json
 import re
 
-from .compliance_review import VALID_FINDING_STATUSES
-from .compliance_review import run_compliance_review_eval
+from .compliance_review_eval import run_compliance_review_eval
+from .compliance_validation import VALID_FINDING_STATUSES
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import GENERATED_RULE_PACK_SCHEMA_VERSION
 from .rule_packs import load_rule_pack

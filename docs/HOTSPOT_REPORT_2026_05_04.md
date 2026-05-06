@@ -350,7 +350,49 @@ Sequence 5 verification:
 - `PYTHONPATH=src python -m compileall src`: passed
 - `git diff --check`: passed
 
+Sequence 6 target:
+
+Extract the deterministic compliance-review eval harness while keeping review orchestration in
+`compliance_review.py` and preserving generated artifact contracts.
+
+## 2026-05-06 Sequence 6 Compliance Review Eval Split
+
+Sequence 6 reranks the remaining `compliance_review.py` surface after the finding-construction
+split and selects the deterministic compliance-review eval harness. This sequence creates
+`src/usfs_r1_ea_sources/compliance_review_eval.py` and moves compliance-review eval case loading,
+fixture package materialization, case validation, review invocation, scoring, mismatch metrics,
+failure taxonomy, and reproduction metadata out of `compliance_review.py`.
+
+The split keeps `run_compliance_review` in `compliance_review.py` as the orchestration owner.
+`cli_compliance.py`, `compliance_coverage.py`, `compliance_gold_eval.py`, and the compliance-review
+tests now import eval defaults and `run_compliance_review_eval` from `compliance_review_eval.py`.
+It leaves compliance-review orchestration, finding construction, finding graph assembly,
+validation, matrix/PDF rendering, authority-integration artifacts, CLI flags, generated artifact
+schemas, and eval scoring semantics unchanged.
+
+Current post-split source line counts:
+
+| Surface | Lines | Sequence 6 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 398 | Review orchestration and local review file helpers remain. |
+| `src/usfs_r1_ea_sources/compliance_review_eval.py` | 954 | New narrow owner for compliance-review eval harness behavior. |
+| `src/usfs_r1_ea_sources/compliance_findings.py` | 217 | Sequence 5 finding-construction owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_finding_graph.py` | 340 | Sequence 4 finding-graph owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_authority_integration.py` | 493 | Sequence 3 authority-integration owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_validation.py` | 762 | Sequence 2 validation/report-summary owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_inputs.py` | 561 | Sequence 1 input/gate owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_outputs.py` | 1,019 | Existing rendering split remains unchanged. |
+
+Sequence 6 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
 Next target:
 
-No Sequence 6 split is selected yet. Rerank remaining hotspots and choose another bounded slice
+No Sequence 7 split is selected yet. Rerank remaining hotspots and choose another bounded slice
 before moving more compliance-review code.

@@ -19,9 +19,13 @@ Milestone 6. The operative architecture references are:
 
 ### Compliance Review Hotspot Reduction
 
-Sequence 5 is implemented for the compliance-review hotspot split. The new
-`src/usfs_r1_ea_sources/compliance_findings.py` module owns compliance finding construction only:
-authority-family inventory indexing, authority-family ID resolution for generated/base rules,
+Sequence 6 is implemented for the compliance-review hotspot split. The new
+`src/usfs_r1_ea_sources/compliance_review_eval.py` module owns the deterministic
+compliance-review eval harness only: eval case loading and validation, fixture package
+materialization, eval review invocation, case scoring, mismatch metrics, failure taxonomy, and
+reproduction metadata. Sequence 5 kept
+`src/usfs_r1_ea_sources/compliance_findings.py` as the owner for compliance finding construction
+only: authority-family inventory indexing, authority-family ID resolution for generated/base rules,
 source-claim evidence compaction, citation-label extraction, and claim-type assignment. Sequence 4
 kept
 `src/usfs_r1_ea_sources/compliance_finding_graph.py` as the owner for finding-graph artifact assembly
@@ -37,18 +41,22 @@ review-summary assembly helpers, and Sequence 1 kept
 `src/usfs_r1_ea_sources/compliance_inputs.py` as the owner for compliance-review input and
 identity/gate-context helpers.
 
-The current post-split line-count baseline is `compliance_review.py` `1,313`,
-`compliance_findings.py` `217`, `compliance_finding_graph.py` `340`,
-`compliance_authority_integration.py` `493`, `compliance_validation.py` `762`,
-`compliance_inputs.py` `561`, and `compliance_outputs.py` `1,019`; the deferred hotspot baselines
-remain
+The current post-split line-count baseline is `compliance_review.py` `398`,
+`compliance_review_eval.py` `954`, `compliance_findings.py` `217`,
+`compliance_finding_graph.py` `340`, `compliance_authority_integration.py` `493`,
+`compliance_validation.py` `762`, `compliance_inputs.py` `561`, and
+`compliance_outputs.py` `1,019`; the deferred hotspot baselines remain
 `nepa_knowledge_graph_export.py` `3,391`, `forest_plan_components.py` `3,302`,
 `ea_consistency_decision_support.py` `3,090`, and `viewer/nepa-3d/app.js` `2,202`.
 
-Sequence 5 does not intentionally change finding selection, compliance status decisions, generated
+Sequence 6 does not intentionally change finding selection, compliance status decisions, generated
 rule-pack semantics, Forest Plan component evaluation, matrix/PDF output, finding graph output,
-eval scoring, CLI flags, or generated artifact schemas. No Sequence 6 split is selected yet; rerank
-remaining hotspots before continuing beyond this finding-construction boundary.
+eval scoring semantics, CLI flags, or generated artifact schemas. No Sequence 7 split is selected
+yet; rerank remaining hotspots before continuing beyond this eval-harness boundary.
+
+Sequence 6 verification passed: `tests/test_compliance_review.py` `55 passed`,
+`tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,
+`compileall src`, and `git diff --check`.
 
 Sequence 5 verification passed: `tests/test_compliance_review.py` `55 passed`,
 `tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,

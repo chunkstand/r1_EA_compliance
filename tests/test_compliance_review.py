@@ -9,7 +9,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
-from usfs_r1_ea_sources.compliance_review import run_compliance_review_eval
+from usfs_r1_ea_sources.compliance_review_eval import run_compliance_review_eval
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction

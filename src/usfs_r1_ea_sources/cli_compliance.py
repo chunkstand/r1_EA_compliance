@@ -9,9 +9,9 @@ from .compliance_coverage import DEFAULT_COVERAGE_MATRIX_PATH
 from .compliance_coverage import run_compliance_coverage
 from .compliance_gold_eval import DEFAULT_COMPLIANCE_GOLD_EVAL_PATH
 from .compliance_gold_eval import run_compliance_gold_eval
-from .compliance_review import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .compliance_review import run_compliance_review
-from .compliance_review import run_compliance_review_eval
+from .compliance_review_eval import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
+from .compliance_review_eval import run_compliance_review_eval
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 
 
