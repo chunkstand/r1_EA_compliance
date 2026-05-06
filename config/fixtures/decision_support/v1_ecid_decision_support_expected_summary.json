@@ -1,0 +1,255 @@
+{
+  "schema_version": "ea-consistency-decision-support-expected-summary-v1",
+  "fixture_id": "v1-ecid-decision-support-expected-summary",
+  "as_of_date": "2026-05-06",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "expected_report_schema_version": "ea-consistency-decision-support-report-v1",
+  "expected_output_dir": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/",
+  "required_output_files": [
+    "ea_consistency_decision_support.json",
+    "ea_consistency_decision_support.md",
+    "ea_consistency_decision_support.pdf",
+    "ea_consistency_decision_support_manifest.json"
+  ],
+  "required_sections": [
+    "executive_determination",
+    "record_and_artifact_inventory",
+    "applicable_authority_summary",
+    "authority_findings",
+    "forest_plan_consistency",
+    "applicable_forest_plan_standards",
+    "non_applicable_authority_boundary",
+    "implementation_confirmation_checklist",
+    "residual_risk_register",
+    "validation_and_replay"
+  ],
+  "expected_counts": {
+    "applicable_authority_count": 33,
+    "non_applicable_authority_count": 340,
+    "candidate_authority_count": 373,
+    "authority_finding_count": 33,
+    "authority_finding_status_counts": {
+      "pass": 33
+    },
+    "non_applicable_search_coverage_certificate_count": 340,
+    "forest_plan_component_finding_count": 329,
+    "forest_plan_supported_component_count": 79,
+    "forest_plan_not_applicable_component_count": 250,
+    "forest_plan_gap_count": 0,
+    "forest_plan_standard_count": 58,
+    "forest_plan_applicable_standard_count": 12,
+    "forest_plan_applied_standard_count": 12,
+    "authority_reviewer_resolution_pending_count": 0,
+    "forest_plan_reviewer_resolution_item_count": 0,
+    "litigation_risk_flag_count": 340,
+    "litigation_risk_legal_conclusion_count": 0,
+    "package_file_count": 43,
+    "package_chunk_count": 1265
+  },
+  "input_hashes": {
+    "package_manifest_sha256": "d0176a5cf6c991e5a7e2356a71b30bb9ceef55fe90bd70dd1fb135118e0a1a81",
+    "package_chunks_sha256": "0d07dc16978652bc308c765299dfbfce1d50a0ca6a9d33f192c8c055cbd48b56",
+    "compliance_matrix_sha256": "d02de0bc8b2357a733e9f8bb9c307fab3b086eca4e16656c6fa66f743c8c9bbc",
+    "compliance_review_sha256": "89029906caeba41e11f5b8199a214f8e57385099f4c2de8d3f807a75c657a1a4",
+    "applicability_validation_sha256": "d84d6b77adaa1fd9f86181aa8685f9545b63248ff07d7fcdc56616cdfc63bd56",
+    "applicable_authorities_sha256": "ab6d5534cf57459d6d7b27750d53e72519ef46260e0bc4ffd5bf11e5957668ad",
+    "non_applicable_authorities_sha256": "ed47def14fee3158e6fba1cb8892c878aaecab82aeaa069a31931d2a2542199b",
+    "search_coverage_certificates_sha256": "639bd77243e48d9620ba7356bb5ca64be4de6c7a54e93de346ff04641d2ab68e",
+    "generated_rule_pack_sha256": "c56d97d700e7fc8c27a95d4e5e93e14c26be3fb5edbf066b7c628cba60f53bb3",
+    "generated_rule_pack_validation_sha256": "8f5197fa14fb6a83b0556b8c0f27a93a2c89cebde6c27dbde4531dd344bface0",
+    "forest_plan_component_findings_sha256": "0ac3a2766446edab23806c666d9154f4c6f6e84b4e764f3cee677ac010d5d395",
+    "forest_plan_applicable_standard_coverage_sha256": "bbd92f584f60b0a888cd779013f43acd82cd652f1e03fcf1d03003d756969145",
+    "forest_plan_context_summary_sha256": "d8c1fbd04f0a019f9911a2d82e3c9d84f06b805e069a46cdb265319e1f81e178",
+    "non_applicable_authority_appendix_sha256": "41c1dce781c2722c68aa28187fc1d73ec7080e91bb33507366153a8e383ad4b9",
+    "non_applicable_authority_appendix_markdown_sha256": "d1ebb9043183e70fb1ad248bd9e2aeea509abfe990109737271df52c14dd46c5",
+    "authority_reviewer_resolution_report_sha256": "6fd76085ed4cabda4b64d86c8c541ca25c8ccccbb3f9539df663979eacf40b3a",
+    "litigation_risk_summary_sha256": "179714b0ad701586fc610b7c0cfad717df82664dc4b567aef5d917beee43b258",
+    "plan_consistency_table_text_sha256": "07c688a0a68511ee652e9af22cbf39d03a7917d9365d1b18519efdf38e1a7564"
+  },
+  "row_trace_contract": {
+    "required_row_fields": [
+      "trace_ids",
+      "source_selectors"
+    ],
+    "required_trace_id_fields": [
+      "trace_id",
+      "trace_type",
+      "source_artifact_path",
+      "source_selector"
+    ],
+    "required_evidence_fields": [
+      "chunk_id",
+      "source_record_id",
+      "citation_label",
+      "artifact_sha256",
+      "content_sha256",
+      "text_span"
+    ]
+  },
+  "required_fixture_rows": {
+    "applicable_authority": {
+      "rule_id": "eo_11990_wetlands",
+      "rule_title": "Executive Order 11990 wetlands protection is addressed",
+      "authority_category": "executive_order",
+      "authority_source_record_id": "R1EA-104",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:eo_11990_wetlands",
+      "applicability_decision_id": "58cf914cba81bea1d55591a5",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "ea_package_citation": "EA-PACKAGE-041 (0094fc10f807)",
+      "source_library_citation": "R1EA-104 (9460e145d1df)",
+      "source_claim_ids": [
+        "claim:20c258ed3bb784c5d791bff6",
+        "claim:a39e467f45a3458336600433",
+        "claim:1c6fbe5bc4336cd16d1e9dbd"
+      ],
+      "limitations": []
+    },
+    "non_applicable_authority": {
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:directives_notice_comment_36cfr_216",
+      "decision_id": "4798417e93d038b92991762f",
+      "authority_category": "regulation",
+      "basis_type": "absent_trigger_evidence",
+      "status": "not_applicable",
+      "source_record_ids": [
+        "R1EA-027"
+      ],
+      "search_coverage_certificate_ids": [
+        "1a2043fba159114bdbc8d610"
+      ],
+      "rationale": "Required positive package trigger groups were not found within the recorded search boundary.",
+      "coverage_certificate": {
+        "coverage_certificate_id": "1a2043fba159114bdbc8d610",
+        "coverage_class": "absent_trigger_evidence",
+        "coverage_result": "sufficient",
+        "covered_candidate_authority_ids": [
+          "rule-template:nepa-ea-v0:0.4.0:directives_notice_comment_36cfr_216"
+        ],
+        "covered_decision_ids": [
+          "4798417e93d038b92991762f"
+        ],
+        "missing_query_variants": []
+      }
+    },
+    "forest_plan_component": {
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "component_key": "FW-STD-RMZ-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "compliance_status": "complies",
+      "finding_status": "supported",
+      "ea_package_citation": "EA-PACKAGE-042 (bebc890bc3da)",
+      "forest_plan_citation": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "determination": {
+        "source": "ea_plan_consistency_table",
+        "review_section": "Plan Consistency Table.pdf"
+      }
+    }
+  },
+  "applicable_standards": [
+    {
+      "component_key": "FW-STD-RMZ-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-PRISK-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-PRISK-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-WL-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WL-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-WLBAT-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLBAT-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-WLGB-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLGB-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-TRIBAL-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-TRIBAL-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-ROS-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROS-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-IRA-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-IRA-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-RWA-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RWA-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "FW-STD-BCA-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-BCA-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "AB-STD-RCREA-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RCREA-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    },
+    {
+      "component_key": "BC-STD-CMBCA-01",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
+      "compliance_status": "complies",
+      "finding_status": "supported"
+    }
+  ],
+  "failure_categories": [
+    "missing_required_artifact",
+    "unparseable_required_artifact",
+    "review_source_set_mismatch",
+    "input_hash_mismatch",
+    "count_drift",
+    "missing_applicable_authority_row",
+    "duplicate_applicable_authority_row",
+    "applicable_authority_missing_dual_evidence",
+    "non_applicable_summary_missing",
+    "non_applicable_missing_search_coverage",
+    "non_applicable_promoted_to_finding",
+    "forest_plan_component_summary_missing",
+    "applicable_standard_missing",
+    "applicable_standard_missing_evidence",
+    "reviewer_resolution_open",
+    "implementation_confirmation_selector_unresolved",
+    "residual_risk_legal_conclusion",
+    "manual_draft_dependency",
+    "missing_report_pdf",
+    "invalid_report_pdf_header",
+    "false_positive_synthesis_claim",
+    "false_negative_synthesis_omission"
+  ],
+  "manual_draft_policy": {
+    "root_east_crazies_drafts_are_canonical": false,
+    "blocked_path_prefixes": [
+      "East_Crazies_"
+    ]
+  }
+}

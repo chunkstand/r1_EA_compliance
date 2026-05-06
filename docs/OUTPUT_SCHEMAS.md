@@ -2154,6 +2154,110 @@ and `human_adjudicated_authority_family`. Each flag has rule IDs, authority-fami
 authority IDs, evidence/artifact refs, rationale, `deterministic_basis=true`, and
 `legal_conclusion=false`; this artifact is not a legal conclusion generator.
 
+## EA Consistency Decision-Support Outputs
+
+Path: `source_library/reviews/<review_id>/decision_support/`
+
+The EA consistency decision-support artifact family is the generated supervisor-facing synthesis
+layer over existing audited review artifacts. It is decision support only: it does not create legal
+advice, a legal sufficiency determination, or a final agency decision. It must read generated review
+artifacts and tracked config/fixtures, not root-level manual East Crazies draft exports.
+
+Sequence 1 defines the tracked report contract before the generator exists:
+
+- `config/ea_consistency_decision_support_v1.json`
+- `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
+- `tests/fixtures/decision_support/minimal_decision_support_report.json`
+
+The eventual generated artifact family must include:
+
+- `ea_consistency_decision_support.json`
+- `ea_consistency_decision_support.md`
+- `ea_consistency_decision_support.pdf`
+- `ea_consistency_decision_support_manifest.json`
+
+`ea_consistency_decision_support.json` has schema version
+`ea-consistency-decision-support-report-v1` and is the canonical report. Markdown and PDF renderings
+must derive from that JSON. The report must include these top-level sections:
+
+- `executive_determination`
+- `record_and_artifact_inventory`
+- `applicable_authority_summary`
+- `authority_findings`
+- `forest_plan_consistency`
+- `applicable_forest_plan_standards`
+- `non_applicable_authority_boundary`
+- `implementation_confirmation_checklist`
+- `residual_risk_register`
+- `validation_and_replay`
+
+The schema keeps four statuses separate:
+
+- applicability status, sourced from applicability artifacts;
+- compliance status, sourced from compliance findings or Forest Plan standard coverage;
+- implementation-confirmation status, sourced from tracked config plus evidence selectors;
+- residual-risk category and `legal_conclusion`, sourced from generated risk/resolution artifacts.
+
+Every row that can appear in a reviewer-facing section must include row-level traceability:
+
+- `trace_ids[]`, with `trace_id`, `trace_type`, `source_artifact_path`, and `source_selector`;
+- `source_selectors[]`, with artifact paths and row/chunk/standard/candidate selectors;
+- evidence objects with `chunk_id`, `source_record_id`, `citation_label`, `artifact_sha256`,
+  `content_sha256`, and `text_span`.
+
+`ea_consistency_decision_support_manifest.json` has schema version
+`ea-consistency-decision-support-manifest-v1`. It records review ID, source set ID, generator
+version, generation timestamp, validation status, input artifact paths, per-section dependencies,
+and SHA-256 values for the package manifest/chunks, applicability validation, applicable and
+non-applicable authority artifacts, search coverage, generated rule-pack validation, compliance
+matrix/review, Forest Plan component findings, applicable-standard coverage, Forest Plan context,
+authority reviewer-resolution report, litigation-risk summary, Plan Consistency Table text, and
+tracked decision-support config.
+
+`config/ea_consistency_decision_support_v1.json` has schema version
+`ea-consistency-decision-support-config-v1`. It owns synthesis-only labels, grouping, display order,
+allowed caveat text, residual-risk grouping, report-quality eval expectations, and
+implementation-confirmation selectors. Implementation-confirmation rows are not compliance
+findings. Each config row must have a stable confirmation ID, display label, evidence status,
+allowed status values, source selectors, and constrained wording guidance.
+
+`config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json` has schema version
+`ea-consistency-decision-support-expected-summary-v1`. It locks the East Crazies proving-review
+contract: required sections, expected counts, input hashes, representative applicable authority,
+representative non-applicable authority with search coverage, representative Forest Plan component,
+all 12 applicable Forest Plan standards, row trace requirements, fail-closed categories, and
+manual-draft quarantine policy.
+
+The minimal test fixture at
+`tests/fixtures/decision_support/minimal_decision_support_report.json` is synthetic. It proves the
+schema boundary without copying full East Crazies evidence text. It must include at least one
+applicable authority with package and source evidence, one non-applicable summary with search
+coverage, one Forest Plan component, one applicable Forest Plan standard, one implementation
+confirmation, one residual-risk row with `deterministic_basis=true` and `legal_conclusion=false`,
+manifest-shaped input hashes, and passing validation metadata.
+
+Decision-support validation must fail closed on:
+
+- missing or unparseable required artifacts;
+- review/source-set mismatch;
+- input hash mismatch;
+- count drift;
+- missing or duplicated applicable authority rows;
+- applicable authorities missing package or source evidence;
+- missing non-applicable summaries or search coverage;
+- non-applicable authorities promoted into compliance findings;
+- missing Forest Plan component summaries;
+- missing applicable standards or standard evidence;
+- open authority or Forest Plan reviewer-resolution queues;
+- unresolved implementation-confirmation selectors;
+- residual-risk rows with `legal_conclusion=true`;
+- dependency on root-level `East_Crazies_*` manual draft exports;
+- missing report PDF or a PDF that does not start with `%PDF-`;
+- synthesis false positives such as unsupported overclaims, reported as
+  `false_positive_synthesis_claim`;
+- synthesis false negatives such as omitted required rows, reported as
+  `false_negative_synthesis_omission`.
+
 `finding_graph_nodes.jsonl` contains:
 
 - `ComplianceRulePack`

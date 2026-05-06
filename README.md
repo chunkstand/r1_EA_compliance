@@ -118,6 +118,9 @@ milestone that expands the bounded authority-family inventory beyond the V1 prov
 `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md` for the planned graph-export and 3D visualization
 sequence covering USDA/Forest Service Region 1 EA authority families, applicability, evidence, and
 readiness blockers. See
+`docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md` for the East Crazies decision-support
+report sequence; Sequence 1 now defines the tracked schema, config, and fixture contract before
+generator implementation. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
@@ -145,6 +148,8 @@ heuristics.
 - `config/source_partition_contract_nepa_3d_v1.json`
 - `config/nepa_3d_graph_contract_v1.json`
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+- `config/ea_consistency_decision_support_v1.json`
+- `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`

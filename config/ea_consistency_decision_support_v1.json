@@ -1,0 +1,340 @@
+{
+  "schema_version": "ea-consistency-decision-support-config-v1",
+  "config_id": "ea-consistency-decision-support-v1",
+  "as_of_date": "2026-05-06",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "report_schema_version": "ea-consistency-decision-support-report-v1",
+  "decision_use_caveat": "This generated document is decision support. It is not legal advice, a legal sufficiency determination, or a final agency decision.",
+  "manual_draft_policy": {
+    "root_east_crazies_drafts_are_canonical": false,
+    "blocked_path_prefixes": [
+      "East_Crazies_"
+    ],
+    "canonical_output_dir": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/"
+  },
+  "section_order": [
+    "executive_determination",
+    "record_and_artifact_inventory",
+    "applicable_authority_summary",
+    "authority_findings",
+    "forest_plan_consistency",
+    "applicable_forest_plan_standards",
+    "non_applicable_authority_boundary",
+    "implementation_confirmation_checklist",
+    "residual_risk_register",
+    "validation_and_replay"
+  ],
+  "authority_group_order": [
+    "law",
+    "regulation",
+    "executive_order",
+    "agency_policy",
+    "state_shpo_requirement",
+    "case_law_review_lens",
+    "forest_plan"
+  ],
+  "residual_risk_group_order": [
+    "reviewer_resolution",
+    "non_applicable_authority_boundary",
+    "implementation_confirmation",
+    "artifact_freshness",
+    "validation"
+  ],
+  "implementation_confirmations": [
+    {
+      "confirmation_id": "closing_instruments",
+      "display_order": 10,
+      "label": "Closing instruments",
+      "group": "closing",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-040;chunk_id=chunk:0ca9dea170f2dc8a324053b1a3f1cf82",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-041;chunk_id=chunk:e0763c496dded55f8de8121572617e15",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Identify closing instruments as evidence-linked implementation confirmations, not proof of final closing."
+    },
+    {
+      "confirmation_id": "deed_restrictions",
+      "display_order": 20,
+      "label": "Deed restrictions and patent reservations",
+      "group": "closing",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-040;chunk_id=chunk:75bcee85e5f141d5de88963e5fa7bdff",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector_type": "authority_finding",
+          "selector": "rule_id=eo_11990_wetlands",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Preserve deed and reservation items as implementation confirmations unless a generated artifact marks them complete."
+    },
+    {
+      "confirmation_id": "easements",
+      "display_order": 30,
+      "label": "Easements and reserved rights",
+      "group": "closing",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-040;chunk_id=chunk:dfb41b44b7834c258650d6629dfa7725",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector_type": "forest_plan_standard",
+          "selector": "component_key=AB-STD-RCREA-01",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "State the evidence selector and confirmation need without creating a new compliance finding."
+    },
+    {
+      "confirmation_id": "appraisal_equalization_title",
+      "display_order": 40,
+      "label": "Appraisal, equalization, mineral/title, and water-right file",
+      "group": "closing",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-002;chunk_id=chunk:dedcacf3e7f7c2b780c3020b503dbf9f",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_manifest.jsonl",
+          "selector_type": "package_record",
+          "selector": "source_record_id=EA-PACKAGE-005",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Describe appraisal, equalization, mineral/title, and water-right records as implementation confirmation inputs."
+    },
+    {
+      "confirmation_id": "nhpa_moa_mitigation",
+      "display_order": 50,
+      "label": "NHPA, SHPO, MOA, and cultural-resource mitigation",
+      "group": "consultation",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector_type": "authority_finding",
+          "selector": "rule_id=montana_shpo_review",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-009;chunk_id=chunk:99bf7c6d81864df40bce2a4fce1c75e0",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Keep NHPA and SHPO mitigation commitments evidence-linked and separate from legal sufficiency conclusions."
+    },
+    {
+      "confirmation_id": "wetland_protections",
+      "display_order": 60,
+      "label": "Wetland protections",
+      "group": "resource_protection",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector_type": "authority_finding",
+          "selector": "rule_id=eo_11990_wetlands",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector_type": "forest_plan_standard",
+          "selector": "component_key=FW-STD-RMZ-01",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Reference wetlands protections as implementation confirmations tied to authority and Forest Plan evidence."
+    },
+    {
+      "confirmation_id": "esa_botany_whitebark_trail_controls",
+      "display_order": 70,
+      "label": "ESA, botany, whitebark pine, wildlife, and trail controls",
+      "group": "resource_protection",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector_type": "authority_finding",
+          "selector": "rule_id=esa_section_7",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector_type": "forest_plan_standard",
+          "selector": "component_key=FW-STD-WLGB-01",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Keep species and trail controls as implementation confirmations sourced to compliance and Forest Plan artifacts."
+    },
+    {
+      "confirmation_id": "access_terms",
+      "display_order": 80,
+      "label": "Access terms",
+      "group": "access",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector_type": "forest_plan_standard",
+          "selector": "component_key=AB-STD-RCREA-01",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector_type": "authority_finding",
+          "selector": "rule_id=planning_rule_36cfr_21915_consistency",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Tie access terms to Forest Plan and authority evidence without asserting final implementation completion."
+    },
+    {
+      "confirmation_id": "construction_phase_commitments",
+      "display_order": 90,
+      "label": "Construction-phase commitments",
+      "group": "construction",
+      "evidence_status": "evidence_linked_confirmation_required",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector_type": "forest_plan_standard",
+          "selector": "component_key=FW-STD-RMZ-01",
+          "required": true
+        },
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/package/package_chunks.jsonl",
+          "selector_type": "package_chunk",
+          "selector": "source_record_id=EA-PACKAGE-042;chunk_id=chunk:1f553ff325c15cc99950d9dc9910b5a4",
+          "required": true
+        }
+      ],
+      "allowed_report_wording": "Describe construction-phase commitments as evidence-linked checks to carry forward."
+    }
+  ],
+  "residual_risk_rules": [
+    {
+      "risk_source_id": "non_applicable_authority_boundary",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/litigation_risk_summary.json",
+      "category": "non_applicable_authority_boundary",
+      "severity": "informational",
+      "deterministic_basis": true,
+      "legal_conclusion": false,
+      "report_rule": "Summarize non-applicable authority boundary flags as deterministic coverage notes, not legal conclusions."
+    },
+    {
+      "risk_source_id": "authority_resolution_status",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/authority_reviewer_resolution_report.json",
+      "category": "reviewer_resolution",
+      "severity": "blocking_if_pending",
+      "deterministic_basis": true,
+      "legal_conclusion": false,
+      "report_rule": "A nonzero pending authority-resolution count blocks reviewer-ready report validation."
+    },
+    {
+      "risk_source_id": "forest_plan_resolution_status",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_reviewer_resolution_queue.json",
+      "category": "reviewer_resolution",
+      "severity": "blocking_if_pending",
+      "deterministic_basis": true,
+      "legal_conclusion": false,
+      "report_rule": "A nonzero Forest Plan reviewer-resolution queue blocks reviewer-ready report validation."
+    }
+  ],
+  "report_eval_expectations": [
+    {
+      "expectation_id": "applicable_authority_rows_complete",
+      "failure_category": "false_negative_synthesis_omission",
+      "question": "Does every applicable authority appear exactly once with package and source evidence?"
+    },
+    {
+      "expectation_id": "non_applicable_rows_not_promoted",
+      "failure_category": "false_positive_synthesis_claim",
+      "question": "Are non-applicable authorities summarized without becoming compliance findings?"
+    },
+    {
+      "expectation_id": "residual_risks_not_legal_conclusions",
+      "failure_category": "false_positive_synthesis_claim",
+      "question": "Are residual risks separated from compliance findings and legal conclusions?"
+    },
+    {
+      "expectation_id": "pdf_rendered_from_canonical_json",
+      "failure_category": "renderer_drift",
+      "question": "Does the PDF derive from the canonical JSON report?"
+    }
+  ]
+}

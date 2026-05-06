@@ -342,6 +342,30 @@ validation status. Static tests now lock the runtime URLs, relative graph-export
 the `node_id`/edge endpoint mapping used by `3d-force-graph`. The viewer status line explicitly
 records that layout does not change readiness.
 
+## EA Consistency Decision-Support Contract
+
+The East Crazies decision-support lane is complete through Sequence 1. Sequence 0 preflight recorded
+the current artifact/count/hash baseline and closed with `go`; Sequence 1 adds the tracked report
+contract before generator implementation. The tracked contract surfaces are:
+
+- `config/ea_consistency_decision_support_v1.json`
+- `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
+- `tests/fixtures/decision_support/minimal_decision_support_report.json`
+- `tests/test_ea_consistency_decision_support.py`
+- `docs/OUTPUT_SCHEMAS.md`
+
+The contract defines schema version `ea-consistency-decision-support-report-v1`, the required
+top-level report sections, manifest lineage, row-level `trace_ids` and `source_selectors`,
+implementation-confirmation selector ownership, residual-risk handling with
+`legal_conclusion=false`, all `12` current applicable standards, the current East Crazies
+count/hash baseline, and fail-closed categories for missing/stale inputs, count drift, missing
+evidence, manual-draft dependency, invalid PDF output, synthesis overclaims, and synthesis
+omissions.
+
+No decision-support generator, renderer, validation phase, or generated
+`source_library/reviews/v1-cg-ecid-compliance-review/decision_support/` output exists yet. The next
+boundary is Sequence 2: Report Generator.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

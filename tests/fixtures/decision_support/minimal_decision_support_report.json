@@ -1,0 +1,347 @@
+{
+  "schema_version": "ea-consistency-decision-support-report-v1",
+  "report_id": "minimal-decision-support-report",
+  "review_id": "review-test",
+  "source_set_id": "source-set-test",
+  "created_at": "2026-05-06T00:00:00Z",
+  "manifest": {
+    "schema_version": "ea-consistency-decision-support-manifest-v1",
+    "input_hashes": {
+      "package_manifest_sha256": "sha256-package-manifest",
+      "package_chunks_sha256": "sha256-package-chunks",
+      "compliance_matrix_sha256": "sha256-compliance-matrix",
+      "applicability_validation_sha256": "sha256-applicability-validation",
+      "generated_rule_pack_validation_sha256": "sha256-generated-rule-pack-validation",
+      "forest_plan_component_findings_sha256": "sha256-forest-plan-components",
+      "forest_plan_applicable_standard_coverage_sha256": "sha256-standard-coverage",
+      "non_applicable_authorities_sha256": "sha256-non-applicable-authorities",
+      "search_coverage_certificates_sha256": "sha256-search-coverage",
+      "litigation_risk_summary_sha256": "sha256-litigation-risk",
+      "decision_support_config_sha256": "sha256-config"
+    },
+    "source_dependencies": [
+      {
+        "artifact_path": "source_library/reviews/review-test/compliance_matrix.json",
+        "sha256": "sha256-compliance-matrix",
+        "section_ids": [
+          "authority_findings",
+          "forest_plan_consistency"
+        ]
+      },
+      {
+        "artifact_path": "source_library/reviews/review-test/applicability/search_coverage_certificates.json",
+        "sha256": "sha256-search-coverage",
+        "section_ids": [
+          "non_applicable_authority_boundary"
+        ]
+      }
+    ],
+    "validation_status": "passed"
+  },
+  "executive_determination": {
+    "decision_support_status": "reviewer_ready",
+    "decision_use_caveat": "This generated document is decision support, not legal advice or a final agency decision.",
+    "legal_conclusion": false
+  },
+  "record_and_artifact_inventory": {
+    "review_id": "review-test",
+    "source_set_id": "source-set-test",
+    "package_file_count": 1,
+    "package_chunk_count": 1,
+    "generated_rule_pack_ready": true,
+    "source_selectors": [
+      {
+        "artifact_path": "source_library/reviews/review-test/package/package_manifest.jsonl",
+        "selector": "source_record_id=EA-PACKAGE-001"
+      }
+    ]
+  },
+  "applicable_authority_summary": {
+    "applicable_authority_count": 1,
+    "status_counts": {
+      "pass": 1
+    },
+    "category_counts": {
+      "executive_order": 1
+    }
+  },
+  "authority_findings": [
+    {
+      "rule_id": "sample_authority",
+      "rule_title": "Sample applicable authority",
+      "authority_category": "executive_order",
+      "authority_source_record_id": "R1EA-TEST",
+      "candidate_authority_id": "rule-template:test:sample_authority",
+      "applicability_decision_id": "decision-test",
+      "applicability_status": "applicable",
+      "compliance_status": "pass",
+      "implementation_confirmation_ids": [
+        "sample_confirmation"
+      ],
+      "source_claim_ids": [
+        "claim:test"
+      ],
+      "limitations": [],
+      "ea_package_evidence": [
+        {
+          "chunk_id": "chunk:package-test",
+          "source_record_id": "EA-PACKAGE-001",
+          "citation_label": "EA-PACKAGE-001 (test)",
+          "artifact_sha256": "sha256-package-artifact",
+          "content_sha256": "sha256-package-content",
+          "text_span": {
+            "char_start": 0,
+            "char_end": 24,
+            "excerpt": "synthetic package excerpt"
+          }
+        }
+      ],
+      "source_library_evidence": [
+        {
+          "chunk_id": "chunk:source-test",
+          "source_record_id": "R1EA-TEST",
+          "citation_label": "R1EA-TEST (test)",
+          "artifact_sha256": "sha256-source-artifact",
+          "content_sha256": "sha256-source-content",
+          "text_span": {
+            "char_start": 0,
+            "char_end": 23,
+            "excerpt": "synthetic source excerpt"
+          }
+        }
+      ],
+      "trace_ids": [
+        {
+          "trace_id": "trace:authority:sample_authority",
+          "trace_type": "applicable_authority",
+          "source_artifact_path": "source_library/reviews/review-test/compliance_matrix.json",
+          "source_selector": "rule_id=sample_authority"
+        }
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/review-test/compliance_matrix.json",
+          "selector": "rule_id=sample_authority"
+        }
+      ]
+    }
+  ],
+  "forest_plan_consistency": {
+    "component_finding_count": 1,
+    "supported_component_count": 1,
+    "not_applicable_component_count": 0,
+    "gap_count": 0,
+    "plan_consistency_table_package_record_id": "EA-PACKAGE-042",
+    "component_rows": [
+      {
+        "component_id": "R1PLAN-test-FW-STD-01",
+        "component_key": "FW-STD-01",
+        "component_type": "standard",
+        "applicability_status": "applicable",
+        "compliance_status": "complies",
+        "finding_status": "supported",
+        "package_evidence": [
+          {
+            "chunk_id": "chunk:plan-package-test",
+            "source_record_id": "EA-PACKAGE-042",
+            "citation_label": "EA-PACKAGE-042 (test)",
+            "artifact_sha256": "sha256-plan-package-artifact",
+            "content_sha256": "sha256-plan-package-content",
+            "text_span": {
+              "char_start": 0,
+              "char_end": 28,
+              "excerpt": "synthetic plan table excerpt"
+            }
+          }
+        ],
+        "forest_plan_evidence": [
+          {
+            "chunk_id": "chunk:forest-plan-test",
+            "source_record_id": "R1PLAN-test-02",
+            "citation_label": "R1PLAN-test-02 (test)",
+            "artifact_sha256": "sha256-forest-plan-artifact",
+            "content_sha256": "sha256-forest-plan-content",
+            "text_span": {
+              "char_start": 0,
+              "char_end": 29,
+              "excerpt": "synthetic forest plan excerpt"
+            }
+          }
+        ],
+        "trace_ids": [
+          {
+            "trace_id": "trace:forest-plan:FW-STD-01",
+            "trace_type": "forest_plan_component",
+            "source_artifact_path": "source_library/reviews/review-test/forest_plan_component_findings.json",
+            "source_selector": "component_key=FW-STD-01"
+          }
+        ],
+        "source_selectors": [
+          {
+            "artifact_path": "source_library/reviews/review-test/forest_plan_component_findings.json",
+            "selector": "component_key=FW-STD-01"
+          }
+        ]
+      }
+    ]
+  },
+  "applicable_forest_plan_standards": [
+    {
+      "component_id": "R1PLAN-test-FW-STD-01",
+      "component_key": "FW-STD-01",
+      "compliance_status": "complies",
+      "finding_status": "supported",
+      "implementation_confirmation_ids": [
+        "sample_confirmation"
+      ],
+      "package_evidence": [
+        {
+          "chunk_id": "chunk:plan-package-test",
+          "source_record_id": "EA-PACKAGE-042",
+          "citation_label": "EA-PACKAGE-042 (test)",
+          "artifact_sha256": "sha256-plan-package-artifact",
+          "content_sha256": "sha256-plan-package-content",
+          "text_span": {
+            "char_start": 0,
+            "char_end": 28,
+            "excerpt": "synthetic plan table excerpt"
+          }
+        }
+      ],
+      "forest_plan_evidence": [
+        {
+          "chunk_id": "chunk:forest-plan-test",
+          "source_record_id": "R1PLAN-test-02",
+          "citation_label": "R1PLAN-test-02 (test)",
+          "artifact_sha256": "sha256-forest-plan-artifact",
+          "content_sha256": "sha256-forest-plan-content",
+          "text_span": {
+            "char_start": 0,
+            "char_end": 29,
+            "excerpt": "synthetic forest plan excerpt"
+          }
+        }
+      ],
+      "trace_ids": [
+        {
+          "trace_id": "trace:standard:FW-STD-01",
+          "trace_type": "applicable_forest_plan_standard",
+          "source_artifact_path": "source_library/reviews/review-test/forest_plan_applicable_standard_coverage.json",
+          "source_selector": "component_key=FW-STD-01"
+        }
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/review-test/forest_plan_applicable_standard_coverage.json",
+          "selector": "component_key=FW-STD-01"
+        }
+      ]
+    }
+  ],
+  "non_applicable_authority_boundary": {
+    "non_applicable_authority_count": 1,
+    "summary_rows": [
+      {
+        "candidate_authority_id": "rule-template:test:non_applicable",
+        "decision_id": "decision-non-applicable-test",
+        "authority_category": "regulation",
+        "basis_type": "absent_trigger_evidence",
+        "status": "not_applicable",
+        "rationale": "Synthetic trigger evidence was not found.",
+        "search_coverage_certificate_ids": [
+          "coverage-test"
+        ],
+        "search_coverage": [
+          {
+            "coverage_certificate_id": "coverage-test",
+            "coverage_class": "absent_trigger_evidence",
+            "coverage_result": "sufficient",
+            "missing_query_variants": []
+          }
+        ],
+        "trace_ids": [
+          {
+            "trace_id": "trace:non-applicable:sample",
+            "trace_type": "non_applicable_authority",
+            "source_artifact_path": "source_library/reviews/review-test/non_applicable_authority_appendix.json",
+            "source_selector": "candidate_authority_id=rule-template:test:non_applicable"
+          }
+        ],
+        "source_selectors": [
+          {
+            "artifact_path": "source_library/reviews/review-test/non_applicable_authority_appendix.json",
+            "selector": "candidate_authority_id=rule-template:test:non_applicable"
+          }
+        ]
+      }
+    ],
+    "appendix_path": "source_library/reviews/review-test/non_applicable_authority_appendix.json"
+  },
+  "implementation_confirmation_checklist": [
+    {
+      "confirmation_id": "sample_confirmation",
+      "label": "Sample implementation confirmation",
+      "status": "requires_confirmation",
+      "config_owner": "config/ea_consistency_decision_support_v1.json",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/review-test/package/package_chunks.jsonl",
+          "selector": "source_record_id=EA-PACKAGE-001;chunk_id=chunk:package-test"
+        }
+      ],
+      "evidence": [
+        {
+          "chunk_id": "chunk:package-test",
+          "source_record_id": "EA-PACKAGE-001",
+          "citation_label": "EA-PACKAGE-001 (test)",
+          "artifact_sha256": "sha256-package-artifact",
+          "content_sha256": "sha256-package-content",
+          "text_span": {
+            "char_start": 0,
+            "char_end": 24,
+            "excerpt": "synthetic package excerpt"
+          }
+        }
+      ],
+      "trace_ids": [
+        {
+          "trace_id": "trace:confirmation:sample",
+          "trace_type": "implementation_confirmation",
+          "source_artifact_path": "config/ea_consistency_decision_support_v1.json",
+          "source_selector": "implementation_confirmations.confirmation_id=sample_confirmation"
+        }
+      ]
+    }
+  ],
+  "residual_risk_register": [
+    {
+      "risk_id": "risk:non-applicable-boundary-sample",
+      "category": "non_applicable_authority_boundary",
+      "severity": "informational",
+      "deterministic_basis": true,
+      "legal_conclusion": false,
+      "source_artifact_path": "source_library/reviews/review-test/litigation_risk_summary.json",
+      "source_selector": "risk_flags[0]",
+      "trace_ids": [
+        {
+          "trace_id": "trace:risk:sample",
+          "trace_type": "residual_risk",
+          "source_artifact_path": "source_library/reviews/review-test/litigation_risk_summary.json",
+          "source_selector": "risk_flags[0]"
+        }
+      ]
+    }
+  ],
+  "validation_and_replay": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "minimal_fixture_schema_boundary",
+        "passed": true
+      }
+    ],
+    "replay_commands": [
+      "PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document --output-dir source_library --review-id review-test"
+    ]
+  }
+}
