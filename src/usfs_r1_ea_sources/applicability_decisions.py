@@ -9,6 +9,9 @@ import json
 import re
 from typing import Any
 
+from .evidence_strength import classify_evidence_strength
+from .evidence_strength import evidence_strength_for_confidence
+from .evidence_strength import is_weak_signal_text
 from .records import sha256_file
 
 
@@ -1041,7 +1044,9 @@ def _trigger_group_diagnostic(
         "package_fact_node_ids": package_fact_node_ids,
         "retrieval_result_ids": retrieval_result_ids,
         "evidence_strength_counts": _evidence_strength_counts(evidence),
+        "evidence_strength_class_counts": _evidence_strength_class_counts(evidence),
         "weak_signal_reasons": sorted(set(weak_signal_reasons)),
+        "weak_signal_details": _weak_signal_details(evidence),
     }
 
 
@@ -1080,6 +1085,48 @@ def _evidence_strength_counts(evidence: list[dict[str, Any]]) -> dict[str, int]:
         for item in evidence
     )
     return dict(sorted(counts.items()))
+
+
+def _evidence_strength_class_counts(evidence: list[dict[str, Any]]) -> dict[str, int]:
+    counts = Counter(
+        str(
+            (item.get("evidence_strength") or {}).get("strength_class")
+            or item.get("confidence_class")
+            or "observed"
+        )
+        for item in evidence
+    )
+    return dict(sorted(counts.items()))
+
+
+def _weak_signal_details(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    details = []
+    for item in evidence:
+        if item.get("confidence_class") != "weak_signal":
+            continue
+        strength = item.get("evidence_strength") or evidence_strength_for_confidence(
+            item.get("confidence_class"),
+            section_family=item.get("section_family"),
+        )
+        details.append(
+            {
+                "evidence_id": item.get("evidence_id"),
+                "strength_class": strength.get("strength_class"),
+                "reason": strength.get("reason"),
+                "matched_phrase": strength.get("matched_phrase"),
+                "matched_text": strength.get("matched_text"),
+                "evidence_window": strength.get("evidence_window"),
+                "section_family": strength.get("section_family") or item.get("section_family"),
+            }
+        )
+    return sorted(
+        details,
+        key=lambda item: (
+            str(item.get("evidence_id") or ""),
+            str(item.get("strength_class") or ""),
+            str(item.get("reason") or ""),
+        ),
+    )
 
 
 def _arbitration_summary(
@@ -1291,6 +1338,10 @@ def _package_fact_nodes(package_fact_graph: dict[str, Any]) -> list[dict[str, An
 
 
 def _package_evidence_span(node: dict[str, Any]) -> dict[str, Any]:
+    evidence_strength = node.get("evidence_strength") or evidence_strength_for_confidence(
+        node.get("confidence_class"),
+        section_family=node.get("section_family"),
+    )
     return {
         "evidence_id": str(node.get("node_id") or ""),
         "package_fact_node_id": node.get("node_id"),
@@ -1303,12 +1354,18 @@ def _package_evidence_span(node: dict[str, Any]) -> dict[str, Any]:
         "matched_terms": _strings([node.get("raw_value"), node.get("normalized_value")]),
         "text_snippet": node.get("raw_value") or node.get("label"),
         "confidence_class": node.get("confidence_class"),
+        "evidence_strength": evidence_strength,
         "evidence_span_ids": _strings(node.get("evidence_span_ids")),
         "text_hash": node.get("text_hash") or node.get("content_sha256"),
     }
 
 
 def _package_result_span(result: dict[str, Any]) -> dict[str, Any]:
+    provenance = result.get("provenance") or {}
+    evidence_strength = provenance.get("evidence_strength") or evidence_strength_for_confidence(
+        provenance.get("confidence_class"),
+        section_family=result.get("section_family"),
+    )
     return {
         "evidence_id": str(result.get("result_id") or ""),
         "retrieval_result_id": result.get("result_id"),
@@ -1321,8 +1378,9 @@ def _package_result_span(result: dict[str, Any]) -> dict[str, Any]:
         "char_end": result.get("char_end"),
         "matched_terms": _strings(result.get("matched_terms")),
         "text_snippet": result.get("text_excerpt"),
-        "confidence_class": (result.get("provenance") or {}).get("confidence_class"),
-        "evidence_span_ids": _strings((result.get("provenance") or {}).get("evidence_span_ids")),
+        "confidence_class": provenance.get("confidence_class"),
+        "evidence_strength": evidence_strength,
+        "evidence_span_ids": _strings(provenance.get("evidence_span_ids")),
         "text_hash": result.get("text_hash"),
     }
 
@@ -1332,6 +1390,14 @@ def _package_chunk_evidence_span(chunk: dict[str, Any], group: list[str]) -> dic
     first_match = _first_trigger_match(text, group)
     chunk_start = first_match[1] if first_match else 0
     chunk_end = first_match[2] if first_match else min(len(text), 200)
+    section_family = _section_family_from_chunk(chunk)
+    evidence_strength = classify_evidence_strength(
+        text=text,
+        start=chunk_start,
+        end=chunk_end,
+        matched_text=first_match[0] if first_match else None,
+        section_family=section_family,
+    )
     absolute_start = _absolute_offset(chunk.get("char_start"), chunk_start)
     absolute_end = _absolute_offset(chunk.get("char_start"), chunk_end)
     evidence_id = _stable_id(
@@ -1341,23 +1407,19 @@ def _package_chunk_evidence_span(chunk: dict[str, Any], group: list[str]) -> dic
         str(chunk_end),
         hashlib.sha256("|".join(group).encode("utf-8")).hexdigest(),
     )
-    confidence = (
-        "weak_signal"
-        if first_match and _is_weak_signal_text(text, chunk_start, chunk_end)
-        else "observed"
-    )
     return {
         "evidence_id": evidence_id,
         "package_fact_node_id": None,
         "package_chunk_ids": _strings([chunk.get("chunk_id")]),
         "citation_label": chunk.get("citation_label"),
-        "section_family": _section_family_from_chunk(chunk),
+        "section_family": section_family,
         "page_label": _page_label(chunk),
         "char_start": absolute_start,
         "char_end": absolute_end,
         "matched_terms": group,
         "text_snippet": _context_excerpt(text, chunk_start, chunk_end),
-        "confidence_class": confidence,
+        "confidence_class": evidence_strength["confidence_class"],
+        "evidence_strength": evidence_strength,
         "evidence_span_ids": [],
         "text_hash": chunk.get("content_sha256"),
     }
@@ -1721,7 +1783,8 @@ def _arbitration_report_lines(decision: dict[str, Any]) -> list[str]:
                 f"`{_format_trigger_group(group.get('trigger_group'))}`: "
                 f"`{group.get('diagnostic_treatment')}` "
                 f"evidence=`{len(group.get('evidence_ids') or [])}` "
-                f"strengths=`{group.get('evidence_strength_counts') or {}}`"
+                f"strengths=`{group.get('evidence_strength_counts') or {}}` "
+                f"classes=`{group.get('evidence_strength_class_counts') or {}}`"
             )
     notes = _strings(summary.get("arbitration_notes"))
     if notes:
@@ -1799,22 +1862,7 @@ def _term_in_text(term: str, text: str) -> bool:
 
 
 def _is_weak_signal_text(text: str, start: int, end: int) -> bool:
-    window = _sentence_around(text, start, end).lower()
-    weak_phrases = (
-        "may require",
-        "may be required",
-        "might require",
-        "could require",
-        "could be required",
-        "potentially",
-        "possible",
-        "if present",
-        "if needed",
-        "if required",
-        "not yet determined",
-        "unknown whether",
-    )
-    return any(phrase in window for phrase in weak_phrases)
+    return is_weak_signal_text(text, start, end)
 
 
 def _sentence_around(text: str, start: int, end: int) -> str:
@@ -1852,6 +1900,10 @@ def _page_label(chunk: dict[str, Any]) -> str | None:
 
 def _section_family_from_chunk(chunk: dict[str, Any]) -> str | None:
     values = " ".join(str(chunk.get(key) or "").lower() for key in ("section", "heading"))
+    if "no action" in values:
+        return "no_action"
+    if "cumulative" in values:
+        return "cumulative_effects"
     if "purpose" in values or "need" in values:
         return "purpose_need"
     if "affected" in values or "environment" in values:

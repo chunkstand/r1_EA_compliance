@@ -1123,8 +1123,12 @@ facts used before applicability decisions are attempted. It includes:
 - package fact graph metadata: `package_fact_graph_id`, `created_at`, extraction method versions,
   source package path, and extraction summary
 - `nodes`, where each node has `node_id`, `node_type`, `label`, normalized value fields,
-  confidence class, extraction method, package chunk IDs, section family, citation label, page
-  label, character offsets, text hash, and evidence-span IDs
+  confidence class, structured `evidence_strength`, extraction method, package chunk IDs, section
+  family, citation label, page label, character offsets, text hash, and evidence-span IDs
+- `evidence_strength` preserves the compatibility `confidence_class` and adds `strength_class`,
+  `reason`, matched phrase/text when available, local evidence window, evidence-window offsets, and
+  section family. Strength classes include `observed`, `conditional`, `speculative`, `background`,
+  `negative_context`, and legacy `weak_signal`.
 - required package fact node types:
   - `action`
   - `agency`
@@ -1182,8 +1186,9 @@ summarizes the package graph validation result. It includes `review_id`, `source
 `package_manifest_sha256`, `package_chunks_sha256`, `package_fact_graph_sha256`,
 `package_context_sha256`, validation checks, negative-context location facts, uncertainty records,
 and fact-count summaries. Uncertainty records include contradictory package evidence, weakly worded
-facts, and missing common fact types that later applicability stages must handle. It is a Milestone
-3 validation artifact only; it does not contain applicability decisions or compliance findings.
+facts with structured `evidence_strength` details, and missing common fact types that later
+applicability stages must handle. It is a Milestone 3 validation artifact only; it does not contain
+applicability decisions or compliance findings.
 
 `applicability_retrieval_trace.jsonl` has schema version `applicability-retrieval-trace-v0`; each
 line records one query execution or fused result set for one candidate authority. Each trace row
@@ -1200,6 +1205,8 @@ includes:
 - ranked results with result ID, result kind, rank, score, fused score, selected/rejected status,
   rejection reason, source record ID, package chunk ID, source chunk ID, claim ID, section family,
   citation label, page label, offsets, matched terms, and text hash
+- package-result provenance carries package graph `confidence_class` and `evidence_strength` when
+  the retrieval row was seeded by a package fact node
 - fusion metadata when multiple searches are combined, including the fusion strategy, input result
   sets, reciprocal-rank-fusion parameters when used, and final rank order
 
@@ -1246,14 +1253,16 @@ Each applicability decision includes:
 - deterministic predicate name, predicate version, predicate input hashes, and predicate result
 - source-record IDs, authority category, authority document role, and source-set identity
 - package evidence spans with package chunk IDs, citation labels, section families, page labels,
-  offsets, matched terms, and text snippets
+  offsets, matched terms, text snippets, compatibility confidence classes, and structured
+  `evidence_strength`
 - `arbitration_summary` with schema version `applicability-evidence-arbitration-v0`, recording
   diagnostic-only per-trigger evidence accounting. The summary includes positive and negative
   trigger group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength
-  counts, weak-signal reasons, source evidence IDs, selected retrieval result IDs, graph path IDs,
-  the current decision effect, and whether weak evidence made adjudication necessary. Milestone 1
-  diagnostics do not change status outcomes; they explain why the current predicate did or did not
-  mark an authority as `needs_adjudication`.
+  counts, structured evidence-strength class counts, weak-signal reasons/details, source evidence
+  IDs, selected retrieval result IDs, graph path IDs, the current decision effect, and whether weak
+  evidence made adjudication necessary. Milestone 1/2 diagnostics do not change status outcomes;
+  they explain why the current predicate did or did not mark an authority as
+  `needs_adjudication`.
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
   offsets, source-claim IDs, text snippets, and `evidence_origin` when the span is carried forward
   from the authority universe because source retrieval recorded coverage but selected no source

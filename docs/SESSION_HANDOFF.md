@@ -100,6 +100,10 @@ Important current behavior:
 - Applicability artifacts are produced before compliance review and do not contain `pass`, `gap`, or
   `uncertain` compliance findings.
 - Weak or conflicting package trigger evidence is recorded as `needs_adjudication`.
+- Evidence-arbitration Milestones 1 and 2 are implemented as behavior-preserving diagnostics:
+  decisions carry `arbitration_summary`, evidence spans carry structured `evidence_strength`, and
+  reports show weak/auxiliary/conflicting trigger-group diagnostics without changing final
+  applicability status outcomes.
 - Not-applicable decisions cite search coverage certificates.
 - Validation now fails if a final contradictory decision lacks human adjudication, if a
   human-adjudicated decision cannot be replayed from a passing adjudication eval, if
@@ -153,10 +157,10 @@ Verified results from the latest Milestone 9 pass:
 
 Next implementation target:
 
-The immediate next implementation target is
-`docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md`: add the authority-family inventory,
-currentness gate, expanded rule templates/applicability predicates, eval/adjudication coverage, and
-reviewer-facing authority-family reporting. Milestone 10 in
+The immediate next implementation target is Milestone 3 in
+`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: implement the trigger-arbitration predicate that can
+let strong independent package evidence carry an applicability decision while weak auxiliary
+evidence remains visible for adjudication/reporting. Milestone 10 in
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` remains the broader real-package expansion and
 operating-runbook track.
 
@@ -475,7 +479,8 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence: start a new post-V1 milestone plan.
+Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 3 in
+`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

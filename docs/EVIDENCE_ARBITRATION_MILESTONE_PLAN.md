@@ -159,7 +159,7 @@ Commit Milestone 1 as a standalone diagnostic/schema-doc slice.
 
 ## Milestone 2: Evidence Strength Model
 
-Status: planned
+Status: implemented
 
 Replace the current boolean weak-signal interpretation with a structured evidence-strength model.
 
@@ -189,6 +189,22 @@ Acceptance signal:
 - Strong evidence in the same candidate decision is not collapsed into the same bucket as weak
   auxiliary evidence.
 - Existing negative-context behavior remains fail-closed.
+
+Implemented state:
+
+- `evidence_strength.py` provides one deterministic classifier for observed, conditional,
+  speculative, background, negative-context, and legacy weak-signal evidence.
+- `package_fact_graph.json` fact/evidence-span nodes and `package_applicability_context.json`
+  compact facts now retain `evidence_strength` while preserving the existing `confidence_class`
+  compatibility field.
+- `applicability_retrieval_trace.jsonl` package-result provenance carries package graph
+  `evidence_strength` forward.
+- `applicability_decisions.jsonl` package evidence spans carry `evidence_strength`, and
+  `arbitration_summary.positive_trigger_groups[]` / `negative_trigger_groups[]` include both
+  compatibility `evidence_strength_counts` and structured `evidence_strength_class_counts` plus
+  `weak_signal_details`.
+- The milestone remains behavior-preserving for applicability status outcomes. Milestone 3 is the
+  first planned behavior-changing trigger-arbitration predicate.
 
 Verification:
 

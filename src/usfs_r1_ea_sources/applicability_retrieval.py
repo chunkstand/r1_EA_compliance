@@ -600,6 +600,7 @@ def _package_results(
                     "fact_subtype": node.get("fact_subtype"),
                     "normalized_value": node.get("normalized_value"),
                     "confidence_class": node.get("confidence_class"),
+                    "evidence_strength": node.get("evidence_strength"),
                 },
             }
         )

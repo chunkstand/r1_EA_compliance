@@ -9,6 +9,9 @@ import json
 import re
 from typing import Any
 
+from .evidence_strength import classify_evidence_strength
+from .evidence_strength import evidence_strength_for_confidence
+from .evidence_strength import is_weak_signal_text
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import ForestPlanProfileCollection
 from .forest_plan_profiles import load_forest_plan_profiles
@@ -228,12 +231,29 @@ def _extract_package_facts(
                 for match in _find_term_matches(chunk_text, term):
                     confidence_class = str(spec.get("confidence_class") or "observed")
                     fact_subtype = str(spec.get("fact_subtype") or "")
+                    evidence_strength = classify_evidence_strength(
+                        text=chunk_text,
+                        start=match.start(),
+                        end=match.end(),
+                        matched_text=match.group(0),
+                        default_confidence_class=confidence_class,
+                        section_family=_section_family(chunk),
+                    )
                     if spec["node_type"] in LOCATION_NODE_TYPES and _is_negative_location_match(
                         chunk_text,
                         match.start(),
                         match.end(),
                     ):
-                        confidence_class = "negative_context"
+                        evidence_strength = classify_evidence_strength(
+                            text=chunk_text,
+                            start=match.start(),
+                            end=match.end(),
+                            matched_text=match.group(0),
+                            section_family=_section_family(chunk),
+                            negative_context=True,
+                            negative_reason="negative_or_out_of_scope_location_context",
+                        )
+                        confidence_class = str(evidence_strength["confidence_class"])
                         suppressed_location_facts.append(
                             {
                                 "node_type": spec["node_type"],
@@ -246,10 +266,11 @@ def _extract_package_facts(
                                 "chunk_char_end": match.end(),
                                 "section_id": section_id,
                                 "reason": "negative_or_out_of_scope_location_context",
+                                "evidence_strength": evidence_strength,
                             }
                         )
-                    elif _is_weak_signal_match(chunk_text, match.start(), match.end()):
-                        confidence_class = "weak_signal"
+                    else:
+                        confidence_class = str(evidence_strength["confidence_class"])
                     _add_fact_node(
                         nodes=nodes,
                         edges=edges,
@@ -262,6 +283,7 @@ def _extract_package_facts(
                         match_end=match.end(),
                         matched_text=match.group(0),
                         confidence_class=confidence_class,
+                        evidence_strength=evidence_strength,
                     )
 
     nodes = [*section_nodes.values(), *nodes]
@@ -452,6 +474,7 @@ def _add_fact_node(
     match_end: int,
     matched_text: str,
     confidence_class: str,
+    evidence_strength: dict[str, Any],
 ) -> None:
     chunk_id = str(chunk.get("chunk_id") or "unknown-chunk")
     absolute_start = _absolute_offset(chunk.get("char_start"), match_start)
@@ -480,6 +503,7 @@ def _add_fact_node(
                 "label": f"{chunk.get('citation_label') or chunk_id} span {match_start}-{match_end}",
                 "normalized_value": span_id,
                 "confidence_class": "observed",
+                "evidence_strength": evidence_strength,
                 "extraction_method": PACKAGE_FACT_EXTRACTION_METHOD_VERSION,
                 "package_chunk_ids": [chunk_id],
                 "section_ids": [section_id],
@@ -514,6 +538,7 @@ def _add_fact_node(
                 "raw_value": matched_text,
                 "normalized_value": spec["normalized_value"],
                 "confidence_class": confidence_class,
+                "evidence_strength": evidence_strength,
                 "extraction_method": PACKAGE_FACT_EXTRACTION_METHOD_VERSION,
                 "source_metadata": spec["source_metadata"],
                 "package_chunk_ids": [chunk_id],
@@ -616,6 +641,7 @@ def _build_uncertainty_records(
                 if node.get("confidence_class") == "weak_signal"
             ]
             for weak_node in weak_nodes:
+                evidence_strength = weak_node.get("evidence_strength") or {}
                 uncertainty_records.append(
                     {
                         "uncertainty_id": _node_id(
@@ -630,6 +656,10 @@ def _build_uncertainty_records(
                         "weak_fact_node_ids": [str(weak_node["node_id"])],
                         "status": "requires_adjudication_before_applicability_decision",
                         "rationale": "Package fact was extracted from conditional or uncertain wording.",
+                        "evidence_strength": evidence_strength,
+                        "weak_signal_reason": evidence_strength.get("reason"),
+                        "matched_phrase": evidence_strength.get("matched_phrase"),
+                        "evidence_window": evidence_strength.get("evidence_window"),
                     }
                 )
             continue
@@ -705,6 +735,10 @@ def _build_extraction_summary(
         f"{node.get('node_type')}:{node.get('fact_subtype')}" for node in fact_nodes
     )
     confidence_counts = Counter(str(node["confidence_class"]) for node in fact_nodes)
+    evidence_strength_counts = Counter(
+        str((node.get("evidence_strength") or {}).get("strength_class") or node["confidence_class"])
+        for node in fact_nodes
+    )
     return {
         "package_file_count": len(package_manifest),
         "package_chunk_count": len(package_chunks),
@@ -717,6 +751,7 @@ def _build_extraction_summary(
         "fact_type_counts": dict(sorted(fact_type_counts.items())),
         "fact_subtype_counts": dict(sorted(fact_subtype_counts.items())),
         "confidence_class_counts": dict(sorted(confidence_counts.items())),
+        "evidence_strength_class_counts": dict(sorted(evidence_strength_counts.items())),
         "negative_location_fact_count": len(extraction["suppressed_location_facts"]),
         "uncertainty_record_count": len(extraction["uncertainty_records"]),
         "weak_signal_fact_count": confidence_counts.get("weak_signal", 0),
@@ -932,6 +967,11 @@ def _compact_fact(node: dict[str, Any]) -> dict[str, Any]:
         "raw_value": node.get("raw_value"),
         "normalized_value": node.get("normalized_value"),
         "confidence_class": node.get("confidence_class"),
+        "evidence_strength": node.get("evidence_strength")
+        or evidence_strength_for_confidence(
+            node.get("confidence_class"),
+            section_family=node.get("section_family"),
+        ),
         "package_chunk_ids": node.get("package_chunk_ids") or [],
         "section_ids": node.get("section_ids") or [],
         "section_family": node.get("section_family"),
@@ -1140,22 +1180,7 @@ def _is_negative_location_match(text: str, start: int, end: int) -> bool:
 
 
 def _is_weak_signal_match(text: str, start: int, end: int) -> bool:
-    window = _sentence_around(text, start, end).lower()
-    weak_phrases = (
-        "may require",
-        "may be required",
-        "might require",
-        "could require",
-        "could be required",
-        "potentially",
-        "possible",
-        "if present",
-        "if needed",
-        "if required",
-        "not yet determined",
-        "unknown whether",
-    )
-    return any(phrase in window for phrase in weak_phrases)
+    return is_weak_signal_text(text, start, end)
 
 
 def _sentence_around(text: str, start: int, end: int) -> str:

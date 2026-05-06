@@ -18,6 +18,7 @@ from usfs_r1_ea_sources.applicability_validation import (
     write_applicability_adjudication_template,
 )
 from usfs_r1_ea_sources.cli import main
+from usfs_r1_ea_sources.evidence_strength import classify_evidence_strength
 from usfs_r1_ea_sources.package_fact_graph import build_package_fact_graph
 from usfs_r1_ea_sources.retrieval import _write_sqlite_index
 
@@ -31,6 +32,71 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             )
         )
         self.assertTrue(_term_in_text("CE", "The agency adopted a CE for this action."))
+
+    def test_evidence_strength_classifies_uncertainty_contexts(self) -> None:
+        conditional_text = "Trail construction may occur if needed for final design."
+        conditional = classify_evidence_strength(
+            text=conditional_text,
+            start=conditional_text.index("Trail construction"),
+            end=conditional_text.index("Trail construction") + len("Trail construction"),
+            matched_text="Trail construction",
+            section_family="alternatives",
+        )
+        self.assertEqual(conditional["confidence_class"], "weak_signal")
+        self.assertEqual(conditional["strength_class"], "conditional")
+        self.assertEqual(conditional["matched_phrase"], "if needed")
+        self.assertIn("Trail construction", conditional["evidence_window"])
+
+        speculative_text = "The parcel scope potentially includes reserved access."
+        speculative = classify_evidence_strength(
+            text=speculative_text,
+            start=speculative_text.index("parcel"),
+            end=speculative_text.index("parcel") + len("parcel"),
+            matched_text="parcel",
+        )
+        self.assertEqual(speculative["confidence_class"], "weak_signal")
+        self.assertEqual(speculative["strength_class"], "speculative")
+        self.assertEqual(speculative["matched_phrase"], "potentially")
+
+        resource_effects_text = (
+            "Resource effects from grazing may be possible in the cumulative effects area."
+        )
+        resource_effects = classify_evidence_strength(
+            text=resource_effects_text,
+            start=resource_effects_text.index("grazing"),
+            end=resource_effects_text.index("grazing") + len("grazing"),
+            matched_text="grazing",
+            section_family="cumulative_effects",
+        )
+        self.assertEqual(resource_effects["confidence_class"], "weak_signal")
+        self.assertEqual(resource_effects["strength_class"], "speculative")
+        self.assertEqual(resource_effects["matched_phrase"], "may be possible")
+
+        no_action_text = (
+            "Under the No Action Alternative, trail construction would not occur and "
+            "access would not change."
+        )
+        no_action = classify_evidence_strength(
+            text=no_action_text,
+            start=no_action_text.index("trail construction"),
+            end=no_action_text.index("trail construction") + len("trail construction"),
+            matched_text="trail construction",
+            section_family="no_action",
+        )
+        self.assertEqual(no_action["confidence_class"], "weak_signal")
+        self.assertEqual(no_action["strength_class"], "background")
+        self.assertEqual(no_action["matched_phrase"], "no action alternative")
+
+        decisive_text = "The Proposed Action reserves Right-of-Way for Big Timber Creek Road No. 197."
+        decisive = classify_evidence_strength(
+            text=decisive_text,
+            start=decisive_text.index("Right-of-Way"),
+            end=decisive_text.index("Right-of-Way") + len("Right-of-Way"),
+            matched_text="Right-of-Way",
+            section_family="alternatives",
+        )
+        self.assertEqual(decisive["confidence_class"], "observed")
+        self.assertEqual(decisive["strength_class"], "observed")
 
     def test_writes_first_class_applicability_decision_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -76,6 +142,12 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(sioux_decision["status"], "not_applicable")
             self.assertEqual(sioux_decision["basis_type"], "negative_package_evidence")
             self.assertTrue(sioux_decision["negative_evidence_spans"])
+            self.assertTrue(
+                any(
+                    span["evidence_strength"]["strength_class"] == "negative_context"
+                    for span in sioux_decision["negative_evidence_spans"]
+                )
+            )
 
             weak_decision = decisions["rule-template:unit-pack:0.1.0:cwa_permit"]
             self.assertEqual(weak_decision["status"], "needs_adjudication")
@@ -177,9 +249,40 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertEqual(groups[("grazing",)]["diagnostic_treatment"], "weak_only")
             self.assertGreater(groups[("road",)]["evidence_strength_counts"]["observed"], 0)
             self.assertNotIn("weak_signal", groups[("road",)]["evidence_strength_counts"])
+            self.assertIn(
+                "observed",
+                groups[("road",)]["evidence_strength_class_counts"],
+            )
             self.assertIn("weak_signal", groups[("trail",)]["evidence_strength_counts"])
+            self.assertIn(
+                "conditional",
+                groups[("trail",)]["evidence_strength_class_counts"],
+            )
+            self.assertIn(
+                "speculative",
+                groups[("grazing",)]["evidence_strength_class_counts"],
+            )
             self.assertTrue(groups[("trail",)]["weak_signal_reasons"])
             self.assertTrue(groups[("grazing",)]["weak_signal_reasons"])
+            trail_details = groups[("trail",)]["weak_signal_details"]
+            self.assertTrue(
+                {
+                    detail["matched_phrase"]
+                    for detail in trail_details
+                    if detail.get("matched_phrase")
+                }
+                & {"could be required", "if needed"}
+            )
+            self.assertTrue(
+                any("Trail easements" in detail["evidence_window"] for detail in trail_details)
+            )
+            grazing_details = groups[("grazing",)]["weak_signal_details"]
+            self.assertTrue(
+                any(
+                    detail.get("matched_phrase") == "may be possible"
+                    for detail in grazing_details
+                )
+            )
             self.assertTrue(arbitration["source_evidence_ids"])
             self.assertTrue(arbitration["selected_retrieval_result_ids"])
 

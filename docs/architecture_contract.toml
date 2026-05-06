@@ -6,7 +6,15 @@ description = "Layer ownership, import boundaries, generated artifacts, command 
 [[layers]]
 name = "foundation"
 summary = "Workbook, config, overrides, adapters, and source-row records."
-modules = ["__init__", "adapters", "config", "overrides", "records", "workbook"]
+modules = [
+  "__init__",
+  "adapters",
+  "config",
+  "evidence_strength",
+  "overrides",
+  "records",
+  "workbook",
+]
 allowed_import_layers = ["foundation"]
 
 [[layers]]
