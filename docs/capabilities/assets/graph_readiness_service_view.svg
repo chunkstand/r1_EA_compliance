@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Readiness graph showing graph-ready and blocked forest profiles">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Authority hierarchy graph from federal law to forest plans">
   <defs>
     <filter id="serviceShadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#141713" flood-opacity="0.13"/>
@@ -9,92 +9,151 @@
     </marker>
   </defs>
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
-  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 graph shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
-  <path d="M 780 650 L 780 310" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
-  <path d="M 780 650 L 330 430" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(330 430)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Beaverhead-Deerlodge</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 520 390" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(520 390)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Bitterroot</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1020 460" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1020 460)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Dakota Prairie Grasslands</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1085 610" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1085 610)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Flathead</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1010 750" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1010 750)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Helena-Lewis Clark</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 820 805" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(820 805)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Idaho Panhandle</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 620 790" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(620 790)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Kootenai</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 420 690" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(420 690)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Lolo</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 285 570" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(285 570)" filter="url(#serviceShadow)">
-    <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
-    <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Nez Perce-Clearwater</text>
-    <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g>
-  <g transform="translate(780 650)" filter="url(#serviceShadow)">
-    <circle r="126" fill="#ffffff" stroke="#7a6e3d" stroke-width="9"/>
-    <circle r="107" fill="#7a6e3d" opacity="0.10"/>
-    <text y="-153" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Review scope</text>
-    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Custer Gallatin</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">EA</text>
-    <text y="164" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#7a6e3d"></text>
-  </g>
-  <g transform="translate(780 310)" filter="url(#serviceShadow)">
-    <circle r="98" fill="#ffffff" stroke="#26786f" stroke-width="9"/>
-    <circle r="79" fill="#26786f" opacity="0.10"/>
-    <text y="-125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Ready forest profile</text>
-    <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Custer</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Gallatin</text>
-    <text y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">review scope</text>
-  </g>
-  <g transform="translate(1220 196)" filter="url(#serviceShadow)">
-    <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
-    <text x="35" y="55" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Blockers remain visible</text>
-    <text x="35" y="92" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">30 readiness blocker nodes and 30 blocker</text><text x="35" y="115" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">edges are exported as graph evidence.</text>
-    <g transform="translate(35 126)">
-          <rect width="390" height="82" rx="14" fill="#ffffff" stroke="#dfcbc6"/>
-          <circle cx="35" cy="41" r="14" fill="#b13d38"/>
-          <text x="64" y="34" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">forest profile not ready</text>
-          <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">62 graph item(s)</text>
-        </g><g transform="translate(35 238)">
-          <rect width="390" height="82" rx="14" fill="#ffffff" stroke="#dfcbc6"/>
-          <circle cx="35" cy="41" r="14" fill="#b13d38"/>
-          <text x="64" y="34" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">missing source</text>
-          <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">33 graph item(s)</text>
-        </g><g transform="translate(35 350)">
-          <rect width="390" height="82" rx="14" fill="#ffffff" stroke="#dfcbc6"/>
-          <circle cx="35" cy="41" r="14" fill="#a75a22"/>
-          <text x="64" y="34" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">superseded source</text>
-          <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">3 graph item(s)</text>
-        </g><g transform="translate(35 462)">
-          <rect width="390" height="82" rx="14" fill="#ffffff" stroke="#dfcbc6"/>
-          <circle cx="35" cy="41" r="14" fill="#a75a22"/>
-          <text x="64" y="34" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">fsh chapter delta required</text>
-          <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">2 graph item(s)</text>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Authority profile hierarchy</text>
+  <text x="72" y="140" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">NEPA analysis is built as a hierarchy: federal law and regulation, department procedure, agency policy, regional direction, and</text><text x="72" y="167" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">forest-plan profiles at the edge of the graph.</text>
+
+  <g transform="translate(92 245)" filter="url(#serviceShadow)">
+    <rect width="260" height="510" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="260" height="12" rx="6" fill="#356a9b"/>
+    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">Federal</text>
+    <g transform="translate(24 82)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#356a9b"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">NEPA</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">42 U.S.C.</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">chapter 55</text>
+        </g><g transform="translate(24 200)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#356a9b"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Other laws</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">ESA, CWA, NHPA,</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">FLPMA</text>
+        </g><g transform="translate(24 318)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#356a9b"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Regulations / orders</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">CFR, executive</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">orders, case law</text>
         </g>
   </g>
-  <g transform="translate(72 890)" filter="url(#serviceShadow)">
-    <rect width="1656" height="132" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value</text>
-    <circle cx="39" cy="77" r="5" fill="#26786f"/>
-  <text x="56" y="84" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">1 graph-ready forest profile and 9 blocked forest profiles are visible in one view.</text>
-    <circle cx="39" cy="111" r="5" fill="#26786f"/>
-  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">The review process shows current capability without implying that every Region 1 profile is ready for service delivery.</text>
+  <g transform="translate(392 308)" filter="url(#serviceShadow)">
+    <rect width="250" height="384" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="250" height="12" rx="6" fill="#26786f"/>
+    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">Department</text>
+    <g transform="translate(24 82)">
+          <rect width="202" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#26786f"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">USDA NEPA</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">7 CFR part 1b</text>
+        </g><g transform="translate(24 200)">
+          <rect width="202" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#26786f"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Department procedure</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">current</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">authority basis</text>
+        </g>
   </g>
+  <g transform="translate(682 300)" filter="url(#serviceShadow)">
+    <rect width="250" height="400" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="250" height="12" rx="6" fill="#7a6e3d"/>
+    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">Agency</text>
+    <g transform="translate(24 82)">
+          <rect width="202" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#7a6e3d"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Forest Service policy</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">NEPA procedures</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">and guidance</text>
+        </g><g transform="translate(24 200)">
+          <rect width="202" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#7a6e3d"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Handbooks / manuals</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">FSH / FSM</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">source layer</text>
+        </g>
+  </g>
+  <g transform="translate(972 285)" filter="url(#serviceShadow)">
+    <rect width="260" height="430" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="260" height="12" rx="6" fill="#a75a22"/>
+    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">Region</text>
+    <g transform="translate(24 82)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#a75a22"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Region 1 directives</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">field</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">supplements</text>
+        </g><g transform="translate(24 200)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#a75a22"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Overlay requirements</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">roadless,</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">wilderness,</text>
+        </g><g transform="translate(24 318)">
+          <rect width="212" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="#a75a22"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">Source/profile gates</text>
+          <text x="54" y="66" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">validation</text><text x="54" y="86" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" fill="#5f625b">before expansion</text>
+        </g>
+  </g>
+
+  <path d="M 352 500 L 392 500" stroke="#8a8f84" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <path d="M 642 500 L 682 500" stroke="#8a8f84" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <path d="M 932 500 L 972 500" stroke="#8a8f84" stroke-width="7" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <text x="1430" y="152" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Forest plans at graph edge</text>
+  <text x="1385" y="184" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">10 tracked Region 1 forest or grassland</text><text x="1385" y="206" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">profiles are visible. Custer Gallatin</text><text x="1385" y="228" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">is operational; the others stay as</text><text x="1385" y="250" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" fill="#5f625b">expansion gates until their source and</text>
+  <path d="M 1180 570 L 1291 218" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1385 218)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Beaverhead-Deerlodge</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1486 285" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1580 285)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Bitterroot plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1326 352" stroke="#6da89d" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1420 352)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#26786f" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#26786f"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Custer Gallatin</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#26786f">operational</text>
+  </g><path d="M 1180 570 L 1511 419" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1605 419)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Dakota Prairie</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Grasslands plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1296 486" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1390 486)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Flathead plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1506 553" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1600 553)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Helena-Lewis</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Clark plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1326 620" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1420 620)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Idaho Panhandle</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1494 687" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1588 687)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Kootenai plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1301 754" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1395 754)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Lolo plan</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g><path d="M 1180 570 L 1491 821" stroke="#d9a19a" stroke-width="4" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+      <g transform="translate(1585 821)" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="#b13d38" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="#b13d38"/>
+    <text x="-48" y="-7" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Nez</text><text x="-48" y="11" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="13" fill="#171713">Perce-Clearwater</text>
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#b13d38">expansion gate</text>
+  </g>
+
+  <text x="92" y="1015" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#26786f">Decision risk is checked across the whole authority stack, not only against a single NEPA citation.</text>
+  <text x="92" y="1046" font-family="Inter, Arial, sans-serif" font-size="19" fill="#5f625b">Region 1 is the operational proof; new systems expand by adding source/profile coverage and replaying validation gates.</text>
 </svg>

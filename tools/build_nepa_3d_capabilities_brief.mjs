@@ -340,72 +340,62 @@ function evidenceTraceServiceGraphSvg(trace, metrics) {
 }
 
 function readinessServiceGraphSvg(readiness, metrics) {
-  const blocked = readiness.blockedUnits.slice(0, 9);
-  const ready = readiness.readyUnits[0] || { label: "Custer Gallatin National Forest" };
-  const blockerCounts = readiness.blockerCounts || {};
-  const blockerRows = [
-    ["forest_profile_not_ready", blockerCounts.forest_profile_not_ready || 0],
-    ["missing_source", blockerCounts.missing_source || 0],
-    ["superseded_source", blockerCounts.superseded_source || 0],
-    ["fsh_chapter_delta_required", blockerCounts.fsh_chapter_delta_required || 0]
-  ];
-  const blockedNodes = blocked
-    .map((node, index) => {
-      const positions = [
-        [330, 430],
-        [520, 390],
-        [1020, 460],
-        [1085, 610],
-        [1010, 750],
-        [820, 805],
-        [620, 790],
-        [420, 690],
-        [285, 570]
-      ];
-      const [x, y] = positions[index] || [380 + index * 70, 720];
-      return `${graphEdge(780, 650, x, y, "#d68578", 5, "")}${smallGraphNode(
-        x,
-        y,
-        "#b13d38",
-        shortForestLabel(node.label || node.node_id),
-        "blocked profile"
-      )}`;
-    })
-    .join("");
-  const blockerCards = blockerRows
-    .map(
-      ([label, count], index) =>
-        `<g transform="translate(35 ${126 + index * 112})">
-          <rect width="390" height="82" rx="14" fill="#ffffff" stroke="#dfcbc6"/>
-          <circle cx="35" cy="41" r="14" fill="${index < 2 ? "#b13d38" : "#a75a22"}"/>
-          <text x="64" y="34" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">${escapeXml(label.replaceAll("_", " "))}</text>
-          <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">${count} graph item(s)</text>
-        </g>`
-    )
-    .join("");
+  const forestPlans = readiness.forestUnits.map((node, index) => {
+    const positions = [
+      [1385, 218],
+      [1580, 285],
+      [1420, 352],
+      [1605, 419],
+      [1390, 486],
+      [1600, 553],
+      [1420, 620],
+      [1588, 687],
+      [1395, 754],
+      [1585, 821]
+    ];
+    const [x, y] = positions[index] || [1500, 220 + index * 72];
+    const isReady = node.display_status !== "readiness_blocked";
+    const color = isReady ? "#26786f" : "#b13d38";
+    const status = isReady ? "operational" : "expansion gate";
+    return `${graphEdge(1180, 570, x - 94, y, isReady ? "#6da89d" : "#d9a19a", 4, "")}
+      ${forestPlanNode(x, y, color, `${shortForestLabel(node.label || node.node_id)} plan`, status)}`;
+  }).join("");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Readiness graph showing graph-ready and blocked forest profiles">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Authority hierarchy graph from federal law to forest plans">
   ${serviceGraphDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
-  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 graph shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
-  ${graphEdge(780, 650, 780, 310, "#26786f", 8, "")}
-  ${blockedNodes}
-  ${graphNode(780, 650, 126, "#7a6e3d", "Review scope", "Custer Gallatin EA", "")}
-  ${graphNode(780, 310, 98, "#26786f", "Ready forest profile", compactSvgLabel(ready.label || ready.node_id, 42), "review scope")}
-  <g transform="translate(1220 196)" filter="url(#serviceShadow)">
-    <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
-    <text x="35" y="55" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Blockers remain visible</text>
-    ${wrapSvgText(`${metrics.readinessBlockers} readiness blocker nodes and ${metrics.hasReadinessBlockerEdges} blocker edges are exported as graph evidence.`, 35, 92, 390, 18, "#5f625b", 2)}
-    ${blockerCards}
-  </g>
-  <g transform="translate(72 890)" filter="url(#serviceShadow)">
-    <rect width="1656" height="132" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value</text>
-    ${bulletText(32, 84, `${readiness.readyUnits.length} graph-ready forest profile and ${readiness.blockedUnits.length} blocked forest profiles are visible in one view.`)}
-    ${bulletText(32, 118, "The review process shows current capability without implying that every Region 1 profile is ready for service delivery.")}
-  </g>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Authority profile hierarchy</text>
+  ${wrapSvgText("NEPA analysis is built as a hierarchy: federal law and regulation, department procedure, agency policy, regional direction, and forest-plan profiles at the edge of the graph.", 72, 140, 1560, 22, "#555b54", 2)}
+
+  ${hierarchyNode(92, 245, 260, 510, "#356a9b", "Federal", [
+    ["NEPA", "42 U.S.C. chapter 55"],
+    ["Other laws", "ESA, CWA, NHPA, FLPMA"],
+    ["Regulations / orders", "CFR, executive orders, case law"]
+  ])}
+  ${hierarchyNode(392, 308, 250, 384, "#26786f", "Department", [
+    ["USDA NEPA", "7 CFR part 1b"],
+    ["Department procedure", "current authority basis"]
+  ])}
+  ${hierarchyNode(682, 300, 250, 400, "#7a6e3d", "Agency", [
+    ["Forest Service policy", "NEPA procedures and guidance"],
+    ["Handbooks / manuals", "FSH / FSM source layer"]
+  ])}
+  ${hierarchyNode(972, 285, 260, 430, "#a75a22", "Region", [
+    ["Region 1 directives", "field supplements"],
+    ["Overlay requirements", "roadless, wilderness, trails"],
+    ["Source/profile gates", "validation before expansion"]
+  ])}
+
+  ${graphEdge(352, 500, 392, 500, "#8a8f84", 7, "")}
+  ${graphEdge(642, 500, 682, 500, "#8a8f84", 7, "")}
+  ${graphEdge(932, 500, 972, 500, "#8a8f84", 7, "")}
+  <text x="1430" y="152" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Forest plans at graph edge</text>
+  ${wrapSvgText(`${readiness.forestUnits.length} tracked Region 1 forest or grassland profiles are visible. Custer Gallatin is operational; the others stay as expansion gates until their source and component coverage is validated.`, 1385, 184, 350, 17, "#5f625b", 4)}
+  ${forestPlans}
+
+  <text x="92" y="1015" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#26786f">Decision risk is checked across the whole authority stack, not only against a single NEPA citation.</text>
+  <text x="92" y="1046" font-family="Inter, Arial, sans-serif" font-size="19" fill="#5f625b">Region 1 is the operational proof; new systems expand by adding source/profile coverage and replaying validation gates.</text>
 </svg>`;
 }
 
@@ -418,6 +408,35 @@ function serviceGraphDefs() {
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#70726c"/>
     </marker>
   </defs>`;
+}
+
+function hierarchyNode(x, y, width, height, color, title, rows) {
+  const rowSvg = rows
+    .map(
+      ([label, detail], index) =>
+        `<g transform="translate(24 ${82 + index * 118})">
+          <rect width="${width - 48}" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
+          <circle cx="28" cy="45" r="13" fill="${color}"/>
+          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">${escapeXml(label)}</text>
+          ${wrapSvgText(detail, 54, 66, width - 130, 15, "#5f625b", 2)}
+        </g>`
+    )
+    .join("");
+  return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
+    <rect width="${width}" height="${height}" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="${width}" height="12" rx="6" fill="${color}"/>
+    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">${escapeXml(title)}</text>
+    ${rowSvg}
+  </g>`;
+}
+
+function forestPlanNode(x, y, color, label, status) {
+  return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
+    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="${color}" stroke-width="4"/>
+    <circle cx="-70" cy="0" r="10" fill="${color}"/>
+    ${wrapSvgText(compactSvgLabel(label, 36), -48, -7, 118, 13, "#171713", 2)}
+    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="${color}">${escapeXml(status)}</text>
+  </g>`;
 }
 
 function graphEdge(x1, y1, x2, y2, color, width, label) {
@@ -671,7 +690,7 @@ function briefHtml(metrics) {
       box-shadow: 0 12px 30px rgba(24,28,26,0.12);
     }
     .graph-figure.trace { height: 2.92in; object-position: center 48%; }
-    .graph-figure.readiness { height: 4.1in; object-fit: contain; }
+    .graph-figure.readiness { height: 4.35in; object-fit: contain; }
     .graph-figure.full {
       height: 5.22in;
       object-fit: contain;
@@ -837,8 +856,8 @@ function briefHtml(metrics) {
       <p class="lede">Our review workflow supports forward review and reverse compliance. Most EAs receive a Forest Plan consistency document; we extend that into a full profile consistency document across applicable laws and authorities, then package decision support for the responsible official.</p>
     </header>
     <main>
-      <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
-      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The USFS Region 1 graph shows Custer Gallatin as ready while preventing broader Region 1 completeness claims.</p>
+      <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Authority hierarchy graph from federal law to department, agency, region, and forest plans" />
+      <p class="caption">Authority hierarchy scene: NEPA and other laws, policies, and regulations are grouped by federal, department, agency, and regional layers, with Region 1 forest-plan profiles at the graph edge.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="scene-list">
           ${scene("Document intake", "Draft NEPA package, appendices, catalog records, and provenance.")}
