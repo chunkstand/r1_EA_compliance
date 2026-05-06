@@ -1060,9 +1060,9 @@ Review-specific export paths:
 - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_validation.json`
 
 The NEPA 3D graph export has schema version `nepa-3d-knowledge-graph-v1`. Milestone 1 defines the
-contract, and Milestone 3 implements the source-set exporter. Later milestones will add review
-overlays and the viewer. The graph is a visualization/export layer over audited artifacts, not a
-separate legal knowledge base.
+contract, Milestone 3 implements the source-set exporter, Milestone 4 adds the review overlay, and
+Milestone 5 adds Region 1 forest-plan readiness blockers. The graph is a visualization/export layer
+over audited artifacts, not a separate legal knowledge base.
 
 Top-level graph shape:
 
@@ -1239,11 +1239,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 It reads catalog and derived review surfaces, including source graph seeds, authority currentness,
 authority inventory, evidence graph nodes/edges, source claims, rule-claim links, the base rule
-pack, authority-family templates, forest-plan profiles, and forest-plan component inventory. It
-does not scan raw artifact filenames. The live source-set export for
-`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges,
-`35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes, `191`
-source-claim nodes, `329` forest-plan component nodes, and zero failed validation checks.
+pack, authority-family templates, forest-plan profiles, the Region 1 forest-plan readiness matrix,
+and forest-plan component inventory. It does not scan raw artifact filenames. The live source-set
+export for `source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes,
+`2,552` edges, `35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes, `191`
+source-claim nodes, `329` inventory forest-plan component nodes, `10` forest-unit nodes, `10`
+forest-plan nodes, `379` total forest-plan component/profile-term nodes, and zero failed validation
+checks. It tracks `10` Region 1 forest/grassland profiles while blocking `9` broader profiles from
+Region 1 completeness claims until their source, component-inventory, and eval gates are ready.
 
 The Milestone 4 review overlay uses the same command with `--review-id`:
 
@@ -1260,8 +1263,9 @@ span nodes over the source-set graph, then validates that every candidate author
 `authority_universe_snapshot.json` has a graph node and exactly one decision, non-applicable
 decisions carry search coverage or adjudication support, generated rules derive only from validated
 applicable decisions, and compliance findings link to generated rules plus evidence spans. The live
-V1 review export passes `58` validation checks with `1,813` nodes, `3,278` edges, `373` candidate
-authorities/decisions, `33` generated rules/findings, and `340` non-applicable authorities.
+V1 review export passes `67` validation checks with `1,907` nodes, `3,430` edges, `373` candidate
+authorities/decisions, `33` generated rules/findings, `340` non-applicable authorities, and the
+same Region 1 forest-plan readiness blockers.
 
 ## Applicability-First Review Outputs
 

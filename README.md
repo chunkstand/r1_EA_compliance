@@ -75,13 +75,19 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges, all
+`source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes, `2,552` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
-under `source_library/reviews/<review_id>/knowledge_graph/` passes `58` validation checks with
-`1,813` nodes, `3,278` edges, `373` candidate authorities/decisions, `33` generated rules and
-compliance findings, and `340` non-applicable authorities with search coverage. The earlier
+under `source_library/reviews/<review_id>/knowledge_graph/` passes `67` validation checks with
+`1,907` nodes, `3,430` edges, `373` candidate authorities/decisions, `33` generated rules and
+compliance findings, and `340` non-applicable authorities with search coverage. NEPA 3D Milestone 5
+now adds the Region 1 forest-plan readiness matrix and first added profile contract: the source-set
+graph tracks `10` Region 1 forest/grassland profiles, keeps `1` Custer Gallatin profile
+graph-ready, blocks `9` broader Region 1 profiles from completeness claims, adds the
+Beaverhead-Deerlodge profile with catalog-confirmed planning page/LMP sources plus positive and
+hard-negative applicability fixture contracts, and leaves component inventory validation as a
+reviewer-visible blocker before graph promotion. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
@@ -132,6 +138,7 @@ heuristics.
 - `config/authority_source_addition_decisions_nepa_ea_v1.json`
 - `config/source_partition_contract_nepa_3d_v1.json`
 - `config/nepa_3d_graph_contract_v1.json`
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`

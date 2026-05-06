@@ -230,16 +230,19 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live export for `source-set-ba8d0feae79501b8` now records:
 
-- `validation_passed=true`, `48` validation checks, `0` failed checks;
-- `1,307` nodes and `2,400` edges;
+- `validation_passed=true`, `57` validation checks, `0` failed checks;
+- `1,401` nodes and `2,552` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
   `44` base rules, `19` authority-family templates, `191` source-claim nodes, and `329`
   forest-plan component nodes;
 - source input joins: `740` catalog graph seed nodes, `759` catalog graph seed edges, `191`
   rule-claim links, current authority-currentness validation, evidence graph node/edge inputs, and
   forest-plan component inventory;
+- Region 1 profile readiness: `10` tracked forest/grassland profiles, `1` graph-ready profile, `9`
+  blocked broader Region 1 profiles, and `1` Milestone 5 added profile with positive and
+  hard-negative applicability fixture contracts;
 - readiness blockers remain visible as graph nodes and edges, including the scoped
-  `fsh_chapter_delta_required` blocker.
+  `fsh_chapter_delta_required`, `forest_profile_not_ready`, and `missing_source` blockers.
 
 ## NEPA 3D Review-Specific Applicability Overlay
 
@@ -260,14 +263,40 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live overlay for `v1-cg-ecid-compliance-review` now records:
 
-- `validation_passed=true`, `58` validation checks, `0` failed checks;
-- `1,813` nodes and `3,278` edges;
+- `validation_passed=true`, `67` validation checks, `0` failed checks;
+- `1,907` nodes and `3,430` edges;
 - review content: `373` candidate authority nodes/decisions, `33` applicable decisions, `340`
   non-applicable decisions, `33` generated rules, `33` compliance findings, and `340` search
   coverage certificates;
 - review graph checks that every candidate maps to exactly one decision, every non-applicable
   decision has search coverage or adjudication support, generated rules derive only from applicable
   decisions, and compliance findings link to generated rules plus evidence spans.
+
+## NEPA 3D Region 1 Forest-Plan Readiness Expansion
+
+NEPA 3D Milestone 5 is implemented by
+`config/region1_forest_plan_readiness_nepa_3d_v1.json`, the Beaverhead-Deerlodge profile addition
+in `config/forest_plan_profiles.json`, and expanded `nepa-knowledge-graph-export` validation. This
+is a graph-readiness slice, not a broad source-capture rerun: it makes the broader Region 1
+forest-plan universe visible while blocking any claim that Custer Gallatin artifacts prove Region 1
+forest-plan completeness.
+
+The readiness matrix now records:
+
+- `10` tracked Region 1 forest/grassland profiles;
+- `1` graph-ready profile: Custer Gallatin with validated `329`-component inventory and `58`
+  standards;
+- `1` Milestone 5 added active profile contract: Beaverhead-Deerlodge, with catalog-confirmed
+  planning page and 2009 Forest Plan rows, positive and hard-negative applicability fixture
+  contracts, and `component_inventory_build_required` before graph promotion;
+- `9` blocked broader Region 1 profiles, visible through `forest_profile_not_ready` and
+  `missing_source` graph blockers;
+- `3` field-directive requirements and `5` overlay requirement groups.
+
+The graph export now validates that configured profiles and known Region 1 units are covered by the
+readiness matrix, added profiles have source requirements and eval fixture contracts, promoted
+profiles have catalog-confirmed sources and component inventory coverage, and
+`region1_completeness_claim=false` while any tracked profile remains blocked.
 
 ## Verified State Snapshot
 

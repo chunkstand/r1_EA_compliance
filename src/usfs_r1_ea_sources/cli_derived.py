@@ -17,6 +17,7 @@ from .extraction_accuracy import run_extraction_accuracy_audit
 from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
 from .nepa_knowledge_graph_export import DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH
 from .nepa_knowledge_graph_export import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .nepa_knowledge_graph_export import DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH
 from .nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 from .retrieval import build_retrieval_index
 from .retrieval import default_index_path
@@ -180,6 +181,11 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     nepa_graph.add_argument(
         "--forest-plan-profiles",
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
+    nepa_graph.add_argument(
+        "--region1-forest-plan-readiness",
+        default=DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
         type=Path,
     )
     nepa_graph.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
@@ -348,6 +354,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             authority_inventory_path=args.authority_inventory,
             authority_family_rule_templates_path=args.authority_family_rule_templates,
             forest_plan_profiles_path=args.forest_plan_profiles,
+            region1_forest_plan_readiness_path=args.region1_forest_plan_readiness,
             rule_pack_path=args.rule_pack,
             catalog_path=args.catalog_path,
             catalog_graph_nodes_path=args.catalog_graph_nodes_path,

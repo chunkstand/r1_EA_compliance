@@ -422,7 +422,10 @@
         "source_set",
         "review",
         "authority_family",
-        "source_record"
+        "source_record",
+        "forest_unit",
+        "forest_plan",
+        "forest_plan_component"
       ],
       "target_node_types": [
         "readiness_blocker"

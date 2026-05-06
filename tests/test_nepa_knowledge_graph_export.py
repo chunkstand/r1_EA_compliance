@@ -23,6 +23,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
             authority_inventory_path=paths["authority_inventory"],
             authority_family_rule_templates_path=paths["templates"],
             forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
             rule_pack_path=paths["rule_pack"],
         )
 
@@ -30,6 +31,9 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert result.summary["authority_family_count"] == 3
         assert result.summary["base_rule_count"] == 2
         assert result.summary["authority_family_rule_template_count"] == 1
+        assert result.summary["region1_forest_plan_readiness_profile_count"] == 2
+        assert result.summary["region1_forest_plan_added_profile_count"] == 1
+        assert result.summary["region1_forest_plan_blocked_profile_count"] == 1
         assert result.summary["forest_plan_component_count"] == 1
         assert result.summary["catalog_graph_node_count"] == 1
         assert result.summary["catalog_graph_edge_count"] == 1
@@ -37,6 +41,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         graph = _read_json(result.graph_path)
         nodes = _read_jsonl(result.nodes_path)
         edges = _read_jsonl(result.edges_path)
+        nodes_by_id = {node["node_id"]: node for node in nodes}
         node_ids = {node["node_id"] for node in nodes}
         checks = {check["name"]: check for check in graph["validation"]["checks"]}
 
@@ -51,10 +56,23 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_reads_catalog_graph_seeds"]["passed"]
         assert checks["nepa_3d_graph_nodes_have_required_provenance"]["passed"]
         assert checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
+        assert checks["nepa_3d_graph_region1_readiness_prevents_overclaim"]["passed"]
+        assert checks["nepa_3d_graph_exports_region1_forest_units"]["passed"]
+        assert checks["nepa_3d_graph_region1_added_profiles_have_eval_fixtures"]["passed"]
         assert checks["nepa_3d_graph_lens_metadata_shape"]["passed"]
         assert checks["nepa_3d_graph_lens_metadata_required_lenses_present"]["passed"]
         assert "forest_plan_component" in graph["summary"]["node_type_counts"]
         assert "source_claim" in graph["summary"]["node_type_counts"]
+        assert "forest_profile_not_ready" in graph["summary"]["readiness_blocker_counts"]
+        assert (
+            nodes_by_id["forest_unit:other-test-forest"]["display_status"]
+            == "readiness_blocked"
+        )
+        assert any(
+            edge["edge_type"] == "HAS_READINESS_BLOCKER"
+            and edge["source_node_id"] == "forest_unit:other-test-forest"
+            for edge in edges
+        )
 
         first_bytes = result.graph_path.read_bytes()
         second = build_nepa_knowledge_graph_export(
@@ -64,6 +82,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
             authority_inventory_path=paths["authority_inventory"],
             authority_family_rule_templates_path=paths["templates"],
             forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
             rule_pack_path=paths["rule_pack"],
         )
         assert second.graph_path.read_bytes() == first_bytes
@@ -85,6 +104,7 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
             authority_inventory_path=paths["authority_inventory"],
             authority_family_rule_templates_path=paths["templates"],
             forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
             rule_pack_path=paths["rule_pack"],
         )
 
@@ -239,6 +259,7 @@ def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[s
     rule_pack = output_dir / "rule_pack.json"
     templates = output_dir / "templates.json"
     forest_profiles = output_dir / "forest_profiles.json"
+    region1_readiness = output_dir / "region1_readiness.json"
     _write_json(
         authority_inventory,
         {
@@ -325,6 +346,12 @@ def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[s
         forest_profiles,
         {
             "schema_version": "forest-plan-profiles-v0",
+            "known_other_forest_units": [
+                {
+                    "forest_unit_id": "other-test-forest",
+                    "names": ["Other Test Forest"],
+                }
+            ],
             "profiles": [
                 {
                     "forest_unit_id": "test-forest",
@@ -338,11 +365,96 @@ def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[s
             ],
         },
     )
+    _write_json(
+        region1_readiness,
+        {
+            "schema_version": "region1-forest-plan-readiness-v1",
+            "readiness_matrix_id": "test-region1-readiness",
+            "source_set_id": source_set_id,
+            "region1_completeness_claim": False,
+            "field_directive_requirements": [
+                {
+                    "requirement_id": "field-directives",
+                    "requirement_type": "regional_directive_index",
+                    "readiness_status": "catalog_confirmed",
+                    "source_record_id": "R1EA-002",
+                }
+            ],
+            "overlay_requirements": [
+                {
+                    "overlay_id": "inventoried-roadless-area",
+                    "readiness_status": "catalog_confirmed",
+                    "source_record_ids": ["R1EA-002"],
+                }
+            ],
+            "profile_rows": [
+                {
+                    "forest_unit_id": "test-forest",
+                    "forest_unit_names": ["Test Forest"],
+                    "profile_kind": "active_profile",
+                    "active_plan_source_record_id": "R1PLAN-001",
+                    "graph_promotion_status": "promoted",
+                    "milestone_5_added_profile": False,
+                    "readiness_blockers": [],
+                    "source_requirements": [
+                        {
+                            "role": "primary_land_management_plan",
+                            "readiness_status": "catalog_confirmed",
+                            "source_record_id": "R1PLAN-001",
+                        }
+                    ],
+                    "component_inventory_validation": {
+                        "status": "validated",
+                        "component_count": 1,
+                        "standard_count": 1,
+                    },
+                    "applicability_eval_coverage": {"status": "covered"},
+                },
+                {
+                    "forest_unit_id": "other-test-forest",
+                    "forest_unit_names": ["Other Test Forest"],
+                    "profile_kind": "region1_tracking_only",
+                    "active_plan_source_record_id": "R1PLAN-OTHER-001",
+                    "graph_promotion_status": "blocked",
+                    "milestone_5_added_profile": True,
+                    "readiness_blockers": ["forest_profile_not_ready"],
+                    "source_requirements": [
+                        {
+                            "role": "primary_land_management_plan",
+                            "readiness_status": "source_delta_required",
+                            "source_record_id": None,
+                        }
+                    ],
+                    "component_inventory_validation": {
+                        "status": "component_inventory_build_required",
+                        "component_count": 0,
+                        "standard_count": 0,
+                    },
+                    "applicability_eval_coverage": {
+                        "status": "fixture_contract_defined",
+                        "positive_case_count": 1,
+                        "hard_negative_case_count": 1,
+                        "fixtures": [
+                            {
+                                "fixture_id": "other-test-positive",
+                                "fixture_type": "positive",
+                            },
+                            {
+                                "fixture_id": "other-test-hard-negative",
+                                "fixture_type": "hard_negative",
+                            },
+                        ],
+                    },
+                },
+            ],
+        },
+    )
     return {
         "authority_inventory": authority_inventory,
         "rule_pack": rule_pack,
         "templates": templates,
         "forest_profiles": forest_profiles,
+        "region1_readiness": region1_readiness,
     }
 
 

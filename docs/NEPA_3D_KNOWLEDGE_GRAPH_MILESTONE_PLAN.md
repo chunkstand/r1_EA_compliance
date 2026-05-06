@@ -378,7 +378,7 @@ Implementation status:
 Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export` CLI command, and `tests/test_nepa_knowledge_graph_export.py`
 implement the source-set graph builder over audited catalog/derived surfaces. The live export for
-`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges, all
+`source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes, `2,552` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components.
 
@@ -430,8 +430,8 @@ Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export --review-id` CLI path, and
 `tests/test_nepa_knowledge_graph_export.py` now implement the review overlay over existing
 applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` export under
-`source_library/reviews/<review_id>/knowledge_graph/` passes `58` validation checks with `1,813`
-nodes, `3,278` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
+`source_library/reviews/<review_id>/knowledge_graph/` passes `67` validation checks with `1,907`
+nodes, `3,430` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
 findings, and `340` non-applicable decisions with search coverage.
 
 Candidate command:
@@ -479,6 +479,18 @@ Goal:
 Move from the current Custer Gallatin-heavy proving graph toward a Region 1 graph that can show
 forest-plan and field-directive authorities across Region 1 units.
 
+Implementation status:
+Completed on 2026-05-06. `config/region1_forest_plan_readiness_nepa_3d_v1.json` defines the
+source-readiness matrix for `10` Region 1 forest/grassland profiles, `3` field-directive
+requirements, and `5` overlay requirement groups. `config/forest_plan_profiles.json` now adds the
+first non-Custer-Gallatin profile contract for Beaverhead-Deerlodge using catalog-confirmed planning
+page and 2009 Forest Plan rows. The NEPA 3D exporter renders all tracked Region 1 profiles as graph
+forest-unit/plan nodes, keeps Custer Gallatin graph-ready, blocks the other `9` profiles from Region
+1 completeness claims, and validates that the Milestone 5 added profile has source requirements,
+component-inventory gating, and positive plus hard-negative applicability fixture contracts. The
+live source-set export now passes `57` checks with `1,401` nodes and `2,552` edges; the V1 review
+overlay passes `67` checks with `1,907` nodes and `3,430` edges.
+
 Required outputs:
 
 - source-readiness matrix for Region 1 forests/grasslands and overlays;
@@ -503,7 +515,7 @@ Required verification:
 PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
   --output-dir source_library \
-  --source-set-id <source-set-id>
+  --review-id v1-cg-ecid-compliance-review
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 git diff --check
 ```

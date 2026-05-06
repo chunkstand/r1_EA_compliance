@@ -1,0 +1,460 @@
+{
+  "as_of_date": "2026-05-06",
+  "field_directive_requirements": [
+    {
+      "readiness_status": "catalog_confirmed",
+      "requirement_id": "region1-field-directives-index",
+      "requirement_type": "regional_directive_index",
+      "source_record_id": "R1EA-029"
+    },
+    {
+      "readiness_status": "catalog_confirmed",
+      "requirement_id": "land-management-planning-handbook",
+      "requirement_type": "forest_service_handbook",
+      "source_record_id": "R1EA-032"
+    },
+    {
+      "readiness_status": "source_delta_required",
+      "requirement_id": "unit-specific-field-supplements",
+      "requirement_type": "unit_field_directive_supplements",
+      "source_record_id": null
+    }
+  ],
+  "overlay_requirements": [
+    {
+      "overlay_id": "inventoried-roadless-area",
+      "readiness_status": "catalog_confirmed",
+      "source_record_ids": [
+        "R1EA-048",
+        "R1EA-049",
+        "R1EA-050"
+      ]
+    },
+    {
+      "overlay_id": "designated-wilderness",
+      "readiness_status": "catalog_confirmed",
+      "source_record_ids": [
+        "R1EA-047",
+        "R1EA-052"
+      ]
+    },
+    {
+      "overlay_id": "wild-and-scenic-river",
+      "readiness_status": "catalog_confirmed",
+      "source_record_ids": [
+        "R1EA-051",
+        "R1EA-053"
+      ]
+    },
+    {
+      "overlay_id": "national-trail",
+      "readiness_status": "catalog_confirmed",
+      "source_record_ids": [
+        "R1EA-054"
+      ]
+    },
+    {
+      "overlay_id": "montana-wilderness-study-area",
+      "readiness_status": "catalog_confirmed",
+      "source_record_ids": [
+        "R1EA-055"
+      ]
+    }
+  ],
+  "profile_rows": [
+    {
+      "active_plan_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "applicability_eval_coverage": {
+        "fixture_ids": [
+          "config/forest_plan_component_eval_seed.json"
+        ],
+        "hard_negative_case_count": 12,
+        "positive_case_count": 23,
+        "status": "covered"
+      },
+      "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-ba8d0feae79501b8/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 329,
+        "inventory_id": "custer-gallatin-nf-2022-components",
+        "status": "validated",
+        "standard_count": 58
+      },
+      "forest_unit_id": "custer-gallatin-nf",
+      "forest_unit_names": [
+        "Custer Gallatin National Forest",
+        "Custer-Gallatin National Forest"
+      ],
+      "graph_promotion_status": "promoted",
+      "milestone_5_added_profile": false,
+      "profile_kind": "active_profile",
+      "readiness_blockers": [],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_1",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_2",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-07"
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+      "applicability_eval_coverage": {
+        "fixtures": [
+          {
+            "expected_status": "candidate_profile_scope_positive_until_component_inventory",
+            "fixture_id": "region1-bdnf-profile-positive",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "forest plan consistency",
+              "Pioneer Mountains"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_beaverhead_deerlodge",
+            "fixture_id": "region1-bdnf-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 1,
+        "positive_case_count": 1,
+        "status": "fixture_contract_defined"
+      },
+      "component_inventory_validation": {
+        "component_count": 0,
+        "inventory_id": null,
+        "required_before_graph_promotion": true,
+        "standard_count": 0,
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "forest_unit_names": [
+        "Beaverhead-Deerlodge National Forest",
+        "Beaverhead Deerlodge National Forest",
+        "BDNF"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": true,
+      "profile_kind": "active_profile_added_milestone_5",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02"
+        },
+        {
+          "readiness_status": "source_delta_required",
+          "role": "record_of_decision",
+          "source_record_id": null
+        },
+        {
+          "readiness_status": "source_delta_required",
+          "role": "forest_plan_amendments",
+          "source_record_id": null
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-bitterroot-nf-02",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "bitterroot-nf",
+      "forest_unit_names": [
+        "Bitterroot National Forest"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-bitterroot-nf-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-bitterroot-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "forest_plan_amendments",
+          "source_record_id": "R1PLAN-bitterroot-nf-03"
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-01",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "forest_unit_names": [
+        "Dakota Prairie Grasslands"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "region1_cross_check",
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-02"
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-flathead-nf-01",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "flathead-nf",
+      "forest_unit_names": [
+        "Flathead National Forest"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-flathead-nf-01"
+        },
+        {
+          "readiness_status": "source_delta_required",
+          "role": "primary_land_management_plan",
+          "source_record_id": null
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "forest_unit_names": [
+        "Helena-Lewis and Clark National Forest",
+        "Helena Lewis and Clark National Forest"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02"
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "forest_unit_names": [
+        "Idaho Panhandle National Forests"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-02"
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-kootenai-nf-01",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "kootenai-nf",
+      "forest_unit_names": [
+        "Kootenai National Forest"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-kootenai-nf-01"
+        },
+        {
+          "readiness_status": "source_delta_required",
+          "role": "primary_land_management_plan",
+          "source_record_id": null
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-lolo-nf-01",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "lolo-nf",
+      "forest_unit_names": [
+        "Lolo National Forest"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-lolo-nf-01"
+        },
+        {
+          "readiness_status": "source_delta_required",
+          "role": "primary_land_management_plan",
+          "source_record_id": null
+        }
+      ]
+    },
+    {
+      "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02",
+      "applicability_eval_coverage": {
+        "status": "not_started"
+      },
+      "component_inventory_validation": {
+        "status": "component_inventory_build_required"
+      },
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "forest_unit_names": [
+        "Nez Perce-Clearwater National Forests",
+        "Nez Perce Clearwater National Forests"
+      ],
+      "graph_promotion_status": "blocked",
+      "milestone_5_added_profile": false,
+      "profile_kind": "region1_tracking_only",
+      "readiness_blockers": [
+        "forest_profile_not_ready"
+      ],
+      "source_requirements": [
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "planning_page",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02"
+        }
+      ]
+    }
+  ],
+  "readiness_matrix_id": "region1-forest-plan-readiness-nepa-3d-v1",
+  "region1_completeness_claim": false,
+  "schema_version": "region1-forest-plan-readiness-v1",
+  "source_set_id": "source-set-ba8d0feae79501b8"
+}

@@ -21,6 +21,9 @@ DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH = Path(
     "config/authority_family_rule_templates_nepa_ea_v1.json"
 )
 DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
+DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH = Path(
+    "config/region1_forest_plan_readiness_nepa_3d_v1.json"
+)
 
 SOURCE_SET_EXPORT_SCHEMA_VERSION = NEPA_3D_GRAPH_SCHEMA_VERSION
 BASE_RULE_NODE_PREFIX = "rule_template:base"
@@ -171,6 +174,7 @@ def build_nepa_knowledge_graph_export(
     authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
     authority_family_rule_templates_path: Path = DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
+    region1_forest_plan_readiness_path: Path = DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
     rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     catalog_path: Path | None = None,
     catalog_graph_nodes_path: Path | None = None,
@@ -231,6 +235,7 @@ def build_nepa_knowledge_graph_export(
     inventory = _read_json(authority_inventory_path)
     template_config = _read_json(authority_family_rule_templates_path)
     forest_plan_profiles = _read_json(forest_plan_profiles_path)
+    region1_forest_plan_readiness = _read_json(region1_forest_plan_readiness_path)
     currentness = _read_json(authority_currentness_path)
     catalog_rows = [
         row
@@ -260,6 +265,7 @@ def build_nepa_knowledge_graph_export(
             "rule_pack": rule_pack_path,
             "authority_family_rule_templates": authority_family_rule_templates_path,
             "forest_plan_profiles": forest_plan_profiles_path,
+            "region1_forest_plan_readiness": region1_forest_plan_readiness_path,
             "evidence_graph_nodes": evidence_graph_nodes_path,
             "evidence_graph_edges": evidence_graph_edges_path,
             "claims": claims_path,
@@ -345,6 +351,7 @@ def build_nepa_knowledge_graph_export(
         builder,
         source_set_id=source_set_id,
         forest_plan_profiles=forest_plan_profiles,
+        region1_forest_plan_readiness=region1_forest_plan_readiness,
         forest_components=forest_components,
     )
     _add_source_set_blockers(builder, source_set_node_id=source_set_node_id, source_set_id=source_set_id)
@@ -373,6 +380,8 @@ def build_nepa_knowledge_graph_export(
         template_config=template_config,
         rule_claim_links=rule_claim_links,
         forest_components=forest_components,
+        forest_plan_profiles=forest_plan_profiles,
+        region1_forest_plan_readiness=region1_forest_plan_readiness,
         currentness=currentness,
         inputs=inputs,
         catalog_graph_node_count=catalog_graph_node_count,
@@ -406,6 +415,8 @@ def build_nepa_knowledge_graph_export(
         currentness=currentness,
         rule_claim_links=rule_claim_links,
         forest_components=forest_components,
+        forest_plan_profiles=forest_plan_profiles,
+        region1_forest_plan_readiness=region1_forest_plan_readiness,
         inputs=inputs,
         catalog_graph_node_count=catalog_graph_node_count,
         catalog_graph_edge_count=catalog_graph_edge_count,
@@ -907,9 +918,12 @@ def _add_forest_plan_nodes(
     *,
     source_set_id: str,
     forest_plan_profiles: dict[str, Any],
+    region1_forest_plan_readiness: dict[str, Any],
     forest_components: dict[str, Any],
 ) -> None:
     plan_node_by_unit: dict[str, str] = {}
+    readiness_by_unit = _region1_profile_readiness_by_unit(region1_forest_plan_readiness)
+    rendered_profile_units: set[str] = set()
     for profile in sorted(
         forest_plan_profiles.get("profiles", []),
         key=lambda item: str(item.get("forest_unit_id") or ""),
@@ -917,19 +931,36 @@ def _add_forest_plan_nodes(
         forest_unit_id = str(profile.get("forest_unit_id") or "")
         if not forest_unit_id:
             continue
+        rendered_profile_units.add(forest_unit_id)
+        readiness = readiness_by_unit.get(forest_unit_id, {})
+        display = _region1_profile_display(readiness)
+        blockers = _region1_profile_readiness_blockers(readiness)
         unit_node_id = _forest_unit_node_id(forest_unit_id)
         builder.add_node(
             node_id=unit_node_id,
             node_type="forest_unit",
             label=str(_first(profile.get("forest_unit_names")) or forest_unit_id),
-            display_status="active",
-            review_readiness_status="not_review_specific",
+            display_status=display["display_status"],
+            review_readiness_status=display["review_readiness_status"],
             provenance={"source_set_id": source_set_id, "forest_code": forest_unit_id},
+            readiness_blockers=blockers,
             metadata={
                 "forest_unit_names": profile.get("forest_unit_names", []),
                 "required_readiness_source_roles": profile.get("required_readiness_source_roles", []),
+                "profile_kind": readiness.get("profile_kind"),
+                "graph_promotion_status": readiness.get("graph_promotion_status"),
+                "source_requirements": readiness.get("source_requirements", []),
+                "component_inventory_validation": readiness.get("component_inventory_validation", {}),
+                "applicability_eval_coverage": readiness.get("applicability_eval_coverage", {}),
             },
         )
+        if blockers:
+            _add_blocker(
+                builder,
+                source_set_id=source_set_id,
+                subject_node_id=unit_node_id,
+                blockers=blockers,
+            )
         plan_source_record_id = str(profile.get("active_plan_source_record_id") or "")
         if plan_source_record_id:
             plan_node_id = f"forest_plan:{forest_unit_id}:{plan_source_record_id}"
@@ -938,43 +969,56 @@ def _add_forest_plan_nodes(
                 node_id=plan_node_id,
                 node_type="forest_plan",
                 label=f"{forest_unit_id} active forest plan",
-                display_status="active",
-                review_readiness_status="not_review_specific",
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
                 provenance={
                     "source_set_id": source_set_id,
                     "forest_code": forest_unit_id,
                     "source_record_id": plan_source_record_id,
                 },
+                readiness_blockers=blockers,
                 metadata={
                     "supporting_source_record_ids_by_role": profile.get(
                         "supporting_source_record_ids_by_role", {}
-                    )
+                    ),
+                    "component_inventory_validation": readiness.get(
+                        "component_inventory_validation", {}
+                    ),
                 },
             )
+            if blockers:
+                _add_blocker(
+                    builder,
+                    source_set_id=source_set_id,
+                    subject_node_id=plan_node_id,
+                    blockers=blockers,
+                )
             builder.add_edge(
                 edge_type="HAS_FOREST_PLAN",
                 source_node_id=unit_node_id,
                 target_node_id=plan_node_id,
-                display_status="active",
-                review_readiness_status="not_review_specific",
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
                 provenance={
                     "source_set_id": source_set_id,
                     "forest_code": forest_unit_id,
                     "source_record_id": plan_source_record_id,
                 },
+                readiness_blockers=blockers,
             )
             builder.add_edge(
                 edge_type="HAS_SOURCE_RECORD",
                 source_node_id=plan_node_id,
                 target_node_id=_source_node_id(plan_source_record_id),
-                display_status="active",
-                review_readiness_status="not_review_specific",
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
                 provenance={
                     "source_set_id": source_set_id,
                     "forest_code": forest_unit_id,
                     "source_record_id": plan_source_record_id,
                     "source_role": "active_plan",
                 },
+                readiness_blockers=blockers,
             )
             for role, role_record in sorted(
                 _dict(profile.get("supporting_source_record_ids_by_role")).items()
@@ -985,15 +1029,118 @@ def _add_forest_plan_nodes(
                         edge_type="HAS_SOURCE_RECORD",
                         source_node_id=plan_node_id,
                         target_node_id=_source_node_id(supporting_source_record_id),
-                        display_status="active",
-                        review_readiness_status="not_review_specific",
+                        display_status=display["display_status"],
+                        review_readiness_status=display["review_readiness_status"],
                         provenance={
                             "source_set_id": source_set_id,
                             "forest_code": forest_unit_id,
                             "source_record_id": supporting_source_record_id,
                             "source_role": role,
                         },
+                        readiness_blockers=blockers,
                     )
+        _add_profile_term_nodes(
+            builder,
+            source_set_id=source_set_id,
+            forest_unit_id=forest_unit_id,
+            plan_node_id=plan_node_by_unit.get(forest_unit_id),
+            profile=profile,
+            display=display,
+            blockers=blockers,
+        )
+
+    for readiness in _region1_profile_readiness_rows(region1_forest_plan_readiness):
+        forest_unit_id = str(readiness.get("forest_unit_id") or "")
+        if not forest_unit_id or forest_unit_id in rendered_profile_units:
+            continue
+        display = _region1_profile_display(readiness)
+        blockers = _region1_profile_readiness_blockers(readiness)
+        unit_node_id = _forest_unit_node_id(forest_unit_id)
+        builder.add_node(
+            node_id=unit_node_id,
+            node_type="forest_unit",
+            label=str(_first(readiness.get("forest_unit_names")) or forest_unit_id),
+            display_status=display["display_status"],
+            review_readiness_status=display["review_readiness_status"],
+            provenance={"source_set_id": source_set_id, "forest_code": forest_unit_id},
+            readiness_blockers=blockers,
+            metadata={
+                "forest_unit_names": readiness.get("forest_unit_names", []),
+                "profile_kind": readiness.get("profile_kind"),
+                "graph_promotion_status": readiness.get("graph_promotion_status"),
+                "source_requirements": readiness.get("source_requirements", []),
+                "component_inventory_validation": readiness.get("component_inventory_validation", {}),
+                "applicability_eval_coverage": readiness.get("applicability_eval_coverage", {}),
+            },
+        )
+        if blockers:
+            _add_blocker(
+                builder,
+                source_set_id=source_set_id,
+                subject_node_id=unit_node_id,
+                blockers=blockers,
+            )
+        plan_source_record_id = str(readiness.get("active_plan_source_record_id") or "")
+        if plan_source_record_id:
+            plan_node_id = f"forest_plan:{forest_unit_id}:{plan_source_record_id}"
+            plan_node_by_unit[forest_unit_id] = plan_node_id
+            builder.add_node(
+                node_id=plan_node_id,
+                node_type="forest_plan",
+                label=f"{forest_unit_id} tracked forest plan",
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "forest_code": forest_unit_id,
+                    "source_record_id": plan_source_record_id,
+                },
+                readiness_blockers=blockers,
+                metadata={
+                    "source_requirements": readiness.get("source_requirements", []),
+                    "component_inventory_validation": readiness.get(
+                        "component_inventory_validation", {}
+                    ),
+                },
+            )
+            if blockers:
+                _add_blocker(
+                    builder,
+                    source_set_id=source_set_id,
+                    subject_node_id=plan_node_id,
+                    blockers=blockers,
+                )
+            builder.add_edge(
+                edge_type="HAS_FOREST_PLAN",
+                source_node_id=unit_node_id,
+                target_node_id=plan_node_id,
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "forest_code": forest_unit_id,
+                    "source_record_id": plan_source_record_id,
+                },
+                readiness_blockers=blockers,
+            )
+            for requirement in _dict_list(readiness.get("source_requirements")):
+                source_record_id = str(requirement.get("source_record_id") or "")
+                if not source_record_id:
+                    continue
+                builder.add_edge(
+                    edge_type="HAS_SOURCE_RECORD",
+                    source_node_id=plan_node_id,
+                    target_node_id=_source_node_id(source_record_id),
+                    display_status=display["display_status"],
+                    review_readiness_status=display["review_readiness_status"],
+                    provenance={
+                        "source_set_id": source_set_id,
+                        "forest_code": forest_unit_id,
+                        "source_record_id": source_record_id,
+                        "source_role": requirement.get("role"),
+                    },
+                    readiness_blockers=blockers,
+                )
 
     for component in sorted(
         forest_components.get("components", []),
@@ -1065,6 +1212,87 @@ def _add_forest_plan_nodes(
                     "source_record_id": source_record_id,
                     "component_id": component_id,
                 },
+            )
+
+
+def _add_profile_term_nodes(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    forest_unit_id: str,
+    plan_node_id: str | None,
+    profile: dict[str, Any],
+    display: dict[str, str],
+    blockers: list[str],
+) -> None:
+    term_fields = (
+        ("geographic_area_terms", "geographic_area"),
+        ("management_area_terms", "management_area"),
+        ("overlay_terms", "overlay"),
+    )
+    active_plan_source_record_id = str(profile.get("active_plan_source_record_id") or "")
+    for field, term_kind in term_fields:
+        for term in _dict_list(profile.get(field)):
+            entry_id = str(term.get("entry_id") or "")
+            if not entry_id:
+                continue
+            component_id = f"profile-term:{forest_unit_id}:{term_kind}:{entry_id}"
+            component_node_id = f"forest_plan_component:{component_id}"
+            source_record_id = str(term.get("source_record_id") or active_plan_source_record_id)
+            builder.add_node(
+                node_id=component_node_id,
+                node_type="forest_plan_component",
+                label=str(term.get("name") or entry_id),
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "component_id": component_id,
+                    "forest_code": forest_unit_id,
+                    "source_record_id": source_record_id,
+                },
+                readiness_blockers=blockers,
+                metadata={
+                    "component_type": term_kind,
+                    "profile_term_field": field,
+                    "entry_id": entry_id,
+                    "aliases": term.get("aliases", []),
+                    "term_source": "forest_plan_profile",
+                },
+            )
+            if blockers:
+                _add_blocker(
+                    builder,
+                    source_set_id=source_set_id,
+                    subject_node_id=component_node_id,
+                    blockers=blockers,
+                )
+            if plan_node_id:
+                builder.add_edge(
+                    edge_type="HAS_FOREST_COMPONENT",
+                    source_node_id=plan_node_id,
+                    target_node_id=component_node_id,
+                    display_status=display["display_status"],
+                    review_readiness_status=display["review_readiness_status"],
+                    provenance={
+                        "source_set_id": source_set_id,
+                        "forest_code": forest_unit_id,
+                        "component_id": component_id,
+                    },
+                    readiness_blockers=blockers,
+                )
+            builder.add_edge(
+                edge_type="BELONGS_TO_FOREST_UNIT",
+                source_node_id=component_node_id,
+                target_node_id=_forest_unit_node_id(forest_unit_id),
+                display_status=display["display_status"],
+                review_readiness_status=display["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "forest_code": forest_unit_id,
+                    "component_id": component_id,
+                },
+                readiness_blockers=blockers,
             )
 
 
@@ -1577,6 +1805,71 @@ def _add_blocker(
         )
 
 
+def _region1_profile_readiness_rows(readiness: dict[str, Any]) -> list[dict[str, Any]]:
+    return _dict_list(readiness.get("profile_rows"))
+
+
+def _region1_profile_readiness_by_unit(readiness: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        str(row.get("forest_unit_id")): row
+        for row in _region1_profile_readiness_rows(readiness)
+        if row.get("forest_unit_id")
+    }
+
+
+def _region1_profile_readiness_blockers(row: dict[str, Any]) -> list[str]:
+    blockers = set(_strings(row.get("readiness_blockers")))
+    if row and str(row.get("graph_promotion_status") or "") != "promoted":
+        blockers.add("forest_profile_not_ready")
+    for requirement in _dict_list(row.get("source_requirements")):
+        if str(requirement.get("readiness_status") or "") != "catalog_confirmed":
+            blockers.add("missing_source")
+    return sorted(blockers)
+
+
+def _region1_profile_display(row: dict[str, Any]) -> dict[str, str]:
+    if row and str(row.get("graph_promotion_status") or "") != "promoted":
+        return {"display_status": "readiness_blocked", "review_readiness_status": "blocked"}
+    return {"display_status": "active", "review_readiness_status": "not_review_specific"}
+
+
+def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
+    rows = _region1_profile_readiness_rows(readiness)
+    added_rows = [row for row in rows if row.get("milestone_5_added_profile")]
+    promoted_rows = [row for row in rows if row.get("graph_promotion_status") == "promoted"]
+    blocked_rows = [row for row in rows if row.get("graph_promotion_status") != "promoted"]
+    return {
+        "region1_forest_plan_readiness_profile_count": len(rows),
+        "region1_forest_plan_graph_ready_profile_count": len(promoted_rows),
+        "region1_forest_plan_blocked_profile_count": len(blocked_rows),
+        "region1_forest_plan_added_profile_count": len(added_rows),
+        "region1_forest_plan_added_profiles_with_eval_fixture_count": sum(
+            1 for row in added_rows if _region1_profile_has_positive_and_negative_fixtures(row)
+        ),
+        "region1_forest_plan_completeness_claim": bool(
+            readiness.get("region1_completeness_claim")
+        ),
+        "region1_field_directive_requirement_count": len(
+            _dict_list(readiness.get("field_directive_requirements"))
+        ),
+        "region1_overlay_requirement_count": len(
+            _dict_list(readiness.get("overlay_requirements"))
+        ),
+    }
+
+
+def _region1_profile_has_positive_and_negative_fixtures(row: dict[str, Any]) -> bool:
+    coverage = _dict(row.get("applicability_eval_coverage"))
+    fixtures = _dict_list(coverage.get("fixtures"))
+    fixture_types = {str(fixture.get("fixture_type") or "") for fixture in fixtures}
+    return (
+        "positive" in fixture_types
+        and "hard_negative" in fixture_types
+        and int(coverage.get("positive_case_count") or 0) >= 1
+        and int(coverage.get("hard_negative_case_count") or 0) >= 1
+    )
+
+
 def _source_display_status(
     *,
     row: dict[str, Any],
@@ -1688,6 +1981,8 @@ def _summary(
     template_config: dict[str, Any],
     rule_claim_links: list[dict[str, Any]],
     forest_components: dict[str, Any],
+    forest_plan_profiles: dict[str, Any],
+    region1_forest_plan_readiness: dict[str, Any],
     currentness: dict[str, Any],
     inputs: list[dict[str, Any]],
     catalog_graph_node_count: int,
@@ -1720,11 +2015,13 @@ def _summary(
         "base_rule_count": len(rule_pack.get("rules", [])),
         "authority_family_rule_template_count": len(template_config.get("templates", [])),
         "rule_claim_link_count": len(rule_claim_links),
+        "forest_plan_profile_count": len(forest_plan_profiles.get("profiles", [])),
         "forest_plan_component_count": len(forest_components.get("components", [])),
         "currentness_validation_passed": currentness.get("validation", {}).get("passed")
         if isinstance(currentness.get("validation"), dict)
         else currentness.get("summary", {}).get("validation_passed"),
         "input_count": len(inputs),
+        **_region1_readiness_summary(region1_forest_plan_readiness),
     }
 
 
@@ -1738,6 +2035,8 @@ def _milestone_validation_checks(
     currentness: dict[str, Any],
     rule_claim_links: list[dict[str, Any]],
     forest_components: dict[str, Any],
+    forest_plan_profiles: dict[str, Any],
+    region1_forest_plan_readiness: dict[str, Any],
     inputs: list[dict[str, Any]],
     catalog_graph_node_count: int,
     catalog_graph_edge_count: int,
@@ -1769,6 +2068,69 @@ def _milestone_validation_checks(
         for node in graph["nodes"]
         if node["node_type"] == "rule_template"
         and node.get("metadata", {}).get("rule_kind") == "authority_family_template"
+    }
+    exported_forest_unit_ids = {
+        node["provenance"].get("forest_code")
+        for node in graph["nodes"]
+        if node["node_type"] == "forest_unit"
+    }
+    active_profile_ids = {
+        str(profile.get("forest_unit_id") or "")
+        for profile in _dict_list(forest_plan_profiles.get("profiles"))
+        if profile.get("forest_unit_id")
+    }
+    known_region1_unit_ids = {
+        str(unit.get("forest_unit_id") or "")
+        for unit in _dict_list(forest_plan_profiles.get("known_other_forest_units"))
+        if unit.get("forest_unit_id")
+    }
+    readiness_rows = _region1_profile_readiness_rows(region1_forest_plan_readiness)
+    readiness_ids = {
+        str(row.get("forest_unit_id") or "") for row in readiness_rows if row.get("forest_unit_id")
+    }
+    added_profile_rows = [row for row in readiness_rows if row.get("milestone_5_added_profile")]
+    blocked_profile_ids_without_blockers = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in readiness_rows
+        if row.get("graph_promotion_status") != "promoted"
+        and not _region1_profile_readiness_blockers(row)
+    )
+    promoted_rows = [
+        row for row in readiness_rows if row.get("graph_promotion_status") == "promoted"
+    ]
+    catalog_source_ids = {str(row.get("source_record_id") or "") for row in catalog_rows}
+    promoted_missing_sources = {
+        str(row.get("forest_unit_id") or ""): sorted(
+            source_record_id
+            for source_record_id in (
+                str(requirement.get("source_record_id") or "")
+                for requirement in _dict_list(row.get("source_requirements"))
+                if requirement.get("readiness_status") == "catalog_confirmed"
+            )
+            if source_record_id and source_record_id not in catalog_source_ids
+        )
+        for row in promoted_rows
+    }
+    promoted_missing_sources = {
+        forest_unit_id: missing
+        for forest_unit_id, missing in promoted_missing_sources.items()
+        if missing
+    }
+    component_forest_unit_ids = {
+        str(component.get("forest_unit_id") or "")
+        for component in _dict_list(forest_components.get("components"))
+        if component.get("forest_unit_id")
+    }
+    promoted_without_inventory = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in promoted_rows
+        if str(row.get("forest_unit_id") or "") not in component_forest_unit_ids
+    )
+    overclaim = bool(region1_forest_plan_readiness.get("region1_completeness_claim"))
+    non_promoted_readiness_ids = {
+        str(row.get("forest_unit_id") or "")
+        for row in readiness_rows
+        if row.get("graph_promotion_status") != "promoted"
     }
     candidate_family_ids = {
         str(family.get("family_id"))
@@ -1859,6 +2221,68 @@ def _milestone_validation_checks(
             bool(forest_components.get("components")),
             "at least one forest plan component",
             len(forest_components.get("components", [])),
+        ),
+        _check(
+            "nepa_3d_graph_region1_readiness_matrix_loaded",
+            region1_forest_plan_readiness.get("schema_version")
+            == "region1-forest-plan-readiness-v1",
+            "region1-forest-plan-readiness-v1",
+            region1_forest_plan_readiness.get("schema_version"),
+        ),
+        _check(
+            "nepa_3d_graph_region1_readiness_covers_configured_profiles",
+            active_profile_ids <= readiness_ids,
+            sorted(active_profile_ids),
+            sorted(active_profile_ids - readiness_ids),
+        ),
+        _check(
+            "nepa_3d_graph_region1_readiness_tracks_known_region1_units",
+            known_region1_unit_ids <= readiness_ids,
+            sorted(known_region1_unit_ids),
+            sorted(known_region1_unit_ids - readiness_ids),
+        ),
+        _check(
+            "nepa_3d_graph_region1_readiness_prevents_overclaim",
+            not overclaim or not non_promoted_readiness_ids,
+            "region1_completeness_claim is false until every tracked profile is promoted",
+            {
+                "region1_completeness_claim": overclaim,
+                "non_promoted_profile_ids": sorted(non_promoted_readiness_ids),
+            },
+        ),
+        _check(
+            "nepa_3d_graph_exports_region1_forest_units",
+            readiness_ids <= exported_forest_unit_ids,
+            sorted(readiness_ids),
+            sorted(readiness_ids - exported_forest_unit_ids),
+        ),
+        _check(
+            "nepa_3d_graph_region1_added_profiles_have_eval_fixtures",
+            bool(added_profile_rows)
+            and all(_region1_profile_has_positive_and_negative_fixtures(row) for row in added_profile_rows),
+            "positive and hard-negative fixture contract for each Milestone 5 added profile",
+            {
+                str(row.get("forest_unit_id") or ""): _region1_profile_has_positive_and_negative_fixtures(row)
+                for row in added_profile_rows
+            },
+        ),
+        _check(
+            "nepa_3d_graph_region1_promoted_profiles_have_inventory",
+            not promoted_without_inventory,
+            "component inventory for each graph-promoted profile",
+            promoted_without_inventory,
+        ),
+        _check(
+            "nepa_3d_graph_region1_promoted_profiles_have_catalog_sources",
+            not promoted_missing_sources,
+            "catalog-confirmed source records exist for each graph-promoted profile",
+            promoted_missing_sources,
+        ),
+        _check(
+            "nepa_3d_graph_region1_blocked_profiles_have_blockers",
+            not blocked_profile_ids_without_blockers,
+            "readiness blockers for each non-promoted profile",
+            blocked_profile_ids_without_blockers,
         ),
         _check(
             "nepa_3d_graph_has_readiness_blocker_nodes",
@@ -2198,7 +2622,15 @@ def _lens_node_types(lens_id: str) -> list[str]:
             "source_claim",
             "rule_template",
         ],
-        "readiness_blockers": ["source_set", "authority_family", "source_record", "readiness_blocker"],
+        "readiness_blockers": [
+            "source_set",
+            "authority_family",
+            "source_record",
+            "forest_unit",
+            "forest_plan",
+            "forest_plan_component",
+            "readiness_blocker",
+        ],
     }
     return values.get(lens_id, [])
 

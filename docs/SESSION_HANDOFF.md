@@ -253,18 +253,27 @@ next-target lanes:
   `nepa-knowledge-graph-export` CLI command build the source-set graph from catalog graph seeds,
   authority inventory/currentness, evidence graph inputs, source claims, rule-claim links, the base
   rule pack, authority-family templates, forest-plan profiles, and forest-plan component inventory.
-  The live `source-set-ba8d0feae79501b8` export passed `48` validation checks with `1,307` nodes,
-  `2,400` edges, all `35` authority families, all `190` catalog source records, all `44` base
+  The refreshed `source-set-ba8d0feae79501b8` export passed `57` validation checks with `1,401`
+  nodes, `2,552` edges, all `35` authority families, all `190` catalog source records, all `44` base
   rules, all `19` authority-family templates, `191` rule-claim links, and `329` forest-plan
   components.
 - NEPA 3D Milestone 4 is implemented. `nepa-knowledge-graph-export --review-id` writes the
   review-specific graph under `source_library/reviews/<review_id>/knowledge_graph/` from existing
-  applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` overlay
-  passed `58` validation checks with `1,813` nodes, `3,278` edges, `373` candidate
+  applicability-first and compliance artifacts. The refreshed `v1-cg-ecid-compliance-review`
+  overlay passed `67` validation checks with `1,907` nodes, `3,430` edges, `373` candidate
   authorities/decisions, `33` generated rules and compliance findings, and `340` non-applicable
   authorities with search coverage.
-- The next NEPA 3D implementation boundary is Milestone 5 Region 1 forest-plan and field-directive
-  expansion.
+- NEPA 3D Milestone 5 is implemented. `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  tracks `10` Region 1 forest/grassland profiles, `3` field-directive requirements, and `5`
+  overlay requirement groups. `config/forest_plan_profiles.json` now contains the first added
+  Beaverhead-Deerlodge profile contract with catalog-confirmed planning page/LMP source rows,
+  positive and hard-negative applicability fixture contracts, and a component-inventory blocker
+  before graph promotion. The source-set graph passed `57` validation checks with `1,401` nodes and
+  `2,552` edges, `1` graph-ready profile, and `9` broader Region 1 profiles blocked from
+  completeness claims.
+- The next NEPA 3D implementation boundary is Milestone 6 local 3D viewer over the normalized graph
+  export, unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory
+  build first.
   The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
   claim handbook completeness.
 

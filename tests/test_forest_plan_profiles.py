@@ -51,6 +51,26 @@ class ForestPlanProfileTests(unittest.TestCase):
             profiles.known_other_forest_units[0].names,
         )
 
+    def test_loads_beaverhead_deerlodge_milestone_5_profile_as_data(self) -> None:
+        profile = load_forest_plan_profile("beaverhead-deerlodge-nf")
+
+        self.assertIn("Beaverhead-Deerlodge National Forest", profile.forest_unit_names)
+        self.assertEqual(
+            profile.active_plan_source_record_id,
+            "R1PLAN-beaverhead-deerlodge-nf-02",
+        )
+        self.assertEqual(
+            profile.required_source_record_ids,
+            (
+                "R1PLAN-beaverhead-deerlodge-nf-01",
+                "R1PLAN-beaverhead-deerlodge-nf-02",
+            ),
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("primary_land_management_plan"),
+            "R1PLAN-beaverhead-deerlodge-nf-02",
+        )
+
     def test_custer_gallatin_profile_matches_current_supporting_routes(self) -> None:
         profile = load_forest_plan_profile("custer-gallatin-nf")
 

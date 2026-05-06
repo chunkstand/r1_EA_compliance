@@ -749,6 +749,53 @@
         "Extract plan components by resource and geography",
         "check suitability/designated areas"
       ]
+    },
+    {
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "forest_unit_names": [
+        "Beaverhead-Deerlodge National Forest",
+        "Beaverhead Deerlodge National Forest",
+        "BDNF"
+      ],
+      "ambiguous_unit_terms": [
+        "Beaverhead",
+        "Deerlodge"
+      ],
+      "active_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+      "profile_data_source": "Workbook R1_Forest_Plans Beaverhead-Deerlodge planning page and 2009 Forest Plan rows added as the first NEPA 3D Milestone 5 Region 1 profile-expansion contract.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+          "required_for": "plan component and area resolution"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Extract Beaverhead-Deerlodge plan components by resource and geography",
+        "validate plan consistency and area-specific direction before graph promotion"
+      ]
     }
   ]
 }
