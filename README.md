@@ -93,7 +93,11 @@ validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milesto
 checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
 the normalized source-set and review overlay JSON exports, defaults to a bounded readiness-blocker
 lens, and keeps validation/readiness status tied to the exported artifacts rather than viewer layout
-while tests lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The earlier
+while tests lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The first viewer
+dropdown gap pass separates authority category from authority family, reads forest-unit values from
+exported forest codes, treats filter selections as context seeds instead of strict edge-endpoint
+requirements, labels graph item types honestly, adds counts and a Clear filters action, and live
+sweeps source-set/review dropdown selections so populated options no longer blank the graph. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds

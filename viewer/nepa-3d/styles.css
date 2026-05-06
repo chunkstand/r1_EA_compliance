@@ -140,6 +140,12 @@ button:focus-visible {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.filter-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 2px;
+}
+
 .slider-row {
   display: grid;
   grid-template-columns: 1fr minmax(100px, 150px) 34px;

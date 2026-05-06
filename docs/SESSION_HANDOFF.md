@@ -290,6 +290,15 @@ next-target lanes:
   runtime URLs, relative graph paths, and `node_id`/edge endpoint mapping; local browser
   verification covered desktop source-set, desktop review overlay, and mobile graph canvas
   screenshots with nonblank graph-root pixel checks.
+- NEPA 3D Milestone 6 dropdown gap closure is implemented in the isolated worktree branch
+  `codex/nepa-3d-dropdown-gaps`. The viewer now separates authority category and authority family,
+  labels status/readiness, currentness/partition, and graph item type filters more accurately,
+  reads forest-unit filters from exported `forest_code` values, adds full-graph option counts and a
+  Clear filters action, and treats dropdown/search selections as context seeds so populated options
+  no longer blank the graph. Live browser sweep on the isolated viewer covered all populated
+  source-set and review-overlay filter options with `0` zero-node selections; some selections still
+  show nodes without edges when the active lens has no matching edge path, and the status line now
+  tells reviewers to try All validated graph data or clear filters.
 - The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
   unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
   first.

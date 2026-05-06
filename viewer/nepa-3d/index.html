@@ -50,7 +50,7 @@
           </div>
           <div class="filter-grid">
             <div class="field-group">
-              <label for="status-filter">Status</label>
+              <label for="status-filter">Status / readiness</label>
               <select id="status-filter" data-filter="status"></select>
             </div>
             <div class="field-group">
@@ -58,11 +58,15 @@
               <select id="authority-category-filter" data-filter="authorityCategory"></select>
             </div>
             <div class="field-group">
+              <label for="authority-family-filter">Authority family</label>
+              <select id="authority-family-filter" data-filter="authorityFamily"></select>
+            </div>
+            <div class="field-group">
               <label for="document-role-filter">Document role</label>
               <select id="document-role-filter" data-filter="documentRole"></select>
             </div>
             <div class="field-group">
-              <label for="currentness-filter">Currentness</label>
+              <label for="currentness-filter">Currentness / partition</label>
               <select id="currentness-filter" data-filter="currentness"></select>
             </div>
             <div class="field-group">
@@ -70,7 +74,7 @@
               <select id="blocker-filter" data-filter="readinessBlocker"></select>
             </div>
             <div class="field-group">
-              <label for="evidence-type-filter">Evidence type</label>
+              <label for="evidence-type-filter">Graph item type</label>
               <select id="evidence-type-filter" data-filter="evidenceType"></select>
             </div>
             <div class="field-group">
@@ -81,6 +85,9 @@
               <label for="review-phase-filter">Review phase</label>
               <select id="review-phase-filter" data-filter="reviewPhase"></select>
             </div>
+          </div>
+          <div class="filter-actions">
+            <button id="clear-filters" type="button">Clear filters</button>
           </div>
         </section>
 
