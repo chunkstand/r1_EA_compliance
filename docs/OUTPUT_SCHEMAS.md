@@ -1133,6 +1133,10 @@ Required readiness blocker types are `missing_source`, `stale_artifact`, `supers
 `retrieval_miss`, `graph_trace_gap`, `search_coverage_gap`, `adjudication_needed`,
 `package_fixture_missing`, `forest_profile_not_ready`, and `fsh_chapter_delta_required`.
 
+Validation enforces contract-required provenance for each emitted node type, edge source/target node
+types against the contract's declared endpoint rules, required lens metadata fields and lenses, and
+known node, edge, and display-status values inside each lens definition.
+
 Node example:
 
 ```json
@@ -1237,9 +1241,9 @@ It reads catalog and derived review surfaces, including source graph seeds, auth
 authority inventory, evidence graph nodes/edges, source claims, rule-claim links, the base rule
 pack, authority-family templates, forest-plan profiles, and forest-plan component inventory. It
 does not scan raw artifact filenames. The live source-set export for
-`source-set-ba8d0feae79501b8` validates with `1,307` nodes, `2,400` edges, `35` authority-family
-nodes, `190` source-record nodes, `63` rule-template nodes, `191` source-claim nodes, `329`
-forest-plan component nodes, and zero failed validation checks.
+`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges,
+`35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes, `191`
+source-claim nodes, `329` forest-plan component nodes, and zero failed validation checks.
 
 ## Applicability-First Review Outputs
 

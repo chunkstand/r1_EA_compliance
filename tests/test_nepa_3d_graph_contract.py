@@ -7,6 +7,8 @@ import json
 from usfs_r1_ea_sources.nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_DISPLAY_STATUSES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_EDGE_TYPES
+from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_LENSES
+from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_LENS_FIELDS
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_NODE_TYPES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_READINESS_BLOCKER_TYPES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_REVIEW_READINESS_STATUSES
@@ -30,6 +32,8 @@ def test_nepa_3d_graph_contract_covers_milestone_1_required_types_and_states() -
     assert REQUIRED_DISPLAY_STATUSES <= set(contract["display_status_values"])
     assert REQUIRED_REVIEW_READINESS_STATUSES <= set(contract["review_readiness_status_values"])
     assert REQUIRED_READINESS_BLOCKER_TYPES <= set(contract["readiness_blocker_types"])
+    assert REQUIRED_LENS_FIELDS <= set(contract["lens_metadata_contract"]["required_fields"])
+    assert REQUIRED_LENSES <= set(contract["lens_metadata_contract"]["required_lenses"])
     assert {"source_set", "review"} <= set(contract["export_scopes"])
 
 
@@ -69,6 +73,60 @@ def test_graph_contract_validation_fails_on_unknown_status_and_missing_edge_endp
     assert checks["nepa_3d_graph_uses_known_display_statuses"]["actual"] == [
         "hidden_technical_state"
     ]
+
+
+def test_graph_contract_validation_fails_on_missing_provenance_lens_and_edge_type() -> None:
+    contract = load_nepa_3d_graph_contract(REPO_ROOT / DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH)
+    graph = deepcopy(_read_json(FIXTURE_DIR / "minimal_source_set_graph.json"))
+    source_node = next(
+        node for node in graph["nodes"] if node["node_id"] == "source_record:R1EA-001"
+    )
+    del source_node["provenance"]["citation_label"]
+    graph["edges"][1]["source_node_id"] = "source_set:source-set-test"
+    del graph["lens_metadata"][0]["description"]
+    graph["lens_metadata"] = [
+        lens for lens in graph["lens_metadata"] if lens["lens_id"] != "readiness_blockers"
+    ]
+
+    checks = {check["name"]: check for check in validate_nepa_3d_graph(graph, contract)}
+
+    assert not checks["nepa_3d_graph_nodes_have_required_provenance"]["passed"]
+    assert not checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
+    assert not checks["nepa_3d_graph_lens_metadata_shape"]["passed"]
+    assert not checks["nepa_3d_graph_lens_metadata_required_lenses_present"]["passed"]
+    assert checks["nepa_3d_graph_nodes_have_required_provenance"]["actual"] == [
+        {
+            "node_id": "source_record:R1EA-001",
+            "node_type": "source_record",
+            "missing": ["citation_label"],
+        }
+    ]
+
+
+def test_contract_validation_fails_when_contract_drops_milestone_1_requirements() -> None:
+    contract = load_nepa_3d_graph_contract(REPO_ROOT / DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH)
+    broken = deepcopy(contract)
+    source_record = next(
+        node_type
+        for node_type in broken["node_types"]
+        if node_type["node_type"] == "source_record"
+    )
+    source_record["required_provenance_fields"] = []
+    supports_rule = next(
+        edge_type
+        for edge_type in broken["edge_types"]
+        if edge_type["edge_type"] == "SUPPORTS_RULE_TEMPLATE"
+    )
+    supports_rule["source_node_types"] = []
+    broken["lens_metadata_contract"]["required_fields"].remove("description")
+    broken["lens_metadata_contract"]["required_lenses"].remove("readiness_blockers")
+
+    checks = {check["name"]: check for check in validate_nepa_3d_graph_contract(broken)}
+
+    assert not checks["nepa_3d_graph_contract_defines_node_provenance"]["passed"]
+    assert not checks["nepa_3d_graph_contract_defines_edge_endpoint_types"]["passed"]
+    assert not checks["nepa_3d_graph_contract_defines_lens_metadata_shape"]["passed"]
+    assert not checks["nepa_3d_graph_contract_defines_required_lenses"]["passed"]
 
 
 def test_review_graph_contract_requires_review_id_for_review_scope() -> None:

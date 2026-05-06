@@ -49,6 +49,10 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_exports_candidate_families"]["passed"]
         assert checks["nepa_3d_graph_exports_superseded_families"]["passed"]
         assert checks["nepa_3d_graph_reads_catalog_graph_seeds"]["passed"]
+        assert checks["nepa_3d_graph_nodes_have_required_provenance"]["passed"]
+        assert checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
+        assert checks["nepa_3d_graph_lens_metadata_shape"]["passed"]
+        assert checks["nepa_3d_graph_lens_metadata_required_lenses_present"]["passed"]
         assert "forest_plan_component" in graph["summary"]["node_type_counts"]
         assert "source_claim" in graph["summary"]["node_type_counts"]
 

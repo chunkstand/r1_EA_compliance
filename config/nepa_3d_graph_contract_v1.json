@@ -220,7 +220,8 @@
     {
       "edge_type": "HAS_SOURCE_RECORD",
       "source_node_types": [
-        "authority_family"
+        "authority_family",
+        "forest_plan"
       ],
       "target_node_types": [
         "source_record"
@@ -265,7 +266,9 @@
     {
       "edge_type": "SUPPORTS_RULE_TEMPLATE",
       "source_node_types": [
-        "source_claim"
+        "source_claim",
+        "source_record",
+        "authority_family"
       ],
       "target_node_types": [
         "rule_template"
@@ -405,7 +408,8 @@
     {
       "edge_type": "HAS_FOREST_COMPONENT",
       "source_node_types": [
-        "forest_plan"
+        "forest_plan",
+        "source_record"
       ],
       "target_node_types": [
         "forest_plan_component"

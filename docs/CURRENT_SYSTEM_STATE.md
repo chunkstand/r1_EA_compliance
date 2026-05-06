@@ -202,10 +202,15 @@ The contract validates:
   compliance findings, forest-plan entities, readiness blockers, and graph lenses;
 - required edge types for evidence paths, source/currentness relationships, package
   applicability, forest-plan overlays, compliance findings, and readiness blockers;
+- required per-node provenance fields for each node type, including source-record, artifact,
+  chunk, evidence-span, source-claim, rule-template, forest-plan, readiness-blocker, and graph-lens
+  provenance;
+- edge endpoint compatibility against the contract-declared source and target node types;
 - display states for active, superseded, reserved, candidate, out-of-scope, applicable,
   not-applicable, unresolved, adjudicated, and readiness-blocked records;
 - review-readiness states and blocker types so graph display status cannot be confused with
   reviewer readiness.
+- lens metadata fields, required lenses, and referenced node, edge, and display-status values.
 
 ## NEPA 3D Source-Set Knowledge Graph Export
 
@@ -225,7 +230,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live export for `source-set-ba8d0feae79501b8` now records:
 
-- `validation_passed=true`, `39` validation checks, `0` failed checks;
+- `validation_passed=true`, `48` validation checks, `0` failed checks;
 - `1,307` nodes and `2,400` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
   `44` base rules, `19` authority-family templates, `191` source-claim nodes, and `329`

@@ -72,10 +72,11 @@ blocked source; the contract itself now validates required partitions, graph-rul
 fixtures plus FSH 1909.15 chapter-collapse fixtures fail closed before graph export work can rely on
 them. NEPA 3D Milestone 1 now defines the source-set/review graph export contract in
 `config/nepa_3d_graph_contract_v1.json` with fixture-backed validation for node and edge types,
-display status, review readiness, provenance, lens metadata, and readiness blockers. NEPA 3D
-Milestone 3 now adds the read-only `nepa-knowledge-graph-export` source-set builder. The live
-export for `source-set-ba8d0feae79501b8` validates with `1,307` nodes, `2,400` edges, all `35`
-authority families, all `190` catalog source records, all `44` base rules, all `19`
+display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
+and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
+`nepa-knowledge-graph-export` source-set builder. The live export for
+`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges, all
+`35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,

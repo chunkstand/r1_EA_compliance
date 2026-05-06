@@ -21,28 +21,109 @@
   ],
   "lens_metadata": [
     {
+      "lens_id": "authority_currentness",
+      "label": "Authority Currentness",
+      "description": "Display active, reserved, superseded, and candidate authority source state.",
+      "supported_node_types": [
+        "authority_family",
+        "source_record",
+        "readiness_blocker"
+      ],
+      "supported_edge_types": [
+        "CONTAINS_AUTHORITY_FAMILY",
+        "HAS_SOURCE_RECORD",
+        "HAS_CURRENTNESS_STATUS",
+        "BLOCKED_BY"
+      ],
+      "display_status_values": [
+        "active",
+        "reserved",
+        "superseded",
+        "candidate"
+      ]
+    },
+    {
+      "lens_id": "forest_plan",
+      "label": "Forest Plan",
+      "description": "Display Region 1 forest-plan units, plans, and component inventory.",
+      "supported_node_types": [
+        "forest_unit",
+        "forest_plan",
+        "forest_plan_component",
+        "source_record"
+      ],
+      "supported_edge_types": [
+        "HAS_FOREST_PLAN",
+        "HAS_FOREST_COMPONENT",
+        "BELONGS_TO_FOREST_UNIT"
+      ],
+      "display_status_values": [
+        "active",
+        "readiness_blocked"
+      ]
+    },
+    {
       "lens_id": "package_applicability",
       "label": "Package Applicability",
-      "description": "Display applicable, unresolved, and adjudication-needed authority states.",
+      "description": "Display review-specific applicability states when a review overlay is exported.",
       "supported_node_types": [
-        "review",
         "authority_family",
-        "applicability_decision",
-        "generated_rule",
-        "compliance_finding",
+        "rule_template",
         "readiness_blocker"
       ],
       "supported_edge_types": [
         "PRODUCES_APPLICABILITY_DECISION",
         "APPLIES_TO_REVIEW",
-        "GENERATES_RULE",
-        "SUPPORTS_COMPLIANCE_FINDING",
+        "NOT_APPLICABLE_TO_REVIEW",
         "NEEDS_ADJUDICATION"
       ],
       "display_status_values": [
-        "active",
         "applicable",
+        "not_applicable",
         "unresolved",
+        "adjudicated",
+        "readiness_blocked"
+      ]
+    },
+    {
+      "lens_id": "evidence_path",
+      "label": "Evidence Path",
+      "description": "Display source record, artifact, chunk, evidence span, claim, and rule paths.",
+      "supported_node_types": [
+        "source_record",
+        "artifact",
+        "chunk",
+        "evidence_span",
+        "source_claim",
+        "rule_template"
+      ],
+      "supported_edge_types": [
+        "HAS_ARTIFACT",
+        "HAS_CHUNK",
+        "HAS_EVIDENCE_SPAN",
+        "SUPPORTS_SOURCE_CLAIM",
+        "SUPPORTS_RULE_TEMPLATE"
+      ],
+      "display_status_values": [
+        "active",
+        "readiness_blocked"
+      ]
+    },
+    {
+      "lens_id": "readiness_blockers",
+      "label": "Readiness Blockers",
+      "description": "Display missing source, stale artifact, adjudication, and readiness blockers.",
+      "supported_node_types": [
+        "source_set",
+        "authority_family",
+        "source_record",
+        "readiness_blocker"
+      ],
+      "supported_edge_types": [
+        "HAS_READINESS_BLOCKER",
+        "BLOCKED_BY"
+      ],
+      "display_status_values": [
         "readiness_blocked"
       ]
     }

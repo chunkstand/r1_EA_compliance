@@ -241,7 +241,10 @@ Completed on 2026-05-06. `config/nepa_3d_graph_contract_v1.json`,
 `nepa_3d_graph_contract.py`, and `tests/fixtures/nepa_3d_graph/` define and validate the
 source-set and review-specific graph export contract before exporter implementation. The contract
 names required node types, edge types, display states, review-readiness states, readiness blockers,
-top-level graph shape, node/edge shape, summary shape, lens metadata, and validation shape.
+top-level graph shape, node/edge shape, summary shape, lens metadata, and validation shape. The
+gap-closure pass now fails closed on missing node-type provenance fields, undeclared edge endpoint
+types, incomplete required graph lenses, or lens metadata that references unknown node, edge, or
+display-status values.
 
 Required outputs:
 
@@ -375,8 +378,8 @@ Implementation status:
 Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export` CLI command, and `tests/test_nepa_knowledge_graph_export.py`
 implement the source-set graph builder over audited catalog/derived surfaces. The live export for
-`source-set-ba8d0feae79501b8` passes validation with `1,307` nodes, `2,400` edges, all `35`
-authority families, all `190` catalog source records, all `44` base rules, all `19`
+`source-set-ba8d0feae79501b8` passes `48` validation checks with `1,307` nodes, `2,400` edges, all
+`35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components.
 
 Candidate command:
