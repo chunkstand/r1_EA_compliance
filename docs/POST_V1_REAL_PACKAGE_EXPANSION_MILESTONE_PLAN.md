@@ -1,7 +1,8 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0 and 1 complete
+Status: in progress; Sequences 0 and 1 complete; Sequence 2 artifact pass exposed a new ECID
+forest-plan component blocker
 
 ## Weakness
 
@@ -11,10 +12,14 @@ Broader post-V1 expansion is not ready. The Sequence 0 promotion-suite baseline 
 - the ECID preliminary-EA expansion slot is blocked by `adjudication_needed`; and
 - the third real-package expansion slot is still `package_fixture_missing`.
 
-Sequence 1 has since closed the ECID applicability-adjudication blocker locally. The remaining ECID
-work is Sequence 2: generate the ECID rule pack, run compliance review and phase eval, and update
-the promotion-suite expansion signal from verified artifacts. The third real-package expansion slot
-still remains `package_fixture_missing`.
+Sequence 1 closed the ECID applicability-adjudication blocker locally. Sequence 2 then generated
+and validated the ECID rule pack, ran compliance review and review-scoped phase eval, generated a
+forest-plan component adjudication worklist, and added promotion-suite expansion artifact checks.
+That pass removed the ECID `adjudication_needed` blocker but correctly did not mark the slot ready:
+ECID compliance review now fails reviewer readiness on `forest_plan_component_gate_reviewer_ready`
+because `29` applicable Forest Plan standards were identified, only `7` were applied, and the
+component worklist contains `158` missing-package-evidence rows. The third real-package expansion
+slot still remains `package_fixture_missing`.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -178,6 +183,16 @@ Acceptance:
 Purpose: convert the adjudicated ECID preliminary-EA applicability run into a generated rule pack,
 compliance review, phase-eval pass, and promotion-suite expansion signal.
 
+Status:
+Artifact pass complete as of 2026-05-06, but reviewer-ready acceptance is blocked by Forest Plan
+component adjudication. The ECID applicability-derived rule pack validates with `46` generated
+rules. Compliance review wrote the expected ECID review artifacts but reported
+`reviewer_ready=false` and `validation_passed=false` because
+`forest_plan_component_gate_reviewer_ready` failed. Review-scoped phase eval wrote
+`source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json` and failed
+only the `compliance_review` phase, with `14/15` phases passing. The generated Forest Plan
+component adjudication worklist has `158` pending rows.
+
 Actions:
 
 - Generate and validate the ECID applicability-derived rule pack.
@@ -186,6 +201,9 @@ Actions:
 - Add promotion-suite artifact checks for the ECID expansion review if the manifest does not yet
   verify those artifacts directly.
 - Mark the ECID expansion slot ready only after the artifact checks pass.
+- If Forest Plan component validation fails, keep the ECID slot blocked with a typed
+  `forest_plan_reviewer_not_ready` signal and generate the component adjudication worklist instead
+  of substituting model-written adjudication.
 
 Verification:
 
@@ -206,14 +224,61 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id region1-expansion-ecid-preliminary-ea
+
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template \
+  --output-dir source_library \
+  --review-id region1-expansion-ecid-preliminary-ea
 ```
 
 Acceptance:
 
 - Generated rule-pack validation passes.
-- Compliance review summary reports `reviewer_ready=true`.
-- Phase eval passes all required phases for the ECID expansion review.
+- Compliance review summary reports `reviewer_ready=true`, unless the sequence exposes a typed
+  Forest Plan component blocker that must become the next ECID sequence.
+- Phase eval passes all required phases for the ECID expansion review, unless the same typed
+  Forest Plan component blocker is present.
 - Promotion suite has no ECID `adjudication_needed` expansion blocker.
+
+Sequence 2 latest local result:
+
+- Generated rule-pack validation: passed, `generated_rule_count=46`.
+- Compliance review: failed reviewer readiness only because
+  `forest_plan_component_gate_reviewer_ready` failed; authority applicability, generated-pack,
+  source-set, matrix, PDF, non-applicable authority, authority-resolution, litigation-risk, and
+  finding-graph checks were present.
+- Phase eval: failed with `14/15` phases passing; blockers were
+  `compliance_review/phase_validation_failed` and `compliance_review/phase_not_reviewer_ready`.
+- Promotion suite non-strict: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
+  and `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
+  "package_fixture_missing": 1}`.
+- Promotion suite strict expansion: expected failure with `promotion_ready=false` and
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
+
+### Sequence 2A: ECID Forest Plan Component Adjudication
+
+Purpose: close the ECID reviewer-ready blocker exposed by Sequence 2 without weakening the Forest
+Plan component gate.
+
+Actions:
+
+- Complete the generated `forest_plan_component_adjudication_template.json` as a reviewer
+  adjudication file, classifying each of the `158` missing-package-evidence rows with an allowed
+  disposition.
+- Run `forest-plan-component-adjudication-eval` against the completed file.
+- Rerun ECID compliance review with the generated ECID rule pack and `--reuse-package-cache`.
+- Rerun review-scoped phase eval for `region1-expansion-ecid-preliminary-ea`.
+- Rerun non-strict and strict promotion suite checks.
+- Mark the ECID expansion slot ready only if compliance validation, matrix readiness, review-scoped
+  phase eval, and the ECID expansion artifact checks all pass.
+
+Acceptance:
+
+- Forest Plan component adjudication eval passes and matches the current `158`-row queue.
+- ECID compliance review reports `reviewer_ready=true`.
+- ECID review-scoped phase eval reports `passed=true` and `reviewer_ready=true`.
+- Promotion suite has no ECID `forest_plan_reviewer_not_ready` or `adjudication_needed` expansion
+  blocker.
 
 ### Sequence 3: Third Real-Package Fixture Contract
 

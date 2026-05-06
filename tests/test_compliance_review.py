@@ -1854,6 +1854,15 @@ class ComplianceReviewTests(unittest.TestCase):
 
             self.assertTrue(result.summary["reviewer_ready"])
             self.assertEqual(result.summary["phase_count"], 14)
+            self.assertEqual(result.summary["review_id"], "phase-review")
+            self.assertEqual(
+                result.review_output_path,
+                output_dir / "reviews" / "phase-review" / "phase_eval_results.json",
+            )
+            self.assertTrue(result.review_output_path.exists())
+            review_phase_summary = json.loads(result.review_output_path.read_text(encoding="utf-8"))
+            self.assertEqual(review_phase_summary["review_id"], "phase-review")
+            self.assertTrue(review_phase_summary["reviewer_ready"])
             claim_phase = _phase(result.summary, "claim_extraction")
             self.assertTrue(claim_phase["passed"])
             self.assertTrue(claim_phase["reviewer_ready"])

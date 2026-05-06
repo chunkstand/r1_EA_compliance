@@ -1095,16 +1095,19 @@ Current state as of 2026-05-06:
   `346` non-applicable authorities, `0` unresolved decisions, `0` `needs_adjudication` decisions,
   and `generated_rule_pack_ready=true`.
 - `config/promotion_suite_v1.json` reports current promotion ready by default while broader
-  expansion remains not ready. After Sequence 1, the remaining ECID work is generated-rule-pack
-  creation, compliance review, phase eval, and promotion-suite artifact checks; the third
-  real-package slot remains `package_fixture_missing`.
+  expansion remains not ready. Sequence 2 generated and validated the ECID rule pack with `46`
+  rules, ran compliance review, wrote review-scoped phase eval, generated a `158`-item Forest Plan
+  component adjudication worklist, and added ECID expansion artifact checks. The remaining ECID
+  blocker is `forest_plan_reviewer_not_ready`; the third real-package slot remains
+  `package_fixture_missing`.
 - The focused closure plan for these blockers is
   `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
 
 Implementation direction:
 
-- Generate the ECID applicability-derived rule pack, run compliance review, phase eval, and
-  promotion-suite checks for `region1-expansion-ecid-preliminary-ea`.
+- Complete the ECID Forest Plan component adjudication worklist, rerun ECID compliance review and
+  review-scoped phase eval, and clear the ECID `forest_plan_reviewer_not_ready` promotion-suite
+  blocker without weakening Forest Plan gates.
 - If the user chooses to broaden coverage first, add the third real Region 1 EA package fixture and
   keep any uncovered applicability uncertainty as explicit typed readiness blockers.
 - Select a small real-package set covering:

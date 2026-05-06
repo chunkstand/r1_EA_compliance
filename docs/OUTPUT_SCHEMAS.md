@@ -2490,11 +2490,13 @@ The manifest has schema version `promotion-suite-v0` and records:
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
   applicability seed/gold eval coverage, arbitration-summary checks, compliance-review eval, and
   compliance-gold eval
+- review-case results that may be marked `required_for_expansion` so expansion readiness depends on
+  verified review artifacts, not only expansion-slot manifest text
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions
 
 `promotion_suite_results.json` has schema version `promotion-suite-results-v0` and records:
 
-- `current_promotion_ready`, `expansion_ready`, and `promotion_ready`
+- `current_promotion_ready`, `expansion_artifacts_ready`, `expansion_ready`, and `promotion_ready`
 - manifest path, output path, Markdown report path, source set, rule-pack identity, and strict mode
 - rule-pack check results
 - per-review artifact checks, including compliance validation, compliance review, compliance
@@ -2508,11 +2510,14 @@ The manifest has schema version `promotion-suite-v0` and records:
   `expansion_failure_category_counts`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
   `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
-  and `package_fixture_missing`
+  `forest_plan_reviewer_not_ready`, and `package_fixture_missing`
 
 By default, open expansion slots do not block `promotion_ready`; they are reported in
-`expansion_failure_category_counts` and `open_expansion_slot_count`. With `--strict-expansion`, open
-expansion slots block `promotion_ready` and enter `failure_category_counts`.
+`expansion_failure_category_counts` and `open_expansion_slot_count`. Expansion artifacts marked
+`required_for_expansion` also contribute to `expansion_artifacts_ready`,
+`open_expansion_artifact_count`, and expansion failure categories. With `--strict-expansion`, open
+expansion slots and failed expansion artifacts block `promotion_ready` and enter
+`failure_category_counts`.
 
 ## Compliance Coverage Outputs
 
@@ -3087,7 +3092,11 @@ Graph edge relationships include:
 - chunk hash mismatch count
 - `reviewer_ready`
 
-The `phase-eval` command writes `phase_eval_results.json` in the same directory. It evaluates
+The `phase-eval` command writes `phase_eval_results.json` in the same directory. When
+`--review-id` or `--review-dir` is supplied, it also writes a review-scoped copy at
+`source_library/reviews/<review_id>/phase_eval_results.json` (or the supplied review directory) with
+the same summary plus `review_id` and `review_dir`, so promotion checks can evaluate multiple
+review-specific phase results without relying on the shared source-set phase artifact. It evaluates
 catalog capture, extraction, retrieval, evidence graph, claim extraction, and rule-claim binding as
 separate phases and records phase blockers so downstream compliance review cannot hide an upstream
 failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval

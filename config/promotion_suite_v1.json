@@ -346,6 +346,305 @@
           ]
         }
       ]
+    },
+    {
+      "id": "region1-expansion-ecid-preliminary-ea",
+      "label": "ECID preliminary-EA expansion review",
+      "review_id": "region1-expansion-ecid-preliminary-ea",
+      "package_label": "East Crazy Inspiration Divide preliminary EA",
+      "required_for_current_promotion": false,
+      "results": [
+        {
+          "id": "applicability_validation",
+          "label": "ECID applicability validation",
+          "path": "reviews/{review_id}/applicability/applicability_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "adjudication_needed",
+          "checks": [
+            {
+              "name": "applicability_validation_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "applicability_reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "applicable_authority_count",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 46
+            },
+            {
+              "name": "non_applicable_authority_count",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 346
+            },
+            {
+              "name": "needs_adjudication_authority_count",
+              "json_path": "summary.needs_adjudication_authority_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
+          "id": "generated_rule_pack_validation",
+          "label": "ECID generated rule-pack validation",
+          "path": "reviews/{review_id}/applicability/generated_rule_pack_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "generated_rule_pack_validation_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "generated_rule_pack_ready",
+              "json_path": "summary.generated_rule_pack_ready",
+              "equals": true
+            },
+            {
+              "name": "generated_rule_count",
+              "json_path": "summary.generated_rule_count",
+              "equals": 46
+            },
+            {
+              "name": "applicable_authority_count",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 46
+            },
+            {
+              "name": "source_set_matches",
+              "json_path": "summary.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            }
+          ]
+        },
+        {
+          "id": "compliance_validation",
+          "label": "ECID compliance validation",
+          "path": "reviews/{review_id}/compliance_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "compliance_validation_passed",
+              "json_path": "passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_review",
+          "label": "ECID compliance review summary",
+          "path": "reviews/{review_id}/compliance_review.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "source_set_matches",
+              "json_path": "summary.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "generated_rule_pack_id_matches",
+              "json_path": "summary.rule_pack_id",
+              "equals": "generated-nepa-ea-v0-region1-expansion-ecid-preliminary-ea",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "generated_rule_pack_version_matches",
+              "json_path": "summary.rule_pack_version",
+              "equals": "applicability-v0",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "rule_count",
+              "json_path": "summary.rule_count",
+              "equals": 46
+            },
+            {
+              "name": "baseline_source_record_count",
+              "json_path": "summary.baseline_source_record_count",
+              "equals": 26,
+              "failure_category": "missing_source"
+            },
+            {
+              "name": "rule_claim_gap_count",
+              "json_path": "summary.rule_claim_gap_count",
+              "equals": 17,
+              "failure_category": "missing_source"
+            },
+            {
+              "name": "forest_plan_applicable_standard_count",
+              "json_path": "summary.forest_plan_review.component_evaluation.applicable_standard_count",
+              "equals": 29,
+              "failure_category": "forest_plan_reviewer_not_ready"
+            },
+            {
+              "name": "forest_plan_applied_standard_count",
+              "json_path": "summary.forest_plan_review.component_evaluation.applied_standard_count",
+              "equals": 7,
+              "failure_category": "forest_plan_reviewer_not_ready"
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix",
+          "label": "ECID compliance matrix JSON",
+          "path": "reviews/{review_id}/compliance_matrix.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "matrix_row_count",
+              "json_path": "summary.row_count",
+              "equals": 46
+            },
+            {
+              "name": "matrix_forest_plan_row_count",
+              "json_path": "summary.forest_plan_compliance_row_count",
+              "equals": 178
+            },
+            {
+              "name": "matrix_reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix_pdf",
+          "label": "ECID compliance matrix PDF",
+          "path": "reviews/{review_id}/compliance_matrix.pdf",
+          "format": "binary",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "matrix_pdf_header_valid",
+              "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
+          "id": "authority_family_provenance",
+          "label": "ECID authority-family provenance",
+          "path": "reviews/{review_id}/authority_family_provenance.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "authority_provenance_generated_mode",
+              "json_path": "summary.generated_mode",
+              "equals": true
+            },
+            {
+              "name": "authority_provenance_finding_count",
+              "json_path": "summary.finding_authority_provenance_count",
+              "equals": 46
+            },
+            {
+              "name": "authority_resolution_pending_count",
+              "json_path": "summary.pending_resolution_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
+          "id": "non_applicable_authority_appendix",
+          "label": "ECID non-applicable authority appendix",
+          "path": "reviews/{review_id}/non_applicable_authority_appendix.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "non_applicable_authority_count",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 346
+            },
+            {
+              "name": "non_applicable_authorities_have_coverage",
+              "json_path": "summary.all_have_coverage_certificates",
+              "equals": true
+            },
+            {
+              "name": "non_applicable_authorities_have_rationale",
+              "json_path": "summary.all_have_rationale",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "forest_plan_component_adjudication_template",
+          "label": "ECID forest-plan component adjudication worklist",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_template.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "component_adjudication_template_pending_items",
+              "json_path": "summary.pending_item_count",
+              "equals": 158
+            },
+            {
+              "name": "component_adjudication_template_queue_items",
+              "json_path": "summary.queue_item_count",
+              "equals": 158
+            }
+          ]
+        },
+        {
+          "id": "phase_eval",
+          "label": "ECID review-scoped phase eval",
+          "path": "reviews/{review_id}/phase_eval_results.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "phase_eval_review_id_matches",
+              "json_path": "review_id",
+              "equals": "region1-expansion-ecid-preliminary-ea",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "phase_eval_source_set_matches",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "phase_eval_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "phase_eval_reviewer_ready",
+              "json_path": "reviewer_ready",
+              "equals": true
+            }
+          ]
+        }
+      ]
     }
   ],
   "suite_results": [
@@ -559,29 +858,36 @@
     {
       "id": "region1-real-ea-slot-1",
       "label": "Second real Region 1 EA package: ECID preliminary EA",
-      "status": "blocked_needs_adjudication",
+      "status": "blocked_forest_plan_component_adjudication",
       "ready": false,
       "required_for_current_promotion": false,
-      "failure_category": "adjudication_needed",
+      "failure_category": "forest_plan_reviewer_not_ready",
       "review_id": "region1-expansion-ecid-preliminary-ea",
       "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
       "last_local_signal": {
         "package_file_count": 7,
         "package_chunk_count": 160,
         "candidate_authority_count": 392,
-        "applicable_authority_count": 43,
+        "applicable_authority_count": 46,
         "non_applicable_authority_count": 346,
-        "needs_adjudication_authority_count": 3,
-        "remaining_adjudication_authority_family_ids": [
-          "cultural_resource_protection_and_state_shpo_sources",
-          "minerals_energy_authorities",
-          "species_supporting_sources_and_overlays"
-        ],
-        "applicability_validation_passed": false,
+        "needs_adjudication_authority_count": 0,
+        "unresolved_authority_count": 0,
+        "remaining_adjudication_authority_family_ids": [],
+        "applicability_validation_passed": true,
+        "generated_rule_pack_ready": true,
+        "generated_rule_count": 46,
+        "compliance_validation_passed": false,
+        "compliance_review_reviewer_ready": false,
+        "forest_plan_applicable_standard_count": 29,
+        "forest_plan_applied_standard_count": 7,
+        "forest_plan_component_reviewer_resolution_count": 158,
+        "forest_plan_component_adjudication_template_pending_count": 158,
         "adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/applicability_adjudication_template.json",
+        "forest_plan_component_adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json",
+        "phase_eval_passed": false,
         "phase_eval_reviewer_ready": false
       },
-      "next_action": "Complete and replay the three-item applicability adjudication template, then rerun applicability validation, generated rule-pack creation, compliance review, and phase eval for this review ID.",
+      "next_action": "Complete the 158-item forest-plan component adjudication worklist, run forest-plan-component-adjudication-eval, then rerun ECID compliance review and review-scoped phase eval before marking this slot ready.",
       "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {

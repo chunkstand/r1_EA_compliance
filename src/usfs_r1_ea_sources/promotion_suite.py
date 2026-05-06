@@ -70,12 +70,27 @@ def run_promotion_suite(
     required_suite_results = [
         result for result in suite_results if result["required_for_current_promotion"]
     ]
+    required_expansion_review_results = [
+        result
+        for case in review_results
+        for result in case["results"]
+        if result["required_for_expansion"]
+    ]
+    required_expansion_suite_results = [
+        result for result in suite_results if result["required_for_expansion"]
+    ]
     current_promotion_ready = (
         rule_pack_result["passed"]
         and all(result["passed"] for result in required_review_results)
         and all(result["passed"] for result in required_suite_results)
     )
-    expansion_ready = all(slot["ready"] for slot in expansion_slots)
+    expansion_artifacts_ready = all(
+        result["passed"]
+        for result in required_expansion_review_results + required_expansion_suite_results
+    )
+    expansion_ready = (
+        all(slot["ready"] for slot in expansion_slots) and expansion_artifacts_ready
+    )
     promotion_ready = current_promotion_ready and (expansion_ready if strict_expansion else True)
     failure_category_counts = _failure_category_counts(
         rule_pack_result=rule_pack_result,
@@ -117,11 +132,27 @@ def run_promotion_suite(
             1 for result in required_review_results + required_suite_results if result["passed"]
         )
         + int(rule_pack_result["passed"]),
+        "required_expansion_result_count": len(required_expansion_review_results)
+        + len(required_expansion_suite_results)
+        + len(expansion_slots),
+        "passed_required_expansion_result_count": sum(
+            1
+            for result in required_expansion_review_results
+            + required_expansion_suite_results
+            if result["passed"]
+        )
+        + sum(1 for slot in expansion_slots if slot["ready"]),
+        "expansion_artifacts_ready": expansion_artifacts_ready,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
         "expansion_failure_category_counts": dict(
             sorted(expansion_failure_category_counts.items())
         ),
         "open_expansion_slot_count": sum(1 for slot in expansion_slots if not slot["ready"]),
+        "open_expansion_artifact_count": sum(
+            1
+            for result in required_expansion_review_results + required_expansion_suite_results
+            if not result["passed"]
+        ),
         "rule_pack_result": rule_pack_result,
         "review_cases": review_results,
         "suite_results": suite_results,

@@ -327,14 +327,50 @@ Latest post-V1 real-package expansion Sequence 1 adjudication closure:
   authorities, `0` unresolved, `0` `needs_adjudication`, `generated_rule_pack_ready=true`,
   `reviewer_ready=true`, and `failure_category_counts={}`.
 - Sequence 1 did not generate the ECID rule pack, run compliance review, run phase eval, update the
-  promotion manifest, or add the missing third real-package fixture. Those remain Sequence 2 and
-  Sequence 3+ work.
+  promotion manifest, or add the missing third real-package fixture. Sequence 2 has since completed
+  the artifact-generation and promotion-manifest pass described below.
+
+Latest post-V1 real-package expansion Sequence 2 artifact pass:
+
+- `applicability-generate-rule-pack` passed for
+  `region1-expansion-ecid-preliminary-ea`, producing a generated ECID rule pack with `46` rules and
+  `generated_rule_pack_ready=true`.
+- `compliance-review` against the generated ECID rule pack wrote
+  `compliance_review.json`, `compliance_validation.json`, `compliance_matrix.json/.md/.pdf`,
+  authority-family provenance, non-applicable authority appendix, authority reviewer-resolution,
+  litigation-risk, rule-claim, and finding-graph artifacts, but exited nonzero because
+  `forest_plan_component_gate_reviewer_ready` failed.
+- ECID Forest Plan component status: `29` applicable standards, `7` applied standards, `158`
+  reviewer-resolution rows, all queued as `missing_package_evidence`.
+- `phase-eval --review-id region1-expansion-ecid-preliminary-ea` now writes a review-scoped copy at
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json`; the ECID
+  run failed with `14/15` phases passing and blockers limited to
+  `compliance_review/phase_validation_failed` and `compliance_review/phase_not_reviewer_ready`.
+- The shared source-set phase-eval artifact was restored by rerunning
+  `phase-eval --review-id v1-cg-ecid-compliance-review`, which passed `17/17` phases for the
+  promoted V1 review.
+- `forest-plan-component-adjudication-template` generated a `158`-item ECID worklist at
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json`
+  and `.md`.
+- `config/promotion_suite_v1.json` now includes ECID `required_for_expansion` artifact checks and
+  treats expansion readiness as both slot readiness and required expansion artifact readiness. The
+  ECID slot is blocked with `forest_plan_reviewer_not_ready`, not `adjudication_needed`.
+- Non-strict promotion suite now reports `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
+  "package_fixture_missing": 1}`, `open_expansion_artifact_count=4`, and
+  `open_expansion_slot_count=2`.
+- Strict expansion promotion suite fails as expected with `promotion_ready=false` and
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
 
 Next implementation target:
 
-The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2. The
-older lane notes below are retained for continuity, but they are not the current next pass unless
-the user redirects.
+The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2A:
+complete the ECID `158`-item Forest Plan component adjudication worklist, run
+`forest-plan-component-adjudication-eval`, rerun ECID compliance review and review-scoped
+phase-eval, then rerun promotion-suite checks before marking the ECID slot ready. The older lane
+notes below are retained for continuity, but they are not the current next pass unless the user
+redirects.
 
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
   East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
@@ -468,11 +504,13 @@ the user redirects.
     `decision_support_pdf.*` source selectors. This closes the gap against the
     thought-leader review's report-quality eval guidance without adding a new sequence.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: the ECID three-item
-  applicability adjudication worklist is complete. The next implementation slice is ECID
-  generated-rule-pack creation, compliance review, phase eval, and promotion-suite artifact
-  checks/signals; after that, add the third real Region 1 EA package fixture.
+  applicability adjudication worklist is complete, and the ECID generated-rule-pack/artifact-check
+  pass exposed a Forest Plan component blocker. The next implementation slice is the ECID
+  `158`-item Forest Plan component adjudication worklist; after that, rerun ECID compliance review,
+  review-scoped phase eval, and promotion-suite checks before adding the third real Region 1 EA
+  package fixture.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false` by closing the ECID adjudication blocker and replacing the
+  `expansion_ready=false` by closing the ECID Forest Plan component blocker and replacing the
   `package_fixture_missing` slot with a verified third real-package fixture.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
@@ -883,10 +921,13 @@ rate `1.0`.
 ## Next Sequence
 
 Next sequence for the current applicability lane:
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2. Sequence 1 adjudication closure
-is complete; the next pass should generate and validate the ECID applicability-derived rule pack,
-run compliance review with `--reuse-package-cache`, run phase eval, and update promotion-suite
-artifact checks/signals for `region1-expansion-ecid-preliminary-ea`.
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2A. Sequence 2 generated and
+validated the ECID applicability-derived rule pack, ran compliance review, wrote review-scoped
+phase eval, and added ECID promotion-suite artifact checks. The next pass should complete the
+`158`-item ECID Forest Plan component adjudication worklist, run
+`forest-plan-component-adjudication-eval`, rerun ECID compliance review with `--reuse-package-cache`,
+rerun review-scoped phase eval, and clear the ECID `forest_plan_reviewer_not_ready` promotion-suite
+blocker before marking the slot ready.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

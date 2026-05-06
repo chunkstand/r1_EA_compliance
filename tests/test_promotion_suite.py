@@ -130,27 +130,55 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert risk_checks["litigation_risk_deterministic_only"]["equals"] is True
 
 
-def test_committed_promotion_suite_records_expansion_pass_blocker() -> None:
+def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    review_cases = {case["id"]: case for case in manifest["review_cases"]}
+    ecid_case = review_cases["region1-expansion-ecid-preliminary-ea"]
+    ecid_results = {result["id"]: result for result in ecid_case["results"]}
+
+    assert ecid_case["required_for_current_promotion"] is False
+    assert ecid_case["review_id"] == "region1-expansion-ecid-preliminary-ea"
+    for result in ecid_results.values():
+        assert result["required_for_current_promotion"] is False
+        assert result["required_for_expansion"] is True
+
+    generated = ecid_results["generated_rule_pack_validation"]
+    generated_checks = {check["name"]: check for check in generated["checks"]}
+    assert generated_checks["generated_rule_pack_validation_passed"]["equals"] is True
+    assert generated_checks["generated_rule_count"]["equals"] == 46
+    assert generated_checks["source_set_matches"]["equals"] == "source-set-ba8d0feae79501b8"
+
+    compliance = ecid_results["compliance_review"]
+    assert compliance["failure_category"] == "forest_plan_reviewer_not_ready"
+    compliance_checks = {check["name"]: check for check in compliance["checks"]}
+    assert compliance_checks["reviewer_ready"]["equals"] is True
+    assert compliance_checks["rule_count"]["equals"] == 46
+    assert compliance_checks["rule_claim_gap_count"]["equals"] == 17
+    assert compliance_checks["forest_plan_applicable_standard_count"]["equals"] == 29
+    assert compliance_checks["forest_plan_applied_standard_count"]["equals"] == 7
+
+    phase = ecid_results["phase_eval"]
+    assert phase["path"] == "reviews/{review_id}/phase_eval_results.json"
+    assert phase["failure_category"] == "forest_plan_reviewer_not_ready"
+
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
 
-    assert slot["status"] == "blocked_needs_adjudication"
+    assert slot["status"] == "blocked_forest_plan_component_adjudication"
     assert slot["ready"] is False
-    assert slot["failure_category"] == "adjudication_needed"
+    assert slot["failure_category"] == "forest_plan_reviewer_not_ready"
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
     assert "Preliminary Environmental Assessment" in slot["package_path"]
     assert slot["last_local_signal"]["package_chunk_count"] == 160
     assert slot["last_local_signal"]["candidate_authority_count"] == 392
-    assert slot["last_local_signal"]["applicable_authority_count"] == 43
+    assert slot["last_local_signal"]["applicable_authority_count"] == 46
     assert slot["last_local_signal"]["non_applicable_authority_count"] == 346
-    assert slot["last_local_signal"]["needs_adjudication_authority_count"] == 3
-    assert slot["last_local_signal"]["remaining_adjudication_authority_family_ids"] == [
-        "cultural_resource_protection_and_state_shpo_sources",
-        "minerals_energy_authorities",
-        "species_supporting_sources_and_overlays",
-    ]
-    assert slot["last_local_signal"]["applicability_validation_passed"] is False
+    assert slot["last_local_signal"]["needs_adjudication_authority_count"] == 0
+    assert slot["last_local_signal"]["remaining_adjudication_authority_family_ids"] == []
+    assert slot["last_local_signal"]["applicability_validation_passed"] is True
+    assert slot["last_local_signal"]["generated_rule_pack_ready"] is True
+    assert slot["last_local_signal"]["compliance_review_reviewer_ready"] is False
+    assert slot["last_local_signal"]["forest_plan_component_reviewer_resolution_count"] == 158
 
 
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:
@@ -194,6 +222,30 @@ def test_promotion_suite_strict_expansion_blocks_promotion(tmp_path: Path) -> No
         "applicability_miss": 1,
         "package_fixture_missing": 1,
     }
+
+
+def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_path: Path) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["expansion_slots"][0]["ready"] = True
+    manifest["expansion_slots"][0].pop("failure_category")
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    result = run_promotion_suite(
+        output_dir=output_dir,
+        manifest_path=manifest_path,
+    )
+
+    assert result.summary["current_promotion_ready"] is True
+    assert result.summary["expansion_ready"] is False
+    assert result.summary["expansion_artifacts_ready"] is False
+    assert result.summary["promotion_ready"] is True
+    assert result.summary["failure_category_counts"] == {}
+    assert result.summary["expansion_failure_category_counts"] == {
+        "applicability_miss": 1,
+    }
+    assert result.summary["open_expansion_slot_count"] == 0
+    assert result.summary["open_expansion_artifact_count"] == 1
 
 
 def test_promotion_suite_fails_missing_required_artifact(tmp_path: Path) -> None:

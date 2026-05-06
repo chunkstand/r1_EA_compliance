@@ -81,6 +81,7 @@ class PhaseEvalResult:
     source_set_id: str
     graph_dir: Path
     output_path: Path
+    review_output_path: Path | None
     summary: dict
 
 
@@ -301,6 +302,9 @@ def run_phase_aligned_eval(
         review_dir = output_dir / "reviews" / review_id
     if review_dir is not None:
         review_dir = Path(review_dir)
+    review_phase_output_path = (
+        review_dir / "phase_eval_results.json" if review_dir is not None else None
+    )
     compliance_validation_path = (
         review_dir / "compliance_validation.json" if review_dir is not None else None
     )
@@ -1128,6 +1132,8 @@ def run_phase_aligned_eval(
     ]
     summary = {
         "source_set_id": source_set_id,
+        "review_id": review_id or (review_dir.name if review_dir is not None else None),
+        "review_dir": str(review_dir) if review_dir is not None else None,
         "created_at": _utc_now(),
         "passed": all(phase["passed"] for phase in phases),
         "reviewer_ready": all(phase["reviewer_ready"] for phase in phases),
@@ -1141,10 +1147,13 @@ def run_phase_aligned_eval(
         "phases": phases,
     }
     _write_json(output_path, summary)
+    if review_phase_output_path is not None:
+        _write_json(review_phase_output_path, summary)
     return PhaseEvalResult(
         source_set_id=source_set_id,
         graph_dir=graph_dir,
         output_path=output_path,
+        review_output_path=review_phase_output_path,
         summary=summary,
     )
 

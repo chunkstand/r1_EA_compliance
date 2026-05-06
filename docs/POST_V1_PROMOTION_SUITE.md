@@ -39,7 +39,8 @@ The result separates three statuses:
 
 - `current_promotion_ready`: the tracked V1 review and suite-level eval artifacts satisfy the
   manifest for the current Custer Gallatin proving case.
-- `expansion_ready`: every declared post-V1 real-package slot is filled and ready.
+- `expansion_ready`: every declared post-V1 real-package slot is filled and ready, and every
+  manifest-declared `required_for_expansion` artifact check passes.
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
   strict mode also requires `expansion_ready`.
 
@@ -62,6 +63,7 @@ The suite uses explicit failure categories so a failed run points at the next en
 - `unsupported_package_evidence`
 - `stale_artifact`
 - `adjudication_needed`
+- `forest_plan_reviewer_not_ready`
 - `package_fixture_missing`
 
 Current-promotion failures are reported in `failure_category_counts`. Expansion-only failures are
@@ -70,15 +72,22 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The Sequence 0 baseline suite was run locally on 2026-05-06 after the evidence-arbitration
-Milestone 5 closeout:
+The latest Sequence 2 promotion-suite pass was run locally on 2026-05-06 after ECID
+generated-rule-pack, compliance-review, review-scoped phase-eval, and promotion-manifest artifact
+checks were added:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
 - `expansion_ready=false`
+- `expansion_artifacts_ready=false`
 - `failure_category_counts={}`
-- `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`
+- `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
+  "package_fixture_missing": 1}`
+- `open_expansion_artifact_count=4`
 - `open_expansion_slot_count=2`
+
+Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
+`failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -96,10 +105,14 @@ The package cache extracted `7` PDFs into `160` chunks, and applicability determ
 adjudication after the evidence-arbitration replay. Sequence 1 completed and replayed those three
 adjudications as `human_applicable`; `applicability-validate` now passes with `46` applicable
 authorities, `346` non-applicable authorities, `0` unresolved, `0` `needs_adjudication`,
-`generated_rule_pack_ready=true`, and `reviewer_ready=true`. The slot remains `ready=false` until
-Sequence 2 generates and validates the ECID rule pack, runs compliance review and phase eval, and
-updates the promotion-suite expansion signal from verified artifacts. The second real-package slot
-remains open with `package_fixture_missing`.
+`generated_rule_pack_ready=true`, and `reviewer_ready=true`. Sequence 2 generated and validated the
+ECID rule pack with `46` rules, wrote the compliance review/matrix/PDF artifacts, wrote
+review-scoped phase eval at `source_library/reviews/region1-expansion-ecid-preliminary-ea/`, and
+added ECID artifact checks to the promotion suite. The slot remains `ready=false` because the ECID
+Forest Plan component gate is not reviewer-ready: `29` applicable standards were identified, `7`
+were applied, and the generated component adjudication worklist has `158` pending
+missing-package-evidence rows. The second real-package slot remains open with
+`package_fixture_missing`.
 
 Resolution plan:
 
@@ -109,5 +122,6 @@ docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md
 
 That plan closes the weakness in sequence: lock the current promotion-suite blocker baseline,
 complete the three-item ECID adjudication replay, generate and review the ECID expansion rule pack,
-replace the missing third package slot with a concrete fixture contract, run that package through
-the applicability-first sequence, and close with strict expansion promotion.
+close the ECID Forest Plan component adjudication blocker, replace the missing third package slot
+with a concrete fixture contract, run that package through the applicability-first sequence, and
+close with strict expansion promotion.

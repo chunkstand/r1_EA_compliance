@@ -344,8 +344,10 @@ generated applicability rule pack; the base rule pack remains the candidate-auth
 can only be used for explicit non-reviewer-ready diagnostics. The ECID preliminary-EA expansion pass
 has replayed the three pending applicability adjudications and now validates with `46` applicable
 authorities, `346` non-applicable authorities, no unresolved or `needs_adjudication` decisions, and
-`generated_rule_pack_ready=true`; ECID generated-rule-pack review, broader embeddings, and further
-real-package adjudication remain downstream work.
+`generated_rule_pack_ready=true`. The ECID generated rule pack now validates with `46` rules, but
+ECID reviewer readiness remains blocked by Forest Plan component adjudication: compliance review and
+review-scoped phase eval fail on `forest_plan_component_gate_reviewer_ready`, with `158`
+missing-package-evidence component rows in the generated adjudication worklist.
 
 ## Reviewer Engine Entry Points
 
@@ -863,15 +865,18 @@ authority-family positive/negative, unresolved, and adjudication coverage.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
-`applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`, and
-`package_fixture_missing`.
+`applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
+`forest_plan_reviewer_not_ready`, and `package_fixture_missing`.
 
 As of the latest post-V1 real-package expansion pass, the ECID preliminary-EA applicability
 adjudication blocker is closed locally: `applicability-adjudication-eval`,
 `applicability-adjudication-apply`, and `applicability-validate` pass for
-`region1-expansion-ecid-preliminary-ea`. The ECID expansion slot still must go through generated
-rule-pack creation, compliance review, phase eval, and promotion-suite artifact checks before it can
-be marked ready.
+`region1-expansion-ecid-preliminary-ea`. The ECID generated rule pack also validates, compliance
+review writes the expected matrix/PDF artifacts, and review-scoped phase eval writes
+`source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json`. The ECID
+expansion slot still cannot be marked ready because Forest Plan component adjudication has not been
+completed for the `158` pending component rows; strict expansion also remains blocked by the missing
+third real-package fixture.
 
 Run the seed retrieval eval gate:
 
