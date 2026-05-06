@@ -479,6 +479,9 @@ def run_phase_aligned_eval(
         generated_rule_pack_path=generated_rule_pack_path,
         generated_rule_pack_validation_path=generated_rule_pack_validation_path,
     )
+    applicability_arbitration_summary = _applicability_arbitration_summary(
+        applicability_artifacts.get("decisions") or []
+    )
 
     phases = [
         _phase(
@@ -619,6 +622,7 @@ def run_phase_aligned_eval(
                 review_dir=review_dir,
                 source_set_id=source_set_id,
                 artifacts=applicability_artifacts,
+                arbitration_summary=applicability_arbitration_summary,
             )
         )
     if compliance_coverage is not None:
@@ -1109,6 +1113,9 @@ def run_phase_aligned_eval(
         "phase_count": len(phases),
         "passed_phase_count": sum(1 for phase in phases if phase["passed"]),
         "reviewer_ready_phase_count": sum(1 for phase in phases if phase["reviewer_ready"]),
+        "applicability_arbitration_summary": applicability_arbitration_summary
+        if review_dir is not None
+        else {},
         "blockers": blockers,
         "phases": phases,
     }
@@ -2020,11 +2027,61 @@ def _gold_rule_pack_match_mode(
     return None
 
 
+def _applicability_arbitration_summary(decisions: list[dict]) -> dict:
+    status_counts: Counter[str] = Counter()
+    effect_counts: Counter[str] = Counter()
+    applicable_with_weak_auxiliary = 0
+    weak_positive_only = 0
+    insufficient_strong_positive = 0
+    positive_negative_conflict = 0
+    for decision in decisions:
+        if not isinstance(decision, dict):
+            continue
+        status = str(decision.get("status") or "")
+        arbitration_status = str(decision.get("arbitration_status") or "not_recorded")
+        summary = decision.get("arbitration_summary")
+        decision_effect = (
+            str(summary.get("decision_effect") or "not_recorded")
+            if isinstance(summary, dict)
+            else "not_recorded"
+        )
+        status_counts[arbitration_status] += 1
+        effect_counts[decision_effect] += 1
+        if status == "applicable" and decision.get("weak_auxiliary_trigger_groups"):
+            applicable_with_weak_auxiliary += 1
+        if status == "needs_adjudication" and arbitration_status == "weak_positive_only":
+            weak_positive_only += 1
+        if (
+            status == "needs_adjudication"
+            and arbitration_status == "insufficient_strong_positive_trigger"
+        ):
+            insufficient_strong_positive += 1
+        if status == "needs_adjudication" and arbitration_status == "positive_negative_conflict":
+            positive_negative_conflict += 1
+    return {
+        "schema_version": "applicability-arbitration-summary-v0",
+        "decision_count": sum(status_counts.values()),
+        "arbitration_status_counts": dict(sorted(status_counts.items())),
+        "decision_effect_counts": dict(sorted(effect_counts.items())),
+        "applicable_with_weak_auxiliary_count": applicable_with_weak_auxiliary,
+        "weak_positive_only_needs_adjudication_count": weak_positive_only,
+        "insufficient_strong_positive_needs_adjudication_count": (
+            insufficient_strong_positive
+        ),
+        "positive_negative_conflict_needs_adjudication_count": positive_negative_conflict,
+        "conservative_arbitration_needs_adjudication_count": (
+            weak_positive_only + insufficient_strong_positive
+        ),
+        "genuine_conflict_needs_adjudication_count": positive_negative_conflict,
+    }
+
+
 def _applicability_phase_gates(
     *,
     review_dir: Path,
     source_set_id: str,
     artifacts: dict,
+    arbitration_summary: dict,
 ) -> list[dict]:
     paths = artifacts["paths"]
     authority_universe = artifacts["authority_universe"]
@@ -2218,6 +2275,7 @@ def _applicability_phase_gates(
                 "all_candidates_decided": candidate_ids == decision_ids,
                 "applicable_authority_count": len(applicable_ids),
                 "non_applicable_authority_count": len(non_applicable_ids),
+                "arbitration_summary": arbitration_summary,
                 "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
             },
         ),

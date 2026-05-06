@@ -257,10 +257,21 @@ Gallatin FEIS and ESA-supporting plan documents.
   species-supporting sources/overlays, each blocked by explicit positive/negative evidence
   conflicts. Forest Plan component non-applicable decisions now carry explicit scope-miss evidence
   so validation fails only on the three unresolved authority conflicts.
-- Latest Milestone 4 local verification on 2026-05-06 replayed the ECID applicability ledger,
-  confirmed the expected reviewer-readiness block on the three unresolved authority conflicts, and
-  passed focused applicability decision, promotion-suite, applicability eval, architecture-contract,
-  ruff, compileall, JSON validation, and `git diff --check` gates.
+- Evidence-arbitration Milestone 5 is implemented as the eval and promotion/phase reporting slice.
+  `applicability-eval` now has `9` seed cases with explicit arbitration expectations covering
+  strong-positive plus weak auxiliary evidence, weak-only evidence, positive/negative conflicts,
+  no-action/background-only evidence, and rule-template-specific trigger sufficiency. The latest
+  local eval run passed `9/9` seed cases with arbitration status/effect match rates of `1.0` and
+  arbitration summary counts of `1` applicable-with-weak-auxiliary, `2` weak-only
+  needs-adjudication, `1` insufficient-strong-trigger needs-adjudication, and `1`
+  positive/negative-conflict needs-adjudication. `applicability-gold-eval` passed `5/5` cases and
+  now requires at least one gold case with explicit arbitration-field expectations.
+- Latest Milestone 5 local verification on 2026-05-06 replayed applicability seed/gold eval
+  artifacts, reran review-bound phase eval for `v1-cg-ecid-compliance-review`, confirmed promotion
+  suite still reports `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_ready=false`, and passed focused applicability decision, applicability eval,
+  promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
+  gates.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

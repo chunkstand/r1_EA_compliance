@@ -252,6 +252,12 @@
       "expected_basis_types_by_rule_id": {
         "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
       },
+      "expected_arbitration_statuses_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "weak_positive_only"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "blocked_by_weak_positive_trigger"
+      },
       "expected_generated_rule_count": 0,
       "expected_retrieval_rule_ids": [
         "clean_water_act_wotus_permits_authority_template"

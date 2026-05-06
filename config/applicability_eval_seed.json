@@ -357,12 +357,170 @@
       "expected_basis_types_by_rule_id": {
         "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
       },
+      "expected_arbitration_statuses_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "weak_positive_only"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "blocked_by_weak_positive_trigger"
+      },
       "expected_generated_rule_count": 0,
       "expected_retrieval_rule_ids": [
         "clean_water_act_wotus_permits_authority_template"
       ],
       "expected_graph_rule_ids": [
         "clean_water_act_wotus_permits_authority_template"
+      ]
+    },
+    {
+      "id": "seed-arbitration-strong-positive-weak-auxiliary",
+      "profile": "arbitration",
+      "coverage_tags": [
+        "arbitration",
+        "roads_access",
+        "weak_auxiliary"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service proposes to reconstruct an existing NFS road and authorize access to the exchange parcel.\n\nNo Action Alternative\n\nUnder the no action alternative, grazing would not change.",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "roads_access_special_use_action_authorities_authority_template": "applicable"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "strong_positive_with_weak_auxiliary"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "positive_trigger_decisive_with_weak_auxiliary"
+      },
+      "expected_generated_rule_count": 1,
+      "expected_retrieval_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ]
+    },
+    {
+      "id": "seed-arbitration-positive-negative-conflict",
+      "profile": "arbitration",
+      "coverage_tags": [
+        "arbitration",
+        "water_wetlands",
+        "positive_negative_conflict"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a proposed authorization.\n\nEnvironmental Consequences\n\nWetlands and waters of the United States occur in the project area. The proposed action includes fill in a stream. The record also states no water permit is required.",
+      "expected_validation_passed": false,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "clean_water_act_wotus_permits_authority_template": "needs_adjudication"
+      },
+      "expected_basis_types_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "positive_negative_conflict"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "blocked_by_positive_negative_conflict"
+      },
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ]
+    },
+    {
+      "id": "seed-arbitration-no-action-background-only",
+      "profile": "arbitration",
+      "coverage_tags": [
+        "arbitration",
+        "roads_access",
+        "no_action_background"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "package_text": "Purpose and Need\n\nThe Forest Service evaluates alternatives for a proposed authorization.\n\nNo Action Alternative\n\nThe no action alternative would keep an existing road and trail unchanged.",
+      "expected_validation_passed": false,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "roads_access_special_use_action_authorities_authority_template": "needs_adjudication"
+      },
+      "expected_basis_types_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "weak_positive_only"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "blocked_by_weak_positive_trigger"
+      },
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ]
+    },
+    {
+      "id": "seed-arbitration-template-specific-sufficiency",
+      "profile": "arbitration",
+      "coverage_tags": [
+        "arbitration",
+        "roads_access",
+        "template_specific_sufficiency"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": {
+          "trigger_arbitration": {
+            "required_strong_trigger_groups": [
+              [
+                "road"
+              ],
+              [
+                "right-of-way"
+              ]
+            ],
+            "minimum_strong_trigger_groups": 2
+          }
+        }
+      },
+      "package_text": "Purpose and Need\n\nThe Forest Service proposes to reconstruct an existing NFS road and authorize access to the exchange parcel.",
+      "expected_validation_passed": false,
+      "expected_generated_rule_pack_ready": false,
+      "expected_statuses": {
+        "roads_access_special_use_action_authorities_authority_template": "needs_adjudication"
+      },
+      "expected_basis_types_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "insufficient_strong_positive_trigger"
+      },
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "roads_access_special_use_action_authorities_authority_template": "blocked_by_weak_positive_trigger"
+      },
+      "expected_generated_rule_count": 0,
+      "expected_retrieval_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
+      ],
+      "expected_graph_rule_ids": [
+        "roads_access_special_use_action_authorities_authority_template"
       ]
     }
   ],

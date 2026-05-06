@@ -129,6 +129,14 @@ def run_applicability_eval(
         "metrics": {
             "pass_rate": _rate(passed_count, case_count),
             "status_match_rate": _case_rate(case_results, "expected_statuses_match"),
+            "arbitration_status_match_rate": _case_rate(
+                case_results,
+                "arbitration_status_alignment_matches",
+            ),
+            "arbitration_decision_effect_match_rate": _case_rate(
+                case_results,
+                "arbitration_decision_effect_alignment_matches",
+            ),
             "applicable_partition_match_rate": _case_rate(
                 case_results,
                 "expected_applicable_authorities_match",
@@ -151,6 +159,7 @@ def run_applicability_eval(
             template_set=authority_family_template_set,
             case_results=case_results,
         ),
+        "arbitration_summary": _aggregate_arbitration_summary(case_results),
         "failure_category_counts": _failure_category_counts(case_results),
         "cases": case_results,
     }
@@ -201,6 +210,7 @@ def run_applicability_gold_eval(
         _check_gold_cases(gold),
         _check_gold_profiles(gold),
         _check_gold_adjudication(gold),
+        _check_gold_arbitration_expectations(gold),
     ]
     adjudication_passed = all(check["passed"] for check in checks)
     eval_summary = None
@@ -257,6 +267,7 @@ def run_applicability_gold_eval(
         "passed": adjudication_passed and eval_passed,
         "checks": checks,
         "metrics": (eval_summary or {}).get("metrics", {}),
+        "arbitration_summary": (eval_summary or {}).get("arbitration_summary", {}),
         "authority_family_template_coverage": (eval_summary or {}).get(
             "authority_family_template_coverage",
             {},
@@ -572,6 +583,12 @@ def _score_case(
         case.get("expected_package_section_families_by_rule_id")
     )
     expected_basis_types = _string_mapping(case.get("expected_basis_types_by_rule_id"))
+    expected_arbitration_statuses = _string_mapping(
+        case.get("expected_arbitration_statuses_by_rule_id")
+    )
+    expected_arbitration_effects = _string_mapping(
+        case.get("expected_arbitration_decision_effects_by_rule_id")
+    )
     coverage_ids = _coverage_certificate_ids(coverage)
     non_applicable_coverage_gaps = []
     for authority in non_applicable.get("authorities") or []:
@@ -648,6 +665,16 @@ def _score_case(
             expected_basis_types,
             decisions_by_rule,
         ),
+        "arbitration_status_alignment_matches": _rules_match_decision_values(
+            expected_arbitration_statuses,
+            decisions_by_rule,
+            "arbitration_status",
+        ),
+        "arbitration_decision_effect_alignment_matches": _rules_match_decision_values(
+            expected_arbitration_effects,
+            decisions_by_rule,
+            "arbitration_summary.decision_effect",
+        ),
         "negative_evidence_matches": _rules_have_decision_field(
             expected_negative,
             decisions_by_rule,
@@ -719,7 +746,18 @@ def _score_case(
         "expected_document_roles_by_rule_id": expected_document_roles,
         "expected_package_section_families_by_rule_id": expected_package_sections,
         "expected_basis_types_by_rule_id": expected_basis_types,
+        "expected_arbitration_statuses_by_rule_id": expected_arbitration_statuses,
+        "expected_arbitration_decision_effects_by_rule_id": expected_arbitration_effects,
         "basis_types_by_rule_id": _basis_types_by_rule_id(decisions_by_rule),
+        "arbitration_statuses_by_rule_id": _decision_values_by_rule_id(
+            decisions_by_rule,
+            "arbitration_status",
+        ),
+        "arbitration_decision_effects_by_rule_id": _decision_values_by_rule_id(
+            decisions_by_rule,
+            "arbitration_summary.decision_effect",
+        ),
+        "arbitration_summary": _case_arbitration_summary(decisions),
         "authority_family_ids_by_rule_id": _authority_family_ids_by_rule_id(decisions_by_rule),
         "adjudicated_rule_ids": _adjudicated_rule_ids(decisions_by_rule),
         "adjudication_summary": adjudication_summary,
@@ -952,6 +990,9 @@ def _candidate_from_rule(
             "requirement": rule.get("requirement"),
             "severity": rule.get("severity"),
             "applicability_mode": rule.get("applicability_mode"),
+            "trigger_arbitration": rule.get("trigger_arbitration")
+            if isinstance(rule.get("trigger_arbitration"), dict)
+            else None,
         },
         "source_evidence_availability": {
             "available": True,
@@ -966,6 +1007,9 @@ def _candidate_from_rule(
             "baseline_required": rule.get("applicability_mode") == "baseline",
             "positive_package_term_groups": positive_groups,
             "negative_package_terms": negative_terms,
+            "trigger_arbitration": rule.get("trigger_arbitration")
+            if isinstance(rule.get("trigger_arbitration"), dict)
+            else None,
         },
         "source_claim_link_ids": [],
         "rule_claim_gap_ids": [],
@@ -1124,6 +1168,9 @@ def _candidate_from_authority_family_template(
                 else {}
             ),
             "evidence_expectation": template.get("evidence_expectation"),
+            "trigger_arbitration": template.get("trigger_arbitration")
+            if isinstance(template.get("trigger_arbitration"), dict)
+            else None,
         },
         "source_evidence_availability": {
             "available": True,
@@ -1152,6 +1199,9 @@ def _candidate_from_authority_family_template(
                 else {}
             ),
             "evidence_expectation": template.get("evidence_expectation"),
+            "trigger_arbitration": template.get("trigger_arbitration")
+            if isinstance(template.get("trigger_arbitration"), dict)
+            else None,
         },
         "source_claim_link_ids": [],
         "rule_claim_gap_ids": [],
@@ -1462,7 +1512,25 @@ def _selected_authority_family_templates(
             "Applicability eval case references unknown authority-family templates: "
             f"{missing}"
         )
+    overrides = case.get("candidate_authority_family_template_overrides_by_rule_id")
+    if isinstance(overrides, dict):
+        selected = [
+            _template_with_override(
+                template,
+                overrides.get(str(template.get("rule_id") or "")),
+            )
+            for template in selected
+        ]
     return selected
+
+
+def _template_with_override(template: dict[str, Any], override: Any) -> dict[str, Any]:
+    if not isinstance(override, dict):
+        return template
+    merged = {**template}
+    for key, value in override.items():
+        merged[str(key)] = value
+    return merged
 
 
 def _positive_groups(rule: dict[str, Any]) -> list[list[str]]:
@@ -1630,6 +1698,19 @@ def _rules_match_basis_types(
     )
 
 
+def _rules_match_decision_values(
+    expected_by_rule: dict[str, str],
+    decisions_by_rule: dict[str, dict[str, Any]],
+    dotted_field: str,
+) -> bool:
+    if not expected_by_rule:
+        return True
+    return all(
+        _decision_dotted_value(decisions_by_rule.get(rule_id) or {}, dotted_field) == expected
+        for rule_id, expected in expected_by_rule.items()
+    )
+
+
 def _basis_types_by_rule_id(
     decisions_by_rule: dict[str, dict[str, Any]],
 ) -> dict[str, str]:
@@ -1637,6 +1718,25 @@ def _basis_types_by_rule_id(
         rule_id: str(decision.get("basis_type") or "")
         for rule_id, decision in sorted(decisions_by_rule.items())
     }
+
+
+def _decision_values_by_rule_id(
+    decisions_by_rule: dict[str, dict[str, Any]],
+    dotted_field: str,
+) -> dict[str, str]:
+    return {
+        rule_id: _decision_dotted_value(decision, dotted_field)
+        for rule_id, decision in sorted(decisions_by_rule.items())
+    }
+
+
+def _decision_dotted_value(decision: dict[str, Any], dotted_field: str) -> str:
+    current: Any = decision
+    for part in dotted_field.split("."):
+        if not isinstance(current, dict):
+            return ""
+        current = current.get(part)
+    return str(current or "")
 
 
 def _authority_family_ids_by_rule_id(
@@ -1750,6 +1850,102 @@ def _file_hash_matches(path: Path, expected_sha256: str) -> bool:
     return bool(path.exists() and expected_sha256 and sha256_file(path) == expected_sha256)
 
 
+def _case_arbitration_summary(decisions: list[dict[str, Any]]) -> dict[str, Any]:
+    status_counts: Counter[str] = Counter()
+    effect_counts: Counter[str] = Counter()
+    applicable_with_weak_auxiliary = 0
+    weak_positive_only = 0
+    insufficient_strong_positive = 0
+    positive_negative_conflict = 0
+    for decision in decisions:
+        if not isinstance(decision, dict):
+            continue
+        arbitration_status = str(decision.get("arbitration_status") or "not_recorded")
+        status = str(decision.get("status") or "")
+        summary = decision.get("arbitration_summary")
+        decision_effect = (
+            str(summary.get("decision_effect") or "not_recorded")
+            if isinstance(summary, dict)
+            else "not_recorded"
+        )
+        status_counts[arbitration_status] += 1
+        effect_counts[decision_effect] += 1
+        if status == "applicable" and decision.get("weak_auxiliary_trigger_groups"):
+            applicable_with_weak_auxiliary += 1
+        if status == "needs_adjudication" and arbitration_status == "weak_positive_only":
+            weak_positive_only += 1
+        if (
+            status == "needs_adjudication"
+            and arbitration_status == "insufficient_strong_positive_trigger"
+        ):
+            insufficient_strong_positive += 1
+        if status == "needs_adjudication" and arbitration_status == "positive_negative_conflict":
+            positive_negative_conflict += 1
+    return {
+        "schema_version": "applicability-arbitration-summary-v0",
+        "decision_count": sum(status_counts.values()),
+        "arbitration_status_counts": dict(sorted(status_counts.items())),
+        "decision_effect_counts": dict(sorted(effect_counts.items())),
+        "applicable_with_weak_auxiliary_count": applicable_with_weak_auxiliary,
+        "weak_positive_only_needs_adjudication_count": weak_positive_only,
+        "insufficient_strong_positive_needs_adjudication_count": (
+            insufficient_strong_positive
+        ),
+        "positive_negative_conflict_needs_adjudication_count": positive_negative_conflict,
+        "conservative_arbitration_needs_adjudication_count": (
+            weak_positive_only + insufficient_strong_positive
+        ),
+        "genuine_conflict_needs_adjudication_count": positive_negative_conflict,
+    }
+
+
+def _aggregate_arbitration_summary(case_results: list[dict[str, Any]]) -> dict[str, Any]:
+    status_counts: Counter[str] = Counter()
+    effect_counts: Counter[str] = Counter()
+    totals: Counter[str] = Counter()
+    for case in case_results:
+        summary = case.get("arbitration_summary")
+        if not isinstance(summary, dict):
+            continue
+        status_counts.update(summary.get("arbitration_status_counts") or {})
+        effect_counts.update(summary.get("decision_effect_counts") or {})
+        for key in (
+            "decision_count",
+            "applicable_with_weak_auxiliary_count",
+            "weak_positive_only_needs_adjudication_count",
+            "insufficient_strong_positive_needs_adjudication_count",
+            "positive_negative_conflict_needs_adjudication_count",
+            "conservative_arbitration_needs_adjudication_count",
+            "genuine_conflict_needs_adjudication_count",
+        ):
+            totals[key] += int(summary.get(key) or 0)
+    return {
+        "schema_version": "applicability-arbitration-summary-v0",
+        "case_count": len(case_results),
+        "decision_count": totals["decision_count"],
+        "arbitration_status_counts": dict(sorted(status_counts.items())),
+        "decision_effect_counts": dict(sorted(effect_counts.items())),
+        "applicable_with_weak_auxiliary_count": totals[
+            "applicable_with_weak_auxiliary_count"
+        ],
+        "weak_positive_only_needs_adjudication_count": totals[
+            "weak_positive_only_needs_adjudication_count"
+        ],
+        "insufficient_strong_positive_needs_adjudication_count": totals[
+            "insufficient_strong_positive_needs_adjudication_count"
+        ],
+        "positive_negative_conflict_needs_adjudication_count": totals[
+            "positive_negative_conflict_needs_adjudication_count"
+        ],
+        "conservative_arbitration_needs_adjudication_count": totals[
+            "conservative_arbitration_needs_adjudication_count"
+        ],
+        "genuine_conflict_needs_adjudication_count": totals[
+            "genuine_conflict_needs_adjudication_count"
+        ],
+    }
+
+
 def _failure_taxonomy(
     *,
     result_flags: dict[str, bool],
@@ -1771,6 +1967,8 @@ def _failure_taxonomy(
             "document_role_alignment_matches": "document_role_alignment_mismatch",
             "package_section_alignment_matches": "package_section_alignment_mismatch",
             "basis_type_alignment_matches": "adjudication_mismatch",
+            "arbitration_status_alignment_matches": "arbitration_mismatch",
+            "arbitration_decision_effect_alignment_matches": "arbitration_mismatch",
             "package_fact_types_match": "package_fact_gap",
             "retrieval_trace_coverage_matches": "retrieval_trace_gap",
             "non_applicable_coverage_supported": "search_coverage_gap",
@@ -1918,6 +2116,20 @@ def _check_gold_adjudication(gold: dict[str, Any]) -> dict[str, Any]:
         if missing:
             failures.append({"case_id": case.get("id"), "fields": missing})
     return _check("gold_eval_cases_have_adjudication", not failures, {"failures": failures})
+
+
+def _check_gold_arbitration_expectations(gold: dict[str, Any]) -> dict[str, Any]:
+    case_ids = [
+        str(case.get("id") or "")
+        for case in _case_list(gold)
+        if isinstance(case.get("expected_arbitration_statuses_by_rule_id"), dict)
+        or isinstance(case.get("expected_arbitration_decision_effects_by_rule_id"), dict)
+    ]
+    return _check(
+        "gold_eval_cases_have_arbitration_expectations",
+        bool(case_ids),
+        {"case_ids": sorted(case_ids)},
+    )
 
 
 def _check(name: str, passed: bool, details: dict[str, Any]) -> dict[str, Any]:

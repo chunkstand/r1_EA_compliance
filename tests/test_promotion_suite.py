@@ -20,12 +20,15 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     assert seed_gate["path"] == "reviews/applicability_eval/applicability_eval_results.json"
     seed_checks = {check["name"]: check for check in seed_gate["checks"]}
     assert seed_checks["applicability_eval_passed"]["equals"] is True
-    assert seed_checks["applicability_eval_case_count"]["min"] == 5
+    assert seed_checks["applicability_eval_case_count"]["min"] == 9
     assert seed_checks["authority_family_high_priority_count"]["equals"] == 19
     assert seed_checks["authority_family_positive_coverage"]["equals"] == 19
     assert seed_checks["authority_family_negative_coverage"]["equals"] == 19
     assert seed_checks["authority_family_unresolved_coverage"]["min"] == 1
     assert seed_checks["authority_family_real_package_tags"]["equals"] is True
+    assert seed_checks["applicability_eval_weak_auxiliary_arbitration"]["min"] == 1
+    assert seed_checks["applicability_eval_weak_only_arbitration"]["min"] == 1
+    assert seed_checks["applicability_eval_positive_negative_arbitration"]["min"] == 1
 
     gold_gate = suite_results["applicability_gold_eval_authority_family_adjudication"]
     assert gold_gate["required_for_current_promotion"] is True
@@ -34,6 +37,7 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     assert gold_checks["applicability_gold_eval_passed"]["equals"] is True
     assert gold_checks["applicability_gold_eval_promotion_ready"]["equals"] is True
     assert gold_checks["applicability_gold_eval_case_count"]["min"] == 5
+    assert gold_checks["applicability_gold_eval_weak_only_arbitration"]["min"] == 1
     assert gold_checks["applicability_gold_eval_unresolved_profile"]["min"] == 1
     assert gold_checks["applicability_gold_eval_adjudicated_profile"]["min"] == 1
     assert gold_checks["authority_family_adjudicated_coverage"]["min"] == 1
@@ -41,8 +45,16 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
 
 def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    suite_results = {result["id"]: result for result in manifest["suite_results"]}
     review_case = manifest["review_cases"][0]
     results = {result["id"]: result for result in review_case["results"]}
+
+    phase = suite_results["phase_eval_core"]
+    phase_checks = {check["name"]: check for check in phase["checks"]}
+    assert phase_checks["phase_eval_arbitration_summary_schema"]["equals"] == (
+        "applicability-arbitration-summary-v0"
+    )
+    assert phase_checks["phase_eval_arbitration_decision_count"]["min"] == 1
 
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True

@@ -67,9 +67,10 @@ Current remaining work:
   applicability decisions requiring adjudication before generated rule-pack or compliance-review
   promotion.
 - The roads/access/special-use blocker exposed a general evidence-arbitration gap. That gap is now
-  closed through Evidence Arbitration Milestones 1-4: roads/access no longer blocks on weak
-  auxiliary evidence, and the remaining ECID expansion blockers are genuine positive/negative
-  conflicts in cultural-resource/SHPO, minerals/energy, and species-supporting authorities.
+  closed through Evidence Arbitration Milestones 1-5: roads/access no longer blocks on weak
+  auxiliary evidence, arbitration behavior has permanent seed/gold/phase/promotion coverage, and
+  the remaining ECID expansion blockers are genuine positive/negative conflicts in
+  cultural-resource/SHPO, minerals/energy, and species-supporting authorities.
 
 ## Target Invariant
 

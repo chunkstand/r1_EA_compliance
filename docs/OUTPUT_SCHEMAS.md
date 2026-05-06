@@ -1569,9 +1569,14 @@ is supplied. The result schema is `applicability-eval-results-v0` and records:
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
   expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
   and document-role alignment status, package-section alignment status, graph path/non-path status,
-  basis-type alignment status, authority-family IDs by rule ID, adjudicated rule IDs, required
-  artifact gaps, coverage gaps, generated-rule-pack readiness, generated-pack hash and coverage
-  mismatch status, and failure taxonomy
+  basis-type alignment status, expected and actual arbitration statuses, expected and actual
+  arbitration decision effects, per-case arbitration summary counts, authority-family IDs by rule
+  ID, adjudicated rule IDs, required artifact gaps, coverage gaps, generated-rule-pack readiness,
+  generated-pack hash and coverage mismatch status, and failure taxonomy
+- `arbitration_summary`, which aggregates arbitration status/effect counts and the readiness
+  buckets for applicable-with-weak-auxiliary, weak-only needs-adjudication,
+  insufficient-strong-trigger needs-adjudication, and positive/negative conflict
+  needs-adjudication cases
 - `authority_family_template_coverage`, which records high-priority authority-family IDs,
   positive/negative/unresolved/adjudicated coverage counts, real-package coverage tags, and missing
   coverage lists
@@ -1583,19 +1588,20 @@ retrieval/graph traces, deterministic decisions, validation, and generated-rule-
 The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
 lack coverage certificates, expected retrieval or graph traces are missing, expected graph non-paths
 are violated, package facts are not found, source-record/document-role/package-section alignment
-fails, negative/no-trigger evidence is absent, required applicability artifacts are missing, the
-generated rule-pack hash differs from validation, or generated rule-pack rules do not match
-validated applicable authorities.
+fails, expected arbitration statuses or decision effects drift, negative/no-trigger evidence is
+absent, required applicability artifacts are missing, the generated rule-pack hash differs from
+validation, or generated rule-pack rules do not match validated applicable authorities.
 
 `applicability-gold-eval` writes
 `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless
 `--results-dir` is supplied. The result schema is `applicability-gold-eval-results-v0` and records
 gold eval identity, adjudication checks, required profile coverage, nested applicability-eval
-metrics, failure categories, and `promotion_ready`. Promotion readiness is true only when positive,
-mixed, negative, unresolved, and replay-adjudicated profiles are present, every case has
-adjudication metadata, and the nested applicability eval passes. Gold evals carry forward the nested
-`authority_family_template_coverage` summary so promotion checks can prove adjudication coverage for
-expanded authority-family templates.
+metrics, arbitration summary counts, failure categories, and `promotion_ready`. Promotion readiness
+is true only when positive, mixed, negative, unresolved, and replay-adjudicated profiles are
+present, every case has adjudication metadata, at least one gold case has explicit arbitration-field
+expectations, and the nested applicability eval passes. Gold evals carry forward the nested
+`authority_family_template_coverage` and `arbitration_summary` summaries so promotion checks can
+prove adjudication and arbitration coverage for expanded authority-family templates.
 
 ## Compliance Review Outputs
 
@@ -2007,7 +2013,8 @@ The manifest has schema version `promotion-suite-v0` and records:
 - review cases with review IDs, package labels, required current-promotion results, artifact paths,
   and JSON or file-header checks
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
-  applicability seed/gold eval coverage, compliance-review eval, and compliance-gold eval
+  applicability seed/gold eval coverage, arbitration-summary checks, compliance-review eval, and
+  compliance-gold eval
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions
 
 `promotion_suite_results.json` has schema version `promotion-suite-results-v0` and records:
@@ -2018,6 +2025,9 @@ The manifest has schema version `promotion-suite-v0` and records:
 - per-review artifact checks, including compliance validation, compliance review, compliance
   matrix, compliance matrix PDF header, and V1 real-EA eval
 - suite-level eval artifact checks
+- arbitration diagnostics from applicability eval, applicability gold eval, and review-bound
+  phase-eval artifacts so promotion reports distinguish weak/conservative arbitration blockers from
+  positive/negative adjudication conflicts
 - open expansion slots and their required next actions
 - current-promotion `failure_category_counts` and expansion-only
   `expansion_failure_category_counts`
@@ -2623,7 +2633,12 @@ coverage certificates, applicability validation is missing or failed, or generat
 do not exactly match the validated applicable-authority partition. The applicability-validation
 phase also rechecks file-backed validation hashes for decision, partition, retrieval/graph trace,
 search-coverage, and provenance artifacts so reviewer-ready phase output cannot rely on stale
-validation. The compliance-review phase
+validation. The phase result also includes `applicability_arbitration_summary`, and the
+`applicability_determination` phase details embed the same summary. That summary reports
+arbitration status/effect counts plus the explicit buckets for applicable decisions with weak
+auxiliary evidence, weak-only needs-adjudication decisions, insufficient-strong-trigger
+needs-adjudication decisions, and positive/negative conflict needs-adjudication decisions. The
+compliance-review phase
 requires the review report to exist, validation to pass, the review ID to match when supplied, and
 the review source set to match the evaluated source set. It also requires `compliance_matrix.json`
 to exist and match the review's schema version, review ID, source set, rule pack, row count, and

@@ -263,6 +263,18 @@
           "name": "core_reviewer_ready_phase_count",
           "json_path": "reviewer_ready_phase_count",
           "min": 10
+        },
+        {
+          "name": "phase_eval_arbitration_summary_schema",
+          "json_path": "applicability_arbitration_summary.schema_version",
+          "equals": "applicability-arbitration-summary-v0",
+          "failure_category": "applicability_miss"
+        },
+        {
+          "name": "phase_eval_arbitration_decision_count",
+          "json_path": "applicability_arbitration_summary.decision_count",
+          "min": 1,
+          "failure_category": "applicability_miss"
         }
       ]
     },
@@ -347,7 +359,7 @@
         {
           "name": "applicability_eval_case_count",
           "json_path": "case_count",
-          "min": 5
+          "min": 9
         },
         {
           "name": "authority_family_high_priority_count",
@@ -373,6 +385,21 @@
           "name": "authority_family_real_package_tags",
           "json_path": "authority_family_template_coverage.real_package_coverage_passed",
           "equals": true
+        },
+        {
+          "name": "applicability_eval_weak_auxiliary_arbitration",
+          "json_path": "arbitration_summary.applicable_with_weak_auxiliary_count",
+          "min": 1
+        },
+        {
+          "name": "applicability_eval_weak_only_arbitration",
+          "json_path": "arbitration_summary.weak_positive_only_needs_adjudication_count",
+          "min": 1
+        },
+        {
+          "name": "applicability_eval_positive_negative_arbitration",
+          "json_path": "arbitration_summary.positive_negative_conflict_needs_adjudication_count",
+          "min": 1
         }
       ]
     },
@@ -397,6 +424,11 @@
           "name": "applicability_gold_eval_case_count",
           "json_path": "case_count",
           "min": 5
+        },
+        {
+          "name": "applicability_gold_eval_weak_only_arbitration",
+          "json_path": "arbitration_summary.weak_positive_only_needs_adjudication_count",
+          "min": 1
         },
         {
           "name": "applicability_gold_eval_unresolved_profile",

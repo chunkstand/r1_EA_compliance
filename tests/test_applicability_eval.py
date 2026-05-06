@@ -50,6 +50,22 @@ class ApplicabilityEvalTests(unittest.TestCase):
         positive = _case_payload(EVAL_SEED, "seed-expanded-authority-positive")
         negative = _case_payload(EVAL_SEED, "seed-expanded-authority-negative")
         unresolved = _case_payload(EVAL_SEED, "seed-expanded-authority-adjudication-required")
+        weak_auxiliary = _case_payload(
+            EVAL_SEED,
+            "seed-arbitration-strong-positive-weak-auxiliary",
+        )
+        positive_negative = _case_payload(
+            EVAL_SEED,
+            "seed-arbitration-positive-negative-conflict",
+        )
+        no_action = _case_payload(
+            EVAL_SEED,
+            "seed-arbitration-no-action-background-only",
+        )
+        template_specific = _case_payload(
+            EVAL_SEED,
+            "seed-arbitration-template-specific-sufficiency",
+        )
         self.assertEqual(sorted(positive["candidate_authority_family_rule_ids"]), template_rule_ids)
         self.assertEqual(sorted(negative["candidate_authority_family_rule_ids"]), template_rule_ids)
         self.assertEqual(positive["expected_status_for_candidate_authority_family_rule_ids"], "applicable")
@@ -62,6 +78,42 @@ class ApplicabilityEvalTests(unittest.TestCase):
         self.assertEqual(
             unresolved["expected_statuses"],
             {"clean_water_act_wotus_permits_authority_template": "needs_adjudication"},
+        )
+        self.assertEqual(
+            unresolved["expected_arbitration_statuses_by_rule_id"],
+            {"clean_water_act_wotus_permits_authority_template": "weak_positive_only"},
+        )
+        self.assertEqual(
+            weak_auxiliary["expected_arbitration_statuses_by_rule_id"],
+            {
+                "roads_access_special_use_action_authorities_authority_template": (
+                    "strong_positive_with_weak_auxiliary"
+                )
+            },
+        )
+        self.assertEqual(
+            positive_negative["expected_arbitration_statuses_by_rule_id"],
+            {
+                "clean_water_act_wotus_permits_authority_template": (
+                    "positive_negative_conflict"
+                )
+            },
+        )
+        self.assertEqual(
+            no_action["expected_arbitration_decision_effects_by_rule_id"],
+            {
+                "roads_access_special_use_action_authorities_authority_template": (
+                    "blocked_by_weak_positive_trigger"
+                )
+            },
+        )
+        self.assertEqual(
+            template_specific[
+                "candidate_authority_family_template_overrides_by_rule_id"
+            ]["roads_access_special_use_action_authorities_authority_template"][
+                "trigger_arbitration"
+            ]["minimum_strong_trigger_groups"],
+            2,
         )
         self.assertTrue(
             (EVAL_SEED.parent / positive["package_path"]).exists(),
@@ -79,13 +131,30 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["passed"])
-            self.assertEqual(result.summary["case_count"], 5)
+            self.assertEqual(result.summary["case_count"], 9)
             self.assertEqual(result.summary["generated_rule_pack_ready_case_count"], 2)
+            arbitration = result.summary["arbitration_summary"]
+            self.assertGreaterEqual(
+                arbitration["applicable_with_weak_auxiliary_count"],
+                1,
+            )
+            self.assertGreaterEqual(
+                arbitration["weak_positive_only_needs_adjudication_count"],
+                2,
+            )
+            self.assertGreaterEqual(
+                arbitration["positive_negative_conflict_needs_adjudication_count"],
+                1,
+            )
+            self.assertGreaterEqual(
+                arbitration["insufficient_strong_positive_needs_adjudication_count"],
+                1,
+            )
             coverage = result.summary["authority_family_template_coverage"]
             self.assertTrue(coverage["passed"])
             self.assertEqual(coverage["positive_covered_family_count"], 19)
             self.assertEqual(coverage["negative_covered_family_count"], 19)
-            self.assertEqual(coverage["unresolved_covered_family_count"], 1)
+            self.assertEqual(coverage["unresolved_covered_family_count"], 2)
             unresolved = _case(result.summary, "seed-expanded-authority-adjudication-required")
             self.assertEqual(
                 unresolved["actual_statuses"],
@@ -98,6 +167,59 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 {
                     "clean_water_act_wotus_permits_authority_template": (
                         "unresolved_evidence_conflict"
+                    )
+                },
+            )
+            self.assertEqual(
+                unresolved["arbitration_statuses_by_rule_id"],
+                {"clean_water_act_wotus_permits_authority_template": "weak_positive_only"},
+            )
+            weak_auxiliary = _case(
+                result.summary,
+                "seed-arbitration-strong-positive-weak-auxiliary",
+            )
+            self.assertEqual(
+                weak_auxiliary["actual_statuses"],
+                {
+                    "roads_access_special_use_action_authorities_authority_template": (
+                        "applicable"
+                    )
+                },
+            )
+            self.assertEqual(
+                weak_auxiliary["arbitration_decision_effects_by_rule_id"],
+                {
+                    "roads_access_special_use_action_authorities_authority_template": (
+                        "positive_trigger_decisive_with_weak_auxiliary"
+                    )
+                },
+            )
+            positive_negative = _case(
+                result.summary,
+                "seed-arbitration-positive-negative-conflict",
+            )
+            self.assertEqual(
+                positive_negative["arbitration_statuses_by_rule_id"],
+                {"clean_water_act_wotus_permits_authority_template": "positive_negative_conflict"},
+            )
+            no_action = _case(result.summary, "seed-arbitration-no-action-background-only")
+            self.assertEqual(
+                no_action["arbitration_statuses_by_rule_id"],
+                {
+                    "roads_access_special_use_action_authorities_authority_template": (
+                        "weak_positive_only"
+                    )
+                },
+            )
+            template_specific = _case(
+                result.summary,
+                "seed-arbitration-template-specific-sufficiency",
+            )
+            self.assertEqual(
+                template_specific["arbitration_statuses_by_rule_id"],
+                {
+                    "roads_access_special_use_action_authorities_authority_template": (
+                        "insufficient_strong_positive_trigger"
                     )
                 },
             )
@@ -291,6 +413,13 @@ class ApplicabilityEvalTests(unittest.TestCase):
             self.assertTrue(result.summary["passed"])
             self.assertTrue(result.summary["promotion_ready"])
             self.assertEqual(result.summary["case_count"], 5)
+            self.assertTrue(
+                any(
+                    check["name"] == "gold_eval_cases_have_arbitration_expectations"
+                    and check["passed"]
+                    for check in result.summary["checks"]
+                )
+            )
             self.assertEqual(
                 sorted(result.summary["profile_counts"]),
                 ["adjudicated", "mixed", "negative", "positive", "unresolved"],
@@ -335,6 +464,14 @@ class ApplicabilityEvalTests(unittest.TestCase):
             determination_phase = _phase(phase_result.summary, "applicability_determination")
             self.assertTrue(determination_phase["passed"])
             self.assertFalse(determination_phase["details"]["non_applicable_coverage_gaps"])
+            self.assertEqual(
+                determination_phase["details"]["arbitration_summary"],
+                phase_result.summary["applicability_arbitration_summary"],
+            )
+            self.assertIn(
+                "arbitration_status_counts",
+                determination_phase["details"]["arbitration_summary"],
+            )
 
             validation_path = (
                 output_dir

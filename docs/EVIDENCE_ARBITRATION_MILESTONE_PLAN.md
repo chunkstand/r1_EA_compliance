@@ -418,7 +418,7 @@ state. Do not stage ignored `source_library/` artifacts unless repository policy
 
 ## Milestone 5: Evaluation And Promotion Coverage
 
-Status: planned
+Status: implemented
 
 Make evidence arbitration a permanent eval dimension so the same failure does not reappear in later
 real-package expansion.
@@ -446,17 +446,72 @@ Acceptance signal:
   arbitration."
 - The next real-package expansion slot has a clear diagnostic if evidence strength is mixed.
 
+Implemented state:
+
+- `applicability-eval` now supports `expected_arbitration_statuses_by_rule_id` and
+  `expected_arbitration_decision_effects_by_rule_id`, reports per-case and aggregate
+  `applicability-arbitration-summary-v0` counts, and includes arbitration status/effect match rates.
+- The committed seed eval now has `9` cases. The four Milestone 5 arbitration cases cover
+  strong-positive plus weak auxiliary evidence, positive/negative conflict, no-action/background-only
+  weak evidence, and rule-template-specific trigger sufficiency. The existing weak-only CWA case now
+  asserts arbitration fields explicitly.
+- `applicability-gold-eval` now carries nested arbitration summaries and requires at least one gold
+  case with explicit arbitration-field expectations.
+- `phase-eval` now writes top-level `applicability_arbitration_summary` and mirrors it into the
+  `applicability_determination` phase details.
+- `promotion-suite` now checks arbitration summary presence in phase eval and seed/gold arbitration
+  coverage counts. The current promotion remains ready while expansion remains blocked by
+  adjudication and the missing third-package fixture.
+
 Verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --eval-file config/applicability_eval_seed.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
+  --output-dir source_library \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --gold-file config/applicability_gold_eval_v0.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
+
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
+python -m json.tool config/applicability_eval_seed.json /tmp/applicability_eval_seed.validated.json
+python -m json.tool config/applicability_gold_eval_v0.json /tmp/applicability_gold_eval_v0.validated.json
+python -m json.tool config/promotion_suite_v1.json /tmp/promotion_suite_v1.validated.json
 git diff --check
 ```
+
+Closeout verification on 2026-05-06:
+
+- `applicability-eval` passed `9/9` cases, with arbitration status/effect match rates of `1.0` and
+  aggregate arbitration counts covering weak auxiliary, weak-only, insufficient-strong-trigger, and
+  positive/negative-conflict cases.
+- `applicability-gold-eval` passed `5/5` cases with `promotion_ready=true` and a passing
+  `gold_eval_cases_have_arbitration_expectations` check.
+- `phase-eval --review-id v1-cg-ecid-compliance-review` passed `16/16` phases and emitted
+  `applicability_arbitration_summary`.
+- `promotion-suite` kept `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_ready=false`; expansion blockers remain `adjudication_needed` and
+  `package_fixture_missing`.
+- Focused tests, architecture contract, ruff, compileall, JSON validation, and whitespace checks
+  passed.
 
 Commit policy:
 
@@ -475,8 +530,8 @@ Stop and report instead of continuing if:
 
 ## Next Implementation Pass
 
-Start with Milestone 5. Milestones 1 through 4 now cover diagnostics, structured evidence strength,
-active trigger arbitration, and the ECID real-package replay/gate-alignment pass. The next pass is
-to make arbitration outcomes a permanent eval and phase-reporting dimension so future expansion
-packages expose decisive, weak-only, weak-auxiliary, and positive/negative conflict cases without
-manual ledger inspection.
+The evidence-arbitration milestone plan is complete through Milestone 5. The next implementation
+pass should return to the broader real-package expansion lane: complete the three-item ECID
+applicability adjudication worklist, replay validation/generated-rule-pack/compliance/phase gates
+for `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if
+the user chooses to advance expansion coverage first.

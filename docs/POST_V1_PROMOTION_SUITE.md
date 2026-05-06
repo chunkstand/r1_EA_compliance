@@ -45,9 +45,9 @@ The result separates three statuses:
 
 The default manifest keeps two open real-package expansion slots. Those slots do not block the
 current V1 promotion claim, but they make broader readiness gaps visible to future agents. Current
-promotion does require the Milestone 4 applicability seed and gold eval artifacts that prove
-positive, negative, unresolved, and replay-adjudicated coverage for the expanded authority-family
-templates. It also requires the Milestone 5 reviewer-report artifacts for the promoted V1 review:
+promotion does require the applicability seed and gold eval artifacts that prove positive, negative,
+unresolved, replay-adjudicated, and arbitration-field coverage for the expanded authority-family
+templates. It also requires the authority-family reviewer-report artifacts for the promoted V1 review:
 authority-family provenance, non-applicable authority appendix, reviewer-resolution report, and
 deterministic litigation-risk summary.
 
@@ -70,7 +70,7 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The suite was run locally on 2026-05-04 after implementation:
+The suite was run locally on 2026-05-06 after the evidence-arbitration Milestone 5 closeout:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
@@ -81,9 +81,12 @@ The suite was run locally on 2026-05-04 after implementation:
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
-authority-family templates with positive and negative cases, and the gold eval includes unresolved
-and replay-adjudicated authority-family profiles. The promoted review also writes the Milestone 5
-authority-family sidecars and the promotion manifest requires them before current promotion passes.
+authority-family templates with positive and negative cases, plus explicit arbitration cases for
+weak auxiliary evidence, weak-only evidence, positive/negative conflicts, no-action/background-only
+evidence, and rule-template-specific trigger sufficiency. The gold eval includes unresolved and
+replay-adjudicated authority-family profiles and now carries explicit arbitration-field
+expectations. The promoted review also writes the authority-family sidecars and the promotion
+manifest requires them before current promotion passes.
 
 The first expansion slot is now a concrete local pass:
 `region1-expansion-ecid-preliminary-ea`, using the preliminary EA package under the ECID intake.

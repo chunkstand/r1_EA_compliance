@@ -190,13 +190,32 @@ Latest evidence-arbitration Milestone 4 closeout verification:
 - `ruff check src tests`, `python -m compileall src`, JSON validation, and `git diff --check`:
   passed.
 
+Latest evidence-arbitration Milestone 5 closeout verification:
+
+- `applicability-eval`: passed `9/9` seed cases with arbitration status/effect match rates of
+  `1.0`; aggregate arbitration counts include `1` applicable-with-weak-auxiliary, `2` weak-only
+  needs-adjudication, `1` insufficient-strong-trigger needs-adjudication, and `1`
+  positive/negative-conflict needs-adjudication.
+- `applicability-gold-eval`: passed `5/5` cases with `promotion_ready=true` and a passing
+  `gold_eval_cases_have_arbitration_expectations` check.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `16/16` phases and emitted
+  `applicability_arbitration_summary`.
+- `promotion-suite`: kept current promotion ready and expansion not ready; expansion blockers remain
+  `adjudication_needed` and `package_fixture_missing`.
+- `tests/test_applicability_decisions.py`: `25 passed`
+- `tests/test_applicability_eval.py`: `11 passed`
+- `tests/test_promotion_suite.py`: `6 passed`
+- `tests/test_architecture_contract.py`: `5 passed`
+- `ruff check src tests`, `python -m compileall src`, JSON validation, and `git diff --check`:
+  passed.
+
 Next implementation target:
 
-The immediate next implementation target is Milestone 5 in
-`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: add permanent eval and promotion/phase reporting
-coverage for arbitration statuses. Milestone 10 in
-`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` remains the broader real-package expansion and
-operating-runbook track.
+The evidence-arbitration milestone plan is complete through Milestone 5. The next implementation
+target should return to Milestone 10 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: either
+complete and replay the three-item ECID applicability adjudication worklist for
+`region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
+user wants to broaden expansion coverage first.
 
 Current stop conditions for the next session:
 
@@ -513,8 +532,11 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 5 in
-`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
+Next sequence for the current applicability lane: return to
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10. The evidence-arbitration plan is
+complete; the outstanding expansion blocker is the three-item ECID applicability adjudication
+worklist, followed by replaying applicability validation, generated-rule-pack creation, compliance
+review, and phase eval for `region1-expansion-ecid-preliminary-ea`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,
