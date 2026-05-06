@@ -139,6 +139,7 @@ summary = "Compliance review, compliance input gates, compliance coverage, and c
 modules = [
   "compliance_authority_integration",
   "compliance_coverage",
+  "compliance_finding_graph",
   "compliance_gold_eval",
   "compliance_inputs",
   "compliance_outputs",

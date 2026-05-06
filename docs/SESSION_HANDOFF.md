@@ -19,8 +19,12 @@ Milestone 6. The operative architecture references are:
 
 ### Compliance Review Hotspot Reduction
 
-Sequence 3 is implemented for the compliance-review hotspot split. The new
-`src/usfs_r1_ea_sources/compliance_authority_integration.py` module owns authority-integration
+Sequence 4 is implemented for the compliance-review hotspot split. The new
+`src/usfs_r1_ea_sources/compliance_finding_graph.py` module owns finding-graph artifact assembly
+only: compliance review/rule/finding nodes, source-library evidence nodes, source-claim nodes,
+package-evidence and package-gap nodes, graph edges, and the Forest Plan review/component-eval graph
+projection. Sequence 3 kept
+`src/usfs_r1_ea_sources/compliance_authority_integration.py` as the owner for authority-integration
 artifact assembly only: authority-family provenance, non-applicable authority appendix JSON and
 Markdown, authority reviewer-resolution report, deterministic litigation-risk summary, and the
 private row/risk helpers needed to assemble those artifacts. Sequence 2 kept
@@ -29,17 +33,21 @@ review-summary assembly helpers, and Sequence 1 kept
 `src/usfs_r1_ea_sources/compliance_inputs.py` as the owner for compliance-review input and
 identity/gate-context helpers.
 
-The current post-split line-count baseline is `compliance_review.py` `1,851`,
-`compliance_authority_integration.py` `493`, `compliance_validation.py` `762`,
-`compliance_inputs.py` `561`, and `compliance_outputs.py` `1,019`; the deferred hotspot baselines
-remain
+The current post-split line-count baseline is `compliance_review.py` `1,519`,
+`compliance_finding_graph.py` `340`, `compliance_authority_integration.py` `493`,
+`compliance_validation.py` `762`, `compliance_inputs.py` `561`, and `compliance_outputs.py`
+`1,019`; the deferred hotspot baselines remain
 `nepa_knowledge_graph_export.py` `3,391`, `forest_plan_components.py` `3,302`,
 `ea_consistency_decision_support.py` `3,090`, and `viewer/nepa-3d/app.js` `2,202`.
 
-Sequence 3 does not intentionally change finding selection, compliance status decisions, generated
+Sequence 4 does not intentionally change finding selection, compliance status decisions, generated
 rule-pack semantics, Forest Plan component evaluation, matrix/PDF output, finding graph output,
-eval scoring, CLI flags, or generated artifact schemas. No Sequence 4 split is selected yet; rerank
-remaining hotspots before continuing beyond this authority-integration boundary.
+eval scoring, CLI flags, or generated artifact schemas. No Sequence 5 split is selected yet; rerank
+remaining hotspots before continuing beyond this finding-graph boundary.
+
+Sequence 4 verification passed: `tests/test_compliance_review.py` `55 passed`,
+`tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,
+`compileall src`, and `git diff --check`.
 
 Sequence 3 verification passed: `tests/test_compliance_review.py` `55 passed`,
 `tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,
