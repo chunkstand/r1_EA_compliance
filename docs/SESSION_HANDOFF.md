@@ -239,6 +239,11 @@ next-target lanes:
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
     non-canonical manual draft comparison material, and `source_library/` remains ignored. The next
     preflight pass is artifact freshness and hash baseline.
+  - Sequence 0 pass 2 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_2_ARTIFACT_FRESHNESS.md`: all required
+    review artifacts exist and parse, validation-owned artifact hashes match current files, the
+    review/source-set/package boundary agrees, and the Plan Consistency Table hash baseline records
+    both raw-file and normalized-text hash shapes. The next preflight pass is current gate replay.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
