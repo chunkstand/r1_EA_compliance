@@ -13,6 +13,7 @@ modules = [
   "evidence_strength",
   "overrides",
   "records",
+  "source_partitions",
   "workbook",
 ]
 allowed_import_layers = ["foundation"]

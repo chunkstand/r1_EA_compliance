@@ -151,6 +151,39 @@ non-addition decision. Milestone 3 supplies the semantic rule-template promotion
 Milestone 4 supplies independent applicability eval/adjudication coverage for that expanded
 authority universe.
 
+## Source Partition Contract For NEPA 3D
+
+NEPA 3D Milestone 2A is implemented by `config/source_partition_contract_nepa_3d_v1.json`,
+`src/usfs_r1_ea_sources/source_partitions.py`, new `catalog-build` `source_partition` fields, and
+expanded `authority-currentness` validation. The source-partition contract is the pre-graph
+boundary that keeps displayable currentness/supersession evidence separate from sources eligible to
+derive active review rules. The current generated catalog was not regenerated for this docs/code
+milestone, so the live partition proof is the `authority-currentness` report over the current
+catalog surfaces.
+
+Current partition values:
+
+- `active_review_corpus`: current source records eligible for extraction, claims, applicability,
+  generated rules, and compliance findings.
+- `currentness_supersession_archive`: rescinded, revoked, superseded, reserved, or
+  currentness-only records that may support only supersession/currentness graph relationships.
+- `candidate_blocked_source`: candidate, blocked, excluded, failed, or unresolved source records
+  visible as graph blockers but not active review authority.
+
+The live `authority-currentness` run for `source-set-ba8d0feae79501b8` now records:
+
+- catalog source partitions: `active_review_corpus=189`, `candidate_blocked_source=1`;
+- authority-family source roles: `active_authority_source=203`,
+  `candidate_blocked_or_currentness_only_source=1`, and
+  `supersession_or_replacement_source=3`;
+- passing fail-closed checks that non-current sources are not in the active review corpus,
+  reserved/superseded authorities are not active controlling sources, superseded family sources use
+  only currentness/supersession graph relationships, and collapsed FSH 1909.15 handbook records
+  cannot satisfy chapter-level source boundaries.
+
+The current source set does not yet add FSH 1909.15 chapter records. The contract keeps that as a
+scoped workbook/source delta before any NEPA 3D graph export claims handbook completeness.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

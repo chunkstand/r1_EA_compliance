@@ -14,6 +14,7 @@ import subprocess
 from .config import DownloaderConfig
 from .records import WorkbookSource, sha256_file, slugify
 from .report import _read_jsonl, _resolve_manifest_path
+from .source_partitions import catalog_source_partition
 from .workbook import load_canonical_sources
 
 
@@ -114,6 +115,7 @@ def build_review_catalog(
         "unique_url_count": len({record["normalized_url"] for record in catalog_records}),
         "review_topic_count": _review_topic_count(catalog_records),
         "authority_count": _authority_count(catalog_records),
+        "source_partition_counts": manifest["source_partition_counts"],
         "download_run_id": run_id,
         "download_batch_run_id": batch_run_id,
         "validation_passed": validation_report["passed"],
@@ -156,7 +158,7 @@ def _catalog_record(
     content_type = _from_manifest(manifest_record, "content_type")
     source_status = _source_status(manifest_record, bool(run_id or batch_run_id))
     artifact_run_id = _from_manifest(manifest_record, "run_id") or run_id
-    return {
+    record = {
         "source_set_id": source_set_id,
         "source_record_id": source.source_record_id,
         "sheet": source.sheet,
@@ -193,6 +195,10 @@ def _catalog_record(
         "citation_label": _citation_label(source, artifact_sha256),
         "metadata": metadata,
     }
+    source_partition, source_partition_basis = catalog_source_partition(record)
+    record["source_partition"] = source_partition
+    record["source_partition_basis"] = source_partition_basis
+    return record
 
 
 def _source_set_manifest(
@@ -213,6 +219,7 @@ def _source_set_manifest(
     role_counts = Counter(record["document_role"] for record in records)
     host_counts = Counter(record["host"] for record in records)
     parser_counts = Counter(record["expected_parser"] for record in records)
+    source_partition_counts = Counter(record["source_partition"] for record in records)
     return {
         "source_set_id": source_set_id,
         "created_at": _utc_now(),
@@ -231,6 +238,7 @@ def _source_set_manifest(
         "review_topic_count": _review_topic_count(records),
         "authority_count": len({record["issuer"] for record in records if record["issuer"]}),
         "status_counts": dict(status_counts),
+        "source_partition_counts": dict(source_partition_counts),
         "document_role_counts": dict(role_counts),
         "host_counts": dict(host_counts),
         "expected_parser_counts": dict(parser_counts),
@@ -295,6 +303,8 @@ def _create_schema(connection: sqlite3.Connection) -> None:
           host TEXT NOT NULL,
           expected_parser TEXT NOT NULL,
           source_status TEXT NOT NULL,
+          source_partition TEXT NOT NULL,
+          source_partition_basis TEXT NOT NULL,
           metadata_json TEXT NOT NULL,
           FOREIGN KEY (source_set_id) REFERENCES source_sets(source_set_id)
         );
@@ -371,6 +381,7 @@ def _create_schema(connection: sqlite3.Connection) -> None:
         CREATE INDEX idx_sources_authority_level ON sources(authority_level);
         CREATE INDEX idx_sources_parser ON sources(expected_parser);
         CREATE INDEX idx_sources_status ON sources(source_status);
+        CREATE INDEX idx_sources_source_partition ON sources(source_partition);
         CREATE INDEX idx_source_review_topics_topic ON source_review_topics(topic_id);
         CREATE INDEX idx_source_artifacts_artifact ON source_artifacts(artifact_sha256);
         """
@@ -410,8 +421,8 @@ def _insert_source(connection: sqlite3.Connection, record: dict) -> None:
           document_role, authority_level, issuer, scope, layer, document_type,
           unit_or_overlay, applies_to, trigger, review_engine_checks, currentness_notes,
           original_url, effective_url, normalized_url, host, expected_parser, source_status,
-          metadata_json
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          source_partition, source_partition_basis, metadata_json
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             record["source_record_id"],
@@ -437,6 +448,8 @@ def _insert_source(connection: sqlite3.Connection, record: dict) -> None:
             record["host"],
             record["expected_parser"],
             record["source_status"],
+            record["source_partition"],
+            record["source_partition_basis"],
             json.dumps(record["metadata"], sort_keys=True),
         ),
     )
@@ -544,6 +557,7 @@ def _graph_records(records: list[dict]) -> tuple[list[dict], list[dict]]:
             "title": record["title"],
             "document_role": record["document_role"],
             "authority_level": record["authority_level"],
+            "source_partition": record["source_partition"],
         }
         if record["issuer"]:
             authority_node_id = f"authority:{slugify(record['issuer'], max_length=96)}"

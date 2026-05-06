@@ -34,7 +34,7 @@ instructions for agents or privileged tools.
 
 | Container | Role | Current Module Owners |
 | --- | --- | --- |
-| Workbook/config | Load workbook rows, overrides, settings, and record identity. | `workbook.py`, `records.py`, `config.py`, `overrides.py`, `adapters.py` |
+| Workbook/config | Load workbook rows, overrides, settings, record identity, and source-partition contracts. | `workbook.py`, `records.py`, `source_partitions.py`, `config.py`, `overrides.py`, `adapters.py` |
 | Capture | Dry-run, preflight, download, batch, report, and run validation. | `dry_run.py`, `preflight.py`, `download.py`, `batches.py`, `report.py`, `validate_run.py`, `pilots.py` |
 | Catalog | Promote workbook rows and artifacts into reviewer-facing catalog surfaces. | `catalog.py` |
 | Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
@@ -75,6 +75,11 @@ Extraction reads catalog records and raw artifacts, then writes derived text/chu
 index and validation outputs. Reuse planning is a review-support helper because it can inspect
 forest-plan source-set requirements while writing only reuse inventory artifacts. Raw artifacts are
 source bytes and provenance only; semantic work starts in derived layers.
+
+Catalog records also carry `source_partition` and `source_partition_basis`. These fields distinguish
+active review-corpus records from currentness/supersession archive records and candidate or blocked
+records before graph-export work joins catalog, currentness, evidence, claim, applicability, and
+finding artifacts.
 
 ### Evidence, Claims, And Rule Packs
 

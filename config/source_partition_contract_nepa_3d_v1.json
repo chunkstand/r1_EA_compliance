@@ -1,0 +1,103 @@
+{
+  "as_of_date": "2026-05-06",
+  "graph_relationship_rules": {
+    "active_review_corpus": {
+      "allowed_relationships": [
+        "SUPPORTED_BY_SOURCE",
+        "CAPTURED_AS_ARTIFACT",
+        "EXTRACTED_TO",
+        "HAS_CHUNK",
+        "HAS_EVIDENCE_SPAN",
+        "EMITS_SOURCE_CLAIM",
+        "CLAIM_SUPPORTS_RULE",
+        "RULE_DERIVES_FROM_AUTHORITY",
+        "SUPPORTS_FINDING",
+        "HAS_CURRENTNESS_STATUS"
+      ],
+      "eligible_for_active_review_rules": true
+    },
+    "candidate_blocked_source": {
+      "allowed_relationships": [
+        "HAS_CURRENTNESS_STATUS",
+        "BLOCKED_BY"
+      ],
+      "eligible_for_active_review_rules": false
+    },
+    "currentness_supersession_archive": {
+      "allowed_relationships": [
+        "SUPERSEDED_BY",
+        "REPLACES_RESERVED_AUTHORITY",
+        "HAS_CURRENTNESS_STATUS",
+        "BLOCKED_BY"
+      ],
+      "eligible_for_active_review_rules": false
+    }
+  },
+  "handbook_chapter_requirements": [
+    {
+      "chapter_record_rules": [
+        {
+          "chapter_id": "contents_zero_code",
+          "description": "FSH 1909.15 contents or zero-code source record."
+        },
+        {
+          "chapter_id": "environmental_analysis",
+          "description": "FSH 1909.15 environmental analysis chapter source record."
+        },
+        {
+          "chapter_id": "environmental_impact_statement",
+          "description": "FSH 1909.15 EIS chapter source record."
+        },
+        {
+          "chapter_id": "environmental_assessment",
+          "description": "FSH 1909.15 EA chapter source record."
+        },
+        {
+          "chapter_id": "related_documents",
+          "description": "FSH 1909.15 related-documents chapter source record."
+        }
+      ],
+      "collapsed_record_disallowed_when_chapter_records_available": true,
+      "handbook_id": "fsh_1909_15",
+      "minimum_distinct_chapter_records_when_used": 2,
+      "source_delta_status": "planned_source_delta"
+    }
+  ],
+  "reserved_superseded_authority_rules": [
+    {
+      "allowed_relationships": [
+        "SUPERSEDED_BY",
+        "REPLACES_RESERVED_AUTHORITY",
+        "HAS_CURRENTNESS_STATUS",
+        "BLOCKED_BY"
+      ],
+      "authority_label": "36 CFR part 220",
+      "required_partition_when_source_record_exists": "currentness_supersession_archive",
+      "reviewer_visible_rationale": "Reserved or superseded Forest Service NEPA regulations may be displayed as currentness/supersession evidence, but may not derive active review rules."
+    }
+  ],
+  "schema_version": "source-partition-contract-v1",
+  "source_partition_contract_id": "nepa-3d-source-partitions-v1",
+  "source_partitions": [
+    {
+      "description": "Current source records eligible for extraction, claims, applicability, generated rules, and compliance findings.",
+      "eligible_for_active_review_rules": true,
+      "partition_id": "active_review_corpus"
+    },
+    {
+      "description": "Rescinded, revoked, superseded, reserved, or currentness-only source records visible for supersession/currentness relationships only.",
+      "eligible_for_active_review_rules": false,
+      "partition_id": "currentness_supersession_archive"
+    },
+    {
+      "description": "Candidate, blocked, excluded, failed, or unresolved source records visible as graph blockers but not active review authority.",
+      "eligible_for_active_review_rules": false,
+      "partition_id": "candidate_blocked_source"
+    }
+  ],
+  "workbook_source_delta_plan": {
+    "environmental_justice_civil_rights": "Keep candidate-blocked until a scoped workbook/source delta adds official Title VI and USDA nondiscrimination sources.",
+    "fsh_1909_15": "Add separate workbook rows for current official FSH 1909.15 contents/zero-code and chapter records used by EA review before graph export claims handbook completeness.",
+    "reserved_36_cfr_part_220": "If an explicit 36 CFR part 220 source record is added, place it in the currentness/supersession archive and link it to current USDA NEPA procedure sources."
+  }
+}

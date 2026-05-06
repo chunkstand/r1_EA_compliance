@@ -51,15 +51,29 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(r1ea001["document_role"], "law")
             self.assertEqual(r1ea001["authority_level"], "federal")
             self.assertEqual(r1ea001["source_status"], "planned")
+            self.assertEqual(r1ea001["source_partition"], "candidate_blocked_source")
+            self.assertEqual(
+                r1ea001["source_partition_basis"],
+                "blocked_or_unavailable_status:planned",
+            )
             self.assertTrue(r1ea001["review_topics"])
+            self.assertEqual(
+                manifest["source_partition_counts"],
+                {"candidate_blocked_source": 190},
+            )
 
             with closing(sqlite3.connect(result.sqlite_path)) as connection:
                 source_count = connection.execute("SELECT count(*) FROM sources").fetchone()[0]
                 topic_count = connection.execute("SELECT count(*) FROM review_topics").fetchone()[0]
                 citation_count = connection.execute("SELECT count(*) FROM citations").fetchone()[0]
+                partition_count = connection.execute(
+                    "SELECT count(*) FROM sources WHERE source_partition = ?",
+                    ("candidate_blocked_source",),
+                ).fetchone()[0]
             self.assertEqual(source_count, 190)
             self.assertGreater(topic_count, 200)
             self.assertEqual(citation_count, 190)
+            self.assertEqual(partition_count, 190)
 
     def test_build_review_catalog_links_download_manifest_artifact(self) -> None:
         config = load_config(CONFIG)
@@ -82,7 +96,9 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(r1ea001["artifact_sha256"], _artifact_sha256())
             self.assertEqual(r1ea001["expected_parser"], "html")
             self.assertEqual(r1ea001["citation_label"], f"R1EA-001 ({_artifact_sha256()[:12]})")
+            self.assertEqual(r1ea001["source_partition"], "active_review_corpus")
             self.assertEqual(r1ea002["source_status"], "not_in_run")
+            self.assertEqual(r1ea002["source_partition"], "candidate_blocked_source")
             self.assertTrue(result.summary["validation_passed"])
 
             with closing(sqlite3.connect(result.sqlite_path)) as connection:

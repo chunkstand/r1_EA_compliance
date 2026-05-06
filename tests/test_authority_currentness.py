@@ -73,9 +73,15 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             self.assertEqual(current_record["capture_date"], "2026-05-01T00:00:00Z")
             self.assertEqual(current_record["supersession_status"], "current_authoritative_source")
             self.assertTrue(current_record["counts_as_current_authority"])
+            self.assertEqual(current_record["source_partition"], "active_review_corpus")
+            self.assertEqual(
+                current_record["authority_family_source_role"],
+                "active_authority_source",
+            )
 
             excluded_record = records[("source_only_family", "R1EA-160")]
             self.assertEqual(excluded_record["currentness_status"], "excluded_no_artifact")
+            self.assertEqual(excluded_record["source_partition"], "candidate_blocked_source")
             self.assertEqual(
                 excluded_record["supersession_status"],
                 "excluded_no_current_authority",
@@ -88,6 +94,11 @@ class AuthorityCurrentnessTests(unittest.TestCase):
                 "superseded_replacement_source",
             )
             self.assertFalse(superseded_record["counts_as_current_authority"])
+            self.assertFalse(superseded_record["eligible_for_active_review_rules_for_family"])
+            self.assertNotIn(
+                "RULE_DERIVES_FROM_AUTHORITY",
+                superseded_record["graph_allowed_relationships_for_family"],
+            )
 
             family_statuses = {
                 family["authority_family_id"]: family["currentness_status"]
@@ -220,6 +231,168 @@ class AuthorityCurrentnessTests(unittest.TestCase):
                 ]["passed"]
             )
 
+    def test_source_partition_contract_allows_archived_reserved_and_fsh_chapters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[
+                    _catalog_row(source_record_id="R1EA-001", title="7 CFR part 1b"),
+                    _catalog_row(
+                        source_record_id="R1EA-220",
+                        title="36 CFR part 220 - Reserved Forest Service NEPA regulations",
+                        currentness_notes="Reserved and superseded; currentness evidence only.",
+                        source_partition="currentness_supersession_archive",
+                    ),
+                    _catalog_row(
+                        source_record_id="R1EA-FSH-1909-15-00",
+                        title="FSH 1909.15 Contents and Zero Code",
+                    ),
+                    _catalog_row(
+                        source_record_id="R1EA-FSH-1909-15-30",
+                        title="FSH 1909.15 Chapter 30 Environmental Assessment",
+                    ),
+                ],
+            )
+            inventory = _inventory(
+                families=[
+                    {
+                        "family_id": "active_nepa_sources",
+                        "status": "active",
+                        "source_record_ids": [
+                            "R1EA-001",
+                            "R1EA-FSH-1909-15-00",
+                            "R1EA-FSH-1909-15-30",
+                        ],
+                        "open_inventory_gaps": [],
+                    },
+                    {
+                        "family_id": "superseded_36_cfr_220",
+                        "status": "superseded",
+                        "source_record_ids": ["R1EA-220"],
+                        "open_inventory_gaps": ["Preserve supersession graph relationship."],
+                        "supersession": {
+                            "replacement_family_id": "active_nepa_sources",
+                            "current_source_record_ids": ["R1EA-001"],
+                        },
+                    },
+                ]
+            )
+            _write_json(inventory_path, inventory)
+            _write_json(decisions_path, {"schema_version": "test-decisions", "decisions": []})
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            checks = {check["name"]: check for check in report["validation"]["checks"]}
+            self.assertTrue(report["validation"]["passed"])
+            self.assertTrue(checks["non_current_sources_not_in_active_review_corpus"]["passed"])
+            self.assertTrue(
+                checks["reserved_or_superseded_authorities_not_active_controlling"]["passed"]
+            )
+            self.assertTrue(checks["fsh_1909_15_chapter_records_are_not_collapsed"]["passed"])
+            partition_records = {
+                record["source_record_id"]: record for record in report["catalog_source_partitions"]
+            }
+            self.assertEqual(
+                partition_records["R1EA-220"]["source_partition"],
+                "currentness_supersession_archive",
+            )
+            self.assertEqual(
+                partition_records["R1EA-FSH-1909-15-30"]["fsh_1909_15_chapter_kind"],
+                "environmental_assessment",
+            )
+
+    def test_active_reserved_36_cfr_220_source_partition_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[
+                    _catalog_row(
+                        source_record_id="R1EA-220",
+                        title="36 CFR part 220 - Reserved Forest Service NEPA regulations",
+                        currentness_notes="Reserved and superseded; should not be active.",
+                        source_partition="active_review_corpus",
+                    )
+                ],
+            )
+            inventory = _inventory(
+                families=[
+                    {
+                        "family_id": "bad_active_superseded_source",
+                        "status": "active",
+                        "source_record_ids": ["R1EA-220"],
+                        "open_inventory_gaps": [],
+                    }
+                ]
+            )
+            _write_json(inventory_path, inventory)
+            _write_json(decisions_path, {"schema_version": "test-decisions", "decisions": []})
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            checks = {check["name"]: check for check in report["validation"]["checks"]}
+            self.assertFalse(report["validation"]["passed"])
+            self.assertFalse(checks["non_current_sources_not_in_active_review_corpus"]["passed"])
+            self.assertFalse(
+                checks["reserved_or_superseded_authorities_not_active_controlling"]["passed"]
+            )
+
+    def test_collapsed_fsh_1909_15_handbook_record_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[
+                    _catalog_row(
+                        source_record_id="R1EA-FSH-1909-15",
+                        title="FSH 1909.15 Environmental Policy and Procedures Handbook",
+                    )
+                ],
+            )
+            inventory = _inventory(
+                families=[
+                    {
+                        "family_id": "collapsed_fsh_handbook",
+                        "status": "active",
+                        "source_record_ids": ["R1EA-FSH-1909-15"],
+                        "open_inventory_gaps": [],
+                    }
+                ]
+            )
+            _write_json(inventory_path, inventory)
+            _write_json(decisions_path, {"schema_version": "test-decisions", "decisions": []})
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            checks = {check["name"]: check for check in report["validation"]["checks"]}
+            self.assertFalse(report["validation"]["passed"])
+            self.assertFalse(checks["fsh_1909_15_chapter_records_are_not_collapsed"]["passed"])
+
 
 def _write_catalog(output_dir: Path, *, rows: list[dict]) -> None:
     catalog_dir = output_dir / "catalog"
@@ -251,8 +424,9 @@ def _catalog_row(
     artifact_path: str | None = "source_library/artifacts/raw/example.raw",
     artifact_sha256: str | None = "abc123",
     artifact_byte_size: int | None = 3,
+    source_partition: str | None = None,
 ) -> dict:
-    return {
+    row = {
         "source_set_id": "source-set-current",
         "source_record_id": source_record_id,
         "title": title or source_record_id,
@@ -270,6 +444,9 @@ def _catalog_row(
         "artifact_sha256": artifact_sha256,
         "artifact_byte_size": artifact_byte_size,
     }
+    if source_partition:
+        row["source_partition"] = source_partition
+    return row
 
 
 def _inventory(families: list[dict] | None = None) -> dict:

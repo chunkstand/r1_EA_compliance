@@ -927,6 +927,45 @@ Each decision includes:
   sources must not satisfy authority coverage
 - `next_action`
 
+## Source Partition Contract
+
+Path: `config/source_partition_contract_nepa_3d_v1.json`
+
+The source-partition contract is the committed NEPA 3D Milestone 2A boundary. It defines which
+catalog source records can be used as active review authority and which records are visible only as
+currentness, supersession, candidate, excluded, failed, or blocker evidence.
+
+The file has schema version `source-partition-contract-v1` and includes:
+
+- `source_partition_contract_id`
+- `as_of_date`
+- `source_partitions`
+- `graph_relationship_rules`
+- `reserved_superseded_authority_rules`
+- `handbook_chapter_requirements`
+- `workbook_source_delta_plan`
+
+Current source partition values are:
+
+- `active_review_corpus`: current source records eligible for extraction, source claims,
+  applicability decisions, generated rules, and compliance findings.
+- `currentness_supersession_archive`: rescinded, revoked, superseded, reserved, or
+  currentness-only records visible only through supersession/currentness graph relationships.
+- `candidate_blocked_source`: candidate, blocked, excluded, failed, or unresolved source records
+  visible as graph blockers but not active review authority.
+
+Catalog records include:
+
+- `source_partition`
+- `source_partition_basis`
+
+The graph relationship rules intentionally keep `currentness_supersession_archive` records limited
+to `SUPERSEDED_BY`, `REPLACES_RESERVED_AUTHORITY`, `HAS_CURRENTNESS_STATUS`, and `BLOCKED_BY`
+relationships. They cannot derive active rules, source claims, generated rules, or compliance
+findings. The FSH 1909.15 handbook rule fails validation when the handbook is represented only as a
+collapsed source record instead of separate chapter records once active FSH 1909.15 sources are
+used by EA review.
+
 ## Authority Currentness Report
 
 Path:
@@ -939,6 +978,8 @@ authority-family inventory. It reads:
   `--authority-inventory`
 - `config/authority_source_addition_decisions_nepa_ea_v1.json`, or the path passed with
   `--source-addition-decisions`
+- `config/source_partition_contract_nepa_3d_v1.json`, or the path passed with
+  `--source-partition-contract`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
 
@@ -949,6 +990,8 @@ The report has schema version `authority-currentness-report-v0` and includes:
 - `inputs` with paths and SHA256 hashes for the authority inventory, source-addition decisions,
   source catalog, and source-set manifest
 - `source_addition_decisions`
+- `source_partition_contract`
+- `catalog_source_partitions`
 - `family_currentness`
 - `source_currentness_records`
 - `validation`
@@ -968,8 +1011,13 @@ includes:
   `created_at` as a fallback
 - `supersession_status`
 - `source_status`
+- `source_partition`
+- `source_partition_basis`
 - `currentness_status`
 - `counts_as_current_authority`
+- `authority_family_source_role`
+- `eligible_for_active_review_rules_for_family`
+- `graph_allowed_relationships_for_family`
 - document role, authority level, issuer, scope, currentness notes, and artifact path/hash
 
 `source_status` values `downloaded`, `downloaded_existing`, `duplicate_content`, and
@@ -982,8 +1030,10 @@ not as current controlling authority for the superseded family.
 
 The validation block checks source-set identity, inventory/catalog alignment, candidate-family
 source-addition decisions, required currentness fields, successful-status-only current coverage,
-excluded-source handling, failed-capture handling, superseded replacement metadata, and inventory
-alignment so stale Milestone 2 currentness gap text cannot remain after the gate passes.
+excluded-source handling, failed-capture handling, superseded replacement metadata, source
+partition presence/validity, non-current source partitioning, reserved/superseded authority
+partitioning, FSH 1909.15 chapter boundaries, and inventory alignment so stale Milestone 2
+currentness gap text cannot remain after the gate passes.
 
 ## Applicability-First Review Outputs
 

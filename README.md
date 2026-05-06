@@ -53,6 +53,7 @@ rows as explicit accepted V1 reviewer risk.
 Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,
 `config/authority_source_addition_decisions_nepa_ea_v1.json`,
+`config/source_partition_contract_nepa_3d_v1.json`,
 `config/authority_family_rule_templates_nepa_ea_v1.json`,
 `config/authority_family_rule_template_coverage_nepa_ea_v1.json`,
 `config/applicability_eval_seed.json`, `config/applicability_gold_eval_v0.json`, the expanded
@@ -62,8 +63,13 @@ requirement groups, `33` active families, all `44/44` current rule-pack rules cr
 `190/190` workbook source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
-confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. Milestone 3
-adds `19` data-backed authority-family rule templates with positive/negative trigger contracts,
+confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. The NEPA 3D
+Milestone 2A source-partition contract is now implemented: the catalog/currentness surfaces
+distinguish active review-corpus, currentness/supersession archive, and candidate/blocked-source
+records; the live catalog partitions are `189` active review-corpus records and `1` candidate or
+blocked source; and reserved/superseded authority fixtures plus FSH 1909.15 chapter-collapse
+fixtures fail closed before graph export work can rely on them. Milestone 3 adds
+`19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
 independent applicability eval and gold-adjudication coverage for those expanded families: seed evals
 now score positive and negative coverage for all `19` high-priority authority-family templates, a
@@ -110,6 +116,7 @@ heuristics.
 - `config/authority_family_rule_template_coverage_nepa_ea_v1.json`
 - `config/authority_universe_families_nepa_ea_v1.json`
 - `config/authority_source_addition_decisions_nepa_ea_v1.json`
+- `config/source_partition_contract_nepa_3d_v1.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`

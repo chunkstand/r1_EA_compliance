@@ -309,6 +309,13 @@ Goal:
 Make source-record boundaries explicit before graph export work begins, so the graph can show
 currentness and supersession without letting non-current material enter the active review corpus.
 
+Implementation status:
+Completed on 2026-05-06. `config/source_partition_contract_nepa_3d_v1.json`,
+`source_partitions.py`, catalog `source_partition` fields, and expanded `authority-currentness`
+validation now implement the pre-graph source boundary. The current source set validates with `189`
+active review-corpus records and `1` candidate/blocked source. FSH 1909.15 chapter records remain a
+scoped workbook/source delta before graph export can claim handbook completeness.
+
 Required outputs:
 
 - source-partition contract that distinguishes at least the active review corpus, the

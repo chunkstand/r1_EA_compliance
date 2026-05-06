@@ -24,6 +24,7 @@ from .rule_claim_binding import build_rule_claim_links
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import run_rule_claim_link_eval
 from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .source_partitions import DEFAULT_SOURCE_PARTITION_CONTRACT_PATH
 
 
 DERIVED_COMMANDS = {
@@ -92,6 +93,11 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     authority_currentness.add_argument(
         "--source-addition-decisions",
         default=DEFAULT_SOURCE_ADDITION_DECISIONS_PATH,
+        type=Path,
+    )
+    authority_currentness.add_argument(
+        "--source-partition-contract",
+        default=DEFAULT_SOURCE_PARTITION_CONTRACT_PATH,
         type=Path,
     )
     authority_currentness.add_argument("--catalog-path", type=Path)
@@ -233,6 +239,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             source_set_id=args.source_set_id,
             authority_inventory_path=args.authority_inventory,
             source_addition_decisions_path=args.source_addition_decisions,
+            source_partition_contract_path=args.source_partition_contract,
             catalog_path=args.catalog_path,
             source_set_manifest_path=args.source_set_manifest_path,
             output_path=args.output_path,

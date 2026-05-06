@@ -8,6 +8,13 @@ import json
 import re
 
 from .records import sha256_file
+from .source_partitions import ACTIVE_REVIEW_CORPUS
+from .source_partitions import DEFAULT_SOURCE_PARTITION_CONTRACT_PATH
+from .source_partitions import catalog_source_partition
+from .source_partitions import catalog_source_partition_record
+from .source_partitions import graph_relationships_for_family_source
+from .source_partitions import load_source_partition_contract
+from .source_partitions import validate_catalog_source_partitions
 
 
 AUTHORITY_CURRENTNESS_REPORT_SCHEMA_VERSION = "authority-currentness-report-v0"
@@ -39,6 +46,7 @@ REQUIRED_SOURCE_CURRENTNESS_FIELDS = {
     "authority_family_id",
     "capture_date",
     "citation_label",
+    "source_partition",
     "source_record_id",
     "source_title",
     "supersession_status",
@@ -58,6 +66,7 @@ def build_authority_currentness_report(
     source_set_id: str | None = None,
     authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
     source_addition_decisions_path: Path = DEFAULT_SOURCE_ADDITION_DECISIONS_PATH,
+    source_partition_contract_path: Path = DEFAULT_SOURCE_PARTITION_CONTRACT_PATH,
     catalog_path: Path | None = None,
     source_set_manifest_path: Path | None = None,
     output_path: Path | None = None,
@@ -67,6 +76,7 @@ def build_authority_currentness_report(
     output_dir = Path(output_dir)
     authority_inventory_path = Path(authority_inventory_path)
     source_addition_decisions_path = Path(source_addition_decisions_path)
+    source_partition_contract_path = Path(source_partition_contract_path)
     catalog_path = Path(catalog_path) if catalog_path else output_dir / "catalog" / "source_catalog.jsonl"
     source_set_manifest_path = (
         Path(source_set_manifest_path)
@@ -76,6 +86,7 @@ def build_authority_currentness_report(
 
     inventory = _read_json(authority_inventory_path)
     source_addition_decisions = _read_source_addition_decisions(source_addition_decisions_path)
+    source_partition_contract = load_source_partition_contract(source_partition_contract_path)
     manifest = _read_json(source_set_manifest_path)
     source_set_id = source_set_id or str(manifest["source_set_id"])
     catalog_rows = [
@@ -93,6 +104,9 @@ def build_authority_currentness_report(
         for decision in source_addition_decisions.get("decisions", [])
         if decision.get("authority_family_id")
     }
+    catalog_source_partitions = [
+        catalog_source_partition_record(row, source_partition_contract) for row in catalog_rows
+    ]
 
     source_currentness_records = []
     family_currentness = []
@@ -103,6 +117,7 @@ def build_authority_currentness_report(
                 source_record_id=source_record_id,
                 catalog_row=catalog_by_source_record_id.get(source_record_id),
                 manifest=manifest,
+                source_partition_contract=source_partition_contract,
             )
             for source_record_id in family.get("source_record_ids", [])
         ]
@@ -121,6 +136,8 @@ def build_authority_currentness_report(
         catalog_rows=catalog_rows,
         catalog_by_source_record_id=catalog_by_source_record_id,
         source_addition_decisions=source_addition_decisions,
+        source_partition_contract=source_partition_contract,
+        catalog_source_partitions=catalog_source_partitions,
         decisions_by_family_id=decisions_by_family_id,
         family_currentness=family_currentness,
         source_currentness_records=source_currentness_records,
@@ -132,6 +149,7 @@ def build_authority_currentness_report(
         manifest=manifest,
         family_currentness=family_currentness,
         source_currentness_records=source_currentness_records,
+        catalog_source_partitions=catalog_source_partitions,
         validation=validation,
     )
 
@@ -158,6 +176,10 @@ def build_authority_currentness_report(
             "source_addition_decisions_sha256": sha256_file(source_addition_decisions_path)
             if source_addition_decisions_path.exists()
             else None,
+            "source_partition_contract_path": str(source_partition_contract_path),
+            "source_partition_contract_sha256": sha256_file(source_partition_contract_path)
+            if source_partition_contract_path.exists()
+            else None,
             "catalog_path": str(catalog_path),
             "catalog_sha256": sha256_file(catalog_path) if catalog_path.exists() else None,
             "source_set_manifest_path": str(source_set_manifest_path),
@@ -165,6 +187,8 @@ def build_authority_currentness_report(
             if source_set_manifest_path.exists()
             else None,
         },
+        "source_partition_contract": source_partition_contract,
+        "catalog_source_partitions": catalog_source_partitions,
         "source_addition_decisions": source_addition_decisions,
         "family_currentness": family_currentness,
         "source_currentness_records": source_currentness_records,
@@ -182,6 +206,7 @@ def _source_currentness_record(
     source_record_id: str,
     catalog_row: dict | None,
     manifest: dict,
+    source_partition_contract: dict,
 ) -> dict:
     family_id = family["family_id"]
     if catalog_row is None:
@@ -206,13 +231,34 @@ def _source_currentness_record(
             "currentness_notes": None,
             "artifact_path": None,
             "artifact_sha256": None,
+            "source_partition": None,
+            "source_partition_basis": "missing_catalog_record",
+            "authority_family_source_role": "missing_catalog_record",
+            "eligible_for_active_review_rules_for_family": False,
+            "graph_allowed_relationships_for_family": [],
         }
 
     source_status = str(catalog_row.get("source_status") or "")
     supersession_status = _supersession_status(family=family, source_status=source_status)
     currentness_status = _currentness_status(family=family, source_status=source_status)
+    source_partition, source_partition_basis = catalog_source_partition(
+        catalog_row,
+        source_partition_contract,
+    )
+    (
+        authority_family_source_role,
+        eligible_for_active_review_rules_for_family,
+        graph_allowed_relationships_for_family,
+    ) = graph_relationships_for_family_source(
+        family_status=str(family.get("status") or ""),
+        source_partition=source_partition,
+        source_status=source_status,
+        contract=source_partition_contract,
+    )
     counts_as_current_authority = (
-        family.get("status") != "superseded" and source_status in SUCCESSFUL_SOURCE_STATUSES
+        family.get("status") != "superseded"
+        and source_status in SUCCESSFUL_SOURCE_STATUSES
+        and source_partition == ACTIVE_REVIEW_CORPUS
     )
 
     return {
@@ -236,6 +282,11 @@ def _source_currentness_record(
         "currentness_notes": catalog_row.get("currentness_notes"),
         "artifact_path": catalog_row.get("artifact_path"),
         "artifact_sha256": catalog_row.get("artifact_sha256"),
+        "source_partition": source_partition,
+        "source_partition_basis": source_partition_basis,
+        "authority_family_source_role": authority_family_source_role,
+        "eligible_for_active_review_rules_for_family": eligible_for_active_review_rules_for_family,
+        "graph_allowed_relationships_for_family": graph_allowed_relationships_for_family,
     }
 
 
@@ -325,6 +376,8 @@ def _validation(
     catalog_rows: list[dict],
     catalog_by_source_record_id: dict[str, dict],
     source_addition_decisions: dict,
+    source_partition_contract: dict,
+    catalog_source_partitions: list[dict],
     decisions_by_family_id: dict[str, dict],
     family_currentness: list[dict],
     source_currentness_records: list[dict],
@@ -431,6 +484,29 @@ def _validation(
         for family in family_currentness
         if family["failed_source_record_count"] or family["missing_catalog_record_count"]
     ]
+    source_partition_checks = validate_catalog_source_partitions(
+        catalog_rows=catalog_rows,
+        catalog_source_partitions=catalog_source_partitions,
+        contract=source_partition_contract,
+    )
+    non_active_source_records_counted_current = [
+        record["source_record_id"]
+        for record in source_currentness_records
+        if record["counts_as_current_authority"]
+        and record.get("source_partition") != ACTIVE_REVIEW_CORPUS
+    ]
+    superseded_family_active_relationship_records = [
+        record["source_record_id"]
+        for record in source_currentness_records
+        if record["family_status"] == "superseded"
+        and (
+            record.get("eligible_for_active_review_rules_for_family")
+            or "RULE_DERIVES_FROM_AUTHORITY"
+            in record.get("graph_allowed_relationships_for_family", [])
+            or "CLAIM_SUPPORTS_RULE" in record.get("graph_allowed_relationships_for_family", [])
+            or "SUPPORTS_FINDING" in record.get("graph_allowed_relationships_for_family", [])
+        )
+    ]
 
     checks = [
         _check(
@@ -524,12 +600,25 @@ def _validation(
             failed_family_ids,
         ),
         _check(
+            "only_active_review_corpus_counts_as_current_authority",
+            not non_active_source_records_counted_current,
+            [],
+            non_active_source_records_counted_current,
+        ),
+        _check(
+            "superseded_family_sources_have_only_currentness_relationships",
+            not superseded_family_active_relationship_records,
+            [],
+            superseded_family_active_relationship_records,
+        ),
+        _check(
             "source_addition_decisions_schema_loaded",
             bool(source_addition_decisions.get("schema_version")),
             "schema_version",
             source_addition_decisions.get("schema_version"),
         ),
     ]
+    checks.extend(source_partition_checks)
     return {
         "schema_version": AUTHORITY_CURRENTNESS_REPORT_SCHEMA_VERSION,
         "passed": all(check["passed"] for check in checks),
@@ -544,6 +633,7 @@ def _summary(
     manifest: dict,
     family_currentness: list[dict],
     source_currentness_records: list[dict],
+    catalog_source_partitions: list[dict],
     validation: dict,
 ) -> dict:
     family_status_counts = Counter(family["family_status"] for family in family_currentness)
@@ -553,6 +643,12 @@ def _summary(
     )
     supersession_counts = Counter(
         record["supersession_status"] for record in source_currentness_records
+    )
+    catalog_source_partition_counts = Counter(
+        record["source_partition"] for record in catalog_source_partitions
+    )
+    family_source_role_counts = Counter(
+        record.get("authority_family_source_role") for record in source_currentness_records
     )
     return {
         "schema_version": AUTHORITY_CURRENTNESS_REPORT_SCHEMA_VERSION,
@@ -567,6 +663,8 @@ def _summary(
         "source_currentness_record_count": len(source_currentness_records),
         "source_currentness_counts": dict(sorted(source_currentness_counts.items())),
         "supersession_status_counts": dict(sorted(supersession_counts.items())),
+        "catalog_source_partition_counts": dict(sorted(catalog_source_partition_counts.items())),
+        "authority_family_source_role_counts": dict(sorted(family_source_role_counts.items())),
         "candidate_family_count": family_status_counts["candidate"],
         "documented_source_non_addition_count": family_currentness_counts[
             "documented_source_non_addition"
