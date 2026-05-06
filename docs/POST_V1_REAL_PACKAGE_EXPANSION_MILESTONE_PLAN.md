@@ -1,7 +1,7 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: planned
+Status: in progress; Sequence 0 complete
 
 ## Weakness
 
@@ -60,6 +60,29 @@ Completion means:
 
 Purpose: prove the current failure is exactly the two expected expansion blockers before changing
 fixtures, adjudication records, or promotion manifest state.
+
+Status:
+Complete as of 2026-05-06. The baseline lock was run without adjudicating ECID, adding a third
+package fixture, or changing the promotion manifest.
+
+Baseline evidence:
+
+- Non-strict promotion-suite output:
+  `source_library/reviews/promotion_suite/sequence0-baseline-nonstrict/promotion_suite_results.json`
+- Strict promotion-suite output:
+  `source_library/reviews/promotion_suite/sequence0-baseline-strict/promotion_suite_results.json`
+- Non-strict result: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  and `open_expansion_slot_count=2`.
+- Strict result: expected command failure with `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`,
+  `failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  and `open_expansion_slot_count=2`.
+- ECID adjudication worklist remains exactly three pending items:
+  `cultural_resource_protection_and_state_shpo_sources`,
+  `minerals_energy_authorities`, and `species_supporting_sources_and_overlays`.
 
 Actions:
 

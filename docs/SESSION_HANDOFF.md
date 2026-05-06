@@ -286,6 +286,30 @@ Latest evidence-arbitration Milestone 5 closeout verification:
 - `ruff check src tests`, `python -m compileall src`, JSON validation, and `git diff --check`:
   passed.
 
+Latest post-V1 real-package expansion Sequence 0 baseline lock:
+
+- `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 0 is complete. This pass did
+  not adjudicate ECID, add a third package fixture, or change the promotion manifest.
+- Non-strict promotion-suite run wrote
+  `source_library/reviews/promotion_suite/sequence0-baseline-nonstrict/promotion_suite_results.json`
+  and reported `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  and `open_expansion_slot_count=2`.
+- Strict promotion-suite run wrote
+  `source_library/reviews/promotion_suite/sequence0-baseline-strict/promotion_suite_results.json`
+  and failed as expected with `current_promotion_ready=true`, `promotion_ready=false`,
+  `expansion_ready=false`,
+  `failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  `expansion_failure_category_counts={"adjudication_needed": 1, "package_fixture_missing": 1}`,
+  and `open_expansion_slot_count=2`.
+- The ECID adjudication template/worklist remains at
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/` with three pending
+  `needs_adjudication` items: `cultural_resource_protection_and_state_shpo_sources`
+  (`decision_id=6f349222ecfa557b7d163d68`), `minerals_energy_authorities`
+  (`decision_id=add0df8c2b513d6068b4edcc`), and
+  `species_supporting_sources_and_overlays` (`decision_id=58df28f23d0b2222f32eb687`).
+
 Next implementation target:
 
 The evidence-arbitration milestone plan is complete through Milestone 5. There are now two explicit
@@ -837,11 +861,11 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence for the current applicability lane: return to
-`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10. The evidence-arbitration plan is
+Next sequence for the current applicability lane:
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 1. Sequence 0 baseline lock is
 complete; the outstanding expansion blocker is the three-item ECID applicability adjudication
 worklist, followed by replaying applicability validation, generated-rule-pack creation, compliance
-review, and phase eval for `region1-expansion-ecid-preliminary-ea`.
+review, phase eval, and promotion-suite checks for `region1-expansion-ecid-preliminary-ea`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,
