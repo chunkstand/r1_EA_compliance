@@ -315,3 +315,42 @@ Next target:
 
 No Sequence 5 split is selected yet. Rerank remaining hotspots and choose another bounded slice
 before moving more compliance-review code.
+
+## 2026-05-06 Sequence 5 Compliance Finding Construction Split
+
+Sequence 5 reranks the remaining `compliance_review.py` surface after the finding-graph split and
+selects the smaller finding-construction slice before touching the larger eval harness. This
+sequence creates `src/usfs_r1_ea_sources/compliance_findings.py` and moves compliance finding
+construction out of `compliance_review.py`.
+
+The split owns authority-family inventory indexing, authority-family ID resolution for generated and
+base rules, source-claim evidence compaction, package/source citation-label extraction, and
+claim-type assignment. It leaves compliance-review orchestration, eval case loading/scoring,
+finding graph assembly, validation, matrix/PDF rendering, authority-integration artifacts, CLI
+behavior, and generated artifact schemas unchanged.
+
+Current post-split source line counts:
+
+| Surface | Lines | Sequence 5 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 1,313 | Review orchestration, eval, and file writes remain. |
+| `src/usfs_r1_ea_sources/compliance_findings.py` | 217 | New narrow owner for compliance finding construction. |
+| `src/usfs_r1_ea_sources/compliance_finding_graph.py` | 340 | Sequence 4 finding-graph owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_authority_integration.py` | 493 | Sequence 3 authority-integration owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_validation.py` | 762 | Sequence 2 validation/report-summary owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_inputs.py` | 561 | Sequence 1 input/gate owner remains unchanged. |
+| `src/usfs_r1_ea_sources/compliance_outputs.py` | 1,019 | Existing rendering split remains unchanged. |
+
+Sequence 5 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Next target:
+
+No Sequence 6 split is selected yet. Rerank remaining hotspots and choose another bounded slice
+before moving more compliance-review code.

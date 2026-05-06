@@ -140,6 +140,7 @@ modules = [
   "compliance_authority_integration",
   "compliance_coverage",
   "compliance_finding_graph",
+  "compliance_findings",
   "compliance_gold_eval",
   "compliance_inputs",
   "compliance_outputs",
