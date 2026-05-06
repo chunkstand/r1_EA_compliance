@@ -221,11 +221,18 @@ Latest evidence-arbitration Milestone 5 closeout verification:
 
 Next implementation target:
 
-The evidence-arbitration milestone plan is complete through Milestone 5. The next implementation
-target should return to Milestone 10 in `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`: either
-complete and replay the three-item ECID applicability adjudication worklist for
-`region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
-user wants to broaden expansion coverage first.
+The evidence-arbitration milestone plan is complete through Milestone 5. There are now two explicit
+next-target lanes:
+
+- `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
+  three-item ECID applicability adjudication worklist for
+  `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
+  user wants to broaden expansion coverage first.
+- `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
+  knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
+  families, applicability decisions, evidence paths, supersession/currentness states, and readiness
+  blockers. This lane must start as a visualization/export layer over existing audited artifacts,
+  not as a separate legal knowledge base.
 
 Current stop conditions for the next session:
 

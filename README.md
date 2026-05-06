@@ -83,6 +83,9 @@ Gallatin National Forest EA compliance review as the proving ground. See
 applicability, non-applicability, validation, and generated rule packs first-class pre-review
 artifacts. See `docs/AUTHORITY_UNIVERSE_COMPLETION_MILESTONE_PLAN.md` for the current completion
 milestone that expands the bounded authority-family inventory beyond the V1 proving path. See
+`docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md` for the planned graph-export and 3D visualization
+sequence covering USDA/Forest Service Region 1 EA authority families, applicability, evidence, and
+readiness blockers. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
