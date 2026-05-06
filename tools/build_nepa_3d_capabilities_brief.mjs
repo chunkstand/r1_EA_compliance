@@ -532,13 +532,13 @@ function currentAuthorityStackSvg(metrics) {
   <rect width="1280" height="640" rx="28" fill="url(#bg)"/>
   <text x="64" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#171713">NEPA review service process mapped as evidence</text>
   <text x="64" y="118" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">Our review process links document inputs, current agency procedures, source evidence, and review decisions - not unsupported conclusions.</text>
-  ${stackBox(64, 172, "Document package", "EA, FONSI, ROD, appendices, and supporting biological, cultural, and forest-plan records.", "#171713")}
-  ${stackBox(336, 172, "Current authority graph", "Current regulations, agency procedures, Forest Plan components, and project authorities.", "#216a60")}
-  ${stackBox(608, 172, "Consistency review", "Full profile consistency document across Forest Plan direction and applicable laws.", "#7c493c")}
-  ${stackBox(880, 172, "Decision support", "Responsible-official briefing with findings, gaps, risks, and evidence paths.", "#356a9b")}
-  ${arrow(292, 268, 326, 268)}
-  ${arrow(564, 268, 598, 268)}
-  ${arrow(836, 268, 870, 268)}
+  ${stackBox(64, 172, "Document package", "EA, FONSI, ROD, appendices, and supporting records.", "#171713")}
+  ${stackBox(368, 172, "Current authority graph", "Current regulations, agency procedures, Forest Plans, and project authorities.", "#216a60")}
+  ${stackBox(672, 172, "Consistency review", "Forest Plan plus full profile consistency across applicable laws.", "#7c493c")}
+  ${stackBox(976, 172, "Decision support", "Findings, gaps, risks, and evidence paths for the responsible official.", "#356a9b")}
+  ${arrow(334, 268, 358, 268)}
+  ${arrow(638, 268, 662, 268)}
+  ${arrow(942, 268, 966, 268)}
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
     <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
@@ -550,10 +550,10 @@ function currentAuthorityStackSvg(metrics) {
 
 function stackBox(x, y, title, body, color) {
   return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <rect width="240" height="190" rx="18" fill="#ffffff" stroke="#d8d3c6"/>
-    <rect width="240" height="9" rx="4" fill="${color}"/>
-    <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">${escapeXml(title)}</text>
-    ${wrapSvgText(body, 20, 82, 200, 17, "#4f554e")}
+    <rect width="270" height="190" rx="18" fill="#ffffff" stroke="#d8d3c6"/>
+    <rect width="270" height="9" rx="4" fill="${color}"/>
+    ${wrapSvgText(title, 20, 50, 230, 19, "#171713", 2, "start", "850")}
+    ${wrapSvgText(body, 20, 86, 230, 15, "#4f554e", 5)}
   </g>`;
 }
 
@@ -910,7 +910,7 @@ function scene(title, copy) {
   return `<div class="scene"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(copy)}</span></div>`;
 }
 
-function wrapSvgText(text, x, y, width, fontSize, fill, maxLines = 5, textAnchor = "start") {
+function wrapSvgText(text, x, y, width, fontSize, fill, maxLines = 5, textAnchor = "start", fontWeight = "") {
   const words = text.split(/\s+/);
   const lines = [];
   let current = "";
@@ -930,7 +930,7 @@ function wrapSvgText(text, x, y, width, fontSize, fill, maxLines = 5, textAnchor
     .slice(0, maxLines)
     .map(
       (line, index) =>
-        `<text x="${x}" y="${y + index * (fontSize + 5)}" text-anchor="${textAnchor}" font-family="Inter, Arial, sans-serif" font-size="${fontSize}" fill="${fill}">${escapeXml(line)}</text>`
+        `<text x="${x}" y="${y + index * (fontSize + 5)}" text-anchor="${textAnchor}" font-family="Inter, Arial, sans-serif" font-size="${fontSize}"${fontWeight ? ` font-weight="${fontWeight}"` : ""} fill="${fill}">${escapeXml(line)}</text>`
     )
     .join("");
 }
