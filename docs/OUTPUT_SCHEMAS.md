@@ -2524,6 +2524,13 @@ By default, open expansion slots do not block `promotion_ready`; they are report
 expansion slots and failed expansion artifacts block `promotion_ready` and enter
 `failure_category_counts`.
 
+Selected not-ready expansion slots are validated fail-closed. A selected slot must carry
+`review_id`, `source_set_id`, `package_path`, `expected_gate_artifacts`, `next_action`, and a typed
+`failure_category` other than `package_fixture_missing`; each expected gate artifact must have an
+ID and path. Ready slots must not retain `failure_category`. The Markdown report's expansion-slot
+table includes review ID, package path, and failed categories in addition to status, readiness, and
+next action.
+
 ## Compliance Coverage Outputs
 
 Default path:

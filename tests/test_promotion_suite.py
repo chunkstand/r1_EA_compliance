@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import json
 
+import pytest
+
 from usfs_r1_ea_sources.promotion_suite import PROMOTION_SUITE_SCHEMA_VERSION
 from usfs_r1_ea_sources.promotion_suite import run_promotion_suite
 
@@ -301,6 +303,67 @@ def test_promotion_suite_reports_selected_not_ready_slot_metadata(tmp_path: Path
     assert slot["package_path"] == "source_library/reviews/_intake/selected-review"
     assert slot["source_set_id"] == "source-set-1"
     assert slot["expected_gate_artifacts"][0]["id"] == "package_manifest"
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    assert "selected-review" in markdown
+    assert "source_library/reviews/_intake/selected-review" in markdown
+    assert "applicability_miss" in markdown
+
+
+def test_promotion_suite_rejects_selected_slot_missing_contract_fields(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "selected_not_run",
+        "ready": False,
+        "failure_category": "applicability_miss",
+        "review_id": "selected-review",
+        "package_path": "source_library/reviews/_intake/selected-review",
+        "next_action": "Run package context and applicability gates.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    with pytest.raises(ValueError, match="source_set_id"):
+        run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+
+def test_promotion_suite_rejects_selected_slot_package_fixture_missing(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "selected_not_run",
+        "ready": False,
+        "failure_category": "package_fixture_missing",
+        "review_id": "selected-review",
+        "package_path": "source_library/reviews/_intake/selected-review",
+        "source_set_id": "source-set-1",
+        "expected_gate_artifacts": [
+            {
+                "id": "package_manifest",
+                "path": "reviews/{review_id}/package/package_manifest.jsonl",
+            }
+        ],
+        "next_action": "Run package context and applicability gates.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    with pytest.raises(ValueError, match="typed failure_category"):
+        run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+
+def test_promotion_suite_rejects_ready_slot_with_failure_category(tmp_path: Path) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["expansion_slots"][0]["ready"] = True
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    with pytest.raises(ValueError, match="ready but still has failure_category"):
+        run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
 
 def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_path: Path) -> None:

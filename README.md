@@ -873,6 +873,9 @@ Default runs keep current-promotion failures in `failure_category_counts` and ex
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
 `forest_plan_reviewer_not_ready`, and `package_fixture_missing`.
+Selected not-ready expansion slots must carry review/package/source-set metadata, expected gate
+artifacts, next action, and a typed non-`package_fixture_missing` failure category; ready slots fail
+validation if they retain a failure category.
 
 As of the latest post-V1 real-package expansion pass, the ECID preliminary-EA expansion slot is
 ready locally. `applicability-adjudication-eval`, `applicability-adjudication-apply`,

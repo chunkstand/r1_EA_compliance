@@ -78,6 +78,12 @@ Current-promotion failures are reported in `failure_category_counts`. Expansion-
 reported separately in `expansion_failure_category_counts`; they enter `failure_category_counts`
 only when strict mode is used.
 
+Selected not-ready expansion slots are validated as contracts, not placeholders. A selected slot
+must define review ID, source set, package path, expected gate artifacts, next action, and a typed
+failure category other than `package_fixture_missing`. A ready slot must not retain a failure
+category. The generated Markdown report includes selected-slot review IDs, package paths, and
+failure categories so the typed blocker is visible without inspecting raw JSON.
+
 ## Current Local Result
 
 The latest Sequence 3 promotion-suite pass was run locally on 2026-05-06 after the third
@@ -94,6 +100,8 @@ real-package slot was replaced with a selected South Plateau fixture contract:
 
 Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
 `failure_category_counts={"applicability_miss": 1}`.
+The generated Markdown report now surfaces the South Plateau review ID, declared package path, and
+`applicability_miss` blocker in the expansion-slot table.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority

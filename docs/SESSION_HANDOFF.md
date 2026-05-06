@@ -9,7 +9,12 @@ real-package slot now selects the South Plateau Area Landscape Treatment Project
 `region1-expansion-south-plateau-landscape-treatment`, with official project/document-page metadata,
 the declared local intake path, the `custer_gallatin` forest-plan profile, expected gate artifacts,
 and a typed `applicability_miss` not-ready signal. The old `package_fixture_missing` placeholder is
-gone; the package is selected but not imported or run.
+gone; the package is selected but not imported or run. The Sequence 3 gap-close pass tightened
+promotion-suite validation so a selected not-ready slot must carry review ID, source set, package
+path, expected gate artifacts, next action, and a typed failure category other than
+`package_fixture_missing`; ready slots now fail validation if they retain a failure category.
+Promotion-suite Markdown also exposes selected-slot review ID, package path, and failure category
+instead of hiding them in JSON only.
 
 The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
 for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
@@ -22,6 +27,10 @@ The normal promotion suite now reports `current_promotion_ready=true`, `promotio
 `expansion_artifacts_ready=true`, `expansion_failure_category_counts={"applicability_miss": 1}`,
 `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`. Strict expansion fails as
 expected with `promotion_ready=false` and `failure_category_counts={"applicability_miss": 1}`.
+Sequence 3 gap-close verification passed with `tests/test_promotion_suite.py` plus
+`tests/test_architecture_contract.py` (`16 passed`), `ruff check src tests`, `compileall src`,
+promotion-suite non-strict, expected strict expansion failure, JSON validation, and
+`git diff --check`.
 
 Next sequence: Sequence 4, the South Plateau applicability-first run. Import the official project
 documents into the declared package path, then run package context build, applicability retrieval,

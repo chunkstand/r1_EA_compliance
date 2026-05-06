@@ -522,6 +522,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   blockers. Sequence 3 selected the South Plateau Area Landscape Treatment Project as the third
   real package under review ID `region1-expansion-south-plateau-landscape-treatment`; its remaining
   blocker is an explicit not-run applicability-first package path, not an unknown fixture.
+  Promotion-suite manifest validation now fails selected slots that omit review/package/source-set
+  metadata, expected gate artifacts, next action, or a typed non-`package_fixture_missing` failure
+  category, and fails ready slots that retain a failure category.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`

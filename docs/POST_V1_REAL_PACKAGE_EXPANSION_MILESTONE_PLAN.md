@@ -366,7 +366,10 @@ project/document-page metadata, declares the local package intake path, keeps th
 promoted `custer_gallatin` forest-plan profile, lists the expected package/applicability/generated
 rule/compliance/phase-eval artifacts, and reports a typed `applicability_miss` blocker until the
 package is imported and run. Normal promotion remains current-ready; strict expansion fails only on
-that typed not-run slot.
+that typed not-run slot. The Sequence 3 gap-close pass makes that contract fail-closed: selected
+not-ready slots must keep review ID, package path, source set, expected gate artifacts, next action,
+and a non-`package_fixture_missing` failure category; ready slots cannot retain a failure category;
+and promotion-suite Markdown now displays selected-slot review/package/failure metadata.
 
 Actions:
 
@@ -400,6 +403,10 @@ Latest local result:
   `open_expansion_slot_count=1`.
 - Strict expansion suite: expected command failure with `promotion_ready=false` and
   `failure_category_counts={"applicability_miss": 1}`.
+- Gap-close verification: `tests/test_promotion_suite.py` plus
+  `tests/test_architecture_contract.py` passed with `16` tests; `ruff check src tests`,
+  `compileall src`, JSON validation, `git diff --check`, non-strict promotion suite, and expected
+  strict expansion failure all passed.
 
 ### Sequence 4: Third Package Applicability-First Run
 

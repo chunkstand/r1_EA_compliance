@@ -639,7 +639,70 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
     for result in manifest.get("suite_results", []):
         _validate_result_spec(result)
     for slot in manifest.get("expansion_slots", []):
-        _validate_safe_id(str(slot.get("id") or ""), "expansion slot id")
+        _validate_expansion_slot_spec(slot)
+
+
+def _validate_expansion_slot_spec(slot: dict[str, Any]) -> None:
+    slot_id = str(slot.get("id") or "")
+    _validate_safe_id(slot_id, "expansion slot id")
+    ready = bool(slot.get("ready", False))
+    status = str(slot.get("status") or "open")
+    if ready and slot.get("failure_category"):
+        raise ValueError(
+            f"Promotion suite expansion slot {slot_id!r} is ready but still has "
+            "failure_category."
+        )
+    if ready:
+        return
+    has_selected_contract = status != "open" or any(
+        key in slot
+        for key in (
+            "review_id",
+            "package_path",
+            "source_set_id",
+            "expected_gate_artifacts",
+            "project_metadata",
+            "forest_plan_profile",
+        )
+    )
+    if not has_selected_contract:
+        return
+    if str(slot.get("failure_category") or "") == "package_fixture_missing":
+        raise ValueError(
+            f"Promotion suite selected expansion slot {slot_id!r} must use a typed "
+            "failure_category other than 'package_fixture_missing'."
+        )
+    for key in (
+        "review_id",
+        "package_path",
+        "source_set_id",
+        "failure_category",
+        "next_action",
+    ):
+        if not str(slot.get(key) or "").strip():
+            raise ValueError(
+                f"Promotion suite selected expansion slot {slot_id!r} is missing {key!r}."
+            )
+    _validate_safe_id(str(slot["review_id"]), "expansion slot review id")
+    _validate_safe_id(str(slot["source_set_id"]), "expansion slot source set id")
+    gate_artifacts = slot.get("expected_gate_artifacts")
+    if not isinstance(gate_artifacts, list) or not gate_artifacts:
+        raise ValueError(
+            f"Promotion suite selected expansion slot {slot_id!r} must define "
+            "expected_gate_artifacts."
+        )
+    for artifact in gate_artifacts:
+        if not isinstance(artifact, dict):
+            raise ValueError(
+                f"Promotion suite selected expansion slot {slot_id!r} has an invalid "
+                "expected gate artifact."
+            )
+        _validate_safe_id(str(artifact.get("id") or ""), "expected gate artifact id")
+        if not str(artifact.get("path") or "").strip():
+            raise ValueError(
+                f"Promotion suite selected expansion slot {slot_id!r} has an expected "
+                "gate artifact without a path."
+            )
 
 
 def _validate_result_spec(spec: dict[str, Any]) -> None:
@@ -716,8 +779,8 @@ def _markdown_report(summary: dict[str, Any]) -> str:
             "",
             "## Expansion Slots",
             "",
-            "| Slot | Status | Ready | Next Action |",
-            "| --- | --- | --- | --- |",
+            "| Slot | Status | Ready | Review ID | Package Path | Failed Categories | Next Action |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
         ]
     )
     for slot in summary["expansion_slots"]:
@@ -728,6 +791,9 @@ def _markdown_report(summary: dict[str, Any]) -> str:
                     _md_cell(slot["id"]),
                     _md_cell(slot.get("status")),
                     _md_cell(slot["ready"]),
+                    _md_cell(slot.get("review_id") or ""),
+                    _md_cell(slot.get("package_path") or ""),
+                    _md_cell(", ".join(slot.get("failure_categories") or []) or "None"),
                     _md_cell(slot.get("next_action") or ""),
                 ]
             )
