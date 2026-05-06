@@ -340,23 +340,19 @@ function evidenceTraceServiceGraphSvg(trace, metrics) {
 }
 
 function readinessServiceGraphSvg(readiness, metrics) {
-  const forestPlans = readiness.forestUnits.map((node, index) => {
-    const positions = [
-      [1385, 218],
-      [1580, 285],
-      [1420, 352],
-      [1605, 419],
-      [1390, 486],
-      [1600, 553],
-      [1420, 620],
-      [1588, 687],
-      [1395, 754],
-      [1585, 821]
-    ];
-    const [x, y] = positions[index] || [1500, 220 + index * 72];
-    return `${graphEdge(1180, 570, x - 94, y, "#b9a88c", 4, "")}
-      ${forestPlanNode(x, y, "#7a6e3d", `${shortForestLabel(node.label || node.node_id)} plan`, "forest plan")}`;
-  }).join("");
+  const levelY = 232;
+  const levelWidth = 300;
+  const levelHeight = 660;
+  const levelGap = 22;
+  const federalX = 60;
+  const departmentX = federalX + levelWidth + levelGap;
+  const agencyX = departmentX + levelWidth + levelGap;
+  const regionX = agencyX + levelWidth + levelGap;
+  const forestLayerX = 1378;
+  const forestLayerY = 184;
+  const forestLayerWidth = 360;
+  const forestLayerHeight = 850;
+  const flowY = levelY + levelHeight / 2;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Authority hierarchy graph from federal law to forest plans">
@@ -365,31 +361,33 @@ function readinessServiceGraphSvg(readiness, metrics) {
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Authority profile hierarchy</text>
   ${wrapSvgText("NEPA analysis is built as a hierarchy: federal law and regulation, department procedure, agency policy, regional direction, and forest-plan profiles at the edge of the graph.", 72, 140, 1560, 22, "#555b54", 2)}
 
-  ${hierarchyNode(92, 245, 260, 510, "#356a9b", "Federal", [
-    ["NEPA", "42 U.S.C. chapter 55"],
-    ["Other laws", "ESA, CWA, NHPA, FLPMA"],
-    ["Regulations / orders", "CFR, executive orders, case law"]
+  ${hierarchyLevelNode(federalX, levelY, levelWidth, levelHeight, "#356a9b", "Federal", [
+    "NEPA",
+    "Other laws",
+    "Regulations / orders"
   ])}
-  ${hierarchyNode(392, 308, 250, 384, "#26786f", "Department", [
-    ["USDA NEPA", "7 CFR part 1b"],
-    ["Department procedure", "current authority basis"]
+  ${hierarchyLevelNode(departmentX, levelY, levelWidth, levelHeight, "#26786f", "Department", [
+    "USDA procedures",
+    "Department rules",
+    "Current authority"
   ])}
-  ${hierarchyNode(682, 300, 250, 400, "#7a6e3d", "Agency", [
-    ["Forest Service policy", "NEPA procedures and guidance"],
-    ["Handbooks / manuals", "FSH / FSM source layer"]
+  ${hierarchyLevelNode(agencyX, levelY, levelWidth, levelHeight, "#7a6e3d", "Agency", [
+    "Forest Service policy",
+    "Handbooks / manuals",
+    "Agency guidance"
   ])}
-  ${hierarchyNode(972, 285, 260, 430, "#a75a22", "Region", [
-    ["Region 1 directives", "field supplements"],
-    ["Overlay requirements", "roadless, wilderness, trails"],
-    ["Source/profile gates", "validation before expansion"]
+  ${hierarchyLevelNode(regionX, levelY, levelWidth, levelHeight, "#a75a22", "Region", [
+    "Region 1 directives",
+    "Overlay requirements",
+    "Validation gates"
   ])}
 
-  ${graphEdge(352, 500, 392, 500, "#8a8f84", 7, "")}
-  ${graphEdge(642, 500, 682, 500, "#8a8f84", 7, "")}
-  ${graphEdge(932, 500, 972, 500, "#8a8f84", 7, "")}
-  <text x="1430" y="152" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Forest plans at graph edge</text>
-  ${wrapSvgText(`${readiness.forestUnits.length} tracked Region 1 forest or grassland profiles sit at the edge of the authority graph. Source/profile validation gates control expansion for each profile.`, 1385, 184, 350, 17, "#5f625b", 4)}
-  ${forestPlans}
+  ${graphEdge(federalX + levelWidth, flowY, departmentX, flowY, "#8a8f84", 7, "")}
+  ${graphEdge(departmentX + levelWidth, flowY, agencyX, flowY, "#8a8f84", 7, "")}
+  ${graphEdge(agencyX + levelWidth, flowY, regionX, flowY, "#8a8f84", 7, "")}
+  ${graphEdge(regionX + levelWidth, flowY, forestLayerX, forestLayerY + 425, "#8a8f84", 7, "")}
+
+  ${forestPlanLayer(forestLayerX, forestLayerY, forestLayerWidth, forestLayerHeight, "#5c6f8c", readiness.forestUnits)}
 
   <text x="92" y="1015" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#26786f">Decision risk is checked across the whole authority stack, not only against a single NEPA citation.</text>
   <text x="92" y="1046" font-family="Inter, Arial, sans-serif" font-size="19" fill="#5f625b">Region 1 is the operational proof; new systems expand by adding source/profile coverage and replaying validation gates.</text>
@@ -407,32 +405,49 @@ function serviceGraphDefs() {
   </defs>`;
 }
 
-function hierarchyNode(x, y, width, height, color, title, rows) {
+function hierarchyLevelNode(x, y, width, height, color, title, rows) {
+  const rowHeight = 96;
+  const rowGap = 42;
+  const firstRowY = 150;
   const rowSvg = rows
-    .map(
-      ([label, detail], index) =>
-        `<g transform="translate(24 ${82 + index * 118})">
-          <rect width="${width - 48}" height="90" rx="15" fill="#ffffff" stroke="#d8d3c6"/>
-          <circle cx="28" cy="45" r="13" fill="${color}"/>
-          <text x="54" y="38" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#171713">${escapeXml(label)}</text>
-          ${wrapSvgText(detail, 54, 66, width - 130, 15, "#5f625b", 2)}
-        </g>`
-    )
+    .map((label, index) => hierarchyPill(24, firstRowY + index * (rowHeight + rowGap), width - 48, rowHeight, color, label))
     .join("");
   return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
     <rect width="${width}" height="${height}" rx="24" fill="#fefdf9" stroke="#d8d3c6"/>
-    <rect width="${width}" height="12" rx="6" fill="${color}"/>
-    <text x="24" y="48" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="#171713">${escapeXml(title)}</text>
+    <rect width="${width}" height="14" rx="7" fill="${color}"/>
+    <text x="24" y="66" font-family="Inter, Arial, sans-serif" font-size="37" font-weight="900" fill="#171713">${escapeXml(title)}</text>
     ${rowSvg}
   </g>`;
 }
 
-function forestPlanNode(x, y, color, label, status) {
+function hierarchyPill(x, y, width, height, color, label) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${width}" height="${height}" rx="16" fill="#ffffff" stroke="#d8d3c6"/>
+    <circle cx="27" cy="${height / 2}" r="10" fill="${color}"/>
+    ${wrapSvgText(label, 49, 41, width - 62, 26, "#171713", 2)}
+  </g>`;
+}
+
+function forestPlanLayer(x, y, width, height, color, forestUnits) {
+  const nodes = forestUnits
+    .map((node, index) =>
+      forestPlanNode(26, 112 + index * 70, width - 52, color, shortForestLabel(node.label || node.node_id))
+    )
+    .join("");
   return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
-    <rect x="-94" y="-33" width="188" height="66" rx="17" fill="#ffffff" stroke="${color}" stroke-width="4"/>
-    <circle cx="-70" cy="0" r="10" fill="${color}"/>
-    ${wrapSvgText(compactSvgLabel(label, 36), -48, -7, 118, 13, "#171713", 2)}
-    <text x="-48" y="23" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="${color}">${escapeXml(status)}</text>
+    <rect width="${width}" height="${height}" rx="26" fill="#fefdf9" stroke="#d8d3c6"/>
+    <rect width="${width}" height="14" rx="7" fill="${color}"/>
+    <text x="26" y="54" font-family="Inter, Arial, sans-serif" font-size="33" font-weight="900" fill="#171713">Forest</text>
+    <text x="26" y="84" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#5f625b">${escapeXml(forestUnits.length)} Region 1 forest-plan profiles</text>
+    ${nodes}
+  </g>`;
+}
+
+function forestPlanNode(x, y, width, color, label) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${width}" height="62" rx="15" fill="#ffffff" stroke="${color}" stroke-width="3"/>
+    <circle cx="24" cy="31" r="9" fill="${color}"/>
+    ${wrapSvgText(compactSvgLabel(label, 48), 44, 30, width - 60, 21, "#171713", 2)}
   </g>`;
 }
 
