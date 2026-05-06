@@ -224,6 +224,12 @@ Next implementation target:
 The evidence-arbitration milestone plan is complete through Milestone 5. There are now two explicit
 next-target lanes:
 
+- `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
+  East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
+  decision-support document. This lane must generate a report from audited review artifacts,
+  not from root-level manual draft prose, and must preserve the applicable/non-applicable authority
+  boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
+  and implementation confirmation checklist.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
@@ -292,6 +298,9 @@ Current stop conditions for the next session:
 - Do not promote compliance-review eval outputs without applicability decision-quality evals.
 - Do not let unresolved or `needs_adjudication` decisions become reviewer-ready by default.
 - Do not let `compliance-review` override applicability decisions.
+- Do not call the raw generated matrix or root-level manual review exports a Forest
+  Supervisor-ready EA consistency decision-support document until the new decision-support report
+  contract, generator, validation gate, and East Crazies proving output are implemented.
 - Do not stage generated `source_library/` artifacts unless repository policy changes explicitly.
 
 ## Historical V1 Gate State
