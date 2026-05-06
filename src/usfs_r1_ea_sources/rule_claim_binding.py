@@ -1296,12 +1296,17 @@ def _claim_search_text(claim: dict) -> str:
 
 
 def _claim_matches_rule_filters(claim: dict, filters: dict) -> bool:
+    source_record_filter = filters.get("source_record_id")
     for key in ("document_role", "authority_level", "source_record_id"):
         value = filters.get(key)
         if value and str(claim.get(key) or "").lower() != str(value).lower():
             return False
     review_topic = filters.get("review_topic") or filters.get("topic")
-    if review_topic and not _topic_matches(str(review_topic), claim.get("review_topics", [])):
+    if (
+        review_topic
+        and not source_record_filter
+        and not _topic_matches(str(review_topic), claim.get("review_topics", []))
+    ):
         return False
     citation = filters.get("citation")
     if citation and not _citation_matches(str(citation), claim):
@@ -1313,8 +1318,22 @@ def _claim_matches_rule_filters(claim: dict, filters: dict) -> bool:
 
 
 def _topic_matches(filter_value: str, topics: list[str]) -> bool:
-    needle = filter_value.lower()
-    return any(needle == str(topic).lower() or needle in str(topic).lower() for topic in topics)
+    needle = _normalized_topic_text(filter_value)
+    if not needle:
+        return False
+    needle_tokens = set(_tokenize(needle))
+    for topic in topics:
+        topic_text = _normalized_topic_text(str(topic))
+        if needle == topic_text or needle in topic_text:
+            return True
+        topic_tokens = set(_tokenize(topic_text))
+        if needle_tokens and len(needle_tokens & topic_tokens) >= min(2, len(needle_tokens)):
+            return True
+    return False
+
+
+def _normalized_topic_text(value: str) -> str:
+    return " ".join(_tokenize(value.replace("_", " ").replace("-", " ")))
 
 
 def _citation_matches(filter_value: str, claim: dict) -> bool:

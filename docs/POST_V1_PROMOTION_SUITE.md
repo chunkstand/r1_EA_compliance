@@ -72,9 +72,9 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The latest Sequence 2 promotion-suite pass was run locally on 2026-05-06 after ECID
-generated-rule-pack, compliance-review, review-scoped phase-eval, promotion-manifest artifact
-checks, and expert-panel source-traceability alignment checks were added:
+The latest Sequence 2A promotion-suite pass was run locally on 2026-05-06 after ECID
+source-claim gap closure, compliance-review, review-scoped phase-eval, promotion-manifest artifact
+checks, and expert-panel source-traceability alignment checks were updated:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
@@ -82,13 +82,12 @@ checks, and expert-panel source-traceability alignment checks were added:
 - `expansion_artifacts_ready=false`
 - `failure_category_counts={}`
 - `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
-  "missing_source": 1, "package_fixture_missing": 1}`
+  "package_fixture_missing": 1}`
 - `open_expansion_artifact_count=4`
 - `open_expansion_slot_count=2`
 
 Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
-`failure_category_counts={"forest_plan_reviewer_not_ready": 5, "missing_source": 1,
-"package_fixture_missing": 1}`.
+`failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -109,11 +108,12 @@ authorities, `346` non-applicable authorities, `0` unresolved, `0` `needs_adjudi
 `generated_rule_pack_ready=true`, and `reviewer_ready=true`. Sequence 2 generated and validated the
 ECID rule pack with `46` rules, wrote the compliance review/matrix/PDF artifacts, wrote
 review-scoped phase eval at `source_library/reviews/region1-expansion-ecid-preliminary-ea/`, and
-added ECID artifact checks to the promotion suite. The slot remains `ready=false` because the ECID
-compliance artifact has `17` rule-claim gaps and the Forest Plan component gate is not
-reviewer-ready: `29` applicable standards were identified, `7` were applied, and the generated
-component adjudication worklist has `158` pending missing-package-evidence rows. The second
-real-package slot remains open with `package_fixture_missing`.
+added ECID artifact checks to the promotion suite. Sequence 2A closed the ECID source-claim gap:
+the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_count=211`. The slot
+remains `ready=false` because the Forest Plan component gate is not reviewer-ready: `29`
+applicable standards were identified, `7` were applied, and the generated component adjudication
+worklist has `158` pending missing-package-evidence rows. The second real-package slot remains
+open with `package_fixture_missing`.
 
 Resolution plan:
 

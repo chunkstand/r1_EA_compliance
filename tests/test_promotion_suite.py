@@ -165,7 +165,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
 
-    assert slot["status"] == "blocked_source_claim_and_forest_plan_component_adjudication"
+    assert slot["status"] == "blocked_forest_plan_component_adjudication"
     assert slot["ready"] is False
     assert slot["failure_category"] == "forest_plan_reviewer_not_ready"
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
@@ -179,8 +179,8 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert slot["last_local_signal"]["applicability_validation_passed"] is True
     assert slot["last_local_signal"]["generated_rule_pack_ready"] is True
     assert slot["last_local_signal"]["compliance_review_reviewer_ready"] is False
-    assert slot["last_local_signal"]["rule_claim_link_count"] == 127
-    assert slot["last_local_signal"]["rule_claim_gap_count"] == 17
+    assert slot["last_local_signal"]["rule_claim_link_count"] == 211
+    assert slot["last_local_signal"]["rule_claim_gap_count"] == 0
     assert slot["last_local_signal"]["forest_plan_component_reviewer_resolution_count"] == 158
 
 

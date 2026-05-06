@@ -1,8 +1,8 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0 and 1 complete; Sequence 2 artifact pass exposed ECID
-source-claim and forest-plan component blockers
+Status: in progress; Sequences 0, 1, and 2A complete; Sequence 2B Forest Plan component
+adjudication is the active ECID blocker
 
 ## Weakness
 
@@ -17,9 +17,10 @@ and validated the ECID rule pack, ran compliance review and review-scoped phase 
 forest-plan component adjudication worklist, and added promotion-suite expansion artifact checks.
 That pass removed the ECID `adjudication_needed` blocker but correctly did not mark the slot ready.
 The follow-up expert-panel alignment review found one manifest gap: the ECID compliance artifact
-recorded `17` rule-claim gaps, but the promotion suite accepted that count as expected. Those gaps
-now block expansion as `missing_source` until every applicable generated rule has cited
-source-claim support. ECID compliance review also fails reviewer readiness on
+recorded `17` rule-claim gaps, but the promotion suite accepted that count as expected. Sequence 2A
+closed that source-claim gap by fixing rule-claim topic matching for generated authority-family
+topic slugs. ECID now reports `rule_claim_gap_count=0`, `rule_claim_link_count=211`, and no
+`missing_source` promotion-suite blocker. ECID compliance review still fails reviewer readiness on
 `forest_plan_component_gate_reviewer_ready` because `29` applicable Forest Plan standards were
 identified, only `7` were applied, and the component worklist contains `158`
 missing-package-evidence rows. The third real-package expansion slot still remains
@@ -188,12 +189,12 @@ Purpose: convert the adjudicated ECID preliminary-EA applicability run into a ge
 compliance review, phase-eval pass, and promotion-suite expansion signal.
 
 Status:
-Artifact pass complete as of 2026-05-06, but reviewer-ready acceptance is blocked by source-claim
-gap closure and Forest Plan component adjudication. The ECID applicability-derived rule pack
-validates with `46` generated rules. Compliance review wrote the expected ECID review artifacts but
-reported `rule_claim_gap_count=17`, `reviewer_ready=false`, and `validation_passed=false` because
-source-claim support is incomplete and `forest_plan_component_gate_reviewer_ready` failed.
-Review-scoped phase eval wrote
+Artifact pass complete as of 2026-05-06, but reviewer-ready acceptance is blocked by Forest Plan
+component adjudication. The ECID applicability-derived rule pack validates with `46` generated
+rules. Sequence 2A closed the earlier source-claim gap, so compliance review now reports
+`rule_claim_gap_count=0` and `rule_claim_link_count=211`. Compliance review still reports
+`reviewer_ready=false` and `validation_passed=false` because
+`forest_plan_component_gate_reviewer_ready` failed. Review-scoped phase eval wrote
 `source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json` and failed
 only the `compliance_review` phase, with `14/15` phases passing. The generated Forest Plan
 component adjudication worklist has `158` pending rows.
@@ -247,24 +248,30 @@ Acceptance:
 Sequence 2 latest local result:
 
 - Generated rule-pack validation: passed, `generated_rule_count=46`.
-- Compliance review: wrote all expected artifacts, but reports `rule_claim_gap_count=17` and fails
-  reviewer readiness because `forest_plan_component_gate_reviewer_ready` failed. Authority
-  applicability, generated-pack, source-set, matrix, PDF, non-applicable authority,
-  authority-resolution, litigation-risk, and finding-graph checks were present.
+- Compliance review: wrote all expected artifacts, reports `rule_claim_gap_count=0` and
+  `rule_claim_link_count=211`, and fails reviewer readiness because
+  `forest_plan_component_gate_reviewer_ready` failed. Authority applicability, generated-pack,
+  source-set, matrix, PDF, non-applicable authority, authority-resolution, litigation-risk, and
+  finding-graph checks were present.
 - Phase eval: failed with `14/15` phases passing; blockers were
   `compliance_review/phase_validation_failed` and `compliance_review/phase_not_reviewer_ready`.
 - Promotion suite non-strict: `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
   and `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
-  "missing_source": 1, "package_fixture_missing": 1}`.
-- Promotion suite strict expansion: expected failure with `promotion_ready=false` and
-  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "missing_source": 1,
   "package_fixture_missing": 1}`.
+- Promotion suite strict expansion: expected failure with `promotion_ready=false` and
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
 
 ### Sequence 2A: ECID Source-Claim Gap Closure
 
 Purpose: close the ECID rule-claim evidence blocker exposed by Sequence 2 before treating the
 expansion package as reviewer-ready.
+
+Status:
+Complete as of 2026-05-06. Rule-claim topic matching now treats generated authority-family topic
+slugs as compatible with exact source-record matches, so catalog human-label topic text no longer
+creates false `explicit_no_claim_gap` records. ECID generated rule-claim binding now links all `46`
+generated rules with `211` rule-claim links and `0` gaps.
 
 Actions:
 
@@ -282,6 +289,20 @@ Acceptance:
 - The promotion suite has no ECID `missing_source` expansion artifact blocker.
 - Any remaining ECID blocker is limited to typed Forest Plan component adjudication evidence, not
   missing source-claim support for applicable generated rules.
+
+Sequence 2A latest local result:
+
+- `rule-claim-link` for the ECID generated rule pack: passed with `linked_rule_count=46`,
+  `link_count=211`, `gap_count=0`, and `reviewer_ready=true`.
+- ECID `compliance-review`: expected command failure remains, but the summary reports
+  `rule_claim_gap_count=0`; the only failed validation check is
+  `forest_plan_component_gate_reviewer_ready`.
+- ECID review-scoped `phase-eval`: expected command failure remains with `14/15` phases passing;
+  the `rule_claim_binding` phase is reviewer-ready with `gap_count=0`.
+- Promotion suite non-strict: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
+  "package_fixture_missing": 1}`.
 
 ### Sequence 2B: ECID Forest Plan Component Adjudication
 

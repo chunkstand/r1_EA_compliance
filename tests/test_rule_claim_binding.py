@@ -67,6 +67,51 @@ class RuleClaimBindingTests(unittest.TestCase):
                 _check(validation, "all_rules_have_claim_link_or_explicit_gap")["passed"]
             )
 
+    def test_rule_claim_link_allows_topic_slug_when_source_record_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-082",
+                        title="Clean Water Act, 33 U.S.C. chapter 26",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="R1EA-082 | Clean Water Act | artifact abc123",
+                        text=(
+                            "The Administrator shall require permits for discharges into "
+                            "waters of the United States."
+                        ),
+                    )
+                ],
+                topics_by_source={
+                    "R1EA-082": [
+                        "Check 401/402/404 applicability, standards, permits, BMPs, "
+                        "and state/Tribal certifications"
+                    ]
+                },
+            )
+            build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            rule_pack_path = _write_topic_slug_rule_pack(Path(tmp))
+
+            result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["gap_count"], 0)
+            self.assertEqual(result.summary["linked_rule_count"], 1)
+            links = _read_jsonl(result.links_path)
+            self.assertEqual(links[0]["rule_id"], "clean_water_act_wotus_permits")
+            self.assertEqual(links[0]["source_record_id"], "R1EA-082")
+            self.assertEqual(links[0]["rule_source_filters"]["topic"], "clean_water_act_wotus_permits")
+
     def test_rule_claim_eval_scores_expected_rule_claim_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -309,7 +354,13 @@ class RuleClaimBindingTests(unittest.TestCase):
             self.assertFalse(_check(validation, "rule_claim_gap_records_are_explicit")["passed"])
 
 
-def _prepare_source_library(output_dir: Path, source_set_id: str, chunks: list[dict]) -> None:
+def _prepare_source_library(
+    output_dir: Path,
+    source_set_id: str,
+    chunks: list[dict],
+    *,
+    topics_by_source: dict[str, list[str]] | None = None,
+) -> None:
     _write_catalog_validation(output_dir, passed=True)
     _write_extraction_diagnostics(
         output_dir,
@@ -319,7 +370,8 @@ def _prepare_source_library(output_dir: Path, source_set_id: str, chunks: list[d
     _write_chunks(output_dir, source_set_id, chunks)
     _write_catalog_sqlite(
         output_dir,
-        {
+        topics_by_source
+        or {
             source_record_id: [f"Topic {source_record_id}"]
             for source_record_id in sorted({chunk["source_record_id"] for chunk in chunks})
         },
@@ -481,6 +533,44 @@ def _write_rule_pack(directory: Path, rule_ids: list[str] | None = None) -> Path
     if rule_ids is not None:
         rule_pack["rules"] = [rule for rule in rule_pack["rules"] if rule["id"] in set(rule_ids)]
     path = directory / "rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_topic_slug_rule_pack(directory: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-nepa-ea",
+        "version": "0.1.0",
+        "title": "Unit NEPA EA Rule Pack",
+        "description": "Unit test rule pack.",
+        "rules": [
+            {
+                "id": "clean_water_act_wotus_permits",
+                "title": "Clean Water Act permit authority is addressed",
+                "question": "Does the EA package address CWA permit authority?",
+                "requirement": (
+                    "Reviewers should evaluate Clean Water Act permit authority using "
+                    "cited source-library evidence."
+                ),
+                "authority_category": "law",
+                "authority_source_record_id": "R1EA-082",
+                "authority_document_role": "law",
+                "applicability_mode": "baseline",
+                "package_query": "waters permits discharge",
+                "package_terms": ["waters", "permits"],
+                "source_query": "Clean Water Act waters United States permits",
+                "source_filters": {
+                    "source_record_id": "R1EA-082",
+                    "document_role": "law",
+                    "authority_level": "federal",
+                    "topic": "clean_water_act_wotus_permits",
+                },
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "topic-rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
 
