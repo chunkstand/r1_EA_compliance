@@ -426,6 +426,38 @@ constrained decision-support wording plus evidence selectors; residual-risk rows
 artifact and selector pointers. The wording continues to state that the report supports review and
 does not replace responsible official, line officer, counsel, or specialist judgment.
 
+## Post-Sequence Gap Close: Rendering Gate And Panel Alignment
+
+Status:
+Complete.
+
+Gap closed:
+Sequence 5 made the Markdown/PDF supervisor-readable, but the validation gate still treated
+rendered outputs mostly as existence/header artifacts. That left the expert-panel report-quality
+guidance partially enforced by fixture tests and documentation rather than by the live readiness
+gate.
+
+Implementation:
+
+- `ea-consistency-document --validate-only` now checks the Markdown supervisor rendering contract:
+  use note, decision-use caveat, review snapshot, bottom-line status, authority categories/counts,
+  Forest Plan basis, applicable-standard count, non-applicable boundary, implementation
+  confirmations, residual-risk summary, long evidence tables, source pointers, validation section,
+  and section order.
+- The same validator now checks the PDF rendering contract for the front matter, review snapshot,
+  table summaries, key counts, and required supervisor-facing sections while still requiring the
+  `%PDF-` header.
+- Missing required rendering content fails as `false_negative_synthesis_omission`, preserving the
+  Sequence 1 report-quality eval categories instead of adding prose-only review instructions.
+- Regression tests tamper otherwise-valid generated Markdown/PDF outputs and prove validation fails
+  with source selectors for the missing rendering contract.
+
+Alignment result:
+This closes the gap against the plan's supervisor-readability acceptance criteria and the
+thought-leader review's recommendation to add report-quality evals for omissions, overclaiming,
+source traceability, non-applicable boundary preservation, Forest Plan standard coverage, PDF
+validity, and manifest freshness.
+
 ## Final Definition Of Done
 
 The milestone is complete. The closeout state satisfies:
@@ -434,7 +466,8 @@ The milestone is complete. The closeout state satisfies:
   current audited review artifacts;
 - the generated JSON, Markdown, and PDF report family exists locally under the review directory;
 - validation proves report freshness, section completeness, authority counts, Forest Plan counts,
-  applicable-standard coverage, non-applicable authority coverage, and PDF validity;
+  applicable-standard coverage, non-applicable authority coverage, PDF validity, and required
+  supervisor-facing Markdown/PDF rendering content;
 - `phase-eval --review-id v1-cg-ecid-compliance-review` includes or accepts the
   decision-support-report phase;
 - `promotion-suite` can report decision-support readiness separately from broader Region 1

@@ -445,6 +445,65 @@ def test_sequence_4_validation_gate_fails_on_invalid_pdf(
     assert "invalid_report_pdf_header" in validation.summary["failure_categories"]
 
 
+def test_gap_close_validation_gate_fails_on_missing_markdown_supervisor_context(
+    tmp_path: Path,
+) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    result = run_ea_consistency_decision_support(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+    markdown = result.markdown_path.read_text(encoding="utf-8").replace(
+        "## Review Snapshot",
+        "## Review Context",
+    )
+    result.markdown_path.write_text(markdown, encoding="utf-8")
+
+    validation = validate_ea_consistency_decision_support_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+
+    assert validation.summary["passed"] is False
+    assert "false_negative_synthesis_omission" in validation.summary["failure_categories"]
+    assert _failed_check(
+        validation.summary,
+        "markdown_supervisor_rendering_contract",
+    )["source_selector"] == "decision_support_markdown.supervisor_rendering_contract"
+
+
+def test_gap_close_validation_gate_fails_on_missing_pdf_supervisor_context(
+    tmp_path: Path,
+) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    result = run_ea_consistency_decision_support(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+    pdf = result.pdf_path.read_bytes().replace(b"Review Snapshot", b"Review Context ")
+    result.pdf_path.write_bytes(pdf)
+
+    validation = validate_ea_consistency_decision_support_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+
+    assert validation.summary["passed"] is False
+    assert "false_negative_synthesis_omission" in validation.summary["failure_categories"]
+    assert _failed_check(
+        validation.summary,
+        "pdf_supervisor_rendering_contract",
+    )["source_selector"] == "decision_support_pdf.supervisor_rendering_contract"
+
+
 def test_sequence_4_phase_eval_includes_decision_support_report_phase(
     tmp_path: Path,
 ) -> None:
@@ -529,6 +588,13 @@ def _phase(summary: dict, phase_name: str) -> dict:
         if phase["name"] == phase_name:
             return phase
     raise AssertionError(f"Missing phase {phase_name}")
+
+
+def _failed_check(summary: dict, check_name: str) -> dict:
+    for check in summary["failures"]:
+        if check["name"] == check_name:
+            return check
+    raise AssertionError(f"Missing failed check {check_name}")
 
 
 def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:

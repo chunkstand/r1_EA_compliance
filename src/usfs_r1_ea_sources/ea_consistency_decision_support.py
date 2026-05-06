@@ -1645,6 +1645,13 @@ def _validate_report_artifact_family(
         config=config,
         expected=expected,
     )
+    _validate_report_renderings(
+        checks=checks,
+        failures=failures,
+        report=report,
+        markdown_artifact=report_artifacts["markdown"],
+        pdf_artifact=report_artifacts["pdf"],
+    )
 
     failure_categories = sorted(
         {
@@ -2000,6 +2007,171 @@ def _validate_report_content_boundaries(
         if "East_Crazies_" in json.dumps(report, sort_keys=True)
         else "clean",
     )
+
+
+def _validate_report_renderings(
+    *,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    report: dict[str, Any],
+    markdown_artifact: _LoadedArtifact,
+    pdf_artifact: _LoadedArtifact,
+) -> None:
+    markdown = str(markdown_artifact.payload or "")
+    pdf_text = _pdf_rendering_text(pdf_artifact.path) if pdf_artifact.exists else ""
+    markdown_missing = _missing_markdown_rendering_items(report, markdown)
+    _record_check(
+        checks,
+        failures,
+        name="markdown_supervisor_rendering_contract",
+        passed=not markdown_missing,
+        failure_category="false_negative_synthesis_omission",
+        source_selector="decision_support_markdown.supervisor_rendering_contract",
+        expected="front matter, snapshot, summaries, caveat, counts, and evidence tables",
+        actual=markdown_missing,
+    )
+    markdown_order_failures = _rendering_order_failures(
+        markdown,
+        [
+            "## How To Use This Document",
+            "## Review Snapshot",
+            "## Applicable Authority Summary",
+            "## Authority Findings",
+            "## Forest Plan Consistency",
+            "## Applicable Forest Plan Standards",
+            "## Non-Applicable Authority Boundary",
+            "## Implementation Confirmation Checklist",
+            "## Residual Risk Register",
+            "## Validation and Replay",
+        ],
+    )
+    _record_check(
+        checks,
+        failures,
+        name="markdown_supervisor_sections_are_ordered",
+        passed=not markdown_order_failures,
+        failure_category="false_negative_synthesis_omission",
+        source_selector="decision_support_markdown.section_order",
+        expected="supervisor summary precedes long evidence tables",
+        actual=markdown_order_failures,
+    )
+    pdf_missing = _missing_pdf_rendering_items(report, pdf_text)
+    _record_check(
+        checks,
+        failures,
+        name="pdf_supervisor_rendering_contract",
+        passed=not pdf_missing,
+        failure_category="false_negative_synthesis_omission",
+        source_selector="decision_support_pdf.supervisor_rendering_contract",
+        expected="front matter, snapshot, table summaries, caveat, counts, and report sections",
+        actual=pdf_missing,
+    )
+
+
+def _missing_markdown_rendering_items(report: dict[str, Any], markdown: str) -> list[str]:
+    forest = _dict(report.get("forest_plan_consistency"))
+    authority_summary = _dict(report.get("applicable_authority_summary"))
+    non_applicable = _dict(report.get("non_applicable_authority_boundary"))
+    required_fragments = {
+        "how_to_use_heading": "## How To Use This Document",
+        "decision_use_caveat": "does not replace responsible official, line officer, counsel",
+        "review_snapshot_heading": "## Review Snapshot",
+        "bottom_line": "Bottom-line determination:",
+        "authority_categories": "Authority categories:",
+        "authority_count": (
+            f"applicable authority findings: "
+            f"{authority_summary.get('applicable_authority_count')}"
+        ),
+        "forest_plan_basis": (
+            f"Forest Plan basis: {forest.get('plan_consistency_table_package_record_id')} "
+            "Plan Consistency Table"
+        ),
+        "applicable_standard_count": (
+            f"Applicable standards: {forest.get('applied_standard_count')} of "
+            f"{forest.get('applicable_standard_count')} applicable Forest Plan standards"
+        ),
+        "non_applicable_boundary": (
+            f"Non-applicable boundary: "
+            f"{non_applicable.get('non_applicable_authority_count')} authorities"
+        ),
+        "implementation_confirmations": (
+            f"Implementation confirmations: "
+            f"{len(_dict_list(report.get('implementation_confirmation_checklist')))} "
+            "evidence-linked checklist rows"
+        ),
+        "residual_risks": (
+            f"Residual risks: {len(_dict_list(report.get('residual_risk_register')))} "
+            "deterministic decision-support notes"
+        ),
+        "authority_table": (
+            "| Rule | Category | Status | EA evidence | Source evidence | "
+            "Implementation confirmations |"
+        ),
+        "standard_table": "| Standard | Compliance | Package evidence | Forest Plan evidence |",
+        "confirmation_table": (
+            "| Confirmation | Status | Decision-support wording | Evidence selectors |"
+        ),
+        "risk_source_pointer": "Source: `",
+        "validation_heading": "## Validation and Replay",
+    }
+    return [
+        key
+        for key, fragment in required_fragments.items()
+        if fragment not in markdown
+    ]
+
+
+def _missing_pdf_rendering_items(report: dict[str, Any], pdf_text: str) -> list[str]:
+    forest = _dict(report.get("forest_plan_consistency"))
+    non_applicable = _dict(report.get("non_applicable_authority_boundary"))
+    required_fragments = {
+        "title": "EA Consistency Decision Support",
+        "bottom_line": "Bottom-line determination:",
+        "decision_use_caveat": "does not replace responsible official",
+        "how_to_use": "How To Use This Document",
+        "review_snapshot": "Review Snapshot",
+        "table_summaries": "Table Summaries",
+        "authority_findings": "Applicable Authority Findings",
+        "forest_plan_standards": "Applicable Forest Plan Standards",
+        "non_applicable_boundary": "Non-Applicable Authority Boundary",
+        "implementation_confirmations": "Implementation Confirmations",
+        "residual_risks": "Residual Risks",
+        "applicable_standard_count": (
+            f"{forest.get('applied_standard_count')} of "
+            f"{forest.get('applicable_standard_count')} applicable standards"
+        ),
+        "non_applicable_count": (
+            f"{non_applicable.get('non_applicable_authority_count')} authorities"
+        ),
+    }
+    return [
+        key
+        for key, fragment in required_fragments.items()
+        if fragment not in pdf_text
+    ]
+
+
+def _rendering_order_failures(text: str, ordered_fragments: list[str]) -> list[str]:
+    failures = []
+    previous_index = -1
+    previous_fragment = ""
+    for fragment in ordered_fragments:
+        current_index = text.find(fragment)
+        if current_index == -1:
+            failures.append(f"missing:{fragment}")
+        elif current_index < previous_index:
+            failures.append(f"out_of_order:{previous_fragment}>{fragment}")
+        else:
+            previous_index = current_index
+            previous_fragment = fragment
+    return failures
+
+
+def _pdf_rendering_text(path: Path) -> str:
+    try:
+        return path.read_bytes().decode("latin-1", errors="ignore")
+    except OSError:
+        return ""
 
 
 def _current_input_hashes(context: _DecisionSupportContext) -> dict[str, str]:

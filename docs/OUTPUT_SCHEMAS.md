@@ -2219,7 +2219,10 @@ validation status, and concise table summaries before long evidence sections. Th
 that the document supports review and does not replace responsible official, line officer, counsel,
 or specialist judgment. Implementation-confirmation tables must preserve constrained
 decision-support wording plus evidence selectors, and residual-risk rows must preserve source
-artifact and selector pointers.
+artifact and selector pointers. Validation fails closed with
+`false_negative_synthesis_omission` when otherwise-current Markdown or PDF renderings omit the
+required supervisor-review front matter, section order, table summaries, counts, or source-pointer
+content.
 
 The schema keeps four statuses separate:
 

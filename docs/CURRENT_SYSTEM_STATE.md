@@ -409,9 +409,13 @@ validation status, and concise table summaries before long evidence sections. Th
 replayed `phase-eval --review-id v1-cg-ecid-compliance-review`, which includes
 `decision_support_report` and passed `17/17` phases with `reviewer_ready=true`; `promotion-suite`
 also reports the decision-support JSON, manifest, and PDF as required current-promotion artifacts.
-Generated `source_library/` outputs remain ignored and are not staged. The EA consistency
-decision-support milestone has no remaining planned sequence; future work should be a new milestone
-or a targeted copy-review pass.
+The post-sequence gap-close pass also makes validation fail closed when otherwise-current Markdown
+or PDF outputs omit the supervisor-review front matter, review snapshot, table summaries, key
+counts, required sections, or source-pointer content; those failures use
+`false_negative_synthesis_omission` with explicit rendering source selectors. Generated
+`source_library/` outputs remain ignored and are not staged. The EA consistency decision-support
+milestone has no remaining planned sequence; future work should be a new milestone or a targeted
+copy-review pass.
 
 ## Verified State Snapshot
 

@@ -247,6 +247,33 @@ The generated decision-support report should fail closed unless all of these hol
 - The PDF exists and begins with `%PDF-`.
 - The report manifest contains enough lineage for an independent reviewer to replay the generation.
 
+## Post-Implementation Alignment Check
+
+The EA consistency decision-support lane now aligns with the panel guidance through the completed
+Sequence 0 through Sequence 5 work and the post-sequence rendering-gate closeout:
+
+- The report generator is deterministic and reads audited review artifacts, not manual root-level
+  East Crazies draft exports.
+- The canonical JSON remains the machine contract; Markdown and PDF are renderings from that JSON.
+- The architecture contract owns the `decision_support` layer, command group, and generated report
+  family.
+- The manifest records input hashes, per-section dependencies, validation status, and replayable
+  lineage.
+- Row-level trace IDs, source selectors, citation labels, artifact hashes, and evidence spans are
+  present for reviewer-facing report rows.
+- Validation and phase eval fail closed on stale hashes, missing sections, missing evidence,
+  non-applicable boundary omissions, missing applicable standards, unresolved implementation
+  confirmations, residual-risk legal conclusions, missing/invalid PDF, and manual-draft
+  dependencies.
+- The post-sequence gap-close pass adds live Markdown/PDF supervisor rendering checks for front
+  matter, review snapshot, table summaries, key counts, section ordering, and source-pointer
+  content. Missing rendering content fails as `false_negative_synthesis_omission`.
+
+Residual scope:
+The panel's "after the report lane is stable, run a hotspot-driven split" recommendation remains a
+separate future milestone. It should not be folded into the completed decision-support sequence
+because it targets broader module design, not report readiness.
+
 ## Stop Conditions
 
 Stop the build and write a follow-up milestone if any of these occur:

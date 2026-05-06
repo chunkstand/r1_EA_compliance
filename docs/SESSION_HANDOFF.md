@@ -349,6 +349,12 @@ next-target lanes:
     and selector pointers; and the caveat states the document supports review but does not replace
     responsible official, line officer, counsel, or specialist judgment. The generated
     `source_library/` report family remains ignored and should not be staged unless policy changes.
+  - Post-sequence gap close is complete: validation now checks the Markdown/PDF supervisor rendering
+    contract directly. Missing front matter, review snapshot, table summaries, key counts, required
+    sections, source pointers, or Markdown section ordering fails as
+    `false_negative_synthesis_omission` with `decision_support_markdown.*` or
+    `decision_support_pdf.*` source selectors. This closes the gap against the
+    thought-leader review's report-quality eval guidance without adding a new sequence.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
