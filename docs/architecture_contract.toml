@@ -142,6 +142,7 @@ modules = [
   "compliance_inputs",
   "compliance_outputs",
   "compliance_review",
+  "compliance_validation",
 ]
 allowed_import_layers = [
   "foundation",

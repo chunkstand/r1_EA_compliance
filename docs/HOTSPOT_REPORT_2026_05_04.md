@@ -204,3 +204,39 @@ Sequence 2 target:
 Extract compliance validation/report assembly helpers only after Sequence 1 verification is green.
 Keep the same boundary rule: one ownership slice, no output schema change, and no downstream
 compliance-review execution unless explicitly requested.
+
+## 2026-05-06 Sequence 2 Compliance Validation Split
+
+Sequence 2 creates `src/usfs_r1_ea_sources/compliance_validation.py` and moves compliance validation
+and review-summary assembly helpers out of `compliance_review.py`. The split owns validation
+constants, compliance validation report checks, reviewer-ready summary assembly, forest-plan summary
+projection for compliance outputs, validation check-name helpers, and finding-graph ID helpers used
+by validation and report assembly.
+
+Current post-split source line counts:
+
+| Surface | Lines | Sequence 2 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 2,329 | Review orchestration, finding construction, graph construction, authority integration, eval, and file writes remain. |
+| `src/usfs_r1_ea_sources/compliance_validation.py` | 762 | New narrow owner for compliance validation checks and review-summary assembly. |
+| `src/usfs_r1_ea_sources/compliance_inputs.py` | 561 | Sequence 1 input/gate owner remains unchanged. |
+
+Sequence 2 preserves the existing generated artifact contracts: no compliance finding construction,
+status decision, generated rule-pack semantic, matrix/PDF output, finding graph output, eval scoring,
+CLI flag, or schema behavior is intentionally changed.
+
+Sequence 2 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Sequence 3 target:
+
+Extract authority-integration artifact assembly for authority provenance, non-applicable appendix,
+reviewer-resolution report, and deterministic litigation-risk summary. Keep the same boundary rule:
+one ownership slice, no output schema change, and no downstream compliance-review execution unless
+explicitly requested.
