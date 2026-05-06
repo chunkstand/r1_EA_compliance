@@ -18,6 +18,27 @@ VALID_SOURCE_PARTITIONS = {
     CURRENTNESS_SUPERSESSION_ARCHIVE,
     CANDIDATE_BLOCKED_SOURCE,
 }
+REQUIRED_SOURCE_PARTITIONS = {
+    ACTIVE_REVIEW_CORPUS,
+    CURRENTNESS_SUPERSESSION_ARCHIVE,
+    CANDIDATE_BLOCKED_SOURCE,
+}
+NON_ACTIVE_ALLOWED_RELATIONSHIPS = {
+    "SUPERSEDED_BY",
+    "REPLACES_RESERVED_AUTHORITY",
+    "HAS_CURRENTNESS_STATUS",
+    "BLOCKED_BY",
+}
+EXPECTED_PARTITION_ACTIVE_ELIGIBILITY = {
+    ACTIVE_REVIEW_CORPUS: True,
+    CURRENTNESS_SUPERSESSION_ARCHIVE: False,
+    CANDIDATE_BLOCKED_SOURCE: False,
+}
+REQUIRED_WORKBOOK_SOURCE_DELTA_PLAN_KEYS = {
+    "environmental_justice_civil_rights",
+    "fsh_1909_15",
+    "reserved_36_cfr_part_220",
+}
 
 SUCCESSFUL_SOURCE_STATUSES = {
     "downloaded",
@@ -91,10 +112,9 @@ def catalog_source_partition_record(row: dict, contract: dict | None = None) -> 
 
 def graph_relationships_for_partition(source_partition: str, contract: dict | None = None) -> list[str]:
     contract = contract or _default_source_partition_contract()
-    rules = contract.get("graph_relationship_rules", {})
-    partition_rules = rules.get(source_partition, {})
-    relationships = partition_rules.get("allowed_relationships") or []
-    return [str(relationship) for relationship in relationships]
+    rules = _dict(contract.get("graph_relationship_rules"))
+    partition_rules = _dict(rules.get(source_partition))
+    return _strings(partition_rules.get("allowed_relationships"))
 
 
 def graph_relationships_for_family_source(
@@ -130,6 +150,7 @@ def validate_catalog_source_partitions(
     catalog_source_partitions: list[dict],
     contract: dict,
 ) -> list[dict]:
+    contract_checks = validate_source_partition_contract(contract)
     partition_by_source_record_id = {
         str(record.get("source_record_id") or ""): record for record in catalog_source_partitions
     }
@@ -169,13 +190,7 @@ def validate_catalog_source_partitions(
         partition_by_source_record_id=partition_by_source_record_id,
         contract=contract,
     )
-    return [
-        _check(
-            "source_partition_contract_schema_loaded",
-            contract.get("schema_version") == SOURCE_PARTITION_CONTRACT_SCHEMA_VERSION,
-            SOURCE_PARTITION_CONTRACT_SCHEMA_VERSION,
-            contract.get("schema_version"),
-        ),
+    return contract_checks + [
         _check(
             "catalog_source_records_have_source_partitions",
             not missing_partition_source_record_ids,
@@ -205,6 +220,169 @@ def validate_catalog_source_partitions(
             fsh_validation["passed"],
             fsh_validation["expected"],
             fsh_validation["actual"],
+        ),
+    ]
+
+
+def validate_source_partition_contract(contract: dict) -> list[dict]:
+    source_partitions = _dict_list(contract.get("source_partitions"))
+    partition_ids = {
+        str(partition.get("partition_id") or "")
+        for partition in source_partitions
+        if partition.get("partition_id")
+    }
+    partition_eligibility_by_id = {
+        str(partition.get("partition_id") or ""): partition.get("eligible_for_active_review_rules")
+        for partition in source_partitions
+        if partition.get("partition_id")
+    }
+    partition_eligibility_violations = {
+        partition_id: partition_eligibility_by_id.get(partition_id)
+        for partition_id, expected in EXPECTED_PARTITION_ACTIVE_ELIGIBILITY.items()
+        if partition_eligibility_by_id.get(partition_id) is not expected
+    }
+    missing_partition_ids = sorted(REQUIRED_SOURCE_PARTITIONS - partition_ids)
+    unknown_partition_ids = sorted(partition_ids - VALID_SOURCE_PARTITIONS)
+    graph_relationship_rules = _dict(contract.get("graph_relationship_rules"))
+    missing_graph_rule_partition_ids = sorted(
+        partition_id
+        for partition_id in REQUIRED_SOURCE_PARTITIONS
+        if partition_id not in graph_relationship_rules
+    )
+    malformed_graph_rule_partition_ids = sorted(
+        partition_id
+        for partition_id in REQUIRED_SOURCE_PARTITIONS
+        if partition_id in graph_relationship_rules
+        and not isinstance(graph_relationship_rules.get(partition_id), dict)
+    )
+    malformed_relationship_list_partition_ids = sorted(
+        partition_id
+        for partition_id in REQUIRED_SOURCE_PARTITIONS
+        if partition_id in graph_relationship_rules
+        and not isinstance(
+            _graph_rule(graph_relationship_rules, partition_id).get("allowed_relationships"),
+            list,
+        )
+    )
+    non_active_relationship_violations = {
+        partition_id: sorted(
+            set(
+                _strings(
+                    _graph_rule(graph_relationship_rules, partition_id).get("allowed_relationships")
+                )
+            )
+            - NON_ACTIVE_ALLOWED_RELATIONSHIPS
+        )
+        for partition_id in (CURRENTNESS_SUPERSESSION_ARCHIVE, CANDIDATE_BLOCKED_SOURCE)
+    }
+    non_active_relationship_violations = {
+        partition_id: relationships
+        for partition_id, relationships in non_active_relationship_violations.items()
+        if relationships
+    }
+    active_rule = _graph_rule(graph_relationship_rules, ACTIVE_REVIEW_CORPUS)
+    non_active_eligibility_violations = [
+        partition_id
+        for partition_id in (CURRENTNESS_SUPERSESSION_ARCHIVE, CANDIDATE_BLOCKED_SOURCE)
+        if _graph_rule(graph_relationship_rules, partition_id).get("eligible_for_active_review_rules")
+        is True
+    ]
+    fsh_contract = _fsh_contract(contract)
+    fsh_minimum = _int_or_none(fsh_contract.get("minimum_distinct_chapter_records_when_used"))
+    source_delta_plan = contract.get("workbook_source_delta_plan")
+    missing_delta_plan_keys = sorted(
+        key
+        for key in REQUIRED_WORKBOOK_SOURCE_DELTA_PLAN_KEYS
+        if not isinstance(source_delta_plan, dict) or not source_delta_plan.get(key)
+    )
+    reserved_rules = _dict_list(contract.get("reserved_superseded_authority_rules"))
+    has_reserved_220_boundary = any(
+        str(rule.get("authority_label") or "").lower() == "36 cfr part 220"
+        and rule.get("required_partition_when_source_record_exists")
+        == CURRENTNESS_SUPERSESSION_ARCHIVE
+        for rule in reserved_rules
+    )
+    return [
+        _check(
+            "source_partition_contract_schema_loaded",
+            contract.get("schema_version") == SOURCE_PARTITION_CONTRACT_SCHEMA_VERSION,
+            SOURCE_PARTITION_CONTRACT_SCHEMA_VERSION,
+            contract.get("schema_version"),
+        ),
+        _check(
+            "source_partition_contract_defines_required_partitions",
+            not missing_partition_ids,
+            [],
+            missing_partition_ids,
+        ),
+        _check(
+            "source_partition_contract_uses_known_partition_ids",
+            not unknown_partition_ids,
+            [],
+            unknown_partition_ids,
+        ),
+        _check(
+            "source_partition_contract_partition_eligibility_matches_boundary",
+            not partition_eligibility_violations,
+            EXPECTED_PARTITION_ACTIVE_ELIGIBILITY,
+            partition_eligibility_violations,
+        ),
+        _check(
+            "source_partition_contract_defines_graph_rules_for_each_partition",
+            not missing_graph_rule_partition_ids,
+            [],
+            missing_graph_rule_partition_ids,
+        ),
+        _check(
+            "source_partition_contract_graph_rules_are_objects",
+            not malformed_graph_rule_partition_ids,
+            [],
+            malformed_graph_rule_partition_ids,
+        ),
+        _check(
+            "source_partition_contract_graph_relationships_are_lists",
+            not malformed_relationship_list_partition_ids,
+            [],
+            malformed_relationship_list_partition_ids,
+        ),
+        _check(
+            "active_review_corpus_is_eligible_for_active_review_rules",
+            active_rule.get("eligible_for_active_review_rules") is True,
+            True,
+            active_rule.get("eligible_for_active_review_rules"),
+        ),
+        _check(
+            "non_active_partitions_are_not_eligible_for_active_review_rules",
+            not non_active_eligibility_violations,
+            [],
+            non_active_eligibility_violations,
+        ),
+        _check(
+            "non_active_partition_relationships_are_limited_to_currentness",
+            not non_active_relationship_violations,
+            {},
+            non_active_relationship_violations,
+        ),
+        _check(
+            "source_partition_contract_defines_fsh_1909_15_chapter_boundary",
+            bool(fsh_minimum and fsh_minimum >= 2),
+            "minimum_distinct_chapter_records_when_used >= 2",
+            fsh_contract,
+        ),
+        _check(
+            "source_partition_contract_defines_reserved_36_cfr_part_220_boundary",
+            has_reserved_220_boundary,
+            {
+                "authority_label": "36 CFR part 220",
+                "required_partition_when_source_record_exists": CURRENTNESS_SUPERSESSION_ARCHIVE,
+            },
+            reserved_rules,
+        ),
+        _check(
+            "source_partition_contract_defines_workbook_source_delta_plan",
+            not missing_delta_plan_keys,
+            [],
+            missing_delta_plan_keys,
         ),
     ]
 
@@ -297,6 +475,12 @@ def _has_non_current_source_marker(row: dict) -> bool:
     text = _row_text(row)
     if re.search(r"\b(rescinded|revoked|repealed|superseded|not[- ]current)\b", text):
         return True
+    if re.search(
+        r"\b(reserved\s+(?:authority|regulation|source|cfr|code|part)|"
+        r"(?:authority|regulation|source|cfr|code|part)\s+reserved)\b",
+        text,
+    ):
+        return True
     return _is_reserved_36_cfr_part_220_source(row)
 
 
@@ -338,15 +522,42 @@ def _row_text(row: dict) -> str:
 
 
 def _partition_eligibility(source_partition: str, contract: dict) -> bool:
-    rules = contract.get("graph_relationship_rules", {})
-    return bool(rules.get(source_partition, {}).get("eligible_for_active_review_rules"))
+    rules = _dict(contract.get("graph_relationship_rules"))
+    return bool(_graph_rule(rules, source_partition).get("eligible_for_active_review_rules"))
 
 
 def _fsh_contract(contract: dict) -> dict:
-    for entry in contract.get("handbook_chapter_requirements", []):
+    for entry in _dict_list(contract.get("handbook_chapter_requirements")):
         if entry.get("handbook_id") == "fsh_1909_15":
             return entry
     return {}
+
+
+def _dict(value: object) -> dict:
+    return value if isinstance(value, dict) else {}
+
+
+def _dict_list(value: object) -> list[dict]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
+def _graph_rule(graph_relationship_rules: dict, partition_id: str) -> dict:
+    return _dict(graph_relationship_rules.get(partition_id))
+
+
+def _int_or_none(value: object) -> int | None:
+    try:
+        return int(str(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def _strings(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value]
 
 
 def _default_source_partition_contract() -> dict[str, Any]:
@@ -393,6 +604,17 @@ def _default_source_partition_contract() -> dict[str, Any]:
                 "collapsed_record_disallowed_when_chapter_records_available": True,
             }
         ],
+        "reserved_superseded_authority_rules": [
+            {
+                "authority_label": "36 CFR part 220",
+                "required_partition_when_source_record_exists": CURRENTNESS_SUPERSESSION_ARCHIVE,
+            }
+        ],
+        "workbook_source_delta_plan": {
+            "environmental_justice_civil_rights": "Add official sources before active review use.",
+            "fsh_1909_15": "Add separate current chapter records before claiming completeness.",
+            "reserved_36_cfr_part_220": "Archive reserved or superseded records if added.",
+        },
     }
 
 

@@ -312,9 +312,12 @@ currentness and supersession without letting non-current material enter the acti
 Implementation status:
 Completed on 2026-05-06. `config/source_partition_contract_nepa_3d_v1.json`,
 `source_partitions.py`, catalog `source_partition` fields, and expanded `authority-currentness`
-validation now implement the pre-graph source boundary. The current source set validates with `189`
-active review-corpus records and `1` candidate/blocked source. FSH 1909.15 chapter records remain a
-scoped workbook/source delta before graph export can claim handbook completeness.
+validation now implement the pre-graph source boundary. The validator also fails closed when the
+contract drops required partitions, lets non-active partitions derive active review rules, omits the
+reserved `36 CFR part 220` boundary, or loses the scoped workbook/source-delta plan. The current
+source set validates with `189` active review-corpus records and `1` candidate/blocked source. FSH
+1909.15 chapter records remain a scoped workbook/source delta before graph export can claim
+handbook completeness.
 
 Required outputs:
 

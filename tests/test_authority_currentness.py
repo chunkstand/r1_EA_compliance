@@ -298,6 +298,16 @@ class AuthorityCurrentnessTests(unittest.TestCase):
                 checks["reserved_or_superseded_authorities_not_active_controlling"]["passed"]
             )
             self.assertTrue(checks["fsh_1909_15_chapter_records_are_not_collapsed"]["passed"])
+            self.assertTrue(
+                checks[
+                    "source_partition_contract_partition_eligibility_matches_boundary"
+                ]["passed"]
+            )
+            self.assertTrue(
+                checks[
+                    "source_partition_contract_defines_reserved_36_cfr_part_220_boundary"
+                ]["passed"]
+            )
             partition_records = {
                 record["source_record_id"]: record for record in report["catalog_source_partitions"]
             }

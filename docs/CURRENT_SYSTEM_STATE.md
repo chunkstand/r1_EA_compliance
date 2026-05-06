@@ -176,10 +176,12 @@ The live `authority-currentness` run for `source-set-ba8d0feae79501b8` now recor
 - authority-family source roles: `active_authority_source=203`,
   `candidate_blocked_or_currentness_only_source=1`, and
   `supersession_or_replacement_source=3`;
-- passing fail-closed checks that non-current sources are not in the active review corpus,
-  reserved/superseded authorities are not active controlling sources, superseded family sources use
-  only currentness/supersession graph relationships, and collapsed FSH 1909.15 handbook records
-  cannot satisfy chapter-level source boundaries.
+- passing fail-closed checks that the source-partition contract defines the required partitions,
+  active/non-active eligibility boundaries, non-active graph relationship limits, reserved
+  `36 CFR part 220` archive handling, scoped workbook/source deltas, and catalog behavior where
+  non-current sources are not in the active review corpus, superseded family sources use only
+  currentness/supersession graph relationships, and collapsed FSH 1909.15 handbook records cannot
+  satisfy chapter-level source boundaries.
 
 The current source set does not yet add FSH 1909.15 chapter records. The contract keeps that as a
 scoped workbook/source delta before any NEPA 3D graph export claims handbook completeness.

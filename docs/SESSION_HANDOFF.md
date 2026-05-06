@@ -239,8 +239,10 @@ next-target lanes:
   outputs carry `source_partition` and `source_partition_basis`; and `authority-currentness` now
   reports catalog partitions, per-family graph roles, and fail-closed checks for non-current active
   sources, reserved/superseded active authority, superseded-family graph relationships, and
-  collapsed FSH 1909.15 handbook records. The live currentness gate passed with `189` active
-  review-corpus records and `1` candidate/blocked source.
+  collapsed FSH 1909.15 handbook records. The gap-closure pass also validates the contract's
+  required partitions, active/non-active eligibility boundary, non-active graph relationship limits,
+  reserved `36 CFR part 220` archive boundary, and scoped workbook/source-delta plan. The live
+  currentness gate passed with `189` active review-corpus records and `1` candidate/blocked source.
 - The next NEPA 3D implementation boundary is Milestone 1 graph export schema/contract, followed by
   the source-set export builder. The FSH 1909.15 chapter rows remain a scoped workbook/source delta
   before any graph export can claim handbook completeness.

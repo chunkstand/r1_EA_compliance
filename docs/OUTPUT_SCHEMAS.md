@@ -962,9 +962,12 @@ Catalog records include:
 The graph relationship rules intentionally keep `currentness_supersession_archive` records limited
 to `SUPERSEDED_BY`, `REPLACES_RESERVED_AUTHORITY`, `HAS_CURRENTNESS_STATUS`, and `BLOCKED_BY`
 relationships. They cannot derive active rules, source claims, generated rules, or compliance
-findings. The FSH 1909.15 handbook rule fails validation when the handbook is represented only as a
-collapsed source record instead of separate chapter records once active FSH 1909.15 sources are
-used by EA review.
+findings. The `authority-currentness` gate also validates that the committed contract defines the
+required partitions, keeps only active review-corpus sources eligible for active review rules,
+defines the reserved `36 CFR part 220` archive boundary, and carries the scoped
+workbook/source-delta plan. The FSH 1909.15 handbook rule fails validation when the handbook is
+represented only as a collapsed source record instead of separate chapter records once active FSH
+1909.15 sources are used by EA review.
 
 ## Authority Currentness Report
 
@@ -1032,7 +1035,8 @@ The validation block checks source-set identity, inventory/catalog alignment, ca
 source-addition decisions, required currentness fields, successful-status-only current coverage,
 excluded-source handling, failed-capture handling, superseded replacement metadata, source
 partition presence/validity, non-current source partitioning, reserved/superseded authority
-partitioning, FSH 1909.15 chapter boundaries, and inventory alignment so stale Milestone 2
+partitioning, source-partition contract structure, FSH 1909.15 chapter boundaries, and inventory
+alignment so stale Milestone 2
 currentness gap text cannot remain after the gate passes.
 
 ## Applicability-First Review Outputs

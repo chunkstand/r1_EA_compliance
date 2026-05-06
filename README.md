@@ -67,8 +67,10 @@ confirmation, `21` Milestone 2 families closed or documented, and `0` failed fam
 Milestone 2A source-partition contract is now implemented: the catalog/currentness surfaces
 distinguish active review-corpus, currentness/supersession archive, and candidate/blocked-source
 records; the live catalog partitions are `189` active review-corpus records and `1` candidate or
-blocked source; and reserved/superseded authority fixtures plus FSH 1909.15 chapter-collapse
-fixtures fail closed before graph export work can rely on them. Milestone 3 adds
+blocked source; the contract itself now validates required partitions, graph-rule limits, reserved
+`36 CFR part 220` boundaries, and scoped workbook/source deltas; and reserved/superseded authority
+fixtures plus FSH 1909.15 chapter-collapse fixtures fail closed before graph export work can rely on
+them. Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
 independent applicability eval and gold-adjudication coverage for those expanded families: seed evals
