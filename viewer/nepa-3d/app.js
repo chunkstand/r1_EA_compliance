@@ -121,10 +121,16 @@ const FILTER_DEFINITIONS = [
     accessor: readinessBlockerValues
   },
   {
-    id: "evidenceType",
-    selector: "evidence-type-filter",
-    label: "Graph item type",
-    accessor: graphItemTypeValues
+    id: "nodeEdgeType",
+    selector: "node-edge-type-filter",
+    label: "Node / edge type",
+    accessor: nodeEdgeTypeValues
+  },
+  {
+    id: "evidenceKind",
+    selector: "evidence-kind-filter",
+    label: "Evidence / basis",
+    accessor: evidenceKindValues
   },
   {
     id: "forestUnit",
@@ -200,7 +206,8 @@ function bindElements() {
     "document-role-filter",
     "currentness-filter",
     "blocker-filter",
-    "evidence-type-filter",
+    "node-edge-type-filter",
+    "evidence-kind-filter",
     "forest-unit-filter",
     "review-phase-filter",
     "neighbor-depth",
@@ -452,9 +459,18 @@ function populateLensSelector() {
   }
   els.lensSelect.innerHTML = "";
   for (const lens of lenses) {
+    const lensCounts = displayLensGraph(lens);
+    const grounding =
+      lens.lens_id === "all"
+        ? "validated graph export node and edge tables"
+        : lens.lens_id === DIFFERENCE_LENS.lens_id
+          ? "review overlay graph export and viewer difference-lens contract"
+          : "graph export lens metadata";
     const option = document.createElement("option");
     option.value = lens.lens_id;
-    option.textContent = lens.label;
+    option.textContent = `${lens.label} (${lensCounts.nodes.length} nodes / ${lensCounts.edges.length} edges)`;
+    option.title = `${lens.label}: ${lensCounts.nodes.length} graph nodes and ${lensCounts.edges.length} graph edges shown by this lens`;
+    option.dataset.grounding = grounding;
     els.lensSelect.append(option);
   }
   const defaultLens = state.dataset.review_id ? DEFAULT_LENS_REVIEW : DEFAULT_LENS_SOURCE_SET;
@@ -475,7 +491,8 @@ function populateFilterOptions({ preserveSelected = false } = {}) {
       [{ value: "", label: "Any" }].concat(
         values.map((value) => ({
           value,
-          label: `${formatOptionLabel(value)} (${valueCounts.get(value)})`
+          label: `${formatOptionLabel(value, filter.id)} (${valueCounts.get(value)})`,
+          grounding: `${filter.label}: ${valueCounts.get(value)} graph item(s) in this export`
         }))
       ),
       selectedValue
@@ -508,7 +525,8 @@ function renderGraph() {
 }
 
 function filteredGraph() {
-  const baseGraph = baseLensGraph();
+  const lens = selectedLens();
+  const baseGraph = baseLensGraph(lens);
   const baseNodeIds = new Set(baseGraph.nodes.map((node) => node.node_id));
   const filterValues = selectedFilterValues();
   const searchSeeds = matchingSearchNodeIds(state.nodes);
@@ -548,7 +566,11 @@ function filteredGraph() {
   });
 
   const edgeNodeIds = new Set(edges.flatMap((edge) => [edge.source_node_id, edge.target_node_id]));
-  const visibleNodeIds = hasSeedFilter ? new Set([...edgeNodeIds, ...seedIds]) : edgeNodeIds;
+  const visibleNodeIds = hasSeedFilter
+    ? new Set([...edgeNodeIds, ...seedIds])
+    : lens?.lens_id === "all" || edgeNodeIds.size === 0
+      ? allowedNodes
+      : edgeNodeIds;
   const nodes = state.nodes.filter((node) => allowedNodes.has(node.node_id) && visibleNodeIds.has(node.node_id));
   const nodeIds = new Set(nodes.map((node) => node.node_id));
   edges = edges.filter((edge) => nodeIds.has(edge.source_node_id) && nodeIds.has(edge.target_node_id));
@@ -556,8 +578,26 @@ function filteredGraph() {
   return { nodes, edges };
 }
 
-function baseLensGraph() {
-  const lens = selectedLens();
+function baseLensGraph(lens = selectedLens()) {
+  return lensGraph(lens);
+}
+
+function displayLensGraph(lens) {
+  const graph = lensGraph(lens);
+  if (lens?.lens_id === "all") {
+    return graph;
+  }
+  const edgeNodeIds = new Set(graph.edges.flatMap((edge) => [edge.source_node_id, edge.target_node_id]));
+  if (edgeNodeIds.size === 0) {
+    return graph;
+  }
+  return {
+    nodes: graph.nodes.filter((node) => edgeNodeIds.has(node.node_id)),
+    edges: graph.edges
+  };
+}
+
+function lensGraph(lens) {
   if (!lens || lens.lens_id === "all") {
     return { nodes: state.nodes, edges: state.edges };
   }
@@ -1109,14 +1149,17 @@ function readinessBlockerValues(item) {
   ]);
 }
 
-function graphItemTypeValues(item) {
+function nodeEdgeTypeValues(item) {
+  return compactValues([item.node_type || item.edge_type]);
+}
+
+function evidenceKindValues(item) {
   return compactValues([
     item.provenance?.evidence_type,
     item.metadata?.evidence_type,
     item.metadata?.claim_type,
     item.metadata?.basis_type,
-    item.currentness_metadata?.basis_type,
-    item.node_type || item.edge_type
+    item.currentness_metadata?.basis_type
   ]);
 }
 
@@ -1160,8 +1203,16 @@ function replaceOptions(select, values, selectedValue) {
   );
 }
 
-function formatOptionLabel(value) {
-  return String(value).replaceAll("_", " ");
+function formatOptionLabel(value, filterId = "") {
+  const raw = String(value);
+  const label = raw.replaceAll("_", " ");
+  if (filterId === "nodeEdgeType") {
+    return raw === raw.toUpperCase() ? `edge: ${label.toLowerCase()}` : `node: ${label}`;
+  }
+  if (filterId === "evidenceKind") {
+    return `evidence/basis: ${label}`;
+  }
+  return label;
 }
 
 function replaceOptionsFromPairs(select, options, selectedValue) {
@@ -1170,6 +1221,10 @@ function replaceOptionsFromPairs(select, options, selectedValue) {
     const option = document.createElement("option");
     option.value = optionInfo.value;
     option.textContent = optionInfo.label;
+    if (optionInfo.grounding) {
+      option.title = optionInfo.grounding;
+      option.dataset.grounding = optionInfo.grounding;
+    }
     select.append(option);
   }
   if (options.some((option) => option.value === selectedValue)) {

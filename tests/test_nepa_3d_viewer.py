@@ -56,7 +56,8 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
         "document-role-filter",
         "currentness-filter",
         "blocker-filter",
-        "evidence-type-filter",
+        "node-edge-type-filter",
+        "evidence-kind-filter",
         "forest-unit-filter",
         "review-phase-filter",
         "neighbor-depth",
@@ -96,7 +97,8 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
         "documentRole",
         "currentness",
         "readinessBlocker",
-        "evidenceType",
+        "nodeEdgeType",
+        "evidenceKind",
         "forestUnit",
         "reviewPhase",
         "clearFilters",
@@ -112,8 +114,9 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
     assert "CONTEXT_SEED_FILTER_IDS = new Set(FILTER_DEFINITIONS.map((filter) => filter.id))" in script
     assert "matchingContextFilterSeedGroups" in script
     assert "baseLensGraph" in script
+    assert "displayLensGraph" in script
     assert "filterOptionCounts" in script
-    assert "const visibleNodeIds = hasSeedFilter ? new Set([...edgeNodeIds, ...seedIds]) : edgeNodeIds" in script
+    assert 'lens?.lens_id === "all" || edgeNodeIds.size === 0' in script
     assert '"artifact hash"' in script
     assert '"artifact path"' in script
     assert "validation_passed" in script
@@ -127,16 +130,22 @@ def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:
     authority_category = _function_body(script, "authorityCategoryValues")
     authority_family = _function_body(script, "authorityFamilyValues")
     forest_unit = _function_body(script, "forestUnitValues")
-    graph_item_type = _function_body(script, "graphItemTypeValues")
+    node_edge_type = _function_body(script, "nodeEdgeTypeValues")
+    evidence_kind = _function_body(script, "evidenceKindValues")
 
     assert "authority_family_id" not in authority_category
     assert "authority_family_id" in authority_family
     assert "forest_code" in forest_unit
-    assert "item.node_type || item.edge_type" in graph_item_type
-    assert "Graph item type" in html
+    assert "item.node_type || item.edge_type" in node_edge_type
+    assert "item.node_type || item.edge_type" not in evidence_kind
+    assert "currentness_metadata?.basis_type" in evidence_kind
+    assert "Node / edge type" in html
+    assert "Evidence / basis" in html
     assert "Status / readiness" in html
     assert "Currentness / partition" in html
     assert "Clear filters" in html
+    assert "dataset.grounding" in script
+    assert "lensGraph(lens)" in script
 
 
 def test_nepa_3d_viewer_styles_define_desktop_and_mobile_graph_surfaces() -> None:

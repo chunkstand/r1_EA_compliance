@@ -543,9 +543,10 @@ click-through provenance/validation panels. The viewer preserves the readiness b
 and reviewer-readiness status come from the graph export, not from layout. A gap-close pass added
 static coverage for pinned runtime URLs, relative graph-export manifest paths, and the `node_id`
 plus edge-endpoint mapping required by `3d-force-graph`. A first-pass dropdown gap closure now
-separates authority category from authority family, labels status/readiness, currentness/partition,
-and graph item type filters more accurately, reads forest-unit filters from exported forest codes,
-adds option counts and Clear filters, and treats dropdown/search selections as context seeds so
+separates authority category from authority family, labels status/readiness and
+currentness/partition filters more accurately, splits node/edge type from evidence/basis values,
+reads forest-unit filters from exported forest codes, grounds lens and filter options with
+graph-export counts, adds Clear filters, and treats dropdown/search selections as context seeds so
 matching nodes stay visible even when the active lens has no matching edges.
 
 Implementation options:
@@ -564,7 +565,8 @@ Required controls:
 - lens selector;
 - search by authority family, citation, source record, rule ID, component ID, or package fact;
 - filters for status/readiness, authority category, authority family, document role,
-  currentness/partition, readiness blocker, graph item type, forest unit, and review phase;
+  currentness/partition, readiness blocker, node/edge type, evidence/basis, forest unit, and review
+  phase;
 - Clear filters control that resets search and all filter dropdowns without changing the selected
   source set, review, or lens;
 - click-through detail panel with provenance, artifact hashes, source paths, citations, and

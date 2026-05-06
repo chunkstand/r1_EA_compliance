@@ -335,11 +335,13 @@ http://127.0.0.1:8765/viewer/nepa-3d/
 The first viewport opens directly into the graph experience. It defaults to a bounded readiness
 blocker lens over the source-set graph, while the V1 review overlay remains selectable. Controls
 cover source set, review, lens, search, status/readiness, authority category, authority family,
-document role, currentness/partition, readiness blocker, graph item type, forest unit, review phase,
-neighbor depth, high-degree hiding, selected-node pinning, fit/reset, Clear filters, PNG export, and
-viewer-state JSON export. Filter dropdowns use full-graph option counts, separate authority category
-from authority family, read forest-unit values from exported forest codes, and treat selections as
-context seeds so matching nodes remain visible even when the selected lens has no matching edges. The
+document role, currentness/partition, readiness blocker, node/edge type, evidence/basis, forest
+unit, review phase, neighbor depth, high-degree hiding, selected-node pinning, fit/reset, Clear
+filters, PNG export, and viewer-state JSON export. Lens and filter dropdowns use graph-export
+counts and grounding metadata, separate authority category from authority family, keep node/edge
+type distinct from evidence and basis fields, read forest-unit values from exported forest codes,
+and treat selections as context seeds so matching nodes remain visible even when the selected lens
+has no matching edges. The
 detail panel shows node/edge provenance, citation labels, artifact hashes, source paths, currentness
 metadata, and validation status. Static tests now lock the runtime URLs, relative graph-export
 manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
