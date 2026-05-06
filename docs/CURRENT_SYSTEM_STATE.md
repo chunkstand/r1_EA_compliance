@@ -512,15 +512,14 @@ Gallatin FEIS and ESA-supporting plan documents.
   `authority_reviewer_resolution_report.json`, and `litigation_risk_summary.json`; promotion
   checks require those artifacts before current promotion can pass.
 - The post-V1 promotion suite is implemented at `config/promotion_suite_v1.json`. The latest
-  Sequence 2A pass reported `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
-  "package_fixture_missing": 1}`, `open_expansion_artifact_count=4`, and
-  `open_expansion_slot_count=2`. Strict expansion is expected to fail at this boundary with
-  `promotion_ready=false`. Sequence 2 has closed the ECID `adjudication_needed` expansion blocker
-  and added ECID artifact checks; Sequence 2A closed the ECID `missing_source` blocker by reducing
-  generated rule-claim gaps from `17` to `0`. The ECID slot remains blocked by Forest Plan
-  component adjudication, and the second expansion slot remains `package_fixture_missing`.
+  Sequence 2B pass reported `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"package_fixture_missing": 1}`,
+  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`. Strict expansion is
+  expected to fail at this boundary with `promotion_ready=false` and
+  `failure_category_counts={"package_fixture_missing": 1}`. Sequences 1, 2, 2A, and 2B have closed
+  the ECID `adjudication_needed`, `missing_source`, and `forest_plan_reviewer_not_ready` expansion
+  blockers. The only remaining expansion slot blocker is the third real-package fixture contract.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
@@ -535,10 +534,13 @@ Gallatin FEIS and ESA-supporting plan documents.
   matrix JSON/Markdown/PDF, wrote
   `source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json`, and
   generated `forest_plan_component_adjudication_template.json/.md`. The generated-pack gate passes,
-  and Sequence 2A now reports `rule_claim_gap_count=0` and `rule_claim_link_count=211`; compliance
-  validation still fails on `forest_plan_component_gate_reviewer_ready`. ECID identified `29`
-  applicable Forest Plan standards, applied `7`, and has a `158`-item Forest Plan component
-  adjudication worklist for missing package evidence.
+  and Sequence 2A reports `rule_claim_gap_count=0` and `rule_claim_link_count=211`. Sequence 2B
+  completed the `158`-item Forest Plan component adjudication replay, ran
+  `forest-plan-component-adjudication-eval`, reran ECID compliance review with
+  `--reuse-package-cache`, and reran review-scoped phase eval. The adjudication eval resolved all
+  `158` rows as true EA package-evidence omissions with `0` system misses; compliance review now
+  reports `reviewer_ready=true` and validation passes without treating those omissions as component
+  support.
 - The ECID roads/access/special-use adjudication item exposed the pre-Milestone-3
   evidence-arbitration gap: weak auxiliary trigger evidence could block an authority family even
   when strong independent roads/access/right-of-way evidence was present. The repair sequence is
@@ -580,12 +582,11 @@ Gallatin FEIS and ESA-supporting plan documents.
   promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
   gates.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The active remaining
-  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 2B:
-  complete the ECID Forest Plan component adjudication worklist, rerun ECID compliance review and
-  review-scoped phase eval, clear the `forest_plan_reviewer_not_ready` promotion-suite blocker, and
-  then continue to the third real Region 1 EA package fixture. Closeout runs should capture strict
-  promotion output in a separate results directory or rerun non-strict promotion last so the default
-  promotion-suite artifact remains aligned with the current-promotion readiness claim.
+  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 3: replace
+  the `package_fixture_missing` slot with a concrete third real Region 1 EA fixture contract.
+  Closeout runs should capture strict promotion output in a separate results directory or rerun
+  non-strict promotion last so the default promotion-suite artifact remains aligned with the
+  current-promotion readiness claim.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

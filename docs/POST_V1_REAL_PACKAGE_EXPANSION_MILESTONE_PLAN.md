@@ -1,8 +1,8 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0, 1, and 2A complete; Sequence 2B Forest Plan component
-adjudication is the active ECID blocker
+Status: in progress; Sequences 0, 1, 2, 2A, and 2B complete; Sequence 3 third real-package
+fixture contract is the active blocker
 
 ## Weakness
 
@@ -20,11 +20,11 @@ The follow-up expert-panel alignment review found one manifest gap: the ECID com
 recorded `17` rule-claim gaps, but the promotion suite accepted that count as expected. Sequence 2A
 closed that source-claim gap by fixing rule-claim topic matching for generated authority-family
 topic slugs. ECID now reports `rule_claim_gap_count=0`, `rule_claim_link_count=211`, and no
-`missing_source` promotion-suite blocker. ECID compliance review still fails reviewer readiness on
-`forest_plan_component_gate_reviewer_ready` because `29` applicable Forest Plan standards were
-identified, only `7` were applied, and the component worklist contains `158`
-missing-package-evidence rows. The third real-package expansion slot still remains
-`package_fixture_missing`.
+`missing_source` promotion-suite blocker. Sequence 2B then completed the `158`-row Forest Plan
+component adjudication replay over the existing ECID package cache. The adjudication eval resolves
+all `158` rows as true EA package-evidence omissions with `0` system misses, compliance review now
+reports `reviewer_ready=true`, and review-scoped phase eval passes. The third real-package
+expansion slot still remains `package_fixture_missing`.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -305,6 +305,12 @@ Sequence 2A latest local result:
   "package_fixture_missing": 1}`.
 
 ### Sequence 2B: ECID Forest Plan Component Adjudication
+
+Status: complete as of 2026-05-06. The ECID Forest Plan component adjudication eval passed against
+the current `158`-row queue with `resolved_adjudication_count=158`, `real_ea_omission_count=158`,
+`pending_adjudication_count=0`, and `system_miss_count=0`. ECID compliance review now reports
+`reviewer_ready=true`, the ECID review-scoped phase eval passes, and the promotion suite has no ECID
+`forest_plan_reviewer_not_ready`, `missing_source`, or `adjudication_needed` blocker.
 
 Purpose: close the ECID reviewer-ready blocker exposed by Sequence 2 without weakening the Forest
 Plan component gate.

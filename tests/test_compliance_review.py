@@ -646,6 +646,123 @@ class ComplianceReviewTests(unittest.TestCase):
                 {edge["relationship"] for edge in edges},
             )
 
+    def test_custer_component_adjudication_resolves_real_ea_omission_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_custer_compliance_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area."
+                ),
+            )
+            rule_pack_path = _write_custer_rule_pack(Path(tmp))
+            review_id = "custer-adjudicated-omission-unit"
+
+            initial = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+            self.assertFalse(initial.summary["reviewer_ready"])
+            review_dir = output_dir / "reviews" / review_id
+            queue = json.loads(
+                (review_dir / "forest_plan_reviewer_resolution_queue.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(queue["item_count"], 1)
+            _write_component_adjudication_eval(
+                review_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+                passed=True,
+                queue_item_count=1,
+            )
+
+            result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertTrue(forest_plan["reviewer_ready"])
+            self.assertFalse(forest_plan["component_evaluation"]["reviewer_ready"])
+            self.assertTrue(forest_plan["component_adjudication"]["reviewer_ready"])
+            self.assertEqual(
+                forest_plan["component_adjudication"]["real_ea_omission_count"],
+                1,
+            )
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertFalse(forest_plan_gate["details"]["component_reviewer_ready"])
+            self.assertTrue(
+                forest_plan_gate["details"]["component_adjudication_reviewer_ready"]
+            )
+            self.assertEqual(
+                forest_plan_gate["details"]["component_adjudication_system_miss_count"],
+                0,
+            )
+
+    def test_custer_component_adjudication_keeps_system_miss_blocking(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_custer_compliance_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area."
+                ),
+            )
+            rule_pack_path = _write_custer_rule_pack(Path(tmp))
+            review_id = "custer-system-miss-adjudication-unit"
+            _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+            review_dir = output_dir / "reviews" / review_id
+            _write_component_adjudication_eval(
+                review_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+                passed=True,
+                queue_item_count=1,
+                real_ea_omission_count=0,
+                system_miss_count=1,
+            )
+
+            result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertFalse(forest_plan["component_adjudication"]["reviewer_ready"])
+            self.assertEqual(
+                forest_plan["component_adjudication"]["failed_checks"],
+                ["system_miss_adjudication"],
+            )
+
     def test_custer_compliance_review_fails_closed_on_stale_component_inventory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -2491,11 +2608,21 @@ def _write_component_adjudication_eval(
     review_id: str,
     passed: bool,
     pending_count: int = 0,
+    queue_item_count: int = 2,
+    real_ea_omission_count: int | None = None,
+    system_miss_count: int = 0,
 ) -> None:
     review_dir.mkdir(parents=True, exist_ok=True)
-    resolved_count = 2 - pending_count
+    resolved_count = queue_item_count - pending_count
+    real_ea_omission_count = (
+        resolved_count if real_ea_omission_count is None else real_ea_omission_count
+    )
     failure_counts = {"adjudication_pending": pending_count} if pending_count else {}
-    outcome_counts = {"real_ea_omission": resolved_count} if resolved_count else {}
+    outcome_counts = {}
+    if real_ea_omission_count:
+        outcome_counts["real_ea_omission"] = real_ea_omission_count
+    if system_miss_count:
+        outcome_counts["system_miss"] = system_miss_count
     (review_dir / "forest_plan_component_adjudication_eval.json").write_text(
         json.dumps(
             {
@@ -2508,28 +2635,35 @@ def _write_component_adjudication_eval(
                     "adjudication_file": str(
                         review_dir / "forest_plan_component_adjudication.json"
                     ),
-                    "queue_item_count": 2,
-                    "adjudication_item_count": 2,
+                    "queue_item_count": queue_item_count,
+                    "adjudication_item_count": queue_item_count,
                     "resolved_adjudication_count": resolved_count,
                     "pending_adjudication_count": pending_count,
-                    "real_ea_omission_count": resolved_count,
-                    "system_miss_count": 0,
-                    "adjudication_completion_rate": round(resolved_count / 2, 6),
-                    "real_ea_omission_rate": round(resolved_count / 2, 6),
-                    "system_miss_rate": 0.0,
+                    "real_ea_omission_count": real_ea_omission_count,
+                    "system_miss_count": system_miss_count,
+                    "adjudication_completion_rate": round(resolved_count / queue_item_count, 6),
+                    "real_ea_omission_rate": round(
+                        real_ea_omission_count / queue_item_count,
+                        6,
+                    ),
+                    "system_miss_rate": round(system_miss_count / queue_item_count, 6),
                     "adjudication_expectation_match_rate": 1.0,
                     "adjudication_outcome_counts": outcome_counts,
                     "disposition_counts": (
-                        {"true_ea_omission": resolved_count}
-                        if resolved_count
+                        {"true_ea_omission": real_ea_omission_count}
+                        if real_ea_omission_count
                         else {}
                     ),
                     "real_ea_omission_disposition_counts": (
-                        {"true_ea_omission": resolved_count}
-                        if resolved_count
+                        {"true_ea_omission": real_ea_omission_count}
+                        if real_ea_omission_count
                         else {}
                     ),
-                    "system_miss_disposition_counts": {},
+                    "system_miss_disposition_counts": (
+                        {"retrieval_miss": system_miss_count}
+                        if system_miss_count
+                        else {}
+                    ),
                     "failure_category_counts": failure_counts,
                     "passed": passed,
                 },

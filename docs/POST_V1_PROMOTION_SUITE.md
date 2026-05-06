@@ -79,22 +79,21 @@ only when strict mode is used.
 
 ## Current Local Result
 
-The latest Sequence 2A promotion-suite pass was run locally on 2026-05-06 after ECID
-source-claim gap closure, compliance-review, review-scoped phase-eval, promotion-manifest artifact
+The latest Sequence 2B promotion-suite pass was run locally on 2026-05-06 after ECID Forest Plan
+component adjudication, compliance-review, review-scoped phase-eval, promotion-manifest artifact
 checks, and expert-panel source-traceability alignment checks were updated:
 
 - `current_promotion_ready=true`
 - `promotion_ready=true`
 - `expansion_ready=false`
-- `expansion_artifacts_ready=false`
+- `expansion_artifacts_ready=true`
 - `failure_category_counts={}`
-- `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 5,
-  "package_fixture_missing": 1}`
-- `open_expansion_artifact_count=4`
-- `open_expansion_slot_count=2`
+- `expansion_failure_category_counts={"package_fixture_missing": 1}`
+- `open_expansion_artifact_count=0`
+- `open_expansion_slot_count=1`
 
 Strict expansion mode is expected to fail at this boundary with `promotion_ready=false` and
-`failure_category_counts={"forest_plan_reviewer_not_ready": 5, "package_fixture_missing": 1}`.
+`failure_category_counts={"package_fixture_missing": 1}`.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -116,11 +115,13 @@ authorities, `346` non-applicable authorities, `0` unresolved, `0` `needs_adjudi
 ECID rule pack with `46` rules, wrote the compliance review/matrix/PDF artifacts, wrote
 review-scoped phase eval at `source_library/reviews/region1-expansion-ecid-preliminary-ea/`, and
 added ECID artifact checks to the promotion suite. Sequence 2A closed the ECID source-claim gap:
-the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_count=211`. The slot
-remains `ready=false` because the Forest Plan component gate is not reviewer-ready: `29`
-applicable standards were identified, `7` were applied, and the generated component adjudication
-worklist has `158` pending missing-package-evidence rows. The second real-package slot remains
-open with `package_fixture_missing`.
+the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_count=211`. Sequence
+2B completed the `158`-row Forest Plan component adjudication queue, and
+`forest-plan-component-adjudication-eval` reports `resolved_adjudication_count=158`,
+`real_ea_omission_count=158`, `pending_adjudication_count=0`, and `system_miss_count=0`. ECID
+compliance review now reports `reviewer_ready=true`, review-scoped phase eval passes, and the ECID
+expansion slot is `ready=true`. The second real-package slot remains open with
+`package_fixture_missing`.
 
 Resolution plan:
 

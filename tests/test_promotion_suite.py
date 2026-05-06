@@ -158,6 +158,15 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert compliance_checks["forest_plan_applicable_standard_count"]["equals"] == 29
     assert compliance_checks["forest_plan_applied_standard_count"]["equals"] == 7
 
+    component_adjudication = ecid_results["forest_plan_component_adjudication_eval"]
+    adjudication_checks = {
+        check["name"]: check for check in component_adjudication["checks"]
+    }
+    assert adjudication_checks["component_adjudication_eval_passed"]["equals"] is True
+    assert adjudication_checks["component_adjudication_eval_resolved_items"]["equals"] == 158
+    assert adjudication_checks["component_adjudication_eval_true_omissions"]["equals"] == 158
+    assert adjudication_checks["component_adjudication_eval_system_misses"]["equals"] == 0
+
     phase = ecid_results["phase_eval"]
     assert phase["path"] == "reviews/{review_id}/phase_eval_results.json"
     assert phase["failure_category"] == "forest_plan_reviewer_not_ready"
@@ -165,9 +174,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
 
-    assert slot["status"] == "blocked_forest_plan_component_adjudication"
-    assert slot["ready"] is False
-    assert slot["failure_category"] == "forest_plan_reviewer_not_ready"
+    assert slot["status"] == "ready"
+    assert slot["ready"] is True
+    assert "failure_category" not in slot
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
     assert "Preliminary Environmental Assessment" in slot["package_path"]
     assert slot["last_local_signal"]["package_chunk_count"] == 160
@@ -178,10 +187,16 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert slot["last_local_signal"]["remaining_adjudication_authority_family_ids"] == []
     assert slot["last_local_signal"]["applicability_validation_passed"] is True
     assert slot["last_local_signal"]["generated_rule_pack_ready"] is True
-    assert slot["last_local_signal"]["compliance_review_reviewer_ready"] is False
+    assert slot["last_local_signal"]["compliance_review_reviewer_ready"] is True
     assert slot["last_local_signal"]["rule_claim_link_count"] == 211
     assert slot["last_local_signal"]["rule_claim_gap_count"] == 0
     assert slot["last_local_signal"]["forest_plan_component_reviewer_resolution_count"] == 158
+    assert slot["last_local_signal"]["forest_plan_component_adjudication_eval_passed"] is True
+    assert slot["last_local_signal"]["forest_plan_component_adjudication_resolved_count"] == 158
+    assert (
+        slot["last_local_signal"]["forest_plan_component_adjudication_system_miss_count"]
+        == 0
+    )
 
 
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:

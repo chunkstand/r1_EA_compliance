@@ -226,6 +226,7 @@ def compliance_summary(
 def forest_plan_summary_for_compliance(forest_plan_result) -> dict:
     summary = forest_plan_result.summary
     component_evaluation = summary.get("component_evaluation") or {}
+    component_adjudication = summary.get("component_adjudication") or {}
     return {
         "review_id": forest_plan_result.review_id,
         "review_dir": str(forest_plan_result.review_dir),
@@ -264,6 +265,7 @@ def forest_plan_summary_for_compliance(forest_plan_result) -> dict:
             else None
         ),
         "component_evaluation": component_evaluation,
+        "component_adjudication": component_adjudication,
     }
 
 
@@ -485,12 +487,17 @@ def check_gap_findings_have_source_evidence(findings: list[dict]) -> dict:
 def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
     scope_status = str(forest_plan_summary.get("scope_status") or "")
     component_evaluation = forest_plan_summary.get("component_evaluation") or {}
+    component_adjudication = forest_plan_summary.get("component_adjudication") or {}
+    component_reviewer_ready = bool(component_evaluation.get("reviewer_ready"))
+    component_adjudication_reviewer_ready = bool(
+        component_adjudication.get("reviewer_ready")
+    )
     required = scope_status == "custer_gallatin"
     if not required:
         passed = True
     else:
-        passed = bool(forest_plan_summary.get("reviewer_ready")) and bool(
-            component_evaluation.get("reviewer_ready")
+        passed = bool(forest_plan_summary.get("reviewer_ready")) and (
+            component_reviewer_ready or component_adjudication_reviewer_ready
         )
     return {
         "name": "forest_plan_component_gate_reviewer_ready",
@@ -503,7 +510,7 @@ def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
             "context_path": forest_plan_summary.get("context_path"),
             "summary_path": forest_plan_summary.get("summary_path"),
             "component_evaluation_present": bool(component_evaluation),
-            "component_reviewer_ready": bool(component_evaluation.get("reviewer_ready")),
+            "component_reviewer_ready": component_reviewer_ready,
             "component_validation_passed": bool(component_evaluation.get("validation_passed")),
             "component_inventory_coverage_passed": bool(
                 component_evaluation.get("component_inventory_coverage_passed")
@@ -513,6 +520,18 @@ def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
             ),
             "reviewer_resolution_count": component_evaluation.get(
                 "reviewer_resolution_count",
+            ),
+            "component_adjudication_present": bool(component_adjudication),
+            "component_adjudication_reviewer_ready": component_adjudication_reviewer_ready,
+            "component_adjudication_failed_checks": component_adjudication.get(
+                "failed_checks",
+                [],
+            ),
+            "component_adjudication_system_miss_count": component_adjudication.get(
+                "system_miss_count",
+            ),
+            "component_adjudication_real_ea_omission_count": component_adjudication.get(
+                "real_ea_omission_count",
             ),
         },
     }

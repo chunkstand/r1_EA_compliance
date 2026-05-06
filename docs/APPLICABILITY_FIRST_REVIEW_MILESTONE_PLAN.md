@@ -1098,18 +1098,16 @@ Current state as of 2026-05-06:
   expansion remains not ready. Sequence 2 generated and validated the ECID rule pack with `46`
   rules, ran compliance review, wrote review-scoped phase eval, generated a `158`-item Forest Plan
   component adjudication worklist, and added ECID expansion artifact checks. Sequence 2A closed the
-  ECID source-claim gap set; the remaining ECID blocker is `forest_plan_reviewer_not_ready`. The
-  third real-package slot remains `package_fixture_missing`.
+  ECID source-claim gap set. Sequence 2B completed the component adjudication replay and reran ECID
+  compliance review, review-scoped phase eval, and promotion-suite checks; the ECID slot is now
+  `ready=true`. The third real-package slot remains `package_fixture_missing`.
 - The focused closure plan for these blockers is
   `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
 
 Implementation direction:
 
-- Complete the ECID Forest Plan component adjudication worklist, rerun ECID compliance review and
-  review-scoped phase eval, and clear the ECID `forest_plan_reviewer_not_ready` promotion-suite
-  blocker without weakening source-traceability or Forest Plan gates.
-- If the user chooses to broaden coverage first, add the third real Region 1 EA package fixture and
-  keep any uncovered applicability uncertainty as explicit typed readiness blockers.
+- Add the third real Region 1 EA package fixture contract and keep any uncovered applicability
+  uncertainty as explicit typed readiness blockers.
 - Select a small real-package set covering:
   - Custer Gallatin;
   - at least one additional Region 1 forest profile once implemented;

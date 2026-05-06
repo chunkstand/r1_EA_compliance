@@ -613,6 +613,46 @@
           ]
         },
         {
+          "id": "forest_plan_component_adjudication_eval",
+          "label": "ECID forest-plan component adjudication eval",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_eval.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "component_adjudication_eval_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "component_adjudication_eval_queue_items",
+              "json_path": "summary.queue_item_count",
+              "equals": 158
+            },
+            {
+              "name": "component_adjudication_eval_resolved_items",
+              "json_path": "summary.resolved_adjudication_count",
+              "equals": 158
+            },
+            {
+              "name": "component_adjudication_eval_pending_items",
+              "json_path": "summary.pending_adjudication_count",
+              "equals": 0
+            },
+            {
+              "name": "component_adjudication_eval_true_omissions",
+              "json_path": "summary.real_ea_omission_count",
+              "equals": 158
+            },
+            {
+              "name": "component_adjudication_eval_system_misses",
+              "json_path": "summary.system_miss_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
           "id": "phase_eval",
           "label": "ECID review-scoped phase eval",
           "path": "reviews/{review_id}/phase_eval_results.json",
@@ -858,10 +898,9 @@
     {
       "id": "region1-real-ea-slot-1",
       "label": "Second real Region 1 EA package: ECID preliminary EA",
-      "status": "blocked_forest_plan_component_adjudication",
-      "ready": false,
+      "status": "ready",
+      "ready": true,
       "required_for_current_promotion": false,
-      "failure_category": "forest_plan_reviewer_not_ready",
       "review_id": "region1-expansion-ecid-preliminary-ea",
       "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
       "last_local_signal": {
@@ -876,20 +915,25 @@
         "applicability_validation_passed": true,
         "generated_rule_pack_ready": true,
         "generated_rule_count": 46,
-        "compliance_validation_passed": false,
-        "compliance_review_reviewer_ready": false,
+        "compliance_validation_passed": true,
+        "compliance_review_reviewer_ready": true,
         "rule_claim_link_count": 211,
         "rule_claim_gap_count": 0,
         "forest_plan_applicable_standard_count": 29,
         "forest_plan_applied_standard_count": 7,
         "forest_plan_component_reviewer_resolution_count": 158,
         "forest_plan_component_adjudication_template_pending_count": 158,
+        "forest_plan_component_adjudication_eval_passed": true,
+        "forest_plan_component_adjudication_resolved_count": 158,
+        "forest_plan_component_adjudication_real_ea_omission_count": 158,
+        "forest_plan_component_adjudication_system_miss_count": 0,
         "adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/applicability/applicability_adjudication_template.json",
         "forest_plan_component_adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json",
-        "phase_eval_passed": false,
-        "phase_eval_reviewer_ready": false
+        "forest_plan_component_adjudication_eval_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_eval.json",
+        "phase_eval_passed": true,
+        "phase_eval_reviewer_ready": true
       },
-      "next_action": "Complete the 158-item forest-plan component adjudication worklist, run forest-plan-component-adjudication-eval, and rerun ECID compliance review and review-scoped phase eval before marking this slot ready.",
+      "next_action": "Proceed to Sequence 3 by replacing the package_fixture_missing third real-package expansion slot with a concrete Region 1 EA fixture contract.",
       "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {

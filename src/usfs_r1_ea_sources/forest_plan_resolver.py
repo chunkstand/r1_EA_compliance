@@ -1535,11 +1535,86 @@ def _summary(
         "retrieval_readiness": retrieval_readiness,
     }
     if component_evaluation_summary is not None:
+        component_adjudication = _component_adjudication_readiness(
+            review_dir=summary_path.parent,
+            review_id=str(context["review_id"]),
+            source_set_id=context.get("source_set_id"),
+            component_evaluation_summary=component_evaluation_summary,
+        )
         summary["component_evaluation"] = component_evaluation_summary
-        summary["reviewer_ready"] = summary["reviewer_ready"] and bool(
+        summary["component_adjudication"] = component_adjudication
+        component_gate_ready = bool(
             component_evaluation_summary.get("validation_passed")
+        ) or bool(component_adjudication.get("reviewer_ready"))
+        summary["reviewer_ready"] = summary["reviewer_ready"] and bool(
+            component_gate_ready
         )
     return summary
+
+
+def _component_adjudication_readiness(
+    *,
+    review_dir: Path,
+    review_id: str,
+    source_set_id: str | None,
+    component_evaluation_summary: dict,
+) -> dict:
+    eval_path = review_dir / "forest_plan_component_adjudication_eval.json"
+    summary = _read_json_if_exists(eval_path)
+    if not isinstance(summary, dict):
+        return {
+            "eval_path": str(eval_path),
+            "eval_exists": False,
+            "reviewer_ready": False,
+            "failed_checks": ["adjudication_eval_missing"],
+        }
+    eval_summary = (
+        summary.get("summary") if isinstance(summary.get("summary"), dict) else {}
+    )
+    current_queue_count = int(component_evaluation_summary.get("reviewer_resolution_count") or 0)
+    adjudication_queue_count = int(eval_summary.get("queue_item_count") or 0)
+    resolved_count = int(eval_summary.get("resolved_adjudication_count") or 0)
+    pending_count = int(eval_summary.get("pending_adjudication_count") or 0)
+    system_miss_count = int(eval_summary.get("system_miss_count") or 0)
+    failed_checks: list[str] = []
+    if not bool(eval_summary.get("passed")):
+        failed_checks.append("adjudication_eval_failed")
+    if (summary.get("review_id") or eval_summary.get("review_id")) != review_id:
+        failed_checks.append("review_id_mismatch")
+    if (summary.get("source_set_id") or eval_summary.get("source_set_id")) != source_set_id:
+        failed_checks.append("source_set_mismatch")
+    if adjudication_queue_count != current_queue_count:
+        failed_checks.append("queue_item_count_mismatch")
+    if resolved_count != current_queue_count:
+        failed_checks.append("resolved_item_count_mismatch")
+    if pending_count:
+        failed_checks.append("pending_adjudication")
+    if system_miss_count:
+        failed_checks.append("system_miss_adjudication")
+    return {
+        "eval_path": str(eval_path),
+        "eval_exists": True,
+        "reviewer_ready": not failed_checks,
+        "failed_checks": failed_checks,
+        "queue_item_count": adjudication_queue_count,
+        "current_queue_item_count": current_queue_count,
+        "resolved_adjudication_count": resolved_count,
+        "pending_adjudication_count": pending_count,
+        "real_ea_omission_count": int(eval_summary.get("real_ea_omission_count") or 0),
+        "system_miss_count": system_miss_count,
+        "adjudication_completion_rate": eval_summary.get("adjudication_completion_rate"),
+        "adjudication_outcome_counts": eval_summary.get("adjudication_outcome_counts", {}),
+        "disposition_counts": eval_summary.get("disposition_counts", {}),
+        "real_ea_omission_disposition_counts": eval_summary.get(
+            "real_ea_omission_disposition_counts",
+            {},
+        ),
+        "system_miss_disposition_counts": eval_summary.get(
+            "system_miss_disposition_counts",
+            {},
+        ),
+        "failure_category_counts": eval_summary.get("failure_category_counts", {}),
+    }
 
 
 def _retrieval_readiness_report(
