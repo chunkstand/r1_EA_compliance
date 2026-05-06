@@ -243,9 +243,14 @@ next-target lanes:
   required partitions, active/non-active eligibility boundary, non-active graph relationship limits,
   reserved `36 CFR part 220` archive boundary, and scoped workbook/source-delta plan. The live
   currentness gate passed with `189` active review-corpus records and `1` candidate/blocked source.
-- The next NEPA 3D implementation boundary is Milestone 1 graph export schema/contract, followed by
-  the source-set export builder. The FSH 1909.15 chapter rows remain a scoped workbook/source delta
-  before any graph export can claim handbook completeness.
+- NEPA 3D Milestone 1 is implemented. `config/nepa_3d_graph_contract_v1.json`,
+  `nepa_3d_graph_contract.py`, `docs/OUTPUT_SCHEMAS.md`, and
+  `tests/fixtures/nepa_3d_graph/` now define and validate the source-set/review graph export schema,
+  node and edge types, display states, review-readiness states, provenance fields, lens metadata,
+  currentness metadata, validation shape, and readiness blockers before exporter implementation.
+- The next NEPA 3D implementation boundary is Milestone 3 source-set knowledge graph export builder.
+  The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
+  claim handbook completeness.
 
 Current stop conditions for the next session:
 

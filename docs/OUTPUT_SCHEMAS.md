@@ -1039,6 +1039,192 @@ partitioning, source-partition contract structure, FSH 1909.15 chapter boundarie
 alignment so stale Milestone 2
 currentness gap text cannot remain after the gate passes.
 
+## NEPA 3D Knowledge Graph Export
+
+Contract path: `config/nepa_3d_graph_contract_v1.json`
+
+Source-set export paths:
+
+- `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl`
+- `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
+- `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
+
+Review-specific export paths:
+
+- `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json`
+- `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl`
+- `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
+- `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_summary.json`
+- `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_validation.json`
+
+The NEPA 3D graph export has schema version `nepa-3d-knowledge-graph-v1`. Milestone 1 defines the
+contract only; Milestone 3 will build the source-set exporter and later milestones will add review
+overlays and the viewer. The graph is a visualization/export layer over audited artifacts, not a
+separate legal knowledge base.
+
+Top-level graph shape:
+
+- `schema_version`
+- `graph_id`
+- `created_at`
+- `export_scope`, with `scope_type` of `source_set` or `review`; review exports must also carry
+  `review_id`
+- `inputs`, including upstream path and SHA256 values when available
+- `lens_metadata`
+- `nodes`
+- `edges`
+- `summary`
+- `validation`
+
+Required node types:
+
+- `source_set`
+- `review`
+- `authority_family`
+- `source_record`
+- `artifact`
+- `chunk`
+- `evidence_span`
+- `source_claim`
+- `rule_template`
+- `applicability_decision`
+- `generated_rule`
+- `compliance_finding`
+- `forest_unit`
+- `forest_plan`
+- `forest_plan_component`
+- `readiness_blocker`
+- `graph_lens`
+
+Required edge types:
+
+- `CONTAINS_AUTHORITY_FAMILY`
+- `HAS_SOURCE_RECORD`
+- `HAS_ARTIFACT`
+- `HAS_CHUNK`
+- `HAS_EVIDENCE_SPAN`
+- `SUPPORTS_SOURCE_CLAIM`
+- `SUPPORTS_RULE_TEMPLATE`
+- `PRODUCES_APPLICABILITY_DECISION`
+- `GENERATES_RULE`
+- `SUPPORTS_COMPLIANCE_FINDING`
+- `SUPERSEDED_BY`
+- `REPLACES_RESERVED_AUTHORITY`
+- `HAS_CURRENTNESS_STATUS`
+- `BLOCKED_BY`
+- `APPLIES_TO_REVIEW`
+- `NOT_APPLICABLE_TO_REVIEW`
+- `NEEDS_ADJUDICATION`
+- `ADJUDICATED_BY`
+- `BELONGS_TO_FOREST_UNIT`
+- `HAS_FOREST_PLAN`
+- `HAS_FOREST_COMPONENT`
+- `HAS_READINESS_BLOCKER`
+- `DISPLAYED_IN_LENS`
+
+Required display states are `active`, `superseded`, `reserved`, `candidate`, `out_of_scope`,
+`applicable`, `not_applicable`, `unresolved`, `adjudicated`, and `readiness_blocked`. Required
+review-readiness states are `reviewer_ready`, `not_reviewer_ready`, `not_review_specific`,
+`source_currentness_only`, `blocked`, and `needs_adjudication`.
+
+Required readiness blocker types are `missing_source`, `stale_artifact`, `superseded_source`,
+`retrieval_miss`, `graph_trace_gap`, `search_coverage_gap`, `adjudication_needed`,
+`package_fixture_missing`, `forest_profile_not_ready`, and `fsh_chapter_delta_required`.
+
+Node example:
+
+```json
+{
+  "node_id": "source_record:R1EA-001",
+  "node_type": "source_record",
+  "label": "7 CFR part 1b",
+  "display_status": "active",
+  "review_readiness_status": "reviewer_ready",
+  "provenance": {
+    "source_set_id": "source-set-ba8d0feae79501b8",
+    "source_record_id": "R1EA-001",
+    "citation_label": "R1EA-001 citation",
+    "artifact_sha256": "..."
+  },
+  "currentness_metadata": {
+    "source_partition": "active_review_corpus",
+    "source_partition_basis": "successful_status:downloaded",
+    "supersession_status": "current_authoritative_source",
+    "counts_as_current_authority": true
+  },
+  "readiness_blockers": []
+}
+```
+
+Edge example:
+
+```json
+{
+  "edge_id": "authority_family:usda_nepa_procedures->source_record:R1EA-001:HAS_SOURCE_RECORD",
+  "edge_type": "HAS_SOURCE_RECORD",
+  "source_node_id": "authority_family:usda_nepa_procedures",
+  "target_node_id": "source_record:R1EA-001",
+  "display_status": "active",
+  "review_readiness_status": "reviewer_ready",
+  "provenance": {
+    "source_set_id": "source-set-ba8d0feae79501b8",
+    "authority_family_id": "usda_nepa_procedures",
+    "source_record_id": "R1EA-001"
+  },
+  "readiness_blockers": []
+}
+```
+
+Lens metadata example:
+
+```json
+{
+  "lens_id": "authority_currentness",
+  "label": "Authority Currentness",
+  "description": "Display active, reserved, superseded, and candidate authority source state.",
+  "supported_node_types": ["authority_family", "source_record", "readiness_blocker"],
+  "supported_edge_types": ["HAS_SOURCE_RECORD", "REPLACES_RESERVED_AUTHORITY", "BLOCKED_BY"],
+  "display_status_values": ["active", "reserved", "readiness_blocked"]
+}
+```
+
+Summary example:
+
+```json
+{
+  "node_count": 6,
+  "edge_count": 6,
+  "node_type_counts": {"source_record": 2},
+  "edge_type_counts": {"HAS_SOURCE_RECORD": 2},
+  "display_status_counts": {"active": 7, "reserved": 3},
+  "review_readiness_status_counts": {"reviewer_ready": 3},
+  "readiness_blocker_counts": {"superseded_source": 2}
+}
+```
+
+Validation example:
+
+```json
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "nepa_3d_graph_edges_resolve_to_nodes",
+      "passed": true,
+      "expected": [],
+      "actual": []
+    }
+  ]
+}
+```
+
+Committed fixtures for the smallest contract slices live under
+`tests/fixtures/nepa_3d_graph/`. `minimal_source_set_graph.json` proves source-set currentness and
+source partition display. `minimal_review_graph.json` proves review-specific applicability,
+generated-rule, compliance-finding, and adjudication-blocker display.
+
 ## Applicability-First Review Outputs
 
 Path: `source_library/reviews/<review_id>/applicability/`

@@ -186,6 +186,27 @@ The live `authority-currentness` run for `source-set-ba8d0feae79501b8` now recor
 The current source set does not yet add FSH 1909.15 chapter records. The contract keeps that as a
 scoped workbook/source delta before any NEPA 3D graph export claims handbook completeness.
 
+## NEPA 3D Graph Export Contract
+
+NEPA 3D Milestone 1 is implemented by `config/nepa_3d_graph_contract_v1.json`,
+`src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`, `docs/OUTPUT_SCHEMAS.md`, and the smallest
+source-set/review graph fixtures under `tests/fixtures/nepa_3d_graph/`. This is a contract slice
+only: it defines the graph schema before the Milestone 3 source-set exporter or later 3D viewer is
+built.
+
+The contract validates:
+
+- source-set and review export scopes, with `review_id` required for review-specific graphs;
+- required node types for source sets, reviews, authority families, source records, artifacts,
+  chunks, evidence spans, source claims, rule templates, applicability decisions, generated rules,
+  compliance findings, forest-plan entities, readiness blockers, and graph lenses;
+- required edge types for evidence paths, source/currentness relationships, package
+  applicability, forest-plan overlays, compliance findings, and readiness blockers;
+- display states for active, superseded, reserved, candidate, out-of-scope, applicable,
+  not-applicable, unresolved, adjudicated, and readiness-blocked records;
+- review-readiness states and blocker types so graph display status cannot be confused with
+  reviewer readiness.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

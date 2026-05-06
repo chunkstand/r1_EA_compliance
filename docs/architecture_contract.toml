@@ -80,6 +80,26 @@ modules = ["evidence_graph"]
 allowed_import_layers = ["foundation", "extraction", "claims", "review", "evidence_graph"]
 
 [[layers]]
+name = "knowledge_graph"
+summary = "NEPA 3D graph contract and future source-set/review export assembly."
+modules = ["nepa_3d_graph_contract"]
+allowed_import_layers = [
+  "foundation",
+  "catalog",
+  "extraction",
+  "retrieval",
+  "claims",
+  "rule_packs",
+  "review",
+  "review_support",
+  "evidence_graph",
+  "package_context",
+  "applicability",
+  "compliance",
+  "knowledge_graph",
+]
+
+[[layers]]
 name = "package_context"
 summary = "Package fact graph context used by applicability."
 modules = ["package_fact_graph"]
@@ -168,6 +188,7 @@ allowed_import_layers = [
   "review",
   "review_support",
   "evidence_graph",
+  "knowledge_graph",
   "package_context",
   "applicability",
   "compliance",
@@ -223,6 +244,21 @@ paths = [
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_edges.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite",
+]
+
+[[artifacts]]
+owner_layer = "knowledge_graph"
+paths = [
+  "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl",
+  "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl",
+  "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json",
+  "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json",
+  "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl",
+  "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_edges.jsonl",
+  "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_summary.json",
+  "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_validation.json",
 ]
 
 [[artifacts]]

@@ -1,0 +1,518 @@
+{
+  "schema_version": "nepa-3d-graph-contract-v1",
+  "graph_schema_version": "nepa-3d-knowledge-graph-v1",
+  "contract_id": "nepa-3d-knowledge-graph-contract-v1",
+  "as_of_date": "2026-05-06",
+  "export_scopes": [
+    "source_set",
+    "review"
+  ],
+  "graph_shape": {
+    "required_top_level_fields": [
+      "schema_version",
+      "graph_id",
+      "created_at",
+      "export_scope",
+      "inputs",
+      "lens_metadata",
+      "nodes",
+      "edges",
+      "summary",
+      "validation"
+    ],
+    "required_node_fields": [
+      "node_id",
+      "node_type",
+      "label",
+      "display_status",
+      "review_readiness_status",
+      "provenance",
+      "currentness_metadata",
+      "readiness_blockers"
+    ],
+    "required_edge_fields": [
+      "edge_id",
+      "edge_type",
+      "source_node_id",
+      "target_node_id",
+      "display_status",
+      "review_readiness_status",
+      "provenance",
+      "readiness_blockers"
+    ],
+    "required_summary_fields": [
+      "node_count",
+      "edge_count",
+      "node_type_counts",
+      "edge_type_counts",
+      "display_status_counts",
+      "review_readiness_status_counts",
+      "readiness_blocker_counts"
+    ],
+    "required_validation_fields": [
+      "passed",
+      "checks"
+    ]
+  },
+  "node_types": [
+    {
+      "node_type": "source_set",
+      "description": "A catalog source set and its derived artifact universe.",
+      "required_provenance_fields": [
+        "source_set_id",
+        "source_set_manifest_sha256"
+      ]
+    },
+    {
+      "node_type": "review",
+      "description": "A package-specific review that overlays applicability and compliance state.",
+      "required_provenance_fields": [
+        "review_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "authority_family",
+      "description": "A normalized authority family from the authority-universe inventory.",
+      "required_provenance_fields": [
+        "authority_family_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "source_record",
+      "description": "A workbook/catalog source record with citation and currentness metadata.",
+      "required_provenance_fields": [
+        "source_record_id",
+        "citation_label",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "artifact",
+      "description": "A captured source artifact referenced by catalog provenance.",
+      "required_provenance_fields": [
+        "source_record_id",
+        "artifact_sha256",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "chunk",
+      "description": "A deterministic extracted chunk from the source-set extraction layer.",
+      "required_provenance_fields": [
+        "source_record_id",
+        "chunk_index",
+        "content_sha256",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "evidence_span",
+      "description": "A retrievable evidence span tied to chunk offsets and source provenance.",
+      "required_provenance_fields": [
+        "source_record_id",
+        "chunk_index",
+        "char_start",
+        "char_end",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "source_claim",
+      "description": "A source-backed claim extracted from evidence.",
+      "required_provenance_fields": [
+        "claim_id",
+        "source_record_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "rule_template",
+      "description": "A base rule or authority-family rule template before package-specific applicability.",
+      "required_provenance_fields": [
+        "rule_id",
+        "rule_pack_id",
+        "rule_pack_version",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "applicability_decision",
+      "description": "A package-specific applicability, non-applicability, unresolved, or adjudicated decision.",
+      "required_provenance_fields": [
+        "authority_family_id",
+        "review_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "generated_rule",
+      "description": "A package-specific generated rule derived from an applicable authority decision.",
+      "required_provenance_fields": [
+        "generated_rule_id",
+        "authority_family_id",
+        "review_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "compliance_finding",
+      "description": "A citation-bearing compliance finding generated for a review.",
+      "required_provenance_fields": [
+        "finding_id",
+        "review_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "forest_unit",
+      "description": "A Region 1 forest or grassland unit used by forest-plan overlays.",
+      "required_provenance_fields": [
+        "forest_code",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "forest_plan",
+      "description": "A current forest-plan source and profile boundary.",
+      "required_provenance_fields": [
+        "forest_code",
+        "source_record_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "forest_plan_component",
+      "description": "A forest-plan component, standard, guideline, area, or overlay.",
+      "required_provenance_fields": [
+        "component_id",
+        "forest_code",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "readiness_blocker",
+      "description": "A reviewer-visible blocker preventing active review or graph promotion.",
+      "required_provenance_fields": [
+        "blocker_type",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "graph_lens",
+      "description": "A display lens such as currentness, applicability, evidence path, or readiness.",
+      "required_provenance_fields": [
+        "lens_id"
+      ]
+    }
+  ],
+  "edge_types": [
+    {
+      "edge_type": "CONTAINS_AUTHORITY_FAMILY",
+      "source_node_types": [
+        "source_set"
+      ],
+      "target_node_types": [
+        "authority_family"
+      ]
+    },
+    {
+      "edge_type": "HAS_SOURCE_RECORD",
+      "source_node_types": [
+        "authority_family"
+      ],
+      "target_node_types": [
+        "source_record"
+      ]
+    },
+    {
+      "edge_type": "HAS_ARTIFACT",
+      "source_node_types": [
+        "source_record"
+      ],
+      "target_node_types": [
+        "artifact"
+      ]
+    },
+    {
+      "edge_type": "HAS_CHUNK",
+      "source_node_types": [
+        "artifact"
+      ],
+      "target_node_types": [
+        "chunk"
+      ]
+    },
+    {
+      "edge_type": "HAS_EVIDENCE_SPAN",
+      "source_node_types": [
+        "chunk"
+      ],
+      "target_node_types": [
+        "evidence_span"
+      ]
+    },
+    {
+      "edge_type": "SUPPORTS_SOURCE_CLAIM",
+      "source_node_types": [
+        "evidence_span"
+      ],
+      "target_node_types": [
+        "source_claim"
+      ]
+    },
+    {
+      "edge_type": "SUPPORTS_RULE_TEMPLATE",
+      "source_node_types": [
+        "source_claim"
+      ],
+      "target_node_types": [
+        "rule_template"
+      ]
+    },
+    {
+      "edge_type": "PRODUCES_APPLICABILITY_DECISION",
+      "source_node_types": [
+        "rule_template",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "applicability_decision"
+      ]
+    },
+    {
+      "edge_type": "GENERATES_RULE",
+      "source_node_types": [
+        "applicability_decision"
+      ],
+      "target_node_types": [
+        "generated_rule"
+      ]
+    },
+    {
+      "edge_type": "SUPPORTS_COMPLIANCE_FINDING",
+      "source_node_types": [
+        "generated_rule",
+        "evidence_span"
+      ],
+      "target_node_types": [
+        "compliance_finding"
+      ]
+    },
+    {
+      "edge_type": "SUPERSEDED_BY",
+      "source_node_types": [
+        "source_record",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "source_record",
+        "authority_family"
+      ]
+    },
+    {
+      "edge_type": "REPLACES_RESERVED_AUTHORITY",
+      "source_node_types": [
+        "source_record",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "source_record",
+        "authority_family"
+      ]
+    },
+    {
+      "edge_type": "HAS_CURRENTNESS_STATUS",
+      "source_node_types": [
+        "source_record",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "readiness_blocker",
+        "source_record"
+      ]
+    },
+    {
+      "edge_type": "BLOCKED_BY",
+      "source_node_types": [
+        "authority_family",
+        "source_record",
+        "review"
+      ],
+      "target_node_types": [
+        "readiness_blocker"
+      ]
+    },
+    {
+      "edge_type": "APPLIES_TO_REVIEW",
+      "source_node_types": [
+        "applicability_decision",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "review"
+      ]
+    },
+    {
+      "edge_type": "NOT_APPLICABLE_TO_REVIEW",
+      "source_node_types": [
+        "applicability_decision",
+        "authority_family"
+      ],
+      "target_node_types": [
+        "review"
+      ]
+    },
+    {
+      "edge_type": "NEEDS_ADJUDICATION",
+      "source_node_types": [
+        "applicability_decision"
+      ],
+      "target_node_types": [
+        "readiness_blocker"
+      ]
+    },
+    {
+      "edge_type": "ADJUDICATED_BY",
+      "source_node_types": [
+        "applicability_decision"
+      ],
+      "target_node_types": [
+        "review"
+      ]
+    },
+    {
+      "edge_type": "BELONGS_TO_FOREST_UNIT",
+      "source_node_types": [
+        "review",
+        "forest_plan",
+        "forest_plan_component"
+      ],
+      "target_node_types": [
+        "forest_unit"
+      ]
+    },
+    {
+      "edge_type": "HAS_FOREST_PLAN",
+      "source_node_types": [
+        "forest_unit"
+      ],
+      "target_node_types": [
+        "forest_plan"
+      ]
+    },
+    {
+      "edge_type": "HAS_FOREST_COMPONENT",
+      "source_node_types": [
+        "forest_plan"
+      ],
+      "target_node_types": [
+        "forest_plan_component"
+      ]
+    },
+    {
+      "edge_type": "HAS_READINESS_BLOCKER",
+      "source_node_types": [
+        "source_set",
+        "review",
+        "authority_family",
+        "source_record"
+      ],
+      "target_node_types": [
+        "readiness_blocker"
+      ]
+    },
+    {
+      "edge_type": "DISPLAYED_IN_LENS",
+      "source_node_types": [
+        "source_set",
+        "review",
+        "authority_family",
+        "source_record",
+        "applicability_decision",
+        "readiness_blocker"
+      ],
+      "target_node_types": [
+        "graph_lens"
+      ]
+    }
+  ],
+  "display_status_values": [
+    "active",
+    "superseded",
+    "reserved",
+    "candidate",
+    "out_of_scope",
+    "applicable",
+    "not_applicable",
+    "unresolved",
+    "adjudicated",
+    "readiness_blocked"
+  ],
+  "review_readiness_status_values": [
+    "reviewer_ready",
+    "not_reviewer_ready",
+    "not_review_specific",
+    "source_currentness_only",
+    "blocked",
+    "needs_adjudication"
+  ],
+  "readiness_blocker_types": [
+    "missing_source",
+    "stale_artifact",
+    "superseded_source",
+    "retrieval_miss",
+    "graph_trace_gap",
+    "search_coverage_gap",
+    "adjudication_needed",
+    "package_fixture_missing",
+    "forest_profile_not_ready",
+    "fsh_chapter_delta_required"
+  ],
+  "source_partition_values": [
+    "active_review_corpus",
+    "currentness_supersession_archive",
+    "candidate_blocked_source"
+  ],
+  "source_partition_edge_limits": {
+    "active_review_corpus": [
+      "HAS_SOURCE_RECORD",
+      "HAS_ARTIFACT",
+      "HAS_CHUNK",
+      "HAS_EVIDENCE_SPAN",
+      "SUPPORTS_SOURCE_CLAIM",
+      "SUPPORTS_RULE_TEMPLATE",
+      "PRODUCES_APPLICABILITY_DECISION",
+      "GENERATES_RULE",
+      "SUPPORTS_COMPLIANCE_FINDING"
+    ],
+    "candidate_blocked_source": [
+      "HAS_CURRENTNESS_STATUS",
+      "BLOCKED_BY"
+    ],
+    "currentness_supersession_archive": [
+      "SUPERSEDED_BY",
+      "REPLACES_RESERVED_AUTHORITY",
+      "HAS_CURRENTNESS_STATUS",
+      "BLOCKED_BY"
+    ]
+  },
+  "lens_metadata_contract": {
+    "required_fields": [
+      "lens_id",
+      "label",
+      "description",
+      "supported_node_types",
+      "supported_edge_types",
+      "display_status_values"
+    ],
+    "required_lenses": [
+      "authority_currentness",
+      "forest_plan",
+      "package_applicability",
+      "evidence_path",
+      "readiness_blockers"
+    ]
+  }
+}

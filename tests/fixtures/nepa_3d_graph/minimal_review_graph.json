@@ -1,0 +1,305 @@
+{
+  "schema_version": "nepa-3d-knowledge-graph-v1",
+  "graph_id": "minimal-review-graph",
+  "created_at": "2026-05-06T00:00:00Z",
+  "export_scope": {
+    "scope_type": "review",
+    "source_set_id": "source-set-test",
+    "review_id": "review-test"
+  },
+  "inputs": [
+    {
+      "name": "applicability_decisions",
+      "path": "source_library/reviews/review-test/applicability/applicability_decisions.jsonl",
+      "sha256": "applicability-decisions-sha256"
+    },
+    {
+      "name": "compliance_review",
+      "path": "source_library/reviews/review-test/compliance_review.json",
+      "sha256": "compliance-review-sha256"
+    }
+  ],
+  "lens_metadata": [
+    {
+      "lens_id": "package_applicability",
+      "label": "Package Applicability",
+      "description": "Display applicable, unresolved, and adjudication-needed authority states.",
+      "supported_node_types": [
+        "review",
+        "authority_family",
+        "applicability_decision",
+        "generated_rule",
+        "compliance_finding",
+        "readiness_blocker"
+      ],
+      "supported_edge_types": [
+        "PRODUCES_APPLICABILITY_DECISION",
+        "APPLIES_TO_REVIEW",
+        "GENERATES_RULE",
+        "SUPPORTS_COMPLIANCE_FINDING",
+        "NEEDS_ADJUDICATION"
+      ],
+      "display_status_values": [
+        "active",
+        "applicable",
+        "unresolved",
+        "readiness_blocked"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "review:review-test",
+      "node_type": "review",
+      "label": "review-test",
+      "display_status": "active",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {},
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "authority_family:land_exchange",
+      "node_type": "authority_family",
+      "label": "Land exchange authority",
+      "display_status": "active",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "land_exchange",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "family_status": "active",
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "applicability_decision:review-test:land_exchange",
+      "node_type": "applicability_decision",
+      "label": "Land exchange applies to review-test",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "land_exchange",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "applicability_decision:review-test:cultural_resources",
+      "node_type": "applicability_decision",
+      "label": "Cultural resources needs adjudication",
+      "display_status": "unresolved",
+      "review_readiness_status": "needs_adjudication",
+      "provenance": {
+        "authority_family_id": "cultural_resources",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": [
+        "adjudication_needed"
+      ]
+    },
+    {
+      "node_id": "readiness_blocker:review-test:adjudication_needed",
+      "node_type": "readiness_blocker",
+      "label": "Applicability adjudication needed",
+      "display_status": "readiness_blocked",
+      "review_readiness_status": "blocked",
+      "provenance": {
+        "blocker_type": "adjudication_needed",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {},
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "generated_rule:review-test:LAND_EXCHANGE_001",
+      "node_type": "generated_rule",
+      "label": "Generated land exchange rule",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "generated_rule_id": "LAND_EXCHANGE_001",
+        "authority_family_id": "land_exchange",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "compliance_finding:review-test:LAND_EXCHANGE_001",
+      "node_type": "compliance_finding",
+      "label": "Finding for generated land exchange rule",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "finding_id": "LAND_EXCHANGE_001",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "authority_family:land_exchange->applicability_decision:review-test:land_exchange:PRODUCES_APPLICABILITY_DECISION",
+      "edge_type": "PRODUCES_APPLICABILITY_DECISION",
+      "source_node_id": "authority_family:land_exchange",
+      "target_node_id": "applicability_decision:review-test:land_exchange",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "land_exchange",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "applicability_decision:review-test:land_exchange->review:review-test:APPLIES_TO_REVIEW",
+      "edge_type": "APPLIES_TO_REVIEW",
+      "source_node_id": "applicability_decision:review-test:land_exchange",
+      "target_node_id": "review:review-test",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "land_exchange",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "applicability_decision:review-test:land_exchange->generated_rule:review-test:LAND_EXCHANGE_001:GENERATES_RULE",
+      "edge_type": "GENERATES_RULE",
+      "source_node_id": "applicability_decision:review-test:land_exchange",
+      "target_node_id": "generated_rule:review-test:LAND_EXCHANGE_001",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "land_exchange",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "generated_rule:review-test:LAND_EXCHANGE_001->compliance_finding:review-test:LAND_EXCHANGE_001:SUPPORTS_COMPLIANCE_FINDING",
+      "edge_type": "SUPPORTS_COMPLIANCE_FINDING",
+      "source_node_id": "generated_rule:review-test:LAND_EXCHANGE_001",
+      "target_node_id": "compliance_finding:review-test:LAND_EXCHANGE_001",
+      "display_status": "applicable",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "finding_id": "LAND_EXCHANGE_001",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "authority_family:land_exchange->applicability_decision:review-test:cultural_resources:PRODUCES_APPLICABILITY_DECISION",
+      "edge_type": "PRODUCES_APPLICABILITY_DECISION",
+      "source_node_id": "authority_family:land_exchange",
+      "target_node_id": "applicability_decision:review-test:cultural_resources",
+      "display_status": "unresolved",
+      "review_readiness_status": "needs_adjudication",
+      "provenance": {
+        "authority_family_id": "cultural_resources",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": [
+        "adjudication_needed"
+      ]
+    },
+    {
+      "edge_id": "applicability_decision:review-test:cultural_resources->readiness_blocker:review-test:adjudication_needed:NEEDS_ADJUDICATION",
+      "edge_type": "NEEDS_ADJUDICATION",
+      "source_node_id": "applicability_decision:review-test:cultural_resources",
+      "target_node_id": "readiness_blocker:review-test:adjudication_needed",
+      "display_status": "readiness_blocked",
+      "review_readiness_status": "needs_adjudication",
+      "provenance": {
+        "authority_family_id": "cultural_resources",
+        "review_id": "review-test",
+        "source_set_id": "source-set-test",
+        "blocker_type": "adjudication_needed"
+      },
+      "readiness_blockers": [
+        "adjudication_needed"
+      ]
+    }
+  ],
+  "summary": {
+    "node_count": 7,
+    "edge_count": 6,
+    "node_type_counts": {
+      "applicability_decision": 2,
+      "authority_family": 1,
+      "compliance_finding": 1,
+      "generated_rule": 1,
+      "readiness_blocker": 1,
+      "review": 1
+    },
+    "edge_type_counts": {
+      "APPLIES_TO_REVIEW": 1,
+      "GENERATES_RULE": 1,
+      "NEEDS_ADJUDICATION": 1,
+      "PRODUCES_APPLICABILITY_DECISION": 2,
+      "SUPPORTS_COMPLIANCE_FINDING": 1
+    },
+    "display_status_counts": {
+      "active": 2,
+      "applicable": 7,
+      "readiness_blocked": 2,
+      "unresolved": 2
+    },
+    "review_readiness_status_counts": {
+      "blocked": 1,
+      "needs_adjudication": 3,
+      "reviewer_ready": 9
+    },
+    "readiness_blocker_counts": {
+      "adjudication_needed": 3
+    }
+  },
+  "validation": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "fixture_contract_slice",
+        "passed": true
+      }
+    ]
+  }
+}

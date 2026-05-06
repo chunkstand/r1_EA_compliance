@@ -70,7 +70,9 @@ records; the live catalog partitions are `189` active review-corpus records and 
 blocked source; the contract itself now validates required partitions, graph-rule limits, reserved
 `36 CFR part 220` boundaries, and scoped workbook/source deltas; and reserved/superseded authority
 fixtures plus FSH 1909.15 chapter-collapse fixtures fail closed before graph export work can rely on
-them. Milestone 3 adds
+them. NEPA 3D Milestone 1 now defines the source-set/review graph export contract in
+`config/nepa_3d_graph_contract_v1.json` with fixture-backed validation for node and edge types,
+display status, review readiness, provenance, lens metadata, and readiness blockers. Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
 independent applicability eval and gold-adjudication coverage for those expanded families: seed evals
@@ -119,6 +121,7 @@ heuristics.
 - `config/authority_universe_families_nepa_ea_v1.json`
 - `config/authority_source_addition_decisions_nepa_ea_v1.json`
 - `config/source_partition_contract_nepa_3d_v1.json`
+- `config/nepa_3d_graph_contract_v1.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`
@@ -154,6 +157,13 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite`
   - `source_library/derived/<source_set_id>/evidence_graph/evidence_graph_validation.json`
   - `source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json`
+- NEPA 3D knowledge graph outputs:
+  - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl`
+  - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
+  - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
+  - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
   - `source_library/derived/<source_set_id>/claims/entities.jsonl`

@@ -1,0 +1,274 @@
+{
+  "schema_version": "nepa-3d-knowledge-graph-v1",
+  "graph_id": "minimal-source-set-graph",
+  "created_at": "2026-05-06T00:00:00Z",
+  "export_scope": {
+    "scope_type": "source_set",
+    "source_set_id": "source-set-test"
+  },
+  "inputs": [
+    {
+      "name": "source_catalog",
+      "path": "source_library/catalog/source_catalog.jsonl",
+      "sha256": "source-catalog-sha256"
+    },
+    {
+      "name": "authority_currentness",
+      "path": "source_library/derived/source-set-test/authority_currentness/authority_currentness_report.json",
+      "sha256": "currentness-sha256"
+    }
+  ],
+  "lens_metadata": [
+    {
+      "lens_id": "authority_currentness",
+      "label": "Authority Currentness",
+      "description": "Display active, reserved, superseded, and candidate authority source state.",
+      "supported_node_types": [
+        "authority_family",
+        "source_record",
+        "readiness_blocker"
+      ],
+      "supported_edge_types": [
+        "HAS_SOURCE_RECORD",
+        "REPLACES_RESERVED_AUTHORITY",
+        "BLOCKED_BY"
+      ],
+      "display_status_values": [
+        "active",
+        "reserved",
+        "readiness_blocked"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "source_set:source-set-test",
+      "node_type": "source_set",
+      "label": "source-set-test",
+      "display_status": "active",
+      "review_readiness_status": "not_review_specific",
+      "provenance": {
+        "source_set_id": "source-set-test",
+        "source_set_manifest_sha256": "manifest-sha256"
+      },
+      "currentness_metadata": {},
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "authority_family:usda_nepa_procedures",
+      "node_type": "authority_family",
+      "label": "USDA NEPA procedures",
+      "display_status": "active",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "usda_nepa_procedures",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "family_status": "active",
+        "source_partition": "active_review_corpus",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "source_record:R1EA-001",
+      "node_type": "source_record",
+      "label": "7 CFR part 1b",
+      "display_status": "active",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "source_record_id": "R1EA-001",
+        "citation_label": "R1EA-001 citation",
+        "source_set_id": "source-set-test",
+        "artifact_sha256": "artifact-active-sha256"
+      },
+      "currentness_metadata": {
+        "source_partition": "active_review_corpus",
+        "source_partition_basis": "successful_status:downloaded",
+        "supersession_status": "current_authoritative_source",
+        "counts_as_current_authority": true
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "source_record:R1EA-220",
+      "node_type": "source_record",
+      "label": "36 CFR part 220 reserved source",
+      "display_status": "reserved",
+      "review_readiness_status": "source_currentness_only",
+      "provenance": {
+        "source_record_id": "R1EA-220",
+        "citation_label": "R1EA-220 citation",
+        "source_set_id": "source-set-test",
+        "artifact_sha256": "artifact-reserved-sha256"
+      },
+      "currentness_metadata": {
+        "source_partition": "currentness_supersession_archive",
+        "source_partition_basis": "non_current_source_marker",
+        "supersession_status": "superseded_replacement_source",
+        "counts_as_current_authority": false
+      },
+      "readiness_blockers": [
+        "superseded_source"
+      ]
+    },
+    {
+      "node_id": "readiness_blocker:superseded_source:R1EA-220",
+      "node_type": "readiness_blocker",
+      "label": "Reserved source cannot derive active review rules",
+      "display_status": "readiness_blocked",
+      "review_readiness_status": "blocked",
+      "provenance": {
+        "blocker_type": "superseded_source",
+        "source_record_id": "R1EA-220",
+        "source_set_id": "source-set-test"
+      },
+      "currentness_metadata": {
+        "source_partition": "currentness_supersession_archive",
+        "supersession_status": "superseded_replacement_source",
+        "counts_as_current_authority": false
+      },
+      "readiness_blockers": []
+    },
+    {
+      "node_id": "graph_lens:authority_currentness",
+      "node_type": "graph_lens",
+      "label": "Authority Currentness",
+      "display_status": "active",
+      "review_readiness_status": "not_review_specific",
+      "provenance": {
+        "lens_id": "authority_currentness"
+      },
+      "currentness_metadata": {},
+      "readiness_blockers": []
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "source_set:source-set-test->authority_family:usda_nepa_procedures:CONTAINS_AUTHORITY_FAMILY",
+      "edge_type": "CONTAINS_AUTHORITY_FAMILY",
+      "source_node_id": "source_set:source-set-test",
+      "target_node_id": "authority_family:usda_nepa_procedures",
+      "display_status": "active",
+      "review_readiness_status": "not_review_specific",
+      "provenance": {
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "authority_family:usda_nepa_procedures->source_record:R1EA-001:HAS_SOURCE_RECORD",
+      "edge_type": "HAS_SOURCE_RECORD",
+      "source_node_id": "authority_family:usda_nepa_procedures",
+      "target_node_id": "source_record:R1EA-001",
+      "display_status": "active",
+      "review_readiness_status": "reviewer_ready",
+      "provenance": {
+        "authority_family_id": "usda_nepa_procedures",
+        "source_record_id": "R1EA-001",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "authority_family:usda_nepa_procedures->source_record:R1EA-220:HAS_SOURCE_RECORD",
+      "edge_type": "HAS_SOURCE_RECORD",
+      "source_node_id": "authority_family:usda_nepa_procedures",
+      "target_node_id": "source_record:R1EA-220",
+      "display_status": "reserved",
+      "review_readiness_status": "source_currentness_only",
+      "provenance": {
+        "authority_family_id": "usda_nepa_procedures",
+        "source_record_id": "R1EA-220",
+        "source_set_id": "source-set-test"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "source_record:R1EA-220->source_record:R1EA-001:REPLACES_RESERVED_AUTHORITY",
+      "edge_type": "REPLACES_RESERVED_AUTHORITY",
+      "source_node_id": "source_record:R1EA-220",
+      "target_node_id": "source_record:R1EA-001",
+      "display_status": "reserved",
+      "review_readiness_status": "source_currentness_only",
+      "provenance": {
+        "source_set_id": "source-set-test",
+        "source_record_id": "R1EA-220",
+        "replacement_source_record_id": "R1EA-001"
+      },
+      "readiness_blockers": []
+    },
+    {
+      "edge_id": "source_record:R1EA-220->readiness_blocker:superseded_source:R1EA-220:BLOCKED_BY",
+      "edge_type": "BLOCKED_BY",
+      "source_node_id": "source_record:R1EA-220",
+      "target_node_id": "readiness_blocker:superseded_source:R1EA-220",
+      "display_status": "readiness_blocked",
+      "review_readiness_status": "blocked",
+      "provenance": {
+        "source_set_id": "source-set-test",
+        "source_record_id": "R1EA-220",
+        "blocker_type": "superseded_source"
+      },
+      "readiness_blockers": [
+        "superseded_source"
+      ]
+    },
+    {
+      "edge_id": "source_set:source-set-test->graph_lens:authority_currentness:DISPLAYED_IN_LENS",
+      "edge_type": "DISPLAYED_IN_LENS",
+      "source_node_id": "source_set:source-set-test",
+      "target_node_id": "graph_lens:authority_currentness",
+      "display_status": "active",
+      "review_readiness_status": "not_review_specific",
+      "provenance": {
+        "source_set_id": "source-set-test",
+        "lens_id": "authority_currentness"
+      },
+      "readiness_blockers": []
+    }
+  ],
+  "summary": {
+    "node_count": 6,
+    "edge_count": 6,
+    "node_type_counts": {
+      "authority_family": 1,
+      "graph_lens": 1,
+      "readiness_blocker": 1,
+      "source_record": 2,
+      "source_set": 1
+    },
+    "edge_type_counts": {
+      "BLOCKED_BY": 1,
+      "CONTAINS_AUTHORITY_FAMILY": 1,
+      "DISPLAYED_IN_LENS": 1,
+      "HAS_SOURCE_RECORD": 2,
+      "REPLACES_RESERVED_AUTHORITY": 1
+    },
+    "display_status_counts": {
+      "active": 7,
+      "readiness_blocked": 2,
+      "reserved": 3
+    },
+    "review_readiness_status_counts": {
+      "blocked": 2,
+      "not_review_specific": 4,
+      "reviewer_ready": 3,
+      "source_currentness_only": 3
+    },
+    "readiness_blocker_counts": {
+      "superseded_source": 2
+    }
+  },
+  "validation": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "fixture_contract_slice",
+        "passed": true
+      }
+    ]
+  }
+}

@@ -236,6 +236,13 @@ The 3D viewer must support these lenses before it is treated as useful:
 Goal:
 Define the normalized graph export schema before implementation.
 
+Implementation status:
+Completed on 2026-05-06. `config/nepa_3d_graph_contract_v1.json`,
+`nepa_3d_graph_contract.py`, and `tests/fixtures/nepa_3d_graph/` define and validate the
+source-set and review-specific graph export contract before exporter implementation. The contract
+names required node types, edge types, display states, review-readiness states, readiness blockers,
+top-level graph shape, node/edge shape, summary shape, lens metadata, and validation shape.
+
 Required outputs:
 
 - `docs/OUTPUT_SCHEMAS.md` section for `nepa_3d_knowledge_graph.json`
