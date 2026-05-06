@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Readiness graph showing graph-ready and blocked forest profiles">
   <defs>
-    <filter id="clientShadow" x="-20%" y="-20%" width="140%" height="140%">
+    <filter id="serviceShadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#141713" flood-opacity="0.13"/>
     </filter>
-    <marker id="arrowClient" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <marker id="arrowService" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#70726c"/>
     </marker>
   </defs>
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The graph can demo a validated Custer Gallatin review while still showing why broader Region 1 coverage is blocked until profile and source evidence is complete.</text>
-  <path d="M 780 650 L 780 310" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/>
-  <path d="M 780 650 L 330 430" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(330 430)" filter="url(#clientShadow)">
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 example shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
+  <path d="M 780 650 L 780 310" stroke="#26786f" stroke-width="8" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>
+  <path d="M 780 650 L 330 430" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(330 430)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Beaverhead-Deerlodge</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 520 390" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(520 390)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 520 390" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(520 390)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Bitterroot</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1020 460" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(1020 460)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 1020 460" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1020 460)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Dakota Prairie Grasslands</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1085 610" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(1085 610)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 1085 610" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1085 610)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Flathead</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 1010 750" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(1010 750)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 1010 750" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(1010 750)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Helena-Lewis Clark</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 820 805" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(820 805)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 820 805" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(820 805)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Idaho Panhandle</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 620 790" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(620 790)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 620 790" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(620 790)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Kootenai</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 420 690" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(420 690)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 420 690" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(420 690)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Lolo</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
-  </g><path d="M 780 650 L 285 570" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/><g transform="translate(285 570)" filter="url(#clientShadow)">
+  </g><path d="M 780 650 L 285 570" stroke="#d68578" stroke-width="5" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/><g transform="translate(285 570)" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="#b13d38" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">Nez Perce-Clearwater</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="#b13d38">blocked profile</text>
   </g>
-  <g transform="translate(780 650)" filter="url(#clientShadow)">
+  <g transform="translate(780 650)" filter="url(#serviceShadow)">
     <circle r="126" fill="#ffffff" stroke="#7a6e3d" stroke-width="9"/>
     <circle r="107" fill="#7a6e3d" opacity="0.10"/>
     <text y="-153" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Review scope</text>
     <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Custer Gallatin</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">EA</text>
     <text y="164" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#7a6e3d"></text>
   </g>
-  <g transform="translate(780 310)" filter="url(#clientShadow)">
+  <g transform="translate(780 310)" filter="url(#serviceShadow)">
     <circle r="98" fill="#ffffff" stroke="#26786f" stroke-width="9"/>
     <circle r="79" fill="#26786f" opacity="0.10"/>
     <text y="-125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">Ready forest profile</text>
     <text x="0" y="-18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Custer</text><text x="0" y="9" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#171713">Gallatin</text>
-    <text y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">demo scope</text>
+    <text y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="750" fill="#26786f">example scope</text>
   </g>
-  <g transform="translate(1220 196)" filter="url(#clientShadow)">
+  <g transform="translate(1220 196)" filter="url(#serviceShadow)">
     <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
     <text x="35" y="55" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Blockers remain visible</text>
     <text x="35" y="92" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">30 readiness blocker nodes and 30 blocker</text><text x="35" y="115" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">edges are exported as graph evidence.</text>
@@ -89,12 +89,12 @@
           <text x="64" y="61" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">2 graph item(s)</text>
         </g>
   </g>
-  <g transform="translate(72 890)" filter="url(#clientShadow)">
+  <g transform="translate(72 890)" filter="url(#serviceShadow)">
     <rect width="1656" height="132" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Demo value</text>
+    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value</text>
     <circle cx="39" cy="77" r="5" fill="#26786f"/>
   <text x="56" y="84" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">1 graph-ready forest profile and 9 blocked forest profiles are visible in one view.</text>
     <circle cx="39" cy="111" r="5" fill="#26786f"/>
-  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">The viewer can show capability now without implying that every Region 1 profile is ready for compliance promotion.</text>
+  <text x="56" y="118" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="19" fill="#4f554e">The review process can show capability now without implying that every Region 1 profile is ready for service delivery.</text>
   </g>
 </svg>

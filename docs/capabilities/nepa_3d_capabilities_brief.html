@@ -207,43 +207,43 @@
 <body>
   <section class="page">
     <header>
-      <div class="kicker">NEPA 3D Knowledge Graph / Capabilities Brief</div>
-      <h1>Current NEPA authority, made auditable</h1>
-      <p class="lede">The system converts a workbook-controlled Forest Service source library into a validated 3D knowledge graph. It shows what current authority was considered, what applies to a specific Environmental Assessment, what does not apply, and exactly which source evidence supports each compliance finding.</p>
+      <div class="kicker">Standing Framework / Capabilities Brief</div>
+      <h1>NEPA review service, made auditable</h1>
+      <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the worked example: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
       <div class="metric-grid">
-        <div class="metric"><strong>1,916</strong><span>validated graph nodes</span></div>
-        <div class="metric"><strong>3,442</strong><span>validated graph edges</span></div>
+        <div class="metric"><strong>1,916</strong><span>example graph nodes</span></div>
+        <div class="metric"><strong>3,442</strong><span>example graph edges</span></div>
         <div class="metric"><strong>33</strong><span>applicable authorities</span></div>
-        <div class="metric"><strong>340</strong><span>non-applicable authorities</span></div>
+        <div class="metric"><strong>340</strong><span>screened-out authorities</span></div>
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Current NEPA authority stack represented by graph evidence" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review service process represented by graph evidence" />
       <div class="grid-2" style="margin-top:0.15in">
         <div class="callout">
-          <strong>Regulatory-currentness model</strong>
-          <p>The graph is built for a moving NEPA environment. It treats CEQ rulemaking status, Forest Service procedures, source records, directives, forest-plan components, applicability decisions, and readiness blockers as separate nodes instead of flattening them into a narrative answer.</p>
+          <strong>Current-authority model</strong>
+          <p>The authority graph is updated with the most current applicable regulations, USDA and Forest Service procedures, source records, directives, forest-plan components, applicability decisions, and readiness blockers instead of flattening them into a narrative answer.</p>
         </div>
         <div class="callout">
-          <strong>Defensibility model</strong>
-          <p>Each viewer claim is backed by graph-export validation. The V1 review overlay passed 75 graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
+          <strong>Decision-support model</strong>
+          <p>Each service finding is backed by graph-export validation. The V1 Region 1 example passed 75 graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from local graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
-      <span>Sources checked: CEQ NEPA Rulemaking page; Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
+      <span>Generated from internal example graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
+      <span>Sources checked: Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
     </footer>
   </section>
 
   <section class="page">
     <header>
       <div class="kicker">Capability 1 / Applicability</div>
-      <h2>From authority universe to review-specific decisions</h2>
-      <p class="lede">The graph separates the universe of candidate authorities from the subset that applies to the project. That makes the review politically legible: reviewers can see both what was used and what was considered but screened out.</p>
+      <h2>From authority graph to decision support</h2>
+      <p class="lede">For any NEPA document package, the process updates the authority graph with the most current applicable regulations and separates current applicable authorities from authorities that were considered but screened out. That makes the review politically legible and defensible.</p>
     </header>
     <main>
-      <img class="graph-figure full" src="assets/graph_applicability_client_view.png" alt="Clear applicability graph view with authority decisions, generated rules, and findings" />
+      <img class="graph-figure full" src="assets/graph_applicability_service_view.png" alt="Clear applicability graph view with authority decisions, generated rules, and findings" />
       <p class="caption">Applicability scene: 373 candidate authority decisions, 33 applicable, 340 non-applicable. The image preserves the graph distinction between candidate authority, review decision, generated rule, and compliance finding.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
@@ -251,8 +251,8 @@
           <p>Non-applicable authorities stay in the graph, so the reviewer can explain what was considered and screened out instead of only showing final inclusions.</p>
         </div>
         <div class="callout">
-          <strong>Political legibility shown</strong>
-          <p>The client sees a visible path from authority universe to decision, rule generation, and compliance finding rather than a black-box conclusion.</p>
+          <strong>Responsible-official support</strong>
+          <p>The output shows a visible path from authority graph to decision, rule generation, and compliance finding rather than a black-box conclusion.</p>
         </div>
       </div>
     </main>
@@ -265,11 +265,11 @@
   <section class="page">
     <header>
       <div class="kicker">Capability 2 / Evidence Traceability</div>
-      <h2>From source record to compliance finding</h2>
-      <p class="lede">A client should be able to ask "why does this finding exist?" and see the support path. The evidence path view turns that question into a graph traversal from source authority and evidence span through applicability and generated rule support.</p>
+      <h2>From source record to authority graph</h2>
+      <p class="lede">A responsible official or review team should be able to ask where each authority and finding came from. The evidence view turns source records, citation labels, extracted spans, and rule templates into a traceable authority graph before findings are used for decision support.</p>
     </header>
     <main>
-      <img class="graph-figure full-trace" src="assets/graph_evidence_trace_client_view.png" alt="Clear evidence path graph from source record to compliance finding" />
+      <img class="graph-figure full-trace" src="assets/graph_evidence_trace_service_view.png" alt="Clear evidence path graph from source record to compliance finding" />
       <p class="caption">Evidence path scene: one actual source-record -> rule-template -> applicability-decision -> generated-rule -> compliance-finding path is derived from graph edges, with the evidence span kept visible.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
@@ -278,7 +278,7 @@
         </div>
         <div class="callout">
           <strong>What this proves</strong>
-          <p>The demo is not just a visualization. It shows that findings can be traced back to the repo evidence model and the validated local graph export.</p>
+          <p>The service is not just a visualization. It shows that findings can be traced back to the repo evidence model and the validated local graph export.</p>
         </div>
       </div>
     </main>
@@ -290,39 +290,39 @@
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 3 / Client Demo and Readiness Control</div>
-      <h2>Show capability without overstating readiness</h2>
-      <p class="lede">The demo mode is designed for a client walkthrough: scene buttons move from source library to authority universe, applicability, evidence path, forest plan, readiness blockers, and the full graph. Readiness remains evidence-backed; layout never promotes the review.</p>
+      <div class="kicker">Capability 3 / Reverse Compliance And Decision Support</div>
+      <h2>Find gaps before they become decision risk</h2>
+      <p class="lede">Our review workflow supports forward review and reverse compliance. Most EAs receive a Forest Plan consistency document; we extend that into a full profile consistency document across applicable laws and authorities, then package decision support for the responsible official.</p>
     </header>
     <main>
-      <img class="graph-figure readiness" src="assets/graph_readiness_client_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
-      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The system shows Custer Gallatin as demo-ready while preventing broader Region 1 completeness claims.</p>
+      <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
+      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The USFS Region 1 example shows Custer Gallatin as ready while preventing broader Region 1 completeness claims.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="scene-list">
-          <div class="scene"><strong>Source library</strong><span>Workbook rows, catalog records, artifact links, and provenance.</span></div>
-          <div class="scene"><strong>Authority universe</strong><span>Currentness, supersession, source records, and authority families.</span></div>
-          <div class="scene"><strong>Applicability</strong><span>Review-specific applicable and non-applicable decisions.</span></div>
-          <div class="scene"><strong>Evidence path</strong><span>Clickable source-to-finding trace for defensibility.</span></div>
-          <div class="scene"><strong>Forest Plan</strong><span>10 forest units, 10 forest plans, and 387 plan components.</span></div>
-          <div class="scene"><strong>Readiness</strong><span>30 readiness blockers and 30 blocker edges.</span></div>
+          <div class="scene"><strong>Document intake</strong><span>Draft NEPA package, appendices, catalog records, and provenance.</span></div>
+          <div class="scene"><strong>Current authority graph</strong><span>Most current applicable regulations, agency procedures, source records, and authority families.</span></div>
+          <div class="scene"><strong>Applicability</strong><span>Document-specific applicable and screened-out authorities.</span></div>
+          <div class="scene"><strong>Reverse compliance</strong><span>Unsupported claims, stale references, and missing evidence.</span></div>
+          <div class="scene"><strong>Consistency document</strong><span>Forest Plan consistency plus full profile consistency across applicable laws.</span></div>
+          <div class="scene"><strong>Decision support</strong><span>Responsible-official briefing with findings, gaps, and evidence paths.</span></div>
         </div>
         <div>
           <div class="callout">
-            <strong>What this demonstrates in three minutes</strong>
+            <strong>What this service demonstrates</strong>
             <ul>
-              <li>Authority coverage is explicit and filterable.</li>
-              <li>Non-applicable authorities are retained for defensibility.</li>
-              <li>Forest-plan scope is visible and blocked when not ready.</li>
-              <li>Exports preserve graph state, validation status, and selected evidence paths.</li>
+              <li>Review any NEPA document package against an authority graph updated with the most current applicable regulations.</li>
+              <li>Identify unsupported or older-regulation-based statements through reverse compliance.</li>
+              <li>Retain screened-out authorities for defensibility and political legibility.</li>
+              <li>Provide responsible-official decision support with evidence paths and residual risks.</li>
             </ul>
           </div>
-          <p class="source-note" style="margin-top:0.09in">Currentness boundary: CEQ's page records removal of its NEPA regulations and prior rulemakings as rescinded/no longer in effect. Forest Service procedure sources remain an agency-specific implementation layer. The graph visualizes the repo's validated source set and review overlay; it is not a substitute for legal review.</p>
+          <p class="source-note" style="margin-top:0.09in">Currentness boundary: older implementing-regulation language is treated as a review risk and flagged outside the current NEPA review basis unless supported by current agency procedure or another current project-specific authority. The graph visualizes the validated USFS Region 1 source set and review overlay; it is not a substitute for legal review.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Deliverable: repo-local 3D viewer plus this 4-page capabilities brief.</span>
-      <span>Residual boundary: broader Region 1 expansion remains blocked until missing source/profile work is complete.</span>
+      <span>Deliverable: graph-backed professional NEPA review process plus service capabilities brief.</span>
+      <span>Boundary: Region 1 expansion waits on missing sources.</span>
     </footer>
   </section>
 </body>

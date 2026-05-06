@@ -107,17 +107,17 @@ async function renderPdf(browser, htmlPath, pdfPath) {
 }
 
 async function writeSvgAssets(graph, metrics) {
-  await writeClientGraphAssets(graph, metrics);
+  await writeServiceGraphAssets(graph, metrics);
   await fs.writeFile(path.join(assetDir, "current_authority_stack.svg"), currentAuthorityStackSvg(metrics), "utf8");
 }
 
-async function writeClientGraphAssets(graph, metrics) {
+async function writeServiceGraphAssets(graph, metrics) {
   const trace = deriveEvidenceTrace(graph);
   const readiness = deriveReadinessSummary(graph, metrics);
   const assets = [
-    ["graph_applicability_client_view", applicabilityClientGraphSvg(metrics)],
-    ["graph_evidence_trace_client_view", evidenceTraceClientGraphSvg(trace, metrics)],
-    ["graph_readiness_client_view", readinessClientGraphSvg(readiness, metrics)]
+    ["graph_applicability_service_view", applicabilityServiceGraphSvg(metrics)],
+    ["graph_evidence_trace_service_view", evidenceTraceServiceGraphSvg(trace, metrics)],
+    ["graph_readiness_service_view", readinessServiceGraphSvg(readiness, metrics)]
   ];
   for (const [name, svg] of assets) {
     const svgPath = path.join(assetDir, `${name}.svg`);
@@ -180,13 +180,13 @@ function deriveReadinessSummary(graph, metrics) {
   };
 }
 
-function applicabilityClientGraphSvg(metrics) {
+function applicabilityServiceGraphSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Applicability graph view with authority decisions">
-  ${clientGraphDefs()}
+  ${serviceGraphDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
-  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Applicability is a graph decision layer</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The system keeps every candidate authority visible, then separates applicable, non-applicable, generated-rule, and finding nodes for the selected EA review.</text>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Applicability is the first review gate</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">For any NEPA document set, our review process builds an authority graph, separates current applicable authority from screened-out authority, and generates evidence-backed findings.</text>
   ${graphEdge(305, 540, 570, 540, "#739bb6", 9, "373 decisions")}
   ${graphEdge(820, 425, 1085, 320, "#26786f", 9, "33 apply")}
   ${graphEdge(820, 635, 1085, 735, "#8b8a82", 8, "340 screened out")}
@@ -198,17 +198,17 @@ function applicabilityClientGraphSvg(metrics) {
   ${graphNode(1190, 735, 104, "#70726c", "Not applicable", `${metrics.nonApplicableDecisions} authorities`, "retained for audit")}
   ${graphNode(1490, 430, 96, "#26786f", "Generated rules", `${metrics.generatedRules} rules`, "review package")}
   ${graphNode(1545, 735, 96, "#356a9b", "Compliance findings", `${metrics.complianceFindings} findings`, "evidence-backed")}
-  <g transform="translate(72 890)" filter="url(#clientShadow)">
+  <g transform="translate(72 890)" filter="url(#serviceShadow)">
     <rect width="1656" height="166" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Client value shown</text>
-    ${bulletText(32, 84, "Defensibility: non-applicable authorities are preserved, so reviewers can explain what was considered and why it was screened out.")}
-    ${bulletText(32, 118, "Political legibility: the split between authority universe, review decision, generated rule, and compliance finding is visible as graph structure.")}
+    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value shown</text>
+    ${bulletText(32, 84, "Defensibility: non-applicable and screened-out authorities are preserved, so the review explains what was considered and why it was not used.")}
+    ${bulletText(32, 118, "Reverse compliance: draft document claims can be checked against the authority graph and flagged when unsupported or based on older regulation language.")}
     ${bulletText(32, 152, `Validation: ${metrics.validationChecks} graph checks passed before this view was exported.`)}
   </g>
 </svg>`;
 }
 
-function evidenceTraceClientGraphSvg(trace, metrics) {
+function evidenceTraceServiceGraphSvg(trace, metrics) {
   const sourceLabel = trace.sourceRecord?.label || "Source record";
   const authorityLabel = trace.authorityFamily?.label || "Authority family";
   const ruleLabel = trace.ruleTemplate?.label || "Rule template";
@@ -221,10 +221,10 @@ function evidenceTraceClientGraphSvg(trace, metrics) {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-label="Evidence path graph from source record to compliance finding">
-  ${clientGraphDefs()}
+  ${serviceGraphDefs()}
   <rect width="1800" height="1080" rx="34" fill="#f7f6f1"/>
-  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">A defensible finding is a clickable path</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This image is generated from one actual graph trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
+  <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">A finding is a traceable evidence path</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">This Region 1 example is generated from one actual graph trace: source authority, rule template, applicability decision, generated rule, evidence span, and compliance finding.</text>
   ${graphEdge(240, 360, 512, 360, "#356a9b", 8, "supports rule")}
   ${graphEdge(692, 360, 960, 360, "#7a6e3d", 8, "produces decision")}
   ${graphEdge(1140, 360, 1396, 360, "#26786f", 8, "generates rule")}
@@ -236,9 +236,9 @@ function evidenceTraceClientGraphSvg(trace, metrics) {
   ${graphNode(1490, 360, 104, "#26786f", "Generated rule", topic, "review overlay")}
   ${graphNode(1490, 715, 100, "#356a9b", "Finding", topic, "compliance matrix")}
   ${graphNode(410, 645, 88, "#a75a22", "Evidence span", compactSvgLabel(evidenceLabel, 44), "source bytes")}
-  <g transform="translate(72 860)" filter="url(#clientShadow)">
+  <g transform="translate(72 860)" filter="url(#serviceShadow)">
     <rect width="1656" height="174" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">What the client can inspect</text>
+    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">What the review team can inspect</text>
     ${bulletText(32, 85, `Authority family: ${compactSvgLabel(authorityLabel, 112)}`)}
     ${bulletText(32, 119, `Source citation: ${compactSvgLabel(citation, 112)}`)}
     ${bulletText(32, 153, `${metrics.supportsFindingEdges} support edges link generated rules or evidence spans to compliance findings across the V1 overlay.`)}
@@ -246,7 +246,7 @@ function evidenceTraceClientGraphSvg(trace, metrics) {
 </svg>`;
 }
 
-function readinessClientGraphSvg(readiness, metrics) {
+function readinessServiceGraphSvg(readiness, metrics) {
   const blocked = readiness.blockedUnits.slice(0, 9);
   const ready = readiness.readyUnits[0] || { label: "Custer Gallatin National Forest" };
   const blockerCounts = readiness.blockerCounts || {};
@@ -293,35 +293,35 @@ function readinessClientGraphSvg(readiness, metrics) {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Readiness graph showing graph-ready and blocked forest profiles">
-  ${clientGraphDefs()}
+  ${serviceGraphDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f8f7f1"/>
   <text x="72" y="94" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850" fill="#171713">Readiness controls prevent overclaiming</text>
-  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The graph can demo a validated Custer Gallatin review while still showing why broader Region 1 coverage is blocked until profile and source evidence is complete.</text>
+  <text x="72" y="140" font-family="Inter, Arial, sans-serif" font-size="22" fill="#555b54">The USFS Region 1 example shows a ready Custer Gallatin profile while keeping broader Region 1 blockers visible.</text>
   ${graphEdge(780, 650, 780, 310, "#26786f", 8, "")}
   ${blockedNodes}
   ${graphNode(780, 650, 126, "#7a6e3d", "Review scope", "Custer Gallatin EA", "")}
-  ${graphNode(780, 310, 98, "#26786f", "Ready forest profile", compactSvgLabel(ready.label || ready.node_id, 42), "demo scope")}
-  <g transform="translate(1220 196)" filter="url(#clientShadow)">
+  ${graphNode(780, 310, 98, "#26786f", "Ready forest profile", compactSvgLabel(ready.label || ready.node_id, 42), "example scope")}
+  <g transform="translate(1220 196)" filter="url(#serviceShadow)">
     <rect width="470" height="640" rx="22" fill="#fff" stroke="#d8d3c6"/>
     <text x="35" y="55" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="850" fill="#171713">Blockers remain visible</text>
     ${wrapSvgText(`${metrics.readinessBlockers} readiness blocker nodes and ${metrics.hasReadinessBlockerEdges} blocker edges are exported as graph evidence.`, 35, 92, 390, 18, "#5f625b", 2)}
     ${blockerCards}
   </g>
-  <g transform="translate(72 890)" filter="url(#clientShadow)">
+  <g transform="translate(72 890)" filter="url(#serviceShadow)">
     <rect width="1656" height="132" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Demo value</text>
+    <text x="32" y="45" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="850" fill="#171713">Service value</text>
     ${bulletText(32, 84, `${readiness.readyUnits.length} graph-ready forest profile and ${readiness.blockedUnits.length} blocked forest profiles are visible in one view.`)}
-    ${bulletText(32, 118, "The viewer can show capability now without implying that every Region 1 profile is ready for compliance promotion.")}
+    ${bulletText(32, 118, "The review process can show capability now without implying that every Region 1 profile is ready for service delivery.")}
   </g>
 </svg>`;
 }
 
-function clientGraphDefs() {
+function serviceGraphDefs() {
   return `<defs>
-    <filter id="clientShadow" x="-20%" y="-20%" width="140%" height="140%">
+    <filter id="serviceShadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#141713" flood-opacity="0.13"/>
     </filter>
-    <marker id="arrowClient" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <marker id="arrowService" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#70726c"/>
     </marker>
   </defs>`;
@@ -337,11 +337,11 @@ function graphEdge(x1, y1, x2, y2, color, width, label) {
       <text x="${labelWidth / 2}" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3f4540">${escapeXml(label)}</text>
     </g>`
     : "";
-  return `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowClient)"/>${labelSvg}`;
+  return `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-opacity="0.58" marker-end="url(#arrowService)"/>${labelSvg}`;
 }
 
 function graphNode(x, y, radius, color, title, value, subtitle) {
-  return `<g transform="translate(${x} ${y})" filter="url(#clientShadow)">
+  return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
     <circle r="${radius}" fill="#ffffff" stroke="${color}" stroke-width="9"/>
     <circle r="${Math.max(radius - 19, 20)}" fill="${color}" opacity="0.10"/>
     <text y="${-radius - 27}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#171713">${escapeXml(title)}</text>
@@ -351,7 +351,7 @@ function graphNode(x, y, radius, color, title, value, subtitle) {
 }
 
 function smallGraphNode(x, y, color, title, subtitle) {
-  return `<g transform="translate(${x} ${y})" filter="url(#clientShadow)">
+  return `<g transform="translate(${x} ${y})" filter="url(#serviceShadow)">
     <circle r="50" fill="#ffffff" stroke="${color}" stroke-width="6"/>
     <text y="-5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="850" fill="#171713">${escapeXml(title)}</text>
     <text y="17" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" fill="${color}">${escapeXml(compactSvgLabel(subtitle, 28))}</text>
@@ -395,7 +395,7 @@ function shortForestLabel(value) {
 
 function currentAuthorityStackSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="Current NEPA authority stack represented by the graph">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="NEPA review service process represented by the graph">
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#f8f7f1"/>
@@ -406,20 +406,20 @@ function currentAuthorityStackSvg(metrics) {
     </filter>
   </defs>
   <rect width="1280" height="640" rx="28" fill="url(#bg)"/>
-  <text x="64" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#171713">Current NEPA authority environment mapped as evidence</text>
-  <text x="64" y="118" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">The graph treats statutes, agency procedures, source records, and review decisions as linked evidence - not as unsupported conclusions.</text>
-  ${stackBox(64, 172, "NEPA statute", "Baseline procedural law still governs federal environmental review.", "#171713")}
-  ${stackBox(336, 172, "CEQ rulemaking status", "CEQ records removal of its NEPA regulations; older 40 CFR 1500-1508 rules are historical reference.", "#7c493c")}
-  ${stackBox(608, 172, "Forest Service layer", "USDA Forest Service procedures, regulations, directives, and handbook sources remain agency-specific review evidence.", "#216a60")}
-  ${stackBox(880, 172, "Reviewer graph", `${metrics.nodeCount.toLocaleString()} nodes / ${metrics.edgeCount.toLocaleString()} edges with validation, provenance, and readiness controls.`, "#356a9b")}
+  <text x="64" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#171713">NEPA review service process mapped as evidence</text>
+  <text x="64" y="118" font-family="Inter, Arial, sans-serif" font-size="18" fill="#5f625b">Our review process links document inputs, current agency procedures, source evidence, and review decisions - not unsupported conclusions.</text>
+  ${stackBox(64, 172, "Document package", "EA, FONSI, ROD, appendices, and supporting biological, cultural, and forest-plan records.", "#171713")}
+  ${stackBox(336, 172, "Current authority graph", "Current regulations, agency procedures, Forest Plan components, and project authorities.", "#216a60")}
+  ${stackBox(608, 172, "Consistency review", "Full profile consistency document across Forest Plan direction and applicable laws.", "#7c493c")}
+  ${stackBox(880, 172, "Decision support", "Responsible-official briefing with applicable authorities, gaps, risks, and evidence paths.", "#356a9b")}
   ${arrow(292, 268, 326, 268)}
   ${arrow(564, 268, 598, 268)}
   ${arrow(836, 268, 870, 268)}
   <g transform="translate(64 430)" filter="url(#shadow)">
     <rect width="1152" height="130" rx="20" fill="#ffffff" stroke="#d8d3c6"/>
-    <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a client demo</text>
-    ${wrapSvgText("The current regulatory picture is moving from a single CEQ code-of-federal-regulations anchor toward agency-specific implementation. The system shows exactly which source record, directive, forest-plan component, applicability decision, and compliance finding supports a claim.", 30, 75, 1088, 16, "#4f554e", 2)}
-    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Validation passed: ${metrics.validationChecks} graph checks; ${metrics.applicableDecisions} applicable and ${metrics.nonApplicableDecisions} non-applicable authority decisions.</text>
+    <text x="30" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#171713">Why this matters for a service engagement</text>
+    ${wrapSvgText("USFS Region 1 is the worked example. The same process can be run against another NEPA document package by refreshing the authority graph with the most current applicable regulations, mapping project evidence, testing reverse compliance, preparing consistency documentation, and packaging decision-support evidence.", 30, 75, 1088, 16, "#4f554e", 2)}
+    <text x="30" y="114" font-family="Inter, Arial, sans-serif" font-size="15" fill="#26786f" font-weight="800">Example validation passed: ${metrics.validationChecks} graph checks; ${metrics.applicableDecisions} applicable and ${metrics.nonApplicableDecisions} non-applicable authority decisions.</text>
   </g>
 </svg>`;
 }
@@ -648,43 +648,43 @@ function briefHtml(metrics) {
 <body>
   <section class="page">
     <header>
-      <div class="kicker">NEPA 3D Knowledge Graph / Capabilities Brief</div>
-      <h1>Current NEPA authority, made auditable</h1>
-      <p class="lede">The system converts a workbook-controlled Forest Service source library into a validated 3D knowledge graph. It shows what current authority was considered, what applies to a specific Environmental Assessment, what does not apply, and exactly which source evidence supports each compliance finding.</p>
+      <div class="kicker">Standing Framework / Capabilities Brief</div>
+      <h1>NEPA review service, made auditable</h1>
+      <p class="lede">We provide professional NEPA reviews for projects using a graph-backed evidence process. The USFS Region 1 source library is the worked example: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
       <div class="metric-grid">
-        ${metric(metrics.nodeCount.toLocaleString(), "validated graph nodes")}
-        ${metric(metrics.edgeCount.toLocaleString(), "validated graph edges")}
+        ${metric(metrics.nodeCount.toLocaleString(), "example graph nodes")}
+        ${metric(metrics.edgeCount.toLocaleString(), "example graph edges")}
         ${metric(metrics.applicableDecisions, "applicable authorities")}
-        ${metric(metrics.nonApplicableDecisions, "non-applicable authorities")}
+        ${metric(metrics.nonApplicableDecisions, "screened-out authorities")}
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Current NEPA authority stack represented by graph evidence" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review service process represented by graph evidence" />
       <div class="grid-2" style="margin-top:0.15in">
         <div class="callout">
-          <strong>Regulatory-currentness model</strong>
-          <p>The graph is built for a moving NEPA environment. It treats CEQ rulemaking status, Forest Service procedures, source records, directives, forest-plan components, applicability decisions, and readiness blockers as separate nodes instead of flattening them into a narrative answer.</p>
+          <strong>Current-authority model</strong>
+          <p>The authority graph is updated with the most current applicable regulations, USDA and Forest Service procedures, source records, directives, forest-plan components, applicability decisions, and readiness blockers instead of flattening them into a narrative answer.</p>
         </div>
         <div class="callout">
-          <strong>Defensibility model</strong>
-          <p>Each viewer claim is backed by graph-export validation. The V1 review overlay passed ${metrics.validationChecks} graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
+          <strong>Decision-support model</strong>
+          <p>Each service finding is backed by graph-export validation. The V1 Region 1 example passed ${metrics.validationChecks} graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from local graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
-      <span>Sources checked: CEQ NEPA Rulemaking page; Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
+      <span>Generated from internal example graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
+      <span>Sources checked: Forest Service NEPA Procedures and Guidance; repo current-state docs.</span>
     </footer>
   </section>
 
   <section class="page">
     <header>
       <div class="kicker">Capability 1 / Applicability</div>
-      <h2>From authority universe to review-specific decisions</h2>
-      <p class="lede">The graph separates the universe of candidate authorities from the subset that applies to the project. That makes the review politically legible: reviewers can see both what was used and what was considered but screened out.</p>
+      <h2>From authority graph to decision support</h2>
+      <p class="lede">For any NEPA document package, the process updates the authority graph with the most current applicable regulations and separates current applicable authorities from authorities that were considered but screened out. That makes the review politically legible and defensible.</p>
     </header>
     <main>
-      <img class="graph-figure full" src="assets/graph_applicability_client_view.png" alt="Clear applicability graph view with authority decisions, generated rules, and findings" />
+      <img class="graph-figure full" src="assets/graph_applicability_service_view.png" alt="Clear applicability graph view with authority decisions, generated rules, and findings" />
       <p class="caption">Applicability scene: ${metrics.candidateDecisions} candidate authority decisions, ${metrics.applicableDecisions} applicable, ${metrics.nonApplicableDecisions} non-applicable. The image preserves the graph distinction between candidate authority, review decision, generated rule, and compliance finding.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
@@ -692,8 +692,8 @@ function briefHtml(metrics) {
           <p>Non-applicable authorities stay in the graph, so the reviewer can explain what was considered and screened out instead of only showing final inclusions.</p>
         </div>
         <div class="callout">
-          <strong>Political legibility shown</strong>
-          <p>The client sees a visible path from authority universe to decision, rule generation, and compliance finding rather than a black-box conclusion.</p>
+          <strong>Responsible-official support</strong>
+          <p>The output shows a visible path from authority graph to decision, rule generation, and compliance finding rather than a black-box conclusion.</p>
         </div>
       </div>
     </main>
@@ -706,11 +706,11 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Capability 2 / Evidence Traceability</div>
-      <h2>From source record to compliance finding</h2>
-      <p class="lede">A client should be able to ask "why does this finding exist?" and see the support path. The evidence path view turns that question into a graph traversal from source authority and evidence span through applicability and generated rule support.</p>
+      <h2>From source record to authority graph</h2>
+      <p class="lede">A responsible official or review team should be able to ask where each authority and finding came from. The evidence view turns source records, citation labels, extracted spans, and rule templates into a traceable authority graph before findings are used for decision support.</p>
     </header>
     <main>
-      <img class="graph-figure full-trace" src="assets/graph_evidence_trace_client_view.png" alt="Clear evidence path graph from source record to compliance finding" />
+      <img class="graph-figure full-trace" src="assets/graph_evidence_trace_service_view.png" alt="Clear evidence path graph from source record to compliance finding" />
       <p class="caption">Evidence path scene: one actual source-record -> rule-template -> applicability-decision -> generated-rule -> compliance-finding path is derived from graph edges, with the evidence span kept visible.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
@@ -719,7 +719,7 @@ function briefHtml(metrics) {
         </div>
         <div class="callout">
           <strong>What this proves</strong>
-          <p>The demo is not just a visualization. It shows that findings can be traced back to the repo evidence model and the validated local graph export.</p>
+          <p>The service is not just a visualization. It shows that findings can be traced back to the repo evidence model and the validated local graph export.</p>
         </div>
       </div>
     </main>
@@ -731,39 +731,39 @@ function briefHtml(metrics) {
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 3 / Client Demo and Readiness Control</div>
-      <h2>Show capability without overstating readiness</h2>
-      <p class="lede">The demo mode is designed for a client walkthrough: scene buttons move from source library to authority universe, applicability, evidence path, forest plan, readiness blockers, and the full graph. Readiness remains evidence-backed; layout never promotes the review.</p>
+      <div class="kicker">Capability 3 / Reverse Compliance And Decision Support</div>
+      <h2>Find gaps before they become decision risk</h2>
+      <p class="lede">Our review workflow supports forward review and reverse compliance. Most EAs receive a Forest Plan consistency document; we extend that into a full profile consistency document across applicable laws and authorities, then package decision support for the responsible official.</p>
     </header>
     <main>
-      <img class="graph-figure readiness" src="assets/graph_readiness_client_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
-      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The system shows Custer Gallatin as demo-ready while preventing broader Region 1 completeness claims.</p>
+      <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Clear readiness graph showing one graph-ready forest profile and blocked forest profiles" />
+      <p class="caption">Readiness scene: blocked profiles and missing-source requirements are graph objects. The USFS Region 1 example shows Custer Gallatin as ready while preventing broader Region 1 completeness claims.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="scene-list">
-          ${scene("Source library", "Workbook rows, catalog records, artifact links, and provenance.")}
-          ${scene("Authority universe", "Currentness, supersession, source records, and authority families.")}
-          ${scene("Applicability", "Review-specific applicable and non-applicable decisions.")}
-          ${scene("Evidence path", "Clickable source-to-finding trace for defensibility.")}
-          ${scene("Forest Plan", `${metrics.forestUnits} forest units, ${metrics.forestPlans} forest plans, and ${metrics.forestPlanComponents} plan components.`)}
-          ${scene("Readiness", `${metrics.readinessBlockers} readiness blockers and ${metrics.hasReadinessBlockerEdges} blocker edges.`)}
+          ${scene("Document intake", "Draft NEPA package, appendices, catalog records, and provenance.")}
+          ${scene("Current authority graph", "Most current applicable regulations, agency procedures, source records, and authority families.")}
+          ${scene("Applicability", "Document-specific applicable and screened-out authorities.")}
+          ${scene("Reverse compliance", "Unsupported claims, stale references, and missing evidence.")}
+          ${scene("Consistency document", "Forest Plan consistency plus full profile consistency across applicable laws.")}
+          ${scene("Decision support", "Responsible-official briefing with findings, gaps, and evidence paths.")}
         </div>
         <div>
           <div class="callout">
-            <strong>What this demonstrates in three minutes</strong>
+            <strong>What this service demonstrates</strong>
             <ul>
-              <li>Authority coverage is explicit and filterable.</li>
-              <li>Non-applicable authorities are retained for defensibility.</li>
-              <li>Forest-plan scope is visible and blocked when not ready.</li>
-              <li>Exports preserve graph state, validation status, and selected evidence paths.</li>
+              <li>Review any NEPA document package against an authority graph updated with the most current applicable regulations.</li>
+              <li>Identify unsupported or older-regulation-based statements through reverse compliance.</li>
+              <li>Retain screened-out authorities for defensibility and political legibility.</li>
+              <li>Provide responsible-official decision support with evidence paths and residual risks.</li>
             </ul>
           </div>
-          <p class="source-note" style="margin-top:0.09in">Currentness boundary: CEQ's page records removal of its NEPA regulations and prior rulemakings as rescinded/no longer in effect. Forest Service procedure sources remain an agency-specific implementation layer. The graph visualizes the repo's validated source set and review overlay; it is not a substitute for legal review.</p>
+          <p class="source-note" style="margin-top:0.09in">Currentness boundary: older implementing-regulation language is treated as a review risk and flagged outside the current NEPA review basis unless supported by current agency procedure or another current project-specific authority. The graph visualizes the validated USFS Region 1 source set and review overlay; it is not a substitute for legal review.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Deliverable: repo-local 3D viewer plus this 4-page capabilities brief.</span>
-      <span>Residual boundary: broader Region 1 expansion remains blocked until missing source/profile work is complete.</span>
+      <span>Deliverable: graph-backed professional NEPA review process plus service capabilities brief.</span>
+      <span>Boundary: Region 1 expansion waits on missing sources.</span>
     </footer>
   </section>
 </body>

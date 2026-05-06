@@ -334,7 +334,7 @@ http://127.0.0.1:8765/viewer/nepa-3d/
 
 The first viewport opens directly into the graph experience. It now defaults to the
 `v1-cg-ecid-compliance-review` review overlay and its Applicability demo scene. Demo buttons above
-the Lens dropdown switch among source library, authority universe, applicability, evidence path,
+the Lens dropdown switch among source library, authority graph, applicability, evidence path,
 forest plan, readiness, and full graph scenes; Reset demo returns to the starting review and scene.
 The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
 source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
@@ -356,13 +356,17 @@ metadata, and validation status. Static tests now lock the runtime URLs, relativ
 manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
 `3d-force-graph`. The viewer status line explicitly records that layout does not change readiness.
 
-A client-facing NEPA 3D capabilities brief is generated at
+A NEPA 3D service capabilities brief is generated at
 `docs/capabilities/nepa_3d_capabilities_brief.pdf` with matching HTML at
 `docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
 `tools/build_nepa_3d_capabilities_brief.mjs` reads the validated
 `v1-cg-ecid-compliance-review` graph export and writes high-resolution graph figures for
-applicability, evidence-path traceability, and readiness blockers.
-The brief is four pages so each graph image stays legible at client-demo scale.
+applicability, evidence-path traceability, and readiness blockers. The brief explains how we perform
+professional NEPA reviews for projects: document intake, authority graph construction and
+updates with the most current applicable regulations and procedures, applicability, reverse
+compliance, Forest Plan and full profile consistency review,
+responsible-official decision support, and evidence traceability.
+The brief is four pages so each graph image stays legible at service-brief scale.
 
 ## Verified State Snapshot
 

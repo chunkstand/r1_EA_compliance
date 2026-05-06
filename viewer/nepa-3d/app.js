@@ -184,18 +184,18 @@ const DEMO_SCENES = [
   },
   {
     id: "authority_universe",
-    label: "Authority universe",
+    label: "Authority graph",
     reviewId: DEFAULT_DEMO_REVIEW_ID,
     lensId: "authority_currentness",
     filters: {},
     neighborDepth: 1,
     degreeThreshold: 90,
     hideHighDegree: false,
-    capabilityTitle: "Current authority universe",
+    capabilityTitle: "Current authority graph",
     capabilityCopy:
       "Shows the authority families and source records used to make currentness and supersession status reviewable.",
     proofLabels: ["authority families are graph nodes", "currentness is data-backed", "superseded material is separated"],
-    graphLabel: "Authority universe",
+    graphLabel: "Authority graph",
     graphSubLabel: "Authority families, sources, currentness",
     labelNodeTypes: ["authority_family", "source_record", "readiness_blocker"]
   },
