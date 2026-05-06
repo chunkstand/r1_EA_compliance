@@ -229,11 +229,9 @@ next-target lanes:
   decision-support document. This lane must generate a report from audited review artifacts,
   not from root-level manual draft prose, and must preserve the applicable/non-applicable authority
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,
-  and implementation confirmation checklist. Before Sequence 1 starts, complete
-  `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` as the Sequence 0 go/no-go gate for
-  artifact freshness, expected counts, phase-eval/promotion readiness, Plan Consistency Table
-  ownership, manual-draft quarantine, residual-risk/checklist source mapping, and
-  CLI/module/renderer ownership.
+  and implementation confirmation checklist. Sequence 0 preflight is complete in
+  `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PLAN.md` and the pass artifacts below; the next
+  boundary is Sequence 1 Report Contract And Fixtures.
   - Sequence 0 pass 1 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_1_WORKSPACE_BOUNDARY.md`: tracked
     worktree status was clean at pass start, root-level `East_Crazies_*` exports are quarantined as
@@ -289,6 +287,16 @@ next-target lanes:
     `tests/test_architecture_contract.py`. The renderer path should follow the existing
     compliance-output JSON-to-Markdown/PDF pattern without importing private helpers or adding
     system PDF dependencies. The next preflight pass is Fixture And Regression Contract.
+  - Sequence 0 pass 8 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_8_FIXTURE_REGRESSION_CONTRACT.md`:
+    fixture/regression expectations are fixed for required report sections, current count fields,
+    required input hash fields, representative applicable authority row (`eo_11990_wetlands`),
+    representative non-applicable authority row (`directives_notice_comment_36cfr_216`) with search
+    coverage, representative Forest Plan row (`FW-STD-RMZ-01`), all `12` applicable standards, and
+    fail-closed categories for missing, stale, or mismatched inputs, count drift, missing
+    non-applicable summaries, unresolved implementation selectors, residual-risk legal conclusions,
+    manual-draft dependency, and invalid or missing PDF output. Sequence 0 preflight is complete
+    with `go`; the next boundary is Sequence 1 Report Contract And Fixtures.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
