@@ -105,6 +105,9 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
     assert '.nodeId("node_id")' in script
     assert "source: edge.source_node_id" in script
     assert "target: edge.target_node_id" in script
+    assert 'CONTEXT_SEED_FILTER_IDS = new Set(["documentRole"])' in script
+    assert "matchingContextFilterSeedNodeIds" in script
+    assert "const visibleNodeIds = new Set([...edgeNodeIds, ...seedIds])" in script
     assert '"artifact hash"' in script
     assert '"artifact path"' in script
     assert "validation_passed" in script

@@ -133,6 +133,7 @@ const FILTER_DEFINITIONS = [
     accessor: reviewPhaseValues
   }
 ];
+const CONTEXT_SEED_FILTER_IDS = new Set(["documentRole"]);
 
 const state = {
   graphApi: null,
@@ -501,8 +502,9 @@ function filteredGraph() {
   }
   const filterValues = selectedFilterValues();
   const searchSeeds = matchingSearchNodeIds();
+  const contextFilterSeeds = matchingContextFilterSeedNodeIds(filterValues);
   const selectedSeeds = state.selectedNodeId ? new Set([state.selectedNodeId]) : new Set();
-  const seedIds = new Set([...searchSeeds, ...selectedSeeds]);
+  const seedIds = new Set([...searchSeeds, ...contextFilterSeeds, ...selectedSeeds]);
   const expandedIds = expandSeeds(seedIds, Number(els.neighborDepth.value));
   const hasSeedFilter = seedIds.size > 0;
   const degreeThreshold = Number(els.degreeThreshold.value);
@@ -518,7 +520,7 @@ function filteredGraph() {
         continue;
       }
     }
-    if (!nodeMatchesFilters(node, filterValues)) {
+    if (!nodeMatchesFilters(node, filterValues, CONTEXT_SEED_FILTER_IDS)) {
       continue;
     }
     if (hasSeedFilter && !expandedIds.has(node.node_id)) {
@@ -543,7 +545,8 @@ function filteredGraph() {
   });
 
   const edgeNodeIds = new Set(edges.flatMap((edge) => [edge.source_node_id, edge.target_node_id]));
-  const nodes = state.nodes.filter((node) => allowedNodes.has(node.node_id) && edgeNodeIds.has(node.node_id));
+  const visibleNodeIds = new Set([...edgeNodeIds, ...seedIds]);
+  const nodes = state.nodes.filter((node) => allowedNodes.has(node.node_id) && visibleNodeIds.has(node.node_id));
   const nodeIds = new Set(nodes.map((node) => node.node_id));
   edges = edges.filter((edge) => nodeIds.has(edge.source_node_id) && nodeIds.has(edge.target_node_id));
 
@@ -579,6 +582,21 @@ function matchingSearchNodeIds() {
   );
 }
 
+function matchingContextFilterSeedNodeIds(filterValues) {
+  const seeds = new Set();
+  for (const filter of FILTER_DEFINITIONS) {
+    if (!CONTEXT_SEED_FILTER_IDS.has(filter.id) || !filterValues[filter.id]) {
+      continue;
+    }
+    for (const node of state.nodes) {
+      if (filter.accessor(node).includes(filterValues[filter.id])) {
+        seeds.add(node.node_id);
+      }
+    }
+  }
+  return seeds;
+}
+
 function expandSeeds(seedIds, depth) {
   const expanded = new Set(seedIds);
   let frontier = new Set(seedIds);
@@ -600,10 +618,13 @@ function expandSeeds(seedIds, depth) {
   return expanded;
 }
 
-function nodeMatchesFilters(node, filterValues) {
+function nodeMatchesFilters(node, filterValues, contextSeedFilterIds = new Set()) {
   for (const filter of FILTER_DEFINITIONS) {
     const selected = filterValues[filter.id];
     if (!selected) {
+      continue;
+    }
+    if (contextSeedFilterIds.has(filter.id)) {
       continue;
     }
     if (!filter.accessor(node).includes(selected)) {
