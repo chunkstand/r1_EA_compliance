@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-04
+Date: 2026-05-06
 
 ## Current Architecture Hardening State
 
@@ -99,13 +99,19 @@ Important current behavior:
 
 - Applicability artifacts are produced before compliance review and do not contain `pass`, `gap`, or
   `uncertain` compliance findings.
-- Weak or conflicting package trigger evidence is recorded as `needs_adjudication`.
+- Trigger arbitration now distinguishes decisive strong package evidence from weak auxiliary
+  evidence. All-weak trigger evidence and unresolved positive/negative conflicts are still recorded
+  as `needs_adjudication`.
 - Evidence-arbitration Milestones 1 and 2 are implemented as behavior-preserving diagnostics:
   decisions carry `arbitration_summary`, evidence spans carry structured `evidence_strength`, and
   reports show weak/auxiliary/conflicting trigger-group diagnostics without changing final
   applicability status outcomes. The gap-close pass added structured weak-signal reason notes,
   broader no-action/no-change background classification, negative-phrase preservation, and package
   graph assertions for fact/context/uncertainty evidence-strength propagation.
+- Evidence-arbitration Milestone 3 is implemented as active trigger arbitration. Strong,
+  rule-contract-sufficient positive trigger groups can carry `applicable` status with weak
+  auxiliary evidence retained in notes and diagnostics. All-weak positive evidence and
+  positive-plus-negative conflicts remain `needs_adjudication`.
 - Not-applicable decisions cite search coverage certificates.
 - Validation now fails if a final contradictory decision lacks human adjudication, if a
   human-adjudicated decision cannot be replayed from a passing adjudication eval, if
@@ -157,12 +163,21 @@ Verified results from the latest Milestone 9 pass:
 - Compileall: passed
 - `git diff --check`: passed
 
+Latest evidence-arbitration Milestone 3 closeout verification:
+
+- `tests/test_applicability_decisions.py`: `24 passed`
+- `tests/test_applicability_eval.py`: `11 passed`
+- `tests/test_architecture_contract.py`: `5 passed`
+- `tests/test_package_fact_graph.py`: `4 passed`
+- `ruff check src tests`: passed
+- `python -m compileall src`: passed
+- `git diff --check`: passed
+
 Next implementation target:
 
-The immediate next implementation target is Milestone 3 in
-`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: implement the trigger-arbitration predicate that can
-let strong independent package evidence carry an applicability decision while weak auxiliary
-evidence remains visible for adjudication/reporting. Milestone 10 in
+The immediate next implementation target is Milestone 4 in
+`docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`: replay the ECID preliminary EA applicability run and
+align the local gates with the active trigger-arbitration predicate. Milestone 10 in
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` remains the broader real-package expansion and
 operating-runbook track.
 
@@ -481,7 +496,7 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 3 in
+Next sequence for the current applicability lane: implement Evidence Arbitration Milestone 4 in
 `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts

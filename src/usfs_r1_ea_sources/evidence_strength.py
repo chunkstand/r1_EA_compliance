@@ -55,7 +55,7 @@ BACKGROUND_CONTEXT_PHRASES = (
     "no new",
     "no additional",
 )
-NEGATIVE_CONTEXT_PHRASES = (
+OUT_OF_SCOPE_CONTEXT_PHRASES = (
     "not part of the project area",
     "outside the project area",
     "outside of the project area",
@@ -64,6 +64,9 @@ NEGATIVE_CONTEXT_PHRASES = (
     "is not within the project area",
     "not affected by the project",
     "does not apply to the project area",
+)
+NEGATIVE_CONTEXT_PHRASES = (
+    *OUT_OF_SCOPE_CONTEXT_PHRASES,
     "project does not include",
     "project does not contain",
     "project does not affect",
@@ -106,6 +109,20 @@ def classify_evidence_strength(
             section_family=section,
         )
 
+    out_of_scope_phrase = _first_phrase(window_lower, OUT_OF_SCOPE_CONTEXT_PHRASES)
+    if out_of_scope_phrase:
+        return _strength_payload(
+            confidence_class="negative_context",
+            strength_class="negative_context",
+            reason="negative_or_out_of_scope_context",
+            matched_phrase=out_of_scope_phrase,
+            matched_text=matched_text,
+            evidence_window=window,
+            evidence_window_start=window_start,
+            evidence_window_end=window_end,
+            section_family=section,
+        )
+
     background_phrase = _first_phrase(window_lower, BACKGROUND_CONTEXT_PHRASES)
     if background_phrase:
         return _strength_payload(
@@ -113,6 +130,20 @@ def classify_evidence_strength(
             strength_class="background",
             reason="background_or_no_action_context",
             matched_phrase=background_phrase,
+            matched_text=matched_text,
+            evidence_window=window,
+            evidence_window_start=window_start,
+            evidence_window_end=window_end,
+            section_family=section,
+        )
+
+    negated_match_phrase = _negated_matched_phrase(window_lower, matched_text)
+    if negated_match_phrase:
+        return _strength_payload(
+            confidence_class="weak_signal",
+            strength_class="background",
+            reason="negated_matched_trigger",
+            matched_phrase=negated_match_phrase,
             matched_text=matched_text,
             evidence_window=window,
             evidence_window_start=window_start,
@@ -303,6 +334,32 @@ def _phrase_in_text(text: str, phrase: str) -> bool:
             flags=re.IGNORECASE,
         )
     )
+
+
+def _negated_matched_phrase(text: str, matched_text: str | None) -> str | None:
+    normalized_match = " ".join(str(matched_text or "").lower().split())
+    if not normalized_match:
+        return None
+    matched_pattern = _matched_text_pattern(normalized_match)
+    patterns = (
+        rf"\bno(?:\s+[a-z0-9/-]+){{0,3}}\s+{matched_pattern}\b",
+        rf"\bnot(?:\s+a|\s+an|\s+the)?(?:\s+[a-z0-9/-]+){{0,3}}\s+{matched_pattern}\b",
+        rf"\bwithout(?:\s+[a-z0-9/-]+){{0,3}}\s+{matched_pattern}\b",
+        rf"\boutside(?:\s+of)?(?:\s+[a-z0-9/-]+){{0,3}}\s+{matched_pattern}\b",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return match.group(0)
+    return None
+
+
+def _matched_text_pattern(normalized_match: str) -> str:
+    parts = [re.escape(part) for part in normalized_match.split()]
+    if not parts:
+        return ""
+    parts[-1] = rf"{parts[-1]}(?:s|es)?"
+    return r"\s+".join(parts)
 
 
 def _normalize_window(text: str) -> str:

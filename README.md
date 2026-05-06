@@ -942,7 +942,9 @@ and graph trace. It writes `applicability_decisions.jsonl`, `applicable_authorit
 `non_applicable_authorities.json`, `search_coverage_certificates.json`,
 `applicability_provenance.json`, and `applicability_report.md`. The command records deterministic
 applicability bases, preserves inspected source-library evidence spans, requires source-index hashes
-for sufficient coverage, and marks weak or conflicting package triggers as `needs_adjudication`. It
+for sufficient coverage, and runs trigger arbitration so strong, rule-contract-sufficient trigger
+evidence can carry an `applicable` decision while weak auxiliary evidence stays visible. All-weak
+trigger evidence and unresolved positive/negative trigger conflicts remain `needs_adjudication`. It
 does not write a generated rule pack, compliance matrix, or compliance findings.
 
 Validate the applicability run before generated rule-pack creation:

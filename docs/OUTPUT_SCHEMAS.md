@@ -1256,14 +1256,18 @@ Each applicability decision includes:
   offsets, matched terms, text snippets, compatibility confidence classes, and structured
   `evidence_strength`
 - `arbitration_summary` with schema version `applicability-evidence-arbitration-v0`, recording
-  diagnostic-only per-trigger evidence accounting. The summary includes positive and negative
-  trigger group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength
-  counts, structured evidence-strength class counts, weak-signal reasons/details, source evidence
-  IDs, selected retrieval result IDs, graph path IDs, the current decision effect, and whether weak
-  evidence made adjudication necessary. Weak-signal reasons include classifier strength class,
-  reason, and matched phrase when available; `weak_signal_details` carries the local evidence
-  window. Milestone 1/2 diagnostics do not change status outcomes; they explain why the current
-  predicate did or did not mark an authority as `needs_adjudication`.
+  active per-trigger evidence arbitration. The summary includes positive and negative trigger
+  group results, matched evidence IDs, package chunk/fact/retrieval refs, evidence strength counts,
+  structured evidence-strength class counts, weak-signal reasons/details, source evidence IDs,
+  selected retrieval result IDs, graph path IDs, the current decision effect, arbitration status,
+  decisive trigger groups, weak auxiliary trigger groups, weak-only trigger groups, missing
+  required trigger groups, and whether evidence made adjudication necessary. Weak-signal reasons
+  include classifier strength class, reason, and matched phrase when available;
+  `weak_signal_details` carries the local evidence window.
+- active arbitration fields: `arbitration_status`, `decisive_trigger_groups`,
+  `weak_auxiliary_trigger_groups`, `weak_only_trigger_groups`, and `arbitration_rationale`. Strong
+  decisive trigger groups can support `applicable` status while weak auxiliary groups remain
+  visible; all-weak positives and positive-plus-negative conflicts remain adjudication blockers.
 - source-library evidence spans with source record IDs, chunk IDs, citation labels, page labels,
   offsets, source-claim IDs, text snippets, and `evidence_origin` when the span is carried forward
   from the authority universe because source retrieval recorded coverage but selected no source

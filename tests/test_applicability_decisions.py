@@ -110,6 +110,44 @@ class ApplicabilityDecisionTests(unittest.TestCase):
         self.assertEqual(does_not_include["strength_class"], "background")
         self.assertEqual(does_not_include["matched_phrase"], "does not include")
 
+        negated_trigger_text = "The record states no road changes and no right-of-way."
+        negated_trigger = classify_evidence_strength(
+            text=negated_trigger_text,
+            start=negated_trigger_text.index("road"),
+            end=negated_trigger_text.index("road") + len("road"),
+            matched_text="road",
+        )
+        self.assertEqual(negated_trigger["confidence_class"], "weak_signal")
+        self.assertEqual(negated_trigger["strength_class"], "background")
+        self.assertEqual(negated_trigger["reason"], "negated_matched_trigger")
+        self.assertEqual(negated_trigger["matched_phrase"], "no road")
+
+        not_a_land_exchange_text = "The proposal is not a land exchange."
+        not_a_land_exchange = classify_evidence_strength(
+            text=not_a_land_exchange_text,
+            start=not_a_land_exchange_text.index("land exchange"),
+            end=not_a_land_exchange_text.index("land exchange") + len("land exchange"),
+            matched_text="land exchange",
+        )
+        self.assertEqual(not_a_land_exchange["confidence_class"], "weak_signal")
+        self.assertEqual(not_a_land_exchange["strength_class"], "background")
+        self.assertEqual(not_a_land_exchange["matched_phrase"], "not a land exchange")
+
+        plural_negated_trigger_text = "The analysis finds no cultural resources."
+        plural_negated_trigger = classify_evidence_strength(
+            text=plural_negated_trigger_text,
+            start=plural_negated_trigger_text.index("cultural resources"),
+            end=plural_negated_trigger_text.index("cultural resources")
+            + len("cultural resources"),
+            matched_text="cultural resource",
+        )
+        self.assertEqual(plural_negated_trigger["confidence_class"], "weak_signal")
+        self.assertEqual(plural_negated_trigger["strength_class"], "background")
+        self.assertEqual(
+            plural_negated_trigger["matched_phrase"],
+            "no cultural resources",
+        )
+
         decisive_text = "The Proposed Action reserves Right-of-Way for Big Timber Creek Road No. 197."
         decisive = classify_evidence_strength(
             text=decisive_text,
@@ -189,7 +227,10 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 weak_arbitration["schema_version"],
                 "applicability-evidence-arbitration-v0",
             )
-            self.assertTrue(weak_arbitration["diagnostic_only"])
+            self.assertFalse(weak_arbitration["diagnostic_only"])
+            self.assertEqual(weak_decision["arbitration_status"], "weak_positive_only")
+            self.assertEqual(weak_decision["decisive_trigger_groups"], [])
+            self.assertTrue(weak_decision["weak_only_trigger_groups"])
             self.assertEqual(
                 weak_arbitration["decision_effect"],
                 "blocked_by_weak_positive_trigger",
@@ -240,7 +281,7 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             report_text = result.report_path.read_text(encoding="utf-8")
             self.assertIn("Arbitration: `blocked_by_weak_positive_trigger`", report_text)
 
-    def test_arbitration_diagnostic_captures_mixed_strong_and_weak_triggers(
+    def test_trigger_arbitration_accepts_strong_triggers_with_weak_auxiliary_evidence(
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -260,21 +301,35 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
             }
             decision = decisions["rule-template:unit-pack:0.1.0:roads_access_arbitration"]
-            self.assertEqual(decision["status"], "needs_adjudication")
-            self.assertEqual(decision["basis_type"], "unresolved_evidence_conflict")
+            self.assertEqual(decision["status"], "applicable")
+            self.assertEqual(decision["basis_type"], "positive_package_trigger")
+            self.assertEqual(
+                decision["arbitration_status"],
+                "strong_positive_with_weak_auxiliary",
+            )
+            self.assertEqual(
+                {tuple(group) for group in decision["decisive_trigger_groups"]},
+                {("road",), ("right-of-way",)},
+            )
+            self.assertEqual(
+                {tuple(group) for group in decision["weak_auxiliary_trigger_groups"]},
+                {("trail",), ("grazing",)},
+            )
+            self.assertTrue(decision["reviewer_notes"])
             arbitration = decision["arbitration_summary"]
             self.assertEqual(
                 arbitration["decision_effect"],
-                "blocked_by_weak_positive_trigger",
+                "positive_trigger_decisive_with_weak_auxiliary",
             )
+            self.assertFalse(arbitration["requires_adjudication"])
             groups = {
                 tuple(group["trigger_group"]): group
                 for group in arbitration["positive_trigger_groups"]
             }
-            self.assertEqual(groups[("road",)]["diagnostic_treatment"], "auxiliary")
+            self.assertEqual(groups[("road",)]["diagnostic_treatment"], "decisive")
             self.assertEqual(
                 groups[("right-of-way",)]["diagnostic_treatment"],
-                "auxiliary",
+                "decisive",
             )
             self.assertEqual(groups[("trail",)]["diagnostic_treatment"], "weak_only")
             self.assertEqual(groups[("grazing",)]["diagnostic_treatment"], "weak_only")
@@ -326,12 +381,49 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             report_text = result.report_path.read_text(encoding="utf-8")
             self.assertIn(
                 "`rule-template:unit-pack:0.1.0:roads_access_arbitration`: "
-                "`needs_adjudication` / `unresolved_evidence_conflict`",
+                "`applicable` / `positive_package_trigger`",
                 report_text,
             )
             self.assertIn("Positive trigger diagnostics:", report_text)
-            self.assertIn("`road`: `auxiliary`", report_text)
+            self.assertIn(
+                "Arbitration: `positive_trigger_decisive_with_weak_auxiliary`",
+                report_text,
+            )
             self.assertIn("`trail`: `weak_only`", report_text)
+
+    def test_trigger_arbitration_keeps_positive_negative_conflict_adjudicated(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[_positive_negative_conflict_candidate(source_set_id)],
+            )
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions["rule-template:unit-pack:0.1.0:positive_negative_conflict"]
+            self.assertEqual(decision["status"], "needs_adjudication")
+            self.assertEqual(decision["basis_type"], "unresolved_evidence_conflict")
+            self.assertEqual(decision["arbitration_status"], "positive_negative_conflict")
+            self.assertEqual(decision["decisive_trigger_groups"], [["road"]])
+            self.assertTrue(decision["negative_evidence_spans"])
+            self.assertIn(
+                "Strong positive trigger evidence and explicit negative",
+                decision["arbitration_rationale"],
+            )
+            self.assertEqual(
+                decision["arbitration_summary"]["decision_effect"],
+                "blocked_by_positive_negative_conflict",
+            )
 
     def test_uses_declared_source_evidence_when_source_retrieval_has_no_selected_hits(
         self,
@@ -1368,11 +1460,38 @@ def _roads_access_arbitration_candidate(source_set_id: str) -> dict:
             ["grazing"],
         ],
     )
+    candidate["trigger_arbitration_contract"] = {
+        "required_trigger_groups": [["road"], ["right-of-way"]],
+        "minimum_strong_trigger_groups": 2,
+        "positive_negative_conflict_policy": "needs_adjudication",
+    }
     candidate["rule_template"].update(
         {
             "title": "Roads and access arbitration fixture",
             "question": "Does the package trigger roads/access authorities?",
             "requirement": "Apply roads/access authority when triggered.",
+        }
+    )
+    return candidate
+
+
+def _positive_negative_conflict_candidate(source_set_id: str) -> dict:
+    candidate = _rule_candidate(
+        source_set_id=source_set_id,
+        rule_id="positive_negative_conflict",
+        source_record_id="R1EA-ROAD",
+        authority_category="regulation",
+        applicability_mode="conditional",
+        source_query="National Forest roads access right-of-way special use authority",
+        package_query="road not part of the project area",
+        positive_trigger_groups=[["road"]],
+        negative_trigger_groups=[["not part of the project area"]],
+    )
+    candidate["rule_template"].update(
+        {
+            "title": "Positive negative arbitration fixture",
+            "question": "Does the package contain conflicting road scope evidence?",
+            "requirement": "Conflict should require adjudication.",
         }
     )
     return candidate

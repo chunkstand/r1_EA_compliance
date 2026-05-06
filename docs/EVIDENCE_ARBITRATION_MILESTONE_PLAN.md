@@ -203,8 +203,8 @@ Implemented state:
   `arbitration_summary.positive_trigger_groups[]` / `negative_trigger_groups[]` include both
   compatibility `evidence_strength_counts` and structured `evidence_strength_class_counts` plus
   `weak_signal_details`.
-- The milestone remains behavior-preserving for applicability status outcomes. Milestone 3 is the
-  first planned behavior-changing trigger-arbitration predicate.
+- The milestone remains behavior-preserving for applicability status outcomes. Milestone 3 now
+  consumes these diagnostics as the behavior-changing trigger-arbitration predicate.
 
 Milestone 1/2 gap-close state:
 
@@ -233,7 +233,7 @@ Commit Milestone 2 as the evidence-strength/schema slice.
 
 ## Milestone 3: Trigger Arbitration Predicate
 
-Status: planned
+Status: implemented
 
 Implement the actual arbitration rule that lets strong independent evidence carry a decision while
 preserving adjudication for genuine uncertainty.
@@ -263,15 +263,37 @@ Acceptance signal:
 - Positive-plus-negative conflict fixtures remain `needs_adjudication`.
 - Not-applicable decisions still require coverage certificates.
 
+Implemented state:
+
+- `applicability-determine` now evaluates positive trigger groups through a trigger-level
+  arbitration function before assigning conditional-rule status.
+- Default sufficiency requires at least one strong positive trigger group. Optional
+  `trigger_arbitration_contract` metadata can require specific strong trigger groups, set a
+  minimum strong group count, or declare positive/negative conflict precedence.
+- Strong positive evidence can carry an `applicable` decision even when weak auxiliary trigger
+  groups are present. Weak auxiliary evidence remains visible in arbitration notes, reviewer notes,
+  report diagnostics, and decision evidence spans.
+- All-weak positive evidence remains `needs_adjudication`, and strong positive evidence plus
+  explicit negative/out-of-scope evidence remains `needs_adjudication` by default.
+- Decision rows now carry active arbitration fields: `arbitration_status`,
+  `decisive_trigger_groups`, `weak_auxiliary_trigger_groups`, `weak_only_trigger_groups`, and
+  `arbitration_rationale`.
+
 Verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_package_fact_graph.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
 git diff --check
 ```
+
+Closeout verification on 2026-05-06 passed all listed commands:
+`24` applicability-decision tests, `11` applicability-eval tests, `5` architecture-contract tests,
+`4` package fact graph tests, ruff, compileall, and whitespace checks.
 
 Commit policy:
 
@@ -411,6 +433,8 @@ Stop and report instead of continuing if:
 
 ## Next Implementation Pass
 
-Start with Milestone 1. It creates the diagnostic artifact and synthetic fixture without changing
-review outcomes. That gives the behavior-changing Milestone 3 a stable test target and avoids
-masking the current failure before it is fully captured.
+Start with Milestone 4. Milestones 1 and 2 created the diagnostic/strength foundation, and
+Milestone 3 now applies active trigger arbitration in `applicability-determine`. The next pass is to
+replay the ECID preliminary EA applicability run, confirm the roads/access authority no longer
+blocks on weak auxiliary evidence, and keep any remaining adjudication items tied to genuine
+authority-specific uncertainty.

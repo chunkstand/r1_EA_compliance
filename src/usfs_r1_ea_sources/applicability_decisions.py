@@ -379,11 +379,15 @@ def _decision_for_candidate(
     source_available = _source_evidence_available(candidate) or bool(source_evidence)
     missing_evidence: list[str] = []
     contradiction_notes: list[str] = []
+    reviewer_notes: list[str] = []
     status = "unresolved"
     basis_type = "source_set_required"
     basis: dict[str, Any] = {}
     confidence = "low"
     predicate_name = "source_set_required"
+    trigger_arbitration = _trigger_arbitration_not_evaluated(
+        "required source evidence has not been evaluated"
+    )
 
     if not source_available:
         missing_evidence.append("required source evidence is unavailable")
@@ -406,6 +410,9 @@ def _decision_for_candidate(
         contradiction_notes.extend(component_result["contradiction_notes"])
         confidence = component_result["confidence"]
         predicate_name = "forest_plan_component"
+        trigger_arbitration = _trigger_arbitration_not_evaluated(
+            "Forest Plan components use the profile/component predicate."
+        )
     else:
         mode = str(
             (candidate.get("rule_template") or {}).get("applicability_mode")
@@ -423,6 +430,49 @@ def _decision_for_candidate(
                 "rationale": "Baseline authorities are mandatory for this source set.",
                 "baseline_required": True,
             }
+            trigger_arbitration = _trigger_arbitration_not_evaluated(
+                "Baseline authorities are mandatory and do not require trigger arbitration.",
+                arbitration_status="mandatory_baseline",
+            )
+        else:
+            trigger_arbitration = _arbitrate_trigger_matches(
+                candidate=candidate,
+                positive_match=positive_match,
+                negative_match=negative_match,
+                coverage_boundary=coverage_boundary,
+            )
+
+        if mode == "baseline":
+            pass
+        elif trigger_arbitration["arbitration_status"] == "positive_negative_conflict":
+            predicate_name = "trigger_arbitration"
+            status = "needs_adjudication"
+            basis_type = "unresolved_evidence_conflict"
+            confidence = "needs_adjudication"
+            basis = {
+                "rationale": trigger_arbitration["arbitration_rationale"],
+                "matched_trigger_groups": positive_match["matched_groups"],
+                "matched_negative_trigger_groups": negative_match["matched_groups"],
+                "decisive_trigger_groups": trigger_arbitration["decisive_trigger_groups"],
+                "weak_auxiliary_trigger_groups": trigger_arbitration[
+                    "weak_auxiliary_trigger_groups"
+                ],
+            }
+            contradiction_notes.extend(trigger_arbitration["arbitration_notes"])
+        elif trigger_arbitration["positive_trigger_sufficient"]:
+            predicate_name = "trigger_arbitration"
+            status = "applicable"
+            basis_type = "positive_package_trigger"
+            confidence = "deterministic_high"
+            basis = {
+                "rationale": trigger_arbitration["arbitration_rationale"],
+                "matched_trigger_groups": positive_match["matched_groups"],
+                "decisive_trigger_groups": trigger_arbitration["decisive_trigger_groups"],
+                "weak_auxiliary_trigger_groups": trigger_arbitration[
+                    "weak_auxiliary_trigger_groups"
+                ],
+            }
+            reviewer_notes.extend(trigger_arbitration["arbitration_notes"])
         elif negative_match["matched"]:
             predicate_name = "explicit_negative_package_evidence"
             basis_type = "negative_package_evidence"
@@ -439,19 +489,18 @@ def _decision_for_candidate(
                 missing_evidence.append("sufficient search coverage for negative trigger")
         elif positive_match["matched"]:
             predicate_name = "positive_package_trigger"
-            basis_type = "positive_package_trigger"
+            basis_type = "unresolved_evidence_conflict"
             basis = {
-                "rationale": "Package evidence matched the authority's positive applicability trigger.",
+                "rationale": trigger_arbitration["arbitration_rationale"],
                 "matched_trigger_groups": positive_match["matched_groups"],
+                "weak_only_trigger_groups": trigger_arbitration["weak_only_trigger_groups"],
+                "missing_required_trigger_groups": trigger_arbitration[
+                    "missing_required_trigger_groups"
+                ],
             }
-            if positive_match["requires_adjudication"]:
-                status = "needs_adjudication"
-                basis_type = "unresolved_evidence_conflict"
-                confidence = "needs_adjudication"
-                contradiction_notes.extend(positive_match["adjudication_notes"])
-            else:
-                status = "applicable"
-                confidence = "deterministic_high"
+            status = "needs_adjudication"
+            confidence = "needs_adjudication"
+            contradiction_notes.extend(trigger_arbitration["arbitration_notes"])
         elif coverage_boundary["coverage_sufficient"]:
             status = "not_applicable"
             basis_type = "absent_trigger_evidence"
@@ -508,6 +557,7 @@ def _decision_for_candidate(
         "coverage_boundary": coverage_boundary,
         "package_fact_graph_sha256": package_fact_graph.get("package_fact_graph_sha256"),
         "package_context_sha256": package_context.get("package_context_sha256"),
+        "trigger_arbitration": trigger_arbitration,
     }
     arbitration_summary = _arbitration_summary(
         status=status,
@@ -515,6 +565,7 @@ def _decision_for_candidate(
         predicate_name=predicate_name,
         positive_match=positive_match,
         negative_match=negative_match,
+        trigger_arbitration=trigger_arbitration,
         source_evidence=source_evidence,
         selected_retrieval_result_ids=selected_result_ids,
         retrieval_trace_ids=trace_ids,
@@ -542,6 +593,11 @@ def _decision_for_candidate(
                 "status": status,
                 "basis_type": basis_type,
                 "coverage_sufficient": coverage_boundary["coverage_sufficient"],
+                "arbitration_status": trigger_arbitration["arbitration_status"],
+                "decisive_trigger_groups": trigger_arbitration["decisive_trigger_groups"],
+                "weak_auxiliary_trigger_groups": trigger_arbitration[
+                    "weak_auxiliary_trigger_groups"
+                ],
             },
         },
         "predicate_name": predicate_name,
@@ -557,8 +613,20 @@ def _decision_for_candidate(
             "positive_trigger_matched": positive_match["matched"],
             "negative_trigger_matched": negative_match["matched"],
             "coverage_sufficient": coverage_boundary["coverage_sufficient"],
+            "arbitration_status": trigger_arbitration["arbitration_status"],
+            "decisive_trigger_groups": trigger_arbitration["decisive_trigger_groups"],
+            "weak_auxiliary_trigger_groups": trigger_arbitration[
+                "weak_auxiliary_trigger_groups"
+            ],
         },
         "arbitration_summary": arbitration_summary,
+        "arbitration_status": trigger_arbitration["arbitration_status"],
+        "decisive_trigger_groups": trigger_arbitration["decisive_trigger_groups"],
+        "weak_auxiliary_trigger_groups": trigger_arbitration[
+            "weak_auxiliary_trigger_groups"
+        ],
+        "weak_only_trigger_groups": trigger_arbitration["weak_only_trigger_groups"],
+        "arbitration_rationale": trigger_arbitration["arbitration_rationale"],
         "source_record_ids": source_record_ids,
         "authority_category": candidate.get("authority_category"),
         "authority_document_role": candidate.get("authority_document_role"),
@@ -586,7 +654,7 @@ def _decision_for_candidate(
         "adjudication_state": (
             "required" if status == "needs_adjudication" else "not_required"
         ),
-        "reviewer_notes": [],
+        "reviewer_notes": reviewer_notes,
         "freshness": dict(freshness),
     }
 
@@ -911,6 +979,228 @@ def _missing_trigger_groups(decision: dict[str, Any]) -> list[list[str]]:
     return []
 
 
+def _arbitrate_trigger_matches(
+    *,
+    candidate: dict[str, Any],
+    positive_match: dict[str, Any],
+    negative_match: dict[str, Any],
+    coverage_boundary: dict[str, Any],
+) -> dict[str, Any]:
+    contract = _trigger_arbitration_contract(candidate)
+    positive_results = positive_match.get("trigger_group_results") or []
+    decisive_groups = [
+        list(result.get("trigger_group") or [])
+        for result in positive_results
+        if result.get("matched") and _strong_evidence_count(result) > 0
+    ]
+    weak_groups = [
+        list(result.get("trigger_group") or [])
+        for result in positive_results
+        if result.get("matched") and _weak_evidence_count(result) > 0
+    ]
+    weak_only_groups = [
+        list(result.get("trigger_group") or [])
+        for result in positive_results
+        if result.get("matched")
+        and _weak_evidence_count(result) > 0
+        and _strong_evidence_count(result) == 0
+    ]
+    required_groups = contract["required_trigger_groups"]
+    decisive_keys = {_trigger_group_key(group) for group in decisive_groups}
+    missing_required = [
+        group
+        for group in required_groups
+        if _trigger_group_key(group) not in decisive_keys
+    ]
+    minimum_strong = int(contract["minimum_strong_trigger_groups"])
+    strong_sufficient = (
+        bool(decisive_groups)
+        and len(decisive_groups) >= minimum_strong
+        and not missing_required
+    )
+    weak_auxiliary_groups = [
+        group
+        for group in weak_groups
+        if _trigger_group_key(group) not in decisive_keys
+    ]
+    notes = sorted(set(_strings(positive_match.get("adjudication_notes"))))
+    arbitration_status = "not_evaluated"
+    rationale = "Trigger arbitration was not evaluated."
+    positive_sufficient = False
+    requires_adjudication = False
+
+    if strong_sufficient and negative_match.get("matched"):
+        conflict_policy = contract["positive_negative_conflict_policy"]
+        if conflict_policy == "positive_precedence":
+            positive_sufficient = True
+            arbitration_status = (
+                "strong_positive_with_weak_auxiliary"
+                if weak_auxiliary_groups
+                else "strong_positive_decisive"
+            )
+            rationale = (
+                "A rule contract gives positive trigger evidence precedence over matched "
+                "negative trigger evidence."
+            )
+        elif conflict_policy == "negative_precedence":
+            arbitration_status = "negative_precedence"
+            rationale = (
+                "A rule contract gives negative trigger evidence precedence over matched "
+                "positive trigger evidence."
+            )
+        else:
+            requires_adjudication = True
+            arbitration_status = "positive_negative_conflict"
+            rationale = (
+                "Strong positive trigger evidence and explicit negative or out-of-scope "
+                "trigger evidence were both found."
+            )
+            notes = sorted(
+                set(
+                    notes
+                    + _strings(negative_match.get("adjudication_notes"))
+                    + [rationale]
+                )
+            )
+    elif strong_sufficient:
+        positive_sufficient = True
+        arbitration_status = (
+            "strong_positive_with_weak_auxiliary"
+            if weak_auxiliary_groups
+            else "strong_positive_decisive"
+        )
+        rationale = (
+            "At least one rule-contract-sufficient positive trigger group has strong "
+            "package evidence."
+        )
+        if weak_auxiliary_groups:
+            rationale = (
+                f"{rationale} Weak auxiliary trigger groups remain recorded for traceability."
+            )
+    elif negative_match.get("matched"):
+        arbitration_status = "negative_trigger_decisive"
+        rationale = "Negative or out-of-scope trigger evidence was found without sufficient positive evidence."
+    elif positive_match.get("matched"):
+        requires_adjudication = True
+        arbitration_status = (
+            "weak_positive_only"
+            if weak_only_groups and not decisive_groups
+            else "insufficient_strong_positive_trigger"
+        )
+        if missing_required:
+            rationale = (
+                "Matched positive trigger evidence does not satisfy required strong trigger "
+                "groups declared by the rule contract."
+            )
+        elif decisive_groups:
+            rationale = (
+                "Matched positive trigger evidence does not meet the rule contract's minimum "
+                "number of strong trigger groups."
+            )
+        else:
+            rationale = "Only weak positive trigger evidence was found."
+    elif coverage_boundary.get("coverage_sufficient"):
+        arbitration_status = "positive_trigger_absent"
+        rationale = "No positive trigger evidence was found within the recorded search boundary."
+    else:
+        arbitration_status = "coverage_gap"
+        rationale = "Positive trigger evidence was not found and search coverage is insufficient."
+
+    return {
+        "arbitration_status": arbitration_status,
+        "positive_trigger_sufficient": positive_sufficient,
+        "requires_adjudication": requires_adjudication,
+        "decisive_trigger_groups": decisive_groups if positive_sufficient or requires_adjudication else [],
+        "weak_auxiliary_trigger_groups": weak_auxiliary_groups if positive_sufficient else [],
+        "weak_only_trigger_groups": weak_only_groups,
+        "missing_required_trigger_groups": missing_required,
+        "minimum_strong_trigger_groups": minimum_strong,
+        "strong_trigger_group_count": len(decisive_groups),
+        "arbitration_rationale": rationale,
+        "arbitration_notes": notes,
+        "contract": contract,
+    }
+
+
+def _trigger_arbitration_not_evaluated(
+    rationale: str,
+    *,
+    arbitration_status: str = "not_evaluated",
+) -> dict[str, Any]:
+    return {
+        "arbitration_status": arbitration_status,
+        "positive_trigger_sufficient": False,
+        "requires_adjudication": False,
+        "decisive_trigger_groups": [],
+        "weak_auxiliary_trigger_groups": [],
+        "weak_only_trigger_groups": [],
+        "missing_required_trigger_groups": [],
+        "minimum_strong_trigger_groups": 0,
+        "strong_trigger_group_count": 0,
+        "arbitration_rationale": rationale,
+        "arbitration_notes": [],
+        "contract": {},
+    }
+
+
+def _trigger_arbitration_contract(candidate: dict[str, Any]) -> dict[str, Any]:
+    raw_contract = candidate.get("trigger_arbitration_contract")
+    if not isinstance(raw_contract, dict):
+        raw_contract = (candidate.get("rule_template") or {}).get("trigger_arbitration")
+    if not isinstance(raw_contract, dict):
+        raw_contract = (
+            candidate.get("deterministic_applicability_test_contract") or {}
+        ).get("trigger_arbitration")
+    if not isinstance(raw_contract, dict):
+        raw_contract = {}
+    required_groups = _trigger_groups(
+        raw_contract.get("required_trigger_groups")
+        or raw_contract.get("required_strong_trigger_groups")
+    )
+    minimum_strong = _positive_int(
+        raw_contract.get("minimum_strong_trigger_groups")
+        or raw_contract.get("min_strong_trigger_groups"),
+        default=len(required_groups) if required_groups else 1,
+    )
+    policy = str(
+        raw_contract.get("positive_negative_conflict_policy")
+        or "needs_adjudication"
+    )
+    if policy not in {"needs_adjudication", "positive_precedence", "negative_precedence"}:
+        policy = "needs_adjudication"
+    return {
+        "required_trigger_groups": required_groups,
+        "minimum_strong_trigger_groups": minimum_strong,
+        "positive_negative_conflict_policy": policy,
+    }
+
+
+def _positive_int(value: Any, *, default: int) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        parsed = default
+    return max(1, parsed)
+
+
+def _weak_evidence_count(group_result: dict[str, Any]) -> int:
+    counts = group_result.get("evidence_strength_counts") or {}
+    return int(counts.get("weak_signal") or 0)
+
+
+def _strong_evidence_count(group_result: dict[str, Any]) -> int:
+    counts = group_result.get("evidence_strength_counts") or {}
+    return sum(
+        int(count)
+        for confidence_class, count in counts.items()
+        if confidence_class not in {"weak_signal", "negative_context"}
+    )
+
+
+def _trigger_group_key(group: list[str]) -> tuple[str, ...]:
+    return tuple(str(value).lower() for value in _strings(group))
+
+
 def _trigger_match(
     *,
     groups: list[list[str]],
@@ -1058,15 +1348,12 @@ def _finalize_trigger_group_diagnostic(
     if not result["matched"]:
         treatment = "unmatched"
     else:
-        strength_counts = result.get("evidence_strength_counts") or {}
-        weak_count = int(strength_counts.get("weak_signal") or 0)
-        strong_count = sum(
-            int(count)
-            for strength, count in strength_counts.items()
-            if strength != "weak_signal"
-        )
+        weak_count = _weak_evidence_count(result)
+        strong_count = _strong_evidence_count(result)
         if weak_count and strong_count:
             treatment = "conflicting"
+        elif strong_count:
+            treatment = "decisive"
         elif weak_count:
             treatment = "weak_only"
         elif requires_adjudication:
@@ -1151,32 +1438,39 @@ def _arbitration_summary(
     predicate_name: str,
     positive_match: dict[str, Any],
     negative_match: dict[str, Any],
+    trigger_arbitration: dict[str, Any],
     source_evidence: list[dict[str, Any]],
     selected_retrieval_result_ids: list[str],
     retrieval_trace_ids: list[str],
     graph_path_ids: list[str],
 ) -> dict[str, Any]:
-    requires_adjudication = bool(
-        positive_match.get("requires_adjudication")
-        or negative_match.get("requires_adjudication")
-    )
+    requires_adjudication = bool(trigger_arbitration.get("requires_adjudication"))
     notes = sorted(
         set(
-            _strings(positive_match.get("adjudication_notes"))
+            _strings(trigger_arbitration.get("arbitration_notes"))
+            + _strings(positive_match.get("adjudication_notes"))
             + _strings(negative_match.get("adjudication_notes"))
         )
     )
     return {
         "schema_version": "applicability-evidence-arbitration-v0",
-        "diagnostic_only": True,
+        "diagnostic_only": False,
         "decision_effect": _arbitration_decision_effect(
             status=status,
             positive_match=positive_match,
             negative_match=negative_match,
+            trigger_arbitration=trigger_arbitration,
         ),
         "status": status,
         "basis_type": basis_type,
         "predicate_name": predicate_name,
+        "arbitration_status": trigger_arbitration.get("arbitration_status"),
+        "decisive_trigger_groups": trigger_arbitration.get("decisive_trigger_groups") or [],
+        "weak_auxiliary_trigger_groups": trigger_arbitration.get("weak_auxiliary_trigger_groups") or [],
+        "weak_only_trigger_groups": trigger_arbitration.get("weak_only_trigger_groups") or [],
+        "missing_required_trigger_groups": trigger_arbitration.get("missing_required_trigger_groups") or [],
+        "minimum_strong_trigger_groups": trigger_arbitration.get("minimum_strong_trigger_groups"),
+        "arbitration_rationale": trigger_arbitration.get("arbitration_rationale"),
         "positive_trigger_matched": bool(positive_match.get("matched")),
         "negative_trigger_matched": bool(negative_match.get("matched")),
         "requires_adjudication": requires_adjudication,
@@ -1199,11 +1493,23 @@ def _arbitration_decision_effect(
     status: str,
     positive_match: dict[str, Any],
     negative_match: dict[str, Any],
+    trigger_arbitration: dict[str, Any],
 ) -> str:
-    if status == "needs_adjudication" and positive_match.get("requires_adjudication"):
+    arbitration_status = str(trigger_arbitration.get("arbitration_status") or "")
+    if status == "needs_adjudication" and arbitration_status == "positive_negative_conflict":
+        return "blocked_by_positive_negative_conflict"
+    if status == "needs_adjudication" and arbitration_status in {
+        "weak_positive_only",
+        "insufficient_strong_positive_trigger",
+    }:
         return "blocked_by_weak_positive_trigger"
     if status == "needs_adjudication" and negative_match.get("requires_adjudication"):
         return "blocked_by_weak_negative_trigger"
+    if (
+        status == "applicable"
+        and arbitration_status == "strong_positive_with_weak_auxiliary"
+    ):
+        return "positive_trigger_decisive_with_weak_auxiliary"
     if status == "applicable" and positive_match.get("matched"):
         return "positive_trigger_decisive"
     if status == "not_applicable" and negative_match.get("matched"):
@@ -1498,6 +1804,10 @@ def _partition_authority_record(decision: dict[str, Any]) -> dict[str, Any]:
         if decision["status"] == "not_applicable"
         else None,
         "basis_type": decision["basis_type"],
+        "arbitration_status": decision.get("arbitration_status"),
+        "decisive_trigger_groups": decision.get("decisive_trigger_groups") or [],
+        "weak_auxiliary_trigger_groups": decision.get("weak_auxiliary_trigger_groups") or [],
+        "arbitration_rationale": decision.get("arbitration_rationale"),
         "generated_rule_metadata": _generated_rule_metadata(decision),
         "predicate_result": decision["predicate_result"],
         "retrieval_trace_ids": decision["retrieval_trace_ids"],
@@ -1770,7 +2080,7 @@ def _write_report(path: Path, summary: dict[str, Any], decisions: list[dict[str,
             f"`{decision['candidate_authority_id']}`: "
             f"`{decision['status']}` / `{decision['basis_type']}`"
         )
-        if decision["status"] == "needs_adjudication":
+        if _should_report_arbitration(decision):
             lines.extend(_arbitration_report_lines(decision))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -1805,6 +2115,18 @@ def _arbitration_report_lines(decision: dict[str, Any]) -> list[str]:
     if notes:
         lines.append(f"  - Weak-signal notes: `{notes}`")
     return lines
+
+
+def _should_report_arbitration(decision: dict[str, Any]) -> bool:
+    summary = decision.get("arbitration_summary")
+    if not isinstance(summary, dict):
+        return False
+    if decision.get("status") == "needs_adjudication":
+        return True
+    return bool(
+        summary.get("weak_auxiliary_trigger_groups")
+        or summary.get("arbitration_notes")
+    )
 
 
 def _format_trigger_group(value: Any) -> str:

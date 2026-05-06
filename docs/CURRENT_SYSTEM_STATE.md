@@ -232,10 +232,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   Applicability determination covered `392` candidate authorities, with `40` applicable, `349`
   non-applicable, and `3` `needs_adjudication` authorities. Validation correctly remains
   not reviewer-ready until the generated adjudication template is completed and replayed.
-- The ECID roads/access/special-use adjudication item also exposed a general evidence-arbitration
-  gap: weak auxiliary trigger evidence can currently block an authority family even when strong
-  independent roads/access/right-of-way evidence is present. The repair sequence is documented in
-  `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
+- The ECID roads/access/special-use adjudication item exposed the pre-Milestone-3
+  evidence-arbitration gap: weak auxiliary trigger evidence could block an authority family even
+  when strong independent roads/access/right-of-way evidence was present. The repair sequence is
+  documented in `docs/EVIDENCE_ARBITRATION_MILESTONE_PLAN.md`.
 - Evidence-arbitration Milestones 1 and 2 are implemented as behavior-preserving diagnostics.
   Applicability decision rows include `arbitration_summary` records, `applicability_report.md`
   renders arbitration diagnostics for `needs_adjudication` rows, and package/decision evidence now
@@ -243,8 +243,17 @@ Gallatin FEIS and ESA-supporting plan documents.
   values. The Milestone 1/2 gap-close pass tightened weak-signal reason strings, expanded
   no-action/no-change background classification, preserved matched negative phrases when available,
   and added package graph assertions for fact/context/uncertainty `evidence_strength` fields. This
-  does not change applicability status outcomes yet; Milestone 3 is the planned behavior-changing
-  predicate slice.
+  diagnostic foundation is now used by Milestone 3.
+- Evidence-arbitration Milestone 3 is implemented as the behavior-changing trigger-arbitration
+  predicate. Strong, rule-contract-sufficient positive trigger groups can now carry an
+  `applicable` decision while weak auxiliary trigger evidence stays visible in arbitration notes,
+  reviewer notes, report diagnostics, and decision evidence. All-weak positives still require
+  adjudication, and strong positive evidence plus explicit negative/out-of-scope evidence still
+  requires adjudication by default. Milestone 4 is the planned real-package replay/gate-alignment
+  slice.
+- Latest Milestone 3 local verification on 2026-05-06 passed focused applicability decision,
+  applicability eval, architecture-contract, package fact graph, ruff, compileall, and
+  `git diff --check` gates.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
@@ -492,8 +501,10 @@ records, package facts, and Forest Plan component provenance when those artifact
 `applicable_authorities.json`, `non_applicable_authorities.json`,
 `search_coverage_certificates.json`, `applicability_provenance.json`, and
 `applicability_report.md` with one deterministic decision row per authority candidate. Weak or
-conflicting trigger evidence is recorded as `needs_adjudication`, and not-applicable decisions cite
-search coverage certificates with required source-index hashes. Decision rows retain inspected
+auxiliary trigger evidence no longer blocks a decision when rule-contract-sufficient strong
+positive trigger evidence is independently present; all-weak positive evidence and unresolved
+positive/negative conflicts still become `needs_adjudication`. Not-applicable decisions cite search
+coverage certificates with required source-index hashes. Decision rows retain inspected
 source-library evidence spans or declared authority-universe source evidence when source retrieval
 records coverage without selecting a source chunk. Explicit negative Forest Plan scope evidence,
 such as package statements that a component area is not part of the project area, overrides broad
