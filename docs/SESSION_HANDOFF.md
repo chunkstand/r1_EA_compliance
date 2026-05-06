@@ -277,6 +277,18 @@ next-target lanes:
     implementation-confirmation checklist item has current generated evidence selectors plus a
     planned tracked configuration owner in `config/ea_consistency_decision_support_v1.json` for
     Sequence 1. The next preflight pass is CLI, Module, And Renderer Ownership.
+  - Sequence 0 pass 7 is complete in
+    `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_7_CLI_MODULE_RENDERER_OWNERSHIP.md`:
+    the full milestone implementation surface is now fixed as the `ea-consistency-document` CLI
+    command, a new `cli_decision_support.py` command lane, canonical module
+    `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`, a new architecture-contract
+    `decision_support` layer and command group when code is introduced, generated artifacts under
+    `source_library/reviews/<review_id>/decision_support/`, schema documentation in
+    `docs/OUTPUT_SCHEMAS.md`, config ownership in `config/ea_consistency_decision_support_v1.json`,
+    and focused tests in `tests/test_ea_consistency_decision_support.py`, `tests/test_cli.py`, and
+    `tests/test_architecture_contract.py`. The renderer path should follow the existing
+    compliance-output JSON-to-Markdown/PDF pattern without importing private helpers or adding
+    system PDF dependencies. The next preflight pass is Fixture And Regression Contract.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: either complete and replay the
   three-item ECID applicability adjudication worklist for
   `region1-expansion-ecid-preliminary-ea`, or add the third real Region 1 EA package fixture if the
