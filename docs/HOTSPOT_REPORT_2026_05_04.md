@@ -114,3 +114,59 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   explicit test and milestone decision.
 - New architecture-contract exception required to make the split pass.
 - Need to rewrite ignored generated corpus/review artifacts without explicit approval.
+
+## 2026-05-06 Sequence 0 Baseline And Contract Lock
+
+This follow-up pass locks the next hotspot-reduction sequence after the completed
+`compliance_outputs.py` split. It does not move code or change generated artifact contracts.
+
+Current line-count baseline:
+
+| Surface | Lines | Sequence 0 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 3,575 | Still the first refactor target. |
+| `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py` | 3,391 | Defer until compliance review risk is reduced. |
+| `src/usfs_r1_ea_sources/forest_plan_components.py` | 3,302 | Defer; promoted component eval is currently green. |
+| `src/usfs_r1_ea_sources/ea_consistency_decision_support.py` | 3,090 | Defer; decision-support gate is newly closed. |
+| `viewer/nepa-3d/app.js` | 2,202 | Defer; viewer work is outside this compliance hotspot sequence. |
+| `src/usfs_r1_ea_sources/compliance_outputs.py` | 1,019 | Existing rendering split remains the model for narrow ownership. |
+
+Sequence 1 target:
+
+Create `src/usfs_r1_ea_sources/compliance_inputs.py` and move only compliance-review input and
+identity/gate-context helpers out of `compliance_review.py`. The intended ownership is path and
+artifact loading for generated applicability rule packs, generated-pack validation, applicability
+validation, non-applicable authority artifacts, search coverage artifacts, package manifest/chunk
+hash checks, optional artifact-path resolution, and small JSON/JSONL read helpers needed only by
+that input boundary.
+
+Sequence 1 non-goals:
+
+- Do not change finding selection, compliance status decisions, generated rule-pack semantics,
+  Forest Plan component evaluation, matrix/PDF output, finding graph output, eval scoring, CLI flags,
+  or generated artifact schemas.
+- Do not move renderer code already owned by `compliance_outputs.py`.
+- Do not stage ignored `source_library/` outputs or root-level manual East Crazies draft exports.
+
+Sequence 1 required verification:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+git diff --check
+```
+
+Sequence 0 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Sequence 0 worktree note: unrelated untracked root-level East Crazies manual draft exports and
+`docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf` were present at baseline and intentionally
+left untouched.
