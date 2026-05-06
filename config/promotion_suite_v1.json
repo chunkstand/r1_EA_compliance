@@ -933,7 +933,7 @@
         "phase_eval_passed": true,
         "phase_eval_reviewer_ready": true
       },
-      "next_action": "Proceed to Sequence 3 by replacing the package_fixture_missing third real-package expansion slot with a concrete Region 1 EA fixture contract.",
+      "next_action": "Keep this ECID expansion slot ready while the South Plateau slot completes Sequence 5 applicability adjudication before strict expansion promotion.",
       "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {

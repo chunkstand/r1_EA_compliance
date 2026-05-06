@@ -564,10 +564,11 @@ legal conclusion.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: the ECID three-item
   applicability adjudication worklist, generated-rule-pack/artifact-check pass, source-claim gap
   closure, Forest Plan component adjudication replay, and third package fixture selection are
-  complete. The next implementation slice is the selected South Plateau applicability-first run.
+  complete. The selected South Plateau applicability-first run is now complete through validation,
+  and the remaining slice is the six-item South Plateau adjudication closure.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false` by running the selected South Plateau package through the
-  applicability-first sequence and then strict expansion promotion.
+  `expansion_ready=false` by resolving the South Plateau adjudication blocker before generated
+  rule-pack validation, compliance review, phase eval, and strict expansion promotion.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness

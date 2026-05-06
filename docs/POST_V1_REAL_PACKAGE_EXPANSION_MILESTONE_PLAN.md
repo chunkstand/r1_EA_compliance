@@ -523,7 +523,7 @@ Acceptance:
 - To close this weakness, the third package must reach reviewer-ready status and the slot must be
   marked ready only after artifact checks pass.
 
-### Sequence 5: Strict Expansion Promotion Closeout
+### Sequence 6: Strict Expansion Promotion Closeout
 
 Purpose: prove broader expansion readiness using the same promotion-suite contract agents will use
 in later sessions.
