@@ -44,7 +44,7 @@ instructions for agents or privileged tools.
 | NEPA 3D knowledge graph | Define and assemble source-set graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
-| Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
+| Compliance | Produce citation-bearing compliance findings, matrices, finding graphs, coverage, and gold evals. | `compliance_review.py`, `compliance_inputs.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
 | CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |

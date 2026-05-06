@@ -135,10 +135,11 @@ allowed_import_layers = [
 
 [[layers]]
 name = "compliance"
-summary = "Compliance review, compliance coverage, and compliance gold eval."
+summary = "Compliance review, compliance input gates, compliance coverage, and compliance gold eval."
 modules = [
   "compliance_coverage",
   "compliance_gold_eval",
+  "compliance_inputs",
   "compliance_outputs",
   "compliance_review",
 ]

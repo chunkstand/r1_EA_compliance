@@ -170,3 +170,37 @@ Sequence 0 verification:
 Sequence 0 worktree note: unrelated untracked root-level East Crazies manual draft exports and
 `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf` were present at baseline and intentionally
 left untouched.
+
+## 2026-05-06 Sequence 1 Compliance Input Split
+
+Sequence 1 creates `src/usfs_r1_ea_sources/compliance_inputs.py` and moves the compliance-review
+input and identity/gate-context helpers out of `compliance_review.py`. The split owns generated
+applicability rule-pack gate loading, generated-pack validation checks, applicability validation
+and non-applicable/search-coverage artifact loading, optional artifact-path resolution, package
+manifest/chunk hash checks, and JSON/JSONL helpers used by that input boundary.
+
+Current post-split source line counts:
+
+| Surface | Lines | Sequence 1 interpretation |
+| --- | ---: | --- |
+| `src/usfs_r1_ea_sources/compliance_review.py` | 3,060 | Review orchestration remains large, but no longer owns the input gate helper set. |
+| `src/usfs_r1_ea_sources/compliance_inputs.py` | 561 | New narrow owner for generated applicability/compliance input artifacts and gate context. |
+
+Sequence 1 preserves the existing generated artifact contracts: no finding selection, compliance
+status decision, generated rule-pack semantic, matrix/PDF output, finding graph output, eval scoring,
+CLI flag, or schema behavior is intentionally changed.
+
+Sequence 1 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py`: `55 passed`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_architecture_contract.py`:
+  `11 passed`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Sequence 2 target:
+
+Extract compliance validation/report assembly helpers only after Sequence 1 verification is green.
+Keep the same boundary rule: one ownership slice, no output schema change, and no downstream
+compliance-review execution unless explicitly requested.

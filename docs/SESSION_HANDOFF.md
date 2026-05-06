@@ -19,20 +19,27 @@ Milestone 6. The operative architecture references are:
 
 ### Compliance Review Hotspot Reduction
 
-Sequence 0 baseline and contract lock is complete for the next compliance-review hotspot split. No
-code moved in this pass. The current line-count baseline is `compliance_review.py` `3,575`,
+Sequence 1 is implemented for the compliance-review hotspot split. The new
+`src/usfs_r1_ea_sources/compliance_inputs.py` module owns compliance-review input and
+identity/gate-context helpers only: generated applicability rule-pack artifact loading,
+generated-pack validation loading, applicability validation loading, non-applicable
+authority/search-coverage artifact loading, package manifest/chunk hash checks, optional
+artifact-path resolution, and JSON/JSONL read helpers needed by that boundary.
+
+The current post-split line-count baseline is `compliance_review.py` `3,060` and
+`compliance_inputs.py` `561`; the earlier deferred hotspot baselines remain
 `nepa_knowledge_graph_export.py` `3,391`, `forest_plan_components.py` `3,302`,
 `ea_consistency_decision_support.py` `3,090`, `viewer/nepa-3d/app.js` `2,202`, and
 `compliance_outputs.py` `1,019`.
 
-The next sequence target is a narrow `src/usfs_r1_ea_sources/compliance_inputs.py` extraction for
-compliance-review input and identity/gate-context helpers only: generated applicability rule-pack
-artifact loading, generated-pack validation loading, applicability validation loading,
-non-applicable authority/search-coverage artifact loading, package manifest/chunk hash checks,
-optional artifact-path resolution, and local JSON/JSONL read helpers needed by that boundary. Do
-not change finding selection, compliance status decisions, generated rule-pack semantics, Forest
-Plan component evaluation, matrix/PDF output, finding graph output, eval scoring, CLI flags, or
-generated artifact schemas in that split.
+Sequence 1 does not intentionally change finding selection, compliance status decisions, generated
+rule-pack semantics, Forest Plan component evaluation, matrix/PDF output, finding graph output,
+eval scoring, CLI flags, or generated artifact schemas. The next sequence target is a narrow
+compliance validation/report assembly split after this sequence is verified and committed.
+
+Sequence 1 verification passed: `tests/test_compliance_review.py` `55 passed`,
+`tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,
+`compileall src`, and `git diff --check`.
 
 Sequence 0 verification passed: `tests/test_compliance_review.py` `55 passed`,
 `tests/test_cli.py tests/test_architecture_contract.py` `11 passed`, `ruff check src tests`,
