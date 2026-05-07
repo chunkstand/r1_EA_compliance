@@ -1231,6 +1231,57 @@
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-ecid-preliminary-ea",
       "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
+      "source_set_id": "source-set-ba8d0feae79501b8",
+      "expected_gate_artifacts": [
+        {
+          "id": "package_manifest",
+          "path": "reviews/{review_id}/package/package_manifest.jsonl"
+        },
+        {
+          "id": "applicability_validation",
+          "path": "reviews/{review_id}/applicability/applicability_validation.json"
+        },
+        {
+          "id": "generated_rule_pack_validation",
+          "path": "reviews/{review_id}/applicability/generated_rule_pack_validation.json"
+        },
+        {
+          "id": "compliance_validation",
+          "path": "reviews/{review_id}/compliance_validation.json"
+        },
+        {
+          "id": "compliance_review",
+          "path": "reviews/{review_id}/compliance_review.json"
+        },
+        {
+          "id": "compliance_matrix",
+          "path": "reviews/{review_id}/compliance_matrix.json"
+        },
+        {
+          "id": "compliance_matrix_pdf",
+          "path": "reviews/{review_id}/compliance_matrix.pdf"
+        },
+        {
+          "id": "authority_family_provenance",
+          "path": "reviews/{review_id}/authority_family_provenance.json"
+        },
+        {
+          "id": "non_applicable_authority_appendix",
+          "path": "reviews/{review_id}/non_applicable_authority_appendix.json"
+        },
+        {
+          "id": "forest_plan_component_adjudication_template",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_template.json"
+        },
+        {
+          "id": "forest_plan_component_adjudication_eval",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_eval.json"
+        },
+        {
+          "id": "phase_eval",
+          "path": "reviews/{review_id}/phase_eval_results.json"
+        }
+      ],
       "last_local_signal": {
         "package_file_count": 7,
         "package_chunk_count": 160,
@@ -1306,6 +1357,34 @@
         {
           "id": "compliance_validation",
           "path": "reviews/{review_id}/compliance_validation.json"
+        },
+        {
+          "id": "compliance_review",
+          "path": "reviews/{review_id}/compliance_review.json"
+        },
+        {
+          "id": "compliance_matrix",
+          "path": "reviews/{review_id}/compliance_matrix.json"
+        },
+        {
+          "id": "compliance_matrix_pdf",
+          "path": "reviews/{review_id}/compliance_matrix.pdf"
+        },
+        {
+          "id": "authority_family_provenance",
+          "path": "reviews/{review_id}/authority_family_provenance.json"
+        },
+        {
+          "id": "non_applicable_authority_appendix",
+          "path": "reviews/{review_id}/non_applicable_authority_appendix.json"
+        },
+        {
+          "id": "authority_reviewer_resolution_report",
+          "path": "reviews/{review_id}/authority_reviewer_resolution_report.json"
+        },
+        {
+          "id": "litigation_risk_summary",
+          "path": "reviews/{review_id}/litigation_risk_summary.json"
         },
         {
           "id": "phase_eval",

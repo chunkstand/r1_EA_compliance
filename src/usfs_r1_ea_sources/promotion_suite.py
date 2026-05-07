@@ -638,11 +638,37 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
             _validate_result_spec(result)
     for result in manifest.get("suite_results", []):
         _validate_result_spec(result)
+    expansion_result_ids_by_review_id = _required_expansion_result_ids_by_review_id(
+        manifest
+    )
     for slot in manifest.get("expansion_slots", []):
-        _validate_expansion_slot_spec(slot)
+        _validate_expansion_slot_spec(
+            slot,
+            expansion_result_ids_by_review_id=expansion_result_ids_by_review_id,
+        )
 
 
-def _validate_expansion_slot_spec(slot: dict[str, Any]) -> None:
+def _required_expansion_result_ids_by_review_id(
+    manifest: dict[str, Any],
+) -> dict[str, set[str]]:
+    result_ids_by_review_id: dict[str, set[str]] = {}
+    for case in manifest.get("review_cases", []):
+        review_id = str(case.get("review_id") or "")
+        result_ids = {
+            str(result.get("id") or "")
+            for result in case.get("results", [])
+            if result.get("required_for_expansion")
+        }
+        if result_ids:
+            result_ids_by_review_id[review_id] = result_ids
+    return result_ids_by_review_id
+
+
+def _validate_expansion_slot_spec(
+    slot: dict[str, Any],
+    *,
+    expansion_result_ids_by_review_id: dict[str, set[str]],
+) -> None:
     slot_id = str(slot.get("id") or "")
     _validate_safe_id(slot_id, "expansion slot id")
     ready = bool(slot.get("ready", False))
@@ -652,8 +678,6 @@ def _validate_expansion_slot_spec(slot: dict[str, Any]) -> None:
             f"Promotion suite expansion slot {slot_id!r} is ready but still has "
             "failure_category."
         )
-    if ready:
-        return
     has_selected_contract = status != "open" or any(
         key in slot
         for key in (
@@ -665,20 +689,19 @@ def _validate_expansion_slot_spec(slot: dict[str, Any]) -> None:
             "forest_plan_profile",
         )
     )
+    if ready:
+        has_selected_contract = True
     if not has_selected_contract:
         return
-    if str(slot.get("failure_category") or "") == "package_fixture_missing":
+    if not ready and str(slot.get("failure_category") or "") == "package_fixture_missing":
         raise ValueError(
             f"Promotion suite selected expansion slot {slot_id!r} must use a typed "
             "failure_category other than 'package_fixture_missing'."
         )
-    for key in (
-        "review_id",
-        "package_path",
-        "source_set_id",
-        "failure_category",
-        "next_action",
-    ):
+    required_keys = ["review_id", "package_path", "source_set_id", "next_action"]
+    if not ready:
+        required_keys.append("failure_category")
+    for key in required_keys:
         if not str(slot.get(key) or "").strip():
             raise ValueError(
                 f"Promotion suite selected expansion slot {slot_id!r} is missing {key!r}."
@@ -702,6 +725,21 @@ def _validate_expansion_slot_spec(slot: dict[str, Any]) -> None:
             raise ValueError(
                 f"Promotion suite selected expansion slot {slot_id!r} has an expected "
                 "gate artifact without a path."
+            )
+    if ready:
+        required_result_ids = expansion_result_ids_by_review_id.get(str(slot["review_id"]))
+        if not required_result_ids:
+            raise ValueError(
+                f"Promotion suite ready expansion slot {slot_id!r} must have matching "
+                "review-case results marked required_for_expansion."
+            )
+        gate_artifact_ids = {str(artifact.get("id") or "") for artifact in gate_artifacts}
+        missing_result_ids = sorted(required_result_ids - gate_artifact_ids)
+        if missing_result_ids:
+            raise ValueError(
+                f"Promotion suite ready expansion slot {slot_id!r} expected_gate_artifacts "
+                "must include required expansion result ids: "
+                f"{', '.join(missing_result_ids)}."
             )
 
 

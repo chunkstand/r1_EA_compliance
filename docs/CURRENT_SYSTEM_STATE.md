@@ -537,9 +537,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
   `open_expansion_slot_count=0`. Non-strict promotion suite was rerun last and reports the same
   readiness with `strict_expansion=false`. Promotion-suite manifest validation now fails selected
-  slots that omit review/package/source-set metadata, expected gate artifacts, next action, or a
-  typed non-`package_fixture_missing` failure category, and fails ready slots that retain a failure
-  category.
+  not-ready slots that omit review/package/source-set metadata, expected gate artifacts, next
+  action, or a typed non-`package_fixture_missing` failure category. Ready slots must retain that
+  review/package/source-set contract, omit failure categories, and list expected gate artifacts
+  covering the matching review case's `required_for_expansion` artifact IDs.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`

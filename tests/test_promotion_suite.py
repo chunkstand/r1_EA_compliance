@@ -214,12 +214,15 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
 
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
+    ecid_gate_artifacts = {artifact["id"] for artifact in slot["expected_gate_artifacts"]}
 
     assert slot["status"] == "ready"
     assert slot["ready"] is True
     assert "failure_category" not in slot
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
+    assert slot["source_set_id"] == "source-set-ba8d0feae79501b8"
     assert "Preliminary Environmental Assessment" in slot["package_path"]
+    assert set(ecid_results).issubset(ecid_gate_artifacts)
     assert slot["last_local_signal"]["package_chunk_count"] == 160
     assert slot["last_local_signal"]["candidate_authority_count"] == 392
     assert slot["last_local_signal"]["applicable_authority_count"] == 46
@@ -284,7 +287,15 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert "package_manifest" in gate_artifacts
     assert "applicability_validation" in gate_artifacts
     assert "generated_rule_pack_validation" in gate_artifacts
+    assert "compliance_review" in gate_artifacts
+    assert "compliance_matrix" in gate_artifacts
+    assert "compliance_matrix_pdf" in gate_artifacts
+    assert "authority_family_provenance" in gate_artifacts
+    assert "non_applicable_authority_appendix" in gate_artifacts
+    assert "authority_reviewer_resolution_report" in gate_artifacts
+    assert "litigation_risk_summary" in gate_artifacts
     assert "phase_eval" in gate_artifacts
+    assert set(south_plateau_results).issubset(gate_artifacts)
 
 
 def test_promotion_suite_reports_current_ready_and_expansion_gap(tmp_path: Path) -> None:
@@ -432,12 +443,87 @@ def test_promotion_suite_rejects_ready_slot_with_failure_category(tmp_path: Path
         run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
 
+def test_promotion_suite_rejects_ready_slot_missing_review_gate_contract(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["review_cases"][0]["results"].append(
+        {
+            "id": "expansion_review",
+            "path": "reviews/{review_id}/expansion_review.json",
+            "required_for_current_promotion": False,
+            "required_for_expansion": True,
+            "failure_category": "applicability_miss",
+            "checks": [
+                {
+                    "name": "expansion_review_passed",
+                    "json_path": "summary.passed",
+                    "equals": True,
+                }
+            ],
+        }
+    )
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "ready",
+        "ready": True,
+        "review_id": "review-1",
+        "package_path": "source_library/reviews/_intake/review-1",
+        "source_set_id": "source-set-1",
+        "expected_gate_artifacts": [
+            {
+                "id": "package_manifest",
+                "path": "reviews/{review_id}/package/package_manifest.jsonl",
+            }
+        ],
+        "next_action": "Keep the slot ready.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    with pytest.raises(ValueError, match="expansion_review"):
+        run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+
 def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_path: Path) -> None:
     manifest_path, output_dir = _write_suite_fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["expansion_slots"][0]["ready"] = True
-    manifest["expansion_slots"][0].pop("failure_category")
+    manifest["review_cases"][0]["results"].append(
+        {
+            "id": "expansion_review",
+            "path": "reviews/{review_id}/expansion_review.json",
+            "required_for_current_promotion": False,
+            "required_for_expansion": True,
+            "failure_category": "applicability_miss",
+            "checks": [
+                {
+                    "name": "expansion_review_passed",
+                    "json_path": "summary.passed",
+                    "equals": True,
+                }
+            ],
+        }
+    )
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "ready",
+        "ready": True,
+        "review_id": "review-1",
+        "package_path": "source_library/reviews/_intake/review-1",
+        "source_set_id": "source-set-1",
+        "expected_gate_artifacts": [
+            {
+                "id": "expansion_review",
+                "path": "reviews/{review_id}/expansion_review.json",
+            }
+        ],
+        "next_action": "Keep the slot ready.",
+    }
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    _write_json(
+        output_dir / "reviews" / "review-1" / "expansion_review.json",
+        {"summary": {"passed": True}},
+    )
 
     result = run_promotion_suite(
         output_dir=output_dir,

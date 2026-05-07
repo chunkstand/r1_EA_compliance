@@ -51,15 +51,14 @@ The result separates three statuses:
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
   strict mode also requires `expansion_ready`.
 
-The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
-and the South Plateau slot is imported but blocked on applicability adjudication. Open expansion
-slots do not block the current V1 promotion claim, but they make broader readiness gaps visible to
-future agents. Current promotion
-does require the applicability seed and gold eval artifacts that prove positive, negative,
-unresolved, replay-adjudicated, and arbitration-field coverage for the expanded authority-family
-templates. It also requires the authority-family reviewer-report artifacts for the promoted V1
-review: authority-family provenance, non-applicable authority appendix, reviewer-resolution report,
-and deterministic litigation-risk summary.
+The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot and the
+South Plateau Area Landscape Treatment Project slot are both ready. Open expansion slots do not
+block the current V1 promotion claim, but they make broader readiness gaps visible to future
+agents. Current promotion does require the applicability seed and gold eval artifacts that prove
+positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
+authority-family templates. It also requires the authority-family reviewer-report artifacts for the
+promoted V1 review: authority-family provenance, non-applicable authority appendix,
+reviewer-resolution report, and deterministic litigation-risk summary.
 
 ## Failure Taxonomy
 
@@ -79,11 +78,13 @@ Current-promotion failures are reported in `failure_category_counts`. Expansion-
 reported separately in `expansion_failure_category_counts`; they enter `failure_category_counts`
 only when strict mode is used.
 
-Selected not-ready expansion slots are validated as contracts, not placeholders. A selected slot
+Selected expansion slots are validated as contracts, not placeholders. A selected not-ready slot
 must define review ID, source set, package path, expected gate artifacts, next action, and a typed
 failure category other than `package_fixture_missing`. A ready slot must not retain a failure
-category. The generated Markdown report includes selected-slot review IDs, package paths, and
-failure categories so the typed blocker is visible without inspecting raw JSON.
+category, must still carry the review/package/source-set contract, and its expected gate artifacts
+must cover the matching review case's `required_for_expansion` artifact IDs. The generated Markdown
+report includes selected-slot review IDs, package paths, and failure categories so the typed
+blocker is visible without inspecting raw JSON.
 
 ## Current Local Result
 
@@ -124,6 +125,11 @@ The South Plateau expansion slot is now `ready=true` and no longer carries
 manifest now includes South Plateau as a required expansion review case, so strict expansion is
 backed by concrete generated rule-pack, compliance validation, matrix/PDF, authority sidecar, and
 review-scoped phase-eval artifact checks rather than a slot flag alone.
+
+The Sequence 6 alignment pass also reconciled each ready expansion slot's `expected_gate_artifacts`
+with its matching `required_for_expansion` review-case checks. Manifest validation now rejects ready
+slots whose expected gate list omits required expansion artifact IDs, preventing a future ready-slot
+flag from drifting away from the concrete artifact gate.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority

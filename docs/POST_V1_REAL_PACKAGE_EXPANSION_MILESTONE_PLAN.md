@@ -575,6 +575,9 @@ Closure evidence:
   `open_expansion_slot_count=0`.
 - Non-strict `promotion-suite` was rerun last and reports the same readiness with
   `strict_expansion=false`.
+- Sequence 6 alignment pass: ECID and South Plateau ready-slot `expected_gate_artifacts` now cover
+  their matching `required_for_expansion` review-case artifact IDs, and manifest validation rejects
+  ready expansion slots that omit those checked artifacts.
 
 Actions:
 

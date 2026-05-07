@@ -27,7 +27,9 @@ phase eval passed `15/15` phases with `reviewer_ready=true`.
 with generated rule-pack, compliance validation, matrix/PDF, authority sidecar, litigation-risk,
 and review-scoped phase-eval checks. The South Plateau expansion slot is `ready=true`; it no longer
 carries `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
-`package_fixture_missing`.
+`package_fixture_missing`. The Sequence 6 alignment pass reconciled ECID and South Plateau
+ready-slot `expected_gate_artifacts` with their matching `required_for_expansion` review-case
+checks, and manifest validation now rejects ready slots that omit those checked artifact IDs.
 
 Strict expansion promotion was written to
 `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/` and
@@ -405,7 +407,8 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
   artifact checks and treats expansion readiness as both slot readiness and required expansion
   artifact readiness. Both declared expansion slots are `ready=true`; neither is blocked by
   `forest_plan_reviewer_not_ready`, `generated_rule_pack_pending`, `adjudication_needed`, or
-  `missing_source`.
+  `missing_source`. Ready-slot `expected_gate_artifacts` now cover the matching review-case
+  `required_for_expansion` artifact IDs for both ECID and South Plateau.
 - Non-strict promotion suite after Sequence 6 reports `current_promotion_ready=true`,
   `promotion_ready=true`, `expansion_ready=true`, `expansion_artifacts_ready=true`,
   `failure_category_counts={}`, `expansion_failure_category_counts={}`,
