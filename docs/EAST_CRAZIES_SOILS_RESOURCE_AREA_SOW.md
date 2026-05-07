@@ -1,22 +1,17 @@
-# East Crazies Example Soils Scope Of Work
+# East Crazies Soils Scope of Work
 
 Date: 2026-05-07
 
-Audience: WLG demonstration package
-Purpose: show that the system can produce resource-area scopes of work for a new NEPA project from a
-structured project intake
-Example project: East Crazy Inspiration Divide land exchange
+Audience: WLG
+Purpose: Soils resource-area SOW from structured project intake
+Example project: East Crazy Inspiration Divide Land Exchange
 Forest: Custer Gallatin National Forest
 Districts: Yellowstone Ranger District; Bozeman Ranger District
 Resource area: Soils
+Scope: Applicable current NEPA and USDA regulations; Custer Gallatin National Forest Land Management Plan
 
-This is a planning and contracting support SOW for an early-stage project. It translates the
-controlling source stack into the fieldwork, analysis, and reporting needed for a concise soils
-resource report or supporting analysis in the proposal record.
-
-Project drivers: proposed trail construction or reroute, trailhead improvements, stream/wetland
-approaches, wet or hydric soils, erosion and sediment delivery, parcel restrictions,
-access/easement features, grazing-related improvements, and acquired-parcel management.
+Early-stage SOW for fieldwork, analysis, and reporting needed to support a soils resource report or
+proposal-record analysis.
 
 This SOW is not a final agency action, agency NEPA finding, or decision document.
 

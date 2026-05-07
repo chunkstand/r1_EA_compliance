@@ -58,7 +58,9 @@ directive links. It keeps only the FS and Forest Plan soil guidance that applies
 report: R1 FSM 2550 soil-quality direction, Custer Gallatin soil plan components, soil-disturbance
 methods, official soil-survey data, and National BMPs. The top deliverables section has been reduced
 to a simple requirements list, leaving detailed explanations in the later Fieldwork, Analysis,
-Reporting, and Appendix sections.
+Reporting, and Appendix sections. The header has been shortened to essential metadata, a scope line
+for applicable current NEPA and USDA regulations plus the Custer Gallatin Land Management Plan, and
+a brief proposal-record support sentence; the project-drivers paragraph was removed.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.

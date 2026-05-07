@@ -84,7 +84,8 @@ function parseMarkdown(markdown) {
     "Forest",
     "District",
     "Districts",
-    "Resource area"
+    "Resource area",
+    "Scope"
   ]);
   const metadata = [];
   while (index < lines.length) {
@@ -217,7 +218,7 @@ function renderHtml(document) {
 <body>
   <article class="report">
     <header class="cover">
-      <div class="kicker">WLG Demonstration Package</div>
+      <div class="kicker">Resource Area Scope of Work</div>
       <h1>${escapeHtml(document.title)}</h1>
       <dl class="meta">${document.metadata.map(renderMeta).join("")}</dl>
       <div class="intro">${document.intro.map(renderBlock).join("")}</div>
@@ -229,7 +230,8 @@ function renderHtml(document) {
 }
 
 function renderMeta(item) {
-  return `<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeLinks(item.value)}</dd></div>`;
+  const className = item.label === "Scope" ? ' class="scope-meta"' : "";
+  return `<div${className}><dt>${escapeHtml(item.label)}</dt><dd>${escapeLinks(item.value)}</dd></div>`;
 }
 
 function renderSection(section) {
@@ -387,6 +389,11 @@ function styles() {
       border-top: 1px solid #e1ddd2;
     }
     .meta div { min-width: 0; }
+    .meta .scope-meta {
+      grid-column: 1 / -1;
+      padding-top: 0.04in;
+      border-top: 1px solid #e1ddd2;
+    }
     dt {
       color: #667065;
       font-size: 6.9pt;
