@@ -42,7 +42,9 @@ management direction, the applicable Forest Plan, soil-quality monitoring method
 official soil-survey data. East Crazies is used as the concrete example action, not as a
 completed-document review. The revision removes the prior completed-project review framing and adds
 an authority-to-report crosswalk requirement so the generated SOW is tied to defensible specialist
-report production.
+report production. The fieldwork section has also been tightened to source-triggered surveys:
+soil-survey/activity-area delineation, detrimental soil disturbance, CWD/organic substrate where
+triggered, slope/equipment/unstable-area constraints, and waterbody/BMP interfaces.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.
