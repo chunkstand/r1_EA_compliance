@@ -178,12 +178,12 @@ EA handoff smoke, and tracked docs/schema checks before writing an operational r
 The gate also emits a machine-readable closeout contract and hashes the gate, eval, and handoff
 smoke outputs so release evidence can be audited without staging ignored generated artifacts. The
 tracked acceptance matrix is
-`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 4-page scope-of-work
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 2-page scope of work
 capabilities brief now lives at `docs/capabilities/project_sow_capabilities_brief.pdf` with a
 matching HTML source and generated figures under `docs/capabilities/assets/`; it frames the
-proposed-action intake, intake evidence graph, contract-ready resource scopes, reviewer
-adjudication loop, operational gate, and downstream EA assembly handoff as the current service
-capability for producing scopes of work. See
+proposed-action intake, traceable resource selection, contract-ready work package rendering,
+reviewer adjudication, and downstream EA assembly handoff as the current service capability for
+producing scopes of work. See
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
@@ -280,13 +280,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
   - `docs/capabilities/assets/graph_readiness_service_view.png`
   - `tools/build_nepa_3d_capabilities_brief.mjs`
-- Scope-of-work service capabilities brief:
+- Scope of work service capabilities brief:
   - `docs/capabilities/project_sow_capabilities_brief.pdf`
   - `docs/capabilities/project_sow_capabilities_brief.html`
   - `docs/capabilities/assets/project_sow_delivery_stack.svg`
-  - `docs/capabilities/assets/project_sow_intake_graph_service_view.png`
-  - `docs/capabilities/assets/project_sow_contract_scope_service_view.png`
-  - `docs/capabilities/assets/project_sow_handoff_service_view.png`
+  - `docs/capabilities/assets/project_sow_system_capabilities_view.png`
   - `tools/build_project_sow_capabilities_brief.mjs`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`

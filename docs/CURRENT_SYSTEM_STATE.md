@@ -467,13 +467,13 @@ at `config/project_sow_resource_scopes_v1.json`, and
 
 The package scopes resource-specialist work needed to prepare a defensible EA package. It selects
 resource scopes from explicit intake fields, project type, trigger terms, resource indicator keys,
-and proposed-action resource-area IDs, then records SOW tasks, data needs, deliverables,
+and proposed-action resource-area IDs, then records scope of work tasks, data needs, deliverables,
 defensibility checks, selected authority families, an authority-to-resource matrix, and a
 resource-analysis coverage matrix, and a compact reviewer summary with package boundaries and a
 review checklist. The reviewer summary separates unresolved resource areas from calibration gaps
-where the SOW is required but no observed East Crazies report was supplied for that area. It also
+where scope of work content is required but no observed East Crazies report was supplied for that area. It also
 emits a package-local intake evidence graph connecting project, proposed action, action elements,
-evidence refs, triggered resource areas, selected SOW scopes, required deliverables, and observed
+evidence refs, triggered resource areas, selected resource scopes, required deliverables, and observed
 specialist/supporting reports. JSON is canonical; Markdown and PDF are renderings from the same
 package JSON. The first checked-in intake fixture is the East Crazies
 land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
@@ -487,7 +487,7 @@ specialist/supporting reports observed in the completed package: mineral potenti
 at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation special
 uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the
 plan-consistency table. Validation requires every observed report resource area to have selected
-SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
+resource scope coverage and to be traceable to a proposed-action resource area in the intake.
 
 Operationalization Sequence 5 adds the reviewer adjudication loop:
 
@@ -555,18 +555,18 @@ The milestone closeout alignment pass adds
 their acceptance criteria and verification evidence; the operational gate now checks that matrix as
 part of the durable-doc closeout set.
 
-A scope-of-work service capabilities brief is generated at
+A scope of work service capabilities brief is generated at
 `docs/capabilities/project_sow_capabilities_brief.pdf` with matching HTML at
 `docs/capabilities/project_sow_capabilities_brief.html`. The generator
 `tools/build_project_sow_capabilities_brief.mjs` mirrors the NEPA 3D capabilities-brief style and
-uses current operational evidence when available. The brief explains the service lane
-for producing scopes of work: proposed-action intake, intake evidence graph, contract-ready
-resource work records, reviewer adjudication, operational-readiness gate, and downstream EA package
-assembly handoff. It is four pages so the system pipeline, graph, contract scope library, and
-handoff figures remain legible at service-brief scale.
+uses the tracked system design artifacts rather than a single project example. The brief explains the service lane
+for producing scopes of work: structured proposed-action intake, traceable resource selection,
+contract-ready work package rendering, reviewer adjudication, operational-readiness gate, and
+downstream EA package assembly handoff. It is two pages and intentionally general, with page-one
+system facts and a consolidated system-capability graphic replacing project-example metric tiles.
 
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
-SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
+resource scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
 evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
 proposed-action-derived resource area has the canonical planning path:
 
@@ -583,9 +583,9 @@ This is a planning artifact only. It does not create applicability decisions, ge
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
 Validation fails closed on missing required intake fields, unsupported intake schema, empty or
 duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
-cannot resolve to selected SOW scope coverage, observed specialist-report resource areas that are
-not derived from the proposed action or lack selected SOW scope coverage, no selected resource
-scopes, selected scopes without SOW content, duplicate intake-derived graph IDs including
+cannot resolve to selected resource scope coverage, observed specialist-report resource areas that are
+not derived from the proposed action or lack selected resource scope coverage, no selected resource
+scopes, selected scopes without scope of work content, duplicate intake-derived graph IDs including
 observed-report and required-deliverable collisions before graph assembly deduplicates nodes and
 edges, dangling graph edges, missing action-element evidence refs, evidence-bearing action elements
 with no triggered resource area, incomplete canonical resource-area graph paths, observed
