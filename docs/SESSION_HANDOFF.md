@@ -34,18 +34,19 @@ temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-pack
 
 The SOW has been revised into a WLG-facing new-project example with a short header followed
 immediately by a three-part Deliverables section: Fieldwork, Analysis, and Reporting. The rest of
-the document now mirrors that structure with Fieldwork Output, Analysis Output, and Reporting Output
-sections before Appendix A and Sources Cited. It demonstrates that the system can produce
-resource-area scopes of work for a new NEPA project from structured intake before late-stage NEPA
-materials or resource-analysis packages exist. The source stack remains explicit: current USDA NEPA
-procedures, NFMA/planning-rule requirements, Forest Service handbook/manual direction, Region 1 soil
-management direction, the applicable Forest Plan, soil-quality monitoring methods, National BMPs, and
-official soil-survey data. East Crazies is used as the concrete example action, not as a
-completed-document review. Fieldwork remains tied to source-triggered surveys: soil-survey/activity
-area delineation, detrimental soil disturbance, CWD/organic substrate where triggered,
-slope/equipment/unstable-area constraints, and waterbody/BMP interfaces. Analysis still uses
-Appendix A as the authority-to-report control table from source trigger to required report output
-and acceptance test.
+the document now mirrors that structure with Fieldwork/Data Collection, Analysis Output, and
+Reporting Output sections before Appendix A and Sources Cited. It demonstrates that the system can
+produce resource-area scopes of work for a new NEPA project from structured intake before late-stage
+NEPA materials or resource-analysis packages exist. The source stack remains explicit: current USDA
+NEPA procedures, NFMA/planning-rule requirements, Forest Service handbook/manual direction, Region 1
+soil management direction, the applicable Forest Plan, soil-quality monitoring methods, National
+BMPs, and official soil-survey data. East Crazies is used as the concrete example action, not as a
+completed-document review. The Fieldwork/Data Collection section now describes existing soil
+condition data collection, prioritization for disturbed or sensitive areas and higher ground
+disturbance, and methodology tied to R1 Soil Quality Standards, NFMA, and the Custer Gallatin Land
+Management Plan. It names DSD surveys and other policy-triggered soil survey types with short
+descriptions. Analysis still uses Appendix A as the authority-to-report control table from source
+trigger to required report output and acceptance test.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.

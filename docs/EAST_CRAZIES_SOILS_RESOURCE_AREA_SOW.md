@@ -48,85 +48,55 @@ This SOW is not a final agency decision, legal sufficiency review, or NEPA compl
 - Final report or memo, final PDF, editable source file, tables, map atlas, GIS package, photo log,
   field forms, source inventory, metadata/readme, and limitations memo.
 
-## Fieldwork Output
+## Fieldwork/Data Collection
+
+Field surveys will collect existing soil condition data within the proposed project area to evaluate
+soil disturbance, stability, sensitivity, and productivity. Field monitoring should be prioritized in
+areas with higher past disturbance, sensitive soil map units, wet or hydric soils, unstable slopes,
+erosion or sediment-connectivity risk, and areas expected to receive higher levels of ground
+disturbance from trail, trailhead, access, crossing, staging, restoration, or parcel-management work.
 
 Before mobilization, prepare a survey-trigger table that ties each proposed action element to the
-source that requires field verification. Do not include generalized reconnaissance as a required
-task. If a survey below is not triggered, record the reason in the table.
+source that requires field verification. If a survey below is not triggered, record the reason in the
+table.
 
-### 1. Soil Survey And Activity-Area Delineation
+### Methodology
 
-Required for each ground-disturbing action area: proposed trail construction or reroute, trailhead
-work, access/staging, restoration work, crossing approaches, and acquired-parcel management areas
-where future NFS management could disturb soil.
+Required fieldwork is based on R1 Soil Quality Standards and soil-management direction, NFMA and 36
+CFR part 219 project consistency requirements, and the Custer Gallatin National Forest Land
+Management Plan. Use the Forest Service Soil-Disturbance Field Guide, Forest Soil Disturbance
+Monitoring Protocol, NRCS Web Soil Survey/SSURGO, and National BMP direction as the field and data
+methods.
 
-- Use NRCS Web Soil Survey/SSURGO, DEM slope data, NHD/NWI, wetland/riparian layers, aerial imagery,
-  and Forest Plan soil/watershed direction to map the soil map units and activity areas before the
-  field visit.
-- Field-verify soil map unit boundaries, slope class, landform, drainage position, hydric or wet soil
-  indicators, erosion hazard, revegetation limits, and sediment connectivity where the action could
-  change soil condition or water quality.
-- Delineate the activity area used for Forest Plan FW-STD-SOIL-01 and MON-SOIL-01. For linear trail
-  features, define the width, length, acreage, and rationale used to translate the trail footprint
-  into an activity area.
+- DSD surveys. Required where a management activity could create or add to detrimental soil
+  disturbance in an activity area. Classify and estimate existing DSD and expected DSD for trail,
+  trailhead, access/staging, restoration, crossing, and parcel-management work. Record compaction,
+  rutting, displacement, puddling, surface erosion, severe burning if present, organic-matter loss,
+  and mass movement. Tie results to FW-STD-SOIL-01 and MON-SOIL-01.
+- Soil survey and activity-area delineation. Required for each ground-disturbing action area. Verify
+  soil map units, slope class, landform, drainage position, hydric/wet soil indicators, erosion
+  hazard, revegetation limits, compaction/rutting limits, and sediment connectivity. Define the
+  activity area used for DSD evaluation; for linear trails, document length, width, acreage, and
+  rationale.
+- Soil sensitivity and productivity survey. Required where soil map units or field indicators show
+  productivity risk, wetness, shallow or restrictive layers, erosion hazard, compaction sensitivity,
+  poor revegetation potential, or other sensitive soil conditions. Identify design changes,
+  restoration needs, or monitoring needed to maintain soil productivity and function.
+- Slope, stability, and equipment-constraint survey. Required where mechanized construction,
+  ground-based equipment, temporary access, blading, scarification, pits/trenches, burn piles, steep
+  slopes, or unstable landforms are proposed. Verify sustained grades over 40 percent, high
+  mass-wasting potential, unstable slopes, wet soils, and locations where FW-GDL-SOIL-01 through
+  FW-GDL-SOIL-08 are triggered.
+- CWD and organic-substrate survey. Required where vegetation activity areas, burn piles, slash
+  treatment, forest-floor removal, revegetation/restoration, or other work affects coarse woody
+  debris, litter, duff, or organic soil cover. Estimate percent coarse woody debris where MON-SOIL-02
+  is triggered and document restoration substrate conditions.
+- Waterbody interface and BMP survey. Required where trail, trailhead, access, crossing, drainage, or
+  restoration work is near streams, wetlands, riparian areas, seeps, springs, swales, drainage paths,
+  or other sediment-routing features. Identify drainage controls, hydrologic disconnection, crossing
+  hardening, wet-weather restrictions, revegetation, decompaction, and inspection needs.
 
-### 2. Detrimental Soil Disturbance Survey
-
-Required where a management activity could create or add to detrimental soil conditions in an
-activity area. This is the core East Crazies soils survey for trail construction or reroute,
-trailhead work, access/staging, restoration, and any disposal or acquisition parcel work that changes
-soil condition.
-
-- Use the Forest Service Soil-Disturbance Field Guide and Forest Soil Disturbance Monitoring Protocol
-  as the field method for classifying existing soil disturbance.
-- Document compaction, rutting, displacement, puddling, surface erosion, severe burning if present,
-  organic-matter loss, and mass movement.
-- Estimate percent detrimental soil disturbance by activity area, including existing disturbance.
-  The report must show whether the proposed action would exceed, avoid, or require restoration under
-  the Custer Gallatin Forest Plan FW-STD-SOIL-01 threshold.
-- Identify where MON-SOIL-01 pre-implementation and post-implementation monitoring is needed. If the
-  Forest Service accepts a linear-feature substitute metric, document the metric and why it remains
-  comparable to the Forest Plan disturbance threshold.
-
-### 3. CWD And Organic-Substrate Survey
-
-Required only if the proposed action includes vegetation activity areas, burn piles, slash treatment,
-forest-floor removal, revegetation/restoration, or other activity that would affect coarse woody
-debris, litter, duff, or organic soil cover.
-
-- If triggered, estimate percent coarse woody debris in vegetation activity areas for MON-SOIL-02 and
-  document litter/duff, ground cover, organic matter, and restoration substrate conditions.
-- For trailhead, access, or restoration work that removes organic cover but is not a vegetation
-  activity area, record the affected area, expected organic-cover loss, and restoration requirement.
-- If no vegetation activity area or organic-substrate effect is present, mark this survey as not
-  triggered.
-
-### 4. Slope, Equipment, And Unstable-Area Survey
-
-Required where mechanized construction, ground-based equipment, temporary access, blading,
-scarification, pits/trenches, burn piles, or steep/unstable landforms are proposed.
-
-- Verify sustained grades over 40 percent where ground-based equipment could be used.
-- Identify high mass-wasting potential, unstable slopes, wet soils, hydric soils, sensitive soil map
-  units, and areas where equipment exclusion or seasonal restriction is needed.
-- Record locations where temporary road blading, mechanical scarification, soil pits/trenches, or
-  burn pile restoration would trigger Forest Plan soil guidelines FW-GDL-SOIL-01 through
-  FW-GDL-SOIL-08.
-
-### 5. Waterbody Interface And BMP Survey
-
-Required where trail, trailhead, access, crossing, drainage, or restoration work is near streams,
-wetlands, riparian areas, seeps, springs, swales, drainage paths, or other sediment-routing features.
-
-- Field-check proposed stream and wetland approaches, crossing locations, drainage outlets, slope
-  breaks, toe slopes, and hydrologic connectivity to waterbodies.
-- Identify site-specific National BMP needs: drainage spacing and outlet protection, crossing
-  hardening, sediment control, wet-weather limits, revegetation, decompaction, and construction
-  timing restrictions.
-- Record whether the Inspiration Divide Trail reroute would remove or reduce an existing
-  stream/wetland crossing effect and what design criteria are needed for the replacement alignment.
-
-### 6. Minimum Survey Record
+### Minimum Survey Record
 
 For each triggered survey location or activity area, record:
 
@@ -134,8 +104,8 @@ For each triggered survey location or activity area, record:
 - activity-area ID, action element, soil map unit, GPS identifier, photo IDs, and field form ID;
 - protocol used, measurements taken, disturbance class, percent disturbance where required, and
   linear-feature substitute metric if approved;
-- slope, landform, drainage position, hydric/wet soil indicators, unstable-area indicators, and
-  sediment-connectivity notes;
+- slope, landform, drainage position, hydric/wet soil indicators, unstable-area indicators,
+  productivity or sensitivity indicators, and sediment-connectivity notes;
 - BMP, design criterion, mitigation, restoration, monitoring requirement, data gap, or revisit need.
 
 Conduct fieldwork during snow-free conditions when the mineral soil surface, organic cover, and
