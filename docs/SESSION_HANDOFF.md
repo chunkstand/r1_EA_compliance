@@ -10,14 +10,15 @@ An ad hoc soils resource-area SOW has been produced at
 docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
 temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
-Important boundary: `soil_resources` is covered by the selected
-`vegetation_soils_air_quality` scope, but the current East Crazies intake does not explicitly list
-soils as a proposed-action-derived resource area and the observed East Crazies calibration set has no
-standalone soils specialist report. The SOW therefore starts with a soils screen and requires the
-specialist/reviewer to decide whether a standalone soils report, incorporated analysis, or no-issue
-memo is appropriate. This artifact does not change package-generation code, generated source-library
-policy, applicability decisions, compliance findings, legal sufficiency, or final agency decision
-status.
+The SOW has been upgraded into a consultant-ready Soils Specialist Report work package. It now
+includes researched Forest Service EA requirements, Custer Gallatin soil-plan context,
+soil-disturbance and BMP guidance, fieldwork methods, analysis requirements, required tables/maps,
+deliverables, schedule, acceptance criteria, and open Forest Service decisions. Important boundary:
+`soil_resources` is covered by the selected `vegetation_soils_air_quality` scope, but the current
+East Crazies intake does not explicitly list soils as a proposed-action-derived resource area and the
+observed East Crazies calibration set has no standalone soils specialist report. This artifact does
+not change package-generation code, generated source-library policy, applicability decisions,
+compliance findings, legal sufficiency, or final agency decision status.
 
 ## Current Project SOW Package Branch Handoff
 
