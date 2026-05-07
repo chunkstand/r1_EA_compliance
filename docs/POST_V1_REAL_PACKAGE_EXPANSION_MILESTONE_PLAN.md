@@ -35,7 +35,7 @@ Plateau artifact checks to the promotion suite, and marked the slot ready after 
 review checks passed. Sequence 7 then found and closed the remaining declared-profile gate by
 making South Plateau strict expansion fail closed while forest-plan context is ambiguous.
 
-A follow-up artifact review found that the South Plateau slot can still pass strict expansion while
+A follow-up artifact review found that the South Plateau slot could still pass strict expansion while
 its forest-plan context is unresolved: the slot declares `forest_plan_profile="custer_gallatin"`,
 but `compliance_review.json` records `forest_plan_review.scope_status="ambiguous"`,
 `forest_plan_review.validation_passed=false`, `forest_plan_review.reviewer_ready=false`, and
@@ -568,10 +568,11 @@ will use in later sessions.
 Status:
 Complete as of 2026-05-06. South Plateau generated rule-pack validation, compliance review,
 matrix/PDF output, review-scoped phase eval, and promotion-suite strict expansion all passed. The
-promotion manifest now includes South Plateau as a required expansion review case, so strict
-expansion checks the generated rule pack, compliance validation, compliance matrix/PDF, authority
+Sequence 6 promotion manifest included South Plateau as a required expansion review case, so strict
+expansion checked the generated rule pack, compliance validation, compliance matrix/PDF, authority
 sidecars, litigation-risk summary, and review-scoped phase eval directly before reporting
-`promotion_ready=true`.
+`promotion_ready=true`. Sequence 7 supersedes the Sequence 6 strict-readiness result by adding the
+declared forest-plan profile gate and blocking South Plateau with `forest_plan_reviewer_not_ready`.
 
 Closure evidence:
 
@@ -581,7 +582,8 @@ Closure evidence:
 - `compliance-review`: passed with `reviewer_ready=true`, `validation_passed=true`, `61`
   findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps.
 - `phase-eval --review-id region1-expansion-south-plateau-landscape-treatment`: passed `15/15`
-  phases with `reviewer_ready=true`.
+  phases with `reviewer_ready=true` at Sequence 6 closeout; the later Sequence 7 rerun passes
+  `16/16` after the NEPA 3D source-set graph phase became available.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: rerun after the South Plateau
   review-scoped eval to restore the shared current-promotion phase artifact; passed `17/17`.
 - Strict `promotion-suite` written to
@@ -589,7 +591,8 @@ Closure evidence:
   `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
   `expansion_artifacts_ready=true`, `failure_category_counts={}`,
   `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
-  `open_expansion_slot_count=0`.
+  `open_expansion_slot_count=0`. This is retained as Sequence 6 historical evidence, not the
+  current strict expansion signal after Sequence 7.
 - Non-strict `promotion-suite` was rerun last and reports the same readiness with
   `strict_expansion=false`.
 - Sequence 6 alignment pass: ECID and South Plateau ready-slot `expected_gate_artifacts` now cover
@@ -770,9 +773,10 @@ Acceptance:
 Sequence 7 latest local result:
 
 - Regression fixtures in `tests/test_promotion_suite.py` prove a manifest `ready=true` false-pass
-  shape with ambiguous nested forest-plan context cannot produce `expansion_ready=true`, and a
-  selected forest-profile slot cannot omit `forest_plan_context_summary` from expected gate
-  artifacts.
+  shape with ambiguous nested forest-plan context cannot produce `expansion_ready=true`, a selected
+  forest-profile slot cannot omit `forest_plan_context_summary` from expected gate artifacts, and a
+  slot that records `forest_plan_component_gate_required=true` cannot pass without a
+  `forest_plan_component_eval` or `forest_plan_component_adjudication` phase.
 - South Plateau review-scoped phase eval passes `16/16` phases with `reviewer_ready=true`; promoted
   V1 review-scoped phase eval was restored at `19/19`.
 - Non-strict promotion suite: `current_promotion_ready=true`, `promotion_ready=true`,

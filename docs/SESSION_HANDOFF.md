@@ -45,6 +45,12 @@ last and keeps the current V1 promotion green with `current_promotion_ready=true
 The promoted V1 review-scoped phase eval was rerun after South Plateau review-scoped eval to
 restore the shared current-promotion phase artifact at `19/19`.
 
+Sequence 7 alignment closeout added direct regression coverage for the
+`forest_plan_component_gate_required=true` branch: a declared-profile slot cannot pass strict
+expansion without a `forest_plan_component_eval` or `forest_plan_component_adjudication` phase.
+The milestone plan also now labels the Sequence 6 strict-pass evidence as historical and superseded
+by the Sequence 7 forest-plan blocker. No generated artifact state changed in that alignment pass.
+
 The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
 for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
 `pending_adjudication_count=0`, and `system_miss_count=0`; those adjudications keep the missing
