@@ -88,6 +88,9 @@ The default manifest is `config/project_sow_eval_proving_intakes_v1.json`. The e
 Crazies, Red Rock Ridge, and Silver Creek in one command, writes local packages under the selected
 output directory, and compares actual metrics and diagnostics to tracked expected values. It keeps
 system misses, intake omissions, calibration gaps, and expected no-observed-report cases separate.
+It also checks contract-readiness metrics so every selected proving-intake scope must preserve
+required deliverables, optional deliverables, and the required contract fields from
+`config/project_sow_resource_scopes_v1.json`.
 
 ## 5. Add Calibration Reports When Available
 

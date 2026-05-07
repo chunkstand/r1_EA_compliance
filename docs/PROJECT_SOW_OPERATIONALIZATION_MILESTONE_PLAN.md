@@ -186,6 +186,8 @@ Implemented work:
 - eval summaries report scope counts, proposed-action resource-area counts, graph node/edge counts,
   validation failures, PDF/rendering checks, system misses, intake omissions, calibration gaps, and
   expected no-observed-report cases;
+- the Sequence 3/4 alignment pass added eval-tracked contract-readiness metrics for selected-scope
+  contract fields, required deliverables, optional deliverables, and contract-ready scope counts;
 - docs and the runbook now identify the eval manifest as the operational green gate before adding
   more project-specific parser behavior.
 
@@ -197,6 +199,9 @@ Acceptance gate status:
   canonical graph path checks for expected resource areas;
 - eval output distinguishes `0` system misses, `0` intake omissions, `7` East Crazies calibration
   gaps, and `17` expected no-observed-report rows across the two new proving intakes;
+- eval expected metrics require contract fields to pass and contract-ready, required-deliverable,
+  and optional-deliverable scope counts to match selected resource-scope counts across all three
+  proving intakes;
 - East Crazies remains green at `10` scopes, `23` proposed-action resource areas, `115` graph nodes,
   `134` graph edges, and `0` validation failures.
 
@@ -218,7 +223,10 @@ Implemented work:
 - added `selected_resource_scopes_have_contract_fields` so selected scopes fail before package
   generation when contract fields are missing;
 - added regression coverage proving optional deliverables do not satisfy the required deliverable
-  gate.
+  gate;
+- the Sequence 3/4 alignment pass made the three-case eval manifest track contract-readiness
+  metrics so contract fields and required/optional deliverable counts remain part of the
+  operational green gate.
 
 Acceptance gate status:
 

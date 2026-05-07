@@ -152,11 +152,13 @@ generation; plain-text proposed actions can first use `project-sow-intake-draft`
 explicitly unreviewed draft intake that must be reviewer-confirmed before validation passes. The
 `project-sow-eval` command now runs the tracked proving-intake manifest across East Crazies, Red
 Rock Ridge, and Silver Creek to compare expected metrics, graph coverage, rendering checks, and
-resource-area diagnostics before treating the workflow as operationally green. Resource scope
-templates now include contract-ready assumptions, dependencies, required and optional deliverables,
-acceptance criteria, reviewer role, review timing, and reviewer signoff fields that render into the
-canonical package outputs. The package is a planning and contracting support artifact for scoping
-resource SOW needs; it is not a final SOW award document. See
+resource-area diagnostics before treating the workflow as operationally green. The eval also tracks
+contract-readiness metrics so every selected scope in the proving set must carry required
+deliverables, optional deliverables, and contract fields. Resource scope templates now include
+contract-ready assumptions, dependencies, required and optional deliverables, acceptance criteria,
+reviewer role, review timing, and reviewer signoff fields that render into the canonical package
+outputs. The package is a planning and contracting support artifact for scoping resource SOW needs;
+it is not a final SOW award document. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved

@@ -2010,6 +2010,12 @@ def _project_sow_eval_actual_metrics(
     diagnostics: dict[str, Any],
 ) -> dict[str, Any]:
     return {
+        "contract_fields_passed": _project_sow_validation_check_passed(
+            package, "selected_resource_scopes_have_contract_fields"
+        ),
+        "contract_ready_resource_scope_count": _project_sow_contract_ready_scope_count(
+            package
+        ),
         "intake_evidence_graph_edge_count": package_summary.get(
             "intake_evidence_graph_edge_count"
         ),
@@ -2022,7 +2028,13 @@ def _project_sow_eval_actual_metrics(
         "proposed_action_resource_area_count": package_summary.get(
             "proposed_action_resource_area_count"
         ),
+        "optional_deliverable_resource_scope_count": _project_sow_scope_count_with_field(
+            package, "optional_deliverables"
+        ),
         "rendering_checks_passed": _project_sow_rendering_checks_passed(package),
+        "required_deliverable_resource_scope_count": _project_sow_scope_count_with_field(
+            package, "required_deliverables"
+        ),
         "resource_scope_count": package_summary.get("resource_scope_count"),
         "validation_failure_count": package_summary.get("validation_failure_count"),
         "calibration_gap_count": len(
@@ -2036,6 +2048,30 @@ def _project_sow_eval_actual_metrics(
         ),
         "system_miss_count": len(_strings(diagnostics.get("system_miss_resource_area_ids"))),
     }
+
+
+def _project_sow_resource_scope_records(package: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        scope
+        for scope in _list(package.get("resource_scope_records"))
+        if isinstance(scope, dict)
+    ]
+
+
+def _project_sow_contract_ready_scope_count(package: dict[str, Any]) -> int:
+    return sum(
+        1
+        for scope in _project_sow_resource_scope_records(package)
+        if not any(_is_empty(scope.get(field)) for field in CONTRACT_REQUIRED_SCOPE_FIELDS)
+    )
+
+
+def _project_sow_scope_count_with_field(package: dict[str, Any], field: str) -> int:
+    return sum(
+        1
+        for scope in _project_sow_resource_scope_records(package)
+        if not _is_empty(scope.get(field))
+    )
 
 
 def _project_sow_eval_resource_diagnostics(
@@ -2108,17 +2144,23 @@ def _project_sow_eval_checks(
 
 
 def _project_sow_rendering_checks_passed(package: dict[str, Any]) -> bool:
+    return all(
+        _project_sow_validation_check_passed(package, name)
+        for name in {
+            "project_sow_markdown_required_sections_present",
+            "project_sow_pdf_required_items_present",
+        }
+    )
+
+
+def _project_sow_validation_check_passed(package: dict[str, Any], check_name: str) -> bool:
     validation = package.get("validation") if isinstance(package.get("validation"), dict) else {}
     checks = {
         str(check.get("name")): check
         for check in _list(validation.get("checks"))
         if isinstance(check, dict)
     }
-    required_checks = {
-        "project_sow_markdown_required_sections_present",
-        "project_sow_pdf_required_items_present",
-    }
-    return all(checks.get(name, {}).get("passed") is True for name in required_checks)
+    return checks.get(check_name, {}).get("passed") is True
 
 
 def _source_set_id(authority_inventory: dict[str, Any]) -> str:

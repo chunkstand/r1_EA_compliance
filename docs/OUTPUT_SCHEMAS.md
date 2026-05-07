@@ -2378,7 +2378,8 @@ Each eval case reports:
 
 - `actual_metrics`, including package pass status, output-written status, selected scope count,
   proposed-action resource-area count, intake graph node/edge counts, validation failures, PDF
-  header validity, rendering-check status, and diagnostic counts;
+  header validity, rendering-check status, contract-field pass status, contract-ready scope count,
+  required-deliverable scope count, optional-deliverable scope count, and diagnostic counts;
 - `diagnostics`, including expected resource areas, `system_miss_resource_area_ids`,
   `intake_omission_resource_area_ids`, `calibration_gap_resource_area_ids`, and
   `expected_no_observed_report_resource_area_ids`;

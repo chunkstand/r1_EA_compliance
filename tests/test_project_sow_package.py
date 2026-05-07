@@ -291,6 +291,16 @@ def test_project_sow_eval_runs_three_proving_intakes(tmp_path: Path) -> None:
         assert case["actual_metrics"]["output_written"] is True
         assert case["actual_metrics"]["pdf_header_valid"] is True
         assert case["actual_metrics"]["rendering_checks_passed"] is True
+        assert case["actual_metrics"]["contract_fields_passed"] is True
+        assert case["actual_metrics"]["contract_ready_resource_scope_count"] == (
+            case["actual_metrics"]["resource_scope_count"]
+        )
+        assert case["actual_metrics"]["optional_deliverable_resource_scope_count"] == (
+            case["actual_metrics"]["resource_scope_count"]
+        )
+        assert case["actual_metrics"]["required_deliverable_resource_scope_count"] == (
+            case["actual_metrics"]["resource_scope_count"]
+        )
         assert Path(case["output_paths"]["package"]).exists()
 
 
@@ -316,6 +326,39 @@ def test_project_sow_eval_fails_on_expected_metric_mismatch(tmp_path: Path) -> N
     assert failed_checks["expected_metrics.resource_scope_count"]["details"] == {
         "actual": 10,
         "expected": 99,
+    }
+
+
+def test_project_sow_eval_tracks_contract_readiness_failures(tmp_path: Path) -> None:
+    resource_config = json.loads((REPO_ROOT / DEFAULT_RESOURCE_SCOPE_CONFIG_PATH).read_text())
+    for scope in resource_config["resource_scopes"]:
+        if scope["resource_scope_id"] == "nepa_project_management":
+            del scope["reviewer_role"]
+            break
+    bad_config_path = tmp_path / "missing_eval_contract_fields_resource_config.json"
+    bad_config_path.write_text(json.dumps(resource_config), encoding="utf-8")
+
+    result = run_project_sow_eval(
+        eval_config_path=EVAL_CONFIG_PATH,
+        output_dir=tmp_path / "project_sow_eval",
+        resource_scope_config_path=bad_config_path,
+    )
+
+    cases = {case["case_id"]: case for case in result.summary["cases"]}
+    failed_checks = {
+        check["name"]: check
+        for check in cases["east-crazies-land-exchange"]["validation_checks"]
+        if not check["passed"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["failed_cases"] == [
+        "east-crazies-land-exchange",
+        "red-rock-ridge-land-exchange",
+        "silver-creek-access-land-adjustment",
+    ]
+    assert failed_checks["expected_metrics.contract_fields_passed"]["details"] == {
+        "actual": False,
+        "expected": True,
     }
 
 

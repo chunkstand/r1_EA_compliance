@@ -105,9 +105,23 @@ edges, reported `0` validation failures, and produced a valid `%PDF-` header; th
 `project-sow-eval` smoke run to `/tmp/project-sow-sequence-4-eval` reported `3` cases passed and
 `0` failed cases.
 
-Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
-stays upstream of South Plateau applicability closure and does not read or write South Plateau
-review outputs. The new public command is:
+The Sequence 3/4 alignment pass closed two gaps. First, `project-sow-eval` now reports and checks
+contract-readiness metrics for selected-scope contract fields, contract-ready scope count, required
+deliverable scope count, and optional deliverable scope count across all three proving intakes.
+Second, the handoff labels below now distinguish the earlier requirements-package sequence numbers
+from the current operationalization sequence numbers so the next operational pass remains Sequence
+5 reviewer adjudication.
+
+Alignment verification passed: the focused project-SOW/CLI/architecture suite reported
+`47 passed`; `project-sow-eval` reported `3` cases passed, `0` failed cases,
+`contract_fields_passed=true` for all cases, and contract-ready/required-deliverable/optional
+deliverable scope counts matching selected scope counts for East Crazies (`10`), Red Rock Ridge
+(`7`), and Silver Creek (`9`).
+
+The earlier Project SOW requirements-package milestone is implemented for the
+proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
+applicability closure and does not read or write South Plateau review outputs. The public package
+command is:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
@@ -147,19 +161,20 @@ Forest Plan consistency, wildlife/species/botany, cultural/tribal, hydrology/wet
 quality, roads/access/recreation/designated areas, vegetation/soils/air-quality/climate/carbon,
 minerals/energy/hazardous materials, and public involvement/coordination.
 
-Sequence 2 added an East Crazies calibration comparison. The intake now records structured
-`proposed_action_elements`, `resource_analysis_expectations`, and observed specialist/supporting
-reports from the completed East Crazies package. The generated JSON/Markdown now includes a
-`resource_analysis_matrix` that compares proposed-action-derived resource areas to selected SOW
-scopes and the observed report set: mineral potential, aquatics, at-risk plants/botany, carbon,
-cultural resources, recreation special areas, recreation special uses, roads/trails/access, tribal
-relations, wetlands, wildlife, water rights, and the plan-consistency table. Validation fails if an
-observed report resource area is not derived from the proposed action or lacks selected SOW scope
-coverage.
+Earlier requirements-package Sequence 2 added an East Crazies calibration comparison. The intake
+now records structured `proposed_action_elements`, `resource_analysis_expectations`, and observed
+specialist/supporting reports from the completed East Crazies package. The generated JSON/Markdown
+now includes a `resource_analysis_matrix` that compares proposed-action-derived resource areas to
+selected SOW scopes and the observed report set: mineral potential, aquatics, at-risk
+plants/botany, carbon, cultural resources, recreation special areas, recreation special uses,
+roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the plan-consistency
+table. Validation fails if an observed report resource area is not derived from the proposed action
+or lacks selected SOW scope coverage.
 
-Sequence 3 added a package-local `intake_evidence_graph` to `project_sow_package.json` and a
-concise graph projection to `project_sow_package.md`. The East Crazies fixture now carries
-`evidence_refs` for proposed-action elements and observed specialist/supporting reports. Validation
+Earlier requirements-package Sequence 3 added a package-local `intake_evidence_graph` to
+`project_sow_package.json` and a concise graph projection to `project_sow_package.md`. The East
+Crazies fixture now carries `evidence_refs` for proposed-action elements and observed
+specialist/supporting reports. Validation
 now fails closed on duplicate intake-derived graph IDs before graph assembly deduplicates nodes and
 edges, dangling graph edges, action elements with resource areas but no evidence refs,
 proposed-action resource areas without the canonical graph path, and observed report resource areas
@@ -171,29 +186,30 @@ The required planning path is:
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
-A local Sequence 3 CLI smoke run to `/tmp` selected `10` SOW scopes, found `23` proposed-action
-resource areas, emitted `115` graph nodes and `134` graph edges, and reported `0` validation
-failures.
+A local requirements-package Sequence 3 CLI smoke run to `/tmp` selected `10` SOW scopes, found
+`23` proposed-action resource areas, emitted `115` graph nodes and `134` graph edges, and reported
+`0` validation failures.
 
-Sequence 4 hardened the graph-quality fixture set. Focused tests now cover missing proposed-action
-evidence refs, observed reports with no proposed-action support, proposed-action resource areas
-with no configured SOW scope, evidence-bearing action elements with no triggered resource area,
-duplicate observed-report graph IDs, duplicate required-deliverable graph IDs, dangling graph
-edges, and land-exchange intakes with no federal land action. A local Sequence 4 CLI smoke run to
-`/tmp` preserved the same accepted East Crazies counts: `10` SOW scopes, `23` proposed-action
-resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
+Earlier requirements-package Sequence 4 hardened the graph-quality fixture set. Focused tests now
+cover missing proposed-action evidence refs, observed reports with no proposed-action support,
+proposed-action resource areas with no configured SOW scope, evidence-bearing action elements with
+no triggered resource area, duplicate observed-report graph IDs, duplicate required-deliverable
+graph IDs, dangling graph edges, and land-exchange intakes with no federal land action. A local
+requirements-package Sequence 4 CLI smoke run to `/tmp` preserved the same accepted East Crazies
+counts: `10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph edges,
+and `0` validation failures.
 
-Sequence 5 added the reviewer-facing polish pass. The canonical JSON now includes
-`reviewer_summary`; Markdown now starts with a reviewer snapshot, review checklist, package
-boundaries, and compact tables; the command writes `project_sow_package.pdf` from the same package
-JSON; rendering validation checks fail if required Markdown or PDF sections are missing; and the
-tracked runbook `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create a new land-exchange
-intake. The post-sequence alignment pass verifies that generated PDF bytes include reviewer-facing
-content and validation checks from the package rendering, and it clarifies that reviewer-summary
-unresolved resource areas are separate from calibration gaps where the SOW is required but no
-observed East Crazies report was supplied. A local Sequence 5 CLI smoke run to `/tmp` preserved
-`10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph edges, `0`
-validation failures, and a valid `%PDF-` header.
+Earlier requirements-package Sequence 5 added the reviewer-facing polish pass. The canonical JSON
+now includes `reviewer_summary`; Markdown now starts with a reviewer snapshot, review checklist,
+package boundaries, and compact tables; the command writes `project_sow_package.pdf` from the same
+package JSON; rendering validation checks fail if required Markdown or PDF sections are missing;
+and the tracked runbook `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create a new
+land-exchange intake. The post-sequence alignment pass verifies that generated PDF bytes include
+reviewer-facing content and validation checks from the package rendering, and it clarifies that
+reviewer-summary unresolved resource areas are separate from calibration gaps where the SOW is
+required but no observed East Crazies report was supplied. A local requirements-package Sequence 5
+CLI smoke run to `/tmp` preserved `10` SOW scopes, `23` proposed-action resource areas, `115` graph
+nodes, `134` graph edges, `0` validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
