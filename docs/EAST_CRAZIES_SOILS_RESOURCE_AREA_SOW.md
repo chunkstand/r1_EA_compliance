@@ -15,6 +15,14 @@ analysis packages exist. The SOW is generated from the proposed action, project 
 action elements, parcel/trail/access features, likely resource triggers, and standard public source
 requirements.
 
+This is the capability WLG should see: the system can translate the controlling source stack into a
+tight specialist-report SOW. For this soils example, the stack includes NEPA, current USDA NEPA
+procedures, NFMA/project-consistency requirements, Forest Service handbook and manual direction,
+Region 1 soil management direction, the applicable Forest Plan, soil-quality monitoring methods,
+National BMPs, and official soil-survey data. The SOW turns those sources into fieldwork, analysis,
+deliverables, and acceptance criteria that should produce a defensible soils specialist report
+without pretending the planning package has already made a NEPA or legal sufficiency determination.
+
 For the East Crazies example, the soils scope is driven by:
 
 - proposed new or rerouted trail segments;
@@ -49,9 +57,15 @@ Before fieldwork, compile the new-project intake package:
 - applicable Forest Plan soil, watershed, road/trail, riparian, recreation, invasive species, and
   backcountry/recommended-wilderness direction.
 
+Prepare an authority-source checklist before fieldwork. At minimum, confirm the current NEPA
+procedure source, NFMA/planning-rule source, Forest Service handbook/manual direction, Region 1 soil
+direction, applicable Forest Plan components, National BMP direction, and soil survey/source-data
+inputs that will drive the specialist report.
+
 Flag missing information early. Typical missing items for a new project are final trail alignments,
 crossing designs, trailhead footprints, parcel restriction language, construction methods, equipment
-assumptions, access permission, and GIS source dates.
+assumptions, applicable handbook or regional-direction excerpts, access permission, and GIS source
+dates.
 
 ### 2. Fieldwork Plan
 
@@ -123,7 +137,24 @@ delivery cannot be evaluated during the main field visit.
 
 ## Analysis
 
-### 1. Existing Condition
+### 1. Authority-To-Report Crosswalk
+
+Prepare a compact authority-to-report crosswalk before drafting effects conclusions. The crosswalk
+must show:
+
+- which laws, regulations, Forest Service handbooks/manuals, regional direction, Forest Plan
+  components, BMPs, and data standards apply to soils;
+- which proposed-action element triggers each source requirement;
+- which field method, analysis table, map, mitigation measure, or monitoring item satisfies each
+  requirement;
+- which requirements are not triggered and why;
+- which requirements remain unresolved because field data, design detail, access, or Forest Service
+  direction is missing.
+
+The crosswalk must use current applicable sources. Former or superseded authority text may be noted
+as currentness context only; it must not drive the specialist report requirements.
+
+### 2. Existing Condition
 
 Describe the soil setting for affected action areas:
 
@@ -135,7 +166,7 @@ Describe the soil setting for affected action areas:
 - soil conditions on disposal and acquisition parcels where relevant to the land exchange decision;
 - data gaps and confidence limits.
 
-### 2. Proposed-Action Effects
+### 3. Proposed-Action Effects
 
 Analyze no action, proposed action, preliminary alternatives if any, and any later Forest
 Service-provided alternative. Address:
@@ -158,7 +189,7 @@ Quantify disturbance where useful. For linear features, use length, width, cross
 soil crossings, wetland/riparian approaches, drainage features, and representative disturbance class
 instead of forcing all effects into an acreage metric.
 
-### 3. Forest Plan Requirements
+### 4. Forest Plan Requirements
 
 Evaluate and document consistency with:
 
@@ -173,7 +204,7 @@ Evaluate and document consistency with:
 The report must identify which Forest Plan components apply to the proposed action and what design,
 mitigation, or monitoring requirements should carry forward.
 
-### 4. Mitigation, BMPs, And Monitoring
+### 5. Mitigation, BMPs, And Monitoring
 
 Prepare a mitigation/BMP/monitoring matrix with action element, location trigger, soil concern,
 required measure, responsible party, timing, and verification method. Include, as applicable:
@@ -187,7 +218,7 @@ required measure, responsible party, timing, and verification method. Include, a
 - wet-weather restrictions, erosion control, decompaction, topsoil/duff salvage, revegetation,
   mulch, weed-free seed, weed prevention, restoration, and post-construction photo-point monitoring.
 
-### 5. Cumulative Effects And Uncertainty
+### 6. Cumulative Effects And Uncertainty
 
 Evaluate cumulative soil effects only where there is a useful cause-and-effect relationship. Consider
 existing and proposed routes, trailheads, unauthorized routes, route drainage, grazing, wetland or
@@ -209,6 +240,8 @@ Acceptance criteria:
 
 - identifies missing GIS, trail design, parcel, wetland, route, construction-method, or Forest Plan
   data;
+- identifies the current laws, regulations, Forest Service handbook/manual direction, Region 1
+  direction, Forest Plan components, BMPs, and soil-data sources that will govern the soils work;
 - identifies whether the work will proceed as a standalone soils report or issue-screening memo;
 - identifies field-season and access constraints.
 
@@ -245,6 +278,7 @@ Provide:
 - action-element by soil concern matrix;
 - stream/wetland crossing and sediment-connectivity table;
 - mitigation/BMP/monitoring matrix;
+- authority-to-report crosswalk;
 - Forest Plan requirements matrix;
 - data-gap and uncertainty table;
 - project, soil-analysis area, soil map unit, slope/erosion hazard, wetland/riparian, road/trail,
@@ -252,6 +286,8 @@ Provide:
 
 Acceptance criteria:
 
+- each required fieldwork, analysis, mitigation, monitoring, and deliverable item is tied to the
+  controlling source that created the need;
 - maps include scale, north arrow, coordinate system, data date, project boundary, activity-area IDs,
   and source attribution;
 - tables distinguish no action, proposed action, preliminary alternatives, and any later analyzed
@@ -268,8 +304,9 @@ Acceptance criteria:
 
 - directly addresses the proposed action and each soil-triggering action element;
 - states whether FW-STD-SOIL-01 applies or is screened out for trail work;
-- ties conclusions to field evidence, GIS evidence, public source requirements, or specialist
-  judgment.
+- ties conclusions to field evidence, GIS evidence, current laws and regulations, Forest Service
+  handbook/manual direction, regional direction, Forest Plan components, BMPs, official data sources,
+  or specialist judgment.
 
 ### 6. EA-Ready Soils Text
 
@@ -293,15 +330,19 @@ Acceptance criteria:
 
 - resolves Forest Service and ID-team comments;
 - preserves source citations and field-data traceability;
+- preserves the authority-to-report crosswalk so the final specialist report remains defensible;
 - documents residual uncertainty and remaining Forest Service decisions;
 - final PDF starts with a valid `%PDF-` header.
 
 ## Sources Cited
 
-- 36 CFR 220.4, Forest Service NEPA general requirements:
-  https://ecfr.io/Title-36/Section-220.4
-- 36 CFR 220.7, Environmental assessment and decision notice:
-  https://ecfr.io/Title-36/Section-220.7
+- National Environmental Policy Act, 42 U.S.C. 4321 et seq.
+- National Forest Management Act, 16 U.S.C. 1600 et seq.
+- USDA NEPA procedures, 7 CFR part 1b:
+  https://www.ecfr.gov/current/title-7/subtitle-A/part-1b
+- National Forest System land management planning, 36 CFR part 219:
+  https://www.ecfr.gov/current/title-36/chapter-II/part-219
+- Forest Service Handbook (FSH) 1909.15, National Environmental Policy Act Handbook.
 - USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management.
 - Custer Gallatin National Forest Land Management Plan:
   https://www.fs.usda.gov/r01/custergallatin/planning/forest-plan/custer-gallatin-land-management-plan-forest-plan-revision
