@@ -32,23 +32,20 @@ An ad hoc soils resource-area SOW has been produced at
 docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
 temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
-The SOW has been revised into a WLG-facing new-project example: a brief purpose/header section,
-Fieldwork, Analysis, Deliverables, and Sources Cited. It now demonstrates that the system can produce
+The SOW has been revised into a WLG-facing new-project example with a short header followed
+immediately by a three-part Deliverables section: Fieldwork, Analysis, and Reporting. The rest of
+the document now mirrors that structure with Fieldwork Output, Analysis Output, and Reporting Output
+sections before Appendix A and Sources Cited. It demonstrates that the system can produce
 resource-area scopes of work for a new NEPA project from structured intake before late-stage NEPA
-materials or resource-analysis packages exist. It now explicitly frames the WLG-facing capability as
-translation from the controlling source stack into a tight specialist-report SOW: current USDA NEPA
+materials or resource-analysis packages exist. The source stack remains explicit: current USDA NEPA
 procedures, NFMA/planning-rule requirements, Forest Service handbook/manual direction, Region 1 soil
 management direction, the applicable Forest Plan, soil-quality monitoring methods, National BMPs, and
 official soil-survey data. East Crazies is used as the concrete example action, not as a
-completed-document review. The revision removes the prior completed-project review framing and adds
-an authority-to-report crosswalk requirement so the generated SOW is tied to defensible specialist
-report production. The fieldwork section has also been tightened to source-triggered surveys:
-soil-survey/activity-area delineation, detrimental soil disturbance, CWD/organic substrate where
-triggered, slope/equipment/unstable-area constraints, and waterbody/BMP interfaces.
-The analysis section now uses Appendix A as the authority-to-report control table; the appendix
-provides the actual crosswalk from NEPA/USDA NEPA procedures, NFMA/planning-rule consistency,
-Forest Plan soil components, Region 1 soil direction, soil-disturbance protocols, SSURGO, BMPs, and
-East Crazies action elements to required report outputs and acceptance tests.
+completed-document review. Fieldwork remains tied to source-triggered surveys: soil-survey/activity
+area delineation, detrimental soil disturbance, CWD/organic substrate where triggered,
+slope/equipment/unstable-area constraints, and waterbody/BMP interfaces. Analysis still uses
+Appendix A as the authority-to-report control table from source trigger to required report output
+and acceptance test.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.

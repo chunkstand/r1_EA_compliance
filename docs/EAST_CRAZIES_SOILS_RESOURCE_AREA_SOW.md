@@ -10,36 +10,45 @@ Forest: Custer Gallatin National Forest
 District: Bozeman Ranger District
 Resource area: Soils
 
-This example assumes a new project is in early planning, before late-stage NEPA materials or resource
-analysis packages exist. The SOW is generated from the proposed action, project location, preliminary
-action elements, parcel/trail/access features, likely resource triggers, and standard public source
-requirements.
+This is a planning and contracting support SOW for an early-stage project. It translates the
+controlling source stack into the fieldwork, analysis, and reporting needed for a defensible soils
+specialist report or approved issue-screening memo.
 
-This is the capability WLG should see: the system can translate the controlling source stack into a
-tight specialist-report SOW. For this soils example, the stack includes NEPA, current USDA NEPA
-procedures, NFMA/project-consistency requirements, Forest Service handbook and manual direction,
-Region 1 soil management direction, the applicable Forest Plan, soil-quality monitoring methods,
-National BMPs, and official soil-survey data. The SOW turns those sources into fieldwork, analysis,
-deliverables, and acceptance criteria that should produce a defensible soils specialist report
-without pretending the planning package has already made a NEPA or legal sufficiency determination.
+Project drivers: proposed trail construction or reroute, trailhead improvements, stream/wetland
+approaches, wet or hydric soils, erosion and sediment delivery, parcel restrictions,
+access/easement features, grazing-related improvements, and acquired-parcel management.
 
-For the East Crazies example, the soils scope is driven by:
+This SOW is not a final agency decision, legal sufficiency review, or NEPA compliance determination.
 
-- proposed new or rerouted trail segments;
-- trailhead improvements;
-- stream crossings, wetland/riparian approaches, wet soils, hydric soils, erosion, and sediment
-  delivery;
-- parcel restrictions, access/easements, grazing-related improvements, and acquired-parcel soil
-  management needs.
+## Deliverables
 
-The consultant product is a Soils Specialist Report or, if approved by the Forest Service soils
-reviewer, a short issue-screening memo. Either product must support later EA drafting, Forest Plan
-consistency documentation, mitigation commitments, and implementation planning.
+### 1. Fieldwork
 
-This is a planning and contracting support SOW. It is not a final agency decision, legal sufficiency
-review, or NEPA compliance determination.
+- Survey-trigger table tying each proposed action element to the controlling source that requires
+  field verification.
+- Fieldwork plan, maps, and activity-area definitions for triggered soils surveys.
+- Field data package with GPS points/tracks/polygons, completed field forms, photo log, soil map unit
+  checks, DSD observations, wetland/riparian interface notes, and data gaps.
 
-## Fieldwork
+### 2. Analysis
+
+- Existing-condition summary by activity area.
+- Effects indicators and soil-disturbance calculations for no action, proposed action, and any Forest
+  Service-provided alternative.
+- Forest Plan consistency analysis using Appendix A.
+- Mitigation/BMP/monitoring matrix tied to action element, location, source trigger, timing,
+  responsible party, and verification method.
+- Cumulative-effects and uncertainty summary where a cause-and-effect relationship exists.
+
+### 3. Reporting
+
+- Draft Soils Specialist Report or approved issue-screening memo.
+- Appendix A authority-to-report crosswalk updated for the project.
+- NEPA-ready soils summary text for later disclosure, if requested by the Forest Service.
+- Final report or memo, final PDF, editable source file, tables, map atlas, GIS package, photo log,
+  field forms, source inventory, metadata/readme, and limitations memo.
+
+## Fieldwork Output
 
 Before mobilization, prepare a survey-trigger table that ties each proposed action element to the
 source that requires field verification. Do not include generalized reconnaissance as a required
@@ -133,7 +142,7 @@ Conduct fieldwork during snow-free conditions when the mineral soil surface, org
 drainage paths can be observed. Conduct a wet-season or post-storm revisit only if waterbody
 connectivity, runoff, erosion, or sediment delivery cannot be determined during the main survey.
 
-## Analysis
+## Analysis Output
 
 Use Appendix A as the authority-to-report control table. The analysis should answer only the soil
 questions triggered by the proposed action and should tie each conclusion to field evidence, GIS
@@ -207,106 +216,52 @@ development risk after conveyance, and vegetation/restoration actions.
 Close the analysis with unresolved assumptions, field limitations, missing design details, and Forest
 Service decisions needed before the soils conclusions can support later NEPA or implementation files.
 
-## Deliverables
+## Reporting Output
 
-### 1. Kickoff And Data Request Log
+### 1. Draft Soils Specialist Report Or Issue-Screening Memo
 
-Provide kickoff notes, received and missing data, access constraints, source materials used, stop
-conditions, and Forest Service decisions needed before fieldwork.
+Provide a draft report or Forest Service-approved issue-screening memo with:
 
-Acceptance criteria:
-
-- identifies missing GIS, trail design, parcel, wetland, route, construction-method, or Forest Plan
-  data;
-- identifies the current laws, regulations, Forest Service handbook/manual direction, Region 1
-  direction, Forest Plan components, BMPs, and soil-data sources that will govern the soils work;
-- identifies whether the work will proceed as a standalone soils report or issue-screening memo;
-- identifies field-season and access constraints.
-
-### 2. Fieldwork Plan
-
-Provide field objectives, activity-area definitions, field maps, observation methods, field forms,
-data conventions, schedule, safety/access plan, and coordination needs.
-
-Acceptance criteria:
-
-- covers the proposed trail, reroute, trailhead, crossings, wetland/riparian interfaces, parcel
-  restrictions, and other project-specific soil trigger areas;
-- explains how soil disturbance will be documented for linear features;
-- identifies whether wet-season or post-storm verification may be needed.
-
-### 3. Field Data Package
-
-Provide GPS data, completed field forms, photo log, soil-check notes, soil map unit verification,
-wetland/riparian and sediment-connectivity notes, and a short field findings memo.
-
-Acceptance criteria:
-
-- every material field conclusion is traceable to location, date, observer, photo, and activity area;
-- sensitive soil, hydric/wet soil, erosion, compaction, rutting, displacement, drainage, and sediment
-  concerns are mapped or explicitly screened out;
-- data are suitable for Custer Gallatin GIS and ID-team use.
-
-### 4. Analysis Tables And Map Atlas
-
-Provide:
-
-- soil map unit and activity-area crosswalk;
-- existing and expected disturbance table;
-- action-element by soil concern matrix;
-- stream/wetland crossing and sediment-connectivity table;
+- project action elements and soils issue triggers;
+- field methods and survey-trigger table;
+- existing condition by activity area;
+- effects indicators and disturbance calculations;
+- direct, indirect, and cumulative effects where triggered;
+- Forest Plan consistency finding using Appendix A;
 - mitigation/BMP/monitoring matrix;
-- Appendix A authority-to-report crosswalk with project-specific updates;
-- Forest Plan requirements matrix;
-- data-gap and uncertainty table;
-- project, soil-analysis area, soil map unit, slope/erosion hazard, wetland/riparian, road/trail,
-  observation, and mitigation maps.
+- residual uncertainty, assumptions, and limitations.
 
 Acceptance criteria:
 
-- each fieldwork, analysis, mitigation, and monitoring item is tied to its controlling source;
-- maps include scale, north arrow, coordinate system, data date, project boundary, activity-area IDs,
-  and source attribution;
-- tables distinguish no action, proposed action, preliminary alternatives, and any later analyzed
-  alternative;
-- linear-feature effects use useful measures and do not rely on misleading acreage-only metrics.
+- directly addresses each soil-triggering action element;
+- states whether FW-STD-SOIL-01 applies, is met, requires restoration, or is not triggered;
+- ties conclusions to Appendix A, field evidence, GIS evidence, official soil data, or specialist
+  judgment;
+- distinguishes required mitigation or monitoring from optional design recommendations.
 
-### 5. Draft Soils Specialist Report Or Issue-Screening Memo
+### 2. NEPA-Ready Soils Summary Text
 
-Provide a draft report or approved issue-screening memo with affected environment, methods, spatial
-and temporal scale, resource indicators, direct and indirect effects, cumulative effects,
-mitigation/BMPs/monitoring, Forest Plan requirements, references, and appendices.
+If requested by the Forest Service, provide concise disclosure text drawn from the soils report or
+issue-screening memo.
 
 Acceptance criteria:
 
-- directly addresses the proposed action and each soil-triggering action element;
-- states whether FW-STD-SOIL-01 applies or is screened out for trail work;
-- ties conclusions to Appendix A, field evidence, GIS evidence, official data, or specialist
-  judgment.
-
-### 6. EA-Ready Soils Text
-
-Provide concise text for the future EA or appendix covering affected environment, environmental
-consequences, mitigation/design criteria, Forest Plan requirements, and cumulative effects if needed.
-
-Acceptance criteria:
-
-- suitable for public disclosure;
-- references the soils report or issue-screening memo instead of duplicating all technical detail;
+- summarizes affected environment, environmental consequences, mitigation/design criteria, Forest
+  Plan consistency, and cumulative effects only where supported by the report;
+- references the soils report or issue-screening memo instead of duplicating technical detail;
 - identifies design criteria or monitoring that must carry into later decision or implementation
   files.
 
-### 7. Final Report And Data Package
+### 3. Final Report And Data Package
 
-Provide final report or memo, final PDF, editable source file, comment-response log, final tables,
-map atlas, GIS layers or geodatabase/geopackage, photo log, field forms, source data inventory,
-metadata/readme, and data limitations memo.
+Provide final report or memo, final PDF, editable source file, Appendix A, final tables, map atlas,
+GIS layers or geodatabase/geopackage, photo log, field forms, source data inventory, metadata/readme,
+limitations memo, and comment-response log.
 
 Acceptance criteria:
 
 - resolves Forest Service and ID-team comments;
-- preserves source citations and field-data traceability;
-- preserves the authority-to-report crosswalk so the final specialist report remains defensible;
+- preserves source citations, field-data traceability, and the authority-to-report crosswalk;
 - documents residual uncertainty and remaining Forest Service decisions;
 - final PDF starts with a valid `%PDF-` header.
 
