@@ -141,7 +141,14 @@ source_library/projects/<project_id>/requirements_package/
   project_sow_package_manifest.json
 ```
 
-JSON is canonical. Markdown and PDF are renderings from the JSON.
+JSON is canonical. Markdown and PDF are renderings from the JSON. The generated package is a
+planning and contracting support artifact for defining resource SOW needs; it is not a final SOW
+award document.
+
+The package renders required and optional deliverables separately. Optional deliverables are planning
+visibility only and do not satisfy required deliverable validation. Each selected SOW scope must
+also carry assumptions, dependencies, acceptance criteria, reviewer role, review timing, and reviewer
+signoff fields from `config/project_sow_resource_scopes_v1.json`.
 
 ## 8. Resolve Validation Failures
 
@@ -154,6 +161,9 @@ Common failure categories:
 - drafted intake metadata still requires reviewer confirmation;
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
+- selected SOW scopes lack required contract fields such as assumptions, dependencies, acceptance
+  criteria, reviewer role, review timing, optional deliverables, or reviewer signoff fields;
+- selected SOW scopes lack required deliverables, even if optional deliverables are present;
 - an action element has resource areas but no evidence refs;
 - an action element has evidence refs but no resource areas;
 - observed reports cover resource areas not derived from the proposed action;

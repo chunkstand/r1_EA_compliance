@@ -14,6 +14,21 @@
         "decision_record",
         "nepa_project_management"
       ],
+      "acceptance_criteria": [
+        "Project initiation products identify responsible officials, schedule, decision pathway, and record ownership.",
+        "EA outline and administrative record index crosswalk to the proposed action, alternatives, public involvement, and expected decision record.",
+        "Package lead confirms unresolved resource-scope gaps are tracked before specialist work starts."
+      ],
+      "assumptions": [
+        "The project will proceed as an environmental assessment unless reviewer confirmation changes the NEPA level.",
+        "The responsible official, district, and project lead will be named before the scope is used for contracting.",
+        "Administrative record expectations are planning requirements, not final agency findings."
+      ],
+      "dependencies": [
+        "Reviewer-confirmed proposed action and purpose-and-need statement.",
+        "Forest, district, responsible official, project lead, and target decision schedule.",
+        "List of selected resource scopes and unresolved intake validation items."
+      ],
       "data_needs": [
         "Project name, forest, district, responsible official, and proponent",
         "Purpose and need, proposed action, no-action baseline, and preliminary alternatives",
@@ -29,6 +44,18 @@
         "Project initiation checklist",
         "NEPA schedule and responsibility matrix",
         "Draft EA outline and administrative record index"
+      ],
+      "optional_deliverables": [
+        "Project risk register",
+        "Administrative record file plan",
+        "Meeting notes and decision-log template"
+      ],
+      "review_timing": "Initiation and recurring package-integration checkpoints before specialist reports are finalized.",
+      "reviewer_role": "NEPA project lead or interdisciplinary team lead",
+      "reviewer_signoff_fields": [
+        "responsible_official_confirmed",
+        "decision_pathway_confirmed",
+        "record_index_owner_confirmed"
       ],
       "resource_name": "NEPA project management and decision record",
       "resource_scope_id": "nepa_project_management",
@@ -53,6 +80,21 @@
         "land_special_use_authorizations",
         "water_rights"
       ],
+      "acceptance_criteria": [
+        "Parcel, estate, reservation, access, title, and equalization facts are complete enough to scope realty tasks.",
+        "Federal disposal, non-federal acquisition, and reserved-right actions are separated in the work products.",
+        "Closing, public-interest, appraisal, and implementation conditions are listed as requirements rather than assumed conclusions."
+      ],
+      "assumptions": [
+        "The proposed action includes a federal land disposal and a non-federal acquisition.",
+        "Final appraisal, title, and public-interest determinations remain reviewer decisions outside this package.",
+        "Outstanding rights, reservations, and special uses require realty confirmation before closing."
+      ],
+      "dependencies": [
+        "Reviewer-confirmed federal and non-federal parcel descriptions.",
+        "Known estate interests, reservations, access commitments, and encumbrances.",
+        "Appraisal, title, equalization, and exchange agreement status from the realty case file."
+      ],
       "data_needs": [
         "Federal and non-federal parcel descriptions, acres, estate interests, reservations, and outstanding rights",
         "Appraisal, equalization, title evidence, mineral reservations, easements, and exchange agreement status",
@@ -68,6 +110,18 @@
         "Land exchange feasibility and public-interest memorandum",
         "Appraisal/equalization/title evidence checklist",
         "Draft realty implementation and closing checklist"
+      ],
+      "optional_deliverables": [
+        "Draft exchange agreement issue list",
+        "Parcel-by-parcel encumbrance table",
+        "Closing-condition tracker"
+      ],
+      "review_timing": "Early realty feasibility review, then update before draft EA release and before decision documentation.",
+      "reviewer_role": "Lands and realty specialist",
+      "reviewer_signoff_fields": [
+        "parcel_facts_confirmed",
+        "reserved_rights_confirmed",
+        "closing_conditions_confirmed"
       ],
       "required_for_project_types": [
         "land_exchange"
@@ -101,6 +155,21 @@
       "covered_resource_area_ids": [
         "land_management_plan_consistency"
       ],
+      "acceptance_criteria": [
+        "Applicable forest plan profile, geographic areas, management areas, overlays, and plan components are identified.",
+        "Plan consistency work products distinguish standards, guidelines, desired conditions, objectives, and suitability direction.",
+        "Any amendment, exception, or unresolved consistency question is recorded as a blocker."
+      ],
+      "assumptions": [
+        "The intake identifies the applicable forest plan profile or flags it for reviewer completion.",
+        "Plan-component screening is a planning requirement and does not create an NFMA compliance conclusion.",
+        "Project geography and overlays will be confirmed before final consistency analysis."
+      ],
+      "dependencies": [
+        "Forest plan profile and project geography.",
+        "Management area, geographic area, and overlay evidence.",
+        "Reviewer-confirmed proposed-action elements and implementation locations."
+      ],
       "data_needs": [
         "Forest plan profile, forest unit, district, geographic areas, management areas, and overlays",
         "Forest Plan standards, guidelines, desired conditions, objectives, and suitability direction potentially touched by the action",
@@ -116,6 +185,18 @@
         "Forest Plan consistency crosswalk",
         "Applicable standard/guideline matrix",
         "Plan amendment or exception screen"
+      ],
+      "optional_deliverables": [
+        "Forest Plan component workshop notes",
+        "Map-overlay consistency appendix",
+        "Plan amendment decision memo draft"
+      ],
+      "review_timing": "After project geography is confirmed and before effects reports rely on plan-component assumptions.",
+      "reviewer_role": "Forest planner or NFMA consistency reviewer",
+      "reviewer_signoff_fields": [
+        "forest_plan_profile_confirmed",
+        "applicable_components_confirmed",
+        "amendment_or_exception_screen_confirmed"
       ],
       "resource_name": "Forest Plan consistency and NFMA requirements",
       "resource_scope_id": "forest_plan_consistency",
@@ -147,6 +228,21 @@
         "species_consultation",
         "wildlife_resources"
       ],
+      "acceptance_criteria": [
+        "Species lists, habitat indicators, survey needs, and consultation pathways are documented for the action area.",
+        "ESA, sensitive species, eagle, migratory bird, EFH, and botany triggers are separated in the work plan.",
+        "Conservation measures, timing limits, and biological evaluation or assessment needs are stated as deliverables."
+      ],
+      "assumptions": [
+        "Species presence, habitat, and consultation status require specialist confirmation.",
+        "No-effect or no-impact conclusions are outside this planning package.",
+        "Survey windows and conservation measures may change after action-area review."
+      ],
+      "dependencies": [
+        "Action area, project footprint, timing, and ground-disturbance assumptions.",
+        "Current species lists and habitat data for the project area.",
+        "Known conservation measures, design criteria, and consultation status."
+      ],
       "data_needs": [
         "Listed, proposed, candidate, sensitive, and species-of-conservation-concern screens",
         "Habitat, survey, timing, conservation measure, and consultation assumptions",
@@ -162,6 +258,18 @@
         "Species and habitat screen",
         "Biological assessment or biological evaluation scope",
         "Wildlife/fisheries/botany effects report outline"
+      ],
+      "optional_deliverables": [
+        "Survey protocol appendix",
+        "Species conservation measure table",
+        "Consultation schedule tracker"
+      ],
+      "review_timing": "After action-area definition and before field survey, consultation, or effects-analysis commitments are finalized.",
+      "reviewer_role": "Wildlife, fisheries, or botany specialist",
+      "reviewer_signoff_fields": [
+        "species_lists_confirmed",
+        "survey_needs_confirmed",
+        "consultation_pathway_confirmed"
       ],
       "resource_name": "Wildlife, fish, botany, and species consultation",
       "resource_scope_id": "wildlife_species_botany",
@@ -201,6 +309,21 @@
         "cultural_resources",
         "tribal_relations"
       ],
+      "acceptance_criteria": [
+        "APE, inventory status, known constraints, SHPO/THPO path, and tribal coordination needs are documented.",
+        "Confidential cultural or tribal information handling is identified before public package use.",
+        "Avoidance, mitigation, monitoring, MOA, or inadvertent discovery needs are listed when triggered."
+      ],
+      "assumptions": [
+        "Cultural-resource eligibility and effect determinations remain specialist and consultation decisions.",
+        "Tribal consultation scope may change after government-to-government outreach.",
+        "Sensitive site information may require restricted handling outside public-facing renderings."
+      ],
+      "dependencies": [
+        "Area of potential effects and proposed ground disturbance.",
+        "Known survey, site, SHPO, THPO, and tribal coordination status.",
+        "Confidentiality requirements and record-handling constraints."
+      ],
       "data_needs": [
         "Area of potential effects, known sites, survey status, and confidentiality limits",
         "SHPO/THPO, tribal consultation, treaty rights, sacred sites, and traditional cultural property indicators",
@@ -216,6 +339,18 @@
         "Cultural resource survey and eligibility scope",
         "Section 106/SHPO/THPO consultation plan",
         "Tribal consultation and confidentiality protocol"
+      ],
+      "optional_deliverables": [
+        "Cultural-resource treatment measure outline",
+        "Inadvertent discovery plan",
+        "Confidential appendix handling plan"
+      ],
+      "review_timing": "Before field inventory, public release, or consultation commitments depend on cultural or tribal assumptions.",
+      "reviewer_role": "Heritage specialist and tribal relations reviewer",
+      "reviewer_signoff_fields": [
+        "ape_confirmed",
+        "consultation_protocol_confirmed",
+        "confidentiality_handling_confirmed"
       ],
       "resource_name": "Cultural resources, SHPO/THPO, and tribal consultation",
       "resource_scope_id": "cultural_tribal_resources",
@@ -254,6 +389,21 @@
         "floodplains_wetlands",
         "water_quality"
       ],
+      "acceptance_criteria": [
+        "Waters, wetlands, floodplains, riparian, aquatic habitat, and water-quality triggers are listed by action element.",
+        "Permit, certification, avoidance, minimization, mitigation, and monitoring needs are visible as deliverables.",
+        "Field delineation or desktop screening assumptions are explicit."
+      ],
+      "assumptions": [
+        "Jurisdictional waters, wetlands, floodplains, and permit needs require specialist confirmation.",
+        "Avoidance and mitigation commitments may change after field review.",
+        "Water-resource requirements are planning tasks, not permit determinations."
+      ],
+      "dependencies": [
+        "Action-element locations, construction assumptions, and stream or wetland crossing information.",
+        "Available water, wetland, floodplain, aquatic habitat, and permit-source data.",
+        "Known design criteria, BMPs, and avoidance or minimization commitments."
+      ],
       "data_needs": [
         "Waters of the United States, wetlands, floodplains, riparian areas, aquatic habitat, and groundwater/drinking-water indicators",
         "Dredge, fill, discharge, crossing, culvert, road, trail, construction, fish, trout, and mitigation assumptions",
@@ -269,6 +419,18 @@
         "Hydrology and wetlands/waters delineation scope",
         "Clean Water Act permit/certification screen",
         "Floodplain and wetland avoidance/minimization matrix"
+      ],
+      "optional_deliverables": [
+        "Wetland delineation field form package",
+        "Aquatic habitat survey appendix",
+        "Water-quality BMP checklist"
+      ],
+      "review_timing": "Before field delineation, design freeze, or permit-screen assumptions are used in EA effects analysis.",
+      "reviewer_role": "Hydrology, fisheries, or wetlands specialist",
+      "reviewer_signoff_fields": [
+        "waters_screen_confirmed",
+        "permit_screen_confirmed",
+        "avoidance_minimization_confirmed"
       ],
       "resource_name": "Hydrology, wetlands, floodplains, and water quality",
       "resource_scope_id": "hydrology_wetlands_water_quality",
@@ -318,6 +480,21 @@
         "recreation_special_uses",
         "roads_trails_access"
       ],
+      "acceptance_criteria": [
+        "Road, trail, access, right-of-way, recreation, special-use, and designated-area tasks are separated by action element.",
+        "Map, design, easement, maintenance, closure, or special-use deliverables are identified where needed.",
+        "Roadless, recommended wilderness, WSR, national trail, and special-area constraints are screened."
+      ],
+      "assumptions": [
+        "Final route locations, access rights, closures, and recreation effects require specialist confirmation.",
+        "Designated-area consistency screens are planning requirements, not final effects conclusions.",
+        "Special-use authorization status may change before decision documentation."
+      ],
+      "dependencies": [
+        "Road, trail, access, construction, maintenance, and easement descriptions.",
+        "Designated-area overlays and recreation-setting data.",
+        "Special-use, outfitter-guide, and access-authorization records."
+      ],
       "data_needs": [
         "Road, trail, access, right-of-way, special-use, closure, construction, and maintenance action elements",
         "Roadless, recommended wilderness, WSR, national trail, special area, and recreation setting overlays",
@@ -333,6 +510,18 @@
         "Roads, trails, and access report scope",
         "Designated-area and recreation consistency screen",
         "Access easement/right-of-way implementation checklist"
+      ],
+      "optional_deliverables": [
+        "Access-map exhibit list",
+        "Trail or road design criteria appendix",
+        "Recreation special-use permit review table"
+      ],
+      "review_timing": "After access commitments are defined and before design, easement, or recreation assumptions are locked.",
+      "reviewer_role": "Engineering, recreation, or access specialist",
+      "reviewer_signoff_fields": [
+        "access_actions_confirmed",
+        "designated_area_screen_confirmed",
+        "special_use_review_confirmed"
       ],
       "resource_name": "Roads, trails, access, recreation, and designated areas",
       "resource_scope_id": "roads_access_recreation_designated_areas",
@@ -375,6 +564,21 @@
         "soil_resources",
         "vegetation_resources"
       ],
+      "acceptance_criteria": [
+        "Vegetation, fuels, soils, invasive species, air-quality, climate, and carbon triggers are tied to action elements.",
+        "Treatment methods, equipment, timing, restoration, prevention, smoke, and monitoring needs are listed as deliverables.",
+        "Carbon, air-quality, and soil-productivity assumptions are stated without implying final effects conclusions."
+      ],
+      "assumptions": [
+        "Treatment units, methods, timing, and mitigation commitments remain subject to specialist confirmation.",
+        "Air-quality, climate, carbon, and soil effects are not determined by this planning package.",
+        "Invasive species and restoration requirements may change after field review."
+      ],
+      "dependencies": [
+        "Treatment-unit locations, methods, timing, and equipment assumptions.",
+        "Soils, vegetation, invasive species, carbon, and air-quality baseline data.",
+        "Known prevention, restoration, monitoring, and BMP commitments."
+      ],
       "data_needs": [
         "Vegetation treatment, fuels, prescribed fire, timber, forest health, invasive species, pesticide/herbicide, soils, air-quality, climate, and carbon indicators",
         "Treatment units, equipment, timing, burn/smoke assumptions, erosion control, carbon storage or sequestration context, revegetation, and restoration commitments",
@@ -390,6 +594,18 @@
         "Vegetation/fuels/forest-health analysis scope",
         "Soils and invasive species prevention plan scope",
         "Air-quality and smoke coordination screen"
+      ],
+      "optional_deliverables": [
+        "Treatment-unit method table",
+        "Revegetation and monitoring plan outline",
+        "Carbon and air-quality appendix outline"
+      ],
+      "review_timing": "After treatment methods are described and before effects reports depend on vegetation, soils, or air assumptions.",
+      "reviewer_role": "Vegetation, soils, air-quality, or climate specialist",
+      "reviewer_signoff_fields": [
+        "treatment_methods_confirmed",
+        "soil_and_invasive_needs_confirmed",
+        "air_climate_carbon_screen_confirmed"
       ],
       "resource_name": "Vegetation, fuels, soils, air quality, climate, and carbon",
       "resource_scope_id": "vegetation_soils_air_quality",
@@ -438,6 +654,21 @@
         "geology_minerals",
         "hazardous_materials"
       ],
+      "acceptance_criteria": [
+        "Mineral estate, reserved minerals, mining claims, energy uses, and hazardous-material indicators are listed.",
+        "Phase I, site-condition, disclosure, mitigation, and reserved-rights deliverables are identified before closing.",
+        "Known or potential recognized environmental conditions are tracked as due-diligence requirements."
+      ],
+      "assumptions": [
+        "Mineral potential, reserved rights, and hazardous-material status require specialist or realty confirmation.",
+        "Site-condition findings are not final until due-diligence records are reviewed.",
+        "Mitigation and disclosure needs may change after title, field, or Phase I review."
+      ],
+      "dependencies": [
+        "Parcel title, mineral estate, reserved-rights, and mining-claim information.",
+        "Known hazardous-materials, contamination, mine waste, or site-condition records.",
+        "Realty closing schedule and disclosure requirements."
+      ],
       "data_needs": [
         "Mineral estate, reserved minerals, mining claims, energy uses, hazardous materials, contamination, and due-diligence records",
         "Phase I environmental site assessment, mine waste, landfill, spill, release, or recognized environmental condition indicators",
@@ -453,6 +684,18 @@
         "Mineral potential and reserved-rights review scope",
         "Hazardous materials/site condition due-diligence checklist",
         "Mitigation and disclosure requirement register"
+      ],
+      "optional_deliverables": [
+        "Phase I environmental site assessment scope",
+        "Mineral reservation map exhibit list",
+        "Recognized environmental condition issue log"
+      ],
+      "review_timing": "Before realty closing assumptions, mitigation terms, or disclosure requirements are finalized.",
+      "reviewer_role": "Minerals, geology, hazardous-materials, or realty due-diligence reviewer",
+      "reviewer_signoff_fields": [
+        "mineral_estate_confirmed",
+        "site_condition_screen_confirmed",
+        "disclosure_requirements_confirmed"
       ],
       "resource_name": "Minerals, energy, and hazardous materials",
       "resource_scope_id": "minerals_energy_hazardous_materials",
@@ -493,6 +736,21 @@
         "agencies_persons_consulted",
         "public_involvement"
       ],
+      "acceptance_criteria": [
+        "Scoping, consultation, coordination, notice, comment-response, and administrative review tasks are identified.",
+        "Contact matrix includes tribes, agencies, counties, adjacent landowners, permittees, and interested publics when known.",
+        "Public-involvement products remain record-support tasks and do not imply decision approval."
+      ],
+      "assumptions": [
+        "Public involvement method and timing remain subject to responsible official and project lead confirmation.",
+        "Consultation and coordination lists may change as resource specialists identify affected parties.",
+        "Administrative review path is planning support, not a final agency action."
+      ],
+      "dependencies": [
+        "Responsible official direction and anticipated NEPA decision pathway.",
+        "Known tribes, agencies, counties, adjacent landowners, permittees, and interested publics.",
+        "Resource-scope consultation needs and project schedule."
+      ],
       "data_needs": [
         "Stakeholders, tribes, counties, agencies, adjacent landowners, permittees, and interested publics",
         "Scoping method, comment tracking, response-to-comments workflow, and objection or appeal path",
@@ -508,6 +766,18 @@
         "Scoping and public-involvement plan",
         "Consultation/coordination contact matrix",
         "Comment response and administrative review checklist"
+      ],
+      "optional_deliverables": [
+        "Scoping notice draft",
+        "Public meeting material checklist",
+        "Comment coding template"
+      ],
+      "review_timing": "Before public release, scoping, formal consultation, or administrative review milestones.",
+      "reviewer_role": "Public involvement, NEPA, or line-officer support reviewer",
+      "reviewer_signoff_fields": [
+        "contact_matrix_confirmed",
+        "scoping_method_confirmed",
+        "administrative_review_path_confirmed"
       ],
       "resource_name": "Public involvement, coordination, and administrative review",
       "resource_scope_id": "public_involvement_coordination",

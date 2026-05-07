@@ -87,6 +87,24 @@ intake omissions, `7` East Crazies calibration gaps, and `17` expected no-observ
 across the two new proving intakes. East Crazies remains green at `10` scopes, `23`
 proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 
+Project SOW operationalization Sequence 4 is implemented. Resource scope templates in
+`config/project_sow_resource_scopes_v1.json` now carry contract-ready assumptions, dependencies,
+optional deliverables, acceptance criteria, reviewer role, review timing, and reviewer signoff fields
+for every configured scope. The canonical `resource_scope_records[]` include those fields, and the
+Markdown/PDF renderings separate required deliverables from optional deliverables and add a
+`Contract terms` section without replacing the JSON contract. Package validation now includes
+`selected_resource_scopes_have_contract_fields`, and tests prove optional deliverables do not satisfy
+the required deliverable gate. The package remains a planning and contracting support artifact for
+resource SOW scoping, not a final SOW award document, applicability decision, compliance finding,
+legal advice, legal sufficiency conclusion, or final agency decision.
+
+Sequence 4 closeout verification passed: the focused project-SOW/CLI/architecture tests reported
+`46 passed`; the East Crazies package smoke run to `/tmp/project-sow-sequence-4-package` selected
+`10` scopes, found `23` proposed-action resource areas, emitted `115` graph nodes and `134` graph
+edges, reported `0` validation failures, and produced a valid `%PDF-` header; the three-case
+`project-sow-eval` smoke run to `/tmp/project-sow-sequence-4-eval` reported `3` cases passed and
+`0` failed cases.
+
 Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
@@ -179,12 +197,12 @@ validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 4,
-contract-ready resource SOW content. Keep JSON canonical, do not convert SOW scopes into
-applicability or compliance findings, and do not stage ignored `source_library/` outputs. The next
-pass should extend the tracked resource-scope config with contract-oriented fields such as
-assumptions, dependencies, optional deliverables, acceptance criteria, reviewer role, and review
-timing before rendering those fields into JSON/Markdown/PDF.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 5,
+reviewer adjudication loop. Keep JSON canonical, do not convert SOW scopes into applicability or
+compliance findings, and do not stage ignored `source_library/` outputs. The next pass should define
+the reviewer worklist and adjudication template for unresolved resource areas, missing evidence
+refs, unknown resource-area IDs, calibration gaps, and optional deliverable decisions before adding
+any replay/apply command.
 
 ## Current Applicability/Expansion Handoff
 

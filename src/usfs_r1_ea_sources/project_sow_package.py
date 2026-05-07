@@ -18,6 +18,15 @@ DEFAULT_AUTHORITY_INVENTORY_PATH = Path("config/authority_universe_families_nepa
 DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH = Path("config/project_sow_intake_draft_rules_v1.json")
 DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH = Path("config/project_sow_eval_proving_intakes_v1.json")
 DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR = Path("source_library/project_sow_eval")
+CONTRACT_REQUIRED_SCOPE_FIELDS = [
+    "acceptance_criteria",
+    "assumptions",
+    "dependencies",
+    "optional_deliverables",
+    "review_timing",
+    "reviewer_role",
+    "reviewer_signoff_fields",
+]
 
 
 @dataclass(frozen=True)
@@ -504,6 +513,14 @@ def _validate_inputs(
             details={"scope_ids": selected_without_tasks},
         )
     )
+    missing_contract_fields = _selected_scope_contract_field_errors(selected_scopes)
+    checks.append(
+        _check(
+            name="selected_resource_scopes_have_contract_fields",
+            passed=not missing_contract_fields,
+            details={"missing_contract_fields": missing_contract_fields},
+        )
+    )
     return {
         "checks": checks,
         "failure_count": sum(1 for check in checks if not check["passed"]),
@@ -631,19 +648,26 @@ def _build_package(
 
 def _scope_record(scope: dict[str, Any]) -> dict[str, Any]:
     return {
+        "acceptance_criteria": _strings(scope.get("acceptance_criteria")),
+        "assumptions": _strings(scope.get("assumptions")),
         "authority_family_ids": _strings(scope.get("authority_family_ids")),
         "covered_resource_area_ids": sorted(
             _resource_area_ids(scope.get("covered_resource_area_ids"))
         ),
         "data_needs": _strings(scope.get("data_needs")),
         "defensibility_checks": _strings(scope.get("defensibility_checks")),
+        "dependencies": _strings(scope.get("dependencies")),
         "discipline": scope.get("discipline"),
         "matched_indicator_keys": _strings(scope.get("matched_indicator_keys")),
         "matched_resource_area_ids": sorted(
             _resource_area_ids(scope.get("matched_resource_area_ids"))
         ),
         "matched_terms": _strings(scope.get("matched_terms")),
+        "optional_deliverables": _strings(scope.get("optional_deliverables")),
         "required_deliverables": _strings(scope.get("required_deliverables")),
+        "review_timing": scope.get("review_timing"),
+        "reviewer_role": scope.get("reviewer_role"),
+        "reviewer_signoff_fields": _strings(scope.get("reviewer_signoff_fields")),
         "resource_name": scope.get("resource_name"),
         "resource_scope_id": scope.get("resource_scope_id"),
         "selection_reasons": _strings(scope.get("selection_reasons")),
@@ -998,6 +1022,26 @@ def _intake_graph_validation_checks(
             details={"report_resource_area_ids": missing_observed_report_paths},
         ),
     ]
+
+
+def _selected_scope_contract_field_errors(
+    selected_scopes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    errors = []
+    for scope in selected_scopes:
+        missing = [
+            field
+            for field in CONTRACT_REQUIRED_SCOPE_FIELDS
+            if _is_empty(scope.get(field))
+        ]
+        if missing:
+            errors.append(
+                {
+                    "missing_fields": missing,
+                    "resource_scope_id": scope.get("resource_scope_id"),
+                }
+            )
+    return errors
 
 
 def _intake_graph_raw_id_diagnostics(
@@ -1356,15 +1400,15 @@ def _render_markdown(package: dict[str, Any]) -> str:
             "",
             "## Resource Scopes",
             "",
-            "| Scope | Discipline | Covered resource areas | Deliverables |",
-            "| --- | --- | --- | --- |",
+            "| Scope | Discipline | Covered resource areas | Required deliverables | Optional deliverables |",
+            "| --- | --- | --- | --- | --- |",
         ]
     )
     for scope in package["resource_scope_records"]:
         lines.append(
             f"| {scope['resource_name']} | `{scope['discipline']}` | "
             f"{', '.join(f'`{item}`' for item in scope['covered_resource_area_ids'])} | "
-            f"{len(scope['required_deliverables'])} |"
+            f"{len(scope['required_deliverables'])} | {len(scope['optional_deliverables'])} |"
         )
     for scope in package["resource_scope_records"]:
         lines.extend(
@@ -1383,8 +1427,27 @@ def _render_markdown(package: dict[str, Any]) -> str:
         )
         lines.extend(f"- {task}" for task in scope["sow_tasks"])
         lines.append("")
-        lines.append("Deliverables:")
+        lines.append("Required deliverables:")
         lines.extend(f"- {deliverable}" for deliverable in scope["required_deliverables"])
+        lines.append("")
+        lines.append("Optional deliverables:")
+        lines.extend(f"- {deliverable}" for deliverable in scope["optional_deliverables"])
+        lines.append("")
+        lines.append("Contract terms:")
+        lines.extend(
+            [
+                f"- Reviewer role: {scope['reviewer_role']}",
+                f"- Review timing: {scope['review_timing']}",
+                "- Assumptions:",
+            ]
+        )
+        lines.extend(f"  - {item}" for item in scope["assumptions"])
+        lines.append("- Dependencies:")
+        lines.extend(f"  - {item}" for item in scope["dependencies"])
+        lines.append("- Acceptance criteria:")
+        lines.extend(f"  - {item}" for item in scope["acceptance_criteria"])
+        lines.append("- Reviewer signoff fields:")
+        lines.extend(f"  - `{item}`" for item in scope["reviewer_signoff_fields"])
         lines.append("")
         lines.append("Defensibility checks:")
         lines.extend(f"- {check}" for check in scope["defensibility_checks"])
@@ -1525,7 +1588,20 @@ def _render_pdf_lines(package: dict[str, Any]) -> list[str]:
     for scope in package["resource_scope_records"]:
         lines.append(
             f"- {scope['resource_scope_id']}: {scope['resource_name']} "
-            f"({len(scope['required_deliverables'])} deliverables)"
+            f"({len(scope['required_deliverables'])} required, "
+            f"{len(scope['optional_deliverables'])} optional deliverables)"
+        )
+    lines.extend(["", "Contract Terms"])
+    for scope in package["resource_scope_records"]:
+        lines.append(f"- {scope['resource_scope_id']} reviewer: {scope['reviewer_role']}")
+        lines.append(f"  timing: {scope['review_timing']}")
+        lines.append(
+            f"  acceptance criteria: {len(scope['acceptance_criteria'])}; "
+            f"assumptions: {len(scope['assumptions'])}; "
+            f"dependencies: {len(scope['dependencies'])}"
+        )
+        lines.append(
+            "  signoff fields: " + ", ".join(scope["reviewer_signoff_fields"])
         )
     lines.extend(["", "Resource Analysis Coverage"])
     for row in package["resource_analysis_matrix"]:
@@ -1558,6 +1634,7 @@ def _rendering_validation_checks(markdown: str, pdf_lines: list[str]) -> list[di
         "## Reviewer Snapshot",
         "## Intake",
         "## Resource Scopes",
+        "Contract terms:",
         "## Resource Analysis Coverage",
         "## Intake Evidence Graph",
         "## Validation",
@@ -1567,6 +1644,7 @@ def _rendering_validation_checks(markdown: str, pdf_lines: list[str]) -> list[di
         "Package Boundaries",
         "Review Checklist",
         "Resource Scopes",
+        "Contract Terms",
         "Resource Analysis Coverage",
         "Intake Evidence Graph",
         "Validation",

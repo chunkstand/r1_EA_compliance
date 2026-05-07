@@ -89,6 +89,7 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     validation_checks = {check["name"]: check for check in package["validation"]["checks"]}
     assert validation_checks["project_sow_markdown_required_sections_present"]["passed"] is True
     assert validation_checks["project_sow_pdf_required_items_present"]["passed"] is True
+    assert validation_checks["selected_resource_scopes_have_contract_fields"]["passed"] is True
     assert package["manifest"]["input_hashes"]["intake_sha256"]
 
     authority_ids = {
@@ -169,14 +170,37 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert "missing_sow_scope" not in observed_report_area_statuses
     assert "observed_not_derived_from_proposed_action" not in observed_report_area_statuses
     assert package["missing_resource_area_requests"] == []
+    for scope in package["resource_scope_records"]:
+        assert scope["acceptance_criteria"], scope["resource_scope_id"]
+        assert scope["assumptions"], scope["resource_scope_id"]
+        assert scope["dependencies"], scope["resource_scope_id"]
+        assert scope["optional_deliverables"], scope["resource_scope_id"]
+        assert scope["required_deliverables"], scope["resource_scope_id"]
+        assert scope["review_timing"], scope["resource_scope_id"]
+        assert scope["reviewer_role"], scope["resource_scope_id"]
+        assert scope["reviewer_signoff_fields"], scope["resource_scope_id"]
+    lands_scope = next(
+        scope
+        for scope in package["resource_scope_records"]
+        if scope["resource_scope_id"] == "lands_realty_land_exchange"
+    )
+    assert lands_scope["reviewer_role"] == "Lands and realty specialist"
+    assert "Draft exchange agreement issue list" in lands_scope["optional_deliverables"]
 
     markdown = result.markdown_path.read_text()
     assert "Requirements Package" in markdown
     assert "Reviewer Snapshot" in markdown
     assert "Review Checklist" in markdown
     assert "Package Boundaries" in markdown
-    assert "| Scope | Discipline | Covered resource areas | Deliverables |" in markdown
+    assert (
+        "| Scope | Discipline | Covered resource areas | Required deliverables | Optional deliverables |"
+        in markdown
+    )
     assert "| Resource area | Coverage status | SOW scopes | Observed reports |" in markdown
+    assert "Contract terms:" in markdown
+    assert "Optional deliverables:" in markdown
+    assert "Reviewer role: Lands and realty specialist" in markdown
+    assert "Acceptance criteria:" in markdown
     assert "Lands, realty, and land exchange case requirements" in markdown
     assert "Resource Analysis Coverage" in markdown
     assert "Intake Evidence Graph" in markdown
@@ -185,6 +209,8 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     pdf_text = result.pdf_path.read_bytes().decode("latin-1", errors="ignore")
     assert "Reviewer Snapshot" in pdf_text
     assert "Review Checklist" in pdf_text
+    assert "Contract Terms" in pdf_text
+    assert "lands_realty_land_exchange reviewer: Lands and realty specialist" in pdf_text
     assert "Resource Analysis Coverage" in pdf_text
     assert "project_sow_pdf_required_items_present: passed" in pdf_text
 
@@ -971,6 +997,66 @@ def test_project_sow_package_fails_land_exchange_without_federal_land_action(
     }
 
 
+def test_project_sow_package_fails_selected_scope_missing_contract_fields(
+    tmp_path: Path,
+) -> None:
+    resource_config = json.loads((REPO_ROOT / DEFAULT_RESOURCE_SCOPE_CONFIG_PATH).read_text())
+    for scope in resource_config["resource_scopes"]:
+        if scope["resource_scope_id"] == "nepa_project_management":
+            del scope["acceptance_criteria"]
+            break
+    bad_config_path = tmp_path / "missing_contract_fields_resource_config.json"
+    bad_config_path.write_text(json.dumps(resource_config), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+        resource_scope_config_path=bad_config_path,
+        authority_inventory_path=REPO_ROOT / DEFAULT_AUTHORITY_INVENTORY_PATH,
+    )
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert set(failed_checks) == {"selected_resource_scopes_have_contract_fields"}
+    assert failed_checks["selected_resource_scopes_have_contract_fields"]["details"] == {
+        "missing_contract_fields": [
+            {
+                "missing_fields": ["acceptance_criteria"],
+                "resource_scope_id": "nepa_project_management",
+            }
+        ]
+    }
+
+
+def test_project_sow_package_optional_deliverables_do_not_satisfy_required_gate(
+    tmp_path: Path,
+) -> None:
+    resource_config = json.loads((REPO_ROOT / DEFAULT_RESOURCE_SCOPE_CONFIG_PATH).read_text())
+    for scope in resource_config["resource_scopes"]:
+        if scope["resource_scope_id"] == "nepa_project_management":
+            scope["required_deliverables"] = []
+            scope["optional_deliverables"] = ["Optional scoping support memo"]
+            break
+    bad_config_path = tmp_path / "optional_only_resource_config.json"
+    bad_config_path.write_text(json.dumps(resource_config), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+        resource_scope_config_path=bad_config_path,
+        authority_inventory_path=REPO_ROOT / DEFAULT_AUTHORITY_INVENTORY_PATH,
+    )
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert set(failed_checks) == {"selected_resource_scopes_have_sow_content"}
+    assert failed_checks["selected_resource_scopes_have_sow_content"]["details"] == {
+        "scope_ids": ["nepa_project_management"]
+    }
+
+
 def test_project_sow_rendering_validation_fails_missing_sections() -> None:
     checks = project_sow._rendering_validation_checks(
         markdown="# Incomplete Package\n\n## Intake\n",
@@ -986,6 +1072,9 @@ def test_project_sow_rendering_validation_fails_missing_sections() -> None:
         "project_sow_markdown_required_sections_present"
     ]["details"]["missing_sections"]
     assert "Review Checklist" in failed_checks[
+        "project_sow_pdf_required_items_present"
+    ]["details"]["missing_items"]
+    assert "Contract Terms" in failed_checks[
         "project_sow_pdf_required_items_present"
     ]["details"]["missing_items"]
 

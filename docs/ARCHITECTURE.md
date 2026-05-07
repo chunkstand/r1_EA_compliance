@@ -140,7 +140,10 @@ compares proposed-action-derived resource areas to observed specialist/supportin
 `project-sow-eval` command runs tracked proving intakes from
 `config/project_sow_eval_proving_intakes_v1.json`, writes local eval package outputs, and reports
 expected metrics, graph-path coverage, rendering checks, system misses, intake omissions,
-calibration gaps, and expected no-observed-report cases. These commands do not create applicability
+calibration gaps, and expected no-observed-report cases. Resource scope templates carry
+contract-ready assumptions, dependencies, required and optional deliverables, acceptance criteria,
+reviewer role, review timing, and reviewer signoff fields as tracked data; selected scopes must
+include those fields before package generation. These commands do not create applicability
 decisions, compliance findings, or legal sufficiency conclusions, and an unreviewed draft cannot
 pass validation until reviewer-confirmation metadata is cleared.
 

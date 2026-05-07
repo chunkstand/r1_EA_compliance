@@ -202,21 +202,25 @@ Acceptance gate status:
 
 ## Sequence 4: Contract-Ready Resource SOW Content
 
-Status: planned.
+Status: complete.
 
 Purpose: make resource scopes usable by a planning lead or contracting/resource lead, not merely
 machine-valid.
 
-Candidate work:
+Implemented work:
 
-- extend `config/project_sow_resource_scopes_v1.json` with contract-oriented fields such as
-  assumptions, dependencies, optional deliverables, required deliverables, acceptance criteria,
-  reviewer role, and review timing;
-- render those fields into JSON, Markdown, and PDF without changing JSON canonicality;
-- make required vs optional deliverables explicit;
-- add tests that fail if a selected SOW scope lacks required contracting fields.
+- extended `config/project_sow_resource_scopes_v1.json` with contract-oriented assumptions,
+  dependencies, optional deliverables, acceptance criteria, reviewer role, review timing, and
+  reviewer signoff fields for every resource scope;
+- carried those fields into canonical `resource_scope_records[]`;
+- rendered required vs optional deliverables and contract terms in Markdown and PDF without moving
+  JSON canonicality out of `project_sow_package.json`;
+- added `selected_resource_scopes_have_contract_fields` so selected scopes fail before package
+  generation when contract fields are missing;
+- added regression coverage proving optional deliverables do not satisfy the required deliverable
+  gate.
 
-Acceptance gate:
+Acceptance gate status:
 
 - every selected scope in East Crazies has tasks, data needs, required deliverables, defensibility
   checks, assumptions, dependencies, and acceptance criteria;

@@ -2407,7 +2407,9 @@ includes:
   area IDs, observed specialist/supporting report count, and resource indicator keys;
 - `resource_scope_records[]`, with `resource_scope_id`, discipline, selected authority families,
   covered resource-area IDs, selection reasons, matched terms, matched resource areas or resource
-  indicators, SOW tasks, data needs, deliverables, and defensibility checks;
+  indicators, SOW tasks, data needs, required deliverables, optional deliverables, assumptions,
+  dependencies, acceptance criteria, reviewer role, review timing, reviewer signoff fields, and
+  defensibility checks;
 - `resource_analysis_matrix[]`, comparing proposed-action-derived resource areas to selected SOW
   scopes and, when supplied by the intake, observed specialist or supporting reports from a
   completed example package;
@@ -2425,7 +2427,7 @@ includes:
 - `validation`, with fail-closed checks for required intake fields, supported intake schema,
   resource-scope config integrity, authority-family resolution, proposed-action resource-area
   coverage, observed specialist-report comparison coverage, selected scope count, and SOW content
-  presence;
+  and contract-field presence;
 - `manifest`, with input paths and SHA-256 hashes for the intake, resource-scope config, and
   authority-family inventory.
 
@@ -2437,7 +2439,15 @@ data, not hidden runtime branches. Each scope can define:
 - `always_required` or `required_for_project_types`;
 - `trigger_terms` and `trigger_indicator_keys`;
 - `authority_family_ids` from `config/authority_universe_families_nepa_ea_v1.json`;
-- `sow_tasks`, `data_needs`, `required_deliverables`, and `defensibility_checks`.
+- `sow_tasks`, `data_needs`, `required_deliverables`, `optional_deliverables`,
+  `assumptions`, `dependencies`, `acceptance_criteria`, `reviewer_role`, `review_timing`,
+  `reviewer_signoff_fields`, and `defensibility_checks`.
+
+Selected scopes must include the contract fields before package generation. Runtime validation uses
+`selected_resource_scopes_have_contract_fields` for assumptions, dependencies, optional
+deliverables, acceptance criteria, reviewer role, review timing, and reviewer signoff fields.
+Optional deliverables are rendered for planning visibility, but they do not satisfy the required
+deliverable gate enforced by `selected_resource_scopes_have_sow_content`.
 
 The tracked intake schema is
 `docs/schemas/project_sow_intake_v0.schema.json`. The minimal land-exchange starting template is
@@ -2519,6 +2529,7 @@ Project SOW package validation must fail closed on:
   path;
 - no selected resource scope;
 - selected resource scopes that lack SOW tasks or deliverables;
+- selected resource scopes that lack required contract fields;
 - Markdown renderings missing required reviewer-facing sections;
 - PDF renderings missing required reviewer-facing items.
 
