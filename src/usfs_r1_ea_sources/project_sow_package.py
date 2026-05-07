@@ -67,6 +67,7 @@ def run_project_sow_package(
         selected_scopes=selected_scopes,
     )
     summary = _summary(
+        intake=intake,
         project_id=selected_project_id,
         source_set_id=selected_source_set_id,
         package_dir=package_dir,
@@ -183,6 +184,46 @@ def _validate_inputs(
             details={"unknown_authority_family_ids": unknown_authorities},
         )
     )
+    known_covered_resource_areas = _covered_resource_area_ids(scopes)
+    expected_resource_areas = _expected_resource_area_ids(intake)
+    observed_resource_areas = _observed_report_resource_area_ids(intake)
+    selected_resource_areas = _covered_resource_area_ids(selected_scopes)
+    missing_expected_resource_areas = sorted(expected_resource_areas - selected_resource_areas)
+    missing_observed_resource_areas = sorted(observed_resource_areas - selected_resource_areas)
+    unknown_expected_resource_areas = sorted(
+        expected_resource_areas - known_covered_resource_areas
+    )
+    observed_without_expected_action_trigger = sorted(
+        observed_resource_areas - expected_resource_areas
+    )
+    checks.append(
+        _check(
+            name="expected_resource_areas_resolve_to_scope_config",
+            passed=not unknown_expected_resource_areas,
+            details={"resource_area_ids": unknown_expected_resource_areas},
+        )
+    )
+    checks.append(
+        _check(
+            name="expected_resource_areas_have_sow_scope",
+            passed=not missing_expected_resource_areas,
+            details={"resource_area_ids": missing_expected_resource_areas},
+        )
+    )
+    checks.append(
+        _check(
+            name="observed_specialist_reports_match_proposed_action_resource_areas",
+            passed=not observed_without_expected_action_trigger,
+            details={"resource_area_ids": observed_without_expected_action_trigger},
+        )
+    )
+    checks.append(
+        _check(
+            name="observed_specialist_reports_have_sow_scope",
+            passed=not missing_observed_resource_areas,
+            details={"resource_area_ids": missing_observed_resource_areas},
+        )
+    )
     checks.append(
         _check(
             name="at_least_one_resource_scope_selected",
@@ -216,15 +257,20 @@ def _select_resource_scopes(
 ) -> list[dict[str, Any]]:
     searchable_text = _searchable_text(intake)
     indicator_keys = _indicator_keys(intake)
+    expected_resource_area_ids = _expected_resource_area_ids(intake)
     project_type = _normalize_token(str(intake.get("project_type") or ""))
     selected = []
     for scope in _resource_scopes(resource_config):
         reasons: list[str] = []
+        scope_resource_area_ids = _resource_area_ids(scope.get("covered_resource_area_ids"))
         matched_terms = [
             term
             for term in _strings(scope.get("trigger_terms"))
             if term.lower() in searchable_text
         ]
+        matched_resource_areas = sorted(
+            expected_resource_area_ids.intersection(scope_resource_area_ids)
+        )
         matched_indicators = sorted(
             indicator_keys.intersection(
                 _normalize_token(value) for value in _strings(scope.get("trigger_indicator_keys"))
@@ -241,11 +287,14 @@ def _select_resource_scopes(
             reasons.append("trigger_terms")
         if matched_indicators:
             reasons.append("resource_indicators")
+        if matched_resource_areas:
+            reasons.append("proposed_action_resource_area")
         if reasons:
             item = dict(scope)
             item["selection_reasons"] = reasons
             item["matched_terms"] = matched_terms
             item["matched_indicator_keys"] = matched_indicators
+            item["matched_resource_area_ids"] = matched_resource_areas
             selected.append(item)
     return selected
 
@@ -265,6 +314,8 @@ def _build_package(
     created_at = _now()
     scope_records = [_scope_record(scope) for scope in selected_scopes]
     authority_matrix = _authority_matrix(scope_records)
+    resource_analysis_matrix = _resource_analysis_matrix(intake, scope_records)
+    observed_specialist_reports = _observed_specialist_reports(intake)
     manifest = {
         "artifact_paths": {
             "authority_inventory": str(authority_inventory_path),
@@ -289,8 +340,14 @@ def _build_package(
         "generator_version": GENERATOR_VERSION,
         "intake_summary": _intake_summary(intake),
         "manifest": manifest,
+        "missing_resource_area_requests": _missing_resource_area_requests(
+            resource_analysis_matrix
+        ),
+        "observed_specialist_reports": observed_specialist_reports,
         "project_id": project_id,
         "project_name": intake.get("project_name"),
+        "resource_analysis_matrix": resource_analysis_matrix,
+        "resource_analysis_matrix_count": len(resource_analysis_matrix),
         "resource_scope_count": len(scope_records),
         "resource_scope_records": scope_records,
         "schema_version": PACKAGE_SCHEMA_VERSION,
@@ -303,10 +360,16 @@ def _build_package(
 def _scope_record(scope: dict[str, Any]) -> dict[str, Any]:
     return {
         "authority_family_ids": _strings(scope.get("authority_family_ids")),
+        "covered_resource_area_ids": sorted(
+            _resource_area_ids(scope.get("covered_resource_area_ids"))
+        ),
         "data_needs": _strings(scope.get("data_needs")),
         "defensibility_checks": _strings(scope.get("defensibility_checks")),
         "discipline": scope.get("discipline"),
         "matched_indicator_keys": _strings(scope.get("matched_indicator_keys")),
+        "matched_resource_area_ids": sorted(
+            _resource_area_ids(scope.get("matched_resource_area_ids"))
+        ),
         "matched_terms": _strings(scope.get("matched_terms")),
         "required_deliverables": _strings(scope.get("required_deliverables")),
         "resource_name": scope.get("resource_name"),
@@ -332,6 +395,89 @@ def _authority_matrix(scope_records: list[dict[str, Any]]) -> list[dict[str, Any
     ]
 
 
+def _resource_analysis_matrix(
+    intake: dict[str, Any],
+    scope_records: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    expected_area_ids = _expected_resource_area_ids(intake)
+    observed_reports = _observed_specialist_reports(intake)
+    catalog = _resource_area_catalog(intake)
+    scope_ids_by_area: dict[str, list[str]] = {}
+    for scope in scope_records:
+        for area_id in scope["covered_resource_area_ids"]:
+            scope_ids_by_area.setdefault(area_id, []).append(str(scope["resource_scope_id"]))
+    reports_by_area: dict[str, list[dict[str, Any]]] = {}
+    for report in observed_reports:
+        for area_id in _resource_area_ids(report.get("resource_area_ids")):
+            reports_by_area.setdefault(area_id, []).append(
+                {
+                    "document_role": report.get("document_role"),
+                    "report_id": report.get("report_id"),
+                    "source_record_id": report.get("source_record_id"),
+                    "title": report.get("title"),
+                }
+            )
+    action_elements_by_area: dict[str, list[dict[str, str]]] = {}
+    for element in _proposed_action_elements(intake):
+        for area_id in _resource_area_ids(element.get("resource_area_ids")):
+            action_elements_by_area.setdefault(area_id, []).append(
+                {
+                    "action_element_id": str(element.get("action_element_id") or ""),
+                    "description": str(element.get("description") or ""),
+                }
+            )
+    resource_area_ids = sorted(
+        set(expected_area_ids) | set(reports_by_area) | set(scope_ids_by_area)
+    )
+    records = []
+    for area_id in resource_area_ids:
+        scope_ids = sorted(set(scope_ids_by_area.get(area_id, [])))
+        reports = sorted(
+            reports_by_area.get(area_id, []),
+            key=lambda item: str(item.get("report_id") or item.get("title") or ""),
+        )
+        expected = area_id in expected_area_ids
+        status = "covered"
+        if expected and not scope_ids:
+            status = "missing_sow_scope"
+        elif reports and not expected:
+            status = "observed_not_derived_from_proposed_action"
+        elif expected and not reports:
+            status = "sow_required_no_observed_report_in_calibration"
+        area = catalog.get(area_id, {})
+        records.append(
+            {
+                "actual_specialist_reports": reports,
+                "coverage_status": status,
+                "expected_from_proposed_action": expected,
+                "proposed_action_elements": action_elements_by_area.get(area_id, []),
+                "proposed_action_basis": _strings(area.get("proposed_action_basis")),
+                "resource_area_id": area_id,
+                "resource_area_name": area.get("resource_area_name")
+                or _title_from_id(area_id),
+                "selected_resource_scope_ids": scope_ids,
+            }
+        )
+    return records
+
+
+def _missing_resource_area_requests(
+    resource_analysis_matrix: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    requests = []
+    for record in resource_analysis_matrix:
+        if record["coverage_status"] == "missing_sow_scope":
+            requests.append(
+                {
+                    "request": "Confirm required specialist product or record location.",
+                    "resource_area_id": record["resource_area_id"],
+                    "resource_area_name": record["resource_area_name"],
+                    "status": record["coverage_status"],
+                }
+            )
+    return requests
+
+
 def _intake_summary(intake: dict[str, Any]) -> dict[str, Any]:
     return {
         "districts": _strings(intake.get("districts")),
@@ -340,8 +486,13 @@ def _intake_summary(intake: dict[str, Any]) -> dict[str, Any]:
         "forest_plan_profile": intake.get("forest_plan_profile"),
         "geography": _strings(intake.get("geography")),
         "nepa_level": intake.get("nepa_level"),
+        "observed_specialist_report_count": len(_observed_specialist_reports(intake)),
         "project_name": intake.get("project_name"),
+        "proposed_action_element_count": len(_proposed_action_elements(intake)),
         "project_type": intake.get("project_type"),
+        "proposed_action_resource_area_ids": sorted(
+            _expected_resource_area_ids(intake)
+        ),
         "resource_indicator_keys": sorted(_indicator_keys(intake)),
     }
 
@@ -364,6 +515,8 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"- Project type: `{intake.get('project_type')}`",
             f"- NEPA level: `{intake.get('nepa_level')}`",
             f"- Federal land action count: `{intake.get('federal_land_action_count')}`",
+            f"- Proposed action resource areas: `{len(intake.get('proposed_action_resource_area_ids') or [])}`",
+            f"- Observed specialist/supporting reports: `{intake.get('observed_specialist_report_count')}`",
             "",
             "## Resource Scopes",
         ]
@@ -377,6 +530,7 @@ def _render_markdown(package: dict[str, Any]) -> str:
                 f"- Scope ID: `{scope['resource_scope_id']}`",
                 f"- Discipline: `{scope['discipline']}`",
                 f"- Selection reasons: {', '.join(scope['selection_reasons'])}",
+                f"- Covered resource areas: {', '.join(f'`{item}`' for item in scope['covered_resource_area_ids'])}",
                 f"- Authority families: {', '.join(f'`{item}`' for item in scope['authority_family_ids'])}",
                 "",
                 "Tasks:",
@@ -394,6 +548,16 @@ def _render_markdown(package: dict[str, Any]) -> str:
         lines.append(
             f"- `{row['authority_family_id']}`: {', '.join(f'`{scope_id}`' for scope_id in row['resource_scope_ids'])}"
         )
+    lines.extend(["", "## Resource Analysis Coverage"])
+    for row in package["resource_analysis_matrix"]:
+        report_titles = [
+            str(report["title"]) for report in row["actual_specialist_reports"]
+        ]
+        lines.append(
+            f"- `{row['resource_area_id']}`: `{row['coverage_status']}`; "
+            f"SOW scopes: {', '.join(f'`{scope_id}`' for scope_id in row['selected_resource_scope_ids']) or 'none'}; "
+            f"reports: {', '.join(report_titles) or 'none observed'}"
+        )
     lines.extend(["", "## Validation"])
     for check in package["validation"]["checks"]:
         status = "passed" if check["passed"] else "failed"
@@ -403,6 +567,7 @@ def _render_markdown(package: dict[str, Any]) -> str:
 
 def _summary(
     *,
+    intake: dict[str, Any],
     project_id: str,
     source_set_id: str,
     package_dir: Path,
@@ -421,12 +586,17 @@ def _summary(
         },
         "output_written": False,
         "passed": validation["passed"],
+        "failed_validation_checks": [
+            check for check in validation["checks"] if not check["passed"]
+        ],
         "project_id": project_id,
+        "proposed_action_resource_area_count": len(_expected_resource_area_ids(intake)),
         "resource_scope_count": len(selected_scopes),
         "schema_version": "project-sow-package-summary-v0",
         "selected_resource_scope_ids": [
             str(scope.get("resource_scope_id")) for scope in selected_scopes
         ],
+        "selected_resource_area_ids": sorted(_covered_resource_area_ids(selected_scopes)),
         "source_set_id": source_set_id,
         "validation_failure_count": validation["failure_count"],
     }
@@ -469,9 +639,92 @@ def _authority_family_ids(authority_inventory: dict[str, Any]) -> set[str]:
 
 def _indicator_keys(intake: dict[str, Any]) -> set[str]:
     indicators = intake.get("resource_indicators")
-    if not isinstance(indicators, dict):
-        return set()
-    return {_normalize_token(str(key)) for key in indicators}
+    keys = set()
+    if isinstance(indicators, dict):
+        keys.update(_normalize_token(str(key)) for key in indicators)
+    for element in _proposed_action_elements(intake):
+        keys.update(
+            _normalize_token(value)
+            for value in _strings(element.get("resource_indicator_keys"))
+        )
+    return keys
+
+
+def _resource_area_catalog(intake: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    catalog: dict[str, dict[str, Any]] = {}
+    for area in _list(intake.get("resource_analysis_expectations")):
+        if isinstance(area, dict) and area.get("resource_area_id"):
+            area_id = _normalize_token(str(area["resource_area_id"]))
+            catalog[area_id] = {**area, "resource_area_id": area_id}
+    for element in _proposed_action_elements(intake):
+        for area_id in _resource_area_ids(element.get("resource_area_ids")):
+            catalog.setdefault(
+                area_id,
+                {
+                    "resource_area_id": area_id,
+                    "resource_area_name": _title_from_id(area_id),
+                },
+            )
+    return catalog
+
+
+def _expected_resource_area_ids(intake: dict[str, Any]) -> set[str]:
+    area_ids = _resource_area_ids(intake.get("expected_resource_area_ids"))
+    area_ids.update(_resource_area_catalog(intake))
+    for element in _proposed_action_elements(intake):
+        area_ids.update(_resource_area_ids(element.get("resource_area_ids")))
+    return area_ids
+
+
+def _covered_resource_area_ids(scopes: list[dict[str, Any]]) -> set[str]:
+    return {
+        area_id
+        for scope in scopes
+        for area_id in _resource_area_ids(scope.get("covered_resource_area_ids"))
+    }
+
+
+def _observed_report_resource_area_ids(intake: dict[str, Any]) -> set[str]:
+    return {
+        area_id
+        for report in _observed_specialist_reports(intake)
+        for area_id in _resource_area_ids(report.get("resource_area_ids"))
+    }
+
+
+def _proposed_action_elements(intake: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        element
+        for element in _list(intake.get("proposed_action_elements"))
+        if isinstance(element, dict)
+    ]
+
+
+def _observed_specialist_reports(intake: dict[str, Any]) -> list[dict[str, Any]]:
+    records = []
+    for report in _list(intake.get("observed_specialist_reports")):
+        if not isinstance(report, dict):
+            continue
+        records.append(
+            {
+                "document_role": report.get("document_role") or "specialist_report",
+                "report_id": report.get("report_id"),
+                "resource_area_ids": sorted(
+                    _resource_area_ids(report.get("resource_area_ids"))
+                ),
+                "source_record_id": report.get("source_record_id"),
+                "title": report.get("title"),
+            }
+        )
+    return records
+
+
+def _resource_area_ids(value: Any) -> set[str]:
+    return {_normalize_token(item) for item in _strings(value)}
+
+
+def _title_from_id(value: str) -> str:
+    return value.replace("_", " ").title()
 
 
 def _searchable_text(value: Any) -> str:

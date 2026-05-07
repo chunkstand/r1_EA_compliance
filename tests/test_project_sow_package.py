@@ -34,6 +34,7 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
         "cultural_tribal_resources",
         "hydrology_wetlands_water_quality",
         "roads_access_recreation_designated_areas",
+        "vegetation_soils_air_quality",
         "minerals_energy_hazardous_materials",
         "public_involvement_coordination",
     }.issubset(scope_ids)
@@ -46,9 +47,38 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert "land_exchange_statutory_authorities" in authority_ids
     assert "nfma_forest_planning_project_consistency" in authority_ids
 
+    resource_matrix = {
+        row["resource_area_id"]: row for row in package["resource_analysis_matrix"]
+    }
+    assert resource_matrix["aquatic_resources"]["actual_specialist_reports"][0]["title"] == (
+        "2024 Aquatics Report.pdf"
+    )
+    assert resource_matrix["climate_carbon"]["selected_resource_scope_ids"] == [
+        "vegetation_soils_air_quality"
+    ]
+    assert resource_matrix["climate_carbon"]["actual_specialist_reports"][0]["title"] == (
+        "2024 Carbon Summary.pdf"
+    )
+    assert resource_matrix["roads_trails_access"]["selected_resource_scope_ids"] == [
+        "roads_access_recreation_designated_areas"
+    ]
+    assert resource_matrix["tribal_relations"]["actual_specialist_reports"][0]["title"] == (
+        "2024 Tribal Relations.pdf"
+    )
+    observed_report_area_statuses = [
+        row["coverage_status"]
+        for row in package["resource_analysis_matrix"]
+        if row["actual_specialist_reports"]
+    ]
+    assert "missing_sow_scope" not in observed_report_area_statuses
+    assert "observed_not_derived_from_proposed_action" not in observed_report_area_statuses
+    assert package["missing_resource_area_requests"] == []
+
     markdown = result.markdown_path.read_text()
     assert "Requirements Package" in markdown
     assert "Lands, realty, and land exchange case requirements" in markdown
+    assert "Resource Analysis Coverage" in markdown
+    assert "2024 Carbon Summary.pdf" in markdown
     assert "This generated package scopes specialist work" in markdown
 
 
@@ -68,3 +98,42 @@ def test_project_sow_package_fails_unknown_authority_family(tmp_path: Path) -> N
     assert result.summary["passed"] is False
     assert result.summary["output_written"] is False
     assert result.summary["validation_failure_count"] == 1
+
+
+def test_project_sow_package_fails_when_observed_report_not_derived_from_action(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    intake["resource_analysis_expectations"] = [
+        row
+        for row in intake["resource_analysis_expectations"]
+        if row["resource_area_id"] != "climate_carbon"
+    ]
+    for element in intake["proposed_action_elements"]:
+        element["resource_area_ids"] = [
+            area_id
+            for area_id in element.get("resource_area_ids", [])
+            if area_id != "climate_carbon"
+        ]
+    intake_path = tmp_path / "missing_climate_action_intake.json"
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=intake_path,
+        output_dir=tmp_path / "source_library",
+    )
+
+    assert result.summary["passed"] is False
+    failed_checks = {
+        check["name"]: check
+        for check in result.summary["failed_validation_checks"]
+        if not check["passed"]
+    }
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {
+        "observed_specialist_reports_match_proposed_action_resource_areas"
+    }
+    assert failed_checks[
+        "observed_specialist_reports_match_proposed_action_resource_areas"
+    ]["details"] == {"resource_area_ids": ["climate_carbon"]}

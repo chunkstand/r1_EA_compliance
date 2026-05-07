@@ -9,6 +9,11 @@
         "forest_service_nepa_current_policy_directives",
         "administrative_review_final_agency_action"
       ],
+      "covered_resource_area_ids": [
+        "alternatives",
+        "decision_record",
+        "nepa_project_management"
+      ],
       "data_needs": [
         "Project name, forest, district, responsible official, and proponent",
         "Purpose and need, proposed action, no-action baseline, and preliminary alternatives",
@@ -39,6 +44,14 @@
         "land_exchange_statutory_authorities",
         "land_exchange_regulatory_requirements",
         "land_exchange_fs_policy_and_project_references"
+      ],
+      "covered_resource_area_ids": [
+        "federal_land_regulations",
+        "grazing_permits_and_leases",
+        "hazardous_materials",
+        "land_exchange_case",
+        "land_special_use_authorizations",
+        "water_rights"
       ],
       "data_needs": [
         "Federal and non-federal parcel descriptions, acres, estate interests, reservations, and outstanding rights",
@@ -85,6 +98,9 @@
         "region1_forest_plan_source_records",
         "nfma_forest_planning_project_consistency"
       ],
+      "covered_resource_area_ids": [
+        "land_management_plan_consistency"
+      ],
       "data_needs": [
         "Forest plan profile, forest unit, district, geographic areas, management areas, and overlays",
         "Forest Plan standards, guidelines, desired conditions, objectives, and suitability direction potentially touched by the action",
@@ -125,6 +141,11 @@
         "species_supporting_sources_and_overlays",
         "eagle_efh_and_special_wildlife_sources",
         "migratory_bird_authorities"
+      ],
+      "covered_resource_area_ids": [
+        "botanical_resources",
+        "species_consultation",
+        "wildlife_resources"
       ],
       "data_needs": [
         "Listed, proposed, candidate, sensitive, and species-of-conservation-concern screens",
@@ -176,6 +197,10 @@
         "cultural_resource_protection_and_state_shpo_sources",
         "tribal_consultation_trust_sacred_sites"
       ],
+      "covered_resource_area_ids": [
+        "cultural_resources",
+        "tribal_relations"
+      ],
       "data_needs": [
         "Area of potential effects, known sites, survey status, and confidentiality limits",
         "SHPO/THPO, tribal consultation, treaty rights, sacred sites, and traditional cultural property indicators",
@@ -224,10 +249,15 @@
         "floodplain_management_eo11988",
         "wetlands_protection_eo11990"
       ],
+      "covered_resource_area_ids": [
+        "aquatic_resources",
+        "floodplains_wetlands",
+        "water_quality"
+      ],
       "data_needs": [
-        "Waters of the United States, wetlands, floodplains, riparian areas, and groundwater/drinking-water indicators",
-        "Dredge, fill, discharge, crossing, culvert, road, trail, construction, and mitigation assumptions",
-        "Permit, certification, avoidance, minimization, and mitigation requirements"
+        "Waters of the United States, wetlands, floodplains, riparian areas, aquatic habitat, and groundwater/drinking-water indicators",
+        "Dredge, fill, discharge, crossing, culvert, road, trail, construction, fish, trout, and mitigation assumptions",
+        "Permit, certification, avoidance, minimization, mitigation, aquatic habitat, and water-quality requirements"
       ],
       "defensibility_checks": [
         "Wetland, WOTUS, floodplain, and water-quality triggers are each resolved.",
@@ -248,6 +278,9 @@
         "Tie water-resource analysis to specific action elements, locations, and implementation commitments."
       ],
       "trigger_indicator_keys": [
+        "aquatics",
+        "fish",
+        "fisheries",
         "wetlands",
         "water",
         "floodplain",
@@ -258,6 +291,11 @@
         "waters of the United States",
         "WOTUS",
         "stream",
+        "aquatic",
+        "fish",
+        "fisheries",
+        "trout",
+        "lake",
         "riparian",
         "floodplain",
         "dredge",
@@ -273,6 +311,12 @@
         "roads_access_special_use_action_authorities",
         "wilderness_wsr_trails_designated_areas",
         "roadless_rule_authorities"
+      ],
+      "covered_resource_area_ids": [
+        "developed_dispersed_recreation",
+        "recreation_special_designations",
+        "recreation_special_uses",
+        "roads_trails_access"
       ],
       "data_needs": [
         "Road, trail, access, right-of-way, special-use, closure, construction, and maintenance action elements",
@@ -326,10 +370,15 @@
         "vegetation_wildfire_forest_health_authorities",
         "clean_air_act_conformity_air_quality"
       ],
+      "covered_resource_area_ids": [
+        "climate_carbon",
+        "soil_resources",
+        "vegetation_resources"
+      ],
       "data_needs": [
-        "Vegetation treatment, fuels, prescribed fire, timber, forest health, invasive species, pesticide/herbicide, soils, and air-quality indicators",
-        "Treatment units, equipment, timing, burn/smoke assumptions, erosion control, revegetation, and restoration commitments",
-        "Air-quality, smoke, soil productivity, noxious weed, and invasive species prevention requirements"
+        "Vegetation treatment, fuels, prescribed fire, timber, forest health, invasive species, pesticide/herbicide, soils, air-quality, climate, and carbon indicators",
+        "Treatment units, equipment, timing, burn/smoke assumptions, erosion control, carbon storage or sequestration context, revegetation, and restoration commitments",
+        "Air-quality, greenhouse gas, carbon, smoke, soil productivity, noxious weed, and invasive species prevention requirements"
       ],
       "defensibility_checks": [
         "Treatment methods and affected resources are separated from background forest-health discussion.",
@@ -342,22 +391,29 @@
         "Soils and invasive species prevention plan scope",
         "Air-quality and smoke coordination screen"
       ],
-      "resource_name": "Vegetation, fuels, soils, invasive species, and air quality",
+      "resource_name": "Vegetation, fuels, soils, air quality, climate, and carbon",
       "resource_scope_id": "vegetation_soils_air_quality",
       "sow_tasks": [
-        "Screen vegetation, fuels, prescribed fire, timber, soils, invasive species, pesticide/herbicide, and air-quality triggers.",
-        "Define treatment-unit, method, timing, equipment, smoke, erosion, restoration, and monitoring deliverables.",
+        "Screen vegetation, fuels, prescribed fire, timber, soils, invasive species, pesticide/herbicide, air-quality, climate, and carbon triggers.",
+        "Define treatment-unit, method, timing, equipment, smoke, carbon, erosion, restoration, and monitoring deliverables.",
         "Tie prevention and mitigation commitments to the action elements that create the need."
       ],
       "trigger_indicator_keys": [
+        "carbon",
+        "climate",
         "vegetation",
         "fuels",
         "timber",
         "soils",
         "air_quality",
+        "greenhouse_gas",
         "invasive_species"
       ],
       "trigger_terms": [
+        "carbon",
+        "climate",
+        "greenhouse gas",
+        "sequestration",
         "vegetation management",
         "fuels treatment",
         "prescribed fire",
@@ -377,6 +433,10 @@
       "authority_family_ids": [
         "minerals_energy_authorities",
         "hazardous_materials_site_condition"
+      ],
+      "covered_resource_area_ids": [
+        "geology_minerals",
+        "hazardous_materials"
       ],
       "data_needs": [
         "Mineral estate, reserved minerals, mining claims, energy uses, hazardous materials, contamination, and due-diligence records",
@@ -428,6 +488,10 @@
         "usda_nepa_procedures_7cfr_part_1b",
         "forest_service_nepa_current_policy_directives",
         "administrative_review_final_agency_action"
+      ],
+      "covered_resource_area_ids": [
+        "agencies_persons_consulted",
+        "public_involvement"
       ],
       "data_needs": [
         "Stakeholders, tribes, counties, agencies, adjacent landowners, permittees, and interested publics",

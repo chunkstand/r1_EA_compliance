@@ -2334,14 +2334,23 @@ The generated artifact family includes:
 machine-readable package. The Markdown rendering must derive from that JSON. The report includes:
 
 - `intake_summary`, including forest, districts, project type, NEPA level, geography, forest-plan
-  profile, federal land action count, and resource indicator keys;
+  profile, federal land action count, proposed-action element count, proposed-action resource
+  area IDs, observed specialist/supporting report count, and resource indicator keys;
 - `resource_scope_records[]`, with `resource_scope_id`, discipline, selected authority families,
-  selection reasons, matched terms or resource indicators, SOW tasks, data needs, deliverables, and
-  defensibility checks;
+  covered resource-area IDs, selection reasons, matched terms, matched resource areas or resource
+  indicators, SOW tasks, data needs, deliverables, and defensibility checks;
+- `resource_analysis_matrix[]`, comparing proposed-action-derived resource areas to selected SOW
+  scopes and, when supplied by the intake, observed specialist or supporting reports from a
+  completed example package;
+- `observed_specialist_reports[]`, preserving the example report title, source record ID, document
+  role, and covered resource-area IDs supplied by the intake;
+- `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
+  scope coverage;
 - `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;
 - `validation`, with fail-closed checks for required intake fields, supported intake schema,
-  resource-scope config integrity, authority-family resolution, selected scope count, and SOW
-  content presence;
+  resource-scope config integrity, authority-family resolution, proposed-action resource-area
+  coverage, observed specialist-report comparison coverage, selected scope count, and SOW content
+  presence;
 - `manifest`, with input paths and SHA-256 hashes for the intake, resource-scope config, and
   authority-family inventory.
 
@@ -2349,6 +2358,7 @@ machine-readable package. The Markdown rendering must derive from that JSON. The
 data, not hidden runtime branches. Each scope can define:
 
 - `resource_scope_id`, `resource_name`, and `discipline`;
+- `covered_resource_area_ids`, which define the resource-analysis areas this SOW can satisfy;
 - `always_required` or `required_for_project_types`;
 - `trigger_terms` and `trigger_indicator_keys`;
 - `authority_family_ids` from `config/authority_universe_families_nepa_ea_v1.json`;
@@ -2358,6 +2368,11 @@ The initial checked-in intake fixture at
 `config/fixtures/project_sow/east_crazies_land_exchange_intake.json` has schema version
 `project-sow-intake-v0`. A reviewer-ready intake must include at least project ID, project name,
 forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
+The East Crazies calibration fixture also records structured `proposed_action_elements`,
+`resource_analysis_expectations`, and the actual specialist/supporting reports observed in the
+completed East Crazies package, including minerals, aquatics, at-risk plants/botany, carbon,
+cultural resources, recreation special areas, recreation special uses, roads/trails/access, tribal
+relations, wetlands, wildlife, water rights, and the plan-consistency table.
 
 Project SOW package validation must fail closed on:
 
@@ -2366,6 +2381,12 @@ Project SOW package validation must fail closed on:
 - missing or empty resource-scope config;
 - duplicate resource scope IDs;
 - resource scopes that reference unknown authority-family IDs;
+- proposed-action resource areas that no configured SOW scope can satisfy;
+- proposed-action resource areas that are not selected into the package;
+- observed specialist/supporting reports whose resource areas were not derived from the proposed
+  action;
+- observed specialist/supporting reports whose resource areas do not have selected SOW scope
+  coverage;
 - no selected resource scope;
 - selected resource scopes that lack SOW tasks or deliverables.
 

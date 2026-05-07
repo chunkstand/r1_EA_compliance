@@ -48,10 +48,25 @@
       "right-of-way",
       "public easements"
     ],
+    "aquatics": [
+      "perennial streams",
+      "trout-bearing streams",
+      "recreational fishing"
+    ],
+    "carbon": [
+      "climate change",
+      "carbon storage",
+      "carbon sequestration"
+    ],
     "cultural": [
       "tribal cultural landscape",
       "historic properties",
       "archaeological resources"
+    ],
+    "designated_areas": [
+      "inventoried roadless area",
+      "backcountry area",
+      "recommended wilderness"
     ],
     "hazardous_materials": [
       "phase I environmental site assessment",
@@ -70,11 +85,494 @@
       "whitebark pine",
       "sensitive species"
     ],
+    "special_uses": [
+      "land special use authorizations",
+      "recreation special use authorizations",
+      "outfitter guide permits"
+    ],
+    "tribal": [
+      "Crow tribal cultural landscape",
+      "government-to-government consultation",
+      "sacred sites"
+    ],
     "water": [
       "wetlands",
       "streams",
-      "riparian areas"
+      "riparian areas",
+      "water rights"
     ]
   },
+  "proposed_action_elements": [
+    {
+      "action_element_id": "land_exchange_acres",
+      "description": "Exchange federal and non-federal parcels in the East Crazy Mountains and Inspiration Divide areas on an equal-value basis.",
+      "resource_area_ids": [
+        "land_exchange_case",
+        "federal_land_regulations",
+        "land_management_plan_consistency"
+      ],
+      "resource_indicator_keys": [
+        "lands_realty",
+        "forest_plan"
+      ]
+    },
+    {
+      "action_element_id": "water_rights_transfer",
+      "description": "Transfer, split, reserve, or update water rights associated with federal and non-federal parcels.",
+      "resource_area_ids": [
+        "water_rights",
+        "water_quality"
+      ],
+      "resource_indicator_keys": [
+        "water"
+      ]
+    },
+    {
+      "action_element_id": "designated_area_ownership_changes",
+      "description": "Move parcels into or out of the Crazy Mountain Inventoried Roadless Area, Crazy Mountains Backcountry Area, Madison Roadless Area, and South Crazy Mountain Recommended Wilderness context.",
+      "resource_area_ids": [
+        "recreation_special_designations"
+      ],
+      "resource_indicator_keys": [
+        "designated_areas",
+        "recreation"
+      ]
+    },
+    {
+      "action_element_id": "trail_road_access_commitments",
+      "description": "Reserve road and trail easements, construct Sweet Trunk Trail No. 274, relocate Inspiration Divide Trail No. 8, and improve Big Timber Canyon Trailhead.",
+      "resource_area_ids": [
+        "roads_trails_access",
+        "developed_dispersed_recreation"
+      ],
+      "resource_indicator_keys": [
+        "access",
+        "roads",
+        "trails",
+        "recreation"
+      ]
+    },
+    {
+      "action_element_id": "special_use_authorizations",
+      "description": "Review affected lands special use authorizations, recreation special use authorizations, and outfitter-guide permits.",
+      "resource_area_ids": [
+        "land_special_use_authorizations",
+        "recreation_special_uses"
+      ],
+      "resource_indicator_keys": [
+        "special_uses",
+        "recreation"
+      ]
+    },
+    {
+      "action_element_id": "wetland_deed_restrictions",
+      "description": "Retain or restrict high-value wetlands, riparian areas, and monitoring access through boundary changes and deed restrictions.",
+      "resource_area_ids": [
+        "floodplains_wetlands",
+        "water_quality"
+      ],
+      "resource_indicator_keys": [
+        "wetlands",
+        "water"
+      ]
+    },
+    {
+      "action_element_id": "aquatic_habitat_ownership_changes",
+      "description": "Analyze ownership changes to perennial streams, trout-bearing stream miles, lake acres, and recreational fishing opportunities.",
+      "resource_area_ids": [
+        "aquatic_resources"
+      ],
+      "resource_indicator_keys": [
+        "aquatics",
+        "fish",
+        "water"
+      ]
+    },
+    {
+      "action_element_id": "wildlife_species_habitat",
+      "description": "Analyze habitat and consultation implications for grizzly bear, Canada lynx, wolverine, whitebark pine, big game, and other wildlife.",
+      "resource_area_ids": [
+        "species_consultation",
+        "wildlife_resources"
+      ],
+      "resource_indicator_keys": [
+        "species",
+        "wildlife",
+        "habitat"
+      ]
+    },
+    {
+      "action_element_id": "botanical_resources",
+      "description": "Analyze at-risk plants and whitebark pine effects associated with trail work, land ownership change, and management commitments.",
+      "resource_area_ids": [
+        "botanical_resources",
+        "species_consultation"
+      ],
+      "resource_indicator_keys": [
+        "botany",
+        "species"
+      ]
+    },
+    {
+      "action_element_id": "cultural_resource_protection",
+      "description": "Protect identified cultural resources on federal lands leaving federal ownership through patent reservations and monitoring access.",
+      "resource_area_ids": [
+        "cultural_resources"
+      ],
+      "resource_indicator_keys": [
+        "cultural",
+        "heritage"
+      ]
+    },
+    {
+      "action_element_id": "tribal_relations",
+      "description": "Consult with Tribal Nations regarding the Crazy Mountains tribal cultural landscape, sacred sites, treaty rights, and traditional cultural practices.",
+      "resource_area_ids": [
+        "tribal_relations"
+      ],
+      "resource_indicator_keys": [
+        "tribal"
+      ]
+    },
+    {
+      "action_element_id": "mineral_estate",
+      "description": "Resolve federal and non-federal mineral estate ownership, outstanding mineral rights, mineral potential, and BLM concurrence.",
+      "resource_area_ids": [
+        "geology_minerals"
+      ],
+      "resource_indicator_keys": [
+        "minerals"
+      ]
+    },
+    {
+      "action_element_id": "grazing_and_improvements",
+      "description": "Identify affected grazing allotments, term permits, fences, roads, irrigation ditches, and related improvements.",
+      "resource_area_ids": [
+        "grazing_permits_and_leases"
+      ],
+      "resource_indicator_keys": [
+        "grazing",
+        "lands_realty"
+      ]
+    },
+    {
+      "action_element_id": "hazardous_materials_due_diligence",
+      "description": "Complete hazardous-materials and site-condition due diligence before conveyance.",
+      "resource_area_ids": [
+        "hazardous_materials"
+      ],
+      "resource_indicator_keys": [
+        "hazardous_materials"
+      ]
+    },
+    {
+      "action_element_id": "climate_carbon_analysis",
+      "description": "Address climate-change context and carbon storage or sequestration implications for the land exchange.",
+      "resource_area_ids": [
+        "climate_carbon"
+      ],
+      "resource_indicator_keys": [
+        "carbon",
+        "climate"
+      ]
+    },
+    {
+      "action_element_id": "public_involvement_and_coordination",
+      "description": "Track scoping, public comments, agency coordination, interested parties, permits, and administrative review requirements.",
+      "resource_area_ids": [
+        "agencies_persons_consulted",
+        "public_involvement"
+      ],
+      "resource_indicator_keys": [
+        "public_involvement"
+      ]
+    }
+  ],
+  "resource_analysis_expectations": [
+    {
+      "proposed_action_basis": [
+        "Equal-value land exchange and land adjustment decision pathway"
+      ],
+      "resource_area_id": "land_exchange_case",
+      "resource_area_name": "Lands, realty, and land exchange case"
+    },
+    {
+      "proposed_action_basis": [
+        "General Exchange Act, FLPMA, land exchange regulations, and Forest Service land exchange policy"
+      ],
+      "resource_area_id": "federal_land_regulations",
+      "resource_area_name": "Federal land regulations"
+    },
+    {
+      "proposed_action_basis": [
+        "Project consistency with Custer Gallatin Land Management Plan direction"
+      ],
+      "resource_area_id": "land_management_plan_consistency",
+      "resource_area_name": "Land Management Plan consistency"
+    },
+    {
+      "proposed_action_basis": [
+        "Water rights transfer, split ownership, reservation, amendment, or no-change findings"
+      ],
+      "resource_area_id": "water_rights",
+      "resource_area_name": "Water rights"
+    },
+    {
+      "proposed_action_basis": [
+        "Ownership changes in roadless, backcountry, and recommended wilderness contexts"
+      ],
+      "resource_area_id": "recreation_special_designations",
+      "resource_area_name": "Recreation special designations"
+    },
+    {
+      "proposed_action_basis": [
+        "Road, trail, easement, trailhead, and access commitments"
+      ],
+      "resource_area_id": "roads_trails_access",
+      "resource_area_name": "Roads, trails, and access"
+    },
+    {
+      "proposed_action_basis": [
+        "Dispersed recreation, hunting, fishing, trail, snowmobile, and trailhead effects"
+      ],
+      "resource_area_id": "developed_dispersed_recreation",
+      "resource_area_name": "Developed and dispersed recreation"
+    },
+    {
+      "proposed_action_basis": [
+        "Recreation special use authorizations and outfitter-guide permit effects"
+      ],
+      "resource_area_id": "recreation_special_uses",
+      "resource_area_name": "Recreation special uses"
+    },
+    {
+      "proposed_action_basis": [
+        "Wildlife habitat, big game, lynx, grizzly bear, wolverine, and other species effects"
+      ],
+      "resource_area_id": "wildlife_resources",
+      "resource_area_name": "Wildlife resources"
+    },
+    {
+      "proposed_action_basis": [
+        "ESA consultation and listed/proposed species determinations"
+      ],
+      "resource_area_id": "species_consultation",
+      "resource_area_name": "Species consultation"
+    },
+    {
+      "proposed_action_basis": [
+        "Perennial streams, trout-bearing streams, lake acres, and recreational fishing effects"
+      ],
+      "resource_area_id": "aquatic_resources",
+      "resource_area_name": "Aquatic resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Wetland retention, deed restrictions, floodplains, and riparian resources"
+      ],
+      "resource_area_id": "floodplains_wetlands",
+      "resource_area_name": "Floodplains and wetlands"
+    },
+    {
+      "proposed_action_basis": [
+        "Construction, road/trail, stream, wetland, and water-quality implications"
+      ],
+      "resource_area_id": "water_quality",
+      "resource_area_name": "Water quality"
+    },
+    {
+      "proposed_action_basis": [
+        "Historic properties, archaeological sites, patent reservations, and monitoring access"
+      ],
+      "resource_area_id": "cultural_resources",
+      "resource_area_name": "Cultural resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Tribal cultural landscape, treaty rights, sacred sites, and government-to-government consultation"
+      ],
+      "resource_area_id": "tribal_relations",
+      "resource_area_name": "Tribal relations"
+    },
+    {
+      "proposed_action_basis": [
+        "Federal and non-federal mineral estate ownership, outstanding rights, mineral potential, and BLM concurrence"
+      ],
+      "resource_area_id": "geology_minerals",
+      "resource_area_name": "Geology and minerals"
+    },
+    {
+      "proposed_action_basis": [
+        "At-risk plants, whitebark pine, and botanical mitigation or survey commitments"
+      ],
+      "resource_area_id": "botanical_resources",
+      "resource_area_name": "Botanical resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Climate-change context and carbon storage or sequestration analysis"
+      ],
+      "resource_area_id": "climate_carbon",
+      "resource_area_name": "Climate and carbon"
+    },
+    {
+      "proposed_action_basis": [
+        "Hazardous-materials and site-condition due diligence before conveyance"
+      ],
+      "resource_area_id": "hazardous_materials",
+      "resource_area_name": "Hazardous materials"
+    },
+    {
+      "proposed_action_basis": [
+        "Affected grazing allotments, permits, fences, roads, irrigation ditches, and other improvements"
+      ],
+      "resource_area_id": "grazing_permits_and_leases",
+      "resource_area_name": "Grazing permits and leases"
+    },
+    {
+      "proposed_action_basis": [
+        "Land special use authorizations affected by lands leaving or entering federal ownership"
+      ],
+      "resource_area_id": "land_special_use_authorizations",
+      "resource_area_name": "Land special use authorizations"
+    },
+    {
+      "proposed_action_basis": [
+        "Scoping, agencies/persons consulted, public involvement, and administrative review"
+      ],
+      "resource_area_id": "public_involvement",
+      "resource_area_name": "Public involvement"
+    },
+    {
+      "proposed_action_basis": [
+        "Agency and person consultation roster needed for the project record"
+      ],
+      "resource_area_id": "agencies_persons_consulted",
+      "resource_area_name": "Agencies and persons consulted"
+    }
+  ],
+  "observed_specialist_reports": [
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-mineral-potential-report-2023",
+      "resource_area_ids": [
+        "geology_minerals"
+      ],
+      "source_record_id": "EA-PACKAGE-005",
+      "title": "2023 Mineral Potential Report.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-aquatics-report-2024",
+      "resource_area_ids": [
+        "aquatic_resources"
+      ],
+      "source_record_id": "EA-PACKAGE-006",
+      "title": "2024 Aquatics Report.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-at-risk-plants-botany-report-2024",
+      "resource_area_ids": [
+        "botanical_resources",
+        "species_consultation"
+      ],
+      "source_record_id": "EA-PACKAGE-007",
+      "title": "2024 At Risk Plants Botany Report.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-carbon-summary-2024",
+      "resource_area_ids": [
+        "climate_carbon"
+      ],
+      "source_record_id": "EA-PACKAGE-008",
+      "title": "2024 Carbon Summary.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-cultural-resources-2024",
+      "resource_area_ids": [
+        "cultural_resources"
+      ],
+      "source_record_id": "EA-PACKAGE-009",
+      "title": "2024 Cultural Resources.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-recreation-special-areas-2024",
+      "resource_area_ids": [
+        "recreation_special_designations"
+      ],
+      "source_record_id": "EA-PACKAGE-010",
+      "title": "2024 Recreation Special Areas.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-recreation-special-uses-2024",
+      "resource_area_ids": [
+        "developed_dispersed_recreation",
+        "recreation_special_uses"
+      ],
+      "source_record_id": "EA-PACKAGE-011",
+      "title": "2024 Recreation Special Uses.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-roads-trails-access-2024",
+      "resource_area_ids": [
+        "roads_trails_access"
+      ],
+      "source_record_id": "EA-PACKAGE-012",
+      "title": "2024 Roads Trails Access.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-tribal-relations-2024",
+      "resource_area_ids": [
+        "tribal_relations"
+      ],
+      "source_record_id": "EA-PACKAGE-013",
+      "title": "2024 Tribal Relations.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-wetlands-report-2024",
+      "resource_area_ids": [
+        "floodplains_wetlands",
+        "water_quality"
+      ],
+      "source_record_id": "EA-PACKAGE-014",
+      "title": "2024 Wetlands Report.pdf"
+    },
+    {
+      "document_role": "specialist_report",
+      "report_id": "ecid-wildlife-report-2024",
+      "resource_area_ids": [
+        "species_consultation",
+        "wildlife_resources"
+      ],
+      "source_record_id": "EA-PACKAGE-015",
+      "title": "2024 Wildlife Report.pdf"
+    },
+    {
+      "document_role": "supporting_analysis",
+      "report_id": "ecid-water-rights-assessment",
+      "resource_area_ids": [
+        "water_rights"
+      ],
+      "source_record_id": "EA-PACKAGE-039",
+      "title": "Water Rights Assessment.pdf"
+    },
+    {
+      "document_role": "supporting_analysis",
+      "report_id": "ecid-plan-consistency-table",
+      "resource_area_ids": [
+        "land_management_plan_consistency"
+      ],
+      "source_record_id": "EA-PACKAGE-042",
+      "title": "Plan Consistency Table.pdf"
+    }
+  ],
   "schema_version": "project-sow-intake-v0"
 }

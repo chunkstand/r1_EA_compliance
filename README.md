@@ -144,7 +144,8 @@ report sequence; Sequence 5 has closed the milestone by making the generated Eas
 JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
 keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
-proposed-action intake into resource SOW requirements before review artifacts exist. See
+proposed-action intake into resource SOW requirements and, for the East Crazies calibration fixture,
+compares proposed-action resource areas to the actual specialist/supporting reports produced. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific

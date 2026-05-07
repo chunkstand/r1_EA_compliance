@@ -9,7 +9,7 @@ Branch/worktree:
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
 
-Sequence 1 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
+Sequence 2 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
 
@@ -34,14 +34,24 @@ Implemented surfaces:
 The command writes `project_sow_package.json`, `project_sow_package.md`, and
 `project_sow_package_manifest.json` under
 `source_library/projects/<project_id>/requirements_package/`. A local CLI smoke run to `/tmp`
-selected nine East Crazies land-exchange resource scopes: NEPA project management, lands/realty,
+selected ten East Crazies land-exchange resource scopes: NEPA project management, lands/realty,
 Forest Plan consistency, wildlife/species/botany, cultural/tribal, hydrology/wetlands/water
-quality, roads/access/recreation/designated areas, minerals/energy/hazardous materials, and public
-involvement/coordination.
+quality, roads/access/recreation/designated areas, vegetation/soils/air-quality/climate/carbon,
+minerals/energy/hazardous materials, and public involvement/coordination.
 
-Next sequence: add richer intake evidence contracts and optional PDF rendering only after this
-contract slice is reviewed. Do not convert SOW scopes into applicability or compliance findings in
-this lane.
+Sequence 2 added an East Crazies calibration comparison. The intake now records structured
+`proposed_action_elements`, `resource_analysis_expectations`, and observed specialist/supporting
+reports from the completed East Crazies package. The generated JSON/Markdown now includes a
+`resource_analysis_matrix` that compares proposed-action-derived resource areas to selected SOW
+scopes and the observed report set: mineral potential, aquatics, at-risk plants/botany, carbon,
+cultural resources, recreation special areas, recreation special uses, roads/trails/access, tribal
+relations, wetlands, wildlife, water rights, and the plan-consistency table. Validation fails if an
+observed report resource area is not derived from the proposed action or lacks selected SOW scope
+coverage.
+
+Next sequence: add richer intake evidence references and optional PDF rendering only after this
+resource-analysis coverage slice is reviewed. Do not convert SOW scopes into applicability or
+compliance findings in this lane.
 
 ## Current Applicability/Expansion Handoff
 

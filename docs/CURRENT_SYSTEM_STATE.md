@@ -445,7 +445,7 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package Sequence 1 is implemented as an upstream planning lane for proposed-action
+Project SOW package Sequence 2 is implemented as an upstream planning lane for proposed-action
 intake before a complete EA review package exists. The public command is:
 
 ```bash
@@ -464,19 +464,30 @@ at `config/project_sow_resource_scopes_v1.json`, and
 - `project_sow_package_manifest.json`
 
 The package scopes resource-specialist work needed to prepare a defensible EA package. It selects
-resource scopes from explicit intake fields, project type, trigger terms, and resource indicator
-keys, then records SOW tasks, data needs, deliverables, defensibility checks, selected authority
-families, and an authority-to-resource matrix. The first checked-in intake fixture is the East
-Crazies land-exchange proposed action and currently selects nine resource scopes: NEPA project
-management, lands/realty land exchange, Forest Plan consistency, wildlife/species/botany,
-cultural/tribal resources, hydrology/wetlands/water quality, roads/access/recreation/designated
-areas, minerals/energy/hazardous materials, and public involvement/coordination.
+resource scopes from explicit intake fields, project type, trigger terms, resource indicator keys,
+and proposed-action resource-area IDs, then records SOW tasks, data needs, deliverables,
+defensibility checks, selected authority families, an authority-to-resource matrix, and a
+resource-analysis coverage matrix. The first checked-in intake fixture is the East Crazies
+land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
+lands/realty land exchange, Forest Plan consistency, wildlife/species/botany, cultural/tribal
+resources, hydrology/wetlands/water quality, roads/access/recreation/designated areas,
+vegetation/soils/air-quality/climate/carbon, minerals/energy/hazardous materials, and public
+involvement/coordination.
+
+The East Crazies fixture now also compares proposed-action-derived resource areas to the actual
+specialist/supporting reports observed in the completed package: mineral potential, aquatics,
+at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation special
+uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the
+plan-consistency table. Validation requires every observed report resource area to have selected
+SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
 Validation fails closed on missing required intake fields, unsupported intake schema, empty or
-duplicated resource-scope config, unknown authority-family IDs, no selected resource scopes, or
-selected scopes without SOW content.
+duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
+cannot resolve to selected SOW scope coverage, observed specialist-report resource areas that are
+not derived from the proposed action or lack selected SOW scope coverage, no selected resource
+scopes, or selected scopes without SOW content.
 
 ## Verified State Snapshot
 
