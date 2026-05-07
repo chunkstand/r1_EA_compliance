@@ -45,6 +45,10 @@ an authority-to-report crosswalk requirement so the generated SOW is tied to def
 report production. The fieldwork section has also been tightened to source-triggered surveys:
 soil-survey/activity-area delineation, detrimental soil disturbance, CWD/organic substrate where
 triggered, slope/equipment/unstable-area constraints, and waterbody/BMP interfaces.
+The analysis section now uses Appendix A as the authority-to-report control table; the appendix
+provides the actual crosswalk from NEPA/USDA NEPA procedures, NFMA/planning-rule consistency,
+Forest Plan soil components, Region 1 soil direction, soil-disturbance protocols, SSURGO, BMPs, and
+East Crazies action elements to required report outputs and acceptance tests.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.
