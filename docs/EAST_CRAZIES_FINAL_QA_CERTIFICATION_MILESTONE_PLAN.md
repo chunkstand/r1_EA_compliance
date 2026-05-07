@@ -191,7 +191,10 @@ Status: complete as of the 2026-05-07 Sequence 1 pass. The tracked contract now 
 fixture lives in `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`, and the
 synthetic schema fixture lives in `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`.
 `docs/OUTPUT_SCHEMAS.md` documents the artifact family and fail-closed categories before generator
-code exists.
+code exists. The Sequence 1 gap-close pass tightened the contract so every scalar expected-summary
+count must appear in `required_count_fields`, config and expected-summary section/output/failure
+contracts must stay aligned, and `validation_expectations` explicitly maps the acceptance criteria
+to fail-closed categories before runtime validation exists.
 
 Sequence 2 should add `src/usfs_r1_ea_sources/final_qa_certification.py`,
 `src/usfs_r1_ea_sources/cli_final_qa.py`, CLI registration, and generated JSON/Markdown/PDF/manifest

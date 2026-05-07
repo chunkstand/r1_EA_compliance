@@ -2401,7 +2401,9 @@ matrix/PDF/review, Forest Plan context summary, and Forest Plan component eval.
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set
 IDs, required gate names, required count fields, artifact selectors, caveat text, reviewer signoff
 fields, prohibited certification phrases, rendering requirements, manual-draft policy, and
-fail-closed categories.
+fail-closed categories. Its `required_count_fields` must cover every scalar expected-summary count,
+and its `validation_expectations` map the Sequence 1 acceptance criteria to the failure categories
+that later runtime validation must use.
 
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json` has schema version
 `east-crazies-final-qa-expected-summary-v1`. It locks current East Crazies semantic counts, source

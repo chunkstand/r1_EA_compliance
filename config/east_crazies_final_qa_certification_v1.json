@@ -119,6 +119,30 @@
   ],
   "required_count_fields": [
     {
+      "field": "package_file_count",
+      "expected": 43,
+      "source_selector": "review_boundary.package_file_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "package_chunk_count",
+      "expected": 1265,
+      "source_selector": "review_boundary.package_chunk_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "baseline_source_record_count",
+      "expected": 26,
+      "source_selector": "review_boundary.baseline_source_record_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "candidate_authority_count",
+      "expected": 373,
+      "source_selector": "applicability_partition.candidate_authority_count",
+      "failure_category": "count_drift"
+    },
+    {
       "field": "applicable_authority_count",
       "expected": 33,
       "source_selector": "applicability_partition.applicable_authority_count",
@@ -137,9 +161,21 @@
       "failure_category": "unresolved_reviewer_item"
     },
     {
+      "field": "generated_rule_count",
+      "expected": 33,
+      "source_selector": "finding_qa.generated_rule_count",
+      "failure_category": "count_drift"
+    },
+    {
       "field": "authority_finding_count",
       "expected": 33,
       "source_selector": "finding_qa.authority_finding_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "authority_finding_status_counts.pass",
+      "expected": 33,
+      "source_selector": "finding_qa.authority_finding_status_counts.pass",
       "failure_category": "count_drift"
     },
     {
@@ -155,10 +191,34 @@
       "failure_category": "missing_citation_or_source_selector"
     },
     {
+      "field": "compliance_matrix_authority_row_count",
+      "expected": 33,
+      "source_selector": "finding_qa.compliance_matrix_authority_row_count",
+      "failure_category": "count_drift"
+    },
+    {
       "field": "forest_plan_component_count",
       "expected": 329,
       "source_selector": "forest_plan_qa.component_count",
       "failure_category": "count_drift"
+    },
+    {
+      "field": "forest_plan_supported_component_count",
+      "expected": 79,
+      "source_selector": "forest_plan_qa.supported_component_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "forest_plan_not_applicable_component_count",
+      "expected": 250,
+      "source_selector": "forest_plan_qa.not_applicable_component_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "forest_plan_gap_count",
+      "expected": 0,
+      "source_selector": "forest_plan_qa.gap_count",
+      "failure_category": "unresolved_reviewer_item"
     },
     {
       "field": "forest_plan_standard_count",
@@ -173,10 +233,58 @@
       "failure_category": "count_drift"
     },
     {
+      "field": "applied_standard_count",
+      "expected": 12,
+      "source_selector": "forest_plan_qa.applied_standard_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "forest_plan_component_eval_case_count",
+      "expected": 35,
+      "source_selector": "forest_plan_qa.component_eval.case_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "phase_eval_phase_count",
+      "expected": 19,
+      "source_selector": "gate_replay_summary.phase_eval.phase_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "phase_eval_passed_phase_count",
+      "expected": 19,
+      "source_selector": "gate_replay_summary.phase_eval.passed_phase_count",
+      "failure_category": "stale_artifact"
+    },
+    {
+      "field": "promotion_suite_required_current_result_count",
+      "expected": 22,
+      "source_selector": "gate_replay_summary.current_promotion_suite.required_current_result_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "promotion_suite_passed_required_current_result_count",
+      "expected": 22,
+      "source_selector": "gate_replay_summary.current_promotion_suite.passed_required_current_result_count",
+      "failure_category": "stale_artifact"
+    },
+    {
       "field": "accepted_v1_risk_count",
       "expected": 14,
       "source_selector": "accepted_v1_risk_ledger.accepted_pending_count",
       "failure_category": "accepted_v1_risk_hidden"
+    },
+    {
+      "field": "actual_pending_applicable_count",
+      "expected": 7,
+      "source_selector": "accepted_v1_risk_ledger.actual_pending_applicable_count",
+      "failure_category": "accepted_v1_risk_hidden"
+    },
+    {
+      "field": "litigation_risk_legal_conclusion_count",
+      "expected": 0,
+      "source_selector": "decision_support_qa.litigation_risk_legal_conclusion_count",
+      "failure_category": "legal_conclusion_leak"
     }
   ],
   "artifact_selectors": [
@@ -261,6 +369,68 @@
     ],
     "pdf_header": "%PDF-"
   },
+  "validation_expectations": [
+    {
+      "expectation_id": "gate_sections_present",
+      "required_failure_category": "missing_required_gate_section",
+      "source_selector": "gate_replay_summary.gates"
+    },
+    {
+      "expectation_id": "input_hashes_current",
+      "required_failure_category": "input_hash_mismatch",
+      "source_selector": "artifact_freshness_ledger.artifacts[].sha256"
+    },
+    {
+      "expectation_id": "generated_artifacts_current",
+      "required_failure_category": "stale_artifact",
+      "source_selector": "gate_replay_summary.gates[].status"
+    },
+    {
+      "expectation_id": "semantic_counts_match",
+      "required_failure_category": "count_drift",
+      "source_selector": "required_count_fields"
+    },
+    {
+      "expectation_id": "citations_and_selectors_present",
+      "required_failure_category": "missing_citation_or_source_selector",
+      "source_selector": "finding_qa.findings[].source_selectors"
+    },
+    {
+      "expectation_id": "non_applicable_boundary_has_search_coverage",
+      "required_failure_category": "missing_non_applicable_boundary_evidence",
+      "source_selector": "applicability_partition.non_applicable_boundary_evidence"
+    },
+    {
+      "expectation_id": "reviewer_items_resolved",
+      "required_failure_category": "unresolved_reviewer_item",
+      "source_selector": "residual_blockers_and_stop_conditions.blockers"
+    },
+    {
+      "expectation_id": "pdf_header_valid",
+      "required_failure_category": "invalid_report_pdf_header",
+      "source_selector": "final_qa_pdf.header"
+    },
+    {
+      "expectation_id": "manual_drafts_not_canonical",
+      "required_failure_category": "manual_draft_dependency",
+      "source_selector": "review_boundary.non_canonical_draft_exclusion"
+    },
+    {
+      "expectation_id": "accepted_v1_risk_visible",
+      "required_failure_category": "accepted_v1_risk_hidden",
+      "source_selector": "accepted_v1_risk_ledger"
+    },
+    {
+      "expectation_id": "legal_conclusion_blocked",
+      "required_failure_category": "legal_conclusion_leak",
+      "source_selector": "certification_statement.legal_conclusion"
+    },
+    {
+      "expectation_id": "human_certification_not_overclaimed",
+      "required_failure_category": "human_certification_overclaim",
+      "source_selector": "certification_statement.caveat"
+    }
+  ],
   "failure_categories": [
     "missing_required_artifact",
     "unparseable_required_artifact",

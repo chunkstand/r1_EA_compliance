@@ -504,7 +504,13 @@ Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
 `tests/test_final_qa_certification.py`, and the schema docs. The contract pins semantic counts,
 source selectors, current artifact hashes, selected Markdown/PDF rendering requirements, optional
 human reviewer signoff fields, accepted V1 risk visibility, and fail-closed categories without
-pinning full rendered body text.
+pinning full rendered body text. The Sequence 1 gap-close pass now requires every scalar
+expected-summary count to appear in `required_count_fields`, keeps config and expected-summary
+sections/output files/failure categories aligned by test, and records `validation_expectations`
+that map missing gates, stale hashes/artifacts, count drift, missing selectors, missing
+non-applicable boundary evidence, unresolved reviewer items, invalid PDF output, manual draft
+dependency, hidden accepted V1 risk, legal-conclusion leaks, and human-certification overclaims to
+fail-closed categories.
 
 Certification in this plan means deterministic machine replay plus optional human reviewer signoff
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel

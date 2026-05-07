@@ -59,8 +59,12 @@ Sequence 1 added:
 The contract pins semantic counts, source selectors, current artifact hashes, required gate names,
 selected Markdown/PDF rendering requirements, optional reviewer signoff fields, accepted V1 risk
 visibility, and fail-closed categories. It does not pin full rendered Markdown/PDF body text.
-Sequence 1 verification passed: `tests/test_final_qa_certification.py` (`7 passed`),
-`tests/test_architecture_contract.py` (`5 passed`), and `git diff --check`.
+The Sequence 1 gap-close pass tightened the contract so every scalar expected-summary count appears
+in `required_count_fields`, config and expected-summary section/output/failure-category contracts
+are tested for alignment, and `validation_expectations` maps the Sequence 1 acceptance criteria to
+fail-closed categories before generator code exists. Sequence 1 gap-close verification passed:
+`tests/test_final_qa_certification.py` (`8 passed`), `tests/test_architecture_contract.py`
+(`5 passed`), and `git diff --check`.
 
 Next implementation boundary: Sequence 2. Add the deterministic final QA artifact reader/generator
 in `src/usfs_r1_ea_sources/final_qa_certification.py`, add `cli_final_qa.py`, register the

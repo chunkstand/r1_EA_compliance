@@ -56,15 +56,22 @@ EXPECTED_COUNTS = {
     "authority_finding_count": 33,
     "rule_claim_link_count": 142,
     "rule_claim_gap_count": 0,
+    "compliance_matrix_authority_row_count": 33,
     "forest_plan_component_count": 329,
+    "forest_plan_supported_component_count": 79,
+    "forest_plan_not_applicable_component_count": 250,
+    "forest_plan_gap_count": 0,
     "forest_plan_standard_count": 58,
     "applicable_standard_count": 12,
     "applied_standard_count": 12,
+    "forest_plan_component_eval_case_count": 35,
     "phase_eval_phase_count": 19,
     "phase_eval_passed_phase_count": 19,
     "promotion_suite_required_current_result_count": 22,
     "promotion_suite_passed_required_current_result_count": 22,
     "accepted_v1_risk_count": 14,
+    "actual_pending_applicable_count": 7,
+    "litigation_risk_legal_conclusion_count": 0,
 }
 
 REQUIRED_FAILURE_CATEGORIES = {
@@ -124,9 +131,21 @@ def test_sequence_1_config_owns_sections_gates_counts_and_signoff() -> None:
         assert gate["failure_category"] in REQUIRED_FAILURE_CATEGORIES
 
     count_fields = {row["field"]: row for row in config["required_count_fields"]}
+    expected_count_fields = set(EXPECTED_COUNTS) - {"authority_finding_status_counts"}
+    expected_count_fields.add("authority_finding_status_counts.pass")
+    assert set(count_fields) == expected_count_fields
     for field, expected in EXPECTED_COUNTS.items():
-        if field in count_fields:
+        if field == "authority_finding_status_counts":
+            assert count_fields["authority_finding_status_counts.pass"]["expected"] == (
+                expected["pass"]
+            )
+        else:
             assert count_fields[field]["expected"] == expected
+        assert count_fields[
+            field if field != "authority_finding_status_counts" else (
+                "authority_finding_status_counts.pass"
+            )
+        ]["source_selector"]
 
     signoff_fields = {row["field"] for row in config["reviewer_signoff_fields"]}
     assert {
@@ -158,6 +177,55 @@ def test_sequence_1_config_declares_fail_closed_acceptance_categories() -> None:
     assert "Accepted V1 Risk Ledger" in config["rendering_requirements"][
         "markdown_required_text"
     ]
+
+    expectation_categories = {
+        row["required_failure_category"] for row in config["validation_expectations"]
+    }
+    assert {
+        "missing_required_gate_section",
+        "input_hash_mismatch",
+        "stale_artifact",
+        "count_drift",
+        "missing_citation_or_source_selector",
+        "missing_non_applicable_boundary_evidence",
+        "unresolved_reviewer_item",
+        "invalid_report_pdf_header",
+        "manual_draft_dependency",
+        "accepted_v1_risk_hidden",
+        "legal_conclusion_leak",
+        "human_certification_overclaim",
+    } <= expectation_categories
+    assert expectation_categories <= set(config["failure_categories"])
+    for expectation in config["validation_expectations"]:
+        assert expectation["expectation_id"]
+        assert expectation["source_selector"]
+
+
+def test_sequence_1_config_and_expected_summary_stay_aligned() -> None:
+    config = _read_json(CONFIG_PATH)
+    expected = _read_json(EXPECTED_SUMMARY_PATH)
+
+    assert config["review_id"] == expected["review_id"]
+    assert config["source_set_id"] == expected["source_set_id"]
+    assert config["report_schema_version"] == expected["expected_report_schema_version"]
+    assert config["manifest_schema_version"] == expected["expected_manifest_schema_version"]
+    assert config["expected_summary_schema_version"] == expected["schema_version"]
+    assert config["section_order"] == expected["required_sections"]
+    assert config["required_output_files"] == expected["required_output_files"]
+    assert config["failure_categories"] == expected["failure_categories"]
+    assert config["manual_draft_policy"]["root_east_crazies_drafts_are_canonical"] == (
+        expected["manual_draft_policy"]["root_east_crazies_drafts_are_canonical"]
+    )
+    assert config["rendering_requirements"]["pdf_header"] == expected["rendering_contract"][
+        "pdf_header"
+    ]
+
+    config_count_fields = {row["field"]: row["expected"] for row in config["required_count_fields"]}
+    for field, value in expected["expected_counts"].items():
+        if field == "authority_finding_status_counts":
+            assert config_count_fields["authority_finding_status_counts.pass"] == value["pass"]
+        else:
+            assert config_count_fields[field] == value
 
 
 def test_expected_summary_locks_current_counts_hashes_and_representative_rows() -> None:
@@ -297,6 +365,7 @@ def test_output_schema_docs_record_final_qa_contract() -> None:
         "east-crazies-final-qa-expected-summary-v1",
         "accepted_v1_risk_ledger",
         "reviewer_signoff",
+        "validation_expectations",
         "human_certification_overclaim",
         "accepted_v1_risk_hidden",
         "East_Crazies_*",
