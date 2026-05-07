@@ -361,7 +361,11 @@ adjudication eval resolves the current `158`-row queue as true EA package-eviden
 South Plateau expansion package has replayed and validated its six applicability adjudications,
 generated and validated `61` rules, passed compliance review with `61` findings, `280` rule-claim
 links, and `0` rule-claim gaps, and passed review-scoped phase eval. Broader strict expansion now
-passes for the declared real-package set.
+passes for the declared real-package set, but the next planned gate-hardening milestone is South
+Plateau forest-plan boundary closure: the slot declares the Custer Gallatin profile while the
+nested forest-plan review is still ambiguous/not reviewer-ready, so strict expansion must be made to
+fail closed unless that declared-profile context resolves or the slot is explicitly blocked with
+`forest_plan_reviewer_not_ready`.
 
 ## Reviewer Engine Entry Points
 
@@ -911,7 +915,9 @@ added South Plateau artifact checks to the promotion suite. Applicability valida
 `61` applicable authorities, `331` non-applicable authorities, no unresolved or `needs_adjudication`
 decisions, and `generated_rule_pack_ready=true`. Compliance review reports `reviewer_ready=true`,
 `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim
-gaps. Strict expansion promotion now passes with `expansion_ready=true`.
+gaps. Strict expansion promotion now passes with `expansion_ready=true`, but
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 7 is planned to close the
+forest-plan gate-boundary weakness before this pass is treated as fully hardened.
 
 Run the seed retrieval eval gate:
 

@@ -2,7 +2,8 @@
 
 Date: 2026-05-06
 Status: complete through Sequence 6 for the declared ECID preliminary-EA and South Plateau
-real-package expansion set
+real-package expansion set; Sequence 7 is planned to close the South Plateau forest-plan
+gate-boundary weakness found after the strict expansion pass.
 
 ## Weakness
 
@@ -32,6 +33,14 @@ the South Plateau rule pack, ran compliance review and review-scoped phase eval,
 Plateau artifact checks to the promotion suite, and marked the slot ready only after those checks
 passed. The declared broader expansion set now passes strict expansion promotion.
 
+A follow-up artifact review found that the South Plateau slot can still pass strict expansion while
+its forest-plan context is unresolved: the slot declares `forest_plan_profile="custer_gallatin"`,
+but `compliance_review.json` records `forest_plan_review.scope_status="ambiguous"`,
+`forest_plan_review.validation_passed=false`, `forest_plan_review.reviewer_ready=false`, and
+`forest_plan_review.needs_reviewer_resolution=true`. Review-scoped `phase-eval` still passes
+`15/15`, and strict expansion promotion still passes, because the current expansion artifact checks
+do not require the declared forest-plan profile to resolve or fail closed.
+
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
 forest-plan, phase-eval, applicability-validation, generated-rule-pack, compliance-review, or
@@ -51,6 +60,10 @@ Completion means:
 - `expansion_failure_category_counts={}`
 - `open_expansion_slot_count=0`
 
+Sequence 7 narrows this completion claim: strict expansion may only pass for South Plateau if the
+declared Custer Gallatin forest-plan context is resolved and reviewer-ready, or if the slot is no
+longer ready and strict expansion fails with a typed `forest_plan_reviewer_not_ready` blocker.
+
 ## Non-Goals
 
 - Do not claim full Region 1 production readiness from two or three packages.
@@ -60,6 +73,8 @@ Completion means:
   policy changes.
 - Do not add a new forest profile unless profile-specific source readiness, component inventory,
   and eval coverage are part of that same milestone slice.
+- Do not treat an ambiguous forest-plan context as non-applicable simply because the compliance
+  matrix currently has zero Forest Plan rows.
 
 ## Current Inputs
 
@@ -641,6 +656,119 @@ Acceptance:
 - `expansion_ready=true`.
 - Expansion failure categories are empty.
 - Handoff states the exact package set and residual boundary.
+
+### Sequence 7: South Plateau Forest-Plan Gate Boundary Closure
+
+Purpose: make strict expansion promotion fail closed when a ready expansion slot declares a
+forest-plan profile but the generated review artifacts do not resolve that profile to a
+reviewer-ready forest-plan context.
+
+Status:
+Planned. This is a gate-hardening and South Plateau closeout sequence. It must not weaken the
+applicability, generated-rule, compliance-review, phase-eval, or promotion-suite gates that already
+pass; it should add the missing forest-plan condition to the expansion readiness contract.
+
+Current weakness evidence:
+
+- `config/promotion_suite_v1.json` marks
+  `region1-expansion-south-plateau-landscape-treatment` ready and declares
+  `forest_plan_profile="custer_gallatin"`.
+- The same slot's `last_local_signal` records `forest_plan_scope_status="ambiguous"` and
+  `forest_plan_component_gate_required=false`.
+- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json`
+  records `summary.reviewer_ready=true`, but its nested `summary.forest_plan_review` records
+  `scope_status="ambiguous"`, `validation_passed=false`, `reviewer_ready=false`, and
+  `needs_reviewer_resolution=true`.
+- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json`
+  passes `15/15` phases with `reviewer_ready=true`, so phase eval does not currently surface the
+  declared-profile mismatch.
+- Strict expansion promotion passes even though the declared forest-plan profile did not resolve.
+
+Actions:
+
+1. Add a regression fixture for the current false-pass shape: a selected expansion slot with
+   `ready=true`, `forest_plan_profile="custer_gallatin"`, passing compliance/phase artifacts, and
+   nested `forest_plan_review.scope_status="ambiguous"` must not produce
+   `expansion_ready=true`.
+2. Extend the promotion-suite expansion contract so any ready slot with `forest_plan_profile` must
+   have review-case artifact checks for forest-plan context readiness. At minimum, the checks must
+   prove:
+   - `summary.forest_plan_review.scope_status` matches the declared profile;
+   - `summary.forest_plan_review.validation_passed=true`;
+   - `summary.forest_plan_review.reviewer_ready=true`;
+   - the slot's recorded `last_local_signal.forest_plan_scope_status` matches the artifact; and
+   - if Forest Plan component evaluation is required, phase eval sees the component eval or
+     component-adjudication phase before reporting reviewer readiness.
+3. Resolve South Plateau's forest-plan path using general profile/package evidence, not a hidden
+   one-off South Plateau exception. Preferred closure is for the package to resolve to Custer
+   Gallatin, rerun compliance review with `--reuse-package-cache`, and produce reviewer-ready
+   forest-plan context and any required component/standard evidence. If the package cannot be
+   defensibly resolved within this sequence, mark the slot `ready=false` with
+   `failure_category="forest_plan_reviewer_not_ready"` and a concrete next action.
+4. Rerun South Plateau review-scoped `phase-eval` and strict plus non-strict promotion suite. Strict
+   expansion must either pass with a resolved/reviewer-ready forest-plan context or fail with only
+   the typed forest-plan blocker.
+5. Update `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, this plan, `docs/POST_V1_PROMOTION_SUITE.md`
+   if the promotion-suite contract changes, and `docs/SESSION_HANDOFF.md` with the exact final
+   state.
+
+Verification:
+
+```bash
+jq '.summary.forest_plan_review' \
+  source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json
+
+jq '{passed, reviewer_ready, phase_count, passed_phase_count, phases: [.phases[].name]}' \
+  source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json
+
+PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_forest_plan_resolver.py tests/test_forest_plan_components.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment
+
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json \
+  --results-dir source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion \
+  --strict-expansion
+
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
+
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+python -m json.tool config/promotion_suite_v1.json /tmp/promotion_suite_v1.validated.json
+git diff --check
+```
+
+Acceptance:
+
+- A ready expansion slot with a declared forest-plan profile cannot pass strict expansion while the
+  nested `forest_plan_review` is ambiguous, failed, stale, or not reviewer-ready.
+- South Plateau either:
+  - resolves to `custer_gallatin`, carries reviewer-ready forest-plan context and any required
+    component/standard evidence, passes review-scoped phase eval, and passes strict promotion; or
+  - remains blocked with `ready=false`, `failure_category="forest_plan_reviewer_not_ready"`, a
+    concrete `next_action`, and strict promotion fails without any unrelated current-promotion
+    regression.
+- The promotion-suite report names the forest-plan blocker explicitly instead of hiding it behind a
+  passing compliance-review or phase-eval summary.
+- Current V1 promotion remains green for `v1-cg-ecid-compliance-review`.
+
+Stop conditions:
+
+- The resolver cannot distinguish South Plateau package location/profile evidence from generic
+  references to Custer Gallatin plan analysis.
+- The fix would mark `forest_plan_profile` optional for ready slots or remove the South Plateau
+  declared profile to make promotion pass.
+- Strict expansion still passes while `forest_plan_review.scope_status="ambiguous"` for a ready
+  declared-profile slot.
+- Closing the package requires new source capture, a new Region 1 forest profile, or a full corpus
+  rebuild outside this sequence.
 
 ## Stop Conditions
 

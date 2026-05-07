@@ -556,7 +556,13 @@ Gallatin FEIS and ESA-supporting plan documents.
   and `0` rule-claim gaps. South Plateau review-scoped phase eval passes `15/15` phases with
   `reviewer_ready=true`. The South Plateau expansion slot is now `ready=true`; it no longer carries
   `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
-  `package_fixture_missing`. Strict promotion suite was written to
+  `package_fixture_missing`. A follow-up artifact review found a narrower gate-boundary weakness:
+  the South Plateau slot declares `forest_plan_profile="custer_gallatin"`, but the nested
+  `forest_plan_review` summary remains `scope_status="ambiguous"`, `validation_passed=false`,
+  `reviewer_ready=false`, and `needs_reviewer_resolution=true`. Sequence 7 of
+  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is now the active planned closeout to make
+  strict expansion fail closed unless a declared-profile slot has reviewer-ready forest-plan context
+  or is explicitly blocked with `forest_plan_reviewer_not_ready`. Strict promotion suite was written to
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`
   and reports `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
   `expansion_artifacts_ready=true`, `failure_category_counts={}`,
@@ -637,8 +643,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   tracked slice.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
   expansion milestone is complete through Sequence 6 for the declared ECID preliminary-EA and South
-  Plateau expansion slots. Future expansion should add a new verified real-package slot and matching
-  promotion-suite review-case artifact checks rather than weakening the current gate.
+  Plateau expansion slots, with Sequence 7 now planned to close the South Plateau forest-plan
+  gate-boundary weakness before treating strict expansion as fully hardened. Future expansion should
+  add a new verified real-package slot and matching promotion-suite review-case artifact checks
+  rather than weakening the current gate.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

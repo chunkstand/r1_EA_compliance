@@ -48,9 +48,13 @@ package evidence visible as gaps and do not mark components supported or create 
 ECID compliance review reports `reviewer_ready=true`, ECID review-scoped phase eval passes `16/16`,
 and the required ECID expansion artifacts pass.
 
-Next implementation target: no further sequence is selected in the post-V1 real-package expansion
-plan. Future expansion should add a new real-package slot plus matching promotion-suite review-case
-artifact checks, or move to the next documented lane the user selects.
+Next implementation target: `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 7.
+A follow-up artifact review found that South Plateau strict expansion can pass while the slot
+declares `forest_plan_profile="custer_gallatin"` but the nested forest-plan review remains
+`scope_status="ambiguous"`, `validation_passed=false`, and `reviewer_ready=false`. Sequence 7 must
+make that false-pass shape impossible: either South Plateau resolves to reviewer-ready Custer
+Gallatin forest-plan context and strict promotion passes, or the slot becomes not ready with a typed
+`forest_plan_reviewer_not_ready` blocker.
 
 ## Current NEPA 3D Graph Gate Handoff
 
@@ -448,10 +452,12 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
 
 Next implementation target:
 
-No further sequence is selected in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`; the
-declared ECID preliminary-EA and South Plateau expansion set is closed through strict expansion
-promotion. The older lane notes below are retained for continuity, but they are not the current next
-pass unless the user redirects.
+Sequence 7 in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is selected. The declared
+ECID preliminary-EA and South Plateau expansion set closed through Sequence 6 strict expansion
+promotion, but Sequence 7 must close the newly identified South Plateau forest-plan gate boundary:
+strict expansion must not pass for a ready declared-profile slot while nested forest-plan context is
+ambiguous or not reviewer-ready. The older lane notes below are retained for continuity, but they
+are not the current next pass unless the user redirects.
 
 Sequence 2B alignment/gap close note: strict and non-strict promotion-suite evidence were kept
 separate, and non-strict was rerun last so the default suite output remains the current-promotion
