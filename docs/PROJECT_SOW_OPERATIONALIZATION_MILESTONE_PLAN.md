@@ -93,31 +93,34 @@ The generator is operationally ready when all of the following are true:
 
 ## Sequence 1: Intake Schema, Template, And Validation-Only Command
 
-Status: next.
+Status: complete.
 
 Purpose: remove the largest operational friction point: hand-authoring a full structured intake
 from the East Crazies fixture.
 
-Candidate work:
+Implemented work:
 
-- add a tracked JSON Schema or equivalent schema document for `project-sow-intake-v0`;
-- add a minimal land-exchange intake template under `config/templates/` or
-  `config/fixtures/project_sow/`;
-- add `project-sow-intake-validate` or a `--validate-only` mode that validates an intake without
-  writing `source_library/` outputs;
-- emit concise validation summaries for required fields, federal land actions, action elements,
-  evidence refs, resource-area IDs, observed reports, and canonical graph path readiness;
-- document the validated template workflow in `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md`.
+- added `docs/schemas/project_sow_intake_v0.schema.json` for `project-sow-intake-v0`;
+- added `config/templates/project_sow_land_exchange_intake_template.json` as the minimal
+  land-exchange starting template;
+- added `project-sow-intake-validate` plus `project-sow-package --validate-only`, both of which
+  validate without writing `source_library/` outputs;
+- validation summaries now report required-field, federal land action, action element, evidence
+  ref, resource-area, observed-report, selected-scope, and canonical graph path checks with
+  `output_written=false`;
+- `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` now documents the template-first validation workflow.
 
-Acceptance gate:
+Acceptance gate status:
 
-- a minimal template can be copied, populated, and validated without output generation;
-- invalid intake examples fail on missing federal land action, missing evidence refs, unknown
+- minimal template validates with `4` selected SOW scopes, `2` proposed-action resource areas,
+  `0` validation failures, and no generated outputs;
+- invalid intake tests fail closed on missing federal land action, missing evidence refs, unknown
   resource-area IDs, and unsupported schema version;
-- the existing East Crazies intake validates with the same accepted graph counts and `0` validation
-  failures;
-- no generated `source_library/` package is written during validation-only runs;
-- docs and handoff identify this as the supported first operational step.
+- the East Crazies intake validates with the accepted counts: `10` selected SOW scopes, `23`
+  proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures;
+- validation-only runs keep generated `source_library/` package outputs unwritten;
+- docs and handoff identify validation from the minimal template as the supported first
+  operational step.
 
 ## Sequence 2: Intake Authoring Assistant For Proposed Actions
 
@@ -273,6 +276,8 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_project_sow_package.py tests
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src uv run --extra dev python -m compileall src
+PYTHONPATH=src uv run --extra dev python -m json.tool docs/schemas/project_sow_intake_v0.schema.json
+PYTHONPATH=src uv run --extra dev python -m json.tool config/templates/project_sow_land_exchange_intake_template.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_resource_scopes_v1.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/fixtures/project_sow/east_crazies_land_exchange_intake.json
 git diff --check

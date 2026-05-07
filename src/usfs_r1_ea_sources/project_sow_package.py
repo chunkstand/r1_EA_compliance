@@ -27,6 +27,51 @@ class ProjectSowPackageResult:
     summary: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class ProjectSowIntakeValidationResult:
+    intake_path: Path
+    summary: dict[str, Any]
+
+
+def validate_project_sow_intake(
+    *,
+    intake_path: Path,
+    project_id: str | None = None,
+    source_set_id: str | None = None,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+) -> ProjectSowIntakeValidationResult:
+    intake_path = Path(intake_path)
+    resource_scope_config_path = Path(resource_scope_config_path)
+    authority_inventory_path = Path(authority_inventory_path)
+
+    intake = _read_json(intake_path)
+    resource_config = _read_json(resource_scope_config_path)
+    authority_inventory = _read_json(authority_inventory_path)
+    selected_project_id = _slug(project_id or str(intake.get("project_id") or "project"))
+    selected_source_set_id = source_set_id or _source_set_id(authority_inventory)
+    selected_scopes = _select_resource_scopes(intake, resource_config)
+    validation = _validate_inputs(
+        intake=intake,
+        resource_config=resource_config,
+        authority_inventory=authority_inventory,
+        selected_scopes=selected_scopes,
+    )
+    return ProjectSowIntakeValidationResult(
+        intake_path=intake_path,
+        summary=_intake_validation_summary(
+            intake=intake,
+            intake_path=intake_path,
+            project_id=selected_project_id,
+            source_set_id=selected_source_set_id,
+            resource_scope_config_path=resource_scope_config_path,
+            authority_inventory_path=authority_inventory_path,
+            validation=validation,
+            selected_scopes=selected_scopes,
+        ),
+    )
+
+
 def run_project_sow_package(
     *,
     intake_path: Path,
@@ -46,11 +91,7 @@ def run_project_sow_package(
     resource_config = _read_json(resource_scope_config_path)
     authority_inventory = _read_json(authority_inventory_path)
     selected_project_id = _slug(project_id or str(intake.get("project_id") or "project"))
-    selected_source_set_id = source_set_id or str(
-        authority_inventory.get("source_set", {}).get("source_set_id")
-        or authority_inventory.get("source_set_id")
-        or "source-set-unspecified"
-    )
+    selected_source_set_id = source_set_id or _source_set_id(authority_inventory)
     package_dir = (
         Path(results_dir)
         if results_dir is not None
@@ -1574,6 +1615,57 @@ def _summary(
         "source_set_id": source_set_id,
         "validation_failure_count": validation["failure_count"],
     }
+
+
+def _intake_validation_summary(
+    *,
+    intake: dict[str, Any],
+    intake_path: Path,
+    project_id: str,
+    source_set_id: str,
+    resource_scope_config_path: Path,
+    authority_inventory_path: Path,
+    validation: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    graph = _intake_evidence_graph(intake, selected_scopes)
+    return {
+        "authority_inventory_path": str(authority_inventory_path),
+        "failed_validation_checks": [
+            check for check in validation["checks"] if not check["passed"]
+        ],
+        "federal_land_action_count": len(_list(intake.get("federal_land_actions"))),
+        "intake_path": str(intake_path),
+        "intake_schema_version": intake.get("schema_version"),
+        "intake_evidence_graph_edge_count": graph["edge_count"],
+        "intake_evidence_graph_node_count": graph["node_count"],
+        "observed_specialist_report_count": len(_observed_specialist_reports(intake)),
+        "output_written": False,
+        "passed": validation["passed"],
+        "project_id": project_id,
+        "proposed_action_element_count": len(_proposed_action_elements(intake)),
+        "proposed_action_resource_area_count": len(_expected_resource_area_ids(intake)),
+        "resource_scope_config_path": str(resource_scope_config_path),
+        "resource_scope_count": len(selected_scopes),
+        "schema_version": "project-sow-intake-validation-summary-v0",
+        "selected_resource_area_ids": sorted(_covered_resource_area_ids(selected_scopes)),
+        "selected_resource_scope_ids": [
+            str(scope.get("resource_scope_id")) for scope in selected_scopes
+        ],
+        "source_set_id": source_set_id,
+        "validation_check_count": len(validation["checks"]),
+        "validation_checks": validation["checks"],
+        "validation_failure_count": validation["failure_count"],
+        "validation_only": True,
+    }
+
+
+def _source_set_id(authority_inventory: dict[str, Any]) -> str:
+    return str(
+        authority_inventory.get("source_set", {}).get("source_set_id")
+        or authority_inventory.get("source_set_id")
+        or "source-set-unspecified"
+    )
 
 
 def _read_json(path: Path) -> dict[str, Any]:

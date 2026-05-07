@@ -1,0 +1,251 @@
+{
+  "$id": "https://example.local/usfs-r1-ea-sources/schemas/project_sow_intake_v0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "Structured proposed-action intake used by the project SOW requirements package generator. This schema covers the tracked JSON shape; runtime validation also checks resource-scope resolution and canonical graph path readiness against repository config.",
+  "properties": {
+    "consultation_indicators": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "districts": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "federal_land_actions": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "action_type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_type",
+          "description"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "forest": {
+      "type": "string"
+    },
+    "forest_plan_profile": {
+      "type": "string"
+    },
+    "geography": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "management_context": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "nepa_level": {
+      "type": "string"
+    },
+    "observed_specialist_reports": {
+      "items": {
+        "$ref": "#/$defs/observed_specialist_report"
+      },
+      "type": "array"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "project_type": {
+      "type": "string"
+    },
+    "proponent": {
+      "type": "string"
+    },
+    "proposed_action_elements": {
+      "items": {
+        "$ref": "#/$defs/proposed_action_element"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "proposed_action_summary": {
+      "type": "string"
+    },
+    "resource_analysis_expectations": {
+      "items": {
+        "$ref": "#/$defs/resource_analysis_expectation"
+      },
+      "type": "array"
+    },
+    "resource_indicators": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "project-sow-intake-v0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "project_name",
+    "forest",
+    "districts",
+    "project_type",
+    "nepa_level",
+    "proposed_action_summary",
+    "federal_land_actions",
+    "proposed_action_elements"
+  ],
+  "title": "Project SOW Intake v0",
+  "type": "object",
+  "$defs": {
+    "evidence_ref": {
+      "additionalProperties": true,
+      "properties": {
+        "citation_label": {
+          "type": "string"
+        },
+        "evidence_ref_id": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "source_record_id": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_ref_id",
+        "locator",
+        "source_record_id",
+        "summary",
+        "title"
+      ],
+      "type": "object"
+    },
+    "observed_specialist_report": {
+      "additionalProperties": true,
+      "properties": {
+        "document_role": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "$ref": "#/$defs/evidence_ref"
+          },
+          "type": "array"
+        },
+        "report_id": {
+          "type": "string"
+        },
+        "resource_area_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "source_record_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "report_id",
+        "resource_area_ids",
+        "title"
+      ],
+      "type": "object"
+    },
+    "proposed_action_element": {
+      "additionalProperties": true,
+      "properties": {
+        "action_element_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "$ref": "#/$defs/evidence_ref"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "resource_area_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "resource_indicator_keys": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "action_element_id",
+        "description",
+        "evidence_refs",
+        "resource_area_ids"
+      ],
+      "type": "object"
+    },
+    "resource_analysis_expectation": {
+      "additionalProperties": true,
+      "properties": {
+        "proposed_action_basis": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "resource_area_id": {
+          "type": "string"
+        },
+        "resource_area_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "resource_area_id",
+        "resource_area_name"
+      ],
+      "type": "object"
+    }
+  }
+}

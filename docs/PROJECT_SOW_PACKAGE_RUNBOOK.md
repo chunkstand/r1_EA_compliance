@@ -8,12 +8,16 @@ findings, legal advice, legal sufficiency determinations, or final agency decisi
 
 ## 1. Create The Intake
 
-Start from the East Crazies fixture:
+Start from the minimal land-exchange template:
 
 ```bash
-cp config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+cp config/templates/project_sow_land_exchange_intake_template.json \
   /tmp/new_land_exchange_intake.json
 ```
+
+The tracked schema for the intake shape is
+`docs/schemas/project_sow_intake_v0.schema.json`. The East Crazies fixture remains the calibration
+example; it is not the normal starting point for a new proposed action.
 
 Update these required fields:
 
@@ -65,7 +69,28 @@ Observed reports are calibration evidence only. They do not replace the proposed
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
-## 5. Generate The Package
+## 5. Validate The Intake
+
+Run the validation-only command before package generation:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-validate \
+  --intake /tmp/new_land_exchange_intake.json
+```
+
+The validation summary reports selected SOW scopes, proposed-action resource-area count, intake
+evidence graph node and edge counts, failed validation checks, and `output_written=false`. It does
+not create `source_library/projects/<project_id>/requirements_package/`.
+
+The package command can also run the same no-write path:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake /tmp/new_land_exchange_intake.json \
+  --validate-only
+```
+
+## 6. Generate The Package
 
 Run:
 
@@ -87,16 +112,18 @@ source_library/projects/<project_id>/requirements_package/
 
 JSON is canonical. Markdown and PDF are renderings from the JSON.
 
-## 6. Resolve Validation Failures
+## 7. Resolve Validation Failures
 
 Common failure categories:
 
 - required intake fields are missing;
+- the intake schema version is unsupported;
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
 - an action element has resource areas but no evidence refs;
 - an action element has evidence refs but no resource areas;
 - observed reports cover resource areas not derived from the proposed action;
+- proposed-action or observed-report resource areas lack the canonical graph path;
 - graph node or edge IDs collide before graph assembly;
 - required Markdown or PDF rendering sections are missing.
 

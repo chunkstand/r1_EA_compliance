@@ -1,0 +1,80 @@
+{
+  "consultation_indicators": [],
+  "districts": [
+    "Example Ranger District"
+  ],
+  "federal_land_actions": [
+    {
+      "action_type": "dispose",
+      "description": "Convey identified National Forest System lands out of federal ownership subject to closing conditions."
+    },
+    {
+      "action_type": "acquire",
+      "description": "Acquire identified non-federal lands for National Forest System management and ownership consolidation benefits."
+    }
+  ],
+  "forest": "Example National Forest",
+  "forest_plan_profile": "replace-with-forest-plan-profile",
+  "geography": [
+    "Example project area"
+  ],
+  "management_context": [],
+  "nepa_level": "environmental_assessment",
+  "observed_specialist_reports": [],
+  "project_id": "new-land-exchange-project",
+  "project_name": "New Land Exchange Project",
+  "project_type": "land_exchange",
+  "proponent": "USDA Forest Service",
+  "proposed_action_elements": [
+    {
+      "action_element_id": "land_exchange_case_setup",
+      "description": "Prepare a land exchange involving federal land disposal, non-federal land acquisition, realty case setup, and Forest Plan consistency review.",
+      "evidence_refs": [
+        {
+          "citation_label": "Proposed action narrative",
+          "evidence_ref_id": "proposed-action-narrative",
+          "locator": "Proposed action narrative",
+          "source_record_id": "INTAKE-001",
+          "summary": "Intake evidence documenting the proposed federal disposal, non-federal acquisition, and Forest Plan consistency context.",
+          "title": "Proposed Action Narrative"
+        }
+      ],
+      "resource_area_ids": [
+        "land_exchange_case",
+        "land_management_plan_consistency"
+      ],
+      "resource_indicator_keys": [
+        "lands_realty",
+        "forest_plan"
+      ]
+    }
+  ],
+  "proposed_action_summary": "The Forest Service proposes a land exchange involving federal land disposal, non-federal land acquisition, realty case setup, and Forest Plan consistency review. Replace this summary with the project-specific proposed action before package generation.",
+  "resource_analysis_expectations": [
+    {
+      "proposed_action_basis": [
+        "Federal disposal and non-federal acquisition require a lands/realty land exchange case file."
+      ],
+      "resource_area_id": "land_exchange_case",
+      "resource_area_name": "Land exchange case"
+    },
+    {
+      "proposed_action_basis": [
+        "The proposed federal action must be screened against the applicable Forest Plan before EA package assembly."
+      ],
+      "resource_area_id": "land_management_plan_consistency",
+      "resource_area_name": "Forest Plan consistency"
+    }
+  ],
+  "resource_indicators": {
+    "forest_plan": [
+      "Forest Plan consistency"
+    ],
+    "lands_realty": [
+      "land exchange",
+      "federal land disposal",
+      "non-federal land acquisition"
+    ]
+  },
+  "schema_version": "project-sow-intake-v0"
+}

@@ -2324,6 +2324,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
   --output-dir source_library
 ```
 
+Validate an intake without writing generated package outputs with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-validate \
+  --intake config/templates/project_sow_land_exchange_intake_template.json
+```
+
+The package command also accepts `--validate-only` for the same no-write validation workflow.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`
@@ -2372,16 +2381,20 @@ data, not hidden runtime branches. Each scope can define:
 - `authority_family_ids` from `config/authority_universe_families_nepa_ea_v1.json`;
 - `sow_tasks`, `data_needs`, `required_deliverables`, and `defensibility_checks`.
 
-The initial checked-in intake fixture at
-`config/fixtures/project_sow/east_crazies_land_exchange_intake.json` has schema version
+The tracked intake schema is
+`docs/schemas/project_sow_intake_v0.schema.json`. The minimal land-exchange starting template is
+`config/templates/project_sow_land_exchange_intake_template.json`. Both use schema version
 `project-sow-intake-v0`. A reviewer-ready intake must include at least project ID, project name,
 forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
-The East Crazies calibration fixture also records structured `proposed_action_elements` with
-`evidence_refs`, `resource_analysis_expectations`, and the actual specialist/supporting reports
-observed in the completed East Crazies package, including minerals, aquatics, at-risk
-plants/botany, carbon, cultural resources, recreation special areas, recreation special uses,
-roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the plan-consistency
-table.
+The validation-only summary has schema version `project-sow-intake-validation-summary-v0` and
+reports selected scope IDs, proposed-action resource-area count, graph node/edge counts, all
+validation checks, failed checks, and `output_written=false`. The East Crazies calibration fixture
+at `config/fixtures/project_sow/east_crazies_land_exchange_intake.json` also records structured
+`proposed_action_elements` with `evidence_refs`, `resource_analysis_expectations`, and the actual
+specialist/supporting reports observed in the completed East Crazies package, including minerals,
+aquatics, at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation
+special uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the
+plan-consistency table.
 
 The intake evidence graph uses deterministic node and edge IDs. Required node types are:
 

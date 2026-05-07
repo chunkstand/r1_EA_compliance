@@ -239,6 +239,89 @@ def test_project_sow_package_handler_propagates_options(monkeypatch) -> None:
     assert captured["results_dir"] == Path("sow-output")
 
 
+def test_project_sow_package_handler_propagates_validate_only(monkeypatch) -> None:
+    captured = {}
+
+    def fake_validate_project_sow_intake(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "validate_project_sow_intake",
+        fake_validate_project_sow_intake,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-package",
+            "--intake",
+            "config/intake.json",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+            "--validate-only",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+    assert "output_dir" not in captured
+    assert "results_dir" not in captured
+
+
+def test_project_sow_intake_validate_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_validate_project_sow_intake(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "validate_project_sow_intake",
+        fake_validate_project_sow_intake,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-intake-validate",
+            "--intake",
+            "config/intake.json",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):

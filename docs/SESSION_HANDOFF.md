@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-06
+Date: 2026-05-07
 
 ## Current Project SOW Package Branch Handoff
 
@@ -8,6 +8,31 @@ Branch/worktree:
 
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
+
+Project SOW operationalization Sequence 1 is implemented. The supported first step for a new
+land-exchange proposed action is now to start from
+`config/templates/project_sow_land_exchange_intake_template.json`, populate the project-specific
+fields, then run the no-write validator:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-validate \
+  --intake /tmp/new_land_exchange_intake.json
+```
+
+The package command also supports `--validate-only` for the same validation path. Both validation
+paths reuse the package builder's intake checks and do not create
+`source_library/projects/<project_id>/requirements_package/` outputs. The validation summary has
+schema version `project-sow-intake-validation-summary-v0`, reports selected scope IDs, proposed
+action resource-area count, intake evidence graph node/edge counts, all validation checks, failed
+checks, and `output_written=false`. The tracked intake schema is
+`docs/schemas/project_sow_intake_v0.schema.json`.
+
+Sequence 1 validation fixtures now cover unsupported schema version, missing federal land action,
+missing evidence refs, and unknown resource-area IDs. The minimal land-exchange template validates
+with `4` selected SOW scopes, `2` proposed-action resource areas, and `0` validation failures. The
+East Crazies intake validates without writing outputs and preserves the accepted calibration counts:
+`10` selected SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph
+edges, and `0` validation failures.
 
 Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
@@ -33,6 +58,8 @@ Implemented surfaces:
 - `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`
 - `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`
 - `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md`
+- `docs/schemas/project_sow_intake_v0.schema.json`
+- `config/templates/project_sow_land_exchange_intake_template.json`
 
 The command writes `project_sow_package.json`, `project_sow_package.md`,
 `project_sow_package.pdf`, and `project_sow_package_manifest.json` under
@@ -92,10 +119,10 @@ validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 1,
-intake schema, minimal land-exchange template, and validation-only workflow. Keep JSON canonical,
-do not convert SOW scopes into applicability or compliance findings, and do not stage ignored
-`source_library/` outputs.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 2,
+intake authoring assistant for proposed actions. Keep JSON canonical, keep human review in control
+of any draft intake, do not convert SOW scopes into applicability or compliance findings, and do
+not stage ignored `source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff
 

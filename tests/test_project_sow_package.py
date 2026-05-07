@@ -7,10 +7,12 @@ from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
+from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 INTAKE_PATH = REPO_ROOT / "config" / "fixtures" / "project_sow" / "east_crazies_land_exchange_intake.json"
+TEMPLATE_PATH = REPO_ROOT / "config" / "templates" / "project_sow_land_exchange_intake_template.json"
 
 
 def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: Path) -> None:
@@ -156,6 +158,130 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert "Review Checklist" in pdf_text
     assert "Resource Analysis Coverage" in pdf_text
     assert "project_sow_pdf_required_items_present: passed" in pdf_text
+
+
+def test_project_sow_intake_validate_accepts_east_crazies_without_writing_outputs() -> None:
+    result = validate_project_sow_intake(intake_path=INTAKE_PATH)
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["validation_only"] is True
+    assert result.summary["output_written"] is False
+    assert result.summary["resource_scope_count"] == 10
+    assert result.summary["proposed_action_resource_area_count"] == 23
+    assert result.summary["intake_evidence_graph_node_count"] == 115
+    assert result.summary["intake_evidence_graph_edge_count"] == 134
+    assert result.summary["validation_failure_count"] == 0
+    assert result.summary["failed_validation_checks"] == []
+
+
+def test_project_sow_intake_validate_accepts_minimal_land_exchange_template() -> None:
+    result = validate_project_sow_intake(intake_path=TEMPLATE_PATH)
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["validation_only"] is True
+    assert result.summary["output_written"] is False
+    assert result.summary["resource_scope_count"] == 4
+    assert result.summary["proposed_action_resource_area_count"] == 2
+    assert result.summary["validation_failure_count"] == 0
+    assert set(result.summary["selected_resource_scope_ids"]) == {
+        "nepa_project_management",
+        "lands_realty_land_exchange",
+        "forest_plan_consistency",
+        "public_involvement_coordination",
+    }
+
+
+def test_project_sow_intake_validate_fails_unsupported_schema_version(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["schema_version"] = "project-sow-intake-v99"
+
+    result = _validate_with_intake(tmp_path, intake, "unsupported_schema_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {"intake_schema_supported"}
+    assert failed_checks["intake_schema_supported"]["details"] == {
+        "schema_version": "project-sow-intake-v99"
+    }
+
+
+def test_project_sow_intake_validate_fails_minimal_missing_federal_land_action(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["federal_land_actions"] = []
+
+    result = _validate_with_intake(tmp_path, intake, "missing_federal_action_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 2
+    assert set(failed_checks) == {
+        "land_exchange_intake_has_federal_land_actions",
+        "required_intake_fields_present",
+    }
+
+
+def test_project_sow_intake_validate_fails_minimal_missing_evidence_refs(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["proposed_action_elements"][0]["evidence_refs"] = []
+
+    result = _validate_with_intake(tmp_path, intake, "missing_evidence_refs_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 2
+    assert set(failed_checks) == {
+        "intake_evidence_graph_action_elements_have_evidence_refs",
+        "intake_evidence_graph_resource_area_paths_complete",
+    }
+    assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
+        "details"
+    ] == {"resource_area_ids": ["land_exchange_case", "land_management_plan_consistency"]}
+
+
+def test_project_sow_intake_validate_fails_minimal_unknown_resource_area(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["proposed_action_elements"][0]["resource_area_ids"].append("unknown_area")
+    intake["resource_analysis_expectations"].append(
+        {
+            "proposed_action_basis": ["Intentional invalid test area."],
+            "resource_area_id": "unknown_area",
+            "resource_area_name": "Unknown area",
+        }
+    )
+
+    result = _validate_with_intake(tmp_path, intake, "unknown_resource_area_intake.json")
+
+    failed_checks = _failed_checks(result)
+    expected_details = {"resource_area_ids": ["unknown_area"]}
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 3
+    assert set(failed_checks) == {
+        "expected_resource_areas_have_sow_scope",
+        "expected_resource_areas_resolve_to_scope_config",
+        "intake_evidence_graph_resource_area_paths_complete",
+    }
+    assert failed_checks["expected_resource_areas_have_sow_scope"][
+        "details"
+    ] == expected_details
+    assert failed_checks["expected_resource_areas_resolve_to_scope_config"][
+        "details"
+    ] == expected_details
+    assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
+        "details"
+    ] == expected_details
 
 
 def test_project_sow_package_fails_unknown_authority_family(tmp_path: Path) -> None:
@@ -572,6 +698,12 @@ def _run_with_intake(tmp_path: Path, intake: dict, filename: str):
         intake_path=intake_path,
         output_dir=tmp_path / "source_library",
     )
+
+
+def _validate_with_intake(tmp_path: Path, intake: dict, filename: str):
+    intake_path = tmp_path / filename
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+    return validate_project_sow_intake(intake_path=intake_path)
 
 
 def _failed_checks(result) -> dict:
