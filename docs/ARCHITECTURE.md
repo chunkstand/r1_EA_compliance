@@ -149,9 +149,13 @@ scopes must include those fields before package generation. The
 `project-sow-adjudication-apply` commands provide a reviewer worklist and deterministic replay path
 for unresolved resource areas, missing evidence refs, unknown resource-area IDs, calibration gaps,
 and optional deliverable decisions. Apply writes an adjudicated intake copy with replay metadata;
-generated packages must be regenerated from that input rather than edited by hand. These commands
-do not create applicability decisions, compliance findings, or legal sufficiency conclusions, and an
-unreviewed draft cannot pass validation until reviewer-confirmation metadata is cleared.
+generated packages must be regenerated from that input rather than edited by hand. The
+`project-sow-ea-package-handoff` command reads accepted package JSON and tracked handoff rules to
+write a downstream EA package assembly checklist for source collection, specialist report
+production, public involvement, consultation, Forest Plan consistency, and decision-record support.
+These commands do not create applicability decisions, generated rule packs, compliance findings, or
+legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
+reviewer-confirmation metadata is cleared.
 
 ## Public CLI Surface
 

@@ -422,6 +422,45 @@ def test_project_sow_eval_handler_propagates_options(monkeypatch) -> None:
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
 
 
+def test_project_sow_ea_package_handoff_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_ea_package_handoff(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_ea_package_handoff",
+        fake_run_project_sow_ea_package_handoff,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-ea-package-handoff",
+            "--package",
+            "project_sow_package.json",
+            "--output",
+            "project_sow_ea_package_handoff.json",
+            "--markdown-output",
+            "project_sow_ea_package_handoff.md",
+            "--handoff-rules",
+            "config/project_sow_ea_handoff_rules_v1.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["package_path"] == Path("project_sow_package.json")
+    assert captured["output_path"] == Path("project_sow_ea_package_handoff.json")
+    assert captured["markdown_path"] == Path("project_sow_ea_package_handoff.md")
+    assert captured["handoff_rules_config_path"] == Path(
+        "config/project_sow_ea_handoff_rules_v1.json"
+    )
+
+
 def test_project_sow_adjudication_template_handler_propagates_options(monkeypatch) -> None:
     captured = {}
 

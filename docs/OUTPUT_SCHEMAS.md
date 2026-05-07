@@ -2453,12 +2453,51 @@ adjudicated intake surfaces the adjudication status in `intake_summary` and
 status, item count, and decision counts. Apply does not mutate the original intake and does not edit
 generated package outputs.
 
+Generate the downstream EA package assembly handoff from an accepted package with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command writes `project_sow_ea_package_handoff.json` and
+`project_sow_ea_package_handoff.md` next to the package unless explicit output paths are supplied.
+It reads the canonical `project_sow_package.json` plus
+`config/project_sow_ea_handoff_rules_v1.json`; it does not inspect future EA package files and does
+not require them to exist.
+
+`project_sow_ea_package_handoff.json` has schema version
+`project-sow-ea-package-handoff-v0`. It includes:
+
+- `package_identity`, with project ID/name, source set, scope set, and package schema version;
+- `derived_from`, including the canonical package path, package schema version, package validation
+  status, and package fields used to derive the handoff;
+- `input_paths` and `input_hashes` for the package JSON and handoff rules config;
+- `downstream_boundaries`, including explicit no-applicability-review, no-generated-rule-pack,
+  no-compliance-review, no-legal-sufficiency, and future-artifacts-not-required-now boundaries;
+- `assembly_categories`, with configured categories and slot counts;
+- `assembly_slots[]`, one expected future-artifact checklist slot per selected SOW
+  scope/category match. Slots include `slot_id`, `slot_category`, selected `resource_scope_id`,
+  covered and matched resource areas, selected authority families, required and optional SOW
+  deliverables, expected future artifact types, and `future_artifact_required_now=false`;
+- `validation`, with fail-closed checks for package schema, package validation status, configured
+  resource scopes, handoff rules schema, required categories, category-rule resolution, and
+  downstream boundary coverage.
+
+The East Crazies proving package currently emits `27` slots: `10` source-collection, `10`
+specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
+consistency, and `2` decision-record-support slots. This handoff is an assembly checklist only; it
+does not create applicability decisions, generated rule packs, compliance findings, legal advice,
+legal sufficiency conclusions, or final agency decisions.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`
 - `project_sow_package.md`
 - `project_sow_package.pdf`
 - `project_sow_package_manifest.json`
+- `project_sow_ea_package_handoff.json`
+- `project_sow_ea_package_handoff.md`
 
 `project_sow_package.json` has schema version `project-sow-package-v0` and is the canonical
 machine-readable package. The Markdown and PDF renderings must derive from that JSON. The report

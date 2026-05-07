@@ -513,6 +513,21 @@ packages from that intake surface adjudication status and decision counts in the
 and command summaries. It does not mutate the original intake and does not edit generated package
 outputs by hand.
 
+Operationalization Sequence 6 adds the downstream EA package assembly handoff:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command reads a passing canonical `project_sow_package.json` plus
+`config/project_sow_ea_handoff_rules_v1.json` and writes
+`project_sow_ea_package_handoff.json` plus `project_sow_ea_package_handoff.md`. East Crazies
+currently emits `27` expected future-artifact slots: `10` source-collection, `10`
+specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
+consistency, and `2` decision-record-support slots. Future artifacts are checklist expectations
+only; the command does not require them to exist.
+
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
 evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
@@ -524,8 +539,8 @@ proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 
 The requirements-package sequence plan for this lane is
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`. The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is downstream EA package
-assembly handoff.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is operational gate and
+release closeout.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -542,6 +557,9 @@ federal land action, or Markdown/PDF renderings missing required reviewer-facing
 Project-SOW adjudication eval additionally fails closed on stale hashes, missing queue rows,
 unexpected or duplicate rows, changed queue identity fields, invalid item types, invalid decisions,
 pending decisions, or incomplete reviewer metadata.
+Project-SOW EA handoff validation additionally fails closed on invalid package schema, failed
+package validation, missing selected scopes, unsupported handoff rules schema, missing required
+handoff categories, unresolved category rules, or missing downstream boundaries.
 
 ## Verified State Snapshot
 

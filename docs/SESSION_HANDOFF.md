@@ -170,6 +170,30 @@ smoke reported `3` cases passed and `0` failed cases; the adjudication replay sm
 and `30` out-of-scope optional-deliverable decisions, and generated a package with
 `adjudication_status=adjudicated` plus a valid `%PDF-` header.
 
+Project SOW operationalization Sequence 6 is implemented. The new public command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command reads canonical `project_sow_package.json` plus
+`config/project_sow_ea_handoff_rules_v1.json` and writes
+`project_sow_ea_package_handoff.json` plus `project_sow_ea_package_handoff.md` next to the package
+unless explicit output paths are supplied. The JSON handoff records package identity, package/rules
+input paths and hashes, downstream boundaries, category summaries, validation checks, and future EA
+assembly slots. Slots map selected SOW scopes to expected source collection, specialist report
+production, public involvement, consultation, Forest Plan consistency, and decision-record support
+artifacts, but every slot has `future_artifact_required_now=false`.
+
+Sequence 6 closeout verification passed: the focused project-SOW/CLI suite reported `55 passed`,
+and the CLI smoke run generated a handoff from the East Crazies package with `27` expected
+future-artifact slots: `10` source-collection, `10` specialist-report-production, `1`
+public-involvement, `3` consultation, `1` Forest Plan consistency, and `2`
+decision-record-support slots. The handoff remains upstream planning support only; it does not
+create applicability decisions, generated rule packs, compliance findings, legal advice, legal
+sufficiency conclusions, or final agency decisions.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package
@@ -186,6 +210,7 @@ Implemented surfaces:
 - `config/project_sow_resource_scopes_v1.json`
 - `config/project_sow_intake_draft_rules_v1.json`
 - `config/project_sow_eval_proving_intakes_v1.json`
+- `config/project_sow_ea_handoff_rules_v1.json`
 - `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
 - `config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json`
 - `config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json`
@@ -265,8 +290,8 @@ nodes, `134` graph edges, `0` validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 6,
-downstream EA package assembly handoff. Keep JSON canonical, do not convert SOW scopes into
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 7,
+operational gate and release closeout. Keep JSON canonical, do not convert SOW scopes into
 applicability or compliance findings, and do not stage ignored `source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff

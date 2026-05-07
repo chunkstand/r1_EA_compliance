@@ -287,28 +287,41 @@ Gap-close pass:
 
 ## Sequence 6: Downstream EA Package Assembly Handoff
 
-Status: planned.
+Status: complete.
 
 Purpose: define how an accepted SOW package becomes the starting checklist for assembling a
 defensible EA package.
 
-Candidate work:
+Implemented work:
 
-- add a handoff artifact that maps SOW scopes to expected future EA package documents or evidence
-  slots;
-- distinguish source collection, specialist report production, public involvement, consultation,
-  Forest Plan consistency, and decision-record support;
-- document what downstream commands may consume later and what they must not infer;
-- add an optional dry-run handoff command that reads a package JSON and emits the expected EA
-  package assembly checklist.
+- added tracked handoff rules in `config/project_sow_ea_handoff_rules_v1.json` for source
+  collection, specialist report production, public involvement, consultation, Forest Plan
+  consistency, and decision-record support;
+- added `project-sow-ea-package-handoff`, which reads canonical `project_sow_package.json` and
+  writes `project_sow_ea_package_handoff.json` plus
+  `project_sow_ea_package_handoff.md`;
+- the JSON handoff records package identity, package/rules input paths and hashes, downstream
+  boundaries, category summaries, validation checks, and one future-artifact checklist slot per
+  selected SOW scope/category match;
+- each slot carries `future_artifact_required_now=false`, expected future artifact types, selected
+  SOW scope, covered resource areas, required/optional SOW deliverables, and source package fields;
+- validation fails closed if the input is not a passing project SOW package, the handoff rules
+  schema is unsupported, required categories are missing, category rules do not resolve, or
+  downstream boundaries are incomplete.
 
-Acceptance gate:
+Acceptance gate status:
 
-- handoff output is derived from canonical `project_sow_package.json`;
-- the handoff identifies expected future artifacts without requiring them to exist yet;
+- handoff output is derived from canonical `project_sow_package.json` and records its SHA-256 hash;
+- East Crazies emits `27` expected future-artifact slots: `10` source-collection, `10`
+  specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
+  consistency, and `2` decision-record-support slots;
+- future artifacts are checklist expectations only and are not required to exist when the handoff is
+  generated;
 - downstream boundaries are explicit: no applicability review, generated rule pack, compliance
-  review, or legal sufficiency claim is triggered by SOW generation;
-- tests prove the handoff remains stable for East Crazies.
+  review, legal advice, legal sufficiency conclusion, or final agency decision is triggered by SOW
+  generation;
+- focused tests prove the handoff remains stable for East Crazies and fails invalid package/rules
+  inputs without writing handoff outputs.
 
 ## Sequence 7: Operational Gate And Release Closeout
 
@@ -344,6 +357,7 @@ PYTHONPATH=src uv run --extra dev python -m compileall src
 PYTHONPATH=src uv run --extra dev python -m json.tool docs/schemas/project_sow_intake_v0.schema.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/templates/project_sow_land_exchange_intake_template.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_resource_scopes_v1.json
+PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_ea_handoff_rules_v1.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/fixtures/project_sow/east_crazies_land_exchange_intake.json
 git diff --check
 ```

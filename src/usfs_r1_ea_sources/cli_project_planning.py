@@ -6,11 +6,13 @@ import argparse
 from .cli_common import print_summary
 from .project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from .project_sow_package import DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH
+from .project_sow_package import DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR
 from .project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from .project_sow_package import run_project_sow_adjudication_apply
 from .project_sow_package import run_project_sow_adjudication_eval
+from .project_sow_package import run_project_sow_ea_package_handoff
 from .project_sow_package import run_project_sow_eval
 from .project_sow_package import run_project_sow_intake_draft
 from .project_sow_package import run_project_sow_package
@@ -22,6 +24,7 @@ PROJECT_PLANNING_COMMANDS = {
     "project-sow-adjudication-apply",
     "project-sow-adjudication-eval",
     "project-sow-adjudication-template",
+    "project-sow-ea-package-handoff",
     "project-sow-eval",
     "project-sow-intake-draft",
     "project-sow-intake-validate",
@@ -191,6 +194,19 @@ def register_project_planning_commands(
         type=Path,
     )
 
+    ea_handoff = subparsers.add_parser(
+        "project-sow-ea-package-handoff",
+        help="Write a downstream EA package assembly checklist from project_sow_package.json.",
+    )
+    ea_handoff.add_argument("--package", required=True, type=Path)
+    ea_handoff.add_argument("--output", type=Path)
+    ea_handoff.add_argument("--markdown-output", type=Path)
+    ea_handoff.add_argument(
+        "--handoff-rules",
+        default=DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH,
+        type=Path,
+    )
+
 
 def handle_project_planning_command(
     args: argparse.Namespace,
@@ -296,6 +312,16 @@ def handle_project_planning_command(
             source_set_id=args.source_set_id,
             resource_scope_config_path=args.resource_scope_config,
             authority_inventory_path=args.authority_inventory,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-ea-package-handoff":
+        result = run_project_sow_ea_package_handoff(
+            package_path=args.package,
+            output_path=args.output,
+            markdown_path=args.markdown_output,
+            handoff_rules_config_path=args.handoff_rules,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

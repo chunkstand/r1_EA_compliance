@@ -162,7 +162,10 @@ outputs. The `project-sow-adjudication-template`, `project-sow-adjudication-eval
 refs, unknown resource-area IDs, calibration gaps, and optional deliverable decisions reviewable and
 replayable into an adjudicated intake copy before package regeneration. The package is a planning
 and contracting support artifact for scoping resource SOW needs; it is not a final SOW award
-document. See
+document. `project-sow-ea-package-handoff` now reads accepted `project_sow_package.json` and writes
+a downstream EA package assembly checklist for future source collection, specialist reports, public
+involvement, consultation, Forest Plan consistency, and decision-record support without requiring
+those future artifacts to exist or triggering applicability/compliance review. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved
@@ -202,6 +205,7 @@ heuristics.
 - `config/templates/project_sow_land_exchange_intake_template.json`
 - `config/project_sow_intake_draft_rules_v1.json`
 - `config/project_sow_eval_proving_intakes_v1.json`
+- `config/project_sow_ea_handoff_rules_v1.json`
 - `config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json`
 - `config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json`
 - `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`

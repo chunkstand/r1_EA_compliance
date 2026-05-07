@@ -1,0 +1,151 @@
+{
+  "assembly_categories": [
+    {
+      "applies_to": "all_selected_scopes",
+      "category_id": "source_collection",
+      "description": "Future source and evidence collection needed before downstream EA package review.",
+      "expected_artifact_types": [
+        "source inventory row",
+        "source record metadata",
+        "citation-ready source excerpt"
+      ],
+      "title": "Source Collection"
+    },
+    {
+      "applies_to": "all_selected_scopes",
+      "category_id": "specialist_report_production",
+      "description": "Future specialist or resource report products expected from selected SOW scopes.",
+      "expected_artifact_types": [
+        "specialist report",
+        "resource analysis memo",
+        "review-ready deliverable"
+      ],
+      "title": "Specialist Report Production"
+    },
+    {
+      "applies_to": "rule_matches",
+      "category_id": "public_involvement",
+      "description": "Future public involvement and coordination records expected for the EA package.",
+      "expected_artifact_types": [
+        "scoping notice",
+        "comment summary",
+        "agency and public coordination record"
+      ],
+      "title": "Public Involvement"
+    },
+    {
+      "applies_to": "rule_matches",
+      "category_id": "consultation",
+      "description": "Future consultation records expected for statutory or intergovernmental coordination.",
+      "expected_artifact_types": [
+        "consultation initiation record",
+        "consultation response",
+        "consultation completion memo"
+      ],
+      "title": "Consultation"
+    },
+    {
+      "applies_to": "rule_matches",
+      "category_id": "forest_plan_consistency",
+      "description": "Future Forest Plan consistency material expected for downstream EA assembly.",
+      "expected_artifact_types": [
+        "Forest Plan consistency table",
+        "applicable standard and guideline crosswalk",
+        "forest-plan evidence excerpt"
+      ],
+      "title": "Forest Plan Consistency"
+    },
+    {
+      "applies_to": "rule_matches",
+      "category_id": "decision_record_support",
+      "description": "Future decision-record support material expected after analysis is complete.",
+      "expected_artifact_types": [
+        "decision rationale support memo",
+        "alternatives and effects summary",
+        "administrative record pointer"
+      ],
+      "title": "Decision Record Support"
+    }
+  ],
+  "category_rules": [
+    {
+      "category_id": "public_involvement",
+      "resource_area_ids": [
+        "agencies_persons_consulted",
+        "public_involvement"
+      ],
+      "resource_scope_ids": [
+        "public_involvement_coordination"
+      ]
+    },
+    {
+      "category_id": "consultation",
+      "resource_area_ids": [
+        "aquatic_resources",
+        "botanical_resources",
+        "cultural_resources",
+        "floodplains_wetlands",
+        "species_consultation",
+        "tribal_relations",
+        "water_quality",
+        "wildlife_resources"
+      ],
+      "resource_scope_ids": [
+        "cultural_tribal_resources",
+        "hydrology_wetlands_water_quality",
+        "wildlife_species_botany"
+      ]
+    },
+    {
+      "category_id": "forest_plan_consistency",
+      "resource_area_ids": [
+        "land_management_plan_consistency"
+      ],
+      "resource_scope_ids": [
+        "forest_plan_consistency"
+      ]
+    },
+    {
+      "category_id": "decision_record_support",
+      "resource_area_ids": [
+        "federal_land_regulations",
+        "land_exchange_case"
+      ],
+      "resource_scope_ids": [
+        "lands_realty_land_exchange",
+        "nepa_project_management"
+      ]
+    }
+  ],
+  "downstream_boundaries": [
+    {
+      "boundary_id": "no_applicability_review",
+      "statement": "The handoff does not decide authority applicability or non-applicability."
+    },
+    {
+      "boundary_id": "no_generated_rule_pack",
+      "statement": "The handoff does not generate or validate an applicability rule pack."
+    },
+    {
+      "boundary_id": "no_compliance_review",
+      "statement": "The handoff does not run compliance review or create compliance findings."
+    },
+    {
+      "boundary_id": "no_legal_sufficiency",
+      "statement": "The handoff does not make legal advice, legal sufficiency conclusions, or final agency decisions."
+    },
+    {
+      "boundary_id": "future_artifacts_not_required_now",
+      "statement": "Expected future EA package artifacts are checklist slots; they are not required to exist when the handoff is generated."
+    }
+  ],
+  "required_category_ids": [
+    "source_collection",
+    "specialist_report_production",
+    "public_involvement",
+    "consultation",
+    "forest_plan_consistency",
+    "decision_record_support"
+  ],
+  "schema_version": "project-sow-ea-handoff-rules-v1"
+}

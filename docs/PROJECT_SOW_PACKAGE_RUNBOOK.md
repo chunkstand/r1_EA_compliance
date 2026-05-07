@@ -194,7 +194,27 @@ visibility only and do not satisfy required deliverable validation. Each selecte
 also carry assumptions, dependencies, acceptance criteria, reviewer role, review timing, and reviewer
 signoff fields from `config/project_sow_resource_scopes_v1.json`.
 
-## 9. Resolve Validation Failures
+## 9. Generate The EA Package Assembly Handoff
+
+After `project_sow_package.json` is accepted, generate the downstream assembly checklist:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command writes `project_sow_ea_package_handoff.json` and
+`project_sow_ea_package_handoff.md` next to the package by default. It reads only the canonical
+package JSON plus `config/project_sow_ea_handoff_rules_v1.json`; it does not inspect or require
+future EA package files. The handoff maps selected SOW scopes into expected future slots for source
+collection, specialist report production, public involvement, consultation, Forest Plan
+consistency, and decision-record support.
+
+Every handoff slot has `future_artifact_required_now=false`. The output is an assembly checklist,
+not an applicability review, generated rule pack, compliance review, legal advice, legal sufficiency
+conclusion, or final agency decision.
+
+## 10. Resolve Validation Failures
 
 Common failure categories:
 
@@ -210,6 +230,7 @@ Common failure categories:
 - selected SOW scopes lack required contract fields such as assumptions, dependencies, acceptance
   criteria, reviewer role, review timing, optional deliverables, or reviewer signoff fields;
 - selected SOW scopes lack required deliverables, even if optional deliverables are present;
+- EA package handoff rules are missing required assembly categories or downstream boundaries;
 - an action element has resource areas but no evidence refs;
 - an action element has evidence refs but no resource areas;
 - observed reports cover resource areas not derived from the proposed action;

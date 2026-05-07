@@ -352,6 +352,8 @@ paths = [
   "source_library/projects/<project_id>/requirements_package/project_sow_package.md",
   "source_library/projects/<project_id>/requirements_package/project_sow_package.pdf",
   "source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.md",
 ]
 
 [[artifacts]]
@@ -440,6 +442,7 @@ commands = [
   "project-sow-adjudication-apply",
   "project-sow-adjudication-eval",
   "project-sow-adjudication-template",
+  "project-sow-ea-package-handoff",
   "project-sow-eval",
   "project-sow-intake-draft",
   "project-sow-intake-validate",

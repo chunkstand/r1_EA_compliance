@@ -6,10 +6,14 @@ from pathlib import Path
 
 from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
+from usfs_r1_ea_sources.project_sow_package import (
+    DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH,
+)
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_eval
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_apply
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_eval
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_ea_package_handoff
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_intake_draft
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
 from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
@@ -599,6 +603,137 @@ def test_project_sow_adjudication_apply_updates_intake_for_package_status(
         "accepted": 7,
         "out_of_scope": 30,
     }
+
+
+def test_project_sow_ea_package_handoff_derives_from_package_json(
+    tmp_path: Path,
+) -> None:
+    package_result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+
+    result = run_project_sow_ea_package_handoff(
+        package_path=package_result.package_path,
+        output_path=tmp_path / "project_sow_ea_package_handoff.json",
+        markdown_path=tmp_path / "project_sow_ea_package_handoff.md",
+    )
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["output_written"] is True
+    assert result.summary["slot_count"] == 27
+    assert result.summary["slot_category_counts"] == {
+        "consultation": 3,
+        "decision_record_support": 2,
+        "forest_plan_consistency": 1,
+        "public_involvement": 1,
+        "source_collection": 10,
+        "specialist_report_production": 10,
+    }
+    assert result.output_path.exists()
+    assert result.markdown_path.exists()
+
+    handoff = json.loads(result.output_path.read_text())
+    package = json.loads(package_result.package_path.read_text())
+    package_hash = hashlib.sha256(package_result.package_path.read_bytes()).hexdigest()
+    assert handoff["schema_version"] == "project-sow-ea-package-handoff-v0"
+    assert handoff["package_identity"]["project_id"] == package["project_id"]
+    assert handoff["package_identity"]["source_set_id"] == package["source_set_id"]
+    assert handoff["derived_from"]["canonical_package_path"] == str(package_result.package_path)
+    assert handoff["derived_from"]["source_fields"] == [
+        "project_id",
+        "project_name",
+        "source_set_id",
+        "scope_set_id",
+        "resource_scope_records",
+        "resource_analysis_matrix",
+        "authority_requirement_matrix",
+        "validation",
+    ]
+    assert handoff["input_hashes"]["project_sow_package_sha256"] == package_hash
+    assert handoff["summary"]["slot_count"] == 27
+    assert handoff["summary"]["slot_category_counts"] == result.summary[
+        "slot_category_counts"
+    ]
+    assert all(
+        slot["future_artifact_required_now"] is False
+        for slot in handoff["assembly_slots"]
+    )
+    assert all(
+        artifact["required_now"] is False
+        for slot in handoff["assembly_slots"]
+        for artifact in slot["expected_future_artifacts"]
+    )
+    boundary_ids = {
+        boundary["boundary_id"] for boundary in handoff["downstream_boundaries"]
+    }
+    assert {
+        "future_artifacts_not_required_now",
+        "no_applicability_review",
+        "no_compliance_review",
+        "no_generated_rule_pack",
+        "no_legal_sufficiency",
+    }.issubset(boundary_ids)
+    markdown = result.markdown_path.read_text()
+    assert "EA Package Assembly Handoff" in markdown
+    assert "Assembly Checklist" in markdown
+    assert "no_applicability_review" in markdown
+
+
+def test_project_sow_ea_package_handoff_fails_invalid_package(
+    tmp_path: Path,
+) -> None:
+    package_result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    package = json.loads(package_result.package_path.read_text())
+    package["validation"]["passed"] = False
+    invalid_package_path = tmp_path / "project_sow_package.json"
+    invalid_package_path.write_text(json.dumps(package), encoding="utf-8")
+
+    result = run_project_sow_ea_package_handoff(
+        package_path=invalid_package_path,
+        output_path=tmp_path / "project_sow_ea_package_handoff.json",
+        markdown_path=tmp_path / "project_sow_ea_package_handoff.md",
+    )
+
+    failed_checks = {
+        check["name"]: check for check in result.summary["failed_validation_checks"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["slot_count"] == 0
+    assert set(failed_checks) == {"project_sow_package_validation_passed"}
+    assert not result.output_path.exists()
+    assert not result.markdown_path.exists()
+
+
+def test_project_sow_ea_package_handoff_fails_incomplete_rules(
+    tmp_path: Path,
+) -> None:
+    package_result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    rules = json.loads(
+        (REPO_ROOT / DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH).read_text()
+    )
+    rules["required_category_ids"].append("missing_category")
+    rules_path = tmp_path / "project_sow_ea_handoff_rules.json"
+    rules_path.write_text(json.dumps(rules), encoding="utf-8")
+
+    result = run_project_sow_ea_package_handoff(
+        package_path=package_result.package_path,
+        handoff_rules_config_path=rules_path,
+    )
+
+    failed_checks = {
+        check["name"]: check for check in result.summary["failed_validation_checks"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert set(failed_checks) == {"ea_handoff_required_categories_present"}
 
 
 def test_project_sow_intake_schema_declares_draft_metadata_contract() -> None:
