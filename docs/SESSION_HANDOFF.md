@@ -10,15 +10,22 @@ An ad hoc soils resource-area SOW has been produced at
 docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
 temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
-The SOW has been upgraded into a consultant-ready Soils Specialist Report work package. It now
-includes researched Forest Service EA requirements, Custer Gallatin soil-plan context,
-soil-disturbance and BMP guidance, fieldwork methods, analysis requirements, required tables/maps,
-deliverables, schedule, acceptance criteria, and open Forest Service decisions. Important boundary:
-`soil_resources` is covered by the selected `vegetation_soils_air_quality` scope, but the current
-East Crazies intake does not explicitly list soils as a proposed-action-derived resource area and the
-observed East Crazies calibration set has no standalone soils specialist report. This artifact does
-not change package-generation code, generated source-library policy, applicability decisions,
-compliance findings, legal sufficiency, or final agency decision status.
+The SOW is now organized around the three requested work sections: Fieldwork, Analysis, and
+Deliverables. Requirements were traced from the Region 1 FSM 2550 Soil Management Supplement, the
+South Plateau Custer Gallatin soils specialist report model, the East Crazies Final EA, the East
+Crazies Plan Consistency Table, the East Crazies Roads/Trails/Access Report, the East Crazies
+Wetlands Report, and the post-exchange parcel restrictions. The current revision also adds a
+source-to-requirement traceability matrix so a consultant or Custer Gallatin soils specialist can see
+which source drives each fieldwork, analysis, and deliverable requirement.
+
+Important boundary: `soil_resources` is covered by the selected `vegetation_soils_air_quality`
+scope, but the current East Crazies intake does not explicitly list soils as a
+proposed-action-derived resource area and the observed East Crazies final specialist report folder
+has no standalone soils specialist report. The local soils specialist report reviewed for structure
+was `Soils Report Revised_Anderson 2023.pdf` from the South Plateau Landscape Area Treatment
+Project; it was used as a Custer Gallatin report model, not as East Crazies project evidence. This
+artifact does not change package-generation code, generated source-library policy, applicability
+decisions, compliance findings, legal sufficiency, or final agency decision status.
 
 ## Current Project SOW Package Branch Handoff
 
