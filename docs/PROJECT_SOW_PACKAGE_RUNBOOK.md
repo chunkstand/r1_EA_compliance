@@ -118,6 +118,8 @@ Common failure categories:
 
 - required intake fields are missing;
 - the intake schema version is unsupported;
+- nested action element, evidence ref, federal land action, resource expectation, or observed
+  report rows are missing required schema fields;
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
 - an action element has resource areas but no evidence refs;

@@ -108,14 +108,18 @@ Implemented work:
 - validation summaries now report required-field, federal land action, action element, evidence
   ref, resource-area, observed-report, selected-scope, and canonical graph path checks with
   `output_written=false`;
+- validation now fails closed on schema-shape defects in nested action-element, evidence-ref,
+  federal-land-action, resource-expectation, and observed-report rows instead of relying only on
+  graph construction side effects;
 - `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` now documents the template-first validation workflow.
 
 Acceptance gate status:
 
 - minimal template validates with `4` selected SOW scopes, `2` proposed-action resource areas,
   `0` validation failures, and no generated outputs;
-- invalid intake tests fail closed on missing federal land action, missing evidence refs, unknown
-  resource-area IDs, and unsupported schema version;
+- invalid intake tests fail closed on missing federal land action, missing action elements, missing
+  or incomplete evidence refs, incomplete observed report rows, unknown resource-area IDs, and
+  unsupported schema version;
 - the East Crazies intake validates with the accepted counts: `10` selected SOW scopes, `23`
   proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures;
 - validation-only runs keep generated `source_library/` package outputs unwritten;
@@ -137,6 +141,13 @@ Candidate work:
 - require explicit reviewer confirmation before a draft becomes package input;
 - preserve the proposed-action source text or locator in evidence refs;
 - add runbook examples for drafting and then validating the intake.
+
+Recommended first pass:
+
+- define the draft-intake artifact contract, uncertainty flags, and reviewer-confirmation boundary;
+- add one proposed-action text fixture plus expected draft-intake metadata without attempting a
+  broad parser;
+- keep the draft output upstream of package generation until `project-sow-intake-validate` passes.
 
 Acceptance gate:
 

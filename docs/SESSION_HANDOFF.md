@@ -25,14 +25,17 @@ paths reuse the package builder's intake checks and do not create
 schema version `project-sow-intake-validation-summary-v0`, reports selected scope IDs, proposed
 action resource-area count, intake evidence graph node/edge counts, all validation checks, failed
 checks, and `output_written=false`. The tracked intake schema is
-`docs/schemas/project_sow_intake_v0.schema.json`.
+`docs/schemas/project_sow_intake_v0.schema.json`. The alignment pass after the first Sequence 1
+commit added explicit nested schema-shape validation so incomplete action-element, evidence-ref,
+federal-land-action, resource-expectation, and observed-report rows fail before package generation.
 
 Sequence 1 validation fixtures now cover unsupported schema version, missing federal land action,
-missing evidence refs, and unknown resource-area IDs. The minimal land-exchange template validates
-with `4` selected SOW scopes, `2` proposed-action resource areas, and `0` validation failures. The
-East Crazies intake validates without writing outputs and preserves the accepted calibration counts:
-`10` selected SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph
-edges, and `0` validation failures.
+missing action elements, missing or incomplete evidence refs, incomplete observed-report rows, and
+unknown resource-area IDs. The minimal land-exchange template validates with `4` selected SOW
+scopes, `2` proposed-action resource areas, and `0` validation failures. The East Crazies intake
+validates without writing outputs and preserves the accepted calibration counts: `10` selected SOW
+scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0`
+validation failures.
 
 Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
@@ -122,7 +125,9 @@ The successor operationalization plan is
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 2,
 intake authoring assistant for proposed actions. Keep JSON canonical, keep human review in control
 of any draft intake, do not convert SOW scopes into applicability or compliance findings, and do
-not stage ignored `source_library/` outputs.
+not stage ignored `source_library/` outputs. The next pass should define the draft-intake artifact
+contract, uncertainty flags, and reviewer-confirmation boundary before attempting a broad
+proposed-action parser.
 
 ## Current Applicability/Expansion Handoff
 

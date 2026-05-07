@@ -2388,8 +2388,10 @@ The tracked intake schema is
 forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
 The validation-only summary has schema version `project-sow-intake-validation-summary-v0` and
 reports selected scope IDs, proposed-action resource-area count, graph node/edge counts, all
-validation checks, failed checks, and `output_written=false`. The East Crazies calibration fixture
-at `config/fixtures/project_sow/east_crazies_land_exchange_intake.json` also records structured
+validation checks, failed checks, and `output_written=false`. Runtime validation includes an
+`intake_schema_shape_valid` check for nested federal land action, proposed-action element,
+evidence-ref, resource expectation, and observed-report rows. The East Crazies calibration fixture at
+`config/fixtures/project_sow/east_crazies_land_exchange_intake.json` also records structured
 `proposed_action_elements` with `evidence_refs`, `resource_analysis_expectations`, and the actual
 specialist/supporting reports observed in the completed East Crazies package, including minerals,
 aquatics, at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation
@@ -2436,6 +2438,8 @@ Project SOW package validation must fail closed on:
 
 - missing required intake fields;
 - unsupported intake schema;
+- schema-shape defects in nested federal land action, proposed-action element, evidence-ref,
+  resource expectation, or observed-report rows;
 - land-exchange intakes with no federal land action;
 - missing or empty resource-scope config;
 - duplicate resource scope IDs;

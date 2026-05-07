@@ -238,14 +238,102 @@ def test_project_sow_intake_validate_fails_minimal_missing_evidence_refs(
     failed_checks = _failed_checks(result)
     assert result.summary["passed"] is False
     assert result.summary["output_written"] is False
-    assert result.summary["validation_failure_count"] == 2
+    assert result.summary["validation_failure_count"] == 3
     assert set(failed_checks) == {
+        "intake_schema_shape_valid",
         "intake_evidence_graph_action_elements_have_evidence_refs",
         "intake_evidence_graph_resource_area_paths_complete",
+    }
+    assert failed_checks["intake_schema_shape_valid"]["details"] == {
+        "errors": [
+            "proposed_action_elements[0].evidence_refs: must contain at least one item"
+        ]
     }
     assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
         "details"
     ] == {"resource_area_ids": ["land_exchange_case", "land_management_plan_consistency"]}
+
+
+def test_project_sow_intake_validate_fails_missing_action_elements(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["proposed_action_elements"] = []
+
+    result = _validate_with_intake(tmp_path, intake, "missing_action_elements_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 2
+    assert set(failed_checks) == {
+        "intake_evidence_graph_resource_area_paths_complete",
+        "required_intake_fields_present",
+    }
+    assert failed_checks["required_intake_fields_present"]["details"] == {
+        "missing_fields": ["proposed_action_elements"]
+    }
+    assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
+        "details"
+    ] == {"resource_area_ids": ["land_exchange_case", "land_management_plan_consistency"]}
+
+
+def test_project_sow_intake_validate_fails_incomplete_action_element_schema(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["proposed_action_elements"][0]["action_element_id"] = ""
+    intake["proposed_action_elements"][0]["evidence_refs"][0].pop("source_record_id")
+
+    result = _validate_with_intake(tmp_path, intake, "incomplete_action_element_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {"intake_schema_shape_valid"}
+    assert failed_checks["intake_schema_shape_valid"]["details"] == {
+        "errors": [
+            "proposed_action_elements[0].action_element_id: required",
+            "proposed_action_elements[0].evidence_refs[0].source_record_id: required",
+        ]
+    }
+
+
+def test_project_sow_intake_validate_fails_incomplete_observed_report_schema(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(TEMPLATE_PATH.read_text())
+    intake["observed_specialist_reports"] = [
+        {
+            "evidence_refs": [
+                {
+                    "evidence_ref_id": "observed-report-evidence",
+                    "locator": "Observed package",
+                    "source_record_id": "INTAKE-002",
+                    "summary": "Observed report evidence.",
+                    "title": "Observed Report.pdf",
+                }
+            ],
+            "report_id": "observed-report",
+            "resource_area_ids": [],
+        }
+    ]
+
+    result = _validate_with_intake(tmp_path, intake, "incomplete_observed_report_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {"intake_schema_shape_valid"}
+    assert failed_checks["intake_schema_shape_valid"]["details"] == {
+        "errors": [
+            "observed_specialist_reports[0].resource_area_ids: required",
+            "observed_specialist_reports[0].title: required",
+            "observed_specialist_reports[0].resource_area_ids: must contain at least one item",
+        ]
+    }
 
 
 def test_project_sow_intake_validate_fails_minimal_unknown_resource_area(
@@ -372,11 +460,17 @@ def test_project_sow_package_fails_when_action_element_lacks_evidence_ref(
         for check in result.summary["failed_validation_checks"]
         if not check["passed"]
     }
-    assert result.summary["validation_failure_count"] == 3
+    assert result.summary["validation_failure_count"] == 4
     assert set(failed_checks) == {
+        "intake_schema_shape_valid",
         "intake_evidence_graph_action_elements_have_evidence_refs",
         "intake_evidence_graph_observed_reports_have_supported_resource_paths",
         "intake_evidence_graph_resource_area_paths_complete",
+    }
+    assert failed_checks["intake_schema_shape_valid"]["details"] == {
+        "errors": [
+            "proposed_action_elements[14].evidence_refs: must contain at least one item"
+        ]
     }
     assert failed_checks[
         "intake_evidence_graph_action_elements_have_evidence_refs"
@@ -491,9 +585,15 @@ def test_project_sow_package_fails_action_element_with_evidence_but_no_resource_
     failed_checks = _failed_checks(result)
     assert result.summary["passed"] is False
     assert result.summary["output_written"] is False
-    assert result.summary["validation_failure_count"] == 1
+    assert result.summary["validation_failure_count"] == 2
     assert set(failed_checks) == {
+        "intake_schema_shape_valid",
         "intake_evidence_graph_action_elements_trigger_resource_areas"
+    }
+    assert failed_checks["intake_schema_shape_valid"]["details"] == {
+        "errors": [
+            "proposed_action_elements[16].resource_area_ids: must contain at least one item"
+        ]
     }
     assert failed_checks[
         "intake_evidence_graph_action_elements_trigger_resource_areas"

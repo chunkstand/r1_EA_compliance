@@ -1,5 +1,5 @@
 {
-  "$id": "https://example.local/usfs-r1-ea-sources/schemas/project_sow_intake_v0.schema.json",
+  "$id": "urn:usfs-r1-ea-sources:schemas:project-sow-intake-v0",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
   "description": "Structured proposed-action intake used by the project SOW requirements package generator. This schema covers the tracked JSON shape; runtime validation also checks resource-scope resolution and canonical graph path readiness against repository config.",

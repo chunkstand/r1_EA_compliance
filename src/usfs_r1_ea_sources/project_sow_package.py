@@ -219,6 +219,7 @@ def _validate_inputs(
         "nepa_level",
         "proposed_action_summary",
         "federal_land_actions",
+        "proposed_action_elements",
     ]
     missing_fields = [field for field in required_fields if _is_empty(intake.get(field))]
     checks.append(
@@ -233,6 +234,14 @@ def _validate_inputs(
             name="intake_schema_supported",
             passed=intake.get("schema_version") == "project-sow-intake-v0",
             details={"schema_version": intake.get("schema_version")},
+        )
+    )
+    schema_shape_errors = _intake_schema_shape_errors(intake)
+    checks.append(
+        _check(
+            name="intake_schema_shape_valid",
+            passed=not schema_shape_errors,
+            details={"errors": schema_shape_errors},
         )
     )
     checks.append(
@@ -1758,6 +1767,100 @@ def _observed_report_resource_area_ids(intake: dict[str, Any]) -> set[str]:
     }
 
 
+def _intake_schema_shape_errors(intake: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    errors.extend(
+        _required_object_field_errors(
+            _list(intake.get("federal_land_actions")),
+            path="federal_land_actions",
+            required_fields=("action_type", "description"),
+        )
+    )
+    for element_index, element in enumerate(_proposed_action_elements(intake)):
+        element_path = f"proposed_action_elements[{element_index}]"
+        errors.extend(
+            _required_fields_for_record(
+                element,
+                path=element_path,
+                required_fields=("action_element_id", "description"),
+            )
+        )
+        if not _resource_area_ids(element.get("resource_area_ids")):
+            errors.append(f"{element_path}.resource_area_ids: must contain at least one item")
+        evidence_refs = _list(element.get("evidence_refs"))
+        if not evidence_refs:
+            errors.append(f"{element_path}.evidence_refs: must contain at least one item")
+        errors.extend(_evidence_ref_shape_errors(evidence_refs, path=f"{element_path}.evidence_refs"))
+
+    errors.extend(
+        _required_object_field_errors(
+            _list(intake.get("resource_analysis_expectations")),
+            path="resource_analysis_expectations",
+            required_fields=("resource_area_id", "resource_area_name"),
+        )
+    )
+    for report_index, report in enumerate(_observed_specialist_reports_raw(intake)):
+        report_path = f"observed_specialist_reports[{report_index}]"
+        errors.extend(
+            _required_fields_for_record(
+                report,
+                path=report_path,
+                required_fields=("report_id", "resource_area_ids", "title"),
+            )
+        )
+        if not _resource_area_ids(report.get("resource_area_ids")):
+            errors.append(f"{report_path}.resource_area_ids: must contain at least one item")
+        errors.extend(
+            _evidence_ref_shape_errors(
+                _list(report.get("evidence_refs")),
+                path=f"{report_path}.evidence_refs",
+            )
+        )
+    return errors
+
+
+def _required_object_field_errors(
+    records: list[Any],
+    *,
+    path: str,
+    required_fields: tuple[str, ...],
+) -> list[str]:
+    errors: list[str] = []
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            errors.append(f"{path}[{index}]: must be an object")
+            continue
+        errors.extend(
+            _required_fields_for_record(
+                record,
+                path=f"{path}[{index}]",
+                required_fields=required_fields,
+            )
+        )
+    return errors
+
+
+def _evidence_ref_shape_errors(records: list[Any], *, path: str) -> list[str]:
+    return _required_object_field_errors(
+        records,
+        path=path,
+        required_fields=("evidence_ref_id", "locator", "source_record_id", "summary", "title"),
+    )
+
+
+def _required_fields_for_record(
+    record: dict[str, Any],
+    *,
+    path: str,
+    required_fields: tuple[str, ...],
+) -> list[str]:
+    return [
+        f"{path}.{field}: required"
+        for field in required_fields
+        if _is_empty(record.get(field))
+    ]
+
+
 def _proposed_action_elements(intake: dict[str, Any]) -> list[dict[str, Any]]:
     return [
         element
@@ -1766,11 +1869,17 @@ def _proposed_action_elements(intake: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def _observed_specialist_reports_raw(intake: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        report
+        for report in _list(intake.get("observed_specialist_reports"))
+        if isinstance(report, dict)
+    ]
+
+
 def _observed_specialist_reports(intake: dict[str, Any]) -> list[dict[str, Any]]:
     records = []
-    for report in _list(intake.get("observed_specialist_reports")):
-        if not isinstance(report, dict):
-            continue
+    for report in _observed_specialist_reports_raw(intake):
         records.append(
             {
                 "document_role": report.get("document_role") or "specialist_report",
