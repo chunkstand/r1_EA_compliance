@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: active; Sequence 1 contract/fixture work is complete and Sequence 2 generator/CLI work is next
+Status: active; Sequence 2 deterministic generator/CLI work is complete and Sequence 3 gate integration is next
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -196,9 +196,9 @@ count must appear in `required_count_fields`, config and expected-summary sectio
 contracts must stay aligned, and `validation_expectations` explicitly maps the acceptance criteria
 to fail-closed categories before runtime validation exists.
 
-Sequence 2 should add `src/usfs_r1_ea_sources/final_qa_certification.py`,
+Sequence 2 added `src/usfs_r1_ea_sources/final_qa_certification.py`,
 `src/usfs_r1_ea_sources/cli_final_qa.py`, CLI registration, and generated JSON/Markdown/PDF/manifest
-writing under the review `final_qa/` directory. It should read the Sequence 1 config/fixtures and
+writing under the review `final_qa/` directory. It reads the Sequence 1 config/fixtures and
 existing audited review artifacts only.
 
 Actions:
@@ -236,6 +236,12 @@ Stop if the expected-summary fixture cannot be grounded in current generated art
 
 Purpose: build the final QA replay command as a deterministic reader over existing audited
 artifacts.
+
+Status: complete as of the 2026-05-07 Sequence 2 pass. The `final-qa-certification` command writes
+and validates the JSON/Markdown/PDF/manifest family under the ignored review `final_qa/` directory,
+and `--validate-only` replays the same `155` checks without rewriting outputs. The implementation
+keeps final QA as a configured artifact reader over existing audited outputs; it does not rerun
+downloader, extraction, compliance review, phase eval, or promotion suite workflows.
 
 Actions:
 

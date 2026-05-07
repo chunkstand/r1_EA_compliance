@@ -2333,18 +2333,34 @@ compliance review, legal sufficiency determination, responsible-official approva
 approval, counsel certification, or Region 1 expansion claim. The configured proving review is
 `v1-cg-ecid-compliance-review` over source set `source-set-ba8d0feae79501b8`.
 
-Sequence 1 defines the tracked contract and fixtures before generator code exists:
+Sequence 1 defines the tracked contract and fixtures, and Sequence 2 implements the deterministic
+generator/validator CLI:
 
 - `config/east_crazies_final_qa_certification_v1.json`
 - `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`
 - `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`
+- `src/usfs_r1_ea_sources/final_qa_certification.py`
+- `src/usfs_r1_ea_sources/cli_final_qa.py`
 
-The later generated artifact family will include:
+The generated artifact family includes:
 
 - `east_crazies_final_qa_certification.json`
 - `east_crazies_final_qa_certification.md`
 - `east_crazies_final_qa_certification.pdf`
 - `east_crazies_final_qa_certification_manifest.json`
+
+Generate or validate the packet with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+
+PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --validate-only
+```
 
 `east_crazies_final_qa_certification.json` has schema version
 `east-crazies-final-qa-certification-report-v1`. Markdown and PDF renderings must derive from that

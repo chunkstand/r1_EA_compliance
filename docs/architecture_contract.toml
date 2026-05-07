@@ -163,7 +163,7 @@ allowed_import_layers = [
 [[layers]]
 name = "decision_support"
 summary = "Supervisor-facing EA consistency report synthesis over audited review artifacts."
-modules = ["ea_consistency_decision_support"]
+modules = ["ea_consistency_decision_support", "final_qa_certification"]
 allowed_import_layers = [
   "foundation",
   "decision_support",
@@ -199,6 +199,7 @@ modules = [
   "cli_decision_support",
   "cli_derived",
   "cli_eval",
+  "cli_final_qa",
   "cli_review",
 ]
 allowed_import_layers = [
@@ -331,6 +332,10 @@ paths = [
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.md",
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.pdf",
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support_manifest.json",
+  "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.json",
+  "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.md",
+  "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.pdf",
+  "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_manifest.json",
 ]
 
 [[artifacts]]
@@ -411,7 +416,7 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 
 [[command_groups]]
 name = "decision_support"
-commands = ["ea-consistency-document"]
+commands = ["ea-consistency-document", "final-qa-certification"]
 
 [[command_groups]]
 name = "eval"

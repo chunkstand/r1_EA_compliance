@@ -472,11 +472,11 @@ copy-review pass.
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the active focused plan for
 turning the promoted East Crazy review into a replayable final QA packet. Sequence 0 baseline
-replay and Sequence 1 contract/fixture work are complete; Sequence 2 deterministic generator and
-CLI work is next. The milestone is bounded to review ID `v1-cg-ecid-compliance-review` and source set
-`source-set-ba8d0feae79501b8`; it does not broaden the claim to other Region 1 packages, does not
-resolve the South Plateau strict-expansion blocker, and does not treat root-level
-`East_Crazies_*` draft exports as canonical artifacts.
+replay, Sequence 1 contract/fixture work, and Sequence 2 deterministic generator/CLI work are
+complete; Sequence 3 gate integration is next. The milestone is bounded to review ID
+`v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`; it does not broaden
+the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
+and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
 
 Sequence 0 verified the current promoted baseline from generated artifacts: `33` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, `373` candidate
@@ -494,7 +494,7 @@ The replay sequences are:
 - Sequence 0: baseline replay and drift check over existing generated artifacts; complete on
   2026-05-07.
 - Sequence 1: final QA contract and fixtures; complete on 2026-05-07.
-- Sequence 2: deterministic generator and CLI with `--validate-only`.
+- Sequence 2: deterministic generator and CLI with `--validate-only`; complete on 2026-05-07.
 - Sequence 3: `phase-eval` and promotion-suite integration.
 - Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit.
 
@@ -511,6 +511,15 @@ that map missing gates, stale hashes/artifacts, count drift, missing selectors, 
 non-applicable boundary evidence, unresolved reviewer items, invalid PDF output, manual draft
 dependency, hidden accepted V1 risk, legal-conclusion leaks, and human-certification overclaims to
 fail-closed categories.
+
+Sequence 2 added the `final-qa-certification` CLI command and the
+`src/usfs_r1_ea_sources/final_qa_certification.py` artifact reader. A live generation pass for
+`v1-cg-ecid-compliance-review` wrote the ignored JSON, Markdown, PDF, and manifest outputs under
+`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`; a follow-up `--validate-only`
+replay passed the same `155` checks without rewriting outputs. The command validates required gate
+selectors, pinned input hashes, source/source-set identity, semantic counts, configured source
+selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
+non-canonical root-level draft boundary.
 
 Certification in this plan means deterministic machine replay plus optional human reviewer signoff
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel

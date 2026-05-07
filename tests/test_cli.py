@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_eval
+from usfs_r1_ea_sources import cli_final_qa
 from usfs_r1_ea_sources.cli import build_parser
 
 
@@ -190,6 +191,91 @@ def test_decision_support_handler_propagates_validate_only(monkeypatch) -> None:
     assert captured["config_path"] == Path("config/custom_decision_support.json")
     assert captured["expected_summary_path"] == Path("config/custom_expected_summary.json")
     assert captured["results_dir"] == Path("decision-output")
+
+
+def test_final_qa_handler_propagates_report_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_final_qa_certification(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_final_qa,
+        "run_final_qa_certification",
+        fake_run_final_qa_certification,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "final-qa-certification",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_final_qa.json",
+            "--expected-summary",
+            "config/custom_final_qa_expected_summary.json",
+            "--results-dir",
+            "final-qa-output",
+        ]
+    )
+
+    result = cli_final_qa.handle_final_qa_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_final_qa.json")
+    assert captured["expected_summary_path"] == Path(
+        "config/custom_final_qa_expected_summary.json"
+    )
+    assert captured["results_dir"] == Path("final-qa-output")
+
+
+def test_final_qa_handler_propagates_validate_only(monkeypatch) -> None:
+    captured = {}
+
+    def fake_validate_final_qa_certification_report(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_final_qa,
+        "validate_final_qa_certification_report",
+        fake_validate_final_qa_certification_report,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "final-qa-certification",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_final_qa.json",
+            "--expected-summary",
+            "config/custom_final_qa_expected_summary.json",
+            "--results-dir",
+            "final-qa-output",
+            "--validate-only",
+        ]
+    )
+
+    result = cli_final_qa.handle_final_qa_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_final_qa.json")
+    assert captured["expected_summary_path"] == Path(
+        "config/custom_final_qa_expected_summary.json"
+    )
+    assert captured["results_dir"] == Path("final-qa-output")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

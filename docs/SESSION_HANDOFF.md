@@ -5,11 +5,11 @@ Date: 2026-05-07
 ## Current East Crazies Final QA / Certification Replay Handoff
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now active. Sequence 0 baseline
-replay and Sequence 1 contract/fixture work are complete for the promoted East Crazy Inspiration
-Divide review. The lane remains bounded to `v1-cg-ecid-compliance-review` and source set
-`source-set-ba8d0feae79501b8`, and it explicitly avoids broad Region 1 claims, South Plateau
-blocker resolution, downloader/catalog regeneration, root-level `East_Crazies_*` draft dependency,
-or legal sufficiency certification.
+replay, Sequence 1 contract/fixture work, and Sequence 2 deterministic generator/CLI work are
+complete for the promoted East Crazy Inspiration Divide review. The lane remains bounded to
+`v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it explicitly
+avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
+root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
 
 Sequence 0 replayed the current gates on 2026-05-07:
 
@@ -62,16 +62,29 @@ visibility, and fail-closed categories. It does not pin full rendered Markdown/P
 The Sequence 1 gap-close pass tightened the contract so every scalar expected-summary count appears
 in `required_count_fields`, config and expected-summary section/output/failure-category contracts
 are tested for alignment, and `validation_expectations` maps the Sequence 1 acceptance criteria to
-fail-closed categories before generator code exists. Sequence 1 gap-close verification passed:
-`tests/test_final_qa_certification.py` (`8 passed`), `tests/test_architecture_contract.py`
-(`5 passed`), and `git diff --check`.
+fail-closed categories before the Sequence 2 generator implementation. Sequence 1 gap-close
+verification passed: `tests/test_final_qa_certification.py` (`8 passed`),
+`tests/test_architecture_contract.py` (`5 passed`), and `git diff --check`.
 
-Next implementation boundary: Sequence 2. Add the deterministic final QA artifact reader/generator
-in `src/usfs_r1_ea_sources/final_qa_certification.py`, add `cli_final_qa.py`, register the
-`final-qa-certification` command, write JSON/Markdown/PDF/manifest under
-`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, and support `--validate-only`.
-Read the Sequence 1 config/fixtures and existing audited artifacts only. Root-level
-`East_Crazies_*` drafts remain non-canonical and unstaged.
+Sequence 2 added:
+
+- `src/usfs_r1_ea_sources/final_qa_certification.py`
+- `src/usfs_r1_ea_sources/cli_final_qa.py`
+- `final-qa-certification` CLI registration
+- architecture-contract ownership for the final QA module, command, and ignored artifact family
+- focused generator/CLI tests in `tests/test_final_qa_certification.py` and `tests/test_cli.py`
+
+The live Sequence 2 generation command passed `155/155` checks and wrote ignored outputs under
+`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`. The follow-up `--validate-only`
+command also passed `155/155` checks without rewriting outputs. The reader validates pinned input
+hashes, required gate selectors, review/source-set identity, semantic counts, configured source
+selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
+non-canonical root-level draft boundary.
+
+Next implementation boundary: Sequence 3. Add final QA visibility to `phase-eval` and the
+current-promotion suite without changing the underlying East Crazy review result or mixing in South
+Plateau strict-expansion blocker work. Root-level `East_Crazies_*` drafts remain non-canonical and
+unstaged.
 
 ## Current Applicability/Expansion Handoff
 
