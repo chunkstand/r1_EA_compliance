@@ -516,10 +516,12 @@ Sequence 2 added the `final-qa-certification` CLI command and the
 `src/usfs_r1_ea_sources/final_qa_certification.py` artifact reader. A live generation pass for
 `v1-cg-ecid-compliance-review` wrote the ignored JSON, Markdown, PDF, and manifest outputs under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`; a follow-up `--validate-only`
-replay passed the same `155` checks without rewriting outputs. The command validates required gate
+replay passed the same `157` checks without rewriting outputs. The command validates required gate
 selectors, pinned input hashes, source/source-set identity, semantic counts, configured source
 selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
-non-canonical root-level draft boundary.
+non-canonical root-level draft boundary. The Sequence 2 gap-close pass now carries all `33`
+compliance-matrix authority findings in `finding_qa.findings`, with per-row compliance-matrix
+selectors, package/source evidence pointers, and trace IDs.
 
 Certification in this plan means deterministic machine replay plus optional human reviewer signoff
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel

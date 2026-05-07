@@ -153,7 +153,7 @@ keeping the ignored outputs under the review `decision_support/` directory. See
 certification replay plan that will validate the promoted East Crazy review packet from existing
 audited artifacts without broadening the legal or Region 1 readiness claim. Sequence 0 baseline
 replay, Sequence 1 final QA contract/fixtures plus gap-close hardening, and Sequence 2
-generator/CLI work are complete; Sequence 3 gate integration is next. See
+generator/CLI plus gap-close alignment work are complete; Sequence 3 gate integration is next. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
 remaining South Plateau strict-expansion forest-plan context blocker. See

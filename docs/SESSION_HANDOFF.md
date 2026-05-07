@@ -74,12 +74,15 @@ Sequence 2 added:
 - architecture-contract ownership for the final QA module, command, and ignored artifact family
 - focused generator/CLI tests in `tests/test_final_qa_certification.py` and `tests/test_cli.py`
 
-The live Sequence 2 generation command passed `155/155` checks and wrote ignored outputs under
+The live Sequence 2 generation command passed `157/157` checks and wrote ignored outputs under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`. The follow-up `--validate-only`
-command also passed `155/155` checks without rewriting outputs. The reader validates pinned input
+command also passed `157/157` checks without rewriting outputs. The reader validates pinned input
 hashes, required gate selectors, review/source-set identity, semantic counts, configured source
 selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
-non-canonical root-level draft boundary.
+non-canonical root-level draft boundary. The Sequence 2 gap-close pass tightened acceptance
+alignment by carrying all `33` compliance-matrix authority findings in `finding_qa.findings`, each
+with a compliance-matrix selector, package/source evidence pointers, and trace IDs, instead of only
+a representative finding row.
 
 Next implementation boundary: Sequence 3. Add final QA visibility to `phase-eval` and the
 current-promotion suite without changing the underlying East Crazy review result or mixing in South

@@ -342,6 +342,10 @@ def _build_report(
 
     gate_results = _gate_results(config, data_by_key)
     accepted_risk = _accepted_v1_risk_ledger(expected, data_by_key)
+    finding_rows = _finding_rows_from_matrix(
+        data_by_key.get("compliance_matrix", {}),
+        fallback=expected["required_fixture_rows"]["applicable_authority"],
+    )
     source_set_id = str(config["source_set_id"])
     review_id = str(config["review_id"])
 
@@ -455,7 +459,7 @@ def _build_report(
             "compliance_matrix_authority_row_count": counts[
                 "compliance_matrix_authority_row_count"
             ],
-            "findings": [expected["required_fixture_rows"]["applicable_authority"]],
+            "findings": finding_rows,
         },
         "forest_plan_qa": {
             "scope_status": _selector_value(
@@ -626,6 +630,26 @@ def _validate_report(
         passed=_rows_have_source_selectors(_selector_value(report, "finding_qa.findings") or []),
         category="missing_citation_or_source_selector",
         details={"selector": "finding_qa.findings"},
+    )
+    findings = _selector_value(report, "finding_qa.findings") or []
+    _add_check(
+        checks,
+        name="all_authority_findings_carried",
+        passed=len(findings)
+        == expected["expected_counts"]["authority_finding_count"]
+        == _selector_value(report, "finding_qa.authority_finding_count"),
+        category="missing_citation_or_source_selector",
+        details={
+            "finding_row_count": len(findings),
+            "expected": expected["expected_counts"]["authority_finding_count"],
+        },
+    )
+    _add_check(
+        checks,
+        name="finding_trace_ids_present",
+        passed=_finding_trace_ids_present(findings),
+        category="missing_citation_or_source_selector",
+        details={"selector": "finding_qa.findings[].trace_ids"},
     )
     _add_check(
         checks,
@@ -1095,6 +1119,86 @@ def _forest_plan_standard_row(row: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _finding_rows_from_matrix(
+    matrix: Any,
+    *,
+    fallback: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    rows = matrix.get("rows", []) if isinstance(matrix, Mapping) else []
+    if not rows:
+        return [dict(fallback)]
+    findings: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        rule_id = str(row.get("rule_id", ""))
+        finding = {
+            "row_id": row.get("row_id"),
+            "rule_id": rule_id,
+            "rule_title": row.get("rule_title"),
+            "status": row.get("status"),
+            "claim_type": row.get("claim_type"),
+            "authority_category": row.get("authority_category"),
+            "authority_family_ids": row.get("authority_family_ids") or [],
+            "authority_source_record_id": row.get("authority_source_record_id"),
+            "candidate_authority_id": row.get("candidate_authority_id"),
+            "applicability_decision_id": row.get("applicability_decision_id"),
+            "applicability_mode": row.get("applicability_mode"),
+            "applicability_status": row.get("applicability_status"),
+            "ea_package_citation": row.get("ea_package_citation"),
+            "source_library_citation": row.get("source_library_citation"),
+            "source_claim_ids": row.get("source_claim_ids") or [],
+            "source_claim_count": row.get("source_claim_count"),
+            "source_selectors": [
+                {
+                    "artifact_path": _matrix_artifact_path(matrix),
+                    "selector": f"rows[rule_id={rule_id}]",
+                }
+            ],
+            "trace_ids": {
+                "applicability_decision_id": row.get("applicability_decision_id"),
+                "candidate_authority_id": row.get("candidate_authority_id"),
+                "source_claim_ids": row.get("source_claim_ids") or [],
+                "search_coverage_certificate_ids": row.get(
+                    "search_coverage_certificate_ids"
+                )
+                or [],
+                "human_adjudication_refs": row.get("human_adjudication_refs") or [],
+            },
+            "source_pointers": {
+                "compliance_matrix": {
+                    "artifact_path": _matrix_artifact_path(matrix),
+                    "selector": f"rows[rule_id={rule_id}]",
+                },
+                "ea_package_evidence": _evidence_pointer(row.get("ea_package_evidence")),
+                "source_library_evidence": _evidence_pointer(row.get("source_library_evidence")),
+            },
+        }
+        findings.append(finding)
+    return findings or [dict(fallback)]
+
+
+def _matrix_artifact_path(matrix: Any) -> str:
+    if isinstance(matrix, Mapping):
+        review_id = matrix.get("review_id")
+        if review_id:
+            return f"source_library/reviews/{review_id}/compliance_matrix.json"
+    return "source_library/reviews/<review_id>/compliance_matrix.json"
+
+
+def _evidence_pointer(evidence: Any) -> dict[str, Any] | None:
+    if not isinstance(evidence, Mapping):
+        return None
+    return {
+        "artifact_path": evidence.get("artifact_path"),
+        "chunk_id": evidence.get("chunk_id"),
+        "citation_label": evidence.get("citation_label"),
+        "source_record_id": evidence.get("source_record_id"),
+        "artifact_sha256": evidence.get("artifact_sha256"),
+        "content_sha256": evidence.get("content_sha256"),
+    }
+
+
 def _section_dependencies(
     config: Mapping[str, Any],
     expected: Mapping[str, Any],
@@ -1538,6 +1642,32 @@ def _rows_have_source_selectors(rows: list[Any]) -> bool:
         and all(selector.get("artifact_path") and selector.get("selector") for selector in row["source_selectors"])
         for row in rows
     )
+
+
+def _finding_trace_ids_present(rows: list[Any]) -> bool:
+    if not rows:
+        return False
+    required_fields = {
+        "rule_id",
+        "candidate_authority_id",
+        "applicability_decision_id",
+        "source_claim_ids",
+    }
+    for row in rows:
+        if not isinstance(row, Mapping):
+            return False
+        if not all(row.get(field) for field in required_fields):
+            return False
+        pointers = row.get("source_pointers")
+        if not isinstance(pointers, Mapping):
+            return False
+        for pointer_key in ("ea_package_evidence", "source_library_evidence"):
+            pointer = pointers.get(pointer_key)
+            if not isinstance(pointer, Mapping):
+                return False
+            if not pointer.get("artifact_path") or not pointer.get("chunk_id"):
+                return False
+    return True
 
 
 def _artifact_paths_use_blocked_prefix(

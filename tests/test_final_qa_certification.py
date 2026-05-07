@@ -400,7 +400,9 @@ def test_sequence_2_generator_writes_and_validates_report_family(tmp_path) -> No
     assert report["schema_version"] == "east-crazies-final-qa-certification-report-v1"
     assert report["gate_replay_summary"]["machine_replay_status"] == "passed"
     assert report["applicability_partition"]["non_applicable_authority_count"] == 1
+    assert len(report["finding_qa"]["findings"]) == 2
     assert report["finding_qa"]["authority_finding_status_counts"]["pass"] == 2
+    assert all(finding["source_pointers"] for finding in report["finding_qa"]["findings"])
     assert report["accepted_v1_risk_ledger"]["accepted_pending_count"] == 2
     assert report["accepted_v1_risk_ledger"]["risks"][0]["hidden_as_pass_finding"] is False
     assert report["certification_statement"]["legal_conclusion"] is False
@@ -557,6 +559,18 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
                     }
                 },
             },
+            "rows": [
+                _sequence_2_matrix_row(
+                    rule_id="rule-a",
+                    candidate_authority_id="candidate:rule-a",
+                    applicability_decision_id="decision-rule-a",
+                ),
+                _sequence_2_matrix_row(
+                    rule_id="rule-b",
+                    candidate_authority_id="candidate:rule-b",
+                    applicability_decision_id="decision-rule-b",
+                ),
+            ],
         },
     )
     (review_dir / "compliance_matrix.pdf").write_bytes(b"%PDF-1.4\n")
@@ -918,6 +932,50 @@ def _gate(name: str, path: str, selector: str, expected: object) -> dict:
         "required_pass_selector": selector,
         "expected_value": expected,
         "failure_category": "stale_artifact",
+    }
+
+
+def _sequence_2_matrix_row(
+    *,
+    rule_id: str,
+    candidate_authority_id: str,
+    applicability_decision_id: str,
+) -> dict:
+    return {
+        "row_id": f"matrix:review-test:{rule_id}",
+        "rule_id": rule_id,
+        "rule_title": f"Synthetic {rule_id}",
+        "status": "pass",
+        "claim_type": "supported_compliance_finding",
+        "authority_category": "law",
+        "authority_family_ids": ["synthetic_family"],
+        "authority_source_record_id": "R1EA-TEST",
+        "candidate_authority_id": candidate_authority_id,
+        "applicability_decision_id": applicability_decision_id,
+        "applicability_mode": "conditional",
+        "applicability_status": "applicable",
+        "ea_package_citation": "EA-PACKAGE-001 (test)",
+        "source_library_citation": "R1EA-TEST (test)",
+        "source_claim_ids": [f"claim:{rule_id}"],
+        "source_claim_count": 1,
+        "search_coverage_certificate_ids": [],
+        "human_adjudication_refs": [],
+        "ea_package_evidence": {
+            "artifact_path": "source_library/reviews/_intake/synthetic/package.pdf",
+            "artifact_sha256": f"sha256-package-{rule_id}",
+            "chunk_id": f"chunk:package:{rule_id}",
+            "citation_label": "EA-PACKAGE-001 (test)",
+            "content_sha256": f"sha256-package-content-{rule_id}",
+            "source_record_id": "EA-PACKAGE-001",
+        },
+        "source_library_evidence": {
+            "artifact_path": "source_library/artifacts/raw/synthetic.html",
+            "artifact_sha256": f"sha256-source-{rule_id}",
+            "chunk_id": f"chunk:source:{rule_id}",
+            "citation_label": "R1EA-TEST (test)",
+            "content_sha256": f"sha256-source-content-{rule_id}",
+            "source_record_id": "R1EA-TEST",
+        },
     }
 
 

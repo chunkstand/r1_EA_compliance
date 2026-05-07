@@ -2386,10 +2386,11 @@ records required artifact paths, schema versions where applicable, SHA-256 value
 
 `applicability_partition` preserves the applicability boundary before compliance: `33` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
-support for the non-applicable boundary. `finding_qa` records the `33` generated findings, finding
-status counts, citation/source selectors, package-evidence selectors, `142` rule-claim links, and
-`0` rule-claim gaps. `forest_plan_qa` records Custer Gallatin context, `329` Forest Plan components,
-`58` standards, `12/12` applicable standards, component-eval status, limitations, and
+support for the non-applicable boundary. `finding_qa` records all `33` generated findings, finding
+status counts, citation/source selectors, package-evidence selectors, per-finding package/source
+evidence pointers, trace IDs, `142` rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
+records Custer Gallatin context, `329` Forest Plan components, `58` standards, `12/12` applicable
+standards, component-eval status, limitations, and
 reviewer-resolution status. `decision_support_qa` records the existing decision-support validation
 result, PDF-header validity, residual-risk rows, implementation-confirmation rows, and
 legal-conclusion safeguards.

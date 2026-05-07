@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: active; Sequence 2 deterministic generator/CLI work is complete and Sequence 3 gate integration is next
+Status: active; Sequence 2 deterministic generator/CLI plus gap-close alignment work is complete and Sequence 3 gate integration is next
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -237,11 +237,15 @@ Stop if the expected-summary fixture cannot be grounded in current generated art
 Purpose: build the final QA replay command as a deterministic reader over existing audited
 artifacts.
 
-Status: complete as of the 2026-05-07 Sequence 2 pass. The `final-qa-certification` command writes
-and validates the JSON/Markdown/PDF/manifest family under the ignored review `final_qa/` directory,
-and `--validate-only` replays the same `155` checks without rewriting outputs. The implementation
-keeps final QA as a configured artifact reader over existing audited outputs; it does not rerun
-downloader, extraction, compliance review, phase eval, or promotion suite workflows.
+Status: complete as of the 2026-05-07 Sequence 2 pass and gap-close alignment pass. The
+`final-qa-certification` command writes and validates the JSON/Markdown/PDF/manifest family under
+the ignored review `final_qa/` directory, and `--validate-only` replays the same `157` checks
+without rewriting outputs. The implementation keeps final QA as a configured artifact reader over
+existing audited outputs; it does not rerun downloader, extraction, compliance review, phase eval,
+or promotion suite workflows. The gap-close pass tightened alignment with the Sequence 2 acceptance
+text by carrying all `33` compliance-matrix authority findings, each with compliance-matrix
+selectors, package/source evidence pointers, and trace IDs, instead of only a representative
+finding row.
 
 Actions:
 
