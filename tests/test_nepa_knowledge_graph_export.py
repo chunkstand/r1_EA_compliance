@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import tempfile
 
+from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
 from usfs_r1_ea_sources.nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 
 
@@ -49,10 +50,21 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
 
         assert len(nodes) == graph["summary"]["node_count"]
         assert len(edges) == graph["summary"]["edge_count"]
+        assert graph["validation"]["failure_category_counts"] == {}
+        assert graph["summary"]["failure_category_counts"] == {}
+        assert all(check["failure_category"].startswith("graph_") for check in checks.values())
         assert all(edge["source_node_id"] in node_ids for edge in edges)
         assert all(edge["target_node_id"] in node_ids for edge in edges)
         assert checks["nepa_3d_graph_exports_all_authority_families"]["passed"]
+        assert (
+            checks["nepa_3d_graph_exports_all_authority_families"]["failure_category"]
+            == "graph_missing_authority_family"
+        )
         assert checks["nepa_3d_graph_exports_all_catalog_source_records"]["passed"]
+        assert (
+            checks["nepa_3d_graph_exports_all_catalog_source_records"]["failure_category"]
+            == "graph_missing_source_record"
+        )
         assert checks["nepa_3d_graph_exports_candidate_families"]["passed"]
         assert checks["nepa_3d_graph_exports_superseded_families"]["passed"]
         assert checks["nepa_3d_graph_reads_catalog_graph_seeds"]["passed"]
@@ -119,6 +131,16 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         )
         assert second.graph_path.read_bytes() == first_bytes
 
+        phase_eval = run_phase_aligned_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        nepa_phase = _phase(phase_eval.summary, "nepa_3d_source_set_graph")
+        assert nepa_phase["passed"]
+        assert nepa_phase["reviewer_ready"]
+        assert nepa_phase["details"]["validation_check_count"] == 61
+        assert nepa_phase["details"]["failure_category_counts"] == {}
+
 
 def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
     with tempfile.TemporaryDirectory() as tmp:
@@ -147,6 +169,8 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
 
         assert result.graph_dir == output_dir / "reviews" / review_id / "knowledge_graph"
         assert result.summary["validation_passed"]
+        assert graph["validation"]["failure_category_counts"] == {}
+        assert all(check["failure_category"].startswith("graph_") for check in checks.values())
         assert graph["export_scope"] == {
             "scope_type": "review",
             "source_set_id": source_set_id,
@@ -162,7 +186,19 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert result.summary["review_retrieval_trace_count"] == 2
         assert result.summary["review_graph_trace_count"] == 2
         assert checks["nepa_3d_review_graph_exports_all_candidate_authorities"]["passed"]
+        assert (
+            checks["nepa_3d_review_graph_exports_all_candidate_authorities"][
+                "failure_category"
+            ]
+            == "graph_missing_candidate_authority"
+        )
         assert checks["nepa_3d_review_graph_maps_each_candidate_to_one_decision"]["passed"]
+        assert (
+            checks["nepa_3d_review_graph_maps_each_candidate_to_one_decision"][
+                "failure_category"
+            ]
+            == "graph_missing_applicability_decision"
+        )
         assert checks["nepa_3d_review_graph_links_required_review_artifacts"]["passed"]
         assert checks["nepa_3d_review_graph_search_coverage_references_resolve"]["passed"]
         assert checks["nepa_3d_review_graph_retrieval_trace_references_resolve"]["passed"]
@@ -195,6 +231,18 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
             and edge["source_node_id"].startswith("evidence_span:review:")
             for edge in edges
         )
+
+        phase_eval = run_phase_aligned_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            review_id=review_id,
+        )
+        nepa_phase = _phase(phase_eval.summary, "nepa_3d_review_graph")
+        assert nepa_phase["passed"]
+        assert nepa_phase["reviewer_ready"]
+        assert nepa_phase["details"]["review_id"] == review_id
+        assert nepa_phase["details"]["validation_check_count"] == 75
+        assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
 def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[str, Path]:
@@ -936,3 +984,7 @@ def _read_json(path: Path) -> dict:
 
 def _read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+
+def _phase(summary: dict, name: str) -> dict:
+    return next(phase for phase in summary["phases"] if phase["name"] == name)

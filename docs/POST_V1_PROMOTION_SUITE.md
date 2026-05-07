@@ -73,6 +73,19 @@ The suite uses explicit failure categories so a failed run points at the next en
 - `adjudication_needed`
 - `forest_plan_reviewer_not_ready`
 - `package_fixture_missing`
+- `graph_missing_authority_family`
+- `graph_missing_candidate_authority`
+- `graph_missing_source_record`
+- `graph_missing_source_partition`
+- `graph_missing_currentness_status`
+- `graph_missing_applicability_decision`
+- `graph_dangling_edge`
+- `graph_stale_artifact`
+- `graph_noncurrent_document_in_main_corpus`
+- `graph_superseded_as_current`
+- `graph_handbook_chapter_collapsed`
+- `graph_viewer_export_invalid`
+- `graph_region1_profile_gap`
 
 Current-promotion failures are reported in `failure_category_counts`. Expansion-only failures are
 reported separately in `expansion_failure_category_counts`; they enter `failure_category_counts`
@@ -119,6 +132,13 @@ promotion gates now pass for the declared expansion set:
 - strict expansion `promotion-suite`: passed with `current_promotion_ready=true`,
   `promotion_ready=true`, `expansion_ready=true`, `failure_category_counts={}`, and
   `expansion_failure_category_counts={}`.
+
+A later NEPA 3D Milestone 7 graph-gate pass added current-promotion checks for source-set and V1
+review graph validation/summary artifacts. The V1 review-bound phase eval now passes `19/19`
+phases, the non-strict promotion suite passes `22/22` required current-promotion results, and the
+new graph gates report `failure_category_counts={}`. Strict expansion promotion also passes with
+`22/22` required current-promotion results, `open_expansion_artifact_count=0`, and
+`open_expansion_slot_count=0`.
 
 The South Plateau expansion slot is now `ready=true` and no longer carries
 `generated_rule_pack_pending`, `adjudication_needed`, or `applicability_miss`. The promotion

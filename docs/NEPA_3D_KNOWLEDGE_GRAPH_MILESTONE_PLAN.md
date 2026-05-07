@@ -609,6 +609,16 @@ state through the local browser workflow before closeout.
 
 ## Milestone 7: Graph Validation And Promotion Gates
 
+Status:
+Initial graph validation and promotion-gate slice completed on 2026-05-06 for
+`source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`. Graph validation checks now carry
+graph-specific failure categories, validation and summary artifacts record
+`failure_category_counts`, `phase-eval` includes optional source-set and review graph phases when
+graph artifacts exist, and `config/promotion_suite_v1.json` requires source-set plus V1 review
+graph validation/summary artifacts for current promotion. The current source-set graph passes
+`61/61` checks; the V1 review overlay graph passes `75/75`; the review-bound phase eval passes
+`19/19`.
+
 Goal:
 Make graph completeness and viewer-readiness testable.
 
@@ -653,6 +663,7 @@ Required verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review

@@ -46,8 +46,8 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `26` baseline source records through the generated applicability rule pack, validates a
 `373`-candidate authority universe with `33` applicable and `340` non-applicable authorities,
 emits `33` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
-review-bound `phase-eval` `17/17` with the post-V1 applicability and decision-support gates
-included, passes
+review-bound `phase-eval` `19/19` with the post-V1 applicability, decision-support, and NEPA 3D
+graph gates included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
@@ -104,7 +104,11 @@ selections so populated options no longer blank the graph. A demo-mode pass now 
 scene buttons for source library, authority graph, applicability, evidence path, forest plan,
 readiness, and full graph views; the evidence-path scene derives a clickable source-to-finding
 spotlight from the graph itself, and a right-side Capability shown panel keeps demo claims grounded
-in rendered graph counts. The graph surface now adds human-readable scene labels plus graph-native
+in rendered graph counts. NEPA 3D Milestone 7 now makes graph artifacts part of the promotion
+surface: source-set and V1 review graph validation/summary outputs carry graph failure-category
+counts, `phase-eval` includes source-set and review graph phases when those artifacts exist, and
+`promotion-suite` requires both graph validation and summary artifacts before current promotion
+passes. The graph surface now adds human-readable scene labels plus graph-native
 node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
 larger set of node labels without changing the validated graph data. Advanced search and category
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
@@ -214,6 +218,10 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
   - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json`
+  - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl`
+  - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
+  - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_summary.json`
+  - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_validation.json`
 - NEPA 3D static viewer:
   - `viewer/nepa-3d/index.html`
   - `viewer/nepa-3d/manifest.json`
@@ -870,12 +878,16 @@ When recording both normal and strict expansion results, send the strict run to 
 `--results-dir` or rerun the normal suite last so the default suite output remains the current
 promotion signal.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
-authority-family positive/negative, unresolved, and adjudication coverage.
+authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
+source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
-`forest_plan_reviewer_not_ready`, and `package_fixture_missing`.
+`forest_plan_reviewer_not_ready`, `package_fixture_missing`, and graph-specific categories such as
+`graph_missing_authority_family`, `graph_missing_candidate_authority`,
+`graph_missing_source_record`, `graph_missing_applicability_decision`, `graph_stale_artifact`,
+`graph_viewer_export_invalid`, and `graph_region1_profile_gap`.
 Selected not-ready expansion slots must carry review/package/source-set metadata, expected gate
 artifacts, next action, and a typed non-`package_fixture_missing` failure category. Ready slots must
 retain the same review/package/source-set contract, omit failure categories, and list expected gate

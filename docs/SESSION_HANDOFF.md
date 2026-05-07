@@ -38,7 +38,8 @@ passed with `current_promotion_ready=true`, `promotion_ready=true`, `expansion_r
 `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
 `open_expansion_slot_count=0`. Non-strict promotion was rerun last and reports the same readiness
 with `strict_expansion=false`. The promoted V1 review-scoped phase eval was rerun after South
-Plateau review-scoped eval to restore the shared current-promotion phase artifact at `17/17`.
+Plateau review-scoped eval to restore the shared current-promotion phase artifact. The later NEPA
+3D graph-gate pass described below reran that artifact at `19/19`.
 
 The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
 for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
@@ -50,6 +51,35 @@ and the required ECID expansion artifacts pass.
 Next implementation target: no further sequence is selected in the post-V1 real-package expansion
 plan. Future expansion should add a new real-package slot plus matching promotion-suite review-case
 artifact checks, or move to the next documented lane the user selects.
+
+## Current NEPA 3D Graph Gate Handoff
+
+NEPA 3D Milestone 7 has its initial graph validation and promotion-gate pass implemented for
+`source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`. Graph validation checks now carry
+graph-specific failure categories, validation and summary artifacts record
+`failure_category_counts`, `phase-eval` includes optional `nepa_3d_source_set_graph` and
+`nepa_3d_review_graph` phases when the graph artifacts exist, and
+`config/promotion_suite_v1.json` requires source-set plus V1 review graph validation/summary
+artifacts for current promotion.
+
+Latest local signals:
+
+- source-set graph export: `61/61` validation checks, `failure_category_counts={}`, `1,410` nodes,
+  and `2,564` edges;
+- V1 review graph export: `75/75` validation checks, `failure_category_counts={}`, `1,916` nodes,
+  and `3,442` edges;
+- V1 review-bound `phase-eval`: `19/19` phases passed with `reviewer_ready=true`;
+- non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, `expansion_artifacts_ready=true`, `22/22` required current-promotion
+  results passed, `failure_category_counts={}`, and `expansion_failure_category_counts={}`;
+- strict expansion `promotion-suite`: same readiness with `strict_expansion=true`, `22/22`
+  required current-promotion results passed, `open_expansion_artifact_count=0`, and
+  `open_expansion_slot_count=0`.
+
+Next implementation target: no additional NEPA 3D Milestone 7 pass is selected yet. Reasonable next
+slices are a deeper graph failure-fixture pass, the Milestone 8 operating runbook/demo closeout, or
+the deferred Beaverhead-Deerlodge component-inventory build if the user chooses to deepen Region 1
+forest-plan readiness first.
 
 ## Current Architecture Hardening State
 
@@ -398,8 +428,8 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
   `source_library/reviews/region1-expansion-ecid-preliminary-ea/phase_eval_results.json`; the ECID
   Sequence 2B run passes with `16/16` phases and `reviewer_ready=true`.
 - The shared source-set phase-eval artifact was restored by rerunning
-  `phase-eval --review-id v1-cg-ecid-compliance-review`, which passed `17/17` phases for the
-  promoted V1 review.
+  `phase-eval --review-id v1-cg-ecid-compliance-review`; the later NEPA 3D graph-gate pass now has
+  that promoted V1 review artifact at `19/19`.
 - `forest-plan-component-adjudication-template` generated a `158`-item ECID worklist at
   `source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json`
   and `.md`.
@@ -649,9 +679,10 @@ legal conclusion.
   procedures, applicability, reverse compliance,
   Forest Plan and full profile consistency review, evidence-path traceability, responsible-official
   decision support, and readiness blockers.
-- The next NEPA 3D implementation boundary is Milestone 7 graph validation and promotion gates,
-  unless the user chooses to deepen the Milestone 5 Beaverhead-Deerlodge component-inventory build
-  first.
+- NEPA 3D Milestone 7 initial graph validation and promotion gates are implemented for the current
+  source-set and V1 review overlay. A follow-up pass should either deepen graph-specific failure
+  fixtures, move to Milestone 8 operating runbook/demo closeout, or deepen the Milestone 5
+  Beaverhead-Deerlodge component-inventory build if the user selects that lane.
   The FSH 1909.15 chapter rows remain a scoped workbook/source delta before any graph export can
   claim handbook completeness.
 

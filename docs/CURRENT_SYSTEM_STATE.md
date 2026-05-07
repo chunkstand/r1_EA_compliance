@@ -230,7 +230,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live export for `source-set-ba8d0feae79501b8` now records:
 
-- `validation_passed=true`, `61` validation checks, `0` failed checks;
+- `validation_passed=true`, `61` validation checks, `0` failed checks, and
+  `failure_category_counts={}`;
 - `1,410` nodes and `2,564` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
   `44` base rules, `19` authority-family templates, `191` source-claim nodes, and `329`
@@ -264,7 +265,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live overlay for `v1-cg-ecid-compliance-review` now records:
 
-- `validation_passed=true`, `75` validation checks, `0` failed checks;
+- `validation_passed=true`, `75` validation checks, `0` failed checks, and
+  `failure_category_counts={}`;
 - `1,916` nodes and `3,442` edges;
 - review content: `373` candidate authority nodes/decisions, `33` applicable decisions, `340`
   non-applicable decisions, `33` generated rules, `33` compliance findings, and `340` search
@@ -356,6 +358,24 @@ metadata, and validation status. Static tests now lock the runtime URLs, relativ
 manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
 `3d-force-graph`. The viewer status line explicitly records that layout does not change readiness.
 
+## NEPA 3D Graph Validation And Promotion Gates
+
+NEPA 3D Milestone 7 has its first promotion-gate slice implemented for the current source-set and
+V1 review overlay graphs. Each graph validation check now carries a graph-specific
+`failure_category`, and validation plus summary artifacts record `failure_category_counts`.
+`phase-eval` adds `nepa_3d_source_set_graph` and `nepa_3d_review_graph` phases when those artifacts
+exist. The latest V1 review-bound phase eval passes `19/19` phases with `reviewer_ready=true`,
+including both graph phases, the post-V1 applicability family, generated rule pack,
+decision-support report, compliance review, forest-plan component eval, and gold eval.
+
+`config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
+the V1 review graph validation/summary artifacts before current promotion passes. The current live
+graph gates pass with `61/61` source-set graph checks, `75/75` review graph checks,
+`failure_category_counts={}`, `1,410` source-set graph nodes, `2,564` source-set graph edges,
+`1,916` review graph nodes, and `3,442` review graph edges. Broader Region 1 profile readiness
+blockers remain visible in the graph summaries and do not claim handbook or Region 1 forest-plan
+completeness.
+
 A NEPA 3D service capabilities brief is generated at
 `docs/capabilities/nepa_3d_capabilities_brief.pdf` with matching HTML at
 `docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
@@ -433,8 +453,10 @@ front-load a use note, bottom-line reviewer-ready status, authority categories, 
 applicable standards, non-applicable boundary, implementation confirmations, residual risks,
 validation status, and concise table summaries before long evidence sections. The same closeout
 replayed `phase-eval --review-id v1-cg-ecid-compliance-review`, which includes
-`decision_support_report` and passed `17/17` phases with `reviewer_ready=true`; `promotion-suite`
-also reports the decision-support JSON, manifest, and PDF as required current-promotion artifacts.
+`decision_support_report`; the current graph-gate pass now has V1 review-bound phase eval passing
+`19/19` phases with `reviewer_ready=true`. `promotion-suite` also reports the decision-support
+JSON, manifest, PDF, and NEPA 3D graph validation/summary artifacts as required current-promotion
+artifacts.
 The post-sequence gap-close pass also makes validation fail closed when otherwise-current Markdown
 or PDF outputs omit the supervisor-review front matter, review snapshot, table summaries, key
 counts, required sections, or source-pointer content; those failures use
@@ -480,9 +502,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   pack. Custer-scoped gold fixtures likewise preserve rule-level expected statuses while expecting
   the overall forest-plan component gate to fail readiness unless component evidence coverage is
   complete.
-- Phase eval passed `17/17` phases with `reviewer_ready: true` for
+- Phase eval passed `19/19` phases with `reviewer_ready: true` for
   `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`, including the post-V1
-  applicability artifact family, generated rule-pack gate, and decision-support-report gate.
+  applicability artifact family, generated rule-pack gate, decision-support-report gate, and
+  NEPA 3D source-set/review graph gates.
 - The current Custer Gallatin LMP component inventory was generated from the active source-set
   chunks: `329` components, `58` standards, `536` selected plan chunks, `0` missing component IDs,
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
@@ -598,11 +621,17 @@ Gallatin FEIS and ESA-supporting plan documents.
   needs-adjudication, `1` insufficient-strong-trigger needs-adjudication, and `1`
   positive/negative-conflict needs-adjudication. `applicability-gold-eval` passed `5/5` cases and
   now requires at least one gold case with explicit arbitration-field expectations.
-- Latest post-V1 real-package expansion verification on 2026-05-06 generated and validated the
-  South Plateau rule pack, ran South Plateau compliance review and review-scoped phase eval,
-  restored the promoted V1 review-scoped phase-eval artifact at `17/17`, and passed strict plus
-  non-strict promotion suite. Focused pytest, architecture-contract, ruff, compileall, JSON
-  validation, and `git diff --check` gates are the closeout verification for the tracked slice.
+- Latest NEPA 3D graph-gate verification on 2026-05-06 regenerated the source-set and V1 review
+  graph exports, reran V1 review-scoped phase eval at `19/19`, and passed non-strict promotion
+  suite with `22/22` required current-promotion results, `failure_category_counts={}`, and
+  `expansion_failure_category_counts={}`. Strict expansion promotion also passed with `22/22`
+  required current-promotion results, `open_expansion_artifact_count=0`, and
+  `open_expansion_slot_count=0`. Latest post-V1 real-package expansion verification on
+  2026-05-06 generated and validated the South Plateau rule pack, ran South Plateau compliance
+  review and review-scoped phase eval, restored the promoted V1 review-scoped phase-eval artifact,
+  and passed strict plus non-strict promotion suite. Focused pytest, architecture-contract, ruff,
+  compileall, JSON validation, and `git diff --check` gates are the closeout verification for the
+  tracked slice.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
   expansion milestone is complete through Sequence 6 for the declared ECID preliminary-EA and South
   Plateau expansion slots. Future expansion should add a new verified real-package slot and matching

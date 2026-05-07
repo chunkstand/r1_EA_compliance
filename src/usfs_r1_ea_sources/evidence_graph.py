@@ -277,6 +277,9 @@ def run_phase_aligned_eval(
     retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
     graph_summary_path = graph_dir / "summary.json"
+    nepa_3d_graph_dir = source_derived_dir / "knowledge_graph"
+    nepa_3d_graph_validation_path = nepa_3d_graph_dir / "nepa_3d_graph_validation.json"
+    nepa_3d_graph_summary_path = nepa_3d_graph_dir / "nepa_3d_graph_summary.json"
     claim_dir = source_derived_dir / "claims"
     claim_validation_path = claim_dir / "claim_validation.json"
     claim_summary_path = claim_dir / "summary.json"
@@ -398,6 +401,19 @@ def run_phase_aligned_eval(
     decision_support_dir = (
         review_dir / "decision_support" if review_dir is not None else None
     )
+    review_nepa_3d_graph_dir = (
+        review_dir / "knowledge_graph" if review_dir is not None else None
+    )
+    review_nepa_3d_graph_validation_path = (
+        review_nepa_3d_graph_dir / "nepa_3d_graph_validation.json"
+        if review_nepa_3d_graph_dir is not None
+        else None
+    )
+    review_nepa_3d_graph_summary_path = (
+        review_nepa_3d_graph_dir / "nepa_3d_graph_summary.json"
+        if review_nepa_3d_graph_dir is not None
+        else None
+    )
 
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
@@ -416,6 +432,28 @@ def run_phase_aligned_eval(
     )
     graph_validation = _read_json(graph_validation_path) if graph_validation_path.exists() else None
     graph_summary = _read_json(graph_summary_path) if graph_summary_path.exists() else None
+    nepa_3d_graph_validation = (
+        _read_json(nepa_3d_graph_validation_path)
+        if nepa_3d_graph_validation_path.exists()
+        else None
+    )
+    nepa_3d_graph_summary = (
+        _read_json(nepa_3d_graph_summary_path)
+        if nepa_3d_graph_summary_path.exists()
+        else None
+    )
+    review_nepa_3d_graph_validation = (
+        _read_json(review_nepa_3d_graph_validation_path)
+        if review_nepa_3d_graph_validation_path is not None
+        and review_nepa_3d_graph_validation_path.exists()
+        else None
+    )
+    review_nepa_3d_graph_summary = (
+        _read_json(review_nepa_3d_graph_summary_path)
+        if review_nepa_3d_graph_summary_path is not None
+        and review_nepa_3d_graph_summary_path.exists()
+        else None
+    )
     claim_validation = _read_json(claim_validation_path) if claim_validation_path.exists() else None
     claim_summary = _read_json(claim_summary_path) if claim_summary_path.exists() else None
     compliance_validation = (
@@ -630,6 +668,17 @@ def run_phase_aligned_eval(
             },
         ),
     ]
+    if nepa_3d_graph_validation is not None or nepa_3d_graph_summary is not None:
+        phases.append(
+            _nepa_3d_graph_phase(
+                "nepa_3d_source_set_graph",
+                validation=nepa_3d_graph_validation,
+                summary=nepa_3d_graph_summary,
+                validation_path=nepa_3d_graph_validation_path,
+                summary_path=nepa_3d_graph_summary_path,
+                expected_source_set_id=source_set_id,
+            )
+        )
     if review_dir is not None:
         phases.extend(
             _applicability_phase_gates(
@@ -639,6 +688,21 @@ def run_phase_aligned_eval(
                 arbitration_summary=applicability_arbitration_summary,
             )
         )
+        if (
+            review_nepa_3d_graph_validation is not None
+            or review_nepa_3d_graph_summary is not None
+        ):
+            phases.append(
+                _nepa_3d_graph_phase(
+                    "nepa_3d_review_graph",
+                    validation=review_nepa_3d_graph_validation,
+                    summary=review_nepa_3d_graph_summary,
+                    validation_path=review_nepa_3d_graph_validation_path,
+                    summary_path=review_nepa_3d_graph_summary_path,
+                    expected_source_set_id=source_set_id,
+                    expected_review_id=review_id,
+                )
+            )
     if compliance_coverage is not None:
         coverage_source_set_id = compliance_coverage.get("source_set_id")
         coverage_source_set_matches = coverage_source_set_id == source_set_id
@@ -2053,6 +2117,73 @@ def _decision_support_failed_check_names(summary: dict[str, Any]) -> list[str]:
         if failure.get("name")
     )
     return sorted(set(failed_checks))
+
+
+def _nepa_3d_graph_phase(
+    name: str,
+    *,
+    validation: dict | None,
+    summary: dict | None,
+    validation_path: Path | None,
+    summary_path: Path | None,
+    expected_source_set_id: str,
+    expected_review_id: str | None = None,
+) -> dict:
+    validation_passed = bool(validation and validation.get("passed"))
+    summary_validation_passed = bool(summary and summary.get("validation_passed"))
+    source_set_matches = bool(
+        summary and summary.get("source_set_id") == expected_source_set_id
+    )
+    review_id_matches = (
+        True
+        if expected_review_id is None
+        else bool(summary and summary.get("review_id") == expected_review_id)
+    )
+    failed_validation_checks = _failed_check_names(validation)
+    failed_validation_check_count = (
+        summary.get("failed_validation_check_count")
+        if isinstance(summary, dict)
+        else None
+    )
+    passed = (
+        validation_passed
+        and summary_validation_passed
+        and source_set_matches
+        and review_id_matches
+        and not failed_validation_checks
+        and failed_validation_check_count in (None, 0)
+    )
+    return _phase(
+        name,
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "validation_path": _path_string(validation_path),
+            "summary_path": _path_string(summary_path),
+            "validation_passed": validation_passed,
+            "summary_validation_passed": summary_validation_passed,
+            "expected_source_set_id": expected_source_set_id,
+            "source_set_id": (summary or {}).get("source_set_id"),
+            "source_set_matches": source_set_matches,
+            "expected_review_id": expected_review_id,
+            "review_id": (summary or {}).get("review_id"),
+            "review_id_matches": review_id_matches,
+            "validation_check_count": (summary or {}).get("validation_check_count"),
+            "failed_validation_check_count": failed_validation_check_count,
+            "failed_validation_checks": failed_validation_checks,
+            "failure_category_counts": (validation or {}).get(
+                "failure_category_counts",
+                {},
+            ),
+            "node_count": (summary or {}).get("node_count", 0),
+            "edge_count": (summary or {}).get("edge_count", 0),
+            "readiness_blocker_counts": (summary or {}).get(
+                "readiness_blocker_counts",
+                {},
+            ),
+            "graph_path": (summary or {}).get("graph_path"),
+        },
+    )
 
 
 def _phase(name: str, *, passed: bool, reviewer_ready: bool, details: dict) -> dict:

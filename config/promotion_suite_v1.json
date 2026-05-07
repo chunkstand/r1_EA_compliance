@@ -316,6 +316,73 @@
           ]
         },
         {
+          "id": "nepa_3d_review_graph_validation",
+          "label": "NEPA 3D review graph validation",
+          "path": "reviews/{review_id}/knowledge_graph/nepa_3d_graph_validation.json",
+          "required_for_current_promotion": true,
+          "failure_category": "graph_viewer_export_invalid",
+          "checks": [
+            {
+              "name": "review_graph_validation_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "review_graph_no_failure_categories",
+              "json_path": "failure_category_counts",
+              "equals": {}
+            }
+          ]
+        },
+        {
+          "id": "nepa_3d_review_graph_summary",
+          "label": "NEPA 3D review graph summary",
+          "path": "reviews/{review_id}/knowledge_graph/nepa_3d_graph_summary.json",
+          "required_for_current_promotion": true,
+          "failure_category": "graph_viewer_export_invalid",
+          "checks": [
+            {
+              "name": "review_graph_validation_passed",
+              "json_path": "validation_passed",
+              "equals": true
+            },
+            {
+              "name": "review_graph_source_set_matches",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "graph_stale_artifact"
+            },
+            {
+              "name": "review_graph_review_id_matches",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review",
+              "failure_category": "graph_stale_artifact"
+            },
+            {
+              "name": "review_graph_decision_count",
+              "json_path": "review_decision_count",
+              "equals": 373,
+              "failure_category": "graph_missing_applicability_decision"
+            },
+            {
+              "name": "review_graph_generated_rule_count",
+              "json_path": "generated_rule_count",
+              "equals": 33,
+              "failure_category": "graph_missing_applicability_decision"
+            },
+            {
+              "name": "review_graph_compliance_finding_count",
+              "json_path": "compliance_finding_count",
+              "equals": 33
+            },
+            {
+              "name": "review_graph_failed_validation_check_count",
+              "json_path": "failed_validation_check_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
           "id": "v1_ea_eval",
           "label": "V1 real EA eval",
           "path": "reviews/{review_id}/v1_ea_eval_results.json",
@@ -1031,12 +1098,12 @@
         {
           "name": "core_passed_phase_count",
           "json_path": "passed_phase_count",
-          "min": 17
+          "min": 19
         },
         {
           "name": "core_reviewer_ready_phase_count",
           "json_path": "reviewer_ready_phase_count",
-          "min": 17
+          "min": 19
         },
         {
           "name": "phase_eval_arbitration_summary_schema",
@@ -1049,6 +1116,71 @@
           "json_path": "applicability_arbitration_summary.decision_count",
           "min": 1,
           "failure_category": "applicability_miss"
+        }
+      ]
+    },
+    {
+      "id": "nepa_3d_source_set_graph_validation",
+      "label": "NEPA 3D source-set graph validation",
+      "path": "derived/{source_set_id}/knowledge_graph/nepa_3d_graph_validation.json",
+      "required_for_current_promotion": true,
+      "failure_category": "graph_viewer_export_invalid",
+      "checks": [
+        {
+          "name": "source_set_graph_validation_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "source_set_graph_no_failure_categories",
+          "json_path": "failure_category_counts",
+          "equals": {}
+        }
+      ]
+    },
+    {
+      "id": "nepa_3d_source_set_graph_summary",
+      "label": "NEPA 3D source-set graph summary",
+      "path": "derived/{source_set_id}/knowledge_graph/nepa_3d_graph_summary.json",
+      "required_for_current_promotion": true,
+      "failure_category": "graph_viewer_export_invalid",
+      "checks": [
+        {
+          "name": "source_set_graph_validation_passed",
+          "json_path": "validation_passed",
+          "equals": true
+        },
+        {
+          "name": "source_set_graph_source_set_matches",
+          "json_path": "source_set_id",
+          "equals": "source-set-ba8d0feae79501b8",
+          "failure_category": "graph_stale_artifact"
+        },
+        {
+          "name": "source_set_graph_node_count",
+          "json_path": "node_count",
+          "min": 1
+        },
+        {
+          "name": "source_set_graph_edge_count",
+          "json_path": "edge_count",
+          "min": 1
+        },
+        {
+          "name": "source_set_graph_validation_checks",
+          "json_path": "validation_check_count",
+          "min": 61
+        },
+        {
+          "name": "source_set_graph_failed_validation_check_count",
+          "json_path": "failed_validation_check_count",
+          "equals": 0
+        },
+        {
+          "name": "source_set_graph_region1_blocked_profiles_visible",
+          "json_path": "region1_forest_plan_blocked_profile_count",
+          "min": 1,
+          "failure_category": "graph_region1_profile_gap"
         }
       ]
     },

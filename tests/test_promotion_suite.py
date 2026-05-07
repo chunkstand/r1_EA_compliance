@@ -53,8 +53,8 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     phase = suite_results["phase_eval_core"]
     phase_checks = {check["name"]: check for check in phase["checks"]}
-    assert phase_checks["core_passed_phase_count"]["min"] == 17
-    assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 17
+    assert phase_checks["core_passed_phase_count"]["min"] == 19
+    assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 19
     assert phase_checks["phase_eval_arbitration_summary_schema"]["equals"] == (
         "applicability-arbitration-summary-v0"
     )
@@ -130,6 +130,55 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert risk_checks["litigation_risk_flags_present"]["min"] == 1
     assert risk_checks["litigation_risk_no_legal_conclusions"]["equals"] == 0
     assert risk_checks["litigation_risk_deterministic_only"]["equals"] is True
+
+    source_graph = suite_results["nepa_3d_source_set_graph_validation"]
+    assert source_graph["required_for_current_promotion"] is True
+    assert (
+        source_graph["path"]
+        == "derived/{source_set_id}/knowledge_graph/nepa_3d_graph_validation.json"
+    )
+    assert source_graph["failure_category"] == "graph_viewer_export_invalid"
+    source_graph_checks = {check["name"]: check for check in source_graph["checks"]}
+    assert source_graph_checks["source_set_graph_validation_passed"]["equals"] is True
+    assert source_graph_checks["source_set_graph_no_failure_categories"]["equals"] == {}
+
+    source_graph_summary = suite_results["nepa_3d_source_set_graph_summary"]
+    assert source_graph_summary["required_for_current_promotion"] is True
+    assert (
+        source_graph_summary["path"]
+        == "derived/{source_set_id}/knowledge_graph/nepa_3d_graph_summary.json"
+    )
+    summary_checks = {check["name"]: check for check in source_graph_summary["checks"]}
+    assert summary_checks["source_set_graph_source_set_matches"]["equals"] == (
+        "source-set-ba8d0feae79501b8"
+    )
+    assert summary_checks["source_set_graph_node_count"]["min"] == 1
+    assert summary_checks["source_set_graph_validation_checks"]["min"] == 61
+
+    review_graph = results["nepa_3d_review_graph_validation"]
+    assert review_graph["required_for_current_promotion"] is True
+    assert (
+        review_graph["path"]
+        == "reviews/{review_id}/knowledge_graph/nepa_3d_graph_validation.json"
+    )
+    assert review_graph["failure_category"] == "graph_viewer_export_invalid"
+    review_graph_checks = {check["name"]: check for check in review_graph["checks"]}
+    assert review_graph_checks["review_graph_validation_passed"]["equals"] is True
+    assert review_graph_checks["review_graph_no_failure_categories"]["equals"] == {}
+
+    review_graph_summary = results["nepa_3d_review_graph_summary"]
+    assert review_graph_summary["required_for_current_promotion"] is True
+    assert (
+        review_graph_summary["path"]
+        == "reviews/{review_id}/knowledge_graph/nepa_3d_graph_summary.json"
+    )
+    review_summary_checks = {
+        check["name"]: check for check in review_graph_summary["checks"]
+    }
+    assert review_summary_checks["review_graph_review_id_matches"]["equals"] == (
+        "v1-cg-ecid-compliance-review"
+    )
+    assert review_summary_checks["review_graph_decision_count"]["equals"] == 373
 
 
 def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:

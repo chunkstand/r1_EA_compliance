@@ -1064,8 +1064,10 @@ Review-specific export paths:
 
 The NEPA 3D graph export has schema version `nepa-3d-knowledge-graph-v1`. Milestone 1 defines the
 contract, Milestone 3 implements the source-set exporter, Milestone 4 adds the review overlay, and
-Milestone 5 adds Region 1 forest-plan readiness blockers. The graph is a visualization/export layer
-over audited artifacts, not a separate legal knowledge base.
+Milestone 5 adds Region 1 forest-plan readiness blockers. Milestone 7 adds graph failure
+categories, phase-eval graph phases, and promotion-suite gates for source-set plus V1 review graph
+validation/summary artifacts. The graph is a visualization/export layer over audited artifacts, not
+a separate legal knowledge base.
 
 Top-level graph shape:
 
@@ -1207,7 +1209,11 @@ Summary example:
   "edge_type_counts": {"HAS_SOURCE_RECORD": 2},
   "display_status_counts": {"active": 7, "reserved": 3},
   "review_readiness_status_counts": {"reviewer_ready": 3},
-  "readiness_blocker_counts": {"superseded_source": 2}
+  "readiness_blocker_counts": {"superseded_source": 2},
+  "validation_passed": true,
+  "validation_check_count": 1,
+  "failed_validation_check_count": 0,
+  "failure_category_counts": {}
 }
 ```
 
@@ -1220,10 +1226,12 @@ Validation example:
     {
       "name": "nepa_3d_graph_edges_resolve_to_nodes",
       "passed": true,
+      "failure_category": "graph_dangling_edge",
       "expected": [],
       "actual": []
     }
-  ]
+  ],
+  "failure_category_counts": {}
 }
 ```
 
@@ -2503,8 +2511,11 @@ The manifest has schema version `promotion-suite-v0` and records:
 - manifest path, output path, Markdown report path, source set, rule-pack identity, and strict mode
 - rule-pack check results
 - per-review artifact checks, including compliance validation, compliance review, compliance
-  matrix, compliance matrix PDF header, and V1 real-EA eval
+  matrix, compliance matrix PDF header, V1 real-EA eval, and NEPA 3D review graph
+  validation/summary artifacts
 - suite-level eval artifact checks
+- NEPA 3D source-set graph validation and summary artifact checks for the current graph-readiness
+  claim
 - arbitration diagnostics from applicability eval, applicability gold eval, and review-bound
   phase-eval artifacts so promotion reports distinguish weak/conservative arbitration blockers from
   positive/negative adjudication conflicts
@@ -2515,7 +2526,10 @@ The manifest has schema version `promotion-suite-v0` and records:
   `expansion_failure_category_counts`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
   `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
-  `forest_plan_reviewer_not_ready`, and `package_fixture_missing`
+  `forest_plan_reviewer_not_ready`, `package_fixture_missing`, and graph-specific categories such
+  as `graph_missing_authority_family`, `graph_missing_candidate_authority`,
+  `graph_missing_source_record`, `graph_missing_applicability_decision`,
+  `graph_viewer_export_invalid`, and `graph_region1_profile_gap`
 
 By default, open expansion slots do not block `promotion_ready`; they are reported in
 `expansion_failure_category_counts` and `open_expansion_slot_count`. Expansion artifacts marked
@@ -3113,7 +3127,10 @@ catalog capture, extraction, retrieval, evidence graph, claim extraction, and ru
 separate phases and records phase blockers so downstream compliance review cannot hide an upstream
 failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
 also includes a `compliance_coverage` phase for matrix, source-claim, source-claim-term, and
-eval-case coverage. When `compliance_gold_eval_results.json` exists under
+eval-case coverage. When NEPA 3D graph validation/summary artifacts exist, phase eval also includes
+`nepa_3d_source_set_graph` and, for review-scoped runs, `nepa_3d_review_graph` phases with
+source-set/review identity checks, validation check counts, failed check names, graph paths,
+readiness blocker counts, and graph failure-category counts. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
 not-promotion-ready artifacts. For generated review rule packs, a passing gold eval against the
