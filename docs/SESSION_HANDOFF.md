@@ -53,7 +53,29 @@ The lane remains bounded to
 avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
 root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
 
-Sequence 0 replayed the current gates on 2026-05-07:
+The latest East Crazies compliance-matrix refresh replayed the current gates on 2026-05-07:
+
+- `compliance-review --reuse-package-cache`: refreshed the canonical compliance review and matrix
+  family under `source_library/reviews/v1-cg-ecid-compliance-review/`, with
+  `reviewer_ready=true`, `validation_passed=true`, `33` generated findings, `33/33` pass
+  findings, `340` non-applicable authorities with search coverage, `329` Forest Plan component
+  findings, and `12/12` applicable standards applied.
+- `ea-consistency-document`: refreshed the decision-support JSON, Markdown, PDF, and manifest from
+  the refreshed compliance artifacts; the follow-on phase replay validated the report with
+  `reviewer_ready=true`.
+- `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with `passed=true`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- `final-qa-certification`: passed `166/166` and refreshed the ignored JSON, Markdown, PDF,
+  manifest, and validation family; the follow-up `--validate-only` also passed `166/166` after the
+  outer gate replay.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` phases with
+  `reviewer_ready=true`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: kept current promotion green with
+  `current_promotion_ready=true`, `promotion_ready=true`, `26/26` required current-promotion
+  results passed, and South Plateau expansion-only blockers still separate as
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
+
+The baseline Sequence 0 replay originally recorded:
 
 - `ea-consistency-document --validate-only`: passed with `reviewer_ready=true`, valid JSON,
   Markdown, PDF, and manifest, current input hashes, `33` applicable authorities, `340`
@@ -68,13 +90,12 @@ Sequence 0 replayed the current gates on 2026-05-07:
   results passed, and South Plateau expansion-only blockers still separate as
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}` after the later South
   Plateau typed-blocker manifest update.
-- `git diff --check`: passed.
 
-Canonical Sequence 0 artifact pointers:
+Current canonical artifact pointers:
 
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=67ba8fe5152acd08c9407f57b3da276b7368a4677689264a205b498f7d2276f5`)
+  (`sha256=2c19b1f838cba17fecbe8802b00029c58cab3e7ef60ea356683a9a20301e6538`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a`)
@@ -83,13 +104,16 @@ Canonical Sequence 0 artifact pointers:
   (`sha256=1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=2207b28a219339096bf9040b00fd41c3cd1142e8b48c1eb06953c95654379ffa`)
+  (`sha256=e84e5b958c390763154320f26fd2c18a985ae703c579546205fb3396a74b7f54`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=f4011773407d529c781a2c9f0bf7e35591cef78539c18f205ca1963a0d6e8f46`)
+  (`sha256=24ce31ddd6876277630517d530d49d8d7f3ac2a10e111a9d2c3484108386de34`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=a27c590f41e8a3223073720d69374a48a054e9f15a3aec17ef5b82fa19f27649`)
+  (`sha256=c8792f69afeadbebec0cabd872c09c049a3b0179e213bd044839bb34c4a56c42`)
+- Final QA validation sidecar:
+  `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
+  (`sha256=2534652c165995f08d2df2c48d4a20b2f300ab0684c167263e025849607c22fc`)
 
 Sequence 1 added:
 
