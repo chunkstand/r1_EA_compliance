@@ -2333,6 +2333,35 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-validate \
 
 The package command also accepts `--validate-only` for the same no-write validation workflow.
 
+Draft an unreviewed intake from proposed-action text with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-draft \
+  --proposed-action config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt \
+  --output /tmp/red_rock_ridge_draft_intake.json \
+  --forest "Example National Forest" \
+  --district "Example Ranger District"
+```
+
+Drafting uses `config/project_sow_intake_draft_rules_v1.json`. The draft output is a
+`project-sow-intake-v0` JSON object with additional `draft_metadata`. It is schema-valid as an
+intake shape, but it is explicitly unreviewed:
+
+- `draft_metadata.schema_version` is `project-sow-intake-draft-v0`;
+- `review_status` starts as `unreviewed`;
+- `reviewer_confirmation_required` starts as `true`;
+- `uncertainty_flags[]` records draft work such as `draft_requires_reviewer_confirmation`,
+  `resource_area_candidates_require_review`, and federal-action ambiguity flags;
+- `source_text_path` and `source_text_sha256` preserve the proposed-action source;
+- generated evidence refs point to the proposed-action source text and paragraph locators.
+
+`project-sow-intake-validate` fails unreviewed drafts with
+`draft_reviewer_confirmation_complete` until a reviewer confirms the draft, clears uncertainty
+flags, and sets `reviewer_confirmation_required=false`. This makes draft output upstream authoring
+support only; it is not an accepted package input. The draft command reports success only when
+`draft_reviewer_confirmation_complete` is the sole validation failure; unrelated schema, scope, or
+inventory failures are reported in `unexpected_failed_validation_checks`.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`
@@ -2440,6 +2469,7 @@ Project SOW package validation must fail closed on:
 - unsupported intake schema;
 - schema-shape defects in nested federal land action, proposed-action element, evidence-ref,
   resource expectation, or observed-report rows;
+- unreviewed draft metadata that still requires reviewer confirmation;
 - land-exchange intakes with no federal land action;
 - missing or empty resource-scope config;
 - duplicate resource scope IDs;

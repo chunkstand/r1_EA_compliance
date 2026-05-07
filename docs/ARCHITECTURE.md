@@ -128,15 +128,18 @@ missing, stale, hash-mismatched, or non-reviewer-ready inputs and must not promo
 draft prose as canonical evidence.
 
 Project planning is an upstream lane for proposed-action intake before a complete EA package exists.
-The `project-sow-intake-validate` command validates a structured intake plus tracked
-resource-scope templates without writing generated outputs. The `project-sow-package` command reads
-the same intake contract, selects resource SOW requirements from explicit project facts,
-proposed-action resource areas, and trigger terms, and writes a local requirements package under
-`source_library/projects/<project_id>/requirements_package/`. JSON is canonical; Markdown and PDF
-are reviewer-facing renderings from that JSON. When the intake supplies a completed example package
-comparison, the command also records a resource-analysis matrix that compares
-proposed-action-derived resource areas to observed specialist/supporting reports. Neither command
-creates applicability decisions, compliance findings, or legal sufficiency conclusions.
+The `project-sow-intake-draft` command drafts an explicitly unreviewed intake from proposed-action
+text using tracked draft rules. The `project-sow-intake-validate` command validates a structured
+intake plus tracked resource-scope templates without writing generated outputs. The
+`project-sow-package` command reads the same intake contract, selects resource SOW requirements from
+explicit project facts, proposed-action resource areas, and trigger terms, and writes a local
+requirements package under `source_library/projects/<project_id>/requirements_package/`. JSON is
+canonical; Markdown and PDF are reviewer-facing renderings from that JSON. When the intake supplies
+a completed example package comparison, the command also records a resource-analysis matrix that
+compares proposed-action-derived resource areas to observed specialist/supporting reports. These
+commands do not create applicability decisions, compliance findings, or legal sufficiency
+conclusions, and an unreviewed draft cannot pass validation until reviewer-confirmation metadata is
+cleared.
 
 ## Public CLI Surface
 

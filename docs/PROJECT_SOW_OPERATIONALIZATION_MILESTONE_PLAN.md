@@ -128,35 +128,44 @@ Acceptance gate status:
 
 ## Sequence 2: Intake Authoring Assistant For Proposed Actions
 
-Status: planned.
+Status: complete.
 
 Purpose: create a repeatable path from a proposed-action narrative to structured intake rows while
 keeping human review in control.
 
-Candidate work:
+Implemented work:
 
-- add a command or script that drafts an intake skeleton from a plain-text proposed action file;
-- extract candidate action elements, evidence refs, federal land actions, resource indicator keys,
-  and resource-area IDs into a draft intake;
-- require explicit reviewer confirmation before a draft becomes package input;
-- preserve the proposed-action source text or locator in evidence refs;
-- add runbook examples for drafting and then validating the intake.
+- added `project-sow-intake-draft` to draft an unreviewed intake skeleton from a plain-text
+  proposed action file;
+- added `config/project_sow_intake_draft_rules_v1.json` so federal-action and resource-area
+  candidate extraction stays in tracked data rather than hidden runtime branches;
+- draft output preserves the proposed-action source path, source text hash, paragraph locators, and
+  source title in `draft_metadata` and evidence refs;
+- draft metadata records `review_status=unreviewed`, `reviewer_confirmation_required=true`, and
+  uncertainty flags so the draft cannot be used as package input until reviewer confirmation clears
+  those fields;
+- added proposed-action text fixtures for a land-exchange draft and an ambiguity case, plus
+  expected draft metadata for the positive fixture;
+- added runbook examples for drafting, reviewer confirmation, validation, and package generation.
 
-Recommended first pass:
+Completed first pass:
 
 - define the draft-intake artifact contract, uncertainty flags, and reviewer-confirmation boundary;
 - add one proposed-action text fixture plus expected draft-intake metadata without attempting a
   broad parser;
 - keep the draft output upstream of package generation until `project-sow-intake-validate` passes.
 
-Acceptance gate:
+Acceptance gate status:
 
-- draft generation produces a schema-valid but explicitly unreviewed intake artifact;
-- the generated draft marks uncertain resource areas and missing evidence as validation work, not as
-  accepted SOW scope decisions;
-- tests cover at least one proposed-action text fixture and one ambiguity case;
-- no model-generated legal conclusion, applicability decision, or compliance finding appears in the
-  intake or package.
+- draft generation produces a `project-sow-intake-v0` artifact with `draft_metadata` schema version
+  `project-sow-intake-draft-v0`, but validation fails on
+  `draft_reviewer_confirmation_complete` until reviewer confirmation is explicit;
+- generated drafts mark candidate resource areas, candidate federal land actions, source locators,
+  and uncertainty flags as review work, not as accepted SOW decisions;
+- tests cover the Red Rock Ridge proposed-action fixture, an ambiguous land-adjustment fixture, and
+  a reviewer-confirmed draft replay;
+- draft output includes no applicability decision, compliance finding, legal advice, legal
+  sufficiency conclusion, or final agency decision.
 
 ## Sequence 3: Multi-Project Calibration And Eval Harness
 

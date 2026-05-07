@@ -6,6 +6,7 @@ from pathlib import Path
 from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_intake_draft
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
 from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
 
@@ -13,6 +14,30 @@ from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
 REPO_ROOT = Path(__file__).resolve().parents[1]
 INTAKE_PATH = REPO_ROOT / "config" / "fixtures" / "project_sow" / "east_crazies_land_exchange_intake.json"
 TEMPLATE_PATH = REPO_ROOT / "config" / "templates" / "project_sow_land_exchange_intake_template.json"
+PROPOSED_ACTION_FIXTURE_PATH = (
+    REPO_ROOT
+    / "config"
+    / "fixtures"
+    / "project_sow"
+    / "proposed_action_text"
+    / "red_rock_ridge_land_exchange_proposed_action.txt"
+)
+AMBIGUOUS_PROPOSED_ACTION_FIXTURE_PATH = (
+    REPO_ROOT
+    / "config"
+    / "fixtures"
+    / "project_sow"
+    / "proposed_action_text"
+    / "ambiguous_land_adjustment_proposed_action.txt"
+)
+EXPECTED_DRAFT_METADATA_PATH = (
+    REPO_ROOT
+    / "config"
+    / "fixtures"
+    / "project_sow"
+    / "proposed_action_text"
+    / "red_rock_ridge_expected_draft_metadata.json"
+)
 
 
 def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: Path) -> None:
@@ -189,6 +214,143 @@ def test_project_sow_intake_validate_accepts_minimal_land_exchange_template() ->
         "forest_plan_consistency",
         "public_involvement_coordination",
     }
+
+
+def test_project_sow_intake_draft_writes_unreviewed_schema_valid_intake(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "red_rock_ridge_draft_intake.json"
+    expected_metadata = json.loads(EXPECTED_DRAFT_METADATA_PATH.read_text())
+
+    result = run_project_sow_intake_draft(
+        proposed_action_path=PROPOSED_ACTION_FIXTURE_PATH,
+        output_path=output_path,
+        forest="Example National Forest",
+        districts=["Example Ranger District"],
+    )
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["output_written"] is True
+    assert result.summary["validation_ready"] is False
+    assert output_path.exists()
+    draft = json.loads(output_path.read_text())
+    assert draft["schema_version"] == "project-sow-intake-v0"
+    assert draft["draft_metadata"]["schema_version"] == "project-sow-intake-draft-v0"
+    assert draft["draft_metadata"]["review_status"] == "unreviewed"
+    assert draft["draft_metadata"]["reviewer_confirmation_required"] is True
+    assert draft["draft_metadata"]["source_text_sha256"]
+    assert draft["draft_metadata"]["candidate_resource_area_ids"] == (
+        expected_metadata["expected_resource_area_ids"]
+    )
+    assert draft["draft_metadata"]["uncertainty_flags"] == (
+        expected_metadata["expected_uncertainty_flags"]
+    )
+    assert sorted(
+        action["action_type"] for action in draft["federal_land_actions"]
+    ) == expected_metadata["expected_federal_land_action_types"]
+    assert draft["proposed_action_elements"]
+    assert all(element["evidence_refs"] for element in draft["proposed_action_elements"])
+    assert any(
+        ref["locator"].startswith("paragraph ")
+        for element in draft["proposed_action_elements"]
+        for ref in element["evidence_refs"]
+    )
+    assert "compliance finding" not in json.dumps(draft).lower()
+    assert "legal sufficiency conclusion" not in json.dumps(draft).lower()
+
+    validation = validate_project_sow_intake(intake_path=output_path)
+    failed_checks = _failed_checks(validation)
+    assert validation.summary["passed"] is False
+    assert set(failed_checks) == {"draft_reviewer_confirmation_complete"}
+    assert failed_checks["draft_reviewer_confirmation_complete"]["details"] == {
+        "errors": [
+            "draft_metadata.review_status must be reviewer_confirmed",
+            "draft_metadata.reviewer_confirmation_required must be false",
+            "draft_metadata.uncertainty_flags must be empty",
+        ]
+    }
+    package_attempt = run_project_sow_package(
+        intake_path=output_path,
+        output_dir=tmp_path / "source_library",
+    )
+    assert package_attempt.summary["passed"] is False
+    assert package_attempt.summary["output_written"] is False
+
+
+def test_project_sow_intake_draft_marks_ambiguous_action_as_review_work(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "ambiguous_draft_intake.json"
+
+    result = run_project_sow_intake_draft(
+        proposed_action_path=AMBIGUOUS_PROPOSED_ACTION_FIXTURE_PATH,
+        output_path=output_path,
+    )
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["validation_ready"] is False
+    draft = json.loads(output_path.read_text())
+    assert "federal_land_actions_need_review" in draft["draft_metadata"]["uncertainty_flags"]
+    assert "land_exchange_action_types_uncertain" in draft["draft_metadata"]["uncertainty_flags"]
+    assert draft["federal_land_actions"] == [
+        {
+            "action_type": "review_needed",
+            "description": (
+                "Reviewer must identify the federal land disposal, acquisition, "
+                "reservation, or other land action before package generation."
+            ),
+        }
+    ]
+    assert "land_exchange_case" in draft["draft_metadata"]["candidate_resource_area_ids"]
+    assert "wildlife_resources" in draft["draft_metadata"]["candidate_resource_area_ids"]
+
+
+def test_project_sow_intake_draft_fails_on_unexpected_validation_failures(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "draft_with_bad_scope_config.json"
+    bad_scope_config_path = tmp_path / "empty_resource_scopes.json"
+    bad_scope_config_path.write_text(
+        json.dumps({"resource_scopes": [], "schema_version": "project-sow-resource-scopes-v1"}),
+        encoding="utf-8",
+    )
+
+    result = run_project_sow_intake_draft(
+        proposed_action_path=PROPOSED_ACTION_FIXTURE_PATH,
+        output_path=output_path,
+        resource_scope_config_path=bad_scope_config_path,
+    )
+
+    failed_check_names = {
+        check["name"] for check in result.summary["unexpected_failed_validation_checks"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is True
+    assert result.summary["validation_ready"] is False
+    assert result.summary["unexpected_validation_failure_count"] > 0
+    assert "resource_scope_config_has_scopes" in failed_check_names
+
+
+def test_project_sow_intake_validate_accepts_reviewer_confirmed_draft(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "reviewed_draft_intake.json"
+    run_project_sow_intake_draft(
+        proposed_action_path=PROPOSED_ACTION_FIXTURE_PATH,
+        output_path=output_path,
+        forest="Example National Forest",
+        districts=["Example Ranger District"],
+    )
+    draft = json.loads(output_path.read_text())
+    draft["draft_metadata"]["review_status"] = "reviewer_confirmed"
+    draft["draft_metadata"]["reviewer_confirmation_required"] = False
+    draft["draft_metadata"]["uncertainty_flags"] = []
+    output_path.write_text(json.dumps(draft), encoding="utf-8")
+
+    validation = validate_project_sow_intake(intake_path=output_path)
+
+    assert validation.summary["passed"] is True, validation.summary
+    assert validation.summary["validation_failure_count"] == 0
 
 
 def test_project_sow_intake_validate_fails_unsupported_schema_version(

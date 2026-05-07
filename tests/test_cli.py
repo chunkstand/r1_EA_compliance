@@ -322,6 +322,69 @@ def test_project_sow_intake_validate_handler_propagates_options(monkeypatch) -> 
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
 
 
+def test_project_sow_intake_draft_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_intake_draft(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_intake_draft",
+        fake_run_project_sow_intake_draft,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-intake-draft",
+            "--proposed-action",
+            "proposed-action.txt",
+            "--output",
+            "draft-intake.json",
+            "--project-id",
+            "project-1",
+            "--project-name",
+            "Project One",
+            "--forest",
+            "Example National Forest",
+            "--district",
+            "North District",
+            "--district",
+            "South District",
+            "--project-type",
+            "land_exchange",
+            "--nepa-level",
+            "environmental_assessment",
+            "--source-title",
+            "Proposed Action Narrative",
+            "--draft-rules",
+            "config/draft-rules.json",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["proposed_action_path"] == Path("proposed-action.txt")
+    assert captured["output_path"] == Path("draft-intake.json")
+    assert captured["project_id"] == "project-1"
+    assert captured["project_name"] == "Project One"
+    assert captured["forest"] == "Example National Forest"
+    assert captured["districts"] == ["North District", "South District"]
+    assert captured["project_type"] == "land_exchange"
+    assert captured["nepa_level"] == "environmental_assessment"
+    assert captured["source_title"] == "Proposed Action Narrative"
+    assert captured["draft_rules_config_path"] == Path("config/draft-rules.json")
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):

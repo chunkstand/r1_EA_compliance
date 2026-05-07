@@ -1,0 +1,21 @@
+{
+  "expected_federal_land_action_types": [
+    "acquire",
+    "dispose",
+    "reserve_rights"
+  ],
+  "expected_resource_area_ids": [
+    "cultural_resources",
+    "floodplains_wetlands",
+    "land_exchange_case",
+    "land_management_plan_consistency",
+    "roads_trails_access",
+    "tribal_relations",
+    "water_quality"
+  ],
+  "expected_uncertainty_flags": [
+    "draft_requires_reviewer_confirmation",
+    "resource_area_candidates_require_review"
+  ],
+  "schema_version": "project-sow-intake-draft-expected-metadata-v0"
+}

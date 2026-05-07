@@ -37,6 +37,35 @@ validates without writing outputs and preserves the accepted calibration counts:
 scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0`
 validation failures.
 
+Project SOW operationalization Sequence 2 is implemented. The new public command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-draft \
+  --proposed-action /tmp/proposed_action.txt \
+  --output /tmp/new_land_exchange_draft_intake.json \
+  --forest "Example National Forest" \
+  --district "Example Ranger District"
+```
+
+The command drafts a `project-sow-intake-v0` JSON artifact from proposed-action text using
+`config/project_sow_intake_draft_rules_v1.json`. Draft output is intentionally unreviewed:
+`draft_metadata.review_status=unreviewed`,
+`draft_metadata.reviewer_confirmation_required=true`, and `uncertainty_flags[]` keep candidate
+resource areas and federal land actions in reviewer-confirmation work. `project-sow-intake-validate`
+fails such drafts on `draft_reviewer_confirmation_complete` until a reviewer confirms the draft,
+sets `reviewer_confirmation_required=false`, and clears uncertainty flags. The draft preserves the
+proposed-action source path, source text hash, and paragraph locators in `draft_metadata` and
+evidence refs. The draft command reports success only when reviewer confirmation is the sole
+validation blocker; unrelated schema, scope, or inventory failures are reported in
+`unexpected_failed_validation_checks`. It does not create applicability decisions, compliance
+findings, legal advice, legal sufficiency conclusions, or final agency decisions.
+
+Sequence 2 fixtures now include a Red Rock Ridge land-exchange proposed-action text fixture, an
+ambiguous land-adjustment fixture, and expected draft metadata for the positive case. Focused tests
+cover draft generation, ambiguity flags, unreviewed-draft validation failure, and reviewer-confirmed
+draft validation replay, plus a guard that unexpected draft-validation failures return a failing
+status.
+
 Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
@@ -50,7 +79,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
 Implemented surfaces:
 
 - `config/project_sow_resource_scopes_v1.json`
+- `config/project_sow_intake_draft_rules_v1.json`
 - `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/ambiguous_land_adjustment_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_expected_draft_metadata.json`
 - `src/usfs_r1_ea_sources/project_sow_package.py`
 - `src/usfs_r1_ea_sources/cli_project_planning.py`
 - `tests/test_project_sow_package.py`
@@ -122,12 +155,11 @@ validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 2,
-intake authoring assistant for proposed actions. Keep JSON canonical, keep human review in control
-of any draft intake, do not convert SOW scopes into applicability or compliance findings, and do
-not stage ignored `source_library/` outputs. The next pass should define the draft-intake artifact
-contract, uncertainty flags, and reviewer-confirmation boundary before attempting a broad
-proposed-action parser.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 3,
+multi-project calibration and eval harness. Keep JSON canonical, do not convert SOW scopes into
+applicability or compliance findings, and do not stage ignored `source_library/` outputs. The next
+pass should define the proving-intake eval manifest and expected metrics before adding new
+project-specific parser behavior.
 
 ## Current Applicability/Expansion Handoff
 

@@ -148,7 +148,8 @@ proposed-action intake into resource SOW requirements and, for the East Crazies 
 compares proposed-action resource areas to the actual specialist/supporting reports produced through
 a package-local intake evidence graph. The supported operational first step is now the no-write
 `project-sow-intake-validate` command against the minimal land-exchange template before package
-generation. See
+generation; plain-text proposed actions can first use `project-sow-intake-draft` to create an
+explicitly unreviewed draft intake that must be reviewer-confirmed before validation passes. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved
@@ -186,6 +187,10 @@ heuristics.
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
 - `docs/schemas/project_sow_intake_v0.schema.json`
 - `config/templates/project_sow_land_exchange_intake_template.json`
+- `config/project_sow_intake_draft_rules_v1.json`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/ambiguous_land_adjustment_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_expected_draft_metadata.json`
 - `config/project_sow_resource_scopes_v1.json`
 - `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
 - `config/ea_review_checklist_seed.json`

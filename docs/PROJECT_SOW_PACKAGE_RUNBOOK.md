@@ -8,7 +8,7 @@ findings, legal advice, legal sufficiency determinations, or final agency decisi
 
 ## 1. Create The Intake
 
-Start from the minimal land-exchange template:
+Start from the minimal land-exchange template when the proposed action is already structured:
 
 ```bash
 cp config/templates/project_sow_land_exchange_intake_template.json \
@@ -18,6 +18,23 @@ cp config/templates/project_sow_land_exchange_intake_template.json \
 The tracked schema for the intake shape is
 `docs/schemas/project_sow_intake_v0.schema.json`. The East Crazies fixture remains the calibration
 example; it is not the normal starting point for a new proposed action.
+
+If the proposed action exists as plain text, draft an unreviewed intake skeleton first:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-draft \
+  --proposed-action /tmp/proposed_action.txt \
+  --output /tmp/new_land_exchange_draft_intake.json \
+  --forest "Example National Forest" \
+  --district "Example Ranger District"
+```
+
+Drafted intakes preserve the proposed-action source path, source text hash, paragraph locators, and
+candidate resource-area triggers in `draft_metadata`. They are intentionally unreviewed and will not
+pass validation until a reviewer confirms the action elements, evidence refs, federal land actions,
+resource-area IDs, and clears the draft uncertainty flags. If a draft has validation failures beyond
+reviewer confirmation, the draft command reports them in `unexpected_failed_validation_checks` and
+returns a failing status.
 
 Update these required fields:
 
@@ -120,6 +137,7 @@ Common failure categories:
 - the intake schema version is unsupported;
 - nested action element, evidence ref, federal land action, resource expectation, or observed
   report rows are missing required schema fields;
+- drafted intake metadata still requires reviewer confirmation;
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
 - an action element has resource areas but no evidence refs;

@@ -15,6 +15,7 @@ MANIFEST_SCHEMA_VERSION = "project-sow-package-manifest-v0"
 GENERATOR_VERSION = "project-sow-package-generator-v0"
 DEFAULT_RESOURCE_SCOPE_CONFIG_PATH = Path("config/project_sow_resource_scopes_v1.json")
 DEFAULT_AUTHORITY_INVENTORY_PATH = Path("config/authority_universe_families_nepa_ea_v1.json")
+DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH = Path("config/project_sow_intake_draft_rules_v1.json")
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,72 @@ class ProjectSowPackageResult:
 class ProjectSowIntakeValidationResult:
     intake_path: Path
     summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ProjectSowIntakeDraftResult:
+    output_path: Path
+    summary: dict[str, Any]
+
+
+def run_project_sow_intake_draft(
+    *,
+    proposed_action_path: Path,
+    output_path: Path,
+    project_id: str | None = None,
+    project_name: str | None = None,
+    forest: str | None = None,
+    districts: list[str] | None = None,
+    project_type: str = "land_exchange",
+    nepa_level: str = "environmental_assessment",
+    source_title: str | None = None,
+    draft_rules_config_path: Path = DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+) -> ProjectSowIntakeDraftResult:
+    proposed_action_path = Path(proposed_action_path)
+    output_path = Path(output_path)
+    draft_rules_config_path = Path(draft_rules_config_path)
+    resource_scope_config_path = Path(resource_scope_config_path)
+    authority_inventory_path = Path(authority_inventory_path)
+
+    proposed_action_text = proposed_action_path.read_text(encoding="utf-8")
+    draft_rules = _read_json(draft_rules_config_path)
+    resource_config = _read_json(resource_scope_config_path)
+    authority_inventory = _read_json(authority_inventory_path)
+    draft = _draft_project_sow_intake(
+        proposed_action_text=proposed_action_text,
+        proposed_action_path=proposed_action_path,
+        draft_rules=draft_rules,
+        project_id=project_id,
+        project_name=project_name,
+        forest=forest,
+        districts=districts,
+        project_type=project_type,
+        nepa_level=nepa_level,
+        source_title=source_title,
+    )
+    selected_scopes = _select_resource_scopes(draft, resource_config)
+    validation = _validate_inputs(
+        intake=draft,
+        resource_config=resource_config,
+        authority_inventory=authority_inventory,
+        selected_scopes=selected_scopes,
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(output_path, draft)
+    summary = _intake_draft_summary(
+        draft=draft,
+        output_path=output_path,
+        proposed_action_path=proposed_action_path,
+        draft_rules_config_path=draft_rules_config_path,
+        resource_scope_config_path=resource_scope_config_path,
+        authority_inventory_path=authority_inventory_path,
+        validation=validation,
+        selected_scopes=selected_scopes,
+    )
+    return ProjectSowIntakeDraftResult(output_path=output_path, summary=summary)
 
 
 def validate_project_sow_intake(
@@ -242,6 +309,14 @@ def _validate_inputs(
             name="intake_schema_shape_valid",
             passed=not schema_shape_errors,
             details={"errors": schema_shape_errors},
+        )
+    )
+    draft_confirmation_errors = _draft_reviewer_confirmation_errors(intake)
+    checks.append(
+        _check(
+            name="draft_reviewer_confirmation_complete",
+            passed=not draft_confirmation_errors,
+            details={"errors": draft_confirmation_errors},
         )
     )
     checks.append(
@@ -1626,6 +1701,57 @@ def _summary(
     }
 
 
+def _intake_draft_summary(
+    *,
+    draft: dict[str, Any],
+    output_path: Path,
+    proposed_action_path: Path,
+    draft_rules_config_path: Path,
+    resource_scope_config_path: Path,
+    authority_inventory_path: Path,
+    validation: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    draft_metadata = draft.get("draft_metadata") if isinstance(draft.get("draft_metadata"), dict) else {}
+    failed_checks = [check for check in validation["checks"] if not check["passed"]]
+    expected_unreviewed_failures = {"draft_reviewer_confirmation_complete"}
+    unexpected_failed_checks = [
+        check
+        for check in failed_checks
+        if str(check.get("name")) not in expected_unreviewed_failures
+    ]
+    return {
+        "authority_inventory_path": str(authority_inventory_path),
+        "candidate_federal_land_action_types": [
+            str(action.get("action_type"))
+            for action in _list(draft.get("federal_land_actions"))
+            if isinstance(action, dict)
+        ],
+        "candidate_resource_area_ids": sorted(_expected_resource_area_ids(draft)),
+        "draft_rules_config_path": str(draft_rules_config_path),
+        "failed_validation_checks": failed_checks,
+        "output_path": str(output_path),
+        "output_written": True,
+        "passed": not unexpected_failed_checks,
+        "project_id": draft.get("project_id"),
+        "proposed_action_path": str(proposed_action_path),
+        "resource_scope_config_path": str(resource_scope_config_path),
+        "review_status": draft_metadata.get("review_status"),
+        "reviewer_confirmation_required": draft_metadata.get(
+            "reviewer_confirmation_required"
+        ),
+        "schema_version": "project-sow-intake-draft-summary-v0",
+        "selected_resource_scope_ids": [
+            str(scope.get("resource_scope_id")) for scope in selected_scopes
+        ],
+        "unexpected_failed_validation_checks": unexpected_failed_checks,
+        "unexpected_validation_failure_count": len(unexpected_failed_checks),
+        "uncertainty_flags": _strings(draft_metadata.get("uncertainty_flags")),
+        "validation_failure_count": validation["failure_count"],
+        "validation_ready": validation["passed"],
+    }
+
+
 def _intake_validation_summary(
     *,
     intake: dict[str, Any],
@@ -1765,6 +1891,330 @@ def _observed_report_resource_area_ids(intake: dict[str, Any]) -> set[str]:
         for report in _observed_specialist_reports(intake)
         for area_id in _resource_area_ids(report.get("resource_area_ids"))
     }
+
+
+def _draft_project_sow_intake(
+    *,
+    proposed_action_text: str,
+    proposed_action_path: Path,
+    draft_rules: dict[str, Any],
+    project_id: str | None,
+    project_name: str | None,
+    forest: str | None,
+    districts: list[str] | None,
+    project_type: str,
+    nepa_level: str,
+    source_title: str | None,
+) -> dict[str, Any]:
+    source_title = source_title or proposed_action_path.name
+    inferred_project_name = project_name or _infer_project_name(proposed_action_text)
+    selected_project_id = _slug(project_id or inferred_project_name)
+    selected_project_type = _normalize_token(project_type or "land_exchange") or "land_exchange"
+    selected_districts = [district for district in districts or [] if district.strip()]
+    if not selected_districts:
+        selected_districts = ["review_needed"]
+
+    federal_actions, federal_action_flags = _draft_federal_land_actions(
+        proposed_action_text=proposed_action_text,
+        draft_rules=draft_rules,
+        project_type=selected_project_type,
+    )
+    action_elements, resource_candidates, element_flags = _draft_action_elements(
+        proposed_action_text=proposed_action_text,
+        source_title=source_title,
+        draft_rules=draft_rules,
+        project_type=selected_project_type,
+    )
+    resource_expectations = _draft_resource_expectations(resource_candidates)
+    resource_indicators = _draft_resource_indicators(resource_candidates)
+    uncertainty_flags = sorted(
+        {
+            "draft_requires_reviewer_confirmation",
+            "resource_area_candidates_require_review",
+            *federal_action_flags,
+            *element_flags,
+        }
+    )
+    return {
+        "consultation_indicators": _draft_consultation_indicators(resource_candidates),
+        "districts": selected_districts,
+        "draft_metadata": {
+            "candidate_federal_land_action_types": [
+                str(action.get("action_type")) for action in federal_actions
+            ],
+            "candidate_resource_area_ids": sorted(resource_candidates),
+            "draft_notice": (
+                "Deterministic draft for reviewer intake authoring. It does not decide "
+                "authority applicability, compliance, or final agency action."
+            ),
+            "review_status": "unreviewed",
+            "reviewer_confirmation_required": True,
+            "schema_version": "project-sow-intake-draft-v0",
+            "source_text_sha256": hashlib.sha256(
+                proposed_action_text.encode("utf-8")
+            ).hexdigest(),
+            "source_text_path": str(proposed_action_path),
+            "uncertainty_flags": uncertainty_flags,
+        },
+        "federal_land_actions": federal_actions,
+        "forest": forest or "review_needed",
+        "forest_plan_profile": "review_needed",
+        "geography": [],
+        "management_context": [],
+        "nepa_level": nepa_level or "environmental_assessment",
+        "observed_specialist_reports": [],
+        "project_id": selected_project_id,
+        "project_name": inferred_project_name,
+        "project_type": selected_project_type,
+        "proponent": "review_needed",
+        "proposed_action_elements": action_elements,
+        "proposed_action_summary": _proposed_action_summary_from_text(proposed_action_text),
+        "resource_analysis_expectations": resource_expectations,
+        "resource_indicators": resource_indicators,
+        "schema_version": "project-sow-intake-v0",
+    }
+
+
+def _draft_federal_land_actions(
+    *,
+    proposed_action_text: str,
+    draft_rules: dict[str, Any],
+    project_type: str,
+) -> tuple[list[dict[str, str]], list[str]]:
+    text = _searchable_text(proposed_action_text)
+    actions: list[dict[str, str]] = []
+    flags: list[str] = []
+    for rule in _list(draft_rules.get("federal_land_action_rules")):
+        if not isinstance(rule, dict):
+            continue
+        terms = _strings(rule.get("trigger_terms"))
+        matched_terms = _matched_terms(text, terms)
+        if not matched_terms:
+            continue
+        action_type = str(rule.get("action_type") or "review_needed")
+        actions.append(
+            {
+                "action_type": action_type,
+                "description": (
+                    f"Draft candidate {action_type} action matched from proposed-action "
+                    f"text terms: {', '.join(matched_terms)}. Reviewer must confirm."
+                ),
+            }
+        )
+    if not actions:
+        flags.append("federal_land_actions_need_review")
+        actions.append(
+            {
+                "action_type": "review_needed",
+                "description": (
+                    "Reviewer must identify the federal land disposal, acquisition, "
+                    "reservation, or other land action before package generation."
+                ),
+            }
+        )
+    if project_type == "land_exchange" and not {
+        str(action.get("action_type")) for action in actions
+    }.intersection({"dispose", "acquire"}):
+        flags.append("land_exchange_action_types_uncertain")
+    return actions, flags
+
+
+def _draft_action_elements(
+    *,
+    proposed_action_text: str,
+    source_title: str,
+    draft_rules: dict[str, Any],
+    project_type: str,
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], list[str]]:
+    passages = _candidate_action_passages(proposed_action_text)
+    resource_candidates: dict[str, dict[str, Any]] = {}
+    elements: list[dict[str, Any]] = []
+    flags: list[str] = []
+    for index, passage in enumerate(passages, start=1):
+        matched_resources = _draft_resource_candidates(
+            text=passage,
+            draft_rules=draft_rules,
+            project_type=project_type,
+        )
+        if not matched_resources:
+            continue
+        for area_id, candidate in matched_resources.items():
+            existing = resource_candidates.setdefault(area_id, candidate)
+            existing.setdefault("matched_terms", [])
+            existing["matched_terms"] = sorted(
+                set(_strings(existing.get("matched_terms")) + _strings(candidate.get("matched_terms")))
+            )
+        element_id = f"draft_action_element_{index:02d}"
+        elements.append(
+            {
+                "action_element_id": element_id,
+                "description": _truncate(passage, 300),
+                "draft_status": "candidate_reviewer_confirmation_required",
+                "evidence_refs": [
+                    {
+                        "citation_label": f"Draft proposed action paragraph {index}",
+                        "evidence_ref_id": f"draft-proposed-action-paragraph-{index:02d}",
+                        "locator": f"paragraph {index}",
+                        "source_record_id": "DRAFT-PROPOSED-ACTION",
+                        "summary": _truncate(passage, 240),
+                        "title": source_title,
+                    }
+                ],
+                "resource_area_ids": sorted(matched_resources),
+                "resource_indicator_keys": sorted(
+                    {
+                        str(candidate.get("indicator_key"))
+                        for candidate in matched_resources.values()
+                        if candidate.get("indicator_key")
+                    }
+                ),
+            }
+        )
+    if not elements:
+        flags.append("resource_area_candidates_need_review")
+        fallback_resources = _draft_resource_candidates(
+            text="land exchange",
+            draft_rules=draft_rules,
+            project_type=project_type,
+        )
+        resource_candidates.update(fallback_resources)
+        elements.append(
+            {
+                "action_element_id": "draft_action_element_01",
+                "description": (
+                    "Reviewer must identify proposed-action elements and resource areas "
+                    "from the source narrative."
+                ),
+                "draft_status": "candidate_reviewer_confirmation_required",
+                "evidence_refs": [
+                    {
+                        "citation_label": "Draft proposed action narrative",
+                        "evidence_ref_id": "draft-proposed-action-narrative",
+                        "locator": "full proposed action text",
+                        "source_record_id": "DRAFT-PROPOSED-ACTION",
+                        "summary": _truncate(proposed_action_text, 240),
+                        "title": source_title,
+                    }
+                ],
+                "resource_area_ids": sorted(fallback_resources) or ["land_exchange_case"],
+                "resource_indicator_keys": ["lands_realty"],
+            }
+        )
+    return elements, resource_candidates, flags
+
+
+def _draft_resource_candidates(
+    *,
+    text: str,
+    draft_rules: dict[str, Any],
+    project_type: str,
+) -> dict[str, dict[str, Any]]:
+    searchable_text = _searchable_text(text)
+    candidates: dict[str, dict[str, Any]] = {}
+    for rule in _list(draft_rules.get("resource_area_rules")):
+        if not isinstance(rule, dict):
+            continue
+        area_id = _normalize_token(str(rule.get("resource_area_id") or ""))
+        if not area_id:
+            continue
+        matched_terms = _matched_terms(searchable_text, _strings(rule.get("trigger_terms")))
+        always_project_types = {
+            _normalize_token(value) for value in _strings(rule.get("always_for_project_types"))
+        }
+        if not matched_terms and project_type not in always_project_types:
+            continue
+        candidates[area_id] = {
+            "indicator_key": rule.get("indicator_key"),
+            "matched_terms": matched_terms or [f"project_type:{project_type}"],
+            "resource_area_id": area_id,
+            "resource_area_name": rule.get("resource_area_name") or _title_from_id(area_id),
+        }
+    return candidates
+
+
+def _draft_resource_expectations(
+    resource_candidates: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "draft_status": "candidate_reviewer_confirmation_required",
+            "proposed_action_basis": [
+                "Draft candidate from proposed-action source text; reviewer must confirm.",
+                "Matched terms: " + ", ".join(_strings(candidate.get("matched_terms"))),
+            ],
+            "resource_area_id": area_id,
+            "resource_area_name": str(candidate.get("resource_area_name") or _title_from_id(area_id)),
+        }
+        for area_id, candidate in sorted(resource_candidates.items())
+    ]
+
+
+def _draft_resource_indicators(
+    resource_candidates: dict[str, dict[str, Any]],
+) -> dict[str, list[str]]:
+    indicators: dict[str, set[str]] = {}
+    for candidate in resource_candidates.values():
+        indicator_key = str(candidate.get("indicator_key") or "").strip()
+        if not indicator_key:
+            continue
+        indicators.setdefault(indicator_key, set()).update(
+            _strings(candidate.get("matched_terms"))
+        )
+    return {key: sorted(values) for key, values in sorted(indicators.items())}
+
+
+def _draft_consultation_indicators(
+    resource_candidates: dict[str, dict[str, Any]],
+) -> list[str]:
+    indicators = []
+    if "species_consultation" in resource_candidates:
+        indicators.append("ESA Section 7 review needed")
+    if "cultural_resources" in resource_candidates or "tribal_relations" in resource_candidates:
+        indicators.append("NHPA/tribal consultation review needed")
+    return indicators
+
+
+def _candidate_action_passages(text: str) -> list[str]:
+    passages = []
+    for raw in re.split(r"\n\s*\n", text):
+        passage = re.sub(r"^\s*[-*]\s*", "", raw.strip())
+        passage = re.sub(r"\s+", " ", passage)
+        if passage:
+            passages.append(passage)
+    return passages or [text.strip()]
+
+
+def _matched_terms(text: str, terms: list[str]) -> list[str]:
+    return sorted({term for term in terms if term.lower() in text})
+
+
+def _infer_project_name(text: str) -> str:
+    for line in text.splitlines():
+        value = line.strip(" #\t")
+        if value:
+            return _truncate(value, 90)
+    return "Draft Project SOW Intake"
+
+
+def _proposed_action_summary_from_text(text: str) -> str:
+    for passage in _candidate_action_passages(text):
+        if passage:
+            return _truncate(passage, 700)
+    return "Draft proposed action summary requires reviewer completion."
+
+
+def _draft_reviewer_confirmation_errors(intake: dict[str, Any]) -> list[str]:
+    draft_metadata = intake.get("draft_metadata")
+    if not isinstance(draft_metadata, dict):
+        return []
+    errors = []
+    if draft_metadata.get("review_status") != "reviewer_confirmed":
+        errors.append("draft_metadata.review_status must be reviewer_confirmed")
+    if draft_metadata.get("reviewer_confirmation_required") is not False:
+        errors.append("draft_metadata.reviewer_confirmation_required must be false")
+    if _strings(draft_metadata.get("uncertainty_flags")):
+        errors.append("draft_metadata.uncertainty_flags must be empty")
+    return errors
 
 
 def _intake_schema_shape_errors(intake: dict[str, Any]) -> list[str]:
