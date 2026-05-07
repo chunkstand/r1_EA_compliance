@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: planned / active next implementation pass for the promoted East Crazy review
+Status: active; Sequence 0 baseline replay is complete and Sequence 1 contract/fixture work is next
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -131,6 +131,18 @@ The JSON, Markdown, and PDF should include the same reviewed sections:
 
 Purpose: prove the current East Crazy artifact family is still the correct canonical baseline before
 adding a new generator.
+
+Status: complete as of the 2026-05-07 Sequence 0 replay. The existing East Crazy review validated
+from current generated artifacts, review-scoped `phase-eval` passed `19/19` with
+`reviewer_ready=true`, and the non-strict promotion suite kept current promotion green with
+`22/22` required current-promotion results passed. The only replay limitation is that `phase-eval`
+and `promotion-suite` have normal write behavior for their ignored generated result files; no
+tracked files or root-level `East_Crazies_*` draft exports were staged or made canonical.
+
+Sequence 1 fixture decision: pin semantic counts, source selectors, and current artifact hashes,
+and add selected Markdown/PDF rendering requirements for required headings, caveats, table-summary
+markers, and PDF-header validity. Do not pin full Markdown/PDF body text because that would make
+the fixture brittle without improving the replay boundary.
 
 Actions:
 

@@ -471,27 +471,35 @@ copy-review pass.
 ## East Crazies Final QA And Certification Replay Plan
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the active focused plan for
-turning the promoted East Crazy review into a replayable final QA packet. The planned milestone is
-bounded to review ID `v1-cg-ecid-compliance-review` and source set
+turning the promoted East Crazy review into a replayable final QA packet. Sequence 0 baseline
+replay is complete; Sequence 1 contract and fixture work is next. The milestone is bounded to
+review ID `v1-cg-ecid-compliance-review` and source set
 `source-set-ba8d0feae79501b8`; it does not broaden the claim to other Region 1 packages, does not
 resolve the South Plateau strict-expansion blocker, and does not treat root-level
 `East_Crazies_*` draft exports as canonical artifacts.
 
-The plan starts from the current promoted baseline: `33` applicable authorities, `340`
-non-applicable authorities, `0` unresolved authorities, `33` generated compliance findings, `142`
-rule-claim links, `0` rule-claim gaps, `12/12` Custer Gallatin applicable standards, passing
-decision-support validation, and review-bound `phase-eval` at `19/19` with
-`reviewer_ready=true`. Its intended generated output family will live under
+Sequence 0 verified the current promoted baseline from generated artifacts: `33` applicable
+authorities, `340` non-applicable authorities, `0` unresolved authorities, `373` candidate
+authorities, `33` generated compliance findings, `142` rule-claim links, `0` rule-claim gaps,
+`43` package files, `1,265` package chunks, `329` Forest Plan component rows, `58` Forest Plan
+standards, `12/12` Custer Gallatin applicable standards, passing decision-support validation, and
+review-bound `phase-eval` at `19/19` with `reviewer_ready=true`. Non-strict `promotion-suite`
+remains current-green with `22/22` required current-promotion results passed while South Plateau
+strict-expansion blockers remain separate. Its intended generated output family will live under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/` and stay ignored unless repository
 policy changes.
 
-The planned replay sequences are:
+The replay sequences are:
 
-- Sequence 0: baseline replay and drift check over existing generated artifacts.
+- Sequence 0: baseline replay and drift check over existing generated artifacts; complete on
+  2026-05-07.
 - Sequence 1: final QA contract and fixtures.
 - Sequence 2: deterministic generator and CLI with `--validate-only`.
 - Sequence 3: `phase-eval` and promotion-suite integration.
 - Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit.
+
+Sequence 1 should pin semantic counts, source selectors, current artifact hashes, and selected
+Markdown/PDF rendering requirements without pinning full rendered body text.
 
 Certification in this plan means deterministic machine replay plus optional human reviewer signoff
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel

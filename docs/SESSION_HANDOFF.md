@@ -4,24 +4,55 @@ Date: 2026-05-07
 
 ## Current East Crazies Final QA / Certification Replay Handoff
 
-`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now the focused plan for producing
-a replayable final QA packet for the promoted East Crazy Inspiration Divide review. The plan is
-bounded to `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it
-explicitly avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog
-regeneration, root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now active. Sequence 0 baseline
+replay is complete for the promoted East Crazy Inspiration Divide review. The lane remains bounded
+to `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it explicitly
+avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
+root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
 
-The planned final QA replay starts from the current green East Crazy baseline: `33` applicable
-authorities, `340` non-applicable authorities, `0` unresolved authorities, `33` generated
-compliance findings, `142` rule-claim links, `0` rule-claim gaps, `12/12` Custer Gallatin
-applicable standards, passing decision-support validation, and review-bound `phase-eval` at
-`19/19` with `reviewer_ready=true`. The intended generated packet family is
-`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, which remains ignored unless
-repository policy changes.
+Sequence 0 replayed the current gates on 2026-05-07:
 
-If implementing that lane next, start with Sequence 0 in
-`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md`: replay existing gates, confirm
-artifact freshness/counts/hashes, keep root-level drafts non-canonical and unstaged, and stop on
-any count drift or missing reviewer-ready artifact before adding a generator.
+- `ea-consistency-document --validate-only`: passed with `reviewer_ready=true`, valid JSON,
+  Markdown, PDF, and manifest, current input hashes, `33` applicable authorities, `340`
+  non-applicable authorities, `0` unresolved authorities, `373` candidate authorities, `33`
+  generated findings, `142` rule-claim links, `0` rule-claim gaps, `329` Forest Plan component
+  rows, `58` Forest Plan standards, `12/12` applicable standards, `43` package files, and `1,265`
+  package chunks.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `19/19` phases with
+  `reviewer_ready=true`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: kept current promotion green with
+  `current_promotion_ready=true`, `promotion_ready=true`, `22/22` required current-promotion
+  results passed, and South Plateau expansion-only blockers still separate as
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+- `git diff --check`: passed.
+
+Canonical Sequence 0 artifact pointers:
+
+- Decision-support JSON:
+  `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
+  (`sha256=67ba8fe5152acd08c9407f57b3da276b7368a4677689264a205b498f7d2276f5`)
+- Decision-support Markdown:
+  `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
+  (`sha256=df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a`)
+- Decision-support PDF:
+  `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.pdf`
+  (`sha256=1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20`)
+- Decision-support manifest:
+  `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
+  (`sha256=2207b28a219339096bf9040b00fd41c3cd1142e8b48c1eb06953c95654379ffa`)
+- Review-scoped phase eval:
+  `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
+  (`sha256=f4011773407d529c781a2c9f0bf7e35591cef78539c18f205ca1963a0d6e8f46`)
+- Non-strict promotion suite:
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  (`sha256=a27c590f41e8a3223073720d69374a48a054e9f15a3aec17ef5b82fa19f27649`)
+
+Sequence 1 should add the final QA contract and fixtures. Pin semantic counts, source selectors,
+and current artifact hashes, plus selected Markdown/PDF rendering requirements for required
+headings, caveats, table-summary markers, and PDF-header validity. Do not pin full rendered
+Markdown/PDF bodies. The intended generated packet family remains
+`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, which stays ignored unless
+repository policy changes. Root-level `East_Crazies_*` drafts remain non-canonical and unstaged.
 
 ## Current Applicability/Expansion Handoff
 
