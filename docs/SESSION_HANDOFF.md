@@ -51,15 +51,16 @@ condition data collection, prioritization for disturbed or sensitive areas and h
 disturbance, and methodology tied to R1 Soil Quality Standards, NFMA, and the Custer Gallatin Land
 Management Plan. It names DSD surveys and other policy-triggered soil survey types with short
 descriptions. Analysis still uses Appendix A as the authority-to-report control table from source
-trigger to required report output and acceptance test. The deliverables pass now limits the first
-section to source-required outputs: trigger/screen-out table, activity-area and treatment-unit maps,
+trigger to required report output and acceptance test. The current-regulation audit keeps the SOW
+within USDA NEPA procedure scope by removing non-regulatory issue-screening language, old
+direct/indirect/cumulative-effects framing, comment-response artifacts, and stale Forest Service NEPA
+directive links. It keeps only the FS and Forest Plan soil guidance that applies to a soils resource
+report: R1 FSM 2550 soil-quality direction, Custer Gallatin soil plan components, soil-disturbance
+methods, official soil-survey data, and National BMPs. The deliverables section remains limited to
+source-required outputs: data-needs/trigger/screen-out table, activity-area and treatment-unit maps,
 DSD field package, site-specific BMP observations, potentially affected environment and reasonably
 foreseeable soil impacts, FW-STD-SOIL-01 calculations, 36 CFR 219.15 Forest Plan consistency table,
-source-triggered mitigation/BMP/monitoring matrix, and final PDF report/data package. The
-content-accuracy pass updates the East Crazies header to both official districts, narrows DSD and CWD
-monitoring triggers to the Forest Plan and R1 soil-management limits, updates NEPA effects language
-to current USDA procedures, and replaces the stale FSH 1909.15 source URL with current Forest Service
-directives and NEPA guidance links.
+source-triggered mitigation/BMP/monitoring matrix, and final PDF report/data package.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.

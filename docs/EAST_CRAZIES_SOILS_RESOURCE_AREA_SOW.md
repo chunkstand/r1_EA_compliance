@@ -11,25 +11,29 @@ Districts: Yellowstone Ranger District; Bozeman Ranger District
 Resource area: Soils
 
 This is a planning and contracting support SOW for an early-stage project. It translates the
-controlling source stack into the fieldwork, analysis, and reporting needed for a defensible soils
-specialist report or approved issue-screening memo.
+controlling source stack into the fieldwork, analysis, and reporting needed for a concise soils
+resource report or supporting analysis in the proposal record.
 
 Project drivers: proposed trail construction or reroute, trailhead improvements, stream/wetland
 approaches, wet or hydric soils, erosion and sediment delivery, parcel restrictions,
 access/easement features, grazing-related improvements, and acquired-parcel management.
 
-This SOW is not a final agency decision, legal sufficiency review, or NEPA compliance determination.
+This SOW is not a final agency action, agency NEPA finding, or decision document.
 
 ## Deliverables
 
-The required deliverables are limited to the outputs needed to support current USDA NEPA procedures,
-NFMA project consistency, R1 FSM 2550 soil-quality direction, and the Custer Gallatin Land Management
-Plan soil components.
+The required deliverables are limited to outputs needed to support current USDA NEPA procedures at 7
+CFR part 1b, third-party documentation review under 7 CFR section 1b.10 if used, NFMA/36 CFR 219.15
+project consistency, R1 FSM 2550 soil-quality direction, and the Custer Gallatin Land Management Plan
+soil components. Use reliable existing data first; collect new field information only where it is
+needed for a reasoned choice, a Forest Plan consistency conclusion, or an applicable soil-method
+requirement.
 
 ### 1. Fieldwork
 
-- Survey-trigger and screen-out table for each proposed action element, identifying the source
-  authority, required field survey, and reason any survey is not triggered.
+- Data-needs, survey-trigger, and screen-out table for each proposed action element, identifying the
+  source authority, reliable existing data used, required field survey if any, and reason any survey
+  is not triggered.
 - Activity-area, developed-site/permanent-road screen-out, and treatment-unit map set tied to soil
   map units, slope/stability limits, waterbody interfaces, access/staging, and crossing locations.
 - DSD field package for each FW-STD-SOIL-01 activity area: pre-implementation percent DSD, expected
@@ -41,7 +45,7 @@ Plan soil components.
 ### 2. Analysis
 
 - Potentially affected environment and reasonably foreseeable soil impacts for the proposed action,
-  no-action consequences, and any Forest Service-provided alternative.
+  alternatives if any, and consequences of not implementing the action.
 - FW-STD-SOIL-01 calculation package showing activity-area acreage, existing DSD, expected DSD,
   15-percent standard status, restoration/net-improvement need, and any valid screen-out rationale.
 - 36 CFR 219.15 Forest Plan consistency table for applicable soil desired conditions, standards,
@@ -50,51 +54,55 @@ Plan soil components.
   trigger, timing, responsible party, verification method, and whether the measure is required or
   advisory.
 - Data-gap and uncertainty summary identifying only the additional information essential to a
-  reasoned choice among alternatives or to support the issue-screening/FONSI record.
+  reasoned choice among alternatives, the Forest Plan consistency conclusion, or the EA/FONSI support
+  record.
 
 ### 3. Reporting
 
-- Draft and final PDF Soils Specialist Report or Forest Service-approved issue-screening memo.
+- Draft and final PDF Soils Resource Report or supporting analysis memo.
 - Appendix A authority-to-report crosswalk updated for the project and cited in the report.
 - Editable report source, final tables, map atlas, GIS package, photo log, field forms, source
-  inventory, metadata/readme, limitations memo, and comment-response log if Forest Service or ID-team
-  comments are provided.
+  inventory, metadata/readme, and limitations memo.
 - Concise EA/FONSI support text only where requested by the Forest Service and only from conclusions
-  already supported in the soils report or issue-screening memo.
+  already supported in the soils report or supporting analysis memo.
 
 ## Fieldwork/Data Collection
 
-Field surveys will collect existing soil condition data within the proposed project area to evaluate
-soil disturbance, stability, sensitivity, and productivity. Field monitoring should be prioritized in
-areas with higher past disturbance, sensitive soil map units, wet or hydric soils, unstable slopes,
-erosion or sediment-connectivity risk, and areas expected to receive higher levels of ground
-disturbance from trail, trailhead, access, crossing, staging, restoration, or parcel-management work.
+Data collection will compile reliable existing soil information for the proposed project area and
+collect site-specific field information only where existing data are not sufficient to evaluate soil
+disturbance, stability, sensitivity, and productivity. Prioritize data gaps in areas with higher past
+disturbance, sensitive soil map units, wet or hydric soils, unstable slopes, erosion or
+sediment-connectivity risk, and areas expected to receive higher levels of ground disturbance from
+trail, trailhead, access, crossing, staging, restoration, or parcel-management work.
 
-Before mobilization, prepare a survey-trigger table that ties each proposed action element to the
-source that requires field verification. If a survey below is not triggered, record the reason in the
-table.
+Before mobilization, prepare a data-needs and survey-trigger table that ties each proposed action
+element to the source requiring field verification. If reliable existing data are sufficient or a
+survey below is not triggered, record the reason in the table.
 
 ### Methodology
 
-Required fieldwork is based on R1 FSM 2550 soil-quality direction, NFMA and 36 CFR part 219 project
-consistency requirements, and the Custer Gallatin National Forest Land Management Plan. Use the
-Forest Service Soil-Disturbance Field Guide, Forest Soil Disturbance Monitoring Protocol, NRCS Web
-Soil Survey/SSURGO, and National BMP direction as the field and data methods.
+Required data collection is based on current USDA NEPA procedures allowing use of reliable data
+sources and limiting new scientific or technical work to information essential to a reasoned choice,
+plus R1 FSM 2550 soil-quality direction, NFMA and 36 CFR 219.15 project consistency requirements, and
+the Custer Gallatin National Forest Land Management Plan. Use the Forest Service Soil-Disturbance
+Field Guide, Forest Soil Disturbance Monitoring Protocol, NRCS Web Soil Survey/SSURGO, and National
+BMP direction as the field and data methods.
 
 - DSD surveys. Required where a management activity could create or add to detrimental soil
-  disturbance in an activity area subject to FW-STD-SOIL-01. Classify and estimate existing DSD and
-  expected DSD for trail construction, trail reroutes, temporary access/staging, restoration,
-  crossing, and parcel-management work. Screen out intensively developed sites, permanent roads,
-  and existing developed-recreation footprints from FW-STD-SOIL-01 calculations; address those
-  areas through BMPs, site design, and watershed controls. Record compaction, rutting,
-  displacement, puddling, surface erosion, severe burning if present, organic-matter loss, and mass
-  movement. Tie applicable results to FW-STD-SOIL-01 and MON-SOIL-01.
-- Soil survey and activity-area delineation. Required for each ground-disturbing action area. Verify
-  soil map units, slope class, landform, drainage position, hydric/wet soil indicators, erosion
-  hazard, revegetation limits, compaction/rutting limits, and sediment connectivity. Define the
-  activity area used for DSD evaluation; for linear trails, document length, width, acreage, and
-  rationale. If a developed-site or permanent-road footprint is screened out of FW-STD-SOIL-01,
-  document the source rationale and the BMP/design controls that still apply.
+  disturbance in an activity area subject to FW-STD-SOIL-01 and reliable existing data are
+  insufficient. Classify and estimate existing DSD and expected DSD for trail construction, trail
+  reroutes, temporary access/staging, restoration, crossing, and parcel-management work. Screen out
+  intensively developed sites, permanent roads, and existing developed-recreation footprints from
+  FW-STD-SOIL-01 calculations; address those areas through BMPs, site design, and watershed controls.
+  Record compaction, rutting, displacement, puddling, surface erosion, severe burning if present,
+  organic-matter loss, and mass movement. Tie applicable results to FW-STD-SOIL-01 and MON-SOIL-01.
+- Soil survey and activity-area delineation. Required for each ground-disturbing action area where
+  official soil data or plan consistency needs field verification. Verify soil map units, slope
+  class, landform, drainage position, hydric/wet soil indicators, erosion hazard, revegetation
+  limits, compaction/rutting limits, and sediment connectivity. Define the activity area used for DSD
+  evaluation; for linear trails, document length, width, acreage, and rationale. If a developed-site
+  or permanent-road footprint is screened out of FW-STD-SOIL-01, document the source rationale and
+  the BMP/design controls that still apply.
 - Soil sensitivity and productivity survey. Required where soil map units or field indicators show
   productivity risk, wetness, shallow or restrictive layers, erosion hazard, compaction sensitivity,
   poor revegetation potential, or other sensitive soil conditions. Identify design changes,
@@ -131,9 +139,10 @@ connectivity, runoff, erosion, or sediment delivery cannot be determined during 
 
 ## Analysis Output
 
-Use Appendix A as the authority-to-report control table. The analysis should answer only the soil
-questions triggered by the proposed action and should tie each conclusion to field evidence, GIS
-data, cited source direction, or a documented Forest Service assumption.
+Use Appendix A as the authority-to-report control table. The analysis should answer only the
+substantive soil issues and plan-consistency questions triggered by the proposed action and should
+tie each conclusion to reliable existing data, field evidence where needed, GIS data, cited source
+direction, or a documented Forest Service assumption.
 
 ### 1. Existing Condition
 
@@ -151,7 +160,8 @@ Summarize the soil setting for each affected activity area:
 
 ### 2. Effects Indicators
 
-Use the same indicators for no action, proposed action, and any Forest Service-provided alternative:
+Use the same indicators for the proposed action, alternatives if any, and consequences of not
+implementing the action:
 
 - activity-area acreage for area-based work;
 - length, width, crossing count, drainage feature count, wetland/riparian approach count, and
@@ -165,8 +175,9 @@ linear metrics where they better describe the effect.
 
 ### 3. Proposed-Action Effects
 
-Analyze soil effects from the proposed trail construction, trail reroute, trailhead work, crossings,
-access/staging, restoration, and parcel-management changes. Address whether the action would:
+Analyze reasonably foreseeable soil impacts from the proposed trail construction, trail reroute,
+trailhead work, crossings, access/staging, restoration, and parcel-management changes. Address
+whether the action would:
 
 - create, add to, or restore detrimental soil disturbance;
 - route sediment toward streams, wetlands, riparian areas, seeps, springs, swales, or drainage paths;
@@ -193,30 +204,28 @@ Provide one mitigation/BMP/monitoring matrix. Each row must include action eleme
 triggering source, soil concern, required measure, timing, responsible party, and verification
 method. Include only measures tied to a triggered source or a site-specific field finding.
 
-### 6. Reasonably Foreseeable Effects And Uncertainty
+### 6. Reasonably Foreseeable Impacts And Uncertainty
 
-Evaluate reasonably foreseeable soil impacts using the same indicators listed above. Include other
-actions separate in time, separate in place, outside Forest Service control, or initiated by third
-parties only where that context assists reasoned decision-making; document the line drawn for that
-analysis. Potential context includes existing/proposed routes, trailheads, unauthorized routes,
-drainage, grazing, wetland/riparian disturbance, foreseeable trail or road work, private land
-development risk after conveyance, and vegetation/restoration actions.
+Evaluate only the reasonably foreseeable soil impacts of the proposed action and alternatives, if
+any, using the indicators listed above. Include separate-action context only where the Forest Service
+determines it is necessary to inform the NEPA finding or an applicable soil plan-consistency
+conclusion.
 
-Close the analysis with unresolved assumptions, field limitations, missing design details, and Forest
-Service decisions needed before the soils conclusions can support later NEPA or implementation files.
+Close the analysis with unresolved assumptions, field limitations, missing design details, and any
+information that limits use of the report in the proposal record.
 
 ## Reporting Output
 
-### 1. Draft Soils Specialist Report Or Issue-Screening Memo
+### 1. Draft Soils Resource Report Or Supporting Analysis Memo
 
-Provide a draft report or Forest Service-approved issue-screening memo with:
+Provide a draft report or supporting analysis memo with:
 
 - project action elements and soils issue triggers;
 - field methods and survey-trigger table;
 - existing condition by activity area;
 - effects indicators and disturbance calculations;
 - reasonably foreseeable environmental impacts where triggered, including separate-action context
-  only where documented as useful to reasoned decision-making;
+  only where the Forest Service determines it is necessary;
 - Forest Plan consistency finding using Appendix A;
 - mitigation/BMP/monitoring matrix;
 - residual uncertainty, assumptions, and limitations.
@@ -229,56 +238,55 @@ Acceptance criteria:
   judgment;
 - distinguishes required mitigation or monitoring from optional design recommendations.
 
-### 2. NEPA-Ready Soils Summary Text
+### 2. EA/FONSI Support Text
 
 If requested by the Forest Service, provide concise disclosure text drawn from the soils report or
-issue-screening memo.
+supporting analysis memo.
 
 Acceptance criteria:
 
 - summarizes the potentially affected environment, reasonably foreseeable environmental impacts,
   mitigation/design criteria, and Forest Plan consistency only where supported by the report;
-- references the soils report or issue-screening memo instead of duplicating technical detail;
-- identifies design criteria or monitoring that must carry into later decision or implementation
-  files.
+- references the soils report or supporting analysis memo instead of duplicating technical detail;
+- identifies design criteria or monitoring that support the EA/FONSI analysis.
 
 ### 3. Final Report And Data Package
 
 Provide final report or memo, final PDF, editable source file, Appendix A, final tables, map atlas,
 GIS layers or geodatabase/geopackage, photo log, field forms, source data inventory, metadata/readme,
-limitations memo, and comment-response log.
+and limitations memo.
 
 Acceptance criteria:
 
-- resolves Forest Service and ID-team comments;
 - preserves source citations, field-data traceability, and the authority-to-report crosswalk;
-- documents residual uncertainty and remaining Forest Service decisions;
-- final PDF starts with a valid `%PDF-` header.
+- documents residual uncertainty and limits on use of the analysis;
+- includes the 7 CFR section 1b.10 financial-interest disclosure statement if the Forest Service
+  authorizes third-party preparation of an EA or EIS, in whole or in part.
 
 ## Appendix A. Authority-To-Report Crosswalk
 
-Use this appendix as the starting control table for the soils specialist report. Update it only if
-Forest Service direction, source currentness, or the proposed action changes.
+Use this appendix as the starting control table for the soils resource report. Update it only if
+current regulations, applicable soil guidance, source currentness, or the proposed action changes.
 
-### A1. NEPA, USDA NEPA Procedures, And Forest Service NEPA Direction
+### A1. NEPA And USDA NEPA Procedures
 
-- Source: NEPA; USDA NEPA procedures at 7 CFR part 1b; Forest Service NEPA directives and guidance,
-  including FSH 1909.15 where applicable.
+- Source: NEPA; USDA NEPA procedures at 7 CFR part 1b.
 - Trigger: Federal land exchange, trail, trailhead, access, and parcel-management decisions that need
-  soils effects support for an environmental assessment or issue-screening memo.
+  soils information for an environmental assessment, finding of no significant impact, or proposal
+  record.
 - Report output: concise affected environment, methods, reasonably foreseeable environmental
-  impacts, separate-action context if useful and documented, mitigation/monitoring, source citations,
-  and data limitations.
+  impacts, alternatives if any, consequences of not implementing the action, mitigation/monitoring,
+  source citations, and data limitations.
 - Acceptance test: each conclusion is traceable to reliable existing data, field evidence, or a
   documented Forest Service assumption; the report does not make the agency decision.
 
 ### A2. Third-Party Or Consultant-Prepared Analysis
 
-- Source: 7 CFR section 1b.10 contractor/third-party preparation procedures and Forest Service
-  direction.
-- Trigger: WLG or a consultant prepares soils analysis for Forest Service review.
+- Source: 7 CFR section 1b.10 applicant/third-party preparation procedures.
+- Trigger: WLG or a consultant prepares environmental information or soils analysis for Forest
+  Service review under Forest Service supervision.
 - Report output: editable report, field forms, GIS/map package, photo log, source inventory,
-  assumptions, limitations, and comment-response log.
+  assumptions, limitations, and disclosure statement if required by 7 CFR section 1b.10.
 - Acceptance test: Forest Service can independently review the methods, source citations, field
   evidence, and assumptions before using the report.
 
@@ -381,8 +389,8 @@ Forest Service direction, source currentness, or the proposed action changes.
   improvements, stream/wetland approaches, access/easement features, parcel restrictions, grazing
   improvements, and acquired-parcel management needs.
 - Report output: action-element by soil-concern matrix, field-survey trigger table, effects
-  indicators, maps, mitigation/BMP/monitoring matrix, and issue-screening rationale if a full report
-  is not required.
+  indicators, maps, mitigation/BMP/monitoring matrix, and concise rationale for any non-substantive
+  soil issue.
 - Acceptance test: every soils conclusion is tied to an action element or explicitly screened out.
 
 ## Sources Cited
@@ -393,10 +401,6 @@ Forest Service direction, source currentness, or the proposed action changes.
   https://www.ecfr.gov/current/title-7/subtitle-A/part-1b
 - National Forest System land management planning, 36 CFR part 219:
   https://www.ecfr.gov/current/title-36/chapter-II/part-219
-- Forest Service National Directives:
-  https://www.fs.usda.gov/about-agency/regulations-policies/national-directives
-- Forest Service NEPA Procedures and Guidance:
-  https://www.fs.usda.gov/about-agency/regulations-policies/nepa/nepa-procedures-and-guidance
 - USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management:
   https://www.fs.usda.gov/im/directives/field/r1/fsm/2500/r1-2550.docx
 - Custer Gallatin National Forest Land Management Plan:
