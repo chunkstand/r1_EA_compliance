@@ -1,0 +1,312 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R ] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 2264 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(East Crazies EA Soils Resource Area Scope Of Work) Tj T*
+() Tj T*
+(Date: 2026-05-07) Tj T*
+() Tj T*
+(This scope of work is a Project SOW planning artifact for the East Crazy Inspiration Divide Land) Tj T*
+(Exchange Environmental Assessment. It scopes soils-resource specialist work needed to support EA) Tj T*
+(package preparation. It is not a final SOW award document, an applicability decision, a compliance) Tj T*
+(finding, legal advice, a legal sufficiency determination, or a final agency decision.) Tj T*
+() Tj T*
+(Package Basis) Tj T*
+() Tj T*
+(Source artifacts reviewed:) Tj T*
+() Tj T*
+(- docs/PROJECT_SOW_PACKAGE_RUNBOOK.md) Tj T*
+(- docs/OUTPUT_SCHEMAS.md) Tj T*
+(- docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md) Tj T*
+(- config/project_sow_resource_scopes_v1.json) Tj T*
+(- config/fixtures/project_sow/east_crazies_land_exchange_intake.json) Tj T*
+(- Generated East Crazies Project SOW package smoke output under) Tj T*
+(/tmp/east-crazies-soils-sow-package/) Tj T*
+() Tj T*
+(Current package facts:) Tj T*
+() Tj T*
+(- Project: East Crazy Inspiration Divide Land Exchange Proposed Action) Tj T*
+(- Forest: Custer Gallatin National Forest) Tj T*
+(- District: Bozeman Ranger District) Tj T*
+(- NEPA level: environmental assessment) Tj T*
+(- Resource area: soil_resources) Tj T*
+(- Selected resource scope: vegetation_soils_air_quality) Tj T*
+(- Resource-scope discipline: vegetation_soils_air) Tj T*
+(- Soil-resource package status: covered by a selected SOW scope) Tj T*
+(- Current intake status: soil_resources is not explicitly listed as an expected) Tj T*
+(proposed-action resource area) Tj T*
+(- Observed East Crazies calibration package status: no standalone soils specialist report is listed) Tj T*
+(in observed_specialist_reports[]) Tj T*
+() Tj T*
+(Because the current intake covers soils through the combined vegetation, soils, air quality,) Tj T*
+(climate, and carbon scope, this SOW starts with a soils screen. The specialist should decide) Tj T*
+(whether a standalone soils effects report is needed or whether a concise no-issue or incorporated) Tj T*
+(analysis memo is sufficient for the EA record.) Tj T*
+() Tj T*
+(Objective) Tj T*
+0 -40 Td (East Crazies EA Soils Resource Area SOW | Page 1 of 6) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 2789 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+() Tj T*
+(Prepare a defensible soils-resource work product for the East Crazies EA that identifies whether) Tj T*
+(the proposed land exchange, access commitments, trail work, wetland protections, grazing-related) Tj T*
+(improvements, and parcel management changes could affect soil productivity, erosion, compaction,) Tj T*
+(stability, revegetation, or sediment delivery. The work product must state the evidence basis,) Tj T*
+(analysis boundary, mitigation or best-management-practice needs, and whether soils require a) Tj T*
+(standalone specialist report.) Tj T*
+() Tj T*
+(Action Elements To Screen) Tj T*
+() Tj T*
+(The soils specialist should screen at least these proposed-action elements from the East Crazies) Tj T*
+(intake:) Tj T*
+() Tj T*
+(- Federal and non-federal parcel exchange, including lands entering and leaving National Forest) Tj T*
+(System ownership.) Tj T*
+(- Road and trail easements, Sweet Trunk Trail No. 274 construction, Inspiration Divide Trail No. 8) Tj T*
+(relocation, and Big Timber Canyon Trailhead improvement.) Tj T*
+(- Wetland, riparian, and monitoring-access deed restrictions.) Tj T*
+(- Grazing allotment, permit, fence, road, irrigation ditch, and related improvement changes.) Tj T*
+(- Hazardous-materials and site-condition due diligence before conveyance.) Tj T*
+(- Climate, carbon, vegetation, and restoration context where those topics depend on soil condition,) Tj T*
+(productivity, or revegetation assumptions.) Tj T*
+() Tj T*
+(Required Tasks) Tj T*
+() Tj T*
+(1. Confirm the soils analysis boundary.) Tj T*
+(  - Identify federal disposal parcels, non-federal acquisition parcels, trail and trailhead work) Tj T*
+(areas, access easements, improvement areas, wetlands/riparian buffers, and any construction or) Tj T*
+(restoration footprints.) Tj T*
+(  - State whether soils analysis is limited to disturbance and restoration areas or also includes) Tj T*
+(broader parcel management consequences after ownership transfer.) Tj T*
+() Tj T*
+(2. Compile baseline soils information.) Tj T*
+(  - Collect available soil survey, ecological site, slope, erosion-hazard, mass-movement,) Tj T*
+(hydrologic soil group, road/trail, wetland/riparian, vegetation, and invasive-species data.) Tj T*
+(  - Identify fragile, highly erodible, compacted, saturated, shallow, unstable, or otherwise) Tj T*
+(sensitive soil map units if present.) Tj T*
+(  - Record data gaps and whether field verification is required.) Tj T*
+() Tj T*
+(3. Screen proposed-action effects.) Tj T*
+(  - Evaluate soil disturbance from trail construction, trail relocation, trailhead improvement,) Tj T*
+(road or trail easements, grazing-related improvements, and restoration commitments.) Tj T*
+0 -40 Td (East Crazies EA Soils Resource Area SOW | Page 2 of 6) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 2873 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(  - Evaluate potential soil-productivity, compaction, displacement, erosion, sediment delivery,) Tj T*
+(slope stability, reclamation, revegetation, and noxious-weed-prevention issues.) Tj T*
+(  - Separate direct construction or implementation effects from long-term ownership and management) Tj T*
+(changes.) Tj T*
+() Tj T*
+(4. Coordinate interdisciplinary dependencies.) Tj T*
+(  - Coordinate sediment and riparian questions with hydrology, wetlands, aquatics, and water) Tj T*
+(quality.) Tj T*
+(  - Coordinate revegetation, restoration, carbon, invasive species, and whitebark pine or botany) Tj T*
+(assumptions with vegetation and botany specialists.) Tj T*
+(  - Coordinate roads, trails, access, and recreation design assumptions with the recreation and) Tj T*
+(engineering/access reviewers.) Tj T*
+(  - Coordinate parcel condition, hazardous-materials, mineral, and realty closing assumptions with) Tj T*
+(lands/realty, minerals, and hazardous-materials reviewers.) Tj T*
+() Tj T*
+(5. Define mitigation, BMP, and monitoring requirements.) Tj T*
+(  - List erosion-control, sediment-control, soil salvage, decompaction, revegetation, weed) Tj T*
+(prevention, seasonal timing, wet-weather operation, and monitoring measures needed for the EA) Tj T*
+(and implementation record.) Tj T*
+(  - Identify which measures are design criteria, mitigation commitments, permit dependencies, or) Tj T*
+(recommended implementation practices.) Tj T*
+() Tj T*
+(6. Prepare the soils record product.) Tj T*
+(  - If soils issues are present, prepare a soils effects technical memorandum or specialist report) Tj T*
+(suitable for incorporation into the EA.) Tj T*
+(  - If soils issues are screened out, prepare a soils no-issue or incorporated-analysis memo with) Tj T*
+(the evidence basis, assumptions, and responsible specialist signoff.) Tj T*
+(  - Include citations, maps or tables, unresolved data gaps, and an administrative-record source) Tj T*
+(list.) Tj T*
+() Tj T*
+(Data Needs) Tj T*
+() Tj T*
+(- Parcel boundary, ownership, easement, and access commitment GIS layers.) Tj T*
+(- Proposed trail, trailhead, road, construction, relocation, and closure footprints.) Tj T*
+(- Wetland, riparian, stream, floodplain, and aquatic-resource overlays.) Tj T*
+(- Grazing allotment, fence, road, irrigation ditch, and improvement locations.) Tj T*
+(- Soil survey, ecological site, slope, erosion-hazard, mass-movement, and hydrologic soil data.) Tj T*
+(- Vegetation, invasive-species, revegetation, restoration, and carbon-analysis assumptions.) Tj T*
+(- Known design criteria, BMPs, permit conditions, monitoring commitments, and mitigation measures.) Tj T*
+(- Field notes, photo points, or site verification records if the specialist determines field review) Tj T*
+(is needed.) Tj T*
+() Tj T*
+0 -40 Td (East Crazies EA Soils Resource Area SOW | Page 3 of 6) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 2754 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(Required Deliverables) Tj T*
+() Tj T*
+(- Soils resource screen and analysis-need determination.) Tj T*
+(- Soils data and assumptions table, including soil survey/map unit sources and disturbance-footprint) Tj T*
+(assumptions.) Tj T*
+(- Soils effects memorandum or specialist report, or a documented no-issue/incorporated-analysis) Tj T*
+(memo if a standalone report is not needed.) Tj T*
+(- Soil BMP, mitigation, restoration, and monitoring matrix.) Tj T*
+(- Interdisciplinary coordination notes for hydrology/wetlands, roads/trails/access, vegetation,) Tj T*
+(realty, minerals, hazardous materials, and Forest Plan consistency dependencies.) Tj T*
+(- Administrative-record source list with citations and file locations.) Tj T*
+() Tj T*
+(Optional Deliverables) Tj T*
+() Tj T*
+(- Field verification plan, field forms, photo log, or map appendix.) Tj T*
+(- Erosion and sediment control checklist for trail, road, or trailhead implementation.) Tj T*
+(- Soil salvage, decompaction, revegetation, and monitoring plan outline.) Tj T*
+(- Soil sensitivity map exhibit for decision-record or implementation appendices.) Tj T*
+() Tj T*
+(Acceptance Criteria) Tj T*
+() Tj T*
+(- The product states whether soils require a standalone specialist report, incorporated analysis, or) Tj T*
+(no-issue memo.) Tj T*
+(- Every screened soils concern is tied to a proposed-action element, parcel, or implementation) Tj T*
+(footprint.) Tj T*
+(- Soil productivity, erosion, compaction, displacement, slope stability, sediment delivery,) Tj T*
+(restoration, and invasive-species prevention are each either analyzed or explicitly screened out.) Tj T*
+(- Soil assumptions that support hydrology, wetlands, vegetation, carbon, roads/trails, realty,) Tj T*
+(minerals, or hazardous-materials work are visible and coordinated.) Tj T*
+(- Mitigation, BMP, restoration, and monitoring commitments are listed as requirements, not assumed) Tj T*
+(conclusions.) Tj T*
+(- The product includes enough citations, maps, tables, and administrative-record references for an) Tj T*
+(EA reviewer to trace the analysis.) Tj T*
+() Tj T*
+(Assumptions) Tj T*
+() Tj T*
+(- Soil effects are not determined by the Project SOW package itself.) Tj T*
+(- The current East Crazies intake has no standalone observed soils specialist report and does not) Tj T*
+(explicitly list soil_resources as a proposed-action-derived resource area.) Tj T*
+(- A soils specialist may determine that a standalone report is unnecessary if the record shows soil) Tj T*
+(issues are adequately addressed through hydrology, wetlands, roads/trails/access, vegetation,) Tj T*
+(carbon, hazardous-materials, or realty work products.) Tj T*
+0 -40 Td (East Crazies EA Soils Resource Area SOW | Page 4 of 6) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 2124 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(- Field verification needs remain subject to specialist judgment after reviewing the project) Tj T*
+(footprint and available soil data.) Tj T*
+() Tj T*
+(Dependencies) Tj T*
+() Tj T*
+(- Reviewer-confirmed project footprint and implementation assumptions.) Tj T*
+(- Current parcel and access GIS data.) Tj T*
+(- Hydrology/wetlands and roads/trails/access design assumptions.) Tj T*
+(- Vegetation, restoration, carbon, and invasive-species assumptions.) Tj T*
+(- Realty, minerals, hazardous-materials, and closing-condition information.) Tj T*
+(- Forest Plan consistency direction for soil, watershed, restoration, or access-related standards) Tj T*
+(and guidelines.) Tj T*
+() Tj T*
+(Reviewer Role And Timing) Tj T*
+() Tj T*
+(Reviewer role: soils specialist, or vegetation/soils/interdisciplinary resource specialist with) Tj T*
+(documented soils competency.) Tj T*
+() Tj T*
+(Review timing:) Tj T*
+() Tj T*
+(- Initial soils screen before draft EA resource analysis is finalized.) Tj T*
+(- Update after trail, trailhead, access, wetland/riparian, and restoration footprints are confirmed.) Tj T*
+(- Final signoff before decision-record mitigation, design criteria, or implementation commitments) Tj T*
+(rely on soils assumptions.) Tj T*
+() Tj T*
+(Recommended signoff fields:) Tj T*
+() Tj T*
+(- soils_analysis_boundary_confirmed) Tj T*
+(- soil_data_sources_confirmed) Tj T*
+(- field_review_need_confirmed) Tj T*
+(- soil_effects_pathway_confirmed) Tj T*
+(- bmp_mitigation_monitoring_confirmed) Tj T*
+(- standalone_soils_report_need_confirmed) Tj T*
+() Tj T*
+(Open Reviewer Decisions) Tj T*
+() Tj T*
+(- Should the East Crazies intake be amended to list soil_resources as an explicit) Tj T*
+(proposed-action resource area?) Tj T*
+(- Is a standalone soils specialist report required, or can soils be documented through a no-issue) Tj T*
+(memo or incorporated interdisciplinary analysis?) Tj T*
+(- Is field verification required for trail, trailhead, access, wetland/riparian, grazing) Tj T*
+(improvement, or restoration areas?) Tj T*
+0 -40 Td (East Crazies EA Soils Resource Area SOW | Page 5 of 6) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 231 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(- Which soil BMPs and monitoring commitments must be carried into the EA, decision record, and) Tj T*
+(implementation file?) Tj T*
+0 -520 Td (East Crazies EA Soils Resource Area SOW | Page 6 of 6) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 14 0 R >>
+endobj
+xref
+0 16
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000155 00000 n 
+0000000225 00000 n 
+0000002541 00000 n 
+0000002668 00000 n 
+0000005509 00000 n 
+0000005636 00000 n 
+0000008561 00000 n 
+0000008688 00000 n 
+0000011495 00000 n 
+0000011624 00000 n 
+0000013801 00000 n 
+0000013930 00000 n 
+0000014213 00000 n 
+trailer
+<< /Size 16 /Root 1 0 R >>
+startxref
+14342
+%%EOF

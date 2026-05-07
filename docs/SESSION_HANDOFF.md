@@ -5,9 +5,10 @@ Date: 2026-05-07
 ## East Crazies Soils Resource Area SOW
 
 An ad hoc soils resource-area SOW has been produced at
-`docs/EAST_CRAZIES_SOILS_RESOURCE_AREA_SOW.md`. It is grounded in the current Project SOW package
-docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a temporary
-East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
+`docs/EAST_CRAZIES_SOILS_RESOURCE_AREA_SOW.md`, with a PDF rendering at
+`docs/EAST_CRAZIES_SOILS_RESOURCE_AREA_SOW.pdf`. It is grounded in the current Project SOW package
+docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
+temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
 Important boundary: `soil_resources` is covered by the selected
 `vegetation_soils_air_quality` scope, but the current East Crazies intake does not explicitly list
