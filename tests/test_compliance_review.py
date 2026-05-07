@@ -1996,6 +1996,42 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
             self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
 
+    def test_phase_eval_can_include_final_qa_certification_phase(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "phase-review"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+            _write_final_qa_phase_outputs(
+                output_dir / "reviews" / review_id,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(result.summary["phase_count"], 15)
+            final_qa_phase = _phase(result.summary, "final_qa_certification_report")
+            self.assertTrue(final_qa_phase["passed"])
+            self.assertTrue(final_qa_phase["reviewer_ready"])
+            self.assertTrue(final_qa_phase["details"]["validation_result_passed"])
+            self.assertEqual(final_qa_phase["details"]["failed_check_count"], 0)
+
     def test_phase_eval_accepts_base_gold_eval_for_generated_rule_pack(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -2599,6 +2635,51 @@ def _write_graph_phase_outputs(output_dir: Path, source_set_id: str) -> None:
         ),
         encoding="utf-8",
     )
+
+
+def _write_final_qa_phase_outputs(
+    review_dir: Path,
+    *,
+    review_id: str,
+    source_set_id: str,
+) -> None:
+    final_qa_dir = review_dir / "final_qa"
+    final_qa_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(
+        final_qa_dir / "east_crazies_final_qa_certification.json",
+        {
+            "schema_version": "east-crazies-final-qa-certification-report-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "gate_replay_summary": {"machine_replay_status": "passed"},
+            "finding_qa": {"authority_finding_count": 33},
+            "accepted_v1_risk_ledger": {"accepted_pending_count": 14},
+            "certification_statement": {"legal_conclusion": False},
+        },
+    )
+    _write_json(
+        final_qa_dir / "east_crazies_final_qa_certification_manifest.json",
+        {
+            "schema_version": "east-crazies-final-qa-certification-manifest-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "validation_status": "passed",
+        },
+    )
+    _write_json(
+        final_qa_dir / "east_crazies_final_qa_certification_validation.json",
+        {
+            "schema_version": "east-crazies-final-qa-certification-validation-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "passed": True,
+            "machine_replay_status": "passed",
+            "check_count": 157,
+            "failed_check_count": 0,
+            "failure_category_counts": {},
+        },
+    )
+    (final_qa_dir / "east_crazies_final_qa_certification.pdf").write_bytes(b"%PDF-1.4\n")
 
 
 def _write_component_adjudication_eval(

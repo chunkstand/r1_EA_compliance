@@ -153,7 +153,9 @@ keeping the ignored outputs under the review `decision_support/` directory. See
 certification replay plan that will validate the promoted East Crazy review packet from existing
 audited artifacts without broadening the legal or Region 1 readiness claim. Sequence 0 baseline
 replay, Sequence 1 final QA contract/fixtures plus gap-close hardening, and Sequence 2
-generator/CLI plus gap-close alignment work are complete; Sequence 3 gate integration is next. See
+generator/CLI plus gap-close alignment work are complete, and Sequence 3 gate integration now makes
+the packet visible to `phase-eval` and the current-promotion suite; Sequence 4 final packet
+QA/closeout is next. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
 remaining South Plateau strict-expansion forest-plan context blocker. See
@@ -893,6 +895,9 @@ promotion signal.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.
+For the East Crazies final QA lane, the current-promotion case also requires the final QA JSON,
+manifest, PDF, and validation sidecar, and review-scoped `phase-eval` includes
+`final_qa_certification_report` once that sidecar exists.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,

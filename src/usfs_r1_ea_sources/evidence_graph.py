@@ -19,6 +19,11 @@ from .ea_consistency_decision_support import (
 )
 from .ea_consistency_decision_support import infer_decision_support_contract_paths
 from .ea_consistency_decision_support import validate_ea_consistency_decision_support_report
+from .final_qa_certification import MANIFEST_FILENAME as FINAL_QA_MANIFEST_FILENAME
+from .final_qa_certification import PDF_FILENAME as FINAL_QA_PDF_FILENAME
+from .final_qa_certification import REPORT_FILENAME as FINAL_QA_REPORT_FILENAME
+from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
+from .final_qa_certification import VALIDATION_SCHEMA_VERSION as FINAL_QA_VALIDATION_SCHEMA_VERSION
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -401,6 +406,7 @@ def run_phase_aligned_eval(
     decision_support_dir = (
         review_dir / "decision_support" if review_dir is not None else None
     )
+    final_qa_dir = review_dir / "final_qa" if review_dir is not None else None
     review_nepa_3d_graph_dir = (
         review_dir / "knowledge_graph" if review_dir is not None else None
     )
@@ -1187,6 +1193,14 @@ def run_phase_aligned_eval(
                 output_dir=output_dir,
                 review_id=review_id or review_dir.name,
                 decision_support_dir=decision_support_dir,
+            )
+        )
+    if final_qa_dir is not None and _should_include_final_qa_phase(final_qa_dir):
+        phases.append(
+            _final_qa_certification_phase(
+                review_id=review_id or review_dir.name,
+                source_set_id=source_set_id,
+                final_qa_dir=final_qa_dir,
             )
         )
     blockers = [
@@ -2034,6 +2048,102 @@ def _should_include_decision_support_phase(
         if payload.get("review_id") == review_id:
             return True
     return False
+
+
+def _should_include_final_qa_phase(final_qa_dir: Path) -> bool:
+    return (final_qa_dir / FINAL_QA_VALIDATION_FILENAME).exists()
+
+
+def _final_qa_certification_phase(
+    *,
+    review_id: str,
+    source_set_id: str,
+    final_qa_dir: Path,
+) -> dict:
+    report_path = final_qa_dir / FINAL_QA_REPORT_FILENAME
+    manifest_path = final_qa_dir / FINAL_QA_MANIFEST_FILENAME
+    pdf_path = final_qa_dir / FINAL_QA_PDF_FILENAME
+    validation_path = final_qa_dir / FINAL_QA_VALIDATION_FILENAME
+
+    report = _read_json_if_exists(report_path)
+    manifest = _read_json_if_exists(manifest_path)
+    validation = _read_json_if_exists(validation_path)
+    pdf_header_valid = (
+        pdf_path.exists()
+        and pdf_path.stat().st_size > 0
+        and pdf_path.read_bytes().startswith(b"%PDF-")
+    )
+    report_identity_matches = bool(
+        report
+        and report.get("review_id") == review_id
+        and report.get("source_set_id") == source_set_id
+    )
+    manifest_identity_matches = bool(
+        manifest
+        and manifest.get("review_id") == review_id
+        and manifest.get("source_set_id") == source_set_id
+    )
+    validation_identity_matches = bool(
+        validation
+        and validation.get("review_id") == review_id
+        and validation.get("source_set_id") == source_set_id
+    )
+    checks = {
+        "report_exists": report is not None,
+        "manifest_exists": manifest is not None,
+        "pdf_exists": pdf_path.exists(),
+        "validation_exists": validation is not None,
+        "report_schema_matches": (report or {}).get("schema_version")
+        == "east-crazies-final-qa-certification-report-v1",
+        "manifest_schema_matches": (manifest or {}).get("schema_version")
+        == "east-crazies-final-qa-certification-manifest-v1",
+        "validation_schema_matches": (validation or {}).get("schema_version")
+        == FINAL_QA_VALIDATION_SCHEMA_VERSION,
+        "report_identity_matches": report_identity_matches,
+        "manifest_identity_matches": manifest_identity_matches,
+        "validation_identity_matches": validation_identity_matches,
+        "report_machine_replay_passed": _selector_value(
+            report or {},
+            "gate_replay_summary.machine_replay_status",
+        )
+        == "passed",
+        "manifest_validation_status_passed": (manifest or {}).get("validation_status")
+        == "passed",
+        "validation_result_passed": (validation or {}).get("passed") is True,
+        "validation_result_no_failed_checks": (validation or {}).get("failed_check_count") == 0,
+        "validation_result_check_count_sufficient": _safe_int(
+            (validation or {}).get("check_count")
+        )
+        >= 157,
+        "pdf_header_valid": pdf_header_valid,
+        "accepted_v1_risk_visible": _selector_value(
+            report or {},
+            "accepted_v1_risk_ledger.accepted_pending_count",
+        )
+        == 14,
+        "legal_conclusion_boundary": _selector_value(
+            report or {},
+            "certification_statement.legal_conclusion",
+        )
+        is False,
+    }
+    passed = all(checks.values())
+    return _phase(
+        "final_qa_certification_report",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "report_path": str(report_path),
+            "manifest_path": str(manifest_path),
+            "pdf_path": str(pdf_path),
+            "validation_path": str(validation_path),
+            "failed_checks": sorted(name for name, passed in checks.items() if not passed),
+            "check_count": (validation or {}).get("check_count"),
+            "failed_check_count": (validation or {}).get("failed_check_count"),
+            "failure_category_counts": (validation or {}).get("failure_category_counts", {}),
+            **checks,
+        },
+    )
 
 
 def _decision_support_phase(
@@ -2890,6 +3000,25 @@ def _safe_int(value: object) -> int:
         return int(value or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _selector_value(data: Any, selector: str) -> Any:
+    current = data
+    for part in selector.split("."):
+        if isinstance(current, dict):
+            current = current.get(part)
+        else:
+            return None
+    return current
+
+
+def _read_json_if_exists(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        return _read_json(path)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def _dict_list(value: Any) -> list[dict[str, Any]]:

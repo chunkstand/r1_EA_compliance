@@ -5,8 +5,9 @@ Date: 2026-05-07
 ## Current East Crazies Final QA / Certification Replay Handoff
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now active. Sequence 0 baseline
-replay, Sequence 1 contract/fixture work, and Sequence 2 deterministic generator/CLI work are
-complete for the promoted East Crazy Inspiration Divide review. The lane remains bounded to
+replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work, and
+Sequence 3 gate integration are complete for the promoted East Crazy Inspiration Divide review.
+The lane remains bounded to
 `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it explicitly
 avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
 root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
@@ -84,10 +85,33 @@ alignment by carrying all `33` compliance-matrix authority findings in `finding_
 with a compliance-matrix selector, package/source evidence pointers, and trace IDs, instead of only
 a representative finding row.
 
-Next implementation boundary: Sequence 3. Add final QA visibility to `phase-eval` and the
-current-promotion suite without changing the underlying East Crazy review result or mixing in South
-Plateau strict-expansion blocker work. Root-level `East_Crazies_*` drafts remain non-canonical and
-unstaged.
+Sequence 3 added:
+
+- `east_crazies_final_qa_certification_validation.json` as the generated validation sidecar;
+- optional review-scoped `phase-eval` phase `final_qa_certification_report` when the sidecar exists;
+- current-promotion-suite required artifacts for the final QA JSON, manifest, PDF, and validation
+  sidecar;
+- self-reference handling so final QA validation still passes when the only hash/count drift is the
+  passing outer final QA phase and the four passing final QA promotion-suite gates.
+
+Latest Sequence 3 verification:
+
+- `final-qa-certification`: passed `165/165` and wrote the ignored JSON, Markdown, PDF, manifest,
+  and validation family.
+- `final-qa-certification --validate-only`: passed `165/165` without rewriting outputs.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` with
+  `final_qa_certification_report` and `reviewer_ready=true`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: passed current promotion with
+  `26/26` required current-promotion results, `current_promotion_ready=true`,
+  `promotion_ready=true`, and South Plateau blockers separate as
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+- strict expansion `promotion-suite --strict-expansion` failed as expected with
+  `current_promotion_ready=true`, `promotion_ready=false`, and the same South Plateau
+  `forest_plan_reviewer_not_ready` blockers.
+
+Next implementation boundary: Sequence 4. Replay final QA validate-only, inspect the rendered
+packet, run the full current-promotion gate stack, update closeout docs, and commit the verified
+slice. Root-level `East_Crazies_*` drafts remain non-canonical and unstaged.
 
 ## Current Applicability/Expansion Handoff
 

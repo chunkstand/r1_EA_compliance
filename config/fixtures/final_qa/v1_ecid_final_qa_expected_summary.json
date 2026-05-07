@@ -11,7 +11,8 @@
     "east_crazies_final_qa_certification.json",
     "east_crazies_final_qa_certification.md",
     "east_crazies_final_qa_certification.pdf",
-    "east_crazies_final_qa_certification_manifest.json"
+    "east_crazies_final_qa_certification_manifest.json",
+    "east_crazies_final_qa_certification_validation.json"
   ],
   "required_sections": [
     "review_boundary",

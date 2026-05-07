@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: active; Sequence 2 deterministic generator/CLI plus gap-close alignment work is complete and Sequence 3 gate integration is next
+Status: active; Sequences 0-3 are complete and Sequence 4 final packet QA/closeout is next
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -69,6 +69,7 @@ Generated outputs stay under ignored review artifacts:
 - `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification.md`
 - `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification.pdf`
 - `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_manifest.json`
+- `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
 
 Tracked implementation surfaces should be added only when their sequence starts:
 
@@ -292,6 +293,14 @@ root-level draft files to satisfy the packet.
 Purpose: make the final QA replay visible to the existing promotion/readiness gates without
 changing the underlying review result.
 
+Status: complete as of the 2026-05-07 Sequence 3 pass. The generator now writes
+`east_crazies_final_qa_certification_validation.json` as the replay sidecar used by outer gates.
+Review-scoped `phase-eval` adds `final_qa_certification_report` when that sidecar exists and passed
+`20/20` with `reviewer_ready=true` for `v1-cg-ecid-compliance-review`. The current promotion suite
+now requires the final QA JSON, manifest, PDF, and validation sidecar and passed `26/26` current
+results. Strict expansion still fails only on South Plateau `forest_plan_reviewer_not_ready`
+blockers, with East Crazy current promotion remaining green.
+
 Actions:
 
 1. Add a `final_qa_certification_report` optional phase to `phase-eval` when the final QA artifact
@@ -320,7 +329,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --manifest config/promotion_suite_v1.json
 
-PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_promotion_suite.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_promotion_suite.py
 git diff --check
 ```
 
@@ -345,7 +354,8 @@ Actions:
 
 Acceptance:
 
-- Final QA JSON, Markdown, PDF, and manifest validate from existing audited artifacts.
+- Final QA JSON, Markdown, PDF, manifest, and validation sidecar validate from existing audited
+  artifacts.
 - `phase-eval`, `v1-ea-eval`, and non-strict `promotion-suite` pass for current promotion.
 - The packet makes every residual risk and accepted V1 risk explicit.
 - The repo docs and handoff match the verified artifact state.
@@ -370,7 +380,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --manifest config/promotion_suite_v1.json
 
-PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_promotion_suite.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_compliance_review.py tests/test_promotion_suite.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src

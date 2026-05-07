@@ -472,8 +472,9 @@ copy-review pass.
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the active focused plan for
 turning the promoted East Crazy review into a replayable final QA packet. Sequence 0 baseline
-replay, Sequence 1 contract/fixture work, and Sequence 2 deterministic generator/CLI work are
-complete; Sequence 3 gate integration is next. The milestone is bounded to review ID
+replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work, and Sequence
+3 gate integration are complete; Sequence 4 final packet QA/closeout is next. The milestone is
+bounded to review ID
 `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`; it does not broaden
 the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
 and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
@@ -483,9 +484,12 @@ authorities, `340` non-applicable authorities, `0` unresolved authorities, `373`
 authorities, `33` generated compliance findings, `142` rule-claim links, `0` rule-claim gaps,
 `43` package files, `1,265` package chunks, `329` Forest Plan component rows, `58` Forest Plan
 standards, `12/12` Custer Gallatin applicable standards, passing decision-support validation, and
-review-bound `phase-eval` at `19/19` with `reviewer_ready=true`. Non-strict `promotion-suite`
-remains current-green with `22/22` required current-promotion results passed while South Plateau
-strict-expansion blockers remain separate. Its intended generated output family will live under
+review-bound baseline `phase-eval` at `19/19` before final QA gate integration. Sequence 3 added
+the final QA validation sidecar, review-scoped `phase-eval` now passes `20/20` with
+`final_qa_certification_report`, and non-strict `promotion-suite` remains current-green with
+`26/26` required current-promotion results passed. South Plateau strict-expansion blockers remain
+separate as `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+Generated final QA outputs live under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/` and stay ignored unless repository
 policy changes.
 
@@ -495,7 +499,7 @@ The replay sequences are:
   2026-05-07.
 - Sequence 1: final QA contract and fixtures; complete on 2026-05-07.
 - Sequence 2: deterministic generator and CLI with `--validate-only`; complete on 2026-05-07.
-- Sequence 3: `phase-eval` and promotion-suite integration.
+- Sequence 3: `phase-eval` and promotion-suite integration; complete on 2026-05-07.
 - Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit.
 
 Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
@@ -513,13 +517,17 @@ dependency, hidden accepted V1 risk, legal-conclusion leaks, and human-certifica
 fail-closed categories.
 
 Sequence 2 added the `final-qa-certification` CLI command and the
-`src/usfs_r1_ea_sources/final_qa_certification.py` artifact reader. A live generation pass for
-`v1-cg-ecid-compliance-review` wrote the ignored JSON, Markdown, PDF, and manifest outputs under
+`src/usfs_r1_ea_sources/final_qa_certification.py` artifact reader. Sequence 3 added
+`east_crazies_final_qa_certification_validation.json` as the validation result consumed by
+outer readiness gates. A live generation pass for `v1-cg-ecid-compliance-review` wrote the ignored
+JSON, Markdown, PDF, manifest, and validation outputs under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`; a follow-up `--validate-only`
-replay passed the same `157` checks without rewriting outputs. The command validates required gate
+replay passed `165/165` checks without rewriting outputs. The command validates required gate
 selectors, pinned input hashes, source/source-set identity, semantic counts, configured source
 selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
-non-canonical root-level draft boundary. The Sequence 2 gap-close pass now carries all `33`
+non-canonical root-level draft boundary. The validator tolerates the self-referential outer
+phase-eval/promotion-suite hash drift only when the extra passing gates are exactly the final QA
+outer gates. The Sequence 2 gap-close pass carries all `33`
 compliance-matrix authority findings in `finding_qa.findings`, with per-row compliance-matrix
 selectors, package/source evidence pointers, and trace IDs.
 

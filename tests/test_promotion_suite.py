@@ -99,6 +99,60 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     pdf_checks = {check["name"]: check for check in decision_pdf["checks"]}
     assert pdf_checks["decision_support_pdf_header_valid"]["starts_with"] == "%PDF-"
 
+    final_qa = results["final_qa_certification_report"]
+    assert final_qa["required_for_current_promotion"] is True
+    assert (
+        final_qa["path"]
+        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification.json"
+    )
+    final_qa_checks = {check["name"]: check for check in final_qa["checks"]}
+    assert final_qa_checks["final_qa_report_schema"]["equals"] == (
+        "east-crazies-final-qa-certification-report-v1"
+    )
+    assert final_qa_checks["final_qa_machine_replay_passed"]["equals"] == "passed"
+    assert final_qa_checks["final_qa_finding_count"]["equals"] == 33
+    assert final_qa_checks["final_qa_accepted_v1_risk_visible"]["equals"] == 14
+    assert final_qa_checks["final_qa_legal_conclusion_boundary"]["equals"] is False
+
+    final_qa_manifest = results["final_qa_certification_manifest"]
+    assert final_qa_manifest["required_for_current_promotion"] is True
+    assert (
+        final_qa_manifest["path"]
+        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification_manifest.json"
+    )
+    final_qa_manifest_checks = {
+        check["name"]: check for check in final_qa_manifest["checks"]
+    }
+    assert final_qa_manifest_checks["final_qa_manifest_schema"]["equals"] == (
+        "east-crazies-final-qa-certification-manifest-v1"
+    )
+    assert final_qa_manifest_checks["final_qa_manifest_validation_status"]["equals"] == "passed"
+
+    final_qa_pdf = results["final_qa_certification_pdf"]
+    assert final_qa_pdf["required_for_current_promotion"] is True
+    assert (
+        final_qa_pdf["path"]
+        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification.pdf"
+    )
+    final_qa_pdf_checks = {check["name"]: check for check in final_qa_pdf["checks"]}
+    assert final_qa_pdf_checks["final_qa_pdf_header_valid"]["starts_with"] == "%PDF-"
+
+    final_qa_validation = results["final_qa_certification_validation"]
+    assert final_qa_validation["required_for_current_promotion"] is True
+    assert (
+        final_qa_validation["path"]
+        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification_validation.json"
+    )
+    final_qa_validation_checks = {
+        check["name"]: check for check in final_qa_validation["checks"]
+    }
+    assert final_qa_validation_checks["final_qa_validation_schema"]["equals"] == (
+        "east-crazies-final-qa-certification-validation-v1"
+    )
+    assert final_qa_validation_checks["final_qa_validation_passed"]["equals"] is True
+    assert final_qa_validation_checks["final_qa_validation_failed_check_count"]["equals"] == 0
+    assert final_qa_validation_checks["final_qa_validation_check_count"]["min"] == 157
+
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True
     assert provenance["path"] == "reviews/{review_id}/authority_family_provenance.json"

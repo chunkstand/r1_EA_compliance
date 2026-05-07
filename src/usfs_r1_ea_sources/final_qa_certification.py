@@ -20,7 +20,9 @@ REPORT_FILENAME = "east_crazies_final_qa_certification.json"
 MARKDOWN_FILENAME = "east_crazies_final_qa_certification.md"
 PDF_FILENAME = "east_crazies_final_qa_certification.pdf"
 MANIFEST_FILENAME = "east_crazies_final_qa_certification_manifest.json"
-GENERATOR_VERSION = "final-qa-certification-sequence-2"
+VALIDATION_FILENAME = "east_crazies_final_qa_certification_validation.json"
+VALIDATION_SCHEMA_VERSION = "east-crazies-final-qa-certification-validation-v1"
+GENERATOR_VERSION = "final-qa-certification-sequence-3"
 HUMAN_JUDGMENT_CAVEAT = (
     "This packet supports review but does not replace responsible official, "
     "line officer, counsel, or specialist judgment."
@@ -34,6 +36,7 @@ class FinalQACertificationResult:
     markdown_path: Path
     pdf_path: Path
     manifest_path: Path
+    validation_path: Path
 
 
 @dataclass(frozen=True)
@@ -43,6 +46,7 @@ class OutputPaths:
     markdown_path: Path
     pdf_path: Path
     manifest_path: Path
+    validation_path: Path
 
 
 def run_final_qa_certification(
@@ -82,6 +86,7 @@ def run_final_qa_certification(
             markdown_path=paths.markdown_path,
             pdf_path=paths.pdf_path,
             manifest_path=paths.manifest_path,
+            validation_path=paths.validation_path,
         )
 
     report = _build_report(
@@ -108,6 +113,17 @@ def run_final_qa_certification(
         config_path=config_path,
         expected_summary_path=expected_summary_path,
         results_dir=paths.results_dir,
+        require_validation_result=False,
+    )
+    result.summary["output_written"] = True
+    _write_json(paths.validation_path, _validation_result_payload(result.summary, paths))
+    result = validate_final_qa_certification_report(
+        output_dir=output_dir,
+        review_id=resolved_review_id,
+        config_path=config_path,
+        expected_summary_path=expected_summary_path,
+        results_dir=paths.results_dir,
+        require_validation_result=True,
     )
     result.summary["output_written"] = True
     return result
@@ -120,6 +136,7 @@ def validate_final_qa_certification_report(
     config_path: Path = DEFAULT_CONFIG_PATH,
     expected_summary_path: Path = DEFAULT_EXPECTED_SUMMARY_PATH,
     results_dir: Path | None = None,
+    require_validation_result: bool = True,
 ) -> FinalQACertificationResult:
     """Validate an existing generated final QA report family without rewriting it."""
 
@@ -143,6 +160,11 @@ def validate_final_qa_certification_report(
     manifest = _load_output_json(paths.manifest_path, "manifest", checks)
     markdown = _load_output_text(paths.markdown_path, "markdown", checks)
     pdf_bytes = _load_output_bytes(paths.pdf_path, "pdf", checks)
+    validation_result = (
+        _load_output_json(paths.validation_path, "validation", checks)
+        if require_validation_result
+        else None
+    )
 
     if report is not None:
         _validate_report(
@@ -151,6 +173,7 @@ def validate_final_qa_certification_report(
             expected=expected,
             paths=paths,
             checks=checks,
+            require_validation_result=require_validation_result,
         )
     if manifest is not None:
         _validate_manifest(
@@ -169,6 +192,13 @@ def validate_final_qa_certification_report(
         )
     if pdf_bytes is not None:
         _validate_pdf(pdf_bytes=pdf_bytes, config=config, checks=checks)
+    if validation_result is not None:
+        _validate_validation_result(
+            validation_result=validation_result,
+            config=config,
+            paths=paths,
+            checks=checks,
+        )
 
     summary = _summarize_checks(
         checks=checks,
@@ -183,6 +213,7 @@ def validate_final_qa_certification_report(
         markdown_path=paths.markdown_path,
         pdf_path=paths.pdf_path,
         manifest_path=paths.manifest_path,
+        validation_path=paths.validation_path,
     )
 
 
@@ -287,16 +318,27 @@ def _collect_input_state(
                 details={"path": str(path), "expected_sha256": expected_hash},
             )
             continue
+        data_for_hash: dict[str, Any] | None = None
+        if path.suffix == ".json":
+            data_for_hash = _read_required_json(path, spec["artifact_key"], checks)
+            if data_for_hash is not None:
+                data_by_key[spec["artifact_key"]] = data_for_hash
         actual_hash = _sha256_file(path)
+        outer_gate_hash_drift_allowed = _outer_gate_hash_drift_allowed(
+            artifact_key=spec["artifact_key"],
+            data=data_for_hash,
+            expected=expected,
+        )
         _add_check(
             checks,
             name=f"input_hash_matches_{spec['artifact_key']}",
-            passed=actual_hash == expected_hash,
+            passed=actual_hash == expected_hash or outer_gate_hash_drift_allowed,
             category="input_hash_mismatch",
             details={
                 "path": str(path),
                 "actual": actual_hash,
                 "expected": expected_hash,
+                "outer_gate_hash_drift_allowed": outer_gate_hash_drift_allowed,
             },
         )
         record = {
@@ -307,11 +349,8 @@ def _collect_input_state(
             "size_bytes": path.stat().st_size,
             "schema_version": None,
         }
-        if path.suffix == ".json":
-            data = _read_required_json(path, spec["artifact_key"], checks)
-            if data is not None:
-                data_by_key[spec["artifact_key"]] = data
-                record["schema_version"] = data.get("schema_version")
+        if data_for_hash is not None:
+            record["schema_version"] = data_for_hash.get("schema_version")
         artifact_records.append(record)
 
     _validate_configured_source_selectors(expected, output_dir, checks)
@@ -371,6 +410,7 @@ def _build_report(
             "markdown": str(paths.markdown_path),
             "pdf": str(paths.pdf_path),
             "manifest": str(paths.manifest_path),
+            "validation": str(paths.validation_path),
         },
         "failure_categories": [],
     }
@@ -542,6 +582,7 @@ def _validate_report(
     expected: Mapping[str, Any],
     paths: OutputPaths,
     checks: list[dict[str, Any]],
+    require_validation_result: bool,
 ) -> None:
     _add_check(
         checks,
@@ -603,8 +644,11 @@ def _validate_report(
         MARKDOWN_FILENAME: paths.markdown_path,
         PDF_FILENAME: paths.pdf_path,
         MANIFEST_FILENAME: paths.manifest_path,
+        VALIDATION_FILENAME: paths.validation_path,
     }
     for filename in expected.get("required_output_files", []):
+        if filename == VALIDATION_FILENAME and not require_validation_result:
+            continue
         _add_check(
             checks,
             name=f"required_output_exists_{filename}",
@@ -831,6 +875,43 @@ def _validate_pdf(
     )
 
 
+def _phase_eval_counts_for_packet(phase_eval: Any) -> dict[str, int]:
+    phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
+    passed_phase_count = _safe_int(_selector_value(phase_eval, "passed_phase_count"))
+    phases = phase_eval.get("phases", []) if isinstance(phase_eval, Mapping) else []
+    final_qa_present = any(
+        isinstance(phase, Mapping)
+        and phase.get("name") == "final_qa_certification_report"
+        and phase.get("passed")
+        for phase in phases
+    )
+    if final_qa_present:
+        phase_count -= 1
+        passed_phase_count -= 1
+    return {
+        "phase_count": phase_count,
+        "passed_phase_count": passed_phase_count,
+    }
+
+
+def _promotion_suite_counts_for_packet(promotion: Any) -> dict[str, int]:
+    required_count = _safe_int(
+        _selector_value(promotion, "required_current_result_count")
+    )
+    passed_count = _safe_int(
+        _selector_value(promotion, "passed_required_current_result_count")
+    )
+    final_qa_result_count = (
+        _passed_final_qa_current_result_count(promotion)
+        if isinstance(promotion, Mapping)
+        else 0
+    )
+    return {
+        "required_current_result_count": max(required_count - final_qa_result_count, 0),
+        "passed_required_current_result_count": max(passed_count - final_qa_result_count, 0),
+    }
+
+
 def _derive_actual_counts(
     data_by_key: Mapping[str, Any],
     checks: list[dict[str, Any]],
@@ -843,6 +924,8 @@ def _derive_actual_counts(
     phase_eval = data_by_key.get("phase_eval", {})
     promotion = data_by_key.get("promotion_suite", {})
     v1_eval = data_by_key.get("v1_ea_eval", {})
+    phase_eval_counts = _phase_eval_counts_for_packet(phase_eval)
+    promotion_counts = _promotion_suite_counts_for_packet(promotion)
 
     compliance_summary = _summary_or_self(compliance)
     applicability_summary = _summary_or_self(applicability)
@@ -901,14 +984,14 @@ def _derive_actual_counts(
         "applicable_standard_count": forest_components.get("applicable_standard_count"),
         "applied_standard_count": forest_components.get("applied_standard_count"),
         "forest_plan_component_eval_case_count": component_eval_summary.get("case_count"),
-        "phase_eval_phase_count": phase_eval.get("phase_count"),
-        "phase_eval_passed_phase_count": phase_eval.get("passed_phase_count"),
-        "promotion_suite_required_current_result_count": promotion.get(
+        "phase_eval_phase_count": phase_eval_counts["phase_count"],
+        "phase_eval_passed_phase_count": phase_eval_counts["passed_phase_count"],
+        "promotion_suite_required_current_result_count": promotion_counts[
             "required_current_result_count"
-        ),
-        "promotion_suite_passed_required_current_result_count": promotion.get(
+        ],
+        "promotion_suite_passed_required_current_result_count": promotion_counts[
             "passed_required_current_result_count"
-        ),
+        ],
         "accepted_v1_risk_count": conditional.get("accepted_pending_count"),
         "actual_pending_applicable_count": conditional.get("actual_pending_applicable_count"),
         "litigation_risk_legal_conclusion_count": authority_integration.get(
@@ -1483,6 +1566,7 @@ def _output_paths(
         markdown_path=resolved_results_dir / MARKDOWN_FILENAME,
         pdf_path=resolved_results_dir / PDF_FILENAME,
         manifest_path=resolved_results_dir / MANIFEST_FILENAME,
+        validation_path=resolved_results_dir / VALIDATION_FILENAME,
     )
 
 
@@ -1597,6 +1681,13 @@ def _selector_value(data: Any, selector: str) -> Any:
         else:
             return None
     return current
+
+
+def _safe_int(value: Any) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _summary_or_self(data: Any) -> Any:
@@ -1742,8 +1833,191 @@ def _summarize_checks(
         "markdown_path": str(paths.markdown_path),
         "pdf_path": str(paths.pdf_path),
         "manifest_path": str(paths.manifest_path),
+        "validation_path": str(paths.validation_path),
         "output_written": output_written,
     }
+
+
+def _validation_result_payload(summary: Mapping[str, Any], paths: OutputPaths) -> dict[str, Any]:
+    return {
+        "schema_version": VALIDATION_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "generator_version": GENERATOR_VERSION,
+        "review_id": summary.get("review_id"),
+        "source_set_id": summary.get("source_set_id"),
+        "passed": bool(summary.get("passed")),
+        "machine_replay_status": summary.get("machine_replay_status"),
+        "check_count": summary.get("check_count"),
+        "passed_check_count": summary.get("passed_check_count"),
+        "failed_check_count": summary.get("failed_check_count"),
+        "failure_category_counts": summary.get("failure_category_counts", {}),
+        "output_written": bool(summary.get("output_written")),
+        "output_files": {
+            "json": str(paths.report_path),
+            "markdown": str(paths.markdown_path),
+            "pdf": str(paths.pdf_path),
+            "manifest": str(paths.manifest_path),
+            "validation": str(paths.validation_path),
+        },
+    }
+
+
+def _validate_validation_result(
+    *,
+    validation_result: Mapping[str, Any],
+    config: Mapping[str, Any],
+    paths: OutputPaths,
+    checks: list[dict[str, Any]],
+) -> None:
+    _add_check(
+        checks,
+        name="validation_result_schema_version",
+        passed=validation_result.get("schema_version") == VALIDATION_SCHEMA_VERSION,
+        category="unparseable_required_artifact",
+        details={"schema_version": validation_result.get("schema_version")},
+    )
+    _add_check(
+        checks,
+        name="validation_result_identity_matches_config",
+        passed=validation_result.get("review_id") == config.get("review_id")
+        and validation_result.get("source_set_id") == config.get("source_set_id"),
+        category="review_source_set_mismatch",
+        details={
+            "review_id": validation_result.get("review_id"),
+            "source_set_id": validation_result.get("source_set_id"),
+        },
+    )
+    _add_check(
+        checks,
+        name="validation_result_passed",
+        passed=validation_result.get("passed") is True
+        and validation_result.get("machine_replay_status") == "passed",
+        category="stale_artifact",
+        details={
+            "passed": validation_result.get("passed"),
+            "machine_replay_status": validation_result.get("machine_replay_status"),
+        },
+    )
+    _add_check(
+        checks,
+        name="validation_result_no_failed_checks",
+        passed=validation_result.get("failed_check_count") == 0
+        and validation_result.get("failure_category_counts") == {},
+        category="stale_artifact",
+        details={
+            "failed_check_count": validation_result.get("failed_check_count"),
+            "failure_category_counts": validation_result.get("failure_category_counts"),
+        },
+    )
+    _add_check(
+        checks,
+        name="validation_result_check_count_sufficient",
+        passed=_safe_int(validation_result.get("check_count")) >= 157,
+        category="stale_artifact",
+        details={"check_count": validation_result.get("check_count")},
+    )
+    output_files = validation_result.get("output_files") or {}
+    expected_files = {
+        "json": str(paths.report_path),
+        "markdown": str(paths.markdown_path),
+        "pdf": str(paths.pdf_path),
+        "manifest": str(paths.manifest_path),
+        "validation": str(paths.validation_path),
+    }
+    _add_check(
+        checks,
+        name="validation_result_output_files_match",
+        passed=all(output_files.get(key) == value for key, value in expected_files.items()),
+        category="stale_artifact",
+        details={"output_files": output_files},
+    )
+
+
+def _outer_gate_hash_drift_allowed(
+    *,
+    artifact_key: str,
+    data: Mapping[str, Any] | None,
+    expected: Mapping[str, Any],
+) -> bool:
+    if artifact_key == "phase_eval":
+        return _phase_eval_has_only_final_qa_outer_gate(
+            data,
+            expected_counts=expected.get("expected_counts", {}),
+        )
+    if artifact_key == "promotion_suite":
+        return _promotion_suite_has_only_final_qa_outer_gates(
+            data,
+            expected_counts=expected.get("expected_counts", {}),
+        )
+    return False
+
+
+def _phase_eval_has_only_final_qa_outer_gate(
+    data: Mapping[str, Any] | None,
+    *,
+    expected_counts: Mapping[str, Any],
+) -> bool:
+    phases = data.get("phases") if isinstance(data, Mapping) else None
+    if not isinstance(phases, list):
+        return False
+    final_qa_phases = [
+        phase
+        for phase in phases
+        if isinstance(phase, Mapping) and phase.get("name") == "final_qa_certification_report"
+    ]
+    if len(final_qa_phases) != 1:
+        return False
+    final_qa_phase = final_qa_phases[0]
+    if not final_qa_phase.get("passed") or not final_qa_phase.get("reviewer_ready"):
+        return False
+    expected_phase_count = _safe_int(expected_counts.get("phase_eval_phase_count"))
+    expected_passed_count = _safe_int(expected_counts.get("phase_eval_passed_phase_count"))
+    return (
+        _safe_int(data.get("phase_count")) == expected_phase_count + 1
+        and _safe_int(data.get("passed_phase_count")) == expected_passed_count + 1
+        and _safe_int(data.get("reviewer_ready_phase_count")) == expected_passed_count + 1
+    )
+
+
+def _promotion_suite_has_only_final_qa_outer_gates(
+    data: Mapping[str, Any] | None,
+    *,
+    expected_counts: Mapping[str, Any],
+) -> bool:
+    if not isinstance(data, Mapping):
+        return False
+    expected_required = _safe_int(
+        expected_counts.get("promotion_suite_required_current_result_count")
+    )
+    expected_passed = _safe_int(
+        expected_counts.get("promotion_suite_passed_required_current_result_count")
+    )
+    final_qa_result_count = _passed_final_qa_current_result_count(data)
+    if final_qa_result_count != 4:
+        return False
+    return (
+        bool(data.get("current_promotion_ready"))
+        and _safe_int(data.get("required_current_result_count"))
+        == expected_required + final_qa_result_count
+        and _safe_int(data.get("passed_required_current_result_count"))
+        == expected_passed + final_qa_result_count
+    )
+
+
+def _passed_final_qa_current_result_count(data: Mapping[str, Any]) -> int:
+    count = 0
+    for case in data.get("review_cases", []):
+        if not isinstance(case, Mapping) or case.get("id") != "v1-cg-ecid":
+            continue
+        for result in case.get("results", []):
+            if not isinstance(result, Mapping):
+                continue
+            result_id = str(result.get("id") or "")
+            if not result_id.startswith("final_qa_certification_"):
+                continue
+            if result.get("required_for_current_promotion") and result.get("passed"):
+                count += 1
+    return count
 
 
 def _utc_now() -> str:

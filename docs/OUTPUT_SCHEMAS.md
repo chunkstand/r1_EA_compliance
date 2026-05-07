@@ -2348,6 +2348,7 @@ The generated artifact family includes:
 - `east_crazies_final_qa_certification.md`
 - `east_crazies_final_qa_certification.pdf`
 - `east_crazies_final_qa_certification_manifest.json`
+- `east_crazies_final_qa_certification_validation.json`
 
 Generate or validate the packet with:
 
@@ -2413,6 +2414,14 @@ status, input artifact paths, required gate names, per-section dependencies, and
 the decision-support report family, V1 EA eval, review-scoped phase eval, non-strict promotion
 suite, compliance validation, applicability validation, generated rule-pack validation, compliance
 matrix/PDF/review, Forest Plan context summary, and Forest Plan component eval.
+
+`east_crazies_final_qa_certification_validation.json` has schema version
+`east-crazies-final-qa-certification-validation-v1`. It records the generator validation result
+used by outer readiness gates: review ID, source set ID, machine replay status, check counts, failed
+check count, failure-category counts, and the output-file paths for the JSON, Markdown, PDF,
+manifest, and validation sidecar. Sequence 3 makes this sidecar a required current-promotion
+artifact and adds an optional `final_qa_certification_report` phase to review-scoped `phase-eval`
+when the sidecar exists.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set

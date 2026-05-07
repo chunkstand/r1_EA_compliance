@@ -336,6 +336,7 @@ paths = [
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.md",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.pdf",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_manifest.json",
+  "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_validation.json",
 ]
 
 [[artifacts]]

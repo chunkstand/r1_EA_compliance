@@ -365,6 +365,7 @@ def test_output_schema_docs_record_final_qa_contract() -> None:
         "East Crazies Final QA And Certification Outputs",
         "east-crazies-final-qa-certification-report-v1",
         "east-crazies-final-qa-certification-manifest-v1",
+        "east-crazies-final-qa-certification-validation-v1",
         "east-crazies-final-qa-certification-config-v1",
         "east-crazies-final-qa-expected-summary-v1",
         "accepted_v1_risk_ledger",
@@ -395,6 +396,7 @@ def test_sequence_2_generator_writes_and_validates_report_family(tmp_path) -> No
     assert result.markdown_path.exists()
     assert result.pdf_path.read_bytes().startswith(b"%PDF-")
     assert result.manifest_path.exists()
+    assert result.validation_path.exists()
 
     report = _read_json(result.report_path)
     assert report["schema_version"] == "east-crazies-final-qa-certification-report-v1"
@@ -432,7 +434,78 @@ def test_sequence_2_validate_only_fails_closed_when_packet_missing(tmp_path) -> 
     )
 
     assert result.summary["passed"] is False
-    assert result.summary["failure_category_counts"]["missing_required_artifact"] == 4
+    assert result.summary["failure_category_counts"]["missing_required_artifact"] == 5
+
+
+def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    results_dir = tmp_path / "final-qa-output"
+
+    generated = run_final_qa_certification(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+    assert generated.summary["passed"] is True
+
+    review_dir = output_dir / "reviews" / "review-test"
+    phase_eval = _read_json(review_dir / "phase_eval_results.json")
+    phase_eval["phase_count"] = 3
+    phase_eval["passed_phase_count"] = 3
+    phase_eval["reviewer_ready_phase_count"] = 3
+    phase_eval["phases"] = [
+        {"name": "base_1", "passed": True, "reviewer_ready": True},
+        {"name": "base_2", "passed": True, "reviewer_ready": True},
+        {
+            "name": "final_qa_certification_report",
+            "passed": True,
+            "reviewer_ready": True,
+        },
+    ]
+    _write_json_file(review_dir / "phase_eval_results.json", phase_eval)
+
+    suite_path = (
+        output_dir
+        / "reviews"
+        / "promotion_suite"
+        / "post-v1-region1-ea-promotion-suite"
+        / "promotion_suite_results.json"
+    )
+    suite = _read_json(suite_path)
+    suite["required_current_result_count"] = 6
+    suite["passed_required_current_result_count"] = 6
+    suite["review_cases"] = [
+        {
+            "id": "v1-cg-ecid",
+            "results": [
+                {
+                    "id": result_id,
+                    "required_for_current_promotion": True,
+                    "passed": True,
+                }
+                for result_id in [
+                    "final_qa_certification_report",
+                    "final_qa_certification_manifest",
+                    "final_qa_certification_pdf",
+                    "final_qa_certification_validation",
+                ]
+            ],
+        }
+    ]
+    _write_json_file(suite_path, suite)
+
+    validation = validate_final_qa_certification_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+
+    assert validation.summary["passed"] is True
+    assert validation.summary["failure_category_counts"] == {}
 
 
 def _read_json(path: Path) -> dict:
@@ -697,6 +770,7 @@ def _sequence_2_config(review_id: str, source_set_id: str) -> dict:
             "east_crazies_final_qa_certification.md",
             "east_crazies_final_qa_certification.pdf",
             "east_crazies_final_qa_certification_manifest.json",
+            "east_crazies_final_qa_certification_validation.json",
         ],
         "required_gate_names": list(REQUIRED_GATES),
         "required_gates": [
@@ -767,6 +841,7 @@ def _sequence_2_expected(output_dir: Path, review_id: str, source_set_id: str) -
             "east_crazies_final_qa_certification.md",
             "east_crazies_final_qa_certification.pdf",
             "east_crazies_final_qa_certification_manifest.json",
+            "east_crazies_final_qa_certification_validation.json",
         ],
         "required_sections": REQUIRED_SECTIONS,
         "expected_counts": _sequence_2_counts(),
