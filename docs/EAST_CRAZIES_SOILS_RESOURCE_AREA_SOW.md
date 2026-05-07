@@ -22,49 +22,30 @@ This SOW is not a final agency action, agency NEPA finding, or decision document
 
 ## Deliverables
 
-The required deliverables are limited to outputs needed to support current USDA NEPA procedures at 7
-CFR part 1b, third-party documentation review under 7 CFR section 1b.10 if used, NFMA/36 CFR 219.15
-project consistency, R1 FSM 2550 soil-quality direction, and the Custer Gallatin Land Management Plan
-soil components. Use reliable existing data first; collect new field information only where it is
-needed for a reasoned choice, a Forest Plan consistency conclusion, or an applicable soil-method
-requirement.
-
 ### 1. Fieldwork
 
-- Data-needs, survey-trigger, and screen-out table for each proposed action element, identifying the
-  source authority, reliable existing data used, required field survey if any, and reason any survey
-  is not triggered.
-- Activity-area, developed-site/permanent-road screen-out, and treatment-unit map set tied to soil
-  map units, slope/stability limits, waterbody interfaces, access/staging, and crossing locations.
-- DSD field package for each FW-STD-SOIL-01 activity area: pre-implementation percent DSD, expected
-  post-implementation DSD, disturbance class, GPS/photo/form evidence, and protocol deviations.
-- Site-specific soil/BMP observations for erosion, sediment delivery, wet or hydric soils, unstable
-  areas, slopes over 40 percent, temporary access, blading, pits/trenches, burn piles, revegetation,
-  and CWD only where FW-GDL-SOIL-07 or MON-SOIL-02 is triggered.
+- Data needs and survey trigger table.
+- Existing data inventory.
+- Activity area and survey map set.
+- DSD field package where triggered.
+- Soil/BMP field observation package where triggered.
 
 ### 2. Analysis
 
-- Potentially affected environment and reasonably foreseeable soil impacts for the proposed action,
-  alternatives if any, and consequences of not implementing the action.
-- FW-STD-SOIL-01 calculation package showing activity-area acreage, existing DSD, expected DSD,
-  15-percent standard status, restoration/net-improvement need, and any valid screen-out rationale.
-- 36 CFR 219.15 Forest Plan consistency table for applicable soil desired conditions, standards,
-  guidelines, suitability components if any, and MON-SOIL-01/MON-SOIL-02 monitoring triggers.
-- Design criteria, mitigation, BMP, and monitoring matrix tied to action element, location, source
-  trigger, timing, responsible party, verification method, and whether the measure is required or
-  advisory.
-- Data-gap and uncertainty summary identifying only the additional information essential to a
-  reasoned choice among alternatives, the Forest Plan consistency conclusion, or the EA/FONSI support
-  record.
+- Potentially affected environment summary.
+- Reasonably foreseeable soil impacts analysis.
+- FW-STD-SOIL-01 calculation package.
+- 36 CFR 219.15 Forest Plan consistency table.
+- Design criteria, mitigation, BMP, and monitoring matrix.
+- Data gap and uncertainty summary.
 
 ### 3. Reporting
 
-- Draft and final PDF Soils Resource Report or supporting analysis memo.
-- Appendix A authority-to-report crosswalk updated for the project and cited in the report.
-- Editable report source, final tables, map atlas, GIS package, photo log, field forms, source
-  inventory, metadata/readme, and limitations memo.
-- Concise EA/FONSI support text only where requested by the Forest Service and only from conclusions
-  already supported in the soils report or supporting analysis memo.
+- Draft Soils Resource Report or supporting analysis memo.
+- Final PDF Soils Resource Report or supporting analysis memo.
+- Appendix A authority-to-report crosswalk.
+- Editable source file and data package.
+- EA/FONSI support text if requested.
 
 ## Fieldwork/Data Collection
 

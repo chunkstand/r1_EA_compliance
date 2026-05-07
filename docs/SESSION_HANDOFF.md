@@ -56,11 +56,9 @@ within USDA NEPA procedure scope by removing non-regulatory issue-screening lang
 direct/indirect/cumulative-effects framing, comment-response artifacts, and stale Forest Service NEPA
 directive links. It keeps only the FS and Forest Plan soil guidance that applies to a soils resource
 report: R1 FSM 2550 soil-quality direction, Custer Gallatin soil plan components, soil-disturbance
-methods, official soil-survey data, and National BMPs. The deliverables section remains limited to
-source-required outputs: data-needs/trigger/screen-out table, activity-area and treatment-unit maps,
-DSD field package, site-specific BMP observations, potentially affected environment and reasonably
-foreseeable soil impacts, FW-STD-SOIL-01 calculations, 36 CFR 219.15 Forest Plan consistency table,
-source-triggered mitigation/BMP/monitoring matrix, and final PDF report/data package.
+methods, official soil-survey data, and National BMPs. The top deliverables section has been reduced
+to a simple requirements list, leaving detailed explanations in the later Fieldwork, Analysis,
+Reporting, and Appendix sections.
 
 Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
 statement that completed East Crazies materials are required for new-project SOW generation.
