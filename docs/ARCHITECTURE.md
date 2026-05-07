@@ -144,9 +144,14 @@ calibration gaps, expected no-observed-report cases, and contract-readiness coun
 deliverables, optional deliverables, and selected-scope contract fields. Resource scope templates
 carry contract-ready assumptions, dependencies, required and optional deliverables, acceptance
 criteria, reviewer role, review timing, and reviewer signoff fields as tracked data; selected
-scopes must include those fields before package generation. These commands do not create applicability
-decisions, compliance findings, or legal sufficiency conclusions, and an unreviewed draft cannot
-pass validation until reviewer-confirmation metadata is cleared.
+scopes must include those fields before package generation. The
+`project-sow-adjudication-template`, `project-sow-adjudication-eval`, and
+`project-sow-adjudication-apply` commands provide a reviewer worklist and deterministic replay path
+for unresolved resource areas, missing evidence refs, unknown resource-area IDs, calibration gaps,
+and optional deliverable decisions. Apply writes an adjudicated intake copy with replay metadata;
+generated packages must be regenerated from that input rather than edited by hand. These commands
+do not create applicability decisions, compliance findings, or legal sufficiency conclusions, and an
+unreviewed draft cannot pass validation until reviewer-confirmation metadata is cleared.
 
 ## Public CLI Surface
 

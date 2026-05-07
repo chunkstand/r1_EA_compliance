@@ -9,13 +9,19 @@ from .project_sow_package import DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR
 from .project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
+from .project_sow_package import run_project_sow_adjudication_apply
+from .project_sow_package import run_project_sow_adjudication_eval
 from .project_sow_package import run_project_sow_eval
 from .project_sow_package import run_project_sow_intake_draft
 from .project_sow_package import run_project_sow_package
 from .project_sow_package import validate_project_sow_intake
+from .project_sow_package import write_project_sow_adjudication_template
 
 
 PROJECT_PLANNING_COMMANDS = {
+    "project-sow-adjudication-apply",
+    "project-sow-adjudication-eval",
+    "project-sow-adjudication-template",
     "project-sow-eval",
     "project-sow-intake-draft",
     "project-sow-intake-validate",
@@ -123,6 +129,68 @@ def register_project_planning_commands(
         type=Path,
     )
 
+    adjudication_template = subparsers.add_parser(
+        "project-sow-adjudication-template",
+        help="Write a reviewer worklist and adjudication template for project SOW review items.",
+    )
+    adjudication_template.add_argument("--intake", required=True, type=Path)
+    adjudication_template.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    adjudication_template.add_argument("--project-id")
+    adjudication_template.add_argument("--source-set-id")
+    adjudication_template.add_argument(
+        "--resource-scope-config",
+        default=DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+        type=Path,
+    )
+    adjudication_template.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+    adjudication_template.add_argument("--results-dir", type=Path)
+
+    adjudication_eval = subparsers.add_parser(
+        "project-sow-adjudication-eval",
+        help="Evaluate a completed project SOW adjudication artifact against the current intake queue.",
+    )
+    adjudication_eval.add_argument("--intake", required=True, type=Path)
+    adjudication_eval.add_argument("--adjudication", required=True, type=Path)
+    adjudication_eval.add_argument("--output", type=Path)
+    adjudication_eval.add_argument("--project-id")
+    adjudication_eval.add_argument("--source-set-id")
+    adjudication_eval.add_argument(
+        "--resource-scope-config",
+        default=DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+        type=Path,
+    )
+    adjudication_eval.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+
+    adjudication_apply = subparsers.add_parser(
+        "project-sow-adjudication-apply",
+        help="Replay a passing project SOW adjudication artifact into an adjudicated intake copy.",
+    )
+    adjudication_apply.add_argument("--intake", required=True, type=Path)
+    adjudication_apply.add_argument("--adjudication", required=True, type=Path)
+    adjudication_apply.add_argument("--output", type=Path)
+    adjudication_apply.add_argument("--output-intake", type=Path)
+    adjudication_apply.add_argument("--eval-output", type=Path)
+    adjudication_apply.add_argument("--project-id")
+    adjudication_apply.add_argument("--source-set-id")
+    adjudication_apply.add_argument(
+        "--resource-scope-config",
+        default=DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+        type=Path,
+    )
+    adjudication_apply.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+
 
 def handle_project_planning_command(
     args: argparse.Namespace,
@@ -185,6 +253,47 @@ def handle_project_planning_command(
         result = run_project_sow_eval(
             eval_config_path=args.eval_config,
             output_dir=args.output_dir,
+            resource_scope_config_path=args.resource_scope_config,
+            authority_inventory_path=args.authority_inventory,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-adjudication-template":
+        result = write_project_sow_adjudication_template(
+            intake_path=args.intake,
+            output_dir=args.output_dir,
+            project_id=args.project_id,
+            source_set_id=args.source_set_id,
+            resource_scope_config_path=args.resource_scope_config,
+            authority_inventory_path=args.authority_inventory,
+            results_dir=args.results_dir,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-adjudication-eval":
+        result = run_project_sow_adjudication_eval(
+            intake_path=args.intake,
+            adjudication_path=args.adjudication,
+            output_path=args.output,
+            project_id=args.project_id,
+            source_set_id=args.source_set_id,
+            resource_scope_config_path=args.resource_scope_config,
+            authority_inventory_path=args.authority_inventory,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-adjudication-apply":
+        result = run_project_sow_adjudication_apply(
+            intake_path=args.intake,
+            adjudication_path=args.adjudication,
+            output_intake_path=args.output_intake,
+            output_path=args.output,
+            eval_output_path=args.eval_output,
+            project_id=args.project_id,
+            source_set_id=args.source_set_id,
             resource_scope_config_path=args.resource_scope_config,
             authority_inventory_path=args.authority_inventory,
         )

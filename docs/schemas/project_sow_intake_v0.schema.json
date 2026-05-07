@@ -131,6 +131,115 @@
     "project_type": {
       "type": "string"
     },
+    "project_sow_adjudication": {
+      "additionalProperties": true,
+      "description": "Replay metadata written by project-sow-adjudication-apply. This records reviewer adjudication of planning worklist items without creating applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+      "properties": {
+        "adjudication_id": {
+          "type": "string"
+        },
+        "adjudication_path": {
+          "type": "string"
+        },
+        "applied_at": {
+          "type": "string"
+        },
+        "decision_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        "eval_output_path": {
+          "type": "string"
+        },
+        "input_hashes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "item_count": {
+          "type": "integer"
+        },
+        "items": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "adjudicated_at": {
+                "type": "string"
+              },
+              "adjudicated_by": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "decision": {
+                "enum": [
+                  "accepted",
+                  "rejected",
+                  "needs_information",
+                  "out_of_scope"
+                ],
+                "type": "string"
+              },
+              "decision_source": {
+                "type": "string"
+              },
+              "item_id": {
+                "type": "string"
+              },
+              "item_type": {
+                "enum": [
+                  "calibration_gap",
+                  "missing_evidence_ref",
+                  "optional_deliverable_decision",
+                  "unknown_resource_area_id",
+                  "unresolved_resource_area"
+                ],
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "item_id",
+              "item_type",
+              "decision",
+              "rationale",
+              "adjudicated_by",
+              "adjudicated_at",
+              "decision_source"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "project-sow-intake-adjudication-v0"
+        },
+        "status": {
+          "enum": [
+            "adjudicated",
+            "adjudicated_needs_information",
+            "not_required"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "adjudication_id",
+        "applied_at",
+        "decision_counts",
+        "item_count",
+        "items"
+      ],
+      "type": "object"
+    },
     "proponent": {
       "type": "string"
     },

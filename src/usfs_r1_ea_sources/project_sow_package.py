@@ -18,6 +18,23 @@ DEFAULT_AUTHORITY_INVENTORY_PATH = Path("config/authority_universe_families_nepa
 DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH = Path("config/project_sow_intake_draft_rules_v1.json")
 DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH = Path("config/project_sow_eval_proving_intakes_v1.json")
 DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR = Path("source_library/project_sow_eval")
+PROJECT_SOW_ADJUDICATION_SCHEMA_VERSION = "project-sow-adjudication-v0"
+PROJECT_SOW_ADJUDICATION_EVAL_SCHEMA_VERSION = "project-sow-adjudication-eval-v0"
+PROJECT_SOW_ADJUDICATION_APPLY_SCHEMA_VERSION = "project-sow-adjudication-apply-v0"
+PROJECT_SOW_INTAKE_ADJUDICATION_SCHEMA_VERSION = "project-sow-intake-adjudication-v0"
+PROJECT_SOW_ADJUDICATION_DECISIONS = (
+    "accepted",
+    "rejected",
+    "needs_information",
+    "out_of_scope",
+)
+PROJECT_SOW_ADJUDICATION_ITEM_TYPES = (
+    "calibration_gap",
+    "missing_evidence_ref",
+    "optional_deliverable_decision",
+    "unknown_resource_area_id",
+    "unresolved_resource_area",
+)
 CONTRACT_REQUIRED_SCOPE_FIELDS = [
     "acceptance_criteria",
     "assumptions",
@@ -55,6 +72,26 @@ class ProjectSowIntakeDraftResult:
 class ProjectSowEvalResult:
     output_dir: Path
     summary_path: Path
+    summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ProjectSowAdjudicationTemplateResult:
+    output_path: Path
+    worklist_path: Path
+    summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ProjectSowAdjudicationEvalResult:
+    output_path: Path
+    summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class ProjectSowAdjudicationApplyResult:
+    output_path: Path
+    output_intake_path: Path
     summary: dict[str, Any]
 
 
@@ -350,6 +387,153 @@ def run_project_sow_eval(
     return ProjectSowEvalResult(
         output_dir=output_dir,
         summary_path=summary_path,
+        summary=summary,
+    )
+
+
+def write_project_sow_adjudication_template(
+    *,
+    intake_path: Path,
+    output_dir: Path = Path("source_library"),
+    project_id: str | None = None,
+    source_set_id: str | None = None,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+    results_dir: Path | None = None,
+) -> ProjectSowAdjudicationTemplateResult:
+    context = _project_sow_adjudication_context(
+        intake_path=intake_path,
+        project_id=project_id,
+        source_set_id=source_set_id,
+        resource_scope_config_path=resource_scope_config_path,
+        authority_inventory_path=authority_inventory_path,
+    )
+    package_dir = (
+        Path(results_dir)
+        if results_dir is not None
+        else Path(output_dir)
+        / "projects"
+        / context["project_id"]
+        / "requirements_package"
+    )
+    output_path = package_dir / "project_sow_adjudication_template.json"
+    worklist_path = package_dir / "project_sow_adjudication_worklist.md"
+    template = _project_sow_adjudication_template(context=context)
+    worklist = _render_project_sow_adjudication_worklist(template)
+    package_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(output_path, template)
+    worklist_path.write_text(worklist, encoding="utf-8")
+    summary = _project_sow_adjudication_template_summary(
+        context=context,
+        output_path=output_path,
+        worklist_path=worklist_path,
+        template=template,
+    )
+    return ProjectSowAdjudicationTemplateResult(
+        output_path=output_path,
+        worklist_path=worklist_path,
+        summary=summary,
+    )
+
+
+def run_project_sow_adjudication_eval(
+    *,
+    intake_path: Path,
+    adjudication_path: Path,
+    output_path: Path | None = None,
+    project_id: str | None = None,
+    source_set_id: str | None = None,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+) -> ProjectSowAdjudicationEvalResult:
+    context = _project_sow_adjudication_context(
+        intake_path=intake_path,
+        project_id=project_id,
+        source_set_id=source_set_id,
+        resource_scope_config_path=resource_scope_config_path,
+        authority_inventory_path=authority_inventory_path,
+    )
+    adjudication_path = Path(adjudication_path)
+    output_path = (
+        Path(output_path)
+        if output_path is not None
+        else adjudication_path.with_name("project_sow_adjudication_eval.json")
+    )
+    adjudication = _read_json(adjudication_path)
+    summary = _project_sow_adjudication_eval_summary(
+        context=context,
+        adjudication=adjudication,
+        adjudication_path=adjudication_path,
+        output_path=output_path,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(output_path, summary)
+    return ProjectSowAdjudicationEvalResult(output_path=output_path, summary=summary)
+
+
+def run_project_sow_adjudication_apply(
+    *,
+    intake_path: Path,
+    adjudication_path: Path,
+    output_intake_path: Path | None = None,
+    output_path: Path | None = None,
+    eval_output_path: Path | None = None,
+    project_id: str | None = None,
+    source_set_id: str | None = None,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+) -> ProjectSowAdjudicationApplyResult:
+    intake_path = Path(intake_path)
+    adjudication_path = Path(adjudication_path)
+    output_path = (
+        Path(output_path)
+        if output_path is not None
+        else adjudication_path.with_name("project_sow_adjudication_apply.json")
+    )
+    output_intake_path = (
+        Path(output_intake_path)
+        if output_intake_path is not None
+        else adjudication_path.with_name("project_sow_adjudicated_intake.json")
+    )
+    eval_output_path = (
+        Path(eval_output_path)
+        if eval_output_path is not None
+        else adjudication_path.with_name("project_sow_adjudication_eval.json")
+    )
+    eval_result = run_project_sow_adjudication_eval(
+        intake_path=intake_path,
+        adjudication_path=adjudication_path,
+        output_path=eval_output_path,
+        project_id=project_id,
+        source_set_id=source_set_id,
+        resource_scope_config_path=resource_scope_config_path,
+        authority_inventory_path=authority_inventory_path,
+    )
+    intake = _read_json(intake_path)
+    summary = _project_sow_adjudication_apply_summary(
+        eval_summary=eval_result.summary,
+        adjudication_path=adjudication_path,
+        eval_output_path=eval_result.output_path,
+        intake_path=intake_path,
+        output_intake_path=output_intake_path,
+        output_path=output_path,
+    )
+    if eval_result.summary["passed"]:
+        applied_intake = dict(intake)
+        applied_intake["project_sow_adjudication"] = _project_sow_intake_adjudication(
+            eval_summary=eval_result.summary,
+            adjudication_path=adjudication_path,
+            eval_output_path=eval_result.output_path,
+        )
+        output_intake_path.parent.mkdir(parents=True, exist_ok=True)
+        _write_json(output_intake_path, applied_intake)
+        summary["output_written"] = True
+        summary["output_intake_sha256"] = _sha256_file(output_intake_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(output_path, summary)
+    return ProjectSowAdjudicationApplyResult(
+        output_path=output_path,
+        output_intake_path=output_intake_path,
         summary=summary,
     )
 
@@ -1319,7 +1503,11 @@ def _observed_report_node_id(report: dict[str, Any]) -> str:
 
 
 def _intake_summary(intake: dict[str, Any]) -> dict[str, Any]:
+    adjudication_summary = _intake_adjudication_summary(intake)
     return {
+        "adjudication_decision_counts": adjudication_summary["decision_counts"],
+        "adjudication_item_count": adjudication_summary["item_count"],
+        "adjudication_status": adjudication_summary["status"],
         "districts": _strings(intake.get("districts")),
         "federal_land_action_count": len(_list(intake.get("federal_land_actions"))),
         "forest": intake.get("forest"),
@@ -1362,6 +1550,7 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"| Observed reports in calibration set | `{snapshot['observed_specialist_report_count']}` |",
             f"| Unresolved resource areas | `{len(snapshot['missing_or_uncovered_resource_area_ids'])}` |",
             f"| Calibration gaps | `{len(snapshot['calibration_gap_resource_area_ids'])}` |",
+            f"| Adjudication status | `{snapshot['adjudication_status']}` |",
             "| Intake evidence graph | "
             f"`{snapshot['intake_evidence_graph_node_count']}` nodes / "
             f"`{snapshot['intake_evidence_graph_edge_count']}` edges |",
@@ -1397,6 +1586,7 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"- Federal land action count: `{intake.get('federal_land_action_count')}`",
             f"- Proposed action resource areas: `{len(intake.get('proposed_action_resource_area_ids') or [])}`",
             f"- Observed specialist/supporting reports: `{intake.get('observed_specialist_report_count')}`",
+            f"- Adjudication status: `{intake.get('adjudication_status')}`",
             "",
             "## Resource Scopes",
             "",
@@ -1509,6 +1699,7 @@ def _reviewer_summary(
     observed_specialist_reports: list[dict[str, Any]],
     intake_evidence_graph: dict[str, Any],
 ) -> dict[str, Any]:
+    adjudication_summary = _intake_adjudication_summary(intake)
     unresolved_statuses = {
         "missing_sow_scope",
         "observed_not_derived_from_proposed_action",
@@ -1539,6 +1730,9 @@ def _reviewer_summary(
         ],
         "schema_version": "project-sow-reviewer-summary-v0",
         "snapshot": {
+            "adjudication_decision_counts": adjudication_summary["decision_counts"],
+            "adjudication_item_count": adjudication_summary["item_count"],
+            "adjudication_status": adjudication_summary["status"],
             "districts": _strings(intake.get("districts")),
             "forest": intake.get("forest"),
             "intake_evidence_graph_edge_count": int(intake_evidence_graph.get("edge_count") or 0),
@@ -1573,6 +1767,7 @@ def _render_pdf_lines(package: dict[str, Any]) -> list[str]:
         f"Observed reports in calibration set: {snapshot['observed_specialist_report_count']}",
         f"Unresolved resource areas: {len(snapshot['missing_or_uncovered_resource_area_ids'])}",
         f"Calibration gaps: {len(snapshot['calibration_gap_resource_area_ids'])}",
+        f"Adjudication status: {snapshot['adjudication_status']}",
         (
             "Intake evidence graph: "
             f"{snapshot['intake_evidence_graph_node_count']} nodes / "
@@ -2161,6 +2356,675 @@ def _project_sow_validation_check_passed(package: dict[str, Any], check_name: st
         if isinstance(check, dict)
     }
     return checks.get(check_name, {}).get("passed") is True
+
+
+def _project_sow_adjudication_context(
+    *,
+    intake_path: Path,
+    project_id: str | None,
+    source_set_id: str | None,
+    resource_scope_config_path: Path,
+    authority_inventory_path: Path,
+) -> dict[str, Any]:
+    intake_path = Path(intake_path)
+    resource_scope_config_path = Path(resource_scope_config_path)
+    authority_inventory_path = Path(authority_inventory_path)
+    intake = _read_json(intake_path)
+    resource_config = _read_json(resource_scope_config_path)
+    authority_inventory = _read_json(authority_inventory_path)
+    selected_project_id = _slug(project_id or str(intake.get("project_id") or "project"))
+    selected_source_set_id = source_set_id or _source_set_id(authority_inventory)
+    selected_scopes = _select_resource_scopes(intake, resource_config)
+    validation = _validate_inputs(
+        intake=intake,
+        resource_config=resource_config,
+        authority_inventory=authority_inventory,
+        selected_scopes=selected_scopes,
+    )
+    scope_records = [_scope_record(scope) for scope in selected_scopes]
+    resource_analysis_matrix = _resource_analysis_matrix(intake, scope_records)
+    queue_items = _project_sow_adjudication_queue(
+        intake=intake,
+        validation=validation,
+        resource_analysis_matrix=resource_analysis_matrix,
+        scope_records=scope_records,
+    )
+    return {
+        "authority_inventory_path": authority_inventory_path,
+        "input_hashes": _project_sow_adjudication_input_hashes(
+            intake_path=intake_path,
+            resource_scope_config_path=resource_scope_config_path,
+            authority_inventory_path=authority_inventory_path,
+        ),
+        "intake": intake,
+        "intake_path": intake_path,
+        "project_id": selected_project_id,
+        "queue_items": queue_items,
+        "resource_analysis_matrix": resource_analysis_matrix,
+        "resource_scope_config_path": resource_scope_config_path,
+        "scope_records": scope_records,
+        "selected_scopes": selected_scopes,
+        "source_set_id": selected_source_set_id,
+        "validation": validation,
+    }
+
+
+def _project_sow_adjudication_input_hashes(
+    *,
+    intake_path: Path,
+    resource_scope_config_path: Path,
+    authority_inventory_path: Path,
+) -> dict[str, str]:
+    return {
+        "authority_inventory_sha256": _sha256_file(authority_inventory_path),
+        "intake_sha256": _sha256_file(intake_path),
+        "resource_scope_config_sha256": _sha256_file(resource_scope_config_path),
+    }
+
+
+def _project_sow_adjudication_queue(
+    *,
+    intake: dict[str, Any],
+    validation: dict[str, Any],
+    resource_analysis_matrix: list[dict[str, Any]],
+    scope_records: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    items: dict[str, dict[str, Any]] = {}
+    element_by_id = {
+        str(element.get("action_element_id") or ""): element
+        for element in _proposed_action_elements(intake)
+    }
+    for area_id in _project_sow_failed_resource_area_ids(
+        validation, "expected_resource_areas_resolve_to_scope_config"
+    ):
+        _add_project_sow_adjudication_item(
+            items,
+            item_type="unknown_resource_area_id",
+            issue_summary=(
+                "Resource area ID is present in the intake but is not configured in "
+                "project_sow_resource_scopes_v1.json."
+            ),
+            resource_area_id=area_id,
+            current_status="unknown_resource_area_id",
+            source_check="expected_resource_areas_resolve_to_scope_config",
+        )
+    for action_element_id in _project_sow_failed_action_element_ids(
+        validation, "intake_evidence_graph_action_elements_have_evidence_refs"
+    ):
+        element = element_by_id.get(action_element_id, {})
+        _add_project_sow_adjudication_item(
+            items,
+            item_type="missing_evidence_ref",
+            issue_summary="Action element triggers a resource area but has no evidence refs.",
+            action_element_id=action_element_id,
+            current_status="missing_evidence_ref",
+            source_check="intake_evidence_graph_action_elements_have_evidence_refs",
+            details={"description": element.get("description")},
+        )
+    for row in resource_analysis_matrix:
+        status = str(row.get("coverage_status") or "")
+        if status in {"missing_sow_scope", "observed_not_derived_from_proposed_action"}:
+            _add_project_sow_adjudication_item(
+                items,
+                item_type="unresolved_resource_area",
+                issue_summary="Resource analysis row is unresolved before package use.",
+                resource_area_id=str(row.get("resource_area_id") or ""),
+                current_status=status,
+                selected_resource_scope_ids=_strings(row.get("selected_resource_scope_ids")),
+                details={"resource_area_name": row.get("resource_area_name")},
+            )
+        if status == "sow_required_no_observed_report_in_calibration":
+            _add_project_sow_adjudication_item(
+                items,
+                item_type="calibration_gap",
+                issue_summary=(
+                    "SOW scope is required from the proposed action, but the calibration "
+                    "package has no observed specialist/supporting report for this area."
+                ),
+                resource_area_id=str(row.get("resource_area_id") or ""),
+                current_status=status,
+                selected_resource_scope_ids=_strings(row.get("selected_resource_scope_ids")),
+                details={"resource_area_name": row.get("resource_area_name")},
+            )
+    for scope in scope_records:
+        scope_id = str(scope.get("resource_scope_id") or "")
+        for deliverable in _strings(scope.get("optional_deliverables")):
+            _add_project_sow_adjudication_item(
+                items,
+                item_type="optional_deliverable_decision",
+                issue_summary="Reviewer must decide whether to carry the optional deliverable.",
+                resource_scope_id=scope_id,
+                optional_deliverable=deliverable,
+                current_status="optional_deliverable_available",
+                details={"resource_name": scope.get("resource_name")},
+            )
+    return [items[item_id] for item_id in sorted(items)]
+
+
+def _add_project_sow_adjudication_item(
+    items: dict[str, dict[str, Any]],
+    *,
+    item_type: str,
+    issue_summary: str,
+    current_status: str,
+    resource_area_id: str | None = None,
+    action_element_id: str | None = None,
+    resource_scope_id: str | None = None,
+    optional_deliverable: str | None = None,
+    selected_resource_scope_ids: list[str] | None = None,
+    source_check: str | None = None,
+    details: dict[str, Any] | None = None,
+) -> None:
+    item_id = _project_sow_adjudication_item_id(
+        item_type=item_type,
+        resource_area_id=resource_area_id,
+        action_element_id=action_element_id,
+        resource_scope_id=resource_scope_id,
+        optional_deliverable=optional_deliverable,
+    )
+    items[item_id] = {
+        "action_element_id": action_element_id,
+        "adjudicated_at": "",
+        "adjudicated_by": [],
+        "allowed_decisions": list(PROJECT_SOW_ADJUDICATION_DECISIONS),
+        "current_status": current_status,
+        "decision": "pending",
+        "decision_source": "",
+        "details": details or {},
+        "evidence_refs": [],
+        "issue_summary": issue_summary,
+        "item_id": item_id,
+        "item_type": item_type,
+        "optional_deliverable": optional_deliverable,
+        "rationale": "",
+        "resource_area_id": resource_area_id,
+        "resource_scope_id": resource_scope_id,
+        "selected_resource_scope_ids": selected_resource_scope_ids or [],
+        "source_check": source_check,
+    }
+
+
+def _project_sow_adjudication_item_id(
+    *,
+    item_type: str,
+    resource_area_id: str | None = None,
+    action_element_id: str | None = None,
+    resource_scope_id: str | None = None,
+    optional_deliverable: str | None = None,
+) -> str:
+    parts = [
+        item_type,
+        resource_area_id,
+        action_element_id,
+        resource_scope_id,
+        optional_deliverable,
+    ]
+    tokens = [_slug(str(part)) for part in parts if part]
+    return ":".join(tokens)
+
+
+def _project_sow_failed_resource_area_ids(validation: dict[str, Any], check_name: str) -> list[str]:
+    check = _validation_check(validation, check_name)
+    return _strings(check.get("details", {}).get("resource_area_ids"))
+
+
+def _project_sow_failed_action_element_ids(validation: dict[str, Any], check_name: str) -> list[str]:
+    check = _validation_check(validation, check_name)
+    return _strings(check.get("details", {}).get("action_element_ids"))
+
+
+def _validation_check(validation: dict[str, Any], check_name: str) -> dict[str, Any]:
+    for check in _list(validation.get("checks")):
+        if isinstance(check, dict) and check.get("name") == check_name:
+            return check
+    return {}
+
+
+def _project_sow_adjudication_template(context: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "adjudication_id": f"project-sow-adjudication-{context['project_id']}",
+        "artifact_boundaries": [
+            "Reviewer adjudication resolves project-SOW planning work only.",
+            "It does not create authority applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+            "Apply writes an adjudicated intake copy; generated package outputs must be regenerated rather than edited by hand.",
+        ],
+        "created_at": _now(),
+        "input_hashes": context["input_hashes"],
+        "input_paths": {
+            "authority_inventory": str(context["authority_inventory_path"]),
+            "intake": str(context["intake_path"]),
+            "resource_scope_config": str(context["resource_scope_config_path"]),
+        },
+        "items": context["queue_items"],
+        "project_id": context["project_id"],
+        "reviewer_metadata": {
+            "review_status": "pending",
+            "reviewed_at": "",
+            "reviewed_by": [],
+            "review_source": "",
+        },
+        "schema_version": PROJECT_SOW_ADJUDICATION_SCHEMA_VERSION,
+        "source_set_id": context["source_set_id"],
+    }
+
+
+def _render_project_sow_adjudication_worklist(template: dict[str, Any]) -> str:
+    items = [item for item in _list(template.get("items")) if isinstance(item, dict)]
+    lines = [
+        "# Project SOW Adjudication Worklist",
+        "",
+        f"- Adjudication ID: `{template.get('adjudication_id')}`",
+        f"- Project ID: `{template.get('project_id')}`",
+        f"- Source set: `{template.get('source_set_id')}`",
+        f"- Queue items: `{len(items)}`",
+        "",
+        "Allowed decisions: `accepted`, `rejected`, `needs_information`, `out_of_scope`.",
+        "",
+        "This worklist is planning support only. It does not create applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+        "",
+    ]
+    counts = Counter(str(item.get("item_type") or "") for item in items)
+    lines.extend(["## Queue Summary", ""])
+    for item_type, count in sorted(counts.items()):
+        lines.append(f"- `{item_type}`: `{count}`")
+    for item in items:
+        lines.extend(
+            [
+                "",
+                f"## `{item.get('item_id')}`",
+                "",
+                f"- Type: `{item.get('item_type')}`",
+                f"- Current status: `{item.get('current_status')}`",
+                f"- Issue: {item.get('issue_summary')}",
+            ]
+        )
+        if item.get("resource_area_id"):
+            lines.append(f"- Resource area: `{item.get('resource_area_id')}`")
+        if item.get("action_element_id"):
+            lines.append(f"- Action element: `{item.get('action_element_id')}`")
+        if item.get("resource_scope_id"):
+            lines.append(f"- Resource scope: `{item.get('resource_scope_id')}`")
+        if item.get("optional_deliverable"):
+            lines.append(f"- Optional deliverable: {item.get('optional_deliverable')}")
+        if _strings(item.get("selected_resource_scope_ids")):
+            lines.append(
+                "- Selected scopes: "
+                + ", ".join(f"`{scope_id}`" for scope_id in item["selected_resource_scope_ids"])
+            )
+        lines.extend(
+            [
+                "- Required reviewer fields: `decision`, `rationale`, `adjudicated_by`, `adjudicated_at`, `decision_source`",
+            ]
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _project_sow_adjudication_template_summary(
+    *,
+    context: dict[str, Any],
+    output_path: Path,
+    worklist_path: Path,
+    template: dict[str, Any],
+) -> dict[str, Any]:
+    items = [item for item in _list(template.get("items")) if isinstance(item, dict)]
+    return {
+        "item_count": len(items),
+        "item_type_counts": dict(
+            sorted(Counter(str(item.get("item_type") or "") for item in items).items())
+        ),
+        "output_path": str(output_path),
+        "output_written": True,
+        "passed": True,
+        "project_id": context["project_id"],
+        "schema_version": "project-sow-adjudication-template-summary-v0",
+        "source_set_id": context["source_set_id"],
+        "worklist_path": str(worklist_path),
+    }
+
+
+def _project_sow_adjudication_eval_summary(
+    *,
+    context: dict[str, Any],
+    adjudication: dict[str, Any],
+    adjudication_path: Path,
+    output_path: Path,
+) -> dict[str, Any]:
+    item_results = _project_sow_adjudication_item_results(
+        expected_items=context["queue_items"],
+        adjudication_items=_list(adjudication.get("items")),
+    )
+    decision_counts = Counter(
+        str(result.get("decision"))
+        for result in item_results
+        if result.get("decision") in PROJECT_SOW_ADJUDICATION_DECISIONS
+    )
+    checks = _project_sow_adjudication_eval_checks(
+        context=context,
+        adjudication=adjudication,
+        item_results=item_results,
+    )
+    failure_counts = Counter(
+        category
+        for result in item_results
+        for category in _strings(result.get("failure_categories"))
+    )
+    for check in checks:
+        if not check["passed"]:
+            failure_counts[str(check["name"])] += 1
+    passed = all(check["passed"] for check in checks) and all(
+        result["passed"] for result in item_results
+    )
+    return {
+        "adjudication_id": adjudication.get("adjudication_id"),
+        "adjudication_item_count": len(_list(adjudication.get("items"))),
+        "adjudication_path": str(adjudication_path),
+        "adjudication_status": _project_sow_adjudication_status(
+            passed=passed,
+            decision_counts=decision_counts,
+            item_count=len(context["queue_items"]),
+        ),
+        "completed_item_count": sum(1 for result in item_results if result["passed"]),
+        "decision_counts": dict(sorted(decision_counts.items())),
+        "failed_validation_checks": [check for check in checks if not check["passed"]],
+        "failure_category_counts": dict(sorted(failure_counts.items())),
+        "input_hashes": context["input_hashes"],
+        "item_results": item_results,
+        "output_path": str(output_path),
+        "passed": passed,
+        "pending_item_count": sum(1 for result in item_results if not result["passed"]),
+        "project_id": context["project_id"],
+        "queue_item_count": len(context["queue_items"]),
+        "schema_version": PROJECT_SOW_ADJUDICATION_EVAL_SCHEMA_VERSION,
+        "source_set_id": context["source_set_id"],
+        "validation_checks": checks,
+    }
+
+
+def _project_sow_adjudication_eval_checks(
+    *,
+    context: dict[str, Any],
+    adjudication: dict[str, Any],
+    item_results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    expected_ids = {str(item.get("item_id")) for item in context["queue_items"]}
+    adjudication_ids = [
+        str(item.get("item_id") or "")
+        for item in _list(adjudication.get("items"))
+        if isinstance(item, dict)
+    ]
+    missing_item_ids = sorted(expected_ids - set(adjudication_ids))
+    unexpected_item_ids = sorted(set(adjudication_ids) - expected_ids)
+    duplicate_item_ids = _duplicates(adjudication_ids)
+    return [
+        _check(
+            name="project_sow_adjudication_schema_supported",
+            passed=adjudication.get("schema_version") == PROJECT_SOW_ADJUDICATION_SCHEMA_VERSION,
+            details={"schema_version": adjudication.get("schema_version")},
+        ),
+        _check(
+            name="project_sow_adjudication_identity_matches_intake",
+            passed=(
+                adjudication.get("project_id") == context["project_id"]
+                and adjudication.get("source_set_id") == context["source_set_id"]
+            ),
+            details={
+                "actual_project_id": adjudication.get("project_id"),
+                "actual_source_set_id": adjudication.get("source_set_id"),
+                "expected_project_id": context["project_id"],
+                "expected_source_set_id": context["source_set_id"],
+            },
+        ),
+        _check(
+            name="project_sow_adjudication_input_hashes_match",
+            passed=adjudication.get("input_hashes") == context["input_hashes"],
+            details={
+                "actual": adjudication.get("input_hashes"),
+                "expected": context["input_hashes"],
+            },
+        ),
+        _check(
+            name="project_sow_adjudication_items_cover_current_queue",
+            passed=not missing_item_ids and not unexpected_item_ids and not duplicate_item_ids,
+            details={
+                "duplicate_item_ids": duplicate_item_ids,
+                "missing_item_ids": missing_item_ids,
+                "unexpected_item_ids": unexpected_item_ids,
+            },
+        ),
+        _check(
+            name="project_sow_adjudication_items_complete",
+            passed=all(result["passed"] for result in item_results),
+            details={
+                "failed_item_ids": [
+                    result["item_id"] for result in item_results if not result["passed"]
+                ]
+            },
+        ),
+    ]
+
+
+def _project_sow_adjudication_item_results(
+    *,
+    expected_items: list[dict[str, Any]],
+    adjudication_items: list[Any],
+) -> list[dict[str, Any]]:
+    expected_by_id = {str(item.get("item_id")): item for item in expected_items}
+    actual_by_id = {
+        str(item.get("item_id") or ""): item
+        for item in adjudication_items
+        if isinstance(item, dict)
+    }
+    duplicate_counts = Counter(
+        str(item.get("item_id") or "")
+        for item in adjudication_items
+        if isinstance(item, dict)
+    )
+    results = [
+        _project_sow_adjudication_item_result(
+            adjudication=item,
+            expected=expected_by_id.get(str(item.get("item_id") or ""))
+            if isinstance(item, dict)
+            else None,
+            duplicate_count=duplicate_counts[str(item.get("item_id") or "")]
+            if isinstance(item, dict)
+            else 0,
+        )
+        for item in adjudication_items
+    ]
+    missing_ids = sorted(set(expected_by_id) - set(actual_by_id))
+    for item_id in missing_ids:
+        expected = expected_by_id[item_id]
+        results.append(
+            {
+                "adjudicated_at": None,
+                "adjudicated_by": [],
+                "current_status": expected.get("current_status"),
+                "decision": None,
+                "decision_source": None,
+                "failure_categories": ["adjudication_missing"],
+                "issue_summary": expected.get("issue_summary"),
+                "item_id": item_id,
+                "item_type": expected.get("item_type"),
+                "optional_deliverable": expected.get("optional_deliverable"),
+                "passed": False,
+                "rationale": None,
+                "resource_area_id": expected.get("resource_area_id"),
+                "resource_scope_id": expected.get("resource_scope_id"),
+            }
+        )
+    return sorted(results, key=lambda result: str(result.get("item_id") or ""))
+
+
+def _project_sow_adjudication_item_result(
+    *,
+    adjudication: Any,
+    expected: dict[str, Any] | None,
+    duplicate_count: int,
+) -> dict[str, Any]:
+    if not isinstance(adjudication, dict):
+        return {
+            "adjudicated_at": None,
+            "adjudicated_by": [],
+            "current_status": None,
+            "decision": None,
+            "decision_source": None,
+            "failure_categories": ["adjudication_item_not_object"],
+            "issue_summary": None,
+            "item_id": "",
+            "item_type": None,
+            "optional_deliverable": None,
+            "passed": False,
+            "rationale": None,
+            "resource_area_id": None,
+            "resource_scope_id": None,
+        }
+    failure_categories: list[str] = []
+    item_id = str(adjudication.get("item_id") or "")
+    item_type = str(adjudication.get("item_type") or "")
+    decision = str(adjudication.get("decision") or "")
+    if expected is None:
+        failure_categories.append("adjudication_unexpected")
+    if duplicate_count > 1:
+        failure_categories.append("adjudication_duplicate")
+    if item_type not in PROJECT_SOW_ADJUDICATION_ITEM_TYPES:
+        failure_categories.append("adjudication_invalid_item_type")
+    if expected is not None and item_type != expected.get("item_type"):
+        failure_categories.append("adjudication_identity_mismatch")
+    if decision == "pending" or not decision:
+        failure_categories.append("adjudication_pending")
+    elif decision not in PROJECT_SOW_ADJUDICATION_DECISIONS:
+        failure_categories.append("adjudication_invalid_decision")
+    if decision in PROJECT_SOW_ADJUDICATION_DECISIONS:
+        missing_fields = _missing_project_sow_adjudication_fields(adjudication)
+        if missing_fields:
+            failure_categories.append("adjudication_incomplete")
+    return {
+        "adjudicated_at": adjudication.get("adjudicated_at"),
+        "adjudicated_by": _strings(adjudication.get("adjudicated_by")),
+        "current_status": adjudication.get("current_status"),
+        "decision": decision,
+        "decision_source": adjudication.get("decision_source"),
+        "failure_categories": sorted(set(failure_categories)),
+        "issue_summary": adjudication.get("issue_summary"),
+        "item_id": item_id,
+        "item_type": item_type,
+        "missing_fields": _missing_project_sow_adjudication_fields(adjudication),
+        "optional_deliverable": adjudication.get("optional_deliverable"),
+        "passed": not failure_categories,
+        "rationale": adjudication.get("rationale"),
+        "resource_area_id": adjudication.get("resource_area_id"),
+        "resource_scope_id": adjudication.get("resource_scope_id"),
+    }
+
+
+def _missing_project_sow_adjudication_fields(adjudication: dict[str, Any]) -> list[str]:
+    missing = []
+    for field in ("adjudicated_at", "decision_source", "rationale"):
+        if _is_empty(adjudication.get(field)):
+            missing.append(field)
+    if not _strings(adjudication.get("adjudicated_by")):
+        missing.append("adjudicated_by")
+    return missing
+
+
+def _project_sow_adjudication_status(
+    *,
+    passed: bool,
+    decision_counts: Counter[str],
+    item_count: int,
+) -> str:
+    if not passed:
+        return "failed"
+    if item_count == 0:
+        return "not_required"
+    if decision_counts.get("needs_information", 0):
+        return "adjudicated_needs_information"
+    return "adjudicated"
+
+
+def _project_sow_adjudication_apply_summary(
+    *,
+    eval_summary: dict[str, Any],
+    adjudication_path: Path,
+    eval_output_path: Path,
+    intake_path: Path,
+    output_intake_path: Path,
+    output_path: Path,
+) -> dict[str, Any]:
+    return {
+        "adjudication_path": str(adjudication_path),
+        "adjudication_status": eval_summary.get("adjudication_status"),
+        "decision_counts": eval_summary.get("decision_counts") or {},
+        "eval_output_path": str(eval_output_path),
+        "failed_validation_checks": eval_summary.get("failed_validation_checks") or [],
+        "input_hashes": eval_summary.get("input_hashes") or {},
+        "intake_path": str(intake_path),
+        "item_count": eval_summary.get("queue_item_count"),
+        "output_intake_path": str(output_intake_path),
+        "output_path": str(output_path),
+        "output_written": False,
+        "passed": eval_summary.get("passed") is True,
+        "schema_version": PROJECT_SOW_ADJUDICATION_APPLY_SCHEMA_VERSION,
+    }
+
+
+def _project_sow_intake_adjudication(
+    *,
+    eval_summary: dict[str, Any],
+    adjudication_path: Path,
+    eval_output_path: Path,
+) -> dict[str, Any]:
+    items = [
+        {
+            "adjudicated_at": result.get("adjudicated_at"),
+            "adjudicated_by": result.get("adjudicated_by") or [],
+            "current_status": result.get("current_status"),
+            "decision": result.get("decision"),
+            "decision_source": result.get("decision_source"),
+            "issue_summary": result.get("issue_summary"),
+            "item_id": result.get("item_id"),
+            "item_type": result.get("item_type"),
+            "optional_deliverable": result.get("optional_deliverable"),
+            "rationale": result.get("rationale"),
+            "resource_area_id": result.get("resource_area_id"),
+            "resource_scope_id": result.get("resource_scope_id"),
+        }
+        for result in _list(eval_summary.get("item_results"))
+        if isinstance(result, dict) and result.get("passed") is True
+    ]
+    return {
+        "adjudication_id": eval_summary.get("adjudication_id"),
+        "adjudication_path": str(adjudication_path),
+        "applied_at": _now(),
+        "boundaries": [
+            "Project SOW adjudication is a planning overlay only.",
+            "It does not create applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+        ],
+        "decision_counts": eval_summary.get("decision_counts") or {},
+        "eval_output_path": str(eval_output_path),
+        "input_hashes": eval_summary.get("input_hashes") or {},
+        "item_count": len(items),
+        "items": items,
+        "schema_version": PROJECT_SOW_INTAKE_ADJUDICATION_SCHEMA_VERSION,
+        "status": eval_summary.get("adjudication_status"),
+    }
+
+
+def _intake_adjudication_summary(intake: dict[str, Any]) -> dict[str, Any]:
+    adjudication = intake.get("project_sow_adjudication")
+    if not isinstance(adjudication, dict):
+        return {
+            "adjudication_id": None,
+            "decision_counts": {},
+            "item_count": 0,
+            "status": "not_applied",
+        }
+    return {
+        "adjudication_id": adjudication.get("adjudication_id"),
+        "decision_counts": adjudication.get("decision_counts") or {},
+        "item_count": int(adjudication.get("item_count") or 0),
+        "status": adjudication.get("status") or "applied",
+    }
 
 
 def _source_set_id(authority_inventory: dict[str, Any]) -> str:

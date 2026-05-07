@@ -2392,6 +2392,60 @@ calibration gaps are expected resource areas without observed reports when a com
 package is available, and expected no-observed-report cases are new proving intakes where no
 completed specialist package exists yet.
 
+Create a reviewer adjudication worklist with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir /tmp/project_sow_adjudication
+```
+
+The command writes `project_sow_adjudication_template.json` and
+`project_sow_adjudication_worklist.md` under
+`<output-dir>/projects/<project_id>/requirements_package/` by default. The JSON template has schema
+version `project-sow-adjudication-v0` and contains current input hashes, project/source-set
+identity, reviewer metadata, artifact boundaries, and one editable item per review queue row. Queue
+item types are:
+
+- `unresolved_resource_area`
+- `missing_evidence_ref`
+- `unknown_resource_area_id`
+- `calibration_gap`
+- `optional_deliverable_decision`
+
+Reviewers complete each row by setting `decision` to `accepted`, `rejected`,
+`needs_information`, or `out_of_scope` and supplying `rationale`, `adjudicated_by`,
+`adjudicated_at`, and `decision_source`. Evaluate a completed artifact with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/project_sow_adjudication/projects/east-crazies-land-exchange/requirements_package/project_sow_adjudication_template.json
+```
+
+`project_sow_adjudication_eval.json` has schema version `project-sow-adjudication-eval-v0` and
+records identity/hash checks, queue coverage checks, per-item failure categories, decision counts,
+and an adjudication status. It fails closed on stale input hashes, missing queue rows, unexpected or
+duplicate items, invalid item types, invalid decisions, pending decisions, or incomplete reviewer
+metadata.
+
+Replay a passing adjudication into package-generation input with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/completed_project_sow_adjudication.json \
+  --output-intake /tmp/east_crazies_adjudicated_intake.json
+```
+
+`project_sow_adjudication_apply.json` has schema version `project-sow-adjudication-apply-v0`.
+Apply first reruns the eval; only a passing eval writes the adjudicated intake copy. The copied
+intake receives a `project_sow_adjudication` object with schema version
+`project-sow-intake-adjudication-v0`, replay status, item count, decision counts, artifact hashes,
+and completed item decisions. Package JSON generated from that adjudicated intake surfaces the
+adjudication status in `intake_summary` and `reviewer_summary.snapshot`. Apply does not mutate the
+original intake and does not edit generated package outputs.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`
@@ -2405,7 +2459,8 @@ includes:
 
 - `intake_summary`, including forest, districts, project type, NEPA level, geography, forest-plan
   profile, federal land action count, proposed-action element count, proposed-action resource
-  area IDs, observed specialist/supporting report count, and resource indicator keys;
+  area IDs, observed specialist/supporting report count, resource indicator keys, and any replayed
+  project-SOW adjudication status/counts;
 - `resource_scope_records[]`, with `resource_scope_id`, discipline, selected authority families,
   covered resource-area IDs, selection reasons, matched terms, matched resource areas or resource
   indicators, SOW tasks, data needs, required deliverables, optional deliverables, assumptions,
@@ -2421,7 +2476,7 @@ includes:
 - `reviewer_summary`, a compact reviewer-facing snapshot with package boundaries, review
   checklist, project context, package counts, graph counts, unresolved resource-area IDs, and
   calibration-gap resource-area IDs where the SOW is required but no observed East Crazies report
-  was supplied for that area;
+  was supplied for that area, plus any replayed project-SOW adjudication status/counts;
 - `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
   scope coverage;
 - `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;

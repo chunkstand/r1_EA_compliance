@@ -8,9 +8,12 @@ from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_eval
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_apply
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_eval
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_intake_draft
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
 from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
+from usfs_r1_ea_sources.project_sow_package import write_project_sow_adjudication_template
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -359,6 +362,153 @@ def test_project_sow_eval_tracks_contract_readiness_failures(tmp_path: Path) -> 
     assert failed_checks["expected_metrics.contract_fields_passed"]["details"] == {
         "actual": False,
         "expected": True,
+    }
+
+
+def test_project_sow_adjudication_template_exports_reviewer_worklist(
+    tmp_path: Path,
+) -> None:
+    result = write_project_sow_adjudication_template(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+
+    template = json.loads(result.output_path.read_text())
+    assert result.summary["passed"] is True
+    assert result.output_path.exists()
+    assert result.worklist_path.exists()
+    assert template["schema_version"] == "project-sow-adjudication-v0"
+    assert result.summary["item_count"] == 37
+    assert result.summary["item_type_counts"] == {
+        "calibration_gap": 7,
+        "optional_deliverable_decision": 30,
+    }
+    assert template["artifact_boundaries"][1].startswith(
+        "It does not create authority applicability decisions"
+    )
+    assert "Allowed decisions" in result.worklist_path.read_text()
+
+
+def test_project_sow_adjudication_template_includes_invalid_intake_queue_items(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    for element in intake["proposed_action_elements"]:
+        if element["action_element_id"] == "climate_carbon_analysis":
+            element["evidence_refs"] = []
+            break
+    intake["proposed_action_elements"].append(
+        {
+            "action_element_id": "unconfigured_resource_probe",
+            "description": "Probe a resource area that has no configured SOW scope.",
+            "evidence_refs": [
+                {
+                    "evidence_ref_id": "unconfigured-resource-probe-evidence",
+                    "locator": "Test fixture",
+                    "source_record_id": "TEST-PACKAGE-001",
+                    "summary": "Evidence for an intentionally unconfigured resource area.",
+                    "title": "Unconfigured Resource Probe.pdf",
+                }
+            ],
+            "resource_area_ids": ["unconfigured_resource_area"],
+            "resource_indicator_keys": [],
+        }
+    )
+    intake_path = tmp_path / "adjudication_queue_intake.json"
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+
+    result = write_project_sow_adjudication_template(
+        intake_path=intake_path,
+        output_dir=tmp_path / "source_library",
+    )
+
+    assert result.summary["item_type_counts"]["missing_evidence_ref"] == 1
+    assert result.summary["item_type_counts"]["unknown_resource_area_id"] == 1
+
+
+def test_project_sow_adjudication_eval_fails_pending_or_invalid_rows(
+    tmp_path: Path,
+) -> None:
+    template_result = write_project_sow_adjudication_template(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    pending_eval = run_project_sow_adjudication_eval(
+        intake_path=INTAKE_PATH,
+        adjudication_path=template_result.output_path,
+        output_path=tmp_path / "pending_adjudication_eval.json",
+    )
+
+    assert pending_eval.summary["passed"] is False
+    assert pending_eval.summary["failure_category_counts"] == {
+        "adjudication_pending": 37,
+        "project_sow_adjudication_items_complete": 1,
+    }
+
+    adjudication = json.loads(template_result.output_path.read_text())
+    adjudication["items"][0].update(
+        {
+            "adjudicated_at": "2026-05-07",
+            "adjudicated_by": ["reviewer@example.test"],
+            "decision": "approved",
+            "decision_source": "fixture review",
+            "rationale": "Invalid decision fixture.",
+        }
+    )
+    invalid_path = tmp_path / "invalid_adjudication.json"
+    invalid_path.write_text(json.dumps(adjudication), encoding="utf-8")
+
+    invalid_eval = run_project_sow_adjudication_eval(
+        intake_path=INTAKE_PATH,
+        adjudication_path=invalid_path,
+        output_path=tmp_path / "invalid_adjudication_eval.json",
+    )
+
+    assert invalid_eval.summary["passed"] is False
+    assert invalid_eval.summary["failure_category_counts"][
+        "adjudication_invalid_decision"
+    ] == 1
+
+
+def test_project_sow_adjudication_apply_updates_intake_for_package_status(
+    tmp_path: Path,
+) -> None:
+    template_result = write_project_sow_adjudication_template(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    adjudication = _completed_project_sow_adjudication(template_result.output_path)
+    adjudication_path = tmp_path / "completed_project_sow_adjudication.json"
+    adjudication_path.write_text(json.dumps(adjudication), encoding="utf-8")
+
+    apply_result = run_project_sow_adjudication_apply(
+        intake_path=INTAKE_PATH,
+        adjudication_path=adjudication_path,
+        output_intake_path=tmp_path / "east_crazies_adjudicated_intake.json",
+        output_path=tmp_path / "project_sow_adjudication_apply.json",
+        eval_output_path=tmp_path / "project_sow_adjudication_eval.json",
+    )
+
+    assert apply_result.summary["passed"] is True, apply_result.summary
+    assert apply_result.summary["output_written"] is True
+    applied_intake = json.loads(apply_result.output_intake_path.read_text())
+    assert applied_intake["project_sow_adjudication"]["status"] == "adjudicated"
+    assert applied_intake["project_sow_adjudication"]["item_count"] == 37
+    assert applied_intake["project_sow_adjudication"]["decision_counts"] == {
+        "accepted": 7,
+        "out_of_scope": 30,
+    }
+
+    package_result = run_project_sow_package(
+        intake_path=apply_result.output_intake_path,
+        output_dir=tmp_path / "source_library_adjudicated",
+    )
+    package = json.loads(package_result.package_path.read_text())
+    assert package_result.summary["passed"] is True, package_result.summary
+    assert package["reviewer_summary"]["snapshot"]["adjudication_status"] == "adjudicated"
+    assert package["intake_summary"]["adjudication_decision_counts"] == {
+        "accepted": 7,
+        "out_of_scope": 30,
     }
 
 
@@ -1174,6 +1324,27 @@ def _edge_exists(
         and (to_node_type is None or node_types.get(edge["to_node_id"]) == to_node_type)
         for edge in graph["edges"]
     )
+
+
+def _completed_project_sow_adjudication(template_path: Path) -> dict:
+    adjudication = json.loads(template_path.read_text())
+    for item in adjudication["items"]:
+        item["adjudicated_at"] = "2026-05-07"
+        item["adjudicated_by"] = ["reviewer@example.test"]
+        item["decision_source"] = "fixture reviewer worklist"
+        item["rationale"] = "Fixture reviewer decision for deterministic replay."
+        item["decision"] = (
+            "out_of_scope"
+            if item["item_type"] == "optional_deliverable_decision"
+            else "accepted"
+        )
+    adjudication["reviewer_metadata"] = {
+        "review_status": "complete",
+        "reviewed_at": "2026-05-07",
+        "reviewed_by": ["reviewer@example.test"],
+        "review_source": "fixture reviewer worklist",
+    }
+    return adjudication
 
 
 def _run_with_intake(tmp_path: Path, intake: dict, filename: str):

@@ -422,6 +422,150 @@ def test_project_sow_eval_handler_propagates_options(monkeypatch) -> None:
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
 
 
+def test_project_sow_adjudication_template_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_write_project_sow_adjudication_template(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "write_project_sow_adjudication_template",
+        fake_write_project_sow_adjudication_template,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-adjudication-template",
+            "--intake",
+            "config/intake.json",
+            "--output-dir",
+            "library",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+            "--results-dir",
+            "adjudication-output",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["output_dir"] == Path("library")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+    assert captured["results_dir"] == Path("adjudication-output")
+
+
+def test_project_sow_adjudication_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_adjudication_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_adjudication_eval",
+        fake_run_project_sow_adjudication_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-adjudication-eval",
+            "--intake",
+            "config/intake.json",
+            "--adjudication",
+            "adjudication.json",
+            "--output",
+            "adjudication-eval.json",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["adjudication_path"] == Path("adjudication.json")
+    assert captured["output_path"] == Path("adjudication-eval.json")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
+def test_project_sow_adjudication_apply_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_adjudication_apply(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_adjudication_apply",
+        fake_run_project_sow_adjudication_apply,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-adjudication-apply",
+            "--intake",
+            "config/intake.json",
+            "--adjudication",
+            "adjudication.json",
+            "--output-intake",
+            "adjudicated-intake.json",
+            "--output",
+            "adjudication-apply.json",
+            "--eval-output",
+            "adjudication-eval.json",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["adjudication_path"] == Path("adjudication.json")
+    assert captured["output_intake_path"] == Path("adjudicated-intake.json")
+    assert captured["output_path"] == Path("adjudication-apply.json")
+    assert captured["eval_output_path"] == Path("adjudication-eval.json")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):

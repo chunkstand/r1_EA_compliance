@@ -239,27 +239,38 @@ Acceptance gate status:
 
 ## Sequence 5: Reviewer Adjudication Loop
 
-Status: planned.
+Status: complete.
 
 Purpose: make unresolved resource areas and calibration gaps reviewable and replayable.
 
-Candidate work:
+Implemented work:
 
-- generate a reviewer worklist for unresolved resource areas, missing evidence refs, unknown
-  resource-area IDs, calibration gaps, and optional deliverable decisions;
-- define an adjudication template with accepted, rejected, needs-information, and out-of-scope
+- added `project-sow-adjudication-template`, which writes
+  `project_sow_adjudication_template.json` and `project_sow_adjudication_worklist.md` for the
+  current intake queue;
+- the queue covers unresolved resource areas, missing evidence refs, unknown resource-area IDs,
+  calibration gaps, and optional deliverable decisions;
+- the adjudication artifact supports `accepted`, `rejected`, `needs_information`, and
+  `out_of_scope` decisions with required rationale, reviewer identity, date, and decision source;
+- added `project-sow-adjudication-eval`, which fails closed on stale input hashes, missing queue
+  rows, unexpected or duplicated rows, invalid item types, invalid decisions, pending decisions, or
+  incomplete reviewer metadata;
+- added `project-sow-adjudication-apply`, which reruns eval and writes an adjudicated intake copy
+  with `project_sow_adjudication` replay metadata only when eval passes;
+- package JSON generated from an adjudicated intake surfaces adjudication status and decision counts
+  in `intake_summary` and `reviewer_summary.snapshot` without editing generated outputs by hand.
+
+Acceptance gate status:
+
+- East Crazies exports a `37`-item worklist: `7` calibration gaps and `30` optional-deliverable
   decisions;
-- add an apply/replay command that updates package generation inputs or overlays without
-  hand-editing generated outputs;
-- preserve reviewer identity/date/source in the adjudication artifact.
-
-Acceptance gate:
-
-- unresolved or calibration-gap rows can be exported to a worklist;
-- applying an adjudication artifact changes package status deterministically;
-- invalid adjudication rows fail with targeted messages;
-- adjudication artifacts do not create applicability decisions, compliance findings, legal advice,
-  legal sufficiency conclusions, or final agency decisions.
+- an unedited template fails eval with targeted `adjudication_pending` rows, and invalid decisions
+  fail with `adjudication_invalid_decision`;
+- a completed adjudication replay writes an adjudicated intake copy, and package generation from
+  that copy reports `adjudication_status=adjudicated` with deterministic decision counts;
+- adjudication artifacts remain project-SOW planning overlays and do not create applicability
+  decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency
+  decisions.
 
 ## Sequence 6: Downstream EA Package Assembly Handoff
 

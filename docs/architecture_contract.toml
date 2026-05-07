@@ -436,7 +436,15 @@ commands = ["ea-consistency-document"]
 
 [[command_groups]]
 name = "project_planning"
-commands = ["project-sow-eval", "project-sow-intake-draft", "project-sow-intake-validate", "project-sow-package"]
+commands = [
+  "project-sow-adjudication-apply",
+  "project-sow-adjudication-eval",
+  "project-sow-adjudication-template",
+  "project-sow-eval",
+  "project-sow-intake-draft",
+  "project-sow-intake-validate",
+  "project-sow-package",
+]
 
 [[command_groups]]
 name = "eval"

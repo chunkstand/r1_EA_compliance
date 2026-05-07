@@ -445,8 +445,9 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package Sequence 5 is implemented as an upstream planning lane for proposed-action
-intake before a complete EA review package exists. The public command is:
+Project SOW package generation and operationalization through Sequence 5 are implemented as an
+upstream planning lane for proposed-action intake before a complete EA review package exists. The
+core package command is:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
@@ -488,24 +489,42 @@ uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, a
 plan-consistency table. Validation requires every observed report resource area to have selected
 SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
-A local Sequence 5 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
-proposed-action resource areas, emitted a `115`-node and `134`-edge intake evidence graph, wrote a
-PDF with a valid `%PDF-` header, and reported `0` validation failures. Each proposed-action-derived
-resource area has the canonical planning path:
+Operationalization Sequence 5 adds the reviewer adjudication loop:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication <completed-project-sow-adjudication.json>
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication <completed-project-sow-adjudication.json> \
+  --output-intake <adjudicated-intake.json>
+```
+
+The template/worklist covers unresolved resource areas, missing evidence refs, unknown resource-area
+IDs, calibration gaps, and optional deliverable decisions. Eval fails closed on stale input hashes,
+missing, duplicated, unexpected, pending, or invalid rows, and incomplete reviewer metadata. Apply
+reruns eval and writes an adjudicated intake copy with `project_sow_adjudication` replay metadata;
+generated packages from that intake surface adjudication status and decision counts in the reviewer
+snapshot. It does not mutate the original intake and does not edit generated package outputs by
+hand.
+
+An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
+SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
+evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
+proposed-action-derived resource area has the canonical planning path:
 
 ```text
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
-The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Sequence 5 adds reviewer-facing Markdown tables, a compact reviewer snapshot/checklist, PDF
-rendering from canonical JSON, rendering validation checks, and
-`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for creating new land-exchange intakes. The post-sequence
-alignment pass adds regression coverage for duplicate required-deliverable graph IDs and verifies
-that generated PDF bytes include reviewer-facing content and validation checks from the package
-rendering. The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is intake schema,
-template, and validation-only workflow.
+The requirements-package sequence plan for this lane is
+`docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`. The successor operationalization plan is
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is downstream EA package
+assembly handoff.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -519,6 +538,9 @@ edges, dangling graph edges, missing action-element evidence refs, evidence-bear
 with no triggered resource area, incomplete canonical resource-area graph paths, observed
 specialist report areas without a proposed-action support path, land-exchange intakes with no
 federal land action, or Markdown/PDF renderings missing required reviewer-facing sections.
+Project-SOW adjudication eval additionally fails closed on stale hashes, missing queue rows,
+unexpected or duplicate rows, invalid item types, invalid decisions, pending decisions, or
+incomplete reviewer metadata.
 
 ## Verified State Snapshot
 

@@ -118,6 +118,44 @@ Alignment verification passed: the focused project-SOW/CLI/architecture suite re
 deliverable scope counts matching selected scope counts for East Crazies (`10`), Red Rock Ridge
 (`7`), and Silver Creek (`9`).
 
+Project SOW operationalization Sequence 5 is implemented. The new public commands are:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir /tmp/project-sow-sequence-5-adjudication
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/project-sow-sequence-5-completed-adjudication.json
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/project-sow-sequence-5-completed-adjudication.json \
+  --output-intake /tmp/project-sow-sequence-5-adjudicated-intake.json
+```
+
+The template/worklist exports unresolved resource areas, missing evidence refs, unknown
+resource-area IDs, calibration gaps, and optional deliverable decisions. East Crazies currently
+exports a `37`-item queue: `7` calibration gaps and `30` optional-deliverable decisions. The eval
+fails targeted rows for stale hashes, missing queue rows, unexpected or duplicated rows, invalid
+item types, invalid decisions, pending decisions, or incomplete reviewer metadata. Apply reruns eval
+and writes a new adjudicated intake copy with `project_sow_adjudication` replay metadata only when
+the eval passes. Package generation from that adjudicated intake surfaces
+`adjudication_status=adjudicated` and deterministic decision counts in `intake_summary` and
+`reviewer_summary.snapshot`. The adjudication loop remains a project-SOW planning overlay; it does
+not create applicability decisions, compliance findings, legal advice, legal sufficiency
+conclusions, or final agency decisions, and it does not edit generated package outputs by hand.
+
+Sequence 5 closeout verification passed: the focused project-SOW/CLI suite reported `49 passed`,
+and the architecture contract reported `5 passed`; the East Crazies adjudication-template smoke run
+wrote a `37`-item worklist; an unedited-template eval failed as expected with `37` pending
+adjudications; a completed-adjudication eval passed with `7` accepted calibration gaps and `30`
+out-of-scope optional-deliverable decisions; adjudication apply wrote an adjudicated intake copy;
+package generation from that copy
+reported `adjudication_status=adjudicated`, selected `10` scopes, found `23` proposed-action
+resource areas, preserved `115` graph nodes and `134` graph edges, reported `0` validation
+failures, and produced a valid `%PDF-` header. The three-case `project-sow-eval` smoke run reported
+`3` cases passed and `0` failed cases.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package
@@ -213,12 +251,9 @@ nodes, `134` graph edges, `0` validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 5,
-reviewer adjudication loop. Keep JSON canonical, do not convert SOW scopes into applicability or
-compliance findings, and do not stage ignored `source_library/` outputs. The next pass should define
-the reviewer worklist and adjudication template for unresolved resource areas, missing evidence
-refs, unknown resource-area IDs, calibration gaps, and optional deliverable decisions before adding
-any replay/apply command.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 6,
+downstream EA package assembly handoff. Keep JSON canonical, do not convert SOW scopes into
+applicability or compliance findings, and do not stage ignored `source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff
 

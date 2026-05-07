@@ -92,7 +92,44 @@ It also checks contract-readiness metrics so every selected proving-intake scope
 required deliverables, optional deliverables, and the required contract fields from
 `config/project_sow_resource_scopes_v1.json`.
 
-## 5. Add Calibration Reports When Available
+## 5. Adjudicate Reviewer Worklist Items
+
+Export the reviewer worklist when the intake or generated package has unresolved resource areas,
+missing evidence refs, unknown resource-area IDs, calibration gaps, or optional deliverable
+decisions:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake /tmp/new_land_exchange_intake.json \
+  --output-dir /tmp/project_sow_adjudication
+```
+
+The command writes a canonical `project_sow_adjudication_template.json` plus a Markdown worklist.
+Reviewers complete the JSON rows with one of `accepted`, `rejected`, `needs_information`, or
+`out_of_scope`, plus rationale, reviewer identity, date, and decision source.
+
+Evaluate a completed adjudication artifact before replay:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake /tmp/new_land_exchange_intake.json \
+  --adjudication /tmp/completed_project_sow_adjudication.json
+```
+
+Replay a passing adjudication into a new intake copy:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake /tmp/new_land_exchange_intake.json \
+  --adjudication /tmp/completed_project_sow_adjudication.json \
+  --output-intake /tmp/new_land_exchange_adjudicated_intake.json
+```
+
+Apply does not mutate the original intake and does not edit generated package outputs. It writes an
+adjudicated intake copy with `project_sow_adjudication` replay metadata; regenerate the package from
+that intake if the adjudication should appear in the reviewer snapshot.
+
+## 6. Add Calibration Reports When Available
 
 If a completed example package exists, populate `observed_specialist_reports[]` with report title,
 document role, source record ID, report ID, resource areas, and evidence refs.
@@ -103,7 +140,7 @@ Observed reports are calibration evidence only. They do not replace the proposed
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
-## 6. Validate The Intake
+## 7. Validate The Intake
 
 Run the validation-only command before package generation:
 
@@ -124,7 +161,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
   --validate-only
 ```
 
-## 7. Generate The Package
+## 8. Generate The Package
 
 Run:
 
@@ -153,7 +190,7 @@ visibility only and do not satisfy required deliverable validation. Each selecte
 also carry assumptions, dependencies, acceptance criteria, reviewer role, review timing, and reviewer
 signoff fields from `config/project_sow_resource_scopes_v1.json`.
 
-## 8. Resolve Validation Failures
+## 9. Resolve Validation Failures
 
 Common failure categories:
 
@@ -164,6 +201,8 @@ Common failure categories:
 - drafted intake metadata still requires reviewer confirmation;
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
+- project-SOW adjudication rows are pending, stale, duplicated, unexpected, missing, or carry an
+  invalid decision;
 - selected SOW scopes lack required contract fields such as assumptions, dependencies, acceptance
   criteria, reviewer role, review timing, optional deliverables, or reviewer signoff fields;
 - selected SOW scopes lack required deliverables, even if optional deliverables are present;
