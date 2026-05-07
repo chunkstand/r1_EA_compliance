@@ -77,8 +77,12 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
 
 The WLG sample readability pass on 2026-05-07 refreshed only the canonical matrix rendering from the
 existing `compliance_matrix.json`: `compliance_matrix.md` and `compliance_matrix.pdf` now start with
-a deterministic Accuracy Audit and render the NEPA/authority rows and Forest Plan rows as concise
-tables. The JSON matrix remained the traceability contract. Follow-on `ea-consistency-document`,
+a Forest Supervisor Readout and deterministic Accuracy Audit in plain decision language, then
+render NEPA/authority rows and Forest Plan rows as signer-oriented tables. Each NEPA row now carries
+the signer question, record need, decision-support finding, EA evidence excerpt, authority basis,
+and trace/caveat status. Each Forest Plan row now carries the component direction, decision-support
+status, EA consistency support, Forest Plan basis, and trace/caveat status. The JSON matrix remained
+the traceability contract. Follow-on `ea-consistency-document`, `final-qa-certification`,
 `phase-eval`, `promotion-suite`, and `final-qa-certification --validate-only` replays are green.
 
 The baseline Sequence 0 replay originally recorded:
@@ -101,13 +105,13 @@ Current canonical artifact pointers:
 
 - Compliance matrix Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.md`
-  (`sha256=70c58a567de1b9ee0989e6ec6ab2e3c6ee8fe0e4b9ac33f1aabca19aa1bcd28c`)
+  (`sha256=37fc6412a47b4a29fc8aec344bb23fc635e1a0eea82c10dcc1912aab8dc9e370`)
 - Compliance matrix PDF:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.pdf`
-  (`sha256=d73b9f8e465980fbde8db0f956a4eff528269bda811e6db5387cf167f3fa0eb4`)
+  (`sha256=3689d696ef7a0a61f9e480b68fe7967217d14e458f09ecdf46d01804fa30b92a`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=fc848326e6b217d97c73555f17df16f4dbaff0843d73f08eeb3f78339e01d6ca`)
+  (`sha256=dc859310f0356d09e60e592160404efc4c794529e98a224451dde483e47942ae`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a`)
@@ -116,16 +120,16 @@ Current canonical artifact pointers:
   (`sha256=1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=bf0a2e57e4129dc109fe114931341653dfefc578d227bc34296e7aef1745844d`)
+  (`sha256=808f13c23e173eb85bde6cd01b27fbc4c71e64a2e1ae032dabd4ae8b6d2b09f0`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=e19cfc9e41b82b1b4a47c5caba20d23f28acd4f9f38e0b6588115ff34d3df3d4`)
+  (`sha256=1c81a6278865b5287450dca4915637adfa4790246ddaf597bc37a47e6b800615`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=9bf73f1051ffe8c88dab749ca7526bbe921915604b9703af7a979eb0c955a553`)
+  (`sha256=91d0127be0604eeb99be8449402c123361a0c5c07ad820ff6bd9b33b8d7c3fea`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=090a1eafa7960abc1076070b4f6aa0685eabceb31be34145b27df92637ef646c`)
+  (`sha256=c67a9e564d2a405bd0874068dd72cb43277cd8edef5086e7b929e00f2e5d5bc2`)
 
 Sequence 1 added:
 

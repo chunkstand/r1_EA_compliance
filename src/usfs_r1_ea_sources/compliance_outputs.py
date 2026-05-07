@@ -4,6 +4,8 @@ from collections import Counter
 from datetime import UTC, datetime
 import json
 from pathlib import Path
+import re
+import textwrap
 
 from .rule_packs import _baseline_source_record_ids
 
@@ -141,10 +143,12 @@ def matrix_markdown(matrix: dict) -> str:
         f"- Source set: `{matrix.get('source_set_id')}`",
         f"- Rule pack: `{matrix['rule_pack']['rule_pack_id']}` "
         f"`{matrix['rule_pack']['version']}`",
-        f"- Rows: `{summary['row_count']}`",
-        f"- Status counts: `{summary['status_counts']}`",
-        f"- Applicability counts: `{summary.get('applicability_counts', {})}`",
-        f"- Reviewer ready: `{summary['reviewer_ready']}`",
+        (
+            f"- Authority findings: `{summary['row_count']} rows; "
+            f"{_count_phrase(summary['status_counts'])}`"
+        ),
+        f"- Applicability: `{_count_phrase(summary.get('applicability_counts', {}))}`",
+        f"- Review gates: `{_review_gate_phrase(summary)}`",
     ]
     if summary.get("non_applicable_authorities_path"):
         lines.append(
@@ -156,8 +160,9 @@ def matrix_markdown(matrix: dict) -> str:
     if forest_plan_review:
         lines.append(
             f"- Forest-plan review: `{forest_plan_review.get('scope_status')}` "
-            f"(reviewer ready: `{forest_plan_review.get('reviewer_ready')}`)"
+            f"({_yes_no_sentence(forest_plan_review.get('reviewer_ready'), 'reviewer ready')})"
         )
+    lines.extend(_supervisor_readout_markdown_lines(matrix))
     lines.extend(_accuracy_audit_markdown_lines(matrix))
     lines.extend(
         [
@@ -165,10 +170,10 @@ def matrix_markdown(matrix: dict) -> str:
             "## NEPA / Authority Compliance",
             "",
             (
-                "| Rule | Authority | Applicability | Finding | EA citation | "
-                "Source citation | Trace | Notes |"
+                "| Review topic | Signer question | Decision support | EA record support | "
+                "Authority basis | Trace / caveats |"
             ),
-            "| --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
     )
     for row in matrix["rows"]:
@@ -178,19 +183,12 @@ def matrix_markdown(matrix: dict) -> str:
             "| "
             + " | ".join(
                 [
-                    _md_cell(_rule_markdown_cell(row)),
-                    _md_cell(_authority_summary_cell(row)),
-                    _md_cell(_applicability_summary_cell(row)),
-                    _md_cell(_finding_summary_cell(row)),
-                    _md_cell(_citation_summary_cell(row.get("ea_package_citation"), ea_evidence)),
-                    _md_cell(
-                        _citation_summary_cell(
-                            row.get("source_library_citation"),
-                            source_evidence,
-                        )
-                    ),
-                    _md_cell(_trace_summary_cell(row)),
-                    _md_cell(_notes_summary_cell(row)),
+                    _md_cell(_nepa_topic_cell(row)),
+                    _md_cell(_nepa_signer_question_cell(row)),
+                    _md_cell(_nepa_decision_support_cell(row)),
+                    _md_cell(_evidence_support_cell(row.get("ea_package_citation"), ea_evidence)),
+                    _md_cell(_authority_basis_cell(row, source_evidence)),
+                    _md_cell(_trace_caveats_cell(row)),
                 ]
             )
             + " |"
@@ -286,74 +284,162 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
     }
 
 
-def _rule_markdown_cell(row: dict) -> str:
+def _supervisor_readout_markdown_lines(matrix: dict) -> list[str]:
+    lines = [
+        "",
+        "## Forest Supervisor Readout",
+        "",
+        "| Signing question | Current decision-support signal |",
+        "| --- | --- |",
+    ]
+    for row in _supervisor_readout_rows(matrix):
+        lines.append(f"| {_md_cell(row['check'])} | {_md_cell(row['signal'])} |")
+    return lines
+
+
+def _supervisor_readout_rows(matrix: dict) -> list[dict[str, str]]:
+    summary = matrix.get("summary") or {}
+    forest_plan = matrix.get("forest_plan_compliance") or {}
+    forest_summary = forest_plan.get("summary") or {}
+    rows = [
+        {
+            "check": "Is the compliance record ready for signing review?",
+            "signal": _authority_readiness_signal(summary),
+        },
+        {
+            "check": "Are inapplicable authorities traceable rather than ignored?",
+            "signal": (
+                f"{summary.get('non_applicable_authority_count', 0)} authorities are "
+                f"tracked in {summary.get('non_applicable_authorities_path') or 'N/A'}."
+            ),
+        },
+    ]
+    if forest_plan:
+        rows.append(
+            {
+                "check": "Is Custer Gallatin Forest Plan consistency visible?",
+                "signal": _forest_plan_readiness_signal(forest_summary),
+            }
+        )
+    rows.append(
+        {
+            "check": "How should a signer use the row tables below?",
+            "signal": (
+                "Read any Needs review row before signing. For Pass rows, confirm the cited EA "
+                "record support, authority basis, and trace/caveat cell match the decision record."
+            ),
+        }
+    )
+    return rows
+
+
+def _nepa_topic_cell(row: dict) -> str:
     return "<br>".join(
         [
-            str(row.get("rule_id") or "unknown"),
-            _truncate(str(row.get("rule_title") or "Untitled authority"), 110),
+            _human_rule_title(row),
+            f"rule: {row.get('rule_id') or 'unknown'}",
+            (
+                f"{_display_value(row.get('authority_category'))}: "
+                f"{row.get('authority_source_record_id') or 'none'}"
+            ),
         ]
     )
 
 
-def _authority_summary_cell(row: dict) -> str:
-    family_ids = ", ".join(row.get("authority_family_ids") or []) or "none"
+def _nepa_signer_question_cell(row: dict) -> str:
+    question = str(row.get("question") or "No signer question recorded.")
+    requirement = str(row.get("requirement") or "No record requirement recorded.")
     return "<br>".join(
         [
-            f"{_display_value(row.get('authority_category'))}: "
-            f"{row.get('authority_source_record_id') or 'none'}",
-            f"family: {_truncate(family_ids, 90)}",
+            _truncate(question, 190),
+            f"Record need: {_truncate(requirement, 210)}",
         ]
     )
 
 
-def _applicability_summary_cell(row: dict) -> str:
+def _nepa_decision_support_cell(row: dict) -> str:
     basis = row.get("applicability_basis") or {}
-    rationale = basis.get("rationale") or ""
+    rationale = row.get("rationale") or basis.get("rationale") or ""
     parts = [
-        _display_value(row.get("applicability_status")),
-        f"mode: {_display_value(row.get('applicability_mode'))}",
+        f"Finding: {_display_value(row.get('status'))}",
+        (
+            f"Applies: {_display_value(row.get('applicability_status'))} "
+            f"({_display_value(row.get('applicability_mode'))})"
+        ),
+        f"Severity: {_display_value(row.get('severity'))}; confidence: {row.get('confidence')}",
     ]
     if rationale:
-        parts.append(_truncate(str(rationale), 90))
+        parts.append(_truncate(str(rationale), 190))
     return "<br>".join(parts)
 
 
-def _finding_summary_cell(row: dict) -> str:
-    status = _display_value(row.get("status"))
-    citation_status = (
-        "citations complete"
-        if row.get("citation_requirements_met")
-        else "citation review needed"
-    )
-    return f"{status}<br>{citation_status}"
-
-
-def _citation_summary_cell(citation: str | None, evidence: dict) -> str:
+def _evidence_support_cell(citation: str | None, evidence: dict) -> str:
     if not citation:
-        return "N/A"
-    title = _truncate(str(evidence.get("title") or ""), 90)
-    if title:
-        return f"{citation}<br>{title}"
-    return citation
-
-
-def _trace_summary_cell(row: dict) -> str:
-    claim_count = int(row.get("source_claim_count") or len(row.get("source_claim_ids", [])))
-    parts = [f"{claim_count} source claim{'s' if claim_count != 1 else ''}"]
-    candidate = row.get("candidate_authority_id")
-    if candidate:
-        parts.append(_truncate(str(candidate), 90))
+        return "No EA citation recorded."
+    parts = [
+        citation,
+        _truncate(str(evidence.get("title") or "Untitled EA record"), 100),
+    ]
+    excerpt = _evidence_excerpt(evidence, 230)
+    if excerpt:
+        parts.append(f"Record says: {excerpt}")
     return "<br>".join(parts)
 
 
-def _notes_summary_cell(row: dict) -> str:
+def _authority_basis_cell(row: dict, evidence: dict) -> str:
+    family_ids = ", ".join(row.get("authority_family_ids") or []) or "none"
+    citation = row.get("source_library_citation") or "No source citation recorded."
+    parts = [
+        str(citation),
+        _truncate(str(evidence.get("title") or "Untitled authority source"), 100),
+        f"Requirement: {_truncate(str(row.get('requirement') or 'Not recorded.'), 210)}",
+    ]
+    excerpt = _evidence_excerpt(evidence, 180)
+    if excerpt:
+        parts.append(f"Authority text: {excerpt}")
+    parts.append(f"Family: {_truncate(family_ids, 100)}")
+    return "<br>".join(parts)
+
+
+def _trace_caveats_cell(row: dict) -> str:
+    claim_count = int(row.get("source_claim_count") or len(row.get("source_claim_ids", [])))
+    citation_status = (
+        "citation gate complete"
+        if row.get("citation_requirements_met")
+        else "citation gate needs review"
+    )
+    parts = [
+        f"{claim_count} source claim{'s' if claim_count != 1 else ''}",
+        citation_status,
+    ]
+    source_claims = row.get("source_claim_ids") or []
+    if source_claims:
+        parts.append("claims: " + _truncate(", ".join(str(value) for value in source_claims), 120))
     limitations = row.get("limitations") or []
     if limitations:
-        return _truncate("; ".join(str(item) for item in limitations), 120)
-    failure_category = row.get("failure_category")
-    if failure_category:
-        return _display_value(failure_category)
-    return "None"
+        parts.append("limitations: " + _truncate("; ".join(str(item) for item in limitations), 160))
+    elif row.get("failure_category"):
+        parts.append("caveat: " + _display_value(row.get("failure_category")))
+    else:
+        parts.append("limitations: none recorded")
+    return "<br>".join(parts)
+
+
+def _human_rule_title(row: dict) -> str:
+    title = str(row.get("rule_title") or "Untitled authority")
+    suffixes = [
+        " is reviewed",
+        " is addressed",
+        " is supported",
+        " are addressed",
+        " are met",
+        " applies",
+    ]
+    for suffix in suffixes:
+        if title.endswith(suffix):
+            title = title[: -len(suffix)]
+            break
+    return _truncate(title, 115)
 
 
 def _forest_plan_compliance_section(
@@ -520,7 +606,7 @@ def _forest_plan_compliance_markdown_lines(section: dict) -> list[str]:
         "## Forest Plan Compliance",
         "",
         f"- Rows: `{summary.get('row_count', 0)}`",
-        f"- Status counts: `{summary.get('compliance_status_counts', {})}`",
+        f"- Decision-support status: `{_forest_plan_readiness_signal(summary)}`",
         f"- Applicable standard rows: `{summary.get('applicable_standard_row_count', 0)}`",
         "",
     ]
@@ -532,45 +618,129 @@ def _forest_plan_compliance_markdown_lines(section: dict) -> list[str]:
     lines.extend(
         [
             (
-                "| Component | Type | Applicability | Compliance | EA citation | "
-                "Forest Plan citation | Determination |"
+                "| Component | Direction / standard | Decision support | EA consistency support | "
+                "Forest Plan basis | Trace / caveats |"
             ),
-            "| --- | --- | --- | --- | --- | --- | --- |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
     )
     for row in section.get("rows", []):
         ea_evidence = row.get("ea_package_evidence") or {}
         plan_evidence = row.get("forest_plan_evidence") or {}
-        determination = row.get("determination") or {}
-        notes = determination.get("explanation") or row.get("rationale") or ""
         lines.append(
             "| "
             + " | ".join(
                 [
-                    _md_cell(
-                        "<br>".join(
-                            [
-                                row.get("component_key") or row.get("component_id") or "",
-                                _truncate(str(row.get("component_id") or ""), 90),
-                            ]
-                        )
-                    ),
-                    _md_cell(_display_value(row.get("component_type"))),
-                    _md_cell(_display_value(row.get("applicability_status"))),
-                    _md_cell(_display_value(row.get("compliance_status"))),
-                    _md_cell(_citation_summary_cell(row.get("ea_package_citation"), ea_evidence)),
-                    _md_cell(
-                        _citation_summary_cell(
-                            row.get("forest_plan_citation"),
-                            plan_evidence,
-                        )
-                    ),
-                    _md_cell(_truncate(notes or "None", 150)),
+                    _md_cell(_forest_component_cell(row)),
+                    _md_cell(_forest_direction_cell(row, plan_evidence)),
+                    _md_cell(_forest_decision_support_cell(row)),
+                    _md_cell(_forest_ea_support_cell(row, ea_evidence)),
+                    _md_cell(_forest_plan_basis_cell(row, plan_evidence)),
+                    _md_cell(_forest_trace_caveats_cell(row)),
                 ]
             )
             + " |"
         )
     return lines
+
+
+def _forest_component_cell(row: dict) -> str:
+    return "<br>".join(
+        [
+            str(row.get("component_key") or row.get("component_id") or "unknown component"),
+            _truncate(str(row.get("component_id") or ""), 105),
+            _display_value(row.get("component_type")),
+        ]
+    )
+
+
+def _forest_direction_cell(row: dict, plan_evidence: dict) -> str:
+    direction = _forest_component_direction(row, plan_evidence, 260)
+    return "<br>".join(
+        [
+            f"Plan direction: {direction}",
+            f"Plan source: {row.get('forest_plan_citation') or 'No Forest Plan citation'}",
+        ]
+    )
+
+
+def _forest_decision_support_cell(row: dict) -> str:
+    component_type = str(row.get("component_type") or "")
+    compliance_status = str(row.get("compliance_status") or "unknown")
+    if component_type == "standard":
+        lead = (
+            "Applicable standard complies"
+            if compliance_status == "complies"
+            else f"Applicable standard needs review: {_display_value(compliance_status)}"
+        )
+    else:
+        lead = (
+            f"{_display_value(component_type)} considered; "
+            "plan-consistency support recorded, not counted as an applicable standard."
+        )
+    parts = [
+        lead,
+        f"Applicability: {_display_value(row.get('applicability_status'))}",
+        f"Finding support: {_display_value(row.get('finding_status'))}",
+    ]
+    if row.get("rationale"):
+        parts.append(_truncate(str(row.get("rationale")), 180))
+    return "<br>".join(parts)
+
+
+def _forest_ea_support_cell(row: dict, ea_evidence: dict) -> str:
+    determination = row.get("determination") or {}
+    explanation = determination.get("explanation")
+    parts = [
+        str(row.get("ea_package_citation") or "No EA citation recorded."),
+        _truncate(str(ea_evidence.get("title") or "Untitled EA record"), 100),
+    ]
+    if explanation:
+        parts.append(f"EA determination: {_truncate(str(explanation), 260)}")
+    else:
+        excerpt = _evidence_excerpt(ea_evidence, 240)
+        if excerpt:
+            parts.append(f"Record says: {excerpt}")
+    if determination.get("review_section"):
+        parts.append(f"Section/source: {_truncate(str(determination['review_section']), 100)}")
+    return "<br>".join(parts)
+
+
+def _forest_plan_basis_cell(row: dict, plan_evidence: dict) -> str:
+    parts = [
+        str(row.get("forest_plan_citation") or "No Forest Plan citation recorded."),
+        _truncate(str(plan_evidence.get("title") or "Untitled Forest Plan source"), 100),
+    ]
+    excerpt = _evidence_excerpt(plan_evidence, 260)
+    if excerpt:
+        parts.append(f"Plan text: {excerpt}")
+    return "<br>".join(parts)
+
+
+def _forest_trace_caveats_cell(row: dict) -> str:
+    standard_applied = row.get("standard_applied")
+    if standard_applied is None:
+        standard_text = "standard applied: N/A"
+    else:
+        standard_text = f"standard applied: {'yes' if bool(standard_applied) else 'no'}"
+    return "<br>".join(
+        [
+            standard_text,
+            f"reviewer resolutions: {row.get('reviewer_resolution_count', 0)}",
+            f"row trace: {_truncate(str(row.get('row_id') or 'not recorded'), 120)}",
+        ]
+    )
+
+
+def _forest_component_direction(row: dict, plan_evidence: dict, max_chars: int) -> str:
+    determination = row.get("determination") or {}
+    component_text = determination.get("component_text")
+    if component_text:
+        return _truncate(str(component_text), max_chars)
+    excerpt = _evidence_excerpt(plan_evidence, max_chars)
+    if excerpt:
+        return excerpt
+    return "No component text excerpt recorded."
 
 
 def _accuracy_audit_markdown_lines(matrix: dict) -> list[str]:
@@ -627,15 +797,12 @@ def _accuracy_audit_rows(matrix: dict) -> list[dict[str, str]]:
         _audit_row(
             "Review gates",
             bool(summary.get("reviewer_ready")) and bool(summary.get("validated")),
-            (
-                f"reviewer_ready={summary.get('reviewer_ready')}; "
-                f"validated={summary.get('validated')}"
-            ),
+            _review_gate_phrase(summary),
         ),
         _audit_row(
             "NEPA authority rows",
             len(rows) == int(summary.get("row_count") or 0),
-            f"{len(rows)} rendered rows; status counts {summary.get('status_counts', {})}",
+            f"{len(rows)} rendered rows; {_count_phrase(summary.get('status_counts', {}))}",
         ),
         _audit_row(
             "EA package evidence",
@@ -701,7 +868,10 @@ def _forest_plan_audit_rows(section: dict) -> list[dict[str, str]]:
         _audit_row(
             "Forest Plan rows",
             len(rows) == int(summary.get("row_count") or 0),
-            f"{len(rows)} rendered rows; status counts {summary.get('compliance_status_counts', {})}",
+            (
+                f"{len(rows)} rendered rows; "
+                f"{_count_phrase(summary.get('compliance_status_counts', {}))}"
+            ),
         ),
         _audit_row(
             "Forest Plan citations",
@@ -730,6 +900,92 @@ def _audit_row(check: str, passed: bool, evidence: str) -> dict[str, str]:
         "result": "Pass" if passed else "Needs review",
         "evidence": evidence,
     }
+
+
+def _authority_readiness_signal(summary: dict) -> str:
+    row_count = int(summary.get("row_count") or 0)
+    status_counts = summary.get("status_counts", {})
+    if row_count and status_counts == {"pass": row_count}:
+        finding_signal = (
+            f"All {row_count} applicable authority rows pass the deterministic evidence gate."
+        )
+    else:
+        finding_signal = f"{row_count} authority rows are rendered: {_count_phrase(status_counts)}."
+    return f"{finding_signal} {_review_gate_phrase(summary)}"
+
+
+def _forest_plan_readiness_signal(summary: dict) -> str:
+    row_count = int(summary.get("row_count") or 0)
+    standard_count = int(summary.get("applicable_standard_row_count") or 0)
+    status_counts = summary.get("compliance_status_counts", {})
+    complies = int(status_counts.get("complies") or 0)
+    non_standard_count = max(row_count - standard_count, 0)
+    if standard_count and complies == standard_count:
+        standard_signal = f"all {standard_count} applicable standards comply"
+    elif standard_count:
+        standard_signal = (
+            f"{standard_count} applicable standards are present; "
+            f"status detail: {_count_phrase(status_counts)}"
+        )
+    else:
+        standard_signal = "no applicable standards are counted for pass/fail compliance"
+    if non_standard_count:
+        return (
+            f"{row_count} applicable Forest Plan components are visible; "
+            f"{standard_signal}; {non_standard_count} goals, guidelines, desired conditions, "
+            "or other non-standard components are carried as plan-consistency support."
+        )
+    return f"{row_count} applicable Forest Plan components are visible; {standard_signal}."
+
+
+def _review_gate_phrase(summary: dict) -> str:
+    reviewer_ready = bool(summary.get("reviewer_ready"))
+    validated = bool(summary.get("validated"))
+    if reviewer_ready and validated:
+        return "Review gates passed and reviewer-ready support is available."
+    if reviewer_ready:
+        return "Reviewer-ready support is available, but validation needs review."
+    if validated:
+        return "Validation passed, but reviewer-ready support is not available."
+    return "Review gates need review before relying on this matrix."
+
+
+def _count_phrase(counts: dict | None) -> str:
+    if not counts:
+        return "no counts recorded"
+    ordered_keys = [
+        "pass",
+        "gap",
+        "uncertain",
+        "not_applicable",
+        "applicable",
+        "complies",
+        "does_not_comply",
+        "partial",
+        "not_evaluated_for_compliance",
+    ]
+    seen: set[str] = set()
+    keys: list[str] = []
+    for key in ordered_keys:
+        if key in counts:
+            keys.append(key)
+            seen.add(key)
+    keys.extend(sorted(key for key in counts if key not in seen))
+    return "; ".join(
+        f"{int(counts[key])} {_count_label(key, int(counts[key]))}" for key in keys
+    )
+
+
+def _count_label(key: str, count: int) -> str:
+    if key == "complies":
+        return "standard complies" if count == 1 else "standards comply"
+    if key == "does_not_comply":
+        return "standard does not comply" if count == 1 else "standards do not comply"
+    return _display_value(key).lower()
+
+
+def _yes_no_sentence(value: object, label: str) -> str:
+    return f"{label}: {'yes' if bool(value) else 'no'}"
 
 
 def _missing_summary(values: list[object], label: str) -> str:
@@ -935,18 +1191,37 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
         f"Review ID: {matrix['review_id']}",
         f"Source set: {matrix.get('source_set_id')}",
         f"Rule pack: {rule_pack['rule_pack_id']} {rule_pack['version']}",
-        f"Rows: {summary['row_count']}",
-        f"Status counts: {summary['status_counts']}",
-        f"Applicability counts: {summary.get('applicability_counts', {})}",
-        f"Reviewer ready: {summary['reviewer_ready']}",
+        f"Authority findings: {summary['row_count']} rows; {_count_phrase(summary['status_counts'])}",
+        f"Applicability: {_count_phrase(summary.get('applicability_counts', {}))}",
+        f"Review gates: {_review_gate_phrase(summary)}",
     ]
     forest_plan_review = summary.get("forest_plan_review") or {}
     if forest_plan_review:
         lines.append(
             "Forest-plan review: "
             f"{forest_plan_review.get('scope_status')} "
-            f"(reviewer ready: {forest_plan_review.get('reviewer_ready')})"
+            f"({_yes_no_sentence(forest_plan_review.get('reviewer_ready'), 'reviewer ready')})"
         )
+    lines.extend(
+        [
+            "",
+            "Forest Supervisor Readout",
+            "",
+        ]
+    )
+    lines.extend(
+        _pdf_wrapped_table_lines(
+            ["Signing question", "Current decision-support signal"],
+            [
+                [
+                    row["check"],
+                    row["signal"],
+                ]
+                for row in _supervisor_readout_rows(matrix)
+            ],
+            [48, 132],
+        )
+    )
     lines.extend(
         [
             "",
@@ -955,7 +1230,7 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
         ]
     )
     lines.extend(
-        _pdf_table_lines(
+        _pdf_wrapped_table_lines(
             ["Check", "Result", "Evidence"],
             [
                 [row["check"], row["result"], row["evidence"]]
@@ -977,10 +1252,10 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
         ]
     )
     lines.extend(
-        _pdf_table_lines(
-            ["Rule", "Authority", "Mode", "Finding", "EA citation", "Source citation", "Trace"],
+        _pdf_wrapped_table_lines(
+            ["Topic", "Question", "Finding", "EA support", "Authority", "Trace"],
             [_matrix_pdf_table_row(row) for row in matrix["rows"]],
-            [28, 34, 14, 12, 28, 28, 12],
+            [27, 36, 30, 42, 42, 20],
         )
     )
     forest_plan_compliance = matrix.get("forest_plan_compliance")
@@ -991,7 +1266,7 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
                 "",
                 "Forest Plan Compliance",
                 f"Rows: {summary.get('row_count', 0)}",
-                f"Status counts: {summary.get('compliance_status_counts', {})}",
+                f"Decision-support status: {_forest_plan_readiness_signal(summary)}",
                 (
                     "Applicable standard rows: "
                     f"{summary.get('applicable_standard_row_count', 0)}"
@@ -1000,53 +1275,48 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
             ]
         )
         lines.extend(
-            _pdf_table_lines(
+            _pdf_wrapped_table_lines(
                 [
                     "Component",
-                    "Type",
-                    "Applies",
-                    "Compliance",
-                    "EA citation",
-                    "Plan citation",
-                    "Determination",
+                    "Direction",
+                    "Finding",
+                    "EA support",
+                    "Plan basis",
+                    "Trace",
                 ],
                 [
                     _forest_plan_pdf_table_row(row)
                     for row in forest_plan_compliance.get("rows", [])
                 ],
-                [31, 13, 11, 22, 28, 28, 36],
+                [26, 42, 34, 42, 42, 18],
             )
         )
-    return _paginate_pdf_lines(lines, max_lines=45)
+    return _paginate_pdf_lines(lines, max_lines=42)
 
 
 def _matrix_pdf_table_row(row: dict) -> list[str]:
     ea_evidence = row.get("ea_package_evidence") or {}
     source_evidence = row.get("source_library_evidence") or {}
     return [
-        f"{row.get('rule_id')} - {row.get('rule_title')}",
-        f"{row.get('authority_category')}: {row.get('authority_source_record_id')}",
-        str(row.get("applicability_mode") or ""),
-        _display_value(row.get("status")),
-        _pdf_citation_summary(row.get("ea_package_citation"), ea_evidence),
-        _pdf_citation_summary(row.get("source_library_citation"), source_evidence),
-        f"{row.get('source_claim_count') or len(row.get('source_claim_ids', []))} claims",
+        _nepa_topic_cell(row),
+        _nepa_signer_question_cell(row),
+        _nepa_decision_support_cell(row),
+        _evidence_support_cell(row.get("ea_package_citation"), ea_evidence),
+        _authority_basis_cell(row, source_evidence),
+        _trace_caveats_cell(row),
     ]
 
 
 def _forest_plan_pdf_table_row(row: dict) -> list[str]:
     ea_evidence = row.get("ea_package_evidence") or {}
     plan_evidence = row.get("forest_plan_evidence") or {}
-    determination = row.get("determination") or {}
-    notes = determination.get("explanation") or row.get("rationale") or "None"
     return [
-        f"{row.get('component_key') or row.get('component_id')} {row.get('component_id')}",
-        _display_value(row.get("component_type")),
-        _display_value(row.get("applicability_status")),
-        _display_value(row.get("compliance_status")),
-        _pdf_citation_summary(row.get("ea_package_citation"), ea_evidence),
-        _pdf_citation_summary(row.get("forest_plan_citation"), plan_evidence),
-        notes,
+        _forest_component_cell(row),
+        _forest_direction_cell(row, plan_evidence),
+        _forest_decision_support_cell(row),
+        _forest_ea_support_cell(row, ea_evidence),
+        _forest_plan_basis_cell(row, plan_evidence),
+        _forest_trace_caveats_cell(row),
     ]
 
 
@@ -1061,6 +1331,46 @@ def _pdf_table_lines(
     return rendered
 
 
+def _pdf_wrapped_table_lines(
+    headers: list[str],
+    rows: list[list[str]],
+    widths: list[int],
+) -> list[str]:
+    rendered = [_pdf_table_row(headers, widths), _pdf_table_separator(widths)]
+    for row in rows:
+        rendered.extend(_pdf_wrapped_table_row_lines(row, widths))
+        rendered.append(_pdf_table_separator(widths))
+    return rendered
+
+
+def _pdf_wrapped_table_row_lines(values: list[str], widths: list[int]) -> list[str]:
+    wrapped_cells = [
+        _wrap_pdf_cell(_pdf_text(value).replace("<br>", " / "), width)
+        for value, width in zip(values, widths, strict=True)
+    ]
+    row_height = max(len(cell) for cell in wrapped_cells)
+    lines = []
+    for index in range(row_height):
+        cells = [
+            (cell[index] if index < len(cell) else "").ljust(width)
+            for cell, width in zip(wrapped_cells, widths, strict=True)
+        ]
+        lines.append(" | ".join(cells))
+    return lines
+
+
+def _wrap_pdf_cell(value: str, width: int) -> list[str]:
+    text = " ".join(str(value).split())
+    if not text:
+        return [""]
+    return textwrap.wrap(
+        text,
+        width=width,
+        break_long_words=False,
+        break_on_hyphens=False,
+    ) or [""]
+
+
 def _pdf_table_row(values: list[str], widths: list[int]) -> str:
     cells = [
         _truncate(_pdf_text(value), width).ljust(width)
@@ -1071,15 +1381,6 @@ def _pdf_table_row(values: list[str], widths: list[int]) -> str:
 
 def _pdf_table_separator(widths: list[int]) -> str:
     return "-+-".join("-" * width for width in widths)
-
-
-def _pdf_citation_summary(citation: str | None, evidence: dict) -> str:
-    if not citation:
-        return "N/A"
-    title = str(evidence.get("title") or "")
-    if title:
-        return f"{citation} {title}"
-    return citation
 
 
 def _paginate_pdf_lines(lines: list[str], *, max_lines: int) -> list[list[str]]:
@@ -1187,6 +1488,7 @@ def _pdf_text(value: str) -> str:
         "\u201c": '"',
         "\u201d": '"',
         "\u00a7": "Sec.",
+        "<br>": " / ",
     }
     text = str(value)
     for old, new in replacements.items():
@@ -1222,6 +1524,29 @@ def _truncate(value: str, max_chars: int) -> str:
     if len(normalized) <= max_chars:
         return normalized
     return normalized[: max_chars - 3].rstrip() + "..."
+
+
+def _evidence_excerpt(evidence: dict, max_chars: int) -> str:
+    text = _clean_evidence_text(str(evidence.get("text") or ""))
+    if not text:
+        return ""
+    return _truncate(text, max_chars)
+
+
+def _clean_evidence_text(value: str) -> str:
+    text = value.replace("|", " ")
+    text = text.replace("#", " ")
+    text = text.replace("*", " ")
+    text = text.replace("\u2022", " ")
+    text = " ".join(text.split())
+    while "---" in text:
+        text = text.replace("---", "--")
+    text = text.strip(" -")
+    if text and text[0].islower():
+        match = re.search(r"\b[A-Z][A-Za-z0-9]", text)
+        if match and match.start() < 120:
+            text = text[match.start() :]
+    return text
 
 
 def _display_value(value: object) -> str:

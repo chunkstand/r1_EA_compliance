@@ -1504,7 +1504,10 @@ applicability mode and status, rule status, requirement, applicability basis, pa
 citation, source evidence citation, source-claim IDs, applied source record IDs, applied source
 document roles, citation-gate status, limitations, and failure category when an applicable finding is
 not a supported pass. For Custer Gallatin Forest Plan reviews, the matrix also includes a separate
-`Forest Plan Compliance` table from component findings and applicable-standard coverage.
+`Forest Plan Compliance` table from component findings and applicable-standard coverage. The
+Markdown/PDF rendering now opens with a Forest Supervisor Readout and Accuracy Audit in plain
+decision language so the signing review can distinguish pass/fail authority rows, inapplicable
+authority traceability, applicable Forest Plan standards, and non-standard plan-consistency support.
 
 `compliance_validation.json` checks rule-pack validity, base EA review validation, all-rules
 coverage, valid finding statuses, dual evidence for `pass`, source evidence for `gap`, source
