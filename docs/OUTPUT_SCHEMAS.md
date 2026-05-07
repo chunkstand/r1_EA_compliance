@@ -2343,7 +2343,9 @@ machine-readable package. The Markdown rendering must derive from that JSON. The
   scopes and, when supplied by the intake, observed specialist or supporting reports from a
   completed example package;
 - `observed_specialist_reports[]`, preserving the example report title, source record ID, document
-  role, and covered resource-area IDs supplied by the intake;
+  role, covered resource-area IDs, and any observed-report evidence refs supplied by the intake;
+- `intake_evidence_graph`, a package-local graph with `nodes[]`, `edges[]`, `node_count`,
+  `edge_count`, and schema version `project-sow-intake-evidence-graph-v0`;
 - `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
   scope coverage;
 - `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;
@@ -2368,11 +2370,48 @@ The initial checked-in intake fixture at
 `config/fixtures/project_sow/east_crazies_land_exchange_intake.json` has schema version
 `project-sow-intake-v0`. A reviewer-ready intake must include at least project ID, project name,
 forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
-The East Crazies calibration fixture also records structured `proposed_action_elements`,
-`resource_analysis_expectations`, and the actual specialist/supporting reports observed in the
-completed East Crazies package, including minerals, aquatics, at-risk plants/botany, carbon,
-cultural resources, recreation special areas, recreation special uses, roads/trails/access, tribal
-relations, wetlands, wildlife, water rights, and the plan-consistency table.
+The East Crazies calibration fixture also records structured `proposed_action_elements` with
+`evidence_refs`, `resource_analysis_expectations`, and the actual specialist/supporting reports
+observed in the completed East Crazies package, including minerals, aquatics, at-risk
+plants/botany, carbon, cultural resources, recreation special areas, recreation special uses,
+roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the plan-consistency
+table.
+
+The intake evidence graph uses deterministic node and edge IDs. Required node types are:
+
+- `project`
+- `proposed_action`
+- `action_element`
+- `evidence_ref`
+- `resource_area`
+- `sow_scope`
+- `expected_deliverable`
+- `observed_specialist_report`
+
+Required edge types are:
+
+- `HAS_PROPOSED_ACTION`
+- `HAS_ACTION_ELEMENT`
+- `SUPPORTED_BY`
+- `TRIGGERS_RESOURCE_AREA`
+- `COVERED_BY_SOW_SCOPE`
+- `REQUIRES_DELIVERABLE`
+- `OBSERVED_REPORT_COVERS_RESOURCE_AREA`
+
+Every proposed-action-derived resource area must have the canonical planning path:
+
+```text
+proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
+```
+
+Observed specialist/supporting report edges are calibration evidence only:
+
+```text
+observed_specialist_report -> resource_area
+```
+
+They do not create review evidence, applicability decisions, compliance findings, or legal
+conclusions.
 
 Project SOW package validation must fail closed on:
 
@@ -2387,6 +2426,12 @@ Project SOW package validation must fail closed on:
   action;
 - observed specialist/supporting reports whose resource areas do not have selected SOW scope
   coverage;
+- duplicate intake evidence graph node or edge IDs;
+- dangling intake evidence graph edges;
+- proposed-action elements with resource areas but no evidence refs;
+- proposed-action resource areas without the canonical graph path;
+- observed specialist/supporting report resource areas without a matching proposed-action graph
+  path;
 - no selected resource scope;
 - selected resource scopes that lack SOW tasks or deliverables.
 

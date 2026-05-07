@@ -138,7 +138,7 @@ Acceptance result:
 
 ## Sequence 3: Intake Evidence Graph
 
-Status: next.
+Status: complete.
 
 Purpose: replace flat evidence references with a deterministic, package-local intake evidence graph
 that explains why each resource area was triggered and how it is covered by the SOW package.
@@ -199,13 +199,16 @@ Acceptance gate:
   path.
 - Tests prove an observed East Crazies report fails validation when it has no proposed-action
   support path.
-- CLI smoke for the East Crazies intake still reports `10` SOW scopes and `0` validation failures.
+- Tests prove a proposed-action element with triggered resource areas but no evidence refs fails
+  validation.
+- CLI smoke for the East Crazies intake reports `10` SOW scopes, `23` proposed-action resource
+  areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 - No applicability decisions, compliance findings, or legal conclusions are introduced.
 - Sequence closes as one verified atomic commit.
 
 ## Sequence 4: Intake Graph Quality Fixtures
 
-Status: planned.
+Status: next.
 
 Purpose: harden the graph contract beyond the happy-path East Crazies fixture.
 

@@ -65,6 +65,52 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert resource_matrix["tribal_relations"]["actual_specialist_reports"][0]["title"] == (
         "2024 Tribal Relations.pdf"
     )
+    graph = package["intake_evidence_graph"]
+    assert graph["schema_version"] == "project-sow-intake-evidence-graph-v0"
+    assert graph["node_count"] > 0
+    assert graph["edge_count"] > 0
+    assert {node["node_type"] for node in graph["nodes"]}.issuperset(
+        {
+            "project",
+            "proposed_action",
+            "action_element",
+            "evidence_ref",
+            "resource_area",
+            "sow_scope",
+            "expected_deliverable",
+            "observed_specialist_report",
+        }
+    )
+    assert {edge["edge_type"] for edge in graph["edges"]}.issuperset(
+        {
+            "HAS_PROPOSED_ACTION",
+            "HAS_ACTION_ELEMENT",
+            "SUPPORTED_BY",
+            "TRIGGERS_RESOURCE_AREA",
+            "COVERED_BY_SOW_SCOPE",
+            "REQUIRES_DELIVERABLE",
+            "OBSERVED_REPORT_COVERS_RESOURCE_AREA",
+        }
+    )
+    expected_area_ids = {
+        row["resource_area_id"]
+        for row in package["resource_analysis_matrix"]
+        if row["expected_from_proposed_action"]
+    }
+    assert expected_area_ids
+    assert all(_has_canonical_graph_path(graph, area_id) for area_id in expected_area_ids)
+    assert _edge_exists(
+        graph,
+        edge_type="OBSERVED_REPORT_COVERS_RESOURCE_AREA",
+        from_node_id="observed_specialist_report:ecid_carbon_summary_2024",
+        to_node_id="resource_area:climate_carbon",
+    )
+    assert _edge_exists(
+        graph,
+        edge_type="COVERED_BY_SOW_SCOPE",
+        from_node_id="resource_area:climate_carbon",
+        to_node_id="sow_scope:vegetation_soils_air_quality",
+    )
     observed_report_area_statuses = [
         row["coverage_status"]
         for row in package["resource_analysis_matrix"]
@@ -78,6 +124,7 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert "Requirements Package" in markdown
     assert "Lands, realty, and land exchange case requirements" in markdown
     assert "Resource Analysis Coverage" in markdown
+    assert "Intake Evidence Graph" in markdown
     assert "2024 Carbon Summary.pdf" in markdown
     assert "This generated package scopes specialist work" in markdown
 
@@ -130,10 +177,107 @@ def test_project_sow_package_fails_when_observed_report_not_derived_from_action(
         if not check["passed"]
     }
     assert result.summary["output_written"] is False
-    assert result.summary["validation_failure_count"] == 1
+    assert result.summary["validation_failure_count"] == 2
     assert set(failed_checks) == {
-        "observed_specialist_reports_match_proposed_action_resource_areas"
+        "intake_evidence_graph_observed_reports_have_supported_resource_paths",
+        "observed_specialist_reports_match_proposed_action_resource_areas",
     }
     assert failed_checks[
         "observed_specialist_reports_match_proposed_action_resource_areas"
     ]["details"] == {"resource_area_ids": ["climate_carbon"]}
+    assert failed_checks[
+        "intake_evidence_graph_observed_reports_have_supported_resource_paths"
+    ]["details"] == {"report_resource_area_ids": ["ecid-carbon-summary-2024:climate_carbon"]}
+
+
+def test_project_sow_package_fails_when_action_element_lacks_evidence_ref(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    for element in intake["proposed_action_elements"]:
+        if element["action_element_id"] == "climate_carbon_analysis":
+            element["evidence_refs"] = []
+    intake_path = tmp_path / "missing_climate_evidence_intake.json"
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=intake_path,
+        output_dir=tmp_path / "source_library",
+    )
+
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    failed_checks = {
+        check["name"]: check
+        for check in result.summary["failed_validation_checks"]
+        if not check["passed"]
+    }
+    assert result.summary["validation_failure_count"] == 3
+    assert set(failed_checks) == {
+        "intake_evidence_graph_action_elements_have_evidence_refs",
+        "intake_evidence_graph_observed_reports_have_supported_resource_paths",
+        "intake_evidence_graph_resource_area_paths_complete",
+    }
+    assert failed_checks[
+        "intake_evidence_graph_action_elements_have_evidence_refs"
+    ]["details"] == {"action_element_ids": ["climate_carbon_analysis"]}
+    assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
+        "details"
+    ] == {"resource_area_ids": ["climate_carbon"]}
+    assert failed_checks[
+        "intake_evidence_graph_observed_reports_have_supported_resource_paths"
+    ]["details"] == {"report_resource_area_ids": ["ecid-carbon-summary-2024:climate_carbon"]}
+
+
+def _has_canonical_graph_path(graph: dict, area_id: str) -> bool:
+    resource_node_id = f"resource_area:{area_id}"
+    node_types = {node["node_id"]: node["node_type"] for node in graph["nodes"]}
+    for trigger_edge in graph["edges"]:
+        if trigger_edge["edge_type"] != "TRIGGERS_RESOURCE_AREA":
+            continue
+        if trigger_edge["to_node_id"] != resource_node_id:
+            continue
+        evidence_node_id = trigger_edge["from_node_id"]
+        supported_edges = [
+            edge
+            for edge in graph["edges"]
+            if edge["edge_type"] == "SUPPORTED_BY"
+            and edge["to_node_id"] == evidence_node_id
+            and node_types.get(edge["from_node_id"]) == "action_element"
+        ]
+        if not supported_edges:
+            continue
+        action_node_ids = {edge["from_node_id"] for edge in supported_edges}
+        if not any(
+            edge["edge_type"] == "HAS_ACTION_ELEMENT"
+            and edge["to_node_id"] in action_node_ids
+            and node_types.get(edge["from_node_id"]) == "proposed_action"
+            for edge in graph["edges"]
+        ):
+            continue
+        if _edge_exists(
+            graph,
+            edge_type="COVERED_BY_SOW_SCOPE",
+            from_node_id=resource_node_id,
+            to_node_type="sow_scope",
+        ):
+            return True
+    return False
+
+
+def _edge_exists(
+    graph: dict,
+    *,
+    edge_type: str,
+    from_node_id: str,
+    to_node_id: str | None = None,
+    to_node_type: str | None = None,
+) -> bool:
+    node_types = {node["node_id"]: node["node_type"] for node in graph["nodes"]}
+    return any(
+        edge["edge_type"] == edge_type
+        and edge["from_node_id"] == from_node_id
+        and (to_node_id is None or edge["to_node_id"] == to_node_id)
+        and (to_node_type is None or node_types.get(edge["to_node_id"]) == to_node_type)
+        for edge in graph["edges"]
+    )

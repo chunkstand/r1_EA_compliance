@@ -445,7 +445,7 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package Sequence 2 is implemented as an upstream planning lane for proposed-action
+Project SOW package Sequence 3 is implemented as an upstream planning lane for proposed-action
 intake before a complete EA review package exists. The public command is:
 
 ```bash
@@ -467,7 +467,10 @@ The package scopes resource-specialist work needed to prepare a defensible EA pa
 resource scopes from explicit intake fields, project type, trigger terms, resource indicator keys,
 and proposed-action resource-area IDs, then records SOW tasks, data needs, deliverables,
 defensibility checks, selected authority families, an authority-to-resource matrix, and a
-resource-analysis coverage matrix. The first checked-in intake fixture is the East Crazies
+resource-analysis coverage matrix. It also emits a package-local intake evidence graph connecting
+project, proposed action, action elements, evidence refs, triggered resource areas, selected SOW
+scopes, required deliverables, and observed specialist/supporting reports. The first checked-in
+intake fixture is the East Crazies
 land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
 lands/realty land exchange, Forest Plan consistency, wildlife/species/botany, cultural/tribal
 resources, hydrology/wetlands/water quality, roads/access/recreation/designated areas,
@@ -481,11 +484,19 @@ uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, a
 plan-consistency table. Validation requires every observed report resource area to have selected
 SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
+A local Sequence 3 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
+proposed-action resource areas, emitted a `115`-node and `134`-edge intake evidence graph, and
+reported `0` validation failures. Each proposed-action-derived resource area has the canonical
+planning path:
+
+```text
+proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
+```
+
 The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Sequence 3 is scoped to a package-local intake evidence graph that connects proposed-action
-elements, evidence refs, triggered resource areas, SOW scopes, expected deliverables, and the East
-Crazies observed specialist/supporting reports without creating applicability or compliance
-findings.
+Next sequence: Sequence 4, intake graph quality fixtures. Add negative fixtures for missing
+evidence refs, dangling graph edges, observed reports without proposed-action support, resource
+areas with no configured SOW scope, and land-exchange intakes with no federal land action.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -493,7 +504,9 @@ Validation fails closed on missing required intake fields, unsupported intake sc
 duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
 cannot resolve to selected SOW scope coverage, observed specialist-report resource areas that are
 not derived from the proposed action or lack selected SOW scope coverage, no selected resource
-scopes, or selected scopes without SOW content.
+scopes, selected scopes without SOW content, duplicate graph IDs, dangling graph edges, missing
+action-element evidence refs, incomplete canonical resource-area graph paths, or observed
+specialist report areas without a proposed-action support path.
 
 ## Verified State Snapshot
 

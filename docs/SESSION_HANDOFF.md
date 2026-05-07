@@ -9,7 +9,7 @@ Branch/worktree:
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
 
-Sequence 2 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
+Sequence 3 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
 
@@ -30,6 +30,7 @@ Implemented surfaces:
 - `docs/OUTPUT_SCHEMAS.md`
 - `docs/ARCHITECTURE.md`
 - `docs/architecture_contract.toml`
+- `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`
 
 The command writes `project_sow_package.json`, `project_sow_package.md`, and
 `project_sow_package_manifest.json` under
@@ -49,11 +50,28 @@ relations, wetlands, wildlife, water rights, and the plan-consistency table. Val
 observed report resource area is not derived from the proposed action or lacks selected SOW scope
 coverage.
 
+Sequence 3 added a package-local `intake_evidence_graph` to `project_sow_package.json` and a
+concise graph projection to `project_sow_package.md`. The East Crazies fixture now carries
+`evidence_refs` for proposed-action elements and observed specialist/supporting reports. Validation
+now fails closed on duplicate graph IDs, dangling graph edges, action elements with resource areas
+but no evidence refs, proposed-action resource areas without the canonical graph path, and observed
+report resource areas without proposed-action support.
+
+The required planning path is:
+
+```text
+proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
+```
+
+A local Sequence 3 CLI smoke run to `/tmp` selected `10` SOW scopes, found `23` proposed-action
+resource areas, emitted `115` graph nodes and `134` graph edges, and reported `0` validation
+failures.
+
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Next sequence: Sequence 3, intake evidence graph. Implement a package-local graph with project,
-proposed-action, action-element, evidence-ref, resource-area, SOW-scope, deliverable, and observed
-specialist-report nodes. Do not convert SOW scopes into applicability or compliance findings in this
-lane.
+Next sequence: Sequence 4, intake graph quality fixtures. Add focused negative fixtures for missing
+evidence refs, observed reports with no proposed-action support, proposed-action resource areas with
+no configured SOW scope, dangling graph edges, and land-exchange intakes with no federal land
+action. Do not convert SOW scopes into applicability or compliance findings in this lane.
 
 ## Current Applicability/Expansion Handoff
 

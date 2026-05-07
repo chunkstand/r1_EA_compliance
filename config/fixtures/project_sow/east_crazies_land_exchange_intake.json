@@ -106,6 +106,16 @@
     {
       "action_element_id": "land_exchange_acres",
       "description": "Exchange federal and non-federal parcels in the East Crazy Mountains and Inspiration Divide areas on an equal-value basis.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.2",
+          "evidence_ref_id": "ecid-final-ea-section-2-2-land-exchange",
+          "locator": "Section 2.2 Proposed Action Alternative",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for federal and non-federal parcel exchange and equal-value land exchange processing.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "land_exchange_case",
         "federal_land_regulations",
@@ -119,6 +129,16 @@
     {
       "action_element_id": "water_rights_transfer",
       "description": "Transfer, split, reserve, or update water rights associated with federal and non-federal parcels.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.2.2 and Table 3",
+          "evidence_ref_id": "ecid-final-ea-section-2-2-2-water-rights",
+          "locator": "Section 2.2.2 and Table 3",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for water-right transfer, split ownership, reservation, amendment, or no-change findings.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "water_rights",
         "water_quality"
@@ -130,6 +150,16 @@
     {
       "action_element_id": "designated_area_ownership_changes",
       "description": "Move parcels into or out of the Crazy Mountain Inventoried Roadless Area, Crazy Mountains Backcountry Area, Madison Roadless Area, and South Crazy Mountain Recommended Wilderness context.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.1",
+          "evidence_ref_id": "ecid-final-ea-section-3-1-designated-areas",
+          "locator": "Section 3.1 Recreation Special Designations",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for analyzing roadless, backcountry, and recommended-wilderness ownership context.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "recreation_special_designations"
       ],
@@ -141,6 +171,16 @@
     {
       "action_element_id": "trail_road_access_commitments",
       "description": "Reserve road and trail easements, construct Sweet Trunk Trail No. 274, relocate Inspiration Divide Trail No. 8, and improve Big Timber Canyon Trailhead.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.5 trails and access",
+          "evidence_ref_id": "ecid-final-ea-section-2-5-trails-access",
+          "locator": "Section 2.5 New Trail and Trailhead Improvement; Patent Reservations",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for trail construction, trail relocation, trailhead improvement, easements, and patent reservations.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "roads_trails_access",
         "developed_dispersed_recreation"
@@ -155,6 +195,16 @@
     {
       "action_element_id": "special_use_authorizations",
       "description": "Review affected lands special use authorizations, recreation special use authorizations, and outfitter-guide permits.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.5 special uses",
+          "evidence_ref_id": "ecid-final-ea-section-2-5-special-uses",
+          "locator": "Section 2.5 Land Special Use Authorizations and Recreation Special Use Authorizations",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for lands special uses, recreation special uses, and outfitter-guide permit effects.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "land_special_use_authorizations",
         "recreation_special_uses"
@@ -167,6 +217,16 @@
     {
       "action_element_id": "wetland_deed_restrictions",
       "description": "Retain or restrict high-value wetlands, riparian areas, and monitoring access through boundary changes and deed restrictions.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.3 wetlands",
+          "evidence_ref_id": "ecid-final-ea-section-2-3-wetlands",
+          "locator": "Section 2.3 Alternative 1 Wetlands Protection and Balance",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for retaining wetlands, applying deed restrictions, and preserving monitoring access.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "floodplains_wetlands",
         "water_quality"
@@ -179,6 +239,16 @@
     {
       "action_element_id": "aquatic_habitat_ownership_changes",
       "description": "Analyze ownership changes to perennial streams, trout-bearing stream miles, lake acres, and recreational fishing opportunities.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.5",
+          "evidence_ref_id": "ecid-final-ea-section-3-5-aquatics",
+          "locator": "Section 3.5 Aquatic Resources",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for stream, lake, trout-bearing aquatic-resource, and recreational fishing analysis.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "aquatic_resources"
       ],
@@ -191,6 +261,16 @@
     {
       "action_element_id": "wildlife_species_habitat",
       "description": "Analyze habitat and consultation implications for grizzly bear, Canada lynx, wolverine, whitebark pine, big game, and other wildlife.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.4",
+          "evidence_ref_id": "ecid-final-ea-section-3-4-wildlife",
+          "locator": "Section 3.4 Wildlife Resources",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for wildlife, big game, grizzly bear, Canada lynx, wolverine, whitebark pine, and habitat analysis.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "species_consultation",
         "wildlife_resources"
@@ -204,6 +284,16 @@
     {
       "action_element_id": "botanical_resources",
       "description": "Analyze at-risk plants and whitebark pine effects associated with trail work, land ownership change, and management commitments.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.10",
+          "evidence_ref_id": "ecid-final-ea-section-3-10-botany",
+          "locator": "Section 3.10 Botanical Resources",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for at-risk plant, whitebark pine, botanical survey, and mitigation analysis.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "botanical_resources",
         "species_consultation"
@@ -216,6 +306,16 @@
     {
       "action_element_id": "cultural_resource_protection",
       "description": "Protect identified cultural resources on federal lands leaving federal ownership through patent reservations and monitoring access.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.7",
+          "evidence_ref_id": "ecid-final-ea-section-3-7-cultural",
+          "locator": "Section 3.7 Cultural Resources",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for cultural-resource protection, patent reservations, and monitoring access.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "cultural_resources"
       ],
@@ -227,6 +327,16 @@
     {
       "action_element_id": "tribal_relations",
       "description": "Consult with Tribal Nations regarding the Crazy Mountains tribal cultural landscape, sacred sites, treaty rights, and traditional cultural practices.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.8",
+          "evidence_ref_id": "ecid-final-ea-section-3-8-tribal",
+          "locator": "Section 3.8 Tribal Relations",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for Tribal consultation, Crazy Mountains tribal cultural landscape, sacred sites, and traditional cultural practices.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "tribal_relations"
       ],
@@ -237,6 +347,16 @@
     {
       "action_element_id": "mineral_estate",
       "description": "Resolve federal and non-federal mineral estate ownership, outstanding mineral rights, mineral potential, and BLM concurrence.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.9",
+          "evidence_ref_id": "ecid-final-ea-section-3-9-minerals",
+          "locator": "Section 3.9 Geology and Minerals",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for mineral estate ownership, outstanding rights, mineral potential, and BLM concurrence.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "geology_minerals"
       ],
@@ -247,6 +367,16 @@
     {
       "action_element_id": "grazing_and_improvements",
       "description": "Identify affected grazing allotments, term permits, fences, roads, irrigation ditches, and related improvements.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.5 grazing",
+          "evidence_ref_id": "ecid-final-ea-section-2-5-grazing",
+          "locator": "Section 2.5 Livestock Grazing Permits and Leases",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for affected grazing allotments, permits, leases, and improvements.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "grazing_permits_and_leases"
       ],
@@ -258,6 +388,16 @@
     {
       "action_element_id": "hazardous_materials_due_diligence",
       "description": "Complete hazardous-materials and site-condition due diligence before conveyance.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 2.5 hazardous materials",
+          "evidence_ref_id": "ecid-final-ea-section-2-5-hazardous-materials",
+          "locator": "Section 2.5 Hazardous Materials",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA proposed action basis for hazardous-materials and site-condition due diligence before conveyance.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "hazardous_materials"
       ],
@@ -268,6 +408,16 @@
     {
       "action_element_id": "climate_carbon_analysis",
       "description": "Address climate-change context and carbon storage or sequestration implications for the land exchange.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Section 3.11",
+          "evidence_ref_id": "ecid-final-ea-section-3-11-climate-carbon",
+          "locator": "Section 3.11 Climate and Carbon",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for climate-change context and carbon storage or sequestration analysis.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "climate_carbon"
       ],
@@ -279,6 +429,16 @@
     {
       "action_element_id": "public_involvement_and_coordination",
       "description": "Track scoping, public comments, agency coordination, interested parties, permits, and administrative review requirements.",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID Final EA Sections 4.1-4.3",
+          "evidence_ref_id": "ecid-final-ea-sections-4-1-4-3-consultation",
+          "locator": "Sections 4.1-4.3 Agencies and Persons Consulted",
+          "source_record_id": "EA-PACKAGE-003",
+          "summary": "Final EA basis for agency consultation, public involvement, administrative review, and interdisciplinary team documentation.",
+          "title": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf"
+        }
+      ],
       "resource_area_ids": [
         "agencies_persons_consulted",
         "public_involvement"
@@ -454,6 +614,16 @@
   "observed_specialist_reports": [
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID mineral specialist report",
+          "evidence_ref_id": "ecid-mineral-potential-report-2023-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-005",
+          "summary": "Observed mineral potential specialist report used for East Crazies SOW calibration.",
+          "title": "2023 Mineral Potential Report.pdf"
+        }
+      ],
       "report_id": "ecid-mineral-potential-report-2023",
       "resource_area_ids": [
         "geology_minerals"
@@ -463,6 +633,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID aquatics specialist report",
+          "evidence_ref_id": "ecid-aquatics-report-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-006",
+          "summary": "Observed aquatic resources specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Aquatics Report.pdf"
+        }
+      ],
       "report_id": "ecid-aquatics-report-2024",
       "resource_area_ids": [
         "aquatic_resources"
@@ -472,6 +652,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID at-risk plants botany report",
+          "evidence_ref_id": "ecid-at-risk-plants-botany-report-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-007",
+          "summary": "Observed at-risk plants and botany specialist report used for East Crazies SOW calibration.",
+          "title": "2024 At Risk Plants Botany Report.pdf"
+        }
+      ],
       "report_id": "ecid-at-risk-plants-botany-report-2024",
       "resource_area_ids": [
         "botanical_resources",
@@ -482,6 +672,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID carbon summary",
+          "evidence_ref_id": "ecid-carbon-summary-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-008",
+          "summary": "Observed carbon summary used for East Crazies SOW calibration.",
+          "title": "2024 Carbon Summary.pdf"
+        }
+      ],
       "report_id": "ecid-carbon-summary-2024",
       "resource_area_ids": [
         "climate_carbon"
@@ -491,6 +691,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID cultural resources report",
+          "evidence_ref_id": "ecid-cultural-resources-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-009",
+          "summary": "Observed cultural resources specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Cultural Resources.pdf"
+        }
+      ],
       "report_id": "ecid-cultural-resources-2024",
       "resource_area_ids": [
         "cultural_resources"
@@ -500,6 +710,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID recreation special areas report",
+          "evidence_ref_id": "ecid-recreation-special-areas-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-010",
+          "summary": "Observed recreation special areas specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Recreation Special Areas.pdf"
+        }
+      ],
       "report_id": "ecid-recreation-special-areas-2024",
       "resource_area_ids": [
         "recreation_special_designations"
@@ -509,6 +729,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID recreation special uses report",
+          "evidence_ref_id": "ecid-recreation-special-uses-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-011",
+          "summary": "Observed recreation special uses specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Recreation Special Uses.pdf"
+        }
+      ],
       "report_id": "ecid-recreation-special-uses-2024",
       "resource_area_ids": [
         "developed_dispersed_recreation",
@@ -519,6 +749,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID roads trails access report",
+          "evidence_ref_id": "ecid-roads-trails-access-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-012",
+          "summary": "Observed roads, trails, and access specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Roads Trails Access.pdf"
+        }
+      ],
       "report_id": "ecid-roads-trails-access-2024",
       "resource_area_ids": [
         "roads_trails_access"
@@ -528,6 +768,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID tribal relations report",
+          "evidence_ref_id": "ecid-tribal-relations-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-013",
+          "summary": "Observed tribal relations specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Tribal Relations.pdf"
+        }
+      ],
       "report_id": "ecid-tribal-relations-2024",
       "resource_area_ids": [
         "tribal_relations"
@@ -537,6 +787,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID wetlands report",
+          "evidence_ref_id": "ecid-wetlands-report-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-014",
+          "summary": "Observed wetlands specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Wetlands Report.pdf"
+        }
+      ],
       "report_id": "ecid-wetlands-report-2024",
       "resource_area_ids": [
         "floodplains_wetlands",
@@ -547,6 +807,16 @@
     },
     {
       "document_role": "specialist_report",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID wildlife report",
+          "evidence_ref_id": "ecid-wildlife-report-2024-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-015",
+          "summary": "Observed wildlife specialist report used for East Crazies SOW calibration.",
+          "title": "2024 Wildlife Report.pdf"
+        }
+      ],
       "report_id": "ecid-wildlife-report-2024",
       "resource_area_ids": [
         "species_consultation",
@@ -557,6 +827,16 @@
     },
     {
       "document_role": "supporting_analysis",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID water rights assessment",
+          "evidence_ref_id": "ecid-water-rights-assessment-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-039",
+          "summary": "Observed water rights assessment used for East Crazies SOW calibration.",
+          "title": "Water Rights Assessment.pdf"
+        }
+      ],
       "report_id": "ecid-water-rights-assessment",
       "resource_area_ids": [
         "water_rights"
@@ -566,6 +846,16 @@
     },
     {
       "document_role": "supporting_analysis",
+      "evidence_refs": [
+        {
+          "citation_label": "ECID plan consistency table",
+          "evidence_ref_id": "ecid-plan-consistency-table-evidence",
+          "locator": "Observed East Crazies package manifest",
+          "source_record_id": "EA-PACKAGE-042",
+          "summary": "Observed plan consistency table used for East Crazies SOW calibration.",
+          "title": "Plan Consistency Table.pdf"
+        }
+      ],
       "report_id": "ecid-plan-consistency-table",
       "resource_area_ids": [
         "land_management_plan_consistency"

@@ -145,7 +145,8 @@ JSON/Markdown/PDF decision-support report family both gate-checked and superviso
 keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
 proposed-action intake into resource SOW requirements and, for the East Crazies calibration fixture,
-compares proposed-action resource areas to the actual specialist/supporting reports produced. See
+compares proposed-action resource areas to the actual specialist/supporting reports produced through
+a package-local intake evidence graph. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See

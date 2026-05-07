@@ -224,6 +224,8 @@ def _validate_inputs(
             details={"resource_area_ids": missing_observed_resource_areas},
         )
     )
+    intake_graph = _intake_evidence_graph(intake, selected_scopes)
+    checks.extend(_intake_graph_validation_checks(intake_graph, intake))
     checks.append(
         _check(
             name="at_least_one_resource_scope_selected",
@@ -316,6 +318,7 @@ def _build_package(
     authority_matrix = _authority_matrix(scope_records)
     resource_analysis_matrix = _resource_analysis_matrix(intake, scope_records)
     observed_specialist_reports = _observed_specialist_reports(intake)
+    intake_evidence_graph = _intake_evidence_graph(intake, selected_scopes)
     manifest = {
         "artifact_paths": {
             "authority_inventory": str(authority_inventory_path),
@@ -339,6 +342,7 @@ def _build_package(
         "created_at": created_at,
         "generator_version": GENERATOR_VERSION,
         "intake_summary": _intake_summary(intake),
+        "intake_evidence_graph": intake_evidence_graph,
         "manifest": manifest,
         "missing_resource_area_requests": _missing_resource_area_requests(
             resource_analysis_matrix
@@ -478,6 +482,369 @@ def _missing_resource_area_requests(
     return requests
 
 
+def _intake_evidence_graph(
+    intake: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    project_id = _slug(str(intake.get("project_id") or "project"))
+    project_node_id = f"project:{project_id}"
+    proposed_action_node_id = f"proposed_action:{project_id}"
+    nodes: dict[str, dict[str, Any]] = {}
+    edges: list[dict[str, Any]] = []
+
+    _add_node(
+        nodes,
+        node_id=project_node_id,
+        node_type="project",
+        label=str(intake.get("project_name") or project_id),
+        metadata={
+            "forest": intake.get("forest"),
+            "project_type": intake.get("project_type"),
+        },
+    )
+    _add_node(
+        nodes,
+        node_id=proposed_action_node_id,
+        node_type="proposed_action",
+        label="Proposed action",
+        metadata={"summary": intake.get("proposed_action_summary")},
+    )
+    _add_edge(
+        edges,
+        edge_type="HAS_PROPOSED_ACTION",
+        from_node_id=project_node_id,
+        to_node_id=proposed_action_node_id,
+    )
+
+    for element in _proposed_action_elements(intake):
+        element_id = _normalize_token(str(element.get("action_element_id") or "element"))
+        element_node_id = f"action_element:{element_id}"
+        _add_node(
+            nodes,
+            node_id=element_node_id,
+            node_type="action_element",
+            label=str(element.get("action_element_id") or element_id),
+            metadata={"description": element.get("description")},
+        )
+        _add_edge(
+            edges,
+            edge_type="HAS_ACTION_ELEMENT",
+            from_node_id=proposed_action_node_id,
+            to_node_id=element_node_id,
+        )
+        for evidence_ref in _evidence_refs(element):
+            evidence_ref_id = _normalize_token(
+                str(evidence_ref.get("evidence_ref_id") or evidence_ref.get("title") or "")
+            )
+            if not evidence_ref_id:
+                continue
+            evidence_node_id = f"evidence_ref:{evidence_ref_id}"
+            _add_node(
+                nodes,
+                node_id=evidence_node_id,
+                node_type="evidence_ref",
+                label=str(evidence_ref.get("title") or evidence_ref_id),
+                metadata={
+                    "citation_label": evidence_ref.get("citation_label"),
+                    "locator": evidence_ref.get("locator"),
+                    "source_record_id": evidence_ref.get("source_record_id"),
+                    "summary": evidence_ref.get("summary"),
+                },
+            )
+            _add_edge(
+                edges,
+                edge_type="SUPPORTED_BY",
+                from_node_id=element_node_id,
+                to_node_id=evidence_node_id,
+            )
+            for area_id in sorted(_resource_area_ids(element.get("resource_area_ids"))):
+                resource_node_id = _resource_area_node_id(area_id)
+                _add_resource_area_node(nodes, intake, area_id)
+                _add_edge(
+                    edges,
+                    edge_type="TRIGGERS_RESOURCE_AREA",
+                    from_node_id=evidence_node_id,
+                    to_node_id=resource_node_id,
+                )
+
+    for area_id in sorted(_expected_resource_area_ids(intake)):
+        _add_resource_area_node(nodes, intake, area_id)
+
+    for scope in selected_scopes:
+        scope_id = str(scope.get("resource_scope_id") or "")
+        if not scope_id:
+            continue
+        scope_node_id = f"sow_scope:{scope_id}"
+        _add_node(
+            nodes,
+            node_id=scope_node_id,
+            node_type="sow_scope",
+            label=str(scope.get("resource_name") or scope_id),
+            metadata={"discipline": scope.get("discipline")},
+        )
+        for area_id in sorted(_resource_area_ids(scope.get("covered_resource_area_ids"))):
+            resource_node_id = _resource_area_node_id(area_id)
+            _add_resource_area_node(nodes, intake, area_id)
+            _add_edge(
+                edges,
+                edge_type="COVERED_BY_SOW_SCOPE",
+                from_node_id=resource_node_id,
+                to_node_id=scope_node_id,
+            )
+        for deliverable in _strings(scope.get("required_deliverables")):
+            deliverable_node_id = f"expected_deliverable:{scope_id}:{_slug(deliverable)}"
+            _add_node(
+                nodes,
+                node_id=deliverable_node_id,
+                node_type="expected_deliverable",
+                label=deliverable,
+                metadata={"resource_scope_id": scope_id},
+            )
+            _add_edge(
+                edges,
+                edge_type="REQUIRES_DELIVERABLE",
+                from_node_id=scope_node_id,
+                to_node_id=deliverable_node_id,
+            )
+
+    for report in _observed_specialist_reports(intake):
+        report_id = _normalize_token(str(report.get("report_id") or report.get("title") or ""))
+        if not report_id:
+            continue
+        report_node_id = f"observed_specialist_report:{report_id}"
+        _add_node(
+            nodes,
+            node_id=report_node_id,
+            node_type="observed_specialist_report",
+            label=str(report.get("title") or report_id),
+            metadata={
+                "document_role": report.get("document_role"),
+                "evidence_refs": report.get("evidence_refs") or [],
+                "source_record_id": report.get("source_record_id"),
+            },
+        )
+        for area_id in _resource_area_ids(report.get("resource_area_ids")):
+            resource_node_id = _resource_area_node_id(area_id)
+            _add_resource_area_node(nodes, intake, area_id)
+            _add_edge(
+                edges,
+                edge_type="OBSERVED_REPORT_COVERS_RESOURCE_AREA",
+                from_node_id=report_node_id,
+                to_node_id=resource_node_id,
+            )
+
+    return {
+        "edge_count": len(edges),
+        "edges": sorted(edges, key=lambda edge: edge["edge_id"]),
+        "node_count": len(nodes),
+        "nodes": sorted(nodes.values(), key=lambda node: node["node_id"]),
+        "schema_version": "project-sow-intake-evidence-graph-v0",
+    }
+
+
+def _intake_graph_validation_checks(
+    graph: dict[str, Any],
+    intake: dict[str, Any],
+) -> list[dict[str, Any]]:
+    nodes = {node["node_id"]: node for node in _list(graph.get("nodes")) if isinstance(node, dict)}
+    edges = [edge for edge in _list(graph.get("edges")) if isinstance(edge, dict)]
+    node_ids = [str(node_id) for node_id in nodes]
+    duplicate_node_ids = _duplicates(node_ids)
+    edge_ids = [str(edge.get("edge_id") or "") for edge in edges]
+    duplicate_edge_ids = _duplicates(edge_ids)
+    dangling_edges = sorted(
+        edge.get("edge_id")
+        for edge in edges
+        if edge.get("from_node_id") not in nodes or edge.get("to_node_id") not in nodes
+    )
+    missing_evidence_action_elements = sorted(
+        str(element.get("action_element_id") or "")
+        for element in _proposed_action_elements(intake)
+        if _resource_area_ids(element.get("resource_area_ids"))
+        and not _evidence_refs(element)
+    )
+    missing_resource_paths = sorted(
+        area_id
+        for area_id in _expected_resource_area_ids(intake)
+        if not _has_canonical_resource_path(graph, area_id)
+    )
+    missing_observed_report_paths = sorted(
+        f"{report.get('report_id') or report.get('title')}:{area_id}"
+        for report in _observed_specialist_reports(intake)
+        for area_id in _resource_area_ids(report.get("resource_area_ids"))
+        if not _has_canonical_resource_path(graph, area_id)
+    )
+    return [
+        _check(
+            name="intake_evidence_graph_node_ids_unique",
+            passed=not duplicate_node_ids,
+            details={"duplicate_node_ids": duplicate_node_ids},
+        ),
+        _check(
+            name="intake_evidence_graph_edge_ids_unique",
+            passed=not duplicate_edge_ids,
+            details={"duplicate_edge_ids": duplicate_edge_ids},
+        ),
+        _check(
+            name="intake_evidence_graph_edges_resolve",
+            passed=not dangling_edges,
+            details={"dangling_edge_ids": dangling_edges},
+        ),
+        _check(
+            name="intake_evidence_graph_action_elements_have_evidence_refs",
+            passed=not missing_evidence_action_elements,
+            details={"action_element_ids": missing_evidence_action_elements},
+        ),
+        _check(
+            name="intake_evidence_graph_resource_area_paths_complete",
+            passed=not missing_resource_paths,
+            details={"resource_area_ids": missing_resource_paths},
+        ),
+        _check(
+            name="intake_evidence_graph_observed_reports_have_supported_resource_paths",
+            passed=not missing_observed_report_paths,
+            details={"report_resource_area_ids": missing_observed_report_paths},
+        ),
+    ]
+
+
+def _add_resource_area_node(
+    nodes: dict[str, dict[str, Any]],
+    intake: dict[str, Any],
+    area_id: str,
+) -> None:
+    area = _resource_area_catalog(intake).get(area_id, {})
+    _add_node(
+        nodes,
+        node_id=_resource_area_node_id(area_id),
+        node_type="resource_area",
+        label=str(area.get("resource_area_name") or _title_from_id(area_id)),
+        metadata={"proposed_action_basis": _strings(area.get("proposed_action_basis"))},
+    )
+
+
+def _add_node(
+    nodes: dict[str, dict[str, Any]],
+    *,
+    node_id: str,
+    node_type: str,
+    label: str,
+    metadata: dict[str, Any],
+) -> None:
+    nodes.setdefault(
+        node_id,
+        {
+            "label": label,
+            "metadata": metadata,
+            "node_id": node_id,
+            "node_type": node_type,
+        },
+    )
+
+
+def _add_edge(
+    edges: list[dict[str, Any]],
+    *,
+    edge_type: str,
+    from_node_id: str,
+    to_node_id: str,
+) -> None:
+    edge_id = f"{edge_type}:{from_node_id}->{to_node_id}"
+    edge = {
+        "edge_id": edge_id,
+        "edge_type": edge_type,
+        "from_node_id": from_node_id,
+        "to_node_id": to_node_id,
+    }
+    if edge not in edges:
+        edges.append(edge)
+
+
+def _has_canonical_resource_path(graph: dict[str, Any], area_id: str) -> bool:
+    resource_node_id = _resource_area_node_id(area_id)
+    return any(
+        edge.get("edge_type") == "TRIGGERS_RESOURCE_AREA"
+        and edge.get("to_node_id") == resource_node_id
+        and _has_incoming_edge(
+            graph,
+            from_node_type="action_element",
+            edge_type="SUPPORTED_BY",
+            to_node_id=str(edge.get("from_node_id")),
+        )
+        and _has_incoming_edge(
+            graph,
+            from_node_type="proposed_action",
+            edge_type="HAS_ACTION_ELEMENT",
+            to_node_id=_incoming_edge_from(graph, str(edge.get("from_node_id"))),
+        )
+        and _has_outgoing_edge(
+            graph,
+            from_node_id=resource_node_id,
+            edge_type="COVERED_BY_SOW_SCOPE",
+            to_node_type="sow_scope",
+        )
+        for edge in _list(graph.get("edges"))
+        if isinstance(edge, dict)
+    )
+
+
+def _incoming_edge_from(graph: dict[str, Any], to_node_id: str) -> str:
+    for edge in _list(graph.get("edges")):
+        if (
+            isinstance(edge, dict)
+            and edge.get("edge_type") == "SUPPORTED_BY"
+            and edge.get("to_node_id") == to_node_id
+        ):
+            return str(edge.get("from_node_id") or "")
+    return ""
+
+
+def _has_incoming_edge(
+    graph: dict[str, Any],
+    *,
+    from_node_type: str,
+    edge_type: str,
+    to_node_id: str,
+) -> bool:
+    node_types = {
+        str(node.get("node_id")): node.get("node_type")
+        for node in _list(graph.get("nodes"))
+        if isinstance(node, dict)
+    }
+    return any(
+        edge.get("edge_type") == edge_type
+        and edge.get("to_node_id") == to_node_id
+        and node_types.get(str(edge.get("from_node_id"))) == from_node_type
+        for edge in _list(graph.get("edges"))
+        if isinstance(edge, dict)
+    )
+
+
+def _has_outgoing_edge(
+    graph: dict[str, Any],
+    *,
+    from_node_id: str,
+    edge_type: str,
+    to_node_type: str,
+) -> bool:
+    node_types = {
+        str(node.get("node_id")): node.get("node_type")
+        for node in _list(graph.get("nodes"))
+        if isinstance(node, dict)
+    }
+    return any(
+        edge.get("edge_type") == edge_type
+        and edge.get("from_node_id") == from_node_id
+        and node_types.get(str(edge.get("to_node_id"))) == to_node_type
+        for edge in _list(graph.get("edges"))
+        if isinstance(edge, dict)
+    )
+
+
+def _resource_area_node_id(area_id: str) -> str:
+    return f"resource_area:{area_id}"
+
+
 def _intake_summary(intake: dict[str, Any]) -> dict[str, Any]:
     return {
         "districts": _strings(intake.get("districts")),
@@ -558,6 +925,24 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"SOW scopes: {', '.join(f'`{scope_id}`' for scope_id in row['selected_resource_scope_ids']) or 'none'}; "
             f"reports: {', '.join(report_titles) or 'none observed'}"
         )
+    graph = package["intake_evidence_graph"]
+    lines.extend(
+        [
+            "",
+            "## Intake Evidence Graph",
+            f"- Nodes: `{graph['node_count']}`",
+            f"- Edges: `{graph['edge_count']}`",
+            "- Required path: `proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope`",
+        ]
+    )
+    for row in package["resource_analysis_matrix"]:
+        if row["expected_from_proposed_action"]:
+            status = (
+                "present"
+                if _has_canonical_resource_path(graph, row["resource_area_id"])
+                else "missing"
+            )
+            lines.append(f"- `{row['resource_area_id']}` path: `{status}`")
     lines.extend(["", "## Validation"])
     for check in package["validation"]["checks"]:
         status = "passed" if check["passed"] else "failed"
@@ -589,6 +974,12 @@ def _summary(
         "failed_validation_checks": [
             check for check in validation["checks"] if not check["passed"]
         ],
+        "intake_evidence_graph_edge_count": _intake_evidence_graph(
+            intake, selected_scopes
+        )["edge_count"],
+        "intake_evidence_graph_node_count": _intake_evidence_graph(
+            intake, selected_scopes
+        )["node_count"],
         "project_id": project_id,
         "proposed_action_resource_area_count": len(_expected_resource_area_ids(intake)),
         "resource_scope_count": len(selected_scopes),
@@ -708,6 +1099,7 @@ def _observed_specialist_reports(intake: dict[str, Any]) -> list[dict[str, Any]]
         records.append(
             {
                 "document_role": report.get("document_role") or "specialist_report",
+                "evidence_refs": _evidence_refs(report),
                 "report_id": report.get("report_id"),
                 "resource_area_ids": sorted(
                     _resource_area_ids(report.get("resource_area_ids"))
@@ -717,6 +1109,24 @@ def _observed_specialist_reports(intake: dict[str, Any]) -> list[dict[str, Any]]
             }
         )
     return records
+
+
+def _evidence_refs(record: dict[str, Any]) -> list[dict[str, Any]]:
+    refs = []
+    for evidence_ref in _list(record.get("evidence_refs")):
+        if not isinstance(evidence_ref, dict):
+            continue
+        refs.append(
+            {
+                "citation_label": evidence_ref.get("citation_label"),
+                "evidence_ref_id": evidence_ref.get("evidence_ref_id"),
+                "locator": evidence_ref.get("locator"),
+                "source_record_id": evidence_ref.get("source_record_id"),
+                "summary": evidence_ref.get("summary"),
+                "title": evidence_ref.get("title"),
+            }
+        )
+    return refs
 
 
 def _resource_area_ids(value: Any) -> set[str]:
