@@ -1,13 +1,13 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: in progress; Sequences 0, 1, 2, 2A, 2B, 3, and 4 complete; Sequence 5 South Plateau
-applicability adjudication closure is the active blocker
+Status: complete through Sequence 6 for the declared ECID preliminary-EA and South Plateau
+real-package expansion set
 
 ## Weakness
 
-Broader post-V1 expansion is not ready. The Sequence 0 promotion-suite baseline originally reported
-`expansion_ready=false` because:
+Broader post-V1 expansion was not ready at the Sequence 0 baseline. The promotion-suite baseline
+originally reported `expansion_ready=false` because:
 
 - the ECID preliminary-EA expansion slot is blocked by `adjudication_needed`; and
 - the third real-package expansion slot was still `package_fixture_missing`.
@@ -25,11 +25,12 @@ component adjudication replay over the existing ECID package cache. The adjudica
 all `158` rows as true EA package-evidence omissions with `0` system misses, compliance review now
 reports `reviewer_ready=true`, and review-scoped phase eval passes. Sequence 3 replaced the
 unknown third-package placeholder with the selected South Plateau fixture contract. Sequence 4
-imported the South Plateau package and ran the applicability-first path through validation. The
-remaining broader expansion blocker is now typed `adjudication_needed`: six South Plateau
-authority-family positive/negative trigger conflicts must be resolved through the replayable
-adjudication path before generated rule-pack, compliance review, phase eval, or strict expansion
-promotion can pass.
+imported the South Plateau package and ran the applicability-first path through validation.
+Sequence 5 then resolved the six South Plateau authority-family positive/negative trigger
+conflicts through replayable adjudication and reran validation. Sequence 6 generated and validated
+the South Plateau rule pack, ran compliance review and review-scoped phase eval, added South
+Plateau artifact checks to the promotion suite, and marked the slot ready only after those checks
+passed. The declared broader expansion set now passes strict expansion promotion.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -468,7 +469,7 @@ Latest local result:
 - Strict expansion promotion-suite rerun: expected command failure with `promotion_ready=false` and
   `failure_category_counts={"adjudication_needed": 1}`.
 
-Pending authority-family adjudication items:
+Sequence 5 resolved authority-family adjudication items:
 
 - `cultural_resource_protection_and_state_shpo_sources`
 - `invasive_pesticide_soils_farmland_drinking_water`
@@ -481,6 +482,24 @@ Pending authority-family adjudication items:
 
 Purpose: resolve the six South Plateau applicability conflicts with a replayable adjudication
 record, then rerun validation before any generated-rule or compliance-review work.
+
+Status:
+Complete as of 2026-05-06. The six pending South Plateau adjudication items were completed as
+`human_applicable`, evaluated, applied to the decision ledger, and validated.
+
+Closure evidence:
+
+- `applicability-adjudication-eval`: passed with `6` resolved adjudications, `0` pending
+  adjudications, and `failure_category_counts={}`.
+- `applicability-adjudication-apply`: passed with `applied_item_count=6`,
+  `remaining_unresolved_authority_count=0`, and applied decision-ledger hash
+  `09b9558edf24dbf5ea53e10420c1d8826f212feab4415099ada400cf6d697515`.
+- `applicability-validate`: passed with `61` applicable authorities, `331` non-applicable
+  authorities, `0` unresolved, `0` `needs_adjudication`, `generated_rule_pack_ready=true`, and
+  `reviewer_ready=true`.
+- The promotion-suite slot now carries `failure_category="generated_rule_pack_pending"` and
+  remains `ready=false` because generated rule-pack validation, compliance review, and
+  review-scoped phase eval have not run for South Plateau.
 
 Actions:
 
@@ -523,13 +542,47 @@ Acceptance:
 - To close this weakness, the third package must reach reviewer-ready status and the slot must be
   marked ready only after artifact checks pass.
 
-### Sequence 6: Strict Expansion Promotion Closeout
+### Sequence 6: South Plateau Generated Review And Strict Expansion Promotion Closeout
 
-Purpose: prove broader expansion readiness using the same promotion-suite contract agents will use
-in later sessions.
+Purpose: generate and validate the South Plateau rule pack, run compliance review and review-scoped
+phase eval, then prove broader expansion readiness using the same promotion-suite contract agents
+will use in later sessions.
+
+Status:
+Complete as of 2026-05-06. South Plateau generated rule-pack validation, compliance review,
+matrix/PDF output, review-scoped phase eval, and promotion-suite strict expansion all passed. The
+promotion manifest now includes South Plateau as a required expansion review case, so strict
+expansion checks the generated rule pack, compliance validation, compliance matrix/PDF, authority
+sidecars, litigation-risk summary, and review-scoped phase eval directly before reporting
+`promotion_ready=true`.
+
+Closure evidence:
+
+- `applicability-generate-rule-pack`: passed with `61` generated rules,
+  `generated_rule_pack_ready=true`, and generated pack hash
+  `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`.
+- `compliance-review`: passed with `reviewer_ready=true`, `validation_passed=true`, `61`
+  findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps.
+- `phase-eval --review-id region1-expansion-south-plateau-landscape-treatment`: passed `15/15`
+  phases with `reviewer_ready=true`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: rerun after the South Plateau
+  review-scoped eval to restore the shared current-promotion phase artifact; passed `17/17`.
+- Strict `promotion-suite` written to
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`:
+  `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
+  `expansion_artifacts_ready=true`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
+  `open_expansion_slot_count=0`.
+- Non-strict `promotion-suite` was rerun last and reports the same readiness with
+  `strict_expansion=false`.
 
 Actions:
 
+- Generate the South Plateau applicability rule pack from the validated `61` applicable authorities.
+- Validate the generated rule pack against the current South Plateau applicability artifacts.
+- Run South Plateau compliance review, compliance validation, matrix/PDF generation, and
+  review-scoped phase eval.
+- Mark the South Plateau expansion slot ready only if those artifacts pass.
 - Run the full focused and strict promotion verification stack.
 - Update `docs/POST_V1_PROMOTION_SUITE.md`, `docs/CURRENT_SYSTEM_STATE.md`, `README.md`, and
   `docs/SESSION_HANDOFF.md` with exact run results.
@@ -538,10 +591,36 @@ Actions:
 Verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment \
+  --source-set-id source-set-ba8d0feae79501b8
+
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
+  --package-path source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment \
+  --output-dir source_library \
+  --rule-pack source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack.json \
+  --source-set-id source-set-ba8d0feae79501b8 \
+  --review-id region1-expansion-south-plateau-landscape-treatment \
+  --reuse-package-cache
+
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id region1-expansion-south-plateau-landscape-treatment
+
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
   --manifest config/promotion_suite_v1.json \
+  --results-dir source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion \
   --strict-expansion
+
+PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
+  --output-dir source_library \
+  --manifest config/promotion_suite_v1.json
 
 PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_eval.py

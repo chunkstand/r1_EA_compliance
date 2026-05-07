@@ -518,21 +518,28 @@ Gallatin FEIS and ESA-supporting plan documents.
   `region1-expansion-south-plateau-landscape-treatment`. Sequence 4 imported `26` official South
   Plateau PDFs from the project Box folder, built the package cache with `.venv-docling`, extracted
   `26/26` files into `3,671` chunks, and ran the applicability-first path through validation.
-  Applicability validation is intentionally not ready: `55` authorities are applicable, `331` are
-  non-applicable, and `6` authority-family positive/negative trigger conflicts remain
-  `needs_adjudication`, with `generated_rule_pack_ready=false`. The South Plateau expansion slot
-  therefore carries typed `adjudication_needed`, not `applicability_miss` or
-  `package_fixture_missing`; generated rule-pack, compliance review, and review-scoped phase eval
-  have not been run for this package. The refreshed non-strict promotion suite reports
-  `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=false`,
+  Sequence 5 completed the six positive/negative-trigger adjudications as replayable
+  `human_applicable` decisions, evaluated and applied them, and reran validation. Sequence 6 then
+  generated and validated the South Plateau rule pack, ran compliance review, matrix/PDF output,
+  review-scoped phase eval, and added South Plateau required expansion artifact checks to the
+  promotion suite. South Plateau applicability validation passes: `61` authorities are applicable,
+  `331` are non-applicable, `0` are unresolved or `needs_adjudication`, and
+  `generated_rule_pack_ready=true`. Generated rule-pack validation passes with `61` rules and hash
+  `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`. Compliance review reports
+  `reviewer_ready=true`, `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links,
+  and `0` rule-claim gaps. South Plateau review-scoped phase eval passes `15/15` phases with
+  `reviewer_ready=true`. The South Plateau expansion slot is now `ready=true`; it no longer carries
+  `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
+  `package_fixture_missing`. Strict promotion suite was written to
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`
+  and reports `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
   `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"adjudication_needed": 1}`,
-  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`; strict expansion fails as
-  expected with `promotion_ready=false` and
-  `failure_category_counts={"adjudication_needed": 1}`. Promotion-suite manifest validation now
-  fails selected slots that omit review/package/source-set metadata, expected gate artifacts, next
-  action, or a typed non-`package_fixture_missing` failure category, and fails ready slots that
-  retain a failure category.
+  `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
+  `open_expansion_slot_count=0`. Non-strict promotion suite was rerun last and reports the same
+  readiness with `strict_expansion=false`. Promotion-suite manifest validation now fails selected
+  slots that omit review/package/source-set metadata, expected gate artifacts, next action, or a
+  typed non-`package_fixture_missing` failure category, and fails ready slots that retain a failure
+  category.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
@@ -590,18 +597,15 @@ Gallatin FEIS and ESA-supporting plan documents.
   needs-adjudication, `1` insufficient-strong-trigger needs-adjudication, and `1`
   positive/negative-conflict needs-adjudication. `applicability-gold-eval` passed `5/5` cases and
   now requires at least one gold case with explicit arbitration-field expectations.
-- Latest Milestone 5 local verification on 2026-05-06 replayed applicability seed/gold eval
-  artifacts, reran review-bound phase eval for `v1-cg-ecid-compliance-review`, confirmed promotion
-  suite still reports `current_promotion_ready=true`, `promotion_ready=true`, and
-  `expansion_ready=false`, and passed focused applicability decision, applicability eval,
-  promotion-suite, architecture-contract, ruff, compileall, JSON validation, and `git diff --check`
-  gates.
-- The evidence-arbitration plan is complete through commit `f304e2e`. The active remaining
-  milestone boundary is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 5: resolve
-  the six South Plateau applicability adjudication items through the template/eval/apply replay
-  path, then rerun validation before generating any rule pack. Closeout runs should capture strict
-  promotion output in a separate results directory or rerun non-strict promotion last so the default
-  promotion-suite artifact remains aligned with the current-promotion readiness claim.
+- Latest post-V1 real-package expansion verification on 2026-05-06 generated and validated the
+  South Plateau rule pack, ran South Plateau compliance review and review-scoped phase eval,
+  restored the promoted V1 review-scoped phase-eval artifact at `17/17`, and passed strict plus
+  non-strict promotion suite. Focused pytest, architecture-contract, ruff, compileall, JSON
+  validation, and `git diff --check` gates are the closeout verification for the tracked slice.
+- The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
+  expansion milestone is complete through Sequence 6 for the declared ECID preliminary-EA and South
+  Plateau expansion slots. Future expansion should add a new verified real-package slot and matching
+  promotion-suite review-case artifact checks rather than weakening the current gate.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

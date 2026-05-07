@@ -347,8 +347,11 @@ authorities, `346` non-applicable authorities, no unresolved or `needs_adjudicat
 `generated_rule_pack_ready=true`. The ECID generated rule pack now validates with `46` rules, the
 generated rule-claim binding has `211` links and `0` gaps, and the Forest Plan component
 adjudication eval resolves the current `158`-row queue as true EA package-evidence omissions with
-`0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready; broader
-strict expansion is now blocked by the South Plateau six-item applicability adjudication worklist.
+`0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready. The
+South Plateau expansion package has replayed and validated its six applicability adjudications,
+generated and validated `61` rules, passed compliance review with `61` findings, `280` rule-claim
+links, and `0` rule-claim gaps, and passed review-scoped phase eval. Broader strict expansion now
+passes for the declared real-package set.
 
 ## Reviewer Engine Entry Points
 
@@ -887,10 +890,13 @@ system misses; those rows remain visible as gaps rather than being converted int
 conclusions. The third real package is South Plateau Area Landscape Treatment Project under review
 ID `region1-expansion-south-plateau-landscape-treatment`. Sequence 4 imported `26` official PDFs,
 extracted `26/26` files into `3,671` package chunks, and ran the applicability-first path through
-validation. The slot remains not ready with `adjudication_needed`: applicability determination found
-`55` applicable authorities, `331` non-applicable authorities, and `6` authority-family
-positive/negative trigger conflicts requiring replayable adjudication before generated rule-pack,
-compliance-review, or phase-eval promotion.
+validation; Sequence 5 replayed six adjudications and reran validation; Sequence 6 generated and
+validated the South Plateau rule pack, ran compliance review and review-scoped phase eval, and
+added South Plateau artifact checks to the promotion suite. Applicability validation passes with
+`61` applicable authorities, `331` non-applicable authorities, no unresolved or `needs_adjudication`
+decisions, and `generated_rule_pack_ready=true`. Compliance review reports `reviewer_ready=true`,
+`61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim
+gaps. Strict expansion promotion now passes with `expansion_ready=true`.
 
 Run the seed retrieval eval gate:
 

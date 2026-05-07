@@ -4,8 +4,9 @@ Date: 2026-05-06
 
 ## Current Applicability/Expansion Handoff
 
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 4 is complete. The South Plateau
-Area Landscape Treatment Project package now exists locally as
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete through Sequence 6 for the
+declared ECID preliminary-EA and South Plateau real-package expansion set. The South Plateau Area
+Landscape Treatment Project package exists locally as
 `region1-expansion-south-plateau-landscape-treatment`: `26` official PDFs were imported from the
 official project Box folder into
 `source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment`, with an
@@ -14,34 +15,28 @@ package cache was rebuilt with `.venv-docling`; `26/26` files extracted, `0` fai
 chunks were written under
 `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/package/`.
 
-The South Plateau applicability-first path ran through validation. Authority universe and package
-context validation passed, retrieval trace validation passed, and determination produced `55`
-applicable authorities, `331` non-applicable authorities, and `6` authorities requiring
-adjudication. `applicability-validate` failed as designed with `generated_rule_pack_ready=false`,
-`reviewer_ready=false`, and `failure_category_counts={"unresolved_authority": 12}`. The generated
-adjudication template/worklist are:
+South Plateau applicability validation now passes after replayable adjudication: `61` authorities
+are applicable, `331` are non-applicable, `0` are unresolved or `needs_adjudication`, and
+`generated_rule_pack_ready=true`. `applicability-generate-rule-pack` passed with `61` generated
+rules and generated pack hash `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`.
+South Plateau compliance review passed with `reviewer_ready=true`, `61` findings, `41` pass, `19`
+uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps. South Plateau review-scoped
+phase eval passed `15/15` phases with `reviewer_ready=true`.
 
-- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json`
-- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_worklist.md`
+`config/promotion_suite_v1.json` now includes South Plateau as a required expansion review case
+with generated rule-pack, compliance validation, matrix/PDF, authority sidecar, litigation-risk,
+and review-scoped phase-eval checks. The South Plateau expansion slot is `ready=true`; it no longer
+carries `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
+`package_fixture_missing`.
 
-The six pending authority-family conflicts are
-`cultural_resource_protection_and_state_shpo_sources`,
-`invasive_pesticide_soils_farmland_drinking_water`,
-`roads_access_special_use_action_authorities`,
-`species_supporting_sources_and_overlays`,
-`vegetation_wildfire_forest_health_authorities`, and
-`wilderness_wsr_trails_designated_areas`. The promotion-suite slot now carries typed
-`adjudication_needed`, remains `ready=false`, and has not run generated rule-pack, compliance
-review, or review-scoped phase eval.
-
-Promotion suite was rerun after the Sequence 4 manifest/docs update. Non-strict reports
-`current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=false`,
+Strict expansion promotion was written to
+`source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/` and
+passed with `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
 `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-`expansion_failure_category_counts={"adjudication_needed": 1}`,
-`open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`. Strict expansion was written
-to the separate strict results directory and failed as expected with `promotion_ready=false` and
-`failure_category_counts={"adjudication_needed": 1}`; the normal suite was rerun last so the default
-promotion-suite output remains the current-promotion signal.
+`expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
+`open_expansion_slot_count=0`. Non-strict promotion was rerun last and reports the same readiness
+with `strict_expansion=false`. The promoted V1 review-scoped phase eval was rerun after South
+Plateau review-scoped eval to restore the shared current-promotion phase artifact at `17/17`.
 
 The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
 for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
@@ -50,10 +45,9 @@ package evidence visible as gaps and do not mark components supported or create 
 ECID compliance review reports `reviewer_ready=true`, ECID review-scoped phase eval passes `16/16`,
 and the required ECID expansion artifacts pass.
 
-Next sequence: Sequence 5, South Plateau applicability adjudication closure. Complete the six-item
-applicability adjudication template, run `applicability-adjudication-eval`, apply it with
-`applicability-adjudication-apply`, and rerun `applicability-validate`. Only after validation passes
-should generated rule-pack validation, compliance review, and review-scoped phase eval run.
+Next implementation target: no further sequence is selected in the post-V1 real-package expansion
+plan. Future expansion should add a new real-package slot plus matching promotion-suite review-case
+artifact checks, or move to the next documented lane the user selects.
 
 ## Current Architecture Hardening State
 
@@ -407,21 +401,22 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
 - `forest-plan-component-adjudication-template` generated a `158`-item ECID worklist at
   `source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json`
   and `.md`.
-- `config/promotion_suite_v1.json` now includes ECID `required_for_expansion` artifact checks and
-  treats expansion readiness as both slot readiness and required expansion artifact readiness. The
-  ECID slot is now `ready=true`; it is no longer blocked by `forest_plan_reviewer_not_ready`,
-  `adjudication_needed`, or `missing_source`.
-- Non-strict promotion suite after Sequence 4 reports `current_promotion_ready=true`,
-  `promotion_ready=true`, `expansion_ready=false`, `expansion_artifacts_ready=true`,
-  `failure_category_counts={}`, `expansion_failure_category_counts={"adjudication_needed": 1}`,
-  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=1`.
+- `config/promotion_suite_v1.json` now includes ECID and South Plateau `required_for_expansion`
+  artifact checks and treats expansion readiness as both slot readiness and required expansion
+  artifact readiness. Both declared expansion slots are `ready=true`; neither is blocked by
+  `forest_plan_reviewer_not_ready`, `generated_rule_pack_pending`, `adjudication_needed`, or
+  `missing_source`.
+- Non-strict promotion suite after Sequence 6 reports `current_promotion_ready=true`,
+  `promotion_ready=true`, `expansion_ready=true`, `expansion_artifacts_ready=true`,
+  `failure_category_counts={}`, `expansion_failure_category_counts={}`,
+  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=0`.
 
 Next implementation target:
 
-The current active lane is `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 5:
-complete the six South Plateau applicability adjudications, evaluate/apply them, and rerun
-applicability validation. The older lane notes below are retained for continuity, but they are not
-the current next pass unless the user redirects.
+No further sequence is selected in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`; the
+declared ECID preliminary-EA and South Plateau expansion set is closed through strict expansion
+promotion. The older lane notes below are retained for continuity, but they are not the current next
+pass unless the user redirects.
 
 Sequence 2B alignment/gap close note: strict and non-strict promotion-suite evidence were kept
 separate, and non-strict was rerun last so the default suite output remains the current-promotion
@@ -564,11 +559,11 @@ legal conclusion.
 - `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` Milestone 10: the ECID three-item
   applicability adjudication worklist, generated-rule-pack/artifact-check pass, source-claim gap
   closure, Forest Plan component adjudication replay, and third package fixture selection are
-  complete. The selected South Plateau applicability-first run is now complete through validation,
-  and the remaining slice is the six-item South Plateau adjudication closure.
+  complete. The selected South Plateau run is now complete through applicability validation,
+  generated rule-pack validation, compliance review, review-scoped phase eval, and strict expansion
+  promotion.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false` by resolving the South Plateau adjudication blocker before generated
-  rule-pack validation, compliance review, phase eval, and strict expansion promotion.
+  `expansion_ready=false`; complete through Sequence 6 for the declared expansion set.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
@@ -977,13 +972,10 @@ rate `1.0`.
 
 ## Next Sequence
 
-Next sequence for the current applicability lane:
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 5. Sequence 4 imported and
-extracted the South Plateau package, ran package context, applicability retrieval, applicability
-determination, validation, and generated the six-item adjudication worklist. The next pass should
-complete the adjudication template, run `applicability-adjudication-eval`, apply it, rerun
-`applicability-validate`, and only then proceed to generated rule-pack, compliance review, and
-review-scoped phase eval in a later sequence.
+No next sequence is selected for the current post-V1 real-package expansion lane. The declared ECID
+preliminary-EA and South Plateau expansion set passes strict promotion. Future expansion should
+start as a new real-package slot with its own package fixture, applicability artifacts, generated
+review artifacts, promotion-suite review-case checks, and docs/handoff closeout.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

@@ -685,6 +685,334 @@
           ]
         }
       ]
+    },
+    {
+      "id": "region1-expansion-south-plateau-landscape-treatment",
+      "label": "South Plateau generated expansion review",
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "package_label": "South Plateau Area Landscape Treatment Project",
+      "required_for_current_promotion": false,
+      "results": [
+        {
+          "id": "applicability_validation",
+          "label": "South Plateau applicability validation",
+          "path": "reviews/{review_id}/applicability/applicability_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "adjudication_needed",
+          "checks": [
+            {
+              "name": "applicability_validation_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "applicability_reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "applicable_authority_count",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 61
+            },
+            {
+              "name": "non_applicable_authority_count",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 331
+            },
+            {
+              "name": "needs_adjudication_authority_count",
+              "json_path": "summary.needs_adjudication_authority_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
+          "id": "generated_rule_pack_validation",
+          "label": "South Plateau generated rule-pack validation",
+          "path": "reviews/{review_id}/applicability/generated_rule_pack_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "generated_rule_pack_validation_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "generated_rule_pack_ready",
+              "json_path": "summary.generated_rule_pack_ready",
+              "equals": true
+            },
+            {
+              "name": "generated_rule_count",
+              "json_path": "summary.generated_rule_count",
+              "equals": 61
+            },
+            {
+              "name": "applicable_authority_count",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 61
+            },
+            {
+              "name": "source_set_matches",
+              "json_path": "summary.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            }
+          ]
+        },
+        {
+          "id": "compliance_validation",
+          "label": "South Plateau compliance validation",
+          "path": "reviews/{review_id}/compliance_validation.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "compliance_validation_passed",
+              "json_path": "passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_review",
+          "label": "South Plateau compliance review summary",
+          "path": "reviews/{review_id}/compliance_review.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "source_set_matches",
+              "json_path": "summary.source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "generated_rule_pack_id_matches",
+              "json_path": "summary.rule_pack_id",
+              "equals": "generated-nepa-ea-v0-region1-expansion-south-plateau-landscape-treatment",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "generated_rule_pack_version_matches",
+              "json_path": "summary.rule_pack_version",
+              "equals": "applicability-v0",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "rule_count",
+              "json_path": "summary.rule_count",
+              "equals": 61
+            },
+            {
+              "name": "baseline_source_record_count",
+              "json_path": "summary.baseline_source_record_count",
+              "equals": 26,
+              "failure_category": "missing_source"
+            },
+            {
+              "name": "rule_claim_gap_count",
+              "json_path": "summary.rule_claim_gap_count",
+              "equals": 0,
+              "failure_category": "missing_source"
+            },
+            {
+              "name": "rule_claim_link_count",
+              "json_path": "summary.rule_claim_link_count",
+              "equals": 280,
+              "failure_category": "missing_source"
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix",
+          "label": "South Plateau compliance matrix JSON",
+          "path": "reviews/{review_id}/compliance_matrix.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "matrix_row_count",
+              "json_path": "summary.row_count",
+              "equals": 61
+            },
+            {
+              "name": "matrix_forest_plan_row_count",
+              "json_path": "summary.forest_plan_compliance_row_count",
+              "equals": 0
+            },
+            {
+              "name": "matrix_reviewer_ready",
+              "json_path": "summary.reviewer_ready",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix_pdf",
+          "label": "South Plateau compliance matrix PDF",
+          "path": "reviews/{review_id}/compliance_matrix.pdf",
+          "format": "binary",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "matrix_pdf_header_valid",
+              "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
+          "id": "authority_family_provenance",
+          "label": "South Plateau authority-family provenance",
+          "path": "reviews/{review_id}/authority_family_provenance.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "authority_provenance_generated_mode",
+              "json_path": "summary.generated_mode",
+              "equals": true
+            },
+            {
+              "name": "authority_provenance_finding_count",
+              "json_path": "summary.finding_authority_provenance_count",
+              "equals": 61
+            },
+            {
+              "name": "authority_resolution_pending_count",
+              "json_path": "summary.pending_resolution_count",
+              "equals": 0
+            }
+          ]
+        },
+        {
+          "id": "non_applicable_authority_appendix",
+          "label": "South Plateau non-applicable authority appendix",
+          "path": "reviews/{review_id}/non_applicable_authority_appendix.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "non_applicable_authority_count",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 331
+            },
+            {
+              "name": "non_applicable_authorities_have_coverage",
+              "json_path": "summary.all_have_coverage_certificates",
+              "equals": true
+            },
+            {
+              "name": "non_applicable_authorities_have_rationale",
+              "json_path": "summary.all_have_rationale",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "authority_reviewer_resolution_report",
+          "label": "South Plateau authority reviewer-resolution report",
+          "path": "reviews/{review_id}/authority_reviewer_resolution_report.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "adjudication_needed",
+          "checks": [
+            {
+              "name": "authority_resolution_pending_count",
+              "json_path": "summary.pending_resolution_count",
+              "equals": 0
+            },
+            {
+              "name": "authority_resolution_adjudicated_count",
+              "json_path": "summary.adjudicated_authority_count",
+              "equals": 6
+            },
+            {
+              "name": "authority_resolution_report_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "litigation_risk_summary",
+          "label": "South Plateau litigation-risk summary",
+          "path": "reviews/{review_id}/litigation_risk_summary.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "litigation_risk_flags_present",
+              "json_path": "summary.risk_flag_count",
+              "min": 1
+            },
+            {
+              "name": "litigation_risk_no_legal_conclusions",
+              "json_path": "summary.legal_conclusion_count",
+              "equals": 0
+            },
+            {
+              "name": "litigation_risk_deterministic_only",
+              "json_path": "summary.deterministic_only",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "phase_eval",
+          "label": "South Plateau review-scoped phase eval",
+          "path": "reviews/{review_id}/phase_eval_results.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "unsupported_package_evidence",
+          "checks": [
+            {
+              "name": "phase_eval_review_id_matches",
+              "json_path": "review_id",
+              "equals": "region1-expansion-south-plateau-landscape-treatment",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "phase_eval_source_set_matches",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "phase_eval_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "phase_eval_reviewer_ready",
+              "json_path": "reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "phase_eval_passed_phase_count",
+              "json_path": "passed_phase_count",
+              "equals": 15
+            }
+          ]
+        }
+      ]
     }
   ],
   "suite_results": [
@@ -933,16 +1261,15 @@
         "phase_eval_passed": true,
         "phase_eval_reviewer_ready": true
       },
-      "next_action": "Keep this ECID expansion slot ready while the South Plateau slot completes Sequence 5 applicability adjudication before strict expansion promotion.",
+      "next_action": "Keep this ECID expansion slot ready while future expansion slots are added through their own verified artifact checks.",
       "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
     },
     {
       "id": "region1-real-ea-slot-2",
       "label": "Third real Region 1 EA package: South Plateau Area Landscape Treatment Project",
-      "status": "blocked_needs_adjudication",
-      "ready": false,
+      "status": "ready",
+      "ready": true,
       "required_for_current_promotion": false,
-      "failure_category": "adjudication_needed",
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
       "source_set_id": "source-set-ba8d0feae79501b8",
@@ -1002,32 +1329,62 @@
         "package_fact_graph_validation_passed": true,
         "applicability_retrieval_validation_passed": true,
         "candidate_authority_count": 392,
-        "applicable_authority_count": 55,
+        "applicable_authority_count": 61,
         "non_applicable_authority_count": 331,
-        "needs_adjudication_authority_count": 6,
-        "unresolved_authority_count": 6,
-        "remaining_adjudication_authority_family_ids": [
-          "cultural_resource_protection_and_state_shpo_sources",
-          "invasive_pesticide_soils_farmland_drinking_water",
-          "roads_access_special_use_action_authorities",
-          "species_supporting_sources_and_overlays",
-          "vegetation_wildfire_forest_health_authorities",
-          "wilderness_wsr_trails_designated_areas"
-        ],
-        "applicability_validation_passed": false,
-        "applicability_validation_failure_category_counts": {
-          "unresolved_authority": 12
-        },
-        "generated_rule_pack_ready": false,
-        "compliance_review_reviewer_ready": false,
-        "phase_eval_passed": false,
+        "needs_adjudication_authority_count": 0,
+        "unresolved_authority_count": 0,
+        "remaining_adjudication_authority_family_ids": [],
+        "applicability_validation_passed": true,
+        "applicability_validation_failure_category_counts": {},
+        "generated_rule_pack_ready": true,
+        "compliance_review_reviewer_ready": true,
+        "phase_eval_passed": true,
         "import_manifest_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment/box_import_manifest.json",
         "applicability_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_validation.json",
         "adjudication_template_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json",
-        "adjudication_worklist_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_worklist.md"
+        "adjudication_worklist_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_worklist.md",
+        "adjudication_template_pending_count": 0,
+        "adjudication_eval_passed": true,
+        "adjudication_resolved_count": 6,
+        "adjudication_pending_count": 0,
+        "adjudication_apply_passed": true,
+        "adjudication_applied_item_count": 6,
+        "adjudication_remaining_unresolved_authority_count": 0,
+        "applicability_decisions_sha256": "09b9558edf24dbf5ea53e10420c1d8826f212feab4415099ada400cf6d697515",
+        "applicable_authorities_sha256": "2dcd85437ba62dafb685e96310c60d571f2061f97e62f82787476da69e84cf40",
+        "non_applicable_authorities_sha256": "90da249fb11840333d80526b97f069de52f7563c473c42c01685e20c354ef6a5",
+        "adjudication_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_eval.json",
+        "adjudication_apply_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_apply.json",
+        "generated_rule_pack_validation_passed": true,
+        "generated_rule_count": 61,
+        "generated_rule_pack_sha256": "39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec",
+        "generated_rule_pack_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack_validation.json",
+        "compliance_validation_passed": true,
+        "compliance_finding_count": 61,
+        "compliance_finding_status_counts": {
+          "gap": 1,
+          "pass": 41,
+          "uncertain": 19
+        },
+        "rule_claim_link_count": 280,
+        "rule_claim_gap_count": 0,
+        "compliance_review_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json",
+        "compliance_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_validation.json",
+        "compliance_matrix_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_matrix.json",
+        "compliance_matrix_pdf_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_matrix.pdf",
+        "authority_family_provenance_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_family_provenance.json",
+        "non_applicable_authority_appendix_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/non_applicable_authority_appendix.json",
+        "authority_reviewer_resolution_report_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_reviewer_resolution_report.json",
+        "litigation_risk_summary_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/litigation_risk_summary.json",
+        "phase_eval_reviewer_ready": true,
+        "phase_eval_passed_phase_count": 15,
+        "phase_eval_phase_count": 15,
+        "phase_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json",
+        "forest_plan_scope_status": "ambiguous",
+        "forest_plan_component_gate_required": false
       },
-      "next_action": "Complete the South Plateau applicability adjudication template for the six unresolved authority-family positive/negative trigger conflicts, then run applicability-adjudication-eval, applicability-adjudication-apply, applicability-validate, generated-rule-pack validation, compliance review, and review-scoped phase eval before changing this slot to ready.",
-      "acceptance_signal": "This selected third package remains blocked until the six applicability adjudications are resolved and the generated rule-pack, compliance validation, and review-scoped phase eval pass."
+      "next_action": "Keep this South Plateau expansion slot ready; add any future real-package expansion through a new verified slot and review-case artifact checks.",
+      "acceptance_signal": "Generated rule-pack validation, compliance validation, compliance matrix/PDF, and review-scoped phase eval pass for the South Plateau generated review."
     }
   ]
 }
