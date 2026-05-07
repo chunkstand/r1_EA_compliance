@@ -1,0 +1,208 @@
+{
+  "schema_version": "east-crazies-final-qa-certification-report-v1",
+  "report_id": "minimal-final-qa-certification-report",
+  "review_id": "review-test",
+  "source_set_id": "source-set-test",
+  "created_at": "2026-05-07T00:00:00Z",
+  "manifest": {
+    "schema_version": "east-crazies-final-qa-certification-manifest-v1",
+    "review_id": "review-test",
+    "source_set_id": "source-set-test",
+    "validation_status": "passed",
+    "input_hashes": {
+      "decision_support_report_sha256": "sha256-decision-support-report",
+      "decision_support_manifest_sha256": "sha256-decision-support-manifest",
+      "phase_eval_results_sha256": "sha256-phase-eval",
+      "promotion_suite_results_sha256": "sha256-promotion-suite",
+      "v1_ea_eval_results_sha256": "sha256-v1-eval"
+    }
+  },
+  "review_boundary": {
+    "review_id": "review-test",
+    "source_set_id": "source-set-test",
+    "package_path": "source_library/reviews/_intake/package-test",
+    "review_artifact_root": "source_library/reviews/review-test",
+    "non_canonical_draft_exclusion": {
+      "root_east_crazies_drafts_are_canonical": false,
+      "blocked_path_prefixes": [
+        "East_Crazies_"
+      ]
+    },
+    "legal_conclusion": false
+  },
+  "gate_replay_summary": {
+    "machine_replay_status": "passed",
+    "reviewer_ready": true,
+    "gates": [
+      {
+        "gate_name": "applicability_validation",
+        "status": "passed",
+        "source_artifact_path": "source_library/reviews/review-test/applicability/applicability_validation.json",
+        "source_selector": "passed"
+      },
+      {
+        "gate_name": "phase_eval",
+        "status": "passed",
+        "source_artifact_path": "source_library/reviews/review-test/phase_eval_results.json",
+        "source_selector": "reviewer_ready"
+      }
+    ]
+  },
+  "artifact_freshness_ledger": {
+    "artifacts": [
+      {
+        "artifact_key": "decision_support_report",
+        "path": "source_library/reviews/review-test/decision_support/ea_consistency_decision_support.json",
+        "sha256": "sha256-decision-support-report",
+        "schema_version": "ea-consistency-decision-support-report-v1",
+        "source_selector": "schema_version"
+      },
+      {
+        "artifact_key": "phase_eval",
+        "path": "source_library/reviews/review-test/phase_eval_results.json",
+        "sha256": "sha256-phase-eval",
+        "source_selector": "reviewer_ready"
+      }
+    ]
+  },
+  "applicability_partition": {
+    "candidate_authority_count": 2,
+    "applicable_authority_count": 1,
+    "non_applicable_authority_count": 1,
+    "unresolved_authority_count": 0,
+    "search_coverage_certificate_count": 1,
+    "non_applicable_boundary_evidence": [
+      {
+        "candidate_authority_id": "candidate:not-applicable",
+        "decision_id": "decision:not-applicable",
+        "status": "not_applicable",
+        "coverage_result": "sufficient",
+        "source_artifact_path": "source_library/reviews/review-test/applicability/search_coverage_certificates.json",
+        "source_selector": "certificates[coverage_certificate_id=coverage:test]"
+      }
+    ]
+  },
+  "finding_qa": {
+    "authority_finding_count": 1,
+    "authority_finding_status_counts": {
+      "pass": 1
+    },
+    "rule_claim_link_count": 2,
+    "rule_claim_gap_count": 0,
+    "findings": [
+      {
+        "rule_id": "rule:test",
+        "status": "pass",
+        "applicability_status": "applicable",
+        "ea_package_citation": "EA-PACKAGE-001 (sha256)",
+        "source_library_citation": "R1EA-001 (sha256)",
+        "source_claim_ids": [
+          "claim:test-source"
+        ],
+        "source_selectors": [
+          {
+            "artifact_path": "source_library/reviews/review-test/compliance_matrix.json",
+            "selector": "rows[rule_id=rule:test]"
+          }
+        ]
+      }
+    ]
+  },
+  "forest_plan_qa": {
+    "scope_status": "custer_gallatin",
+    "reviewer_ready": true,
+    "component_count": 1,
+    "standard_count": 1,
+    "applicable_standard_count": 1,
+    "component_eval_passed": true,
+    "applicable_standards": [
+      {
+        "component_key": "FW-STD-RMZ-01",
+        "component_id": "R1PLAN-test-FW-STD-RMZ-01",
+        "compliance_status": "complies",
+        "finding_status": "supported",
+        "package_evidence": [
+          {
+            "chunk_id": "chunk:package",
+            "source_record_id": "EA-PACKAGE-001",
+            "citation_label": "EA-PACKAGE-001 (sha256)"
+          }
+        ],
+        "forest_plan_evidence": [
+          {
+            "chunk_id": "chunk:plan",
+            "source_record_id": "R1PLAN-test",
+            "citation_label": "R1PLAN-test (sha256)"
+          }
+        ]
+      }
+    ]
+  },
+  "decision_support_qa": {
+    "validation_status": "passed",
+    "reviewer_ready": true,
+    "pdf_header_valid": true,
+    "residual_risk_rows": [
+      {
+        "risk_id": "risk:non-applicable-authority-boundary",
+        "category": "non_applicable_authority_boundary",
+        "deterministic_basis": true,
+        "legal_conclusion": false,
+        "source_artifact_path": "source_library/reviews/review-test/litigation_risk_summary.json",
+        "source_selector": "summary.risk_category_counts"
+      }
+    ],
+    "implementation_confirmation_rows": [
+      {
+        "confirmation_id": "closing_instruments",
+        "status": "requires_confirmation",
+        "source_selectors": [
+          {
+            "artifact_path": "source_library/reviews/review-test/package/package_chunks.jsonl",
+            "selector": "source_record_id=EA-PACKAGE-001"
+          }
+        ]
+      }
+    ]
+  },
+  "accepted_v1_risk_ledger": {
+    "policy_mode": "accepted_pending_v1",
+    "accepted_pending_count": 1,
+    "actual_pending_count": 1,
+    "actual_pending_applicable_count": 1,
+    "source_artifact_path": "source_library/reviews/review-test/v1_ea_eval_results.json",
+    "source_selector": "conditional_adjudication",
+    "risks": [
+      {
+        "rule_id": "rule:test",
+        "actual_applicability": "applicable",
+        "actual_status": "pass",
+        "classification_rationale": "Synthetic pending row remains reviewer risk.",
+        "hidden_as_pass_finding": false
+      }
+    ]
+  },
+  "certification_statement": {
+    "machine_replay_status": "passed",
+    "certification_scope": "machine_replay_plus_optional_human_signoff",
+    "legal_conclusion": false,
+    "caveat": "This packet supports review but does not replace responsible official, line officer, counsel, or specialist judgment.",
+    "reviewer_signoff": {
+      "reviewer_name": null,
+      "reviewer_role": null,
+      "reviewer_signature": null,
+      "review_date": null,
+      "reviewer_notes": null
+    }
+  },
+  "residual_blockers_and_stop_conditions": {
+    "blockers": [],
+    "stop_conditions": [
+      "missing_required_artifact",
+      "input_hash_mismatch",
+      "count_drift",
+      "unresolved_reviewer_item",
+      "legal_conclusion_leak"
+    ]
+  }
+}

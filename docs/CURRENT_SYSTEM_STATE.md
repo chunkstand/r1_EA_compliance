@@ -472,8 +472,8 @@ copy-review pass.
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the active focused plan for
 turning the promoted East Crazy review into a replayable final QA packet. Sequence 0 baseline
-replay is complete; Sequence 1 contract and fixture work is next. The milestone is bounded to
-review ID `v1-cg-ecid-compliance-review` and source set
+replay and Sequence 1 contract/fixture work are complete; Sequence 2 deterministic generator and
+CLI work is next. The milestone is bounded to review ID `v1-cg-ecid-compliance-review` and source set
 `source-set-ba8d0feae79501b8`; it does not broaden the claim to other Region 1 packages, does not
 resolve the South Plateau strict-expansion blocker, and does not treat root-level
 `East_Crazies_*` draft exports as canonical artifacts.
@@ -493,13 +493,18 @@ The replay sequences are:
 
 - Sequence 0: baseline replay and drift check over existing generated artifacts; complete on
   2026-05-07.
-- Sequence 1: final QA contract and fixtures.
+- Sequence 1: final QA contract and fixtures; complete on 2026-05-07.
 - Sequence 2: deterministic generator and CLI with `--validate-only`.
 - Sequence 3: `phase-eval` and promotion-suite integration.
 - Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit.
 
-Sequence 1 should pin semantic counts, source selectors, current artifact hashes, and selected
-Markdown/PDF rendering requirements without pinning full rendered body text.
+Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
+`config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,
+`tests/fixtures/final_qa/minimal_final_qa_certification_report.json`,
+`tests/test_final_qa_certification.py`, and the schema docs. The contract pins semantic counts,
+source selectors, current artifact hashes, selected Markdown/PDF rendering requirements, optional
+human reviewer signoff fields, accepted V1 risk visibility, and fail-closed categories without
+pinning full rendered body text.
 
 Certification in this plan means deterministic machine replay plus optional human reviewer signoff
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel

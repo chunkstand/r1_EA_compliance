@@ -1,0 +1,281 @@
+{
+  "schema_version": "east-crazies-final-qa-certification-config-v1",
+  "config_id": "east-crazies-final-qa-certification-v1",
+  "as_of_date": "2026-05-07",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "report_schema_version": "east-crazies-final-qa-certification-report-v1",
+  "manifest_schema_version": "east-crazies-final-qa-certification-manifest-v1",
+  "expected_summary_schema_version": "east-crazies-final-qa-expected-summary-v1",
+  "certification_caveat": "This packet is deterministic machine QA plus optional reviewer signoff. It supports review, but it is not legal advice, a legal sufficiency determination, responsible-official approval, line-officer approval, counsel certification, or a final agency decision.",
+  "manual_draft_policy": {
+    "root_east_crazies_drafts_are_canonical": false,
+    "blocked_path_prefixes": [
+      "East_Crazies_"
+    ],
+    "canonical_output_dir": "source_library/reviews/v1-cg-ecid-compliance-review/final_qa/"
+  },
+  "section_order": [
+    "review_boundary",
+    "gate_replay_summary",
+    "artifact_freshness_ledger",
+    "applicability_partition",
+    "finding_qa",
+    "forest_plan_qa",
+    "decision_support_qa",
+    "accepted_v1_risk_ledger",
+    "certification_statement",
+    "residual_blockers_and_stop_conditions"
+  ],
+  "required_output_files": [
+    "east_crazies_final_qa_certification.json",
+    "east_crazies_final_qa_certification.md",
+    "east_crazies_final_qa_certification.pdf",
+    "east_crazies_final_qa_certification_manifest.json"
+  ],
+  "required_gate_names": [
+    "applicability_validation",
+    "generated_rule_pack_validation",
+    "compliance_validation",
+    "compliance_matrix",
+    "forest_plan_context",
+    "forest_plan_component_eval",
+    "decision_support_validation",
+    "phase_eval",
+    "v1_ea_eval",
+    "current_promotion_suite"
+  ],
+  "required_gates": [
+    {
+      "gate_name": "applicability_validation",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/applicability/applicability_validation.json",
+      "required_pass_selector": "passed",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "generated_rule_pack_validation",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/applicability/generated_rule_pack_validation.json",
+      "required_pass_selector": "generated_rule_pack_ready",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "compliance_validation",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_validation.json",
+      "required_pass_selector": "passed",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "compliance_matrix",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+      "required_pass_selector": "summary.validated",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "forest_plan_context",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_context_summary.json",
+      "required_pass_selector": "reviewer_ready",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "forest_plan_component_eval",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json",
+      "required_pass_selector": "passed",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "decision_support_validation",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json",
+      "required_pass_selector": "validation_status",
+      "expected_value": "passed",
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "phase_eval",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",
+      "required_pass_selector": "reviewer_ready",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "v1_ea_eval",
+      "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/v1_ea_eval_results.json",
+      "required_pass_selector": "passed",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    },
+    {
+      "gate_name": "current_promotion_suite",
+      "artifact_path": "source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json",
+      "required_pass_selector": "current_promotion_ready",
+      "expected_value": true,
+      "failure_category": "stale_artifact"
+    }
+  ],
+  "required_count_fields": [
+    {
+      "field": "applicable_authority_count",
+      "expected": 33,
+      "source_selector": "applicability_partition.applicable_authority_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "non_applicable_authority_count",
+      "expected": 340,
+      "source_selector": "applicability_partition.non_applicable_authority_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "unresolved_authority_count",
+      "expected": 0,
+      "source_selector": "applicability_partition.unresolved_authority_count",
+      "failure_category": "unresolved_reviewer_item"
+    },
+    {
+      "field": "authority_finding_count",
+      "expected": 33,
+      "source_selector": "finding_qa.authority_finding_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "rule_claim_link_count",
+      "expected": 142,
+      "source_selector": "finding_qa.rule_claim_link_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "rule_claim_gap_count",
+      "expected": 0,
+      "source_selector": "finding_qa.rule_claim_gap_count",
+      "failure_category": "missing_citation_or_source_selector"
+    },
+    {
+      "field": "forest_plan_component_count",
+      "expected": 329,
+      "source_selector": "forest_plan_qa.component_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "forest_plan_standard_count",
+      "expected": 58,
+      "source_selector": "forest_plan_qa.standard_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "applicable_standard_count",
+      "expected": 12,
+      "source_selector": "forest_plan_qa.applicable_standard_count",
+      "failure_category": "count_drift"
+    },
+    {
+      "field": "accepted_v1_risk_count",
+      "expected": 14,
+      "source_selector": "accepted_v1_risk_ledger.accepted_pending_count",
+      "failure_category": "accepted_v1_risk_hidden"
+    }
+  ],
+  "artifact_selectors": [
+    {
+      "artifact_key": "decision_support_report",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json",
+      "required": true
+    },
+    {
+      "artifact_key": "decision_support_markdown",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md",
+      "required": true
+    },
+    {
+      "artifact_key": "decision_support_pdf",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.pdf",
+      "required": true,
+      "pdf_header": "%PDF-"
+    },
+    {
+      "artifact_key": "decision_support_manifest",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json",
+      "required": true
+    },
+    {
+      "artifact_key": "phase_eval",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",
+      "required": true
+    },
+    {
+      "artifact_key": "v1_ea_eval",
+      "path": "source_library/reviews/v1-cg-ecid-compliance-review/v1_ea_eval_results.json",
+      "required": true
+    },
+    {
+      "artifact_key": "promotion_suite",
+      "path": "source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json",
+      "required": true
+    }
+  ],
+  "reviewer_signoff_fields": [
+    {
+      "field": "reviewer_name",
+      "required_for_machine_validation": false
+    },
+    {
+      "field": "reviewer_role",
+      "required_for_machine_validation": false
+    },
+    {
+      "field": "reviewer_signature",
+      "required_for_machine_validation": false
+    },
+    {
+      "field": "review_date",
+      "required_for_machine_validation": false
+    },
+    {
+      "field": "reviewer_notes",
+      "required_for_machine_validation": false
+    }
+  ],
+  "prohibited_certification_phrases": [
+    "legal sufficiency certified",
+    "counsel approved",
+    "responsible official approved",
+    "line officer approved",
+    "final agency decision certified"
+  ],
+  "rendering_requirements": {
+    "markdown_required_text": [
+      "How To Use This Packet",
+      "Machine Replay Status",
+      "Accepted V1 Risk Ledger",
+      "Reviewer Signoff",
+      "does not replace responsible official, line officer, counsel, or specialist judgment"
+    ],
+    "pdf_required_text_markers": [
+      "Machine Replay Status",
+      "Accepted V1 Risk Ledger",
+      "Reviewer Signoff"
+    ],
+    "pdf_header": "%PDF-"
+  },
+  "failure_categories": [
+    "missing_required_artifact",
+    "unparseable_required_artifact",
+    "stale_artifact",
+    "review_source_set_mismatch",
+    "input_hash_mismatch",
+    "count_drift",
+    "missing_required_gate_section",
+    "missing_citation_or_source_selector",
+    "missing_non_applicable_boundary_evidence",
+    "unresolved_reviewer_item",
+    "invalid_report_pdf_header",
+    "manual_draft_dependency",
+    "accepted_v1_risk_hidden",
+    "legal_conclusion_leak",
+    "human_certification_overclaim"
+  ]
+}

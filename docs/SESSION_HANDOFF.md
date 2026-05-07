@@ -5,10 +5,11 @@ Date: 2026-05-07
 ## Current East Crazies Final QA / Certification Replay Handoff
 
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now active. Sequence 0 baseline
-replay is complete for the promoted East Crazy Inspiration Divide review. The lane remains bounded
-to `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it explicitly
-avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
-root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
+replay and Sequence 1 contract/fixture work are complete for the promoted East Crazy Inspiration
+Divide review. The lane remains bounded to `v1-cg-ecid-compliance-review` and source set
+`source-set-ba8d0feae79501b8`, and it explicitly avoids broad Region 1 claims, South Plateau
+blocker resolution, downloader/catalog regeneration, root-level `East_Crazies_*` draft dependency,
+or legal sufficiency certification.
 
 Sequence 0 replayed the current gates on 2026-05-07:
 
@@ -47,12 +48,26 @@ Canonical Sequence 0 artifact pointers:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   (`sha256=a27c590f41e8a3223073720d69374a48a054e9f15a3aec17ef5b82fa19f27649`)
 
-Sequence 1 should add the final QA contract and fixtures. Pin semantic counts, source selectors,
-and current artifact hashes, plus selected Markdown/PDF rendering requirements for required
-headings, caveats, table-summary markers, and PDF-header validity. Do not pin full rendered
-Markdown/PDF bodies. The intended generated packet family remains
-`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, which stays ignored unless
-repository policy changes. Root-level `East_Crazies_*` drafts remain non-canonical and unstaged.
+Sequence 1 added:
+
+- `config/east_crazies_final_qa_certification_v1.json`
+- `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`
+- `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`
+- `tests/test_final_qa_certification.py`
+- the final QA schema section in `docs/OUTPUT_SCHEMAS.md`
+
+The contract pins semantic counts, source selectors, current artifact hashes, required gate names,
+selected Markdown/PDF rendering requirements, optional reviewer signoff fields, accepted V1 risk
+visibility, and fail-closed categories. It does not pin full rendered Markdown/PDF body text.
+Sequence 1 verification passed: `tests/test_final_qa_certification.py` (`7 passed`),
+`tests/test_architecture_contract.py` (`5 passed`), and `git diff --check`.
+
+Next implementation boundary: Sequence 2. Add the deterministic final QA artifact reader/generator
+in `src/usfs_r1_ea_sources/final_qa_certification.py`, add `cli_final_qa.py`, register the
+`final-qa-certification` command, write JSON/Markdown/PDF/manifest under
+`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, and support `--validate-only`.
+Read the Sequence 1 config/fixtures and existing audited artifacts only. Root-level
+`East_Crazies_*` drafts remain non-canonical and unstaged.
 
 ## Current Applicability/Expansion Handoff
 

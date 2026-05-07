@@ -1,0 +1,231 @@
+{
+  "schema_version": "east-crazies-final-qa-expected-summary-v1",
+  "fixture_id": "v1-ecid-final-qa-expected-summary",
+  "as_of_date": "2026-05-07",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "expected_report_schema_version": "east-crazies-final-qa-certification-report-v1",
+  "expected_manifest_schema_version": "east-crazies-final-qa-certification-manifest-v1",
+  "expected_output_dir": "source_library/reviews/v1-cg-ecid-compliance-review/final_qa/",
+  "required_output_files": [
+    "east_crazies_final_qa_certification.json",
+    "east_crazies_final_qa_certification.md",
+    "east_crazies_final_qa_certification.pdf",
+    "east_crazies_final_qa_certification_manifest.json"
+  ],
+  "required_sections": [
+    "review_boundary",
+    "gate_replay_summary",
+    "artifact_freshness_ledger",
+    "applicability_partition",
+    "finding_qa",
+    "forest_plan_qa",
+    "decision_support_qa",
+    "accepted_v1_risk_ledger",
+    "certification_statement",
+    "residual_blockers_and_stop_conditions"
+  ],
+  "expected_counts": {
+    "package_file_count": 43,
+    "package_chunk_count": 1265,
+    "baseline_source_record_count": 26,
+    "candidate_authority_count": 373,
+    "applicable_authority_count": 33,
+    "non_applicable_authority_count": 340,
+    "unresolved_authority_count": 0,
+    "generated_rule_count": 33,
+    "authority_finding_count": 33,
+    "authority_finding_status_counts": {
+      "pass": 33
+    },
+    "rule_claim_link_count": 142,
+    "rule_claim_gap_count": 0,
+    "compliance_matrix_authority_row_count": 33,
+    "forest_plan_component_count": 329,
+    "forest_plan_supported_component_count": 79,
+    "forest_plan_not_applicable_component_count": 250,
+    "forest_plan_gap_count": 0,
+    "forest_plan_standard_count": 58,
+    "applicable_standard_count": 12,
+    "applied_standard_count": 12,
+    "forest_plan_component_eval_case_count": 35,
+    "phase_eval_phase_count": 19,
+    "phase_eval_passed_phase_count": 19,
+    "promotion_suite_required_current_result_count": 22,
+    "promotion_suite_passed_required_current_result_count": 22,
+    "accepted_v1_risk_count": 14,
+    "actual_pending_applicable_count": 7,
+    "litigation_risk_legal_conclusion_count": 0
+  },
+  "input_hashes": {
+    "decision_support_report_sha256": "67ba8fe5152acd08c9407f57b3da276b7368a4677689264a205b498f7d2276f5",
+    "decision_support_markdown_sha256": "df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a",
+    "decision_support_pdf_sha256": "1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20",
+    "decision_support_manifest_sha256": "2207b28a219339096bf9040b00fd41c3cd1142e8b48c1eb06953c95654379ffa",
+    "v1_ea_eval_results_sha256": "0f8754a726429596af7ca90536cbd763859b07185f436fe821b22a134955bb28",
+    "phase_eval_results_sha256": "f4011773407d529c781a2c9f0bf7e35591cef78539c18f205ca1963a0d6e8f46",
+    "promotion_suite_results_sha256": "a27c590f41e8a3223073720d69374a48a054e9f15a3aec17ef5b82fa19f27649",
+    "compliance_validation_sha256": "5915770c6ce5596bb810543ab3279f186c236ad1d187d392738d95281b1cdcda",
+    "applicability_validation_sha256": "d84d6b77adaa1fd9f86181aa8685f9545b63248ff07d7fcdc56616cdfc63bd56",
+    "generated_rule_pack_validation_sha256": "8f5197fa14fb6a83b0556b8c0f27a93a2c89cebde6c27dbde4531dd344bface0",
+    "compliance_matrix_sha256": "d02de0bc8b2357a733e9f8bb9c307fab3b086eca4e16656c6fa66f743c8c9bbc",
+    "compliance_matrix_pdf_sha256": "31c47e3e0156c09a4798e7b404ab072114cdd4ed6076b9debc843b774d500c4a",
+    "compliance_review_sha256": "89029906caeba41e11f5b8199a214f8e57385099f4c2de8d3f807a75c657a1a4",
+    "forest_plan_context_summary_sha256": "d8c1fbd04f0a019f9911a2d82e3c9d84f06b805e069a46cdb265319e1f81e178",
+    "forest_plan_component_eval_results_sha256": "c25d3f7443b8fb6cafe80d27a6e9dd914211472a0a1d68e701dd2830eb4a8d72"
+  },
+  "required_fixture_rows": {
+    "applicable_authority": {
+      "rule_id": "eo_11990_wetlands",
+      "rule_title": "Executive Order 11990 wetlands protection is addressed",
+      "authority_category": "executive_order",
+      "authority_source_record_id": "R1EA-104",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:eo_11990_wetlands",
+      "applicability_decision_id": "58cf914cba81bea1d55591a5",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "ea_package_citation": "EA-PACKAGE-041 (0094fc10f807)",
+      "source_library_citation": "R1EA-104 (9460e145d1df)",
+      "source_claim_ids": [
+        "claim:20c258ed3bb784c5d791bff6",
+        "claim:a39e467f45a3458336600433",
+        "claim:1c6fbe5bc4336cd16d1e9dbd"
+      ],
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector": "rows[rule_id=eo_11990_wetlands]"
+        }
+      ]
+    },
+    "non_applicable_authority": {
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:directives_notice_comment_36cfr_216",
+      "decision_id": "4798417e93d038b92991762f",
+      "authority_category": "regulation",
+      "basis_type": "absent_trigger_evidence",
+      "status": "not_applicable",
+      "source_record_ids": [
+        "R1EA-027"
+      ],
+      "search_coverage_certificate_ids": [
+        "1a2043fba159114bdbc8d610"
+      ],
+      "rationale": "Required positive package trigger groups were not found within the recorded search boundary.",
+      "coverage_certificate": {
+        "coverage_certificate_id": "1a2043fba159114bdbc8d610",
+        "coverage_class": "absent_trigger_evidence",
+        "coverage_result": "sufficient",
+        "missing_query_variants": []
+      },
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/applicability/non_applicable_authorities.json",
+          "selector": "authorities[candidate_authority_id=rule-template:nepa-ea-v0:0.4.0:directives_notice_comment_36cfr_216]"
+        }
+      ]
+    },
+    "forest_plan_standard": {
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "component_key": "FW-STD-RMZ-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "compliance_status": "complies",
+      "finding_status": "supported",
+      "ea_package_citation": "EA-PACKAGE-042 (bebc890bc3da)",
+      "forest_plan_citation": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
+          "selector": "standards[component_key=FW-STD-RMZ-01]"
+        }
+      ]
+    },
+    "decision_support_residual_risk": {
+      "risk_id": "risk:non-applicable-authority-boundary",
+      "category": "non_applicable_authority_boundary",
+      "deterministic_basis": true,
+      "legal_conclusion": false,
+      "risk_flag_count": 340,
+      "severity": "informational",
+      "source_artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/litigation_risk_summary.json",
+      "source_selector": "summary.risk_category_counts"
+    }
+  },
+  "accepted_v1_risk_ledger": {
+    "policy_mode": "accepted_pending_v1",
+    "accepted_pending_count": 14,
+    "actual_pending_count": 14,
+    "actual_pending_applicable_count": 7,
+    "source_artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/v1_ea_eval_results.json",
+    "source_selector": "conditional_adjudication",
+    "accepted_pending_rule_ids": [
+      "directives_notice_comment_36cfr_216",
+      "eo_11990_wetlands",
+      "eo_13186_migratory_birds",
+      "esa_consultation_50cfr_402",
+      "esa_section_7",
+      "mbta_migratory_birds",
+      "montana_shpo_review",
+      "nepa_4336b_programmatic_tiering",
+      "nepa_4336f_sponsor_prepared_documents",
+      "nhpa_36cfr_800",
+      "nhpa_section_106",
+      "postdecisional_review_36cfr_214",
+      "roadless_rule_36cfr_294b",
+      "usda_nepa_applicant_docs_7cfr_1b10"
+    ],
+    "representative_pending_rows": [
+      {
+        "rule_id": "directives_notice_comment_36cfr_216",
+        "actual_applicability": "not_applicable",
+        "actual_status": "not_applicable",
+        "classification_rationale": "The package discusses standards and review process terms, but whether Forest Service directive notice-and-comment rules are triggered for this project record is pending reviewer judgment."
+      },
+      {
+        "rule_id": "eo_11990_wetlands",
+        "actual_applicability": "applicable",
+        "actual_status": "pass",
+        "classification_rationale": "The package includes wetlands and floodplain-related evidence, but final EO 11990 applicability is pending reviewer adjudication."
+      }
+    ]
+  },
+  "rendering_contract": {
+    "markdown_required_text": [
+      "How To Use This Packet",
+      "Machine Replay Status",
+      "Accepted V1 Risk Ledger",
+      "Reviewer Signoff"
+    ],
+    "pdf_required_text_markers": [
+      "Machine Replay Status",
+      "Accepted V1 Risk Ledger",
+      "Reviewer Signoff"
+    ],
+    "pdf_header": "%PDF-",
+    "pin_full_rendered_body_text": false
+  },
+  "failure_categories": [
+    "missing_required_artifact",
+    "unparseable_required_artifact",
+    "stale_artifact",
+    "review_source_set_mismatch",
+    "input_hash_mismatch",
+    "count_drift",
+    "missing_required_gate_section",
+    "missing_citation_or_source_selector",
+    "missing_non_applicable_boundary_evidence",
+    "unresolved_reviewer_item",
+    "invalid_report_pdf_header",
+    "manual_draft_dependency",
+    "accepted_v1_risk_hidden",
+    "legal_conclusion_leak",
+    "human_certification_overclaim"
+  ],
+  "manual_draft_policy": {
+    "root_east_crazies_drafts_are_canonical": false,
+    "blocked_path_prefixes": [
+      "East_Crazies_"
+    ]
+  }
+}

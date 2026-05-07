@@ -152,7 +152,8 @@ keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` for the focused final QA and
 certification replay plan that will validate the promoted East Crazy review packet from existing
 audited artifacts without broadening the legal or Region 1 readiness claim. Sequence 0 baseline
-replay is complete; Sequence 1 final QA contract and fixtures are next. See
+replay and Sequence 1 final QA contract/fixtures are complete; Sequence 2 generator/CLI work is
+next. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
 remaining South Plateau strict-expansion forest-plan context blocker. See

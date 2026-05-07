@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: active; Sequence 0 baseline replay is complete and Sequence 1 contract/fixture work is next
+Status: active; Sequence 1 contract/fixture work is complete and Sequence 2 generator/CLI work is next
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -185,6 +185,18 @@ the documented promoted source set.
 
 Purpose: define the report schema, fixture expectations, and fail-closed categories before writing
 the generator.
+
+Status: complete as of the 2026-05-07 Sequence 1 pass. The tracked contract now lives in
+`config/east_crazies_final_qa_certification_v1.json`, the current East Crazies expected-summary
+fixture lives in `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`, and the
+synthetic schema fixture lives in `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`.
+`docs/OUTPUT_SCHEMAS.md` documents the artifact family and fail-closed categories before generator
+code exists.
+
+Sequence 2 should add `src/usfs_r1_ea_sources/final_qa_certification.py`,
+`src/usfs_r1_ea_sources/cli_final_qa.py`, CLI registration, and generated JSON/Markdown/PDF/manifest
+writing under the review `final_qa/` directory. It should read the Sequence 1 config/fixtures and
+existing audited review artifacts only.
 
 Actions:
 

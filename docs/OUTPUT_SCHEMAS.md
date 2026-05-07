@@ -2302,6 +2302,7 @@ manifest-shaped input hashes, and passing validation metadata.
 Decision-support validation must fail closed on:
 
 - missing or unparseable required artifacts;
+- stale generated artifacts;
 - review/source-set mismatch;
 - input hash mismatch;
 - count drift;
@@ -2321,6 +2322,118 @@ Decision-support validation must fail closed on:
   `false_positive_synthesis_claim`;
 - synthesis false negatives such as omitted required rows, reported as
   `false_negative_synthesis_omission`.
+
+## East Crazies Final QA And Certification Outputs
+
+Path: `source_library/reviews/<review_id>/final_qa/`
+
+The East Crazies final QA and certification artifact family is a replayable closeout packet over
+existing audited artifacts for the promoted East Crazy Inspiration Divide review. It is not a new
+compliance review, legal sufficiency determination, responsible-official approval, line-officer
+approval, counsel certification, or Region 1 expansion claim. The configured proving review is
+`v1-cg-ecid-compliance-review` over source set `source-set-ba8d0feae79501b8`.
+
+Sequence 1 defines the tracked contract and fixtures before generator code exists:
+
+- `config/east_crazies_final_qa_certification_v1.json`
+- `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`
+- `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`
+
+The later generated artifact family will include:
+
+- `east_crazies_final_qa_certification.json`
+- `east_crazies_final_qa_certification.md`
+- `east_crazies_final_qa_certification.pdf`
+- `east_crazies_final_qa_certification_manifest.json`
+
+`east_crazies_final_qa_certification.json` has schema version
+`east-crazies-final-qa-certification-report-v1`. Markdown and PDF renderings must derive from that
+JSON. The report must include these top-level sections:
+
+- `review_boundary`
+- `gate_replay_summary`
+- `artifact_freshness_ledger`
+- `applicability_partition`
+- `finding_qa`
+- `forest_plan_qa`
+- `decision_support_qa`
+- `accepted_v1_risk_ledger`
+- `certification_statement`
+- `residual_blockers_and_stop_conditions`
+
+`review_boundary` records the review ID, source set, package path, review artifact root, and the
+policy that root-level `East_Crazies_*` draft exports are not canonical. `gate_replay_summary`
+records replay status for applicability validation, generated rule-pack validation, compliance
+validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
+validation, phase eval, V1 EA eval, and current-promotion suite. `artifact_freshness_ledger`
+records required artifact paths, schema versions where applicable, SHA-256 values, and selectors.
+
+`applicability_partition` preserves the applicability boundary before compliance: `33` applicable
+authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
+support for the non-applicable boundary. `finding_qa` records the `33` generated findings, finding
+status counts, citation/source selectors, package-evidence selectors, `142` rule-claim links, and
+`0` rule-claim gaps. `forest_plan_qa` records Custer Gallatin context, `329` Forest Plan components,
+`58` standards, `12/12` applicable standards, component-eval status, limitations, and
+reviewer-resolution status. `decision_support_qa` records the existing decision-support validation
+result, PDF-header validity, residual-risk rows, implementation-confirmation rows, and
+legal-conclusion safeguards.
+
+`accepted_v1_risk_ledger` is required. It records
+`conditional_adjudication.policy_mode=accepted_pending_v1`, `accepted_pending_count=14`,
+`actual_pending_count=14`, `actual_pending_applicable_count=7`, all accepted pending rule IDs, a
+pointer to `v1_ea_eval_results.json`, and representative pending rows. These rows are explicit
+accepted V1 reviewer risk; they must not be hidden as final pass findings or converted into legal
+conclusions.
+
+`certification_statement` records machine replay status, optional `reviewer_signoff` fields
+(`reviewer_name`, `reviewer_role`, `reviewer_signature`, `review_date`, and `reviewer_notes`), and
+a caveat that the packet supports review but does not replace responsible official, line officer,
+counsel, or specialist judgment. Empty signoff fields do not fail machine validation.
+
+`east_crazies_final_qa_certification_manifest.json` has schema version
+`east-crazies-final-qa-certification-manifest-v1`. It records review ID, source set ID, validation
+status, input artifact paths, required gate names, per-section dependencies, and SHA-256 values for
+the decision-support report family, V1 EA eval, review-scoped phase eval, non-strict promotion
+suite, compliance validation, applicability validation, generated rule-pack validation, compliance
+matrix/PDF/review, Forest Plan context summary, and Forest Plan component eval.
+
+`config/east_crazies_final_qa_certification_v1.json` has schema version
+`east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set
+IDs, required gate names, required count fields, artifact selectors, caveat text, reviewer signoff
+fields, prohibited certification phrases, rendering requirements, manual-draft policy, and
+fail-closed categories.
+
+`config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json` has schema version
+`east-crazies-final-qa-expected-summary-v1`. It locks current East Crazies semantic counts, source
+selectors, current artifact hashes, representative applicable authority and non-applicable
+authority rows, a representative Forest Plan standard, a representative decision-support residual
+risk row, selected Markdown/PDF rendering requirements, and the accepted V1 risk ledger. It does
+not pin full rendered Markdown/PDF body text.
+
+The minimal test fixture at
+`tests/fixtures/final_qa/minimal_final_qa_certification_report.json` is synthetic. It proves the
+schema boundary without depending on local `source_library/`; it must include one gate replay,
+artifact freshness rows, one applicable finding with citations/selectors, one non-applicable
+boundary row with search coverage, one Forest Plan standard, one decision-support residual-risk row
+with `legal_conclusion=false`, one accepted V1 risk row, a certification statement, optional
+`reviewer_signoff`, and empty blockers.
+
+Final QA validation must fail closed on:
+
+- missing or unparseable required artifacts;
+- stale generated artifacts;
+- review/source-set mismatch;
+- input hash mismatch;
+- count drift;
+- missing required gate sections;
+- missing citations or source selectors;
+- missing non-applicable boundary evidence;
+- unresolved reviewer items;
+- invalid report PDF header;
+- dependency on root-level `East_Crazies_*` manual draft exports;
+- hidden accepted V1 risk, reported as `accepted_v1_risk_hidden`;
+- legal-conclusion wording, reported as `legal_conclusion_leak`;
+- human-certification overclaim, reported as `human_certification_overclaim`.
 
 `finding_graph_nodes.jsonl` contains:
 
