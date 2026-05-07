@@ -563,7 +563,8 @@ uses the tracked system design artifacts rather than a single project example. T
 for producing scopes of work: structured proposed-action intake, traceable resource selection,
 contract-ready work package rendering, reviewer adjudication, operational-readiness gate, and
 downstream EA package assembly handoff. It is two pages and intentionally general, with page-one
-system facts and a consolidated system-capability graphic replacing project-example metric tiles.
+purpose and system facts sections plus a consolidated system-capability graphic replacing
+project-example metric tiles.
 
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 resource scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake

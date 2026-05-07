@@ -181,9 +181,9 @@ tracked acceptance matrix is
 `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 2-page scope of work
 capabilities brief now lives at `docs/capabilities/project_sow_capabilities_brief.pdf` with a
 matching HTML source and generated figures under `docs/capabilities/assets/`; it frames the
-proposed-action intake, traceable resource selection, contract-ready work package rendering,
-reviewer adjudication, and downstream EA assembly handoff as the current service capability for
-producing scopes of work. See
+purpose of reducing scope-development bottlenecks, proposed-action intake, traceable resource
+selection, contract-ready work package rendering, reviewer adjudication, and downstream EA assembly
+handoff as the current service capability for producing scopes of work. See
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased

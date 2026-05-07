@@ -162,6 +162,32 @@ function briefHtml() {
       font-weight: 800;
       letter-spacing: 0;
     }
+    .purpose {
+      display: grid;
+      grid-template-columns: 1.05in 1fr;
+      gap: 0.14in;
+      align-items: center;
+      margin-top: 0.13in;
+      padding: 0.12in 0.14in;
+      background: #eef6f3;
+      border: 1px solid #b8d6cf;
+      border-left: 6px solid #26786f;
+      border-radius: 8px;
+    }
+    .purpose strong {
+      display: block;
+      color: #171713;
+      font-size: 11.4pt;
+      line-height: 1.1;
+    }
+    .purpose span {
+      display: block;
+      color: #3f4842;
+      font-size: 8.8pt;
+      line-height: 1.32;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -265,6 +291,10 @@ function briefHtml() {
       <div class="kicker">Standing Framework / Capabilities Brief</div>
       <h1>NEPA Scope of Work System</h1>
       <p class="lede">This system turns a structured proposed-action intake into a contract-ready scope of work package. It explains why resource workstreams are selected, renders the work needed from each resource area, and carries reviewer decisions forward without converting planning support into compliance conclusions.</p>
+      <div class="purpose">
+        <strong>Purpose</strong>
+        <span>Scope of work development is a common project bottleneck. Agency staff may inflate resource-area requirements beyond what laws, regulations, and project facts require. This system identifies only the required work and excludes preference-driven additions.</span>
+      </div>
       <p class="proof-note">Overall system facts</p>
       <div class="fact-grid">
         <div class="fact"><strong>Structured intake</strong><span>Captures proposed action, project profile, resource indicators, evidence references, and review assumptions as data.</span></div>
