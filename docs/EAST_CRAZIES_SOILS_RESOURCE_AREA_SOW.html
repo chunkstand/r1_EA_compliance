@@ -4,22 +4,19 @@
   <meta charset="utf-8" />
   <title>East Crazies Example Soils Scope Of Work</title>
   <style>
-    @page { size: Letter; margin: 0.42in; }
+    @page { size: Letter; margin: 0.46in; }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
       color: #1d221f;
-      background: #f7f6f1;
+      background: #fbfaf7;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
     .report { max-width: 7.66in; margin: 0 auto; }
     .cover {
-      padding: 0.2in 0.22in 0.18in;
-      background: #ffffff;
-      border: 1px solid #d7d2c5;
-      border-left: 7px solid #23776e;
-      border-radius: 10px;
+      padding: 0 0 0.18in;
+      border-bottom: 2px solid #23776e;
       break-inside: avoid;
     }
     .kicker {
@@ -32,7 +29,7 @@
     h1, h2, h3, p, dl, dd, ul { margin: 0; }
     h1 {
       margin-top: 0.04in;
-      font-size: 22pt;
+      font-size: 25pt;
       line-height: 1.05;
       letter-spacing: 0;
       color: #141814;
@@ -40,9 +37,9 @@
     .meta {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.07in 0.12in;
-      margin-top: 0.13in;
-      padding-top: 0.12in;
+      gap: 0.09in 0.18in;
+      margin-top: 0.16in;
+      padding-top: 0.14in;
       border-top: 1px solid #e1ddd2;
     }
     .meta div { min-width: 0; }
@@ -57,102 +54,122 @@
     dd {
       margin-top: 0.025in;
       color: #1d221f;
-      font-size: 8.5pt;
-      line-height: 1.22;
+      font-size: 9.1pt;
+      line-height: 1.28;
       font-weight: 650;
     }
     .intro {
-      margin-top: 0.14in;
+      margin-top: 0.18in;
       column-count: 2;
-      column-gap: 0.22in;
+      column-gap: 0.28in;
     }
     p, li {
       color: #414a42;
-      font-size: 8.45pt;
-      line-height: 1.25;
+      font-size: 9.35pt;
+      line-height: 1.38;
       text-wrap: pretty;
     }
-    p { margin-bottom: 0.055in; }
+    p { margin-bottom: 0.08in; }
     .section {
-      margin-top: 0.15in;
-      padding-top: 0.03in;
+      margin-top: 0.22in;
+      padding-top: 0.02in;
       break-inside: auto;
     }
     h2 {
-      margin-bottom: 0.08in;
-      padding: 0.055in 0.08in;
-      color: #ffffff;
-      background: #23776e;
-      border-radius: 5px;
-      font-size: 11.2pt;
+      margin-bottom: 0.11in;
+      padding: 0 0 0.045in;
+      color: #1b5f58;
+      background: transparent;
+      border-bottom: 2px solid #23776e;
+      border-radius: 0;
+      font-size: 13.2pt;
       line-height: 1.08;
-      letter-spacing: 0.015em;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
     }
     h3 {
-      margin: 0.06in 0 0.04in;
+      margin: 0.12in 0 0.055in;
       color: #171b17;
-      font-size: 9.1pt;
-      line-height: 1.18;
+      font-size: 10.6pt;
+      line-height: 1.22;
       break-after: avoid;
     }
     .section-body {
-      column-count: 2;
-      column-gap: 0.24in;
+      max-width: 6.95in;
     }
     .section-body > h3:first-child { margin-top: 0; }
     ul {
-      margin: 0 0 0.07in 0.13in;
+      margin: 0 0 0.1in 0.18in;
       padding: 0;
     }
-    li { margin-bottom: 0.028in; }
+    li { margin-bottom: 0.05in; }
     li::marker { color: #23776e; }
-    .cards {
+    .deliverable-list {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.08in;
+      gap: 0.18in;
+      align-items: start;
     }
-    .card, .appendix-card {
-      padding: 0.1in 0.11in;
-      background: #ffffff;
-      border: 1px solid #d9d5ca;
-      border-left: 4px solid #23776e;
-      border-radius: 7px;
+    .deliverable-item {
+      padding-top: 0.08in;
+      border-top: 4px solid #23776e;
       break-inside: avoid;
     }
-    .card h3, .appendix-card h3 {
+    .deliverable-item h3 {
       margin-top: 0;
       color: #141814;
-      font-size: 9.4pt;
+      font-size: 10.7pt;
     }
-    .card ul { margin-bottom: 0; }
+    .deliverable-item ul { margin-bottom: 0; }
     .appendix-lead {
-      margin-bottom: 0.08in;
+      margin-bottom: 0.12in;
       max-width: 6.6in;
     }
-    .appendix-grid {
+    .appendix-list {
+      display: block;
+    }
+    .appendix-entry {
+      padding: 0.09in 0;
+      border-top: 1px solid #d8d3c6;
+      break-inside: avoid;
+    }
+    .appendix-entry h3 {
+      margin: 0 0 0.05in;
+      color: #1b5f58;
+      font-size: 10pt;
+    }
+    .crosswalk {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.075in;
+      grid-template-columns: 0.95in 1fr;
+      gap: 0.035in 0.12in;
+      margin: 0;
     }
-    .appendix-card p,
-    .appendix-card li {
-      font-size: 7.72pt;
-      line-height: 1.2;
+    .crosswalk div { display: contents; }
+    .crosswalk dt {
+      color: #52615a;
+      font-size: 7.2pt;
+      line-height: 1.22;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 850;
     }
-    .appendix-card ul { margin-bottom: 0; }
+    .crosswalk dd {
+      color: #3d463f;
+      font-size: 8.55pt;
+      line-height: 1.32;
+      font-weight: 450;
+    }
     .sources .section-body {
-      column-count: 2;
-      column-gap: 0.2in;
+      max-width: 7in;
     }
     .sources li {
-      font-size: 7.7pt;
-      line-height: 1.18;
+      font-size: 8pt;
+      line-height: 1.26;
       overflow-wrap: anywhere;
     }
     a { color: #175e57; text-decoration: none; }
     @media print {
-      .cover, .card, .appendix-card { box-shadow: none; }
+      .cover, .deliverable-item, .appendix-entry { box-shadow: none; }
     }
   </style>
 </head>
@@ -166,13 +183,13 @@
     </header>
     <section class="section deliverables" id="deliverables">
       <h2>Deliverables</h2>
-      <div class="cards"><div class="card">
+      <div class="deliverable-list"><div class="deliverable-item">
         <h3>1. Fieldwork</h3>
         <ul><li>Survey-trigger table tying each proposed action element to the controlling source that requires field verification.</li><li>Fieldwork plan, maps, and activity-area definitions for triggered soils surveys.</li><li>Field data package with GPS points/tracks/polygons, completed field forms, photo log, soil map unit checks, DSD observations, wetland/riparian interface notes, and data gaps.</li></ul>
-      </div><div class="card">
+      </div><div class="deliverable-item">
         <h3>2. Analysis</h3>
         <ul><li>Existing-condition summary by activity area.</li><li>Effects indicators and soil-disturbance calculations for no action, proposed action, and any Forest Service-provided alternative.</li><li>Forest Plan consistency analysis using Appendix A.</li><li>Mitigation/BMP/monitoring matrix tied to action element, location, source trigger, timing, responsible party, and verification method.</li><li>Cumulative-effects and uncertainty summary where a cause-and-effect relationship exists.</li></ul>
-      </div><div class="card">
+      </div><div class="deliverable-item">
         <h3>3. Reporting</h3>
         <ul><li>Draft Soils Specialist Report or approved issue-screening memo.</li><li>Appendix A authority-to-report crosswalk updated for the project.</li><li>NEPA-ready soils summary text for later disclosure, if requested by the Forest Service.</li><li>Final report or memo, final PDF, editable source file, tables, map atlas, GIS package, photo log, field forms, source inventory, metadata/readme, and limitations memo.</li></ul>
       </div></div>
@@ -188,43 +205,43 @@
   </section><section class="section appendix" id="appendix-a-authority-to-report-crosswalk">
       <h2>Appendix A. Authority-To-Report Crosswalk</h2>
       <div class="appendix-lead"><p>Use this appendix as the starting control table for the soils specialist report. Update it only if Forest Service direction, source currentness, or the proposed action changes.</p></div>
-    <div class="appendix-grid">
-      <div class="appendix-card">
+    <div class="appendix-list">
+      <div class="appendix-entry">
             <h3>A1. NEPA, USDA NEPA Procedures, And FSH 1909.15</h3>
-            <ul><li>Source: NEPA; USDA NEPA procedures at 7 CFR part 1b; FSH 1909.15.</li><li>Trigger: Federal land exchange, trail, trailhead, access, and parcel-management decisions that need soils effects support for an environmental assessment or issue-screening memo.</li><li>Report output: concise affected environment, methods, direct and indirect effects, cumulative effects if useful, mitigation/monitoring, source citations, and data limitations.</li><li>Acceptance test: each conclusion is traceable to reliable existing data, field evidence, or a documented Forest Service assumption; the report does not make the agency decision.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>NEPA; USDA NEPA procedures at 7 CFR part 1b; FSH 1909.15.</dd></div><div><dt>Trigger</dt><dd>Federal land exchange, trail, trailhead, access, and parcel-management decisions that need soils effects support for an environmental assessment or issue-screening memo.</dd></div><div><dt>Report output</dt><dd>concise affected environment, methods, direct and indirect effects, cumulative effects if useful, mitigation/monitoring, source citations, and data limitations.</dd></div><div><dt>Acceptance test</dt><dd>each conclusion is traceable to reliable existing data, field evidence, or a documented Forest Service assumption; the report does not make the agency decision.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A2. Third-Party Or Consultant-Prepared Analysis</h3>
-            <ul><li>Source: 7 CFR part 1b contractor/third-party preparation procedures and Forest Service direction.</li><li>Trigger: WLG or a consultant prepares soils analysis for Forest Service review.</li><li>Report output: editable report, field forms, GIS/map package, photo log, source inventory, assumptions, limitations, and comment-response log.</li><li>Acceptance test: Forest Service can independently review the methods, source citations, field evidence, and assumptions before using the report.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>7 CFR part 1b contractor/third-party preparation procedures and Forest Service direction.</dd></div><div><dt>Trigger</dt><dd>WLG or a consultant prepares soils analysis for Forest Service review.</dd></div><div><dt>Report output</dt><dd>editable report, field forms, GIS/map package, photo log, source inventory, assumptions, limitations, and comment-response log.</dd></div><div><dt>Acceptance test</dt><dd>Forest Service can independently review the methods, source citations, field evidence, and assumptions before using the report.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A3. NFMA And 36 CFR Part 219</h3>
-            <ul><li>Source: NFMA; 36 CFR part 219, especially project/activity consistency with the applicable Forest Plan.</li><li>Trigger: Any NFS project or authorization after approval of the Custer Gallatin Forest Plan.</li><li>Report output: Forest Plan consistency section that addresses applicable desired conditions, standards, guidelines, suitability, and monitoring components.</li><li>Acceptance test: the report states whether the action complies with standards, follows guidelines or uses an equally effective design, and avoids foreclosing applicable desired conditions.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>NFMA; 36 CFR part 219, especially project/activity consistency with the applicable Forest Plan.</dd></div><div><dt>Trigger</dt><dd>Any NFS project or authorization after approval of the Custer Gallatin Forest Plan.</dd></div><div><dt>Report output</dt><dd>Forest Plan consistency section that addresses applicable desired conditions, standards, guidelines, suitability, and monitoring components.</dd></div><div><dt>Acceptance test</dt><dd>the report states whether the action complies with standards, follows guidelines or uses an equally effective design, and avoids foreclosing applicable desired conditions.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A4. Custer Gallatin Forest Plan Soil Desired Conditions</h3>
-            <ul><li>Source: FW-DC-SOIL-01, FW-DC-SOIL-02, and FW-DC-SOIL-03.</li><li>Trigger: Trail, trailhead, crossing, access, restoration, and parcel-management actions that could affect soil productivity, hydrologic function, erosion, or ground cover.</li><li>Report output: existing-condition and effects discussion for soil productivity, erosion, sediment connectivity, infiltration, ground cover, and restoration feasibility.</li><li>Acceptance test: the report explains how the action maintains or moves toward the soil desired conditions, or identifies the design changes needed.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>FW-DC-SOIL-01, FW-DC-SOIL-02, and FW-DC-SOIL-03.</dd></div><div><dt>Trigger</dt><dd>Trail, trailhead, crossing, access, restoration, and parcel-management actions that could affect soil productivity, hydrologic function, erosion, or ground cover.</dd></div><div><dt>Report output</dt><dd>existing-condition and effects discussion for soil productivity, erosion, sediment connectivity, infiltration, ground cover, and restoration feasibility.</dd></div><div><dt>Acceptance test</dt><dd>the report explains how the action maintains or moves toward the soil desired conditions, or identifies the design changes needed.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A5. Custer Gallatin Forest Plan Soil Standard</h3>
-            <ul><li>Source: FW-STD-SOIL-01.</li><li>Trigger: Any management activity that could create or add to detrimental soil conditions in an activity area.</li><li>Report output: activity-area delineation, existing DSD estimate, expected DSD estimate, linear-trail metric rationale if used, and restoration/design measures needed to avoid exceeding the standard.</li><li>Acceptance test: the report states whether FW-STD-SOIL-01 applies, is met, requires restoration, or is not triggered.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>FW-STD-SOIL-01.</dd></div><div><dt>Trigger</dt><dd>Any management activity that could create or add to detrimental soil conditions in an activity area.</dd></div><div><dt>Report output</dt><dd>activity-area delineation, existing DSD estimate, expected DSD estimate, linear-trail metric rationale if used, and restoration/design measures needed to avoid exceeding the standard.</dd></div><div><dt>Acceptance test</dt><dd>the report states whether FW-STD-SOIL-01 applies, is met, requires restoration, or is not triggered.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A6. Custer Gallatin Forest Plan Soil Guidelines</h3>
-            <ul><li>Source: FW-GDL-SOIL-01 through FW-GDL-SOIL-08.</li><li>Trigger: Ground-based equipment, temporary access, blading, scarification, pits/trenches, burn piles, steep slopes, high mass-wasting potential, CWD, or restoration work.</li><li>Report output: guideline applicability table with action element, location, field finding, design feature, mitigation, or equally effective alternative.</li><li>Acceptance test: every triggered guideline is carried into the design criteria or explicitly screened out.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>FW-GDL-SOIL-01 through FW-GDL-SOIL-08.</dd></div><div><dt>Trigger</dt><dd>Ground-based equipment, temporary access, blading, scarification, pits/trenches, burn piles, steep slopes, high mass-wasting potential, CWD, or restoration work.</dd></div><div><dt>Report output</dt><dd>guideline applicability table with action element, location, field finding, design feature, mitigation, or equally effective alternative.</dd></div><div><dt>Acceptance test</dt><dd>every triggered guideline is carried into the design criteria or explicitly screened out.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A7. Custer Gallatin Forest Plan Soil Monitoring</h3>
-            <ul><li>Source: MON-SOIL-01 and MON-SOIL-02.</li><li>Trigger: DSD monitoring where FW-STD-SOIL-01 applies; CWD monitoring where vegetation activity areas or organic-substrate effects are present.</li><li>Report output: monitoring recommendation with location, metric, timing, responsible party, and success criterion.</li><li>Acceptance test: the report identifies pre/post DSD monitoring and CWD monitoring where triggered, or states why they are not triggered.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>MON-SOIL-01 and MON-SOIL-02.</dd></div><div><dt>Trigger</dt><dd>DSD monitoring where FW-STD-SOIL-01 applies; CWD monitoring where vegetation activity areas or organic-substrate effects are present.</dd></div><div><dt>Report output</dt><dd>monitoring recommendation with location, metric, timing, responsible party, and success criterion.</dd></div><div><dt>Acceptance test</dt><dd>the report identifies pre/post DSD monitoring and CWD monitoring where triggered, or states why they are not triggered.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A8. Region 1 Soil Management Direction</h3>
-            <ul><li>Source: USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management.</li><li>Trigger: Forest Service management activity that could affect soil productivity or create detrimental soil disturbance.</li><li>Report output: regional soil-quality method, DSD threshold logic, productivity-risk discussion, and restoration requirements.</li><li>Acceptance test: regional soil direction is visible in the methods, effects indicators, and mitigation/monitoring matrix.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management.</dd></div><div><dt>Trigger</dt><dd>Forest Service management activity that could affect soil productivity or create detrimental soil disturbance.</dd></div><div><dt>Report output</dt><dd>regional soil-quality method, DSD threshold logic, productivity-risk discussion, and restoration requirements.</dd></div><div><dt>Acceptance test</dt><dd>regional soil direction is visible in the methods, effects indicators, and mitigation/monitoring matrix.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A9. Soil-Disturbance Field Guide And Monitoring Protocol</h3>
-            <ul><li>Source: Forest Service Soil-Disturbance Field Guide and Forest Soil Disturbance Monitoring Protocol.</li><li>Trigger: Any required DSD survey or soil-disturbance classification.</li><li>Report output: disturbance classes, field forms, photo/GPS evidence, activity-area summary, and protocol deviations.</li><li>Acceptance test: disturbance conclusions are repeatable from the field record.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>Forest Service Soil-Disturbance Field Guide and Forest Soil Disturbance Monitoring Protocol.</dd></div><div><dt>Trigger</dt><dd>Any required DSD survey or soil-disturbance classification.</dd></div><div><dt>Report output</dt><dd>disturbance classes, field forms, photo/GPS evidence, activity-area summary, and protocol deviations.</dd></div><div><dt>Acceptance test</dt><dd>disturbance conclusions are repeatable from the field record.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A10. NRCS Web Soil Survey And SSURGO</h3>
-            <ul><li>Source: NRCS Web Soil Survey and SSURGO.</li><li>Trigger: Every mapped activity area and any parcel where soil limitations affect the proposed action.</li><li>Report output: soil map unit/activity-area crosswalk, limitation ratings, hydric/wet soil indicators, erosion hazard, drainage, revegetation limits, and data limitations.</li><li>Acceptance test: official soil data are cited and field-verified where the action creates a soil issue.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>NRCS Web Soil Survey and SSURGO.</dd></div><div><dt>Trigger</dt><dd>Every mapped activity area and any parcel where soil limitations affect the proposed action.</dd></div><div><dt>Report output</dt><dd>soil map unit/activity-area crosswalk, limitation ratings, hydric/wet soil indicators, erosion hazard, drainage, revegetation limits, and data limitations.</dd></div><div><dt>Acceptance test</dt><dd>official soil data are cited and field-verified where the action creates a soil issue.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A11. National BMPs</h3>
-            <ul><li>Source: Forest Service National Best Management Practices Program.</li><li>Trigger: Trail, trailhead, access, crossing, drainage, or restoration work with water-quality or sediment-delivery risk.</li><li>Report output: BMP matrix for drainage control, hydrologic disconnection, crossing hardening, sediment control, wet-weather restrictions, decompaction, revegetation, and inspection.</li><li>Acceptance test: BMPs are tied to mapped locations and verification methods, not listed generically.</li></ul>
-          </div><div class="appendix-card">
+            <dl class="crosswalk"><div><dt>Source</dt><dd>Forest Service National Best Management Practices Program.</dd></div><div><dt>Trigger</dt><dd>Trail, trailhead, access, crossing, drainage, or restoration work with water-quality or sediment-delivery risk.</dd></div><div><dt>Report output</dt><dd>BMP matrix for drainage control, hydrologic disconnection, crossing hardening, sediment control, wet-weather restrictions, decompaction, revegetation, and inspection.</dd></div><div><dt>Acceptance test</dt><dd>BMPs are tied to mapped locations and verification methods, not listed generically.</dd></div></dl>
+          </div><div class="appendix-entry">
             <h3>A12. East Crazies Example Action Elements</h3>
-            <ul><li>Source: East Crazies structured intake assumptions.</li><li>Trigger: Sweet Trunk Trail work, Inspiration Divide Trail reroute, Big Timber Canyon Trailhead improvements, stream/wetland approaches, access/easement features, parcel restrictions, grazing improvements, and acquired-parcel management needs.</li><li>Report output: action-element by soil-concern matrix, field-survey trigger table, effects indicators, maps, mitigation/BMP/monitoring matrix, and issue-screening rationale if a full report is not required.</li><li>Acceptance test: every soils conclusion is tied to an action element or explicitly screened out.</li></ul>
+            <dl class="crosswalk"><div><dt>Source</dt><dd>East Crazies structured intake assumptions.</dd></div><div><dt>Trigger</dt><dd>Sweet Trunk Trail work, Inspiration Divide Trail reroute, Big Timber Canyon Trailhead improvements, stream/wetland approaches, access/easement features, parcel restrictions, grazing improvements, and acquired-parcel management needs.</dd></div><div><dt>Report output</dt><dd>action-element by soil-concern matrix, field-survey trigger table, effects indicators, maps, mitigation/BMP/monitoring matrix, and issue-screening rationale if a full report is not required.</dd></div><div><dt>Acceptance test</dt><dd>every soils conclusion is tied to an action element or explicitly screened out.</dd></div></dl>
           </div>
     </div>
     </section><section class="section sources" id="sources-cited">

@@ -36,8 +36,8 @@ async function main() {
 
   const pdf = await PDFDocument.load(await fs.readFile(pdfPath));
   const pageCount = pdf.getPageCount();
-  if (pageCount > 8) {
-    throw new Error(`Expected compact SOW PDF to be 8 pages or fewer, got ${pageCount}.`);
+  if (pageCount > 10) {
+    throw new Error(`Expected readable SOW PDF to be 10 pages or fewer, got ${pageCount}.`);
   }
   console.log(`Wrote ${path.relative(repoRoot, htmlPath)}`);
   console.log(`Wrote ${path.relative(repoRoot, pdfPath)} (${pageCount} pages)`);
@@ -236,7 +236,7 @@ function renderSection(section) {
   if (section.title === "Deliverables") {
     return `<section class="section deliverables" id="${slug}">
       <h2>${escapeHtml(section.title)}</h2>
-      <div class="cards">${renderH3Cards(section.blocks)}</div>
+      <div class="deliverable-list">${renderDeliverables(section.blocks)}</div>
     </section>`;
   }
   if (section.title.startsWith("Appendix")) {
@@ -252,24 +252,24 @@ function renderSection(section) {
   </section>`;
 }
 
-function renderH3Cards(blocks) {
-  const cards = [];
+function renderDeliverables(blocks) {
+  const deliverables = [];
   let current = null;
   for (const block of blocks) {
     if (block.type === "h3") {
       current = { title: block.text, blocks: [] };
-      cards.push(current);
+      deliverables.push(current);
       continue;
     }
     if (current) {
       current.blocks.push(block);
     }
   }
-  return cards
+  return deliverables
     .map(
-      (card) => `<div class="card">
-        <h3>${escapeHtml(card.title)}</h3>
-        ${card.blocks.map(renderBlock).join("")}
+      (deliverable) => `<div class="deliverable-item">
+        <h3>${escapeHtml(deliverable.title)}</h3>
+        ${deliverable.blocks.map(renderBlock).join("")}
       </div>`
     )
     .join("");
@@ -292,12 +292,12 @@ function renderAppendix(blocks) {
     }
   }
   return `<div class="appendix-lead">${lead.map(renderBlock).join("")}</div>
-    <div class="appendix-grid">
+    <div class="appendix-list">
       ${entries
         .map(
-          (entry) => `<div class="appendix-card">
+          (entry) => `<div class="appendix-entry">
             <h3>${escapeHtml(entry.title)}</h3>
-            ${entry.blocks.map(renderBlock).join("")}
+            ${entry.blocks.map(renderAppendixBlock).join("")}
           </div>`
         )
         .join("")}
@@ -317,6 +317,21 @@ function renderBlock(block) {
   return "";
 }
 
+function renderAppendixBlock(block) {
+  if (block.type !== "ul") {
+    return renderBlock(block);
+  }
+  return `<dl class="crosswalk">${block.items.map(renderCrosswalkItem).join("")}</dl>`;
+}
+
+function renderCrosswalkItem(item) {
+  const match = item.match(/^([^:]+):\s*(.*)$/);
+  if (!match) {
+    return `<div><dt>Note</dt><dd>${escapeLinks(item)}</dd></div>`;
+  }
+  return `<div><dt>${escapeHtml(match[1])}</dt><dd>${escapeLinks(match[2])}</dd></div>`;
+}
+
 function escapeLinks(value) {
   const escaped = escapeHtml(value);
   return escaped.replaceAll(/(https:\/\/[^\s<]+)/g, '<a href="$1">$1</a>');
@@ -332,22 +347,19 @@ function escapeHtml(value) {
 
 function styles() {
   return `
-    @page { size: Letter; margin: 0.42in; }
+    @page { size: Letter; margin: 0.46in; }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
       color: #1d221f;
-      background: #f7f6f1;
+      background: #fbfaf7;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
     .report { max-width: 7.66in; margin: 0 auto; }
     .cover {
-      padding: 0.2in 0.22in 0.18in;
-      background: #ffffff;
-      border: 1px solid #d7d2c5;
-      border-left: 7px solid #23776e;
-      border-radius: 10px;
+      padding: 0 0 0.18in;
+      border-bottom: 2px solid #23776e;
       break-inside: avoid;
     }
     .kicker {
@@ -360,7 +372,7 @@ function styles() {
     h1, h2, h3, p, dl, dd, ul { margin: 0; }
     h1 {
       margin-top: 0.04in;
-      font-size: 22pt;
+      font-size: 25pt;
       line-height: 1.05;
       letter-spacing: 0;
       color: #141814;
@@ -368,9 +380,9 @@ function styles() {
     .meta {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.07in 0.12in;
-      margin-top: 0.13in;
-      padding-top: 0.12in;
+      gap: 0.09in 0.18in;
+      margin-top: 0.16in;
+      padding-top: 0.14in;
       border-top: 1px solid #e1ddd2;
     }
     .meta div { min-width: 0; }
@@ -385,102 +397,122 @@ function styles() {
     dd {
       margin-top: 0.025in;
       color: #1d221f;
-      font-size: 8.5pt;
-      line-height: 1.22;
+      font-size: 9.1pt;
+      line-height: 1.28;
       font-weight: 650;
     }
     .intro {
-      margin-top: 0.14in;
+      margin-top: 0.18in;
       column-count: 2;
-      column-gap: 0.22in;
+      column-gap: 0.28in;
     }
     p, li {
       color: #414a42;
-      font-size: 8.45pt;
-      line-height: 1.25;
+      font-size: 9.35pt;
+      line-height: 1.38;
       text-wrap: pretty;
     }
-    p { margin-bottom: 0.055in; }
+    p { margin-bottom: 0.08in; }
     .section {
-      margin-top: 0.15in;
-      padding-top: 0.03in;
+      margin-top: 0.22in;
+      padding-top: 0.02in;
       break-inside: auto;
     }
     h2 {
-      margin-bottom: 0.08in;
-      padding: 0.055in 0.08in;
-      color: #ffffff;
-      background: #23776e;
-      border-radius: 5px;
-      font-size: 11.2pt;
+      margin-bottom: 0.11in;
+      padding: 0 0 0.045in;
+      color: #1b5f58;
+      background: transparent;
+      border-bottom: 2px solid #23776e;
+      border-radius: 0;
+      font-size: 13.2pt;
       line-height: 1.08;
-      letter-spacing: 0.015em;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
     }
     h3 {
-      margin: 0.06in 0 0.04in;
+      margin: 0.12in 0 0.055in;
       color: #171b17;
-      font-size: 9.1pt;
-      line-height: 1.18;
+      font-size: 10.6pt;
+      line-height: 1.22;
       break-after: avoid;
     }
     .section-body {
-      column-count: 2;
-      column-gap: 0.24in;
+      max-width: 6.95in;
     }
     .section-body > h3:first-child { margin-top: 0; }
     ul {
-      margin: 0 0 0.07in 0.13in;
+      margin: 0 0 0.1in 0.18in;
       padding: 0;
     }
-    li { margin-bottom: 0.028in; }
+    li { margin-bottom: 0.05in; }
     li::marker { color: #23776e; }
-    .cards {
+    .deliverable-list {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.08in;
+      gap: 0.18in;
+      align-items: start;
     }
-    .card, .appendix-card {
-      padding: 0.1in 0.11in;
-      background: #ffffff;
-      border: 1px solid #d9d5ca;
-      border-left: 4px solid #23776e;
-      border-radius: 7px;
+    .deliverable-item {
+      padding-top: 0.08in;
+      border-top: 4px solid #23776e;
       break-inside: avoid;
     }
-    .card h3, .appendix-card h3 {
+    .deliverable-item h3 {
       margin-top: 0;
       color: #141814;
-      font-size: 9.4pt;
+      font-size: 10.7pt;
     }
-    .card ul { margin-bottom: 0; }
+    .deliverable-item ul { margin-bottom: 0; }
     .appendix-lead {
-      margin-bottom: 0.08in;
+      margin-bottom: 0.12in;
       max-width: 6.6in;
     }
-    .appendix-grid {
+    .appendix-list {
+      display: block;
+    }
+    .appendix-entry {
+      padding: 0.09in 0;
+      border-top: 1px solid #d8d3c6;
+      break-inside: avoid;
+    }
+    .appendix-entry h3 {
+      margin: 0 0 0.05in;
+      color: #1b5f58;
+      font-size: 10pt;
+    }
+    .crosswalk {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.075in;
+      grid-template-columns: 0.95in 1fr;
+      gap: 0.035in 0.12in;
+      margin: 0;
     }
-    .appendix-card p,
-    .appendix-card li {
-      font-size: 7.72pt;
-      line-height: 1.2;
+    .crosswalk div { display: contents; }
+    .crosswalk dt {
+      color: #52615a;
+      font-size: 7.2pt;
+      line-height: 1.22;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 850;
     }
-    .appendix-card ul { margin-bottom: 0; }
+    .crosswalk dd {
+      color: #3d463f;
+      font-size: 8.55pt;
+      line-height: 1.32;
+      font-weight: 450;
+    }
     .sources .section-body {
-      column-count: 2;
-      column-gap: 0.2in;
+      max-width: 7in;
     }
     .sources li {
-      font-size: 7.7pt;
-      line-height: 1.18;
+      font-size: 8pt;
+      line-height: 1.26;
       overflow-wrap: anywhere;
     }
     a { color: #175e57; text-decoration: none; }
     @media print {
-      .cover, .card, .appendix-card { box-shadow: none; }
+      .cover, .deliverable-item, .appendix-entry { box-shadow: none; }
     }
   `;
 }
