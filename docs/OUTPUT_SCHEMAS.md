@@ -2345,7 +2345,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-draft \
 
 Drafting uses `config/project_sow_intake_draft_rules_v1.json`. The draft output is a
 `project-sow-intake-v0` JSON object with additional `draft_metadata`. It is schema-valid as an
-intake shape, but it is explicitly unreviewed:
+intake shape, and the tracked `project_sow_intake_v0` schema declares the optional
+`draft_metadata` object. Drafted intakes are explicitly unreviewed:
 
 - `draft_metadata.schema_version` is `project-sow-intake-draft-v0`;
 - `review_status` starts as `unreviewed`;

@@ -60,6 +60,10 @@ validation blocker; unrelated schema, scope, or inventory failures are reported 
 `unexpected_failed_validation_checks`. It does not create applicability decisions, compliance
 findings, legal advice, legal sufficiency conclusions, or final agency decisions.
 
+The Sequence 2 alignment pass closed the remaining draft-contract gap by declaring
+`draft_metadata` in `docs/schemas/project_sow_intake_v0.schema.json` and tightening the fixture test
+to verify the exact proposed-action source path and SHA-256 hash.
+
 Sequence 2 fixtures now include a Red Rock Ridge land-exchange proposed-action text fixture, an
 ambiguous land-adjustment fixture, and expected draft metadata for the positive case. Focused tests
 cover draft generation, ambiguity flags, unreviewed-draft validation failure, and reviewer-confirmed

@@ -17,6 +17,64 @@
       "minItems": 1,
       "type": "array"
     },
+    "draft_metadata": {
+      "additionalProperties": true,
+      "description": "Metadata for an intake drafted from proposed-action text. Presence of this object means runtime validation requires explicit reviewer confirmation before package generation.",
+      "properties": {
+        "candidate_federal_land_action_types": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "candidate_resource_area_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "draft_notice": {
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "unreviewed",
+            "reviewer_confirmed"
+          ],
+          "type": "string"
+        },
+        "reviewer_confirmation_required": {
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "project-sow-intake-draft-v0"
+        },
+        "source_text_path": {
+          "type": "string"
+        },
+        "source_text_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "uncertainty_flags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "review_status",
+        "reviewer_confirmation_required",
+        "candidate_federal_land_action_types",
+        "candidate_resource_area_ids",
+        "source_text_path",
+        "source_text_sha256",
+        "uncertainty_flags"
+      ],
+      "type": "object"
+    },
     "federal_land_actions": {
       "items": {
         "additionalProperties": true,

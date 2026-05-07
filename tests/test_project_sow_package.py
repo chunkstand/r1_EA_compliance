@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
 REPO_ROOT = Path(__file__).resolve().parents[1]
 INTAKE_PATH = REPO_ROOT / "config" / "fixtures" / "project_sow" / "east_crazies_land_exchange_intake.json"
 TEMPLATE_PATH = REPO_ROOT / "config" / "templates" / "project_sow_land_exchange_intake_template.json"
+INTAKE_SCHEMA_PATH = REPO_ROOT / "docs" / "schemas" / "project_sow_intake_v0.schema.json"
 PROPOSED_ACTION_FIXTURE_PATH = (
     REPO_ROOT
     / "config"
@@ -216,6 +218,17 @@ def test_project_sow_intake_validate_accepts_minimal_land_exchange_template() ->
     }
 
 
+def test_project_sow_intake_schema_declares_draft_metadata_contract() -> None:
+    schema = json.loads(INTAKE_SCHEMA_PATH.read_text())
+    draft_metadata = schema["properties"]["draft_metadata"]
+
+    assert draft_metadata["properties"]["schema_version"] == {
+        "const": "project-sow-intake-draft-v0"
+    }
+    assert "source_text_path" in draft_metadata["required"]
+    assert draft_metadata["properties"]["source_text_sha256"]["pattern"] == "^[a-f0-9]{64}$"
+
+
 def test_project_sow_intake_draft_writes_unreviewed_schema_valid_intake(
     tmp_path: Path,
 ) -> None:
@@ -238,7 +251,10 @@ def test_project_sow_intake_draft_writes_unreviewed_schema_valid_intake(
     assert draft["draft_metadata"]["schema_version"] == "project-sow-intake-draft-v0"
     assert draft["draft_metadata"]["review_status"] == "unreviewed"
     assert draft["draft_metadata"]["reviewer_confirmation_required"] is True
-    assert draft["draft_metadata"]["source_text_sha256"]
+    assert draft["draft_metadata"]["source_text_path"] == str(PROPOSED_ACTION_FIXTURE_PATH)
+    assert draft["draft_metadata"]["source_text_sha256"] == hashlib.sha256(
+        PROPOSED_ACTION_FIXTURE_PATH.read_bytes()
+    ).hexdigest()
     assert draft["draft_metadata"]["candidate_resource_area_ids"] == (
         expected_metadata["expected_resource_area_ids"]
     )

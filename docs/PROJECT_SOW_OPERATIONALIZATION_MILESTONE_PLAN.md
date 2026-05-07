@@ -141,6 +141,8 @@ Implemented work:
   candidate extraction stays in tracked data rather than hidden runtime branches;
 - draft output preserves the proposed-action source path, source text hash, paragraph locators, and
   source title in `draft_metadata` and evidence refs;
+- `docs/schemas/project_sow_intake_v0.schema.json` explicitly declares the optional
+  `draft_metadata` contract instead of relying on open-ended intake properties;
 - draft metadata records `review_status=unreviewed`, `reviewer_confirmation_required=true`, and
   uncertainty flags so the draft cannot be used as package input until reviewer confirmation clears
   those fields;
@@ -163,7 +165,7 @@ Acceptance gate status:
 - generated drafts mark candidate resource areas, candidate federal land actions, source locators,
   and uncertainty flags as review work, not as accepted SOW decisions;
 - tests cover the Red Rock Ridge proposed-action fixture, an ambiguous land-adjustment fixture, and
-  a reviewer-confirmed draft replay;
+  a reviewer-confirmed draft replay, with exact source path/hash preservation checks;
 - draft output includes no applicability decision, compliance finding, legal advice, legal
   sufficiency conclusion, or final agency decision.
 
