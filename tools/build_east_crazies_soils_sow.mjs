@@ -83,6 +83,7 @@ function parseMarkdown(markdown) {
     "Example project",
     "Forest",
     "District",
+    "Districts",
     "Resource area"
   ]);
   const metadata = [];

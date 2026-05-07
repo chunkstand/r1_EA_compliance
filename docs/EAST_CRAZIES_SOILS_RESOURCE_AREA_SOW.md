@@ -7,7 +7,7 @@ Purpose: show that the system can produce resource-area scopes of work for a new
 structured project intake
 Example project: East Crazy Inspiration Divide land exchange
 Forest: Custer Gallatin National Forest
-District: Bozeman Ranger District
+Districts: Yellowstone Ranger District; Bozeman Ranger District
 Resource area: Soils
 
 This is a planning and contracting support SOW for an early-stage project. It translates the
@@ -38,7 +38,8 @@ This SOW is not a final agency decision, legal sufficiency review, or NEPA compl
 - Forest Plan consistency analysis using Appendix A.
 - Mitigation/BMP/monitoring matrix tied to action element, location, source trigger, timing,
   responsible party, and verification method.
-- Cumulative-effects and uncertainty summary where a cause-and-effect relationship exists.
+- Reasonably foreseeable effects and uncertainty summary; include separate-action context only where
+  it assists reasoned decision-making.
 
 ### 3. Reporting
 
@@ -62,22 +63,25 @@ table.
 
 ### Methodology
 
-Required fieldwork is based on R1 Soil Quality Standards and soil-management direction, NFMA and 36
-CFR part 219 project consistency requirements, and the Custer Gallatin National Forest Land
-Management Plan. Use the Forest Service Soil-Disturbance Field Guide, Forest Soil Disturbance
-Monitoring Protocol, NRCS Web Soil Survey/SSURGO, and National BMP direction as the field and data
-methods.
+Required fieldwork is based on R1 FSM 2550 soil-quality direction, NFMA and 36 CFR part 219 project
+consistency requirements, and the Custer Gallatin National Forest Land Management Plan. Use the
+Forest Service Soil-Disturbance Field Guide, Forest Soil Disturbance Monitoring Protocol, NRCS Web
+Soil Survey/SSURGO, and National BMP direction as the field and data methods.
 
 - DSD surveys. Required where a management activity could create or add to detrimental soil
-  disturbance in an activity area. Classify and estimate existing DSD and expected DSD for trail,
-  trailhead, access/staging, restoration, crossing, and parcel-management work. Record compaction,
-  rutting, displacement, puddling, surface erosion, severe burning if present, organic-matter loss,
-  and mass movement. Tie results to FW-STD-SOIL-01 and MON-SOIL-01.
+  disturbance in an activity area subject to FW-STD-SOIL-01. Classify and estimate existing DSD and
+  expected DSD for trail construction, trail reroutes, temporary access/staging, restoration,
+  crossing, and parcel-management work. Screen out intensively developed sites, permanent roads,
+  and existing developed-recreation footprints from FW-STD-SOIL-01 calculations; address those
+  areas through BMPs, site design, and watershed controls. Record compaction, rutting,
+  displacement, puddling, surface erosion, severe burning if present, organic-matter loss, and mass
+  movement. Tie applicable results to FW-STD-SOIL-01 and MON-SOIL-01.
 - Soil survey and activity-area delineation. Required for each ground-disturbing action area. Verify
   soil map units, slope class, landform, drainage position, hydric/wet soil indicators, erosion
   hazard, revegetation limits, compaction/rutting limits, and sediment connectivity. Define the
   activity area used for DSD evaluation; for linear trails, document length, width, acreage, and
-  rationale.
+  rationale. If a developed-site or permanent-road footprint is screened out of FW-STD-SOIL-01,
+  document the source rationale and the BMP/design controls that still apply.
 - Soil sensitivity and productivity survey. Required where soil map units or field indicators show
   productivity risk, wetness, shallow or restrictive layers, erosion hazard, compaction sensitivity,
   poor revegetation potential, or other sensitive soil conditions. Identify design changes,
@@ -87,10 +91,10 @@ methods.
   slopes, or unstable landforms are proposed. Verify sustained grades over 40 percent, high
   mass-wasting potential, unstable slopes, wet soils, and locations where FW-GDL-SOIL-01 through
   FW-GDL-SOIL-08 are triggered.
-- CWD and organic-substrate survey. Required where vegetation activity areas, burn piles, slash
-  treatment, forest-floor removal, revegetation/restoration, or other work affects coarse woody
-  debris, litter, duff, or organic soil cover. Estimate percent coarse woody debris where MON-SOIL-02
-  is triggered and document restoration substrate conditions.
+- CWD and organic-substrate survey. Required where vegetation management treatment units trigger
+  FW-GDL-SOIL-07 or MON-SOIL-02. Estimate coarse woody debris where those components apply.
+  Otherwise, document litter, duff, ground cover, and restoration substrate conditions only as
+  existing-condition or BMP-support information.
 - Waterbody interface and BMP survey. Required where trail, trailhead, access, crossing, drainage, or
   restoration work is near streams, wetlands, riparian areas, seeps, springs, swales, drainage paths,
   or other sediment-routing features. Identify drainage controls, hydrologic disconnection, crossing
@@ -176,10 +180,12 @@ Provide one mitigation/BMP/monitoring matrix. Each row must include action eleme
 triggering source, soil concern, required measure, timing, responsible party, and verification
 method. Include only measures tied to a triggered source or a site-specific field finding.
 
-### 6. Cumulative Effects And Uncertainty
+### 6. Reasonably Foreseeable Effects And Uncertainty
 
-Evaluate cumulative soil effects only where a cause-and-effect relationship exists. Use the same
-indicators listed above and consider existing/proposed routes, trailheads, unauthorized routes,
+Evaluate reasonably foreseeable soil impacts using the same indicators listed above. Include other
+actions separate in time, separate in place, outside Forest Service control, or initiated by third
+parties only where that context assists reasoned decision-making; document the line drawn for that
+analysis. Potential context includes existing/proposed routes, trailheads, unauthorized routes,
 drainage, grazing, wetland/riparian disturbance, foreseeable trail or road work, private land
 development risk after conveyance, and vegetation/restoration actions.
 
@@ -196,7 +202,8 @@ Provide a draft report or Forest Service-approved issue-screening memo with:
 - field methods and survey-trigger table;
 - existing condition by activity area;
 - effects indicators and disturbance calculations;
-- direct, indirect, and cumulative effects where triggered;
+- reasonably foreseeable environmental impacts where triggered, including separate-action context
+  only where documented as useful to reasoned decision-making;
 - Forest Plan consistency finding using Appendix A;
 - mitigation/BMP/monitoring matrix;
 - residual uncertainty, assumptions, and limitations.
@@ -216,8 +223,8 @@ issue-screening memo.
 
 Acceptance criteria:
 
-- summarizes affected environment, environmental consequences, mitigation/design criteria, Forest
-  Plan consistency, and cumulative effects only where supported by the report;
+- summarizes the potentially affected environment, reasonably foreseeable environmental impacts,
+  mitigation/design criteria, and Forest Plan consistency only where supported by the report;
 - references the soils report or issue-screening memo instead of duplicating technical detail;
 - identifies design criteria or monitoring that must carry into later decision or implementation
   files.
@@ -240,19 +247,22 @@ Acceptance criteria:
 Use this appendix as the starting control table for the soils specialist report. Update it only if
 Forest Service direction, source currentness, or the proposed action changes.
 
-### A1. NEPA, USDA NEPA Procedures, And FSH 1909.15
+### A1. NEPA, USDA NEPA Procedures, And Forest Service NEPA Direction
 
-- Source: NEPA; USDA NEPA procedures at 7 CFR part 1b; FSH 1909.15.
+- Source: NEPA; USDA NEPA procedures at 7 CFR part 1b; Forest Service NEPA directives and guidance,
+  including FSH 1909.15 where applicable.
 - Trigger: Federal land exchange, trail, trailhead, access, and parcel-management decisions that need
   soils effects support for an environmental assessment or issue-screening memo.
-- Report output: concise affected environment, methods, direct and indirect effects, cumulative
-  effects if useful, mitigation/monitoring, source citations, and data limitations.
+- Report output: concise affected environment, methods, reasonably foreseeable environmental
+  impacts, separate-action context if useful and documented, mitigation/monitoring, source citations,
+  and data limitations.
 - Acceptance test: each conclusion is traceable to reliable existing data, field evidence, or a
   documented Forest Service assumption; the report does not make the agency decision.
 
 ### A2. Third-Party Or Consultant-Prepared Analysis
 
-- Source: 7 CFR part 1b contractor/third-party preparation procedures and Forest Service direction.
+- Source: 7 CFR section 1b.10 contractor/third-party preparation procedures and Forest Service
+  direction.
 - Trigger: WLG or a consultant prepares soils analysis for Forest Service review.
 - Report output: editable report, field forms, GIS/map package, photo log, source inventory,
   assumptions, limitations, and comment-response log.
@@ -283,9 +293,12 @@ Forest Service direction, source currentness, or the proposed action changes.
 
 - Source: FW-STD-SOIL-01.
 - Trigger: Any management activity that could create or add to detrimental soil conditions in an
-  activity area.
+  activity area subject to the standard. Screen out intensively developed sites, developed recreation
+  sites, administrative sites, rock quarries, mines, and permanent roads where the standard does not
+  apply.
 - Report output: activity-area delineation, existing DSD estimate, expected DSD estimate, linear-trail
-  metric rationale if used, and restoration/design measures needed to avoid exceeding the standard.
+  metric rationale if used, screen-out rationale where used, and restoration/design measures needed
+  to avoid exceeding the standard.
 - Acceptance test: the report states whether FW-STD-SOIL-01 applies, is met, requires restoration, or
   is not triggered.
 
@@ -302,8 +315,8 @@ Forest Service direction, source currentness, or the proposed action changes.
 ### A7. Custer Gallatin Forest Plan Soil Monitoring
 
 - Source: MON-SOIL-01 and MON-SOIL-02.
-- Trigger: DSD monitoring where FW-STD-SOIL-01 applies; CWD monitoring where vegetation activity
-  areas or organic-substrate effects are present.
+- Trigger: DSD monitoring where FW-STD-SOIL-01 applies; CWD monitoring where vegetation management
+  treatment units trigger FW-GDL-SOIL-07 or MON-SOIL-02.
 - Report output: monitoring recommendation with location, metric, timing, responsible party, and
   success criterion.
 - Acceptance test: the report identifies pre/post DSD monitoring and CWD monitoring where triggered,
@@ -349,7 +362,8 @@ Forest Service direction, source currentness, or the proposed action changes.
 
 ### A12. East Crazies Example Action Elements
 
-- Source: East Crazies structured intake assumptions.
+- Source: East Crazies structured intake assumptions and Forest Service project summary for project
+  63115.
 - Trigger: Sweet Trunk Trail work, Inspiration Divide Trail reroute, Big Timber Canyon Trailhead
   improvements, stream/wetland approaches, access/easement features, parcel restrictions, grazing
   improvements, and acquired-parcel management needs.
@@ -366,11 +380,16 @@ Forest Service direction, source currentness, or the proposed action changes.
   https://www.ecfr.gov/current/title-7/subtitle-A/part-1b
 - National Forest System land management planning, 36 CFR part 219:
   https://www.ecfr.gov/current/title-36/chapter-II/part-219
-- Forest Service Handbook (FSH) 1909.15, National Environmental Policy Act Handbook:
-  https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?1909.15=
-- USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management.
+- Forest Service National Directives:
+  https://www.fs.usda.gov/about-agency/regulations-policies/national-directives
+- Forest Service NEPA Procedures and Guidance:
+  https://www.fs.usda.gov/about-agency/regulations-policies/nepa/nepa-procedures-and-guidance
+- USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management:
+  https://www.fs.usda.gov/im/directives/field/r1/fsm/2500/r1-2550.docx
 - Custer Gallatin National Forest Land Management Plan:
   https://www.fs.usda.gov/r01/custergallatin/planning/forest-plan/custer-gallatin-land-management-plan-forest-plan-revision
+- East Crazy Inspiration Divide Land Exchange project summary:
+  https://www.fs.usda.gov/r01/custergallatin/projects/63115
 - Forest Service Soil Quality Monitoring resources:
   https://www.fs.usda.gov/soils/monitoring.shtml
 - Forest Service Soil-Disturbance Field Guide:
