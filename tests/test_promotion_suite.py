@@ -153,7 +153,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
         "source-set-ba8d0feae79501b8"
     )
     assert summary_checks["source_set_graph_node_count"]["min"] == 1
-    assert summary_checks["source_set_graph_validation_checks"]["min"] == 61
+    assert summary_checks["source_set_graph_validation_checks"]["min"] == 62
 
     review_graph = results["nepa_3d_review_graph_validation"]
     assert review_graph["required_for_current_promotion"] is True
@@ -179,6 +179,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
         "v1-cg-ecid-compliance-review"
     )
     assert review_summary_checks["review_graph_decision_count"]["equals"] == 373
+    assert review_summary_checks["review_graph_validation_checks"]["min"] == 76
 
 
 def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:

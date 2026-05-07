@@ -52,6 +52,24 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert len(edges) == graph["summary"]["edge_count"]
         assert graph["validation"]["failure_category_counts"] == {}
         assert graph["summary"]["failure_category_counts"] == {}
+        assert graph["summary"]["authority_category_counts"] == {
+            "law": 1,
+            "regulation": 1,
+        }
+        assert graph["summary"]["source_status_counts"] == {
+            "downloaded": 4,
+            "skipped_excluded": 1,
+        }
+        assert graph["summary"]["source_partition_counts"] == {
+            "active_review_corpus": 3,
+            "candidate_blocked_source": 1,
+            "currentness_supersession_archive": 1,
+        }
+        assert graph["summary"]["source_currentness_status_counts"] == {
+            "confirmed_from_catalog": 4,
+            "excluded_no_artifact": 1,
+        }
+        assert graph["summary"]["applicability_status_counts"] == {}
         assert all(check["failure_category"].startswith("graph_") for check in checks.values())
         assert all(edge["source_node_id"] in node_ids for edge in edges)
         assert all(edge["target_node_id"] in node_ids for edge in edges)
@@ -68,6 +86,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_exports_candidate_families"]["passed"]
         assert checks["nepa_3d_graph_exports_superseded_families"]["passed"]
         assert checks["nepa_3d_graph_reads_catalog_graph_seeds"]["passed"]
+        assert checks["nepa_3d_graph_reports_required_summary_count_fields"]["passed"]
         assert checks["nepa_3d_graph_nodes_have_required_provenance"]["passed"]
         assert checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
         assert checks["nepa_3d_graph_region1_readiness_prevents_overclaim"]["passed"]
@@ -138,7 +157,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         nepa_phase = _phase(phase_eval.summary, "nepa_3d_source_set_graph")
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
-        assert nepa_phase["details"]["validation_check_count"] == 61
+        assert nepa_phase["details"]["validation_check_count"] == 62
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
@@ -170,6 +189,24 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert result.graph_dir == output_dir / "reviews" / review_id / "knowledge_graph"
         assert result.summary["validation_passed"]
         assert graph["validation"]["failure_category_counts"] == {}
+        assert graph["summary"]["authority_category_counts"] == {
+            "forest_plan": 1,
+            "law": 3,
+            "regulation": 1,
+        }
+        assert graph["summary"]["source_status_counts"] == {
+            "downloaded": 4,
+            "skipped_excluded": 1,
+        }
+        assert graph["summary"]["source_partition_counts"] == {
+            "active_review_corpus": 3,
+            "candidate_blocked_source": 1,
+            "currentness_supersession_archive": 1,
+        }
+        assert graph["summary"]["applicability_status_counts"] == {
+            "applicable": 2,
+            "not_applicable": 1,
+        }
         assert all(check["failure_category"].startswith("graph_") for check in checks.values())
         assert graph["export_scope"] == {
             "scope_type": "review",
@@ -186,6 +223,7 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert result.summary["review_retrieval_trace_count"] == 2
         assert result.summary["review_graph_trace_count"] == 2
         assert checks["nepa_3d_review_graph_exports_all_candidate_authorities"]["passed"]
+        assert checks["nepa_3d_graph_reports_required_summary_count_fields"]["passed"]
         assert (
             checks["nepa_3d_review_graph_exports_all_candidate_authorities"][
                 "failure_category"
@@ -241,7 +279,7 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
         assert nepa_phase["details"]["review_id"] == review_id
-        assert nepa_phase["details"]["validation_check_count"] == 75
+        assert nepa_phase["details"]["validation_check_count"] == 76
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 

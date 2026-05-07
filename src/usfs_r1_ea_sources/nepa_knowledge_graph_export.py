@@ -6,6 +6,7 @@ from pathlib import Path
 import hashlib
 import json
 from typing import Any
+from typing import Iterable
 
 from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
 from .nepa_3d_graph_contract import NEPA_3D_GRAPH_SCHEMA_VERSION
@@ -642,6 +643,7 @@ def _add_authority_families(
             },
             readiness_blockers=blockers,
             metadata={
+                "authority_category": family.get("authority_category"),
                 "required_authority_requirement_ids": family.get(
                     "required_authority_requirement_ids", []
                 ),
@@ -1604,6 +1606,7 @@ def _add_review_overlay(
             readiness_blockers=blockers,
             metadata={
                 "status": status,
+                "applicability_status": status,
                 "search_coverage_certificate_ids": decision.get(
                     "search_coverage_certificate_ids", []
                 ),
@@ -2281,6 +2284,62 @@ def _source_currentness_by_id(records: list[dict[str, Any]]) -> dict[str, dict[s
     return by_id
 
 
+def _node_metadata_counts(
+    nodes: list[dict[str, Any]],
+    key: str,
+    *,
+    node_type: str | None = None,
+) -> dict[str, int]:
+    return _sorted_counts(
+        _dict(node.get("metadata")).get(key)
+        for node in nodes
+        if node_type is None or node.get("node_type") == node_type
+    )
+
+
+def _node_currentness_counts(
+    nodes: list[dict[str, Any]],
+    key: str,
+    *,
+    node_type: str | None = None,
+) -> dict[str, int]:
+    return _sorted_counts(
+        _dict(node.get("currentness_metadata")).get(key)
+        for node in nodes
+        if node_type is None or node.get("node_type") == node_type
+    )
+
+
+def _sorted_counts(values: Iterable[Any]) -> dict[str, int]:
+    return dict(
+        sorted(
+            Counter(
+                str(value)
+                for value in values
+                if value is not None and not isinstance(value, (list, dict, tuple, set))
+            ).items()
+        )
+    )
+
+
+def _missing_summary_count_fields(graph: dict[str, Any]) -> list[str]:
+    summary = _dict(graph.get("summary"))
+    required_fields = [
+        "node_type_counts",
+        "edge_type_counts",
+        "authority_category_counts",
+        "source_status_counts",
+        "source_partition_counts",
+        "applicability_status_counts",
+        "readiness_blocker_counts",
+    ]
+    return [
+        field
+        for field in required_fields
+        if not isinstance(summary.get(field), dict)
+    ]
+
+
 def _summary(
     *,
     source_set_id: str,
@@ -2312,6 +2371,23 @@ def _summary(
         "review_readiness_status_counts": dict(
             Counter(str(record.get("review_readiness_status")) for record in nodes + edges)
         ),
+        "authority_category_counts": _node_metadata_counts(nodes, "authority_category"),
+        "source_status_counts": _node_metadata_counts(
+            nodes,
+            "source_status",
+            node_type="source_record",
+        ),
+        "source_partition_counts": _node_currentness_counts(
+            nodes,
+            "source_partition",
+            node_type="source_record",
+        ),
+        "source_currentness_status_counts": _node_currentness_counts(
+            nodes,
+            "currentness_status",
+            node_type="source_record",
+        ),
+        "applicability_status_counts": _node_metadata_counts(nodes, "applicability_status"),
         "readiness_blocker_counts": dict(
             Counter(
                 blocker
@@ -2494,6 +2570,20 @@ def _milestone_validation_checks(
                 "catalog_graph_node_count": catalog_graph_node_count,
                 "catalog_graph_edge_count": catalog_graph_edge_count,
             },
+        ),
+        _check(
+            "nepa_3d_graph_reports_required_summary_count_fields",
+            not _missing_summary_count_fields(graph),
+            [
+                "node_type_counts",
+                "edge_type_counts",
+                "authority_category_counts",
+                "source_status_counts",
+                "source_partition_counts",
+                "applicability_status_counts",
+                "readiness_blocker_counts",
+            ],
+            _missing_summary_count_fields(graph),
         ),
         _check(
             "nepa_3d_graph_currentness_gate_passed",

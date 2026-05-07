@@ -378,7 +378,7 @@ Implementation status:
 Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export` CLI command, and `tests/test_nepa_knowledge_graph_export.py`
 implement the source-set graph builder over audited catalog/derived surfaces. The live export for
-`source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes, `2,552` edges, all
+`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes, `2,564` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components.
 
@@ -430,8 +430,8 @@ Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export --review-id` CLI path, and
 `tests/test_nepa_knowledge_graph_export.py` now implement the review overlay over existing
 applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` export under
-`source_library/reviews/<review_id>/knowledge_graph/` passes `67` validation checks with `1,907`
-nodes, `3,430` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
+`source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with `1,916`
+nodes, `3,442` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
 findings, and `340` non-applicable decisions with search coverage.
 
 Candidate command:
@@ -613,10 +613,11 @@ Status:
 Initial graph validation and promotion-gate slice completed on 2026-05-06 for
 `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`. Graph validation checks now carry
 graph-specific failure categories, validation and summary artifacts record
-`failure_category_counts`, `phase-eval` includes optional source-set and review graph phases when
-graph artifacts exist, and `config/promotion_suite_v1.json` requires source-set plus V1 review
-graph validation/summary artifacts for current promotion. The current source-set graph passes
-`61/61` checks; the V1 review overlay graph passes `75/75`; the review-bound phase eval passes
+`failure_category_counts`, graph summaries report all required Milestone 7 count dimensions,
+`phase-eval` includes optional source-set and review graph phases when graph artifacts exist, and
+`config/promotion_suite_v1.json` requires source-set plus V1 review graph validation/summary
+artifacts for current promotion. The current source-set graph passes
+`62/62` checks; the V1 review overlay graph passes `76/76`; the review-bound phase eval passes
 `19/19`.
 
 Goal:

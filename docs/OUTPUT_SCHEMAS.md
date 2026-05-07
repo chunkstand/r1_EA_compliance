@@ -1209,6 +1209,11 @@ Summary example:
   "edge_type_counts": {"HAS_SOURCE_RECORD": 2},
   "display_status_counts": {"active": 7, "reserved": 3},
   "review_readiness_status_counts": {"reviewer_ready": 3},
+  "authority_category_counts": {"regulation": 2},
+  "source_status_counts": {"downloaded": 2},
+  "source_partition_counts": {"active_review_corpus": 2},
+  "source_currentness_status_counts": {"confirmed_from_catalog": 2},
+  "applicability_status_counts": {"applicable": 1},
   "readiness_blocker_counts": {"superseded_source": 2},
   "validation_passed": true,
   "validation_check_count": 1,
@@ -1295,12 +1300,14 @@ It reads catalog and derived review surfaces, including source graph seeds, auth
 authority inventory, evidence graph nodes/edges, source claims, rule-claim links, the base rule
 pack, authority-family templates, forest-plan profiles, the Region 1 forest-plan readiness matrix,
 and forest-plan component inventory. It does not scan raw artifact filenames. The live source-set
-export for `source-set-ba8d0feae79501b8` passes `57` validation checks with `1,401` nodes,
-`2,552` edges, `35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes, `191`
-source-claim nodes, `329` inventory forest-plan component nodes, `10` forest-unit nodes, `10`
-forest-plan nodes, `379` total forest-plan component/profile-term nodes, and zero failed validation
-checks. It tracks `10` Region 1 forest/grassland profiles while blocking `9` broader profiles from
-Region 1 completeness claims until their source, component-inventory, and eval gates are ready.
+export for `source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes,
+`2,564` edges, `35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes,
+`191` source-claim nodes, `329` inventory forest-plan component nodes, `10` forest-unit nodes, `10`
+forest-plan nodes, `387` total forest-plan component/requirement nodes, and zero failed validation
+checks. It reports node, edge, authority-category, source-status, source-partition,
+applicability-status, and readiness-blocker count dimensions. It tracks `10` Region 1
+forest/grassland profiles while blocking `9` broader profiles from Region 1 completeness claims
+until their source, component-inventory, and eval gates are ready.
 
 The Milestone 4 review overlay uses the same command with `--review-id`:
 
@@ -1317,7 +1324,7 @@ span nodes over the source-set graph, then validates that every candidate author
 `authority_universe_snapshot.json` has a graph node and exactly one decision, non-applicable
 decisions carry search coverage or adjudication support, generated rules derive only from validated
 applicable decisions, and compliance findings link to generated rules plus evidence spans. The live
-V1 review export passes `67` validation checks with `1,907` nodes, `3,430` edges, `373` candidate
+V1 review export passes `76` validation checks with `1,916` nodes, `3,442` edges, `373` candidate
 authorities/decisions, `33` generated rules/findings, `340` non-applicable authorities, and the
 same Region 1 forest-plan readiness blockers.
 

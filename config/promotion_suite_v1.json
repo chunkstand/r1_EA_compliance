@@ -376,6 +376,11 @@
               "equals": 33
             },
             {
+              "name": "review_graph_validation_checks",
+              "json_path": "validation_check_count",
+              "min": 76
+            },
+            {
               "name": "review_graph_failed_validation_check_count",
               "json_path": "failed_validation_check_count",
               "equals": 0
@@ -1169,7 +1174,7 @@
         {
           "name": "source_set_graph_validation_checks",
           "json_path": "validation_check_count",
-          "min": 61
+          "min": 62
         },
         {
           "name": "source_set_graph_failed_validation_check_count",

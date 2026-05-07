@@ -230,7 +230,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live export for `source-set-ba8d0feae79501b8` now records:
 
-- `validation_passed=true`, `61` validation checks, `0` failed checks, and
+- `validation_passed=true`, `62` validation checks, `0` failed checks, and
   `failure_category_counts={}`;
 - `1,410` nodes and `2,564` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
@@ -265,7 +265,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
 
 The live overlay for `v1-cg-ecid-compliance-review` now records:
 
-- `validation_passed=true`, `75` validation checks, `0` failed checks, and
+- `validation_passed=true`, `76` validation checks, `0` failed checks, and
   `failure_category_counts={}`;
 - `1,916` nodes and `3,442` edges;
 - review content: `373` candidate authority nodes/decisions, `33` applicable decisions, `340`
@@ -363,6 +363,9 @@ manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapp
 NEPA 3D Milestone 7 has its first promotion-gate slice implemented for the current source-set and
 V1 review overlay graphs. Each graph validation check now carries a graph-specific
 `failure_category`, and validation plus summary artifacts record `failure_category_counts`.
+The summary now reports the Milestone 7 count dimensions explicitly: node type, edge type,
+authority category, source status, source partition, source currentness status, applicability
+status, and readiness blocker.
 `phase-eval` adds `nepa_3d_source_set_graph` and `nepa_3d_review_graph` phases when those artifacts
 exist. The latest V1 review-bound phase eval passes `19/19` phases with `reviewer_ready=true`,
 including both graph phases, the post-V1 applicability family, generated rule pack,
@@ -370,7 +373,7 @@ decision-support report, compliance review, forest-plan component eval, and gold
 
 `config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
 the V1 review graph validation/summary artifacts before current promotion passes. The current live
-graph gates pass with `61/61` source-set graph checks, `75/75` review graph checks,
+graph gates pass with `62/62` source-set graph checks, `76/76` review graph checks,
 `failure_category_counts={}`, `1,410` source-set graph nodes, `2,564` source-set graph edges,
 `1,916` review graph nodes, and `3,442` review graph edges. Broader Region 1 profile readiness
 blockers remain visible in the graph summaries and do not claim handbook or Region 1 forest-plan

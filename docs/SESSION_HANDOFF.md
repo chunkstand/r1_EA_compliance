@@ -57,16 +57,18 @@ artifact checks, or move to the next documented lane the user selects.
 NEPA 3D Milestone 7 has its initial graph validation and promotion-gate pass implemented for
 `source-set-ba8d0feae79501b8` and `v1-cg-ecid-compliance-review`. Graph validation checks now carry
 graph-specific failure categories, validation and summary artifacts record
-`failure_category_counts`, `phase-eval` includes optional `nepa_3d_source_set_graph` and
-`nepa_3d_review_graph` phases when the graph artifacts exist, and
+`failure_category_counts`, summaries report node, edge, authority-category, source-status,
+source-partition, source-currentness, applicability-status, and readiness-blocker counts,
+`phase-eval` includes optional `nepa_3d_source_set_graph` and `nepa_3d_review_graph` phases when
+the graph artifacts exist, and
 `config/promotion_suite_v1.json` requires source-set plus V1 review graph validation/summary
 artifacts for current promotion.
 
 Latest local signals:
 
-- source-set graph export: `61/61` validation checks, `failure_category_counts={}`, `1,410` nodes,
+- source-set graph export: `62/62` validation checks, `failure_category_counts={}`, `1,410` nodes,
   and `2,564` edges;
-- V1 review graph export: `75/75` validation checks, `failure_category_counts={}`, `1,916` nodes,
+- V1 review graph export: `76/76` validation checks, `failure_category_counts={}`, `1,916` nodes,
   and `3,442` edges;
 - V1 review-bound `phase-eval`: `19/19` phases passed with `reviewer_ready=true`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
@@ -622,14 +624,14 @@ legal conclusion.
   `nepa-knowledge-graph-export` CLI command build the source-set graph from catalog graph seeds,
   authority inventory/currentness, evidence graph inputs, source claims, rule-claim links, the base
   rule pack, authority-family templates, forest-plan profiles, and forest-plan component inventory.
-  The refreshed `source-set-ba8d0feae79501b8` export passed `57` validation checks with `1,401`
-  nodes, `2,552` edges, all `35` authority families, all `190` catalog source records, all `44` base
+  The refreshed `source-set-ba8d0feae79501b8` export passed `62` validation checks with `1,410`
+  nodes, `2,564` edges, all `35` authority families, all `190` catalog source records, all `44` base
   rules, all `19` authority-family templates, `191` rule-claim links, and `329` forest-plan
   components.
 - NEPA 3D Milestone 4 is implemented. `nepa-knowledge-graph-export --review-id` writes the
   review-specific graph under `source_library/reviews/<review_id>/knowledge_graph/` from existing
   applicability-first and compliance artifacts. The refreshed `v1-cg-ecid-compliance-review`
-  overlay passed `75` validation checks with `1,916` nodes, `3,442` edges, `373` candidate
+  overlay passed `76` validation checks with `1,916` nodes, `3,442` edges, `373` candidate
   authorities/decisions, `33` generated rules and compliance findings, and `340` non-applicable
   authorities with search coverage. The gap-close checks now also require hashed review artifact
   inputs and resolving search-coverage, retrieval-trace, and graph-trace references.
@@ -638,7 +640,7 @@ legal conclusion.
   overlay requirement groups. `config/forest_plan_profiles.json` now contains the first added
   Beaverhead-Deerlodge profile contract with catalog-confirmed planning page/LMP source rows,
   positive and hard-negative applicability fixture contracts, and a component-inventory blocker
-  before graph promotion. The source-set graph passed `61` validation checks with `1,410` nodes and
+  before graph promotion. The source-set graph passed `62` validation checks with `1,410` nodes and
   `2,564` edges, `1` graph-ready profile, `9` broader Region 1 profiles blocked from completeness
   claims, and graph-visible field-directive/overlay requirement nodes linked to catalog sources.
 - NEPA 3D Milestone 6 is implemented. `viewer/nepa-3d/` is a checked-in static viewer over the

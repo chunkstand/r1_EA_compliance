@@ -76,11 +76,11 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `61` validation checks with `1,410` nodes, `2,564` edges, all
+`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes, `2,564` edges, all
 `35` authority families, all `190` catalog source records, all `44` base rules, all `19`
 authority-family templates, `191` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
-under `source_library/reviews/<review_id>/knowledge_graph/` passes `75` validation checks with
+under `source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with
 `1,916` nodes, `3,442` edges, `373` candidate authorities/decisions, `33` generated rules and
 compliance findings, `340` non-applicable authorities with search coverage, and explicit validation
 that review artifact, search-coverage, retrieval-trace, and graph-trace references resolve. NEPA 3D
@@ -108,7 +108,9 @@ in rendered graph counts. NEPA 3D Milestone 7 now makes graph artifacts part of 
 surface: source-set and V1 review graph validation/summary outputs carry graph failure-category
 counts, `phase-eval` includes source-set and review graph phases when those artifacts exist, and
 `promotion-suite` requires both graph validation and summary artifacts before current promotion
-passes. The graph surface now adds human-readable scene labels plus graph-native
+passes; graph summaries also report authority-category, source-status/source-partition, and
+applicability-status counts alongside node, edge, and readiness-blocker counts. The graph surface
+now adds human-readable scene labels plus graph-native
 node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
 larger set of node labels without changing the validated graph data. Advanced search and category
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
