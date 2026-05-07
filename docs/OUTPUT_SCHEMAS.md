@@ -2426,7 +2426,8 @@ Project SOW package validation must fail closed on:
   action;
 - observed specialist/supporting reports whose resource areas do not have selected SOW scope
   coverage;
-- duplicate intake evidence graph node or edge IDs;
+- duplicate intake-derived evidence graph node or edge IDs, including collisions detected before
+  graph assembly deduplicates nodes and edges;
 - dangling intake evidence graph edges;
 - proposed-action elements with resource areas but no evidence refs;
 - proposed-action resource areas without the canonical graph path;

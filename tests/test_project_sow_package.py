@@ -229,6 +229,38 @@ def test_project_sow_package_fails_when_action_element_lacks_evidence_ref(
     ]["details"] == {"report_resource_area_ids": ["ecid-carbon-summary-2024:climate_carbon"]}
 
 
+def test_project_sow_package_fails_duplicate_evidence_ref_graph_id(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    duplicate_evidence_ref_id = "ecid-final-ea-section-3-11-climate-carbon"
+    for element in intake["proposed_action_elements"]:
+        if element["action_element_id"] == "water_rights_transfer":
+            element["evidence_refs"][0]["evidence_ref_id"] = duplicate_evidence_ref_id
+    intake_path = tmp_path / "duplicate_evidence_ref_id_intake.json"
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=intake_path,
+        output_dir=tmp_path / "source_library",
+    )
+
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    failed_checks = {
+        check["name"]: check
+        for check in result.summary["failed_validation_checks"]
+        if not check["passed"]
+    }
+    duplicate_node_id = "evidence_ref:ecid_final_ea_section_3_11_climate_carbon"
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {"intake_evidence_graph_node_ids_unique"}
+    assert failed_checks["intake_evidence_graph_node_ids_unique"]["details"] == {
+        "duplicate_input_node_ids": [duplicate_node_id],
+        "duplicate_node_ids": [duplicate_node_id],
+    }
+
+
 def _has_canonical_graph_path(graph: dict, area_id: str) -> bool:
     resource_node_id = f"resource_area:{area_id}"
     node_types = {node["node_id"]: node["node_type"] for node in graph["nodes"]}

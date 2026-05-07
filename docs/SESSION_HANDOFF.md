@@ -53,9 +53,10 @@ coverage.
 Sequence 3 added a package-local `intake_evidence_graph` to `project_sow_package.json` and a
 concise graph projection to `project_sow_package.md`. The East Crazies fixture now carries
 `evidence_refs` for proposed-action elements and observed specialist/supporting reports. Validation
-now fails closed on duplicate graph IDs, dangling graph edges, action elements with resource areas
-but no evidence refs, proposed-action resource areas without the canonical graph path, and observed
-report resource areas without proposed-action support.
+now fails closed on duplicate intake-derived graph IDs before graph assembly deduplicates nodes and
+edges, dangling graph edges, action elements with resource areas but no evidence refs,
+proposed-action resource areas without the canonical graph path, and observed report resource areas
+without proposed-action support.
 
 The required planning path is:
 

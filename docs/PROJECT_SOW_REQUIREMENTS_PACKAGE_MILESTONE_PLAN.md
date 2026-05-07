@@ -201,6 +201,8 @@ Acceptance gate:
   support path.
 - Tests prove a proposed-action element with triggered resource areas but no evidence refs fails
   validation.
+- Tests prove duplicate intake-derived graph node IDs fail validation before graph assembly can
+  collapse the duplicate records.
 - CLI smoke for the East Crazies intake reports `10` SOW scopes, `23` proposed-action resource
   areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 - No applicability decisions, compliance findings, or legal conclusions are introduced.
@@ -218,7 +220,7 @@ Candidate fixtures:
 - observed specialist report with no matching proposed-action resource area;
 - proposed-action resource area with no configured SOW scope;
 - action element with evidence but no triggered resource area;
-- duplicate evidence-ref IDs;
+- duplicate observed-report IDs or duplicate deliverable graph IDs;
 - dangling graph edge;
 - land-exchange intake with no federal land action.
 

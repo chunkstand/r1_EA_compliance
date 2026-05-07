@@ -504,9 +504,10 @@ Validation fails closed on missing required intake fields, unsupported intake sc
 duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
 cannot resolve to selected SOW scope coverage, observed specialist-report resource areas that are
 not derived from the proposed action or lack selected SOW scope coverage, no selected resource
-scopes, selected scopes without SOW content, duplicate graph IDs, dangling graph edges, missing
-action-element evidence refs, incomplete canonical resource-area graph paths, or observed
-specialist report areas without a proposed-action support path.
+scopes, selected scopes without SOW content, duplicate intake-derived graph IDs before graph
+assembly deduplicates nodes and edges, dangling graph edges, missing action-element evidence refs,
+incomplete canonical resource-area graph paths, or observed specialist report areas without a
+proposed-action support path.
 
 ## Verified State Snapshot
 
