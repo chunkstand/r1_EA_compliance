@@ -522,6 +522,126 @@ class ForestPlanResolverTests(unittest.TestCase):
             )
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_profile_scope_uses_header_location_and_excludes_reference_district(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "## South Plateau Area Landscape Treatment Project",
+                        "## Hebgen Lake Ranger District, Custer Gallatin National Forest",
+                        "The project area is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "Quiet nonmotorized recreation opportunities predominate.",
+                        "No new permanent or temporary roads are proposed.",
+                        "The backcountry area is not suitable for motorized transport or mechanized transport.",
+                        (
+                            "References: Final Report, Work Assignment 2-73. Forest Service "
+                            "Files, Bozeman Ranger District, Bozeman, MT."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-header-location-reference-district",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertEqual(
+                {
+                    evidence["evidence_role"]
+                    for evidence in context["forest_unit"]["package_evidence"]
+                },
+                {"project_location"},
+            )
+            self.assertEqual(
+                _names(context["project_location_signals"]),
+                ["Hebgen Lake Ranger District"],
+            )
+            background_names = {
+                evidence["name"] for evidence in context["background_location_mentions"]
+            }
+            self.assertIn("Bozeman Ranger District", background_names)
+            self.assertTrue(
+                all(
+                    evidence["evidence_role"] == "background_reference"
+                    for evidence in context["background_location_mentions"]
+                    if evidence["name"] == "Bozeman Ranger District"
+                )
+            )
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_reference_list_district_does_not_resolve_project_location(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "References: Final Report, Work Assignment 2-73. Forest Service Files, "
+                    "Bozeman Ranger District, Bozeman, MT. Gallatin National Forest. 1987. "
+                    "Gallatin National Forest Plan."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=Path(tmp) / "source_library",
+                review_id="reference-district-not-location",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "ambiguous")
+            self.assertEqual(context["project_location_signals"], [])
+            background = {
+                evidence["name"]: evidence["evidence_role"]
+                for evidence in context["background_location_mentions"]
+            }
+            self.assertEqual(background["Bozeman Ranger District"], "background_reference")
+            self.assertTrue(context["needs_reviewer_resolution"])
+
+    def test_unselected_profile_district_does_not_resolve_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                extra_profile_updates={
+                    "forest_unit_id": "profile-two-nf",
+                    "forest_unit_names": ["Profile Two National Forest"],
+                    "ambiguous_unit_terms": ["Profile Two"],
+                    "ranger_district_terms": [
+                        {
+                            "entry_id": "district-profile-two",
+                            "category": "district",
+                            "name": "Profile Two Ranger District",
+                            "aliases": [],
+                        }
+                    ],
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "The proposed action is on Profile Two Ranger District.",
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=Path(tmp) / "source_library",
+                review_id="unselected-profile-district",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "ambiguous")
+            self.assertIsNone(context["forest_unit"])
+            self.assertEqual(context["project_location_signals"], [])
+
     def test_profile_scope_stays_ambiguous_when_other_forest_is_operative(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             package_path = _write_package(

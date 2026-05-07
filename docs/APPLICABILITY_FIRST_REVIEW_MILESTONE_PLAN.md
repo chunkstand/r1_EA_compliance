@@ -64,11 +64,11 @@ Implemented today:
 Current remaining work:
 
 - Milestone 10 real-package expansion remains open until strict expansion can truthfully report the
-  declared real-package set. The ECID preliminary-EA slot is now ready. The South Plateau Area
-  Landscape Treatment Project slot has passing applicability, generated rule-pack, compliance
-  review, and review-scoped phase-eval artifacts, but strict expansion is intentionally blocked by
-  `forest_plan_reviewer_not_ready` because its declared Custer Gallatin forest-plan context remains
-  `scope_status="ambiguous"`.
+  declared real-package set. The ECID preliminary-EA slot is ready. The South Plateau Area
+  Landscape Treatment Project now resolves to Custer Gallatin forest-plan context with
+  `validation_passed=true`, but strict expansion is intentionally blocked by
+  `forest_plan_reviewer_not_ready` because `31` forest-plan component adjudication items remain
+  pending.
 - The roads/access/special-use blocker exposed a general evidence-arbitration gap. That gap is now
   closed through Evidence Arbitration Milestones 1-5: roads/access no longer blocks on weak
   auxiliary evidence, arbitration behavior has permanent seed/gold/phase/promotion coverage, and
@@ -1107,14 +1107,14 @@ Current state as of 2026-05-06:
   `26` official PDFs and built a `3,671`-chunk package cache, Sequence 5 replayed six
   applicability adjudications, Sequence 6 generated the South Plateau rule pack and compliance
   artifacts, and Sequence 7 hardened strict expansion so South Plateau cannot pass while its
-  declared forest-plan context is ambiguous.
-- The active closure plan for the remaining South Plateau forest-plan blocker is
-  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
+  declared forest-plan context is ambiguous. The South Plateau forest-plan context milestone then
+  resolved the context to Custer Gallatin and narrowed the remaining blocker to the `31` pending
+  component-adjudication items.
 
 Implementation direction:
 
-- Resolve South Plateau's declared Custer Gallatin forest-plan context using general
-  profile/package evidence, or keep a narrower typed `forest_plan_reviewer_not_ready` blocker.
+- Complete the South Plateau `31`-item forest-plan component adjudication worklist, then rerun
+  component adjudication eval, compliance review, phase eval, and strict expansion promotion.
 - Select a small real-package set covering:
   - Custer Gallatin;
   - at least one additional Region 1 forest profile once implemented;

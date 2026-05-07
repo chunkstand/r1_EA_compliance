@@ -1,11 +1,28 @@
 # South Plateau Forest-Plan Context Milestone Plan
 
 Date: 2026-05-07
-Status: planned / active next implementation pass
+Status: complete in typed-blocker state
 
 This plan resolves the remaining strict-expansion blocker for the South Plateau Area Landscape
 Treatment Project without weakening the generated applicability, generated rule-pack, compliance,
 phase-eval, or promotion-suite gates that already pass.
+
+## Outcome
+
+Complete as of 2026-05-07. The resolver now classifies package location evidence with reusable
+`evidence_role` metadata, filters bibliographic/background district and forest mentions out of
+project-location resolution, and lets selected-profile ranger-district evidence support scope only
+through profile data. South Plateau now resolves to `scope_status="custer_gallatin"` with
+`forest_plan_context_validation.json` passing, `1` project-location signal, `2` geographic areas,
+`9` management areas, `4` overlays, `5` supporting-plan routes, and `0` unresolved mentions.
+
+The package is still not strict-expansion ready. The remaining blocker is narrower than the
+previous ambiguous-scope state: forest-plan component evaluation records `329` components, `152`
+applicable components, `24` applicable standards, `21` applied standards, `31` component gaps, and
+`31` pending `missing_package_evidence` adjudication items. The component adjudication template and
+pending eval are generated under the South Plateau review directory. Non-strict promotion remains
+green; strict expansion fails only on `forest_plan_reviewer_not_ready` with
+`current_promotion_ready=true`.
 
 ## Goal
 
@@ -36,7 +53,7 @@ Completion means:
 - Do not add a new Region 1 forest profile or run broad source capture in this milestone.
 - Do not stage ignored `source_library/` generated artifacts unless repository policy changes.
 
-## Current Baseline
+## Initial Baseline
 
 The current strict-expansion blocker is narrow and should stay narrow:
 

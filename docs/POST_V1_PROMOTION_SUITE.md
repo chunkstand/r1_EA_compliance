@@ -105,10 +105,11 @@ status, or last local signal does not prove the declared profile.
 
 ## Current Local Result
 
-The latest Sequence 7 pass was run locally on 2026-05-06 for the selected South Plateau fixture
-contract. The package import, applicability-first run, adjudication replay, and generated review
-artifacts pass, but strict expansion is intentionally blocked until the declared forest-plan profile
-is reviewer-ready:
+The latest South Plateau forest-plan context pass was run locally on 2026-05-07 for the selected
+South Plateau fixture contract. The package import, applicability-first run, adjudication replay,
+generated review artifacts, and Custer Gallatin context resolution are now in place; strict
+expansion remains intentionally blocked until the forest-plan component adjudication worklist is
+completed:
 
 - imported `26` official South Plateau PDFs from the project Box folder;
 - extracted `26/26` package files into `3,671` chunks with `.venv-docling`;
@@ -125,30 +126,39 @@ is reviewer-ready:
   or `needs_adjudication` decisions, and `generated_rule_pack_ready=true`;
 - `applicability-generate-rule-pack`: passed with `61` generated rules and
   `generated_rule_pack_ready=true`;
-- `compliance-review`: passed with `reviewer_ready=true`, `61` findings, `41` pass, `19`
-  uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps;
-- South Plateau review-scoped `phase-eval`: passed `16/16` phases with `reviewer_ready=true`;
+- `compliance-review`: runs from the cached package and generated rule pack, resolves
+  `scope_status="custer_gallatin"` with forest-plan context `validation_passed=true`, but now
+  exits nonzero because the required forest-plan component gate is pending;
+- forest-plan component evaluation: `329` components, `152` applicable components, `24`
+  applicable standards, `21` applied standards, `31` gaps, and `31` reviewer-resolution items;
+- `forest-plan-component-adjudication-template`: generated a `31`-item worklist; the paired
+  `forest-plan-component-adjudication-eval` currently fails with `31` pending adjudications;
+- South Plateau review-scoped `phase-eval`: fails `15/17` with blockers limited to
+  `compliance_review` and `forest_plan_component_adjudication`;
 - the promoted V1 review-scoped `phase-eval` was rerun after the South Plateau review-scoped pass
-  to restore the shared current-promotion phase-eval artifact at `19/19`;
+  to restore the shared current-promotion phase-eval artifact at `20/20`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
-  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`;
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`,
+  `open_expansion_artifact_count=5`, and `open_expansion_slot_count=1`;
 - strict expansion `promotion-suite`: expected command failure with `current_promotion_ready=true`,
   `promotion_ready=false`, `expansion_ready=false`,
-  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`, and
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 6}`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
-A later NEPA 3D Milestone 7 graph-gate pass added current-promotion checks for source-set and V1
-review graph validation/summary artifacts. The V1 review-bound phase eval now passes `19/19`
-phases, the non-strict promotion suite passes `22/22` required current-promotion results, and the
-new graph gates report `failure_category_counts={}`. Strict expansion now fails closed only on the
-South Plateau forest-plan blocker while still passing `22/22` required current-promotion results.
+A later final-QA promotion pass added current-promotion checks for the final QA packet family. The
+V1 review-bound phase eval now passes `20/20` phases, the non-strict promotion suite passes
+`26/26` required current-promotion results, and the current gates report `failure_category_counts={}`.
+Strict expansion now fails closed only on the South Plateau forest-plan blocker while still passing
+`26/26` required current-promotion results.
 
-The South Plateau expansion slot is now `ready=false` and carries
-`forest_plan_reviewer_not_ready`. The promotion manifest includes South Plateau as a required
-expansion review case, so strict expansion is backed by concrete generated rule-pack, compliance
-validation, matrix/PDF, authority sidecar, forest-plan context summary, and review-scoped
+The South Plateau expansion slot remains `ready=false` and carries
+`forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:
+`forest_plan_context_summary.json` now records `scope_status="custer_gallatin"` and
+`validation_passed=true`. The blocker is the `31` pending component adjudications required before
+the component gate, compliance validation, South Plateau phase eval, and strict expansion can pass.
+The promotion manifest includes the component findings, reviewer-resolution queue, adjudication
+template, adjudication eval, compliance outputs, forest-plan context summary, and review-scoped
 phase-eval artifact checks rather than a slot flag alone.
 
 The Sequence 6 alignment pass also reconciled each ready expansion slot's `expected_gate_artifacts`
@@ -187,20 +197,8 @@ the compliance artifact now has `rule_claim_gap_count=0` and `rule_claim_link_co
 compliance review now reports `reviewer_ready=true`, review-scoped phase eval passes, and the ECID
 expansion slot is `ready=true`. The second real-package slot is South Plateau Area Landscape
 Treatment Project. It now has an imported package, package cache, applicability context, retrieval
-trace, decision ledger, adjudication eval/apply artifacts, passing validation and generated
-rule-pack artifacts, reviewer-ready compliance artifacts, and passing review-scoped phase eval. Its
-expansion slot is blocked on `forest_plan_reviewer_not_ready` because the declared Custer Gallatin
-forest-plan context remains ambiguous.
-
-Resolution plan:
-
-```text
-docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md
-```
-
-The prior sequence in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete through
-the typed South Plateau forest-plan blocker. The active follow-up plan resolves the remaining
-strict-expansion issue by reproducing the ambiguous context failure, separating project-location
-evidence from bibliographic/background mentions, rerunning South Plateau forest-plan/compliance
-artifacts if the package resolves to Custer Gallatin, and then rerunning strict plus non-strict
-promotion-suite gates.
+trace, decision ledger, adjudication eval/apply artifacts, passing generated rule-pack artifacts,
+resolved Custer Gallatin forest-plan context, forest-plan component findings, a reviewer-resolution
+queue, and a pending component-adjudication eval. Its expansion slot is blocked on
+`forest_plan_reviewer_not_ready` until the `31`-item component adjudication worklist is completed
+and the downstream compliance/phase/promotion gates are replayed.

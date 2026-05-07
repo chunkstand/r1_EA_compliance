@@ -487,6 +487,7 @@ def _resolve_scope(
         name=resolver_profile.profile.forest_unit_names[0],
         category="forest_unit",
         aliases=resolver_profile.profile.forest_unit_names,
+        limit=None,
     )
     other_forest_mentions = []
     for unit in resolver_profile.known_other_forest_units:
@@ -496,33 +497,51 @@ def _resolve_scope(
                 name=unit.names[0],
                 category="forest_unit",
                 aliases=unit.names,
+                limit=None,
             )
         )
+    profile_district_scope_mentions, profile_district_background_mentions = (
+        _profile_district_location_mentions(package_chunks, resolver_profile=resolver_profile)
+    )
     profile_scope_mentions = [
         mention for mention in profile_mentions if _is_scope_decisive_mention(mention)
+    ]
+    profile_background_mentions = [
+        mention for mention in profile_mentions if not _is_scope_decisive_mention(mention)
     ]
     blocking_other_forest_mentions = [
         mention for mention in other_forest_mentions if _is_scope_decisive_mention(mention)
     ]
+    other_background_mentions = [
+        mention for mention in other_forest_mentions if not _is_scope_decisive_mention(mention)
+    ]
+    selected_profile_scope_mentions = profile_scope_mentions or profile_district_scope_mentions
     ambiguous_mentions = []
-    if not profile_mentions:
+    if not selected_profile_scope_mentions:
         ambiguous_mentions = _mentions_for_aliases(
             package_chunks,
             name="ambiguous forest cue",
             category="forest_unit",
             aliases=resolver_profile.profile.ambiguous_unit_terms,
+            limit=None,
         )
 
-    if profile_mentions and not blocking_other_forest_mentions:
+    if selected_profile_scope_mentions and not blocking_other_forest_mentions:
         status = resolver_profile.scope_status
         forest_unit = {
             "name": resolver_profile.profile.forest_unit_names[0],
-            "package_evidence": (profile_scope_mentions or profile_mentions)[:5],
+            "resolution_basis": (
+                "forest_unit_project_location"
+                if profile_scope_mentions
+                else "profile_district_project_location"
+            ),
+            "package_evidence": selected_profile_scope_mentions[:5],
         }
-    elif blocking_other_forest_mentions and not profile_mentions:
+    elif blocking_other_forest_mentions and not selected_profile_scope_mentions:
         status = resolver_profile.out_of_scope_status
         forest_unit = {
             "name": blocking_other_forest_mentions[0]["name"],
+            "resolution_basis": "other_forest_unit_project_location",
             "package_evidence": blocking_other_forest_mentions[:5],
         }
     else:
@@ -530,16 +549,35 @@ def _resolve_scope(
         forest_unit = None
 
     unresolved = []
-    if profile_mentions and blocking_other_forest_mentions:
+    if selected_profile_scope_mentions and blocking_other_forest_mentions:
         unresolved.extend(
             _unresolved_from_evidence(
                 "multiple_forest_units_mentioned",
                 blocking_other_forest_mentions,
             )
         )
+    if (
+        status == "ambiguous"
+        and not selected_profile_scope_mentions
+        and not blocking_other_forest_mentions
+        and profile_background_mentions
+    ):
+        unresolved.extend(
+            _unresolved_from_evidence(
+                "profile_forest_unit_mention_not_project_location",
+                profile_background_mentions[:5],
+            )
+        )
     if ambiguous_mentions:
         unresolved.extend(_unresolved_from_evidence("ambiguous_forest_unit", ambiguous_mentions))
-    if not profile_mentions and not other_forest_mentions and not ambiguous_mentions:
+    if (
+        not selected_profile_scope_mentions
+        and not blocking_other_forest_mentions
+        and not ambiguous_mentions
+        and not profile_background_mentions
+        and not other_background_mentions
+        and not profile_district_background_mentions
+    ):
         unresolved.append(
             {
                 "category": "forest_unit",
@@ -552,6 +590,13 @@ def _resolve_scope(
         "scope_status": status,
         "forest_unit": forest_unit,
         "unresolved_mentions": unresolved,
+        "background_location_mentions": _dedupe_evidence(
+            [
+                *profile_background_mentions,
+                *other_background_mentions,
+                *profile_district_background_mentions,
+            ]
+        )[:20],
     }
 
 
@@ -646,6 +691,7 @@ def _context_report(
         "source_record_readiness": source_record_readiness,
         "package_evidence": package_evidence,
         "plan_source_evidence": plan_source_evidence,
+        "background_location_mentions": scope.get("background_location_mentions", []),
         "unresolved_mentions": unresolved_mentions,
         "needs_reviewer_resolution": False,
         "package_file_count": len(package_manifest),
@@ -665,15 +711,20 @@ def _resolved_entries(
     for entry in entries:
         mentions = _mentions_for_entry(package_chunks, entry)
         has_negative_determination = any(_is_negative_location_context(evidence) for evidence in mentions)
-        package_evidence = [
-            evidence for evidence in mentions if not _is_negative_location_context(evidence)
-        ]
-        if has_negative_determination:
+        if not attach_plan_evidence and entry.category == "district":
             package_evidence = [
-                evidence
-                for evidence in package_evidence
-                if _is_affirmative_location_context(evidence)
+                evidence for evidence in mentions if _is_project_location_evidence(evidence)
             ]
+        else:
+            package_evidence = [
+                evidence for evidence in mentions if not _is_negative_location_context(evidence)
+            ]
+            if has_negative_determination:
+                package_evidence = [
+                    evidence
+                    for evidence in package_evidence
+                    if _is_affirmative_location_context(evidence)
+                ]
         package_evidence = package_evidence[:5]
         if not package_evidence:
             continue
@@ -854,6 +905,7 @@ def _mentions_for_aliases(
     name: str,
     category: str,
     aliases: tuple[str, ...],
+    limit: int | None = 5,
 ) -> list[dict]:
     mentions = []
     for alias in aliases:
@@ -866,7 +918,10 @@ def _mentions_for_aliases(
                 alias=alias,
             )
         )
-    return _dedupe_evidence(mentions)[:5]
+    deduped = _dedupe_evidence(mentions)
+    if limit is None:
+        return deduped
+    return deduped[:limit]
 
 
 def _mentions_for_alias(
@@ -898,9 +953,41 @@ def _mentions_for_alias(
     return mentions
 
 
+def _profile_district_location_mentions(
+    package_chunks: list[dict],
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> tuple[list[dict], list[dict]]:
+    project_mentions = []
+    background_mentions = []
+    for entry in resolver_profile.ranger_district_entries:
+        for evidence in _mentions_for_entry(package_chunks, entry):
+            if _is_project_location_evidence(evidence):
+                project_mentions.append(evidence)
+            elif not _is_negative_location_context(evidence):
+                background_mentions.append(evidence)
+    return _dedupe_evidence(project_mentions), _dedupe_evidence(background_mentions)
+
+
 def _is_scope_decisive_mention(evidence: dict) -> bool:
-    text = _scope_decision_text(evidence)
-    return not _has_incidental_forest_unit_context(text)
+    return _is_project_location_evidence(evidence)
+
+
+def _is_project_location_evidence(evidence: dict) -> bool:
+    return _location_evidence_role(evidence) == "project_location"
+
+
+def _location_evidence_role(evidence: dict) -> str:
+    if _is_negative_location_context(evidence):
+        return "negative_location"
+    decision_text = _location_context_text(evidence)
+    if _has_incidental_forest_unit_context(decision_text):
+        return "background_reference"
+    if _is_affirmative_location_context(evidence) or _is_header_project_location_context(evidence):
+        return "project_location"
+    if evidence.get("category") in {"district", "forest_unit"}:
+        return "background_reference"
+    return "generic_mention"
 
 
 def _is_negative_location_context(evidence: dict) -> bool:
@@ -1066,17 +1153,56 @@ def _is_affirmative_location_context(evidence: dict) -> bool:
     text = " ".join([_location_decision_window(evidence), _scope_decision_text(evidence)])
     return bool(
         re.search(
-            r"\b(?:project\s+area|project|action|trail\s+work|parcels?|lands?)\b.{0,160}"
+            r"\b(?:project\s+area|project|action|trail\s+work|parcels?|lands?|it)\b.{0,160}"
             r"\b(?:includes?|is|are|within|cross(?:es)?|located|incorporated)\b.{0,220}"
-            r"\b(?:in|within|into|across|cross(?:es)?)\b",
+            r"\b(?:on|in|within|into|across|cross(?:es)?)\b",
             text,
         )
         or re.search(
             r"\b(?:will|would)\s+(?:also\s+)?be\s+(?:incorporated|located)\s+"
-            r"(?:in|within|into)\b",
+            r"(?:on|in|within|into)\b",
             text,
         )
     )
+
+
+def _is_header_project_location_context(evidence: dict) -> bool:
+    if evidence.get("category") not in {"district", "forest_unit"}:
+        return False
+    text = _location_context_text(evidence)
+    if _has_incidental_forest_unit_context(text):
+        return False
+    has_header_marker = "##" in text or "|" in text
+    has_admin_unit = "ranger district" in text or "national forest" in text
+    has_document_context = bool(
+        re.search(
+            r"\b(?:project|proposed\s+action|environmental\s+assessment|analysis|"
+            r"specialist\s+report|compliance\s+statement)\b",
+            text,
+        )
+    )
+    if has_header_marker and has_admin_unit and has_document_context:
+        return True
+    return bool(
+        re.search(
+            r"\b(?:project|analysis|environmental\s+assessment)\b.{0,240}"
+            r"\b(?:ranger\s+district|national\s+forest)\b",
+            text,
+        )
+    )
+
+
+def _location_context_text(evidence: dict) -> str:
+    provenance = evidence.get("provenance") or {}
+    return " ".join(
+        str(part)
+        for part in (
+            _location_decision_window(evidence),
+            provenance.get("section"),
+            provenance.get("heading"),
+        )
+        if part
+    ).lower()
 
 
 def _location_decision_window(evidence: dict) -> str:
@@ -1154,10 +1280,18 @@ def _has_incidental_forest_unit_context(text: str) -> bool:
     incidental_phrases = (
         "references",
         "literature cited",
+        "literature/ science considered",
+        "literature/science considered",
+        "science considered",
         "bibliography",
         "works cited",
         "reference list",
+        "forest service files",
         "coordinates stewardship",
+        "for example, the",
+        "other forests in the area",
+        "neighboring national forests",
+        "neither forest has planned projects",
         "northern portion",
         "southern portion",
         "not likely to use affected parcels",
@@ -1168,6 +1302,8 @@ def _has_incidental_forest_unit_context(text: str) -> bool:
         r"\b\d{4}[a-z]?\.\s+[^.]{0,180}\bnational forest\b",
         r"\busda forest service\.\s+\d{4}[a-z]?\b",
         r"\bu\.s\. department of agriculture\b[^.]{0,180}\b\d{4}[a-z]?\b",
+        r"\bpublication\s+#?[a-z0-9-]+\b[^.]{0,180}\bnational forest\b",
+        r"\bnational forest\b[^.]{0,140}\b\d+\s*pp\b",
     )
     return any(re.search(pattern, text) for pattern in reference_like_patterns)
 
@@ -1216,7 +1352,7 @@ def _package_evidence(
     chunk_span_start = span_start + leading_trim
     chunk_span_end = span_start + trailing_trim
     source_chunk_start = int(chunk.get("char_start") or 0)
-    return {
+    evidence = {
         "category": category,
         "entry_id": entry_id,
         "name": name,
@@ -1247,6 +1383,8 @@ def _package_evidence(
             "content_sha256": chunk.get("content_sha256"),
         },
     }
+    evidence["evidence_role"] = _location_evidence_role(evidence)
+    return evidence
 
 
 def _dedupe_evidence(records: list[dict]) -> list[dict]:

@@ -996,7 +996,7 @@
           "path": "reviews/{review_id}/compliance_validation.json",
           "required_for_current_promotion": false,
           "required_for_expansion": true,
-          "failure_category": "unsupported_package_evidence",
+          "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
               "name": "compliance_validation_passed",
@@ -1134,12 +1134,18 @@
             {
               "name": "matrix_forest_plan_row_count",
               "json_path": "summary.forest_plan_compliance_row_count",
-              "equals": 0
+              "equals": 152
+            },
+            {
+              "name": "matrix_forest_plan_applicable_standard_row_count",
+              "json_path": "summary.forest_plan_compliance_applicable_standard_row_count",
+              "equals": 24
             },
             {
               "name": "matrix_reviewer_ready",
               "json_path": "summary.reviewer_ready",
-              "equals": true
+              "equals": true,
+              "failure_category": "forest_plan_reviewer_not_ready"
             }
           ]
         },
@@ -1264,7 +1270,7 @@
           "path": "reviews/{review_id}/phase_eval_results.json",
           "required_for_current_promotion": false,
           "required_for_expansion": true,
-          "failure_category": "unsupported_package_evidence",
+          "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
               "name": "phase_eval_review_id_matches",
@@ -1291,7 +1297,7 @@
             {
               "name": "phase_eval_passed_phase_count",
               "json_path": "passed_phase_count",
-              "equals": 16
+              "equals": 15
             }
           ]
         }
@@ -1716,6 +1722,22 @@
           "path": "reviews/{review_id}/forest_plan_context_summary.json"
         },
         {
+          "id": "forest_plan_component_findings",
+          "path": "reviews/{review_id}/forest_plan_component_findings.json"
+        },
+        {
+          "id": "forest_plan_reviewer_resolution_queue",
+          "path": "reviews/{review_id}/forest_plan_reviewer_resolution_queue.json"
+        },
+        {
+          "id": "forest_plan_component_adjudication_template",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_template.json"
+        },
+        {
+          "id": "forest_plan_component_adjudication_eval",
+          "path": "reviews/{review_id}/forest_plan_component_adjudication_eval.json"
+        },
+        {
           "id": "compliance_matrix",
           "path": "reviews/{review_id}/compliance_matrix.json"
         },
@@ -1769,8 +1791,8 @@
         "applicability_validation_passed": true,
         "applicability_validation_failure_category_counts": {},
         "generated_rule_pack_ready": true,
-        "compliance_review_reviewer_ready": true,
-        "phase_eval_passed": true,
+        "compliance_review_reviewer_ready": false,
+        "phase_eval_passed": false,
         "import_manifest_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment/box_import_manifest.json",
         "applicability_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_validation.json",
         "adjudication_template_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_template.json",
@@ -1791,7 +1813,7 @@
         "generated_rule_count": 61,
         "generated_rule_pack_sha256": "39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec",
         "generated_rule_pack_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack_validation.json",
-        "compliance_validation_passed": true,
+        "compliance_validation_passed": false,
         "compliance_finding_count": 61,
         "compliance_finding_status_counts": {
           "gap": 1,
@@ -1800,6 +1822,36 @@
         },
         "rule_claim_link_count": 280,
         "rule_claim_gap_count": 0,
+        "forest_plan_context_validation_passed": true,
+        "forest_plan_context_reviewer_ready": false,
+        "forest_plan_context_project_location_signal_count": 1,
+        "forest_plan_context_geographic_area_count": 2,
+        "forest_plan_context_management_area_count": 9,
+        "forest_plan_context_overlay_count": 4,
+        "forest_plan_context_supporting_plan_evidence_count": 5,
+        "forest_plan_context_unresolved_mention_count": 0,
+        "forest_plan_component_count": 329,
+        "forest_plan_component_standard_count": 58,
+        "forest_plan_component_applicable_count": 152,
+        "forest_plan_component_applicable_standard_count": 24,
+        "forest_plan_component_applied_standard_count": 21,
+        "forest_plan_component_supported_count": 121,
+        "forest_plan_component_gap_count": 31,
+        "forest_plan_component_not_applicable_count": 177,
+        "forest_plan_component_reviewer_resolution_count": 31,
+        "forest_plan_component_validation_passed": false,
+        "forest_plan_component_reviewer_ready": false,
+        "forest_plan_component_inventory_coverage_passed": true,
+        "forest_plan_applicable_standard_coverage_passed": false,
+        "forest_plan_component_adjudication_template_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_component_adjudication_template.json",
+        "forest_plan_component_adjudication_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_component_adjudication_eval.json",
+        "forest_plan_component_adjudication_eval_passed": false,
+        "forest_plan_component_adjudication_resolved_count": 0,
+        "forest_plan_component_adjudication_pending_count": 31,
+        "forest_plan_component_adjudication_real_ea_omission_count": 0,
+        "forest_plan_component_adjudication_system_miss_count": 0,
+        "compliance_matrix_forest_plan_row_count": 152,
+        "compliance_matrix_forest_plan_applicable_standard_row_count": 24,
         "compliance_review_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json",
         "compliance_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_validation.json",
         "compliance_matrix_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_matrix.json",
@@ -1808,15 +1860,15 @@
         "non_applicable_authority_appendix_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/non_applicable_authority_appendix.json",
         "authority_reviewer_resolution_report_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_reviewer_resolution_report.json",
         "litigation_risk_summary_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/litigation_risk_summary.json",
-        "phase_eval_reviewer_ready": true,
-        "phase_eval_passed_phase_count": 16,
-        "phase_eval_phase_count": 16,
+        "phase_eval_reviewer_ready": false,
+        "phase_eval_passed_phase_count": 15,
+        "phase_eval_phase_count": 17,
         "phase_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json",
-        "forest_plan_scope_status": "ambiguous",
-        "forest_plan_component_gate_required": false
+        "forest_plan_scope_status": "custer_gallatin",
+        "forest_plan_component_gate_required": true
       },
-      "next_action": "Resolve the South Plateau package to reviewer-ready Custer Gallatin forest-plan context, or keep the slot blocked with forest_plan_reviewer_not_ready before strict expansion promotion.",
-      "acceptance_signal": "Generated rule-pack validation, compliance validation, matrix/PDF, and review-scoped phase eval pass, but strict expansion remains blocked until the declared Custer Gallatin forest-plan context is reviewer-ready."
+      "next_action": "Complete the 31-item South Plateau forest-plan component adjudication worklist, then rerun component adjudication eval, compliance review, phase eval, and strict expansion promotion.",
+      "acceptance_signal": "South Plateau now resolves to Custer Gallatin with context validation passed; strict expansion remains blocked on 31 pending forest-plan component adjudications."
     }
   ]
 }

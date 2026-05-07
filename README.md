@@ -156,8 +156,9 @@ complete: Sequence 4 closed the final packet QA pass by making the rendered pack
 baseline replay counts from live outer-gate counts, preserving idempotent V1 eval hashes across
 unchanged reruns, and validating the final current-promotion stack. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
-`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
-remaining South Plateau strict-expansion forest-plan context blocker. See
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the completed South Plateau
+forest-plan context pass, which narrows the strict-expansion blocker to pending component
+adjudication. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
 heuristics.
@@ -369,11 +370,12 @@ generated rule-claim binding has `211` links and `0` gaps, and the Forest Plan c
 adjudication eval resolves the current `158`-row queue as true EA package-evidence omissions with
 `0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready. The
 South Plateau expansion package has replayed and validated its six applicability adjudications,
-generated and validated `61` rules, passed compliance review with `61` findings, `280` rule-claim
-links, and `0` rule-claim gaps, and passed review-scoped phase eval. Sequence 7 now makes strict
-expansion fail closed for declared forest-plan profiles: South Plateau declares the Custer Gallatin
-profile, but its nested forest-plan review remains ambiguous/not reviewer-ready, so the slot is
-`ready=false` with `forest_plan_reviewer_not_ready` until that declared-profile context resolves.
+generated and validated `61` rules, resolved to Custer Gallatin forest-plan context with
+`validation_passed=true`, and now exposes the actual remaining component gate: `329` forest-plan
+components, `152` applicable components, `24` applicable standards, `21` applied standards, and
+`31` pending component-adjudication items. Non-strict promotion remains green, while strict
+expansion is blocked only by `forest_plan_reviewer_not_ready` until that adjudication worklist is
+completed without pending/system-miss items.
 
 ## Reviewer Engine Entry Points
 
@@ -711,9 +713,11 @@ Custer Gallatin packages with no resolved geographic area, management area, or o
 reviewer-ready and set `needs_reviewer_resolution`. Ambiguous `Gallatin`-only packages are not
 guessed. Other configured forest profiles remain blocking evidence when they are mentioned as
 operative project scope, but incidental background, reference, bibliography, or coordination
-mentions do not force an otherwise Custer Gallatin package to `ambiguous`. Negative package-location
-text such as `not part of the project area` is filtered before geographic and management area
-resolution. Non-Custer packages are marked `not_custer_gallatin` and treated as out of scope.
+mentions do not force an otherwise Custer Gallatin package to `ambiguous`; package evidence now
+carries an `evidence_role` so project-location and background/reference mentions are auditable.
+Negative package-location text such as `not part of the project area` is filtered before geographic
+and management area resolution. Non-Custer packages are marked `not_custer_gallatin` and treated as
+out of scope.
 
 Export and evaluate a forest-plan component adjudication file for an existing review:
 
@@ -931,13 +935,12 @@ added South Plateau artifact checks to the promotion suite. Applicability valida
 `61` applicable authorities, `331` non-applicable authorities, no unresolved or `needs_adjudication`
 decisions, and `generated_rule_pack_ready=true`. Compliance review reports `reviewer_ready=true`,
 `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim
-gaps. South Plateau review-scoped phase eval now passes `16/16` phases with
-`reviewer_ready=true`, but its nested `summary.forest_plan_review` remains
-`scope_status="ambiguous"`, `validation_passed=false`, and `reviewer_ready=false`. Sequence 7
-therefore marks the South Plateau slot `ready=false` with `forest_plan_reviewer_not_ready`;
-non-strict current promotion remains green, while strict expansion fails until the declared Custer
-Gallatin forest-plan context is reviewer-ready. The active follow-up plan is
-`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
+gaps. The South Plateau forest-plan context now resolves to `scope_status="custer_gallatin"` with
+`validation_passed=true`, `2` geographic areas, `9` management areas, `4` overlays, and `5`
+supporting-plan routes. Compliance validation and South Plateau review-scoped phase eval now fail
+only because the forest-plan component gate is pending: `31` component adjudications remain open
+from the generated worklist. Non-strict current promotion remains green; strict expansion fails
+only on `forest_plan_reviewer_not_ready` until the component adjudication eval passes.
 
 Run the seed retrieval eval gate:
 

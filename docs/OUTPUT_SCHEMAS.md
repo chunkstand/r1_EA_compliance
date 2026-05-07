@@ -478,6 +478,8 @@ resolution without re-extracting the package files.
 - forest unit and ranger district signals from the selected profile
 - profile source records used by the resolver
 - project location signals found in the EA package
+- `background_location_mentions`: district or forest-unit mentions classified as background,
+  bibliography, reference, coordination, comparison, or otherwise non-project-location evidence
 - resolved geographic areas
 - resolved management areas
 - resolved overlays
@@ -487,7 +489,8 @@ resolution without re-extracting the package files.
     supporting plan record was applied
 - `source_record_readiness`: required profile source-record IDs, indexed chunk counts, and
   missing source IDs
-- package evidence snippets
+- package evidence snippets; location and forest-unit snippets include `evidence_role` values such
+  as `project_location`, `background_reference`, `negative_location`, or `generic_mention`
 - source-library plan evidence snippets
 - unresolved mentions that require reviewer attention
 - `needs_reviewer_resolution`
@@ -503,6 +506,11 @@ project area`, `there are no <area/overlay> in the parcels`, or `outside of <are
 filtered before geographic, management-area, or overlay resolution. If an entry has negative
 package-location evidence, table-only or incidental mentions are suppressed unless the package also
 contains affirmative project-location evidence for that entry.
+
+Ranger-district evidence can support a selected forest-plan profile only when the district belongs
+to that selected profile and the package evidence is classified as `project_location`; district
+terms from another configured profile do not resolve the selected profile. Bibliographic and
+reference-list district mentions remain visible in `background_location_mentions`.
 
 `forest_plan_context_validation.json` records gate-facing checks for:
 

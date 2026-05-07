@@ -629,23 +629,24 @@ Gallatin FEIS and ESA-supporting plan documents.
   promotion suite. South Plateau applicability validation passes: `61` authorities are applicable,
   `331` are non-applicable, `0` are unresolved or `needs_adjudication`, and
   `generated_rule_pack_ready=true`. Generated rule-pack validation passes with `61` rules and hash
-  `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`. Compliance review reports
-  `reviewer_ready=true`, `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links,
-  and `0` rule-claim gaps. South Plateau review-scoped phase eval now passes `16/16` phases with
-  `reviewer_ready=true`. Sequence 7 closed the narrower gate-boundary weakness conservatively: the
-  South Plateau slot declares `forest_plan_profile="custer_gallatin"`, but the nested
-  `forest_plan_review` summary remains `scope_status="ambiguous"`, `validation_passed=false`,
-  `reviewer_ready=false`, and `needs_reviewer_resolution=true`. The South Plateau expansion slot is
-  now `ready=false` with `failure_category="forest_plan_reviewer_not_ready"`, and the manifest also
-  checks `forest_plan_context_summary.json` plus dynamic declared-profile slot checks. The active
-  follow-up plan is `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Strict
+  `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`. The authority-review layer
+  still emits `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0`
+  rule-claim gaps. The South Plateau forest-plan context pass now resolves the package to
+  `scope_status="custer_gallatin"` with context `validation_passed=true`, `2` geographic areas,
+  `9` management areas, `4` overlays, `5` supporting-plan routes, and `0` unresolved mentions.
+  The remaining blocker is narrower: forest-plan component evaluation has `329` components,
+  `152` applicable components, `24` applicable standards, `21` applied standards, and `31`
+  `missing_package_evidence` items in the component adjudication worklist. The South Plateau
+  expansion slot remains `ready=false` with `failure_category="forest_plan_reviewer_not_ready"`,
+  and the manifest now records the component findings, reviewer queue, adjudication template, and
+  pending adjudication eval as expected gate artifacts. Strict
   promotion suite was written to
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`
   and now fails as expected with `current_promotion_ready=true`, `promotion_ready=false`,
   `expansion_ready=false`, `expansion_artifacts_ready=false`,
-  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
-  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`. Non-strict promotion suite
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 6}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`,
+  `open_expansion_artifact_count=5`, and `open_expansion_slot_count=1`. Non-strict promotion suite
   was rerun last and keeps current promotion green with `current_promotion_ready=true`,
   `promotion_ready=true`, `failure_category_counts={}`, and the same expansion-only blocker counts.
   Promotion-suite manifest validation now fails selected not-ready slots that omit
@@ -711,6 +712,12 @@ Gallatin FEIS and ESA-supporting plan documents.
   needs-adjudication, `1` insufficient-strong-trigger needs-adjudication, and `1`
   positive/negative-conflict needs-adjudication. `applicability-gold-eval` passed `5/5` cases and
   now requires at least one gold case with explicit arbitration-field expectations.
+- Latest South Plateau forest-plan context verification on 2026-05-07 reran the cached South
+  Plateau compliance review, generated the `31`-item forest-plan component adjudication template,
+  evaluated it in pending state, reran South Plateau phase eval at `15/17`, restored the promoted
+  V1 review-scoped phase eval at `20/20`, passed non-strict promotion with
+  `current_promotion_ready=true`, and proved strict expansion fails only on
+  `forest_plan_reviewer_not_ready`.
 - Latest NEPA 3D graph-gate verification on 2026-05-06 regenerated the source-set and V1 review
   graph exports, reran V1 review-scoped phase eval at `19/19`, and passed non-strict promotion
   suite with `22/22` required current-promotion results, `failure_category_counts={}`, and
@@ -723,10 +730,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   tracked slice.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
   expansion milestone is complete through Sequence 7 for the declared ECID preliminary-EA and South
-  Plateau expansion slots. Current V1 promotion remains green, but strict expansion is intentionally
-  blocked until South Plateau resolves to reviewer-ready Custer Gallatin forest-plan context or a
-  narrower typed forest-plan blocker is recorded through
-  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Future expansion should add a new
+  Plateau expansion slots. The South Plateau forest-plan context milestone is complete in the
+  typed-blocker state: Custer Gallatin context is resolved, but strict expansion is intentionally
+  blocked until the 31-item component adjudication queue is completed and passes eval. Future
+  expansion should add a new
   verified real-package slot and matching promotion-suite review-case artifact checks rather than
   weakening the current gate.
 
@@ -1379,7 +1386,9 @@ packages are not guessed. The command now accepts `--forest-unit-id` and
 source records, area terms, overlays, and supporting evidence routes. Other configured forest
 profiles are still blocking evidence when mentioned as operative project scope, but incidental
 background, reference, bibliography, or coordination mentions do not force an otherwise
-Custer-Gallatin package to `ambiguous`. Negative package-location text such as `not part of the
+Custer-Gallatin package to `ambiguous`. Location evidence now carries `evidence_role` metadata and
+the context includes `background_location_mentions` so reviewers can see which references were
+excluded from project-location resolution. Negative package-location text such as `not part of the
 project area` is also filtered before area resolution. For Custer Gallatin packages it extracts:
 
 - forest unit and ranger district signals
