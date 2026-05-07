@@ -44,9 +44,10 @@ promotion, and non-strict promotion.
 
 ## Current East Crazies Final QA / Certification Replay Handoff
 
-`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now active. Sequence 0 baseline
-replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work, and
-Sequence 3 gate integration are complete for the promoted East Crazy Inspiration Divide review.
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is closed. Sequence 0 baseline
+replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work,
+Sequence 3 gate integration, and Sequence 4 final packet QA/closeout are complete for the promoted
+East Crazy Inspiration Divide review.
 The lane remains bounded to
 `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it explicitly
 avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
@@ -65,7 +66,8 @@ Sequence 0 replayed the current gates on 2026-05-07:
 - `promotion-suite --manifest config/promotion_suite_v1.json`: kept current promotion green with
   `current_promotion_ready=true`, `promotion_ready=true`, `22/22` required current-promotion
   results passed, and South Plateau expansion-only blockers still separate as
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}` after the later South
+  Plateau typed-blocker manifest update.
 - `git diff --check`: passed.
 
 Canonical Sequence 0 artifact pointers:
@@ -149,7 +151,7 @@ Latest Sequence 3 verification:
 - `promotion-suite --manifest config/promotion_suite_v1.json`: passed current promotion with
   `26/26` required current-promotion results, `current_promotion_ready=true`,
   `promotion_ready=true`, and South Plateau blockers separate as
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 - strict expansion `promotion-suite --strict-expansion` failed as expected with
   `current_promotion_ready=true`, `promotion_ready=false`, and the same South Plateau
   `forest_plan_reviewer_not_ready` blockers.
@@ -174,7 +176,28 @@ Latest Sequence 4 verification:
 - `promotion-suite --manifest config/promotion_suite_v1.json`: passed current promotion with
   `26/26` required current-promotion results, `current_promotion_ready=true`,
   `promotion_ready=true`, and South Plateau blockers separate as
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
+
+Latest final closeout replay:
+
+- `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with
+  `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- `final-qa-certification`: passed `166/166` and refreshed the ignored JSON, Markdown, PDF,
+  manifest, and validation family.
+- `final-qa-certification --validate-only`: passed `166/166` without rewriting outputs after the
+  outer gate replay. The stored validation sidecar records the inner packet replay at `157/157`;
+  the CLI result adds the outer self-reference/freshness checks.
+- Rendered packet inspection: Markdown exposes the required caveats, source pointers, accepted V1
+  risk ledger, residual blockers, baseline/live gate counts, and root-level draft exclusion; PDF
+  header is `%PDF-1.4`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` with
+  `final_qa_certification_report` and `reviewer_ready=true`.
+- Strict expansion `promotion-suite --strict-expansion` failed as expected with
+  `current_promotion_ready=true`, `promotion_ready=false`, and
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
+- Non-strict `promotion-suite` was rerun last and passed with `current_promotion_ready=true`,
+  `promotion_ready=true`, `failure_category_counts={}`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
 The East Crazies final QA/certification replay milestone has no remaining planned sequence. Next
 implementation target, if continuing strict expansion, is the South Plateau `31`-item forest-plan
@@ -262,14 +285,14 @@ Latest local signals:
   and `2,564` edges;
 - V1 review graph export: `76/76` validation checks, `failure_category_counts={}`, `1,916` nodes,
   and `3,442` edges;
-- V1 review-bound `phase-eval`: `19/19` phases passed with `reviewer_ready=true`;
+- V1 review-bound `phase-eval`: `20/20` phases passed with `reviewer_ready=true`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=false`, `expansion_artifacts_ready=false`, `22/22` required current-promotion
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `26/26` required current-promotion
   results passed, `failure_category_counts={}`, and
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`;
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`;
 - strict expansion `promotion-suite`: expected command failure with `current_promotion_ready=true`,
-  `promotion_ready=false`, `expansion_ready=false`, `22/22` required current-promotion results
-  passed, `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`.
+  `promotion_ready=false`, `expansion_ready=false`, `26/26` required current-promotion results
+  passed, `open_expansion_artifact_count=5`, and `open_expansion_slot_count=1`.
 
 Next implementation target: no additional NEPA 3D Milestone 7 pass is selected yet. Reasonable next
 slices are a deeper graph failure-fixture pass, the Milestone 8 operating runbook/demo closeout, or
@@ -635,10 +658,12 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
   reviewer-ready. Ready-slot `expected_gate_artifacts` cover the matching review-case
   `required_for_expansion` artifact IDs, and declared forest-profile slots must include
   `compliance_review`, `forest_plan_context_summary`, and `phase_eval` gate contracts.
-- Non-strict promotion suite after Sequence 7 reports `current_promotion_ready=true`,
+- Historical non-strict promotion suite after Sequence 7 reported `current_promotion_ready=true`,
   `promotion_ready=true`, `expansion_ready=false`, `expansion_artifacts_ready=false`,
   `failure_category_counts={}`, `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
-  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`.
+  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`; the current closeout
+  signal after final QA and South Plateau context updates is `26/26` current-promotion results and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
 Next implementation target:
 

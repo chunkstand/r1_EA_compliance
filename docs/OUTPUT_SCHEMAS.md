@@ -2434,6 +2434,10 @@ validation sidecar, and SHA-256 hashes for the non-circular JSON, Markdown, PDF,
 outputs. Sequence 3 makes this sidecar a required current-promotion artifact, verifies those
 sidecar hashes back against local files in `promotion-suite`, and adds an optional
 `final_qa_certification_report` phase to review-scoped `phase-eval` when the sidecar exists.
+In the 2026-05-07 closeout state the stored sidecar records the inner packet replay at `157/157`
+checks, while `final-qa-certification --validate-only` reports `166/166` after adding outer
+self-reference and freshness checks around the sidecar. This distinction is expected; outer gates
+use the sidecar plus output hashes to fail closed if a packet file is edited after validation.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set

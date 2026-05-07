@@ -367,9 +367,10 @@ The summary now reports the Milestone 7 count dimensions explicitly: node type, 
 authority category, source status, source partition, source currentness status, applicability
 status, and readiness blocker.
 `phase-eval` adds `nepa_3d_source_set_graph` and `nepa_3d_review_graph` phases when those artifacts
-exist. The latest V1 review-bound phase eval passes `19/19` phases with `reviewer_ready=true`,
-including both graph phases, the post-V1 applicability family, generated rule pack,
-decision-support report, compliance review, forest-plan component eval, and gold eval.
+exist. After final QA gate integration, the latest V1 review-bound phase eval passes `20/20` phases
+with `reviewer_ready=true`, including both graph phases, the final QA certification report, the
+post-V1 applicability family, generated rule pack, decision-support report, compliance review,
+forest-plan component eval, and gold eval.
 
 `config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
 the V1 review graph validation/summary artifacts before current promotion passes. The current live
@@ -488,7 +489,7 @@ review-bound baseline `phase-eval` at `19/19` before final QA gate integration. 
 the final QA validation sidecar, review-scoped `phase-eval` now passes `20/20` with
 `final_qa_certification_report`, and non-strict `promotion-suite` remains current-green with
 `26/26` required current-promotion results passed. South Plateau strict-expansion blockers remain
-separate as `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+separate as `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 Generated final QA outputs live under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/` and stay ignored unless repository
 policy changes.
@@ -510,6 +511,15 @@ report renders both baseline counts that exclude final-QA self-reference (`19/19
 current-promotion results). The final closeout stack is ordered so mutating V1 eval output runs
 before the final QA refresh; the final validate-only replay then still passes after `phase-eval`
 and non-strict `promotion-suite` add only the permitted final-QA outer-gate drift.
+
+The 2026-05-07 closeout replay accepted the milestone. `final-qa-certification` refreshed the
+ignored packet and passed `166/166`; `final-qa-certification --validate-only` also passed
+`166/166` without rewriting outputs after the outer gate replay. The stored validation sidecar
+records the inner packet replay at `157/157` checks plus output hashes for the JSON, Markdown, PDF,
+and manifest; the CLI's `166/166` result includes the additional outer self-reference and freshness
+checks around that sidecar. The rendered Markdown exposes the required caveats, source pointers,
+accepted V1 risk ledger, residual blockers, baseline/live gate counts, and root-level draft
+exclusion, and the generated PDF starts with `%PDF-1.4`.
 
 Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,

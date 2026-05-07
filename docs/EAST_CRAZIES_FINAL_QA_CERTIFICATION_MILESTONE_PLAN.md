@@ -1,11 +1,45 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: complete; Sequences 0-4 are complete as of the 2026-05-07 final packet QA closeout
+Status: closed; Sequences 0-4 are complete and accepted after the 2026-05-07 final closeout replay
 
-This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
-Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
-review, legal sufficiency determination, or Region 1 expansion pass.
+This completed plan adds a focused final QA and certification replay for the promoted East Crazy
+Inspiration Divide EA compliance review. It is a replay over existing audited artifacts, not a new
+compliance review, legal sufficiency determination, or Region 1 expansion pass.
+
+## Closeout Result
+
+The milestone acceptance criteria are met for the promoted East Crazy review. The 2026-05-07
+closeout replay refreshed the ignored final QA packet, validated it without rewriting outputs,
+replayed the current-promotion gates, and reran non-strict promotion last so the default promotion
+suite output remains the current-promotion signal.
+
+Closeout evidence:
+
+- `v1-ea-eval`: passed with `passed=true`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`.
+- `final-qa-certification`: passed `166/166` and wrote the ignored JSON, Markdown, PDF, manifest,
+  and validation family under the review `final_qa/` directory.
+- `final-qa-certification --validate-only`: passed `166/166` without rewriting outputs after the
+  final outer-gate replay.
+- Stored validation sidecar: records the inner packet replay at `157/157` checks and the output
+  hashes used by `promotion-suite`; the CLI's `166/166` result includes outer
+  self-reference/freshness checks around that sidecar.
+- Rendered packet inspection: Markdown exposes required caveats, source pointers, accepted V1 risk
+  ledger, residual blockers, baseline/live gate counts, and root-level draft exclusion; the PDF
+  header is `%PDF-1.4`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` with
+  `final_qa_certification_report` and `reviewer_ready=true`.
+- Non-strict `promotion-suite`: passed current promotion with `26/26` required current-promotion
+  results, `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
+- Strict expansion `promotion-suite --strict-expansion`: failed as expected with
+  `current_promotion_ready=true`, `promotion_ready=false`, and the same South Plateau
+  `forest_plan_reviewer_not_ready` blocker family.
+
+No further East Crazies final QA sequence remains. The next implementation target, if continuing
+strict expansion, is outside this milestone: complete the South Plateau `31`-item Forest Plan
+component adjudication worklist and rerun that review's downstream gates.
 
 ## Goal
 
@@ -61,7 +95,7 @@ The final QA replay starts from the current promoted review state:
 These counts are acceptance inputs, not free text. If any count drifts, the final QA replay must
 fail closed until the drift is explained by a deliberate reviewed sequence.
 
-## Proposed Output Surfaces
+## Generated Output Surfaces
 
 Generated outputs stay under ignored review artifacts:
 
@@ -71,7 +105,7 @@ Generated outputs stay under ignored review artifacts:
 - `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_manifest.json`
 - `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
 
-Tracked implementation surfaces should be added only when their sequence starts:
+Tracked implementation surfaces added by this milestone:
 
 - `config/east_crazies_final_qa_certification_v1.json`
 - `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`
@@ -83,7 +117,7 @@ Tracked implementation surfaces should be added only when their sequence starts:
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
 
-The command should be review-scoped, for example:
+The command is review-scoped:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
@@ -91,7 +125,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
   --review-id v1-cg-ecid-compliance-review
 ```
 
-The implementation should also support validation without rewriting generated outputs:
+The implementation also supports validation without rewriting generated outputs:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
@@ -297,7 +331,7 @@ Status: complete as of the 2026-05-07 Sequence 3 pass. The generator now writes
 `east_crazies_final_qa_certification_validation.json` as the replay sidecar used by outer gates.
 Review-scoped `phase-eval` adds `final_qa_certification_report` when that sidecar exists and passed
 `20/20` with `reviewer_ready=true` for `v1-cg-ecid-compliance-review`. The current promotion suite
-now requires the final QA JSON, manifest, PDF, and validation sidecar and passed `26/26` current
+now requires the final QA JSON, manifest, PDF, and validation sidecar and passes `26/26` current
 results. Strict expansion still fails only on South Plateau `forest_plan_reviewer_not_ready`
 blockers, with East Crazy current promotion remaining green.
 
@@ -346,11 +380,14 @@ phase-eval readiness checks.
 Purpose: replay the full certification path, inspect the rendered packet, update durable docs, and
 commit the verified slice.
 
-Status: complete as of the 2026-05-07 Sequence 4 pass. The closeout found and fixed two final QA
-usability/freshness gaps: the rendered Machine Replay summary now separates baseline replay counts
-that exclude final-QA self-reference from live outer-gate counts, and `v1-ea-eval` preserves
-`generated_at` when unchanged semantic output would otherwise rewrite only a timestamp and churn the
-final QA input hash.
+Status: closed as of the 2026-05-07 final closeout replay. The closeout found and fixed two final
+QA usability/freshness gaps: the rendered Machine Replay summary now separates baseline replay
+counts that exclude final-QA self-reference from live outer-gate counts, and `v1-ea-eval`
+preserves `generated_at` when unchanged semantic output would otherwise rewrite only a timestamp
+and churn the final QA input hash. The final closeout replay reconfirmed the same acceptance state
+after the South Plateau typed-blocker update: East Crazies current promotion remains green, while
+strict expansion remains outside this milestone and blocked only by South Plateau Forest Plan
+component adjudication.
 
 Actions:
 

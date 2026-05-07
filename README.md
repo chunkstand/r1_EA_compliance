@@ -46,8 +46,8 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `26` baseline source records through the generated applicability rule pack, validates a
 `373`-candidate authority universe with `33` applicable and `340` non-applicable authorities,
 emits `33` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
-review-bound `phase-eval` `19/19` with the post-V1 applicability, decision-support, and NEPA 3D
-graph gates included, passes
+review-bound `phase-eval` `20/20` with the post-V1 applicability, decision-support, NEPA 3D graph,
+and final QA certification gates included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk.
 
@@ -149,12 +149,12 @@ readiness blockers. See
 report sequence; Sequence 5 has closed the milestone by making the generated East Crazies
 JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
 keeping the ignored outputs under the review `decision_support/` directory. See
-`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` for the focused final QA and
-certification replay plan that will validate the promoted East Crazy review packet from existing
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` for the closed final QA and
+certification replay plan that validates the promoted East Crazy review packet from existing
 audited artifacts without broadening the legal or Region 1 readiness claim. Sequences 0-4 are
-complete: Sequence 4 closed the final packet QA pass by making the rendered packet distinguish
-baseline replay counts from live outer-gate counts, preserving idempotent V1 eval hashes across
-unchanged reruns, and validating the final current-promotion stack. See
+complete and accepted: Sequence 4 closed the final packet QA pass by making the rendered packet
+distinguish baseline replay counts from live outer-gate counts, preserving idempotent V1 eval
+hashes across unchanged reruns, and validating the final current-promotion stack. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the completed South Plateau
 forest-plan context pass, which narrows the strict-expansion blocker to pending component
