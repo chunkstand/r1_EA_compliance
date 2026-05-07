@@ -22,32 +22,45 @@ This SOW is not a final agency decision, legal sufficiency review, or NEPA compl
 
 ## Deliverables
 
+The required deliverables are limited to the outputs needed to support current USDA NEPA procedures,
+NFMA project consistency, R1 FSM 2550 soil-quality direction, and the Custer Gallatin Land Management
+Plan soil components.
+
 ### 1. Fieldwork
 
-- Survey-trigger table tying each proposed action element to the controlling source that requires
-  field verification.
-- Fieldwork plan, maps, and activity-area definitions for triggered soils surveys.
-- Field data package with GPS points/tracks/polygons, completed field forms, photo log, soil map unit
-  checks, DSD observations, wetland/riparian interface notes, and data gaps.
+- Survey-trigger and screen-out table for each proposed action element, identifying the source
+  authority, required field survey, and reason any survey is not triggered.
+- Activity-area, developed-site/permanent-road screen-out, and treatment-unit map set tied to soil
+  map units, slope/stability limits, waterbody interfaces, access/staging, and crossing locations.
+- DSD field package for each FW-STD-SOIL-01 activity area: pre-implementation percent DSD, expected
+  post-implementation DSD, disturbance class, GPS/photo/form evidence, and protocol deviations.
+- Site-specific soil/BMP observations for erosion, sediment delivery, wet or hydric soils, unstable
+  areas, slopes over 40 percent, temporary access, blading, pits/trenches, burn piles, revegetation,
+  and CWD only where FW-GDL-SOIL-07 or MON-SOIL-02 is triggered.
 
 ### 2. Analysis
 
-- Existing-condition summary by activity area.
-- Effects indicators and soil-disturbance calculations for no action, proposed action, and any Forest
-  Service-provided alternative.
-- Forest Plan consistency analysis using Appendix A.
-- Mitigation/BMP/monitoring matrix tied to action element, location, source trigger, timing,
-  responsible party, and verification method.
-- Reasonably foreseeable effects and uncertainty summary; include separate-action context only where
-  it assists reasoned decision-making.
+- Potentially affected environment and reasonably foreseeable soil impacts for the proposed action,
+  no-action consequences, and any Forest Service-provided alternative.
+- FW-STD-SOIL-01 calculation package showing activity-area acreage, existing DSD, expected DSD,
+  15-percent standard status, restoration/net-improvement need, and any valid screen-out rationale.
+- 36 CFR 219.15 Forest Plan consistency table for applicable soil desired conditions, standards,
+  guidelines, suitability components if any, and MON-SOIL-01/MON-SOIL-02 monitoring triggers.
+- Design criteria, mitigation, BMP, and monitoring matrix tied to action element, location, source
+  trigger, timing, responsible party, verification method, and whether the measure is required or
+  advisory.
+- Data-gap and uncertainty summary identifying only the additional information essential to a
+  reasoned choice among alternatives or to support the issue-screening/FONSI record.
 
 ### 3. Reporting
 
-- Draft Soils Specialist Report or approved issue-screening memo.
-- Appendix A authority-to-report crosswalk updated for the project.
-- NEPA-ready soils summary text for later disclosure, if requested by the Forest Service.
-- Final report or memo, final PDF, editable source file, tables, map atlas, GIS package, photo log,
-  field forms, source inventory, metadata/readme, and limitations memo.
+- Draft and final PDF Soils Specialist Report or Forest Service-approved issue-screening memo.
+- Appendix A authority-to-report crosswalk updated for the project and cited in the report.
+- Editable report source, final tables, map atlas, GIS package, photo log, field forms, source
+  inventory, metadata/readme, limitations memo, and comment-response log if Forest Service or ID-team
+  comments are provided.
+- Concise EA/FONSI support text only where requested by the Forest Service and only from conclusions
+  already supported in the soils report or issue-screening memo.
 
 ## Fieldwork/Data Collection
 
