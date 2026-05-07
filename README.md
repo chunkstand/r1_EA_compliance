@@ -150,6 +150,8 @@ report sequence; Sequence 5 has closed the milestone by making the generated Eas
 JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
 keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
+remaining South Plateau strict-expansion forest-plan context blocker. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
 heuristics.
@@ -921,7 +923,8 @@ gaps. South Plateau review-scoped phase eval now passes `16/16` phases with
 `scope_status="ambiguous"`, `validation_passed=false`, and `reviewer_ready=false`. Sequence 7
 therefore marks the South Plateau slot `ready=false` with `forest_plan_reviewer_not_ready`;
 non-strict current promotion remains green, while strict expansion fails until the declared Custer
-Gallatin forest-plan context is reviewer-ready.
+Gallatin forest-plan context is reviewer-ready. The active follow-up plan is
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
 
 Run the seed retrieval eval gate:
 

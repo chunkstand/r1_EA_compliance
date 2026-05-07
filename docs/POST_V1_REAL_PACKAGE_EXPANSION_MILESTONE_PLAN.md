@@ -6,6 +6,9 @@ real-package expansion set. Sequence 7 conservatively blocks South Plateau stric
 `forest_plan_reviewer_not_ready` until its declared Custer Gallatin forest-plan context is
 reviewer-ready.
 
+Follow-up resolution plan:
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
+
 ## Weakness
 
 Broader post-V1 expansion was not ready at the Sequence 0 baseline. The promotion-suite baseline
@@ -788,6 +791,14 @@ Sequence 7 latest local result:
   `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`, and no unrelated
   current-promotion regression.
+
+Next implementation pass:
+
+Use `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` to resolve the remaining South
+Plateau forest-plan context blocker. That plan starts by reproducing the current
+`scope_status="ambiguous"` validation failure, then separates project-location evidence from
+bibliographic/background mentions before rerunning South Plateau compliance, phase-eval, and
+promotion-suite gates.
 
 Stop conditions:
 

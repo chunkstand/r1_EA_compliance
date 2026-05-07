@@ -195,12 +195,12 @@ forest-plan context remains ambiguous.
 Resolution plan:
 
 ```text
-docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md
+docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md
 ```
 
-That plan closes the weakness in sequence: lock the current promotion-suite blocker baseline,
-complete the three-item ECID adjudication replay, generate and review the ECID expansion rule pack,
-close the ECID source-claim gaps, close the ECID Forest Plan component adjudication blocker, select
-the third package fixture, run that package through the applicability-first sequence, close the
-generated review, and harden strict expansion so South Plateau cannot pass while forest-plan context
-is ambiguous. That sequence is now complete through the typed South Plateau forest-plan blocker.
+The prior sequence in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete through
+the typed South Plateau forest-plan blocker. The active follow-up plan resolves the remaining
+strict-expansion issue by reproducing the ambiguous context failure, separating project-location
+evidence from bibliographic/background mentions, rerunning South Plateau forest-plan/compliance
+artifacts if the package resolves to Custer Gallatin, and then rerunning strict plus non-strict
+promotion-suite gates.

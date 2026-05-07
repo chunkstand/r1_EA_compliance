@@ -63,15 +63,18 @@ Implemented today:
 
 Current remaining work:
 
-- Milestone 10 real-package expansion remains open. The first expansion pass now has local evidence
-  for `region1-expansion-ecid-preliminary-ea`, but it is intentionally blocked by three
-  applicability decisions requiring adjudication before generated rule-pack or compliance-review
-  promotion.
+- Milestone 10 real-package expansion remains open until strict expansion can truthfully report the
+  declared real-package set. The ECID preliminary-EA slot is now ready. The South Plateau Area
+  Landscape Treatment Project slot has passing applicability, generated rule-pack, compliance
+  review, and review-scoped phase-eval artifacts, but strict expansion is intentionally blocked by
+  `forest_plan_reviewer_not_ready` because its declared Custer Gallatin forest-plan context remains
+  `scope_status="ambiguous"`.
 - The roads/access/special-use blocker exposed a general evidence-arbitration gap. That gap is now
   closed through Evidence Arbitration Milestones 1-5: roads/access no longer blocks on weak
   auxiliary evidence, arbitration behavior has permanent seed/gold/phase/promotion coverage, and
-  the remaining ECID expansion blockers are genuine positive/negative conflicts in
-  cultural-resource/SHPO, minerals/energy, and species-supporting authorities.
+  the later ECID applicability conflicts were resolved through replayable adjudication.
+- The active follow-up plan is
+  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
 
 ## Target Invariant
 
@@ -1100,17 +1103,18 @@ Current state as of 2026-05-06:
   component adjudication worklist, and added ECID expansion artifact checks. Sequence 2A closed the
   ECID source-claim gap set. Sequence 2B completed the component adjudication replay and reran ECID
   compliance review, review-scoped phase eval, and promotion-suite checks; the ECID slot is now
-  `ready=true`. Sequence 3 selected the South Plateau third package fixture, so the remaining
-  expansion blocker is a typed `applicability_miss` for a selected-but-not-run package. The
-  selected-slot contract now fails closed if review/package/source-set metadata, expected gate
-  artifacts, next action, or a typed non-`package_fixture_missing` failure category is missing.
-- The focused closure plan for these blockers is
-  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`.
+  `ready=true`. Sequence 3 selected the South Plateau package fixture, Sequence 4 imported its
+  `26` official PDFs and built a `3,671`-chunk package cache, Sequence 5 replayed six
+  applicability adjudications, Sequence 6 generated the South Plateau rule pack and compliance
+  artifacts, and Sequence 7 hardened strict expansion so South Plateau cannot pass while its
+  declared forest-plan context is ambiguous.
+- The active closure plan for the remaining South Plateau forest-plan blocker is
+  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
 
 Implementation direction:
 
-- Add the third real Region 1 EA package fixture contract and keep any uncovered applicability
-  uncertainty as explicit typed readiness blockers.
+- Resolve South Plateau's declared Custer Gallatin forest-plan context using general
+  profile/package evidence, or keep a narrower typed `forest_plan_reviewer_not_ready` blocker.
 - Select a small real-package set covering:
   - Custer Gallatin;
   - at least one additional Region 1 forest profile once implemented;

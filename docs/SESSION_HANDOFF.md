@@ -58,11 +58,11 @@ package evidence visible as gaps and do not mark components supported or create 
 ECID compliance review reports `reviewer_ready=true`, ECID review-scoped phase eval passes `16/16`,
 and the required ECID expansion artifacts pass.
 
-Next implementation target if continuing strict expansion: resolve South Plateau to reviewer-ready
-Custer Gallatin forest-plan context, or leave the typed `forest_plan_reviewer_not_ready` blocker in
-place. The first slice should inspect
-`source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_context_validation.json`
-and the package/profile evidence that kept `scope_status="ambiguous"`.
+Next implementation target if continuing strict expansion:
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. The first slice should reproduce the
+current `scope_status="ambiguous"` blocker, separate project-location evidence from
+bibliographic/background mentions, and then either resolve South Plateau to reviewer-ready Custer
+Gallatin forest-plan context or keep a narrower typed `forest_plan_reviewer_not_ready` blocker.
 
 ## Current NEPA 3D Graph Gate Handoff
 
@@ -614,6 +614,9 @@ legal conclusion.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
   `expansion_ready=false`; complete through Sequence 7 for the declared expansion set, with South
   Plateau intentionally blocked on `forest_plan_reviewer_not_ready`.
+- `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`: active follow-up plan for resolving
+  the remaining South Plateau strict-expansion blocker without weakening the declared-profile,
+  compliance-review, phase-eval, or promotion-suite gates.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
@@ -1023,12 +1026,14 @@ rate `1.0`.
 
 ## Next Sequence
 
-No next sequence is selected for the current post-V1 real-package expansion lane. Current V1
-promotion remains green, ECID remains a ready expansion slot, and South Plateau is intentionally
-blocked from strict expansion by `forest_plan_reviewer_not_ready` until its declared Custer Gallatin
-forest-plan context is reviewer-ready. Future expansion should start as a new real-package slot with
-its own package fixture, applicability artifacts, generated review artifacts, promotion-suite
-review-case checks, and docs/handoff closeout.
+The next selected sequence is the South Plateau forest-plan context plan in
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Current V1 promotion remains green,
+ECID remains a ready expansion slot, and South Plateau is intentionally blocked from strict
+expansion by `forest_plan_reviewer_not_ready` until its declared Custer Gallatin forest-plan
+context is reviewer-ready or the blocker is narrowed by verified resolver evidence. Future package
+expansion beyond that should start as a new real-package slot with its own package fixture,
+applicability artifacts, generated review artifacts, promotion-suite review-case checks, and
+docs/handoff closeout.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

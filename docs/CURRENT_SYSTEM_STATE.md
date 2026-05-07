@@ -559,7 +559,8 @@ Gallatin FEIS and ESA-supporting plan documents.
   `forest_plan_review` summary remains `scope_status="ambiguous"`, `validation_passed=false`,
   `reviewer_ready=false`, and `needs_reviewer_resolution=true`. The South Plateau expansion slot is
   now `ready=false` with `failure_category="forest_plan_reviewer_not_ready"`, and the manifest also
-  checks `forest_plan_context_summary.json` plus dynamic declared-profile slot checks. Strict
+  checks `forest_plan_context_summary.json` plus dynamic declared-profile slot checks. The active
+  follow-up plan is `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Strict
   promotion suite was written to
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`
   and now fails as expected with `current_promotion_ready=true`, `promotion_ready=false`,
@@ -645,9 +646,11 @@ Gallatin FEIS and ESA-supporting plan documents.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
   expansion milestone is complete through Sequence 7 for the declared ECID preliminary-EA and South
   Plateau expansion slots. Current V1 promotion remains green, but strict expansion is intentionally
-  blocked until South Plateau resolves to reviewer-ready Custer Gallatin forest-plan context. Future
-  expansion should add a new verified real-package slot and matching promotion-suite review-case
-  artifact checks rather than weakening the current gate.
+  blocked until South Plateau resolves to reviewer-ready Custer Gallatin forest-plan context or a
+  narrower typed forest-plan blocker is recorded through
+  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Future expansion should add a new
+  verified real-package slot and matching promotion-suite review-case artifact checks rather than
+  weakening the current gate.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.
