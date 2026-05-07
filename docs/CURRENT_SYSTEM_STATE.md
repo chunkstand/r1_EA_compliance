@@ -445,7 +445,7 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package Sequence 4 is implemented as an upstream planning lane for proposed-action
+Project SOW package Sequence 5 is implemented as an upstream planning lane for proposed-action
 intake before a complete EA review package exists. The public command is:
 
 ```bash
@@ -461,16 +461,18 @@ at `config/project_sow_resource_scopes_v1.json`, and
 
 - `project_sow_package.json`
 - `project_sow_package.md`
+- `project_sow_package.pdf`
 - `project_sow_package_manifest.json`
 
 The package scopes resource-specialist work needed to prepare a defensible EA package. It selects
 resource scopes from explicit intake fields, project type, trigger terms, resource indicator keys,
 and proposed-action resource-area IDs, then records SOW tasks, data needs, deliverables,
 defensibility checks, selected authority families, an authority-to-resource matrix, and a
-resource-analysis coverage matrix. It also emits a package-local intake evidence graph connecting
-project, proposed action, action elements, evidence refs, triggered resource areas, selected SOW
-scopes, required deliverables, and observed specialist/supporting reports. The first checked-in
-intake fixture is the East Crazies
+resource-analysis coverage matrix, and a compact reviewer summary with package boundaries and a
+review checklist. It also emits a package-local intake evidence graph connecting project, proposed
+action, action elements, evidence refs, triggered resource areas, selected SOW scopes, required
+deliverables, and observed specialist/supporting reports. JSON is canonical; Markdown and PDF are
+renderings from the same package JSON. The first checked-in intake fixture is the East Crazies
 land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
 lands/realty land exchange, Forest Plan consistency, wildlife/species/botany, cultural/tribal
 resources, hydrology/wetlands/water quality, roads/access/recreation/designated areas,
@@ -484,21 +486,20 @@ uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, a
 plan-consistency table. Validation requires every observed report resource area to have selected
 SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
-A local Sequence 4 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
-proposed-action resource areas, emitted a `115`-node and `134`-edge intake evidence graph, and
-reported `0` validation failures. Each proposed-action-derived resource area has the canonical
-planning path:
+A local Sequence 5 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
+proposed-action resource areas, emitted a `115`-node and `134`-edge intake evidence graph, wrote a
+PDF with a valid `%PDF-` header, and reported `0` validation failures. Each proposed-action-derived
+resource area has the canonical planning path:
 
 ```text
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
 The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Sequence 4 adds focused graph-quality fixtures for missing evidence refs, observed reports without
-proposed-action support, resource areas with no configured SOW scope, evidence-bearing action
-elements with no triggered resource area, duplicate observed-report graph IDs, dangling graph edges,
-and land-exchange intakes with no federal land action. Next sequence: Sequence 5, reviewer-facing
-package polish and optional rendering.
+Sequence 5 adds reviewer-facing Markdown tables, a compact reviewer snapshot/checklist, PDF
+rendering from canonical JSON, rendering validation checks, and
+`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for creating new land-exchange intakes. No further sequence is
+selected for this planning lane.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -510,7 +511,8 @@ scopes, selected scopes without SOW content, duplicate intake-derived graph IDs 
 assembly deduplicates nodes and edges, dangling graph edges, missing action-element evidence refs,
 evidence-bearing action elements with no triggered resource area, incomplete canonical
 resource-area graph paths, observed specialist report areas without a proposed-action support path,
-or land-exchange intakes with no federal land action.
+land-exchange intakes with no federal land action, or Markdown/PDF renderings missing required
+reviewer-facing sections.
 
 ## Verified State Snapshot
 

@@ -22,6 +22,7 @@ class ProjectSowPackageResult:
     output_dir: Path
     package_path: Path
     markdown_path: Path
+    pdf_path: Path
     manifest_path: Path
     summary: dict[str, Any]
 
@@ -57,6 +58,7 @@ def run_project_sow_package(
     )
     package_path = package_dir / "project_sow_package.json"
     markdown_path = package_dir / "project_sow_package.md"
+    pdf_path = package_dir / "project_sow_package.pdf"
     manifest_path = package_dir / "project_sow_package_manifest.json"
 
     selected_scopes = _select_resource_scopes(intake, resource_config)
@@ -73,6 +75,7 @@ def run_project_sow_package(
         package_dir=package_dir,
         package_path=package_path,
         markdown_path=markdown_path,
+        pdf_path=pdf_path,
         manifest_path=manifest_path,
         validation=validation,
         selected_scopes=selected_scopes,
@@ -82,6 +85,7 @@ def run_project_sow_package(
             output_dir=package_dir,
             package_path=package_path,
             markdown_path=markdown_path,
+            pdf_path=pdf_path,
             manifest_path=manifest_path,
             summary=summary,
         )
@@ -98,20 +102,60 @@ def run_project_sow_package(
         authority_inventory_path=authority_inventory_path,
     )
     markdown = _render_markdown(package)
+    pdf_lines = _render_pdf_lines(package)
+    rendering_checks = _rendering_validation_checks(markdown=markdown, pdf_lines=pdf_lines)
+    package["validation"]["checks"].extend(rendering_checks)
+    package["validation"]["failure_count"] = sum(
+        1 for check in package["validation"]["checks"] if not check["passed"]
+    )
+    package["validation"]["passed"] = all(
+        check["passed"] for check in package["validation"]["checks"]
+    )
+    summary = _summary(
+        intake=intake,
+        project_id=selected_project_id,
+        source_set_id=selected_source_set_id,
+        package_dir=package_dir,
+        package_path=package_path,
+        markdown_path=markdown_path,
+        pdf_path=pdf_path,
+        manifest_path=manifest_path,
+        validation=package["validation"],
+        selected_scopes=selected_scopes,
+    )
+    if not package["validation"]["passed"]:
+        return ProjectSowPackageResult(
+            output_dir=package_dir,
+            package_path=package_path,
+            markdown_path=markdown_path,
+            pdf_path=pdf_path,
+            manifest_path=manifest_path,
+            summary=summary,
+        )
+    markdown = _render_markdown(package)
+    pdf_lines = _render_pdf_lines(package)
     package_dir.mkdir(parents=True, exist_ok=True)
     _write_json(package_path, package)
     markdown_path.write_text(markdown, encoding="utf-8")
+    _write_simple_pdf(
+        pdf_path,
+        _paginate_pdf_lines(pdf_lines, max_lines=42),
+        title="Project SOW Requirements Package",
+    )
     _write_json(manifest_path, package["manifest"])
     summary["output_written"] = True
     summary["output_hashes"] = {
         "project_sow_package_sha256": _sha256_file(package_path),
         "project_sow_package_markdown_sha256": _sha256_file(markdown_path),
+        "project_sow_package_pdf_sha256": _sha256_file(pdf_path),
         "project_sow_package_manifest_sha256": _sha256_file(manifest_path),
     }
+    summary["pdf_header_valid"] = pdf_path.read_bytes().startswith(b"%PDF-")
     return ProjectSowPackageResult(
         output_dir=package_dir,
         package_path=package_path,
         markdown_path=markdown_path,
+        pdf_path=pdf_path,
         manifest_path=manifest_path,
         summary=summary,
     )
@@ -364,6 +408,15 @@ def _build_package(
         "observed_specialist_reports": observed_specialist_reports,
         "project_id": project_id,
         "project_name": intake.get("project_name"),
+        "reviewer_summary": _reviewer_summary(
+            intake=intake,
+            project_id=project_id,
+            source_set_id=source_set_id,
+            scope_records=scope_records,
+            resource_analysis_matrix=resource_analysis_matrix,
+            observed_specialist_reports=observed_specialist_reports,
+            intake_evidence_graph=intake_evidence_graph,
+        ),
         "resource_analysis_matrix": resource_analysis_matrix,
         "resource_analysis_matrix_count": len(resource_analysis_matrix),
         "resource_scope_count": len(scope_records),
@@ -1045,8 +1098,46 @@ def _render_markdown(package: dict[str, Any]) -> str:
         "",
         "This generated package scopes specialist work needed to prepare a defensible NEPA EA package. It is planning support, not legal advice or a final compliance determination.",
         "",
-        "## Intake",
+        "## Reviewer Snapshot",
+        "",
     ]
+    reviewer_summary = package["reviewer_summary"]
+    snapshot = reviewer_summary["snapshot"]
+    lines.extend(
+        [
+            "| Field | Value |",
+            "| --- | --- |",
+            f"| Project ID | `{package['project_id']}` |",
+            f"| Forest | {snapshot['forest']} |",
+            f"| Districts | {', '.join(snapshot['districts'])} |",
+            f"| Project type | `{snapshot['project_type']}` |",
+            f"| NEPA level | `{snapshot['nepa_level']}` |",
+            f"| SOW scopes | `{snapshot['resource_scope_count']}` |",
+            f"| Proposed-action resource areas | `{snapshot['proposed_action_resource_area_count']}` |",
+            f"| Observed reports in calibration set | `{snapshot['observed_specialist_report_count']}` |",
+            "| Intake evidence graph | "
+            f"`{snapshot['intake_evidence_graph_node_count']}` nodes / "
+            f"`{snapshot['intake_evidence_graph_edge_count']}` edges |",
+            "",
+            "### Review Checklist",
+            "",
+        ]
+    )
+    lines.extend(f"- {item}" for item in reviewer_summary["review_checklist"])
+    lines.extend(
+        [
+            "",
+            "### Package Boundaries",
+            "",
+        ]
+    )
+    lines.extend(f"- {item}" for item in reviewer_summary["package_boundaries"])
+    lines.extend(
+        [
+            "",
+            "## Intake",
+        ]
+    )
     intake = package["intake_summary"]
     lines.extend(
         [
@@ -1061,8 +1152,17 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"- Observed specialist/supporting reports: `{intake.get('observed_specialist_report_count')}`",
             "",
             "## Resource Scopes",
+            "",
+            "| Scope | Discipline | Covered resource areas | Deliverables |",
+            "| --- | --- | --- | --- |",
         ]
     )
+    for scope in package["resource_scope_records"]:
+        lines.append(
+            f"| {scope['resource_name']} | `{scope['discipline']}` | "
+            f"{', '.join(f'`{item}`' for item in scope['covered_resource_area_ids'])} | "
+            f"{len(scope['required_deliverables'])} |"
+        )
     for scope in package["resource_scope_records"]:
         lines.extend(
             [
@@ -1090,15 +1190,23 @@ def _render_markdown(package: dict[str, Any]) -> str:
         lines.append(
             f"- `{row['authority_family_id']}`: {', '.join(f'`{scope_id}`' for scope_id in row['resource_scope_ids'])}"
         )
-    lines.extend(["", "## Resource Analysis Coverage"])
+    lines.extend(
+        [
+            "",
+            "## Resource Analysis Coverage",
+            "",
+            "| Resource area | Coverage status | SOW scopes | Observed reports |",
+            "| --- | --- | --- | --- |",
+        ]
+    )
     for row in package["resource_analysis_matrix"]:
         report_titles = [
             str(report["title"]) for report in row["actual_specialist_reports"]
         ]
         lines.append(
-            f"- `{row['resource_area_id']}`: `{row['coverage_status']}`; "
-            f"SOW scopes: {', '.join(f'`{scope_id}`' for scope_id in row['selected_resource_scope_ids']) or 'none'}; "
-            f"reports: {', '.join(report_titles) or 'none observed'}"
+            f"| `{row['resource_area_id']}` | `{row['coverage_status']}` | "
+            f"{', '.join(f'`{scope_id}`' for scope_id in row['selected_resource_scope_ids']) or 'none'} | "
+            f"{', '.join(report_titles) or 'none observed'} |"
         )
     graph = package["intake_evidence_graph"]
     lines.extend(
@@ -1125,6 +1233,290 @@ def _render_markdown(package: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _reviewer_summary(
+    *,
+    intake: dict[str, Any],
+    project_id: str,
+    source_set_id: str,
+    scope_records: list[dict[str, Any]],
+    resource_analysis_matrix: list[dict[str, Any]],
+    observed_specialist_reports: list[dict[str, Any]],
+    intake_evidence_graph: dict[str, Any],
+) -> dict[str, Any]:
+    missing_or_uncovered = [
+        row["resource_area_id"]
+        for row in resource_analysis_matrix
+        if row["coverage_status"] != "covered"
+    ]
+    return {
+        "package_boundaries": [
+            "Planning support only; not legal advice or a final agency decision.",
+            "JSON is canonical; Markdown and PDF are renderings from the same package JSON.",
+            "SOW scope selection is not an applicability decision or compliance finding.",
+            "Ignored source_library outputs remain local generated artifacts unless policy changes.",
+        ],
+        "review_checklist": [
+            "Confirm the proposed action and federal land actions are complete.",
+            "Assign a responsible specialist for each required resource scope.",
+            "Confirm each proposed-action resource area has an evidence-backed graph path.",
+            "Resolve any missing resource-area requests before using the package for contracting.",
+            "Use observed East Crazies reports only as calibration evidence, not as legal precedent.",
+        ],
+        "schema_version": "project-sow-reviewer-summary-v0",
+        "snapshot": {
+            "districts": _strings(intake.get("districts")),
+            "forest": intake.get("forest"),
+            "intake_evidence_graph_edge_count": int(intake_evidence_graph.get("edge_count") or 0),
+            "intake_evidence_graph_node_count": int(intake_evidence_graph.get("node_count") or 0),
+            "missing_or_uncovered_resource_area_ids": missing_or_uncovered,
+            "nepa_level": intake.get("nepa_level"),
+            "observed_specialist_report_count": len(observed_specialist_reports),
+            "project_id": project_id,
+            "project_name": intake.get("project_name"),
+            "project_type": intake.get("project_type"),
+            "proposed_action_resource_area_count": len(_expected_resource_area_ids(intake)),
+            "resource_scope_count": len(scope_records),
+            "source_set_id": source_set_id,
+        },
+    }
+
+
+def _render_pdf_lines(package: dict[str, Any]) -> list[str]:
+    reviewer_summary = package["reviewer_summary"]
+    snapshot = reviewer_summary["snapshot"]
+    lines = [
+        f"{package['project_name']} Requirements Package",
+        "Reviewer Snapshot",
+        f"Project ID: {package['project_id']}",
+        f"Forest: {snapshot['forest']}",
+        f"Districts: {', '.join(snapshot['districts'])}",
+        f"Project type: {snapshot['project_type']}",
+        f"NEPA level: {snapshot['nepa_level']}",
+        f"Resource Scope Count: {snapshot['resource_scope_count']}",
+        f"Proposed-action resource areas: {snapshot['proposed_action_resource_area_count']}",
+        f"Observed reports in calibration set: {snapshot['observed_specialist_report_count']}",
+        (
+            "Intake evidence graph: "
+            f"{snapshot['intake_evidence_graph_node_count']} nodes / "
+            f"{snapshot['intake_evidence_graph_edge_count']} edges"
+        ),
+        "",
+        "Package Boundaries",
+    ]
+    lines.extend(f"- {item}" for item in reviewer_summary["package_boundaries"])
+    lines.extend(["", "Review Checklist"])
+    lines.extend(f"- {item}" for item in reviewer_summary["review_checklist"])
+    lines.extend(["", "Resource Scopes"])
+    for scope in package["resource_scope_records"]:
+        lines.append(
+            f"- {scope['resource_scope_id']}: {scope['resource_name']} "
+            f"({len(scope['required_deliverables'])} deliverables)"
+        )
+    lines.extend(["", "Resource Analysis Coverage"])
+    for row in package["resource_analysis_matrix"]:
+        reports = ", ".join(
+            str(report["title"]) for report in row["actual_specialist_reports"]
+        )
+        lines.append(
+            f"- {row['resource_area_id']}: {row['coverage_status']}; "
+            f"SOW scopes {', '.join(row['selected_resource_scope_ids']) or 'none'}; "
+            f"reports {reports or 'none observed'}"
+        )
+    lines.extend(
+        [
+            "",
+            "Intake Evidence Graph",
+            "Required path: proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope",
+            "",
+            "Validation",
+        ]
+    )
+    for check in package["validation"]["checks"]:
+        status = "passed" if check["passed"] else "failed"
+        lines.append(f"- {check['name']}: {status}")
+    return [_truncate(line, 150) for line in lines]
+
+
+def _rendering_validation_checks(markdown: str, pdf_lines: list[str]) -> list[dict[str, Any]]:
+    required_markdown_sections = [
+        "# ",
+        "## Reviewer Snapshot",
+        "## Intake",
+        "## Resource Scopes",
+        "## Resource Analysis Coverage",
+        "## Intake Evidence Graph",
+        "## Validation",
+    ]
+    required_pdf_items = [
+        "Reviewer Snapshot",
+        "Package Boundaries",
+        "Review Checklist",
+        "Resource Scopes",
+        "Resource Analysis Coverage",
+        "Intake Evidence Graph",
+        "Validation",
+    ]
+    pdf_text = "\n".join(pdf_lines)
+    missing_markdown_sections = [
+        section for section in required_markdown_sections if section not in markdown
+    ]
+    missing_pdf_items = [item for item in required_pdf_items if item not in pdf_text]
+    return [
+        _check(
+            name="project_sow_markdown_required_sections_present",
+            passed=not missing_markdown_sections,
+            details={"missing_sections": missing_markdown_sections},
+        ),
+        _check(
+            name="project_sow_pdf_required_items_present",
+            passed=not missing_pdf_items,
+            details={"missing_items": missing_pdf_items},
+        ),
+    ]
+
+
+def _paginate_pdf_lines(lines: list[str], *, max_lines: int) -> list[list[str]]:
+    pages: list[list[str]] = []
+    page: list[str] = []
+    for line in lines:
+        if len(page) >= max_lines:
+            pages.append(page)
+            page = []
+        page.append(line)
+    if page:
+        pages.append(page)
+    return pages or [["Project SOW Requirements Package"]]
+
+
+def _write_simple_pdf(path: Path, pages: list[list[str]], *, title: str) -> None:
+    width = 1008
+    height = 612
+    margin_x = 34
+    start_y = 568
+    leading = 12
+    font_size = 8
+    objects: list[bytes | None] = [None, None, None]
+
+    def add_object(payload: bytes) -> int:
+        objects.append(payload)
+        return len(objects)
+
+    for page_number, page_lines in enumerate(pages, start=1):
+        content = _pdf_page_content(
+            page_lines,
+            page_number=page_number,
+            page_count=len(pages),
+            title=title,
+            margin_x=margin_x,
+            start_y=start_y,
+            leading=leading,
+            font_size=font_size,
+        )
+        content_id = add_object(
+            b"<< /Length "
+            + str(len(content)).encode("ascii")
+            + b" >>\nstream\n"
+            + content
+            + b"\nendstream"
+        )
+        page_id = add_object(
+            (
+                f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {width} {height}] "
+                f"/Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>"
+            ).encode("ascii")
+        )
+        objects[1] = (objects[1] or b"") + f"{page_id} 0 R ".encode("ascii")
+
+    kids = objects[1] or b""
+    objects[0] = b"<< /Type /Catalog /Pages 2 0 R >>"
+    objects[1] = (
+        b"<< /Type /Pages /Kids ["
+        + kids
+        + b"] /Count "
+        + str(len(pages)).encode("ascii")
+        + b" >>"
+    )
+    objects[2] = b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"
+    _write_pdf_objects(path, [obj for obj in objects if obj is not None])
+
+
+def _pdf_page_content(
+    lines: list[str],
+    *,
+    page_number: int,
+    page_count: int,
+    title: str,
+    margin_x: int,
+    start_y: int,
+    leading: int,
+    font_size: int,
+) -> bytes:
+    commands = [f"BT /F1 {font_size} Tf {leading} TL {margin_x} {start_y} Td"]
+    for line in lines:
+        commands.append(f"({_pdf_escape(line)}) Tj T*")
+    footer_y = 24 - (start_y - len(lines) * leading)
+    commands.append(
+        f"0 {footer_y} Td ({_pdf_escape(f'{title} | Page {page_number} of {page_count}')}) Tj"
+    )
+    commands.append("ET")
+    return "\n".join(commands).encode("latin-1", errors="replace")
+
+
+def _pdf_escape(value: str) -> str:
+    return (
+        _pdf_text(value)
+        .replace("\\", "\\\\")
+        .replace("(", "\\(")
+        .replace(")", "\\)")
+    )
+
+
+def _pdf_text(value: str) -> str:
+    replacements = {
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u00a7": "Sec.",
+    }
+    text = str(value)
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
+
+def _write_pdf_objects(path: Path, objects: list[bytes]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    offsets = []
+    payload = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(len(payload))
+        payload.extend(f"{index} 0 obj\n".encode("ascii"))
+        payload.extend(obj)
+        payload.extend(b"\nendobj\n")
+    xref_offset = len(payload)
+    payload.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    payload.extend(b"0000000000 65535 f \n")
+    for offset in offsets:
+        payload.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    payload.extend(
+        (
+            f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
+            f"startxref\n{xref_offset}\n%%EOF\n"
+        ).encode("ascii")
+    )
+    path.write_bytes(bytes(payload))
+
+
+def _truncate(value: str, max_chars: int) -> str:
+    text = str(value).replace("\n", " ")
+    if len(text) <= max_chars:
+        return text
+    return text[: max_chars - 3].rstrip() + "..."
+
+
 def _summary(
     *,
     intake: dict[str, Any],
@@ -1133,6 +1525,7 @@ def _summary(
     package_dir: Path,
     package_path: Path,
     markdown_path: Path,
+    pdf_path: Path,
     manifest_path: Path,
     validation: dict[str, Any],
     selected_scopes: list[dict[str, Any]],
@@ -1143,6 +1536,7 @@ def _summary(
             "manifest": str(manifest_path),
             "markdown": str(markdown_path),
             "package": str(package_path),
+            "pdf": str(pdf_path),
         },
         "output_written": False,
         "passed": validation["passed"],

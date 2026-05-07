@@ -9,7 +9,7 @@ Branch/worktree:
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
 
-Sequence 4 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
+Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
 
@@ -31,9 +31,10 @@ Implemented surfaces:
 - `docs/ARCHITECTURE.md`
 - `docs/architecture_contract.toml`
 - `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`
+- `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md`
 
-The command writes `project_sow_package.json`, `project_sow_package.md`, and
-`project_sow_package_manifest.json` under
+The command writes `project_sow_package.json`, `project_sow_package.md`,
+`project_sow_package.pdf`, and `project_sow_package_manifest.json` under
 `source_library/projects/<project_id>/requirements_package/`. A local CLI smoke run to `/tmp`
 selected ten East Crazies land-exchange resource scopes: NEPA project management, lands/realty,
 Forest Plan consistency, wildlife/species/botany, cultural/tribal, hydrology/wetlands/water
@@ -76,10 +77,18 @@ federal land action. A local Sequence 4 CLI smoke run to `/tmp` preserved the sa
 Crazies counts: `10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134`
 graph edges, and `0` validation failures.
 
+Sequence 5 added the reviewer-facing polish pass. The canonical JSON now includes
+`reviewer_summary`; Markdown now starts with a reviewer snapshot, review checklist, package
+boundaries, and compact tables; the command writes `project_sow_package.pdf` from the same package
+JSON; rendering validation checks fail if required Markdown or PDF sections are missing; and the
+tracked runbook `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create a new land-exchange
+intake. A local Sequence 5 CLI smoke run to `/tmp` preserved `10` SOW scopes, `23`
+proposed-action resource areas, `115` graph nodes, `134` graph edges, `0` validation failures, and
+a valid `%PDF-` header.
+
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Next sequence: Sequence 5, reviewer-facing package polish and optional rendering. Keep JSON
-canonical, do not convert SOW scopes into applicability or compliance findings, and do not stage
-ignored `source_library/` outputs.
+No further project-SOW sequence is selected. Keep JSON canonical, do not convert SOW scopes into
+applicability or compliance findings, and do not stage ignored `source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff
 

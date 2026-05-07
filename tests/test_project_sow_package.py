@@ -23,9 +23,16 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert result.summary["output_written"] is True
     assert result.package_path.exists()
     assert result.markdown_path.exists()
+    assert result.pdf_path.exists()
     assert result.manifest_path.exists()
+    assert result.pdf_path.read_bytes().startswith(b"%PDF-")
+    assert result.summary["pdf_header_valid"] is True
+    assert result.summary["output_paths"]["pdf"] == str(result.pdf_path)
+    assert result.summary["output_hashes"]["project_sow_package_pdf_sha256"]
 
     package = json.loads(result.package_path.read_text())
+    assert package["reviewer_summary"]["schema_version"] == "project-sow-reviewer-summary-v0"
+    assert package["reviewer_summary"]["snapshot"]["resource_scope_count"] == 10
     scope_ids = {scope["resource_scope_id"] for scope in package["resource_scope_records"]}
     assert {
         "nepa_project_management",
@@ -40,6 +47,9 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
         "public_involvement_coordination",
     }.issubset(scope_ids)
     assert package["validation"]["passed"] is True
+    validation_checks = {check["name"]: check for check in package["validation"]["checks"]}
+    assert validation_checks["project_sow_markdown_required_sections_present"]["passed"] is True
+    assert validation_checks["project_sow_pdf_required_items_present"]["passed"] is True
     assert package["manifest"]["input_hashes"]["intake_sha256"]
 
     authority_ids = {
@@ -123,6 +133,8 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
 
     markdown = result.markdown_path.read_text()
     assert "Requirements Package" in markdown
+    assert "Reviewer Snapshot" in markdown
+    assert "Review Checklist" in markdown
     assert "Lands, realty, and land exchange case requirements" in markdown
     assert "Resource Analysis Coverage" in markdown
     assert "Intake Evidence Graph" in markdown
@@ -419,6 +431,25 @@ def test_project_sow_package_fails_land_exchange_without_federal_land_action(
         "federal_land_action_count": 0,
         "project_type": "land_exchange",
     }
+
+
+def test_project_sow_rendering_validation_fails_missing_sections() -> None:
+    checks = project_sow._rendering_validation_checks(
+        markdown="# Incomplete Package\n\n## Intake\n",
+        pdf_lines=["Incomplete Package", "Resource Scopes"],
+    )
+
+    failed_checks = {check["name"]: check for check in checks if not check["passed"]}
+    assert set(failed_checks) == {
+        "project_sow_markdown_required_sections_present",
+        "project_sow_pdf_required_items_present",
+    }
+    assert "## Reviewer Snapshot" in failed_checks[
+        "project_sow_markdown_required_sections_present"
+    ]["details"]["missing_sections"]
+    assert "Review Checklist" in failed_checks[
+        "project_sow_pdf_required_items_present"
+    ]["details"]["missing_items"]
 
 
 def _has_canonical_graph_path(graph: dict, area_id: str) -> bool:

@@ -2328,10 +2328,12 @@ The generated artifact family includes:
 
 - `project_sow_package.json`
 - `project_sow_package.md`
+- `project_sow_package.pdf`
 - `project_sow_package_manifest.json`
 
 `project_sow_package.json` has schema version `project-sow-package-v0` and is the canonical
-machine-readable package. The Markdown rendering must derive from that JSON. The report includes:
+machine-readable package. The Markdown and PDF renderings must derive from that JSON. The report
+includes:
 
 - `intake_summary`, including forest, districts, project type, NEPA level, geography, forest-plan
   profile, federal land action count, proposed-action element count, proposed-action resource
@@ -2346,6 +2348,8 @@ machine-readable package. The Markdown rendering must derive from that JSON. The
   role, covered resource-area IDs, and any observed-report evidence refs supplied by the intake;
 - `intake_evidence_graph`, a package-local graph with `nodes[]`, `edges[]`, `node_count`,
   `edge_count`, and schema version `project-sow-intake-evidence-graph-v0`;
+- `reviewer_summary`, a compact reviewer-facing snapshot with package boundaries, review
+  checklist, project context, package counts, and graph counts;
 - `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
   scope coverage;
 - `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;
@@ -2436,7 +2440,14 @@ Project SOW package validation must fail closed on:
 - observed specialist/supporting report resource areas without a matching proposed-action graph
   path;
 - no selected resource scope;
-- selected resource scopes that lack SOW tasks or deliverables.
+- selected resource scopes that lack SOW tasks or deliverables;
+- Markdown renderings missing required reviewer-facing sections;
+- PDF renderings missing required reviewer-facing items.
+
+The generated PDF must be written from `project_sow_package.json` and start with `%PDF-`.
+
+Use `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the tracked workflow for creating a new land-exchange
+intake from a proposed action.
 
 `finding_graph_nodes.jsonl` contains:
 

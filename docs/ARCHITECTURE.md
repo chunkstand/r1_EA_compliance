@@ -131,8 +131,9 @@ Project planning is an upstream lane for proposed-action intake before a complet
 The `project-sow-package` command reads a structured intake plus tracked resource-scope templates,
 selects resource SOW requirements from explicit project facts, proposed-action resource areas, and
 trigger terms, and writes a local requirements package under
-`source_library/projects/<project_id>/requirements_package/`. When the intake supplies a completed
-example package comparison, the command also records a resource-analysis matrix that compares
+`source_library/projects/<project_id>/requirements_package/`. JSON is canonical; Markdown and PDF
+are reviewer-facing renderings from that JSON. When the intake supplies a completed example package
+comparison, the command also records a resource-analysis matrix that compares
 proposed-action-derived resource areas to observed specialist/supporting reports. It must not create
 applicability decisions, compliance findings, or legal sufficiency conclusions.
 

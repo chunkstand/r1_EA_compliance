@@ -350,6 +350,7 @@ owner_layer = "project_planning"
 paths = [
   "source_library/projects/<project_id>/requirements_package/project_sow_package.json",
   "source_library/projects/<project_id>/requirements_package/project_sow_package.md",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.pdf",
   "source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json",
 ]
 

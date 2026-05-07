@@ -238,7 +238,7 @@ Acceptance gate:
 
 ## Sequence 5: Reviewer-Facing Package Polish And Optional Rendering
 
-Status: next.
+Status: complete.
 
 Purpose: make the package easier for a planning lead or contracting/resource lead to use without
 changing the canonical JSON contract.
@@ -254,7 +254,14 @@ Acceptance gate:
 
 - JSON remains canonical.
 - Rendering validation fails if required sections are missing.
-- PDF, if added, is generated from the same package JSON and starts with `%PDF-`.
+- PDF is generated from the same package JSON and starts with `%PDF-`.
+- `project_sow_package.json` includes `reviewer_summary`.
+- Markdown includes a reviewer snapshot, review checklist, package boundaries, resource-scope
+  table, and resource-analysis table.
+- `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create and validate a new land-exchange
+  intake.
+- CLI smoke for the East Crazies intake still reports `10` SOW scopes, `23` proposed-action
+  resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 - No ignored generated outputs are staged.
 
 ## Required Verification

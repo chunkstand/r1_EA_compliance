@@ -149,6 +149,7 @@ compares proposed-action resource areas to the actual specialist/supporting repo
 a package-local intake evidence graph. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
+`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
@@ -254,6 +255,7 @@ Generated outputs are written under `source_library/` and ignored by git:
 - Project SOW requirements package outputs:
   - `source_library/projects/<project_id>/requirements_package/project_sow_package.json`
   - `source_library/projects/<project_id>/requirements_package/project_sow_package.md`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.pdf`
   - `source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
