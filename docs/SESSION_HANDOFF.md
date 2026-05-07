@@ -31,6 +31,7 @@ Implemented surfaces:
 - `docs/ARCHITECTURE.md`
 - `docs/architecture_contract.toml`
 - `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`
+- `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`
 - `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md`
 
 The command writes `project_sow_package.json`, `project_sow_package.md`,
@@ -90,8 +91,11 @@ observed East Crazies report was supplied. A local Sequence 5 CLI smoke run to `
 validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-No further project-SOW sequence is selected. Keep JSON canonical, do not convert SOW scopes into
-applicability or compliance findings, and do not stage ignored `source_library/` outputs.
+The successor operationalization plan is
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 1,
+intake schema, minimal land-exchange template, and validation-only workflow. Keep JSON canonical,
+do not convert SOW scopes into applicability or compliance findings, and do not stage ignored
+`source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff
 

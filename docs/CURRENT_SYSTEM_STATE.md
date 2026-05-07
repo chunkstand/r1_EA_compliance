@@ -503,7 +503,9 @@ rendering from canonical JSON, rendering validation checks, and
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for creating new land-exchange intakes. The post-sequence
 alignment pass adds regression coverage for duplicate required-deliverable graph IDs and verifies
 that generated PDF bytes include reviewer-facing content and validation checks from the package
-rendering. No further sequence is selected for this planning lane.
+rendering. The successor operationalization plan is
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is intake schema,
+template, and validation-only workflow.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.

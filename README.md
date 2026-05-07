@@ -149,6 +149,9 @@ compares proposed-action resource areas to the actual specialist/supporting repo
 a package-local intake evidence graph. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved
+generator into a repeatable intake, calibration, reviewer-adjudication, and downstream handoff
+workflow. See
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased

@@ -58,11 +58,12 @@ Generated local artifact family:
 source_library/projects/<project_id>/requirements_package/
   project_sow_package.json
   project_sow_package.md
+  project_sow_package.pdf
   project_sow_package_manifest.json
 ```
 
-The JSON is canonical. Markdown is a rendering from the JSON. `source_library/` remains ignored and
-must not be staged.
+The JSON is canonical. Markdown and PDF are renderings from the JSON. `source_library/` remains
+ignored and must not be staged.
 
 ## Sequence 1: Planning Lane And SOW Package Contract
 
