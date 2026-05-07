@@ -1,6 +1,27 @@
 # Session Handoff
 
-Date: 2026-05-06
+Date: 2026-05-07
+
+## Current East Crazies Final QA / Certification Replay Handoff
+
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is now the focused plan for producing
+a replayable final QA packet for the promoted East Crazy Inspiration Divide review. The plan is
+bounded to `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`, and it
+explicitly avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog
+regeneration, root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
+
+The planned final QA replay starts from the current green East Crazy baseline: `33` applicable
+authorities, `340` non-applicable authorities, `0` unresolved authorities, `33` generated
+compliance findings, `142` rule-claim links, `0` rule-claim gaps, `12/12` Custer Gallatin
+applicable standards, passing decision-support validation, and review-bound `phase-eval` at
+`19/19` with `reviewer_ready=true`. The intended generated packet family is
+`source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`, which remains ignored unless
+repository policy changes.
+
+If implementing that lane next, start with Sequence 0 in
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md`: replay existing gates, confirm
+artifact freshness/counts/hashes, keep root-level drafts non-canonical and unstaged, and stop on
+any count drift or missing reviewer-ready artifact before adding a generator.
 
 ## Current Applicability/Expansion Handoff
 
@@ -1026,14 +1047,18 @@ rate `1.0`.
 
 ## Next Sequence
 
-The next selected sequence is the South Plateau forest-plan context plan in
-`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Current V1 promotion remains green,
-ECID remains a ready expansion slot, and South Plateau is intentionally blocked from strict
-expansion by `forest_plan_reviewer_not_ready` until its declared Custer Gallatin forest-plan
-context is reviewer-ready or the blocker is narrowed by verified resolver evidence. Future package
-expansion beyond that should start as a new real-package slot with its own package fixture,
-applicability artifacts, generated review artifacts, promotion-suite review-case checks, and
-docs/handoff closeout.
+The next selected sequence depends on the lane being continued. For a focused final East Crazy
+compliance-review QA/certification replay, use
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` and begin with Sequence 0 baseline
+replay and drift check. For strict real-package expansion, continue with the South Plateau
+forest-plan context plan in `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
+
+Current V1 promotion remains green, ECID remains a ready expansion slot, and South Plateau is
+intentionally blocked from strict expansion by `forest_plan_reviewer_not_ready` until its declared
+Custer Gallatin forest-plan context is reviewer-ready or the blocker is narrowed by verified
+resolver evidence. Future package expansion beyond that should start as a new real-package slot
+with its own package fixture, applicability artifacts, generated review artifacts, promotion-suite
+review-case checks, and docs/handoff closeout.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,
