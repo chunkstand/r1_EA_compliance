@@ -156,6 +156,20 @@ resource areas, preserved `115` graph nodes and `134` graph edges, reported `0` 
 failures, and produced a valid `%PDF-` header. The three-case `project-sow-eval` smoke run reported
 `3` cases passed and `0` failed cases.
 
+Sequence 5 gap-close pass is implemented. `project-sow-adjudication-eval` now requires complete
+top-level `reviewer_metadata`, treats current-queue identity fields as immutable, and fails stale
+hashes or tampered rows before replay. `project-sow-adjudication-apply` preserves the top-level
+reviewer metadata in the adjudicated intake copy, and validation/package summaries now expose
+`adjudication_status`, `adjudication_item_count`, and `adjudication_decision_counts`. Gap-close
+regressions cover stale input hashes, row identity tampering, missing reviewer metadata, and
+summary-level adjudication status/counts. Gap-close verification passed: the focused
+project-SOW/CLI suite reported `51 passed`; architecture contract reported `5 passed`; ruff,
+compileall, JSON validation, and `git diff --check` passed; the three-case `project-sow-eval`
+smoke reported `3` cases passed and `0` failed cases; the adjudication replay smoke wrote a
+`37`-item worklist, preserved top-level reviewer metadata, replayed `7` accepted calibration gaps
+and `30` out-of-scope optional-deliverable decisions, and generated a package with
+`adjudication_status=adjudicated` plus a valid `%PDF-` header.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package

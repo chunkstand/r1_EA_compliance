@@ -106,7 +106,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
 
 The command writes a canonical `project_sow_adjudication_template.json` plus a Markdown worklist.
 Reviewers complete the JSON rows with one of `accepted`, `rejected`, `needs_information`, or
-`out_of_scope`, plus rationale, reviewer identity, date, and decision source.
+`out_of_scope`, plus rationale, reviewer identity, date, and decision source. Also set the
+top-level `reviewer_metadata.review_status` to `complete` and fill `reviewed_by`, `reviewed_at`,
+and `review_source`. Do not edit item IDs, item types, resource-area IDs, action-element IDs,
+resource-scope IDs, optional deliverable text, current status, selected SOW scopes, or source-check
+fields; those values are current-queue identity fields and eval will fail if they drift.
 
 Evaluate a completed adjudication artifact before replay:
 
@@ -127,7 +131,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
 
 Apply does not mutate the original intake and does not edit generated package outputs. It writes an
 adjudicated intake copy with `project_sow_adjudication` replay metadata; regenerate the package from
-that intake if the adjudication should appear in the reviewer snapshot.
+that intake if the adjudication should appear in the reviewer snapshot and command summaries.
 
 ## 6. Add Calibration Reports When Available
 
@@ -202,7 +206,7 @@ Common failure categories:
 - a land-exchange intake has no federal land action;
 - resource areas do not resolve to a configured SOW scope;
 - project-SOW adjudication rows are pending, stale, duplicated, unexpected, missing, or carry an
-  invalid decision;
+  invalid decision, changed queue identity field, or incomplete top-level reviewer metadata;
 - selected SOW scopes lack required contract fields such as assumptions, dependencies, acceptance
   criteria, reviewer role, review timing, optional deliverables, or reviewer signoff fields;
 - selected SOW scopes lack required deliverables, even if optional deliverables are present;

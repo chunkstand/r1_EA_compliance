@@ -443,6 +443,7 @@ def test_project_sow_adjudication_eval_fails_pending_or_invalid_rows(
     assert pending_eval.summary["failure_category_counts"] == {
         "adjudication_pending": 37,
         "project_sow_adjudication_items_complete": 1,
+        "project_sow_adjudication_reviewer_metadata_complete": 1,
     }
 
     adjudication = json.loads(template_result.output_path.read_text())
@@ -468,6 +469,83 @@ def test_project_sow_adjudication_eval_fails_pending_or_invalid_rows(
     assert invalid_eval.summary["failure_category_counts"][
         "adjudication_invalid_decision"
     ] == 1
+
+
+def test_project_sow_adjudication_eval_fails_stale_hash_and_identity_mismatch(
+    tmp_path: Path,
+) -> None:
+    template_result = write_project_sow_adjudication_template(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    adjudication = _completed_project_sow_adjudication(template_result.output_path)
+    adjudication["input_hashes"]["intake_sha256"] = "0" * 64
+    expected_resource_area_id = adjudication["items"][0]["resource_area_id"]
+    adjudication["items"][0]["resource_area_id"] = "tampered_resource_area"
+    adjudication_path = tmp_path / "stale_identity_mismatch_adjudication.json"
+    adjudication_path.write_text(json.dumps(adjudication), encoding="utf-8")
+
+    result = run_project_sow_adjudication_eval(
+        intake_path=INTAKE_PATH,
+        adjudication_path=adjudication_path,
+        output_path=tmp_path / "stale_identity_mismatch_eval.json",
+    )
+
+    item_results = {
+        item["item_id"]: item for item in result.summary["item_results"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["failure_category_counts"][
+        "project_sow_adjudication_input_hashes_match"
+    ] == 1
+    assert result.summary["failure_category_counts"]["adjudication_identity_mismatch"] == 1
+    assert item_results[adjudication["items"][0]["item_id"]]["identity_mismatches"] == [
+        {
+            "actual": "tampered_resource_area",
+            "expected": expected_resource_area_id,
+            "field": "resource_area_id",
+        }
+    ]
+
+
+def test_project_sow_adjudication_eval_requires_top_level_reviewer_metadata(
+    tmp_path: Path,
+) -> None:
+    template_result = write_project_sow_adjudication_template(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    adjudication = _completed_project_sow_adjudication(template_result.output_path)
+    adjudication["reviewer_metadata"] = {
+        "review_status": "pending",
+        "reviewed_at": "",
+        "reviewed_by": [],
+        "review_source": "",
+    }
+    adjudication_path = tmp_path / "missing_reviewer_metadata_adjudication.json"
+    adjudication_path.write_text(json.dumps(adjudication), encoding="utf-8")
+
+    result = run_project_sow_adjudication_eval(
+        intake_path=INTAKE_PATH,
+        adjudication_path=adjudication_path,
+        output_path=tmp_path / "missing_reviewer_metadata_eval.json",
+    )
+
+    failed_checks = {
+        check["name"]: check for check in result.summary["failed_validation_checks"]
+    }
+    assert result.summary["passed"] is False
+    assert set(failed_checks) == {"project_sow_adjudication_reviewer_metadata_complete"}
+    assert failed_checks["project_sow_adjudication_reviewer_metadata_complete"][
+        "details"
+    ] == {
+        "errors": [
+            "reviewer_metadata.review_status must be complete",
+            "reviewer_metadata.reviewed_at required",
+            "reviewer_metadata.reviewed_by required",
+            "reviewer_metadata.review_source required",
+        ]
+    }
 
 
 def test_project_sow_adjudication_apply_updates_intake_for_package_status(
@@ -498,6 +576,12 @@ def test_project_sow_adjudication_apply_updates_intake_for_package_status(
         "accepted": 7,
         "out_of_scope": 30,
     }
+    assert applied_intake["project_sow_adjudication"]["reviewer_metadata"] == {
+        "review_status": "complete",
+        "review_source": "fixture reviewer worklist",
+        "reviewed_at": "2026-05-07",
+        "reviewed_by": ["reviewer@example.test"],
+    }
 
     package_result = run_project_sow_package(
         intake_path=apply_result.output_intake_path,
@@ -505,6 +589,11 @@ def test_project_sow_adjudication_apply_updates_intake_for_package_status(
     )
     package = json.loads(package_result.package_path.read_text())
     assert package_result.summary["passed"] is True, package_result.summary
+    assert package_result.summary["adjudication_status"] == "adjudicated"
+    assert package_result.summary["adjudication_decision_counts"] == {
+        "accepted": 7,
+        "out_of_scope": 30,
+    }
     assert package["reviewer_summary"]["snapshot"]["adjudication_status"] == "adjudicated"
     assert package["intake_summary"]["adjudication_decision_counts"] == {
         "accepted": 7,

@@ -506,11 +506,12 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
 
 The template/worklist covers unresolved resource areas, missing evidence refs, unknown resource-area
 IDs, calibration gaps, and optional deliverable decisions. Eval fails closed on stale input hashes,
-missing, duplicated, unexpected, pending, or invalid rows, and incomplete reviewer metadata. Apply
-reruns eval and writes an adjudicated intake copy with `project_sow_adjudication` replay metadata;
-generated packages from that intake surface adjudication status and decision counts in the reviewer
-snapshot. It does not mutate the original intake and does not edit generated package outputs by
-hand.
+missing, duplicated, unexpected, pending, invalid, or queue-identity-tampered rows, and incomplete
+top-level or per-item reviewer metadata. Apply reruns eval and writes an adjudicated intake copy
+with `project_sow_adjudication` replay metadata, including top-level reviewer metadata. Generated
+packages from that intake surface adjudication status and decision counts in the reviewer snapshot
+and command summaries. It does not mutate the original intake and does not edit generated package
+outputs by hand.
 
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
@@ -539,8 +540,8 @@ with no triggered resource area, incomplete canonical resource-area graph paths,
 specialist report areas without a proposed-action support path, land-exchange intakes with no
 federal land action, or Markdown/PDF renderings missing required reviewer-facing sections.
 Project-SOW adjudication eval additionally fails closed on stale hashes, missing queue rows,
-unexpected or duplicate rows, invalid item types, invalid decisions, pending decisions, or
-incomplete reviewer metadata.
+unexpected or duplicate rows, changed queue identity fields, invalid item types, invalid decisions,
+pending decisions, or incomplete reviewer metadata.
 
 ## Verified State Snapshot
 

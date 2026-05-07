@@ -2415,7 +2415,12 @@ item types are:
 
 Reviewers complete each row by setting `decision` to `accepted`, `rejected`,
 `needs_information`, or `out_of_scope` and supplying `rationale`, `adjudicated_by`,
-`adjudicated_at`, and `decision_source`. Evaluate a completed artifact with:
+`adjudicated_at`, and `decision_source`. The top-level `reviewer_metadata` must also record
+`review_status=complete`, `reviewed_by`, `reviewed_at`, and `review_source`. Queue identity fields
+such as item ID, item type, current status, resource area, action element, resource scope, optional
+deliverable, source check, and selected SOW scopes are immutable reviewer context; changing them is
+treated as a stale or tampered adjudication row rather than as a reviewer decision. Evaluate a
+completed artifact with:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
@@ -2426,8 +2431,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
 `project_sow_adjudication_eval.json` has schema version `project-sow-adjudication-eval-v0` and
 records identity/hash checks, queue coverage checks, per-item failure categories, decision counts,
 and an adjudication status. It fails closed on stale input hashes, missing queue rows, unexpected or
-duplicate items, invalid item types, invalid decisions, pending decisions, or incomplete reviewer
-metadata.
+duplicate items, changed queue identity fields, invalid item types, invalid decisions, pending
+decisions, missing per-item reviewer fields, or incomplete top-level reviewer metadata.
 
 Replay a passing adjudication into package-generation input with:
 
@@ -2442,9 +2447,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
 Apply first reruns the eval; only a passing eval writes the adjudicated intake copy. The copied
 intake receives a `project_sow_adjudication` object with schema version
 `project-sow-intake-adjudication-v0`, replay status, item count, decision counts, artifact hashes,
-and completed item decisions. Package JSON generated from that adjudicated intake surfaces the
-adjudication status in `intake_summary` and `reviewer_summary.snapshot`. Apply does not mutate the
-original intake and does not edit generated package outputs.
+top-level reviewer metadata, and completed item decisions. Package JSON generated from that
+adjudicated intake surfaces the adjudication status in `intake_summary` and
+`reviewer_summary.snapshot`; package and validation-only CLI summaries also expose adjudication
+status, item count, and decision counts. Apply does not mutate the original intake and does not edit
+generated package outputs.
 
 The generated artifact family includes:
 

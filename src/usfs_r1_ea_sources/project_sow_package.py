@@ -2018,7 +2018,11 @@ def _summary(
     validation: dict[str, Any],
     selected_scopes: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    adjudication_summary = _intake_adjudication_summary(intake)
     return {
+        "adjudication_decision_counts": adjudication_summary["decision_counts"],
+        "adjudication_item_count": adjudication_summary["item_count"],
+        "adjudication_status": adjudication_summary["status"],
         "output_dir": str(package_dir),
         "output_paths": {
             "manifest": str(manifest_path),
@@ -2113,7 +2117,11 @@ def _intake_validation_summary(
     selected_scopes: list[dict[str, Any]],
 ) -> dict[str, Any]:
     graph = _intake_evidence_graph(intake, selected_scopes)
+    adjudication_summary = _intake_adjudication_summary(intake)
     return {
+        "adjudication_decision_counts": adjudication_summary["decision_counts"],
+        "adjudication_item_count": adjudication_summary["item_count"],
+        "adjudication_status": adjudication_summary["status"],
         "authority_inventory_path": str(authority_inventory_path),
         "failed_validation_checks": [
             check for check in validation["checks"] if not check["passed"]
@@ -2698,6 +2706,7 @@ def _project_sow_adjudication_eval_summary(
         for result in item_results
         if result.get("decision") in PROJECT_SOW_ADJUDICATION_DECISIONS
     )
+    reviewer_metadata = _project_sow_adjudication_reviewer_metadata(adjudication)
     checks = _project_sow_adjudication_eval_checks(
         context=context,
         adjudication=adjudication,
@@ -2734,6 +2743,7 @@ def _project_sow_adjudication_eval_summary(
         "pending_item_count": sum(1 for result in item_results if not result["passed"]),
         "project_id": context["project_id"],
         "queue_item_count": len(context["queue_items"]),
+        "reviewer_metadata": reviewer_metadata,
         "schema_version": PROJECT_SOW_ADJUDICATION_EVAL_SCHEMA_VERSION,
         "source_set_id": context["source_set_id"],
         "validation_checks": checks,
@@ -2755,6 +2765,7 @@ def _project_sow_adjudication_eval_checks(
     missing_item_ids = sorted(expected_ids - set(adjudication_ids))
     unexpected_item_ids = sorted(set(adjudication_ids) - expected_ids)
     duplicate_item_ids = _duplicates(adjudication_ids)
+    metadata_errors = _project_sow_adjudication_reviewer_metadata_errors(adjudication)
     return [
         _check(
             name="project_sow_adjudication_schema_supported",
@@ -2799,6 +2810,11 @@ def _project_sow_adjudication_eval_checks(
                     result["item_id"] for result in item_results if not result["passed"]
                 ]
             },
+        ),
+        _check(
+            name="project_sow_adjudication_reviewer_metadata_complete",
+            passed=not metadata_errors,
+            details={"errors": metadata_errors},
         ),
     ]
 
@@ -2888,7 +2904,15 @@ def _project_sow_adjudication_item_result(
         failure_categories.append("adjudication_duplicate")
     if item_type not in PROJECT_SOW_ADJUDICATION_ITEM_TYPES:
         failure_categories.append("adjudication_invalid_item_type")
-    if expected is not None and item_type != expected.get("item_type"):
+    identity_mismatches = (
+        _project_sow_adjudication_identity_mismatches(
+            adjudication=adjudication,
+            expected=expected,
+        )
+        if expected is not None
+        else []
+    )
+    if identity_mismatches:
         failure_categories.append("adjudication_identity_mismatch")
     if decision == "pending" or not decision:
         failure_categories.append("adjudication_pending")
@@ -2908,6 +2932,7 @@ def _project_sow_adjudication_item_result(
         "issue_summary": adjudication.get("issue_summary"),
         "item_id": item_id,
         "item_type": item_type,
+        "identity_mismatches": identity_mismatches,
         "missing_fields": _missing_project_sow_adjudication_fields(adjudication),
         "optional_deliverable": adjudication.get("optional_deliverable"),
         "passed": not failure_categories,
@@ -2925,6 +2950,69 @@ def _missing_project_sow_adjudication_fields(adjudication: dict[str, Any]) -> li
     if not _strings(adjudication.get("adjudicated_by")):
         missing.append("adjudicated_by")
     return missing
+
+
+def _project_sow_adjudication_identity_mismatches(
+    *,
+    adjudication: dict[str, Any],
+    expected: dict[str, Any],
+) -> list[dict[str, Any]]:
+    fields = (
+        "action_element_id",
+        "current_status",
+        "item_type",
+        "optional_deliverable",
+        "resource_area_id",
+        "resource_scope_id",
+        "selected_resource_scope_ids",
+        "source_check",
+    )
+    mismatches = []
+    for field in fields:
+        actual = adjudication.get(field)
+        expected_value = expected.get(field)
+        if field == "selected_resource_scope_ids":
+            actual = _strings(actual)
+            expected_value = _strings(expected_value)
+        if actual != expected_value:
+            mismatches.append(
+                {
+                    "actual": actual,
+                    "expected": expected_value,
+                    "field": field,
+                }
+            )
+    return mismatches
+
+
+def _project_sow_adjudication_reviewer_metadata(
+    adjudication: dict[str, Any],
+) -> dict[str, Any]:
+    metadata = adjudication.get("reviewer_metadata")
+    if not isinstance(metadata, dict):
+        metadata = {}
+    return {
+        "review_status": metadata.get("review_status"),
+        "reviewed_at": metadata.get("reviewed_at"),
+        "reviewed_by": _strings(metadata.get("reviewed_by")),
+        "review_source": metadata.get("review_source"),
+    }
+
+
+def _project_sow_adjudication_reviewer_metadata_errors(
+    adjudication: dict[str, Any],
+) -> list[str]:
+    metadata = _project_sow_adjudication_reviewer_metadata(adjudication)
+    errors = []
+    if metadata["review_status"] != "complete":
+        errors.append("reviewer_metadata.review_status must be complete")
+    if _is_empty(metadata["reviewed_at"]):
+        errors.append("reviewer_metadata.reviewed_at required")
+    if not metadata["reviewed_by"]:
+        errors.append("reviewer_metadata.reviewed_by required")
+    if _is_empty(metadata["review_source"]):
+        errors.append("reviewer_metadata.review_source required")
+    return errors
 
 
 def _project_sow_adjudication_status(
@@ -3005,6 +3093,7 @@ def _project_sow_intake_adjudication(
         "input_hashes": eval_summary.get("input_hashes") or {},
         "item_count": len(items),
         "items": items,
+        "reviewer_metadata": eval_summary.get("reviewer_metadata") or {},
         "schema_version": PROJECT_SOW_INTAKE_ADJUDICATION_SCHEMA_VERSION,
         "status": eval_summary.get("adjudication_status"),
     }

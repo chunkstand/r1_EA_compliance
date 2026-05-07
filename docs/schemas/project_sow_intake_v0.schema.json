@@ -217,6 +217,33 @@
           },
           "type": "array"
         },
+        "reviewer_metadata": {
+          "additionalProperties": true,
+          "properties": {
+            "review_status": {
+              "const": "complete"
+            },
+            "review_source": {
+              "type": "string"
+            },
+            "reviewed_at": {
+              "type": "string"
+            },
+            "reviewed_by": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "review_status",
+            "reviewed_at",
+            "reviewed_by",
+            "review_source"
+          ],
+          "type": "object"
+        },
         "schema_version": {
           "const": "project-sow-intake-adjudication-v0"
         },
@@ -236,7 +263,8 @@
         "applied_at",
         "decision_counts",
         "item_count",
-        "items"
+        "items",
+        "reviewer_metadata"
       ],
       "type": "object"
     },

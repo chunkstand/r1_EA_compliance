@@ -272,6 +272,19 @@ Acceptance gate status:
   decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency
   decisions.
 
+Gap-close pass:
+
+- tightened eval so completed artifacts must include top-level reviewer metadata with
+  `review_status=complete`, reviewer identity, date, and decision source;
+- made queue identity fields immutable during eval, including item type, current status,
+  resource-area ID, action-element ID, resource-scope ID, optional deliverable, selected SOW scopes,
+  and source check;
+- surfaced replayed adjudication status, item count, and decision counts in validation-only and
+  package command summaries, not only inside generated package JSON;
+- preserved top-level reviewer metadata in the adjudicated intake copy written by apply;
+- added regression coverage for stale hashes, tampered queue identity, missing top-level reviewer
+  metadata, and summary-level adjudication status/counts.
+
 ## Sequence 6: Downstream EA Package Assembly Handoff
 
 Status: planned.
