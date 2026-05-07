@@ -90,6 +90,10 @@ PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS = (
         ("project-sow-operational-gate", "Operational Gate"),
     ),
     (
+        Path("docs/ARCHITECTURE.md"),
+        ("project-sow-operational-gate",),
+    ),
+    (
         Path("docs/OUTPUT_SCHEMAS.md"),
         ("project_sow_operational_gate_summary.json",),
     ),
@@ -98,9 +102,27 @@ PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS = (
         ("project-sow-operational-gate",),
     ),
     (
+        Path("docs/SESSION_HANDOFF.md"),
+        ("Sequence 7", "project-sow-operational-gate"),
+    ),
+    (
+        Path("docs/architecture_contract.toml"),
+        ("project-sow-operational-gate",),
+    ),
+    (
         Path("docs/PROJECT_SOW_OPERATIONAL_READINESS_REPORT.md"),
         ("project-sow-operational-gate", "local-only"),
     ),
+)
+PROJECT_SOW_OPERATIONAL_GATE_CLOSEOUT_CONTRACT_FIELDS = (
+    "artifact_boundaries",
+    "ci_policy",
+    "downstream_use",
+    "generated_outputs",
+    "must_not_infer",
+    "required_green_checks",
+    "tracked_doc_paths",
+    "tracked_json_paths",
 )
 
 
@@ -504,7 +526,13 @@ def run_project_sow_operational_gate(
         handoff_rules_config_path=handoff_rules_config_path,
     )
     json_doc_checks = _project_sow_operational_gate_json_doc_checks()
+    closeout_contract = _project_sow_operational_gate_closeout_contract(
+        output_dir=output_dir,
+        eval_output_dir=eval_output_dir,
+        handoff_output_dir=handoff_output_dir,
+    )
     checks = _project_sow_operational_gate_checks(
+        closeout_contract=closeout_contract,
         intake_validations=intake_validations,
         eval_summary=eval_result.summary,
         handoff_smoke=handoff_smoke,
@@ -522,6 +550,7 @@ def run_project_sow_operational_gate(
             "reason": "The Sequence 7 gate writes generated reports and package smoke outputs under a caller-selected directory; CI adoption should be a separate explicit milestone.",
             "status": "local-only",
         },
+        "closeout_contract": closeout_contract,
         "eval_config_path": str(eval_config_path),
         "failed_checks": [check for check in checks if not check["passed"]],
         "handoff_rules_config_path": str(handoff_rules_config_path),
@@ -544,10 +573,19 @@ def run_project_sow_operational_gate(
     summary["ea_handoff_smoke"] = handoff_smoke
     markdown = _render_project_sow_operational_gate_markdown(summary)
     output_dir.mkdir(parents=True, exist_ok=True)
+    summary["output_written"] = True
+    summary_content_hash = _sha256_json_payload(summary)
     _write_json(summary_path, summary)
     markdown_path.write_text(markdown, encoding="utf-8")
-    summary["output_written"] = True
     summary["output_hashes"] = {
+        "project_sow_ea_package_handoff_markdown_sha256": handoff_smoke.get(
+            "output_hashes", {}
+        ).get("project_sow_ea_package_handoff_markdown_sha256"),
+        "project_sow_ea_package_handoff_sha256": handoff_smoke.get(
+            "output_hashes", {}
+        ).get("project_sow_ea_package_handoff_sha256"),
+        "project_sow_eval_summary_sha256": _sha256_file(eval_result.summary_path),
+        "project_sow_operational_gate_summary_content_sha256": summary_content_hash,
         "project_sow_operational_readiness_report_sha256": _sha256_file(markdown_path),
     }
     _write_json(summary_path, summary)
@@ -2602,6 +2640,7 @@ def _project_sow_operational_gate_handoff_smoke(
         "failed_validation_checks": result.summary.get("failed_validation_checks"),
         "markdown_path": str(result.markdown_path),
         "output_path": str(result.output_path),
+        "output_hashes": result.summary.get("output_hashes") or {},
         "output_written": bool(result.summary.get("output_written")),
         "package_path": str(package_path),
         "passed": bool(result.summary.get("passed")),
@@ -2630,6 +2669,10 @@ def _project_sow_operational_gate_json_doc_checks() -> dict[str, Any]:
         if missing_terms:
             missing_doc_terms.append({"missing_terms": missing_terms, "path": str(path)})
     return {
+        "checked_doc_paths": [
+            str(path) for path, _terms in PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS
+        ],
+        "checked_json_paths": [str(path) for path in PROJECT_SOW_OPERATIONAL_GATE_JSON_PATHS],
         "docs_updated": not missing_doc_terms,
         "invalid_json_paths": invalid_json_paths,
         "json_paths_valid": not invalid_json_paths,
@@ -2637,8 +2680,80 @@ def _project_sow_operational_gate_json_doc_checks() -> dict[str, Any]:
     }
 
 
+def _project_sow_operational_gate_closeout_contract(
+    *,
+    output_dir: Path,
+    eval_output_dir: Path,
+    handoff_output_dir: Path,
+) -> dict[str, Any]:
+    return {
+        "artifact_boundaries": [
+            "Generated outputs stay under the selected output directory.",
+            "Ignored generated source_library outputs remain unstaged.",
+            "The command is a planning-lane gate, not a downstream review gate.",
+        ],
+        "ci_policy": {
+            "status": "local-only",
+            "promotion_path": "Treat broader CI integration as a separate explicit milestone.",
+        },
+        "downstream_use": "Use as Project SOW operational-readiness closeout evidence only.",
+        "generated_outputs": {
+            "ea_handoff_smoke_dir": str(handoff_output_dir),
+            "operational_gate_summary": str(
+                output_dir / "project_sow_operational_gate_summary.json"
+            ),
+            "operational_readiness_report": str(
+                output_dir / "project_sow_operational_readiness_report.md"
+            ),
+            "project_sow_eval_dir": str(eval_output_dir),
+        },
+        "must_not_infer": [
+            "Future EA package artifacts exist.",
+            "Authority applicability or non-applicability has been decided.",
+            "Generated rule-pack readiness has been established.",
+            "Compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions have been made.",
+        ],
+        "required_green_checks": [
+            "project_sow_operational_gate_intake_validations_passed",
+            "project_sow_operational_gate_intake_validations_no_outputs",
+            "project_sow_operational_gate_proving_eval_passed",
+            "project_sow_operational_gate_proving_case_count",
+            "project_sow_operational_gate_package_outputs_written",
+            "project_sow_operational_gate_rendering_checks_passed",
+            "project_sow_operational_gate_system_misses_clear",
+            "project_sow_operational_gate_intake_omissions_clear",
+            "project_sow_operational_gate_ea_handoff_passed",
+            "project_sow_operational_gate_ea_handoff_slots_stable",
+            "project_sow_operational_gate_json_inputs_valid",
+            "project_sow_operational_gate_docs_updated",
+            "project_sow_operational_gate_closeout_contract_complete",
+        ],
+        "schema_version": "project-sow-operational-gate-closeout-contract-v0",
+        "tracked_doc_paths": [
+            str(path) for path, _terms in PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS
+        ],
+        "tracked_json_paths": [str(path) for path in PROJECT_SOW_OPERATIONAL_GATE_JSON_PATHS],
+    }
+
+
+def _project_sow_operational_gate_closeout_contract_errors(
+    contract: dict[str, Any],
+) -> list[str]:
+    errors = []
+    for field in PROJECT_SOW_OPERATIONAL_GATE_CLOSEOUT_CONTRACT_FIELDS:
+        if _is_empty(contract.get(field)):
+            errors.append(f"closeout_contract.{field}: required")
+    if contract.get("schema_version") != "project-sow-operational-gate-closeout-contract-v0":
+        errors.append("closeout_contract.schema_version: unsupported")
+    ci_policy = contract.get("ci_policy") if isinstance(contract.get("ci_policy"), dict) else {}
+    if ci_policy.get("status") != "local-only":
+        errors.append("closeout_contract.ci_policy.status: must be local-only")
+    return errors
+
+
 def _project_sow_operational_gate_checks(
     *,
+    closeout_contract: dict[str, Any],
     intake_validations: list[dict[str, Any]],
     eval_summary: dict[str, Any],
     handoff_smoke: dict[str, Any],
@@ -2663,6 +2778,9 @@ def _project_sow_operational_gate_checks(
     intake_omission_total = sum(
         len(_strings(case.get("diagnostics", {}).get("intake_omission_resource_area_ids")))
         for case in cases
+    )
+    closeout_contract_errors = _project_sow_operational_gate_closeout_contract_errors(
+        closeout_contract
     )
     return [
         _check(
@@ -2749,6 +2867,11 @@ def _project_sow_operational_gate_checks(
             name="project_sow_operational_gate_docs_updated",
             passed=bool(json_doc_checks.get("docs_updated")),
             details={"missing_doc_terms": json_doc_checks.get("missing_doc_terms") or []},
+        ),
+        _check(
+            name="project_sow_operational_gate_closeout_contract_complete",
+            passed=not closeout_contract_errors,
+            details={"errors": closeout_contract_errors},
         ),
     ]
 
@@ -4927,6 +5050,11 @@ def _duplicates(values: Any) -> list[str]:
 
 def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _sha256_json_payload(payload: dict[str, Any]) -> str:
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _now() -> str:

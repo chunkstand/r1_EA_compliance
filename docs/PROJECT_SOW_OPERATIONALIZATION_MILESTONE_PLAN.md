@@ -365,6 +365,19 @@ Acceptance gate status:
 - ignored generated outputs remain local under the selected output directory and unstaged;
 - milestone closes as one verified sequence commit after all prior sequence commits are green.
 
+Gap-close pass:
+
+- added a machine-readable `closeout_contract` to the operational gate summary so release-closeout
+  evidence records required green checks, generated-output locations, tracked doc/schema paths,
+  local-only CI policy, and non-review/non-legal boundaries;
+- expanded the gate's tracked docs check to cover the durable closeout set, including README,
+  architecture, current state, output schemas, runbook, milestone plan, session handoff,
+  architecture contract, and readiness report;
+- added output hashes for the operational readiness report, gate summary content, proving eval
+  summary, and EA handoff smoke artifacts;
+- added regression coverage proving the gate fails closed when a required closeout-doc reference is
+  missing.
+
 ## Required Verification
 
 For implementation sequences touching Python, CLI, config, schema, or generated artifact contracts:

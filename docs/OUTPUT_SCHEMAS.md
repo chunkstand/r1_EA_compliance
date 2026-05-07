@@ -2512,7 +2512,13 @@ applicability, support generated rule-pack creation, or create compliance/legal 
 - `ea_handoff_smoke`, the East Crazies handoff smoke summary including slot counts and validation
   failure counts;
 - `tracked_docs_schema_checks`, parse checks for the tracked JSON inputs and required docs
-  references;
+  references, including the checked JSON paths, checked durable-doc paths, invalid JSON paths, and
+  missing doc terms;
+- `closeout_contract`, a machine-readable release-closeout contract that records required green
+  checks, generated-output locations, durable doc/schema paths, local-only CI policy, downstream
+  use, artifact boundaries, and conclusions the gate must not imply;
+- `output_hashes`, including hashes for the operational readiness report, proving eval summary,
+  gate summary content, and EA handoff smoke JSON/Markdown outputs;
 - `ci_policy`, currently `local-only`, because adding this generated-output gate to broader CI is a
   separate milestone decision;
 - `artifact_boundaries`, preserving the non-downloader, non-review, non-applicability,
@@ -2520,7 +2526,8 @@ applicability, support generated rule-pack creation, or create compliance/legal 
 
 The command also writes `project_sow_operational_readiness_report.md`, a Markdown rendering of the
 same operational readiness gate. These generated reports stay under the caller-selected output
-directory and are not staged from `source_library/`.
+directory and are not staged from `source_library/`. The gate fails closed if the tracked
+durable-doc closeout set does not contain the expected operational-gate references.
 
 The generated artifact family includes:
 

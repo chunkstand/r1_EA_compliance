@@ -29,8 +29,13 @@ The gate must pass all of these checks before the lane is treated as operational
 - proving eval reports `0` system misses and `0` intake omissions;
 - East Crazies EA handoff smoke passes and remains stable at `27` expected future-artifact slots;
 - tracked JSON inputs parse successfully;
-- tracked README, runbook, schema, current-state, milestone, and handoff docs reference the
-  operational gate and its local-only boundary.
+- tracked README, architecture, current-state, output-schema, runbook, milestone, session handoff,
+  architecture contract, and readiness-report docs reference the operational gate and its local-only
+  boundary.
+- the gate summary includes a `closeout_contract` with required green checks, generated-output
+  locations, tracked doc/schema paths, local-only CI policy, and non-review/non-legal boundaries;
+- the gate summary records hashes for the operational report, proving eval summary, gate summary
+  content, and EA handoff smoke artifacts.
 
 ## Boundaries
 
@@ -57,6 +62,7 @@ Latest gate result:
 - East Crazies EA handoff smoke passed with `27` expected future-artifact slots and `0` handoff
   validation failures;
 - tracked JSON inputs parsed successfully and required docs references were present;
+- closeout contract and output hashes were present in the generated gate summary;
 - generated outputs were written under `/tmp/project-sow-sequence-7-operational-gate` for closeout
   verification, not staged from `source_library/`.
 

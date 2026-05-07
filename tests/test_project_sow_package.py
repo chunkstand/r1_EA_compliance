@@ -392,6 +392,24 @@ def test_project_sow_operational_gate_runs_release_checks(tmp_path: Path) -> Non
     assert result.summary["ea_handoff_smoke"]["validation_failure_count"] == 0
     assert result.summary["tracked_docs_schema_checks"]["json_paths_valid"] is True
     assert result.summary["tracked_docs_schema_checks"]["docs_updated"] is True
+    assert "docs/SESSION_HANDOFF.md" in result.summary["tracked_docs_schema_checks"][
+        "checked_doc_paths"
+    ]
+    assert "docs/ARCHITECTURE.md" in result.summary["tracked_docs_schema_checks"][
+        "checked_doc_paths"
+    ]
+    assert result.summary["closeout_contract"]["schema_version"] == (
+        "project-sow-operational-gate-closeout-contract-v0"
+    )
+    assert result.summary["closeout_contract"]["ci_policy"]["status"] == "local-only"
+    assert "project_sow_operational_gate_closeout_contract_complete" in {
+        check["name"] for check in result.summary["checks"]
+    }
+    assert result.summary["output_hashes"]["project_sow_eval_summary_sha256"]
+    assert result.summary["output_hashes"]["project_sow_ea_package_handoff_sha256"]
+    assert result.summary["output_hashes"][
+        "project_sow_operational_gate_summary_content_sha256"
+    ]
     assert result.summary["ci_policy"]["status"] == "local-only"
     assert all(check["passed"] for check in result.summary["checks"])
     markdown = result.markdown_path.read_text()
@@ -417,6 +435,36 @@ def test_project_sow_operational_gate_fails_on_eval_regression(tmp_path: Path) -
     assert failed_checks["project_sow_operational_gate_proving_eval_passed"][
         "details"
     ]["failed_cases"] == ["east-crazies-land-exchange"]
+
+
+def test_project_sow_operational_gate_fails_missing_closeout_doc(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    missing_doc_path = tmp_path / "missing_closeout_doc.md"
+    monkeypatch.setattr(
+        project_sow,
+        "PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS",
+        project_sow.PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS
+        + ((missing_doc_path, ("project-sow-operational-gate",)),),
+    )
+
+    result = run_project_sow_operational_gate(
+        output_dir=tmp_path / "project_sow_operational_gate"
+    )
+
+    failed_checks = {check["name"]: check for check in result.summary["failed_checks"]}
+    assert result.summary["passed"] is False
+    assert result.summary_path.exists()
+    assert "project_sow_operational_gate_docs_updated" in failed_checks
+    assert failed_checks["project_sow_operational_gate_docs_updated"]["details"] == {
+        "missing_doc_terms": [
+            {
+                "missing_terms": ["project-sow-operational-gate"],
+                "path": str(missing_doc_path),
+            }
+        ]
+    }
 
 
 def test_project_sow_adjudication_template_exports_reviewer_worklist(

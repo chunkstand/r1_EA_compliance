@@ -174,7 +174,9 @@ lane through the intake evidence graph and package-quality passes. See
 generator into a repeatable intake, calibration, reviewer-adjudication, and downstream handoff
 workflow. The local-only `project-sow-operational-gate` command is the operational readiness gate
 for this lane: it runs intake validation, the proving-intake eval, package/rendering smoke checks,
-EA handoff smoke, and tracked docs/schema checks before writing an operational readiness report. See
+EA handoff smoke, and tracked docs/schema checks before writing an operational readiness report.
+The gate also emits a machine-readable closeout contract and hashes the gate, eval, and handoff
+smoke outputs so release evidence can be audited without staging ignored generated artifacts. See
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased

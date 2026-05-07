@@ -235,6 +235,11 @@ checks package/rendering smoke signals, generates an East Crazies EA handoff smo
 verifies tracked JSON/docs references. The command is local-only for this sequence and should not be
 treated as CI policy until a separate milestone adds CI integration.
 
+The summary includes a `closeout_contract` that records required green checks, generated-output
+locations, local-only CI policy, tracked doc/schema paths, and conclusions the gate must not imply.
+It also records hashes for the operational report, proving eval summary, and EA handoff smoke
+outputs. Missing durable closeout-doc references fail the gate before milestone closeout.
+
 ## 11. Resolve Validation Failures
 
 Common failure categories:

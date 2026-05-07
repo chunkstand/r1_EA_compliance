@@ -230,6 +230,19 @@ architecture contract reported `5 passed`; ruff, compileall, JSON validation, an
 proving eval cases, `0` failed cases, `0` system misses, `0` intake omissions, and an East Crazies
 EA handoff smoke with `27` expected future-artifact slots and `0` handoff validation failures.
 
+Sequence 7 gap-close pass is implemented. `project_sow_operational_gate_summary.json` now includes
+a machine-readable `closeout_contract`, expands durable-doc checks to README, architecture,
+current-state, output-schema, runbook, milestone, session handoff, architecture contract, and
+readiness-report docs, and records output hashes for the operational readiness report, gate summary
+content, proving eval summary, and EA handoff smoke artifacts. Regression coverage proves the gate
+fails closed when a required closeout-doc reference is missing. Gap-close verification passed: the
+focused project-SOW/CLI suite reported `60 passed`; architecture contract reported `5 passed`;
+ruff, compileall, JSON validation, and `git diff --check` passed; the operational gate run to
+`/tmp/project-sow-sequence-7-gap-gate` passed `4` validation-only intake targets, `3` proving eval
+cases, `0` failed cases, `0` system misses, `0` intake omissions, `13` gate checks, and an East
+Crazies EA handoff smoke with `27` expected future-artifact slots and `0` handoff validation
+failures.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package

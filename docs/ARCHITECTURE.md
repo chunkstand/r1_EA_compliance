@@ -157,7 +157,8 @@ The handoff includes a downstream consumption contract and fails closed on malfo
 future-artifact slots before downstream commands can treat it as a usable checklist.
 The `project-sow-operational-gate` command composes the intake validation, proving eval,
 package/rendering smoke, EA handoff smoke, and tracked docs/schema checks into one local-only
-operational readiness report for milestone closeout.
+operational readiness report for milestone closeout. Its gap-close contract makes the durable-doc
+set, local-only CI boundary, generated-output locations, and output hashes machine-readable.
 These commands do not create applicability decisions, generated rule packs, compliance findings, or
 legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
 reviewer-confirmation metadata is cleared.

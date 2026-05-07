@@ -547,6 +547,9 @@ an East Crazies EA handoff smoke, and tracked JSON/docs checks before writing
 `project_sow_operational_gate_summary.json` and `project_sow_operational_readiness_report.md`.
 The command is intentionally not broad CI yet; the Sequence 7 closeout records it as local-only
 until CI adoption is scoped as a separate milestone.
+The Sequence 7 gap-close pass adds a machine-readable `closeout_contract`, expands tracked
+docs/schema checks across the durable closeout set, fails closed on missing closeout-doc references,
+and records output hashes for the gate report, proving eval summary, and EA handoff smoke artifacts.
 
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
