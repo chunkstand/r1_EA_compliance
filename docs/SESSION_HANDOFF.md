@@ -32,13 +32,14 @@ An ad hoc soils resource-area SOW has been produced at
 docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
 temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
-The SOW is now organized around the three requested work sections: Fieldwork, Analysis, and
-Deliverables. Requirements were traced from the Region 1 FSM 2550 Soil Management Supplement, the
-South Plateau Custer Gallatin soils specialist report model, the East Crazies Final EA, the East
-Crazies Plan Consistency Table, the East Crazies Roads/Trails/Access Report, the East Crazies
-Wetlands Report, and the post-exchange parcel restrictions. The current revision also adds a
-source-to-requirement traceability matrix so a consultant or Custer Gallatin soils specialist can see
-which source drives each fieldwork, analysis, and deliverable requirement.
+The SOW has been revised into a shorter consultant-facing structure: a brief project header,
+Fieldwork, Analysis, Deliverables, and Sources Cited. The revision removes the earlier source-basis
+narrative, schedule section, open-decision section, and traceability matrix so the document starts
+with the work a soils consultant needs to perform immediately. It still carries the core requirements
+from the Region 1 FSM 2550 Soil Management Supplement, the South Plateau Custer Gallatin soils
+specialist report model, the East Crazies Final EA, the East Crazies Plan Consistency Table, the
+East Crazies Roads/Trails/Access Report, the East Crazies Wetlands Report, and the post-exchange
+parcel restrictions.
 
 Important boundary: `soil_resources` is covered by the selected `vegetation_soils_air_quality`
 scope, but the current East Crazies intake does not explicitly list soils as a
