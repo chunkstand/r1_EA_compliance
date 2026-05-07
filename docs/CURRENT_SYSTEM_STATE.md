@@ -481,6 +481,12 @@ uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, a
 plan-consistency table. Validation requires every observed report resource area to have selected
 SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
+The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
+Sequence 3 is scoped to a package-local intake evidence graph that connects proposed-action
+elements, evidence refs, triggered resource areas, SOW scopes, expected deliverables, and the East
+Crazies observed specialist/supporting reports without creating applicability or compliance
+findings.
+
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
 Validation fails closed on missing required intake fields, unsupported intake schema, empty or

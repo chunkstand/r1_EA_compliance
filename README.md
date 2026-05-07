@@ -146,6 +146,8 @@ keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
 proposed-action intake into resource SOW requirements and, for the East Crazies calibration fixture,
 compares proposed-action resource areas to the actual specialist/supporting reports produced. See
+`docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
+lane through the intake evidence graph and package-quality passes. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific

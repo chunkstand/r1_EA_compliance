@@ -49,9 +49,11 @@ relations, wetlands, wildlife, water rights, and the plan-consistency table. Val
 observed report resource area is not derived from the proposed action or lacks selected SOW scope
 coverage.
 
-Next sequence: add richer intake evidence references and optional PDF rendering only after this
-resource-analysis coverage slice is reviewed. Do not convert SOW scopes into applicability or
-compliance findings in this lane.
+The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
+Next sequence: Sequence 3, intake evidence graph. Implement a package-local graph with project,
+proposed-action, action-element, evidence-ref, resource-area, SOW-scope, deliverable, and observed
+specialist-report nodes. Do not convert SOW scopes into applicability or compliance findings in this
+lane.
 
 ## Current Applicability/Expansion Handoff
 
