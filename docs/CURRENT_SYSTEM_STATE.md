@@ -399,7 +399,7 @@ the current artifact/count/hash baseline and closed with `go`; Sequence 1 added 
 contract; Sequence 2 added the deterministic generator and public CLI command; Sequence 3 generated
 the first local report family for the promoted East Crazies review; Sequence 4 made that family a
 checked validation, phase-eval, and promotion-suite gate; Sequence 5 polished the Markdown/PDF
-renderings for supervisor review without changing the canonical JSON schema. The tracked surfaces
+renderings for responsible official review without changing the canonical JSON schema. The tracked surfaces
 are:
 
 - `config/ea_consistency_decision_support_v1.json`
@@ -1505,7 +1505,7 @@ citation, source evidence citation, source-claim IDs, applied source record IDs,
 document roles, citation-gate status, limitations, and failure category when an applicable finding is
 not a supported pass. For Custer Gallatin Forest Plan reviews, the matrix also includes a separate
 `Forest Plan Compliance` table from component findings and applicable-standard coverage. The
-Markdown/PDF rendering now opens with a Forest Supervisor Readout and Accuracy Audit in plain
+Markdown/PDF rendering now opens with a Responsible Official Readout and Accuracy Audit in plain
 decision language so the signing review can distinguish pass/fail authority rows, inapplicable
 authority traceability, applicable Forest Plan standards, and non-standard plan-consistency support.
 

@@ -147,7 +147,7 @@ sequence covering USDA/Forest Service Region 1 EA authority families, applicabil
 readiness blockers. See
 `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md` for the East Crazies decision-support
 report sequence; Sequence 5 has closed the milestone by making the generated East Crazies
-JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
+JSON/Markdown/PDF decision-support report family both gate-checked and responsible-official-readable while
 keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` for the closed final QA and
 certification replay plan that validates the promoted East Crazy review packet from existing
@@ -808,7 +808,7 @@ Rule-pack IDs, rule IDs, and fixed review IDs must use only letters, numbers, do
 hyphens. Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot
 silently broaden source retrieval.
 The compliance matrix is the reviewer-facing table set. The Markdown/PDF rendering starts with a
-Forest Supervisor Readout and Accuracy Audit in plain decision language, then renders a
+Responsible Official Readout and Accuracy Audit in plain decision language, then renders a
 signer-oriented `NEPA / Authority Compliance` table with the review topic, signer question,
 decision-support finding, EA record support, authority basis, and trace/caveat cells. When a Forest
 Plan lane is present, the matrix also includes a separate `Forest Plan Compliance` table derived

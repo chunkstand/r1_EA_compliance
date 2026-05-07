@@ -516,7 +516,7 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(matrix_rows["mitigation"]["failure_category"], "package_evidence_gap")
             markdown = result.compliance_matrix_markdown_path.read_text(encoding="utf-8")
             self.assertIn("# Compliance Matrix", markdown)
-            self.assertIn("## Forest Supervisor Readout", markdown)
+            self.assertIn("## Responsible Official Readout", markdown)
             self.assertIn("## Accuracy Audit", markdown)
             self.assertIn(
                 "| Review topic | Signer question | Decision support | EA record support | Authority basis | Trace / caveats |",

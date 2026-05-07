@@ -2143,7 +2143,7 @@ resolution count. This keeps Forest Plan component compliance visible without mi
 into the NEPA/generated-rule compliance table.
 
 `compliance_matrix.md` is a human-readable rendering for reviewer and demo use. It starts with a
-Forest Supervisor Readout and an Accuracy Audit table that express reviewer gates, row counts,
+Responsible Official Readout and an Accuracy Audit table that express reviewer gates, row counts,
 citation coverage, source-claim traceability, non-applicable authority tracking, and Forest Plan
 coverage in plain decision language. It then renders a signer-oriented `NEPA / Authority
 Compliance` table plus the separate `Forest Plan Compliance` table when available. The Markdown/PDF
@@ -2189,7 +2189,7 @@ authority IDs, evidence/artifact refs, rationale, `deterministic_basis=true`, an
 
 Path: `source_library/reviews/<review_id>/decision_support/`
 
-The EA consistency decision-support artifact family is the generated supervisor-facing synthesis
+The EA consistency decision-support artifact family is the generated responsible-official-facing synthesis
 layer over existing audited review artifacts. It is decision support only: it does not create legal
 advice, a legal sufficiency determination, or a final agency decision. It must read generated review
 artifacts and tracked config/fixtures, not root-level manual East Crazies draft exports.
@@ -2242,7 +2242,7 @@ must derive from that JSON. The report must include these top-level sections:
 - `residual_risk_register`
 - `validation_and_replay`
 
-Sequence 5 defines the supervisor-readable rendering contract for the Markdown/PDF derivatives.
+Sequence 5 defines the responsible-official-readable rendering contract for the Markdown/PDF derivatives.
 Those renderings must front-load a "How To Use This Document" note, bottom-line
 decision-support status, authority category/status counts, Forest Plan basis, applicable-standard
 coverage, non-applicable authority boundary, implementation-confirmation count, residual-risk count,

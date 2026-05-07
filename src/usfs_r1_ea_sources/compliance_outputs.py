@@ -162,7 +162,7 @@ def matrix_markdown(matrix: dict) -> str:
             f"- Forest-plan review: `{forest_plan_review.get('scope_status')}` "
             f"({_yes_no_sentence(forest_plan_review.get('reviewer_ready'), 'reviewer ready')})"
         )
-    lines.extend(_supervisor_readout_markdown_lines(matrix))
+    lines.extend(_responsible_official_readout_markdown_lines(matrix))
     lines.extend(_accuracy_audit_markdown_lines(matrix))
     lines.extend(
         [
@@ -284,20 +284,20 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
     }
 
 
-def _supervisor_readout_markdown_lines(matrix: dict) -> list[str]:
+def _responsible_official_readout_markdown_lines(matrix: dict) -> list[str]:
     lines = [
         "",
-        "## Forest Supervisor Readout",
+        "## Responsible Official Readout",
         "",
         "| Signing question | Current decision-support signal |",
         "| --- | --- |",
     ]
-    for row in _supervisor_readout_rows(matrix):
+    for row in _responsible_official_readout_rows(matrix):
         lines.append(f"| {_md_cell(row['check'])} | {_md_cell(row['signal'])} |")
     return lines
 
 
-def _supervisor_readout_rows(matrix: dict) -> list[dict[str, str]]:
+def _responsible_official_readout_rows(matrix: dict) -> list[dict[str, str]]:
     summary = matrix.get("summary") or {}
     forest_plan = matrix.get("forest_plan_compliance") or {}
     forest_summary = forest_plan.get("summary") or {}
@@ -1205,7 +1205,7 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
     lines.extend(
         [
             "",
-            "Forest Supervisor Readout",
+            "Responsible Official Readout",
             "",
         ]
     )
@@ -1217,7 +1217,7 @@ def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:
                     row["check"],
                     row["signal"],
                 ]
-                for row in _supervisor_readout_rows(matrix)
+                for row in _responsible_official_readout_rows(matrix)
             ],
             [48, 132],
         )

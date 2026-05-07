@@ -13,7 +13,7 @@ The preflight should be completed and closed before Sequence 1 of the full miles
 ## Goal
 
 Prove that the system has the current, complete, and replayable inputs needed to implement a
-Forest Supervisor-facing EA consistency decision-support document for
+Responsible Official-facing EA consistency decision-support document for
 `v1-cg-ecid-compliance-review`, and define the exact go/no-go conditions for starting the full
 report-contract and generator work.
 

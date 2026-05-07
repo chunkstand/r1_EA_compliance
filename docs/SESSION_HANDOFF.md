@@ -77,7 +77,7 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
 
 The WLG sample readability pass on 2026-05-07 refreshed only the canonical matrix rendering from the
 existing `compliance_matrix.json`: `compliance_matrix.md` and `compliance_matrix.pdf` now start with
-a Forest Supervisor Readout and deterministic Accuracy Audit in plain decision language, then
+a Responsible Official Readout and deterministic Accuracy Audit in plain decision language, then
 render NEPA/authority rows and Forest Plan rows as signer-oriented tables. Each NEPA row now carries
 the signer question, record need, decision-support finding, EA evidence excerpt, authority basis,
 and trace/caveat status. Each Forest Plan row now carries the component direction, decision-support
@@ -105,13 +105,13 @@ Current canonical artifact pointers:
 
 - Compliance matrix Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.md`
-  (`sha256=37fc6412a47b4a29fc8aec344bb23fc635e1a0eea82c10dcc1912aab8dc9e370`)
+  (`sha256=7f432a378e4185b7a8df0d34fc43ce23657a5aee4387b0ae7ad409387163facb`)
 - Compliance matrix PDF:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.pdf`
-  (`sha256=3689d696ef7a0a61f9e480b68fe7967217d14e458f09ecdf46d01804fa30b92a`)
+  (`sha256=abbb17f32d31a14b57eedfd28dcb84b451ef2cd5ed5888e1caa3a0b5d8ec4af0`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=dc859310f0356d09e60e592160404efc4c794529e98a224451dde483e47942ae`)
+  (`sha256=2909b53f9da0ed58ae010f4adee1553d4c3644a58690ec3d62d9f984c287abbf`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a`)
@@ -120,16 +120,16 @@ Current canonical artifact pointers:
   (`sha256=1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=808f13c23e173eb85bde6cd01b27fbc4c71e64a2e1ae032dabd4ae8b6d2b09f0`)
+  (`sha256=dfa45fd9deff286ab2f67eafb9a1c9ea55e3513ada2aed7ead9d213adb06ecf9`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=1c81a6278865b5287450dca4915637adfa4790246ddaf597bc37a47e6b800615`)
+  (`sha256=81d32b0370ade6c9be6b36ea2a0818953316af8a20fa982d8548f5fb23db7ba6`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=91d0127be0604eeb99be8449402c123361a0c5c07ad820ff6bd9b33b8d7c3fea`)
+  (`sha256=d34127b9efb43023eb812d01666fc58afbc1d786a0e70c6c2cbccdce16d51e4c`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=c67a9e564d2a405bd0874068dd72cb43277cd8edef5086e7b929e00f2e5d5bc2`)
+  (`sha256=1debb237ad841dbffba9487f7541840fde99853e6da0a5d08cb726e6db176e3e`)
 
 Sequence 1 added:
 
@@ -720,7 +720,7 @@ item, and preserved the missing evidence as visible gaps rather than converting 
 legal conclusion.
 
 - `docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md`: close the gap between reviewer-ready
-  East Crazies evidence artifacts and a single Forest Supervisor-facing EA consistency
+  East Crazies evidence artifacts and a single Responsible Official-facing EA consistency
   decision-support document. This lane must generate a report from audited review artifacts,
   not from root-level manual draft prose, and must preserve the applicable/non-applicable authority
   boundary, Forest Plan component coverage, applicable-standard coverage, residual risk register,

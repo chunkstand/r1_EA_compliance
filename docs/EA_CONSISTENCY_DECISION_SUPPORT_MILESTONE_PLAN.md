@@ -3,7 +3,7 @@
 Date: 2026-05-06
 
 This milestone closes the gap between the current reviewer-ready evidence artifacts and a single
-Forest Supervisor-facing decision-support document for the East Crazy Inspiration Divide EA. The
+Responsible Official-facing decision-support document for the East Crazy Inspiration Divide EA. The
 current system has the defensible evidence base: generated applicability artifacts, a generated
 compliance matrix, Forest Plan component findings, applicable-standard coverage, non-applicable
 authority artifacts, reviewer-resolution reports, and validation gates. The missing product is a
@@ -27,7 +27,7 @@ clearly separating:
 - implementation confirmations and residual risks;
 - machine evidence from reviewer-facing synthesis.
 
-The output should be suitable as decision support for a Forest Supervisor on the Custer Gallatin
+The output should be suitable as decision support for a Responsible Official on the Custer Gallatin
 National Forest because it is complete, traceable, bounded, and candid about implementation
 conditions.
 
