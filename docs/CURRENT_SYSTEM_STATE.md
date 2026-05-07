@@ -383,14 +383,14 @@ completeness.
 A NEPA 3D service capabilities brief is generated at
 `docs/capabilities/nepa_3d_capabilities_brief.pdf` with matching HTML at
 `docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
-`tools/build_nepa_3d_capabilities_brief.mjs` reads the validated
-`v1-cg-ecid-compliance-review` graph export and writes high-resolution graph figures for
-applicability, evidence-path traceability, and readiness blockers. The brief explains how we perform
-professional NEPA reviews for projects: document intake, authority graph construction and
-updates with the most current applicable regulations and procedures, applicability, reverse
-compliance, Forest Plan and full profile consistency review,
-responsible-official decision support, and evidence traceability.
-The brief is four pages so each graph image stays legible at service-brief scale.
+`tools/build_nepa_3d_capabilities_brief.mjs` reads the current catalog manifest, source-set graph
+summary and validation, phase-eval results, and promotion-suite status. It writes high-resolution
+system graphics for the source-governed operating model, evidence traceability, and readiness gates.
+The brief now presents system capabilities and boundaries without named project examples: local
+source capture, currentness and source partitions, extraction/retrieval/evidence layers,
+authority-family modeling, applicability, reverse compliance, review products, the graph viewer
+surface, promotion gates, and expansion blockers. The brief is four pages so each figure stays
+legible at capabilities-brief scale.
 
 ## EA Consistency Decision-Support Generator
 

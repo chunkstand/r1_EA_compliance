@@ -8,8 +8,8 @@
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      color: #171713;
-      background: #f7f6f1;
+      color: #17202a;
+      background: #f4f6f2;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     .page {
@@ -22,11 +22,11 @@
       gap: 0.18in;
       position: relative;
       overflow: hidden;
-      background: #f7f6f1;
+      background: #f4f6f2;
     }
     .page:last-child { page-break-after: auto; }
     .kicker {
-      color: #26786f;
+      color: #1f6f68;
       font-size: 9.5pt;
       font-weight: 850;
       letter-spacing: 0.08em;
@@ -35,38 +35,68 @@
     h1, h2, h3, p { margin: 0; }
     h1 {
       margin-top: 0.06in;
-      font-size: 30pt;
-      line-height: 0.98;
+      max-width: 6.9in;
+      font-size: 29pt;
+      line-height: 1;
       letter-spacing: 0;
     }
     h2 {
-      font-size: 19pt;
-      line-height: 1.05;
+      margin-top: 0.04in;
+      font-size: 20pt;
+      line-height: 1.08;
       letter-spacing: 0;
     }
     h3 {
-      font-size: 12pt;
-      line-height: 1.15;
+      font-size: 11.4pt;
+      line-height: 1.16;
       letter-spacing: 0;
     }
     p, li {
-      font-size: 9.7pt;
+      font-size: 9.5pt;
       line-height: 1.36;
-      color: #4f554e;
+      color: #435049;
     }
     .lede {
       margin-top: 0.12in;
-      max-width: 6.7in;
-      color: #30342f;
-      font-size: 12.2pt;
-      line-height: 1.32;
+      max-width: 6.75in;
+      color: #26322d;
+      font-size: 11.6pt;
+      line-height: 1.33;
     }
     .metric-context {
       margin-top: 0.12in;
-      color: #26786f;
-      font-size: 9.2pt;
+      color: #1f6f68;
+      font-size: 8.9pt;
       font-weight: 800;
-      letter-spacing: 0;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.09in;
+      margin-top: 0.15in;
+    }
+    .metric {
+      min-height: 0.66in;
+      padding: 0.1in;
+      background: #ffffff;
+      border: 1px solid #d4d9d0;
+      border-left: 5px solid #1f6f68;
+      border-radius: 8px;
+      box-shadow: 0 8px 18px rgba(29, 39, 34, 0.07);
+    }
+    .metric strong {
+      display: block;
+      font-size: 17pt;
+      line-height: 1;
+      color: #17202a;
+    }
+    .metric span {
+      display: block;
+      margin-top: 0.04in;
+      font-size: 7.7pt;
+      line-height: 1.22;
+      color: #58615b;
+      font-weight: 720;
     }
     .grid-2 {
       display: grid;
@@ -74,123 +104,64 @@
       gap: 0.16in;
       align-items: start;
     }
-    .card {
-      background: rgba(255,255,255,0.88);
-      border: 1px solid #d8d3c6;
-      border-radius: 8px;
-      padding: 0.14in;
-      box-shadow: 0 10px 24px rgba(24,28,26,0.08);
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.09in;
-      margin-top: 0.16in;
-    }
-    .metric {
-      min-height: 0.62in;
-      padding: 0.1in;
-      background: #ffffff;
-      border: 1px solid #d8d3c6;
-      border-left: 5px solid #26786f;
-      border-radius: 8px;
-    }
-    .metric strong {
-      display: block;
-      font-size: 18pt;
-      line-height: 1;
-      color: #171713;
-    }
-    .metric span {
-      display: block;
-      margin-top: 0.04in;
-      font-size: 7.8pt;
-      line-height: 1.2;
-      color: #5f625b;
-      font-weight: 700;
-    }
-    .hero-img {
-      width: 100%;
-      border: 1px solid #d8d3c6;
-      border-radius: 10px;
-      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
-    }
-    .snapshot {
-      width: 100%;
-      height: 3.46in;
-      object-fit: cover;
-      object-position: center;
-      border: 1px solid #d8d3c6;
-      border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
-    }
-    .snapshot.tall { height: 4.36in; }
+    .hero-img,
     .graph-figure {
       width: 100%;
-      height: 3.35in;
-      object-fit: cover;
-      object-position: center 50%;
-      border: 1px solid #d8d3c6;
+      border: 1px solid #d4d9d0;
       border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
+      background: #ffffff;
+      box-shadow: 0 12px 28px rgba(29, 39, 34, 0.12);
     }
-    .graph-figure.trace { height: 2.92in; object-position: center 48%; }
-    .graph-figure.readiness { height: 4.35in; object-fit: contain; }
-    .graph-figure.full {
-      height: 5.22in;
-      object-fit: contain;
-      object-position: center;
-    }
-    .graph-figure.full-trace {
-      height: 5.0in;
-      object-fit: contain;
-      object-position: center;
-    }
+    .hero-img { height: 3.52in; object-fit: cover; object-position: center; }
+    .graph-figure { height: 4.95in; object-fit: contain; object-position: center; }
+    .graph-figure.tall { height: 5.38in; }
     .caption {
       margin-top: 0.06in;
-      color: #5f625b;
-      font-size: 8.2pt;
+      color: #5e6861;
+      font-size: 8.1pt;
       line-height: 1.28;
     }
     .callout {
       padding: 0.14in;
       background: #ffffff;
-      border: 1px solid #d8d3c6;
-      border-left: 6px solid #26786f;
+      border: 1px solid #d4d9d0;
+      border-left: 6px solid #1f6f68;
       border-radius: 8px;
+      box-shadow: 0 8px 18px rgba(29, 39, 34, 0.06);
     }
     .callout strong {
       display: block;
       margin-bottom: 0.05in;
-      font-size: 11.5pt;
+      color: #17202a;
+      font-size: 11.2pt;
     }
     ul {
       margin: 0.08in 0 0;
       padding-left: 0.16in;
     }
-    li { margin-bottom: 0.055in; }
-    .scene-list {
+    li { margin-bottom: 0.05in; }
+    .capability-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.08in;
     }
-    .scene {
-      padding: 0.09in;
+    .capability {
+      min-height: 0.68in;
+      padding: 0.08in;
       border-radius: 7px;
-      border: 1px solid #d8d3c6;
-      background: rgba(255,255,255,0.88);
+      border: 1px solid #d4d9d0;
+      background: rgba(255,255,255,0.92);
     }
-    .scene strong {
+    .capability strong {
       display: block;
-      font-size: 9.2pt;
       margin-bottom: 0.03in;
+      color: #17202a;
+      font-size: 8.9pt;
     }
-    .scene span {
+    .capability span {
       display: block;
-      color: #5f625b;
-      font-size: 7.8pt;
+      color: #58615b;
+      font-size: 7.7pt;
       line-height: 1.28;
     }
     .footer {
@@ -198,139 +169,138 @@
       justify-content: space-between;
       gap: 0.15in;
       padding-top: 0.08in;
-      border-top: 1px solid #d8d3c6;
-      color: #6d6b63;
-      font-size: 7.2pt;
+      border-top: 1px solid #d4d9d0;
+      color: #68706a;
+      font-size: 7.1pt;
       line-height: 1.25;
     }
-    .footer a { color: #26786f; text-decoration: none; }
     .source-note {
-      font-size: 7.5pt;
-      line-height: 1.24;
-      color: #6d6b63;
+      margin-top: 0.08in;
+      color: #68706a;
+      font-size: 7.6pt;
+      line-height: 1.25;
     }
   </style>
 </head>
 <body>
   <section class="page">
     <header>
-      <div class="kicker">Standing Framework / Capabilities Brief</div>
-      <h1>Decision Ready NEPA Analysis</h1>
-      <p class="lede">We provide professional NEPA reviews and build decision-ready NEPA analysis systems using a graph-backed evidence process. The current operational proof is USFS Region 1: we update the authority graph with the most current applicable regulations and procedures, test applicability, run Forest Plan and full profile consistency review, trace evidence, flag older-regulation dependencies, and package decision support for the responsible official.</p>
-      <p class="metric-context">Service capabilities apply to NEPA document packages; Region 1 counts are current operational evidence.</p>
+      <div class="kicker">System Capabilities Brief</div>
+      <h1>NEPA 3D Knowledge Graph Review System</h1>
+      <p class="lede">The current system is a local, auditable reviewer-engine for USDA Forest Service Region 1 NEPA source material. It turns workbook-governed source records into extracted evidence, authority-family models, source-claim links, applicability decisions, compliance outputs, decision-support reports, and a 3D knowledge graph surface.</p>
+      <p class="metric-context">Current operating status from local catalog, source-set graph, phase-eval, and promotion gates.</p>
       <div class="metric-grid">
-        <div class="metric"><strong>1,916</strong><span>Region 1 graph nodes</span></div>
-        <div class="metric"><strong>3,442</strong><span>Region 1 graph edges</span></div>
-        <div class="metric"><strong>Any</strong><span>NEPA document package</span></div>
-        <div class="metric"><strong>Full</strong><span>authority profile review</span></div>
+        <div class="metric"><strong>190</strong><span>workbook source records in the local catalog</span></div>
+        <div class="metric"><strong>35</strong><span>authority families mapped to source records</span></div>
+        <div class="metric"><strong>62/62</strong><span>source-set graph checks</span></div>
+        <div class="metric"><strong>26/26</strong><span>current promotion gates</span></div>
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review service process represented by graph evidence" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="System process from controlled source library to decision support" />
       <div class="grid-2" style="margin-top:0.15in">
         <div class="callout">
-          <strong>Current-authority model</strong>
-          <p>The authority graph is updated with the most current applicable regulations, USDA and Forest Service procedures, source records, directives, forest-plan components, applicability decisions, and readiness blockers instead of flattening them into a narrative answer.</p>
+          <strong>What the system does</strong>
+          <p>Maintains source identity, artifact provenance, citation labels, currentness status, extraction spans, graph edges, validation results, and reviewer-facing outputs as separate auditable surfaces.</p>
         </div>
         <div class="callout">
-          <strong>Decision-support model</strong>
-          <p>Each service finding is backed by graph-export validation. The V1 Region 1 graph passed 75 graph checks and links generated rules and compliance findings back to source records, evidence spans, and review-specific applicability decisions.</p>
+          <strong>What the system avoids</strong>
+          <p>It does not rely on hidden one-off shortcuts or unsupported legal conclusions. Expansion to new packages or profiles is routed through source, profile, and evaluation gates.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from validated internal graph export: <strong>v1-cg-ecid-compliance-review</strong></span>
-      <span>Current proof: USFS Region 1; expansion by source/profile gates and validation.</span>
+      <span>Brief generated 2026-05-07 from current local system artifacts.</span>
+      <span>Scope: system capabilities and boundaries only; no named package examples.</span>
     </footer>
   </section>
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 1 / Applicability</div>
-      <h2>From authority graph to decision support</h2>
-      <p class="lede">For any NEPA document package, the process updates the authority graph with the most current applicable regulations and separates current applicable authorities from authorities that were considered but screened out. That makes the review politically legible and defensible.</p>
+      <div class="kicker">Capability 1 / Source-Governed Operating Model</div>
+      <h2>Controlled source library to graph-ready review layer</h2>
+      <p class="lede">The workbook remains the contract. Downloader, catalog, extraction, retrieval, evidence graph, source-claim graph, rule binding, and knowledge graph exports all preserve row identity and provenance so downstream review products can be replayed and inspected.</p>
     </header>
     <main>
-      <img class="graph-figure full" src="assets/graph_applicability_service_view.png" alt="Clear applicability graph view with authority decisions, generated rules, and findings" />
-      <p class="caption">Applicability scene: 373 candidate authority decisions, 33 applicable, 340 non-applicable. The image preserves the graph distinction between candidate authority, review decision, generated rule, and compliance finding.</p>
+      <img class="graph-figure" src="assets/graph_applicability_service_view.png" alt="Operating model showing source library, extraction, authority graph, and review outputs" />
+      <p class="caption">Operating model: source records are captured once, then promoted through derived layers with explicit validation. The graphic separates source capture, semantic extraction, applicability, review products, and visualization so the same evidence model supports multiple outputs without duplicating logic.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Defensibility shown</strong>
-          <p>Non-applicable authorities stay in the graph, so the reviewer can explain what was considered and screened out instead of only showing final inclusions.</p>
+          <strong>Currentness and partitioning</strong>
+          <p>Active review sources are separated from candidate, blocked, superseded, and currentness-only records before graph export. That prevents stale or excluded sources from silently supporting current authority.</p>
         </div>
         <div class="callout">
-          <strong>Responsible-official support</strong>
-          <p>The output shows a visible path from authority graph to decision, rule generation, and compliance finding rather than a black-box conclusion.</p>
+          <strong>Validation before display</strong>
+          <p>Graph exports carry node and edge type checks, provenance requirements, endpoint compatibility checks, readiness status, and failure-category counts before they are used by the viewer or promotion suite.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Defensible review behavior: candidate authorities remain visible even when non-applicable.</span>
-      <span>Validation behavior: 75 graph checks passed before export.</span>
+      <span>Current graph surface: 1,410 nodes and 2,564 edges.</span>
+      <span>Catalog boundary: 160 unique artifacts linked to workbook records.</span>
     </footer>
   </section>
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 2 / Evidence Traceability</div>
-      <h2>From source record to authority graph</h2>
-      <p class="lede">A responsible official or review team should be able to ask where each authority and finding came from. The evidence view turns source records, citation labels, extracted spans, and rule templates into a traceable authority graph before findings are used for decision support.</p>
+      <div class="kicker">Capability 2 / Evidence Traceability And Review Products</div>
+      <h2>Every finding stays connected to evidence</h2>
+      <p class="lede">The system keeps source records, artifacts, chunks, evidence spans, source claims, rule templates, applicability decisions, generated rules, and findings as graph-visible objects. Review outputs are produced from those artifacts rather than from a narrative-only analysis pass.</p>
     </header>
     <main>
-      <img class="graph-figure full-trace" src="assets/graph_evidence_trace_service_view.png" alt="Clear evidence path graph from source record to compliance finding" />
-      <p class="caption">Evidence path scene: one actual source-record -> rule-template -> applicability-decision -> generated-rule -> compliance-finding path is derived from graph edges, with the evidence span kept visible.</p>
+      <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
+      <p class="caption">Traceability model: source evidence supports claims; claims support rules and applicability; applicability drives review products. The chain remains inspectable across JSON, Markdown, PDF, SQLite, and graph export surfaces.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>What is inspectable</strong>
-          <p>Source records, citation labels, extraction spans, applicability decisions, generated rules, and findings all remain separate graph objects with explicit support edges.</p>
+          <strong>Reviewer-facing outputs</strong>
+          <ul>
+            <li>Compliance matrix in JSON, Markdown, and PDF.</li>
+            <li>Decision-support report with evidence paths and residual risk.</li>
+            <li>Final QA certification and replay validation artifacts.</li>
+            <li>Knowledge graph JSON, node/edge files, summaries, and validation.</li>
+          </ul>
         </div>
         <div class="callout">
-          <strong>What this proves</strong>
-          <p>The service is not just a visualization. It shows that findings can be traced back to the repo evidence model and the validated local graph export.</p>
+          <strong>Reverse compliance</strong>
+          <p>The same evidence model can search for unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan component gaps before the package is treated as reviewer-ready.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Evidence behavior: findings link to source records, artifact hashes, citation labels, and extraction spans.</span>
-      <span>Trace behavior: 99 support edges link evidence or generated rules to findings.</span>
+      <span>Current source-claim links: 191.</span>
+      <span>Phase-eval status: 20/20 passing phases.</span>
     </footer>
   </section>
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 3 / Reverse Compliance And Decision Support</div>
-      <h2>Find gaps before they become decision risk</h2>
-      <p class="lede">Our review workflow supports forward review and reverse compliance. Most EAs receive a Forest Plan consistency document; we extend that into a full profile consistency document across applicable laws and authorities, then package decision support for the responsible official.</p>
+      <div class="kicker">Capability 3 / Readiness, Governance, And Expansion</div>
+      <h2>Promotion gates make readiness explicit</h2>
+      <p class="lede">Readiness is not inferred from a finished-looking report. The system uses deterministic gates for source capture, currentness, extraction, retrieval, graph validation, applicability, compliance outputs, forest-plan evaluation, decision support, final QA, and promotion.</p>
     </header>
     <main>
-      <img class="graph-figure readiness" src="assets/graph_readiness_service_view.png" alt="Authority hierarchy graph from federal law to department, agency, region, and forest plans" />
-      <p class="caption">Authority hierarchy scene: NEPA and other laws, policies, and regulations are grouped by federal, department, agency, and regional layers, with Region 1 forest-plan profiles at the graph edge.</p>
-      <div class="grid-2" style="margin-top:0.14in">
-        <div class="scene-list">
-          <div class="scene"><strong>Document intake</strong><span>Draft NEPA package, appendices, catalog records, and provenance.</span></div>
-          <div class="scene"><strong>Current authority graph</strong><span>Most current applicable regulations, agency procedures, source records, and authority families.</span></div>
-          <div class="scene"><strong>Applicability</strong><span>Document-specific applicable and screened-out authorities.</span></div>
-          <div class="scene"><strong>Reverse compliance</strong><span>Unsupported claims, stale references, and missing evidence.</span></div>
-          <div class="scene"><strong>Consistency document</strong><span>Forest Plan consistency plus full profile consistency across applicable laws.</span></div>
-          <div class="scene"><strong>Decision support</strong><span>Responsible-official briefing with findings, gaps, and evidence paths.</span></div>
+      <img class="graph-figure tall" src="assets/graph_readiness_service_view.png" alt="Readiness gates and expansion boundary for the NEPA review system" />
+      <div class="grid-2" style="margin-top:0.12in">
+        <div class="capability-list">
+          <div class="capability"><strong>Source control</strong><span>Workbook rows, URL overrides, catalog records, hashes, and source-set manifests.</span></div>
+          <div class="capability"><strong>Evidence build</strong><span>Extraction, retrieval, evidence spans, graph edges, and source-claim links.</span></div>
+          <div class="capability"><strong>Authority model</strong><span>Authority families, currentness decisions, rule templates, and source partitions.</span></div>
+          <div class="capability"><strong>Applicability</strong><span>Package-specific decisions, generated rules, screened-out authority, and unresolved items.</span></div>
+          <div class="capability"><strong>Review outputs</strong><span>Compliance matrix, decision support, final QA, and reviewer-facing PDFs.</span></div>
+          <div class="capability"><strong>Viewer surface</strong><span>3D graph scenes driven by validated graph JSON rather than hard-coded visuals.</span></div>
         </div>
         <div>
           <div class="callout">
-            <strong>What this service delivers</strong>
-            <ul>
-              <li>Review any NEPA document package against an authority graph updated with the most current applicable regulations.</li>
-              <li>Identify unsupported or older-regulation-based statements through reverse compliance.</li>
-              <li>Retain screened-out authorities for defensibility and political legibility.</li>
-              <li>Provide responsible-official decision support with evidence paths and residual risks.</li>
-            </ul>
+            <strong>Expansion boundary</strong>
+            <p>New packages, forest profiles, or authority deltas are added by expanding the source/profile contract and replaying gates. Blockers remain visible when profiles or sources are not ready, instead of being collapsed into a generic failure.</p>
           </div>
-          <p class="source-note" style="margin-top:0.08in">Currentness boundary: older implementing-regulation language is treated as a review risk and flagged outside the current NEPA review basis unless supported by current agency procedure or another current project-specific authority. The graph visualizes the validated USFS Region 1 source set and review overlay; it is not a substitute for legal review.</p>
+          <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Deliverable: graph-backed professional NEPA review process plus service capabilities brief.</span>
-      <span>Boundary: Region 1 is the current operational proof; new systems require source/profile gates.</span>
+      <span>Forest-plan readiness tracked: 1/10 profiles graph-ready, 9 blocked.</span>
+      <span>Current promotion: ready with 0 current failures.</span>
     </footer>
   </section>
 </body>

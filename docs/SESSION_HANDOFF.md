@@ -938,12 +938,11 @@ legal conclusion.
 - NEPA 3D service capabilities brief closeout adds a generated 4-page brief at
   `docs/capabilities/nepa_3d_capabilities_brief.pdf` with a matching HTML source and high-resolution
   graph figures under `docs/capabilities/assets/`. The brief is built by
-  `tools/build_nepa_3d_capabilities_brief.mjs` from the validated
-  `v1-cg-ecid-compliance-review` graph export and presents the professional NEPA review process:
-  document intake, authority graph updates with the most current applicable regulations and
-  procedures, applicability, reverse compliance,
-  Forest Plan and full profile consistency review, evidence-path traceability, responsible-official
-  decision support, and readiness blockers.
+  `tools/build_nepa_3d_capabilities_brief.mjs` from current catalog, source-set graph,
+  phase-eval, and promotion-suite artifacts. The current version is a system-level brief without
+  named project examples and covers source-governed operation, authority currentness, evidence
+  traceability, review products, reverse compliance, readiness gates, promotion state, and expansion
+  blockers.
 - NEPA 3D Milestone 7 initial graph validation and promotion gates are implemented for the current
   source-set and V1 review overlay. A follow-up pass should either deepen graph-specific failure
   fixtures, move to Milestone 8 operating runbook/demo closeout, or deepen the Milestone 5

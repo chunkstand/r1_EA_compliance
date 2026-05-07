@@ -114,13 +114,11 @@ now adds human-readable scene labels plus graph-native
 node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
 larger set of node labels without changing the validated graph data. Advanced search and category
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
-4-page service capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
-with graph figures that frame USFS Region 1 as the current implementation evidence for reviewing
-NEPA document packages, authority graph updates with the most current applicable regulations and
-procedures,
-reverse compliance, source-to-finding traceability,
-Forest Plan and full profile consistency review, responsible-official decision support, and
-readiness blockers from the validated V1 graph export. The earlier
+4-page system capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+with matching HTML and asset-backed graphics. The brief covers the current source-governed
+operating model, authority-currentness and partitioning, evidence traceability, review-product
+surfaces, reverse compliance, readiness gates, promotion status, and expansion boundaries without
+named project examples. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
