@@ -469,10 +469,12 @@ resource scopes from explicit intake fields, project type, trigger terms, resour
 and proposed-action resource-area IDs, then records SOW tasks, data needs, deliverables,
 defensibility checks, selected authority families, an authority-to-resource matrix, and a
 resource-analysis coverage matrix, and a compact reviewer summary with package boundaries and a
-review checklist. It also emits a package-local intake evidence graph connecting project, proposed
-action, action elements, evidence refs, triggered resource areas, selected SOW scopes, required
-deliverables, and observed specialist/supporting reports. JSON is canonical; Markdown and PDF are
-renderings from the same package JSON. The first checked-in intake fixture is the East Crazies
+review checklist. The reviewer summary separates unresolved resource areas from calibration gaps
+where the SOW is required but no observed East Crazies report was supplied for that area. It also
+emits a package-local intake evidence graph connecting project, proposed action, action elements,
+evidence refs, triggered resource areas, selected SOW scopes, required deliverables, and observed
+specialist/supporting reports. JSON is canonical; Markdown and PDF are renderings from the same
+package JSON. The first checked-in intake fixture is the East Crazies
 land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
 lands/realty land exchange, Forest Plan consistency, wildlife/species/botany, cultural/tribal
 resources, hydrology/wetlands/water quality, roads/access/recreation/designated areas,
@@ -498,8 +500,10 @@ proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 Sequence 5 adds reviewer-facing Markdown tables, a compact reviewer snapshot/checklist, PDF
 rendering from canonical JSON, rendering validation checks, and
-`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for creating new land-exchange intakes. No further sequence is
-selected for this planning lane.
+`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for creating new land-exchange intakes. The post-sequence
+alignment pass adds regression coverage for duplicate required-deliverable graph IDs and verifies
+that generated PDF bytes include reviewer-facing content and validation checks from the package
+rendering. No further sequence is selected for this planning lane.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -507,12 +511,12 @@ Validation fails closed on missing required intake fields, unsupported intake sc
 duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
 cannot resolve to selected SOW scope coverage, observed specialist-report resource areas that are
 not derived from the proposed action or lack selected SOW scope coverage, no selected resource
-scopes, selected scopes without SOW content, duplicate intake-derived graph IDs before graph
-assembly deduplicates nodes and edges, dangling graph edges, missing action-element evidence refs,
-evidence-bearing action elements with no triggered resource area, incomplete canonical
-resource-area graph paths, observed specialist report areas without a proposed-action support path,
-land-exchange intakes with no federal land action, or Markdown/PDF renderings missing required
-reviewer-facing sections.
+scopes, selected scopes without SOW content, duplicate intake-derived graph IDs including
+observed-report and required-deliverable collisions before graph assembly deduplicates nodes and
+edges, dangling graph edges, missing action-element evidence refs, evidence-bearing action elements
+with no triggered resource area, incomplete canonical resource-area graph paths, observed
+specialist report areas without a proposed-action support path, land-exchange intakes with no
+federal land action, or Markdown/PDF renderings missing required reviewer-facing sections.
 
 ## Verified State Snapshot
 

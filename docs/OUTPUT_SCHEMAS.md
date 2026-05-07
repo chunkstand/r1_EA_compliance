@@ -2349,7 +2349,9 @@ includes:
 - `intake_evidence_graph`, a package-local graph with `nodes[]`, `edges[]`, `node_count`,
   `edge_count`, and schema version `project-sow-intake-evidence-graph-v0`;
 - `reviewer_summary`, a compact reviewer-facing snapshot with package boundaries, review
-  checklist, project context, package counts, and graph counts;
+  checklist, project context, package counts, graph counts, unresolved resource-area IDs, and
+  calibration-gap resource-area IDs where the SOW is required but no observed East Crazies report
+  was supplied for that area;
 - `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
   scope coverage;
 - `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;

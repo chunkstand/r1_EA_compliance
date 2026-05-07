@@ -72,19 +72,22 @@ failures.
 Sequence 4 hardened the graph-quality fixture set. Focused tests now cover missing proposed-action
 evidence refs, observed reports with no proposed-action support, proposed-action resource areas
 with no configured SOW scope, evidence-bearing action elements with no triggered resource area,
-duplicate observed-report graph IDs, dangling graph edges, and land-exchange intakes with no
-federal land action. A local Sequence 4 CLI smoke run to `/tmp` preserved the same accepted East
-Crazies counts: `10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134`
-graph edges, and `0` validation failures.
+duplicate observed-report graph IDs, duplicate required-deliverable graph IDs, dangling graph
+edges, and land-exchange intakes with no federal land action. A local Sequence 4 CLI smoke run to
+`/tmp` preserved the same accepted East Crazies counts: `10` SOW scopes, `23` proposed-action
+resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 
 Sequence 5 added the reviewer-facing polish pass. The canonical JSON now includes
 `reviewer_summary`; Markdown now starts with a reviewer snapshot, review checklist, package
 boundaries, and compact tables; the command writes `project_sow_package.pdf` from the same package
 JSON; rendering validation checks fail if required Markdown or PDF sections are missing; and the
 tracked runbook `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create a new land-exchange
-intake. A local Sequence 5 CLI smoke run to `/tmp` preserved `10` SOW scopes, `23`
-proposed-action resource areas, `115` graph nodes, `134` graph edges, `0` validation failures, and
-a valid `%PDF-` header.
+intake. The post-sequence alignment pass verifies that generated PDF bytes include reviewer-facing
+content and validation checks from the package rendering, and it clarifies that reviewer-summary
+unresolved resource areas are separate from calibration gaps where the SOW is required but no
+observed East Crazies report was supplied. A local Sequence 5 CLI smoke run to `/tmp` preserved
+`10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134` graph edges, `0`
+validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 No further project-SOW sequence is selected. Keep JSON canonical, do not convert SOW scopes into

@@ -1115,6 +1115,8 @@ def _render_markdown(package: dict[str, Any]) -> str:
             f"| SOW scopes | `{snapshot['resource_scope_count']}` |",
             f"| Proposed-action resource areas | `{snapshot['proposed_action_resource_area_count']}` |",
             f"| Observed reports in calibration set | `{snapshot['observed_specialist_report_count']}` |",
+            f"| Unresolved resource areas | `{len(snapshot['missing_or_uncovered_resource_area_ids'])}` |",
+            f"| Calibration gaps | `{len(snapshot['calibration_gap_resource_area_ids'])}` |",
             "| Intake evidence graph | "
             f"`{snapshot['intake_evidence_graph_node_count']}` nodes / "
             f"`{snapshot['intake_evidence_graph_edge_count']}` edges |",
@@ -1243,10 +1245,19 @@ def _reviewer_summary(
     observed_specialist_reports: list[dict[str, Any]],
     intake_evidence_graph: dict[str, Any],
 ) -> dict[str, Any]:
+    unresolved_statuses = {
+        "missing_sow_scope",
+        "observed_not_derived_from_proposed_action",
+    }
     missing_or_uncovered = [
         row["resource_area_id"]
         for row in resource_analysis_matrix
-        if row["coverage_status"] != "covered"
+        if row["coverage_status"] in unresolved_statuses
+    ]
+    calibration_gap_resource_area_ids = [
+        row["resource_area_id"]
+        for row in resource_analysis_matrix
+        if row["coverage_status"] == "sow_required_no_observed_report_in_calibration"
     ]
     return {
         "package_boundaries": [
@@ -1268,6 +1279,7 @@ def _reviewer_summary(
             "forest": intake.get("forest"),
             "intake_evidence_graph_edge_count": int(intake_evidence_graph.get("edge_count") or 0),
             "intake_evidence_graph_node_count": int(intake_evidence_graph.get("node_count") or 0),
+            "calibration_gap_resource_area_ids": calibration_gap_resource_area_ids,
             "missing_or_uncovered_resource_area_ids": missing_or_uncovered,
             "nepa_level": intake.get("nepa_level"),
             "observed_specialist_report_count": len(observed_specialist_reports),
@@ -1295,6 +1307,8 @@ def _render_pdf_lines(package: dict[str, Any]) -> list[str]:
         f"Resource Scope Count: {snapshot['resource_scope_count']}",
         f"Proposed-action resource areas: {snapshot['proposed_action_resource_area_count']}",
         f"Observed reports in calibration set: {snapshot['observed_specialist_report_count']}",
+        f"Unresolved resource areas: {len(snapshot['missing_or_uncovered_resource_area_ids'])}",
+        f"Calibration gaps: {len(snapshot['calibration_gap_resource_area_ids'])}",
         (
             "Intake evidence graph: "
             f"{snapshot['intake_evidence_graph_node_count']} nodes / "

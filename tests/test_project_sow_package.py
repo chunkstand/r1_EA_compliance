@@ -33,6 +33,14 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     package = json.loads(result.package_path.read_text())
     assert package["reviewer_summary"]["schema_version"] == "project-sow-reviewer-summary-v0"
     assert package["reviewer_summary"]["snapshot"]["resource_scope_count"] == 10
+    assert package["reviewer_summary"]["snapshot"]["intake_evidence_graph_node_count"] == 115
+    assert package["reviewer_summary"]["snapshot"]["intake_evidence_graph_edge_count"] == 134
+    assert (
+        package["reviewer_summary"]["snapshot"]["missing_or_uncovered_resource_area_ids"] == []
+    )
+    assert len(
+        package["reviewer_summary"]["snapshot"]["calibration_gap_resource_area_ids"]
+    ) == 7
     scope_ids = {scope["resource_scope_id"] for scope in package["resource_scope_records"]}
     assert {
         "nepa_project_management",
@@ -135,11 +143,19 @@ def test_project_sow_package_generates_land_exchange_resource_scopes(tmp_path: P
     assert "Requirements Package" in markdown
     assert "Reviewer Snapshot" in markdown
     assert "Review Checklist" in markdown
+    assert "Package Boundaries" in markdown
+    assert "| Scope | Discipline | Covered resource areas | Deliverables |" in markdown
+    assert "| Resource area | Coverage status | SOW scopes | Observed reports |" in markdown
     assert "Lands, realty, and land exchange case requirements" in markdown
     assert "Resource Analysis Coverage" in markdown
     assert "Intake Evidence Graph" in markdown
     assert "2024 Carbon Summary.pdf" in markdown
     assert "This generated package scopes specialist work" in markdown
+    pdf_text = result.pdf_path.read_bytes().decode("latin-1", errors="ignore")
+    assert "Reviewer Snapshot" in pdf_text
+    assert "Review Checklist" in pdf_text
+    assert "Resource Analysis Coverage" in pdf_text
+    assert "project_sow_pdf_required_items_present: passed" in pdf_text
 
 
 def test_project_sow_package_fails_unknown_authority_family(tmp_path: Path) -> None:
@@ -377,6 +393,49 @@ def test_project_sow_package_fails_duplicate_observed_report_graph_id(
     assert failed_checks["intake_evidence_graph_node_ids_unique"]["details"] == {
         "duplicate_input_node_ids": [duplicate_node_id],
         "duplicate_node_ids": [duplicate_node_id],
+    }
+
+
+def test_project_sow_package_fails_duplicate_deliverable_graph_id(
+    tmp_path: Path,
+) -> None:
+    resource_config = json.loads((REPO_ROOT / DEFAULT_RESOURCE_SCOPE_CONFIG_PATH).read_text())
+    for scope in resource_config["resource_scopes"]:
+        if scope["resource_scope_id"] == "nepa_project_management":
+            scope["required_deliverables"].append(scope["required_deliverables"][0])
+            break
+    bad_config_path = tmp_path / "duplicate_deliverable_resource_config.json"
+    bad_config_path.write_text(json.dumps(resource_config), encoding="utf-8")
+
+    result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+        resource_scope_config_path=bad_config_path,
+        authority_inventory_path=REPO_ROOT / DEFAULT_AUTHORITY_INVENTORY_PATH,
+    )
+
+    failed_checks = _failed_checks(result)
+    duplicate_node_id = (
+        "expected_deliverable:nepa_project_management:project-initiation-checklist"
+    )
+    duplicate_edge_id = (
+        "REQUIRES_DELIVERABLE:sow_scope:nepa_project_management->"
+        "expected_deliverable:nepa_project_management:project-initiation-checklist"
+    )
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 2
+    assert set(failed_checks) == {
+        "intake_evidence_graph_edge_ids_unique",
+        "intake_evidence_graph_node_ids_unique",
+    }
+    assert failed_checks["intake_evidence_graph_node_ids_unique"]["details"] == {
+        "duplicate_input_node_ids": [duplicate_node_id],
+        "duplicate_node_ids": [duplicate_node_id],
+    }
+    assert failed_checks["intake_evidence_graph_edge_ids_unique"]["details"] == {
+        "duplicate_edge_ids": [duplicate_edge_id],
+        "duplicate_input_edge_ids": [duplicate_edge_id],
     }
 
 

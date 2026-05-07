@@ -228,7 +228,8 @@ Acceptance gate:
 
 - Focused tests cover each failure category.
 - Validation messages identify the missing graph path or dangling ID.
-- Duplicate observed-report graph IDs fail before graph assembly can collapse records.
+- Duplicate observed-report and required-deliverable graph IDs fail before graph assembly can
+  collapse records.
 - Action elements with evidence refs but no triggered resource area fail validation.
 - Land-exchange intakes with no federal land action fail with an explicit
   `land_exchange_intake_has_federal_land_actions` check in addition to the required-field check.
@@ -260,6 +261,8 @@ Acceptance gate:
   table, and resource-analysis table.
 - `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` documents how to create and validate a new land-exchange
   intake.
+- Tests verify the generated PDF bytes include reviewer-facing content and validation checks from
+  the same package rendering.
 - CLI smoke for the East Crazies intake still reports `10` SOW scopes, `23` proposed-action
   resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
 - No ignored generated outputs are staged.
