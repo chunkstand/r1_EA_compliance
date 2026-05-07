@@ -323,6 +323,16 @@ Acceptance gate status:
 - focused tests prove the handoff remains stable for East Crazies and fails invalid package/rules
   inputs without writing handoff outputs.
 
+Gap-close pass:
+
+- added a machine-readable `downstream_consumption_contract` to the handoff JSON and Markdown so
+  downstream commands can see which fields they may consume and what they must not infer;
+- tightened handoff rules validation so incomplete categories, unsupported `applies_to` values,
+  empty expected artifact types, missing rule scopes/resource areas, duplicate or incomplete
+  boundaries, empty slot artifacts, and non-false `required_now` flags fail closed;
+- added regression coverage proving malformed handoff rules fail without writing handoff outputs;
+- kept the East Crazies slot contract stable at `27` expected future-artifact slots.
+
 ## Sequence 7: Operational Gate And Release Closeout
 
 Status: planned.

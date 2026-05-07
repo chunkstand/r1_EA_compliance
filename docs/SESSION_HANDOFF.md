@@ -194,6 +194,21 @@ decision-record-support slots. The handoff remains upstream planning support onl
 create applicability decisions, generated rule packs, compliance findings, legal advice, legal
 sufficiency conclusions, or final agency decisions.
 
+Sequence 6 gap-close pass is implemented. `project_sow_ea_package_handoff.json` now includes a
+machine-readable `downstream_consumption_contract` naming the fields future commands may consume
+and the conclusions they must not infer. Handoff validation now fails closed on incomplete category
+metadata, unsupported `applies_to` values, empty expected artifact types, incomplete rule
+scope/resource-area bindings, incomplete or duplicate downstream boundaries, empty handoff slots,
+or future-artifact entries that are missing artifact types or do not preserve `required_now=false`.
+Gap-close regression coverage proves malformed handoff rules fail without writing JSON or Markdown
+handoff outputs while the East Crazies contract stays stable at `27` expected future-artifact slots.
+Gap-close verification passed: the focused project-SOW/CLI suite reported `56 passed`;
+architecture contract reported `5 passed`; ruff, compileall, JSON validation, and
+`git diff --check` passed; the East Crazies package and handoff smoke generated `27`
+future-artifact slots with `12` passing handoff validation checks; and the three-case
+`project-sow-eval` smoke reported `3` cases passed, `0` failed cases, `0` system misses, and `0`
+intake omissions.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package

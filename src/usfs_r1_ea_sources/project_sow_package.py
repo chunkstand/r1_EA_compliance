@@ -27,6 +27,18 @@ PROJECT_SOW_ADJUDICATION_APPLY_SCHEMA_VERSION = "project-sow-adjudication-apply-
 PROJECT_SOW_INTAKE_ADJUDICATION_SCHEMA_VERSION = "project-sow-intake-adjudication-v0"
 PROJECT_SOW_EA_HANDOFF_SCHEMA_VERSION = "project-sow-ea-package-handoff-v0"
 PROJECT_SOW_EA_HANDOFF_SUMMARY_SCHEMA_VERSION = "project-sow-ea-package-handoff-summary-v0"
+PROJECT_SOW_EA_HANDOFF_RULES_SCHEMA_VERSION = "project-sow-ea-handoff-rules-v1"
+PROJECT_SOW_EA_HANDOFF_ALLOWED_CATEGORY_APPLIES_TO = (
+    "all_selected_scopes",
+    "rule_matches",
+)
+PROJECT_SOW_EA_HANDOFF_REQUIRED_BOUNDARY_IDS = (
+    "future_artifacts_not_required_now",
+    "no_applicability_review",
+    "no_compliance_review",
+    "no_generated_rule_pack",
+    "no_legal_sufficiency",
+)
 PROJECT_SOW_ADJUDICATION_DECISIONS = (
     "accepted",
     "rejected",
@@ -3191,7 +3203,12 @@ def _validate_project_sow_ea_handoff_inputs(
 ) -> dict[str, Any]:
     categories = _project_sow_ea_handoff_categories(rules_config)
     category_ids = {str(category.get("category_id") or "") for category in categories}
+    category_errors = _project_sow_ea_handoff_category_errors(categories)
     rules = _project_sow_ea_handoff_category_rules(rules_config)
+    rule_errors = _project_sow_ea_handoff_rule_errors(
+        categories=categories,
+        rules=rules,
+    )
     unknown_rule_category_ids = sorted(
         {
             str(rule.get("category_id") or "")
@@ -3201,19 +3218,17 @@ def _validate_project_sow_ea_handoff_inputs(
     )
     required_category_ids = _strings(rules_config.get("required_category_ids"))
     missing_required_category_ids = sorted(set(required_category_ids) - category_ids)
+    boundary_errors = _project_sow_ea_handoff_boundary_errors(rules_config)
     boundary_ids = {
         str(boundary.get("boundary_id") or "")
         for boundary in _project_sow_ea_handoff_boundaries(rules_config)
     }
-    required_boundary_ids = {
-        "future_artifacts_not_required_now",
-        "no_applicability_review",
-        "no_compliance_review",
-        "no_generated_rule_pack",
-        "no_legal_sufficiency",
-    }
-    missing_boundary_ids = sorted(required_boundary_ids - boundary_ids)
+    missing_boundary_ids = sorted(
+        set(PROJECT_SOW_EA_HANDOFF_REQUIRED_BOUNDARY_IDS) - boundary_ids
+    )
     resource_scopes = _project_sow_resource_scope_records(package)
+    slots = _project_sow_ea_handoff_slots(package=package, rules_config=rules_config)
+    slot_errors = _project_sow_ea_handoff_slot_errors(slots)
     checks = [
         _check(
             name="project_sow_package_schema_supported",
@@ -3232,8 +3247,14 @@ def _validate_project_sow_ea_handoff_inputs(
         ),
         _check(
             name="ea_handoff_rules_schema_supported",
-            passed=rules_config.get("schema_version") == "project-sow-ea-handoff-rules-v1",
+            passed=rules_config.get("schema_version")
+            == PROJECT_SOW_EA_HANDOFF_RULES_SCHEMA_VERSION,
             details={"schema_version": rules_config.get("schema_version")},
+        ),
+        _check(
+            name="ea_handoff_categories_complete",
+            passed=not category_errors,
+            details={"errors": category_errors},
         ),
         _check(
             name="ea_handoff_required_categories_present",
@@ -3250,12 +3271,32 @@ def _validate_project_sow_ea_handoff_inputs(
             details={"unknown_category_ids": unknown_rule_category_ids},
         ),
         _check(
+            name="ea_handoff_category_rules_complete",
+            passed=not rule_errors,
+            details={"errors": rule_errors},
+        ),
+        _check(
+            name="ea_handoff_boundaries_complete",
+            passed=not boundary_errors,
+            details={"errors": boundary_errors},
+        ),
+        _check(
             name="ea_handoff_boundaries_explicit",
             passed=not missing_boundary_ids,
             details={
                 "configured_boundary_ids": sorted(boundary_ids),
                 "missing_boundary_ids": missing_boundary_ids,
             },
+        ),
+        _check(
+            name="ea_handoff_slots_present",
+            passed=bool(slots),
+            details={"slot_count": len(slots)},
+        ),
+        _check(
+            name="ea_handoff_slots_have_future_artifacts",
+            passed=not slot_errors,
+            details={"errors": slot_errors},
         ),
     ]
     return {
@@ -3303,6 +3344,7 @@ def _build_project_sow_ea_handoff(
                 "validation",
             ],
         },
+        "downstream_consumption_contract": _project_sow_ea_handoff_consumption_contract(),
         "downstream_boundaries": _project_sow_ea_handoff_boundaries(rules_config),
         "input_hashes": {
             "project_sow_ea_handoff_rules_sha256": _sha256_file(rules_config_path),
@@ -3451,6 +3493,46 @@ def _project_sow_ea_handoff_category_summary(
     ]
 
 
+def _project_sow_ea_handoff_consumption_contract() -> dict[str, Any]:
+    return {
+        "allowed_downstream_inputs": [
+            {
+                "field": "package_identity",
+                "use": "Identify the project SOW package that seeded assembly planning.",
+            },
+            {
+                "field": "input_hashes",
+                "use": "Detect stale handoffs when the source package or handoff rules change.",
+            },
+            {
+                "field": "assembly_categories",
+                "use": "Understand configured future EA package work categories and slot counts.",
+            },
+            {
+                "field": "assembly_slots",
+                "use": "Seed future EA package assembly checklists for selected SOW scopes.",
+            },
+            {
+                "field": "downstream_boundaries",
+                "use": "Preserve non-review, non-compliance, and non-legal-sufficiency limits.",
+            },
+        ],
+        "must_not_infer": [
+            "Expected future artifacts already exist.",
+            "Expected future artifacts are complete, sufficient, or reviewer-ready.",
+            "Authority applicability or non-applicability has been decided.",
+            "A generated rule pack may be created from this handoff alone.",
+            "Compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions have been made.",
+        ],
+        "required_preconditions_for_review_commands": [
+            "Verify the source package hash before consuming the handoff.",
+            "Require actual source, consultation, specialist-report, public-involvement, Forest Plan, and decision-record artifacts before downstream review commands assess them.",
+            "Regenerate the handoff after the project SOW package or handoff rules change.",
+        ],
+        "schema_version": "project-sow-ea-package-handoff-consumption-contract-v0",
+    }
+
+
 def _project_sow_ea_handoff_categories(
     rules_config: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -3482,6 +3564,94 @@ def _project_sow_ea_handoff_boundaries(
         for boundary in _list(rules_config.get("downstream_boundaries"))
         if isinstance(boundary, dict)
     ]
+
+
+def _project_sow_ea_handoff_category_errors(
+    categories: list[dict[str, Any]],
+) -> list[str]:
+    errors: list[str] = []
+    category_ids = [str(category.get("category_id") or "") for category in categories]
+    for duplicate_id in _duplicates(category_ids):
+        errors.append(f"assembly_categories: duplicate category_id {duplicate_id}")
+    for index, category in enumerate(categories):
+        path = f"assembly_categories[{index}]"
+        for field in ("category_id", "title", "description"):
+            if _is_empty(category.get(field)):
+                errors.append(f"{path}.{field}: required")
+        applies_to = str(category.get("applies_to") or "")
+        if applies_to not in PROJECT_SOW_EA_HANDOFF_ALLOWED_CATEGORY_APPLIES_TO:
+            errors.append(f"{path}.applies_to: unsupported")
+        if not _strings(category.get("expected_artifact_types")):
+            errors.append(f"{path}.expected_artifact_types: must contain at least one item")
+    return errors
+
+
+def _project_sow_ea_handoff_rule_errors(
+    *,
+    categories: list[dict[str, Any]],
+    rules: list[dict[str, Any]],
+) -> list[str]:
+    errors: list[str] = []
+    rule_category_ids = {str(rule.get("category_id") or "") for rule in rules}
+    rule_match_category_ids = {
+        str(category.get("category_id") or "")
+        for category in categories
+        if category.get("applies_to") == "rule_matches"
+    }
+    for category_id in sorted(rule_match_category_ids - rule_category_ids):
+        if category_id:
+            errors.append(f"category_rules: missing rule for {category_id}")
+    for index, rule in enumerate(rules):
+        path = f"category_rules[{index}]"
+        if _is_empty(rule.get("category_id")):
+            errors.append(f"{path}.category_id: required")
+        if not _strings(rule.get("resource_scope_ids")):
+            errors.append(f"{path}.resource_scope_ids: must contain at least one item")
+        if not _strings(rule.get("resource_area_ids")):
+            errors.append(f"{path}.resource_area_ids: must contain at least one item")
+    return errors
+
+
+def _project_sow_ea_handoff_boundary_errors(
+    rules_config: dict[str, Any],
+) -> list[str]:
+    errors: list[str] = []
+    boundaries = _project_sow_ea_handoff_boundaries(rules_config)
+    boundary_ids = [str(boundary.get("boundary_id") or "") for boundary in boundaries]
+    for duplicate_id in _duplicates(boundary_ids):
+        errors.append(f"downstream_boundaries: duplicate boundary_id {duplicate_id}")
+    for index, boundary in enumerate(boundaries):
+        path = f"downstream_boundaries[{index}]"
+        for field in ("boundary_id", "statement"):
+            if _is_empty(boundary.get(field)):
+                errors.append(f"{path}.{field}: required")
+    return errors
+
+
+def _project_sow_ea_handoff_slot_errors(slots: list[dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    slot_ids = [str(slot.get("slot_id") or "") for slot in slots]
+    for duplicate_id in _duplicates(slot_ids):
+        errors.append(f"assembly_slots: duplicate slot_id {duplicate_id}")
+    for slot in slots:
+        slot_id = str(slot.get("slot_id") or "unknown")
+        if slot.get("future_artifact_required_now") is not False:
+            errors.append(f"{slot_id}.future_artifact_required_now: must be false")
+        artifacts = [
+            artifact
+            for artifact in _list(slot.get("expected_future_artifacts"))
+            if isinstance(artifact, dict)
+        ]
+        if not artifacts:
+            errors.append(f"{slot_id}.expected_future_artifacts: must contain at least one item")
+            continue
+        for artifact_index, artifact in enumerate(artifacts):
+            artifact_path = f"{slot_id}.expected_future_artifacts[{artifact_index}]"
+            if _is_empty(artifact.get("artifact_type")):
+                errors.append(f"{artifact_path}.artifact_type: required")
+            if artifact.get("required_now") is not False:
+                errors.append(f"{artifact_path}.required_now: must be false")
+    return errors
 
 
 def _project_sow_ea_handoff_summary(
@@ -3554,6 +3724,27 @@ def _render_project_sow_ea_handoff_markdown(handoff: dict[str, Any]) -> str:
         f"- `{boundary.get('boundary_id')}`: {boundary.get('statement')}"
         for boundary in _list(handoff.get("downstream_boundaries"))
         if isinstance(boundary, dict)
+    )
+    contract = (
+        handoff.get("downstream_consumption_contract")
+        if isinstance(handoff.get("downstream_consumption_contract"), dict)
+        else {}
+    )
+    lines.extend(["", "## Downstream Consumption Contract", ""])
+    lines.append("May consume:")
+    lines.extend(
+        f"- `{item.get('field')}`: {item.get('use')}"
+        for item in _list(contract.get("allowed_downstream_inputs"))
+        if isinstance(item, dict)
+    )
+    lines.append("")
+    lines.append("Must not infer:")
+    lines.extend(f"- {item}" for item in _strings(contract.get("must_not_infer")))
+    lines.append("")
+    lines.append("Required preconditions:")
+    lines.extend(
+        f"- {item}"
+        for item in _strings(contract.get("required_preconditions_for_review_commands"))
     )
     lines.extend(
         [

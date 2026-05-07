@@ -210,6 +210,11 @@ future EA package files. The handoff maps selected SOW scopes into expected futu
 collection, specialist report production, public involvement, consultation, Forest Plan
 consistency, and decision-record support.
 
+The JSON and Markdown include a downstream consumption contract. Future commands may use the
+package identity, input hashes, assembly categories, assembly slots, and downstream boundaries, but
+must not infer that expected artifacts exist, are sufficient, are reviewer-ready, decide authority
+applicability, justify generated rule-pack creation, or create compliance/legal conclusions.
+
 Every handoff slot has `future_artifact_required_now=false`. The output is an assembly checklist,
 not an applicability review, generated rule pack, compliance review, legal advice, legal sufficiency
 conclusion, or final agency decision.
@@ -230,7 +235,9 @@ Common failure categories:
 - selected SOW scopes lack required contract fields such as assumptions, dependencies, acceptance
   criteria, reviewer role, review timing, optional deliverables, or reviewer signoff fields;
 - selected SOW scopes lack required deliverables, even if optional deliverables are present;
-- EA package handoff rules are missing required assembly categories or downstream boundaries;
+- EA package handoff rules are missing required assembly categories, category metadata, expected
+  future artifact types, category-rule scope/resource-area bindings, downstream boundaries, or
+  future-artifact slot content;
 - an action element has resource areas but no evidence refs;
 - an action element has evidence refs but no resource areas;
 - observed reports cover resource areas not derived from the proposed action;

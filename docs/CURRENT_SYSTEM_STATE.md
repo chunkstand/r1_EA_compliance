@@ -528,6 +528,12 @@ specialist-report-production, `1` public-involvement, `3` consultation, `1` Fore
 consistency, and `2` decision-record-support slots. Future artifacts are checklist expectations
 only; the command does not require them to exist.
 
+The Sequence 6 gap-close pass adds an explicit downstream consumption contract and tightens
+handoff-rules validation. Future commands may consume package identity, input hashes, assembly
+categories, assembly slots, and downstream boundaries, but must not infer artifact existence,
+artifact sufficiency, authority applicability, generated rule-pack readiness, compliance findings,
+legal advice, legal sufficiency conclusions, or final agency decisions from the handoff alone.
+
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
 evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
@@ -558,8 +564,10 @@ Project-SOW adjudication eval additionally fails closed on stale hashes, missing
 unexpected or duplicate rows, changed queue identity fields, invalid item types, invalid decisions,
 pending decisions, or incomplete reviewer metadata.
 Project-SOW EA handoff validation additionally fails closed on invalid package schema, failed
-package validation, missing selected scopes, unsupported handoff rules schema, missing required
-handoff categories, unresolved category rules, or missing downstream boundaries.
+package validation, missing selected scopes, unsupported handoff rules schema, incomplete handoff
+categories, missing required handoff categories, unresolved or incomplete category rules,
+incomplete downstream boundaries, missing explicit downstream boundary IDs, empty slots, or slots
+without expected future artifact content.
 
 ## Verified State Snapshot
 

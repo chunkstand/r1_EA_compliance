@@ -153,6 +153,8 @@ generated packages must be regenerated from that input rather than edited by han
 `project-sow-ea-package-handoff` command reads accepted package JSON and tracked handoff rules to
 write a downstream EA package assembly checklist for source collection, specialist report
 production, public involvement, consultation, Forest Plan consistency, and decision-record support.
+The handoff includes a downstream consumption contract and fails closed on malformed rules or empty
+future-artifact slots before downstream commands can treat it as a usable checklist.
 These commands do not create applicability decisions, generated rule packs, compliance findings, or
 legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
 reviewer-confirmation metadata is cleared.

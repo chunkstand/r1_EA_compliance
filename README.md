@@ -165,7 +165,9 @@ and contracting support artifact for scoping resource SOW needs; it is not a fin
 document. `project-sow-ea-package-handoff` now reads accepted `project_sow_package.json` and writes
 a downstream EA package assembly checklist for future source collection, specialist reports, public
 involvement, consultation, Forest Plan consistency, and decision-record support without requiring
-those future artifacts to exist or triggering applicability/compliance review. See
+those future artifacts to exist or triggering applicability/compliance review. The handoff includes
+a downstream consumption contract and fails closed on malformed handoff rules before emitting
+checklist outputs. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved

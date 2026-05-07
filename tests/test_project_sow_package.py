@@ -655,6 +655,16 @@ def test_project_sow_ea_package_handoff_derives_from_package_json(
     assert handoff["summary"]["slot_category_counts"] == result.summary[
         "slot_category_counts"
     ]
+    validation_check_names = {
+        check["name"] for check in handoff["validation"]["checks"]
+    }
+    assert {
+        "ea_handoff_boundaries_complete",
+        "ea_handoff_categories_complete",
+        "ea_handoff_category_rules_complete",
+        "ea_handoff_slots_have_future_artifacts",
+        "ea_handoff_slots_present",
+    }.issubset(validation_check_names)
     assert all(
         slot["future_artifact_required_now"] is False
         for slot in handoff["assembly_slots"]
@@ -674,10 +684,24 @@ def test_project_sow_ea_package_handoff_derives_from_package_json(
         "no_generated_rule_pack",
         "no_legal_sufficiency",
     }.issubset(boundary_ids)
+    contract = handoff["downstream_consumption_contract"]
+    assert contract["schema_version"] == (
+        "project-sow-ea-package-handoff-consumption-contract-v0"
+    )
+    assert {
+        item["field"] for item in contract["allowed_downstream_inputs"]
+    }.issuperset({"assembly_slots", "input_hashes", "package_identity"})
+    assert "Expected future artifacts already exist." in contract["must_not_infer"]
+    assert any(
+        "actual source" in item
+        for item in contract["required_preconditions_for_review_commands"]
+    )
     markdown = result.markdown_path.read_text()
     assert "EA Package Assembly Handoff" in markdown
     assert "Assembly Checklist" in markdown
+    assert "Downstream Consumption Contract" in markdown
     assert "no_applicability_review" in markdown
+    assert "Expected future artifacts already exist." in markdown
 
 
 def test_project_sow_ea_package_handoff_fails_invalid_package(
@@ -734,6 +758,55 @@ def test_project_sow_ea_package_handoff_fails_incomplete_rules(
     assert result.summary["passed"] is False
     assert result.summary["output_written"] is False
     assert set(failed_checks) == {"ea_handoff_required_categories_present"}
+
+
+def test_project_sow_ea_package_handoff_fails_malformed_rules(
+    tmp_path: Path,
+) -> None:
+    package_result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    rules = json.loads(
+        (REPO_ROOT / DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH).read_text()
+    )
+    rules["assembly_categories"][0]["applies_to"] = "unsupported"
+    rules["assembly_categories"][1]["expected_artifact_types"] = []
+    rules["category_rules"][0]["resource_area_ids"] = []
+    rules["category_rules"][0]["resource_scope_ids"] = []
+    rules["downstream_boundaries"][0]["statement"] = ""
+    rules_path = tmp_path / "malformed_project_sow_ea_handoff_rules.json"
+    rules_path.write_text(json.dumps(rules), encoding="utf-8")
+
+    result = run_project_sow_ea_package_handoff(
+        package_path=package_result.package_path,
+        output_path=tmp_path / "project_sow_ea_package_handoff.json",
+        markdown_path=tmp_path / "project_sow_ea_package_handoff.md",
+        handoff_rules_config_path=rules_path,
+    )
+
+    failed_checks = {
+        check["name"]: check for check in result.summary["failed_validation_checks"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert {
+        "ea_handoff_boundaries_complete",
+        "ea_handoff_categories_complete",
+        "ea_handoff_category_rules_complete",
+        "ea_handoff_slots_have_future_artifacts",
+    }.issubset(failed_checks)
+    assert "assembly_categories[0].applies_to: unsupported" in failed_checks[
+        "ea_handoff_categories_complete"
+    ]["details"]["errors"]
+    assert "category_rules[0].resource_scope_ids: must contain at least one item" in (
+        failed_checks["ea_handoff_category_rules_complete"]["details"]["errors"]
+    )
+    assert "downstream_boundaries[0].statement: required" in failed_checks[
+        "ea_handoff_boundaries_complete"
+    ]["details"]["errors"]
+    assert not result.output_path.exists()
+    assert not result.markdown_path.exists()
 
 
 def test_project_sow_intake_schema_declares_draft_metadata_contract() -> None:

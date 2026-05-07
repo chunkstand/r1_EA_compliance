@@ -2475,20 +2475,29 @@ not require them to exist.
 - `input_paths` and `input_hashes` for the package JSON and handoff rules config;
 - `downstream_boundaries`, including explicit no-applicability-review, no-generated-rule-pack,
   no-compliance-review, no-legal-sufficiency, and future-artifacts-not-required-now boundaries;
+- `downstream_consumption_contract`, which names the handoff fields future commands may consume,
+  the conclusions they must not infer, and the preconditions required before downstream review
+  commands assess actual EA package artifacts;
 - `assembly_categories`, with configured categories and slot counts;
 - `assembly_slots[]`, one expected future-artifact checklist slot per selected SOW
   scope/category match. Slots include `slot_id`, `slot_category`, selected `resource_scope_id`,
   covered and matched resource areas, selected authority families, required and optional SOW
   deliverables, expected future artifact types, and `future_artifact_required_now=false`;
 - `validation`, with fail-closed checks for package schema, package validation status, configured
-  resource scopes, handoff rules schema, required categories, category-rule resolution, and
-  downstream boundary coverage.
+  resource scopes, handoff rules schema, complete category metadata, required categories,
+  category-rule resolution, complete rule metadata, complete and explicit downstream boundaries,
+  slot presence, and future-artifact slot completeness.
 
 The East Crazies proving package currently emits `27` slots: `10` source-collection, `10`
 specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
 consistency, and `2` decision-record-support slots. This handoff is an assembly checklist only; it
 does not create applicability decisions, generated rule packs, compliance findings, legal advice,
 legal sufficiency conclusions, or final agency decisions.
+
+The consumption contract permits future commands to consume package identity, input hashes,
+assembly categories, assembly slots, and downstream boundaries. It explicitly bars inference that
+expected future artifacts already exist, are sufficient, are reviewer-ready, decide authority
+applicability, support generated rule-pack creation, or create compliance/legal conclusions.
 
 The generated artifact family includes:
 
