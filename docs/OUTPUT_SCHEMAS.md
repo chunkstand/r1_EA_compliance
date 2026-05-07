@@ -2363,6 +2363,34 @@ support only; it is not an accepted package input. The draft command reports suc
 `draft_reviewer_confirmation_complete` is the sole validation failure; unrelated schema, scope, or
 inventory failures are reported in `unexpected_failed_validation_checks`.
 
+Run the proving-intake eval harness with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-eval \
+  --output-dir /tmp/project_sow_eval
+```
+
+The default eval config is `config/project_sow_eval_proving_intakes_v1.json`. The command writes
+local generated packages under `<output-dir>/cases/<case_id>/` and writes
+`project_sow_eval_summary.json` with schema version `project-sow-eval-summary-v0`.
+
+Each eval case reports:
+
+- `actual_metrics`, including package pass status, output-written status, selected scope count,
+  proposed-action resource-area count, intake graph node/edge counts, validation failures, PDF
+  header validity, rendering-check status, and diagnostic counts;
+- `diagnostics`, including expected resource areas, `system_miss_resource_area_ids`,
+  `intake_omission_resource_area_ids`, `calibration_gap_resource_area_ids`, and
+  `expected_no_observed_report_resource_area_ids`;
+- `validation_checks`, comparing actual metrics and diagnostics to the tracked expected values in
+  the eval config.
+
+The diagnostic categories are intentionally separate: system misses are graph/scope failures,
+intake omissions are observed reports that were not derived from proposed-action resource areas,
+calibration gaps are expected resource areas without observed reports when a completed comparison
+package is available, and expected no-observed-report cases are new proving intakes where no
+completed specialist package exists yet.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`

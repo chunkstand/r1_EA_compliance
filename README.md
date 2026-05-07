@@ -149,7 +149,10 @@ compares proposed-action resource areas to the actual specialist/supporting repo
 a package-local intake evidence graph. The supported operational first step is now the no-write
 `project-sow-intake-validate` command against the minimal land-exchange template before package
 generation; plain-text proposed actions can first use `project-sow-intake-draft` to create an
-explicitly unreviewed draft intake that must be reviewer-confirmed before validation passes. See
+explicitly unreviewed draft intake that must be reviewer-confirmed before validation passes. The
+`project-sow-eval` command now runs the tracked proving-intake manifest across East Crazies, Red
+Rock Ridge, and Silver Creek to compare expected metrics, graph coverage, rendering checks, and
+resource-area diagnostics before treating the workflow as operationally green. See
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
 lane through the intake evidence graph and package-quality passes. See
 `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved
@@ -188,6 +191,9 @@ heuristics.
 - `docs/schemas/project_sow_intake_v0.schema.json`
 - `config/templates/project_sow_land_exchange_intake_template.json`
 - `config/project_sow_intake_draft_rules_v1.json`
+- `config/project_sow_eval_proving_intakes_v1.json`
+- `config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json`
+- `config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json`
 - `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`
 - `config/fixtures/project_sow/proposed_action_text/ambiguous_land_adjustment_proposed_action.txt`
 - `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_expected_draft_metadata.json`

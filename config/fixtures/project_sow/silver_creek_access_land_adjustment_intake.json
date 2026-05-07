@@ -1,0 +1,266 @@
+{
+  "consultation_indicators": [
+    "ESA Section 7 review needed"
+  ],
+  "districts": [
+    "Silver Creek Ranger District"
+  ],
+  "federal_land_actions": [
+    {
+      "action_type": "dispose",
+      "description": "Convey isolated federal inholdings near Silver Creek subject to mineral, site-condition, and access reservations."
+    },
+    {
+      "action_type": "acquire",
+      "description": "Acquire non-federal riparian and habitat lands that improve public access and watershed management."
+    },
+    {
+      "action_type": "reserve_rights",
+      "description": "Reserve road access, mineral interests, and monitoring rights needed for implementation."
+    }
+  ],
+  "forest": "Example National Forest",
+  "forest_plan_profile": "example_forest_plan",
+  "geography": [
+    "Silver Creek drainage",
+    "East bench access corridor"
+  ],
+  "management_context": [
+    "wildlife habitat linkage",
+    "riparian restoration opportunity",
+    "existing access road"
+  ],
+  "nepa_level": "environmental_assessment",
+  "observed_specialist_reports": [],
+  "project_id": "silver-creek-access-land-adjustment",
+  "project_name": "Silver Creek Access Land Adjustment",
+  "project_type": "land_exchange",
+  "proponent": "USDA Forest Service",
+  "proposed_action_elements": [
+    {
+      "action_element_id": "silver_creek_exchange_case",
+      "description": "Exchange isolated federal inholdings for non-federal riparian and habitat lands while screening Forest Plan consistency.",
+      "evidence_refs": [
+        {
+          "citation_label": "Silver Creek proposed action paragraph 1",
+          "evidence_ref_id": "silver-creek-proposed-action-01",
+          "locator": "paragraph 1",
+          "source_record_id": "SILVER-CREEK-INTAKE",
+          "summary": "Proposed land exchange case setup and Forest Plan consistency context.",
+          "title": "Silver Creek Access Land Adjustment Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "land_exchange_case",
+        "land_management_plan_consistency"
+      ],
+      "resource_indicator_keys": [
+        "lands_realty",
+        "forest_plan"
+      ]
+    },
+    {
+      "action_element_id": "silver_creek_access_road",
+      "description": "Reserve road access and define access-road maintenance terms for the east bench corridor.",
+      "evidence_refs": [
+        {
+          "citation_label": "Silver Creek proposed action paragraph 2",
+          "evidence_ref_id": "silver-creek-proposed-action-02",
+          "locator": "paragraph 2",
+          "source_record_id": "SILVER-CREEK-INTAKE",
+          "summary": "Proposed road access reservation and access-road maintenance context.",
+          "title": "Silver Creek Access Land Adjustment Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "roads_trails_access"
+      ],
+      "resource_indicator_keys": [
+        "access",
+        "roads"
+      ]
+    },
+    {
+      "action_element_id": "silver_creek_habitat_species",
+      "description": "Screen habitat linkage, wildlife movement, and listed or sensitive species effects on acquired lands.",
+      "evidence_refs": [
+        {
+          "citation_label": "Silver Creek proposed action paragraph 3",
+          "evidence_ref_id": "silver-creek-proposed-action-03",
+          "locator": "paragraph 3",
+          "source_record_id": "SILVER-CREEK-INTAKE",
+          "summary": "Proposed wildlife habitat linkage and listed or sensitive species review.",
+          "title": "Silver Creek Access Land Adjustment Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "species_consultation",
+        "wildlife_resources"
+      ],
+      "resource_indicator_keys": [
+        "species",
+        "wildlife",
+        "habitat"
+      ]
+    },
+    {
+      "action_element_id": "silver_creek_riparian_restoration",
+      "description": "Evaluate riparian restoration, stream-bank work, wetland avoidance, and revegetation commitments on acquired lands.",
+      "evidence_refs": [
+        {
+          "citation_label": "Silver Creek proposed action paragraph 4",
+          "evidence_ref_id": "silver-creek-proposed-action-04",
+          "locator": "paragraph 4",
+          "source_record_id": "SILVER-CREEK-INTAKE",
+          "summary": "Proposed riparian restoration, wetland avoidance, water-quality protection, and revegetation work.",
+          "title": "Silver Creek Access Land Adjustment Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "floodplains_wetlands",
+        "vegetation_resources",
+        "water_quality"
+      ],
+      "resource_indicator_keys": [
+        "water",
+        "wetlands",
+        "vegetation"
+      ]
+    },
+    {
+      "action_element_id": "silver_creek_minerals_hazmat_due_diligence",
+      "description": "Review reserved minerals, mining claims, site conditions, and hazardous-material due diligence before closing.",
+      "evidence_refs": [
+        {
+          "citation_label": "Silver Creek proposed action paragraph 5",
+          "evidence_ref_id": "silver-creek-proposed-action-05",
+          "locator": "paragraph 5",
+          "source_record_id": "SILVER-CREEK-INTAKE",
+          "summary": "Proposed mineral, mining-claim, site-condition, and hazardous-material due-diligence work.",
+          "title": "Silver Creek Access Land Adjustment Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "geology_minerals",
+        "hazardous_materials"
+      ],
+      "resource_indicator_keys": [
+        "minerals",
+        "hazardous_materials"
+      ]
+    }
+  ],
+  "proposed_action_summary": "The Forest Service proposes the Silver Creek Access Land Adjustment to exchange isolated federal lands for riparian and habitat lands, reserve road and mineral rights, and define wildlife, species, wetland, water-quality, vegetation, minerals, and hazardous-materials review work before closing.",
+  "resource_analysis_expectations": [
+    {
+      "proposed_action_basis": [
+        "Federal disposal and non-federal acquisition require land exchange case review."
+      ],
+      "resource_area_id": "land_exchange_case",
+      "resource_area_name": "Land exchange case"
+    },
+    {
+      "proposed_action_basis": [
+        "The land adjustment requires Forest Plan consistency screening."
+      ],
+      "resource_area_id": "land_management_plan_consistency",
+      "resource_area_name": "Forest Plan consistency"
+    },
+    {
+      "proposed_action_basis": [
+        "Reserved road access and maintenance terms trigger roads and access review."
+      ],
+      "resource_area_id": "roads_trails_access",
+      "resource_area_name": "Roads, trails, and access"
+    },
+    {
+      "proposed_action_basis": [
+        "Wildlife habitat linkage work triggers wildlife-resource review."
+      ],
+      "resource_area_id": "wildlife_resources",
+      "resource_area_name": "Wildlife resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Listed or sensitive species screens trigger species consultation planning."
+      ],
+      "resource_area_id": "species_consultation",
+      "resource_area_name": "Species consultation"
+    },
+    {
+      "proposed_action_basis": [
+        "Wetland avoidance and stream-bank work trigger wetlands and floodplain screening."
+      ],
+      "resource_area_id": "floodplains_wetlands",
+      "resource_area_name": "Floodplains and wetlands"
+    },
+    {
+      "proposed_action_basis": [
+        "Stream-bank and riparian restoration work triggers water-quality review."
+      ],
+      "resource_area_id": "water_quality",
+      "resource_area_name": "Water quality"
+    },
+    {
+      "proposed_action_basis": [
+        "Revegetation commitments trigger vegetation-resource review."
+      ],
+      "resource_area_id": "vegetation_resources",
+      "resource_area_name": "Vegetation resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Reserved minerals and mining claims trigger geology and minerals review."
+      ],
+      "resource_area_id": "geology_minerals",
+      "resource_area_name": "Geology and minerals"
+    },
+    {
+      "proposed_action_basis": [
+        "Site-condition due diligence triggers hazardous-materials review."
+      ],
+      "resource_area_id": "hazardous_materials",
+      "resource_area_name": "Hazardous materials"
+    }
+  ],
+  "resource_indicators": {
+    "access": [
+      "road access",
+      "access-road maintenance"
+    ],
+    "forest_plan": [
+      "Forest Plan consistency"
+    ],
+    "hazardous_materials": [
+      "hazardous materials",
+      "site condition"
+    ],
+    "lands_realty": [
+      "land exchange",
+      "federal land disposal",
+      "non-federal land acquisition"
+    ],
+    "minerals": [
+      "reserved minerals",
+      "mining claims"
+    ],
+    "species": [
+      "listed species",
+      "sensitive species"
+    ],
+    "vegetation": [
+      "revegetation",
+      "riparian restoration"
+    ],
+    "water": [
+      "stream-bank work",
+      "water quality",
+      "wetlands"
+    ],
+    "wildlife": [
+      "wildlife habitat",
+      "habitat linkage"
+    ]
+  },
+  "schema_version": "project-sow-intake-v0"
+}

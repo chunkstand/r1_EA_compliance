@@ -385,6 +385,43 @@ def test_project_sow_intake_draft_handler_propagates_options(monkeypatch) -> Non
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
 
 
+def test_project_sow_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_eval",
+        fake_run_project_sow_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-eval",
+            "--eval-config",
+            "config/eval.json",
+            "--output-dir",
+            "/tmp/project-sow-eval",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["eval_config_path"] == Path("config/eval.json")
+    assert captured["output_dir"] == Path("/tmp/project-sow-eval")
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):

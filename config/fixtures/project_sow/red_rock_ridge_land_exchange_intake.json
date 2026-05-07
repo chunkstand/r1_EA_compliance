@@ -1,0 +1,209 @@
+{
+  "consultation_indicators": [
+    "NHPA Section 106",
+    "tribal consultation"
+  ],
+  "districts": [
+    "North Fork Ranger District"
+  ],
+  "federal_land_actions": [
+    {
+      "action_type": "dispose",
+      "description": "Convey the federal Red Rock Ridge tract out of National Forest System ownership subject to access and resource-protection reservations."
+    },
+    {
+      "action_type": "acquire",
+      "description": "Acquire the non-federal meadow and riparian tract for National Forest System consolidation and watershed management."
+    },
+    {
+      "action_type": "reserve_rights",
+      "description": "Reserve trail, administrative access, and riparian monitoring rights needed after closing."
+    }
+  ],
+  "forest": "Example National Forest",
+  "forest_plan_profile": "example_forest_plan",
+  "geography": [
+    "Red Rock Ridge",
+    "North Fork watershed"
+  ],
+  "management_context": [
+    "public trail access",
+    "riparian corridor",
+    "tribal consultation area"
+  ],
+  "nepa_level": "environmental_assessment",
+  "observed_specialist_reports": [],
+  "project_id": "red-rock-ridge-land-exchange",
+  "project_name": "Red Rock Ridge Land Exchange",
+  "project_type": "land_exchange",
+  "proponent": "USDA Forest Service",
+  "proposed_action_elements": [
+    {
+      "action_element_id": "red_rock_exchange_case",
+      "description": "Exchange federal upland parcels for a non-federal meadow parcel with Forest Plan consistency and realty case review.",
+      "evidence_refs": [
+        {
+          "citation_label": "Red Rock Ridge proposed action paragraph 1",
+          "evidence_ref_id": "red-rock-ridge-proposed-action-01",
+          "locator": "paragraph 1",
+          "source_record_id": "RED-ROCK-RIDGE-INTAKE",
+          "summary": "Proposed federal disposal, non-federal acquisition, and Forest Plan consistency context.",
+          "title": "Red Rock Ridge Land Exchange Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "land_exchange_case",
+        "land_management_plan_consistency"
+      ],
+      "resource_indicator_keys": [
+        "lands_realty",
+        "forest_plan"
+      ]
+    },
+    {
+      "action_element_id": "red_rock_access_reservations",
+      "description": "Reserve public trail and administrative access easements across the exchange parcels.",
+      "evidence_refs": [
+        {
+          "citation_label": "Red Rock Ridge proposed action paragraph 2",
+          "evidence_ref_id": "red-rock-ridge-proposed-action-02",
+          "locator": "paragraph 2",
+          "source_record_id": "RED-ROCK-RIDGE-INTAKE",
+          "summary": "Proposed trail and administrative access reservations.",
+          "title": "Red Rock Ridge Land Exchange Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "roads_trails_access"
+      ],
+      "resource_indicator_keys": [
+        "access",
+        "trails"
+      ]
+    },
+    {
+      "action_element_id": "red_rock_riparian_conditions",
+      "description": "Apply riparian monitoring and wetland protection conditions to the acquired meadow tract.",
+      "evidence_refs": [
+        {
+          "citation_label": "Red Rock Ridge proposed action paragraph 3",
+          "evidence_ref_id": "red-rock-ridge-proposed-action-03",
+          "locator": "paragraph 3",
+          "source_record_id": "RED-ROCK-RIDGE-INTAKE",
+          "summary": "Proposed riparian monitoring, wetland protection, and water-quality conditions.",
+          "title": "Red Rock Ridge Land Exchange Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "floodplains_wetlands",
+        "water_quality"
+      ],
+      "resource_indicator_keys": [
+        "water",
+        "wetlands"
+      ]
+    },
+    {
+      "action_element_id": "red_rock_heritage_tribal_coordination",
+      "description": "Coordinate cultural-resource survey, SHPO review, and tribal consultation for the exchange parcels.",
+      "evidence_refs": [
+        {
+          "citation_label": "Red Rock Ridge proposed action paragraph 4",
+          "evidence_ref_id": "red-rock-ridge-proposed-action-04",
+          "locator": "paragraph 4",
+          "source_record_id": "RED-ROCK-RIDGE-INTAKE",
+          "summary": "Proposed cultural-resource, SHPO, and tribal consultation work.",
+          "title": "Red Rock Ridge Land Exchange Proposed Action"
+        }
+      ],
+      "resource_area_ids": [
+        "cultural_resources",
+        "tribal_relations"
+      ],
+      "resource_indicator_keys": [
+        "cultural",
+        "tribal"
+      ]
+    }
+  ],
+  "proposed_action_summary": "The Forest Service proposes the Red Rock Ridge Land Exchange to convey federal upland parcels, acquire a non-federal meadow and riparian tract, reserve public and administrative access, and complete wetland, water-quality, cultural-resource, and tribal consultation work before closing.",
+  "resource_analysis_expectations": [
+    {
+      "proposed_action_basis": [
+        "The exchange requires a lands/realty case file for federal disposal and non-federal acquisition."
+      ],
+      "resource_area_id": "land_exchange_case",
+      "resource_area_name": "Land exchange case"
+    },
+    {
+      "proposed_action_basis": [
+        "The exchange must be screened against the applicable Forest Plan."
+      ],
+      "resource_area_id": "land_management_plan_consistency",
+      "resource_area_name": "Forest Plan consistency"
+    },
+    {
+      "proposed_action_basis": [
+        "Reserved access easements and trail commitments trigger roads, trails, and access analysis."
+      ],
+      "resource_area_id": "roads_trails_access",
+      "resource_area_name": "Roads, trails, and access"
+    },
+    {
+      "proposed_action_basis": [
+        "Riparian and wetland protection conditions trigger wetlands and floodplain screening."
+      ],
+      "resource_area_id": "floodplains_wetlands",
+      "resource_area_name": "Floodplains and wetlands"
+    },
+    {
+      "proposed_action_basis": [
+        "Riparian monitoring and water-resource conditions trigger water-quality review."
+      ],
+      "resource_area_id": "water_quality",
+      "resource_area_name": "Water quality"
+    },
+    {
+      "proposed_action_basis": [
+        "Survey and SHPO coordination trigger cultural-resource analysis."
+      ],
+      "resource_area_id": "cultural_resources",
+      "resource_area_name": "Cultural resources"
+    },
+    {
+      "proposed_action_basis": [
+        "Tribal consultation commitments trigger tribal-relations planning requirements."
+      ],
+      "resource_area_id": "tribal_relations",
+      "resource_area_name": "Tribal relations"
+    }
+  ],
+  "resource_indicators": {
+    "access": [
+      "trail access",
+      "administrative access",
+      "easement"
+    ],
+    "cultural": [
+      "cultural-resource survey",
+      "SHPO review"
+    ],
+    "forest_plan": [
+      "Forest Plan consistency"
+    ],
+    "lands_realty": [
+      "land exchange",
+      "federal land disposal",
+      "non-federal land acquisition"
+    ],
+    "tribal": [
+      "tribal consultation"
+    ],
+    "water": [
+      "riparian monitoring",
+      "water quality",
+      "wetlands"
+    ]
+  },
+  "schema_version": "project-sow-intake-v0"
+}

@@ -7,6 +7,7 @@ from pathlib import Path
 from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_eval
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_intake_draft
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
 from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
@@ -16,6 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 INTAKE_PATH = REPO_ROOT / "config" / "fixtures" / "project_sow" / "east_crazies_land_exchange_intake.json"
 TEMPLATE_PATH = REPO_ROOT / "config" / "templates" / "project_sow_land_exchange_intake_template.json"
 INTAKE_SCHEMA_PATH = REPO_ROOT / "docs" / "schemas" / "project_sow_intake_v0.schema.json"
+EVAL_CONFIG_PATH = REPO_ROOT / "config" / "project_sow_eval_proving_intakes_v1.json"
 PROPOSED_ACTION_FIXTURE_PATH = (
     REPO_ROOT
     / "config"
@@ -215,6 +217,79 @@ def test_project_sow_intake_validate_accepts_minimal_land_exchange_template() ->
         "lands_realty_land_exchange",
         "forest_plan_consistency",
         "public_involvement_coordination",
+    }
+
+
+def test_project_sow_eval_runs_three_proving_intakes(tmp_path: Path) -> None:
+    result = run_project_sow_eval(
+        eval_config_path=EVAL_CONFIG_PATH,
+        output_dir=tmp_path / "project_sow_eval",
+    )
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary_path.exists()
+    assert result.summary["case_count"] == 3
+    assert result.summary["failed_cases"] == []
+    assert result.summary["category_totals"] == {
+        "calibration_gap_resource_area_ids": 7,
+        "expected_no_observed_report_resource_area_ids": 17,
+        "intake_omission_resource_area_ids": 0,
+        "system_miss_resource_area_ids": 0,
+    }
+    cases = {case["case_id"]: case for case in result.summary["cases"]}
+    assert set(cases) == {
+        "east-crazies-land-exchange",
+        "red-rock-ridge-land-exchange",
+        "silver-creek-access-land-adjustment",
+    }
+    east_crazies = cases["east-crazies-land-exchange"]
+    assert east_crazies["actual_metrics"]["resource_scope_count"] == 10
+    assert east_crazies["actual_metrics"]["proposed_action_resource_area_count"] == 23
+    assert east_crazies["actual_metrics"]["intake_evidence_graph_node_count"] == 115
+    assert east_crazies["actual_metrics"]["intake_evidence_graph_edge_count"] == 134
+    assert east_crazies["diagnostics"]["system_miss_resource_area_ids"] == []
+    assert east_crazies["diagnostics"]["intake_omission_resource_area_ids"] == []
+    assert east_crazies["diagnostics"]["calibration_gap_resource_area_ids"] == (
+        east_crazies["expected_diagnostics"]["calibration_gap_resource_area_ids"]
+    )
+    assert cases["red-rock-ridge-land-exchange"]["diagnostics"][
+        "expected_no_observed_report_resource_area_ids"
+    ] == cases["red-rock-ridge-land-exchange"]["expected_diagnostics"][
+        "expected_no_observed_report_resource_area_ids"
+    ]
+    assert cases["silver-creek-access-land-adjustment"]["actual_metrics"][
+        "expected_no_observed_report_count"
+    ] == 10
+    for case in cases.values():
+        assert case["passed"] is True, case
+        assert case["actual_metrics"]["output_written"] is True
+        assert case["actual_metrics"]["pdf_header_valid"] is True
+        assert case["actual_metrics"]["rendering_checks_passed"] is True
+        assert Path(case["output_paths"]["package"]).exists()
+
+
+def test_project_sow_eval_fails_on_expected_metric_mismatch(tmp_path: Path) -> None:
+    eval_config = json.loads(EVAL_CONFIG_PATH.read_text())
+    eval_config["eval_cases"][0]["expected_metrics"]["resource_scope_count"] = 99
+    bad_eval_config_path = tmp_path / "bad_project_sow_eval.json"
+    bad_eval_config_path.write_text(json.dumps(eval_config), encoding="utf-8")
+
+    result = run_project_sow_eval(
+        eval_config_path=bad_eval_config_path,
+        output_dir=tmp_path / "project_sow_eval",
+    )
+
+    cases = {case["case_id"]: case for case in result.summary["cases"]}
+    failed_checks = {
+        check["name"]: check
+        for check in cases["east-crazies-land-exchange"]["validation_checks"]
+        if not check["passed"]
+    }
+    assert result.summary["passed"] is False
+    assert result.summary["failed_cases"] == ["east-crazies-land-exchange"]
+    assert failed_checks["expected_metrics.resource_scope_count"]["details"] == {
+        "actual": 10,
+        "expected": 99,
     }
 
 

@@ -70,6 +70,23 @@ cover draft generation, ambiguity flags, unreviewed-draft validation failure, an
 draft validation replay, plus a guard that unexpected draft-validation failures return a failing
 status.
 
+Project SOW operationalization Sequence 3 is implemented. The new public command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-eval \
+  --output-dir /tmp/project_sow_eval
+```
+
+The command reads `config/project_sow_eval_proving_intakes_v1.json`, runs three proving intakes in
+one command, writes local generated packages under `<output-dir>/cases/<case_id>/`, and writes
+`project_sow_eval_summary.json`. The tracked cases are East Crazies, Red Rock Ridge, and Silver
+Creek. The summary compares actual metrics to tracked expected values and keeps diagnostics
+separate: system misses, intake omissions, calibration gaps, and expected no-observed-report cases.
+The accepted Sequence 3 smoke signal is `3` cases passed, `0` failed cases, `0` system misses, `0`
+intake omissions, `7` East Crazies calibration gaps, and `17` expected no-observed-report rows
+across the two new proving intakes. East Crazies remains green at `10` scopes, `23`
+proposed-action resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
+
 Sequence 5 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
@@ -84,7 +101,10 @@ Implemented surfaces:
 
 - `config/project_sow_resource_scopes_v1.json`
 - `config/project_sow_intake_draft_rules_v1.json`
+- `config/project_sow_eval_proving_intakes_v1.json`
 - `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
+- `config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json`
+- `config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json`
 - `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`
 - `config/fixtures/project_sow/proposed_action_text/ambiguous_land_adjustment_proposed_action.txt`
 - `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_expected_draft_metadata.json`
@@ -159,11 +179,12 @@ validation failures, and a valid `%PDF-` header.
 
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
 The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 3,
-multi-project calibration and eval harness. Keep JSON canonical, do not convert SOW scopes into
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`. Next project-SOW sequence: Sequence 4,
+contract-ready resource SOW content. Keep JSON canonical, do not convert SOW scopes into
 applicability or compliance findings, and do not stage ignored `source_library/` outputs. The next
-pass should define the proving-intake eval manifest and expected metrics before adding new
-project-specific parser behavior.
+pass should extend the tracked resource-scope config with contract-oriented fields such as
+assumptions, dependencies, optional deliverables, acceptance criteria, reviewer role, and review
+timing before rendering those fields into JSON/Markdown/PDF.
 
 ## Current Applicability/Expansion Handoff
 

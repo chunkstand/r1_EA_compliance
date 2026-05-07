@@ -171,25 +171,32 @@ Acceptance gate status:
 
 ## Sequence 3: Multi-Project Calibration And Eval Harness
 
-Status: planned.
+Status: complete.
 
 Purpose: stop treating East Crazies as the only quality signal.
 
-Candidate work:
+Implemented work:
 
-- add at least two additional land-exchange or closely adjacent NEPA proposed-action fixtures;
-- for each proving intake, record expected resource-area coverage and available observed specialist
-  reports when a completed package exists;
-- add a `project-sow-eval` command or test harness that runs all proving intakes and reports scope
-  counts, graph path coverage, unresolved areas, calibration gaps, and rendering checks;
-- track accepted expected metrics in a config or fixture file instead of hard-coding them in tests.
+- added Red Rock Ridge and Silver Creek package-ready proving intakes alongside the existing East
+  Crazies calibration intake;
+- added `config/project_sow_eval_proving_intakes_v1.json` to track expected metrics and diagnostic
+  resource-area IDs outside tests;
+- added `project-sow-eval`, which runs all proving intakes in one command and writes local package
+  outputs plus `project_sow_eval_summary.json` under the selected output directory;
+- eval summaries report scope counts, proposed-action resource-area counts, graph node/edge counts,
+  validation failures, PDF/rendering checks, system misses, intake omissions, calibration gaps, and
+  expected no-observed-report cases;
+- docs and the runbook now identify the eval manifest as the operational green gate before adding
+  more project-specific parser behavior.
 
-Acceptance gate:
+Acceptance gate status:
 
-- at least three proving intakes run in one command;
-- each proving intake has complete canonical graph paths for expected resource areas;
-- eval output distinguishes system misses, intake omissions, calibration gaps, and expected
-  no-observed-report cases;
+- `project-sow-eval` runs three proving intakes in one command: East Crazies, Red Rock Ridge, and
+  Silver Creek;
+- all three package outputs pass validation, rendering checks, PDF header checks, and complete
+  canonical graph path checks for expected resource areas;
+- eval output distinguishes `0` system misses, `0` intake omissions, `7` East Crazies calibration
+  gaps, and `17` expected no-observed-report rows across the two new proving intakes;
 - East Crazies remains green at `10` scopes, `23` proposed-action resource areas, `115` graph nodes,
   `134` graph edges, and `0` validation failures.
 

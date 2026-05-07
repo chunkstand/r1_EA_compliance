@@ -75,7 +75,21 @@ include:
 Resource area IDs must resolve to `covered_resource_area_ids` in
 `config/project_sow_resource_scopes_v1.json`.
 
-## 4. Add Calibration Reports When Available
+## 4. Run The Proving-Intake Eval
+
+Before treating the project SOW lane as operationally green, run the tracked proving-intake eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-eval \
+  --output-dir /tmp/project_sow_eval
+```
+
+The default manifest is `config/project_sow_eval_proving_intakes_v1.json`. The eval runs East
+Crazies, Red Rock Ridge, and Silver Creek in one command, writes local packages under the selected
+output directory, and compares actual metrics and diagnostics to tracked expected values. It keeps
+system misses, intake omissions, calibration gaps, and expected no-observed-report cases separate.
+
+## 5. Add Calibration Reports When Available
 
 If a completed example package exists, populate `observed_specialist_reports[]` with report title,
 document role, source record ID, report ID, resource areas, and evidence refs.
@@ -86,7 +100,7 @@ Observed reports are calibration evidence only. They do not replace the proposed
 proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
-## 5. Validate The Intake
+## 6. Validate The Intake
 
 Run the validation-only command before package generation:
 
@@ -107,7 +121,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
   --validate-only
 ```
 
-## 6. Generate The Package
+## 7. Generate The Package
 
 Run:
 
@@ -129,7 +143,7 @@ source_library/projects/<project_id>/requirements_package/
 
 JSON is canonical. Markdown and PDF are renderings from the JSON.
 
-## 7. Resolve Validation Failures
+## 8. Resolve Validation Failures
 
 Common failure categories:
 

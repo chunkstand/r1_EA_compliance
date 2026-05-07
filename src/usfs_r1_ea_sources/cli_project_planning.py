@@ -6,13 +6,17 @@ import argparse
 from .cli_common import print_summary
 from .project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from .project_sow_package import DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH
+from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH
+from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR
 from .project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
+from .project_sow_package import run_project_sow_eval
 from .project_sow_package import run_project_sow_intake_draft
 from .project_sow_package import run_project_sow_package
 from .project_sow_package import validate_project_sow_intake
 
 
 PROJECT_PLANNING_COMMANDS = {
+    "project-sow-eval",
     "project-sow-intake-draft",
     "project-sow-intake-validate",
     "project-sow-package",
@@ -94,6 +98,31 @@ def register_project_planning_commands(
         type=Path,
     )
 
+    eval_command = subparsers.add_parser(
+        "project-sow-eval",
+        help="Run project SOW proving-intake evaluation cases.",
+    )
+    eval_command.add_argument(
+        "--eval-config",
+        default=DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH,
+        type=Path,
+    )
+    eval_command.add_argument(
+        "--output-dir",
+        default=DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR,
+        type=Path,
+    )
+    eval_command.add_argument(
+        "--resource-scope-config",
+        default=DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+        type=Path,
+    )
+    eval_command.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+
 
 def handle_project_planning_command(
     args: argparse.Namespace,
@@ -146,6 +175,16 @@ def handle_project_planning_command(
             nepa_level=args.nepa_level,
             source_title=args.source_title,
             draft_rules_config_path=args.draft_rules,
+            resource_scope_config_path=args.resource_scope_config,
+            authority_inventory_path=args.authority_inventory,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-eval":
+        result = run_project_sow_eval(
+            eval_config_path=args.eval_config,
+            output_dir=args.output_dir,
             resource_scope_config_path=args.resource_scope_config,
             authority_inventory_path=args.authority_inventory,
         )
