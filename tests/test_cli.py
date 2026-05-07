@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_eval
+from usfs_r1_ea_sources import cli_project_planning
 from usfs_r1_ea_sources.cli import build_parser
 
 
@@ -190,6 +191,52 @@ def test_decision_support_handler_propagates_validate_only(monkeypatch) -> None:
     assert captured["config_path"] == Path("config/custom_decision_support.json")
     assert captured["expected_summary_path"] == Path("config/custom_expected_summary.json")
     assert captured["results_dir"] == Path("decision-output")
+
+
+def test_project_sow_package_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_package(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_package",
+        fake_run_project_sow_package,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-package",
+            "--intake",
+            "config/intake.json",
+            "--output-dir",
+            "library",
+            "--project-id",
+            "project-1",
+            "--source-set-id",
+            "source-set-1",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+            "--results-dir",
+            "sow-output",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["intake_path"] == Path("config/intake.json")
+    assert captured["output_dir"] == Path("library")
+    assert captured["project_id"] == "project-1"
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+    assert captured["results_dir"] == Path("sow-output")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

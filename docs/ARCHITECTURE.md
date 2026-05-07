@@ -46,6 +46,7 @@ instructions for agents or privileged tools.
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
 | Compliance | Produce citation-bearing compliance findings, authority-integration artifacts, matrices, finding graphs, coverage, review evals, and gold evals. | `compliance_review.py`, `compliance_review_eval.py`, `compliance_inputs.py`, `compliance_findings.py`, `compliance_authority_integration.py`, `compliance_finding_graph.py`, `compliance_validation.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
+| Project planning | Generate proposed-action resource SOW requirements packages before a review package exists. | `project_sow_package.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
 | CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
@@ -126,6 +127,12 @@ writes the local `decision_support/` JSON, Markdown, PDF, and manifest family. I
 missing, stale, hash-mismatched, or non-reviewer-ready inputs and must not promote manual root-level
 draft prose as canonical evidence.
 
+Project planning is an upstream lane for proposed-action intake before a complete EA package exists.
+The `project-sow-package` command reads a structured intake plus tracked resource-scope templates,
+selects resource SOW requirements from explicit project facts and trigger terms, and writes a local
+requirements package under `source_library/projects/<project_id>/requirements_package/`. It must not
+create applicability decisions, compliance findings, or legal sufficiency conclusions.
+
 ## Public CLI Surface
 
 `src/usfs_r1_ea_sources/cli.py` remains the public entrypoint. Command registration can be split by
@@ -140,6 +147,7 @@ Current command groups are recorded in `docs/architecture_contract.toml`:
 - review and forest-plan;
 - compliance;
 - decision support;
+- project planning;
 - eval and promotion.
 
 ## Architecture Fitness Gates

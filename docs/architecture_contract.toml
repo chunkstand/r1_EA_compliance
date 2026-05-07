@@ -170,6 +170,15 @@ allowed_import_layers = [
 ]
 
 [[layers]]
+name = "project_planning"
+summary = "Proposed-action NEPA project requirements and resource SOW package generation before review artifacts exist."
+modules = ["project_sow_package"]
+allowed_import_layers = [
+  "foundation",
+  "project_planning",
+]
+
+[[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = ["applicability_eval", "promotion_suite", "v1_ea_eval"]
@@ -183,6 +192,7 @@ allowed_import_layers = [
   "review",
   "compliance",
   "decision_support",
+  "project_planning",
   "eval",
 ]
 
@@ -199,6 +209,7 @@ modules = [
   "cli_decision_support",
   "cli_derived",
   "cli_eval",
+  "cli_project_planning",
   "cli_review",
 ]
 allowed_import_layers = [
@@ -217,6 +228,7 @@ allowed_import_layers = [
   "applicability",
   "compliance",
   "decision_support",
+  "project_planning",
   "eval",
   "cli",
 ]
@@ -334,6 +346,14 @@ paths = [
 ]
 
 [[artifacts]]
+owner_layer = "project_planning"
+paths = [
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.md",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json",
+]
+
+[[artifacts]]
 owner_layer = "eval"
 paths = [
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
@@ -412,6 +432,10 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 [[command_groups]]
 name = "decision_support"
 commands = ["ea-consistency-document"]
+
+[[command_groups]]
+name = "project_planning"
+commands = ["project-sow-package"]
 
 [[command_groups]]
 name = "eval"

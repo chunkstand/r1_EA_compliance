@@ -443,6 +443,41 @@ counts, required sections, or source-pointer content; those failures use
 milestone has no remaining planned sequence; future work should be a new milestone or a targeted
 copy-review pass.
 
+## Project SOW Requirements Package
+
+Project SOW package Sequence 1 is implemented as an upstream planning lane for proposed-action
+intake before a complete EA review package exists. The public command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+```
+
+The command reads a structured `project-sow-intake-v0` JSON file, the tracked resource-scope config
+at `config/project_sow_resource_scopes_v1.json`, and
+`config/authority_universe_families_nepa_ea_v1.json`. It writes a local requirements package under
+`source_library/projects/<project_id>/requirements_package/`:
+
+- `project_sow_package.json`
+- `project_sow_package.md`
+- `project_sow_package_manifest.json`
+
+The package scopes resource-specialist work needed to prepare a defensible EA package. It selects
+resource scopes from explicit intake fields, project type, trigger terms, and resource indicator
+keys, then records SOW tasks, data needs, deliverables, defensibility checks, selected authority
+families, and an authority-to-resource matrix. The first checked-in intake fixture is the East
+Crazies land-exchange proposed action and currently selects nine resource scopes: NEPA project
+management, lands/realty land exchange, Forest Plan consistency, wildlife/species/botany,
+cultural/tribal resources, hydrology/wetlands/water quality, roads/access/recreation/designated
+areas, minerals/energy/hazardous materials, and public involvement/coordination.
+
+This is a planning artifact only. It does not create applicability decisions, generated rule packs,
+compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
+Validation fails closed on missing required intake fields, unsupported intake schema, empty or
+duplicated resource-scope config, unknown authority-family IDs, no selected resource scopes, or
+selected scopes without SOW content.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

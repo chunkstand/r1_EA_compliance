@@ -2,6 +2,47 @@
 
 Date: 2026-05-06
 
+## Current Project SOW Package Branch Handoff
+
+Branch/worktree:
+
+- Branch: `codex/nepa-project-sow-package`
+- Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
+
+Sequence 1 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
+stays upstream of South Plateau applicability closure and does not read or write South Plateau
+review outputs. The new public command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+```
+
+Implemented surfaces:
+
+- `config/project_sow_resource_scopes_v1.json`
+- `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
+- `src/usfs_r1_ea_sources/project_sow_package.py`
+- `src/usfs_r1_ea_sources/cli_project_planning.py`
+- `tests/test_project_sow_package.py`
+- `tests/test_cli.py`
+- `docs/OUTPUT_SCHEMAS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/architecture_contract.toml`
+
+The command writes `project_sow_package.json`, `project_sow_package.md`, and
+`project_sow_package_manifest.json` under
+`source_library/projects/<project_id>/requirements_package/`. A local CLI smoke run to `/tmp`
+selected nine East Crazies land-exchange resource scopes: NEPA project management, lands/realty,
+Forest Plan consistency, wildlife/species/botany, cultural/tribal, hydrology/wetlands/water
+quality, roads/access/recreation/designated areas, minerals/energy/hazardous materials, and public
+involvement/coordination.
+
+Next sequence: add richer intake evidence contracts and optional PDF rendering only after this
+contract slice is reviewed. Do not convert SOW scopes into applicability or compliance findings in
+this lane.
+
 ## Current Applicability/Expansion Handoff
 
 `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 4 is complete. The South Plateau

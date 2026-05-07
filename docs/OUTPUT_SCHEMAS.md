@@ -2307,6 +2307,68 @@ Decision-support validation must fail closed on:
 - synthesis false negatives such as omitted required rows, reported as
   `false_negative_synthesis_omission`.
 
+## Project SOW Requirements Package Outputs
+
+Path: `source_library/projects/<project_id>/requirements_package/`
+
+The project SOW requirements package is an upstream planning artifact for a proposed NEPA action
+before a complete EA review package exists. It scopes resource-specialist work needed to prepare a
+defensible EA package. It is planning support only: it does not create applicability decisions,
+compliance findings, legal advice, a legal sufficiency determination, or a final agency decision.
+
+Generate the artifact family with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+```
+
+The generated artifact family includes:
+
+- `project_sow_package.json`
+- `project_sow_package.md`
+- `project_sow_package_manifest.json`
+
+`project_sow_package.json` has schema version `project-sow-package-v0` and is the canonical
+machine-readable package. The Markdown rendering must derive from that JSON. The report includes:
+
+- `intake_summary`, including forest, districts, project type, NEPA level, geography, forest-plan
+  profile, federal land action count, and resource indicator keys;
+- `resource_scope_records[]`, with `resource_scope_id`, discipline, selected authority families,
+  selection reasons, matched terms or resource indicators, SOW tasks, data needs, deliverables, and
+  defensibility checks;
+- `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;
+- `validation`, with fail-closed checks for required intake fields, supported intake schema,
+  resource-scope config integrity, authority-family resolution, selected scope count, and SOW
+  content presence;
+- `manifest`, with input paths and SHA-256 hashes for the intake, resource-scope config, and
+  authority-family inventory.
+
+`config/project_sow_resource_scopes_v1.json` owns the resource-scope templates. Those templates are
+data, not hidden runtime branches. Each scope can define:
+
+- `resource_scope_id`, `resource_name`, and `discipline`;
+- `always_required` or `required_for_project_types`;
+- `trigger_terms` and `trigger_indicator_keys`;
+- `authority_family_ids` from `config/authority_universe_families_nepa_ea_v1.json`;
+- `sow_tasks`, `data_needs`, `required_deliverables`, and `defensibility_checks`.
+
+The initial checked-in intake fixture at
+`config/fixtures/project_sow/east_crazies_land_exchange_intake.json` has schema version
+`project-sow-intake-v0`. A reviewer-ready intake must include at least project ID, project name,
+forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
+
+Project SOW package validation must fail closed on:
+
+- missing required intake fields;
+- unsupported intake schema;
+- missing or empty resource-scope config;
+- duplicate resource scope IDs;
+- resource scopes that reference unknown authority-family IDs;
+- no selected resource scope;
+- selected resource scopes that lack SOW tasks or deliverables.
+
 `finding_graph_nodes.jsonl` contains:
 
 - `ComplianceRulePack`

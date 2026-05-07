@@ -143,6 +143,8 @@ readiness blockers. See
 report sequence; Sequence 5 has closed the milestone by making the generated East Crazies
 JSON/Markdown/PDF decision-support report family both gate-checked and supervisor-readable while
 keeping the ignored outputs under the review `decision_support/` directory. See
+`docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
+proposed-action intake into resource SOW requirements before review artifacts exist. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased
 toward scalable search, learning, evidence, and eval loops instead of hidden domain-specific
@@ -172,6 +174,8 @@ heuristics.
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - `config/ea_consistency_decision_support_v1.json`
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
+- `config/project_sow_resource_scopes_v1.json`
+- `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`
@@ -243,6 +247,10 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory_build_coverage.json`
   - `source_library/derived/<source_set_id>/forest_plan_components/components.jsonl`
   - `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
+- Project SOW requirements package outputs:
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.json`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.md`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
   - `source_library/reviews/<review_id>/package/package_chunks.jsonl`

@@ -1,0 +1,542 @@
+from __future__ import annotations
+
+from collections import Counter
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+import hashlib
+import json
+import re
+
+
+PACKAGE_SCHEMA_VERSION = "project-sow-package-v0"
+MANIFEST_SCHEMA_VERSION = "project-sow-package-manifest-v0"
+GENERATOR_VERSION = "project-sow-package-generator-v0"
+DEFAULT_RESOURCE_SCOPE_CONFIG_PATH = Path("config/project_sow_resource_scopes_v1.json")
+DEFAULT_AUTHORITY_INVENTORY_PATH = Path("config/authority_universe_families_nepa_ea_v1.json")
+
+
+@dataclass(frozen=True)
+class ProjectSowPackageResult:
+    output_dir: Path
+    package_path: Path
+    markdown_path: Path
+    manifest_path: Path
+    summary: dict[str, Any]
+
+
+def run_project_sow_package(
+    *,
+    intake_path: Path,
+    output_dir: Path = Path("source_library"),
+    project_id: str | None = None,
+    source_set_id: str | None = None,
+    resource_scope_config_path: Path = DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+    authority_inventory_path: Path = DEFAULT_AUTHORITY_INVENTORY_PATH,
+    results_dir: Path | None = None,
+) -> ProjectSowPackageResult:
+    output_dir = Path(output_dir)
+    intake_path = Path(intake_path)
+    resource_scope_config_path = Path(resource_scope_config_path)
+    authority_inventory_path = Path(authority_inventory_path)
+
+    intake = _read_json(intake_path)
+    resource_config = _read_json(resource_scope_config_path)
+    authority_inventory = _read_json(authority_inventory_path)
+    selected_project_id = _slug(project_id or str(intake.get("project_id") or "project"))
+    selected_source_set_id = source_set_id or str(
+        authority_inventory.get("source_set", {}).get("source_set_id")
+        or authority_inventory.get("source_set_id")
+        or "source-set-unspecified"
+    )
+    package_dir = (
+        Path(results_dir)
+        if results_dir is not None
+        else output_dir / "projects" / selected_project_id / "requirements_package"
+    )
+    package_path = package_dir / "project_sow_package.json"
+    markdown_path = package_dir / "project_sow_package.md"
+    manifest_path = package_dir / "project_sow_package_manifest.json"
+
+    selected_scopes = _select_resource_scopes(intake, resource_config)
+    validation = _validate_inputs(
+        intake=intake,
+        resource_config=resource_config,
+        authority_inventory=authority_inventory,
+        selected_scopes=selected_scopes,
+    )
+    summary = _summary(
+        project_id=selected_project_id,
+        source_set_id=selected_source_set_id,
+        package_dir=package_dir,
+        package_path=package_path,
+        markdown_path=markdown_path,
+        manifest_path=manifest_path,
+        validation=validation,
+        selected_scopes=selected_scopes,
+    )
+    if not validation["passed"]:
+        return ProjectSowPackageResult(
+            output_dir=package_dir,
+            package_path=package_path,
+            markdown_path=markdown_path,
+            manifest_path=manifest_path,
+            summary=summary,
+        )
+
+    package = _build_package(
+        intake=intake,
+        project_id=selected_project_id,
+        source_set_id=selected_source_set_id,
+        resource_config=resource_config,
+        selected_scopes=selected_scopes,
+        validation=validation,
+        intake_path=intake_path,
+        resource_scope_config_path=resource_scope_config_path,
+        authority_inventory_path=authority_inventory_path,
+    )
+    markdown = _render_markdown(package)
+    package_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(package_path, package)
+    markdown_path.write_text(markdown, encoding="utf-8")
+    _write_json(manifest_path, package["manifest"])
+    summary["output_written"] = True
+    summary["output_hashes"] = {
+        "project_sow_package_sha256": _sha256_file(package_path),
+        "project_sow_package_markdown_sha256": _sha256_file(markdown_path),
+        "project_sow_package_manifest_sha256": _sha256_file(manifest_path),
+    }
+    return ProjectSowPackageResult(
+        output_dir=package_dir,
+        package_path=package_path,
+        markdown_path=markdown_path,
+        manifest_path=manifest_path,
+        summary=summary,
+    )
+
+
+def _validate_inputs(
+    *,
+    intake: dict[str, Any],
+    resource_config: dict[str, Any],
+    authority_inventory: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    checks = []
+    required_fields = [
+        "project_id",
+        "project_name",
+        "forest",
+        "districts",
+        "project_type",
+        "nepa_level",
+        "proposed_action_summary",
+        "federal_land_actions",
+    ]
+    missing_fields = [field for field in required_fields if _is_empty(intake.get(field))]
+    checks.append(
+        _check(
+            name="required_intake_fields_present",
+            passed=not missing_fields,
+            details={"missing_fields": missing_fields},
+        )
+    )
+    checks.append(
+        _check(
+            name="intake_schema_supported",
+            passed=intake.get("schema_version") == "project-sow-intake-v0",
+            details={"schema_version": intake.get("schema_version")},
+        )
+    )
+    scopes = _resource_scopes(resource_config)
+    checks.append(
+        _check(
+            name="resource_scope_config_has_scopes",
+            passed=bool(scopes),
+            details={"resource_scope_count": len(scopes)},
+        )
+    )
+    duplicate_scope_ids = _duplicates(
+        str(scope.get("resource_scope_id") or "") for scope in scopes
+    )
+    checks.append(
+        _check(
+            name="resource_scope_ids_unique",
+            passed=not duplicate_scope_ids,
+            details={"duplicate_scope_ids": duplicate_scope_ids},
+        )
+    )
+    authority_family_ids = _authority_family_ids(authority_inventory)
+    unknown_authorities = sorted(
+        {
+            authority_id
+            for scope in scopes
+            for authority_id in _strings(scope.get("authority_family_ids"))
+            if authority_id not in authority_family_ids
+        }
+    )
+    checks.append(
+        _check(
+            name="resource_scope_authorities_resolve",
+            passed=not unknown_authorities,
+            details={"unknown_authority_family_ids": unknown_authorities},
+        )
+    )
+    checks.append(
+        _check(
+            name="at_least_one_resource_scope_selected",
+            passed=bool(selected_scopes),
+            details={"selected_scope_count": len(selected_scopes)},
+        )
+    )
+    selected_without_tasks = sorted(
+        scope["resource_scope_id"]
+        for scope in selected_scopes
+        if not scope.get("sow_tasks") or not scope.get("required_deliverables")
+    )
+    checks.append(
+        _check(
+            name="selected_resource_scopes_have_sow_content",
+            passed=not selected_without_tasks,
+            details={"scope_ids": selected_without_tasks},
+        )
+    )
+    return {
+        "checks": checks,
+        "failure_count": sum(1 for check in checks if not check["passed"]),
+        "passed": all(check["passed"] for check in checks),
+        "schema_version": "project-sow-package-validation-v0",
+    }
+
+
+def _select_resource_scopes(
+    intake: dict[str, Any],
+    resource_config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    searchable_text = _searchable_text(intake)
+    indicator_keys = _indicator_keys(intake)
+    project_type = _normalize_token(str(intake.get("project_type") or ""))
+    selected = []
+    for scope in _resource_scopes(resource_config):
+        reasons: list[str] = []
+        matched_terms = [
+            term
+            for term in _strings(scope.get("trigger_terms"))
+            if term.lower() in searchable_text
+        ]
+        matched_indicators = sorted(
+            indicator_keys.intersection(
+                _normalize_token(value) for value in _strings(scope.get("trigger_indicator_keys"))
+            )
+        )
+        required_project_types = {
+            _normalize_token(value) for value in _strings(scope.get("required_for_project_types"))
+        }
+        if scope.get("always_required") is True:
+            reasons.append("always_required")
+        if project_type and project_type in required_project_types:
+            reasons.append(f"project_type:{project_type}")
+        if matched_terms:
+            reasons.append("trigger_terms")
+        if matched_indicators:
+            reasons.append("resource_indicators")
+        if reasons:
+            item = dict(scope)
+            item["selection_reasons"] = reasons
+            item["matched_terms"] = matched_terms
+            item["matched_indicator_keys"] = matched_indicators
+            selected.append(item)
+    return selected
+
+
+def _build_package(
+    *,
+    intake: dict[str, Any],
+    project_id: str,
+    source_set_id: str,
+    resource_config: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+    validation: dict[str, Any],
+    intake_path: Path,
+    resource_scope_config_path: Path,
+    authority_inventory_path: Path,
+) -> dict[str, Any]:
+    created_at = _now()
+    scope_records = [_scope_record(scope) for scope in selected_scopes]
+    authority_matrix = _authority_matrix(scope_records)
+    manifest = {
+        "artifact_paths": {
+            "authority_inventory": str(authority_inventory_path),
+            "intake": str(intake_path),
+            "resource_scope_config": str(resource_scope_config_path),
+        },
+        "created_at": created_at,
+        "generator_version": GENERATOR_VERSION,
+        "input_hashes": {
+            "authority_inventory_sha256": _sha256_file(authority_inventory_path),
+            "intake_sha256": _sha256_file(intake_path),
+            "resource_scope_config_sha256": _sha256_file(resource_scope_config_path),
+        },
+        "project_id": project_id,
+        "schema_version": MANIFEST_SCHEMA_VERSION,
+        "source_set_id": source_set_id,
+        "validation_status": "passed" if validation["passed"] else "failed",
+    }
+    return {
+        "authority_requirement_matrix": authority_matrix,
+        "created_at": created_at,
+        "generator_version": GENERATOR_VERSION,
+        "intake_summary": _intake_summary(intake),
+        "manifest": manifest,
+        "project_id": project_id,
+        "project_name": intake.get("project_name"),
+        "resource_scope_count": len(scope_records),
+        "resource_scope_records": scope_records,
+        "schema_version": PACKAGE_SCHEMA_VERSION,
+        "scope_set_id": resource_config.get("scope_set_id"),
+        "source_set_id": source_set_id,
+        "validation": validation,
+    }
+
+
+def _scope_record(scope: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "authority_family_ids": _strings(scope.get("authority_family_ids")),
+        "data_needs": _strings(scope.get("data_needs")),
+        "defensibility_checks": _strings(scope.get("defensibility_checks")),
+        "discipline": scope.get("discipline"),
+        "matched_indicator_keys": _strings(scope.get("matched_indicator_keys")),
+        "matched_terms": _strings(scope.get("matched_terms")),
+        "required_deliverables": _strings(scope.get("required_deliverables")),
+        "resource_name": scope.get("resource_name"),
+        "resource_scope_id": scope.get("resource_scope_id"),
+        "selection_reasons": _strings(scope.get("selection_reasons")),
+        "sow_tasks": _strings(scope.get("sow_tasks")),
+        "status": "required",
+    }
+
+
+def _authority_matrix(scope_records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: dict[str, set[str]] = {}
+    for scope in scope_records:
+        for authority_id in scope["authority_family_ids"]:
+            rows.setdefault(authority_id, set()).add(str(scope["resource_scope_id"]))
+    return [
+        {
+            "authority_family_id": authority_id,
+            "resource_scope_ids": sorted(scope_ids),
+            "status": "planning_requirement",
+        }
+        for authority_id, scope_ids in sorted(rows.items())
+    ]
+
+
+def _intake_summary(intake: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "districts": _strings(intake.get("districts")),
+        "federal_land_action_count": len(_list(intake.get("federal_land_actions"))),
+        "forest": intake.get("forest"),
+        "forest_plan_profile": intake.get("forest_plan_profile"),
+        "geography": _strings(intake.get("geography")),
+        "nepa_level": intake.get("nepa_level"),
+        "project_name": intake.get("project_name"),
+        "project_type": intake.get("project_type"),
+        "resource_indicator_keys": sorted(_indicator_keys(intake)),
+    }
+
+
+def _render_markdown(package: dict[str, Any]) -> str:
+    lines = [
+        f"# {package['project_name']} Requirements Package",
+        "",
+        "This generated package scopes specialist work needed to prepare a defensible NEPA EA package. It is planning support, not legal advice or a final compliance determination.",
+        "",
+        "## Intake",
+    ]
+    intake = package["intake_summary"]
+    lines.extend(
+        [
+            f"- Project ID: `{package['project_id']}`",
+            f"- Source set: `{package['source_set_id']}`",
+            f"- Forest: {intake.get('forest')}",
+            f"- Districts: {', '.join(intake.get('districts') or [])}",
+            f"- Project type: `{intake.get('project_type')}`",
+            f"- NEPA level: `{intake.get('nepa_level')}`",
+            f"- Federal land action count: `{intake.get('federal_land_action_count')}`",
+            "",
+            "## Resource Scopes",
+        ]
+    )
+    for scope in package["resource_scope_records"]:
+        lines.extend(
+            [
+                "",
+                f"### {scope['resource_name']}",
+                "",
+                f"- Scope ID: `{scope['resource_scope_id']}`",
+                f"- Discipline: `{scope['discipline']}`",
+                f"- Selection reasons: {', '.join(scope['selection_reasons'])}",
+                f"- Authority families: {', '.join(f'`{item}`' for item in scope['authority_family_ids'])}",
+                "",
+                "Tasks:",
+            ]
+        )
+        lines.extend(f"- {task}" for task in scope["sow_tasks"])
+        lines.append("")
+        lines.append("Deliverables:")
+        lines.extend(f"- {deliverable}" for deliverable in scope["required_deliverables"])
+        lines.append("")
+        lines.append("Defensibility checks:")
+        lines.extend(f"- {check}" for check in scope["defensibility_checks"])
+    lines.extend(["", "## Authority Requirement Matrix"])
+    for row in package["authority_requirement_matrix"]:
+        lines.append(
+            f"- `{row['authority_family_id']}`: {', '.join(f'`{scope_id}`' for scope_id in row['resource_scope_ids'])}"
+        )
+    lines.extend(["", "## Validation"])
+    for check in package["validation"]["checks"]:
+        status = "passed" if check["passed"] else "failed"
+        lines.append(f"- `{check['name']}`: `{status}`")
+    return "\n".join(lines) + "\n"
+
+
+def _summary(
+    *,
+    project_id: str,
+    source_set_id: str,
+    package_dir: Path,
+    package_path: Path,
+    markdown_path: Path,
+    manifest_path: Path,
+    validation: dict[str, Any],
+    selected_scopes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "output_dir": str(package_dir),
+        "output_paths": {
+            "manifest": str(manifest_path),
+            "markdown": str(markdown_path),
+            "package": str(package_path),
+        },
+        "output_written": False,
+        "passed": validation["passed"],
+        "project_id": project_id,
+        "resource_scope_count": len(selected_scopes),
+        "schema_version": "project-sow-package-summary-v0",
+        "selected_resource_scope_ids": [
+            str(scope.get("resource_scope_id")) for scope in selected_scopes
+        ],
+        "source_set_id": source_set_id,
+        "validation_failure_count": validation["failure_count"],
+    }
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"Required JSON file is missing: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Required JSON file is invalid: {path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise ValueError(f"Required JSON file must contain an object: {path}")
+    return data
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _resource_scopes(resource_config: dict[str, Any]) -> list[dict[str, Any]]:
+    scopes = resource_config.get("resource_scopes")
+    if not isinstance(scopes, list):
+        return []
+    return [scope for scope in scopes if isinstance(scope, dict)]
+
+
+def _authority_family_ids(authority_inventory: dict[str, Any]) -> set[str]:
+    family_ids = {
+        str(family.get("family_id"))
+        for family in _list(authority_inventory.get("authority_families"))
+        if isinstance(family, dict) and family.get("family_id")
+    }
+    for family in _list(authority_inventory.get("authority_families")):
+        if isinstance(family, dict) and family.get("authority_family_id"):
+            family_ids.add(str(family["authority_family_id"]))
+    return family_ids
+
+
+def _indicator_keys(intake: dict[str, Any]) -> set[str]:
+    indicators = intake.get("resource_indicators")
+    if not isinstance(indicators, dict):
+        return set()
+    return {_normalize_token(str(key)) for key in indicators}
+
+
+def _searchable_text(value: Any) -> str:
+    text = " ".join(_flatten_strings(value)).lower()
+    return re.sub(r"\s+", " ", text)
+
+
+def _flatten_strings(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        strings: list[str] = []
+        for key, item in value.items():
+            strings.append(str(key))
+            strings.extend(_flatten_strings(item))
+        return strings
+    if isinstance(value, list):
+        strings = []
+        for item in value:
+            strings.extend(_flatten_strings(item))
+        return strings
+    if value is None:
+        return []
+    return [str(value)]
+
+
+def _normalize_token(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+
+
+def _slug(value: str) -> str:
+    slug = _normalize_token(value).replace("_", "-")
+    return slug or "project"
+
+
+def _check(name: str, passed: bool, details: dict[str, Any]) -> dict[str, Any]:
+    return {"details": details, "name": name, "passed": bool(passed)}
+
+
+def _is_empty(value: Any) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return not value.strip()
+    if isinstance(value, list | dict):
+        return not value
+    return False
+
+
+def _list(value: Any) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
+def _strings(value: Any) -> list[str]:
+    return [str(item) for item in _list(value) if str(item).strip()]
+
+
+def _duplicates(values: Any) -> list[str]:
+    counts = Counter(value for value in values if value)
+    return sorted(value for value, count in counts.items() if count > 1)
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _now() -> str:
+    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")

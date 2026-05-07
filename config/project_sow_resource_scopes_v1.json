@@ -1,0 +1,468 @@
+{
+  "description": "Resource scope templates for proposed-action NEPA project requirements packages. These templates are planning guidance over current authority-family data; they do not create compliance findings or legal conclusions.",
+  "resource_scopes": [
+    {
+      "always_required": true,
+      "authority_family_ids": [
+        "nepa_core_statute",
+        "usda_nepa_procedures_7cfr_part_1b",
+        "forest_service_nepa_current_policy_directives",
+        "administrative_review_final_agency_action"
+      ],
+      "data_needs": [
+        "Project name, forest, district, responsible official, and proponent",
+        "Purpose and need, proposed action, no-action baseline, and preliminary alternatives",
+        "Decision schedule, public involvement plan, and expected decision document"
+      ],
+      "defensibility_checks": [
+        "The NEPA level and decision pathway are explicit.",
+        "The proposed action is specific enough to support resource specialist analysis.",
+        "The project record can show how public involvement, alternatives, effects, and decision documentation were handled."
+      ],
+      "discipline": "nepa_project_management",
+      "required_deliverables": [
+        "Project initiation checklist",
+        "NEPA schedule and responsibility matrix",
+        "Draft EA outline and administrative record index"
+      ],
+      "resource_name": "NEPA project management and decision record",
+      "resource_scope_id": "nepa_project_management",
+      "sow_tasks": [
+        "Confirm purpose and need, proposed action, no-action baseline, and preliminary alternatives.",
+        "Define the decision record, public involvement, objection or appeal path, and project schedule.",
+        "Maintain an administrative record index that ties resource products to the EA sections they support."
+      ],
+      "trigger_terms": []
+    },
+    {
+      "authority_family_ids": [
+        "land_exchange_statutory_authorities",
+        "land_exchange_regulatory_requirements",
+        "land_exchange_fs_policy_and_project_references"
+      ],
+      "data_needs": [
+        "Federal and non-federal parcel descriptions, acres, estate interests, reservations, and outstanding rights",
+        "Appraisal, equalization, title evidence, mineral reservations, easements, and exchange agreement status",
+        "Public interest determination and lands/realty case file milestones"
+      ],
+      "defensibility_checks": [
+        "The exchange case file supports public interest, equal value, title, and reservation findings.",
+        "Federal land actions are separated from non-federal acquisition actions.",
+        "Implementation conditions needed for closing are visible as requirements, not implied conclusions."
+      ],
+      "discipline": "lands_realty",
+      "required_deliverables": [
+        "Land exchange feasibility and public-interest memorandum",
+        "Appraisal/equalization/title evidence checklist",
+        "Draft realty implementation and closing checklist"
+      ],
+      "required_for_project_types": [
+        "land_exchange"
+      ],
+      "resource_name": "Lands, realty, and land exchange case requirements",
+      "resource_scope_id": "lands_realty_land_exchange",
+      "sow_tasks": [
+        "Compile parcel, ownership, estate, access, reservation, and title facts for all lands entering or leaving federal ownership.",
+        "Identify appraisal, equalization, exchange agreement, notice, closing, and public-interest determination requirements.",
+        "Coordinate realty conditions with resource mitigation, easements, deed restrictions, and decision documentation."
+      ],
+      "trigger_terms": [
+        "land exchange",
+        "exchange agreement",
+        "appraisal",
+        "title evidence",
+        "equal value",
+        "cash equalization",
+        "federal land disposal",
+        "non-federal land acquisition",
+        "reservation",
+        "easement"
+      ]
+    },
+    {
+      "always_required": true,
+      "authority_family_ids": [
+        "region1_forest_plan_source_records",
+        "nfma_forest_planning_project_consistency"
+      ],
+      "data_needs": [
+        "Forest plan profile, forest unit, district, geographic areas, management areas, and overlays",
+        "Forest Plan standards, guidelines, desired conditions, objectives, and suitability direction potentially touched by the action",
+        "Plan consistency table or crosswalk from proposed action elements to applicable plan components"
+      ],
+      "defensibility_checks": [
+        "Applicable Forest Plan components are identified before compliance conclusions are made.",
+        "Project geography and overlays are tied to plan-source evidence.",
+        "Any plan amendment or exception question is isolated as a blocker."
+      ],
+      "discipline": "forest_plan_consistency",
+      "required_deliverables": [
+        "Forest Plan consistency crosswalk",
+        "Applicable standard/guideline matrix",
+        "Plan amendment or exception screen"
+      ],
+      "resource_name": "Forest Plan consistency and NFMA requirements",
+      "resource_scope_id": "forest_plan_consistency",
+      "sow_tasks": [
+        "Resolve the forest plan profile and project geography from the intake.",
+        "Identify management areas, geographic areas, overlays, and applicable plan components.",
+        "Prepare the Forest Plan consistency matrix needed for the EA and decision record."
+      ],
+      "trigger_terms": [
+        "forest plan",
+        "land management plan",
+        "management area",
+        "geographic area",
+        "recommended wilderness",
+        "backcountry area",
+        "roadless",
+        "plan amendment"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "esa_section7_species_consultation",
+        "species_supporting_sources_and_overlays",
+        "eagle_efh_and_special_wildlife_sources",
+        "migratory_bird_authorities"
+      ],
+      "data_needs": [
+        "Listed, proposed, candidate, sensitive, and species-of-conservation-concern screens",
+        "Habitat, survey, timing, conservation measure, and consultation assumptions",
+        "Biological assessment/evaluation need and consultation pathway"
+      ],
+      "defensibility_checks": [
+        "Species and habitat effects are separated from background species mentions.",
+        "ESA, sensitive species, eagle, migratory bird, and EFH triggers are each explicitly resolved.",
+        "Consultation or no-effect/no-impact rationale is citation-ready."
+      ],
+      "discipline": "wildlife_fisheries_botany",
+      "required_deliverables": [
+        "Species and habitat screen",
+        "Biological assessment or biological evaluation scope",
+        "Wildlife/fisheries/botany effects report outline"
+      ],
+      "resource_name": "Wildlife, fish, botany, and species consultation",
+      "resource_scope_id": "wildlife_species_botany",
+      "sow_tasks": [
+        "Screen the action area for listed species, sensitive species, species of conservation concern, eagles, migratory birds, EFH, and habitat triggers.",
+        "Define survey, consultation, conservation measure, and biological evaluation deliverables.",
+        "Tie each species conclusion to action-area facts and source evidence."
+      ],
+      "trigger_indicator_keys": [
+        "species",
+        "wildlife",
+        "botany",
+        "habitat"
+      ],
+      "trigger_terms": [
+        "listed species",
+        "threatened species",
+        "endangered species",
+        "candidate species",
+        "sensitive species",
+        "species of conservation concern",
+        "habitat",
+        "biological assessment",
+        "biological evaluation",
+        "section 7",
+        "eagle",
+        "migratory bird",
+        "whitebark pine"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "cultural_resource_protection_and_state_shpo_sources",
+        "tribal_consultation_trust_sacred_sites"
+      ],
+      "data_needs": [
+        "Area of potential effects, known sites, survey status, and confidentiality limits",
+        "SHPO/THPO, tribal consultation, treaty rights, sacred sites, and traditional cultural property indicators",
+        "Avoidance, mitigation, MOA, monitoring, or inadvertent discovery requirements"
+      ],
+      "defensibility_checks": [
+        "Cultural-resource and tribal-interest triggers are not collapsed into a generic heritage note.",
+        "Consultation status, confidentiality limits, and mitigation commitments are explicit.",
+        "Resource products can support NHPA/SHPO and tribal-consultation record requirements."
+      ],
+      "discipline": "heritage_tribal",
+      "required_deliverables": [
+        "Cultural resource survey and eligibility scope",
+        "Section 106/SHPO/THPO consultation plan",
+        "Tribal consultation and confidentiality protocol"
+      ],
+      "resource_name": "Cultural resources, SHPO/THPO, and tribal consultation",
+      "resource_scope_id": "cultural_tribal_resources",
+      "sow_tasks": [
+        "Define the APE, cultural-resource inventory status, and consultation path.",
+        "Identify tribal, treaty, sacred-site, THPO, and confidentiality requirements.",
+        "List mitigation, monitoring, avoidance, MOA, and inadvertent discovery deliverables if triggered."
+      ],
+      "trigger_indicator_keys": [
+        "cultural",
+        "tribal",
+        "heritage"
+      ],
+      "trigger_terms": [
+        "cultural resource",
+        "historic property",
+        "archaeological",
+        "archeological",
+        "SHPO",
+        "THPO",
+        "tribal consultation",
+        "sacred site",
+        "treaty rights",
+        "traditional cultural property",
+        "NAGPRA"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "clean_water_act_wotus_permits",
+        "floodplain_management_eo11988",
+        "wetlands_protection_eo11990"
+      ],
+      "data_needs": [
+        "Waters of the United States, wetlands, floodplains, riparian areas, and groundwater/drinking-water indicators",
+        "Dredge, fill, discharge, crossing, culvert, road, trail, construction, and mitigation assumptions",
+        "Permit, certification, avoidance, minimization, and mitigation requirements"
+      ],
+      "defensibility_checks": [
+        "Wetland, WOTUS, floodplain, and water-quality triggers are each resolved.",
+        "Permit requirements are visible as tasks even when later found not required.",
+        "Avoidance/minimization/mitigation assumptions are tied to action elements."
+      ],
+      "discipline": "hydrology_wetlands",
+      "required_deliverables": [
+        "Hydrology and wetlands/waters delineation scope",
+        "Clean Water Act permit/certification screen",
+        "Floodplain and wetland avoidance/minimization matrix"
+      ],
+      "resource_name": "Hydrology, wetlands, floodplains, and water quality",
+      "resource_scope_id": "hydrology_wetlands_water_quality",
+      "sow_tasks": [
+        "Screen for wetlands, WOTUS, floodplains, riparian areas, water-quality permits, and construction-related discharge or fill.",
+        "Identify field delineation, permit, certification, avoidance, minimization, and mitigation deliverables.",
+        "Tie water-resource analysis to specific action elements, locations, and implementation commitments."
+      ],
+      "trigger_indicator_keys": [
+        "wetlands",
+        "water",
+        "floodplain",
+        "hydrology"
+      ],
+      "trigger_terms": [
+        "wetland",
+        "waters of the United States",
+        "WOTUS",
+        "stream",
+        "riparian",
+        "floodplain",
+        "dredge",
+        "fill",
+        "discharge",
+        "section 404",
+        "section 401",
+        "water quality"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "roads_access_special_use_action_authorities",
+        "wilderness_wsr_trails_designated_areas",
+        "roadless_rule_authorities"
+      ],
+      "data_needs": [
+        "Road, trail, access, right-of-way, special-use, closure, construction, and maintenance action elements",
+        "Roadless, recommended wilderness, WSR, national trail, special area, and recreation setting overlays",
+        "Motorized/mechanized/nonmotorized use constraints and public access commitments"
+      ],
+      "defensibility_checks": [
+        "Access benefits and construction effects are analyzed as separate work requirements.",
+        "Designated-area constraints are explicit before effects conclusions.",
+        "Road/trail actions are traceable to maps, design criteria, and implementation commitments."
+      ],
+      "discipline": "roads_access_recreation",
+      "required_deliverables": [
+        "Roads, trails, and access report scope",
+        "Designated-area and recreation consistency screen",
+        "Access easement/right-of-way implementation checklist"
+      ],
+      "resource_name": "Roads, trails, access, recreation, and designated areas",
+      "resource_scope_id": "roads_access_recreation_designated_areas",
+      "sow_tasks": [
+        "Identify all road, trail, access, right-of-way, closure, special-use, and recreation action elements.",
+        "Screen designated-area constraints, including roadless, recommended wilderness, WSR, national trails, and special areas.",
+        "Define map, design, access, and implementation deliverables needed for the EA and decision record."
+      ],
+      "trigger_indicator_keys": [
+        "roads",
+        "trails",
+        "access",
+        "recreation",
+        "designated_areas"
+      ],
+      "trigger_terms": [
+        "road",
+        "trail",
+        "access",
+        "right-of-way",
+        "ROW",
+        "special use",
+        "easement",
+        "roadless",
+        "recommended wilderness",
+        "wilderness study area",
+        "wild and scenic river",
+        "national trail",
+        "recreation"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "invasive_pesticide_soils_farmland_drinking_water",
+        "vegetation_wildfire_forest_health_authorities",
+        "clean_air_act_conformity_air_quality"
+      ],
+      "data_needs": [
+        "Vegetation treatment, fuels, prescribed fire, timber, forest health, invasive species, pesticide/herbicide, soils, and air-quality indicators",
+        "Treatment units, equipment, timing, burn/smoke assumptions, erosion control, revegetation, and restoration commitments",
+        "Air-quality, smoke, soil productivity, noxious weed, and invasive species prevention requirements"
+      ],
+      "defensibility_checks": [
+        "Treatment methods and affected resources are separated from background forest-health discussion.",
+        "Smoke, air, soil, invasive species, and restoration commitments are explicit when triggered.",
+        "Implementation requirements are stated as tasks and deliverables, not assumed compliance."
+      ],
+      "discipline": "vegetation_soils_air",
+      "required_deliverables": [
+        "Vegetation/fuels/forest-health analysis scope",
+        "Soils and invasive species prevention plan scope",
+        "Air-quality and smoke coordination screen"
+      ],
+      "resource_name": "Vegetation, fuels, soils, invasive species, and air quality",
+      "resource_scope_id": "vegetation_soils_air_quality",
+      "sow_tasks": [
+        "Screen vegetation, fuels, prescribed fire, timber, soils, invasive species, pesticide/herbicide, and air-quality triggers.",
+        "Define treatment-unit, method, timing, equipment, smoke, erosion, restoration, and monitoring deliverables.",
+        "Tie prevention and mitigation commitments to the action elements that create the need."
+      ],
+      "trigger_indicator_keys": [
+        "vegetation",
+        "fuels",
+        "timber",
+        "soils",
+        "air_quality",
+        "invasive_species"
+      ],
+      "trigger_terms": [
+        "vegetation management",
+        "fuels treatment",
+        "prescribed fire",
+        "timber",
+        "forest health",
+        "soil",
+        "invasive species",
+        "noxious weed",
+        "pesticide",
+        "herbicide",
+        "smoke",
+        "air quality",
+        "emissions"
+      ]
+    },
+    {
+      "authority_family_ids": [
+        "minerals_energy_authorities",
+        "hazardous_materials_site_condition"
+      ],
+      "data_needs": [
+        "Mineral estate, reserved minerals, mining claims, energy uses, hazardous materials, contamination, and due-diligence records",
+        "Phase I environmental site assessment, mine waste, landfill, spill, release, or recognized environmental condition indicators",
+        "Reserved rights, mineral report, reclamation, and hazardous-materials mitigation requirements"
+      ],
+      "defensibility_checks": [
+        "Mineral estate and hazardous-materials questions are resolved before land adjustment or ground-disturbance decisions.",
+        "Known or potential site conditions are visible as due-diligence tasks.",
+        "Reserved rights and mitigation commitments are carried into realty and decision documentation."
+      ],
+      "discipline": "minerals_hazmat",
+      "required_deliverables": [
+        "Mineral potential and reserved-rights review scope",
+        "Hazardous materials/site condition due-diligence checklist",
+        "Mitigation and disclosure requirement register"
+      ],
+      "resource_name": "Minerals, energy, and hazardous materials",
+      "resource_scope_id": "minerals_energy_hazardous_materials",
+      "sow_tasks": [
+        "Screen mineral estate, reserved rights, mining, energy, hazardous materials, contamination, and due-diligence indicators.",
+        "Define mineral report, Phase I/site condition, disclosure, mitigation, and implementation deliverables.",
+        "Coordinate minerals and hazardous-materials requirements with realty and resource mitigation commitments."
+      ],
+      "trigger_indicator_keys": [
+        "minerals",
+        "hazardous_materials",
+        "energy",
+        "contamination"
+      ],
+      "trigger_terms": [
+        "minerals",
+        "mineral estate",
+        "mining claim",
+        "reserved mineral",
+        "oil and gas",
+        "hazardous substance",
+        "hazardous waste",
+        "contamination",
+        "recognized environmental condition",
+        "phase I environmental site assessment",
+        "mine waste"
+      ]
+    },
+    {
+      "always_required": true,
+      "authority_family_ids": [
+        "nepa_core_statute",
+        "usda_nepa_procedures_7cfr_part_1b",
+        "forest_service_nepa_current_policy_directives",
+        "administrative_review_final_agency_action"
+      ],
+      "data_needs": [
+        "Stakeholders, tribes, counties, agencies, adjacent landowners, permittees, and interested publics",
+        "Scoping method, comment tracking, response-to-comments workflow, and objection or appeal path",
+        "Notice, publication, meeting, and administrative review requirements"
+      ],
+      "defensibility_checks": [
+        "Public involvement is planned as a record requirement, not a summary afterthought.",
+        "Consultation and coordination parties are linked to the resources they affect.",
+        "Comment response, objection, and decision notice responsibilities are explicit."
+      ],
+      "discipline": "public_involvement",
+      "required_deliverables": [
+        "Scoping and public-involvement plan",
+        "Consultation/coordination contact matrix",
+        "Comment response and administrative review checklist"
+      ],
+      "resource_name": "Public involvement, coordination, and administrative review",
+      "resource_scope_id": "public_involvement_coordination",
+      "sow_tasks": [
+        "Identify required and discretionary scoping, consultation, coordination, notice, and comment-response tasks.",
+        "Build a contact matrix for tribes, agencies, counties, adjacent landowners, permittees, and interested publics.",
+        "Define objection, appeal, decision notice, and final agency action documentation needs."
+      ],
+      "trigger_terms": [
+        "public comment",
+        "scoping",
+        "notice",
+        "objection",
+        "appeal",
+        "coordination",
+        "consultation"
+      ]
+    }
+  ],
+  "schema_version": "project-sow-resource-scopes-v1",
+  "scope_set_id": "region1-nepa-project-sow-resource-scopes-v1"
+}

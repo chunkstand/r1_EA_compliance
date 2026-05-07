@@ -1,0 +1,80 @@
+{
+  "consultation_indicators": [
+    "ESA Section 7",
+    "NHPA Section 106",
+    "tribal consultation",
+    "SHPO coordination"
+  ],
+  "districts": [
+    "Bozeman Ranger District"
+  ],
+  "federal_land_actions": [
+    {
+      "action_type": "dispose",
+      "description": "Convey selected National Forest System lands out of federal ownership subject to reservations, easements, and closing conditions."
+    },
+    {
+      "action_type": "acquire",
+      "description": "Acquire non-federal lands for National Forest System management, access, habitat, recreation, and consolidation benefits."
+    },
+    {
+      "action_type": "reserve_rights",
+      "description": "Reserve public access, trail, road, mineral, and resource-protection interests where needed."
+    }
+  ],
+  "forest": "Custer Gallatin National Forest",
+  "forest_plan_profile": "custer_gallatin",
+  "geography": [
+    "Crazy Mountains",
+    "Bridger, Bangtail, and Crazy Mountains Geographic Area",
+    "Madison, Henrys Lake, and Gallatin Mountains Geographic Area"
+  ],
+  "management_context": [
+    "Crazy Mountains Backcountry Area",
+    "South Crazy Recommended Wilderness Area",
+    "Inventoried roadless area",
+    "public trail access"
+  ],
+  "nepa_level": "environmental_assessment",
+  "project_id": "east-crazies-land-exchange-proposed-action",
+  "project_name": "East Crazy Inspiration Divide Land Exchange Proposed Action",
+  "project_type": "land_exchange",
+  "proponent": "USDA Forest Service",
+  "proposed_action_summary": "The Forest Service proposes a land exchange on the Custer Gallatin National Forest involving federal land disposal, non-federal land acquisition, access easements, deed restrictions, mineral reservations, trail and road access commitments, and resource-protection conditions. The action would affect National Forest System lands and lands entering federal ownership in the Crazy Mountains area.",
+  "resource_indicators": {
+    "access": [
+      "trail access",
+      "road access",
+      "right-of-way",
+      "public easements"
+    ],
+    "cultural": [
+      "tribal cultural landscape",
+      "historic properties",
+      "archaeological resources"
+    ],
+    "hazardous_materials": [
+      "phase I environmental site assessment",
+      "site condition due diligence"
+    ],
+    "minerals": [
+      "mineral estate",
+      "reserved minerals",
+      "mineral potential"
+    ],
+    "species": [
+      "listed species",
+      "Canada lynx",
+      "grizzly bear",
+      "wolverine",
+      "whitebark pine",
+      "sensitive species"
+    ],
+    "water": [
+      "wetlands",
+      "streams",
+      "riparian areas"
+    ]
+  },
+  "schema_version": "project-sow-intake-v0"
+}
