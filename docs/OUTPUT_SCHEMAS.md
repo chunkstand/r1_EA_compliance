@@ -2417,6 +2417,7 @@ Project SOW package validation must fail closed on:
 
 - missing required intake fields;
 - unsupported intake schema;
+- land-exchange intakes with no federal land action;
 - missing or empty resource-scope config;
 - duplicate resource scope IDs;
 - resource scopes that reference unknown authority-family IDs;
@@ -2430,6 +2431,7 @@ Project SOW package validation must fail closed on:
   graph assembly deduplicates nodes and edges;
 - dangling intake evidence graph edges;
 - proposed-action elements with resource areas but no evidence refs;
+- proposed-action elements with evidence refs but no triggered resource area;
 - proposed-action resource areas without the canonical graph path;
 - observed specialist/supporting report resource areas without a matching proposed-action graph
   path;

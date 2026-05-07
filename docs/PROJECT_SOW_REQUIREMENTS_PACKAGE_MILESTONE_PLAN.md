@@ -210,7 +210,7 @@ Acceptance gate:
 
 ## Sequence 4: Intake Graph Quality Fixtures
 
-Status: next.
+Status: complete.
 
 Purpose: harden the graph contract beyond the happy-path East Crazies fixture.
 
@@ -228,11 +228,17 @@ Acceptance gate:
 
 - Focused tests cover each failure category.
 - Validation messages identify the missing graph path or dangling ID.
-- No new runtime special cases are hidden outside config/fixtures and generic graph validation.
+- Duplicate observed-report graph IDs fail before graph assembly can collapse records.
+- Action elements with evidence refs but no triggered resource area fail validation.
+- Land-exchange intakes with no federal land action fail with an explicit
+  `land_exchange_intake_has_federal_land_actions` check in addition to the required-field check.
+- CLI smoke for the East Crazies intake still reports `10` SOW scopes, `23` proposed-action
+  resource areas, `115` graph nodes, `134` graph edges, and `0` validation failures.
+- No new runtime special cases are hidden outside generic graph validation.
 
 ## Sequence 5: Reviewer-Facing Package Polish And Optional Rendering
 
-Status: planned after graph quality fixtures.
+Status: next.
 
 Purpose: make the package easier for a planning lead or contracting/resource lead to use without
 changing the canonical JSON contract.

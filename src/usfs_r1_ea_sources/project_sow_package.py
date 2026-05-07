@@ -150,6 +150,20 @@ def _validate_inputs(
             details={"schema_version": intake.get("schema_version")},
         )
     )
+    checks.append(
+        _check(
+            name="land_exchange_intake_has_federal_land_actions",
+            passed=(
+                _normalize_token(str(intake.get("project_type") or ""))
+                != "land_exchange"
+                or bool(_list(intake.get("federal_land_actions")))
+            ),
+            details={
+                "federal_land_action_count": len(_list(intake.get("federal_land_actions"))),
+                "project_type": intake.get("project_type"),
+            },
+        )
+    )
     scopes = _resource_scopes(resource_config)
     checks.append(
         _check(
@@ -668,6 +682,12 @@ def _intake_graph_validation_checks(
         if _resource_area_ids(element.get("resource_area_ids"))
         and not _evidence_ref_node_ids(element)
     )
+    evidence_without_resource_area_action_elements = sorted(
+        str(element.get("action_element_id") or "")
+        for element in _proposed_action_elements(intake)
+        if _evidence_ref_node_ids(element)
+        and not _resource_area_ids(element.get("resource_area_ids"))
+    )
     missing_resource_paths = sorted(
         area_id
         for area_id in _expected_resource_area_ids(intake)
@@ -705,6 +725,13 @@ def _intake_graph_validation_checks(
             name="intake_evidence_graph_action_elements_have_evidence_refs",
             passed=not missing_evidence_action_elements,
             details={"action_element_ids": missing_evidence_action_elements},
+        ),
+        _check(
+            name="intake_evidence_graph_action_elements_trigger_resource_areas",
+            passed=not evidence_without_resource_area_action_elements,
+            details={
+                "action_element_ids": evidence_without_resource_area_action_elements,
+            },
         ),
         _check(
             name="intake_evidence_graph_resource_area_paths_complete",

@@ -9,7 +9,7 @@ Branch/worktree:
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
 
-Sequence 3 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
+Sequence 4 is implemented for the proposed-action-to-resource-SOW lane. This sequence intentionally
 stays upstream of South Plateau applicability closure and does not read or write South Plateau
 review outputs. The new public command is:
 
@@ -68,11 +68,18 @@ A local Sequence 3 CLI smoke run to `/tmp` selected `10` SOW scopes, found `23` 
 resource areas, emitted `115` graph nodes and `134` graph edges, and reported `0` validation
 failures.
 
+Sequence 4 hardened the graph-quality fixture set. Focused tests now cover missing proposed-action
+evidence refs, observed reports with no proposed-action support, proposed-action resource areas
+with no configured SOW scope, evidence-bearing action elements with no triggered resource area,
+duplicate observed-report graph IDs, dangling graph edges, and land-exchange intakes with no
+federal land action. A local Sequence 4 CLI smoke run to `/tmp` preserved the same accepted East
+Crazies counts: `10` SOW scopes, `23` proposed-action resource areas, `115` graph nodes, `134`
+graph edges, and `0` validation failures.
+
 The dedicated sequence plan is now `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Next sequence: Sequence 4, intake graph quality fixtures. Add focused negative fixtures for missing
-evidence refs, observed reports with no proposed-action support, proposed-action resource areas with
-no configured SOW scope, dangling graph edges, and land-exchange intakes with no federal land
-action. Do not convert SOW scopes into applicability or compliance findings in this lane.
+Next sequence: Sequence 5, reviewer-facing package polish and optional rendering. Keep JSON
+canonical, do not convert SOW scopes into applicability or compliance findings, and do not stage
+ignored `source_library/` outputs.
 
 ## Current Applicability/Expansion Handoff
 

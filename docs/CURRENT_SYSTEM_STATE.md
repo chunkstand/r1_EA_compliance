@@ -445,7 +445,7 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package Sequence 3 is implemented as an upstream planning lane for proposed-action
+Project SOW package Sequence 4 is implemented as an upstream planning lane for proposed-action
 intake before a complete EA review package exists. The public command is:
 
 ```bash
@@ -484,7 +484,7 @@ uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, a
 plan-consistency table. Validation requires every observed report resource area to have selected
 SOW scope coverage and to be traceable to a proposed-action resource area in the intake.
 
-A local Sequence 3 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
+A local Sequence 4 CLI smoke run for the East Crazies intake selected `10` SOW scopes, found `23`
 proposed-action resource areas, emitted a `115`-node and `134`-edge intake evidence graph, and
 reported `0` validation failures. Each proposed-action-derived resource area has the canonical
 planning path:
@@ -494,9 +494,11 @@ proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 ```
 
 The sequence plan for this lane is `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`.
-Next sequence: Sequence 4, intake graph quality fixtures. Add negative fixtures for missing
-evidence refs, dangling graph edges, observed reports without proposed-action support, resource
-areas with no configured SOW scope, and land-exchange intakes with no federal land action.
+Sequence 4 adds focused graph-quality fixtures for missing evidence refs, observed reports without
+proposed-action support, resource areas with no configured SOW scope, evidence-bearing action
+elements with no triggered resource area, duplicate observed-report graph IDs, dangling graph edges,
+and land-exchange intakes with no federal land action. Next sequence: Sequence 5, reviewer-facing
+package polish and optional rendering.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
@@ -506,8 +508,9 @@ cannot resolve to selected SOW scope coverage, observed specialist-report resour
 not derived from the proposed action or lack selected SOW scope coverage, no selected resource
 scopes, selected scopes without SOW content, duplicate intake-derived graph IDs before graph
 assembly deduplicates nodes and edges, dangling graph edges, missing action-element evidence refs,
-incomplete canonical resource-area graph paths, or observed specialist report areas without a
-proposed-action support path.
+evidence-bearing action elements with no triggered resource area, incomplete canonical
+resource-area graph paths, observed specialist report areas without a proposed-action support path,
+or land-exchange intakes with no federal land action.
 
 ## Verified State Snapshot
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from usfs_r1_ea_sources import project_sow_package as project_sow
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_AUTHORITY_INVENTORY_PATH
 from usfs_r1_ea_sources.project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
@@ -162,6 +163,11 @@ def test_project_sow_package_fails_when_observed_report_not_derived_from_action(
             for area_id in element.get("resource_area_ids", [])
             if area_id != "climate_carbon"
         ]
+    intake["proposed_action_elements"] = [
+        element
+        for element in intake["proposed_action_elements"]
+        if element.get("resource_area_ids")
+    ]
     intake_path = tmp_path / "missing_climate_action_intake.json"
     intake_path.write_text(json.dumps(intake), encoding="utf-8")
 
@@ -261,6 +267,160 @@ def test_project_sow_package_fails_duplicate_evidence_ref_graph_id(
     }
 
 
+def test_project_sow_package_fails_unconfigured_resource_area_path(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    intake["proposed_action_elements"].append(
+        {
+            "action_element_id": "unconfigured_resource_probe",
+            "description": "Probe a resource area that has no configured SOW scope.",
+            "evidence_refs": [
+                {
+                    "evidence_ref_id": "unconfigured-resource-probe-evidence",
+                    "locator": "Test fixture",
+                    "source_record_id": "TEST-PACKAGE-001",
+                    "summary": "Evidence for an intentionally unconfigured resource area.",
+                    "title": "Unconfigured Resource Probe.pdf",
+                }
+            ],
+            "resource_area_ids": ["unconfigured_resource_area"],
+            "resource_indicator_keys": [],
+        }
+    )
+
+    result = _run_with_intake(tmp_path, intake, "unconfigured_resource_area_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 3
+    assert set(failed_checks) == {
+        "expected_resource_areas_have_sow_scope",
+        "expected_resource_areas_resolve_to_scope_config",
+        "intake_evidence_graph_resource_area_paths_complete",
+    }
+    expected_details = {"resource_area_ids": ["unconfigured_resource_area"]}
+    assert failed_checks["expected_resource_areas_have_sow_scope"]["details"] == expected_details
+    assert failed_checks["expected_resource_areas_resolve_to_scope_config"][
+        "details"
+    ] == expected_details
+    assert failed_checks["intake_evidence_graph_resource_area_paths_complete"][
+        "details"
+    ] == expected_details
+
+
+def test_project_sow_package_fails_action_element_with_evidence_but_no_resource_area(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    intake["proposed_action_elements"].append(
+        {
+            "action_element_id": "context_without_resource_area",
+            "description": "Evidence-bearing context that does not trigger a resource area.",
+            "evidence_refs": [
+                {
+                    "evidence_ref_id": "context-without-resource-area-evidence",
+                    "locator": "Test fixture",
+                    "source_record_id": "TEST-PACKAGE-002",
+                    "summary": "Evidence that should not stand alone without a triggered resource area.",
+                    "title": "Context Without Resource Area.pdf",
+                }
+            ],
+            "resource_area_ids": [],
+            "resource_indicator_keys": [],
+        }
+    )
+
+    result = _run_with_intake(tmp_path, intake, "context_without_resource_area_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {
+        "intake_evidence_graph_action_elements_trigger_resource_areas"
+    }
+    assert failed_checks[
+        "intake_evidence_graph_action_elements_trigger_resource_areas"
+    ]["details"] == {"action_element_ids": ["context_without_resource_area"]}
+
+
+def test_project_sow_package_fails_duplicate_observed_report_graph_id(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    intake["observed_specialist_reports"][1]["report_id"] = intake[
+        "observed_specialist_reports"
+    ][0]["report_id"]
+
+    result = _run_with_intake(tmp_path, intake, "duplicate_observed_report_id_intake.json")
+
+    failed_checks = _failed_checks(result)
+    duplicate_node_id = "observed_specialist_report:ecid_mineral_potential_report_2023"
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 1
+    assert set(failed_checks) == {"intake_evidence_graph_node_ids_unique"}
+    assert failed_checks["intake_evidence_graph_node_ids_unique"]["details"] == {
+        "duplicate_input_node_ids": [duplicate_node_id],
+        "duplicate_node_ids": [duplicate_node_id],
+    }
+
+
+def test_project_sow_graph_validation_reports_dangling_edge(tmp_path: Path) -> None:
+    result = run_project_sow_package(
+        intake_path=INTAKE_PATH,
+        output_dir=tmp_path / "source_library",
+    )
+    package = json.loads(result.package_path.read_text())
+    graph = json.loads(json.dumps(package["intake_evidence_graph"]))
+    dangling_edge = {
+        "edge_id": "BROKEN:missing_node->resource_area:climate_carbon",
+        "edge_type": "BROKEN",
+        "from_node_id": "missing_node",
+        "to_node_id": "resource_area:climate_carbon",
+    }
+    graph["edges"].append(dangling_edge)
+    graph["edge_count"] += 1
+    intake = json.loads(INTAKE_PATH.read_text())
+
+    validation_checks = project_sow._intake_graph_validation_checks(graph, intake, [])
+    failed_checks = {
+        check["name"]: check for check in validation_checks if not check["passed"]
+    }
+
+    assert set(failed_checks) == {"intake_evidence_graph_edges_resolve"}
+    assert failed_checks["intake_evidence_graph_edges_resolve"]["details"] == {
+        "dangling_edge_ids": [dangling_edge["edge_id"]]
+    }
+
+
+def test_project_sow_package_fails_land_exchange_without_federal_land_action(
+    tmp_path: Path,
+) -> None:
+    intake = json.loads(INTAKE_PATH.read_text())
+    intake["federal_land_actions"] = []
+
+    result = _run_with_intake(tmp_path, intake, "no_federal_land_action_intake.json")
+
+    failed_checks = _failed_checks(result)
+    assert result.summary["passed"] is False
+    assert result.summary["output_written"] is False
+    assert result.summary["validation_failure_count"] == 2
+    assert set(failed_checks) == {
+        "land_exchange_intake_has_federal_land_actions",
+        "required_intake_fields_present",
+    }
+    assert failed_checks["required_intake_fields_present"]["details"] == {
+        "missing_fields": ["federal_land_actions"]
+    }
+    assert failed_checks["land_exchange_intake_has_federal_land_actions"]["details"] == {
+        "federal_land_action_count": 0,
+        "project_type": "land_exchange",
+    }
+
+
 def _has_canonical_graph_path(graph: dict, area_id: str) -> bool:
     resource_node_id = f"resource_area:{area_id}"
     node_types = {node["node_id"]: node["node_type"] for node in graph["nodes"]}
@@ -313,3 +473,20 @@ def _edge_exists(
         and (to_node_type is None or node_types.get(edge["to_node_id"]) == to_node_type)
         for edge in graph["edges"]
     )
+
+
+def _run_with_intake(tmp_path: Path, intake: dict, filename: str):
+    intake_path = tmp_path / filename
+    intake_path.write_text(json.dumps(intake), encoding="utf-8")
+    return run_project_sow_package(
+        intake_path=intake_path,
+        output_dir=tmp_path / "source_library",
+    )
+
+
+def _failed_checks(result) -> dict:
+    return {
+        check["name"]: check
+        for check in result.summary["failed_validation_checks"]
+        if not check["passed"]
+    }
