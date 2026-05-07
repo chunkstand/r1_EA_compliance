@@ -10,52 +10,52 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 4 0 obj
-<< /Length 2286 >>
+<< /Length 2121 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
-(EAST CRAZIES EA SOILS SCOPE OF WORK) Tj T*
+(EAST CRAZIES EXAMPLE SOILS SCOPE OF WORK) Tj T*
 () Tj T*
 () Tj T*
 (Date: 2026-05-07) Tj T*
 () Tj T*
-(Project: East Crazy Inspiration Divide Land Exchange Environmental Assessment) Tj T*
+(Audience: WLG demonstration package) Tj T*
+(Purpose: show that the system can produce resource-area scopes of work for a new NEPA project from a) Tj T*
+(structured project intake) Tj T*
+(Example project: East Crazy Inspiration Divide land exchange) Tj T*
 (Forest: Custer Gallatin National Forest) Tj T*
 (District: Bozeman Ranger District) Tj T*
 (Resource area: Soils) Tj T*
 () Tj T*
-(Prepare the soils work needed to support the East Crazies EA record. The work must determine whether) Tj T*
-(the existing EA and Plan Consistency Table soil conclusions are still supported, or whether the Forest) Tj T*
-(Service needs revised soils analysis, mitigation, monitoring, or EA text.) Tj T*
+(This example assumes a new project is in early planning, before late-stage NEPA materials or resource) Tj T*
+(analysis packages exist. The SOW is generated from the proposed action, project location, preliminary) Tj T*
+(action elements, parcel/trail/access features, likely resource triggers, and standard public source) Tj T*
+(requirements.) Tj T*
 () Tj T*
-(Focus the scope on the soil issues created by the proposed action:) Tj T*
+(For the East Crazies example, the soils scope is driven by:) Tj T*
 () Tj T*
-(- Sweet Trunk Trail No. 274, including the new trail alignment and drainage design.) Tj T*
-(- Inspiration Divide Trail No. 8 reroute, including the removed stream/wetland crossing.) Tj T*
-(- Big Timber Canyon Trailhead improvements.) Tj T*
-(- Stream crossings, wetland/riparian approaches, wet soils, hydric soils, erosion, and sediment) Tj T*
-(  delivery.) Tj T*
-(- Parcel restrictions, wetland covenants, access/easements, grazing-related improvements, and any) Tj T*
-(  acquired-parcel soil management needs.) Tj T*
+(- proposed new or rerouted trail segments;) Tj T*
+(- trailhead improvements;) Tj T*
+(- stream crossings, wetland/riparian approaches, wet soils, hydric soils, erosion, and sediment) Tj T*
+(  delivery;) Tj T*
+(- parcel restrictions, access/easements, grazing-related improvements, and acquired-parcel soil) Tj T*
+(  management needs.) Tj T*
 () Tj T*
-(The expected product is a Soils Specialist Report unless the Forest Service soils reviewer approves a) Tj T*
-(short no-issue or incorporated-analysis memo. Either product must address the fieldwork, analysis, and) Tj T*
-(deliverables below.) Tj T*
+(The consultant product is a Soils Specialist Report or, if approved by the Forest Service soils) Tj T*
+(reviewer, a short issue-screening memo. Either product must support later EA drafting, Forest Plan) Tj T*
+(consistency documentation, mitigation commitments, and implementation planning.) Tj T*
 () Tj T*
 (This is a planning and contracting support SOW. It is not a final agency decision, legal sufficiency) Tj T*
 (review, or NEPA compliance determination.) Tj T*
 () Tj T*
 (FIELDWORK) Tj T*
 () Tj T*
-(1. Pre-Field Review) Tj T*
+(1. Intake And Data Setup) Tj T*
 () Tj T*
-(Before mobilization, review:) Tj T*
+(Before fieldwork, compile the new-project intake package:) Tj T*
 () Tj T*
-(- final EA, proposed action, alternatives, maps, Plan Consistency Table, Roads/Trails/Access Report,) Tj T*
-(  Wetlands Report, and parcel restriction documents;) Tj T*
-(- Sweet Trunk Trail alignment, Inspiration Divide Trail reroute, Big Timber Canyon Trailhead) Tj T*
-(  footprint, easements, access routes, stream crossings, wetlands, riparian areas, parcel boundaries,) Tj T*
-(  and staging/restoration areas;) Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 1 of 8) Tj
+(- proposed action summary, preliminary alternatives if any, project purpose and need, and known) Tj T*
+(  action elements;) Tj T*
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 1 of 8) Tj
 ET
 endstream
 endobj
@@ -63,52 +63,52 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
 endobj
 6 0 obj
-<< /Length 2466 >>
+<< /Length 2776 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
-(- NRCS Web Soil Survey/SSURGO soil map units, slope, erosion hazard, drainage, hydric soil ratings,) Tj T*
+(- conceptual trail, road, access, easement, trailhead, staging, restoration, and parcel boundaries;) Tj T*
+(- preliminary GIS layers for parcels, routes, crossings, wetlands, riparian areas, streams, slopes,) Tj T*
+(  landforms, and administrative boundaries;) Tj T*
+(- NRCS Web Soil Survey/SSURGO soil map units, erosion hazard, drainage, hydric soil ratings,) Tj T*
 (  compaction/rutting limits, and revegetation limitations;) Tj T*
-(- DEM/slope data, NHD, NWI, MTNHP wetland/riparian data, aerial imagery, route layers, grazing) Tj T*
-(  allotment/improvement layers, and any available landslide or mass-wasting data;) Tj T*
-(- Custer Gallatin soil, watershed, road/trail, riparian, recreation, invasive species, and) Tj T*
-(  backcountry/recommended-wilderness plan components that affect soil work.) Tj T*
+(- DEM/slope data, NHD, NWI, MTNHP wetland/riparian data, aerial imagery, grazing) Tj T*
+(  allotment/improvement layers, and available landslide or mass-wasting data;) Tj T*
+(- applicable Forest Plan soil, watershed, road/trail, riparian, recreation, invasive species, and) Tj T*
+(  backcountry/recommended-wilderness direction.) Tj T*
+() Tj T*
+(Flag missing information early. Typical missing items for a new project are final trail alignments,) Tj T*
+(crossing designs, trailhead footprints, parcel restriction language, construction methods, equipment) Tj T*
+(assumptions, access permission, and GIS source dates.) Tj T*
 () Tj T*
 (2. Fieldwork Plan) Tj T*
 () Tj T*
-(Submit a fieldwork plan for Forest Service review before fieldwork starts. Include:) Tj T*
+(Submit a fieldwork plan for Forest Service approval before mobilization. Include:) Tj T*
 () Tj T*
 (- field questions and decision points;) Tj T*
 (- activity-area definitions for trail, trailhead, access, wetland/riparian, grazing-improvement, and) Tj T*
 (  parcel-management features;) Tj T*
-(- maps showing soil map units, slopes, proposed review areas, trail/road alignments, crossings,) Tj T*
-(  wetlands, riparian areas, and parcel boundaries;) Tj T*
+(- maps showing proposed review areas, soil map units, slopes, stream/wetland interfaces, route) Tj T*
+(  alignments, crossings, parcel boundaries, and access constraints;) Tj T*
 (- proposed observation points, transects, meander routes, representative soil checks, and photo) Tj T*
 (  points;) Tj T*
-(- method for documenting soil disturbance for linear trail features;) Tj T*
+(- method for documenting soil disturbance on linear trail features;) Tj T*
 (- method for deciding whether FW-STD-SOIL-01 applies, does not apply, or needs a linear-feature) Tj T*
 (  explanation;) Tj T*
-(- GPS/photo naming, field forms, data transfer format, access needs, safety constraints, and) Tj T*
-(  coordination needs.) Tj T*
+(- GPS/photo naming, field forms, data transfer format, schedule, access needs, safety constraints,) Tj T*
+(  and interdisciplinary coordination needs.) Tj T*
 () Tj T*
 (3. Field Review Areas) Tj T*
 () Tj T*
-(Review the following where access allows:) Tj T*
+(For the East Crazies example, review these areas where access allows:) Tj T*
 () Tj T*
-(- Sweet Trunk Trail alignment.) Tj T*
-(- Inspiration Divide Trail reroute.) Tj T*
-(- Big Timber Canyon Trailhead improvement area.) Tj T*
-(- Stream crossings, wetland/riparian approaches, seeps/springs, slope breaks, toe slopes, drainage) Tj T*
-(  paths, and sediment-routing areas.) Tj T*
-(- Federal parcels leaving ownership and non-federal parcels entering ownership where parcel) Tj T*
-(  restrictions or future NFS management create soil questions.) Tj T*
-(- Existing trails, roads, route drainage, grazing improvements, compacted areas, eroding areas,) Tj T*
-(  disturbed areas, and revegetation/restoration areas.) Tj T*
-() Tj T*
-(4. Field Methods) Tj T*
-() Tj T*
-(Use field methods sufficient to support report-ready conclusions:) Tj T*
-() Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 2 of 8) Tj
+(- proposed Sweet Trunk Trail corridor;) Tj T*
+(- proposed Inspiration Divide Trail reroute corridor;) Tj T*
+(- Big Timber Canyon Trailhead improvement area;) Tj T*
+(- proposed stream crossings, wetland/riparian approaches, seeps/springs, slope breaks, toe slopes,) Tj T*
+(  drainage paths, and sediment-routing areas;) Tj T*
+(- federal disposal parcels and non-federal acquisition parcels where parcel restrictions or future) Tj T*
+(  NFS management create soil questions;) Tj T*
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 2 of 8) Tj
 ET
 endstream
 endobj
@@ -116,14 +116,23 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
 endobj
 8 0 obj
-<< /Length 2780 >>
+<< /Length 2675 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
+(- existing roads, trails, route drainage, grazing improvements, compacted areas, eroding areas,) Tj T*
+(  disturbed areas, and revegetation/restoration areas.) Tj T*
+() Tj T*
+(For another new project, substitute the project-specific action elements and resource trigger areas.) Tj T*
+() Tj T*
+(4. Field Methods) Tj T*
+() Tj T*
+(Use field methods sufficient to support report-ready conclusions:) Tj T*
+() Tj T*
 (- verify representative soil map units, landforms, slope classes, drainage, surface texture, coarse) Tj T*
 (  fragments, hydric/wet soil indicators, and erosion susceptibility;) Tj T*
 (- classify visible soil disturbance, including compaction, rutting, displacement, puddling, surface) Tj T*
 (  erosion, organic-matter loss, and mass movement;) Tj T*
-(- document representative conditions with GPS points/tracks/polygons and photos;) Tj T*
+(- document representative conditions with GPS points, tracks, polygons, and photos;) Tj T*
 (- use shovel checks, probes, or soil pits where needed for hydric indicators, rooting depth,) Tj T*
 (  restrictive layers, wetness, compaction, or restoration feasibility;) Tj T*
 (- check whether trail and trailhead design can hydrologically disconnect drainage from waterbodies) Tj T*
@@ -152,16 +161,7 @@ BT /F1 8 Tf 12 TL 34 568 Td
 () Tj T*
 (ANALYSIS) Tj T*
 () Tj T*
-(1. Existing Condition) Tj T*
-() Tj T*
-(Describe the soil setting for the affected action areas:) Tj T*
-() Tj T*
-(- soil map units, slopes, parent materials, drainage, erosion hazard, compaction/rutting limits,) Tj T*
-(  revegetation limits, hydric soil indicators, and sensitive soil attributes;) Tj T*
-(- existing roads, trails, trailheads, stream crossings, wetland/riparian areas, grazing) Tj T*
-(  improvements, disturbed areas, and route drainage;) Tj T*
-(- existing soil disturbance and sediment connectivity;) Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 3 of 8) Tj
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 3 of 8) Tj
 ET
 endstream
 endobj
@@ -169,52 +169,52 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
 endobj
 10 0 obj
-<< /Length 2635 >>
+<< /Length 2715 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
+(1. Existing Condition) Tj T*
+() Tj T*
+(Describe the soil setting for affected action areas:) Tj T*
+() Tj T*
+(- soil map units, slopes, parent materials, drainage, erosion hazard, compaction/rutting limits,) Tj T*
+(  revegetation limits, hydric soil indicators, and sensitive soil attributes;) Tj T*
+(- existing roads, trails, trailheads, stream crossings, wetland/riparian areas, grazing) Tj T*
+(  improvements, disturbed areas, and route drainage;) Tj T*
+(- existing soil disturbance and sediment connectivity;) Tj T*
 (- soil conditions on disposal and acquisition parcels where relevant to the land exchange decision;) Tj T*
 (- data gaps and confidence limits.) Tj T*
 () Tj T*
-(2. Effects) Tj T*
+(2. Proposed-Action Effects) Tj T*
 () Tj T*
-(Analyze no action, proposed action, Alternative 1 if retained, and any other Forest Service-provided) Tj T*
-(alternative. Address:) Tj T*
+(Analyze no action, proposed action, preliminary alternatives if any, and any later Forest) Tj T*
+(Service-provided alternative. Address:) Tj T*
 () Tj T*
 (- soil disturbance from trail construction, trail reroute, trailhead work, crossings, access,) Tj T*
 (  staging, restoration, and parcel-management changes;) Tj T*
-(- whether trail work near or across waterbodies could deliver sediment, and whether design features) Tj T*
-(  keep the magnitude and duration low;) Tj T*
-(- whether the Trail No. 8 reroute reduces soil and sediment effects by removing the existing) Tj T*
+(- whether trail work near or across waterbodies could deliver sediment, and what design features) Tj T*
+(  would reduce that risk;) Tj T*
+(- whether a trail reroute would reduce soil or sediment effects by removing an existing) Tj T*
 (  stream/wetland crossing;) Tj T*
-(- whether wetland covenants, no-subdivision restrictions, no-mineral-development restrictions, and) Tj T*
-(  retained wetland parcels reduce foreseeable soil disturbance;) Tj T*
-(- whether acquired parcels create new soil-management needs for NFS management;) Tj T*
-(- whether trailhead resurfacing, parking, toilet facilities, or kiosk construction require erosion,) Tj T*
-(  compaction, drainage, topsoil, or revegetation controls;) Tj T*
+(- whether parcel restrictions, wetland covenants, no-subdivision restrictions, or) Tj T*
+(  no-mineral-development restrictions would reduce foreseeable soil disturbance after conveyance;) Tj T*
+(- whether acquired parcels would create new soil-management needs for NFS management;) Tj T*
+(- whether trailhead resurfacing, parking, toilet facilities, kiosk construction, or similar) Tj T*
+(  improvements would require erosion, compaction, drainage, topsoil, or revegetation controls;) Tj T*
 (- whether grazing improvements, grazing use, hazardous materials, minerals, vegetation, invasive) Tj T*
-(  species, restoration, or carbon assumptions create soil handling or mitigation needs.) Tj T*
+(  species, restoration, or carbon assumptions would create soil handling or mitigation needs.) Tj T*
 () Tj T*
 (Quantify disturbance where useful. For linear features, use length, width, crossing count, sensitive) Tj T*
 (soil crossings, wetland/riparian approaches, drainage features, and representative disturbance class) Tj T*
 (instead of forcing all effects into an acreage metric.) Tj T*
 () Tj T*
-(3. Forest Plan Consistency) Tj T*
+(3. Forest Plan Requirements) Tj T*
 () Tj T*
 (Evaluate and document consistency with:) Tj T*
 () Tj T*
 (- FW-DC-SOIL-01, FW-DC-SOIL-02, and FW-DC-SOIL-03;) Tj T*
 (- FW-STD-SOIL-01, including the rationale for applying or screening out the standard;) Tj T*
 (- FW-GDL-SOIL-01 through FW-GDL-SOIL-08;) Tj T*
-(- related road/trail direction, especially hydrologic disconnection, mass-wasting avoidance, and) Tj T*
-(  hardened stream crossings;) Tj T*
-(- invasive species, revegetation, riparian, wetland, aquatic, recreation, backcountry, and) Tj T*
-(  recommended-wilderness components that affect soil or sediment analysis.) Tj T*
-() Tj T*
-(The report must state where it agrees with, narrows, or revises the existing Plan Consistency Table.) Tj T*
-() Tj T*
-(4. Mitigation, BMPs, And Monitoring) Tj T*
-() Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 4 of 8) Tj
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 4 of 8) Tj
 ET
 endstream
 endobj
@@ -222,9 +222,19 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
 endobj
 12 0 obj
-<< /Length 2589 >>
+<< /Length 2644 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
+(- related road/trail direction, especially hydrologic disconnection, mass-wasting avoidance, and) Tj T*
+(  hardened stream crossings;) Tj T*
+(- invasive species, revegetation, riparian, wetland, aquatic, recreation, backcountry, and) Tj T*
+(  recommended-wilderness components that affect soil or sediment analysis.) Tj T*
+() Tj T*
+(The report must identify which Forest Plan components apply to the proposed action and what design,) Tj T*
+(mitigation, or monitoring requirements should carry forward.) Tj T*
+() Tj T*
+(4. Mitigation, BMPs, And Monitoring) Tj T*
+() Tj T*
 (Prepare a mitigation/BMP/monitoring matrix with action element, location trigger, soil concern,) Tj T*
 (required measure, responsible party, timing, and verification method. Include, as applicable:) Tj T*
 () Tj T*
@@ -245,20 +255,32 @@ BT /F1 8 Tf 12 TL 34 568 Td
 (and vegetation/restoration actions that could affect ground cover or erosion.) Tj T*
 () Tj T*
 (Clearly identify unresolved field limitations, assumptions, and Forest Service decisions needed) Tj T*
-(before soil conclusions can be used in the EA, decision record, collection agreement, trail design) Tj T*
-(package, or implementation file.) Tj T*
+(before soil conclusions can be used in EA drafting, decision support, collection agreements, trail) Tj T*
+(design, or implementation files.) Tj T*
 () Tj T*
 (DELIVERABLES) Tj T*
 () Tj T*
 (1. Kickoff And Data Request Log) Tj T*
 () Tj T*
-(Provide kickoff notes, received and missing data, access constraints, source documents reviewed, stop) Tj T*
+(Provide kickoff notes, received and missing data, access constraints, source materials used, stop) Tj T*
 (conditions, and Forest Service decisions needed before fieldwork.) Tj T*
 () Tj T*
 (Acceptance criteria:) Tj T*
 () Tj T*
-(- identifies missing GIS, trail design, parcel, wetland, route, or Forest Plan data;) Tj T*
-(- identifies whether the work will proceed as a standalone soils report or no-issue memo;) Tj T*
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 5 of 8) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 2224 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
+(- identifies missing GIS, trail design, parcel, wetland, route, construction-method, or Forest Plan) Tj T*
+(  data;) Tj T*
+(- identifies whether the work will proceed as a standalone soils report or issue-screening memo;) Tj T*
 (- identifies field-season and access constraints.) Tj T*
 () Tj T*
 (2. Fieldwork Plan) Tj T*
@@ -267,21 +289,10 @@ BT /F1 8 Tf 12 TL 34 568 Td
 (data conventions, schedule, safety/access plan, and coordination needs.) Tj T*
 () Tj T*
 (Acceptance criteria:) Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 5 of 8) Tj
-ET
-endstream
-endobj
-13 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
-endobj
-14 0 obj
-<< /Length 2246 >>
-stream
-BT /F1 8 Tf 12 TL 34 568 Td
 () Tj T*
-(- covers Sweet Trunk Trail, Inspiration Divide reroute, Big Timber Canyon Trailhead, crossings,) Tj T*
-(  wetland/riparian interfaces, and parcel restrictions;) Tj T*
-(- explains how soil disturbance will be documented for linear trail features;) Tj T*
+(- covers the proposed trail, reroute, trailhead, crossings, wetland/riparian interfaces, parcel) Tj T*
+(  restrictions, and other project-specific soil trigger areas;) Tj T*
+(- explains how soil disturbance will be documented for linear features;) Tj T*
 (- identifies whether wet-season or post-storm verification may be needed.) Tj T*
 () Tj T*
 (3. Field Data Package) Tj T*
@@ -305,22 +316,11 @@ BT /F1 8 Tf 12 TL 34 568 Td
 (- action-element by soil concern matrix;) Tj T*
 (- stream/wetland crossing and sediment-connectivity table;) Tj T*
 (- mitigation/BMP/monitoring matrix;) Tj T*
-(- Forest Plan consistency matrix;) Tj T*
+(- Forest Plan requirements matrix;) Tj T*
 (- data-gap and uncertainty table;) Tj T*
 (- project, soil-analysis area, soil map unit, slope/erosion hazard, wetland/riparian, road/trail,) Tj T*
 (  observation, and mitigation maps.) Tj T*
-() Tj T*
-(Acceptance criteria:) Tj T*
-() Tj T*
-(- maps include scale, north arrow, coordinate system, data date, project boundary, activity-area IDs,) Tj T*
-(  and source attribution;) Tj T*
-(- tables distinguish no action, proposed action, Alternative 1, and any other analyzed alternative;) Tj T*
-(- linear-feature effects use useful measures and do not rely on misleading acreage-only metrics.) Tj T*
-() Tj T*
-(5. Draft Soils Specialist Report Or No-Issue Memo) Tj T*
-() Tj T*
-(Provide a draft report or approved no-issue memo with affected environment, methods, spatial and) Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 6 of 8) Tj
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 6 of 8) Tj
 ET
 endstream
 endobj
@@ -328,30 +328,42 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 14 0 R >>
 endobj
 16 0 obj
-<< /Length 2189 >>
+<< /Length 2195 >>
 stream
 BT /F1 8 Tf 12 TL 34 568 Td
-(temporal scale, resource indicators, direct and indirect effects, cumulative effects,) Tj T*
-(mitigation/BMPs/monitoring, Forest Plan consistency, references, and appendices.) Tj T*
 () Tj T*
 (Acceptance criteria:) Tj T*
 () Tj T*
-(- directly addresses the final EA, Plan Consistency Table, Roads/Trails/Access Report, and Wetlands) Tj T*
-(  Report;) Tj T*
+(- maps include scale, north arrow, coordinate system, data date, project boundary, activity-area IDs,) Tj T*
+(  and source attribution;) Tj T*
+(- tables distinguish no action, proposed action, preliminary alternatives, and any later analyzed) Tj T*
+(  alternative;) Tj T*
+(- linear-feature effects use useful measures and do not rely on misleading acreage-only metrics.) Tj T*
+() Tj T*
+(5. Draft Soils Specialist Report Or Issue-Screening Memo) Tj T*
+() Tj T*
+(Provide a draft report or approved issue-screening memo with affected environment, methods, spatial) Tj T*
+(and temporal scale, resource indicators, direct and indirect effects, cumulative effects,) Tj T*
+(mitigation/BMPs/monitoring, Forest Plan requirements, references, and appendices.) Tj T*
+() Tj T*
+(Acceptance criteria:) Tj T*
+() Tj T*
+(- directly addresses the proposed action and each soil-triggering action element;) Tj T*
 (- states whether FW-STD-SOIL-01 applies or is screened out for trail work;) Tj T*
-(- ties conclusions to field evidence, GIS evidence, source documents, or specialist judgment.) Tj T*
+(- ties conclusions to field evidence, GIS evidence, public source requirements, or specialist) Tj T*
+(  judgment.) Tj T*
 () Tj T*
 (6. EA-Ready Soils Text) Tj T*
 () Tj T*
-(Provide concise text for the EA or appendix covering affected environment, environmental) Tj T*
-(consequences, mitigation/design criteria, Forest Plan consistency, and cumulative effects if needed.) Tj T*
+(Provide concise text for the future EA or appendix covering affected environment, environmental) Tj T*
+(consequences, mitigation/design criteria, Forest Plan requirements, and cumulative effects if needed.) Tj T*
 () Tj T*
 (Acceptance criteria:) Tj T*
 () Tj T*
 (- suitable for public disclosure;) Tj T*
-(- references the soils report or no-issue memo instead of duplicating all technical detail;) Tj T*
-(- identifies any design criteria or monitoring that must carry into the decision or implementation) Tj T*
-(  file.) Tj T*
+(- references the soils report or issue-screening memo instead of duplicating all technical detail;) Tj T*
+(- identifies design criteria or monitoring that must carry into later decision or implementation) Tj T*
+(  files.) Tj T*
 () Tj T*
 (7. Final Report And Data Package) Tj T*
 () Tj T*
@@ -361,6 +373,17 @@ BT /F1 8 Tf 12 TL 34 568 Td
 () Tj T*
 (Acceptance criteria:) Tj T*
 () Tj T*
+0 -40 Td (East Crazies Example Soils Scope Of Work | Page 7 of 8) Tj
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Length 1724 >>
+stream
+BT /F1 8 Tf 12 TL 34 568 Td
 (- resolves Forest Service and ID-team comments;) Tj T*
 (- preserves source citations and field-data traceability;) Tj T*
 (- documents residual uncertainty and remaining Forest Service decisions;) Tj T*
@@ -373,17 +396,6 @@ BT /F1 8 Tf 12 TL 34 568 Td
 (- 36 CFR 220.7, Environmental assessment and decision notice:) Tj T*
 (  https://ecfr.io/Title-36/Section-220.7) Tj T*
 (- USDA Forest Service Manual, Region 1 Supplement, FSM 2550 Soil Management.) Tj T*
-0 -40 Td (East Crazies EA Soils Scope Of Work | Page 7 of 8) Tj
-ET
-endstream
-endobj
-17 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1008 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 16 0 R >>
-endobj
-18 0 obj
-<< /Length 1255 >>
-stream
-BT /F1 8 Tf 12 TL 34 568 Td
 (- Custer Gallatin National Forest Land Management Plan:) Tj T*
 (  https://www.fs.usda.gov/r01/custergallatin/planning/forest-plan/custer-gallatin-land-management-plan-forest-plan-revision) Tj T*
 (- Forest Service Soil Quality Monitoring resources:) Tj T*
@@ -394,14 +406,10 @@ BT /F1 8 Tf 12 TL 34 568 Td
 (  https://www.nrcs.usda.gov/resources/data-and-reports/web-soil-survey) Tj T*
 (- Forest Service National Best Management Practices Program:) Tj T*
 (  https://www.fs.usda.gov/naturalresources/watershed/bmp.shtml) Tj T*
-(- East Crazy Inspiration Divide Final Environmental Assessment, January 2025.) Tj T*
-(- East Crazies Plan Consistency Table.) Tj T*
-(- East Crazies Roads, Trails, and Access Report.) Tj T*
-(- East Crazies Wetlands Report.) Tj T*
-(- Post Exchange Federal Parcels and Restrictions.) Tj T*
-(- South Plateau Landscape Area Treatment Project, `Soils Report Revised_Anderson 2023.pdf`, used as) Tj T*
-(  a Custer Gallatin soils report structure model.) Tj T*
-0 -340 Td (East Crazies EA Soils Scope Of Work | Page 8 of 8) Tj
+(- East Crazies example project intake assumptions: land exchange, proposed trail construction,) Tj T*
+(  proposed trail reroute, trailhead improvements, parcel restrictions, easements, wetland/riparian) Tj T*
+(  interfaces, grazing-related improvements, and acquired-parcel management needs.) Tj T*
+0 -244 Td (East Crazies Example Soils Scope Of Work | Page 8 of 8) Tj
 ET
 endstream
 endobj
@@ -415,23 +423,23 @@ xref
 0000000064 00000 n 
 0000000169 00000 n 
 0000000239 00000 n 
-0000002577 00000 n 
-0000002704 00000 n 
-0000005222 00000 n 
-0000005349 00000 n 
-0000008181 00000 n 
-0000008308 00000 n 
-0000010996 00000 n 
-0000011125 00000 n 
-0000013767 00000 n 
-0000013896 00000 n 
-0000016195 00000 n 
-0000016324 00000 n 
-0000018566 00000 n 
-0000018695 00000 n 
-0000020003 00000 n 
+0000002412 00000 n 
+0000002539 00000 n 
+0000005367 00000 n 
+0000005494 00000 n 
+0000008221 00000 n 
+0000008348 00000 n 
+0000011116 00000 n 
+0000011245 00000 n 
+0000013942 00000 n 
+0000014071 00000 n 
+0000016348 00000 n 
+0000016477 00000 n 
+0000018725 00000 n 
+0000018854 00000 n 
+0000020631 00000 n 
 trailer
 << /Size 20 /Root 1 0 R >>
 startxref
-20132
+20760
 %%EOF

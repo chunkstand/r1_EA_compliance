@@ -32,23 +32,16 @@ An ad hoc soils resource-area SOW has been produced at
 docs, `config/project_sow_resource_scopes_v1.json`, the East Crazies intake fixture, and a
 temporary East Crazies package smoke run under `/tmp/east-crazies-soils-sow-package/`.
 
-The SOW has been revised into a shorter consultant-facing structure: a brief project header,
-Fieldwork, Analysis, Deliverables, and Sources Cited. The revision removes the earlier source-basis
-narrative, schedule section, open-decision section, and traceability matrix so the document starts
-with the work a soils consultant needs to perform immediately. It still carries the core requirements
-from the Region 1 FSM 2550 Soil Management Supplement, the South Plateau Custer Gallatin soils
-specialist report model, the East Crazies Final EA, the East Crazies Plan Consistency Table, the
-East Crazies Roads/Trails/Access Report, the East Crazies Wetlands Report, and the post-exchange
-parcel restrictions.
+The SOW has been revised into a WLG-facing new-project example: a brief purpose/header section,
+Fieldwork, Analysis, Deliverables, and Sources Cited. It now demonstrates that the system can produce
+resource-area scopes of work for a new NEPA project from structured intake before late-stage NEPA
+materials or resource-analysis packages exist. East Crazies is used as the concrete example action,
+not as a completed-document review. The revision removes the prior completed-project review framing.
 
-Important boundary: `soil_resources` is covered by the selected `vegetation_soils_air_quality`
-scope, but the current East Crazies intake does not explicitly list soils as a
-proposed-action-derived resource area and the observed East Crazies final specialist report folder
-has no standalone soils specialist report. The local soils specialist report reviewed for structure
-was `Soils Report Revised_Anderson 2023.pdf` from the South Plateau Landscape Area Treatment
-Project; it was used as a Custer Gallatin report model, not as East Crazies project evidence. This
-artifact does not change package-generation code, generated source-library policy, applicability
-decisions, compliance findings, legal sufficiency, or final agency decision status.
+Important boundary: this is a generated SOW example, not an East Crazies compliance review or a
+statement that completed East Crazies materials are required for new-project SOW generation.
+This artifact does not change package-generation code, generated source-library policy,
+applicability decisions, compliance findings, legal sufficiency, or final agency decision status.
 
 ## Current Project SOW Package Branch Handoff
 
