@@ -53,7 +53,7 @@ The lane remains bounded to
 avoids broad Region 1 claims, South Plateau blocker resolution, downloader/catalog regeneration,
 root-level `East_Crazies_*` draft dependency, or legal sufficiency certification.
 
-The latest East Crazies compliance-matrix refresh replayed the current gates on 2026-05-07:
+The East Crazies compliance-matrix replay refreshed the current gates on 2026-05-07:
 
 - `compliance-review --reuse-package-cache`: refreshed the canonical compliance review and matrix
   family under `source_library/reviews/v1-cg-ecid-compliance-review/`, with
@@ -75,6 +75,12 @@ The latest East Crazies compliance-matrix refresh replayed the current gates on 
   results passed, and South Plateau expansion-only blockers still separate as
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
+The WLG sample readability pass on 2026-05-07 refreshed only the canonical matrix rendering from the
+existing `compliance_matrix.json`: `compliance_matrix.md` and `compliance_matrix.pdf` now start with
+a deterministic Accuracy Audit and render the NEPA/authority rows and Forest Plan rows as concise
+tables. The JSON matrix remained the traceability contract. Follow-on `ea-consistency-document`,
+`phase-eval`, `promotion-suite`, and `final-qa-certification --validate-only` replays are green.
+
 The baseline Sequence 0 replay originally recorded:
 
 - `ea-consistency-document --validate-only`: passed with `reviewer_ready=true`, valid JSON,
@@ -93,9 +99,15 @@ The baseline Sequence 0 replay originally recorded:
 
 Current canonical artifact pointers:
 
+- Compliance matrix Markdown:
+  `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.md`
+  (`sha256=70c58a567de1b9ee0989e6ec6ab2e3c6ee8fe0e4b9ac33f1aabca19aa1bcd28c`)
+- Compliance matrix PDF:
+  `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.pdf`
+  (`sha256=d73b9f8e465980fbde8db0f956a4eff528269bda811e6db5387cf167f3fa0eb4`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=2c19b1f838cba17fecbe8802b00029c58cab3e7ef60ea356683a9a20301e6538`)
+  (`sha256=fc848326e6b217d97c73555f17df16f4dbaff0843d73f08eeb3f78339e01d6ca`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=df7d953891c692d2dab94d9141b4e9ba0934ddeceac4da3111d30c11a55a281a`)
@@ -104,16 +116,16 @@ Current canonical artifact pointers:
   (`sha256=1a3529285f6270b6c5bbd1c5dcf473af6efa790e7cc8962cd2b51bad979f2c20`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=e84e5b958c390763154320f26fd2c18a985ae703c579546205fb3396a74b7f54`)
+  (`sha256=bf0a2e57e4129dc109fe114931341653dfefc578d227bc34296e7aef1745844d`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=24ce31ddd6876277630517d530d49d8d7f3ac2a10e111a9d2c3484108386de34`)
+  (`sha256=e19cfc9e41b82b1b4a47c5caba20d23f28acd4f9f38e0b6588115ff34d3df3d4`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=c8792f69afeadbebec0cabd872c09c049a3b0179e213bd044839bb34c4a56c42`)
+  (`sha256=9bf73f1051ffe8c88dab749ca7526bbe921915604b9703af7a979eb0c955a553`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=2534652c165995f08d2df2c48d4a20b2f300ab0684c167263e025849607c22fc`)
+  (`sha256=090a1eafa7960abc1076070b4f6aa0685eabceb31be34145b27df92637ef646c`)
 
 Sequence 1 added:
 

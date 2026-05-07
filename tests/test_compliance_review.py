@@ -516,7 +516,14 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(matrix_rows["mitigation"]["failure_category"], "package_evidence_gap")
             markdown = result.compliance_matrix_markdown_path.read_text(encoding="utf-8")
             self.assertIn("# Compliance Matrix", markdown)
+            self.assertIn("## Accuracy Audit", markdown)
+            self.assertIn(
+                "| Rule | Authority | Applicability | Finding | EA citation | Source citation | Trace | Notes |",
+                markdown,
+            )
+            self.assertIn("| Review gates | Pass |", markdown)
             self.assertIn("purpose_need", markdown)
+            self.assertNotIn("The proposed action improves trail access.", markdown)
 
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
@@ -618,6 +625,11 @@ class ComplianceReviewTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertIn("## Forest Plan Compliance", markdown)
+            self.assertIn(
+                "| Component | Type | Applicability | Compliance | EA citation | Forest Plan citation | Determination |",
+                markdown,
+            )
+            self.assertIn("| Forest Plan citations | Pass |", markdown)
             self.assertIn("BC-STD-CMBCA", markdown)
 
             validation = json.loads(

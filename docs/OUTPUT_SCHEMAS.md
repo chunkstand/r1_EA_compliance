@@ -2142,10 +2142,14 @@ evidence, Forest Plan source evidence, plan-consistency determination text, rati
 resolution count. This keeps Forest Plan component compliance visible without mixing component rows
 into the NEPA/generated-rule compliance table.
 
-`compliance_matrix.md` is a compact human-readable rendering with a `NEPA / Authority Compliance`
-table plus the separate `Forest Plan Compliance` table when available.
-`compliance_matrix.pdf` is generated for every compliance review from the same JSON matrix data. The
-JSON matrix is the stable machine contract.
+`compliance_matrix.md` is a compact human-readable rendering for reviewer and demo use. It starts
+with an Accuracy Audit table that checks reviewer gates, row counts, citation coverage,
+source-claim traceability, non-applicable authority tracking, and Forest Plan coverage when present.
+It then renders a `NEPA / Authority Compliance` table plus the separate `Forest Plan Compliance`
+table when available. The Markdown/PDF views intentionally summarize citations, findings, and trace
+counts instead of embedding long evidence excerpts; the JSON matrix remains the stable machine
+contract with the full compact evidence spans, claim IDs, and provenance fields.
+`compliance_matrix.pdf` is generated for every compliance review from the same JSON matrix data.
 
 Authority integration sidecars are generated for every compliance review. In diagnostic base-pack
 runs they are present but marked non-reviewer-ready through validation; in generated-pack runs they

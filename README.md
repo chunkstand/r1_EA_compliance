@@ -807,14 +807,14 @@ connects the review, rule pack, rules, findings, evidence spans, source claims, 
 Rule-pack IDs, rule IDs, and fixed review IDs must use only letters, numbers, dots, underscores, and
 hyphens. Unknown or empty `source_filters` fail rule-pack validation so typoed filters cannot
 silently broaden source retrieval.
-The compliance matrix is the reviewer-facing table set: the `NEPA / Authority Compliance` table
-records authority category, authority source record, authority document role, applicability mode,
-applicability status and basis, rule status, package citation, source-library citation, source-claim
-IDs, limitations, and whether citation requirements were met. When a Forest Plan lane is present,
-the matrix also includes a separate `Forest Plan Compliance` table derived from component findings
-and applicable-standard coverage, so Forest Plan compliance is clearly separated from
-NEPA/generated-rule compliance. Every compliance review also renders `compliance_matrix.pdf` from
-the same matrix data.
+The compliance matrix is the reviewer-facing table set. The Markdown/PDF rendering starts with an
+Accuracy Audit table, then renders a concise `NEPA / Authority Compliance` table with authority,
+applicability, finding, citation, trace, and notes columns. When a Forest Plan lane is present, the
+matrix also includes a separate `Forest Plan Compliance` table derived from component findings and
+applicable-standard coverage, so Forest Plan compliance is clearly separated from NEPA/generated-rule
+compliance. The full JSON matrix remains the stable traceability contract for evidence spans,
+source-claim IDs, limitations, citation requirements, and provenance fields. Every compliance review
+also renders `compliance_matrix.pdf` from the same matrix data.
 
 Run the final compliance review eval gate:
 
