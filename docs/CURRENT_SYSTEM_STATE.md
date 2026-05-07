@@ -470,11 +470,11 @@ copy-review pass.
 
 ## East Crazies Final QA And Certification Replay Plan
 
-`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the active focused plan for
+`docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` is the completed focused plan for
 turning the promoted East Crazy review into a replayable final QA packet. Sequence 0 baseline
-replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work, and Sequence
-3 gate integration are complete; Sequence 4 final packet QA/closeout is next. The milestone is
-bounded to review ID
+replay, Sequence 1 contract/fixture work, Sequence 2 deterministic generator/CLI work, Sequence 3
+gate integration, and Sequence 4 final packet QA/closeout are complete. The milestone is bounded to
+review ID
 `v1-cg-ecid-compliance-review` and source set `source-set-ba8d0feae79501b8`; it does not broaden
 the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
 and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
@@ -500,7 +500,16 @@ The replay sequences are:
 - Sequence 1: final QA contract and fixtures; complete on 2026-05-07.
 - Sequence 2: deterministic generator and CLI with `--validate-only`; complete on 2026-05-07.
 - Sequence 3: `phase-eval` and promotion-suite integration; complete on 2026-05-07.
-- Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit.
+- Sequence 4: rendered packet QA, docs/handoff closeout, and atomic commit; complete on
+  2026-05-07.
+
+Sequence 4 closed the remaining packet QA issues. `v1-ea-eval` now preserves `generated_at` when
+the semantic payload is unchanged, so reruns no longer churn the final QA input hash. The final QA
+report renders both baseline counts that exclude final-QA self-reference (`19/19` phase eval and
+`22/22` current-promotion results) and live integrated counts (`20/20` phase eval and `26/26`
+current-promotion results). The final closeout stack is ordered so mutating V1 eval output runs
+before the final QA refresh; the final validate-only replay then still passes after `phase-eval`
+and non-strict `promotion-suite` add only the permitted final-QA outer-gate drift.
 
 Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,

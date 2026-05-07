@@ -151,11 +151,10 @@ JSON/Markdown/PDF decision-support report family both gate-checked and superviso
 keeping the ignored outputs under the review `decision_support/` directory. See
 `docs/EAST_CRAZIES_FINAL_QA_CERTIFICATION_MILESTONE_PLAN.md` for the focused final QA and
 certification replay plan that will validate the promoted East Crazy review packet from existing
-audited artifacts without broadening the legal or Region 1 readiness claim. Sequence 0 baseline
-replay, Sequence 1 final QA contract/fixtures plus gap-close hardening, and Sequence 2
-generator/CLI plus gap-close alignment work are complete, and Sequence 3 gate integration now makes
-the packet visible to `phase-eval` and the current-promotion suite; Sequence 4 final packet
-QA/closeout is next. See
+audited artifacts without broadening the legal or Region 1 readiness claim. Sequences 0-4 are
+complete: Sequence 4 closed the final packet QA pass by making the rendered packet distinguish
+baseline replay counts from live outer-gate counts, preserving idempotent V1 eval hashes across
+unchanged reruns, and validating the final current-promotion stack. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the active plan to resolve the
 remaining South Plateau strict-expansion forest-plan context blocker. See

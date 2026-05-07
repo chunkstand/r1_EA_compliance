@@ -1,7 +1,7 @@
 # East Crazies Final QA And Certification Replay Milestone Plan
 
 Date: 2026-05-07
-Status: active; Sequences 0-3 are complete and Sequence 4 final packet QA/closeout is next
+Status: complete; Sequences 0-4 are complete as of the 2026-05-07 final packet QA closeout
 
 This plan adds a focused final QA and certification replay for the promoted East Crazy Inspiration
 Divide EA compliance review. It is a replay over existing audited artifacts, not a new compliance
@@ -346,12 +346,20 @@ phase-eval readiness checks.
 Purpose: replay the full certification path, inspect the rendered packet, update durable docs, and
 commit the verified slice.
 
+Status: complete as of the 2026-05-07 Sequence 4 pass. The closeout found and fixed two final QA
+usability/freshness gaps: the rendered Machine Replay summary now separates baseline replay counts
+that exclude final-QA self-reference from live outer-gate counts, and `v1-ea-eval` preserves
+`generated_at` when unchanged semantic output would otherwise rewrite only a timestamp and churn the
+final QA input hash.
+
 Actions:
 
-1. Regenerate the final QA packet once, then rerun `--validate-only`.
+1. Run `v1-ea-eval` first when refreshing the final closeout stack, then regenerate the final QA
+   packet and rerun `--validate-only`.
 2. Inspect the generated Markdown/PDF for reviewer usability, table fit, required caveats, source
    pointers, and absence of unsupported legal conclusions.
-3. Rerun the full current-promotion gate stack.
+3. Rerun the full current-promotion gate stack, then replay final QA `--validate-only` once more to
+   prove only permitted final-QA outer-gate drift remains.
 4. Update `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and
    `docs/OUTPUT_SCHEMAS.md` with the implemented status and final command set.
 5. Leave ignored `source_library/` outputs unstaged unless repository policy changes.
@@ -368,6 +376,15 @@ Acceptance:
 Verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --eval-file config/v1_ecid_real_ea_eval.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+
 PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
@@ -377,15 +394,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
 
-PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
-  --output-dir source_library \
-  --review-id v1-cg-ecid-compliance-review \
-  --eval-file config/v1_ecid_real_ea_eval.json
-
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --manifest config/promotion_suite_v1.json
 
-PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_compliance_review.py tests/test_promotion_suite.py
+PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review \
+  --validate-only
+
+PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_compliance_review.py tests/test_promotion_suite.py tests/test_v1_ea_eval.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src

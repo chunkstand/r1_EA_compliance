@@ -2382,8 +2382,11 @@ JSON. The report must include these top-level sections:
 policy that root-level `East_Crazies_*` draft exports are not canonical. `gate_replay_summary`
 records replay status for applicability validation, generated rule-pack validation, compliance
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
-validation, phase eval, V1 EA eval, and current-promotion suite. `artifact_freshness_ledger`
-records required artifact paths, schema versions where applicable, SHA-256 values, and selectors.
+validation, phase eval, V1 EA eval, and current-promotion suite. For the outer gates it records
+both baseline counts that exclude the final QA self-reference (`19/19` phase eval and `22/22`
+current-promotion results for this packet) and live integrated counts after gate integration
+(`20/20` phase eval and `26/26` current-promotion results). `artifact_freshness_ledger` records
+required artifact paths, schema versions where applicable, SHA-256 values, and selectors.
 
 `applicability_partition` preserves the applicability boundary before compliance: `33` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
@@ -2590,6 +2593,8 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 
 - summary identity, output path, overall pass/fail status, lane pass/fail status, checks, metrics,
   and failure-category counts
+- `generated_at`; reruns preserve the existing timestamp when the semantic payload is unchanged so
+  final QA input hashes do not churn only because the eval command was replayed
 - `broader_ea_passed`, `forest_plan_passed`, `forest_plan_component_adjudication_required`,
   `broader_ea_failure_category_counts`, `forest_plan_failure_category_counts`,
   `failed_rule_expectation_count`, `failed_rule_ids`, `failed_rule_ids_by_category`,

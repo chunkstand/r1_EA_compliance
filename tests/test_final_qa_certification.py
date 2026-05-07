@@ -516,6 +516,36 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
     assert validation.summary["passed"] is True
     assert validation.summary["failure_category_counts"] == {}
 
+    regenerated = run_final_qa_certification(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+    assert regenerated.summary["passed"] is True
+    report = _read_json(regenerated.report_path)
+    phase_summary = report["gate_replay_summary"]["phase_eval"]
+    promotion_summary = report["gate_replay_summary"]["current_promotion_suite"]
+    assert phase_summary["phase_count"] == 2
+    assert phase_summary["passed_phase_count"] == 2
+    assert phase_summary["live_phase_count"] == 3
+    assert phase_summary["live_passed_phase_count"] == 3
+    assert phase_summary["final_qa_self_reference_phase_count"] == 1
+    assert promotion_summary["required_current_result_count"] == 2
+    assert promotion_summary["passed_required_current_result_count"] == 2
+    assert promotion_summary["live_required_current_result_count"] == 6
+    assert promotion_summary["live_passed_required_current_result_count"] == 6
+    assert promotion_summary["final_qa_current_result_count"] == 4
+    markdown = regenerated.markdown_path.read_text(encoding="utf-8")
+    assert "Phase eval baseline excluding final QA self-reference: `2/2`" in markdown
+    assert "Phase eval live gate: `3/3`" in markdown
+    assert (
+        "Current promotion suite baseline excluding final QA packet gates: `2/2`"
+        in markdown
+    )
+    assert "Current promotion suite live gate: `6/6`" in markdown
+
 
 def test_final_qa_validate_fails_when_validation_sidecar_output_hash_is_stale(
     tmp_path,

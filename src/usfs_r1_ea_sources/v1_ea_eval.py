@@ -228,6 +228,11 @@ def run_v1_ea_review_eval(
             "rule_pack_version": contract.get("rule_pack_version"),
         },
     }
+    payload = _preserve_generated_at_when_semantically_unchanged(
+        payload,
+        resolved_output_path,
+    )
+    summary = payload["summary"]
     resolved_output_path.parent.mkdir(parents=True, exist_ok=True)
     resolved_output_path.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
@@ -239,6 +244,39 @@ def run_v1_ea_review_eval(
         output_path=resolved_output_path,
         summary=summary,
     )
+
+
+def _preserve_generated_at_when_semantically_unchanged(
+    payload: dict[str, Any],
+    output_path: Path,
+) -> dict[str, Any]:
+    if not output_path.exists():
+        return payload
+    try:
+        existing = _read_json(output_path)
+    except (OSError, json.JSONDecodeError):
+        return payload
+    existing_summary = existing.get("summary") if isinstance(existing, dict) else None
+    existing_generated_at = (
+        existing_summary.get("generated_at")
+        if isinstance(existing_summary, dict)
+        else None
+    )
+    if not isinstance(existing_generated_at, str) or not existing_generated_at:
+        return payload
+    candidate = json.loads(json.dumps(payload))
+    candidate["summary"]["generated_at"] = existing_generated_at
+    if _without_summary_generated_at(candidate) == _without_summary_generated_at(existing):
+        return candidate
+    return payload
+
+
+def _without_summary_generated_at(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = json.loads(json.dumps(payload))
+    summary = normalized.get("summary")
+    if isinstance(summary, dict):
+        summary.pop("generated_at", None)
+    return normalized
 
 
 def _resolve_review_dir(

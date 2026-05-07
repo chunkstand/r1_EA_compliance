@@ -41,6 +41,34 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(result.summary["failed_rule_ids_by_category"], {})
             self.assertEqual(result.summary["failed_rule_expectations"], [])
 
+    def test_v1_eval_rerun_preserves_timestamp_when_payload_is_semantically_same(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            first = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+            payload = _read_json(first.output_path)
+            payload["summary"]["generated_at"] = "2000-01-01T00:00:00Z"
+            _write_json(first.output_path, payload)
+            pinned_text = first.output_path.read_text(encoding="utf-8")
+
+            second = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertEqual(second.summary["generated_at"], "2000-01-01T00:00:00Z")
+            self.assertEqual(second.output_path.read_text(encoding="utf-8"), pinned_text)
+
     def test_v1_eval_accepts_generated_rule_pack_base_identity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

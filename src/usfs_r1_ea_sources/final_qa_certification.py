@@ -452,19 +452,35 @@ def _build_report(
                     data_by_key.get("phase_eval", {}),
                     "reviewer_ready",
                 ),
+                "count_mode": "baseline_excluding_final_qa_self_reference",
                 "phase_count": counts["phase_eval_phase_count"],
                 "passed_phase_count": counts["phase_eval_passed_phase_count"],
+                "live_phase_count": counts["phase_eval_live_phase_count"],
+                "live_passed_phase_count": counts["phase_eval_live_passed_phase_count"],
+                "final_qa_self_reference_phase_count": counts[
+                    "phase_eval_final_qa_self_reference_phase_count"
+                ],
             },
             "current_promotion_suite": {
                 "current_promotion_ready": _selector_value(
                     data_by_key.get("promotion_suite", {}),
                     "current_promotion_ready",
                 ),
+                "count_mode": "baseline_excluding_final_qa_packet_gates",
                 "required_current_result_count": counts[
                     "promotion_suite_required_current_result_count"
                 ],
                 "passed_required_current_result_count": counts[
                     "promotion_suite_passed_required_current_result_count"
+                ],
+                "live_required_current_result_count": counts[
+                    "promotion_suite_live_required_current_result_count"
+                ],
+                "live_passed_required_current_result_count": counts[
+                    "promotion_suite_live_passed_required_current_result_count"
+                ],
+                "final_qa_current_result_count": counts[
+                    "promotion_suite_final_qa_current_result_count"
                 ],
                 "expansion_failure_category_counts": _selector_value(
                     data_by_key.get("promotion_suite", {}),
@@ -876,29 +892,31 @@ def _validate_pdf(
 
 
 def _phase_eval_counts_for_packet(phase_eval: Any) -> dict[str, int]:
-    phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
-    passed_phase_count = _safe_int(_selector_value(phase_eval, "passed_phase_count"))
+    live_phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
+    live_passed_phase_count = _safe_int(_selector_value(phase_eval, "passed_phase_count"))
     phases = phase_eval.get("phases", []) if isinstance(phase_eval, Mapping) else []
-    final_qa_present = any(
+    final_qa_self_reference_count = int(any(
         isinstance(phase, Mapping)
         and phase.get("name") == "final_qa_certification_report"
         and phase.get("passed")
         for phase in phases
-    )
-    if final_qa_present:
-        phase_count -= 1
-        passed_phase_count -= 1
+    ))
+    phase_count = live_phase_count - final_qa_self_reference_count
+    passed_phase_count = live_passed_phase_count - final_qa_self_reference_count
     return {
         "phase_count": phase_count,
         "passed_phase_count": passed_phase_count,
+        "live_phase_count": live_phase_count,
+        "live_passed_phase_count": live_passed_phase_count,
+        "final_qa_self_reference_phase_count": final_qa_self_reference_count,
     }
 
 
 def _promotion_suite_counts_for_packet(promotion: Any) -> dict[str, int]:
-    required_count = _safe_int(
+    live_required_count = _safe_int(
         _selector_value(promotion, "required_current_result_count")
     )
-    passed_count = _safe_int(
+    live_passed_count = _safe_int(
         _selector_value(promotion, "passed_required_current_result_count")
     )
     final_qa_result_count = (
@@ -907,8 +925,11 @@ def _promotion_suite_counts_for_packet(promotion: Any) -> dict[str, int]:
         else 0
     )
     return {
-        "required_current_result_count": max(required_count - final_qa_result_count, 0),
-        "passed_required_current_result_count": max(passed_count - final_qa_result_count, 0),
+        "required_current_result_count": max(live_required_count - final_qa_result_count, 0),
+        "passed_required_current_result_count": max(live_passed_count - final_qa_result_count, 0),
+        "live_required_current_result_count": live_required_count,
+        "live_passed_required_current_result_count": live_passed_count,
+        "final_qa_current_result_count": final_qa_result_count,
     }
 
 
@@ -986,11 +1007,27 @@ def _derive_actual_counts(
         "forest_plan_component_eval_case_count": component_eval_summary.get("case_count"),
         "phase_eval_phase_count": phase_eval_counts["phase_count"],
         "phase_eval_passed_phase_count": phase_eval_counts["passed_phase_count"],
+        "phase_eval_live_phase_count": phase_eval_counts["live_phase_count"],
+        "phase_eval_live_passed_phase_count": phase_eval_counts[
+            "live_passed_phase_count"
+        ],
+        "phase_eval_final_qa_self_reference_phase_count": phase_eval_counts[
+            "final_qa_self_reference_phase_count"
+        ],
         "promotion_suite_required_current_result_count": promotion_counts[
             "required_current_result_count"
         ],
         "promotion_suite_passed_required_current_result_count": promotion_counts[
             "passed_required_current_result_count"
+        ],
+        "promotion_suite_live_required_current_result_count": promotion_counts[
+            "live_required_current_result_count"
+        ],
+        "promotion_suite_live_passed_required_current_result_count": promotion_counts[
+            "live_passed_required_current_result_count"
+        ],
+        "promotion_suite_final_qa_current_result_count": promotion_counts[
+            "final_qa_current_result_count"
         ],
         "accepted_v1_risk_count": conditional.get("accepted_pending_count"),
         "actual_pending_applicable_count": conditional.get("actual_pending_applicable_count"),
@@ -1321,10 +1358,16 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
         f"- Review ID: `{report['review_id']}`",
         f"- Source set: `{report['source_set_id']}`",
         f"- Machine replay status: `{report['gate_replay_summary']['machine_replay_status']}`",
-        f"- Phase eval: `{phase['passed_phase_count']}/{phase['phase_count']}` phases passed",
-        "- Current promotion suite: "
+        "- Phase eval baseline excluding final QA self-reference: "
+        f"`{phase['passed_phase_count']}/{phase['phase_count']}` phases passed",
+        "- Phase eval live gate: "
+        f"`{phase['live_passed_phase_count']}/{phase['live_phase_count']}` phases passed",
+        "- Current promotion suite baseline excluding final QA packet gates: "
         f"`{promotion['passed_required_current_result_count']}/"
         f"{promotion['required_current_result_count']}` required current results passed",
+        "- Current promotion suite live gate: "
+        f"`{promotion['live_passed_required_current_result_count']}/"
+        f"{promotion['live_required_current_result_count']}` required current results passed",
         "",
         "## Gate Replay Summary",
         "",
@@ -1417,7 +1460,10 @@ def _pdf_lines(report: Mapping[str, Any]) -> list[str]:
         "Machine Replay Status",
         f"Review ID: {report['review_id']}",
         f"Source set: {report['source_set_id']}",
-        f"Phase eval: {phase['passed_phase_count']}/{phase['phase_count']} phases passed",
+        "Phase eval baseline excluding final QA self-reference: "
+        f"{phase['passed_phase_count']}/{phase['phase_count']} phases passed",
+        "Phase eval live gate: "
+        f"{phase['live_passed_phase_count']}/{phase['live_phase_count']} phases passed",
         "Accepted V1 Risk Ledger",
         f"Accepted pending rows: {accepted['accepted_pending_count']}",
         "Reviewer Signoff",

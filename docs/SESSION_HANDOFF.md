@@ -114,9 +114,32 @@ Latest Sequence 3 verification:
   `current_promotion_ready=true`, `promotion_ready=false`, and the same South Plateau
   `forest_plan_reviewer_not_ready` blockers.
 
-Next implementation boundary: Sequence 4. Replay final QA validate-only, inspect the rendered
-packet, run the full current-promotion gate stack, update closeout docs, and commit the verified
-slice. Root-level `East_Crazies_*` drafts remain non-canonical and unstaged.
+Sequence 4 is complete. It closed the final packet QA pass by making the rendered Machine Replay
+summary show both baseline counts that exclude final-QA self-reference (`19/19` phase eval and
+`22/22` current-promotion results) and live integrated counts (`20/20` phase eval and `26/26`
+current-promotion results). It also made `v1-ea-eval` idempotent for unchanged semantic payloads so
+replaying that gate does not churn the final QA input hash only by updating `generated_at`.
+
+Latest Sequence 4 verification:
+
+- `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with
+  `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- `final-qa-certification`: passed `166/166` and wrote the ignored JSON, Markdown, PDF, manifest,
+  and validation family after the V1 eval refresh.
+- `final-qa-certification --validate-only`: passed `166/166` before and after the outer gate replay.
+- Rendered packet inspection: Markdown exposes required caveats, source pointers, accepted V1 risk
+  ledger, residual blockers, and root-level draft exclusion; PDF is `%PDF-1.4`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` with
+  `final_qa_certification_report` and `reviewer_ready=true`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: passed current promotion with
+  `26/26` required current-promotion results, `current_promotion_ready=true`,
+  `promotion_ready=true`, and South Plateau blockers separate as
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
+
+The East Crazies final QA/certification replay milestone has no remaining planned sequence. Next
+implementation target, if continuing strict expansion, remains
+`docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`. Root-level `East_Crazies_*` drafts
+remain non-canonical and unstaged.
 
 ## Current Applicability/Expansion Handoff
 
