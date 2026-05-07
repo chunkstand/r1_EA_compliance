@@ -857,7 +857,7 @@
           "path": "reviews/{review_id}/compliance_review.json",
           "required_for_current_promotion": false,
           "required_for_expansion": true,
-          "failure_category": "unsupported_package_evidence",
+          "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
               "name": "reviewer_ready",
@@ -904,6 +904,63 @@
               "json_path": "summary.rule_claim_link_count",
               "equals": 280,
               "failure_category": "missing_source"
+            },
+            {
+              "name": "forest_plan_scope_status_matches_declared_profile",
+              "json_path": "summary.forest_plan_review.scope_status",
+              "equals": "custer_gallatin",
+              "failure_category": "forest_plan_reviewer_not_ready"
+            },
+            {
+              "name": "forest_plan_validation_passed",
+              "json_path": "summary.forest_plan_review.validation_passed",
+              "equals": true,
+              "failure_category": "forest_plan_reviewer_not_ready"
+            },
+            {
+              "name": "forest_plan_reviewer_ready",
+              "json_path": "summary.forest_plan_review.reviewer_ready",
+              "equals": true,
+              "failure_category": "forest_plan_reviewer_not_ready"
+            }
+          ]
+        },
+        {
+          "id": "forest_plan_context_summary",
+          "label": "South Plateau forest-plan context summary",
+          "path": "reviews/{review_id}/forest_plan_context_summary.json",
+          "required_for_current_promotion": false,
+          "required_for_expansion": true,
+          "failure_category": "forest_plan_reviewer_not_ready",
+          "checks": [
+            {
+              "name": "forest_plan_context_schema",
+              "json_path": "schema_version",
+              "equals": "forest-plan-context-summary-v0"
+            },
+            {
+              "name": "forest_plan_context_source_set_matches",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8",
+              "failure_category": "stale_artifact"
+            },
+            {
+              "name": "forest_plan_context_scope_status_matches_declared_profile",
+              "json_path": "scope_status",
+              "equals": "custer_gallatin",
+              "failure_category": "forest_plan_reviewer_not_ready"
+            },
+            {
+              "name": "forest_plan_context_validation_passed",
+              "json_path": "validation_passed",
+              "equals": true,
+              "failure_category": "forest_plan_reviewer_not_ready"
+            },
+            {
+              "name": "forest_plan_context_reviewer_ready",
+              "json_path": "reviewer_ready",
+              "equals": true,
+              "failure_category": "forest_plan_reviewer_not_ready"
             }
           ]
         },
@@ -1080,7 +1137,7 @@
             {
               "name": "phase_eval_passed_phase_count",
               "json_path": "passed_phase_count",
-              "equals": 15
+              "equals": 16
             }
           ]
         }
@@ -1455,8 +1512,9 @@
     {
       "id": "region1-real-ea-slot-2",
       "label": "Third real Region 1 EA package: South Plateau Area Landscape Treatment Project",
-      "status": "ready",
-      "ready": true,
+      "status": "blocked_forest_plan_review",
+      "ready": false,
+      "failure_category": "forest_plan_reviewer_not_ready",
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
@@ -1498,6 +1556,10 @@
         {
           "id": "compliance_review",
           "path": "reviews/{review_id}/compliance_review.json"
+        },
+        {
+          "id": "forest_plan_context_summary",
+          "path": "reviews/{review_id}/forest_plan_context_summary.json"
         },
         {
           "id": "compliance_matrix",
@@ -1593,14 +1655,14 @@
         "authority_reviewer_resolution_report_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_reviewer_resolution_report.json",
         "litigation_risk_summary_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/litigation_risk_summary.json",
         "phase_eval_reviewer_ready": true,
-        "phase_eval_passed_phase_count": 15,
-        "phase_eval_phase_count": 15,
+        "phase_eval_passed_phase_count": 16,
+        "phase_eval_phase_count": 16,
         "phase_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json",
         "forest_plan_scope_status": "ambiguous",
         "forest_plan_component_gate_required": false
       },
-      "next_action": "Keep this South Plateau expansion slot ready; add any future real-package expansion through a new verified slot and review-case artifact checks.",
-      "acceptance_signal": "Generated rule-pack validation, compliance validation, compliance matrix/PDF, and review-scoped phase eval pass for the South Plateau generated review."
+      "next_action": "Resolve the South Plateau package to reviewer-ready Custer Gallatin forest-plan context, or keep the slot blocked with forest_plan_reviewer_not_ready before strict expansion promotion.",
+      "acceptance_signal": "Generated rule-pack validation, compliance validation, matrix/PDF, and review-scoped phase eval pass, but strict expansion remains blocked until the declared Custer Gallatin forest-plan context is reviewer-ready."
     }
   ]
 }

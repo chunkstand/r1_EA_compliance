@@ -246,6 +246,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     )
 
     south_plateau_compliance = south_plateau_results["compliance_review"]
+    assert south_plateau_compliance["failure_category"] == "forest_plan_reviewer_not_ready"
     south_plateau_compliance_checks = {
         check["name"]: check for check in south_plateau_compliance["checks"]
     }
@@ -253,6 +254,40 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert south_plateau_compliance_checks["rule_count"]["equals"] == 61
     assert south_plateau_compliance_checks["rule_claim_gap_count"]["equals"] == 0
     assert south_plateau_compliance_checks["rule_claim_link_count"]["equals"] == 280
+    assert (
+        south_plateau_compliance_checks[
+            "forest_plan_scope_status_matches_declared_profile"
+        ]["equals"]
+        == "custer_gallatin"
+    )
+    assert (
+        south_plateau_compliance_checks["forest_plan_validation_passed"][
+            "failure_category"
+        ]
+        == "forest_plan_reviewer_not_ready"
+    )
+    assert (
+        south_plateau_compliance_checks["forest_plan_reviewer_ready"]["equals"] is True
+    )
+
+    south_plateau_forest_context = south_plateau_results["forest_plan_context_summary"]
+    forest_context_checks = {
+        check["name"]: check for check in south_plateau_forest_context["checks"]
+    }
+    assert south_plateau_forest_context["required_for_expansion"] is True
+    assert (
+        forest_context_checks[
+            "forest_plan_context_scope_status_matches_declared_profile"
+        ]["equals"]
+        == "custer_gallatin"
+    )
+    assert (
+        forest_context_checks["forest_plan_context_validation_passed"][
+            "failure_category"
+        ]
+        == "forest_plan_reviewer_not_ready"
+    )
+    assert forest_context_checks["forest_plan_context_reviewer_ready"]["equals"] is True
 
     south_plateau_phase = south_plateau_results["phase_eval"]
     south_plateau_phase_checks = {
@@ -260,7 +295,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     }
     assert south_plateau_phase_checks["phase_eval_passed"]["equals"] is True
     assert south_plateau_phase_checks["phase_eval_reviewer_ready"]["equals"] is True
-    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 15
+    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 16
 
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
@@ -295,9 +330,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     third_slot = slots["region1-real-ea-slot-2"]
     gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}
 
-    assert third_slot["status"] == "ready"
-    assert third_slot["ready"] is True
-    assert "failure_category" not in third_slot
+    assert third_slot["status"] == "blocked_forest_plan_review"
+    assert third_slot["ready"] is False
+    assert third_slot["failure_category"] == "forest_plan_reviewer_not_ready"
     assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
     assert third_slot["source_set_id"] == "source-set-ba8d0feae79501b8"
     assert third_slot["forest_plan_profile"] == "custer_gallatin"
@@ -329,7 +364,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert third_slot["last_local_signal"]["rule_claim_gap_count"] == 0
     assert third_slot["last_local_signal"]["phase_eval_passed"] is True
     assert third_slot["last_local_signal"]["phase_eval_reviewer_ready"] is True
-    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 15
+    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 16
     assert third_slot["last_local_signal"]["adjudication_eval_passed"] is True
     assert third_slot["last_local_signal"]["adjudication_resolved_count"] == 6
     assert third_slot["last_local_signal"]["adjudication_apply_passed"] is True
@@ -338,6 +373,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert "applicability_validation" in gate_artifacts
     assert "generated_rule_pack_validation" in gate_artifacts
     assert "compliance_review" in gate_artifacts
+    assert "forest_plan_context_summary" in gate_artifacts
     assert "compliance_matrix" in gate_artifacts
     assert "compliance_matrix_pdf" in gate_artifacts
     assert "authority_family_provenance" in gate_artifacts
@@ -532,6 +568,241 @@ def test_promotion_suite_rejects_ready_slot_missing_review_gate_contract(
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     with pytest.raises(ValueError, match="expansion_review"):
+        run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+
+def test_promotion_suite_blocks_declared_forest_profile_false_pass(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["review_cases"][0]["results"].extend(
+        [
+            {
+                "id": "compliance_review",
+                "path": "reviews/{review_id}/compliance_review.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "compliance_review_reviewer_ready",
+                        "json_path": "summary.reviewer_ready",
+                        "equals": True,
+                    },
+                    {
+                        "name": "forest_plan_scope_status_matches_declared_profile",
+                        "json_path": "summary.forest_plan_review.scope_status",
+                        "equals": "custer_gallatin",
+                        "failure_category": "forest_plan_reviewer_not_ready",
+                    },
+                ],
+            },
+            {
+                "id": "forest_plan_context_summary",
+                "path": "reviews/{review_id}/forest_plan_context_summary.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "forest_plan_context_reviewer_ready",
+                        "json_path": "reviewer_ready",
+                        "equals": True,
+                    }
+                ],
+            },
+            {
+                "id": "phase_eval",
+                "path": "reviews/{review_id}/phase_eval_results.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "phase_eval_reviewer_ready",
+                        "json_path": "reviewer_ready",
+                        "equals": True,
+                    }
+                ],
+            },
+        ]
+    )
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "ready",
+        "ready": True,
+        "review_id": "review-1",
+        "package_path": "source_library/reviews/_intake/review-1",
+        "source_set_id": "source-set-1",
+        "forest_plan_profile": "custer_gallatin",
+        "expected_gate_artifacts": [
+            {
+                "id": "compliance_review",
+                "path": "reviews/{review_id}/compliance_review.json",
+            },
+            {
+                "id": "forest_plan_context_summary",
+                "path": "reviews/{review_id}/forest_plan_context_summary.json",
+            },
+            {
+                "id": "phase_eval",
+                "path": "reviews/{review_id}/phase_eval_results.json",
+            },
+        ],
+        "last_local_signal": {
+            "forest_plan_scope_status": "ambiguous",
+            "forest_plan_component_gate_required": False,
+        },
+        "next_action": "Resolve the declared forest-plan context.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    _write_json(
+        output_dir / "derived" / "source-set-1" / "evidence_graph" / "phase_eval_results.json",
+        {"source_set_id": "source-set-1", "passed_phase_count": 2, "reviewer_ready": True},
+    )
+    _write_json(
+        output_dir / "reviews" / "review-1" / "compliance_review.json",
+        {
+            "summary": {
+                "reviewer_ready": True,
+                "forest_plan_review": {
+                    "scope_status": "ambiguous",
+                    "validation_passed": False,
+                    "reviewer_ready": False,
+                    "needs_reviewer_resolution": True,
+                },
+            }
+        },
+    )
+    _write_json(
+        output_dir / "reviews" / "review-1" / "forest_plan_context_summary.json",
+        {
+            "schema_version": "forest-plan-context-summary-v0",
+            "review_id": "review-1",
+            "source_set_id": "source-set-1",
+            "scope_status": "ambiguous",
+            "validation_passed": False,
+            "reviewer_ready": False,
+            "needs_reviewer_resolution": True,
+        },
+    )
+    _write_json(
+        output_dir / "reviews" / "review-1" / "phase_eval_results.json",
+        {
+            "review_id": "review-1",
+            "source_set_id": "source-set-1",
+            "passed": True,
+            "reviewer_ready": True,
+            "passed_phase_count": 2,
+            "phase_count": 2,
+            "phases": [
+                {"name": "applicability_validation", "passed": True, "reviewer_ready": True},
+                {"name": "compliance_review", "passed": True, "reviewer_ready": True},
+            ],
+        },
+    )
+
+    result = run_promotion_suite(
+        output_dir=output_dir,
+        manifest_path=manifest_path,
+        strict_expansion=True,
+    )
+    slot = result.summary["expansion_slots"][0]
+
+    assert result.summary["current_promotion_ready"] is True
+    assert result.summary["expansion_ready"] is False
+    assert result.summary["promotion_ready"] is False
+    assert set(result.summary["failure_category_counts"]) == {
+        "forest_plan_reviewer_not_ready"
+    }
+    assert slot["manifest_ready"] is True
+    assert slot["ready"] is False
+    assert slot["failure_categories"] == ["forest_plan_reviewer_not_ready"]
+    profile_checks = {
+        check["name"]: check for check in slot["forest_plan_profile_checks"]
+    }
+    assert profile_checks["forest_plan_scope_status_matches_declared_profile"][
+        "actual"
+    ] == "ambiguous"
+    assert profile_checks["forest_plan_reviewer_ready"]["passed"] is False
+
+
+def test_promotion_suite_rejects_forest_profile_slot_missing_gate_artifact(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = _write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["review_cases"][0]["results"].extend(
+        [
+            {
+                "id": "compliance_review",
+                "path": "reviews/{review_id}/compliance_review.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "forest_plan_reviewer_ready",
+                        "json_path": "summary.forest_plan_review.reviewer_ready",
+                        "equals": True,
+                    }
+                ],
+            },
+            {
+                "id": "forest_plan_context_summary",
+                "path": "reviews/{review_id}/forest_plan_context_summary.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "forest_plan_context_reviewer_ready",
+                        "json_path": "reviewer_ready",
+                        "equals": True,
+                    }
+                ],
+            },
+            {
+                "id": "phase_eval",
+                "path": "reviews/{review_id}/phase_eval_results.json",
+                "required_for_current_promotion": False,
+                "required_for_expansion": True,
+                "failure_category": "forest_plan_reviewer_not_ready",
+                "checks": [
+                    {
+                        "name": "phase_eval_reviewer_ready",
+                        "json_path": "reviewer_ready",
+                        "equals": True,
+                    }
+                ],
+            },
+        ]
+    )
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "blocked_forest_plan_review",
+        "ready": False,
+        "failure_category": "forest_plan_reviewer_not_ready",
+        "review_id": "review-1",
+        "package_path": "source_library/reviews/_intake/review-1",
+        "source_set_id": "source-set-1",
+        "forest_plan_profile": "custer_gallatin",
+        "expected_gate_artifacts": [
+            {
+                "id": "compliance_review",
+                "path": "reviews/{review_id}/compliance_review.json",
+            },
+            {
+                "id": "phase_eval",
+                "path": "reviews/{review_id}/phase_eval_results.json",
+            },
+        ],
+        "next_action": "Resolve the declared forest-plan context.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    with pytest.raises(ValueError, match="forest_plan_context_summary"):
         run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
 

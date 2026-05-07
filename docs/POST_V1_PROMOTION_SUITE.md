@@ -51,10 +51,11 @@ The result separates three statuses:
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
   strict mode also requires `expansion_ready`.
 
-The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot and the
-South Plateau Area Landscape Treatment Project slot are both ready. Open expansion slots do not
-block the current V1 promotion claim, but they make broader readiness gaps visible to future
-agents. Current promotion does require the applicability seed and gold eval artifacts that prove
+The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
+and the South Plateau Area Landscape Treatment Project slot is selected but blocked on
+`forest_plan_reviewer_not_ready`. Open expansion slots do not block the current V1 promotion claim,
+but they make broader readiness gaps visible to future agents. Current promotion does require the
+applicability seed and gold eval artifacts that prove
 positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the
 promoted V1 review: authority-family provenance, non-applicable authority appendix,
@@ -97,13 +98,17 @@ failure category other than `package_fixture_missing`. A ready slot must not ret
 category, must still carry the review/package/source-set contract, and its expected gate artifacts
 must cover the matching review case's `required_for_expansion` artifact IDs. The generated Markdown
 report includes selected-slot review IDs, package paths, and failure categories so the typed
-blocker is visible without inspecting raw JSON.
+blocker is visible without inspecting raw JSON. A slot that declares `forest_plan_profile` must also
+have expansion gate contracts for `compliance_review`, `forest_plan_context_summary`, and
+`phase_eval`; the runtime slot check fails closed if the artifact scope, validation, reviewer-ready
+status, or last local signal does not prove the declared profile.
 
 ## Current Local Result
 
-The latest Sequence 6 pass was run locally on 2026-05-06 for the selected South Plateau fixture
-contract. The package import, applicability-first run, adjudication replay, generated review, and
-promotion gates now pass for the declared expansion set:
+The latest Sequence 7 pass was run locally on 2026-05-06 for the selected South Plateau fixture
+contract. The package import, applicability-first run, adjudication replay, and generated review
+artifacts pass, but strict expansion is intentionally blocked until the declared forest-plan profile
+is reviewer-ready:
 
 - imported `26` official South Plateau PDFs from the project Box folder;
 - extracted `26/26` package files into `3,671` chunks with `.venv-docling`;
@@ -122,34 +127,38 @@ promotion gates now pass for the declared expansion set:
   `generated_rule_pack_ready=true`;
 - `compliance-review`: passed with `reviewer_ready=true`, `61` findings, `41` pass, `19`
   uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps;
-- South Plateau review-scoped `phase-eval`: passed `15/15` phases with `reviewer_ready=true`;
+- South Plateau review-scoped `phase-eval`: passed `16/16` phases with `reviewer_ready=true`;
 - the promoted V1 review-scoped `phase-eval` was rerun after the South Plateau review-scoped pass
-  to restore the shared current-promotion phase-eval artifact at `17/17`;
+  to restore the shared current-promotion phase-eval artifact at `19/19`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=true`, `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
-  `open_expansion_slot_count=0`;
-- strict expansion `promotion-suite`: passed with `current_promotion_ready=true`,
-  `promotion_ready=true`, `expansion_ready=true`, `failure_category_counts={}`, and
-  `expansion_failure_category_counts={}`.
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`;
+- strict expansion `promotion-suite`: expected command failure with `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`,
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`.
 
 A later NEPA 3D Milestone 7 graph-gate pass added current-promotion checks for source-set and V1
 review graph validation/summary artifacts. The V1 review-bound phase eval now passes `19/19`
 phases, the non-strict promotion suite passes `22/22` required current-promotion results, and the
-new graph gates report `failure_category_counts={}`. Strict expansion promotion also passes with
-`22/22` required current-promotion results, `open_expansion_artifact_count=0`, and
-`open_expansion_slot_count=0`.
+new graph gates report `failure_category_counts={}`. Strict expansion now fails closed only on the
+South Plateau forest-plan blocker while still passing `22/22` required current-promotion results.
 
-The South Plateau expansion slot is now `ready=true` and no longer carries
-`generated_rule_pack_pending`, `adjudication_needed`, or `applicability_miss`. The promotion
-manifest now includes South Plateau as a required expansion review case, so strict expansion is
-backed by concrete generated rule-pack, compliance validation, matrix/PDF, authority sidecar, and
-review-scoped phase-eval artifact checks rather than a slot flag alone.
+The South Plateau expansion slot is now `ready=false` and carries
+`forest_plan_reviewer_not_ready`. The promotion manifest includes South Plateau as a required
+expansion review case, so strict expansion is backed by concrete generated rule-pack, compliance
+validation, matrix/PDF, authority sidecar, forest-plan context summary, and review-scoped
+phase-eval artifact checks rather than a slot flag alone.
 
 The Sequence 6 alignment pass also reconciled each ready expansion slot's `expected_gate_artifacts`
 with its matching `required_for_expansion` review-case checks. Manifest validation now rejects ready
 slots whose expected gate list omits required expansion artifact IDs, preventing a future ready-slot
 flag from drifting away from the concrete artifact gate.
+
+The Sequence 7 hardening pass added the declared-profile boundary: a selected slot with
+`forest_plan_profile` must either resolve to that profile with `validation_passed=true` and
+`reviewer_ready=true`, or stay blocked with the typed forest-plan failure category.
 
 The post-V1 applicability artifact family exists for the promoted review and is included in
 `phase-eval --review-id`. The applicability seed eval now covers all `19` high-priority
@@ -180,7 +189,8 @@ expansion slot is `ready=true`. The second real-package slot is South Plateau Ar
 Treatment Project. It now has an imported package, package cache, applicability context, retrieval
 trace, decision ledger, adjudication eval/apply artifacts, passing validation and generated
 rule-pack artifacts, reviewer-ready compliance artifacts, and passing review-scoped phase eval. Its
-expansion slot is `ready=true`.
+expansion slot is blocked on `forest_plan_reviewer_not_ready` because the declared Custer Gallatin
+forest-plan context remains ambiguous.
 
 Resolution plan:
 
@@ -191,6 +201,6 @@ docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md
 That plan closes the weakness in sequence: lock the current promotion-suite blocker baseline,
 complete the three-item ECID adjudication replay, generate and review the ECID expansion rule pack,
 close the ECID source-claim gaps, close the ECID Forest Plan component adjudication blocker, select
-the third package fixture, run that package through the applicability-first sequence, and close with
-strict expansion promotion. That sequence is now complete for the declared ECID preliminary-EA and
-South Plateau expansion slots.
+the third package fixture, run that package through the applicability-first sequence, close the
+generated review, and harden strict expansion so South Plateau cannot pass while forest-plan context
+is ambiguous. That sequence is now complete through the typed South Plateau forest-plan blocker.

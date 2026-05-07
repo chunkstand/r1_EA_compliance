@@ -2528,7 +2528,8 @@ The manifest has schema version `promotion-suite-v0` and records:
   positive/negative adjudication conflicts
 - open expansion slots and their required next actions, including selected package metadata such as
   review ID, source set, package path, forest-plan profile, official project metadata, expected gate
-  artifacts, and last local signal fields when the manifest provides them
+  artifacts, `manifest_ready`, dynamic `forest_plan_profile_checks`, and last local signal fields
+  when the manifest provides them
 - current-promotion `failure_category_counts` and expansion-only
   `expansion_failure_category_counts`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
@@ -2551,6 +2552,14 @@ Selected not-ready expansion slots are validated fail-closed. A selected slot mu
 ID and path. Ready slots must not retain `failure_category`. The Markdown report's expansion-slot
 table includes review ID, package path, and failed categories in addition to status, readiness, and
 next action.
+
+Selected slots that declare `forest_plan_profile` are an additional fail-closed contract. The
+manifest must provide required expansion result IDs and expected gate artifacts for
+`compliance_review`, `forest_plan_context_summary`, and `phase_eval`. Runtime slot checks compare
+the declared profile to `summary.forest_plan_review.scope_status`, require
+`validation_passed=true` and `reviewer_ready=true`, verify the slot's last local forest-plan signal
+matches the artifact, and require a Forest Plan component phase when the slot records that component
+gating is required.
 
 ## Compliance Coverage Outputs
 

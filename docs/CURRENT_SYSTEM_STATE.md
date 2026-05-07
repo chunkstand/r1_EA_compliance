@@ -553,26 +553,28 @@ Gallatin FEIS and ESA-supporting plan documents.
   `generated_rule_pack_ready=true`. Generated rule-pack validation passes with `61` rules and hash
   `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`. Compliance review reports
   `reviewer_ready=true`, `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links,
-  and `0` rule-claim gaps. South Plateau review-scoped phase eval passes `15/15` phases with
-  `reviewer_ready=true`. The South Plateau expansion slot is now `ready=true`; it no longer carries
-  `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
-  `package_fixture_missing`. A follow-up artifact review found a narrower gate-boundary weakness:
-  the South Plateau slot declares `forest_plan_profile="custer_gallatin"`, but the nested
+  and `0` rule-claim gaps. South Plateau review-scoped phase eval now passes `16/16` phases with
+  `reviewer_ready=true`. Sequence 7 closed the narrower gate-boundary weakness conservatively: the
+  South Plateau slot declares `forest_plan_profile="custer_gallatin"`, but the nested
   `forest_plan_review` summary remains `scope_status="ambiguous"`, `validation_passed=false`,
-  `reviewer_ready=false`, and `needs_reviewer_resolution=true`. Sequence 7 of
-  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is now the active planned closeout to make
-  strict expansion fail closed unless a declared-profile slot has reviewer-ready forest-plan context
-  or is explicitly blocked with `forest_plan_reviewer_not_ready`. Strict promotion suite was written to
+  `reviewer_ready=false`, and `needs_reviewer_resolution=true`. The South Plateau expansion slot is
+  now `ready=false` with `failure_category="forest_plan_reviewer_not_ready"`, and the manifest also
+  checks `forest_plan_context_summary.json` plus dynamic declared-profile slot checks. Strict
+  promotion suite was written to
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/`
-  and reports `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
-  `expansion_artifacts_ready=true`, `failure_category_counts={}`,
-  `expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
-  `open_expansion_slot_count=0`. Non-strict promotion suite was rerun last and reports the same
-  readiness with `strict_expansion=false`. Promotion-suite manifest validation now fails selected
-  not-ready slots that omit review/package/source-set metadata, expected gate artifacts, next
-  action, or a typed non-`package_fixture_missing` failure category. Ready slots must retain that
+  and now fails as expected with `current_promotion_ready=true`, `promotion_ready=false`,
+  `expansion_ready=false`, `expansion_artifacts_ready=false`,
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`. Non-strict promotion suite
+  was rerun last and keeps current promotion green with `current_promotion_ready=true`,
+  `promotion_ready=true`, `failure_category_counts={}`, and the same expansion-only blocker counts.
+  Promotion-suite manifest validation now fails selected not-ready slots that omit
+  review/package/source-set metadata, expected gate artifacts, next action, or a typed
+  non-`package_fixture_missing` failure category. Ready slots must retain that
   review/package/source-set contract, omit failure categories, and list expected gate artifacts
-  covering the matching review case's `required_for_expansion` artifact IDs.
+  covering the matching review case's `required_for_expansion` artifact IDs; declared forest-plan
+  profile slots must also prove reviewer-ready profile context before strict expansion can pass.
 - The first Milestone 10 expansion pass has a local review ID:
   `region1-expansion-ecid-preliminary-ea`. The package cache extracted `7` PDFs into `160` chunks.
   Evidence-arbitration Milestone 4 replay covered `392` candidate authorities, with `43`
@@ -633,20 +635,19 @@ Gallatin FEIS and ESA-supporting plan documents.
 - Latest NEPA 3D graph-gate verification on 2026-05-06 regenerated the source-set and V1 review
   graph exports, reran V1 review-scoped phase eval at `19/19`, and passed non-strict promotion
   suite with `22/22` required current-promotion results, `failure_category_counts={}`, and
-  `expansion_failure_category_counts={}`. Strict expansion promotion also passed with `22/22`
-  required current-promotion results, `open_expansion_artifact_count=0`, and
-  `open_expansion_slot_count=0`. Latest post-V1 real-package expansion verification on
-  2026-05-06 generated and validated the South Plateau rule pack, ran South Plateau compliance
-  review and review-scoped phase eval, restored the promoted V1 review-scoped phase-eval artifact,
-  and passed strict plus non-strict promotion suite. Focused pytest, architecture-contract, ruff,
-  compileall, JSON validation, and `git diff --check` gates are the closeout verification for the
+  `expansion_failure_category_counts={}`. Latest post-V1 real-package expansion verification on
+  2026-05-06 reran South Plateau review-scoped phase eval at `16/16`, restored the promoted V1
+  review-scoped phase-eval artifact at `19/19`, kept non-strict current promotion green, and made
+  strict expansion fail closed only on `forest_plan_reviewer_not_ready`. Focused pytest,
+  architecture-contract, ruff, compileall, JSON validation, and `git diff --check` gates are the
+  closeout verification for the
   tracked slice.
 - The evidence-arbitration plan is complete through commit `f304e2e`. The post-V1 real-package
-  expansion milestone is complete through Sequence 6 for the declared ECID preliminary-EA and South
-  Plateau expansion slots, with Sequence 7 now planned to close the South Plateau forest-plan
-  gate-boundary weakness before treating strict expansion as fully hardened. Future expansion should
-  add a new verified real-package slot and matching promotion-suite review-case artifact checks
-  rather than weakening the current gate.
+  expansion milestone is complete through Sequence 7 for the declared ECID preliminary-EA and South
+  Plateau expansion slots. Current V1 promotion remains green, but strict expansion is intentionally
+  blocked until South Plateau resolves to reviewer-ready Custer Gallatin forest-plan context. Future
+  expansion should add a new verified real-package slot and matching promotion-suite review-case
+  artifact checks rather than weakening the current gate.
 
 Previous full downstream promotion snapshot was verified locally on 2026-04-30 before the rule-pack
 `0.4.0` baseline expansion and before the later 186-row and 190-row catalog updates.

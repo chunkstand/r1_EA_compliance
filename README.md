@@ -360,12 +360,10 @@ adjudication eval resolves the current `158`-row queue as true EA package-eviden
 `0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready. The
 South Plateau expansion package has replayed and validated its six applicability adjudications,
 generated and validated `61` rules, passed compliance review with `61` findings, `280` rule-claim
-links, and `0` rule-claim gaps, and passed review-scoped phase eval. Broader strict expansion now
-passes for the declared real-package set, but the next planned gate-hardening milestone is South
-Plateau forest-plan boundary closure: the slot declares the Custer Gallatin profile while the
-nested forest-plan review is still ambiguous/not reviewer-ready, so strict expansion must be made to
-fail closed unless that declared-profile context resolves or the slot is explicitly blocked with
-`forest_plan_reviewer_not_ready`.
+links, and `0` rule-claim gaps, and passed review-scoped phase eval. Sequence 7 now makes strict
+expansion fail closed for declared forest-plan profiles: South Plateau declares the Custer Gallatin
+profile, but its nested forest-plan review remains ambiguous/not reviewer-ready, so the slot is
+`ready=false` with `forest_plan_reviewer_not_ready` until that declared-profile context resolves.
 
 ## Reviewer Engine Entry Points
 
@@ -897,7 +895,10 @@ Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`
 Selected not-ready expansion slots must carry review/package/source-set metadata, expected gate
 artifacts, next action, and a typed non-`package_fixture_missing` failure category. Ready slots must
 retain the same review/package/source-set contract, omit failure categories, and list expected gate
-artifacts covering the matching review case's `required_for_expansion` artifact IDs.
+artifacts covering the matching review case's `required_for_expansion` artifact IDs. A slot that
+declares `forest_plan_profile` also fails closed unless the compliance review, forest-plan context
+summary, last local signal, and any required Forest Plan component phase prove reviewer-ready context
+for that declared profile.
 
 As of the latest post-V1 real-package expansion pass, the ECID preliminary-EA expansion slot is
 ready locally. `applicability-adjudication-eval`, `applicability-adjudication-apply`,
@@ -915,9 +916,12 @@ added South Plateau artifact checks to the promotion suite. Applicability valida
 `61` applicable authorities, `331` non-applicable authorities, no unresolved or `needs_adjudication`
 decisions, and `generated_rule_pack_ready=true`. Compliance review reports `reviewer_ready=true`,
 `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim
-gaps. Strict expansion promotion now passes with `expansion_ready=true`, but
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 7 is planned to close the
-forest-plan gate-boundary weakness before this pass is treated as fully hardened.
+gaps. South Plateau review-scoped phase eval now passes `16/16` phases with
+`reviewer_ready=true`, but its nested `summary.forest_plan_review` remains
+`scope_status="ambiguous"`, `validation_passed=false`, and `reviewer_ready=false`. Sequence 7
+therefore marks the South Plateau slot `ready=false` with `forest_plan_reviewer_not_ready`;
+non-strict current promotion remains green, while strict expansion fails until the declared Custer
+Gallatin forest-plan context is reviewer-ready.
 
 Run the seed retrieval eval gate:
 

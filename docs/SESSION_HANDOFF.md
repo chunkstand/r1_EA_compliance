@@ -4,7 +4,7 @@ Date: 2026-05-06
 
 ## Current Applicability/Expansion Handoff
 
-`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete through Sequence 6 for the
+`docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete through Sequence 7 for the
 declared ECID preliminary-EA and South Plateau real-package expansion set. The South Plateau Area
 Landscape Treatment Project package exists locally as
 `region1-expansion-south-plateau-landscape-treatment`: `26` official PDFs were imported from the
@@ -21,25 +21,29 @@ are applicable, `331` are non-applicable, `0` are unresolved or `needs_adjudicat
 rules and generated pack hash `39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec`.
 South Plateau compliance review passed with `reviewer_ready=true`, `61` findings, `41` pass, `19`
 uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim gaps. South Plateau review-scoped
-phase eval passed `15/15` phases with `reviewer_ready=true`.
+phase eval now passes `16/16` phases with `reviewer_ready=true`.
 
 `config/promotion_suite_v1.json` now includes South Plateau as a required expansion review case
 with generated rule-pack, compliance validation, matrix/PDF, authority sidecar, litigation-risk,
-and review-scoped phase-eval checks. The South Plateau expansion slot is `ready=true`; it no longer
-carries `generated_rule_pack_pending`, `adjudication_needed`, `applicability_miss`, or
-`package_fixture_missing`. The Sequence 6 alignment pass reconciled ECID and South Plateau
-ready-slot `expected_gate_artifacts` with their matching `required_for_expansion` review-case
-checks, and manifest validation now rejects ready slots that omit those checked artifact IDs.
+forest-plan context summary, and review-scoped phase-eval checks. The South Plateau expansion slot
+is now `ready=false` with `failure_category="forest_plan_reviewer_not_ready"`: it declares
+`forest_plan_profile="custer_gallatin"`, but the nested forest-plan review remains
+`scope_status="ambiguous"`, `validation_passed=false`, `reviewer_ready=false`, and
+`needs_reviewer_resolution=true`. The Sequence 7 hardening pass added dynamic declared-profile slot
+checks, and manifest validation now rejects forest-profile slots that omit the required
+`compliance_review`, `forest_plan_context_summary`, and `phase_eval` expansion gate contracts.
 
 Strict expansion promotion was written to
 `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/` and
-passed with `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
-`expansion_artifacts_ready=true`, `failure_category_counts={}`,
-`expansion_failure_category_counts={}`, `open_expansion_artifact_count=0`, and
-`open_expansion_slot_count=0`. Non-strict promotion was rerun last and reports the same readiness
-with `strict_expansion=false`. The promoted V1 review-scoped phase eval was rerun after South
-Plateau review-scoped eval to restore the shared current-promotion phase artifact. The later NEPA
-3D graph-gate pass described below reran that artifact at `19/19`.
+now fails as expected with `current_promotion_ready=true`, `promotion_ready=false`,
+`expansion_ready=false`, `expansion_artifacts_ready=false`,
+`failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+`expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+`open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`. Non-strict promotion was rerun
+last and keeps the current V1 promotion green with `current_promotion_ready=true`,
+`promotion_ready=true`, `failure_category_counts={}`, and the same expansion-only blocker counts.
+The promoted V1 review-scoped phase eval was rerun after South Plateau review-scoped eval to
+restore the shared current-promotion phase artifact at `19/19`.
 
 The ECID preliminary-EA expansion slot remains ready. Its Forest Plan component adjudication eval
 for the current `158`-row queue resolves all `158` rows as true EA package-evidence omissions,
@@ -48,13 +52,11 @@ package evidence visible as gaps and do not mark components supported or create 
 ECID compliance review reports `reviewer_ready=true`, ECID review-scoped phase eval passes `16/16`,
 and the required ECID expansion artifacts pass.
 
-Next implementation target: `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` Sequence 7.
-A follow-up artifact review found that South Plateau strict expansion can pass while the slot
-declares `forest_plan_profile="custer_gallatin"` but the nested forest-plan review remains
-`scope_status="ambiguous"`, `validation_passed=false`, and `reviewer_ready=false`. Sequence 7 must
-make that false-pass shape impossible: either South Plateau resolves to reviewer-ready Custer
-Gallatin forest-plan context and strict promotion passes, or the slot becomes not ready with a typed
-`forest_plan_reviewer_not_ready` blocker.
+Next implementation target if continuing strict expansion: resolve South Plateau to reviewer-ready
+Custer Gallatin forest-plan context, or leave the typed `forest_plan_reviewer_not_ready` blocker in
+place. The first slice should inspect
+`source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_context_validation.json`
+and the package/profile evidence that kept `scope_status="ambiguous"`.
 
 ## Current NEPA 3D Graph Gate Handoff
 
@@ -76,11 +78,12 @@ Latest local signals:
   and `3,442` edges;
 - V1 review-bound `phase-eval`: `19/19` phases passed with `reviewer_ready=true`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=true`, `expansion_artifacts_ready=true`, `22/22` required current-promotion
-  results passed, `failure_category_counts={}`, and `expansion_failure_category_counts={}`;
-- strict expansion `promotion-suite`: same readiness with `strict_expansion=true`, `22/22`
-  required current-promotion results passed, `open_expansion_artifact_count=0`, and
-  `open_expansion_slot_count=0`.
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `22/22` required current-promotion
+  results passed, `failure_category_counts={}`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`;
+- strict expansion `promotion-suite`: expected command failure with `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`, `22/22` required current-promotion results
+  passed, `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`.
 
 Next implementation target: no additional NEPA 3D Milestone 7 pass is selected yet. Reasonable next
 slices are a deeper graph failure-fixture pass, the Milestone 8 operating runbook/demo closeout, or
@@ -441,23 +444,22 @@ Latest post-V1 real-package expansion Sequence 2B/3 status:
   and `.md`.
 - `config/promotion_suite_v1.json` now includes ECID and South Plateau `required_for_expansion`
   artifact checks and treats expansion readiness as both slot readiness and required expansion
-  artifact readiness. Both declared expansion slots are `ready=true`; neither is blocked by
-  `forest_plan_reviewer_not_ready`, `generated_rule_pack_pending`, `adjudication_needed`, or
-  `missing_source`. Ready-slot `expected_gate_artifacts` now cover the matching review-case
-  `required_for_expansion` artifact IDs for both ECID and South Plateau.
-- Non-strict promotion suite after Sequence 6 reports `current_promotion_ready=true`,
-  `promotion_ready=true`, `expansion_ready=true`, `expansion_artifacts_ready=true`,
-  `failure_category_counts={}`, `expansion_failure_category_counts={}`,
-  `open_expansion_artifact_count=0`, and `open_expansion_slot_count=0`.
+  artifact readiness. ECID remains `ready=true`; South Plateau is `ready=false` with
+  `forest_plan_reviewer_not_ready` until its declared Custer Gallatin forest-plan context becomes
+  reviewer-ready. Ready-slot `expected_gate_artifacts` cover the matching review-case
+  `required_for_expansion` artifact IDs, and declared forest-profile slots must include
+  `compliance_review`, `forest_plan_context_summary`, and `phase_eval` gate contracts.
+- Non-strict promotion suite after Sequence 7 reports `current_promotion_ready=true`,
+  `promotion_ready=true`, `expansion_ready=false`, `expansion_artifacts_ready=false`,
+  `failure_category_counts={}`, `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`.
 
 Next implementation target:
 
-Sequence 7 in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is selected. The declared
-ECID preliminary-EA and South Plateau expansion set closed through Sequence 6 strict expansion
-promotion, but Sequence 7 must close the newly identified South Plateau forest-plan gate boundary:
-strict expansion must not pass for a ready declared-profile slot while nested forest-plan context is
-ambiguous or not reviewer-ready. The older lane notes below are retained for continuity, but they
-are not the current next pass unless the user redirects.
+Sequence 7 in `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` is complete. The declared
+ECID preliminary-EA and South Plateau expansion set no longer reports strict expansion ready while
+South Plateau forest-plan context is ambiguous. The older lane notes below are retained for
+continuity, but they are not the current next pass unless the user redirects.
 
 Sequence 2B alignment/gap close note: strict and non-strict promotion-suite evidence were kept
 separate, and non-strict was rerun last so the default suite output remains the current-promotion
@@ -601,10 +603,11 @@ legal conclusion.
   applicability adjudication worklist, generated-rule-pack/artifact-check pass, source-claim gap
   closure, Forest Plan component adjudication replay, and third package fixture selection are
   complete. The selected South Plateau run is now complete through applicability validation,
-  generated rule-pack validation, compliance review, review-scoped phase eval, and strict expansion
-  promotion.
+  generated rule-pack validation, compliance review, review-scoped phase eval, and Sequence 7
+  strict-expansion fail-closed hardening.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false`; complete through Sequence 6 for the declared expansion set.
+  `expansion_ready=false`; complete through Sequence 7 for the declared expansion set, with South
+  Plateau intentionally blocked on `forest_plan_reviewer_not_ready`.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
   families, applicability decisions, evidence paths, supersession/currentness states, and readiness
@@ -1014,10 +1017,12 @@ rate `1.0`.
 
 ## Next Sequence
 
-No next sequence is selected for the current post-V1 real-package expansion lane. The declared ECID
-preliminary-EA and South Plateau expansion set passes strict promotion. Future expansion should
-start as a new real-package slot with its own package fixture, applicability artifacts, generated
-review artifacts, promotion-suite review-case checks, and docs/handoff closeout.
+No next sequence is selected for the current post-V1 real-package expansion lane. Current V1
+promotion remains green, ECID remains a ready expansion slot, and South Plateau is intentionally
+blocked from strict expansion by `forest_plan_reviewer_not_ready` until its declared Custer Gallatin
+forest-plan context is reviewer-ready. Future expansion should start as a new real-package slot with
+its own package fixture, applicability artifacts, generated review artifacts, promotion-suite
+review-case checks, and docs/handoff closeout.
 
 The V1 EA gate repair plan is closed. The current East Crazy Inspiration Divide review artifacts
 were regenerated and verified, and the V1 EA gate is promoted after the broader EA lane,

@@ -1,9 +1,10 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: complete through Sequence 6 for the declared ECID preliminary-EA and South Plateau
-real-package expansion set; Sequence 7 is planned to close the South Plateau forest-plan
-gate-boundary weakness found after the strict expansion pass.
+Status: complete through Sequence 7 for the declared ECID preliminary-EA and South Plateau
+real-package expansion set. Sequence 7 conservatively blocks South Plateau strict expansion on
+`forest_plan_reviewer_not_ready` until its declared Custer Gallatin forest-plan context is
+reviewer-ready.
 
 ## Weakness
 
@@ -30,16 +31,17 @@ imported the South Plateau package and ran the applicability-first path through 
 Sequence 5 then resolved the six South Plateau authority-family positive/negative trigger
 conflicts through replayable adjudication and reran validation. Sequence 6 generated and validated
 the South Plateau rule pack, ran compliance review and review-scoped phase eval, added South
-Plateau artifact checks to the promotion suite, and marked the slot ready only after those checks
-passed. The declared broader expansion set now passes strict expansion promotion.
+Plateau artifact checks to the promotion suite, and marked the slot ready after those generated
+review checks passed. Sequence 7 then found and closed the remaining declared-profile gate by
+making South Plateau strict expansion fail closed while forest-plan context is ambiguous.
 
 A follow-up artifact review found that the South Plateau slot can still pass strict expansion while
 its forest-plan context is unresolved: the slot declares `forest_plan_profile="custer_gallatin"`,
 but `compliance_review.json` records `forest_plan_review.scope_status="ambiguous"`,
 `forest_plan_review.validation_passed=false`, `forest_plan_review.reviewer_ready=false`, and
-`forest_plan_review.needs_reviewer_resolution=true`. Review-scoped `phase-eval` still passes
-`15/15`, and strict expansion promotion still passes, because the current expansion artifact checks
-do not require the declared forest-plan profile to resolve or fail closed.
+`forest_plan_review.needs_reviewer_resolution=true`. Review-scoped `phase-eval` still passes, but
+Sequence 7 now prevents strict expansion promotion from passing unless the declared forest-plan
+profile resolves or the slot carries the typed blocker.
 
 The current V1 Custer Gallatin proving review remains promoted. This plan resolves the broader
 expansion weakness without weakening the current source-record, document-role, citation,
@@ -48,17 +50,17 @@ promotion-suite gates.
 
 ## Goal
 
-Make the post-V1 promotion suite report `expansion_ready=true` and make strict expansion promotion
-pass for the declared real-package expansion set.
+Make the post-V1 promotion suite report broader expansion readiness only when declared real-package
+slots and their required artifacts are genuinely ready, including declared forest-plan context.
 
-Completion means:
+Completion means the current V1 promotion remains green and expansion readiness is explicit:
 
 - `current_promotion_ready=true`
-- `expansion_ready=true`
-- `promotion_ready=true` under `--strict-expansion`
-- `failure_category_counts={}`
-- `expansion_failure_category_counts={}`
-- `open_expansion_slot_count=0`
+- non-strict `promotion_ready=true`
+- strict `promotion_ready=true` only when `expansion_ready=true`
+- strict `promotion_ready=false` with typed failure categories when any declared expansion slot is
+  selected but not reviewer-ready
+- no current-promotion regression while expansion-only blockers are resolved or carried explicitly
 
 Sequence 7 narrows this completion claim: strict expansion may only pass for South Plateau if the
 declared Custer Gallatin forest-plan context is resolved and reviewer-ready, or if the slot is no
@@ -664,25 +666,31 @@ forest-plan profile but the generated review artifacts do not resolve that profi
 reviewer-ready forest-plan context.
 
 Status:
-Planned. This is a gate-hardening and South Plateau closeout sequence. It must not weaken the
-applicability, generated-rule, compliance-review, phase-eval, or promotion-suite gates that already
-pass; it should add the missing forest-plan condition to the expansion readiness contract.
+Complete as of 2026-05-06. This gate-hardening and South Plateau closeout sequence did not weaken
+the applicability, generated-rule, compliance-review, phase-eval, or current promotion-suite gates
+that already pass. It added the missing forest-plan condition to the expansion readiness contract
+and blocks South Plateau strict expansion with `forest_plan_reviewer_not_ready`.
 
-Current weakness evidence:
+Closure evidence:
 
 - `config/promotion_suite_v1.json` marks
-  `region1-expansion-south-plateau-landscape-treatment` ready and declares
+  `region1-expansion-south-plateau-landscape-treatment` as
+  `status="blocked_forest_plan_review"`, `ready=false`, and
+  `failure_category="forest_plan_reviewer_not_ready"`, while preserving
   `forest_plan_profile="custer_gallatin"`.
-- The same slot's `last_local_signal` records `forest_plan_scope_status="ambiguous"` and
-  `forest_plan_component_gate_required=false`.
+- The same slot's `last_local_signal` still records `forest_plan_scope_status="ambiguous"` and
+  `forest_plan_component_gate_required=false`; the runtime profile check requires that signal to
+  match the artifact rather than pretending it is resolved.
 - `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json`
   records `summary.reviewer_ready=true`, but its nested `summary.forest_plan_review` records
   `scope_status="ambiguous"`, `validation_passed=false`, `reviewer_ready=false`, and
   `needs_reviewer_resolution=true`.
 - `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json`
-  passes `15/15` phases with `reviewer_ready=true`, so phase eval does not currently surface the
+  passes `16/16` phases with `reviewer_ready=true`, so phase eval does not by itself surface the
   declared-profile mismatch.
-- Strict expansion promotion passes even though the declared forest-plan profile did not resolve.
+- Strict expansion promotion now fails as expected with
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}` while
+  `current_promotion_ready=true`.
 
 Actions:
 
@@ -758,6 +766,24 @@ Acceptance:
 - The promotion-suite report names the forest-plan blocker explicitly instead of hiding it behind a
   passing compliance-review or phase-eval summary.
 - Current V1 promotion remains green for `v1-cg-ecid-compliance-review`.
+
+Sequence 7 latest local result:
+
+- Regression fixtures in `tests/test_promotion_suite.py` prove a manifest `ready=true` false-pass
+  shape with ambiguous nested forest-plan context cannot produce `expansion_ready=true`, and a
+  selected forest-profile slot cannot omit `forest_plan_context_summary` from expected gate
+  artifacts.
+- South Plateau review-scoped phase eval passes `16/16` phases with `reviewer_ready=true`; promoted
+  V1 review-scoped phase eval was restored at `19/19`.
+- Non-strict promotion suite: `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `expansion_artifacts_ready=false`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `open_expansion_artifact_count=2`, and `open_expansion_slot_count=1`.
+- Strict expansion promotion suite: expected command failure with `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`,
+  `failure_category_counts={"forest_plan_reviewer_not_ready": 3}`,
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 3}`, and no unrelated
+  current-promotion regression.
 
 Stop conditions:
 

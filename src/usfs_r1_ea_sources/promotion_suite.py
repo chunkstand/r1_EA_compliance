@@ -14,6 +14,11 @@ PROMOTION_SUITE_RESULTS_SCHEMA_VERSION = "promotion-suite-results-v0"
 DEFAULT_PROMOTION_SUITE_PATH = Path("config/promotion_suite_v1.json")
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 MISSING = object()
+FOREST_PLAN_PROFILE_GATE_RESULT_IDS = {
+    "compliance_review",
+    "forest_plan_context_summary",
+    "phase_eval",
+}
 
 
 @dataclass(frozen=True)
@@ -58,7 +63,8 @@ def run_promotion_suite(
         for spec in manifest.get("suite_results", [])
     ]
     expansion_slots = [
-        _expansion_slot_result(slot) for slot in manifest.get("expansion_slots", [])
+        _expansion_slot_result(slot, output_dir=output_dir)
+        for slot in manifest.get("expansion_slots", [])
     ]
 
     required_review_results = [
@@ -480,21 +486,32 @@ def _check_result(
     return result
 
 
-def _expansion_slot_result(slot: dict[str, Any]) -> dict[str, Any]:
-    ready = bool(slot.get("ready", False))
+def _expansion_slot_result(slot: dict[str, Any], *, output_dir: Path) -> dict[str, Any]:
+    manifest_ready = bool(slot.get("ready", False))
     category = str(slot.get("failure_category") or "package_fixture_missing")
+    profile_checks = _forest_plan_profile_slot_checks(slot, output_dir=output_dir)
+    failed_profile_categories = [
+        check["failure_category"] for check in profile_checks if not check["passed"]
+    ]
+    ready = manifest_ready and not failed_profile_categories
+    failure_categories = sorted(
+        set(([] if manifest_ready else [category]) + failed_profile_categories)
+    )
     result = {
         "id": slot["id"],
         "label": slot.get("label"),
         "status": slot.get("status", "open"),
+        "manifest_ready": manifest_ready,
         "ready": ready,
         "required_for_current_promotion": bool(
             slot.get("required_for_current_promotion", False)
         ),
-        "failure_categories": [] if ready else [category],
+        "failure_categories": [] if ready else failure_categories,
         "next_action": slot.get("next_action"),
         "acceptance_signal": slot.get("acceptance_signal"),
     }
+    if profile_checks:
+        result["forest_plan_profile_checks"] = profile_checks
     for key in (
         "review_id",
         "source_set_id",
@@ -507,6 +524,135 @@ def _expansion_slot_result(slot: dict[str, Any]) -> dict[str, Any]:
         if key in slot:
             result[key] = slot[key]
     return result
+
+
+def _forest_plan_profile_slot_checks(
+    slot: dict[str, Any], *, output_dir: Path
+) -> list[dict[str, Any]]:
+    declared_profile = str(slot.get("forest_plan_profile") or "")
+    if not declared_profile:
+        return []
+    review_id = str(slot.get("review_id") or "")
+    category = "forest_plan_reviewer_not_ready"
+    checks: list[dict[str, Any]] = []
+    compliance_path = output_dir / "reviews" / review_id / "compliance_review.json"
+    if not compliance_path.exists():
+        return [
+            _check_result(
+                name="forest_plan_compliance_review_exists",
+                passed=False,
+                expected=True,
+                actual=False,
+                failure_category=category,
+                details={"path": str(compliance_path)},
+            )
+        ]
+
+    compliance_payload = _read_json(compliance_path)
+    forest_plan_review = _json_path(compliance_payload, "summary.forest_plan_review")
+    if forest_plan_review is MISSING or not isinstance(forest_plan_review, dict):
+        checks.append(
+            _check_result(
+                name="forest_plan_review_summary_present",
+                passed=False,
+                expected="summary.forest_plan_review",
+                actual=None,
+                failure_category=category,
+                details={"path": str(compliance_path)},
+            )
+        )
+        artifact_scope_status = None
+    else:
+        checks.append(
+            _check_result(
+                name="forest_plan_review_summary_present",
+                passed=True,
+                expected="summary.forest_plan_review",
+                actual="present",
+                failure_category=category,
+                details={"path": str(compliance_path)},
+            )
+        )
+        artifact_scope_status = forest_plan_review.get("scope_status")
+        checks.append(
+            _equals_check(
+                "forest_plan_scope_status_matches_declared_profile",
+                actual=artifact_scope_status,
+                expected=declared_profile,
+                failure_category=category,
+            )
+        )
+        checks.append(
+            _equals_check(
+                "forest_plan_validation_passed",
+                actual=forest_plan_review.get("validation_passed"),
+                expected=True,
+                failure_category=category,
+            )
+        )
+        checks.append(
+            _equals_check(
+                "forest_plan_reviewer_ready",
+                actual=forest_plan_review.get("reviewer_ready"),
+                expected=True,
+                failure_category=category,
+            )
+        )
+
+    last_signal_scope_status = _json_path(
+        slot, "last_local_signal.forest_plan_scope_status"
+    )
+    checks.append(
+        _check_result(
+            name="forest_plan_last_signal_scope_status_matches_artifact",
+            passed=last_signal_scope_status is not MISSING
+            and last_signal_scope_status == artifact_scope_status,
+            expected=artifact_scope_status,
+            actual=None if last_signal_scope_status is MISSING else last_signal_scope_status,
+            failure_category=category,
+        )
+    )
+
+    gate_required = (
+        _json_path(slot, "last_local_signal.forest_plan_component_gate_required") is True
+    )
+    if gate_required:
+        phase_path = output_dir / "reviews" / review_id / "phase_eval_results.json"
+        phase_names: list[str] = []
+        if phase_path.exists():
+            phase_payload = _read_json(phase_path)
+            phase_names = [
+                str(phase.get("name"))
+                for phase in phase_payload.get("phases", [])
+                if isinstance(phase, dict)
+            ]
+        checks.append(
+            _check_result(
+                name="forest_plan_component_phase_present_when_required",
+                passed=bool(
+                    {"forest_plan_component_eval", "forest_plan_component_adjudication"}
+                    .intersection(phase_names)
+                ),
+                expected=[
+                    "forest_plan_component_eval",
+                    "forest_plan_component_adjudication",
+                ],
+                actual=phase_names,
+                failure_category=category,
+                details={"path": str(phase_path)},
+            )
+        )
+    else:
+        checks.append(
+            _check_result(
+                name="forest_plan_component_phase_present_when_required",
+                passed=True,
+                expected="not_required",
+                actual="not_required",
+                failure_category=category,
+            )
+        )
+    return checks
 
 
 def _failure_category_counts(
@@ -726,6 +872,27 @@ def _validate_expansion_slot_spec(
                 f"Promotion suite selected expansion slot {slot_id!r} has an expected "
                 "gate artifact without a path."
             )
+    gate_artifact_ids = {str(artifact.get("id") or "") for artifact in gate_artifacts}
+    if slot.get("forest_plan_profile"):
+        review_result_ids = expansion_result_ids_by_review_id.get(str(slot["review_id"]), set())
+        missing_forest_gate_results = sorted(
+            FOREST_PLAN_PROFILE_GATE_RESULT_IDS - review_result_ids
+        )
+        if missing_forest_gate_results:
+            raise ValueError(
+                f"Promotion suite selected expansion slot {slot_id!r} declares "
+                "forest_plan_profile but is missing required expansion result ids: "
+                f"{', '.join(missing_forest_gate_results)}."
+            )
+        missing_forest_gate_artifacts = sorted(
+            FOREST_PLAN_PROFILE_GATE_RESULT_IDS - gate_artifact_ids
+        )
+        if missing_forest_gate_artifacts:
+            raise ValueError(
+                f"Promotion suite selected expansion slot {slot_id!r} declares "
+                "forest_plan_profile but expected_gate_artifacts is missing: "
+                f"{', '.join(missing_forest_gate_artifacts)}."
+            )
     if ready:
         required_result_ids = expansion_result_ids_by_review_id.get(str(slot["review_id"]))
         if not required_result_ids:
@@ -733,7 +900,6 @@ def _validate_expansion_slot_spec(
                 f"Promotion suite ready expansion slot {slot_id!r} must have matching "
                 "review-case results marked required_for_expansion."
             )
-        gate_artifact_ids = {str(artifact.get("id") or "") for artifact in gate_artifacts}
         missing_result_ids = sorted(required_result_ids - gate_artifact_ids)
         if missing_result_ids:
             raise ValueError(
