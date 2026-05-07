@@ -136,11 +136,6 @@ async function projectSowMetrics() {
     slotCategoryCounts,
     categoryTotals,
     eastMetrics,
-    eastProjectName:
-      packageDoc?.project_name ||
-      "East Crazy Inspiration Divide Land Exchange Proposed Action",
-    eastForest: packageDoc?.intake_summary?.forest || "Custer Gallatin National Forest",
-    eastDistrict: (packageDoc?.intake_summary?.districts || ["Bozeman Ranger District"]).join(", "),
     scopeRecords,
     selectedScopeNames: scopeRecords.map((scope) => scope.resource_name).slice(0, 10),
     selectedScopeIds: scopeRecords.map((scope) => scope.resource_scope_id).slice(0, 10),
@@ -260,7 +255,7 @@ function briefHtml(metrics) {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Project SOW Capabilities Brief</title>
+  <title>Project Scope of Work Capabilities Brief</title>
   <style>
     @page { size: Letter; margin: 0; }
     * { box-sizing: border-box; }
@@ -269,6 +264,7 @@ function briefHtml(metrics) {
       color: #171713;
       background: #f7f6f1;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
     .page {
       width: 8.5in;
@@ -296,11 +292,13 @@ function briefHtml(metrics) {
       font-size: 30pt;
       line-height: 0.98;
       letter-spacing: 0;
+      text-wrap: balance;
     }
     h2 {
       font-size: 19pt;
       line-height: 1.05;
       letter-spacing: 0;
+      text-wrap: balance;
     }
     h3 {
       font-size: 12pt;
@@ -311,6 +309,7 @@ function briefHtml(metrics) {
       font-size: 9.7pt;
       line-height: 1.36;
       color: #4f554e;
+      text-wrap: pretty;
     }
     .lede {
       margin-top: 0.12in;
@@ -351,6 +350,7 @@ function briefHtml(metrics) {
       font-size: 18pt;
       line-height: 1;
       color: #171713;
+      font-variant-numeric: tabular-nums;
     }
     .metric span {
       display: block;
@@ -364,19 +364,17 @@ function briefHtml(metrics) {
       width: 100%;
       border: 1px solid #d8d3c6;
       border-radius: 10px;
-      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
     }
     .graph-figure {
       width: 100%;
-      height: 4.25in;
+      height: 3.0in;
       object-fit: contain;
       object-position: center;
       border: 1px solid #d8d3c6;
       border-radius: 10px;
       background: #fff;
-      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
     }
-    .graph-figure.compact { height: 4.05in; }
+    .graph-figure.compact { height: 3.0in; }
     .caption {
       margin-top: 0.06in;
       color: #5f625b;
@@ -443,31 +441,31 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Standing Framework / Capabilities Brief</div>
-      <h1>Scope Ready NEPA Work Packages</h1>
-      <p class="lede">We turn a proposed-action intake into a contract-ready Project SOW requirements package before a complete EA review package exists. The workflow selects resource scopes, builds an intake evidence graph, renders required and optional deliverables, exposes reviewer adjudication, and hands accepted packages forward into EA assembly planning without creating legal conclusions or final agency decisions.</p>
-      <p class="metric-context">Current operational proof: ${fmtNumber(metrics.caseCount)} proving intakes, ${fmtNumber(metrics.failedCaseCount)} failed cases, ${fmtNumber(metrics.totalSystemMisses)} system misses, and ${fmtNumber(metrics.totalIntakeOmissions)} intake omissions.</p>
+      <h1>NEPA Scope of Work System</h1>
+      <p class="lede">This system turns a proposed-action intake into a contract-ready scope of work requirements package before a complete EA review package exists. It selects resource workstreams, builds an intake evidence graph, renders required and optional deliverables, exposes reviewer adjudication, and hands accepted packages forward into EA assembly planning.</p>
+      <p class="metric-context">Operational proof is grounded in current gate evidence and tracked proving intakes.</p>
       <div class="metric-grid">
-        <div class="metric"><strong>${fmtNumber(metrics.scopeLibraryCount)}</strong><span>resource SOW templates</span></div>
-        <div class="metric"><strong>${fmtNumber(metrics.eastMetrics.resource_scope_count)}</strong><span>East Crazies selected scopes</span></div>
-        <div class="metric"><strong>${fmtNumber(metrics.eastMetrics.proposed_action_resource_area_count)}</strong><span>proposed-action resource areas</span></div>
+        <div class="metric"><strong>${fmtNumber(metrics.scopeLibraryCount)}</strong><span>resource work templates</span></div>
+        <div class="metric"><strong>${fmtNumber(metrics.caseCount)}</strong><span>tracked proving intakes</span></div>
+        <div class="metric"><strong>${fmtNumber(metrics.totalSystemMisses)}</strong><span>system misses in gate</span></div>
         <div class="metric"><strong>${fmtNumber(metrics.handoffSlots)}</strong><span>EA handoff checklist slots</span></div>
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/project_sow_delivery_stack.svg" alt="Project SOW delivery process from intake to EA package handoff" />
+      <img class="hero-img" src="assets/project_sow_delivery_stack.svg" alt="Project scope of work delivery process from intake to EA package handoff" />
       <div class="grid-2" style="margin-top:0.15in">
         <div class="callout">
           <strong>Planning model</strong>
-          <p>The system reads structured proposed-action evidence and turns it into resource-specific SOW work, data needs, deliverables, assumptions, dependencies, acceptance criteria, reviewer roles, review timing, and signoff fields.</p>
+          <p>The system reads structured proposed-action evidence and turns it into resource-specific work tasks, data needs, deliverables, assumptions, dependencies, acceptance criteria, reviewer roles, review timing, and signoff fields.</p>
         </div>
         <div class="callout">
-          <strong>Boundary model</strong>
-          <p>The output is a planning and contracting support artifact. It does not decide applicability, generate compliance findings, provide legal advice, prove legal sufficiency, or make a final agency decision.</p>
+          <strong>Review boundary</strong>
+          <p>The package is upstream planning support: resource selection, evidence paths, and contract fields stay separate from compliance and legal conclusions.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Generated from current Project SOW operational evidence.</span>
+      <span>Generated from current scope-of-work operational evidence.</span>
       <span>Command: <strong>project-sow-operational-gate</strong>; JSON is canonical.</span>
     </footer>
   </section>
@@ -475,20 +473,20 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Capability 1 / Intake Evidence Graph</div>
-      <h2>From proposed action to SOW scope</h2>
-      <p class="lede">The package records how each proposed-action element and evidence reference triggers a resource area and how that resource area resolves to a SOW scope. That keeps scope selection inspectable before specialist work is contracted.</p>
+      <h2>From proposed action to resource scope</h2>
+      <p class="lede">The package records how each proposed-action element and evidence reference triggers a resource area and how that resource area resolves to a resource scope. That keeps scope selection inspectable before specialist work is contracted.</p>
     </header>
     <main>
-      <img class="graph-figure" src="assets/project_sow_intake_graph_service_view.png" alt="Intake evidence graph from proposed action to SOW scope" />
-      <p class="caption">East Crazies evidence graph: ${fmtNumber(metrics.eastMetrics.intake_evidence_graph_node_count)} nodes and ${fmtNumber(metrics.eastMetrics.intake_evidence_graph_edge_count)} edges connect project, proposed action, action elements, evidence refs, resource areas, SOW scopes, required deliverables, and observed reports.</p>
+      <img class="graph-figure" src="assets/project_sow_intake_graph_service_view.png" alt="Intake evidence graph from proposed action to resource scope" />
+      <p class="caption">Representative intake graph: ${fmtNumber(metrics.eastMetrics.intake_evidence_graph_node_count)} nodes and ${fmtNumber(metrics.eastMetrics.intake_evidence_graph_edge_count)} edges connect project, proposed action, action elements, evidence refs, resource areas, selected resource scopes, required deliverables, and reference reports.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
           <strong>Defensibility shown</strong>
-          <p>Every proposed-action-derived resource area is expected to keep the planning path: proposed action -> action element -> evidence ref -> resource area -> SOW scope.</p>
+          <p>Every proposed-action-derived resource area is expected to keep the planning path: proposed action -> action element -> evidence ref -> resource area -> resource scope.</p>
         </div>
         <div class="callout">
           <strong>Review signal</strong>
-          <p>Validation fails closed on unsupported resource areas, dangling graph edges, observed reports without proposed-action support, missing SOW content, and missing reviewer-facing package sections.</p>
+          <p>Validation fails closed on unsupported resource areas, dangling graph edges, observed reports without proposed-action support, missing work content, and missing reviewer-facing package sections.</p>
         </div>
       </div>
     </main>
@@ -502,11 +500,11 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Capability 2 / Contract Ready Scopes</div>
       <h2>Turn resource screening into work statements</h2>
-      <p class="lede">Resource scopes are not just labels. Each selected scope carries SOW tasks, data needs, required and optional deliverables, defensibility checks, assumptions, dependencies, acceptance criteria, reviewer role, review timing, and signoff fields.</p>
+      <p class="lede">Resource scopes are not just labels. Each selected scope carries work tasks, data needs, required and optional deliverables, defensibility checks, assumptions, dependencies, acceptance criteria, reviewer role, review timing, and signoff fields.</p>
     </header>
     <main>
-      <img class="graph-figure compact" src="assets/project_sow_contract_scope_service_view.png" alt="Contract-ready SOW scopes and deliverables" />
-      <p class="caption">Current scope library: ${fmtNumber(metrics.scopeLibraryCount)} resource SOW templates. East Crazies selects ${fmtNumber(metrics.eastMetrics.resource_scope_count)} scopes, all with contract fields, required deliverables, optional deliverables, and rendering checks passed.</p>
+      <img class="graph-figure compact" src="assets/project_sow_contract_scope_service_view.png" alt="Contract-ready resource scopes and deliverables" />
+      <p class="caption">Current scope library: ${fmtNumber(metrics.scopeLibraryCount)} resource work templates. A representative package selects ${fmtNumber(metrics.eastMetrics.resource_scope_count)} scopes, all with contract fields, required deliverables, optional deliverables, and rendering checks passed.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
           <strong>What is inspectable</strong>
@@ -520,7 +518,7 @@ function briefHtml(metrics) {
     </main>
     <footer class="footer">
       <span>Contract behavior: ${fmtNumber(metrics.totalRequiredDeliverables)} required and ${fmtNumber(metrics.totalOptionalDeliverables)} optional deliverables in the current scope library rendering.</span>
-      <span>Calibration behavior: ${fmtNumber(metrics.observedReportCount)} observed East Crazies reports are calibration evidence, not precedent.</span>
+      <span>Rendering behavior: JSON remains canonical; Markdown and PDF are derived views.</span>
     </footer>
   </section>
 
@@ -532,12 +530,12 @@ function briefHtml(metrics) {
     </header>
     <main>
       <img class="graph-figure compact" src="assets/project_sow_handoff_service_view.png" alt="Operational gate and downstream EA package handoff" />
-      <p class="caption">Operational gate proof: ${fmtNumber(metrics.gateChecksPassed)}/${fmtNumber(metrics.gateCheckCount)} gate checks passed. The East Crazies handoff emits ${fmtNumber(metrics.handoffSlots)} future EA assembly slots across source collection, specialist reports, public involvement, consultation, Forest Plan consistency, and decision-record support.</p>
+      <p class="caption">Operational gate proof: ${fmtNumber(metrics.gateChecksPassed)}/${fmtNumber(metrics.gateCheckCount)} gate checks passed. The handoff pattern emits ${fmtNumber(metrics.handoffSlots)} future EA assembly slots across source collection, specialist reports, public involvement, consultation, Forest Plan consistency, and decision-record support.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="scene-list">
           <div class="scene"><strong>Intake validate</strong><span>No-write validation for templates and proving intakes.</span></div>
           <div class="scene"><strong>Draft intake</strong><span>Plain-text proposed actions become unreviewed drafts for confirmation.</span></div>
-          <div class="scene"><strong>Package render</strong><span>Canonical JSON plus Markdown/PDF SOW package renderings.</span></div>
+          <div class="scene"><strong>Package render</strong><span>Canonical JSON plus Markdown/PDF scope-of-work package renderings.</span></div>
           <div class="scene"><strong>Adjudication</strong><span>Reviewer worklist and replay path for planning decisions.</span></div>
           <div class="scene"><strong>Operational gate</strong><span>Eval, rendering smoke, docs/schema checks, and output hashes.</span></div>
           <div class="scene"><strong>EA handoff</strong><span>Future assembly slots without claiming artifacts exist now.</span></div>
@@ -547,17 +545,17 @@ function briefHtml(metrics) {
             <strong>What this service delivers</strong>
             <ul>
               <li>Structured proposed-action intake and validation before package generation.</li>
-              <li>Resource SOW requirements package with contract-ready scope records.</li>
-              <li>Reviewer adjudication for calibration gaps and optional deliverable decisions.</li>
+              <li>Resource scope-of-work requirements package with contract-ready scope records.</li>
+              <li>Reviewer adjudication for unresolved planning choices and optional deliverable decisions.</li>
               <li>Downstream EA assembly checklist tied to the accepted package JSON.</li>
             </ul>
           </div>
-          <p class="source-note" style="margin-top:0.08in">Current boundary: the Project SOW lane scopes work needed to prepare a defensible EA package. It does not run downloader, extraction, applicability, generated rule-pack, compliance review, phase-eval, legal sufficiency, or final agency decision workflows.</p>
+          <p class="source-note" style="margin-top:0.08in">Current boundary: this lane scopes work needed to prepare a defensible EA package. Handoff slots are future expectations, not evidence that future artifacts already exist.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>Deliverable: graph-backed Project SOW planning package plus operational-readiness evidence.</span>
+      <span>Deliverable: graph-backed scope-of-work planning package plus operational-readiness evidence.</span>
       <span>Boundary: broader CI adoption remains a separate explicit milestone.</span>
     </footer>
   </section>
@@ -569,8 +567,8 @@ function deliveryStackSvg(metrics) {
   const steps = [
     ["Proposed action", `${fmtNumber(metrics.intakeValidationCount)} intake validations`],
     ["Intake graph", `${fmtNumber(metrics.eastMetrics.intake_evidence_graph_node_count)} nodes / ${fmtNumber(metrics.eastMetrics.intake_evidence_graph_edge_count)} edges`],
-    ["SOW package", `${fmtNumber(metrics.eastMetrics.resource_scope_count)} selected scopes`],
-    ["Adjudication", `${fmtNumber(metrics.totalCalibrationGaps)} calibration gaps tracked`],
+    ["Work package", `${fmtNumber(metrics.eastMetrics.resource_scope_count)} selected scopes`],
+    ["Adjudication", "reviewer worklist"],
     ["EA handoff", `${fmtNumber(metrics.handoffSlots)} future slots`]
   ];
   const stepCards = steps
@@ -591,24 +589,24 @@ function deliveryStackSvg(metrics) {
   return svgShell(
     1120,
     420,
-    `<text x="70" y="52" class="eyebrow">Project SOW delivery stack</text>
+    `<text x="70" y="52" class="eyebrow">Scope-of-work delivery stack</text>
      ${stepCards}
      <rect x="70" y="282" width="980" height="68" rx="18" fill="#eef6f3" stroke="#b8d6cf" stroke-width="2"/>
-     <text x="96" y="323" class="title">Planning support only</text>
-     <text x="365" y="311" class="muted">No applicability decisions, compliance findings, legal advice,</text>
-     <text x="365" y="335" class="muted">legal sufficiency, or final agency decisions.</text>`
+     <text x="96" y="323" class="title">Planning boundary</text>
+     <text x="365" y="311" class="muted">Scope selection and contract fields stay separate</text>
+     <text x="365" y="335" class="muted">from compliance and legal conclusions.</text>`
   );
 }
 
 function intakeGraphSvg(metrics) {
   const nodes = [
-    [70, 92, 176, 66, "Project", metrics.eastForest],
+    [70, 92, 176, 66, "Project profile", "Forest / district"],
     [70, 212, 176, 66, "Proposed action", `${fmtNumber(metrics.eastMetrics.proposed_action_resource_area_count)} resource areas`],
     [330, 58, 178, 62, "Action elements", `${fmtNumber(metrics.eastMetrics.intake_evidence_graph_node_count)} graph nodes`],
     [330, 172, 178, 62, "Evidence refs", `${fmtNumber(metrics.eastMetrics.intake_evidence_graph_edge_count)} graph edges`],
-    [330, 286, 178, 62, "Observed reports", `${fmtNumber(metrics.observedReportCount)} calibration reports`],
+    [330, 286, 178, 62, "Reference reports", `${fmtNumber(metrics.observedReportCount)} comparison inputs`],
     [590, 80, 190, 70, "Resource areas", `${fmtNumber(metrics.eastMetrics.proposed_action_resource_area_count)} proposed-action areas`],
-    [590, 220, 190, 70, "SOW scopes", `${fmtNumber(metrics.eastMetrics.resource_scope_count)} selected scopes`],
+    [590, 220, 190, 70, "Resource scopes", `${fmtNumber(metrics.eastMetrics.resource_scope_count)} selected scopes`],
     [862, 80, 188, 70, "Required deliverables", `${fmtNumber(metrics.eastMetrics.required_deliverable_resource_scope_count)} scope records`],
     [862, 220, 188, 70, "Package outputs", "JSON / Markdown / PDF"]
   ];
@@ -632,7 +630,7 @@ function intakeGraphSvg(metrics) {
      ${edges}
      ${nodeMarkup}
      <rect x="70" y="365" width="980" height="42" rx="14" fill="#f7f6f1" stroke="#d8d3c6" stroke-width="2"/>
-     <text x="92" y="392" class="muted">Canonical path: proposed action -> action element -> evidence ref -> resource area -> SOW scope.</text>`
+     <text x="92" y="392" class="muted">Canonical path: proposed action -> action element -> evidence ref -> resource area -> resource scope.</text>`
   );
 }
 
@@ -757,11 +755,6 @@ function slotLabel(key) {
 
 function svgShell(width, height, content) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#181c1a" flood-opacity="0.12"/>
-    </filter>
-  </defs>
   <style>
     .eyebrow { font: 800 20px Inter, Arial, sans-serif; fill: #26786f; letter-spacing: 1.5px; text-transform: uppercase; }
     .title { font: 800 22px Inter, Arial, sans-serif; fill: #171713; }
@@ -772,7 +765,7 @@ function svgShell(width, height, content) {
   </style>
   <rect width="${width}" height="${height}" fill="#ffffff"/>
   <rect x="24" y="24" width="${width - 48}" height="${height - 48}" rx="24" fill="#f7f6f1" stroke="#d8d3c6" stroke-width="2"/>
-  <g filter="url(#shadow)">${content}</g>
+  <g>${content}</g>
 </svg>`;
 }
 

@@ -178,7 +178,7 @@ EA handoff smoke, and tracked docs/schema checks before writing an operational r
 The gate also emits a machine-readable closeout contract and hashes the gate, eval, and handoff
 smoke outputs so release evidence can be audited without staging ignored generated artifacts. The
 tracked acceptance matrix is
-`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 4-page Project SOW
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 4-page scope-of-work
 capabilities brief now lives at `docs/capabilities/project_sow_capabilities_brief.pdf` with a
 matching HTML source and generated figures under `docs/capabilities/assets/`; it frames the
 proposed-action intake, intake evidence graph, contract-ready resource scopes, reviewer
@@ -280,7 +280,7 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
   - `docs/capabilities/assets/graph_readiness_service_view.png`
   - `tools/build_nepa_3d_capabilities_brief.mjs`
-- Project SOW service capabilities brief:
+- Scope-of-work service capabilities brief:
   - `docs/capabilities/project_sow_capabilities_brief.pdf`
   - `docs/capabilities/project_sow_capabilities_brief.html`
   - `docs/capabilities/assets/project_sow_delivery_stack.svg`
