@@ -522,12 +522,14 @@ Sequence 2 added the `final-qa-certification` CLI command and the
 outer readiness gates. A live generation pass for `v1-cg-ecid-compliance-review` wrote the ignored
 JSON, Markdown, PDF, manifest, and validation outputs under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`; a follow-up `--validate-only`
-replay passed `165/165` checks without rewriting outputs. The command validates required gate
+replay passed `166/166` checks without rewriting outputs. The command validates required gate
 selectors, pinned input hashes, source/source-set identity, semantic counts, configured source
 selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
 non-canonical root-level draft boundary. The validator tolerates the self-referential outer
 phase-eval/promotion-suite hash drift only when the extra passing gates are exactly the final QA
-outer gates. The Sequence 2 gap-close pass carries all `33`
+outer gates. The Sequence 3 gap-close pass records JSON/Markdown/PDF/manifest output hashes in the
+validation sidecar and makes `promotion-suite` compare those hashes against the local files before
+current promotion can pass. The Sequence 2 gap-close pass carries all `33`
 compliance-matrix authority findings in `finding_qa.findings`, with per-row compliance-matrix
 selectors, package/source evidence pointers, and trace IDs.
 

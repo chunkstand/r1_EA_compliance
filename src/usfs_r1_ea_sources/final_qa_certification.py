@@ -1859,6 +1859,7 @@ def _validation_result_payload(summary: Mapping[str, Any], paths: OutputPaths) -
             "manifest": str(paths.manifest_path),
             "validation": str(paths.validation_path),
         },
+        "output_hashes": _validation_output_hashes(paths),
     }
 
 
@@ -1931,6 +1932,29 @@ def _validate_validation_result(
         category="stale_artifact",
         details={"output_files": output_files},
     )
+    expected_hashes = _validation_output_hashes(paths)
+    actual_hashes = validation_result.get("output_hashes") or {}
+    _add_check(
+        checks,
+        name="validation_result_output_hashes_match",
+        passed=all(actual_hashes.get(key) == value for key, value in expected_hashes.items()),
+        category="stale_artifact",
+        details={"output_hashes": actual_hashes},
+    )
+
+
+def _validation_output_hashes(paths: OutputPaths) -> dict[str, str]:
+    hash_paths = {
+        "json_sha256": paths.report_path,
+        "markdown_sha256": paths.markdown_path,
+        "pdf_sha256": paths.pdf_path,
+        "manifest_sha256": paths.manifest_path,
+    }
+    return {
+        key: _sha256_file(path)
+        for key, path in hash_paths.items()
+        if path.exists()
+    }
 
 
 def _outer_gate_hash_drift_allowed(

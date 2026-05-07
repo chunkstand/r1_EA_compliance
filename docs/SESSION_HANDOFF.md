@@ -94,11 +94,16 @@ Sequence 3 added:
 - self-reference handling so final QA validation still passes when the only hash/count drift is the
   passing outer final QA phase and the four passing final QA promotion-suite gates.
 
+Sequence 3 gap-close tightened sidecar freshness: the validation sidecar now records SHA-256 hashes
+for the generated JSON, Markdown, PDF, and manifest, and `promotion-suite` compares those declared
+hashes back to the local files before the current-promotion gate can pass. This prevents a stale
+passing validation sidecar from masking a later edited packet file.
+
 Latest Sequence 3 verification:
 
-- `final-qa-certification`: passed `165/165` and wrote the ignored JSON, Markdown, PDF, manifest,
+- `final-qa-certification`: passed `166/166` and wrote the ignored JSON, Markdown, PDF, manifest,
   and validation family.
-- `final-qa-certification --validate-only`: passed `165/165` without rewriting outputs.
+- `final-qa-certification --validate-only`: passed `166/166` without rewriting outputs.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` with
   `final_qa_certification_report` and `reviewer_ready=true`.
 - `promotion-suite --manifest config/promotion_suite_v1.json`: passed current promotion with

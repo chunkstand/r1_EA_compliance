@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+import hashlib
 import json
 import re
 
@@ -331,6 +332,7 @@ def _artifact_result(
                 check_spec,
                 artifact_format=artifact_format,
                 default_failure_category=_failure_category(spec, missing=False),
+                output_dir=output_dir,
             )
             checks.append(check)
             if not check["passed"]:
@@ -357,6 +359,7 @@ def _evaluate_artifact_check(
     *,
     artifact_format: str,
     default_failure_category: str,
+    output_dir: Path,
 ) -> dict[str, Any]:
     name = str(check_spec["name"])
     failure_category = str(
@@ -379,6 +382,39 @@ def _evaluate_artifact_check(
             expected=expected_prefix,
             actual=actual_prefix,
             failure_category=failure_category,
+        )
+    if "file_sha256_matches" in check_spec:
+        hash_spec = check_spec["file_sha256_matches"]
+        if not isinstance(hash_spec, dict):
+            raise ValueError(f"Unsupported promotion-suite check: {check_spec}")
+        path_value = _json_path(payload, str(hash_spec.get("path_json_path") or ""))
+        expected_sha = _json_path(payload, str(hash_spec.get("sha256_json_path") or ""))
+        if path_value is MISSING or expected_sha is MISSING:
+            return _check_result(
+                name=name,
+                passed=False,
+                expected="declared output path and sha256",
+                actual=None,
+                failure_category=failure_category,
+            )
+        target_path = _resolve_output_path(str(path_value), output_dir)
+        if not target_path.exists():
+            return _check_result(
+                name=name,
+                passed=False,
+                expected=str(expected_sha),
+                actual="missing",
+                failure_category=failure_category,
+                details={"path": str(target_path)},
+            )
+        actual_sha = _sha256_file(target_path)
+        return _check_result(
+            name=name,
+            passed=actual_sha == expected_sha,
+            expected=str(expected_sha),
+            actual=actual_sha,
+            failure_category=failure_category,
+            details={"path": str(target_path)},
         )
 
     actual = _json_path(payload, str(check_spec["json_path"]))
@@ -748,7 +784,17 @@ def _resolve_output_path(value: str, output_dir: Path) -> Path:
     path = Path(value)
     if path.is_absolute():
         return path
+    if path.parts and path.parts[0] == output_dir.name:
+        return output_dir.joinpath(*path.parts[1:])
     return output_dir / path
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _resolve_repo_path(value: str, manifest_path: Path) -> Path:
@@ -917,11 +963,31 @@ def _validate_result_spec(spec: dict[str, Any]) -> None:
         _validate_safe_id(str(check.get("name") or ""), "check name")
         if "starts_with" in check:
             continue
+        if "file_sha256_matches" in check:
+            hash_spec = check["file_sha256_matches"]
+            if not isinstance(hash_spec, dict):
+                raise ValueError(
+                    f"Promotion suite check {check.get('name')!r} has invalid "
+                    "file_sha256_matches spec."
+                )
+            for key in ("path_json_path", "sha256_json_path"):
+                if not str(hash_spec.get(key) or "").strip():
+                    raise ValueError(
+                        f"Promotion suite check {check.get('name')!r} is missing {key}."
+                    )
+            continue
         if not str(check.get("json_path") or "").strip():
             raise ValueError(
                 f"Promotion suite check {check.get('name')!r} is missing json_path."
             )
-        supported = {"equals", "min", "contains_all", "non_empty", "starts_with"}
+        supported = {
+            "equals",
+            "min",
+            "contains_all",
+            "non_empty",
+            "starts_with",
+            "file_sha256_matches",
+        }
         if not supported.intersection(check):
             raise ValueError(
                 f"Promotion suite check {check.get('name')!r} must define one of "

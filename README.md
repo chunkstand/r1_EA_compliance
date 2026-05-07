@@ -897,7 +897,9 @@ authority-family positive/negative, unresolved, and adjudication coverage. It al
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.
 For the East Crazies final QA lane, the current-promotion case also requires the final QA JSON,
 manifest, PDF, and validation sidecar, and review-scoped `phase-eval` includes
-`final_qa_certification_report` once that sidecar exists.
+`final_qa_certification_report` once that sidecar exists. The validation sidecar records
+JSON/Markdown/PDF/manifest hashes, and promotion-suite checks those hashes against the local packet
+files.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,

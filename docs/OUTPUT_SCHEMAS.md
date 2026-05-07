@@ -2418,10 +2418,11 @@ matrix/PDF/review, Forest Plan context summary, and Forest Plan component eval.
 `east_crazies_final_qa_certification_validation.json` has schema version
 `east-crazies-final-qa-certification-validation-v1`. It records the generator validation result
 used by outer readiness gates: review ID, source set ID, machine replay status, check counts, failed
-check count, failure-category counts, and the output-file paths for the JSON, Markdown, PDF,
-manifest, and validation sidecar. Sequence 3 makes this sidecar a required current-promotion
-artifact and adds an optional `final_qa_certification_report` phase to review-scoped `phase-eval`
-when the sidecar exists.
+check count, failure-category counts, output-file paths for the JSON, Markdown, PDF, manifest, and
+validation sidecar, and SHA-256 hashes for the non-circular JSON, Markdown, PDF, and manifest
+outputs. Sequence 3 makes this sidecar a required current-promotion artifact, verifies those
+sidecar hashes back against local files in `promotion-suite`, and adds an optional
+`final_qa_certification_report` phase to review-scoped `phase-eval` when the sidecar exists.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set

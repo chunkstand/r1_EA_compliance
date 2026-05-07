@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
 import json
 
 import pytest
@@ -152,6 +153,18 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert final_qa_validation_checks["final_qa_validation_passed"]["equals"] is True
     assert final_qa_validation_checks["final_qa_validation_failed_check_count"]["equals"] == 0
     assert final_qa_validation_checks["final_qa_validation_check_count"]["min"] == 157
+    assert "file_sha256_matches" in final_qa_validation_checks[
+        "final_qa_validation_report_hash_matches_file"
+    ]
+    assert "file_sha256_matches" in final_qa_validation_checks[
+        "final_qa_validation_markdown_hash_matches_file"
+    ]
+    assert "file_sha256_matches" in final_qa_validation_checks[
+        "final_qa_validation_pdf_hash_matches_file"
+    ]
+    assert "file_sha256_matches" in final_qa_validation_checks[
+        "final_qa_validation_manifest_hash_matches_file"
+    ]
 
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True
@@ -479,6 +492,90 @@ def test_promotion_suite_strict_expansion_blocks_promotion(tmp_path: Path) -> No
         "applicability_miss": 1,
         "package_fixture_missing": 1,
     }
+
+
+def test_promotion_suite_fails_stale_validation_sidecar_file_hash(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "source_library"
+    manifest_path = tmp_path / "promotion_suite.json"
+    _write_json(
+        tmp_path / "rule_pack.json",
+        {
+            "rule_pack_id": "rules-v0",
+            "version": "1.0.0",
+            "baseline_source_record_ids": ["R1EA-001"],
+            "rules": [{"id": "rule-1"}],
+        },
+    )
+    report_path = (
+        output_dir / "reviews" / "review-1" / "final_qa" / "final_report.json"
+    )
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("first version\n", encoding="utf-8")
+    validation_path = report_path.parent / "validation.json"
+    _write_json(
+        validation_path,
+        {
+            "passed": True,
+            "output_files": {"json": "source_library/reviews/review-1/final_qa/final_report.json"},
+            "output_hashes": {"json_sha256": _sha256_bytes(b"different version\n")},
+        },
+    )
+    _write_json(
+        manifest_path,
+        {
+            "schema_version": PROMOTION_SUITE_SCHEMA_VERSION,
+            "id": "suite-1",
+            "source_set_id": "source-set-1",
+            "rule_pack_path": "rule_pack.json",
+            "rule_pack_id": "rules-v0",
+            "rule_pack_version": "1.0.0",
+            "expected_rule_count": 1,
+            "expected_baseline_source_record_count": 1,
+            "review_cases": [
+                {
+                    "id": "case-1",
+                    "review_id": "review-1",
+                    "results": [
+                        {
+                            "id": "final_qa_certification_validation",
+                            "path": "reviews/{review_id}/final_qa/validation.json",
+                            "failure_category": "stale_artifact",
+                            "checks": [
+                                {
+                                    "name": "final_qa_validation_passed",
+                                    "json_path": "passed",
+                                    "equals": True,
+                                },
+                                {
+                                    "name": "final_qa_validation_report_hash_matches_file",
+                                    "file_sha256_matches": {
+                                        "path_json_path": "output_files.json",
+                                        "sha256_json_path": "output_hashes.json_sha256",
+                                    },
+                                },
+                            ],
+                        }
+                    ],
+                }
+            ],
+            "suite_results": [],
+            "expansion_slots": [],
+        },
+    )
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+    assert result.summary["current_promotion_ready"] is False
+    failed_result = result.summary["review_cases"][0]["results"][0]
+    failed_check = next(
+        check
+        for check in failed_result["checks"]
+        if check["name"] == "final_qa_validation_report_hash_matches_file"
+    )
+    assert failed_check["passed"] is False
+    assert failed_check["failure_category"] == "stale_artifact"
 
 
 def test_promotion_suite_reports_selected_not_ready_slot_metadata(tmp_path: Path) -> None:
@@ -1193,3 +1290,7 @@ def _write_suite_fixture(tmp_path: Path) -> tuple[Path, Path]:
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()

@@ -342,6 +342,34 @@
               "name": "final_qa_validation_check_count",
               "json_path": "check_count",
               "min": 157
+            },
+            {
+              "name": "final_qa_validation_report_hash_matches_file",
+              "file_sha256_matches": {
+                "path_json_path": "output_files.json",
+                "sha256_json_path": "output_hashes.json_sha256"
+              }
+            },
+            {
+              "name": "final_qa_validation_markdown_hash_matches_file",
+              "file_sha256_matches": {
+                "path_json_path": "output_files.markdown",
+                "sha256_json_path": "output_hashes.markdown_sha256"
+              }
+            },
+            {
+              "name": "final_qa_validation_pdf_hash_matches_file",
+              "file_sha256_matches": {
+                "path_json_path": "output_files.pdf",
+                "sha256_json_path": "output_hashes.pdf_sha256"
+              }
+            },
+            {
+              "name": "final_qa_validation_manifest_hash_matches_file",
+              "file_sha256_matches": {
+                "path_json_path": "output_files.manifest",
+                "sha256_json_path": "output_hashes.manifest_sha256"
+              }
             }
           ]
         },

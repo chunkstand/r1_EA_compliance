@@ -301,6 +301,11 @@ now requires the final QA JSON, manifest, PDF, and validation sidecar and passed
 results. Strict expansion still fails only on South Plateau `forest_plan_reviewer_not_ready`
 blockers, with East Crazy current promotion remaining green.
 
+Sequence 3 gap-close added output-hash freshness checks to the validation sidecar and promotion
+suite. The sidecar records hashes for the generated JSON, Markdown, PDF, and manifest, and the
+promotion suite compares those hashes to the local files so a stale passing sidecar cannot mask a
+later packet edit.
+
 Actions:
 
 1. Add a `final_qa_certification_report` optional phase to `phase-eval` when the final QA artifact

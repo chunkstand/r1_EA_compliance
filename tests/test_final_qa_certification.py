@@ -397,6 +397,15 @@ def test_sequence_2_generator_writes_and_validates_report_family(tmp_path) -> No
     assert result.pdf_path.read_bytes().startswith(b"%PDF-")
     assert result.manifest_path.exists()
     assert result.validation_path.exists()
+    validation_payload = _read_json(result.validation_path)
+    assert validation_payload["output_hashes"]["json_sha256"] == _sha256(result.report_path)
+    assert validation_payload["output_hashes"]["markdown_sha256"] == _sha256(
+        result.markdown_path
+    )
+    assert validation_payload["output_hashes"]["pdf_sha256"] == _sha256(result.pdf_path)
+    assert validation_payload["output_hashes"]["manifest_sha256"] == _sha256(
+        result.manifest_path
+    )
 
     report = _read_json(result.report_path)
     assert report["schema_version"] == "east-crazies-final-qa-certification-report-v1"
@@ -506,6 +515,37 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
 
     assert validation.summary["passed"] is True
     assert validation.summary["failure_category_counts"] == {}
+
+
+def test_final_qa_validate_fails_when_validation_sidecar_output_hash_is_stale(
+    tmp_path,
+) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    results_dir = tmp_path / "final-qa-output"
+
+    result = run_final_qa_certification(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+    assert result.summary["passed"] is True
+    result.report_path.write_text(
+        result.report_path.read_text(encoding="utf-8") + "\n",
+        encoding="utf-8",
+    )
+
+    validation = validate_final_qa_certification_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+
+    assert validation.summary["passed"] is False
+    assert validation.summary["failure_category_counts"]["stale_artifact"] == 1
 
 
 def _read_json(path: Path) -> dict:
