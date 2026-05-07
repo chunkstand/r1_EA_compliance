@@ -2499,6 +2499,29 @@ assembly categories, assembly slots, and downstream boundaries. It explicitly ba
 expected future artifacts already exist, are sufficient, are reviewer-ready, decide authority
 applicability, support generated rule-pack creation, or create compliance/legal conclusions.
 
+`project_sow_operational_gate_summary.json` has schema version
+`project-sow-operational-gate-summary-v0`. It is written by the local-only
+`project-sow-operational-gate` command and includes:
+
+- `checks[]`, the top-level operational gate checks for intake validation, proving eval,
+  package/rendering smoke, EA handoff smoke, and tracked docs/schema coverage;
+- `intake_validations[]`, no-write validation summaries for the minimal template and each proving
+  intake;
+- `proving_eval`, a compact pointer to the `project_sow_eval_summary.json` run and its case counts,
+  failed cases, and diagnostic totals;
+- `ea_handoff_smoke`, the East Crazies handoff smoke summary including slot counts and validation
+  failure counts;
+- `tracked_docs_schema_checks`, parse checks for the tracked JSON inputs and required docs
+  references;
+- `ci_policy`, currently `local-only`, because adding this generated-output gate to broader CI is a
+  separate milestone decision;
+- `artifact_boundaries`, preserving the non-downloader, non-review, non-applicability,
+  non-compliance, and non-legal-sufficiency limits of the Project SOW lane.
+
+The command also writes `project_sow_operational_readiness_report.md`, a Markdown rendering of the
+same operational readiness gate. These generated reports stay under the caller-selected output
+directory and are not staged from `source_library/`.
+
 The generated artifact family includes:
 
 - `project_sow_package.json`
@@ -2507,6 +2530,8 @@ The generated artifact family includes:
 - `project_sow_package_manifest.json`
 - `project_sow_ea_package_handoff.json`
 - `project_sow_ea_package_handoff.md`
+- `project_sow_operational_gate_summary.json`
+- `project_sow_operational_readiness_report.md`
 
 `project_sow_package.json` has schema version `project-sow-package-v0` and is the canonical
 machine-readable package. The Markdown and PDF renderings must derive from that JSON. The report

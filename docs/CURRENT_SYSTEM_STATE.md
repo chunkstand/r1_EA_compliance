@@ -534,6 +534,20 @@ categories, assembly slots, and downstream boundaries, but must not infer artifa
 artifact sufficiency, authority applicability, generated rule-pack readiness, compliance findings,
 legal advice, legal sufficiency conclusions, or final agency decisions from the handoff alone.
 
+Operationalization Sequence 7 adds the local-only operational readiness gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
+  --output-dir source_library/project_sow_operational_gate
+```
+
+The gate runs no-write intake validation for the minimal template and the three proving intakes,
+the three-case `project-sow-eval`, package/rendering smoke checks for generated proving packages,
+an East Crazies EA handoff smoke, and tracked JSON/docs checks before writing
+`project_sow_operational_gate_summary.json` and `project_sow_operational_readiness_report.md`.
+The command is intentionally not broad CI yet; the Sequence 7 closeout records it as local-only
+until CI adoption is scoped as a separate milestone.
+
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
 evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
@@ -545,8 +559,8 @@ proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
 
 The requirements-package sequence plan for this lane is
 `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`. The successor operationalization plan is
-`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; its next sequence is operational gate and
-release closeout.
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; Sequence 7 closes the operational gate and
+release-closeout boundary for this branch.
 
 This is a planning artifact only. It does not create applicability decisions, generated rule packs,
 compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.

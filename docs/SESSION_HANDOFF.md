@@ -209,6 +209,27 @@ future-artifact slots with `12` passing handoff validation checks; and the three
 `project-sow-eval` smoke reported `3` cases passed, `0` failed cases, `0` system misses, and `0`
 intake omissions.
 
+Project SOW operationalization Sequence 7 is implemented. The new local-only operational gate is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
+  --output-dir source_library/project_sow_operational_gate
+```
+
+The gate validates the minimal template and all proving intakes without writing package outputs,
+runs the three-case `project-sow-eval`, verifies proving package rendering/PDF smoke signals,
+runs an East Crazies EA handoff smoke, checks tracked JSON inputs and docs references, and writes
+`project_sow_operational_gate_summary.json` plus
+`project_sow_operational_readiness_report.md` under the selected output directory. Sequence 7 keeps
+the command local-only; CI integration remains a separate future milestone. The tracked closeout
+report is `docs/PROJECT_SOW_OPERATIONAL_READINESS_REPORT.md`.
+Sequence 7 closeout verification passed: the focused project-SOW/CLI suite reported `59 passed`;
+architecture contract reported `5 passed`; ruff, compileall, JSON validation, and
+`git diff --check` passed; the operational gate run to
+`/tmp/project-sow-sequence-7-operational-gate` passed `4` validation-only intake targets, `3`
+proving eval cases, `0` failed cases, `0` system misses, `0` intake omissions, and an East Crazies
+EA handoff smoke with `27` expected future-artifact slots and `0` handoff validation failures.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package

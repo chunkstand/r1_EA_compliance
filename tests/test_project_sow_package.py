@@ -15,6 +15,7 @@ from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_adjudication_eval
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_ea_package_handoff
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_intake_draft
+from usfs_r1_ea_sources.project_sow_package import run_project_sow_operational_gate
 from usfs_r1_ea_sources.project_sow_package import run_project_sow_package
 from usfs_r1_ea_sources.project_sow_package import validate_project_sow_intake
 from usfs_r1_ea_sources.project_sow_package import write_project_sow_adjudication_template
@@ -367,6 +368,55 @@ def test_project_sow_eval_tracks_contract_readiness_failures(tmp_path: Path) -> 
         "actual": False,
         "expected": True,
     }
+
+
+def test_project_sow_operational_gate_runs_release_checks(tmp_path: Path) -> None:
+    result = run_project_sow_operational_gate(
+        output_dir=tmp_path / "project_sow_operational_gate"
+    )
+
+    assert result.summary["passed"] is True, result.summary
+    assert result.summary["schema_version"] == "project-sow-operational-gate-summary-v0"
+    assert result.summary_path.exists()
+    assert result.markdown_path.exists()
+    assert result.summary["intake_validation_count"] == 4
+    assert result.summary["proving_eval"]["case_count"] == 3
+    assert result.summary["proving_eval"]["failed_cases"] == []
+    assert result.summary["proving_eval"]["category_totals"][
+        "system_miss_resource_area_ids"
+    ] == 0
+    assert result.summary["proving_eval"]["category_totals"][
+        "intake_omission_resource_area_ids"
+    ] == 0
+    assert result.summary["ea_handoff_smoke"]["slot_count"] == 27
+    assert result.summary["ea_handoff_smoke"]["validation_failure_count"] == 0
+    assert result.summary["tracked_docs_schema_checks"]["json_paths_valid"] is True
+    assert result.summary["tracked_docs_schema_checks"]["docs_updated"] is True
+    assert result.summary["ci_policy"]["status"] == "local-only"
+    assert all(check["passed"] for check in result.summary["checks"])
+    markdown = result.markdown_path.read_text()
+    assert "Project SOW Operational Readiness Report" in markdown
+    assert "project-sow-operational-gate" in markdown
+
+
+def test_project_sow_operational_gate_fails_on_eval_regression(tmp_path: Path) -> None:
+    eval_config = json.loads(EVAL_CONFIG_PATH.read_text())
+    eval_config["eval_cases"][0]["expected_metrics"]["resource_scope_count"] = 99
+    bad_eval_config_path = tmp_path / "bad_project_sow_eval.json"
+    bad_eval_config_path.write_text(json.dumps(eval_config), encoding="utf-8")
+
+    result = run_project_sow_operational_gate(
+        eval_config_path=bad_eval_config_path,
+        output_dir=tmp_path / "project_sow_operational_gate",
+    )
+
+    failed_checks = {check["name"]: check for check in result.summary["failed_checks"]}
+    assert result.summary["passed"] is False
+    assert result.summary_path.exists()
+    assert "project_sow_operational_gate_proving_eval_passed" in failed_checks
+    assert failed_checks["project_sow_operational_gate_proving_eval_passed"][
+        "details"
+    ]["failed_cases"] == ["east-crazies-land-exchange"]
 
 
 def test_project_sow_adjudication_template_exports_reviewer_worklist(

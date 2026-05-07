@@ -9,12 +9,15 @@ from .project_sow_package import DEFAULT_INTAKE_DRAFT_RULES_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH
 from .project_sow_package import DEFAULT_PROJECT_SOW_EVAL_OUTPUT_DIR
+from .project_sow_package import DEFAULT_PROJECT_SOW_INTAKE_TEMPLATE_PATH
+from .project_sow_package import DEFAULT_PROJECT_SOW_OPERATIONAL_GATE_OUTPUT_DIR
 from .project_sow_package import DEFAULT_RESOURCE_SCOPE_CONFIG_PATH
 from .project_sow_package import run_project_sow_adjudication_apply
 from .project_sow_package import run_project_sow_adjudication_eval
 from .project_sow_package import run_project_sow_ea_package_handoff
 from .project_sow_package import run_project_sow_eval
 from .project_sow_package import run_project_sow_intake_draft
+from .project_sow_package import run_project_sow_operational_gate
 from .project_sow_package import run_project_sow_package
 from .project_sow_package import validate_project_sow_intake
 from .project_sow_package import write_project_sow_adjudication_template
@@ -28,6 +31,7 @@ PROJECT_PLANNING_COMMANDS = {
     "project-sow-eval",
     "project-sow-intake-draft",
     "project-sow-intake-validate",
+    "project-sow-operational-gate",
     "project-sow-package",
 }
 
@@ -207,6 +211,41 @@ def register_project_planning_commands(
         type=Path,
     )
 
+    operational_gate = subparsers.add_parser(
+        "project-sow-operational-gate",
+        help="Run the Project SOW operational readiness gate and write a report.",
+    )
+    operational_gate.add_argument(
+        "--output-dir",
+        default=DEFAULT_PROJECT_SOW_OPERATIONAL_GATE_OUTPUT_DIR,
+        type=Path,
+    )
+    operational_gate.add_argument(
+        "--eval-config",
+        default=DEFAULT_PROJECT_SOW_EVAL_CONFIG_PATH,
+        type=Path,
+    )
+    operational_gate.add_argument(
+        "--template-intake",
+        default=DEFAULT_PROJECT_SOW_INTAKE_TEMPLATE_PATH,
+        type=Path,
+    )
+    operational_gate.add_argument(
+        "--resource-scope-config",
+        default=DEFAULT_RESOURCE_SCOPE_CONFIG_PATH,
+        type=Path,
+    )
+    operational_gate.add_argument(
+        "--authority-inventory",
+        default=DEFAULT_AUTHORITY_INVENTORY_PATH,
+        type=Path,
+    )
+    operational_gate.add_argument(
+        "--handoff-rules",
+        default=DEFAULT_PROJECT_SOW_EA_HANDOFF_RULES_CONFIG_PATH,
+        type=Path,
+    )
+
 
 def handle_project_planning_command(
     args: argparse.Namespace,
@@ -321,6 +360,18 @@ def handle_project_planning_command(
             package_path=args.package,
             output_path=args.output,
             markdown_path=args.markdown_output,
+            handoff_rules_config_path=args.handoff_rules,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "project-sow-operational-gate":
+        result = run_project_sow_operational_gate(
+            output_dir=args.output_dir,
+            eval_config_path=args.eval_config,
+            template_intake_path=args.template_intake,
+            resource_scope_config_path=args.resource_scope_config,
+            authority_inventory_path=args.authority_inventory,
             handoff_rules_config_path=args.handoff_rules,
         )
         print_summary(result.summary)

@@ -219,7 +219,23 @@ Every handoff slot has `future_artifact_required_now=false`. The output is an as
 not an applicability review, generated rule pack, compliance review, legal advice, legal sufficiency
 conclusion, or final agency decision.
 
-## 10. Resolve Validation Failures
+## 10. Run The Operational Gate
+
+Before closing the project-SOW operationalization lane, run the local-only Operational Gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
+  --output-dir source_library/project_sow_operational_gate
+```
+
+The gate writes `project_sow_operational_gate_summary.json` and
+`project_sow_operational_readiness_report.md` under the selected output directory. It validates the
+minimal template and proving intakes without writing package outputs, runs `project-sow-eval`,
+checks package/rendering smoke signals, generates an East Crazies EA handoff smoke artifact, and
+verifies tracked JSON/docs references. The command is local-only for this sequence and should not be
+treated as CI policy until a separate milestone adds CI integration.
+
+## 11. Resolve Validation Failures
 
 Common failure categories:
 

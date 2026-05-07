@@ -335,24 +335,34 @@ Gap-close pass:
 
 ## Sequence 7: Operational Gate And Release Closeout
 
-Status: planned.
+Status: complete.
 
 Purpose: define one boring operational readiness command and close the milestone only when it is
 green.
 
-Candidate work:
+Implemented work:
 
-- add a single documented operational verification command or script that runs intake validation,
-  proving-intake evals, package generation, rendering checks, and docs/schema checks;
-- write an operational readiness report under tracked eval artifacts or docs;
-- update README, output schemas, runbook, current-state docs, and session handoff;
-- decide whether the operationalized command should remain local-only or be included in broader CI.
+- added `project-sow-operational-gate` as the single local-only operational readiness command;
+- the gate validates the minimal land-exchange template and all proving intakes without writing
+  package outputs;
+- the gate runs `project-sow-eval`, verifies proving package outputs and rendering/PDF smoke
+  signals, and runs an East Crazies `project-sow-ea-package-handoff` smoke;
+- the gate checks tracked JSON inputs and required docs references before passing;
+- the gate writes `project_sow_operational_gate_summary.json` and
+  `project_sow_operational_readiness_report.md` under the selected output directory;
+- added the tracked `docs/PROJECT_SOW_OPERATIONAL_READINESS_REPORT.md` closeout report for the
+  branch-level operational readiness decision;
+- recorded CI status as `local-only`; broader CI integration is a later explicit milestone, not a
+  hidden Sequence 7 side effect.
 
-Acceptance gate:
+Acceptance gate status:
 
-- operational gate passes for all proving intakes;
-- docs and schemas match the implemented artifacts;
-- ignored generated outputs remain unstaged;
+- operational gate passes for the minimal template, East Crazies, Red Rock Ridge, and Silver Creek;
+- proving eval remains green with `3` cases passed, `0` failed cases, `0` system misses, and `0`
+  intake omissions;
+- East Crazies handoff smoke remains stable at `27` expected future-artifact slots;
+- docs and schemas match the implemented artifacts through the gate's tracked docs/schema check;
+- ignored generated outputs remain local under the selected output directory and unstaged;
 - milestone closes as one verified sequence commit after all prior sequence commits are green.
 
 ## Required Verification

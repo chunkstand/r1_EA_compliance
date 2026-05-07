@@ -354,6 +354,8 @@ paths = [
   "source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json",
   "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.json",
   "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.md",
+  "source_library/project_sow_operational_gate/project_sow_operational_gate_summary.json",
+  "source_library/project_sow_operational_gate/project_sow_operational_readiness_report.md",
 ]
 
 [[artifacts]]
@@ -446,6 +448,7 @@ commands = [
   "project-sow-eval",
   "project-sow-intake-draft",
   "project-sow-intake-validate",
+  "project-sow-operational-gate",
   "project-sow-package",
 ]
 

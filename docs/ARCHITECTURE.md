@@ -155,6 +155,9 @@ write a downstream EA package assembly checklist for source collection, speciali
 production, public involvement, consultation, Forest Plan consistency, and decision-record support.
 The handoff includes a downstream consumption contract and fails closed on malformed rules or empty
 future-artifact slots before downstream commands can treat it as a usable checklist.
+The `project-sow-operational-gate` command composes the intake validation, proving eval,
+package/rendering smoke, EA handoff smoke, and tracked docs/schema checks into one local-only
+operational readiness report for milestone closeout.
 These commands do not create applicability decisions, generated rule packs, compliance findings, or
 legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
 reviewer-confirmation metadata is cleared.

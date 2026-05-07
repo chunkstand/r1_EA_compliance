@@ -422,6 +422,49 @@ def test_project_sow_eval_handler_propagates_options(monkeypatch) -> None:
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
 
 
+def test_project_sow_operational_gate_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_project_sow_operational_gate(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_project_planning,
+        "run_project_sow_operational_gate",
+        fake_run_project_sow_operational_gate,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "project-sow-operational-gate",
+            "--output-dir",
+            "/tmp/project-sow-operational-gate",
+            "--eval-config",
+            "config/eval.json",
+            "--template-intake",
+            "config/template.json",
+            "--resource-scope-config",
+            "config/scopes.json",
+            "--authority-inventory",
+            "config/authorities.json",
+            "--handoff-rules",
+            "config/handoff-rules.json",
+        ]
+    )
+
+    result = cli_project_planning.handle_project_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("/tmp/project-sow-operational-gate")
+    assert captured["eval_config_path"] == Path("config/eval.json")
+    assert captured["template_intake_path"] == Path("config/template.json")
+    assert captured["resource_scope_config_path"] == Path("config/scopes.json")
+    assert captured["authority_inventory_path"] == Path("config/authorities.json")
+    assert captured["handoff_rules_config_path"] == Path("config/handoff-rules.json")
+
+
 def test_project_sow_ea_package_handoff_handler_propagates_options(monkeypatch) -> None:
     captured = {}
 
