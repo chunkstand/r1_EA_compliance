@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#181c1a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <style>
+    .eyebrow { font: 800 20px Inter, Arial, sans-serif; fill: #26786f; letter-spacing: 1.5px; text-transform: uppercase; }
+    .title { font: 800 22px Inter, Arial, sans-serif; fill: #171713; }
+    .scope-title { font: 800 16px Inter, Arial, sans-serif; fill: #171713; }
+    .muted { font: 700 15px Inter, Arial, sans-serif; fill: #5f625b; }
+    .tiny { font: 700 12px Inter, Arial, sans-serif; fill: #5f625b; }
+    .small-label { font: 800 14px Inter, Arial, sans-serif; fill: #26786f; letter-spacing: 1px; text-transform: uppercase; }
+  </style>
+  <rect width="1120" height="420" fill="#ffffff"/>
+  <rect x="24" y="24" width="1072" height="372" rx="24" fill="#f7f6f1" stroke="#d8d3c6" stroke-width="2"/>
+  <g filter="url(#shadow)"><text x="70" y="52" class="eyebrow">Project SOW delivery stack</text>
+     <path d="M242 155 C252 155 256 155 266 155" stroke="#26786f" stroke-width="5" stroke-linecap="round"/><path d="M266 155 l-13 -10 v20 z" fill="#26786f"/><rect x="64" y="80" width="178" height="150" rx="16" fill="#ffffff" stroke="#d8d3c6" stroke-width="2"/>
+        <rect x="64" y="80" width="178" height="12" rx="6" fill="#26786f"/>
+        <text x="82" y="127" class="small-label">Step 1</text>
+        <text x="82" y="158" class="title">Proposed action</text>
+        <text x="82" y="190" class="muted">4 intake validations</text><path d="M450 155 C460 155 464 155 474 155" stroke="#26786f" stroke-width="5" stroke-linecap="round"/><path d="M474 155 l-13 -10 v20 z" fill="#26786f"/><rect x="272" y="80" width="178" height="150" rx="16" fill="#ffffff" stroke="#d8d3c6" stroke-width="2"/>
+        <rect x="272" y="80" width="178" height="12" rx="6" fill="#26786f"/>
+        <text x="290" y="127" class="small-label">Step 2</text>
+        <text x="290" y="158" class="title">Intake graph</text>
+        <text x="290" y="190" class="muted">115 nodes / 134 edges</text><path d="M658 155 C668 155 672 155 682 155" stroke="#26786f" stroke-width="5" stroke-linecap="round"/><path d="M682 155 l-13 -10 v20 z" fill="#26786f"/><rect x="480" y="80" width="178" height="150" rx="16" fill="#ffffff" stroke="#d8d3c6" stroke-width="2"/>
+        <rect x="480" y="80" width="178" height="12" rx="6" fill="#26786f"/>
+        <text x="498" y="127" class="small-label">Step 3</text>
+        <text x="498" y="158" class="title">SOW package</text>
+        <text x="498" y="190" class="muted">10 selected scopes</text><path d="M866 155 C876 155 880 155 890 155" stroke="#26786f" stroke-width="5" stroke-linecap="round"/><path d="M890 155 l-13 -10 v20 z" fill="#26786f"/><rect x="688" y="80" width="178" height="150" rx="16" fill="#ffffff" stroke="#d8d3c6" stroke-width="2"/>
+        <rect x="688" y="80" width="178" height="12" rx="6" fill="#26786f"/>
+        <text x="706" y="127" class="small-label">Step 4</text>
+        <text x="706" y="158" class="title">Adjudication</text>
+        <text x="706" y="190" class="muted">7 calibration gaps tracked</text><rect x="896" y="80" width="178" height="150" rx="16" fill="#ffffff" stroke="#d8d3c6" stroke-width="2"/>
+        <rect x="896" y="80" width="178" height="12" rx="6" fill="#26786f"/>
+        <text x="914" y="127" class="small-label">Step 5</text>
+        <text x="914" y="158" class="title">EA handoff</text>
+        <text x="914" y="190" class="muted">27 future slots</text>
+     <rect x="70" y="282" width="980" height="68" rx="18" fill="#eef6f3" stroke="#b8d6cf" stroke-width="2"/>
+     <text x="96" y="323" class="title">Planning support only</text>
+     <text x="365" y="311" class="muted">No applicability decisions, compliance findings, legal advice,</text>
+     <text x="365" y="335" class="muted">legal sufficiency, or final agency decisions.</text></g>
+</svg>

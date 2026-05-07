@@ -445,7 +445,7 @@ copy-review pass.
 
 ## Project SOW Requirements Package
 
-Project SOW package generation and operationalization through Sequence 5 are implemented as an
+Project SOW package generation and operationalization through Sequence 7 are implemented as an
 upstream planning lane for proposed-action intake before a complete EA review package exists. The
 core package command is:
 
@@ -554,6 +554,16 @@ The milestone closeout alignment pass adds
 `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`, which maps Sequences 1 through 7 to
 their acceptance criteria and verification evidence; the operational gate now checks that matrix as
 part of the durable-doc closeout set.
+
+A Project SOW service capabilities brief is generated at
+`docs/capabilities/project_sow_capabilities_brief.pdf` with matching HTML at
+`docs/capabilities/project_sow_capabilities_brief.html`. The generator
+`tools/build_project_sow_capabilities_brief.mjs` mirrors the NEPA 3D capabilities-brief style and
+uses current Project SOW operational evidence when available. The brief explains the service lane
+for producing scopes of work: proposed-action intake, intake evidence graph, contract-ready
+resource SOW records, reviewer adjudication, operational-readiness gate, and downstream EA package
+assembly handoff. It is four pages so the SOW pipeline, graph, contract scope library, and handoff
+figures remain legible at service-brief scale.
 
 An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
 SOW scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake

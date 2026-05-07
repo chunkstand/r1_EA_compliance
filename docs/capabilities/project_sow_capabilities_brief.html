@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Project SOW Capabilities Brief</title>
+  <style>
+    @page { size: Letter; margin: 0; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #171713;
+      background: #f7f6f1;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .page {
+      width: 8.5in;
+      height: 11in;
+      padding: 0.42in 0.48in;
+      page-break-after: always;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 0.18in;
+      position: relative;
+      overflow: hidden;
+      background: #f7f6f1;
+    }
+    .page:last-child { page-break-after: auto; }
+    .kicker {
+      color: #26786f;
+      font-size: 9.5pt;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      margin-top: 0.06in;
+      font-size: 30pt;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: 19pt;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 12pt;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    p, li {
+      font-size: 9.7pt;
+      line-height: 1.36;
+      color: #4f554e;
+    }
+    .lede {
+      margin-top: 0.12in;
+      max-width: 6.8in;
+      color: #30342f;
+      font-size: 12.2pt;
+      line-height: 1.32;
+    }
+    .metric-context {
+      margin-top: 0.12in;
+      color: #26786f;
+      font-size: 9.2pt;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.16in;
+      align-items: start;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.09in;
+      margin-top: 0.16in;
+    }
+    .metric {
+      min-height: 0.62in;
+      padding: 0.1in;
+      background: #ffffff;
+      border: 1px solid #d8d3c6;
+      border-left: 5px solid #26786f;
+      border-radius: 8px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 18pt;
+      line-height: 1;
+      color: #171713;
+    }
+    .metric span {
+      display: block;
+      margin-top: 0.04in;
+      font-size: 7.8pt;
+      line-height: 1.2;
+      color: #5f625b;
+      font-weight: 700;
+    }
+    .hero-img {
+      width: 100%;
+      border: 1px solid #d8d3c6;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
+    }
+    .graph-figure {
+      width: 100%;
+      height: 4.25in;
+      object-fit: contain;
+      object-position: center;
+      border: 1px solid #d8d3c6;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(24,28,26,0.12);
+    }
+    .graph-figure.compact { height: 4.05in; }
+    .caption {
+      margin-top: 0.06in;
+      color: #5f625b;
+      font-size: 8.2pt;
+      line-height: 1.28;
+    }
+    .callout {
+      padding: 0.14in;
+      background: #ffffff;
+      border: 1px solid #d8d3c6;
+      border-left: 6px solid #26786f;
+      border-radius: 8px;
+    }
+    .callout strong {
+      display: block;
+      margin-bottom: 0.05in;
+      font-size: 11.5pt;
+    }
+    ul {
+      margin: 0.08in 0 0;
+      padding-left: 0.16in;
+    }
+    li { margin-bottom: 0.055in; }
+    .scene-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.08in;
+    }
+    .scene {
+      padding: 0.09in;
+      border-radius: 7px;
+      border: 1px solid #d8d3c6;
+      background: rgba(255,255,255,0.88);
+    }
+    .scene strong {
+      display: block;
+      font-size: 9.2pt;
+      margin-bottom: 0.03in;
+    }
+    .scene span {
+      display: block;
+      color: #5f625b;
+      font-size: 7.8pt;
+      line-height: 1.28;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.15in;
+      padding-top: 0.08in;
+      border-top: 1px solid #d8d3c6;
+      color: #6d6b63;
+      font-size: 7.2pt;
+      line-height: 1.25;
+    }
+    .source-note {
+      font-size: 7.5pt;
+      line-height: 1.24;
+      color: #6d6b63;
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <header>
+      <div class="kicker">Standing Framework / Capabilities Brief</div>
+      <h1>Scope Ready NEPA Work Packages</h1>
+      <p class="lede">We turn a proposed-action intake into a contract-ready Project SOW requirements package before a complete EA review package exists. The workflow selects resource scopes, builds an intake evidence graph, renders required and optional deliverables, exposes reviewer adjudication, and hands accepted packages forward into EA assembly planning without creating legal conclusions or final agency decisions.</p>
+      <p class="metric-context">Current operational proof: 3 proving intakes, 0 failed cases, 0 system misses, and 0 intake omissions.</p>
+      <div class="metric-grid">
+        <div class="metric"><strong>10</strong><span>resource SOW templates</span></div>
+        <div class="metric"><strong>10</strong><span>East Crazies selected scopes</span></div>
+        <div class="metric"><strong>23</strong><span>proposed-action resource areas</span></div>
+        <div class="metric"><strong>27</strong><span>EA handoff checklist slots</span></div>
+      </div>
+    </header>
+    <main>
+      <img class="hero-img" src="assets/project_sow_delivery_stack.svg" alt="Project SOW delivery process from intake to EA package handoff" />
+      <div class="grid-2" style="margin-top:0.15in">
+        <div class="callout">
+          <strong>Planning model</strong>
+          <p>The system reads structured proposed-action evidence and turns it into resource-specific SOW work, data needs, deliverables, assumptions, dependencies, acceptance criteria, reviewer roles, review timing, and signoff fields.</p>
+        </div>
+        <div class="callout">
+          <strong>Boundary model</strong>
+          <p>The output is a planning and contracting support artifact. It does not decide applicability, generate compliance findings, provide legal advice, prove legal sufficiency, or make a final agency decision.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <span>Generated from current Project SOW operational evidence.</span>
+      <span>Command: <strong>project-sow-operational-gate</strong>; JSON is canonical.</span>
+    </footer>
+  </section>
+
+  <section class="page">
+    <header>
+      <div class="kicker">Capability 1 / Intake Evidence Graph</div>
+      <h2>From proposed action to SOW scope</h2>
+      <p class="lede">The package records how each proposed-action element and evidence reference triggers a resource area and how that resource area resolves to a SOW scope. That keeps scope selection inspectable before specialist work is contracted.</p>
+    </header>
+    <main>
+      <img class="graph-figure" src="assets/project_sow_intake_graph_service_view.png" alt="Intake evidence graph from proposed action to SOW scope" />
+      <p class="caption">East Crazies evidence graph: 115 nodes and 134 edges connect project, proposed action, action elements, evidence refs, resource areas, SOW scopes, required deliverables, and observed reports.</p>
+      <div class="grid-2" style="margin-top:0.14in">
+        <div class="callout">
+          <strong>Defensibility shown</strong>
+          <p>Every proposed-action-derived resource area is expected to keep the planning path: proposed action -> action element -> evidence ref -> resource area -> SOW scope.</p>
+        </div>
+        <div class="callout">
+          <strong>Review signal</strong>
+          <p>Validation fails closed on unsupported resource areas, dangling graph edges, observed reports without proposed-action support, missing SOW content, and missing reviewer-facing package sections.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <span>Evidence behavior: selected scopes stay tied to intake fields, resource indicators, and proposed-action evidence.</span>
+      <span>Validation behavior: 24 package checks, 0 failures in the current proof.</span>
+    </footer>
+  </section>
+
+  <section class="page">
+    <header>
+      <div class="kicker">Capability 2 / Contract Ready Scopes</div>
+      <h2>Turn resource screening into work statements</h2>
+      <p class="lede">Resource scopes are not just labels. Each selected scope carries SOW tasks, data needs, required and optional deliverables, defensibility checks, assumptions, dependencies, acceptance criteria, reviewer role, review timing, and signoff fields.</p>
+    </header>
+    <main>
+      <img class="graph-figure compact" src="assets/project_sow_contract_scope_service_view.png" alt="Contract-ready SOW scopes and deliverables" />
+      <p class="caption">Current scope library: 10 resource SOW templates. East Crazies selects 10 scopes, all with contract fields, required deliverables, optional deliverables, and rendering checks passed.</p>
+      <div class="grid-2" style="margin-top:0.14in">
+        <div class="callout">
+          <strong>What is inspectable</strong>
+          <p>Scope records keep tasks separate from deliverables and keep assumptions, dependencies, acceptance criteria, reviewer role, timing, and signoff fields explicit for contracting review.</p>
+        </div>
+        <div class="callout">
+          <strong>What this prevents</strong>
+          <p>Optional deliverables cannot satisfy the required-deliverable gate, and selected scopes without contract fields fail validation before package use.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <span>Contract behavior: 30 required and 30 optional deliverables in the current scope library rendering.</span>
+      <span>Calibration behavior: 13 observed East Crazies reports are calibration evidence, not precedent.</span>
+    </footer>
+  </section>
+
+  <section class="page">
+    <header>
+      <div class="kicker">Capability 3 / Evaluation, Adjudication, And Handoff</div>
+      <h2>Close the planning loop before EA assembly</h2>
+      <p class="lede">The operational lane validates intakes without writing outputs, runs the proving-intake eval, checks generated package renderings, exposes reviewer adjudication for unresolved planning items, and converts an accepted package into a downstream EA assembly checklist.</p>
+    </header>
+    <main>
+      <img class="graph-figure compact" src="assets/project_sow_handoff_service_view.png" alt="Operational gate and downstream EA package handoff" />
+      <p class="caption">Operational gate proof: 13/13 gate checks passed. The East Crazies handoff emits 27 future EA assembly slots across source collection, specialist reports, public involvement, consultation, Forest Plan consistency, and decision-record support.</p>
+      <div class="grid-2" style="margin-top:0.14in">
+        <div class="scene-list">
+          <div class="scene"><strong>Intake validate</strong><span>No-write validation for templates and proving intakes.</span></div>
+          <div class="scene"><strong>Draft intake</strong><span>Plain-text proposed actions become unreviewed drafts for confirmation.</span></div>
+          <div class="scene"><strong>Package render</strong><span>Canonical JSON plus Markdown/PDF SOW package renderings.</span></div>
+          <div class="scene"><strong>Adjudication</strong><span>Reviewer worklist and replay path for planning decisions.</span></div>
+          <div class="scene"><strong>Operational gate</strong><span>Eval, rendering smoke, docs/schema checks, and output hashes.</span></div>
+          <div class="scene"><strong>EA handoff</strong><span>Future assembly slots without claiming artifacts exist now.</span></div>
+        </div>
+        <div>
+          <div class="callout">
+            <strong>What this service delivers</strong>
+            <ul>
+              <li>Structured proposed-action intake and validation before package generation.</li>
+              <li>Resource SOW requirements package with contract-ready scope records.</li>
+              <li>Reviewer adjudication for calibration gaps and optional deliverable decisions.</li>
+              <li>Downstream EA assembly checklist tied to the accepted package JSON.</li>
+            </ul>
+          </div>
+          <p class="source-note" style="margin-top:0.08in">Current boundary: the Project SOW lane scopes work needed to prepare a defensible EA package. It does not run downloader, extraction, applicability, generated rule-pack, compliance review, phase-eval, legal sufficiency, or final agency decision workflows.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <span>Deliverable: graph-backed Project SOW planning package plus operational-readiness evidence.</span>
+      <span>Boundary: broader CI adoption remains a separate explicit milestone.</span>
+    </footer>
+  </section>
+</body>
+</html>
