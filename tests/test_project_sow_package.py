@@ -398,6 +398,9 @@ def test_project_sow_operational_gate_runs_release_checks(tmp_path: Path) -> Non
     assert "docs/ARCHITECTURE.md" in result.summary["tracked_docs_schema_checks"][
         "checked_doc_paths"
     ]
+    assert "docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md" in result.summary[
+        "tracked_docs_schema_checks"
+    ]["checked_doc_paths"]
     assert result.summary["closeout_contract"]["schema_version"] == (
         "project-sow-operational-gate-closeout-contract-v0"
     )

@@ -36,6 +36,8 @@ The gate must pass all of these checks before the lane is treated as operational
   locations, tracked doc/schema paths, local-only CI policy, and non-review/non-legal boundaries;
 - the gate summary records hashes for the operational report, proving eval summary, gate summary
   content, and EA handoff smoke artifacts.
+- `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md` maps Sequences 1 through 7 to their
+  acceptance criteria, verification evidence, and current status.
 
 ## Boundaries
 
@@ -46,11 +48,15 @@ explicitly.
 
 ## Latest Closeout Signal
 
+The milestone acceptance matrix is `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`; all
+seven operationalization sequences are marked `Met` there and are backed by the gate plus focused
+Project SOW tests.
+
 Sequence 7 closeout gate run:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
-  --output-dir /tmp/project-sow-sequence-7-operational-gate
+  --output-dir /tmp/project-sow-milestone-closeout-gate
 ```
 
 Latest gate result:
@@ -63,7 +69,15 @@ Latest gate result:
   validation failures;
 - tracked JSON inputs parsed successfully and required docs references were present;
 - closeout contract and output hashes were present in the generated gate summary;
-- generated outputs were written under `/tmp/project-sow-sequence-7-operational-gate` for closeout
+- generated outputs were written under `/tmp/project-sow-milestone-closeout-gate` for closeout
   verification, not staged from `source_library/`.
+
+## Additional Verification
+
+Project SOW milestone verification passed with the focused project-SOW/CLI suite, architecture
+contract, ruff, compileall, JSON validation, operational gate, and whitespace checks. A full repo
+`pytest` run was also attempted; it produced `427 passed` and `6 skipped` before failing one
+non-Project-SOW test because ignored generated catalog evidence was absent from this worktree:
+`source_library/catalog/source_catalog.jsonl`.
 
 The current branch handoff records the full required verification stack after closeout.

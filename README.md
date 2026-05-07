@@ -176,7 +176,9 @@ workflow. The local-only `project-sow-operational-gate` command is the operation
 for this lane: it runs intake validation, the proving-intake eval, package/rendering smoke checks,
 EA handoff smoke, and tracked docs/schema checks before writing an operational readiness report.
 The gate also emits a machine-readable closeout contract and hashes the gate, eval, and handoff
-smoke outputs so release evidence can be audited without staging ignored generated artifacts. See
+smoke outputs so release evidence can be audited without staging ignored generated artifacts. The
+tracked acceptance matrix is
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. See
 `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/BITTER_LESSON_ALIGNMENT.md` for the design guardrails that keep the reviewer engine biased

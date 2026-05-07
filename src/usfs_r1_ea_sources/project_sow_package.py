@@ -113,6 +113,10 @@ PROJECT_SOW_OPERATIONAL_GATE_DOC_REQUIREMENTS = (
         Path("docs/PROJECT_SOW_OPERATIONAL_READINESS_REPORT.md"),
         ("project-sow-operational-gate", "local-only"),
     ),
+    (
+        Path("docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md"),
+        ("Sequence 1", "Sequence 7", "acceptance criteria"),
+    ),
 )
 PROJECT_SOW_OPERATIONAL_GATE_CLOSEOUT_CONTRACT_FIELDS = (
     "artifact_boundaries",

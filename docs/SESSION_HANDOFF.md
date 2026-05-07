@@ -243,6 +243,22 @@ cases, `0` failed cases, `0` system misses, `0` intake omissions, `13` gate chec
 Crazies EA handoff smoke with `27` expected future-artifact slots and `0` handoff validation
 failures.
 
+Project SOW operationalization milestone closeout alignment is implemented. The tracked acceptance
+matrix is `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`; it maps Sequences 1 through 7
+to acceptance criteria, verification evidence, and status, and the operational gate now checks that
+matrix as part of the durable-doc closeout set. Milestone closeout verification passed: the focused
+project-SOW/CLI suite reported `60 passed`; architecture contract reported `5 passed`; ruff,
+compileall, JSON validation, and `git diff --check` passed; the operational gate run to
+`/tmp/project-sow-milestone-closeout-gate` passed `4` validation-only intake targets, `3` proving
+eval cases, `0` failed cases, `0` system misses, `0` intake omissions, `13` gate checks, and an
+East Crazies EA handoff smoke with `27` expected future-artifact slots and `0` handoff validation
+failures. A full repo `pytest` run was also attempted and reached `427 passed`, `6 skipped` before
+failing the non-Project-SOW
+`tests/test_authority_family_rule_templates.py::test_authority_family_templates_have_milestone_3_contracts`
+because the ignored generated catalog file
+`source_library/catalog/source_catalog.jsonl` is absent from this worktree; generated
+`source_library/` evidence remains unstaged by policy.
+
 The earlier Project SOW requirements-package milestone is implemented for the
 proposed-action-to-resource-SOW lane. That baseline intentionally stays upstream of South Plateau
 applicability closure and does not read or write South Plateau review outputs. The public package

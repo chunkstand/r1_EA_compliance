@@ -2513,7 +2513,8 @@ applicability, support generated rule-pack creation, or create compliance/legal 
   failure counts;
 - `tracked_docs_schema_checks`, parse checks for the tracked JSON inputs and required docs
   references, including the checked JSON paths, checked durable-doc paths, invalid JSON paths, and
-  missing doc terms;
+  missing doc terms. The durable-doc path set includes the operationalization acceptance matrix so
+  stale sequence-level acceptance evidence fails the gate;
 - `closeout_contract`, a machine-readable release-closeout contract that records required green
   checks, generated-output locations, durable doc/schema paths, local-only CI policy, downstream
   use, artifact boundaries, and conclusions the gate must not imply;

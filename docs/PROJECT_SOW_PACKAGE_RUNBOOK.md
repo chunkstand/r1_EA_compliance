@@ -239,6 +239,9 @@ The summary includes a `closeout_contract` that records required green checks, g
 locations, local-only CI policy, tracked doc/schema paths, and conclusions the gate must not imply.
 It also records hashes for the operational report, proving eval summary, and EA handoff smoke
 outputs. Missing durable closeout-doc references fail the gate before milestone closeout.
+The tracked acceptance matrix for all Project SOW operationalization sequences is
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`; update it with the milestone plan and
+handoff whenever closeout evidence changes.
 
 ## 11. Resolve Validation Failures
 

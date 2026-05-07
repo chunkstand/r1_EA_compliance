@@ -46,7 +46,7 @@ Current branch/worktree:
 - Branch: `codex/nepa-project-sow-package`
 - Worktree: `/Users/chunkstand/projects/usfs-r1-EA-sources-nepa-project-sow-package`
 
-Implemented command:
+Baseline package command:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
@@ -54,7 +54,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
   --output-dir source_library
 ```
 
-Current generated artifact family:
+Current closeout gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
+  --output-dir source_library/project_sow_operational_gate
+```
+
+Current generated artifact families:
 
 ```text
 source_library/projects/<project_id>/requirements_package/
@@ -62,6 +69,12 @@ source_library/projects/<project_id>/requirements_package/
   project_sow_package.md
   project_sow_package.pdf
   project_sow_package_manifest.json
+  project_sow_ea_package_handoff.json
+  project_sow_ea_package_handoff.md
+
+source_library/project_sow_operational_gate/
+  project_sow_operational_gate_summary.json
+  project_sow_operational_readiness_report.md
 ```
 
 Current East Crazies accepted smoke signal:
@@ -378,6 +391,13 @@ Gap-close pass:
 - added regression coverage proving the gate fails closed when a required closeout-doc reference is
   missing.
 
+Milestone closeout alignment:
+
+- added `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md` as the tracked acceptance matrix
+  mapping Sequences 1 through 7 to acceptance criteria, verification evidence, and status;
+- wired the acceptance matrix into the operational gate's durable-doc check so milestone closeout
+  fails if the sequence-level acceptance map is missing or stale.
+
 ## Required Verification
 
 For implementation sequences touching Python, CLI, config, schema, or generated artifact contracts:
@@ -391,6 +411,7 @@ PYTHONPATH=src uv run --extra dev python -m json.tool docs/schemas/project_sow_i
 PYTHONPATH=src uv run --extra dev python -m json.tool config/templates/project_sow_land_exchange_intake_template.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_resource_scopes_v1.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_ea_handoff_rules_v1.json
+PYTHONPATH=src uv run --extra dev python -m json.tool config/project_sow_eval_proving_intakes_v1.json
 PYTHONPATH=src uv run --extra dev python -m json.tool config/fixtures/project_sow/east_crazies_land_exchange_intake.json
 git diff --check
 ```
