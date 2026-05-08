@@ -102,6 +102,8 @@ async function currentMetrics() {
   const phasePassed = phaseEval?.passed_phase_count || 0;
 
   return {
+    activeReviewCorpus: summary?.source_partition_counts?.active_review_corpus || 0,
+    candidateBlockedSources: summary?.source_partition_counts?.candidate_blocked_source || 0,
     sourceRecords: catalog?.source_count || summary?.catalog_source_record_count || 0,
     artifacts: catalog?.artifact_count || summary?.node_type_counts?.artifact || 0,
     sourceLinks: catalog?.link_count || summary?.edge_type_counts?.HAS_ARTIFACT || 0,
@@ -125,6 +127,7 @@ async function currentMetrics() {
     currentPromotionReady: promotion?.current_promotion_ready === true,
     promotionFailureCategories: promotion?.failure_category_counts || {},
     expansionFailureCategories: promotion?.expansion_failure_category_counts || {},
+    readinessBlockers: summary?.readiness_blocker_counts || {},
     phaseTotal,
     phasePassed,
     phaseReviewerReady: phaseEval?.reviewer_ready === true,
@@ -407,19 +410,19 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Capability 1 / Source-Governed Operating Model</div>
       <h2>Controlled source library to graph-ready review layer</h2>
-      <p class="lede">The workbook remains the contract. Downloader, catalog, extraction, retrieval, evidence graph, source-claim graph, rule binding, and knowledge graph exports all preserve row identity and provenance so downstream review products can be replayed and inspected.</p>
+      <p class="lede">Every review starts with a controlled source contract. Workbook rows, exclusions, URL repairs, source partitions, catalog records, and artifact hashes define what can support review logic. Derived layers are rebuilt from those surfaces, not loose files.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_applicability_service_view.png" alt="Operating model showing source library, extraction, authority graph, and review outputs" />
-      <p class="caption">Operating model: source records are captured once, then promoted through derived layers with explicit validation. The graphic separates source capture, semantic extraction, applicability, review products, and visualization so the same evidence model supports multiple outputs without duplicating logic.</p>
+      <p class="caption">Source governance model: only eligible catalog records feed review logic. Superseded, candidate, blocked, or currentness-only records stay visible as context and readiness evidence.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Currentness and partitioning</strong>
-          <p>Active review sources are separated from candidate, blocked, superseded, and currentness-only records before graph export. That prevents stale or excluded sources from silently supporting current authority.</p>
+          <strong>Contract enforced</strong>
+          <p>Workbook scope, source identity, URL overrides, exclusions, and partitions are checked before downstream review artifacts can rely on a source.</p>
         </div>
         <div class="callout">
-          <strong>Validation before display</strong>
-          <p>Graph exports carry node and edge type checks, provenance requirements, endpoint compatibility checks, readiness status, and failure-category counts before they are used by the viewer or promotion suite.</p>
+          <strong>Rebuildable layers</strong>
+          <p>Extraction, retrieval, claims, graph exports, reports, and validation summaries are generated from catalog surfaces and can be replayed.</p>
         </div>
       </div>
     </main>
@@ -433,24 +436,19 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Capability 2 / Evidence Traceability And Review Products</div>
       <h2>Every finding stays connected to evidence</h2>
-      <p class="lede">The system keeps source records, artifacts, chunks, evidence spans, source claims, rule templates, applicability decisions, generated rules, and findings as graph-visible objects. Review outputs are produced from those artifacts rather than from a narrative-only analysis pass.</p>
+      <p class="lede">Findings are produced from inspectable evidence paths. The system links source records, artifacts, evidence spans, claims, authority decisions, and review findings before it renders reports or graph views.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: source evidence supports claims; claims support rules and applicability; applicability drives review products. The chain remains inspectable across JSON, Markdown, PDF, SQLite, and graph export surfaces.</p>
+      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Reviewer-facing outputs</strong>
-          <ul>
-            <li>Compliance matrix in JSON, Markdown, and PDF.</li>
-            <li>Decision-support report with evidence paths and residual risk.</li>
-            <li>Final QA certification and replay validation artifacts.</li>
-            <li>Knowledge graph JSON, node/edge files, summaries, and validation.</li>
-          </ul>
+          <strong>Audit surface</strong>
+          <p>Each product can be traced back to source record, artifact hash, evidence span, and decision path. Reviewers can inspect the basis without relying on narrative alone.</p>
         </div>
         <div class="callout">
           <strong>Reverse compliance</strong>
-          <p>The same evidence model can search for unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan component gaps before the package is treated as reviewer-ready.</p>
+          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps before readiness is claimed.</p>
         </div>
       </div>
     </main>
@@ -464,27 +462,21 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Capability 3 / Readiness, Governance, And Expansion</div>
       <h2>Promotion gates make readiness explicit</h2>
-      <p class="lede">Readiness is not inferred from a finished-looking report. The system uses deterministic gates for source capture, currentness, extraction, retrieval, graph validation, applicability, compliance outputs, forest-plan evaluation, decision support, final QA, and promotion.</p>
+      <p class="lede">A polished report is not the readiness signal. The system checks source capture, currentness, evidence, graph validity, review outputs, final QA, and promotion before it marks a review ready.</p>
     </header>
     <main>
       <img class="graph-figure tall" src="assets/graph_readiness_service_view.png" alt="Readiness gates and expansion boundary for the NEPA review system" />
       <div class="grid-2" style="margin-top:0.12in">
-        <div class="capability-list">
-          ${capability("Source control", "Workbook rows, URL overrides, catalog records, hashes, and source-set manifests.")}
-          ${capability("Evidence build", "Extraction, retrieval, evidence spans, graph edges, and source-claim links.")}
-          ${capability("Authority model", "Authority families, currentness decisions, rule templates, and source partitions.")}
-          ${capability("Applicability", "Package-specific decisions, generated rules, screened-out authority, and unresolved items.")}
-          ${capability("Review outputs", "Compliance matrix, decision support, final QA, and reviewer-facing PDFs.")}
-          ${capability("Viewer surface", "3D graph scenes driven by validated graph JSON rather than hard-coded visuals.")}
+        <div class="callout">
+          <strong>Ready means replayable</strong>
+          <p>The underlying source, evidence, graph, review, QA, and promotion artifacts can be regenerated and checked against the same gates.</p>
         </div>
-        <div>
-          <div class="callout">
-            <strong>Expansion boundary</strong>
-            <p>New packages, forest profiles, or authority deltas are added by expanding the source/profile contract and replaying gates. Blockers remain visible when profiles or sources are not ready, instead of being collapsed into a generic failure.</p>
-          </div>
-          <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
+        <div class="callout">
+          <strong>Blocked means specific</strong>
+          <p>Missing sources, profile gaps, superseded authority, and chapter-level deltas stay typed and visible instead of becoming a generic failure.</p>
         </div>
       </div>
+      <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
     </main>
     <footer class="footer">
       <span>Forest-plan readiness tracked: ${metrics.graphReadyProfiles}/${metrics.profileCount} profiles graph-ready, ${metrics.blockedProfiles} blocked.</span>
@@ -525,33 +517,49 @@ function currentAuthorityStackSvg(metrics) {
 }
 
 function operatingModelSvg(metrics) {
-  const lanes = [
-    ["Input contract", "Workbook rows", "Scope and exclusions", "URL overrides", "#17202a"],
-    ["Source library", "Catalog and SQLite", "Manifests and hashes", "Artifact provenance", "#1f6f68"],
-    ["Derived evidence", "Extraction spans", "Retrieval index", "Source claims", "#835b2f"],
-    ["Authority logic", "Currentness", "Applicability", "Generated rules", "#6f4f86"],
-    ["Review surface", "Matrices and reports", "Graph exports", "Promotion gates", "#2e5e88"]
-  ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Operating model from source library to review outputs">
   ${svgDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Source-governed operating model</text>
-  ${wrapSvgText("Each layer reads from a controlled surface and writes an auditable artifact. Generated products can be rebuilt without scanning raw filenames or collapsing provenance.", 72, 138, 1560, 22, "#58615b", 2)}
-  ${lanes
-    .map((lane, index) => laneCard(72 + index * 340, 252, 292, 540, lane[4], lane[0], lane.slice(1, 4)))
-    .join("")}
-  ${flowArrow(364, 520, 402, 520)}
-  ${flowArrow(704, 520, 742, 520)}
-  ${flowArrow(1044, 520, 1082, 520)}
-  ${flowArrow(1384, 520, 1422, 520)}
-  <g transform="translate(72 868)" filter="url(#shadow)">
-    <rect width="1656" height="176" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="48" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="880" fill="#17202a">Current system signals</text>
-    ${statusPill(32, 78, "Catalog", `${metrics.sourceRecords.toLocaleString()} source records`, "#17202a")}
-    ${statusPill(366, 78, "Graph", `${metrics.nodeCount.toLocaleString()} nodes / ${metrics.edgeCount.toLocaleString()} edges`, "#1f6f68")}
-    ${statusPill(700, 78, "Authority", `${metrics.authorityFamilies.toLocaleString()} families / ${metrics.authorityTemplates.toLocaleString()} templates`, "#835b2f")}
-    ${statusPill(1034, 78, "Gates", `${passRatio(metrics.currentGatePassed, metrics.currentGateTotal)} current promotion`, "#2e5e88")}
+  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Source governance before analysis</text>
+  ${wrapSvgText("Only cataloged, eligible, current sources can feed review logic. Blocked and superseded material stays visible without becoming controlling authority.", 72, 138, 1560, 22, "#58615b", 2)}
+
+  ${governanceCard(72, 222, 470, 188, "#17202a", "1. Workbook Contract", [
+    "Defines review universe",
+    "Preserves row identity",
+    "Applies scope and exclusions"
+  ])}
+  ${governanceCard(665, 222, 470, 188, "#1f6f68", "2. Local Source Library", [
+    "Catalog, manifests, hashes",
+    "Artifact provenance",
+    "SQLite review index"
+  ])}
+  ${governanceCard(1258, 222, 470, 188, "#835b2f", "3. Source Partitions", [
+    "Active review corpus",
+    "Candidate or blocked sources",
+    "Currentness archive"
+  ])}
+  ${flowArrow(542, 316, 655, 316)}
+  ${flowArrow(1135, 316, 1248, 316)}
+
+  <g transform="translate(72 500)" filter="url(#shadow)">
+    <rect width="1656" height="186" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
+    <text x="32" y="48" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Partition rule</text>
+    ${partitionPill(32, 82, 486, "#1f6f68", "Active review corpus", `${metrics.activeReviewCorpus.toLocaleString()} records may support review logic`)}
+    ${partitionPill(584, 82, 486, "#a65332", "Candidate / blocked", `${metrics.candidateBlockedSources.toLocaleString()} record visible as a blocker`)}
+    ${partitionPill(1136, 82, 486, "#68706a", "Superseded / currentness-only", "visible for context, not active authority")}
+  </g>
+
+  <g transform="translate(72 760)" filter="url(#shadow)">
+    <rect width="1656" height="230" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
+    <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Derived after the source gate</text>
+    ${processStep(34, 92, "#835b2f", "Extraction", "source text and evidence spans")}
+    ${processStep(420, 92, "#1f6f68", "Retrieval", "indexed evidence for review")}
+    ${processStep(806, 92, "#6f4f86", "Claims", "source claims and rule support")}
+    ${processStep(1192, 92, "#2e5e88", "Graph Export", "validated nodes, edges, and reports")}
+    ${flowArrow(316, 152, 410, 152)}
+    ${flowArrow(702, 152, 796, 152)}
+    ${flowArrow(1088, 152, 1182, 152)}
   </g>
 </svg>`;
 }
@@ -561,61 +569,64 @@ function evidenceTraceSvg(metrics) {
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Evidence path from source record through extraction and review outputs">
   ${svgDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Evidence path stays inspectable</text>
-  ${wrapSvgText("The system treats a finding as the end of a traceable path, not as a standalone sentence. Each link has a provenance role and can be tested.", 72, 138, 1560, 22, "#58615b", 2)}
-  ${graphEdge(258, 425, 520, 425, "#2e5e88", 8, "artifact link")}
-  ${graphEdge(700, 425, 962, 425, "#1f6f68", 8, "extracted support")}
-  ${graphEdge(1142, 425, 1404, 425, "#835b2f", 8, "rule support")}
-  ${graphEdge(1494, 510, 1494, 690, "#6f4f86", 8, "review output")}
-  ${graphEdge(520, 720, 1404, 720, "#a65332", 7, "evidence span")}
-  ${graphNode(190, 425, 96, "#2e5e88", "Source record", "Workbook row", "scope + citation")}
-  ${graphNode(610, 425, 98, "#1f6f68", "Artifact", "Local bytes", "hash + manifest")}
-  ${graphNode(1052, 425, 104, "#835b2f", "Source claim", `${metrics.sourceClaims.toLocaleString()} links`, "evidence graph")}
-  ${graphNode(1494, 425, 104, "#6f4f86", "Authority logic", "Rules + decisions", "applicability")}
-  ${graphNode(1494, 790, 104, "#2e5e88", "Review product", "Matrix / report", "PDF + JSON")}
-  ${graphNode(430, 720, 86, "#a65332", "Evidence span", "Extracted text", "chunk reference")}
-  <g transform="translate(72 902)" filter="url(#shadow)">
-    <rect width="1656" height="142" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="46" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="880" fill="#17202a">Review outputs from the trace</text>
-    ${inlineList(32, 88, [
-      "compliance matrix",
-      "decision-support report",
-      "final QA packet",
-      "knowledge graph export",
-      "3D viewer scenes"
-    ])}
+  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Finding trace</text>
+  ${wrapSvgText("The review product is only the final view. The underlying path stays inspectable from source record to finding.", 72, 138, 1560, 22, "#58615b", 2)}
+
+  <g transform="translate(72 214)" filter="url(#shadow)">
+    <rect width="1656" height="430" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
+    ${traceStep(44, 108, "#17202a", "Source Record", "row identity, scope, citation")}
+    ${traceStep(374, 108, "#1f6f68", "Evidence Span", "extracted text with artifact hash")}
+    ${traceStep(704, 108, "#835b2f", "Source Claim", `${metrics.sourceClaims.toLocaleString()} support links`)}
+    ${traceStep(1034, 108, "#6f4f86", "Authority Decision", "applicable, screened out, unresolved")}
+    ${traceStep(1364, 108, "#2e5e88", "Finding", "review result with evidence path")}
+    ${flowArrow(300, 198, 364, 198)}
+    ${flowArrow(630, 198, 694, 198)}
+    ${flowArrow(960, 198, 1024, 198)}
+    ${flowArrow(1290, 198, 1354, 198)}
+    <text x="44" y="362" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#17202a">Reverse compliance uses the same path in the opposite direction.</text>
+    <text x="44" y="397" font-family="Inter, Arial, sans-serif" font-size="19" fill="#58615b">Unsupported claims, stale authority language, missing evidence, and unresolved applicability are flagged before readiness.</text>
+  </g>
+
+  <g transform="translate(72 728)" filter="url(#shadow)">
+    <rect width="1656" height="234" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
+    <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Outputs generated from the trace</text>
+    ${outputTile(32, 88, "#2e5e88", "Compliance Matrix", "authorities, findings, evidence")}
+    ${outputTile(432, 88, "#1f6f68", "Decision Support", "risks, gaps, signer readout")}
+    ${outputTile(832, 88, "#835b2f", "Final QA", "replay checks and packet validation")}
+    ${outputTile(1232, 88, "#6f4f86", "Knowledge Graph", "nodes, edges, scenes, validation")}
   </g>
 </svg>`;
 }
 
 function readinessGateSvg(metrics) {
   const gates = [
-    ["Catalog integrity", "Workbook coverage, source statuses, artifact links", true],
-    ["Currentness", "Active, candidate, superseded, and blocked source roles", metrics.currentnessPassed],
-    ["Graph validation", `${passRatio(metrics.validationChecks, metrics.validationChecks)} source-set checks`, metrics.validationPassed],
-    ["Phase evaluation", `${passRatio(metrics.phasePassed, metrics.phaseTotal)} review phases`, metrics.phaseReviewerReady],
-    ["Promotion suite", `${passRatio(metrics.currentGatePassed, metrics.currentGateTotal)} current gates`, metrics.currentPromotionReady]
+    ["Source capture", "catalog and artifact links complete", true],
+    ["Currentness", "active, blocked, and superseded roles checked", metrics.currentnessPassed],
+    ["Evidence build", "extraction, retrieval, claims, and graph inputs rebuilt", true],
+    ["Graph validation", "schema, provenance, endpoints, and summaries valid", metrics.validationPassed],
+    ["Review outputs", "matrix, decision support, final QA, and PDF artifacts valid", metrics.phaseReviewerReady],
+    ["Promotion", "current gate suite ready", metrics.currentPromotionReady]
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="Readiness gates and expansion boundary for the NEPA review system">
   ${svgDefs()}
   <rect width="1800" height="1180" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Readiness is a gated state</text>
-  ${wrapSvgText("Reports, PDFs, and viewer scenes are downstream products. The system first verifies source capture, evidence, graph validity, review outputs, and promotion status.", 72, 138, 1560, 22, "#58615b", 2)}
+  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Readiness gate stack</text>
+  ${wrapSvgText("Readiness is an artifact state. The system must prove source, evidence, graph, review, QA, and promotion gates before outputs are treated as ready.", 72, 138, 1560, 22, "#58615b", 2)}
   <g transform="translate(72 224)" filter="url(#shadow)">
-    <rect width="1060" height="744" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Current gate stack</text>
-    ${gates.map((gate, index) => gateRow(34, 96 + index * 124, gate[0], gate[1], gate[2])).join("")}
+    <rect width="1018" height="790" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
+    <text x="32" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Current readiness gates</text>
+    ${gates.map((gate, index) => gateRow(34, 94 + index * 104, gate[0], gate[1], gate[2])).join("")}
   </g>
-  <g transform="translate(1190 224)" filter="url(#shadow)">
-    <rect width="538" height="744" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="30" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Expansion boundary</text>
-    ${metricBlock(30, 104, "Forest-plan profiles", `${metrics.graphReadyProfiles}/${metrics.profileCount}`, "graph-ready")}
-    ${metricBlock(30, 248, "Blocked profiles", String(metrics.blockedProfiles), "visible readiness blockers")}
-    ${metricBlock(30, 392, "Components", metrics.forestComponents.toLocaleString(), "inventory-backed")}
-    ${metricBlock(30, 536, "Profile requirements", String(metrics.fieldDirectives + metrics.overlayRequirements), "directives + overlays")}
+  <g transform="translate(1160 224)" filter="url(#shadow)">
+    <rect width="568" height="790" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
+    <text x="30" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Expansion blockers stay typed</text>
+    ${blockerTile(30, 104, "#a65332", "Forest profile not ready", readinessCount(metrics, "forest_profile_not_ready"), "profile coverage not complete")}
+    ${blockerTile(30, 252, "#835b2f", "Missing source", readinessCount(metrics, "missing_source"), "required source absent or unresolved")}
+    ${blockerTile(30, 400, "#68706a", "Superseded source", readinessCount(metrics, "superseded_source"), "visible for currentness only")}
+    ${blockerTile(30, 548, "#6f4f86", "Chapter delta", readinessCount(metrics, "fsh_chapter_delta_required"), "handbook chapter split required")}
+    <text x="30" y="728" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#1f6f68">${metrics.graphReadyProfiles}/${metrics.profileCount} tracked forest-plan profiles are graph-ready.</text>
   </g>
-  <text x="92" y="1060" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="850" fill="#1f6f68">Blocked or incomplete sources remain explicit so expansion risk is visible before a package is called ready.</text>
 </svg>`;
 }
 
@@ -627,6 +638,71 @@ function architectureCard(x, y, width, height, color, title, body) {
     ${wrapSvgText(title, 48, 55, width - 74, 21, "#17202a", 1, "start", "870")}
     ${wrapSvgText(body, 24, 92, width - 48, 16, "#58615b", 3)}
   </g>`;
+}
+
+function governanceCard(x, y, width, height, color, title, rows) {
+  return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
+    <rect width="${width}" height="${height}" rx="20" fill="#ffffff" stroke="#d4d9d0"/>
+    <rect width="${width}" height="10" rx="5" fill="${color}"/>
+    <text x="28" y="54" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="880" fill="#17202a">${escapeXml(title)}</text>
+    ${rows.map((row, index) => checklistRow(30, 88 + index * 30, color, row)).join("")}
+  </g>`;
+}
+
+function checklistRow(x, y, color, label) {
+  return `<g transform="translate(${x} ${y})">
+    <circle cx="8" cy="-6" r="7" fill="${color}"/>
+    <text x="26" y="0" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="730" fill="#435049">${escapeXml(label)}</text>
+  </g>`;
+}
+
+function partitionPill(x, y, width, color, title, value) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${width}" height="72" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
+    <circle cx="30" cy="36" r="11" fill="${color}"/>
+    <text x="52" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
+    <text x="52" y="54" font-family="Inter, Arial, sans-serif" font-size="15" fill="#58615b">${escapeXml(value)}</text>
+  </g>`;
+}
+
+function processStep(x, y, color, title, body) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="284" height="98" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
+    <rect width="284" height="8" rx="4" fill="${color}"/>
+    <text x="24" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="860" fill="#17202a">${escapeXml(title)}</text>
+    ${wrapSvgText(body, 24, 70, 236, 15, "#58615b", 2)}
+  </g>`;
+}
+
+function traceStep(x, y, color, title, body) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="256" height="180" rx="20" fill="#f8faf7" stroke="#d4d9d0"/>
+    <rect width="256" height="9" rx="5" fill="${color}"/>
+    <text x="24" y="52" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="870" fill="#17202a">${escapeXml(title)}</text>
+    ${wrapSvgText(body, 24, 92, 210, 18, "#58615b", 3)}
+  </g>`;
+}
+
+function outputTile(x, y, color, title, body) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="342" height="92" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
+    <circle cx="28" cy="46" r="10" fill="${color}"/>
+    <text x="50" y="39" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="860" fill="#17202a">${escapeXml(title)}</text>
+    <text x="50" y="66" font-family="Inter, Arial, sans-serif" font-size="16" fill="#58615b">${escapeXml(body)}</text>
+  </g>`;
+}
+
+function blockerTile(x, y, color, title, count, body) {
+  return `<g transform="translate(${x} ${y})">
+    <rect width="508" height="112" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
+    <text x="24" y="36" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
+    <text x="24" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="920" fill="${color}">${escapeXml(String(count))}</text>
+    <text x="108" y="78" font-family="Inter, Arial, sans-serif" font-size="17" fill="#58615b">${escapeXml(body)}</text>
+  </g>`;
+}
+
+function readinessCount(metrics, key) {
+  return Number(metrics.readinessBlockers?.[key] || 0).toLocaleString();
 }
 
 function laneCard(x, y, width, height, color, title, rows) {
@@ -666,13 +742,13 @@ function gateRow(x, y, title, value, passed) {
   const color = passed ? "#1f6f68" : "#a65332";
   const label = passed ? "PASS" : "BLOCKED";
   return `<g transform="translate(${x} ${y})">
-    <rect width="992" height="92" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
+    <rect width="920" height="78" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
     <circle cx="48" cy="46" r="22" fill="${color}"/>
     <path d="M 38 46 L 45 54 L 60 36" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="88" y="38" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="870" fill="#17202a">${escapeXml(title)}</text>
     <text x="88" y="66" font-family="Inter, Arial, sans-serif" font-size="17" fill="#58615b">${escapeXml(value)}</text>
-    <rect x="832" y="27" width="126" height="38" rx="19" fill="${color}"/>
-    <text x="895" y="52" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#ffffff">${label}</text>
+    <rect x="760" y="20" width="126" height="38" rx="19" fill="${color}"/>
+    <text x="823" y="45" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#ffffff">${label}</text>
   </g>`;
 }
 

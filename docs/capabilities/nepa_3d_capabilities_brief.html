@@ -209,19 +209,19 @@
     <header>
       <div class="kicker">Capability 1 / Source-Governed Operating Model</div>
       <h2>Controlled source library to graph-ready review layer</h2>
-      <p class="lede">The workbook remains the contract. Downloader, catalog, extraction, retrieval, evidence graph, source-claim graph, rule binding, and knowledge graph exports all preserve row identity and provenance so downstream review products can be replayed and inspected.</p>
+      <p class="lede">Every review starts with a controlled source contract. Workbook rows, exclusions, URL repairs, source partitions, catalog records, and artifact hashes define what can support review logic. Derived layers are rebuilt from those surfaces, not loose files.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_applicability_service_view.png" alt="Operating model showing source library, extraction, authority graph, and review outputs" />
-      <p class="caption">Operating model: source records are captured once, then promoted through derived layers with explicit validation. The graphic separates source capture, semantic extraction, applicability, review products, and visualization so the same evidence model supports multiple outputs without duplicating logic.</p>
+      <p class="caption">Source governance model: only eligible catalog records feed review logic. Superseded, candidate, blocked, or currentness-only records stay visible as context and readiness evidence.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Currentness and partitioning</strong>
-          <p>Active review sources are separated from candidate, blocked, superseded, and currentness-only records before graph export. That prevents stale or excluded sources from silently supporting current authority.</p>
+          <strong>Contract enforced</strong>
+          <p>Workbook scope, source identity, URL overrides, exclusions, and partitions are checked before downstream review artifacts can rely on a source.</p>
         </div>
         <div class="callout">
-          <strong>Validation before display</strong>
-          <p>Graph exports carry node and edge type checks, provenance requirements, endpoint compatibility checks, readiness status, and failure-category counts before they are used by the viewer or promotion suite.</p>
+          <strong>Rebuildable layers</strong>
+          <p>Extraction, retrieval, claims, graph exports, reports, and validation summaries are generated from catalog surfaces and can be replayed.</p>
         </div>
       </div>
     </main>
@@ -235,24 +235,19 @@
     <header>
       <div class="kicker">Capability 2 / Evidence Traceability And Review Products</div>
       <h2>Every finding stays connected to evidence</h2>
-      <p class="lede">The system keeps source records, artifacts, chunks, evidence spans, source claims, rule templates, applicability decisions, generated rules, and findings as graph-visible objects. Review outputs are produced from those artifacts rather than from a narrative-only analysis pass.</p>
+      <p class="lede">Findings are produced from inspectable evidence paths. The system links source records, artifacts, evidence spans, claims, authority decisions, and review findings before it renders reports or graph views.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: source evidence supports claims; claims support rules and applicability; applicability drives review products. The chain remains inspectable across JSON, Markdown, PDF, SQLite, and graph export surfaces.</p>
+      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Reviewer-facing outputs</strong>
-          <ul>
-            <li>Compliance matrix in JSON, Markdown, and PDF.</li>
-            <li>Decision-support report with evidence paths and residual risk.</li>
-            <li>Final QA certification and replay validation artifacts.</li>
-            <li>Knowledge graph JSON, node/edge files, summaries, and validation.</li>
-          </ul>
+          <strong>Audit surface</strong>
+          <p>Each product can be traced back to source record, artifact hash, evidence span, and decision path. Reviewers can inspect the basis without relying on narrative alone.</p>
         </div>
         <div class="callout">
           <strong>Reverse compliance</strong>
-          <p>The same evidence model can search for unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan component gaps before the package is treated as reviewer-ready.</p>
+          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps before readiness is claimed.</p>
         </div>
       </div>
     </main>
@@ -266,27 +261,21 @@
     <header>
       <div class="kicker">Capability 3 / Readiness, Governance, And Expansion</div>
       <h2>Promotion gates make readiness explicit</h2>
-      <p class="lede">Readiness is not inferred from a finished-looking report. The system uses deterministic gates for source capture, currentness, extraction, retrieval, graph validation, applicability, compliance outputs, forest-plan evaluation, decision support, final QA, and promotion.</p>
+      <p class="lede">A polished report is not the readiness signal. The system checks source capture, currentness, evidence, graph validity, review outputs, final QA, and promotion before it marks a review ready.</p>
     </header>
     <main>
       <img class="graph-figure tall" src="assets/graph_readiness_service_view.png" alt="Readiness gates and expansion boundary for the NEPA review system" />
       <div class="grid-2" style="margin-top:0.12in">
-        <div class="capability-list">
-          <div class="capability"><strong>Source control</strong><span>Workbook rows, URL overrides, catalog records, hashes, and source-set manifests.</span></div>
-          <div class="capability"><strong>Evidence build</strong><span>Extraction, retrieval, evidence spans, graph edges, and source-claim links.</span></div>
-          <div class="capability"><strong>Authority model</strong><span>Authority families, currentness decisions, rule templates, and source partitions.</span></div>
-          <div class="capability"><strong>Applicability</strong><span>Package-specific decisions, generated rules, screened-out authority, and unresolved items.</span></div>
-          <div class="capability"><strong>Review outputs</strong><span>Compliance matrix, decision support, final QA, and reviewer-facing PDFs.</span></div>
-          <div class="capability"><strong>Viewer surface</strong><span>3D graph scenes driven by validated graph JSON rather than hard-coded visuals.</span></div>
+        <div class="callout">
+          <strong>Ready means replayable</strong>
+          <p>The underlying source, evidence, graph, review, QA, and promotion artifacts can be regenerated and checked against the same gates.</p>
         </div>
-        <div>
-          <div class="callout">
-            <strong>Expansion boundary</strong>
-            <p>New packages, forest profiles, or authority deltas are added by expanding the source/profile contract and replaying gates. Blockers remain visible when profiles or sources are not ready, instead of being collapsed into a generic failure.</p>
-          </div>
-          <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
+        <div class="callout">
+          <strong>Blocked means specific</strong>
+          <p>Missing sources, profile gaps, superseded authority, and chapter-level deltas stay typed and visible instead of becoming a generic failure.</p>
         </div>
       </div>
+      <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
     </main>
     <footer class="footer">
       <span>Forest-plan readiness tracked: 1/10 profiles graph-ready, 9 blocked.</span>
