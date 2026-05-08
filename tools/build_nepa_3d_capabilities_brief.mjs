@@ -554,62 +554,27 @@ function evidenceTraceSvg(metrics) {
 }
 
 function r1GraphShowcaseSvg(metrics) {
+  const scene = simplifiedGraphSceneSvg(metrics);
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="Region 1 3D graph showcase with NEPA, USDA regulations, evidence, and forest plan layers">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="Simplified Region 1 3D graph model with NEPA, USDA regulations, evidence, review views, and forest plan layers">
   ${graphShowcaseDefs()}
   <rect width="1800" height="1180" rx="34" fill="#f4f6f2"/>
   <g transform="translate(72 82)" filter="url(#shadow)">
     <rect width="1656" height="940" rx="30" fill="#0d1821"/>
     <rect x="18" y="18" width="1620" height="904" rx="24" fill="url(#nightGlow)" stroke="#314653"/>
-    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Region 1 3D knowledge graph</text>
-    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">Authority, evidence, and forest-plan layers remain distinct but connected.</text>
+    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Simplified Region 1 graph model</text>
+    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">A reduced 3D view of the graph: separate layers, shared evidence paths, and readable depth.</text>
 
-    ${showcaseEdge(820, 430, 430, 285, "#2ad0bc", 0.72)}
-    ${showcaseEdge(820, 430, 1220, 285, "#e7aa54", 0.72)}
-    ${showcaseEdge(820, 430, 830, 695, "#71d58a", 0.72)}
-    ${showcaseEdge(820, 430, 420, 690, "#66a9e7", 0.5)}
-    ${showcaseEdge(820, 430, 1240, 690, "#b38ee8", 0.5)}
-    ${showcaseEdge(430, 285, 1220, 285, "#45606c", 0.42)}
-    ${showcaseEdge(420, 690, 830, 695, "#45606c", 0.42)}
-    ${showcaseEdge(1240, 690, 830, 695, "#45606c", 0.42)}
+    <g transform="translate(54 150)">
+      ${scene}
+    </g>
 
-    ${showcaseHub(820, 430, "#f8faf7", "R1 Graph", `${metrics.nodeCount.toLocaleString()} nodes / ${metrics.edgeCount.toLocaleString()} edges`)}
-    ${showcaseCluster(430, 285, "#2ad0bc", "NEPA", `${metrics.nepaFamilyCount || 4} authority families`, [
-      "Core statute",
-      "EA duties",
-      "FS NEPA policy",
-      "supersession flags"
-    ])}
-    ${showcaseCluster(1220, 285, "#e7aa54", "USDA Regulations", `${metrics.regulationAuthorityCount.toLocaleString()} regulation families`, [
-      "7 CFR part 1b",
-      "agency procedures",
-      "rule templates",
-      "currentness checks"
-    ])}
-    ${showcaseCluster(830, 695, "#71d58a", "Forest Plans", `${metrics.profileCount} profiles / ${metrics.forestComponents.toLocaleString()} components`, [
-      "separate graph layer",
-      "plan components",
-      "profile readiness",
-      "overlay requirements"
-    ])}
-    ${showcaseCluster(420, 690, "#66a9e7", "Source Evidence", `${metrics.sourceRecords.toLocaleString()} records / ${metrics.sourceClaims.toLocaleString()} claim links`, [
-      "catalog rows",
-      "artifact hashes",
-      "evidence spans",
-      "citation labels"
-    ])}
-    ${showcaseCluster(1240, 690, "#b38ee8", "Review Views", "lenses, search, scenes", [
-      "authority graph",
-      "evidence paths",
-      "readiness blockers",
-      "review outputs"
-    ])}
-
-    <g transform="translate(54 798)">
-      ${showcaseLegend(0, 0, "#2ad0bc", "NEPA graphed")}
-      ${showcaseLegend(270, 0, "#e7aa54", "USDA regulations graphed")}
-      ${showcaseLegend(640, 0, "#71d58a", "Forest plans graphed separately")}
-      ${showcaseLegend(1110, 0, "#66a9e7", "Source evidence linked")}
+    <g transform="translate(54 812)">
+      ${graphLegendChip(0, 0, "#2ad0bc", "NEPA")}
+      ${graphLegendChip(186, 0, "#e7aa54", "USDA regulations")}
+      ${graphLegendChip(472, 0, "#66a9e7", "Source evidence")}
+      ${graphLegendChip(764, 0, "#71d58a", "Forest plans")}
+      ${graphLegendChip(1038, 0, "#b38ee8", "Review views")}
     </g>
   </g>
 </svg>`;
@@ -641,6 +606,41 @@ function graphShowcaseDefs() {
       <stop offset="0.58" stop-color="#0f202b"/>
       <stop offset="1" stop-color="#0a131b"/>
     </radialGradient>
+    <radialGradient id="floorGlow" cx="50%" cy="42%" r="68%">
+      <stop offset="0" stop-color="#203c4b" stop-opacity="0.72"/>
+      <stop offset="0.72" stop-color="#122633" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#0d1821" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nodeHub" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.35" stop-color="#d9f1ec"/>
+      <stop offset="1" stop-color="#1f6f68"/>
+    </radialGradient>
+    <radialGradient id="nodeNep" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#e9fffb"/>
+      <stop offset="0.36" stop-color="#2ad0bc"/>
+      <stop offset="1" stop-color="#0b5b54"/>
+    </radialGradient>
+    <radialGradient id="nodeUsda" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#fff4da"/>
+      <stop offset="0.36" stop-color="#e7aa54"/>
+      <stop offset="1" stop-color="#734b15"/>
+    </radialGradient>
+    <radialGradient id="nodeSource" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#eaf6ff"/>
+      <stop offset="0.36" stop-color="#66a9e7"/>
+      <stop offset="1" stop-color="#19496e"/>
+    </radialGradient>
+    <radialGradient id="nodeForest" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#eaffef"/>
+      <stop offset="0.36" stop-color="#71d58a"/>
+      <stop offset="1" stop-color="#20623c"/>
+    </radialGradient>
+    <radialGradient id="nodeReview" cx="34%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#f4eaff"/>
+      <stop offset="0.36" stop-color="#b38ee8"/>
+      <stop offset="1" stop-color="#4e3373"/>
+    </radialGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#17202a" flood-opacity="0.18"/>
     </filter>
@@ -651,51 +651,202 @@ function graphShowcaseDefs() {
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+    <filter id="softBlur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
   </defs>`;
 }
 
-function showcaseEdge(x1, y1, x2, y2, color, opacity) {
-  const cx = (x1 + x2) / 2;
-  const cy = Math.min(y1, y2) - 80;
-  return `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="5" stroke-opacity="${opacity}" stroke-linecap="round"/>`;
+function simplifiedGraphSceneSvg(metrics) {
+  const nodes = simplifiedGraphNodes(metrics);
+  const lookup = Object.fromEntries(nodes.map((node) => [node.id, { ...node, ...graphProject(node) }]));
+  const edges = simplifiedGraphEdges()
+    .map(([from, to, color, width = 3, opacity = 0.48]) => graphSceneEdge(lookup[from], lookup[to], color, width, opacity))
+    .join("");
+  const nodeMarkup = Object.values(lookup)
+    .sort((a, b) => a.screenY - b.screenY)
+    .map((node) => graphSceneNode(node))
+    .join("");
+
+  return `<rect x="0" y="0" width="1548" height="624" rx="22" fill="#0b151e" stroke="#314653"/>
+    <rect x="18" y="18" width="1512" height="588" rx="18" fill="url(#nightGlow)" stroke="#213a48"/>
+    ${graphSceneFloor()}
+    <g opacity="0.86">${edges}</g>
+    <g>${nodeMarkup}</g>
+    ${graphLayerLabel(58, 36, "#2ad0bc", "NEPA", `${metrics.nepaFamilyCount || 4} authority families`)}
+    ${graphLayerLabel(1106, 34, "#e7aa54", "USDA Regulations", `${metrics.regulationAuthorityCount.toLocaleString()} regulation families`)}
+    ${graphLayerLabel(64, 486, "#66a9e7", "Source Evidence", `${metrics.sourceRecords.toLocaleString()} source records`)}
+    ${graphLayerLabel(642, 508, "#71d58a", "Forest Plans", `${metrics.profileCount} profiles / ${metrics.forestComponents.toLocaleString()} components`)}
+    ${graphLayerLabel(1120, 476, "#b38ee8", "Review Views", "lenses, scenes, outputs")}`;
 }
 
-function showcaseHub(x, y, color, title, subtitle) {
-  return `<g transform="translate(${x} ${y})" filter="url(#glow)">
-    <circle r="100" fill="#132734" stroke="${color}" stroke-width="4"/>
-    <circle r="67" fill="#1f6f68" opacity="0.38"/>
-    <circle r="22" fill="${color}"/>
-    <text y="-12" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
-    <text y="28" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="760" fill="#c8d7d3">${escapeXml(subtitle)}</text>
-  </g>`;
-}
-
-function showcaseCluster(x, y, color, title, subtitle, labels) {
-  const satellites = [
-    [-118, -72],
-    [118, -72],
-    [-118, 72],
-    [118, 72]
+function simplifiedGraphNodes(metrics) {
+  return [
+    { id: "hub", x: 0, y: -18, z: 188, r: 45, gradient: "nodeHub", color: "#f8faf7", label: "R1 Graph", sublabel: `${metrics.nodeCount.toLocaleString()} / ${metrics.edgeCount.toLocaleString()}` },
+    ...clusterNodes("nepa", { x: -440, y: -118, z: 112 }, "nodeNep", "#2ad0bc", [
+      [-84, -42, 0, 20],
+      [0, -72, 26, 15],
+      [66, -35, 8, 14],
+      [-96, 36, -10, 14],
+      [-10, 24, 34, 23],
+      [78, 42, -12, 12],
+      [-4, -4, 54, 28]
+    ]),
+    ...clusterNodes("usda", { x: 360, y: -128, z: 124 }, "nodeUsda", "#e7aa54", [
+      [-86, -42, 0, 17],
+      [-10, -66, 22, 16],
+      [74, -44, 4, 14],
+      [-92, 34, -12, 14],
+      [0, 22, 42, 28],
+      [82, 36, -10, 13],
+      [24, -8, 18, 21]
+    ]),
+    ...clusterNodes("source", { x: -408, y: 162, z: 22 }, "nodeSource", "#66a9e7", [
+      [-112, -30, -8, 14],
+      [-48, -56, 16, 14],
+      [22, -44, 8, 13],
+      [86, -18, -4, 12],
+      [-124, 42, -20, 12],
+      [-58, 54, 8, 16],
+      [16, 42, 28, 22],
+      [90, 44, -10, 13],
+      [-2, -2, 48, 25]
+    ]),
+    ...clusterNodes("forest", { x: 60, y: 220, z: -18 }, "nodeForest", "#71d58a", [
+      [-116, -58, -8, 15],
+      [-48, -70, 16, 15],
+      [38, -56, 8, 14],
+      [112, -18, -10, 12],
+      [-126, 36, -22, 12],
+      [-62, 58, 10, 17],
+      [16, 58, 24, 24],
+      [90, 48, -12, 13],
+      [-4, -10, 42, 29]
+    ]),
+    ...clusterNodes("review", { x: 432, y: 118, z: 58 }, "nodeReview", "#b38ee8", [
+      [-90, -48, -8, 15],
+      [-18, -66, 24, 16],
+      [62, -38, 4, 13],
+      [-94, 32, -14, 13],
+      [-2, 22, 38, 24],
+      [76, 38, -8, 12],
+      [34, -8, 18, 19]
+    ])
   ];
-  return `<g transform="translate(${x} ${y})">
-    ${satellites
-      .map(([sx, sy], index) => {
-        const pulse = index % 2 === 0 ? 20 : 14;
-        return `<line x1="0" y1="0" x2="${sx}" y2="${sy}" stroke="${color}" stroke-opacity="0.42" stroke-width="3"/>
-        <g transform="translate(${sx} ${sy})">
-          <circle r="35" fill="#0d1821" stroke="${color}" stroke-width="3" filter="url(#glow)"/>
-          <circle r="${pulse}" fill="${color}" opacity="0.16"/>
-        </g>`;
-      })
-      .join("")}
-    <circle r="78" fill="#102431" stroke="${color}" stroke-width="5" filter="url(#glow)"/>
-    <circle r="46" fill="${color}" opacity="0.22"/>
-    <text y="-8" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
-    <text y="28" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="${color}">${escapeXml(subtitle)}</text>
+}
+
+function clusterNodes(prefix, center, gradient, color, points) {
+  return points.map(([x, y, z, r], index) => ({
+    id: `${prefix}-${index}`,
+    x: center.x + x,
+    y: center.y + y,
+    z: center.z + z,
+    r,
+    gradient,
+    color
+  }));
+}
+
+function simplifiedGraphEdges() {
+  return [
+    ["hub", "nepa-4", "#2ad0bc", 5, 0.62],
+    ["hub", "nepa-6", "#2ad0bc", 4, 0.48],
+    ["hub", "usda-4", "#e7aa54", 5, 0.62],
+    ["hub", "usda-6", "#e7aa54", 4, 0.48],
+    ["hub", "source-8", "#66a9e7", 4, 0.44],
+    ["hub", "forest-8", "#71d58a", 5, 0.62],
+    ["hub", "review-4", "#b38ee8", 4, 0.5],
+    ["source-8", "forest-8", "#6fa6b7", 3, 0.36],
+    ["source-6", "review-4", "#6f85ba", 3, 0.34],
+    ["forest-8", "review-4", "#8fb6a1", 3, 0.36],
+    ["nepa-6", "usda-4", "#526b78", 2, 0.32],
+    ...clusterEdgeSet("nepa", "#2ad0bc"),
+    ...clusterEdgeSet("usda", "#e7aa54"),
+    ...clusterEdgeSet("source", "#66a9e7"),
+    ...clusterEdgeSet("forest", "#71d58a"),
+    ...clusterEdgeSet("review", "#b38ee8")
+  ];
+}
+
+function clusterEdgeSet(prefix, color) {
+  return [
+    [`${prefix}-0`, `${prefix}-1`, color, 2, 0.4],
+    [`${prefix}-1`, `${prefix}-2`, color, 2, 0.4],
+    [`${prefix}-0`, `${prefix}-4`, color, 2, 0.34],
+    [`${prefix}-4`, `${prefix}-5`, color, 2, 0.34],
+    [`${prefix}-3`, `${prefix}-4`, color, 2, 0.34],
+    [`${prefix}-4`, `${prefix}-6`, color, 2, 0.4]
+  ];
+}
+
+function graphProject(node) {
+  const z = node.z || 0;
+  const scale = 1 + z / 880;
+  return {
+    screenX: 774 + node.x + z * 0.34,
+    screenY: 366 + node.y * 0.62 - z * 0.52,
+    screenR: Math.max(7, node.r * scale)
+  };
+}
+
+function graphSceneFloor() {
+  const horizontal = [-210, -150, -90, -30, 30, 90, 150, 210]
+    .map((y) => {
+      const a = graphProject({ x: -650, y, z: -92, r: 1 });
+      const b = graphProject({ x: 650, y, z: -92, r: 1 });
+      const controlY = ((a.screenY + b.screenY) / 2 - 28).toFixed(1);
+      return `<path d="M ${a.screenX.toFixed(1)} ${a.screenY.toFixed(1)} Q 774 ${controlY} ${b.screenX.toFixed(1)} ${b.screenY.toFixed(1)}" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/>`;
+    })
+    .join("");
+  const vertical = [-600, -450, -300, -150, 0, 150, 300, 450, 600]
+    .map((x) => {
+      const a = graphProject({ x, y: -236, z: -92, r: 1 });
+      const b = graphProject({ x, y: 236, z: -92, r: 1 });
+      return `<path d="M ${a.screenX.toFixed(1)} ${a.screenY.toFixed(1)} L ${b.screenX.toFixed(1)} ${b.screenY.toFixed(1)}" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/>`;
+    })
+    .join("");
+  return `<g>
+    <ellipse cx="774" cy="420" rx="675" ry="248" fill="url(#floorGlow)"/>
+    ${horizontal}
+    ${vertical}
   </g>`;
 }
 
-function showcaseLegend(x, y, color, label) {
+function graphSceneEdge(from, to, color, width, opacity) {
+  if (!from || !to) {
+    return "";
+  }
+  const lift = Math.min(from.screenY, to.screenY) - 28;
+  const cx = (from.screenX + to.screenX) / 2;
+  return `<path d="M ${from.screenX.toFixed(1)} ${from.screenY.toFixed(1)} C ${cx.toFixed(1)} ${lift.toFixed(1)} ${cx.toFixed(1)} ${lift.toFixed(1)} ${to.screenX.toFixed(1)} ${to.screenY.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-opacity="${opacity}" stroke-linecap="round"/>`;
+}
+
+function graphSceneNode(node) {
+  const shadowOpacity = node.id === "hub" ? 0.36 : 0.24;
+  const label = node.label
+    ? `<text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#f8faf7">${escapeXml(node.label)}</text>
+      <text y="21" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="760" fill="#d6e6e2">${escapeXml(node.sublabel)}</text>`
+    : "";
+  const filter = node.id === "hub" ? ' filter="url(#glow)"' : "";
+  const labelMarkup = label ? `\n    ${label}` : "";
+  return `<g transform="translate(${node.screenX.toFixed(1)} ${node.screenY.toFixed(1)})"${filter}>
+    <ellipse cx="0" cy="${(node.screenR * 0.88).toFixed(1)}" rx="${(node.screenR * 1.08).toFixed(1)}" ry="${(node.screenR * 0.32).toFixed(1)}" fill="#000000" opacity="${shadowOpacity}" filter="url(#softBlur)"/>
+    <circle r="${node.screenR.toFixed(1)}" fill="url(#${node.gradient})" stroke="${node.color}" stroke-width="${node.id === "hub" ? 4 : 2.2}"/>
+    <circle cx="${(-node.screenR * 0.34).toFixed(1)}" cy="${(-node.screenR * 0.36).toFixed(1)}" r="${(node.screenR * 0.24).toFixed(1)}" fill="#ffffff" opacity="0.38"/>${labelMarkup}
+  </g>`;
+}
+
+function graphLayerLabel(x, y, color, title, subtitle) {
+  const width = Math.max(232, Math.min(342, title.length * 14 + subtitle.length * 6 + 42));
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${width}" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
+    <circle cx="28" cy="35" r="9" fill="${color}"/>
+    <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
+    <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="${color}">${escapeXml(subtitle)}</text>
+  </g>`;
+}
+
+function graphLegendChip(x, y, color, label) {
   const width = Math.max(210, label.length * 11 + 54);
   return `<g transform="translate(${x} ${y})">
     <rect width="${width}" height="54" rx="27" fill="#122633" stroke="#314653"/>
