@@ -112,7 +112,7 @@
       background: #ffffff;
       box-shadow: 0 12px 28px rgba(29, 39, 34, 0.12);
     }
-    .hero-img { height: 3.52in; object-fit: cover; object-position: center; }
+    .hero-img { height: 5.25in; object-fit: contain; object-position: center; }
     .graph-figure { height: 4.95in; object-fit: contain; object-position: center; }
     .graph-figure.tall { height: 5.38in; }
     .caption {
@@ -187,30 +187,20 @@
     <header>
       <div class="kicker">System Capabilities Brief</div>
       <h1>NEPA 3D Knowledge Graph Review System</h1>
-      <p class="lede">The current system is a local, auditable reviewer-engine for USDA Forest Service Region 1 NEPA source material. It turns workbook-governed source records into extracted evidence, authority-family models, source-claim links, applicability decisions, compliance outputs, decision-support reports, and a 3D knowledge graph surface.</p>
-      <p class="metric-context">Current operating status from local catalog, source-set graph, phase-eval, and promotion gates.</p>
+      <p class="lede">The system turns Region 1 NEPA source material into auditable review intelligence. It preserves source provenance, builds an authority graph, traces evidence to findings, and gates readiness before outputs reach reviewers. The result is a transparent operating layer for compliance review, decision support, and graph exploration.</p>
+      <p class="metric-context">Current Region 1 implementation snapshot.</p>
       <div class="metric-grid">
-        <div class="metric"><strong>190</strong><span>workbook source records in the local catalog</span></div>
-        <div class="metric"><strong>35</strong><span>authority families mapped to source records</span></div>
-        <div class="metric"><strong>62/62</strong><span>source-set graph checks</span></div>
-        <div class="metric"><strong>26/26</strong><span>current promotion gates</span></div>
+        <div class="metric"><strong>1,410</strong><span>Region 1 graph nodes</span></div>
+        <div class="metric"><strong>2,564</strong><span>Region 1 graph edges</span></div>
+        <div class="metric"><strong>35</strong><span>authority families</span></div>
+        <div class="metric"><strong>190</strong><span>source records</span></div>
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="System process from controlled source library to decision support" />
-      <div class="grid-2" style="margin-top:0.15in">
-        <div class="callout">
-          <strong>What the system does</strong>
-          <p>Maintains source identity, artifact provenance, citation labels, currentness status, extraction spans, graph edges, validation results, and reviewer-facing outputs as separate auditable surfaces.</p>
-        </div>
-        <div class="callout">
-          <strong>What the system avoids</strong>
-          <p>It does not rely on hidden one-off shortcuts or unsupported legal conclusions. Expansion to new packages or profiles is routed through source, profile, and evaluation gates.</p>
-        </div>
-      </div>
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Architecture components for the NEPA review system" />
     </main>
     <footer class="footer">
-      <span>Brief generated 2026-05-07 from current local system artifacts.</span>
+      <span>Brief generated 2026-05-08 from current local system artifacts.</span>
       <span>Scope: system capabilities and boundaries only; no named package examples.</span>
     </footer>
   </section>

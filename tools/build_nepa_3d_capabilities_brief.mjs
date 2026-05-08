@@ -310,7 +310,7 @@ function briefHtml(metrics) {
       background: #ffffff;
       box-shadow: 0 12px 28px rgba(29, 39, 34, 0.12);
     }
-    .hero-img { height: 3.52in; object-fit: cover; object-position: center; }
+    .hero-img { height: 5.25in; object-fit: contain; object-position: center; }
     .graph-figure { height: 4.95in; object-fit: contain; object-position: center; }
     .graph-figure.tall { height: 5.38in; }
     .caption {
@@ -385,27 +385,17 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">System Capabilities Brief</div>
       <h1>NEPA 3D Knowledge Graph Review System</h1>
-      <p class="lede">The current system is a local, auditable reviewer-engine for USDA Forest Service Region 1 NEPA source material. It turns workbook-governed source records into extracted evidence, authority-family models, source-claim links, applicability decisions, compliance outputs, decision-support reports, and a 3D knowledge graph surface.</p>
-      <p class="metric-context">Current operating status from local catalog, source-set graph, phase-eval, and promotion gates.</p>
+      <p class="lede">The system turns Region 1 NEPA source material into auditable review intelligence. It preserves source provenance, builds an authority graph, traces evidence to findings, and gates readiness before outputs reach reviewers. The result is a transparent operating layer for compliance review, decision support, and graph exploration.</p>
+      <p class="metric-context">Current Region 1 implementation snapshot.</p>
       <div class="metric-grid">
-        ${metric(metrics.sourceRecords.toLocaleString(), "workbook source records in the local catalog")}
-        ${metric(metrics.authorityFamilies.toLocaleString(), "authority families mapped to source records")}
-        ${metric(passRatio(metrics.validationChecks, metrics.validationChecks), "source-set graph checks")}
-        ${metric(passRatio(metrics.currentGatePassed, metrics.currentGateTotal), "current promotion gates")}
+        ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
+        ${metric(metrics.edgeCount.toLocaleString(), "Region 1 graph edges")}
+        ${metric(metrics.authorityFamilies.toLocaleString(), "authority families")}
+        ${metric(metrics.sourceRecords.toLocaleString(), "source records")}
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="System process from controlled source library to decision support" />
-      <div class="grid-2" style="margin-top:0.15in">
-        <div class="callout">
-          <strong>What the system does</strong>
-          <p>Maintains source identity, artifact provenance, citation labels, currentness status, extraction spans, graph edges, validation results, and reviewer-facing outputs as separate auditable surfaces.</p>
-        </div>
-        <div class="callout">
-          <strong>What the system avoids</strong>
-          <p>It does not rely on hidden one-off shortcuts or unsupported legal conclusions. Expansion to new packages or profiles is routed through source, profile, and evaluation gates.</p>
-        </div>
-      </div>
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Architecture components for the NEPA review system" />
     </main>
     <footer class="footer">
       <span>Brief generated ${escapeHtml(metrics.generatedAt)} from current local system artifacts.</span>
@@ -507,23 +497,29 @@ function briefHtml(metrics) {
 
 function currentAuthorityStackSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="System process from controlled source library to decision support">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="840" viewBox="0 0 1280 840" role="img" aria-label="Architecture components for the NEPA review system">
   ${svgDefs()}
-  <rect width="1280" height="640" rx="28" fill="#f4f6f2"/>
-  <rect x="34" y="32" width="1212" height="576" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
-  <text x="72" y="85" font-family="Inter, Arial, sans-serif" font-size="33" font-weight="880" fill="#17202a">System process: controlled evidence to review support</text>
-  <text x="72" y="125" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">The review engine keeps source capture, evidence, authority logic, and decision-support outputs traceable.</text>
-  ${stackBox(72, 182, "Workbook source contract", metrics.sourceRecords.toLocaleString(), "catalog records; row identity, scope, URLs", "#17202a")}
-  ${stackBox(368, 182, "Audited local corpus", metrics.artifacts.toLocaleString(), "unique artifacts; hashes, manifests, SQLite", "#1f6f68")}
-  ${stackBox(664, 182, "Authority graph", metrics.authorityFamilies.toLocaleString(), "authority families; currentness, partitions, rules", "#835b2f")}
-  ${stackBox(960, 182, "Review outputs", passRatio(metrics.currentGatePassed, metrics.currentGateTotal), "current gates; matrix, support, QA, viewer", "#2e5e88")}
-  ${arrow(330, 282, 358, 282)}
-  ${arrow(626, 282, 654, 282)}
-  ${arrow(922, 282, 950, 282)}
-  <g transform="translate(72 452)">
-    <rect width="1136" height="98" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="38" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#17202a">Design principle</text>
-    ${wrapSvgText("Domain knowledge stays in data and artifacts: source rows, authority-family configs, rule templates, eval fixtures, graph contracts, and reviewer-facing reports.", 28, 70, 1068, 16, "#435049", 2)}
+  <rect width="1280" height="840" rx="28" fill="#f4f6f2"/>
+  <rect x="34" y="32" width="1212" height="776" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
+  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">Architecture components at a glance</text>
+  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">A source-governed review engine with traceable evidence, explicit authority logic, and gated outputs.</text>
+
+  ${architectureCard(76, 188, 330, 150, "#17202a", "Source Contract", "Workbook rows set scope, exclusions, source identity, and review boundaries.")}
+  ${architectureCard(474, 188, 330, 150, "#1f6f68", "Audited Source Library", "Catalogs, manifests, hashes, partitions, and SQLite preserve provenance.")}
+  ${architectureCard(872, 188, 330, 150, "#835b2f", "Evidence Pipeline", "Extraction, retrieval, evidence spans, graph edges, and source claims.")}
+  ${flowArrow(406, 263, 464, 263)}
+  ${flowArrow(804, 263, 862, 263)}
+
+  ${architectureCard(76, 416, 330, 150, "#6f4f86", "Authority Engine", "Authority families, currentness, rule templates, and applicability decisions.")}
+  ${architectureCard(474, 416, 330, 150, "#2e5e88", "Reviewer Outputs", "Compliance matrix, decision support, final QA, and report PDFs.")}
+  ${architectureCard(872, 416, 330, 150, "#a65332", "Graph Experience", "3D scenes, lenses, search, and evidence paths from validated graph JSON.")}
+  ${flowArrow(406, 491, 464, 491)}
+  ${flowArrow(804, 491, 862, 491)}
+
+  <g transform="translate(76 640)" filter="url(#shadow)">
+    <rect width="1126" height="98" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
+    <text x="28" y="38" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#17202a">Readiness layer</text>
+    ${wrapSvgText("Validation, phase-eval, promotion, and expansion gates run across the architecture before the system claims reviewer readiness.", 28, 70, 1044, 17, "#435049", 2)}
   </g>
 </svg>`;
 }
@@ -623,13 +619,13 @@ function readinessGateSvg(metrics) {
 </svg>`;
 }
 
-function stackBox(x, y, title, value, subtitle, color) {
+function architectureCard(x, y, width, height, color, title, body) {
   return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <rect width="256" height="200" rx="18" fill="#ffffff" stroke="#d4d9d0"/>
-    <rect width="256" height="9" rx="4" fill="${color}"/>
-    ${wrapSvgText(title, 20, 50, 212, 18, "#17202a", 2, "start", "850")}
-    <text x="20" y="110" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="900" fill="${color}">${escapeXml(value)}</text>
-    ${wrapSvgText(subtitle, 20, 148, 212, 15, "#58615b", 2)}
+    <rect width="${width}" height="${height}" rx="18" fill="#ffffff" stroke="#d4d9d0"/>
+    <rect width="${width}" height="10" rx="5" fill="${color}"/>
+    <circle cx="28" cy="48" r="10" fill="${color}"/>
+    ${wrapSvgText(title, 48, 55, width - 74, 21, "#17202a", 1, "start", "870")}
+    ${wrapSvgText(body, 24, 92, width - 48, 16, "#58615b", 3)}
   </g>`;
 }
 
