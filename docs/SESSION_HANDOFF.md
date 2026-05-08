@@ -174,13 +174,13 @@ Current canonical artifact pointers:
 
 - Compliance matrix Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.md`
-  (`sha256=5dd062837c8c060752dcde97c46e313a09c1f0278608ee35f572c8785d5a9dbc`)
+  (`sha256=241ac87038ce3660ce18d5f35060d03b43b2d6540b7380dbc3f292e02dc7987a`)
 - Compliance matrix PDF:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.pdf`
   (`sha256=d117093c64f879964ad08bdddb68a07b0c85d1f8b023e36aff7db3c51d800461`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=fcbfd84a01311a37e2e8fdae2e5038d2397d87a6fe4e7a0c318bc46d14e58752`)
+  (`sha256=4986087120612f76c579fa0c64d375f5b5e35a21c41a795fcdb30153fa53b768`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=76f7f9c0e202f823350c6c7dd2ea01c1d0fd745745637eacaebbc3025ba27d07`)
@@ -189,16 +189,16 @@ Current canonical artifact pointers:
   (`sha256=20a0e615e4b9f7b552044d430a356e4ccdec31e22ca3e078d59cce71d3623f9f`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=3ccec0816baaed97d4062306e88d27f1da0de349a14fd6e06925853c5deecb1f`)
+  (`sha256=185de3fabf5ad87f9a0dda705f747b6ae46db62073b28cb179989bb7b2d31a60`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=9e3b8fc9dd9a0c062ee62a770165ebf9e8a4c79009df1032bd9635e84d809873`)
+  (`sha256=c991e065b44a773b9add0076fc1f63bdebba31d9fde52affc07e6616b8787463`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=63b3f5cc5a9c15ace318231d2ac5f922107addcb1bdd69ab7c93c9a8c04bc17b`)
+  (`sha256=d196b50caf6bbc148f120ee651ef3759aa3e415a75ae75dea737b6414dfe15fe`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=0f11351155c45b5a618bedbf1630b080b5fa4c68b6251e4c47e775c1854a710b`)
+  (`sha256=1ce414c36a378daa5515dc9d77995685d73fbff77680604db5acf42d6a20ca83`)
 
 Sequence 1 added:
 
