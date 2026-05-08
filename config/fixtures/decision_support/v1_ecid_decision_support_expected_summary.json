@@ -152,6 +152,48 @@
       }
     }
   },
+  "required_applicable_authority_rows": [
+    {
+      "rule_id": "flpma_section_206_land_exchange",
+      "authority_category": "law",
+      "authority_source_record_id": "R1EA-146",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:flpma_section_206_land_exchange",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional"
+    },
+    {
+      "rule_id": "land_exchange_fs_policy_and_project_references",
+      "authority_category": "agency_policy",
+      "authority_source_record_id": "R1EA-150",
+      "authority_family_id": "land_exchange_fs_policy_and_project_references",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_fs_policy_and_project_references",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional"
+    },
+    {
+      "rule_id": "land_exchange_regulatory_requirements",
+      "authority_category": "regulation",
+      "authority_source_record_id": "R1EA-124",
+      "authority_family_id": "land_exchange_regulatory_requirements",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_regulatory_requirements",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional"
+    },
+    {
+      "rule_id": "land_exchange_statutory_authorities",
+      "authority_category": "law",
+      "authority_source_record_id": "R1EA-137",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_statutory_authorities",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional"
+    }
+  ],
   "applicable_standards": [
     {
       "component_key": "FW-STD-RMZ-01",

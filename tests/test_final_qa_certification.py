@@ -85,6 +85,7 @@ REQUIRED_FAILURE_CATEGORIES = {
     "review_source_set_mismatch",
     "input_hash_mismatch",
     "count_drift",
+    "missing_applicable_authority_row",
     "missing_required_gate_section",
     "missing_citation_or_source_selector",
     "missing_non_applicable_boundary_evidence",
@@ -111,6 +112,13 @@ ACCEPTED_PENDING_RULE_IDS = {
     "postdecisional_review_36cfr_214",
     "roadless_rule_36cfr_294b",
     "usda_nepa_applicant_docs_7cfr_1b10",
+}
+
+EXPECTED_LAND_EXCHANGE_ROW_SOURCES = {
+    "flpma_section_206_land_exchange": "R1EA-146",
+    "land_exchange_fs_policy_and_project_references": "R1EA-150",
+    "land_exchange_regulatory_requirements": "R1EA-124",
+    "land_exchange_statutory_authorities": "R1EA-137",
 }
 
 
@@ -263,6 +271,18 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert applicable["status"] == "pass"
     assert applicable["applicability_status"] == "applicable"
     assert applicable["source_selectors"]
+
+    required_land_exchange_rows = {
+        row["rule_id"]: row for row in expected["required_applicable_authority_rows"]
+    }
+    assert required_land_exchange_rows.keys() == EXPECTED_LAND_EXCHANGE_ROW_SOURCES.keys()
+    for rule_id, source_record_id in EXPECTED_LAND_EXCHANGE_ROW_SOURCES.items():
+        row = required_land_exchange_rows[rule_id]
+        assert row["authority_source_record_id"] == source_record_id
+        assert row["status"] == "pass"
+        assert row["applicability_status"] == "applicable"
+        assert row["applicability_mode"] == "conditional"
+        assert row["source_selectors"]
 
     non_applicable = expected["required_fixture_rows"]["non_applicable_authority"]
     assert non_applicable["status"] == "not_applicable"

@@ -392,6 +392,11 @@
       "source_selector": "required_count_fields"
     },
     {
+      "expectation_id": "required_applicable_authority_rows_present",
+      "required_failure_category": "missing_applicable_authority_row",
+      "source_selector": "finding_qa.findings"
+    },
+    {
       "expectation_id": "citations_and_selectors_present",
       "required_failure_category": "missing_citation_or_source_selector",
       "source_selector": "finding_qa.findings[].source_selectors"
@@ -439,6 +444,7 @@
     "review_source_set_mismatch",
     "input_hash_mismatch",
     "count_drift",
+    "missing_applicable_authority_row",
     "missing_required_gate_section",
     "missing_citation_or_source_selector",
     "missing_non_applicable_boundary_evidence",

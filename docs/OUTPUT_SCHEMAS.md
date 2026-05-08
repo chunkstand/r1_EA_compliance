@@ -2406,7 +2406,8 @@ required artifact paths, schema versions where applicable, SHA-256 values, and s
 authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
 support for the non-applicable boundary. `finding_qa` records all `37` generated findings, finding
 status counts, citation/source selectors, package-evidence selectors, per-finding package/source
-evidence pointers, trace IDs, `162` generated-pack rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
+evidence pointers, trace IDs, the required first-class land-exchange row set, `162` generated-pack
+rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
 records Custer Gallatin context, `329` Forest Plan components, `58` standards, `12/12` applicable
 standards, component-eval status, limitations, and
 reviewer-resolution status. `decision_support_qa` records the existing decision-support validation
@@ -2440,10 +2441,11 @@ validation sidecar, and SHA-256 hashes for the non-circular JSON, Markdown, PDF,
 outputs. Sequence 3 makes this sidecar a required current-promotion artifact, verifies those
 sidecar hashes back against local files in `promotion-suite`, and adds an optional
 `final_qa_certification_report` phase to review-scoped `phase-eval` when the sidecar exists.
-In the 2026-05-07 closeout state the stored sidecar records the inner packet replay at `157/157`
-checks, while `final-qa-certification --validate-only` reports `166/166` after adding outer
-self-reference and freshness checks around the sidecar. This distinction is expected; outer gates
-use the sidecar plus output hashes to fail closed if a packet file is edited after validation.
+In the 2026-05-08 gap-close state the stored sidecar records the inner packet replay at `159/159`
+checks, while `final-qa-certification --validate-only` reports `168/168` after adding outer
+self-reference, freshness, and required-row checks around the sidecar. This distinction is
+expected; outer gates use the sidecar plus output hashes to fail closed if a packet file is edited
+after validation.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set
@@ -2456,8 +2458,9 @@ that later runtime validation must use.
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json` has schema version
 `east-crazies-final-qa-expected-summary-v1`. It locks current East Crazies semantic counts, source
 selectors, current artifact hashes, representative applicable authority and non-applicable
-authority rows, a representative Forest Plan standard, a representative decision-support residual
-risk row, selected Markdown/PDF rendering requirements, and the accepted V1 risk ledger. It does
+authority rows, the required four-row land-exchange applicable-authority set, a representative
+Forest Plan standard, a representative decision-support residual risk row, selected Markdown/PDF
+rendering requirements, and the accepted V1 risk ledger. It does
 not pin full rendered Markdown/PDF body text.
 
 The minimal test fixture at

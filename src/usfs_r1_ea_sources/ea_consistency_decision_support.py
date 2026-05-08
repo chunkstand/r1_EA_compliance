@@ -792,6 +792,13 @@ def _validate_authority_rows(
         expected=[],
         actual=missing_evidence,
     )
+    _validate_required_applicable_authority_rows(
+        rows=rows,
+        expected=context.expected,
+        checks=checks,
+        failures=failures,
+        source_selector="compliance_matrix.rows",
+    )
 
 
 def _validate_non_applicable_boundary(
@@ -1942,6 +1949,14 @@ def _validate_report_content_boundaries(
         actual=sorted(standard_keys),
     )
 
+    _validate_required_applicable_authority_rows(
+        rows=_dict_list(report.get("authority_findings")),
+        expected=expected,
+        checks=checks,
+        failures=failures,
+        source_selector="decision_support_report.authority_findings",
+    )
+
     missing_standard_evidence = [
         str(row.get("component_key") or row.get("component_id"))
         for row in _dict_list(report.get("applicable_forest_plan_standards"))
@@ -2007,6 +2022,75 @@ def _validate_report_content_boundaries(
         if "East_Crazies_" in json.dumps(report, sort_keys=True)
         else "clean",
     )
+
+
+def _validate_required_applicable_authority_rows(
+    *,
+    rows: list[dict[str, Any]],
+    expected: dict[str, Any],
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    source_selector: str,
+) -> None:
+    required_rows = _dict_list(expected.get("required_applicable_authority_rows"))
+    if not required_rows:
+        return
+    rows_by_rule_id = {
+        str(row.get("rule_id")): row
+        for row in rows
+        if str(row.get("rule_id") or "").strip()
+    }
+    missing: list[str] = []
+    mismatches: list[dict[str, Any]] = []
+    for required in required_rows:
+        rule_id = str(required.get("rule_id") or "")
+        actual = rows_by_rule_id.get(rule_id)
+        if actual is None:
+            missing.append(rule_id)
+            continue
+        mismatch_fields = _required_authority_row_mismatch_fields(
+            actual=actual,
+            required=required,
+        )
+        if mismatch_fields:
+            mismatches.append({"rule_id": rule_id, "fields": mismatch_fields})
+    _record_check(
+        checks,
+        failures,
+        name="required_applicable_authority_rows_present",
+        passed=not missing and not mismatches,
+        failure_category="missing_applicable_authority_row",
+        source_selector=source_selector,
+        expected=[str(row.get("rule_id")) for row in required_rows],
+        actual={"missing": missing, "mismatches": mismatches},
+    )
+
+
+def _required_authority_row_mismatch_fields(
+    *,
+    actual: dict[str, Any],
+    required: dict[str, Any],
+) -> list[str]:
+    mismatch_fields: list[str] = []
+    for field in (
+        "authority_category",
+        "authority_source_record_id",
+        "candidate_authority_id",
+        "applicability_status",
+        "applicability_mode",
+    ):
+        if field in required and actual.get(field) != required[field]:
+            mismatch_fields.append(field)
+    if "status" in required:
+        actual_status = actual.get("status", actual.get("compliance_status"))
+        if actual_status != required["status"]:
+            mismatch_fields.append("status")
+    if "authority_family_id" in required:
+        family_id = str(required["authority_family_id"])
+        actual_family_ids = set(_strings(actual.get("authority_family_ids")))
+        if actual.get("authority_family_id") != family_id and family_id not in actual_family_ids:
+            mismatch_fields.append("authority_family_id")
+    return mismatch_fields
 
 
 def _validate_report_renderings(

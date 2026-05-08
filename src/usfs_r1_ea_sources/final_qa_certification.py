@@ -364,6 +364,16 @@ def _collect_input_state(
         artifact_records.append(record)
 
     _validate_configured_source_selectors(expected, output_dir, checks)
+    _validate_required_applicable_authority_rows(
+        rows=(
+            data_by_key.get("compliance_matrix", {}).get("rows", [])
+            if isinstance(data_by_key.get("compliance_matrix"), Mapping)
+            else []
+        ),
+        expected=expected,
+        checks=checks,
+        source_selector="compliance_matrix.rows",
+    )
     actual_counts = _derive_actual_counts(data_by_key, checks)
     _validate_actual_counts(actual_counts, config, checks)
     _validate_source_pdf_header(review_id, output_dir, checks)
@@ -716,6 +726,12 @@ def _validate_report(
             "finding_row_count": len(findings),
             "expected": expected["expected_counts"]["authority_finding_count"],
         },
+    )
+    _validate_required_applicable_authority_rows(
+        rows=findings,
+        expected=expected,
+        checks=checks,
+        source_selector="finding_qa.findings",
     )
     _add_check(
         checks,
@@ -1120,6 +1136,9 @@ def _validate_configured_source_selectors(
     for value in fixture_rows.values():
         if isinstance(value, Mapping):
             selector_rows.append(value)
+    for value in expected.get("required_applicable_authority_rows", []):
+        if isinstance(value, Mapping):
+            selector_rows.append(value)
     ledger = expected.get("accepted_v1_risk_ledger", {})
     if isinstance(ledger, Mapping):
         selector_rows.append(ledger)
@@ -1282,6 +1301,7 @@ def _finding_rows_from_matrix(
             "status": row.get("status"),
             "claim_type": row.get("claim_type"),
             "authority_category": row.get("authority_category"),
+            "authority_family_id": row.get("authority_family_id"),
             "authority_family_ids": row.get("authority_family_ids") or [],
             "authority_source_record_id": row.get("authority_source_record_id"),
             "candidate_authority_id": row.get("candidate_authority_id"),
@@ -1828,6 +1848,85 @@ def _finding_trace_ids_present(rows: list[Any]) -> bool:
             if not pointer.get("artifact_path") or not pointer.get("chunk_id"):
                 return False
     return True
+
+
+def _validate_required_applicable_authority_rows(
+    *,
+    rows: Any,
+    expected: Mapping[str, Any],
+    checks: list[dict[str, Any]],
+    source_selector: str,
+) -> None:
+    required_rows = [
+        row
+        for row in expected.get("required_applicable_authority_rows", [])
+        if isinstance(row, Mapping)
+    ]
+    if not required_rows:
+        return
+    row_list = [row for row in rows if isinstance(row, Mapping)] if isinstance(rows, list) else []
+    rows_by_rule_id = {
+        str(row.get("rule_id")): row
+        for row in row_list
+        if str(row.get("rule_id") or "").strip()
+    }
+    missing: list[str] = []
+    mismatches: list[dict[str, Any]] = []
+    for required in required_rows:
+        rule_id = str(required.get("rule_id") or "")
+        actual = rows_by_rule_id.get(rule_id)
+        if actual is None:
+            missing.append(rule_id)
+            continue
+        mismatch_fields = _required_authority_row_mismatch_fields(
+            actual=actual,
+            required=required,
+        )
+        if mismatch_fields:
+            mismatches.append({"rule_id": rule_id, "fields": mismatch_fields})
+    _add_check(
+        checks,
+        name="required_applicable_authority_rows_present",
+        passed=not missing and not mismatches,
+        category="missing_applicable_authority_row",
+        details={
+            "selector": source_selector,
+            "required_rule_ids": [str(row.get("rule_id")) for row in required_rows],
+            "missing_rule_ids": missing,
+            "mismatches": mismatches,
+        },
+    )
+
+
+def _required_authority_row_mismatch_fields(
+    *,
+    actual: Mapping[str, Any],
+    required: Mapping[str, Any],
+) -> list[str]:
+    mismatch_fields: list[str] = []
+    for field in (
+        "authority_category",
+        "authority_source_record_id",
+        "candidate_authority_id",
+        "applicability_status",
+        "applicability_mode",
+    ):
+        if field in required and actual.get(field) != required[field]:
+            mismatch_fields.append(field)
+    if "status" in required:
+        actual_status = actual.get("status", actual.get("compliance_status"))
+        if actual_status != required["status"]:
+            mismatch_fields.append("status")
+    if "authority_family_id" in required:
+        family_id = str(required["authority_family_id"])
+        actual_family_ids = {
+            str(item)
+            for item in actual.get("authority_family_ids") or []
+            if str(item or "").strip()
+        }
+        if actual.get("authority_family_id") != family_id and family_id not in actual_family_ids:
+            mismatch_fields.append("authority_family_id")
+    return mismatch_fields
 
 
 def _artifact_paths_use_blocked_prefix(

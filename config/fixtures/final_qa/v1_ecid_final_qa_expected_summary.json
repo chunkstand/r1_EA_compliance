@@ -59,10 +59,10 @@
     "litigation_risk_legal_conclusion_count": 0
   },
   "input_hashes": {
-    "decision_support_report_sha256": "ba88a097b861d6f23d2ad5c0e7b8a5a8a1fc27abd1ae838562d9b63a71ce6967",
+    "decision_support_report_sha256": "fcbfd84a01311a37e2e8fdae2e5038d2397d87a6fe4e7a0c318bc46d14e58752",
     "decision_support_markdown_sha256": "76f7f9c0e202f823350c6c7dd2ea01c1d0fd745745637eacaebbc3025ba27d07",
     "decision_support_pdf_sha256": "20a0e615e4b9f7b552044d430a356e4ccdec31e22ca3e078d59cce71d3623f9f",
-    "decision_support_manifest_sha256": "be3a9325dece6bf9943f11af28313202ec17eaed3da07c5d258709a0558907ad",
+    "decision_support_manifest_sha256": "3ccec0816baaed97d4062306e88d27f1da0de349a14fd6e06925853c5deecb1f",
     "v1_ea_eval_results_sha256": "36bd29e12f550c32026ec65929fc5eb9c58a09af7ff59196a0d677afd942bdd9",
     "phase_eval_results_sha256": "4b239e413f81f43db1a7aedb2fe6eb26715ea191966059c17990d955a436dec3",
     "promotion_suite_results_sha256": "6ec070e38a82a1e0634dc895f5e1d9650855cf8be383950ad18bd14607327ad4",
@@ -157,6 +157,72 @@
       "source_selector": "summary.risk_category_counts"
     }
   },
+  "required_applicable_authority_rows": [
+    {
+      "rule_id": "flpma_section_206_land_exchange",
+      "authority_category": "law",
+      "authority_source_record_id": "R1EA-146",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:flpma_section_206_land_exchange",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector": "rows[rule_id=flpma_section_206_land_exchange]"
+        }
+      ]
+    },
+    {
+      "rule_id": "land_exchange_fs_policy_and_project_references",
+      "authority_category": "agency_policy",
+      "authority_source_record_id": "R1EA-150",
+      "authority_family_id": "land_exchange_fs_policy_and_project_references",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_fs_policy_and_project_references",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector": "rows[rule_id=land_exchange_fs_policy_and_project_references]"
+        }
+      ]
+    },
+    {
+      "rule_id": "land_exchange_regulatory_requirements",
+      "authority_category": "regulation",
+      "authority_source_record_id": "R1EA-124",
+      "authority_family_id": "land_exchange_regulatory_requirements",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_regulatory_requirements",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector": "rows[rule_id=land_exchange_regulatory_requirements]"
+        }
+      ]
+    },
+    {
+      "rule_id": "land_exchange_statutory_authorities",
+      "authority_category": "law",
+      "authority_source_record_id": "R1EA-137",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:land_exchange_statutory_authorities",
+      "status": "pass",
+      "applicability_status": "applicable",
+      "applicability_mode": "conditional",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.json",
+          "selector": "rows[rule_id=land_exchange_statutory_authorities]"
+        }
+      ]
+    }
+  ],
   "accepted_v1_risk_ledger": {
     "policy_mode": "accepted_pending_v1",
     "accepted_pending_count": 14,
@@ -217,6 +283,7 @@
     "review_source_set_mismatch",
     "input_hash_mismatch",
     "count_drift",
+    "missing_applicable_authority_row",
     "missing_required_gate_section",
     "missing_citation_or_source_selector",
     "missing_non_applicable_boundary_evidence",

@@ -514,14 +514,19 @@ current-promotion results). The final closeout stack is ordered so mutating V1 e
 before the final QA refresh; the final validate-only replay then still passes after `phase-eval`
 and non-strict `promotion-suite` add only the permitted final-QA outer-gate drift.
 
-The 2026-05-07 closeout replay accepted the milestone. `final-qa-certification` refreshed the
-ignored packet and passed `166/166`; `final-qa-certification --validate-only` also passed
-`166/166` without rewriting outputs after the outer gate replay. The stored validation sidecar
-records the inner packet replay at `157/157` checks plus output hashes for the JSON, Markdown, PDF,
-and manifest; the CLI's `166/166` result includes the additional outer self-reference and freshness
-checks around that sidecar. The rendered Markdown exposes the required caveats, source pointers,
-accepted V1 risk ledger, residual blockers, baseline/live gate counts, and root-level draft
-exclusion, and the generated PDF starts with `%PDF-1.4`.
+The 2026-05-08 gap-close replay accepted the land-exchange row-contract hardening. The
+decision-support expected summary and final-QA expected summary now carry
+`required_applicable_authority_rows` for all four first-class land-exchange rows, and validation
+fails closed with `missing_applicable_authority_row` if any required row is absent or loses its
+expected source record, authority family, applicability mode/status, or pass status.
+`final-qa-certification` refreshed the ignored packet and passed `168/168`;
+`final-qa-certification --validate-only` also passed `168/168` without rewriting outputs after the
+outer gate replay. The stored validation sidecar
+records the inner packet replay at `159/159` checks plus output hashes for the JSON, Markdown, PDF,
+and manifest; the CLI's `168/168` result includes the additional outer self-reference, freshness,
+and required-row checks around that sidecar. The rendered Markdown exposes the required caveats,
+source pointers, accepted V1 risk ledger, residual blockers, baseline/live gate counts, and
+root-level draft exclusion, and the generated PDF starts with `%PDF-1.4`.
 
 Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,
@@ -543,14 +548,15 @@ Sequence 2 added the `final-qa-certification` CLI command and the
 outer readiness gates. A live generation pass for `v1-cg-ecid-compliance-review` wrote the ignored
 JSON, Markdown, PDF, manifest, and validation outputs under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/`; a follow-up `--validate-only`
-replay passed `166/166` checks without rewriting outputs. The command validates required gate
+replay passed `168/168` checks without rewriting outputs. The command validates required gate
 selectors, pinned input hashes, source/source-set identity, semantic counts, configured source
-selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
-non-canonical root-level draft boundary. The validator tolerates the self-referential outer
+selectors, required applicable authority rows, PDF headers, accepted V1 risk visibility,
+legal-conclusion safeguards, and the non-canonical root-level draft boundary. The validator tolerates
+the self-referential outer
 phase-eval/promotion-suite hash drift only when the extra passing gates are exactly the final QA
 outer gates. The Sequence 3 gap-close pass records JSON/Markdown/PDF/manifest output hashes in the
 validation sidecar and makes `promotion-suite` compare those hashes against the local files before
-current promotion can pass. The Sequence 2 gap-close pass carries all `33`
+current promotion can pass. The Sequence 2 gap-close pass carries all `37`
 compliance-matrix authority findings in `finding_qa.findings`, with per-row compliance-matrix
 selectors, package/source evidence pointers, and trace IDs.
 

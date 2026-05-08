@@ -52,7 +52,9 @@ and final QA certification gates included, passes
 rows as explicit accepted V1 reviewer risk. The current matrix includes four first-class
 land-exchange authority rows: FLPMA Section 206 (`R1EA-146`), land-exchange statutory authorities
 (`R1EA-137`), land-exchange regulations (`R1EA-124`), and Forest Service land-exchange policy and
-project references (`R1EA-150`).
+project references (`R1EA-150`). The decision-support and final-QA packet contracts now fail closed
+if any of those required land-exchange rows disappear or lose their expected source-record,
+authority-family, applicability, or pass-status metadata.
 
 Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,

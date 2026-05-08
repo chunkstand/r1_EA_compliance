@@ -2,6 +2,32 @@
 
 Date: 2026-05-08
 
+## Latest East Crazies Review-Packet Gap Close
+
+The land-exchange matrix milestone gap-close is complete. The review packet now has a
+fail-closed `required_applicable_authority_rows` contract for all four first-class land-exchange
+rows, not just the aggregate `37` finding count or the representative FLPMA row. The
+decision-support source validation and final-QA source/output validation now fail with
+`missing_applicable_authority_row` if any required row is absent or loses its expected source
+record, family, applicability mode/status, or pass status.
+
+Regenerated local packet artifacts remain ignored. Latest replay signals:
+
+- `ea-consistency-document`: passed and rewrote the decision-support JSON/manifest with the
+  strengthened expected-summary hash.
+- `final-qa-certification`: passed `168/168`; `--validate-only` also passed `168/168`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: current promotion remains
+  `26/26`; South Plateau remains the only expansion blocker with
+  `forest_plan_reviewer_not_ready`.
+
+Next review-packet strengthening pass: add a deterministic signer-facing packet index / row
+appendix that surfaces every first-class authority row, non-applicable boundary artifact, Forest
+Plan standard row, residual risk, and implementation-confirmation selector in one review-order
+ledger. The acceptance signal should be a generated JSON/Markdown/PDF artifact plus phase/promotion
+checks that prove every packet row links back to canonical matrix, decision-support, final-QA, and
+source-library selectors without relying on root-level drafts.
+
 ## Latest East Crazies Land-Exchange Matrix Closeout
 
 All land-exchange authority coverage is now a first-class V1 compliance artifact. The base
@@ -23,8 +49,8 @@ findings.
 Intake now identifies land-exchange statutory, regulatory, and Forest Service policy/project cues,
 not only FLPMA Section 206. Generated artifacts under
 `source_library/reviews/v1-cg-ecid-compliance-review/` were refreshed and remain ignored.
-Verification replay is green: `phase-eval` `20/20`, `final-qa-certification` `166/166`,
-`final-qa-certification --validate-only` `166/166`, and non-strict `promotion-suite` current-ready
+Verification replay is green: `phase-eval` `20/20`, `final-qa-certification` `168/168`,
+`final-qa-certification --validate-only` `168/168`, and non-strict `promotion-suite` current-ready
 with `26/26` required current-promotion results.
 
 ## Latest South Plateau Forest-Plan Context Closeout
@@ -98,8 +124,8 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
   `reviewer_ready=true`.
 - `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with `passed=true`,
   `broader_ea_passed=true`, and `forest_plan_passed=true`.
-- `final-qa-certification`: passed `166/166` and refreshed the ignored JSON, Markdown, PDF,
-  manifest, and validation family; the follow-up `--validate-only` also passed `166/166` after the
+- `final-qa-certification`: passed `168/168` and refreshed the ignored JSON, Markdown, PDF,
+  manifest, and validation family; the follow-up `--validate-only` also passed `168/168` after the
   outer gate replay.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `20/20` phases with
   `reviewer_ready=true`.
@@ -145,7 +171,7 @@ Current canonical artifact pointers:
   (`sha256=d117093c64f879964ad08bdddb68a07b0c85d1f8b023e36aff7db3c51d800461`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=ba88a097b861d6f23d2ad5c0e7b8a5a8a1fc27abd1ae838562d9b63a71ce6967`)
+  (`sha256=fcbfd84a01311a37e2e8fdae2e5038d2397d87a6fe4e7a0c318bc46d14e58752`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
   (`sha256=76f7f9c0e202f823350c6c7dd2ea01c1d0fd745745637eacaebbc3025ba27d07`)
@@ -154,16 +180,16 @@ Current canonical artifact pointers:
   (`sha256=20a0e615e4b9f7b552044d430a356e4ccdec31e22ca3e078d59cce71d3623f9f`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=be3a9325dece6bf9943f11af28313202ec17eaed3da07c5d258709a0558907ad`)
+  (`sha256=3ccec0816baaed97d4062306e88d27f1da0de349a14fd6e06925853c5deecb1f`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=4b239e413f81f43db1a7aedb2fe6eb26715ea191966059c17990d955a436dec3`)
+  (`sha256=9e3b8fc9dd9a0c062ee62a770165ebf9e8a4c79009df1032bd9635e84d809873`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=e705076df76900f9ac3422b07ea7af5fc81328de044dc98cd00254fdd392f9b1`)
+  (`sha256=63b3f5cc5a9c15ace318231d2ac5f922107addcb1bdd69ab7c93c9a8c04bc17b`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=7872f76996cebb809fca59498225817d3f670291c2dea91531bf259e06b4648a`)
+  (`sha256=0f11351155c45b5a618bedbf1630b080b5fa4c68b6251e4c47e775c1854a710b`)
 
 Sequence 1 added:
 
@@ -256,11 +282,11 @@ Latest final closeout replay:
 
 - `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with
   `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true`.
-- `final-qa-certification`: passed `166/166` and refreshed the ignored JSON, Markdown, PDF,
+- `final-qa-certification`: passed `168/168` and refreshed the ignored JSON, Markdown, PDF,
   manifest, and validation family.
-- `final-qa-certification --validate-only`: passed `166/166` without rewriting outputs after the
-  outer gate replay. The stored validation sidecar records the inner packet replay at `157/157`;
-  the CLI result adds the outer self-reference/freshness checks.
+- `final-qa-certification --validate-only`: passed `168/168` without rewriting outputs after the
+  outer gate replay. The stored validation sidecar records the inner packet replay at `159/159`;
+  the CLI result adds the outer self-reference/freshness and required-row checks.
 - Rendered packet inspection: Markdown exposes the required caveats, source pointers, accepted V1
   risk ledger, residual blockers, baseline/live gate counts, and root-level draft exclusion; PDF
   header is `%PDF-1.4`.

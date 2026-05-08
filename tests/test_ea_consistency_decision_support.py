@@ -99,6 +99,13 @@ EXPECTED_CONFIRMATION_IDS = {
     "construction_phase_commitments",
 }
 
+EXPECTED_LAND_EXCHANGE_ROW_SOURCES = {
+    "flpma_section_206_land_exchange": "R1EA-146",
+    "land_exchange_fs_policy_and_project_references": "R1EA-150",
+    "land_exchange_regulatory_requirements": "R1EA-124",
+    "land_exchange_statutory_authorities": "R1EA-137",
+}
+
 EXPECTED_STANDARD_KEYS = {
     "FW-STD-RMZ-01",
     "FW-STD-PRISK-01",
@@ -181,6 +188,17 @@ def test_expected_summary_locks_pass_8_counts_hashes_samples_and_failures() -> N
     assert applicable["applicability_status"] == "applicable"
     assert applicable["status"] == "pass"
     assert applicable["limitations"] == []
+
+    required_land_exchange_rows = {
+        row["rule_id"]: row for row in expected["required_applicable_authority_rows"]
+    }
+    assert required_land_exchange_rows.keys() == EXPECTED_LAND_EXCHANGE_ROW_SOURCES.keys()
+    for rule_id, source_record_id in EXPECTED_LAND_EXCHANGE_ROW_SOURCES.items():
+        row = required_land_exchange_rows[rule_id]
+        assert row["authority_source_record_id"] == source_record_id
+        assert row["status"] == "pass"
+        assert row["applicability_status"] == "applicable"
+        assert row["applicability_mode"] == "conditional"
 
     non_applicable = expected["required_fixture_rows"]["non_applicable_authority"]
     assert non_applicable["status"] == "not_applicable"
