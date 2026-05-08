@@ -386,30 +386,6 @@ function briefHtml(metrics) {
       padding-left: 0.16in;
     }
     li { margin-bottom: 0.05in; }
-    .capability-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.08in;
-    }
-    .capability {
-      min-height: 0.68in;
-      padding: 0.08in;
-      border-radius: 7px;
-      border: 1px solid #d4d9d0;
-      background: rgba(255,255,255,0.92);
-    }
-    .capability strong {
-      display: block;
-      margin-bottom: 0.03in;
-      color: #17202a;
-      font-size: 8.9pt;
-    }
-    .capability span {
-      display: block;
-      color: #58615b;
-      font-size: 7.7pt;
-      line-height: 1.28;
-    }
     .footer {
       display: flex;
       justify-content: space-between;
@@ -420,12 +396,6 @@ function briefHtml(metrics) {
       font-size: 7.1pt;
       line-height: 1.25;
     }
-    .source-note {
-      margin-top: 0.08in;
-      color: #68706a;
-      font-size: 7.6pt;
-      line-height: 1.25;
-    }
   </style>
 </head>
 <body>
@@ -433,7 +403,7 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">WLG Brief / Core Message</div>
       <h1>Make NEPA Review Risk Visible Early</h1>
-      <p class="lede">This is not a visualization or report generator. It is an auditable NEPA review engine that makes review risk visible early. It connects source material, authority, evidence, findings, and forest-plan readiness before a package reaches decision, objection, litigation, or consultant rework.</p>
+      <p class="lede">The system is an auditable NEPA review engine, not a stand-alone visualization. It connects source material, authority, evidence, findings, and forest-plan readiness so WLG can identify review risk while the record can still be fixed.</p>
       <p class="metric-context">Current Region 1 graph surface.</p>
       <div class="metric-grid">
         ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
@@ -448,15 +418,15 @@ function briefHtml(metrics) {
         <div class="proof-panel">
           <strong>What the engine shows</strong>
           <ul>
-            <li>Which NEPA, USDA, and Forest Service authorities apply.</li>
-            <li>Which authorities were screened out and why.</li>
-            <li>Where each finding came from in the source record.</li>
-            <li>Whether Forest Plan consistency is supported.</li>
+            <li>Applicable and screened-out authorities.</li>
+            <li>The evidence path behind each finding.</li>
+            <li>Forest Plan consistency support and profile readiness.</li>
+            <li>Missing, stale, or unsupported source dependencies.</li>
           </ul>
         </div>
         <div class="proof-panel">
           <strong>Why it matters</strong>
-          <p>Risk becomes visible while there is still time to fix source gaps, unsupported claims, stale authority language, and forest-plan profile blockers.</p>
+          <p>The system points reviewers to the record defects that drive delay: source gaps, unsupported claims, stale authority language, and forest-plan blockers.</p>
         </div>
       </div>
     </main>
@@ -468,27 +438,27 @@ function briefHtml(metrics) {
 
   <section class="page">
     <header>
-      <div class="kicker">How The Engine Supports The Message</div>
+      <div class="kicker">Traceability Architecture</div>
       <h2>Trace Every Finding to Governed Evidence</h2>
-      <p class="lede">The engine preserves the full path: source contract, evidence span, authority decision, finding. That path powers compliance review, reverse compliance, decision support, final QA, and graph exploration.</p>
+      <p class="lede">Each output is generated from governed sources. The trail runs from workbook scope and artifact hash to evidence span, source claim, authority decision, and finding.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
+      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same path supports reports, QA replay, graph views, and reverse checks.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Source governed</strong>
-          <p>Workbook scope, exclusions, source partitions, catalog records, and artifact hashes define what can support review logic.</p>
+          <strong>Source boundary</strong>
+          <p>Workbook scope, exclusions, partitions, catalog records, and hashes determine which materials can support review logic.</p>
         </div>
         <div class="callout">
-          <strong>Reverse compliance</strong>
-          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps.</p>
+          <strong>Reverse check</strong>
+          <p>Findings can be tested backward for unsupported claims, stale authority dependencies, missing support, unresolved applicability, and forest-plan gaps.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
       <span>Current graph surface: ${metrics.nodeCount.toLocaleString()} nodes and ${metrics.edgeCount.toLocaleString()} edges.</span>
-      <span>Catalog boundary: ${metrics.artifacts.toLocaleString()} unique artifacts linked to workbook records.</span>
+      <span>Catalog boundary: ${metrics.artifacts.toLocaleString()} cataloged artifacts linked to workbook records.</span>
     </footer>
   </section>
 
@@ -496,24 +466,24 @@ function briefHtml(metrics) {
     <header>
       <div class="kicker">Knowledge Graph / Region 1</div>
       <h2>NEPA, USDA regulations, and forest plans in one graph</h2>
-      <p class="lede">The Region 1 graph is the client-facing surface for the system. It shows NEPA authority, USDA regulations and procedures, source evidence, and forest-plan layers as connected but distinct parts of the review universe.</p>
+      <p class="lede">The Region 1 graph presents NEPA authority, USDA regulations and procedures, source evidence, review views, and forest-plan data as connected layers without collapsing them into one undifferentiated network.</p>
     </header>
     <main>
       <img class="graph-figure tall" src="assets/graph_r1_showcase_view.png" alt="Region 1 3D graph showcase with NEPA, USDA regulations, source evidence, and forest-plan layers" />
       <div class="grid-2" style="margin-top:0.12in">
         <div class="callout">
-          <strong>Separate forest-plan layer</strong>
-          <p>Forest-plan profiles and components are graphed separately from NEPA and USDA authority, then linked into review context when ready.</p>
+          <strong>Forest plans stay separate</strong>
+          <p>Forest-plan profiles and components are represented as their own layer, with readiness linked into review context instead of mixed into NEPA authority.</p>
         </div>
         <div class="callout">
-          <strong>Authority layer</strong>
-          <p>NEPA authority, USDA procedures, and regulatory families stay visible beside source evidence so reviewers can inspect how findings are supported.</p>
+          <strong>Authority and evidence stay inspectable</strong>
+          <p>NEPA and USDA authority remain visible beside source records and evidence traces so reviewers can inspect the basis for a finding.</p>
         </div>
       </div>
     </main>
     <footer class="footer">
-      <span>R1 graph surface: ${metrics.nodeCount.toLocaleString()} nodes and ${metrics.edgeCount.toLocaleString()} edges.</span>
-      <span>Forest plans: ${metrics.profileCount} profiles and ${metrics.forestComponents.toLocaleString()} components represented as a separate layer.</span>
+      <span>Graph layers: NEPA, USDA regulation, source evidence, review views, and forest plans.</span>
+      <span>Forest plans: ${metrics.profileCount} profiles, ${metrics.graphReadyProfiles} graph-ready profile, and ${metrics.forestComponents.toLocaleString()} components.</span>
     </footer>
   </section>
 </body>
@@ -526,11 +496,11 @@ function currentAuthorityStackSvg(metrics) {
   ${svgDefs()}
   <rect width="1280" height="760" rx="28" fill="#f4f6f2"/>
   <rect x="34" y="32" width="1212" height="696" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
-  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">Risk visibility before the decision point</text>
-  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">The engine turns a NEPA package into traceable review intelligence while the record can still be improved.</text>
+  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">From package to review risk signal</text>
+  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">Source records, authority logic, and evidence traces converge before decision support is produced.</text>
 
   ${riskNode(150, 378, "#17202a", "NEPA Package", "draft package, appendices, source records")}
-  ${riskNode(418, 248, "#1f6f68", "Authority Applies", "NEPA, USDA, Forest Service, Forest Plan")}
+  ${riskNode(418, 248, "#1f6f68", "Authority Logic", "NEPA, USDA, Forest Service, Forest Plan")}
   ${riskNode(418, 508, "#835b2f", "Evidence Trace", "source record to finding")}
   ${riskHub(700, 378, "#2e5e88", "Risk Visible Early", "before objection, litigation, or rework")}
   ${riskNode(982, 248, "#6f4f86", "Decision Support", "findings, gaps, signer readout")}
@@ -544,7 +514,7 @@ function currentAuthorityStackSvg(metrics) {
 
   <g transform="translate(76 628)" filter="url(#shadow)">
     <rect width="1126" height="70" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">WLG value: find the review risk early enough to fix the record, not after the decision path is locked.</text>
+    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">WLG value: focus record repair before the decision path is locked.</text>
   </g>
 </svg>`;
 }
@@ -554,22 +524,22 @@ function evidenceTraceSvg(metrics) {
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Evidence path from source record through extraction and review outputs">
   ${svgDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Finding trace</text>
-  ${wrapSvgText("The review product is only the final view. The underlying path stays inspectable from source record to finding.", 72, 138, 1560, 22, "#58615b", 2)}
+  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Evidence trace</text>
+  ${wrapSvgText("Every finding remains linked to source identity, text evidence, authority status, and generated output.", 72, 138, 1560, 22, "#58615b", 2)}
 
   <g transform="translate(72 214)" filter="url(#shadow)">
     <rect width="1656" height="430" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
     ${traceStep(44, 108, "#17202a", "Source Record", "row identity, scope, citation")}
     ${traceStep(374, 108, "#1f6f68", "Evidence Span", "extracted text with artifact hash")}
     ${traceStep(704, 108, "#835b2f", "Source Claim", `${metrics.sourceClaims.toLocaleString()} support links`)}
-    ${traceStep(1034, 108, "#6f4f86", "Authority Decision", "applicable, screened out, unresolved")}
+    ${traceStep(1034, 108, "#6f4f86", "Authority Decision", "applies, screened out, unresolved")}
     ${traceStep(1364, 108, "#2e5e88", "Finding", "review result with evidence path")}
     ${flowArrow(300, 198, 364, 198)}
     ${flowArrow(630, 198, 694, 198)}
     ${flowArrow(960, 198, 1024, 198)}
     ${flowArrow(1290, 198, 1354, 198)}
-    <text x="44" y="362" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#17202a">Reverse compliance uses the same path in the opposite direction.</text>
-    <text x="44" y="397" font-family="Inter, Arial, sans-serif" font-size="19" fill="#58615b">Unsupported claims, stale authority language, missing evidence, and unresolved applicability are flagged before readiness.</text>
+    <text x="44" y="362" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#17202a">Backward checks test the finding against the record.</text>
+    <text x="44" y="397" font-family="Inter, Arial, sans-serif" font-size="19" fill="#58615b">The trace exposes missing evidence, stale authority language, and unresolved applicability.</text>
   </g>
 
   <g transform="translate(72 728)" filter="url(#shadow)">
