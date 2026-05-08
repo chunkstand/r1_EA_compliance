@@ -401,9 +401,9 @@ function briefHtml(metrics) {
 <body>
   <section class="page">
     <header>
-      <div class="kicker">WLG Brief / Core Message</div>
+      <div class="kicker">Client Brief / Core Message</div>
       <h1>Make NEPA Review Risk Visible Early</h1>
-      <p class="lede">The system is an auditable NEPA review engine, not a stand-alone visualization. It connects source material, authority, evidence, findings, and forest-plan readiness so WLG can identify review risk while the record can still be fixed.</p>
+      <p class="lede">The system is an auditable NEPA review engine, not a stand-alone visualization. It connects source material, authority, evidence, findings, and forest-plan readiness so review teams can identify risk while the record can still be fixed.</p>
       <p class="metric-context">Current Region 1 graph surface.</p>
       <div class="metric-grid">
         ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
@@ -514,7 +514,7 @@ function currentAuthorityStackSvg(metrics) {
 
   <g transform="translate(76 628)" filter="url(#shadow)">
     <rect width="1126" height="70" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">WLG value: focus record repair before the decision path is locked.</text>
+    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">Reusable value: focus record repair before the decision path is locked.</text>
   </g>
 </svg>`;
 }

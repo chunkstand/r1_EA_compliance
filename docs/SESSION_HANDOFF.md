@@ -75,8 +75,8 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
   results passed, and South Plateau expansion-only blockers still separate as
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
-The WLG sample readability pass on 2026-05-07 refreshed only the canonical matrix rendering from the
-existing `compliance_matrix.json`: `compliance_matrix.md` and `compliance_matrix.pdf` now start with
+The client-sample readability pass on 2026-05-07 refreshed only the canonical matrix rendering from
+the existing `compliance_matrix.json`: `compliance_matrix.md` and `compliance_matrix.pdf` now start with
 a Responsible Official Readout and deterministic Accuracy Audit in plain decision language, then
 render NEPA/authority rows and Forest Plan rows as signer-oriented tables. Each NEPA row now carries
 the signer question, record need, decision-support finding, EA evidence excerpt, authority basis,
@@ -939,11 +939,10 @@ legal conclusion.
   `docs/capabilities/nepa_3d_capabilities_brief.pdf` with a matching HTML source and high-resolution
   graph figures under `docs/capabilities/assets/`. The brief is built by
   `tools/build_nepa_3d_capabilities_brief.mjs` from current catalog, source-set graph,
-  phase-eval, and promotion-suite artifacts. The current version is a system-level brief organized
-  around WLG's early-risk message: make NEPA review risk visible before decision, trace findings to
-  governed source evidence, flag readiness blockers, and showcase distinct NEPA, USDA regulation,
-  source-evidence, and forest-plan layers in the Region 1 graph without named project examples.
-  blockers.
+  phase-eval, and promotion-suite artifacts. The current version is a reusable system-level brief
+  organized around early review-risk visibility: trace findings to governed source evidence, flag
+  readiness blockers, and showcase distinct NEPA, USDA regulation, source-evidence, and forest-plan
+  layers in the Region 1 graph without named project examples.
 - NEPA 3D Milestone 7 initial graph validation and promotion gates are implemented for the current
   source-set and V1 review overlay. A follow-up pass should either deepen graph-specific failure
   fixtures, move to Milestone 8 operating runbook/demo closeout, or deepen the Milestone 5

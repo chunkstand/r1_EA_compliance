@@ -63,6 +63,6 @@
 
   <g transform="translate(76 628)" filter="url(#shadow)">
     <rect width="1126" height="70" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">WLG value: focus record repair before the decision path is locked.</text>
+    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">Reusable value: focus record repair before the decision path is locked.</text>
   </g>
 </svg>
