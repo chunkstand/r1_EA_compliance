@@ -77,6 +77,12 @@ class PackageFactGraphTests(unittest.TestCase):
             }
             self.assertIn(("action", "land_exchange"), observed_pairs)
             self.assertIn(("authority", "flpma_section_206_land_exchange"), observed_pairs)
+            self.assertIn(("authority", "land_exchange_statutory_authorities"), observed_pairs)
+            self.assertIn(("authority", "land_exchange_regulatory_requirements"), observed_pairs)
+            self.assertIn(
+                ("authority", "land_exchange_fs_policy_and_project_references"),
+                observed_pairs,
+            )
             self.assertIn(("agency", "usfs"), observed_pairs)
             self.assertIn(("nepa_level", "environmental_assessment"), observed_pairs)
             self.assertIn(("geography", "project_area"), observed_pairs)
@@ -171,6 +177,19 @@ class PackageFactGraphTests(unittest.TestCase):
                     for fact in flpma_authority_signals
                 )
             )
+            authority_signal_values = {
+                fact["normalized_value"]
+                for fact in context["authority_signals"]
+                if fact["confidence_class"] != "negative_context"
+            }
+            self.assertTrue(
+                {
+                    "land_exchange_statutory_authorities",
+                    "land_exchange_regulatory_requirements",
+                    "land_exchange_fs_policy_and_project_references",
+                }
+                <= authority_signal_values
+            )
             uncertainty_check = _check(
                 graph["validation"],
                 "uncertain_facts_are_recorded_without_applicability_decisions",
@@ -207,7 +226,7 @@ class PackageFactGraphTests(unittest.TestCase):
                 )
             )
 
-    def test_intake_identifies_flpma_from_statutory_citation(self) -> None:
+    def test_intake_identifies_land_exchange_authorities_from_citations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             output_dir = root / "source_library"
@@ -226,7 +245,8 @@ class PackageFactGraphTests(unittest.TestCase):
                         text=(
                             "The Forest Service proposes an exchange of lands under "
                             "43 U.S.C. \u00a7 1716. The record includes a public-interest "
-                            "determination and equal-value finding."
+                            "determination and equal-value finding. It also cites "
+                            "16 U.S.C. \u00a7 485, 36 CFR part 254, FSM 5430, and FSH 5409.13."
                         ),
                     )
                 ],
@@ -262,6 +282,17 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertEqual(
                 context_signals[0]["source_metadata"]["authority_family_id"],
                 "land_exchange_statutory_authorities",
+            )
+            authority_signal_values = {
+                fact["normalized_value"] for fact in context["authority_signals"]
+            }
+            self.assertTrue(
+                {
+                    "land_exchange_statutory_authorities",
+                    "land_exchange_regulatory_requirements",
+                    "land_exchange_fs_policy_and_project_references",
+                }
+                <= authority_signal_values
             )
 
     def test_contradictory_location_facts_are_uncertainty_records(self) -> None:
@@ -415,7 +446,9 @@ def _write_package_cache(
             text=(
                 "The East Crazy Inspiration Divide Land Exchange Project is an "
                 "environmental assessment. The Forest Service proposes a land exchange "
-                "on the Custer Gallatin National Forest under FLPMA Section 206."
+                "on the Custer Gallatin National Forest under FLPMA Section 206. "
+                "The exchange authority also references 16 U.S.C. \u00a7 485, "
+                "36 CFR part 254, FSM 5430, and FSH 5409.13."
             ),
         ),
         _chunk(

@@ -44,12 +44,15 @@ component-like labels with nonnumeric number tokens. Older reviewer-ready downst
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
 `26` baseline source records through the generated applicability rule pack, validates a
-`374`-candidate authority universe with `34` applicable and `340` non-applicable authorities,
-emits `34` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
+`377`-candidate authority universe with `37` applicable and `340` non-applicable authorities,
+emits `37` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
 review-bound `phase-eval` `20/20` with the post-V1 applicability, decision-support, NEPA 3D graph,
 and final QA certification gates included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
-rows as explicit accepted V1 reviewer risk.
+rows as explicit accepted V1 reviewer risk. The current matrix includes four first-class
+land-exchange authority rows: FLPMA Section 206 (`R1EA-146`), land-exchange statutory authorities
+(`R1EA-137`), land-exchange regulations (`R1EA-124`), and Forest Service land-exchange policy and
+project references (`R1EA-150`).
 
 Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,
@@ -60,7 +63,7 @@ Authority-universe completion Milestones 1 through 4 are now represented by
 `config/applicability_eval_seed.json`, `config/applicability_gold_eval_v0.json`, the expanded
 applicability fixture under `config/fixtures/applicability/`, and the `authority-currentness`
 command. The inventory has `35` authority families, `18` required authority
-requirement groups, `33` active families, all `45/45` current rule-pack rules crosswalked, and all
+requirement groups, `33` active families, all `48/48` current rule-pack rules crosswalked, and all
 `190/190` workbook source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
@@ -76,12 +79,12 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,426` nodes, `2,586` edges, all
-`35` authority families, all `190` catalog source records, all `45` base rules, all `19`
-authority-family templates, `196` rule-claim links, and `329` forest-plan components. NEPA 3D
+`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,470` nodes, `2,648` edges, all
+`35` authority families, all `190` catalog source records, all `48` base rules, all `19`
+authority-family templates, `211` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
 under `source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with
-`1,937` nodes, `3,470` edges, `374` candidate authorities/decisions, `34` generated rules and
+`1,996` nodes, `3,550` edges, `377` candidate authorities/decisions, `37` generated rules and
 compliance findings, `340` non-applicable authorities with search coverage, and explicit validation
 that review artifact, search-coverage, retrieval-trace, and graph-trace references resolve. NEPA 3D
 Milestone 5 now adds the Region 1 forest-plan readiness matrix and first added profile contract:
@@ -345,7 +348,7 @@ Inspiration Divide real EA review against the V1 contract, including the explici
 conditional-adjudication policy. The `compliance-gold-eval` command runs the 10-case adjudication
 promotion gate. The `promotion-suite` command checks manifest-declared readiness evidence for the
 current V1 review and post-V1 expansion slots. The active compliance rule pack is `0.4.0`: it
-declares the 26 workbook `Scope=Baseline` source records explicitly and contains 44 total authority
+declares the 26 workbook `Scope=Baseline` source records explicitly and contains 48 total authority
 rules.
 
 The post-V1 applicability-first contract moves authority applicability into a pre-review artifact
@@ -1065,8 +1068,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build \
 `ea-review`. It writes `package_fact_graph.json`, `package_applicability_context.json`, and
 `package_fact_graph_validation.json` under the review applicability directory. Facts are bound to
 package chunk IDs, section IDs, parser provenance, artifact hashes, content hashes, and evidence
-span IDs. FLPMA Section 206 is identified during intake as an `authority` fact
-(`flpma_section_206_land_exchange`) with the `R1EA-146` source-record binding. Negative or
+span IDs. Land-exchange authority signals are identified during intake as `authority` facts,
+including FLPMA Section 206 (`flpma_section_206_land_exchange`, `R1EA-146`), land-exchange
+statutory authorities (`R1EA-137`), 36 CFR part 254 land-exchange regulations (`R1EA-124`), and
+Forest Service land-exchange policy/project references (`R1EA-150`). Negative or
 out-of-scope location statements are recorded as negative-context facts rather
 than positive geography facts. Weakly worded facts and missing common fact types are recorded as
 graph uncertainty for later applicability stages instead of being resolved inside the package

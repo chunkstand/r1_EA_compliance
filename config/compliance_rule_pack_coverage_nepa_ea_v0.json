@@ -474,6 +474,69 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
+      "expected_package_evidence": "The EA package should address Forest Service exchange policy and project-reference records, including appraisal/title guidance, reservations, outstanding rights, notices, agreements, and closing records.",
+      "obligation_area": "Forest Service land-exchange policy and project-reference records are addressed",
+      "rule_id": "land_exchange_fs_policy_and_project_references",
+      "source_claim_terms": [
+        "FSM 5430",
+        "exchanges",
+        "reservations",
+        "public interest",
+        "equal value",
+        "cash"
+      ],
+      "source_record_ids": [
+        "R1EA-150"
+      ]
+    },
+    {
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ],
+      "expected_package_evidence": "The EA package should address 36 CFR part 254 exchange procedure and valuation requirements, including notice, appraisal, equal value, cash equalization, approval, title, and closing requirements.",
+      "obligation_area": "36 CFR part 254 land-exchange requirements are addressed",
+      "rule_id": "land_exchange_regulatory_requirements",
+      "source_claim_terms": [
+        "36 CFR part 254",
+        "notice",
+        "appraisals",
+        "equal value",
+        "cash equalization",
+        "title",
+        "closing"
+      ],
+      "source_record_ids": [
+        "R1EA-124"
+      ]
+    },
+    {
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ],
+      "expected_package_evidence": "The EA package should address statutory exchange authority, public-interest basis, acquisition/disposal, reservations, equal-value/cash-equalization, and related land-exchange statutory constraints.",
+      "obligation_area": "Land-exchange statutory authorities are addressed",
+      "rule_id": "land_exchange_statutory_authorities",
+      "source_claim_terms": [
+        "exchange of lands",
+        "public interest",
+        "equal value",
+        "notice",
+        "national forests"
+      ],
+      "source_record_ids": [
+        "R1EA-137"
+      ]
+    },
+    {
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ],
       "expected_package_evidence": "The EA package should use current Regional Forester species-of-conservation-concern information when plan consistency or biological resources are reviewed.",
       "obligation_area": "Northern Region species of conservation concern page is reviewed",
       "rule_id": "region1_species_of_conservation_concern",

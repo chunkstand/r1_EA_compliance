@@ -65,7 +65,7 @@ Current inventory summary:
 - Required authority requirement groups covered: `18`
 - Family statuses: `active=33`, `candidate=1`, `superseded=1`
 - Workbook source records crosswalked: `190/190`
-- Current rule-pack rules crosswalked: `45/45`
+- Current rule-pack rules crosswalked: `48/48`
 - Authority-family rule templates: `19`
 - Orphan rule IDs: none
 - Orphan workbook source record IDs: none
@@ -95,11 +95,10 @@ records the authority-family ID, rule-template ID, primary and supporting source
 fact types, positive and negative package triggers, source filters, evidence expectations,
 dependency/exception/supersession fields, and coverage follow-up metadata.
 
-A current real-source authority-universe contract build for
-`authority-universe-m3-contract-check` passed locally with `393` candidate authorities:
-`45` base rule-template candidates, `19` authority-family rule-template candidates, and `329`
-forest-plan component candidates. The `19` template candidates are conditional and are included by
-default when `applicability-authority-universe` runs from the repo with:
+With the current 48-rule base pack, the full real-source authority universe comprises `48` base
+rule-template candidates, `19` authority-family rule-template candidates, and `329` forest-plan
+component candidates. The `19` template candidates are conditional and are included by default when
+`applicability-authority-universe` runs from the repo with:
 
 ```text
 config/authority_family_rule_templates_nepa_ea_v1.json
@@ -232,11 +231,11 @@ The live export for `source-set-ba8d0feae79501b8` now records:
 
 - `validation_passed=true`, `62` validation checks, `0` failed checks, and
   `failure_category_counts={}`;
-- `1,426` nodes and `2,586` edges;
+- `1,470` nodes and `2,648` edges;
 - source-set content: `35` authority families, `190` catalog source records, `160` artifact nodes,
-  `45` base rules, `19` authority-family templates, `196` source-claim nodes, and `329`
+  `48` base rules, `19` authority-family templates, `211` source-claim nodes, and `329`
   forest-plan component nodes;
-- source input joins: `740` catalog graph seed nodes, `759` catalog graph seed edges, `196`
+- source input joins: `740` catalog graph seed nodes, `759` catalog graph seed edges, `211`
   rule-claim links, current authority-currentness validation, evidence graph node/edge inputs, and
   forest-plan component inventory;
 - Region 1 profile readiness: `10` tracked forest/grassland profiles, `1` graph-ready profile, `9`
@@ -267,9 +266,9 @@ The live overlay for `v1-cg-ecid-compliance-review` now records:
 
 - `validation_passed=true`, `76` validation checks, `0` failed checks, and
   `failure_category_counts={}`;
-- `1,937` nodes and `3,470` edges;
-- review content: `374` candidate authority nodes/decisions, `34` applicable decisions, `340`
-  non-applicable decisions, `34` generated rules, `34` compliance findings, and `340` search
+- `1,996` nodes and `3,550` edges;
+- review content: `377` candidate authority nodes/decisions, `37` applicable decisions, `340`
+  non-applicable decisions, `37` generated rules, `37` compliance findings, and `340` search
   coverage certificates;
 - review graph checks that every candidate maps to exactly one decision, every non-applicable
   decision has search coverage or adjudication support, search-coverage certificate IDs resolve to
@@ -375,8 +374,8 @@ forest-plan component eval, and gold eval.
 `config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
 the V1 review graph validation/summary artifacts before current promotion passes. The current live
 graph gates pass with `62/62` source-set graph checks, `76/76` review graph checks,
-`failure_category_counts={}`, `1,426` source-set graph nodes, `2,586` source-set graph edges,
-`1,937` review graph nodes, and `3,470` review graph edges. Broader Region 1 profile readiness
+`failure_category_counts={}`, `1,470` source-set graph nodes, `2,648` source-set graph edges,
+`1,996` review graph nodes, and `3,550` review graph edges. Broader Region 1 profile readiness
 blockers remain visible in the graph summaries and do not claim handbook or Region 1 forest-plan
 completeness.
 
@@ -450,7 +449,7 @@ ignored local report family under
 
 The latest Sequence 5 closeout regenerated and then validated that ignored local report family.
 Validation returned `passed=true` and `reviewer_ready=true`, rechecked all current input hashes and
-required report sections, kept all `34` applicable authority findings with package/source evidence,
+required report sections, kept all `37` applicable authority findings with package/source evidence,
 kept the `340` non-applicable authority boundary with search coverage, represented all `329` Forest
 Plan component rows, covered all `12/12` applicable standards with package and plan evidence, kept
 `9` implementation-confirmation rows with evidence and `3` residual-risk notes with `0`
@@ -460,7 +459,7 @@ applicable standards, non-applicable boundary, implementation confirmations, res
 validation status, and concise table summaries before long evidence sections. The same closeout
 replayed `phase-eval --review-id v1-cg-ecid-compliance-review`, which includes
 `decision_support_report`; the current graph-gate pass now has V1 review-bound phase eval passing
-`19/19` phases with `reviewer_ready=true`. `promotion-suite` also reports the decision-support
+`20/20` phases with `reviewer_ready=true`. `promotion-suite` also reports the decision-support
 JSON, manifest, PDF, and NEPA 3D graph validation/summary artifacts as required current-promotion
 artifacts.
 The post-sequence gap-close pass also makes validation fail closed when otherwise-current Markdown
@@ -482,9 +481,10 @@ review ID
 the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
 and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
 
-Sequence 0 verified the current promoted baseline from generated artifacts: `34` applicable
-authorities, `340` non-applicable authorities, `0` unresolved authorities, `374` candidate
-authorities, `34` generated compliance findings, `147` rule-claim links, `0` rule-claim gaps,
+Sequence 0 verified the current promoted baseline from generated artifacts: `37` applicable
+authorities, `340` non-applicable authorities, `0` unresolved authorities, `377` candidate
+authorities, `37` generated compliance findings, `162` generated-pack rule-claim links,
+`0` rule-claim gaps,
 `43` package files, `1,265` package chunks, `329` Forest Plan component rows, `58` Forest Plan
 standards, `12/12` Custer Gallatin applicable standards, passing decision-support validation, and
 review-bound baseline `phase-eval` at `19/19` before final QA gate integration. Sequence 3 added
@@ -584,9 +584,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   `0` retrieval-binding mismatches.
 - Source-claim extraction has been rebuilt and is reviewer-ready with `43,353` claims, `9,818`
   entities, and `1.0` claim evidence/topic/authority coverage rates.
-- Rule-claim binding for rule pack `nepa-ea-v0` version `0.4.0` has been rebuilt with `196` links
-  across `45/45` rules, `0` gaps, and no rules without source-claim links.
-- Compliance coverage has been refreshed for the `45`-rule matrix and `3` seed eval cases.
+- Rule-claim binding for rule pack `nepa-ea-v0` version `0.4.0` has been rebuilt with `211` links
+  across `48/48` rules, `0` gaps, and no rules without source-claim links.
+- Compliance coverage has been refreshed for the `48`-rule matrix and `3` seed eval cases.
 - Compliance review eval passed `3/3` seed cases. The Custer-scoped all-authorities fixture now
   expects `reviewer_ready: false` when the full forest-plan component gate is unmet.
 - Compliance gold eval passed `10/10` adjudicated cases in the pre-applicability V1 artifact set.
@@ -604,10 +604,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   `0` duplicate component or standard IDs, and `2` non-blocking inventory-quality issues.
   Component-like labels with nonnumeric number tokens, such as cross-reference/table headings, are
   suppressed from generated component IDs and surfaced in build coverage.
-- Current generated-pack V1 EA gate artifacts were verified locally on 2026-05-04 for
-  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `34`
-  generated compliance findings, `34` pass findings, all `26` baseline source records evaluated
-  through the generated applicability rule pack, `147` generated-pack rule-claim links, and `0`
+- Current generated-pack V1 EA gate artifacts were verified locally on 2026-05-08 for
+  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `37`
+  generated compliance findings, `37` pass findings, all `26` baseline source records evaluated
+  through the generated applicability rule pack, `162` generated-pack rule-claim links, and `0`
   rule-claim gaps.
 - Forest-plan component eval passed `35/35` adjudicated cases for the promoted review. The current
   component findings have `329` components, `79` supported components, `250` not applicable
@@ -617,10 +617,10 @@ Gallatin FEIS and ESA-supporting plan documents.
   `compliance-gold-eval` `10/10`. Direct base-pack review/gold reruns are diagnostic; the current
   generated-pack review-bound phase eval can use the passing base-pack gold suite through
   `rule_pack_match_mode=generated_base`.
-- The post-V1 applicability run for `v1-cg-ecid-compliance-review` validates cleanly with `374`
-  candidate authorities, `34` applicable authorities, `340` not-applicable authorities, no
+- The post-V1 applicability run for `v1-cg-ecid-compliance-review` validates cleanly with `377`
+  candidate authorities, `37` applicable authorities, `340` not-applicable authorities, no
   unresolved/adjudication decisions, and `generated_rule_pack_ready=true`; the generated rule pack
-  contains `34` rules and validates against the applicability artifacts.
+  contains `37` rules and validates against the applicability artifacts.
 - Authority-universe Milestone 5 is implemented in the compliance review layer. Generated review
   findings now carry candidate authority IDs, applicability decision IDs, authority-family IDs,
   generated applicability provenance, and coverage/adjudication references. The promoted review
@@ -962,7 +962,7 @@ rule-to-source-claim bindings, and writes compliance validation, a compliance re
 reviewer-facing compliance matrix, and a finding graph for rules, findings, source claims, source
 evidence, package evidence, and package gaps.
 
-Rule-pack `0.4.0` contains `45` rules. It declares `baseline_source_record_ids` for the 26
+Rule-pack `0.4.0` contains `48` rules. It declares `baseline_source_record_ids` for the 26
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
@@ -981,9 +981,12 @@ non-applicability proof. `applicability-context-build` reads the existing EA pac
 writes `package_fact_graph.json`, `package_applicability_context.json`, and
 `package_fact_graph_validation.json` with typed, span-bound package facts for project/action,
 agency, NEPA level, authority signals, geography, Forest Plan areas/overlays, resource topics,
-consultations, permits, public involvement, alternatives, and decision/finding signals. FLPMA
-Section 206 is extracted at intake as `authority:flpma_section_206_land_exchange` with the
-`R1EA-146` source-record binding before applicability or compliance decisions are attempted. It
+consultations, permits, public involvement, alternatives, and decision/finding signals.
+Land-exchange authority signals are extracted at intake as `authority` facts before applicability
+or compliance decisions are attempted: FLPMA Section 206
+(`authority:flpma_section_206_land_exchange`, `R1EA-146`), land-exchange statutory authorities
+(`R1EA-137`), 36 CFR part 254 regulations (`R1EA-124`), and Forest Service land-exchange
+policy/project references (`R1EA-150`). It
 records negative or out-of-scope location statements as negative-context facts instead of positive
 geography facts, and
 records weakly worded or missing common fact types as graph uncertainty rather than resolving them
@@ -1479,10 +1482,9 @@ The post-V1 applicability-first artifact contract reserves
 Those artifacts are the target source of truth for applicability and non-applicability. The
 non-applicable authority list must not be buried only as compliance matrix rows. A not-applicable
 decision must carry negative evidence, trigger-miss rationale, search coverage, or adjudication, and
-a reviewer-ready compliance review must eventually consume a generated rule pack tied to a passing
-applicability validation hash plus the package fact graph, retrieval trace, graph trace, search
-coverage, and provenance hashes. This is a documented contract at the current milestone, not yet an
-implemented command sequence.
+a reviewer-ready compliance review consumes a generated rule pack tied to a passing applicability
+validation hash plus the package fact graph, retrieval trace, graph trace, search coverage, and
+provenance hashes.
 
 The rule pack is data, not hidden code. Each rule includes identity, title, question, requirement,
 severity, authority category, authority source record, applicability mode, package query and terms,
@@ -1710,11 +1712,11 @@ non-applicable authority appendices, reviewer-resolution reporting, and evidence
 litigation-risk summaries.
 
 The Authority-First Compliance Matrix V0.4 milestone is implemented for the current local source-set
-promotion gate. The active rule pack contains 44 authority rows and explicitly requires all 26
+promotion gate. The active rule pack contains 48 authority rows and explicitly requires all 26
 workbook `Scope=Baseline` source records in every EA review, with additional conditional rules for
 triggered authorities. The refreshed coverage and gold gates contain ten adjudicated realistic
 package profiles, expected source rows, expected source document classes, per-case failure taxonomy,
-compact reproduction paths, and generated compliance matrices for the `0.4.0`/44-rule pack.
+compact reproduction paths, and generated compliance matrices for the `0.4.0`/48-rule pack.
 
 The current system has a complete 190-row downloader/catalog corpus that includes the four missed
 Custer Gallatin FEIS and ESA-supporting plan documents. Full-source-set reuse-first extraction has
@@ -1776,7 +1778,7 @@ passes with `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
 `failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
 `conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
 conditional adjudication rows carried as explicit V1 reviewer risk. Review-bound `phase-eval` now
-passes `17/17` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
+passes `20/20` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
 passing base-pack gold suite through `rule_pack_match_mode=generated_base`. Embeddings, reranking,
 model-assisted synthesis, and broader Region 1 package expansion remain post-V1 work and should
 start under a new milestone plan.

@@ -6,7 +6,7 @@
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
-  "expected_rule_count": 45,
+  "expected_rule_count": 48,
   "expected_baseline_source_record_count": 26,
   "review_cases": [
     {
@@ -63,7 +63,7 @@
             {
               "name": "rule_count",
               "json_path": "summary.rule_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "baseline_source_record_count",
@@ -89,7 +89,7 @@
             {
               "name": "matrix_row_count",
               "json_path": "summary.row_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "matrix_reviewer_ready",
@@ -152,7 +152,7 @@
             {
               "name": "decision_support_applicable_authorities",
               "json_path": "applicable_authority_summary.applicable_authority_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "decision_support_non_applicable_authorities",
@@ -249,7 +249,7 @@
             {
               "name": "final_qa_finding_count",
               "json_path": "finding_qa.authority_finding_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "final_qa_accepted_v1_risk_visible",
@@ -388,7 +388,7 @@
             {
               "name": "authority_provenance_finding_count",
               "json_path": "summary.finding_authority_provenance_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "authority_provenance_family_ids_present",
@@ -515,19 +515,19 @@
             {
               "name": "review_graph_decision_count",
               "json_path": "review_decision_count",
-              "equals": 374,
+              "equals": 377,
               "failure_category": "graph_missing_applicability_decision"
             },
             {
               "name": "review_graph_generated_rule_count",
               "json_path": "generated_rule_count",
-              "equals": 34,
+              "equals": 37,
               "failure_category": "graph_missing_applicability_decision"
             },
             {
               "name": "review_graph_compliance_finding_count",
               "json_path": "compliance_finding_count",
-              "equals": 34
+              "equals": 37
             },
             {
               "name": "review_graph_validation_checks",

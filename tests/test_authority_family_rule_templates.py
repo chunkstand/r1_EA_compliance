@@ -128,6 +128,12 @@ def test_package_fact_cues_map_to_active_authority_family_templates() -> None:
     assert ("overlay", "designated_area") in package_fact_values
     assert ("action", "land_exchange") in package_fact_values
     assert ("authority", "flpma_section_206_land_exchange") in package_fact_values
+    assert ("authority", "land_exchange_statutory_authorities") in package_fact_values
+    assert ("authority", "land_exchange_regulatory_requirements") in package_fact_values
+    assert (
+        "authority",
+        "land_exchange_fs_policy_and_project_references",
+    ) in package_fact_values
 
 
 def _load_json(path: Path) -> dict:

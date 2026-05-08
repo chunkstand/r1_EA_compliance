@@ -531,7 +531,7 @@ class V1EAReviewEvalTests(unittest.TestCase):
         )
         policy = contract["conditional_adjudication_policy"]
 
-        self.assertEqual(len(contract["conditional_source_expectations"]), 18)
+        self.assertEqual(len(contract["conditional_source_expectations"]), 22)
         self.assertEqual(len(adjudicate_rule_ids), 14)
         self.assertEqual(policy["mode"], "accepted_pending_v1")
         self.assertEqual(policy["accepted_pending_count"], 14)

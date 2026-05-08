@@ -25,12 +25,12 @@
     "validation_and_replay"
   ],
   "expected_counts": {
-    "applicable_authority_count": 34,
+    "applicable_authority_count": 37,
     "non_applicable_authority_count": 340,
-    "candidate_authority_count": 374,
-    "authority_finding_count": 34,
+    "candidate_authority_count": 377,
+    "authority_finding_count": 37,
     "authority_finding_status_counts": {
-      "pass": 34
+      "pass": 37
     },
     "non_applicable_search_coverage_certificate_count": 340,
     "forest_plan_component_finding_count": 329,
@@ -50,21 +50,21 @@
   "input_hashes": {
     "package_manifest_sha256": "d0176a5cf6c991e5a7e2356a71b30bb9ceef55fe90bd70dd1fb135118e0a1a81",
     "package_chunks_sha256": "0d07dc16978652bc308c765299dfbfce1d50a0ca6a9d33f192c8c055cbd48b56",
-    "compliance_matrix_sha256": "5ef0032da0d0c07f0e9e15274123c1b7ae4f2775b035ff41965c7417bcc81301",
-    "compliance_review_sha256": "a4d32b0d99a17b1fb00ece6a08e28ef537cdf767f696bdc143e259343e4155b6",
-    "applicability_validation_sha256": "86a95af942fcb26e76208bcacea43c68a342b3e21f5c6075668519f8d30e0586",
-    "applicable_authorities_sha256": "9dc66d4fce2ea910e18a73478ea31d86d53fa9970721ec7f140f8229923a11e1",
-    "non_applicable_authorities_sha256": "053c752acbc6e4eb66682066d145e667ef3cfca3028113f129912f2ab53f3be1",
-    "search_coverage_certificates_sha256": "5c66cbe4a1c3cfb16f2839ad361fd4f0e5c07b01eaf338b2e957a3d7a4944d72",
-    "generated_rule_pack_sha256": "9bfa4757e8d1ca0cf586100f10914baed15dce88248558ee9106801e914ce876",
-    "generated_rule_pack_validation_sha256": "53f02369c2c2faacfa5838bc05fad94f05567eec1d5bb2c4c9748c1da27a89d5",
-    "forest_plan_component_findings_sha256": "e321fd3afdd78ee25b2480112bd6f7855007463a58890280ec06946937bc6bb9",
-    "forest_plan_applicable_standard_coverage_sha256": "c2132bbdf6d919b03a12deeba46dccc1b2037487ce2f0ff1edb5f82ef69d32ab",
+    "compliance_matrix_sha256": "1daf88b02aaf60ae0b667c16e8fb2b64f3367f4c398a064af7c541721d221382",
+    "compliance_review_sha256": "42f8bc76931cf73e2b64d4f282128a6f1a5dd68c38f2de9c93a6ce1d50a72bbc",
+    "applicability_validation_sha256": "86d7ea0eb2c0f2662e88ac159959211e8739db66573e7a624d057d376db878a1",
+    "applicable_authorities_sha256": "24700350da272b5ccaeb7d8415de3bcf15df0a3dd003c92dc1101bfc9bd570fc",
+    "non_applicable_authorities_sha256": "3c051f577faed45d9d80d55ffa10fdf93034e97c76667af2e102bdc5452e7de7",
+    "search_coverage_certificates_sha256": "047f5882aacd4721948463c21b18b0be55d8d418332858dc93b2e91fc1fa34b0",
+    "generated_rule_pack_sha256": "dcf49c1eeeceabe15729cd1aec505de5203f9e05de42b7688806ef338d29f775",
+    "generated_rule_pack_validation_sha256": "fb24989fda3da446198f6608efe3370dd3978b1ec8e86d318399865f4b0449cb",
+    "forest_plan_component_findings_sha256": "2121fcd63d7c7df07d9d8a27fd78a0ebc75cdc72c361ddb103146dea5446795c",
+    "forest_plan_applicable_standard_coverage_sha256": "1e54fdbe66999b6e2952d828ff996e851de54157b77e5616fc6e104b7b420acd",
     "forest_plan_context_summary_sha256": "45ab75e7a2e0cb973ac97a53fa20e49df9f0da6f9928c6dac615047bf2ee8cb2",
-    "non_applicable_authority_appendix_sha256": "4c123964471c7fa880d70f2ee9388189ed56a9aceb3ef3ce522502154cbb3143",
+    "non_applicable_authority_appendix_sha256": "62eb8d15b9f19187b7b94da4dbd399c8080d805d4bd7846abaee424ffbfe13a4",
     "non_applicable_authority_appendix_markdown_sha256": "3f29470bfe1fc2bc1b6ebcdf2d38241c8553c2619e96f4b7cee0b94800be382d",
-    "authority_reviewer_resolution_report_sha256": "3a3649c7b8ccb0cc1aa86918ed50712e1869b92c8dbf18d3ac285d0676b0f751",
-    "litigation_risk_summary_sha256": "e8f944b6d91eb44cc1e80a2550280de95c4c7443fa8a4bc5922115afca979d25",
+    "authority_reviewer_resolution_report_sha256": "029683991f8c8ba17f4943e623950dd859c903c9a3e3ce47a12057af5d31381c",
+    "litigation_risk_summary_sha256": "ba73485116d62b9958eb3f5d7ece9515fa6618a1259738eda932ffcce7d764a2",
     "plan_consistency_table_text_sha256": "07c688a0a68511ee652e9af22cbf39d03a7917d9365d1b18519efdf38e1a7564"
   },
   "row_trace_contract": {

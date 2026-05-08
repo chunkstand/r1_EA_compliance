@@ -65,25 +65,41 @@
       "section_id": "purpose_need",
       "label": "Purpose and Need",
       "required": true,
-      "expected_terms": ["purpose and need", "need for action", "purpose of action"]
+      "expected_terms": [
+        "purpose and need",
+        "need for action",
+        "purpose of action"
+      ]
     },
     {
       "section_id": "proposed_action",
       "label": "Proposed Action",
       "required": true,
-      "expected_terms": ["proposed action", "proposal", "action alternative"]
+      "expected_terms": [
+        "proposed action",
+        "proposal",
+        "action alternative"
+      ]
     },
     {
       "section_id": "alternatives",
       "label": "Alternatives",
       "required": true,
-      "expected_terms": ["alternatives", "no action alternative", "alternative"]
+      "expected_terms": [
+        "alternatives",
+        "no action alternative",
+        "alternative"
+      ]
     },
     {
       "section_id": "affected_environment",
       "label": "Affected Environment",
       "required": true,
-      "expected_terms": ["affected environment", "existing condition", "existing conditions"]
+      "expected_terms": [
+        "affected environment",
+        "existing condition",
+        "existing conditions"
+      ]
     },
     {
       "section_id": "environmental_consequences",
@@ -100,19 +116,34 @@
       "section_id": "mitigation_design_features",
       "label": "Mitigation and Design Features",
       "required": true,
-      "expected_terms": ["mitigation", "design feature", "design features", "project design criteria"]
+      "expected_terms": [
+        "mitigation",
+        "design feature",
+        "design features",
+        "project design criteria"
+      ]
     },
     {
       "section_id": "consultation_coordination",
       "label": "Consultation and Coordination",
       "required": true,
-      "expected_terms": ["consultation", "coordination", "tribal consultation", "agency consultation"]
+      "expected_terms": [
+        "consultation",
+        "coordination",
+        "tribal consultation",
+        "agency consultation"
+      ]
     },
     {
       "section_id": "public_involvement_objection",
       "label": "Public Involvement and Objection",
       "required": true,
-      "expected_terms": ["public involvement", "public comment", "objection", "scoping"]
+      "expected_terms": [
+        "public involvement",
+        "public comment",
+        "objection",
+        "scoping"
+      ]
     },
     {
       "section_id": "decision_fonsi",
@@ -177,10 +208,16 @@
   "rule_review_expectations": [
     {
       "rule_id": "nepa_statute_chapter_55",
-      "expected_package_section_ids": ["purpose_need"],
+      "expected_package_section_ids": [
+        "purpose_need"
+      ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-001"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-001"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "nepa_4332_environmental_information",
@@ -192,15 +229,26 @@
         "public_involvement_objection"
       ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-002"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-002"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "nepa_4336_level_of_review",
-      "expected_package_section_ids": ["environmental_consequences", "decision_fonsi"],
+      "expected_package_section_ids": [
+        "environmental_consequences",
+        "decision_fonsi"
+      ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-003"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-003"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "usda_nepa_ea_7cfr_1b5",
@@ -211,96 +259,185 @@
         "environmental_consequences"
       ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-013"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-013"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "usda_nepa_fonsi_7cfr_1b6",
-      "expected_package_section_ids": ["decision_fonsi", "mitigation_design_features"],
+      "expected_package_section_ids": [
+        "decision_fonsi",
+        "mitigation_design_features"
+      ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-014"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-014"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "planning_rule_36cfr_21915_consistency",
-      "expected_package_section_ids": ["forest_plan_consistency"],
+      "expected_package_section_ids": [
+        "forest_plan_consistency"
+      ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1EA-024"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-024"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "custer_gallatin_lmp_2022",
-      "expected_package_section_ids": ["forest_plan_consistency"],
+      "expected_package_section_ids": [
+        "forest_plan_consistency"
+      ],
       "section_match": "any",
-      "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
-      "expected_source_document_roles": ["forest_plan"]
+      "expected_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ]
     }
   ],
   "conditional_source_expectations": [
     {
       "rule_id": "nepa_4336b_programmatic_tiering",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["tiers to", "programmatic", "final environmental impact statement"],
+      "trigger_terms": [
+        "tiers to",
+        "programmatic",
+        "final environmental impact statement"
+      ],
       "classification_rationale": "The package uses tiering and programmatic FEIS language, but the adequacy and final applicability of the tiering authority require reviewer judgment. V1 accepts this as pending only when the source and alternatives/environmental-consequences section alignment pass.",
-      "expected_package_section_ids": ["alternatives", "environmental_consequences"],
-      "expected_source_record_ids": ["R1EA-005"],
-      "expected_source_document_roles": ["law"]
+      "expected_package_section_ids": [
+        "alternatives",
+        "environmental_consequences"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-005"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "nepa_4336c_ce_adoption_screen",
       "expected_applicability": "not_applicable",
-      "trigger_terms": ["categorical exclusion", "adopted CE"],
+      "trigger_terms": [
+        "categorical exclusion",
+        "adopted CE"
+      ],
       "classification_rationale": "The East Crazies package is an EA/FONSI review and does not adopt or rely on a categorical-exclusion path.",
-      "expected_source_record_ids": ["R1EA-006"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-006"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "nepa_4336f_sponsor_prepared_documents",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["sponsor", "applicant", "financial interest"],
+      "trigger_terms": [
+        "sponsor",
+        "applicant",
+        "financial interest"
+      ],
       "classification_rationale": "The land exchange involves non-federal parties, but whether sponsor-prepared environmental-document requirements are triggered is a reviewer judgment item for V1.",
-      "expected_source_record_ids": ["R1EA-007"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-007"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "usda_nepa_ce_fanec_7cfr_1b3",
       "expected_applicability": "not_applicable",
-      "trigger_terms": ["categorical exclusion", "FANEC", "extraordinary circumstances"],
+      "trigger_terms": [
+        "categorical exclusion",
+        "FANEC",
+        "extraordinary circumstances"
+      ],
       "classification_rationale": "The package does not use a USDA categorical exclusion, FANEC, or extraordinary-circumstances CE screen as the review path.",
-      "expected_source_record_ids": ["R1EA-011"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-011"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "usda_nepa_subcomponent_ce_7cfr_1b4",
       "expected_applicability": "not_applicable",
-      "trigger_terms": ["categorical exclusion", "extraordinary circumstances", "USDA CE"],
+      "trigger_terms": [
+        "categorical exclusion",
+        "extraordinary circumstances",
+        "USDA CE"
+      ],
       "classification_rationale": "The package proceeds through an EA rather than a subcomponent categorical-exclusion process.",
-      "expected_source_record_ids": ["R1EA-012"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-012"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "usda_nepa_applicant_docs_7cfr_1b10",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["applicant", "third party", "financial disclosure"],
+      "trigger_terms": [
+        "applicant",
+        "third party",
+        "financial disclosure"
+      ],
       "classification_rationale": "The package has applicant and land-exchange context, but whether applicant-document and financial-disclosure requirements are fully triggered remains pending reviewer judgment.",
-      "expected_source_record_ids": ["R1EA-016"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-016"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "postdecisional_review_36cfr_214",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["appeal", "written authorization", "effective date"],
+      "trigger_terms": [
+        "appeal",
+        "written authorization",
+        "effective date"
+      ],
       "classification_rationale": "The package includes decision and objection-review context, but V1 leaves the final postdecisional-review applicability determination to reviewer adjudication.",
-      "expected_source_record_ids": ["R1EA-026"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-026"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "directives_notice_comment_36cfr_216",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["directive", "notice and comment", "standards"],
+      "trigger_terms": [
+        "directive",
+        "notice and comment",
+        "standards"
+      ],
       "classification_rationale": "The package discusses standards and review process terms, but whether Forest Service directive notice-and-comment rules are triggered for this project record is pending reviewer judgment.",
-      "expected_source_record_ids": ["R1EA-027"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_source_record_ids": [
+        "R1EA-027"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "custer_gallatin_lmp_2022",
@@ -311,9 +448,15 @@
         "Crazy Mountains Backcountry Area"
       ],
       "classification_rationale": "The project is on the Custer Gallatin National Forest and the package identifies the applicable 2022 Land Management Plan and Crazy Mountains Backcountry Area context.",
-      "expected_package_section_ids": ["forest_plan_consistency"],
-      "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
-      "expected_source_document_roles": ["forest_plan"]
+      "expected_package_section_ids": [
+        "forest_plan_consistency"
+      ],
+      "expected_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ]
     },
     {
       "rule_id": "flpma_section_206_land_exchange",
@@ -329,8 +472,77 @@
         "public interest"
       ],
       "classification_rationale": "The package identifies the land exchange authority, public-interest determination, equal-value basis, appraisal values, and cash equalization strategy for the East Crazy Inspiration Divide land exchange.",
-      "expected_source_record_ids": ["R1EA-146"],
-      "expected_source_document_roles": ["law"]
+      "expected_source_record_ids": [
+        "R1EA-146"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
+    },
+    {
+      "rule_id": "land_exchange_fs_policy_and_project_references",
+      "expected_applicability": "applicable",
+      "trigger_terms": [
+        "land exchange",
+        "exchange case",
+        "appraisal",
+        "title evidence",
+        "reservations",
+        "outstanding rights",
+        "exchange agreement",
+        "notice of exchange",
+        "closing"
+      ],
+      "classification_rationale": "The package describes Forest Service exchange case records, appraisal/title details, reservations/outstanding rights, notices, agreement, and closing context that trigger Forest Service exchange policy/project-reference review.",
+      "expected_source_record_ids": [
+        "R1EA-150"
+      ],
+      "expected_source_document_roles": [
+        "agency_policy"
+      ]
+    },
+    {
+      "rule_id": "land_exchange_regulatory_requirements",
+      "expected_applicability": "applicable",
+      "trigger_terms": [
+        "land exchange",
+        "36 CFR part 254",
+        "agreement to initiate",
+        "notice of exchange",
+        "appraisal",
+        "equal value",
+        "cash equalization",
+        "title approval"
+      ],
+      "classification_rationale": "The package identifies a land exchange with appraisal, equal-value, cash-equalization, notice, approval, title, and closing details that trigger the 36 CFR part 254 procedural and valuation review row.",
+      "expected_source_record_ids": [
+        "R1EA-124"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
+    },
+    {
+      "rule_id": "land_exchange_statutory_authorities",
+      "expected_applicability": "applicable",
+      "trigger_terms": [
+        "land exchange",
+        "exchange of lands",
+        "FLPMA",
+        "public interest determination",
+        "equal value",
+        "cash equalization",
+        "reservation",
+        "acquisition",
+        "disposal"
+      ],
+      "classification_rationale": "The package describes the East Crazy Inspiration Divide land exchange, acquisition/disposal, public-interest determination, equal-value basis, cash equalization strategy, and related exchange authority context.",
+      "expected_source_record_ids": [
+        "R1EA-137"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "esa_section_7",
@@ -343,81 +555,169 @@
         "biological assessment"
       ],
       "classification_rationale": "The package contains biological-resource and ESA consultation signals, but V1 treats final ESA Section 7 compliance applicability as pending reviewer adjudication.",
-      "expected_package_section_ids": ["biological_resources"],
-      "expected_source_record_ids": ["R1EA-065"],
-      "expected_source_document_roles": ["law"]
+      "expected_package_section_ids": [
+        "biological_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-065"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "esa_consultation_50cfr_402",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Endangered Species Act", "Section 7", "U.S. Fish and Wildlife Service"],
+      "trigger_terms": [
+        "Endangered Species Act",
+        "Section 7",
+        "U.S. Fish and Wildlife Service"
+      ],
       "classification_rationale": "The package includes ESA consultation cues and biological-resource evidence, but the consultation-regulation applicability finding remains a pending reviewer judgment.",
-      "expected_package_section_ids": ["biological_resources"],
-      "expected_source_record_ids": ["R1EA-066"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_package_section_ids": [
+        "biological_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-066"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "nhpa_section_106",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["National Historic Preservation Act", "Section 106", "historic properties"],
+      "trigger_terms": [
+        "National Historic Preservation Act",
+        "Section 106",
+        "historic properties"
+      ],
       "classification_rationale": "The package contains cultural-resource and Section 106 context, but final NHPA applicability and sufficiency are pending reviewer adjudication.",
-      "expected_package_section_ids": ["cultural_resources"],
-      "expected_source_record_ids": ["R1EA-070"],
-      "expected_source_document_roles": ["law"]
+      "expected_package_section_ids": [
+        "cultural_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-070"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "nhpa_36cfr_800",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["36 CFR part 800", "SHPO", "adverse effect", "historic properties"],
+      "trigger_terms": [
+        "36 CFR part 800",
+        "SHPO",
+        "adverse effect",
+        "historic properties"
+      ],
       "classification_rationale": "The package includes SHPO and historic-property evidence, but final 36 CFR part 800 applicability and process sufficiency are pending reviewer adjudication.",
-      "expected_package_section_ids": ["cultural_resources"],
-      "expected_source_record_ids": ["R1EA-071"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_package_section_ids": [
+        "cultural_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-071"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "montana_shpo_review",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Montana SHPO", "State Historic Preservation Officer", "cultural resource"],
+      "trigger_terms": [
+        "Montana SHPO",
+        "State Historic Preservation Officer",
+        "cultural resource"
+      ],
       "classification_rationale": "The package includes Montana SHPO and cultural-resource evidence, but the state-review applicability determination is left pending for reviewer adjudication.",
-      "expected_package_section_ids": ["cultural_resources"],
-      "expected_source_record_ids": ["R1EA-119"],
-      "expected_source_document_roles": ["state_requirement"]
+      "expected_package_section_ids": [
+        "cultural_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-119"
+      ],
+      "expected_source_document_roles": [
+        "state_requirement"
+      ]
     },
     {
       "rule_id": "roadless_rule_36cfr_294b",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Roadless Rule", "inventoried roadless", "roadless area"],
+      "trigger_terms": [
+        "Roadless Rule",
+        "inventoried roadless",
+        "roadless area"
+      ],
       "classification_rationale": "The package includes roadless-area evidence, but final Roadless Rule applicability and project-effect interpretation remain pending reviewer adjudication.",
-      "expected_package_section_ids": ["roadless_wetlands"],
-      "expected_source_record_ids": ["R1EA-049"],
-      "expected_source_document_roles": ["regulation"]
+      "expected_package_section_ids": [
+        "roadless_wetlands"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-049"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ]
     },
     {
       "rule_id": "eo_11990_wetlands",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Executive Order 11990", "wetlands", "wetland", "floodplains"],
+      "trigger_terms": [
+        "Executive Order 11990",
+        "wetlands",
+        "wetland",
+        "floodplains"
+      ],
       "classification_rationale": "The package includes wetlands and floodplain-related evidence, but final EO 11990 applicability is pending reviewer adjudication.",
-      "expected_package_section_ids": ["roadless_wetlands"],
-      "expected_source_record_ids": ["R1EA-104"],
-      "expected_source_document_roles": ["executive_order"]
+      "expected_package_section_ids": [
+        "roadless_wetlands"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-104"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ]
     },
     {
       "rule_id": "mbta_migratory_birds",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Migratory Bird Treaty Act", "migratory bird", "birds"],
+      "trigger_terms": [
+        "Migratory Bird Treaty Act",
+        "migratory bird",
+        "birds"
+      ],
       "classification_rationale": "The package contains biological-resource and bird-related evidence, but final MBTA applicability remains pending reviewer adjudication.",
-      "expected_package_section_ids": ["biological_resources"],
-      "expected_source_record_ids": ["R1EA-094"],
-      "expected_source_document_roles": ["law"]
+      "expected_package_section_ids": [
+        "biological_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-094"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ]
     },
     {
       "rule_id": "eo_13186_migratory_birds",
       "expected_applicability": "adjudicate",
-      "trigger_terms": ["Executive Order 13186", "migratory bird", "Migratory Bird Treaty Act"],
+      "trigger_terms": [
+        "Executive Order 13186",
+        "migratory bird",
+        "Migratory Bird Treaty Act"
+      ],
       "classification_rationale": "The package contains migratory-bird signals, but final EO 13186 applicability remains pending reviewer adjudication.",
-      "expected_package_section_ids": ["biological_resources"],
-      "expected_source_record_ids": ["R1EA-096"],
-      "expected_source_document_roles": ["executive_order"]
+      "expected_package_section_ids": [
+        "biological_resources"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-096"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ]
     }
   ],
   "forest_plan": {
@@ -431,15 +731,21 @@
       "R1PLAN-custer-gallatin-nf-06",
       "R1PLAN-custer-gallatin-nf-07"
     ],
-    "expected_geographic_area_ids": ["geo-bridger-bangtail-crazy"],
-    "expected_management_area_ids": ["mgmt-crazy-mountains-bca"],
+    "expected_geographic_area_ids": [
+      "geo-bridger-bangtail-crazy"
+    ],
+    "expected_management_area_ids": [
+      "mgmt-crazy-mountains-bca"
+    ],
     "expected_overlay_ids": [],
     "expected_component_ids": [
       "R1PLAN-custer-gallatin-nf-02-BC-DC-CMBCA-01",
       "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
       "R1PLAN-custer-gallatin-nf-02-BC-SUIT-CMBCA-01"
     ],
-    "expected_applicable_standard_ids": ["R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01"],
+    "expected_applicable_standard_ids": [
+      "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01"
+    ],
     "min_applicable_standard_count": 1,
     "require_all_applicable_standards_applied": true,
     "require_reviewer_ready": true,

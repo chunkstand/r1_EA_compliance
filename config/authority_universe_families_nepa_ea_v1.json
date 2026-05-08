@@ -1505,6 +1505,7 @@
       ],
       "coverage_requirements": {
         "coverage_matrix_rule_ids": [
+          "land_exchange_fs_policy_and_project_references",
           "land_exchange_fs_policy_and_project_references_authority_template"
         ],
         "eval_case_ids": [
@@ -1540,7 +1541,9 @@
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
-      "rule_ids": [],
+      "rule_ids": [
+        "land_exchange_fs_policy_and_project_references"
+      ],
       "source_evidence_requirements": [
         "Forest Service exchange policy/handbook source or non-controlling project reference",
         "package evidence for exchange case, project documents, valuation/appraisal, title, reservations, notice, agreement, or closing"
@@ -1635,6 +1638,7 @@
       ],
       "coverage_requirements": {
         "coverage_matrix_rule_ids": [
+          "land_exchange_regulatory_requirements",
           "land_exchange_regulatory_requirements_authority_template"
         ],
         "eval_case_ids": [
@@ -1676,7 +1680,9 @@
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
-      "rule_ids": [],
+      "rule_ids": [
+        "land_exchange_regulatory_requirements"
+      ],
       "source_evidence_requirements": [
         "36 CFR part 254, NEPA overlay, relocation, or administrative-review overlay source",
         "package evidence for exchange initiation, public notice, appraisal, equalization, approval, title, closing, written authorization, or EA/FONSI overlay"
@@ -1792,6 +1798,7 @@
       "coverage_requirements": {
         "coverage_matrix_rule_ids": [
           "flpma_section_206_land_exchange",
+          "land_exchange_statutory_authorities",
           "land_exchange_statutory_authorities_authority_template"
         ],
         "eval_case_ids": [
@@ -1831,7 +1838,8 @@
         "land_exchange"
       ],
       "rule_ids": [
-        "flpma_section_206_land_exchange"
+        "flpma_section_206_land_exchange",
+        "land_exchange_statutory_authorities"
       ],
       "source_evidence_requirements": [
         "exchange statute source",
@@ -5744,14 +5752,14 @@
     "families_confirmed_by_milestone_2_source_currentness": 21,
     "families_requiring_milestone_2_source_currentness": 0,
     "families_requiring_milestone_3_rule_template_work": 0,
-    "mapped_rule_count": 45,
+    "mapped_rule_count": 48,
     "mapped_source_record_count": 190,
     "milestone_2_source_currentness_gate_status": "passed",
     "milestone_2_source_currentness_report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
     "orphan_rule_ids": [],
     "orphan_source_record_ids": [],
     "required_authority_requirement_count": 18,
-    "rule_count": 45,
+    "rule_count": 48,
     "rule_pack_id": "nepa-ea-v0",
     "rule_pack_version": "0.4.0",
     "source_record_crosswalk_count": 190,

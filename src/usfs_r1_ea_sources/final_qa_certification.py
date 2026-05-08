@@ -283,16 +283,26 @@ def _collect_input_state(
             checks=checks,
         )
         actual = _selector_value(data, gate["required_pass_selector"])
+        self_reference_allowed = _current_promotion_suite_self_reference_allowed(
+            gate=gate,
+            data=data,
+            expected_counts=(
+                expected["expected_counts"]
+                if isinstance(expected.get("expected_counts"), Mapping)
+                else {}
+            ),
+        )
         _add_check(
             checks,
             name=f"gate_{gate['gate_name']}_passed",
-            passed=actual == gate["expected_value"],
+            passed=actual == gate["expected_value"] or self_reference_allowed,
             category=gate.get("failure_category", "stale_artifact"),
             details={
                 "path": str(artifact_path),
                 "selector": gate["required_pass_selector"],
                 "actual": actual,
                 "expected": gate["expected_value"],
+                "self_reference_allowed": self_reference_allowed,
             },
         )
 
@@ -481,6 +491,9 @@ def _build_report(
                 ],
                 "final_qa_current_result_count": counts[
                     "promotion_suite_final_qa_current_result_count"
+                ],
+                "final_qa_current_passed_result_count": counts[
+                    "promotion_suite_final_qa_current_passed_result_count"
                 ],
                 "expansion_failure_category_counts": _selector_value(
                     data_by_key.get("promotion_suite", {}),
@@ -919,17 +932,24 @@ def _promotion_suite_counts_for_packet(promotion: Any) -> dict[str, int]:
     live_passed_count = _safe_int(
         _selector_value(promotion, "passed_required_current_result_count")
     )
-    final_qa_result_count = (
-        _passed_final_qa_current_result_count(promotion)
+    final_qa_counts = (
+        _final_qa_current_result_counts(promotion)
         if isinstance(promotion, Mapping)
-        else 0
+        else {"required": 0, "passed": 0}
     )
     return {
-        "required_current_result_count": max(live_required_count - final_qa_result_count, 0),
-        "passed_required_current_result_count": max(live_passed_count - final_qa_result_count, 0),
+        "required_current_result_count": max(
+            live_required_count - final_qa_counts["required"],
+            0,
+        ),
+        "passed_required_current_result_count": max(
+            live_passed_count - final_qa_counts["passed"],
+            0,
+        ),
         "live_required_current_result_count": live_required_count,
         "live_passed_required_current_result_count": live_passed_count,
-        "final_qa_current_result_count": final_qa_result_count,
+        "final_qa_current_result_count": final_qa_counts["required"],
+        "final_qa_current_passed_result_count": final_qa_counts["passed"],
     }
 
 
@@ -1028,6 +1048,9 @@ def _derive_actual_counts(
         ],
         "promotion_suite_final_qa_current_result_count": promotion_counts[
             "final_qa_current_result_count"
+        ],
+        "promotion_suite_final_qa_current_passed_result_count": promotion_counts[
+            "final_qa_current_passed_result_count"
         ],
         "accepted_v1_risk_count": conditional.get("accepted_pending_count"),
         "actual_pending_applicable_count": conditional.get("actual_pending_applicable_count"),
@@ -2062,20 +2085,37 @@ def _promotion_suite_has_only_final_qa_outer_gates(
     expected_passed = _safe_int(
         expected_counts.get("promotion_suite_passed_required_current_result_count")
     )
-    final_qa_result_count = _passed_final_qa_current_result_count(data)
-    if final_qa_result_count != 4:
+    final_qa_counts = _final_qa_current_result_counts(data)
+    if final_qa_counts["required"] != 4:
         return False
     return (
-        bool(data.get("current_promotion_ready"))
-        and _safe_int(data.get("required_current_result_count"))
-        == expected_required + final_qa_result_count
+        _safe_int(data.get("required_current_result_count"))
+        == expected_required + final_qa_counts["required"]
         and _safe_int(data.get("passed_required_current_result_count"))
-        == expected_passed + final_qa_result_count
+        == expected_passed + final_qa_counts["passed"]
     )
 
 
-def _passed_final_qa_current_result_count(data: Mapping[str, Any]) -> int:
-    count = 0
+def _current_promotion_suite_self_reference_allowed(
+    *,
+    gate: Mapping[str, Any],
+    data: Mapping[str, Any],
+    expected_counts: Mapping[str, Any],
+) -> bool:
+    if gate.get("gate_name") != "current_promotion_suite":
+        return False
+    if gate.get("required_pass_selector") != "current_promotion_ready":
+        return False
+    if gate.get("expected_value") is not True:
+        return False
+    return _promotion_suite_has_only_final_qa_outer_gates(
+        data,
+        expected_counts=expected_counts,
+    )
+
+
+def _final_qa_current_result_counts(data: Mapping[str, Any]) -> dict[str, int]:
+    counts = {"required": 0, "passed": 0}
     for case in data.get("review_cases", []):
         if not isinstance(case, Mapping) or case.get("id") != "v1-cg-ecid":
             continue
@@ -2085,9 +2125,11 @@ def _passed_final_qa_current_result_count(data: Mapping[str, Any]) -> int:
             result_id = str(result.get("id") or "")
             if not result_id.startswith("final_qa_certification_"):
                 continue
-            if result.get("required_for_current_promotion") and result.get("passed"):
-                count += 1
-    return count
+            if result.get("required_for_current_promotion"):
+                counts["required"] += 1
+                if result.get("passed"):
+                    counts["passed"] += 1
+    return counts
 
 
 def _utc_now() -> str:

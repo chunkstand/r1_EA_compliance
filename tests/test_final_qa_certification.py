@@ -52,15 +52,15 @@ EXPECTED_COUNTS = {
     "package_file_count": 43,
     "package_chunk_count": 1265,
     "baseline_source_record_count": 26,
-    "candidate_authority_count": 374,
-    "applicable_authority_count": 34,
+    "candidate_authority_count": 377,
+    "applicable_authority_count": 37,
     "non_applicable_authority_count": 340,
     "unresolved_authority_count": 0,
-    "generated_rule_count": 34,
-    "authority_finding_count": 34,
-    "rule_claim_link_count": 147,
+    "generated_rule_count": 37,
+    "authority_finding_count": 37,
+    "rule_claim_link_count": 162,
     "rule_claim_gap_count": 0,
-    "compliance_matrix_authority_row_count": 34,
+    "compliance_matrix_authority_row_count": 37,
     "forest_plan_component_count": 329,
     "forest_plan_supported_component_count": 79,
     "forest_plan_not_applicable_component_count": 250,
@@ -239,7 +239,7 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert expected["required_sections"] == REQUIRED_SECTIONS
     for key, value in EXPECTED_COUNTS.items():
         assert expected["expected_counts"][key] == value
-    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 34
+    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 37
 
     assert set(expected["input_hashes"]) >= {
         "decision_support_report_sha256",
@@ -486,7 +486,8 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
     )
     suite = _read_json(suite_path)
     suite["required_current_result_count"] = 6
-    suite["passed_required_current_result_count"] = 6
+    suite["passed_required_current_result_count"] = 5
+    suite["current_promotion_ready"] = False
     suite["review_cases"] = [
         {
             "id": "v1-cg-ecid",
@@ -494,7 +495,7 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
                 {
                     "id": result_id,
                     "required_for_current_promotion": True,
-                    "passed": True,
+                    "passed": result_id != "final_qa_certification_report",
                 }
                 for result_id in [
                     "final_qa_certification_report",
@@ -537,8 +538,9 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
     assert promotion_summary["required_current_result_count"] == 2
     assert promotion_summary["passed_required_current_result_count"] == 2
     assert promotion_summary["live_required_current_result_count"] == 6
-    assert promotion_summary["live_passed_required_current_result_count"] == 6
+    assert promotion_summary["live_passed_required_current_result_count"] == 5
     assert promotion_summary["final_qa_current_result_count"] == 4
+    assert promotion_summary["final_qa_current_passed_result_count"] == 3
     markdown = regenerated.markdown_path.read_text(encoding="utf-8")
     assert "Phase eval baseline excluding final QA self-reference: `2/2`" in markdown
     assert "Phase eval live gate: `3/3`" in markdown
@@ -546,7 +548,7 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
         "Current promotion suite baseline excluding final QA packet gates: `2/2`"
         in markdown
     )
-    assert "Current promotion suite live gate: `6/6`" in markdown
+    assert "Current promotion suite live gate: `5/6`" in markdown
 
 
 def test_final_qa_validate_fails_when_validation_sidecar_output_hash_is_stale(

@@ -1,7 +1,7 @@
 {
   "schema_version": "east-crazies-final-qa-certification-config-v1",
   "config_id": "east-crazies-final-qa-certification-v1",
-  "as_of_date": "2026-05-07",
+  "as_of_date": "2026-05-08",
   "review_id": "v1-cg-ecid-compliance-review",
   "source_set_id": "source-set-ba8d0feae79501b8",
   "report_schema_version": "east-crazies-final-qa-certification-report-v1",
@@ -139,13 +139,13 @@
     },
     {
       "field": "candidate_authority_count",
-      "expected": 374,
+      "expected": 377,
       "source_selector": "applicability_partition.candidate_authority_count",
       "failure_category": "count_drift"
     },
     {
       "field": "applicable_authority_count",
-      "expected": 34,
+      "expected": 37,
       "source_selector": "applicability_partition.applicable_authority_count",
       "failure_category": "count_drift"
     },
@@ -163,25 +163,25 @@
     },
     {
       "field": "generated_rule_count",
-      "expected": 34,
+      "expected": 37,
       "source_selector": "finding_qa.generated_rule_count",
       "failure_category": "count_drift"
     },
     {
       "field": "authority_finding_count",
-      "expected": 34,
+      "expected": 37,
       "source_selector": "finding_qa.authority_finding_count",
       "failure_category": "count_drift"
     },
     {
       "field": "authority_finding_status_counts.pass",
-      "expected": 34,
+      "expected": 37,
       "source_selector": "finding_qa.authority_finding_status_counts.pass",
       "failure_category": "count_drift"
     },
     {
       "field": "rule_claim_link_count",
-      "expected": 147,
+      "expected": 162,
       "source_selector": "finding_qa.rule_claim_link_count",
       "failure_category": "count_drift"
     },
@@ -193,7 +193,7 @@
     },
     {
       "field": "compliance_matrix_authority_row_count",
-      "expected": 34,
+      "expected": 37,
       "source_selector": "finding_qa.compliance_matrix_authority_row_count",
       "failure_category": "count_drift"
     },

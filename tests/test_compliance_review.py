@@ -24,7 +24,7 @@ from usfs_r1_ea_sources.rule_packs import validate_rule_pack
 
 
 class ComplianceReviewTests(unittest.TestCase):
-    def test_v1_flpma_rule_is_first_class_compliance_contract(self) -> None:
+    def test_v1_land_exchange_rules_are_first_class_compliance_contract(self) -> None:
         rule_pack = json.loads(
             Path("config/compliance_rule_pack_nepa_ea_v0.json").read_text(encoding="utf-8")
         )
@@ -98,10 +98,95 @@ class ComplianceReviewTests(unittest.TestCase):
             expectation["rule_id"]: expectation
             for expectation in v1_contract["conditional_source_expectations"]
         }
-        flpma_expectation = conditional_expectations["flpma_section_206_land_exchange"]
-        self.assertEqual(flpma_expectation["expected_applicability"], "applicable")
-        self.assertEqual(flpma_expectation["expected_source_record_ids"], ["R1EA-146"])
-        self.assertEqual(flpma_expectation["expected_source_document_roles"], ["law"])
+        land_exchange_contracts = {
+            "flpma_section_206_land_exchange": {
+                "source_record_ids": ["R1EA-146"],
+                "document_roles": ["law"],
+                "family_id": "land_exchange_statutory_authorities",
+                "mode": "conditional",
+            },
+            "land_exchange_statutory_authorities": {
+                "source_record_ids": ["R1EA-137"],
+                "document_roles": ["law"],
+                "family_id": "land_exchange_statutory_authorities",
+                "mode": "conditional",
+            },
+            "land_exchange_regulatory_requirements": {
+                "source_record_ids": ["R1EA-124"],
+                "document_roles": ["regulation"],
+                "family_id": "land_exchange_regulatory_requirements",
+                "mode": "conditional",
+            },
+            "land_exchange_fs_policy_and_project_references": {
+                "source_record_ids": ["R1EA-150"],
+                "document_roles": ["agency_policy"],
+                "family_id": "land_exchange_fs_policy_and_project_references",
+                "mode": "conditional",
+            },
+        }
+        for rule_id, expected in land_exchange_contracts.items():
+            rule = _rule_by_id(rule_pack, rule_id)
+            self.assertEqual(rule["authority_source_record_id"], expected["source_record_ids"][0])
+            self.assertEqual(rule["applicability_mode"], expected["mode"])
+            self.assertEqual(rule["authority_family_id"], expected["family_id"])
+            self.assertIn("land exchange", [term.lower() for term in rule["package_terms"]])
+            generic_exchange_terms = {
+                "acquisition",
+                "appraisal",
+                "cash equalization",
+                "closing",
+                "disposal",
+                "easement",
+                "equal value",
+                "feasibility analysis",
+                "mineral reservation",
+                "outstanding rights",
+                "public interest determination",
+                "reservation",
+                "reservations",
+                "segregation",
+                "title evidence",
+            }
+            singleton_trigger_groups = {
+                tuple(term.lower() for term in group)
+                for group in rule.get("applies_if_package_term_groups", [])
+                if len(group) == 1
+            }
+            self.assertFalse(
+                {(term,) for term in generic_exchange_terms} & singleton_trigger_groups
+            )
+
+            coverage_item = _coverage_item_by_rule_id(coverage, rule_id)
+            self.assertEqual(coverage_item["source_record_ids"], expected["source_record_ids"])
+            self.assertEqual(
+                set(coverage_item["eval_case_ids"]),
+                {
+                    "all-authorities-pass",
+                    "baseline-nepa-only",
+                    "unrelated-package-produces-baseline-gaps",
+                },
+            )
+
+            self.assertEqual(eval_cases["all-authorities-pass"]["expected_statuses"][rule_id], "pass")
+            self.assertEqual(
+                eval_cases["baseline-nepa-only"]["expected_statuses"][rule_id],
+                "not_applicable",
+            )
+            self.assertEqual(
+                eval_cases["unrelated-package-produces-baseline-gaps"]["expected_statuses"][rule_id],
+                "not_applicable",
+            )
+
+            v1_expectation = conditional_expectations[rule_id]
+            self.assertEqual(v1_expectation["expected_applicability"], "applicable")
+            self.assertEqual(
+                v1_expectation["expected_source_record_ids"],
+                expected["source_record_ids"],
+            )
+            self.assertEqual(
+                v1_expectation["expected_source_document_roles"],
+                expected["document_roles"],
+            )
 
     def test_compliance_review_refuses_base_rule_pack_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

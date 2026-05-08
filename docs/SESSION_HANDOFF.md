@@ -2,6 +2,31 @@
 
 Date: 2026-05-08
 
+## Latest East Crazies Land-Exchange Matrix Closeout
+
+All land-exchange authority coverage is now a first-class V1 compliance artifact. The base
+`nepa-ea-v0` rule pack has `48` rules, with four land-exchange rows promoted into the matrix
+contract:
+
+- `flpma_section_206_land_exchange` (`R1EA-146`)
+- `land_exchange_statutory_authorities` (`R1EA-137`)
+- `land_exchange_regulatory_requirements` (`R1EA-124`)
+- `land_exchange_fs_policy_and_project_references` (`R1EA-150`)
+
+The promoted East Crazy Inspiration Divide review now records `377` candidate authorities, `37`
+applicable authorities, `340` non-applicable authorities, `37` generated compliance findings, `162`
+generated-pack rule-claim links, and `0` rule-claim gaps. The source-set NEPA 3D graph was also
+refreshed to `1,470` nodes, `2,648` edges, `48` base rules, and `211` base rule-claim links; the V1
+review overlay validates at `1,996` nodes, `3,550` edges, `377` decisions, and `37` generated
+findings.
+
+Intake now identifies land-exchange statutory, regulatory, and Forest Service policy/project cues,
+not only FLPMA Section 206. Generated artifacts under
+`source_library/reviews/v1-cg-ecid-compliance-review/` were refreshed and remain ignored.
+Verification replay is green: `phase-eval` `20/20`, `final-qa-certification` `166/166`,
+`final-qa-certification --validate-only` `166/166`, and non-strict `promotion-suite` current-ready
+with `26/26` required current-promotion results.
+
 ## Latest South Plateau Forest-Plan Context Closeout
 
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` is complete in the typed-blocker state.
@@ -57,15 +82,17 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
 
 - `compliance-review --reuse-package-cache`: refreshed the canonical compliance review and matrix
   family under `source_library/reviews/v1-cg-ecid-compliance-review/`, with
-  `reviewer_ready=true`, `validation_passed=true`, `34` generated findings, `34/34` pass
+  `reviewer_ready=true`, `validation_passed=true`, `37` generated findings, `37/37` pass
   findings, `340` non-applicable authorities with search coverage, `329` Forest Plan component
   findings, and `12/12` applicable standards applied.
-  The generated V1 matrix now includes the first-class FLPMA Section 206 land-exchange row
-  (`flpma_section_206_land_exchange`, `R1EA-146`) as a passing authority finding in the
-  `land_exchange_statutory_authorities` family.
-- FLPMA is now first-class at intake as well: `applicability-context-build` extracts
-  `authority:flpma_section_206_land_exchange` from FLPMA/43 U.S.C. 1716 package text and carries
-  the `R1EA-146` source-record binding into `package_applicability_context.json`.
+  The generated V1 matrix now includes four first-class land-exchange rows:
+  `flpma_section_206_land_exchange` (`R1EA-146`), `land_exchange_statutory_authorities`
+  (`R1EA-137`), `land_exchange_regulatory_requirements` (`R1EA-124`), and
+  `land_exchange_fs_policy_and_project_references` (`R1EA-150`).
+- Land-exchange authority coverage is now first-class at intake as well:
+  `applicability-context-build` extracts FLPMA/43 U.S.C. 1716, broader land-exchange statutory
+  signals, 36 CFR part 254 regulatory signals, and FSM/FSH land-exchange policy/project signals
+  into source-record-bound authority facts before applicability decisions.
 - `ea-consistency-document`: refreshed the decision-support JSON, Markdown, PDF, and manifest from
   the refreshed compliance artifacts; the follow-on phase replay validated the report with
   `reviewer_ready=true`.
@@ -94,9 +121,10 @@ the traceability contract. Follow-on `ea-consistency-document`, `final-qa-certif
 The baseline Sequence 0 replay originally recorded:
 
 - `ea-consistency-document --validate-only`: passed with `reviewer_ready=true`, valid JSON,
-  Markdown, PDF, and manifest, current input hashes, `34` applicable authorities, `340`
-  non-applicable authorities, `0` unresolved authorities, `374` candidate authorities, `34`
-  generated findings, `147` rule-claim links, `0` rule-claim gaps, `329` Forest Plan component
+  Markdown, PDF, and manifest, current input hashes, `37` applicable authorities, `340`
+  non-applicable authorities, `0` unresolved authorities, `377` candidate authorities, `37`
+  generated findings, `162` generated-pack rule-claim links, `0` rule-claim gaps,
+  `329` Forest Plan component
   rows, `58` Forest Plan standards, `12/12` applicable standards, `43` package files, and `1,265`
   package chunks.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `19/19` phases with
@@ -111,31 +139,31 @@ Current canonical artifact pointers:
 
 - Compliance matrix Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.md`
-  (`sha256=5e685f81a415a36ad88d33bb74c0f65586c738761067d8d44404c8cc80914a1b`)
+  (`sha256=5dd062837c8c060752dcde97c46e313a09c1f0278608ee35f572c8785d5a9dbc`)
 - Compliance matrix PDF:
   `source_library/reviews/v1-cg-ecid-compliance-review/compliance_matrix.pdf`
-  (`sha256=e8eec111f25780c1ca6dd6925ad6f2b2eff8bbc8de7bf0628bb72def280f09e9`)
+  (`sha256=d117093c64f879964ad08bdddb68a07b0c85d1f8b023e36aff7db3c51d800461`)
 - Decision-support JSON:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.json`
-  (`sha256=3683e2323e7b9933a49a6e9aafa80e3593e0e64499be3a6684d1c58b477997f8`)
+  (`sha256=ba88a097b861d6f23d2ad5c0e7b8a5a8a1fc27abd1ae838562d9b63a71ce6967`)
 - Decision-support Markdown:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.md`
-  (`sha256=00f1a32ef9228efd3ac767b1b1938488bd7b2032852090f0a5163decd71cd2ec`)
+  (`sha256=76f7f9c0e202f823350c6c7dd2ea01c1d0fd745745637eacaebbc3025ba27d07`)
 - Decision-support PDF:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support.pdf`
-  (`sha256=09ab448b5d595617303c2d973e2127365c0f8d614208046d8ed5611aa060d0aa`)
+  (`sha256=20a0e615e4b9f7b552044d430a356e4ccdec31e22ca3e078d59cce71d3623f9f`)
 - Decision-support manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/ea_consistency_decision_support_manifest.json`
-  (`sha256=d9ac649075b233d2aad6f2feb919e5324b027cdb84b2d3fc89ae92982d30c393`)
+  (`sha256=be3a9325dece6bf9943f11af28313202ec17eaed3da07c5d258709a0558907ad`)
 - Review-scoped phase eval:
   `source_library/reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`
-  (`sha256=e6ebf1f39701ece3061524cd7cac7083eeecb930a4b434ecbb9a9cbe20162c37`)
+  (`sha256=4b239e413f81f43db1a7aedb2fe6eb26715ea191966059c17990d955a436dec3`)
 - Non-strict promotion suite:
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  (`sha256=f01f7764ee9ffe07917f166389bf79fa844dc1a9674a051e3d3e9c93dd7cbb62`)
+  (`sha256=e705076df76900f9ac3422b07ea7af5fc81328de044dc98cd00254fdd392f9b1`)
 - Final QA validation sidecar:
   `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/east_crazies_final_qa_certification_validation.json`
-  (`sha256=17c76c91afad0c0c5ff568b3dab594a08b27dcf68e35dc84ec61446d645c6b6a`)
+  (`sha256=7872f76996cebb809fca59498225817d3f670291c2dea91531bf259e06b4648a`)
 
 Sequence 1 added:
 
@@ -169,7 +197,7 @@ command also passed `157/157` checks without rewriting outputs. The reader valid
 hashes, required gate selectors, review/source-set identity, semantic counts, configured source
 selectors, PDF headers, accepted V1 risk visibility, legal-conclusion safeguards, and the
 non-canonical root-level draft boundary. The Sequence 2 gap-close pass tightened acceptance
-alignment by carrying all `34` compliance-matrix authority findings in `finding_qa.findings`, each
+alignment by carrying all `37` compliance-matrix authority findings in `finding_qa.findings`, each
 with a compliance-matrix selector, package/source evidence pointers, and trace IDs, instead of only
 a representative finding row.
 
@@ -327,10 +355,10 @@ artifacts for current promotion.
 
 Latest local signals:
 
-- source-set graph export: `62/62` validation checks, `failure_category_counts={}`, `1,426` nodes,
-  and `2,586` edges;
-- V1 review graph export: `76/76` validation checks, `failure_category_counts={}`, `1,937` nodes,
-  and `3,470` edges;
+- source-set graph export: `62/62` validation checks, `failure_category_counts={}`, `1,470` nodes,
+  and `2,648` edges;
+- V1 review graph export: `76/76` validation checks, `failure_category_counts={}`, `1,996` nodes,
+  and `3,550` edges;
 - V1 review-bound `phase-eval`: `20/20` phases passed with `reviewer_ready=true`;
 - non-strict `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `expansion_artifacts_ready=false`, `26/26` required current-promotion
@@ -578,7 +606,7 @@ Verified results from the latest Milestone 5 arbitration coverage pass:
 - `promotion-suite`: `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`; expansion blockers remain `adjudication_needed` and
   `package_fixture_missing`
-- The current V1 applicability artifact family remains reviewer-ready with `374` candidates, `34`
+- The current V1 applicability artifact family remains reviewer-ready with `377` candidates, `37`
   applicable authorities, `340` non-applicable authorities, no unresolved/adjudication decisions,
   and `generated_rule_pack_ready=true`.
 - Ruff, compileall, JSON validation, and `git diff --check`: passed
@@ -761,8 +789,8 @@ legal conclusion.
     Boundary.
   - Sequence 0 pass 5 is complete in
     `docs/EA_CONSISTENCY_DECISION_SUPPORT_PREFLIGHT_PASS_5_AUTHORITY_UNIVERSE_BOUNDARY.md`:
-    applicable and non-applicable authority partitions are disjoint and cover all `374` candidates,
-    with `34` applicable authorities, `340` non-applicable authorities, `340` search coverage
+    applicable and non-applicable authority partitions are disjoint and cover all `377` candidates,
+    with `37` applicable authorities, `340` non-applicable authorities, `340` search coverage
     certificates, exact non-applicable appendix alignment, generated-rule-pack validation proving
     generated rules derive only from applicable authorities, and the compliance matrix linking to
     non-applicable artifacts instead of double-counting them as findings. The next preflight pass is
@@ -818,7 +846,7 @@ legal conclusion.
     stale, hash-mismatched, non-reviewer-ready, unresolved-selector, missing-evidence, or
     legal-conclusion conditions, and writes canonical JSON plus Markdown, PDF, and manifest outputs
     under `source_library/reviews/<review_id>/decision_support/`. A local run for
-    `v1-cg-ecid-compliance-review` passed and wrote the ignored generated report family with `34`
+    `v1-cg-ecid-compliance-review` passed and wrote the ignored generated report family with `37`
     applicable authority findings, `340` non-applicable authorities, `329` Forest Plan component
     rows, `12/12` applicable standards applied, `0` open authority/Forest Plan resolution items, and
     a valid `%PDF-` PDF header. Sequence 3 closed out that first real report output; Sequence 4 now
@@ -827,7 +855,7 @@ legal conclusion.
     decision-support family under
     `source_library/reviews/v1-cg-ecid-compliance-review/decision_support/`:
     `ea_consistency_decision_support.json`, `.md`, `.pdf`, and `_manifest.json`. The generated
-    report validation passed with `34` applicable authority findings rendered as `pass`, `340`
+    report validation passed with `37` applicable authority findings rendered as `pass`, `340`
     non-applicable authorities summarized with search coverage, `329` Forest Plan component rows,
     all `12/12` applicable Forest Plan standards carrying package and plan evidence, `9`
     implementation-confirmation rows with evidence, `3` residual-risk notes, `0` legal-conclusion
@@ -893,15 +921,15 @@ legal conclusion.
   `nepa-knowledge-graph-export` CLI command build the source-set graph from catalog graph seeds,
   authority inventory/currentness, evidence graph inputs, source claims, rule-claim links, the base
   rule pack, authority-family templates, forest-plan profiles, and forest-plan component inventory.
-  The refreshed `source-set-ba8d0feae79501b8` export passed `62` validation checks with `1,426`
-  nodes, `2,586` edges, all `35` authority families, all `190` catalog source records, all `45` base
-  rules, all `19` authority-family templates, `196` rule-claim links, and `329` forest-plan
+  The refreshed `source-set-ba8d0feae79501b8` export passed `62` validation checks with `1,470`
+  nodes, `2,648` edges, all `35` authority families, all `190` catalog source records, all `48` base
+  rules, all `19` authority-family templates, `211` rule-claim links, and `329` forest-plan
   components.
 - NEPA 3D Milestone 4 is implemented. `nepa-knowledge-graph-export --review-id` writes the
   review-specific graph under `source_library/reviews/<review_id>/knowledge_graph/` from existing
   applicability-first and compliance artifacts. The refreshed `v1-cg-ecid-compliance-review`
-  overlay passed `76` validation checks with `1,937` nodes, `3,470` edges, `374` candidate
-  authorities/decisions, `34` generated rules and compliance findings, and `340` non-applicable
+  overlay passed `76` validation checks with `1,996` nodes, `3,550` edges, `377` candidate
+  authorities/decisions, `37` generated rules and compliance findings, and `340` non-applicable
   authorities with search coverage. The gap-close checks now also require hashed review artifact
   inputs and resolving search-coverage, retrieval-trace, and graph-trace references.
 - NEPA 3D Milestone 5 is implemented. `config/region1_forest_plan_readiness_nepa_3d_v1.json`
@@ -909,8 +937,8 @@ legal conclusion.
   overlay requirement groups. `config/forest_plan_profiles.json` now contains the first added
   Beaverhead-Deerlodge profile contract with catalog-confirmed planning page/LMP source rows,
   positive and hard-negative applicability fixture contracts, and a component-inventory blocker
-  before graph promotion. The source-set graph passed `62` validation checks with `1,426` nodes and
-  `2,586` edges, `1` graph-ready profile, `9` broader Region 1 profiles blocked from completeness
+  before graph promotion. The source-set graph passed `62` validation checks with `1,470` nodes and
+  `2,648` edges, `1` graph-ready profile, `9` broader Region 1 profiles blocked from completeness
   claims, and graph-visible field-directive/overlay requirement nodes linked to catalog sources.
 - NEPA 3D Milestone 6 is implemented. `viewer/nepa-3d/` is a checked-in static viewer over the
   normalized graph export. It uses `viewer/nepa-3d/manifest.json` to load the current source-set
@@ -995,9 +1023,9 @@ Current run result:
 
 - Package extraction wrote `43` manifest rows and `1,265` package chunks.
 - Compliance review wrote JSON, Markdown, PDF matrix, and finding graph artifacts.
-- Applicability validation covers `374` candidates with `34` applicable and `340` non-applicable
+- Applicability validation covers `377` candidates with `37` applicable and `340` non-applicable
   authorities, no unresolved/adjudication decisions, and `generated_rule_pack_ready=true`.
-- Compliance findings: `34` generated-pack findings, all `34` pass.
+- Compliance findings: `37` generated-pack findings, all `37` pass.
 - All `26` baseline source records were evaluated.
 - The profile-driven forest-plan resolver now resolves the package to `scope_status:
   custer_gallatin`; context validation passes and `needs_reviewer_resolution` is `false`.
@@ -1078,9 +1106,9 @@ Primary gate artifacts/checks:
 - V1 EA gate repair milestone 6 promoted the final pre-applicability V1 gate on 2026-05-03. That
   base-pack rerun had `44` findings, `40` pass findings, `4` not-applicable findings, all `26`
   baseline source records evaluated, `191` rule-claim links, and `0` rule-claim gaps. The current
-  generated-pack V1 review supersedes it with `34` generated findings, `34` pass findings, `147`
-generated-pack rule-claim links, and `0` rule-claim gaps. `forest-plan-component-eval` passes
-  `35/35`, review-bound `phase-eval` passes `17/17`, and `v1-ea-eval` passes broader EA and
+  generated-pack V1 review supersedes it with `37` generated findings, `37` pass findings, `162`
+  generated-pack rule-claim links, and `0` rule-claim gaps. `forest-plan-component-eval` passes
+  `35/35`, review-bound `phase-eval` passes `20/20`, and `v1-ea-eval` passes broader EA and
   forest-plan lanes. Base-pack compliance-gold eval outputs remain useful through
   `rule_pack_match_mode=generated_base`, but direct base-pack compliance-review reruns are
   diagnostic unless explicitly allowed.
