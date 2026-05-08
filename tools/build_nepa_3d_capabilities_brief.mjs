@@ -38,6 +38,14 @@ const sourceSetValidationPath = path.join(
   "knowledge_graph",
   "nepa_3d_graph_validation.json"
 );
+const sourceSetGraphPath = path.join(
+  repoRoot,
+  "source_library",
+  "derived",
+  "source-set-ba8d0feae79501b8",
+  "knowledge_graph",
+  "nepa_3d_graph.json"
+);
 const catalogManifestPath = path.join(repoRoot, "source_library", "catalog", "source_set_manifest.json");
 const promotionSuitePath = path.join(
   repoRoot,
@@ -91,6 +99,7 @@ async function main() {
 async function currentMetrics() {
   const summary = await readJsonIfExists(sourceSetSummaryPath);
   const validation = await readJsonIfExists(sourceSetValidationPath);
+  const graph = await readJsonIfExists(sourceSetGraphPath);
   const catalog = await readJsonIfExists(catalogManifestPath);
   const promotion = await readJsonIfExists(promotionSuitePath);
   const phaseEval = await readJsonIfExists(phaseEvalPath);
@@ -100,6 +109,12 @@ async function currentMetrics() {
   const currentGatePassed = promotion?.passed_required_current_result_count || 0;
   const phaseTotal = phaseEval?.phase_count || (Array.isArray(phaseEval?.phases) ? phaseEval.phases.length : 0);
   const phasePassed = phaseEval?.passed_phase_count || 0;
+  const authorityFamilyNodes = Array.isArray(graph?.nodes)
+    ? graph.nodes.filter((node) => node.node_type === "authority_family")
+    : [];
+  const nepaFamilyCount = authorityFamilyNodes.filter((node) =>
+    /nepa|national environmental policy act/i.test(`${node.node_id || ""} ${node.label || ""}`)
+  ).length;
 
   return {
     activeReviewCorpus: summary?.source_partition_counts?.active_review_corpus || 0,
@@ -110,6 +125,8 @@ async function currentMetrics() {
     nodeCount: summary?.node_count || 0,
     edgeCount: summary?.edge_count || 0,
     authorityFamilies: summary?.authority_family_count || summary?.node_type_counts?.authority_family || 0,
+    nepaFamilyCount,
+    regulationAuthorityCount: summary?.authority_category_counts?.regulation || 0,
     baseRules: summary?.base_rule_count || 0,
     authorityTemplates: summary?.authority_family_rule_template_count || 0,
     sourceClaims: summary?.rule_claim_link_count || summary?.node_type_counts?.source_claim || 0,
@@ -151,7 +168,7 @@ async function writeAssets(metrics) {
     ["current_authority_stack", currentAuthorityStackSvg(metrics)],
     ["graph_applicability_service_view", operatingModelSvg(metrics)],
     ["graph_evidence_trace_service_view", evidenceTraceSvg(metrics)],
-    ["graph_readiness_service_view", readinessGateSvg(metrics)]
+    ["graph_r1_showcase_view", r1GraphShowcaseSvg(metrics)]
   ];
   for (const [name, svg] of assets) {
     const svgPath = path.join(assetDir, `${name}.svg`);
@@ -460,27 +477,26 @@ function briefHtml(metrics) {
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 3 / Readiness, Governance, And Expansion</div>
-      <h2>Promotion gates make readiness explicit</h2>
-      <p class="lede">A polished report is not the readiness signal. The system checks source capture, currentness, evidence, graph validity, review outputs, final QA, and promotion before it marks a review ready.</p>
+      <div class="kicker">Capability 3 / Region 1 3D Graph</div>
+      <h2>NEPA, USDA regulations, and forest plans in one graph</h2>
+      <p class="lede">The Region 1 graph is the client-facing surface for the system. It shows NEPA authority, USDA regulations and procedures, source evidence, and forest-plan layers as connected but distinct parts of the review universe.</p>
     </header>
     <main>
-      <img class="graph-figure tall" src="assets/graph_readiness_service_view.png" alt="Readiness gates and expansion boundary for the NEPA review system" />
+      <img class="graph-figure tall" src="assets/graph_r1_showcase_view.png" alt="Region 1 3D graph showcase with NEPA, USDA regulations, source evidence, and forest-plan layers" />
       <div class="grid-2" style="margin-top:0.12in">
         <div class="callout">
-          <strong>Ready means replayable</strong>
-          <p>The underlying source, evidence, graph, review, QA, and promotion artifacts can be regenerated and checked against the same gates.</p>
+          <strong>Separate forest-plan layer</strong>
+          <p>Forest-plan profiles and components are graphed separately from NEPA and USDA authority, then linked into review context when ready.</p>
         </div>
         <div class="callout">
-          <strong>Blocked means specific</strong>
-          <p>Missing sources, profile gaps, superseded authority, and chapter-level deltas stay typed and visible instead of becoming a generic failure.</p>
+          <strong>Authority layer</strong>
+          <p>NEPA authority, USDA procedures, and regulatory families stay visible beside source evidence so reviewers can inspect how findings are supported.</p>
         </div>
       </div>
-      <p class="source-note">Boundary statement: the system produces auditable review support and readiness evidence. It does not replace professional judgment, agency review, or legal sufficiency review.</p>
     </main>
     <footer class="footer">
-      <span>Forest-plan readiness tracked: ${metrics.graphReadyProfiles}/${metrics.profileCount} profiles graph-ready, ${metrics.blockedProfiles} blocked.</span>
-      <span>Current promotion: ${metrics.currentPromotionReady ? "ready" : "not ready"} with ${failureCategoryText(metrics.promotionFailureCategories)} current failures.</span>
+      <span>R1 graph surface: ${metrics.nodeCount.toLocaleString()} nodes and ${metrics.edgeCount.toLocaleString()} edges.</span>
+      <span>Forest plans: ${metrics.profileCount} profiles and ${metrics.forestComponents.toLocaleString()} components represented as a separate layer.</span>
     </footer>
   </section>
 </body>
@@ -598,34 +614,64 @@ function evidenceTraceSvg(metrics) {
 </svg>`;
 }
 
-function readinessGateSvg(metrics) {
-  const gates = [
-    ["Source capture", "catalog and artifact links complete", true],
-    ["Currentness", "active, blocked, and superseded roles checked", metrics.currentnessPassed],
-    ["Evidence build", "extraction, retrieval, claims, and graph inputs rebuilt", true],
-    ["Graph validation", "schema, provenance, endpoints, and summaries valid", metrics.validationPassed],
-    ["Review outputs", "matrix, decision support, final QA, and PDF artifacts valid", metrics.phaseReviewerReady],
-    ["Promotion", "current gate suite ready", metrics.currentPromotionReady]
-  ];
+function r1GraphShowcaseSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="Readiness gates and expansion boundary for the NEPA review system">
-  ${svgDefs()}
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="Region 1 3D graph showcase with NEPA, USDA regulations, evidence, and forest plan layers">
+  ${graphShowcaseDefs()}
   <rect width="1800" height="1180" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Readiness gate stack</text>
-  ${wrapSvgText("Readiness is an artifact state. The system must prove source, evidence, graph, review, QA, and promotion gates before outputs are treated as ready.", 72, 138, 1560, 22, "#58615b", 2)}
-  <g transform="translate(72 224)" filter="url(#shadow)">
-    <rect width="1018" height="790" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Current readiness gates</text>
-    ${gates.map((gate, index) => gateRow(34, 94 + index * 104, gate[0], gate[1], gate[2])).join("")}
-  </g>
-  <g transform="translate(1160 224)" filter="url(#shadow)">
-    <rect width="568" height="790" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="30" y="54" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="880" fill="#17202a">Expansion blockers stay typed</text>
-    ${blockerTile(30, 104, "#a65332", "Forest profile not ready", readinessCount(metrics, "forest_profile_not_ready"), "profile coverage not complete")}
-    ${blockerTile(30, 252, "#835b2f", "Missing source", readinessCount(metrics, "missing_source"), "required source absent or unresolved")}
-    ${blockerTile(30, 400, "#68706a", "Superseded source", readinessCount(metrics, "superseded_source"), "visible for currentness only")}
-    ${blockerTile(30, 548, "#6f4f86", "Chapter delta", readinessCount(metrics, "fsh_chapter_delta_required"), "handbook chapter split required")}
-    <text x="30" y="728" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#1f6f68">${metrics.graphReadyProfiles}/${metrics.profileCount} tracked forest-plan profiles are graph-ready.</text>
+  <g transform="translate(72 82)" filter="url(#shadow)">
+    <rect width="1656" height="940" rx="30" fill="#0d1821"/>
+    <rect x="18" y="18" width="1620" height="904" rx="24" fill="url(#nightGlow)" stroke="#314653"/>
+    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Region 1 3D knowledge graph</text>
+    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">Authority, evidence, and forest-plan layers remain distinct but connected.</text>
+
+    ${showcaseEdge(820, 430, 430, 285, "#2ad0bc", 0.72)}
+    ${showcaseEdge(820, 430, 1220, 285, "#e7aa54", 0.72)}
+    ${showcaseEdge(820, 430, 830, 695, "#71d58a", 0.72)}
+    ${showcaseEdge(820, 430, 420, 690, "#66a9e7", 0.5)}
+    ${showcaseEdge(820, 430, 1240, 690, "#b38ee8", 0.5)}
+    ${showcaseEdge(430, 285, 1220, 285, "#45606c", 0.42)}
+    ${showcaseEdge(420, 690, 830, 695, "#45606c", 0.42)}
+    ${showcaseEdge(1240, 690, 830, 695, "#45606c", 0.42)}
+
+    ${showcaseHub(820, 430, "#f8faf7", "R1 Graph", `${metrics.nodeCount.toLocaleString()} nodes / ${metrics.edgeCount.toLocaleString()} edges`)}
+    ${showcaseCluster(430, 285, "#2ad0bc", "NEPA", `${metrics.nepaFamilyCount || 4} authority families`, [
+      "Core statute",
+      "EA duties",
+      "FS NEPA policy",
+      "supersession flags"
+    ])}
+    ${showcaseCluster(1220, 285, "#e7aa54", "USDA Regulations", `${metrics.regulationAuthorityCount.toLocaleString()} regulation families`, [
+      "7 CFR part 1b",
+      "agency procedures",
+      "rule templates",
+      "currentness checks"
+    ])}
+    ${showcaseCluster(830, 695, "#71d58a", "Forest Plans", `${metrics.profileCount} profiles / ${metrics.forestComponents.toLocaleString()} components`, [
+      "separate graph layer",
+      "plan components",
+      "profile readiness",
+      "overlay requirements"
+    ])}
+    ${showcaseCluster(420, 690, "#66a9e7", "Source Evidence", `${metrics.sourceRecords.toLocaleString()} records / ${metrics.sourceClaims.toLocaleString()} claim links`, [
+      "catalog rows",
+      "artifact hashes",
+      "evidence spans",
+      "citation labels"
+    ])}
+    ${showcaseCluster(1240, 690, "#b38ee8", "Review Views", "lenses, search, scenes", [
+      "authority graph",
+      "evidence paths",
+      "readiness blockers",
+      "review outputs"
+    ])}
+
+    <g transform="translate(54 798)">
+      ${showcaseLegend(0, 0, "#2ad0bc", "NEPA graphed")}
+      ${showcaseLegend(270, 0, "#e7aa54", "USDA regulations graphed")}
+      ${showcaseLegend(640, 0, "#71d58a", "Forest plans graphed separately")}
+      ${showcaseLegend(1110, 0, "#66a9e7", "Source evidence linked")}
+    </g>
   </g>
 </svg>`;
 }
@@ -637,6 +683,76 @@ function architectureCard(x, y, width, height, color, title, body) {
     <circle cx="28" cy="48" r="10" fill="${color}"/>
     ${wrapSvgText(title, 48, 55, width - 74, 21, "#17202a", 1, "start", "870")}
     ${wrapSvgText(body, 24, 92, width - 48, 16, "#58615b", 3)}
+  </g>`;
+}
+
+function graphShowcaseDefs() {
+  return `<defs>
+    <radialGradient id="nightGlow" cx="50%" cy="42%" r="72%">
+      <stop offset="0" stop-color="#183342"/>
+      <stop offset="0.58" stop-color="#0f202b"/>
+      <stop offset="1" stop-color="#0a131b"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#17202a" flood-opacity="0.18"/>
+    </filter>
+    <filter id="glow" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>`;
+}
+
+function showcaseEdge(x1, y1, x2, y2, color, opacity) {
+  const cx = (x1 + x2) / 2;
+  const cy = Math.min(y1, y2) - 80;
+  return `<path d="M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="5" stroke-opacity="${opacity}" stroke-linecap="round"/>`;
+}
+
+function showcaseHub(x, y, color, title, subtitle) {
+  return `<g transform="translate(${x} ${y})" filter="url(#glow)">
+    <circle r="100" fill="#132734" stroke="${color}" stroke-width="4"/>
+    <circle r="67" fill="#1f6f68" opacity="0.38"/>
+    <circle r="22" fill="${color}"/>
+    <text y="-12" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
+    <text y="28" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="760" fill="#c8d7d3">${escapeXml(subtitle)}</text>
+  </g>`;
+}
+
+function showcaseCluster(x, y, color, title, subtitle, labels) {
+  const satellites = [
+    [-118, -72],
+    [118, -72],
+    [-118, 72],
+    [118, 72]
+  ];
+  return `<g transform="translate(${x} ${y})">
+    ${satellites
+      .map(([sx, sy], index) => {
+        const pulse = index % 2 === 0 ? 20 : 14;
+        return `<line x1="0" y1="0" x2="${sx}" y2="${sy}" stroke="${color}" stroke-opacity="0.42" stroke-width="3"/>
+        <g transform="translate(${sx} ${sy})">
+          <circle r="35" fill="#0d1821" stroke="${color}" stroke-width="3" filter="url(#glow)"/>
+          <circle r="${pulse}" fill="${color}" opacity="0.16"/>
+        </g>`;
+      })
+      .join("")}
+    <circle r="78" fill="#102431" stroke="${color}" stroke-width="5" filter="url(#glow)"/>
+    <circle r="46" fill="${color}" opacity="0.22"/>
+    <text y="-8" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
+    <text y="28" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="${color}">${escapeXml(subtitle)}</text>
+  </g>`;
+}
+
+function showcaseLegend(x, y, color, label) {
+  const width = Math.max(210, label.length * 11 + 54);
+  return `<g transform="translate(${x} ${y})">
+    <rect width="${width}" height="54" rx="27" fill="#122633" stroke="#314653"/>
+    <circle cx="28" cy="27" r="10" fill="${color}"/>
+    <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">${escapeXml(label)}</text>
   </g>`;
 }
 

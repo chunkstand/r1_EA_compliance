@@ -243,7 +243,7 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `docs/capabilities/nepa_3d_capabilities_brief.html`
   - `docs/capabilities/assets/graph_applicability_service_view.png`
   - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
-  - `docs/capabilities/assets/graph_readiness_service_view.png`
+  - `docs/capabilities/assets/graph_r1_showcase_view.png`
   - `tools/build_nepa_3d_capabilities_brief.mjs`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
