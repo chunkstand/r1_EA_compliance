@@ -2379,14 +2379,16 @@ valid `%PDF-` compliance matrix PDF.
 
 `review_packet_index.json` has schema version `review-packet-index-v1`. It carries the reviewer
 boundary, artifact inventory, row-inventory summary, render-manifest summary, applicable authority
-rows, non-applicable authority boundary, Forest Plan component rows, applicable standards,
-implementation confirmations, residual risks, and replay commands. It includes selectors to
-decision-support and final-QA rows but does not make root-level `East_Crazies_*` drafts canonical.
+rows, a dedicated `land_exchange_rows` subset, non-applicable authority boundary, Forest Plan
+component rows, applicable standards, implementation confirmations, residual risks, and replay
+commands. It includes selectors to decision-support and final-QA rows but does not make root-level
+`East_Crazies_*` drafts canonical.
 
 `review_packet_index_validation.json` has schema version `review-packet-index-validation-v1`. It
 fails closed on missing or unparsable required artifacts, missing applicable authority rows, missing
 matrix render rows, missing packet index rows, missing Forest Plan rows, missing non-applicable
-boundary evidence, invalid packet PDF header, and non-canonical root draft dependencies. Review-
+boundary evidence, missing first-class land-exchange packet rows, invalid packet PDF header, and
+non-canonical root draft dependencies. Review-
 scoped `phase-eval` includes a `review_packet_index` phase when this sidecar exists, and
 `config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
 and validation sidecar for current East Crazies promotion.

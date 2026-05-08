@@ -57,8 +57,9 @@ if any of those required land-exchange rows disappear or lose their expected sou
 authority-family, applicability, or pass-status metadata.
 The signer-facing review packet index under
 `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/` proves the full
-`37`/`340`/`79`/`12` row universe, the compliance matrix render manifest, and the root-level draft
-quarantine boundary; the current final-QA validate-only replay passes `196/196`.
+`37`/`340`/`79`/`12` row universe, exposes the four land-exchange rows as a dedicated first-class
+packet section, proves the compliance matrix render manifest, and keeps the root-level draft
+quarantine boundary visible; the current final-QA validate-only replay passes `196/196`.
 
 Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,

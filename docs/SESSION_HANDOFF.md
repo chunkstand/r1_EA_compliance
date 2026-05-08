@@ -12,13 +12,15 @@ signer-facing review packet index, PDF, and validation sidecar under
 The packet index validates the full current row universe: `37` applicable authority rows, `340`
 non-applicable authority boundary rows, `79` Forest Plan component rows, `12` applicable Forest
 Plan standards, and all four land-exchange rows with their expected source records
-(`R1EA-146`, `R1EA-137`, `R1EA-124`, and `R1EA-150`). The compliance matrix Markdown now exposes
-deterministic row markers, and `compliance_matrix_render_manifest.json` proves `37` authority plus
-`79` Forest Plan rendered rows. Root-level `East_Crazies_*` draft exports remain non-canonical.
+(`R1EA-146`, `R1EA-137`, `R1EA-124`, and `R1EA-150`). The row inventory and packet index now expose
+those land-exchange rows as a dedicated first-class section, not only as a subset of general
+authority rows. The compliance matrix Markdown now exposes deterministic row markers, and
+`compliance_matrix_render_manifest.json` proves `37` authority plus `79` Forest Plan rendered rows.
+Root-level `East_Crazies_*` draft exports remain non-canonical.
 
 Regenerated local packet artifacts remain ignored. Latest replay signals:
 
-- `review-packet-index`: passed with `29` checks and `0` failures.
+- `review-packet-index`: passed with `30` checks and `0` failures.
 - `ea-consistency-document`: passed with live packet row checks and rewrote the decision-support
   JSON/manifest.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `21/21`, including
@@ -53,7 +55,7 @@ findings.
 Intake now identifies land-exchange statutory, regulatory, and Forest Service policy/project cues,
 not only FLPMA Section 206. Generated artifacts under
 `source_library/reviews/v1-cg-ecid-compliance-review/` were refreshed and remain ignored.
-Post row-completeness verification replay is green: `review-packet-index` `29/29`,
+Post row-completeness verification replay is green: `review-packet-index` `30/30`,
 `phase-eval` `21/21`, `final-qa-certification` `196/196`,
 `final-qa-certification --validate-only` `196/196`, and non-strict `promotion-suite`
 current-ready with `31/31` required current-promotion results.
@@ -129,7 +131,7 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
   `reviewer_ready=true`.
 - `v1-ea-eval --eval-file config/v1_ecid_real_ea_eval.json`: passed with `passed=true`,
   `broader_ea_passed=true`, and `forest_plan_passed=true`.
-- `review-packet-index`: passed `29/29`, wrote the ignored packet index family, and validated the
+- `review-packet-index`: passed `30/30`, wrote the ignored packet index family, and validated the
   full `37`/`340`/`79`/`12` row universe.
 - `final-qa-certification`: passed `196/196` and refreshed the ignored JSON, Markdown, PDF,
   manifest, and validation family; the follow-up `--validate-only` also passed `196/196` after the

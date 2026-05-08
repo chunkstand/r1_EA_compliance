@@ -5,6 +5,7 @@ import json
 import tempfile
 
 from usfs_r1_ea_sources.review_packet_index import (
+    LAND_EXCHANGE_RULE_SOURCES,
     PACKET_INDEX_SCHEMA_VERSION,
     RENDER_MANIFEST_SCHEMA_VERSION,
     ROW_INVENTORY_SCHEMA_VERSION,
@@ -38,6 +39,7 @@ def test_review_packet_index_generates_row_inventory_manifest_and_packet() -> No
         assert packet["schema_version"] == PACKET_INDEX_SCHEMA_VERSION
         assert validation["schema_version"] == VALIDATION_SCHEMA_VERSION
         assert inventory["summary"]["applicable_authority_count"] == 1
+        assert inventory["summary"]["land_exchange_row_count"] == 0
         assert inventory["summary"]["non_applicable_authority_count"] == 1
         assert inventory["summary"]["forest_plan_component_row_count"] == 1
         assert inventory["summary"]["applicable_standard_count"] == 1
@@ -47,6 +49,41 @@ def test_review_packet_index_generates_row_inventory_manifest_and_packet() -> No
             "matrix-row:authority:purpose_need"
         )
         assert validation["summary"]["failure_category_counts"] == {}
+
+
+def test_review_packet_index_exposes_land_exchange_rows_as_first_class_section() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        review_id = "review-1"
+        review_dir = output_dir / "reviews" / review_id
+        _write_minimal_review(review_dir, review_id=review_id)
+        _append_land_exchange_rows(review_dir, review_id=review_id)
+
+        result = run_review_packet_index(output_dir=output_dir, review_id=review_id)
+
+        assert result.summary["passed"] is True
+        assert result.summary["land_exchange_row_count"] == len(LAND_EXCHANGE_RULE_SOURCES)
+
+        inventory = _read_json(result.row_inventory_path)
+        packet = _read_json(result.packet_index_path)
+        validation = _read_json(result.validation_path)
+        inventory_markdown = result.row_inventory_markdown_path.read_text(encoding="utf-8")
+        packet_markdown = result.packet_index_markdown_path.read_text(encoding="utf-8")
+
+        expected_sources = dict(LAND_EXCHANGE_RULE_SOURCES)
+        assert inventory["summary"]["land_exchange_row_count"] == len(expected_sources)
+        assert {
+            row["rule_id"]: row["authority_source_record_id"]
+            for row in packet["land_exchange_rows"]
+        } == expected_sources
+        assert "## Land-Exchange Rows" in inventory_markdown
+        assert "## Land-Exchange Rows" in packet_markdown
+        assert (
+            _validation_check(validation, "land_exchange_rows_first_class_in_packet_index")[
+                "passed"
+            ]
+            is True
+        )
 
 
 def test_review_packet_index_fails_when_final_qa_drops_applicable_row() -> None:
@@ -231,6 +268,84 @@ def _write_minimal_review(review_dir: Path, *, review_id: str) -> None:
             "residual_blockers_and_stop_conditions": {"blockers": []},
         },
     )
+
+
+def _append_land_exchange_rows(review_dir: Path, *, review_id: str) -> None:
+    matrix_path = review_dir / "compliance_matrix.json"
+    matrix = _read_json(matrix_path)
+    markers = []
+    rows = []
+    for rule_id, source_record_id in LAND_EXCHANGE_RULE_SOURCES.items():
+        row = {
+            "row_id": f"matrix:{review_id}:{rule_id}",
+            "rule_id": rule_id,
+            "rule_title": rule_id.replace("_", " ").title(),
+            "authority_category": "law",
+            "authority_source_record_id": source_record_id,
+            "authority_family_ids": ["land_exchange_statutory_authorities"],
+            "candidate_authority_id": f"candidate:{rule_id}",
+            "applicability_decision_id": f"decision:{rule_id}",
+            "applicability_status": "applicable",
+            "applicability_mode": "conditional",
+            "status": "pass",
+            "ea_package_citation": "EA-PACKAGE-002",
+            "source_library_citation": source_record_id,
+            "source_claim_ids": [f"claim:{rule_id}"],
+        }
+        rows.append(row)
+        markers.append(f"<!-- matrix-row:authority:{rule_id} -->")
+    matrix["rows"].extend(rows)
+    _write_json(matrix_path, matrix)
+
+    markdown_path = review_dir / "compliance_matrix.md"
+    markdown_path.write_text(
+        markdown_path.read_text(encoding="utf-8") + "\n" + "\n".join(markers) + "\n",
+        encoding="utf-8",
+    )
+
+    compliance_review = _read_json(review_dir / "compliance_review.json")
+    compliance_review["findings"].extend(rows)
+    _write_json(review_dir / "compliance_review.json", compliance_review)
+
+    applicable = _read_json(review_dir / "applicability" / "applicable_authorities.json")
+    applicable["authorities"].extend(
+        {
+            "rule_template": {"rule_id": row["rule_id"]},
+            "candidate_authority_id": row["candidate_authority_id"],
+            "decision_id": row["applicability_decision_id"],
+            "status": "applicable",
+            "authority_category": "law",
+            "authority_family_ids": row["authority_family_ids"],
+            "source_record_ids": [row["authority_source_record_id"]],
+        }
+        for row in rows
+    )
+    _write_json(review_dir / "applicability" / "applicable_authorities.json", applicable)
+
+    generated = _read_json(review_dir / "applicability" / "generated_rule_pack.json")
+    generated["rules"].extend({"id": row["rule_id"]} for row in rows)
+    _write_json(review_dir / "applicability" / "generated_rule_pack.json", generated)
+
+    decision_support = _read_json(
+        review_dir / "decision_support" / "ea_consistency_decision_support.json"
+    )
+    decision_support["authority_findings"].extend(
+        {"rule_id": row["rule_id"]} for row in rows
+    )
+    _write_json(
+        review_dir / "decision_support" / "ea_consistency_decision_support.json",
+        decision_support,
+    )
+
+    final_qa = _read_json(
+        review_dir / "final_qa" / "east_crazies_final_qa_certification.json"
+    )
+    final_qa["finding_qa"]["findings"].extend({"rule_id": row["rule_id"]} for row in rows)
+    _write_json(review_dir / "final_qa" / "east_crazies_final_qa_certification.json", final_qa)
+
+
+def _validation_check(validation: dict, name: str) -> dict:
+    return next(check for check in validation["checks"] if check["name"] == name)
 
 
 def _write_json(path: Path, payload: dict) -> None:

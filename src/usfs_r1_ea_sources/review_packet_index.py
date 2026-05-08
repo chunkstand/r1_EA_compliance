@@ -452,6 +452,7 @@ def _build_row_inventory(
         _standard_ledger_row(row=row, review_dir=review_dir)
         for row in sorted(applicable_standards, key=lambda value: str(value.get("component_key")))
     ]
+    land_exchange_rows = _land_exchange_ledger_rows(authority_rows)
     return {
         "schema_version": ROW_INVENTORY_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -459,6 +460,7 @@ def _build_row_inventory(
         "source_set_id": matrix.get("source_set_id"),
         "summary": {
             "applicable_authority_count": len(applicable_rule_ids),
+            "land_exchange_row_count": len(land_exchange_rows),
             "non_applicable_authority_count": len(non_applicable_rows),
             "forest_plan_component_row_count": len(forest_rows),
             "applicable_standard_count": len(standard_rows),
@@ -489,6 +491,7 @@ def _build_row_inventory(
             "applicable_standard_component_ids": sorted(standard_component_ids),
         },
         "applicable_authority_rows": authority_rows,
+        "land_exchange_rows": land_exchange_rows,
         "non_applicable_authority_rows": non_applicable_rows,
         "forest_plan_component_rows": forest_rows,
         "applicable_forest_plan_standard_rows": standard_rows,
@@ -531,6 +534,7 @@ def _build_packet_index(
         "row_inventory_summary": inventory["summary"],
         "render_manifest_summary": render_manifest["summary"],
         "applicable_authority_rows": inventory["applicable_authority_rows"],
+        "land_exchange_rows": inventory["land_exchange_rows"],
         "non_applicable_authority_boundary": {
             "non_applicable_authority_count": inventory["summary"][
                 "non_applicable_authority_count"
@@ -657,6 +661,25 @@ def _validate_packet(
         category="missing_applicable_authority_row",
         details={"required_rule_sources": LAND_EXCHANGE_RULE_SOURCES},
     )
+    expected_land_exchange = {
+        rule_id: source_record_id
+        for rule_id, source_record_id in LAND_EXCHANGE_RULE_SOURCES.items()
+        if rule_id in expected_authority_set
+    }
+    packet_land_exchange = {
+        str(row.get("rule_id")): str(row.get("authority_source_record_id"))
+        for row in _dict_list(packet_index.get("land_exchange_rows"))
+    }
+    _add_check(
+        checks,
+        name="land_exchange_rows_first_class_in_packet_index",
+        passed=packet_land_exchange == expected_land_exchange,
+        category="missing_applicable_authority_row",
+        details={
+            "expected_rule_sources": expected_land_exchange,
+            "packet_rule_sources": packet_land_exchange,
+        },
+    )
     _add_check(
         checks,
         name="render_manifest_passed",
@@ -704,6 +727,7 @@ def _validate_packet(
         "review_id": review_id,
         "source_set_id": inventory.get("source_set_id"),
         "applicable_authority_count": inventory["summary"]["applicable_authority_count"],
+        "land_exchange_row_count": inventory["summary"]["land_exchange_row_count"],
         "non_applicable_authority_count": inventory["summary"]["non_applicable_authority_count"],
         "forest_plan_component_row_count": inventory["summary"][
             "forest_plan_component_row_count"
@@ -863,6 +887,7 @@ def _inventory_markdown(inventory: dict[str, Any]) -> str:
         f"- Review ID: `{inventory['review_id']}`",
         f"- Source set: `{inventory['source_set_id']}`",
         f"- Applicable authority rows: `{summary['applicable_authority_count']}`",
+        f"- Land-exchange rows: `{summary.get('land_exchange_row_count', 0)}`",
         f"- Non-applicable authority boundary rows: `{summary['non_applicable_authority_count']}`",
         f"- Forest Plan component rows: `{summary['forest_plan_component_row_count']}`",
         f"- Applicable Forest Plan standards: `{summary['applicable_standard_count']}`",
@@ -886,6 +911,29 @@ def _inventory_markdown(inventory: dict[str, Any]) -> str:
             )
             + " |"
         )
+    if inventory["land_exchange_rows"]:
+        lines.extend(
+            [
+                "",
+                "## Land-Exchange Rows",
+                "",
+                "| Rule ID | Source record | Status | Matrix marker |",
+                "| --- | --- | --- | --- |",
+            ]
+        )
+        for row in inventory["land_exchange_rows"]:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _md_cell(row.get("rule_id")),
+                        _md_cell(row.get("authority_source_record_id")),
+                        _md_cell(row.get("compliance_status")),
+                        _md_cell(row.get("render_markdown_marker")),
+                    ]
+                )
+                + " |"
+            )
     lines.extend(
         [
             "",
@@ -924,6 +972,7 @@ def _packet_index_markdown(packet_index: dict[str, Any]) -> str:
         f"- Review ID: `{packet_index['review_id']}`",
         f"- Source set: `{packet_index['source_set_id']}`",
         f"- Applicable authority rows: `{summary['applicable_authority_count']}`",
+        f"- Land-exchange rows: `{summary.get('land_exchange_row_count', 0)}`",
         f"- Non-applicable authorities: `{summary['non_applicable_authority_count']}`",
         f"- Forest Plan component rows: `{summary['forest_plan_component_row_count']}`",
         f"- Applicable Forest Plan standards: `{summary['applicable_standard_count']}`",
@@ -946,6 +995,29 @@ def _packet_index_markdown(packet_index: dict[str, Any]) -> str:
             )
             + " |"
         )
+    if packet_index["land_exchange_rows"]:
+        lines.extend(
+            [
+                "",
+                "## Land-Exchange Rows",
+                "",
+                "| Rule ID | Source record | Status | Matrix marker |",
+                "| --- | --- | --- | --- |",
+            ]
+        )
+        for row in packet_index["land_exchange_rows"]:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _md_cell(row.get("rule_id")),
+                        _md_cell(row.get("authority_source_record_id")),
+                        _md_cell(row.get("compliance_status")),
+                        _md_cell(row.get("render_markdown_marker")),
+                    ]
+                )
+                + " |"
+            )
     lines.extend(
         [
             "",
@@ -1002,6 +1074,7 @@ def _packet_index_pdf_lines(packet_index: dict[str, Any]) -> list[str]:
         f"Review ID: {packet_index['review_id']}",
         f"Source set: {packet_index['source_set_id']}",
         f"Applicable authority rows: {summary['applicable_authority_count']}",
+        f"Land-exchange rows: {summary.get('land_exchange_row_count', 0)}",
         f"Non-applicable authority boundary rows: {summary['non_applicable_authority_count']}",
         f"Forest Plan component rows: {summary['forest_plan_component_row_count']}",
         f"Applicable Forest Plan standards: {summary['applicable_standard_count']}",
@@ -1107,6 +1180,14 @@ def _residual_risk_rows(decision_support: dict[str, Any], final_qa: dict[str, An
             }
         )
     return rows
+
+
+def _land_exchange_ledger_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        row
+        for row in rows
+        if str(row.get("rule_id")) in LAND_EXCHANGE_RULE_SOURCES
+    ]
 
 
 def _land_exchange_rows_present(inventory: dict[str, Any]) -> bool:

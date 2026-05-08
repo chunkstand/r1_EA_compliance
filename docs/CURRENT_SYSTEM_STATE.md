@@ -380,8 +380,9 @@ includes `review_packet_row_inventory.json`, `review_packet_row_inventory.md`,
 `compliance_matrix_render_manifest.json`, `review_packet_index.json`, `review_packet_index.md`,
 `review_packet_index.pdf`, and `review_packet_index_validation.json`. The validation sidecar passes
 with `37` applicable authority rows, `340` non-applicable authority boundary rows, `79` Forest Plan
-component rows, `12` applicable Forest Plan standards, `116` rendered matrix rows, and no failed
-checks. It also keeps root-level `East_Crazies_*` drafts out of the canonical packet boundary.
+component rows, `12` applicable Forest Plan standards, `4` dedicated land-exchange rows, `116`
+rendered matrix rows, and no failed checks across `30` validation checks. It also keeps root-level
+`East_Crazies_*` drafts out of the canonical packet boundary.
 
 Decision support now live-validates that packet row sets match the compliance matrix and render
 manifest without hashing downstream packet artifacts into the decision-support manifest. Final QA

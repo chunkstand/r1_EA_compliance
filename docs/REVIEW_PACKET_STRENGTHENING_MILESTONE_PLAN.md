@@ -64,7 +64,7 @@ The current promoted East Crazies packet has the right ingredients:
 - Forest Plan component findings: `329`;
 - Forest Plan applicable component rows carried into the matrix: `79`;
 - Forest Plan applicable standards: `12/12`, all applied;
-- review packet index validation: `29/29`;
+- review packet index validation: `30/30`;
 - final QA validation: `196/196`;
 - review-scoped phase eval: `21/21`;
 - current-promotion suite: `31/31`, with South Plateau blockers kept expansion-only.
@@ -94,11 +94,23 @@ The implemented artifact family is:
 
 Closeout replay:
 
-- `review-packet-index`: passed, `29` checks, `0` failures.
+- `review-packet-index`: passed, `30` checks, `0` failures.
 - `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `21/21`.
 - `promotion-suite --manifest config/promotion_suite_v1.json`: current promotion passed `31/31`;
   South Plateau remains expansion-only with `forest_plan_reviewer_not_ready`.
 - `final-qa-certification --validate-only`: passed `196/196`.
+
+## Acceptance Criteria Alignment Matrix
+
+| Acceptance criterion | Evidence artifact or gate | Closeout status |
+| --- | --- | --- |
+| Applicable authority row-set equality across applicability, generated rule pack, compliance review, compliance matrix, decision support, final QA, and packet index | `review_packet_row_inventory.json` `authority_row_comparisons`; `review_packet_index_validation.json` row-set checks | Met |
+| Rendered matrix completeness for every authority and Forest Plan matrix row | `compliance_matrix_render_manifest.json`; deterministic Markdown row markers; `%PDF-` matrix header check | Met |
+| Land-exchange first-class status for FLPMA Section 206, statutory, regulatory, and Forest Service policy/project-reference rows | `review_packet_row_inventory.json` and `review_packet_index.json` dedicated `land_exchange_rows`; `land_exchange_rows_first_class_in_packet_index` validation check | Met |
+| Forest Plan first-class status for applicable component rows and applicable standards | `forest_plan_component_rows`, `applicable_forest_plan_standard_rows`, and render-manifest Forest Plan row-set checks | Met |
+| Non-applicable boundary remains summarized and coverage-backed without becoming findings | `non_applicable_authority_boundary` and `non_applicable_boundary_present` validation check | Met |
+| Canonical artifact boundary excludes root-level `East_Crazies_*` drafts | `non_canonical_root_drafts_not_referenced` validation check and packet quarantine statement | Met |
+| Promotion readiness remains green while South Plateau blockers stay typed and separate | `phase-eval` `21/21`, current `promotion-suite` `31/31`, expansion blocker category `forest_plan_reviewer_not_ready` | Met |
 
 ## Gap To Close
 
@@ -238,7 +250,7 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" \
   --output-dir source_library \
-  --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
+  --rule-pack source_library/reviews/v1-cg-ecid-compliance-review/applicability/generated_rule_pack.json \
   --source-set-id source-set-ba8d0feae79501b8 \
   --review-id v1-cg-ecid-compliance-review \
   --reuse-package-cache \
