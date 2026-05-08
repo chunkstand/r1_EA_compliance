@@ -191,7 +191,7 @@
     <polyline points="-54.2,-30.7 70.2,-30.7 52.2,30.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
     <rect x="-69.2" y="-27.7" width="12.0" height="12.0" fill="#f8faf7" opacity="0.42"/>
     <text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="900" fill="#f8faf7">R1 Graph</text>
-      <text y="19" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="760" fill="#d6e6e2">1,410 / 2,564</text>
+      <text y="19" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="760" fill="#d6e6e2">1,426 / 2,586</text>
   </g><g transform="translate(272.7 262.1)">
     <ellipse cx="-2.7" cy="15.8" rx="21.9" ry="6.1" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
     <polygon points="-18.9,8.9 12.8,8.9 6.8,16.9 -24.9,16.9 -18.9,8.9" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>

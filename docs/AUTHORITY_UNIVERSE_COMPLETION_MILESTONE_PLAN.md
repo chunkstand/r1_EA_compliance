@@ -103,7 +103,7 @@ litigation-risk categories without turning non-applicable authorities into compl
   `config/authority_family_rule_template_coverage_nepa_ea_v1.json`, package fact graph cue
   coverage for designated areas, and authority-universe builder support for
   `authority_family_rule_template` candidates. A current source-set contract build validates `19`
-  expanded authority-family templates alongside the `44` base rule templates and `329` forest-plan
+  expanded authority-family templates alongside the `45` base rule templates and `329` forest-plan
   component candidates.
 - Milestone 4 is complete through expanded `config/applicability_eval_seed.json`,
   `config/applicability_gold_eval_v0.json`, the

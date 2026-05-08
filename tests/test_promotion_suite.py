@@ -73,7 +73,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     )
     assert decision_checks["decision_support_status"]["equals"] == "reviewer_ready"
     assert decision_checks["decision_support_validation_passed"]["equals"] is True
-    assert decision_checks["decision_support_applicable_authorities"]["equals"] == 33
+    assert decision_checks["decision_support_applicable_authorities"]["equals"] == 34
     assert decision_checks["decision_support_non_applicable_authorities"]["equals"] == 340
     assert decision_checks["decision_support_forest_plan_components"]["equals"] == 329
     assert decision_checks["decision_support_applicable_standards"]["equals"] == 12
@@ -111,7 +111,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
         "east-crazies-final-qa-certification-report-v1"
     )
     assert final_qa_checks["final_qa_machine_replay_passed"]["equals"] == "passed"
-    assert final_qa_checks["final_qa_finding_count"]["equals"] == 33
+    assert final_qa_checks["final_qa_finding_count"]["equals"] == 34
     assert final_qa_checks["final_qa_accepted_v1_risk_visible"]["equals"] == 14
     assert final_qa_checks["final_qa_legal_conclusion_boundary"]["equals"] is False
 
@@ -171,7 +171,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert provenance["path"] == "reviews/{review_id}/authority_family_provenance.json"
     provenance_checks = {check["name"]: check for check in provenance["checks"]}
     assert provenance_checks["authority_provenance_generated_mode"]["equals"] is True
-    assert provenance_checks["authority_provenance_finding_count"]["equals"] == 33
+    assert provenance_checks["authority_provenance_finding_count"]["equals"] == 34
     assert provenance_checks["authority_provenance_family_ids_present"]["equals"] == []
     assert provenance_checks["authority_provenance_candidate_ids_present"]["equals"] == []
 
@@ -245,7 +245,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert review_summary_checks["review_graph_review_id_matches"]["equals"] == (
         "v1-cg-ecid-compliance-review"
     )
-    assert review_summary_checks["review_graph_decision_count"]["equals"] == 373
+    assert review_summary_checks["review_graph_decision_count"]["equals"] == 374
     assert review_summary_checks["review_graph_validation_checks"]["min"] == 76
 
 

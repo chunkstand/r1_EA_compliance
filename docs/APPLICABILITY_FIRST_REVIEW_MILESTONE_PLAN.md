@@ -1088,9 +1088,9 @@ Current state as of 2026-05-06:
   related reserved-access authorities no longer block solely because weak auxiliary evidence is
   present; arbitration behavior now has seed, gold, phase-eval, and promotion-suite coverage.
 - The current promoted V1 review remains `v1-cg-ecid-compliance-review` against
-  `source-set-ba8d0feae79501b8`, with `373` applicability candidates, `33` applicable authorities,
+  `source-set-ba8d0feae79501b8`, with `374` applicability candidates, `34` applicable authorities,
   `340` non-applicable authorities, no unresolved/adjudication decisions, and a generated
-  applicability rule pack with `33` rules.
+  applicability rule pack with `34` rules.
 - The first real-package expansion slot is `region1-expansion-ecid-preliminary-ea`. It has local
   package evidence. Sequence 1 of the focused post-V1 expansion plan replayed the three
   applicability adjudications for cultural-resource/SHPO, minerals/energy, and species-supporting

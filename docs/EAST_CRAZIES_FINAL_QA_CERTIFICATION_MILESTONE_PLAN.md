@@ -145,9 +145,9 @@ The JSON, Markdown, and PDF should include the same reviewed sections:
    validation, phase-eval, V1 EA eval, and current-promotion suite results.
 3. Artifact freshness ledger: required input files, schema versions, artifact hashes, modified
    times where useful, and source selectors.
-4. Applicability partition: `33` applicable, `340` non-applicable, `0` unresolved, and explicit
+4. Applicability partition: `34` applicable, `340` non-applicable, `0` unresolved, and explicit
    search-coverage support for the non-applicable boundary.
-5. Finding QA: `33` generated findings, status counts, citation/source selectors, package-evidence
+5. Finding QA: `34` generated findings, status counts, citation/source selectors, package-evidence
    selectors, rule-claim link counts, and zero rule-claim gaps.
 6. Forest-plan QA: Custer Gallatin context basis, applicable standards, component inventory counts,
    component eval result, limitations, and reviewer-resolution status.
@@ -278,7 +278,7 @@ the ignored review `final_qa/` directory, and `--validate-only` replays the same
 without rewriting outputs. The implementation keeps final QA as a configured artifact reader over
 existing audited outputs; it does not rerun downloader, extraction, compliance review, phase eval,
 or promotion suite workflows. The gap-close pass tightened alignment with the Sequence 2 acceptance
-text by carrying all `33` compliance-matrix authority findings, each with compliance-matrix
+text by carrying all `34` compliance-matrix authority findings, each with compliance-matrix
 selectors, package/source evidence pointers, and trace IDs, instead of only a representative
 finding row.
 

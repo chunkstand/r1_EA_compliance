@@ -49,15 +49,15 @@ The current repo already has the core graph ingredients:
 
 - workbook/catalog coverage for `190` source rows;
 - authority-family inventory with `35` families: `33` active, `1` candidate, and `1` superseded;
-- `44/44` base rule-pack rules crosswalked to authority families;
+- `45/45` base rule-pack rules crosswalked to authority families;
 - `19` authority-family rule templates for expanded conditional authority coverage;
 - reviewer-ready evidence graph and source-claim graph artifacts for
   `source-set-ba8d0feae79501b8`;
-- a current expanded authority-universe contract build with `392` candidates:
-  `44` base rule-template candidates, `19` authority-family rule-template candidates, and `329`
+- a current expanded authority-universe contract build with `393` candidates:
+  `45` base rule-template candidates, `19` authority-family rule-template candidates, and `329`
   Custer Gallatin Forest Plan component candidates;
-- promoted V1 applicability artifacts for `v1-cg-ecid-compliance-review` with `373` candidates,
-  `33` applicable authorities, `340` not-applicable authorities, no unresolved decisions, and a
+- promoted V1 applicability artifacts for `v1-cg-ecid-compliance-review` with `374` candidates,
+  `34` applicable authorities, `340` not-applicable authorities, no unresolved decisions, and a
   validated generated rule pack;
 - post-V1 expansion artifacts for `region1-expansion-ecid-preliminary-ea` with `43` applicable
   authorities, `346` non-applicable authorities, and `3` decisions requiring adjudication.
@@ -378,9 +378,9 @@ Implementation status:
 Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export` CLI command, and `tests/test_nepa_knowledge_graph_export.py`
 implement the source-set graph builder over audited catalog/derived surfaces. The live export for
-`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes, `2,564` edges, all
-`35` authority families, all `190` catalog source records, all `44` base rules, all `19`
-authority-family templates, `191` rule-claim links, and `329` forest-plan components.
+`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,426` nodes, `2,586` edges, all
+`35` authority families, all `190` catalog source records, all `45` base rules, all `19`
+authority-family templates, `196` rule-claim links, and `329` forest-plan components.
 
 Candidate command:
 
@@ -430,8 +430,8 @@ Completed on 2026-05-06. `nepa_knowledge_graph_export.py`, the
 `nepa-knowledge-graph-export --review-id` CLI path, and
 `tests/test_nepa_knowledge_graph_export.py` now implement the review overlay over existing
 applicability-first and compliance artifacts. The live `v1-cg-ecid-compliance-review` export under
-`source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with `1,916`
-nodes, `3,442` edges, `373` candidate authorities/decisions, `33` generated rules, `33` compliance
+`source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with `1,937`
+nodes, `3,470` edges, `374` candidate authorities/decisions, `34` generated rules, `34` compliance
 findings, and `340` non-applicable decisions with search coverage.
 
 Candidate command:
@@ -492,8 +492,8 @@ forest-unit/plan nodes, keeps Custer Gallatin graph-ready, blocks the other `9` 
 component-inventory gating, and positive plus hard-negative applicability fixture contracts. A
 gap-close pass renders the `3` field-directive requirements and `5` overlay requirement groups as
 graph-visible requirement nodes with source links, and validates that catalog-confirmed requirement
-sources resolve. The live source-set export now passes `61` checks with `1,410` nodes and `2,564`
-edges; the V1 review overlay passes `75` checks with `1,916` nodes and `3,442` edges.
+sources resolve. The live source-set export now passes `62` checks with `1,426` nodes and `2,586`
+edges; the V1 review overlay passes `76` checks with `1,937` nodes and `3,470` edges.
 
 Required outputs:
 

@@ -450,7 +450,7 @@ ignored local report family under
 
 The latest Sequence 5 closeout regenerated and then validated that ignored local report family.
 Validation returned `passed=true` and `reviewer_ready=true`, rechecked all current input hashes and
-required report sections, kept all `33` applicable authority findings with package/source evidence,
+required report sections, kept all `34` applicable authority findings with package/source evidence,
 kept the `340` non-applicable authority boundary with search coverage, represented all `329` Forest
 Plan component rows, covered all `12/12` applicable standards with package and plan evidence, kept
 `9` implementation-confirmation rows with evidence and `3` residual-risk notes with `0`
@@ -482,7 +482,7 @@ review ID
 the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
 and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
 
-Sequence 0 verified the current promoted baseline from generated artifacts: `33` applicable
+Sequence 0 verified the current promoted baseline from generated artifacts: `34` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, `374` candidate
 authorities, `34` generated compliance findings, `147` rule-claim links, `0` rule-claim gaps,
 `43` package files, `1,265` package chunks, `329` Forest Plan component rows, `58` Forest Plan
@@ -605,9 +605,9 @@ Gallatin FEIS and ESA-supporting plan documents.
   Component-like labels with nonnumeric number tokens, such as cross-reference/table headings, are
   suppressed from generated component IDs and surfaced in build coverage.
 - Current generated-pack V1 EA gate artifacts were verified locally on 2026-05-04 for
-  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `33`
-  generated compliance findings, `33` pass findings, all `26` baseline source records evaluated
-  through the generated applicability rule pack, `142` generated-pack rule-claim links, and `0`
+  `v1-cg-ecid-compliance-review`. The regenerated compliance review is reviewer-ready with `34`
+  generated compliance findings, `34` pass findings, all `26` baseline source records evaluated
+  through the generated applicability rule pack, `147` generated-pack rule-claim links, and `0`
   rule-claim gaps.
 - Forest-plan component eval passed `35/35` adjudicated cases for the promoted review. The current
   component findings have `329` components, `79` supported components, `250` not applicable

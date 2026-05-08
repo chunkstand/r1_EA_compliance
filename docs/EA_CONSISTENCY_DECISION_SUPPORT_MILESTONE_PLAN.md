@@ -48,7 +48,7 @@ conditions.
 The current repository already proves the core review state for
 `v1-cg-ecid-compliance-review`:
 
-- `33` generated applicable authority findings, all passing;
+- `34` generated applicable authority findings, all passing;
 - `340` non-applicable authorities retained in the applicability artifacts and appendix;
 - `329` Custer Gallatin Land Management Plan component findings;
 - `79` applicable/supported Forest Plan components and `250` not-applicable components;
@@ -265,7 +265,7 @@ Implementation scope:
 
 Acceptance criteria:
 
-- Report includes all `33` applicable authority findings.
+- Report includes all `34` applicable authority findings.
 - Report includes all Forest Plan component coverage counts and all `12` applicable standards.
 - Report links the Plan Consistency Table as `EA-PACKAGE-042`.
 - Report summarizes the `340` non-applicable authorities and points to full coverage artifacts.
@@ -297,7 +297,7 @@ The 2026-05-06 local run wrote the ignored report family under
 - `ea_consistency_decision_support.pdf`
 - `ea_consistency_decision_support_manifest.json`
 
-The generated report validation passed with all `33` applicable authority findings rendered as
+The generated report validation passed with all `34` applicable authority findings rendered as
 `pass`, all `340` non-applicable authorities summarized with search coverage, all `329` Forest Plan
 component rows represented, the `EA-PACKAGE-042` Plan Consistency Table linked, all `12/12`
 applicable Forest Plan standards covered with package and plan evidence, `9` implementation
