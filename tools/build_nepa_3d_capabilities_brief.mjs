@@ -562,8 +562,8 @@ function r1GraphShowcaseSvg(metrics) {
   <g transform="translate(72 82)" filter="url(#shadow)">
     <rect width="1656" height="940" rx="30" fill="#0d1821"/>
     <rect x="18" y="18" width="1620" height="904" rx="24" fill="url(#nightGlow)" stroke="#314653"/>
-    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Simplified Region 1 graph model</text>
-    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">A reduced 3D view of the graph: separate layers, shared evidence paths, and readable depth.</text>
+    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Region 1 graph control model</text>
+    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">A reduced industrial view of the graph: distinct layers, conduit paths, and readable depth.</text>
 
     <g transform="translate(54 150)">
       ${scene}
@@ -611,36 +611,36 @@ function graphShowcaseDefs() {
       <stop offset="0.72" stop-color="#122633" stop-opacity="0.42"/>
       <stop offset="1" stop-color="#0d1821" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="nodeHub" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.35" stop-color="#d9f1ec"/>
-      <stop offset="1" stop-color="#1f6f68"/>
-    </radialGradient>
-    <radialGradient id="nodeNep" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#e9fffb"/>
-      <stop offset="0.36" stop-color="#2ad0bc"/>
-      <stop offset="1" stop-color="#0b5b54"/>
-    </radialGradient>
-    <radialGradient id="nodeUsda" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#fff4da"/>
-      <stop offset="0.36" stop-color="#e7aa54"/>
-      <stop offset="1" stop-color="#734b15"/>
-    </radialGradient>
-    <radialGradient id="nodeSource" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#eaf6ff"/>
-      <stop offset="0.36" stop-color="#66a9e7"/>
-      <stop offset="1" stop-color="#19496e"/>
-    </radialGradient>
-    <radialGradient id="nodeForest" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#eaffef"/>
-      <stop offset="0.36" stop-color="#71d58a"/>
-      <stop offset="1" stop-color="#20623c"/>
-    </radialGradient>
-    <radialGradient id="nodeReview" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#f4eaff"/>
-      <stop offset="0.36" stop-color="#b38ee8"/>
-      <stop offset="1" stop-color="#4e3373"/>
-    </radialGradient>
+    <linearGradient id="nodeHub" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8faf7"/>
+      <stop offset="0.48" stop-color="#7da49d"/>
+      <stop offset="1" stop-color="#163b40"/>
+    </linearGradient>
+    <linearGradient id="nodeNep" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#65fff0"/>
+      <stop offset="0.46" stop-color="#178d83"/>
+      <stop offset="1" stop-color="#073b3a"/>
+    </linearGradient>
+    <linearGradient id="nodeUsda" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd179"/>
+      <stop offset="0.48" stop-color="#a56822"/>
+      <stop offset="1" stop-color="#3d280f"/>
+    </linearGradient>
+    <linearGradient id="nodeSource" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9bd4ff"/>
+      <stop offset="0.48" stop-color="#326a98"/>
+      <stop offset="1" stop-color="#102f49"/>
+    </linearGradient>
+    <linearGradient id="nodeForest" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9cffaa"/>
+      <stop offset="0.48" stop-color="#347449"/>
+      <stop offset="1" stop-color="#12391f"/>
+    </linearGradient>
+    <linearGradient id="nodeReview" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d6b4ff"/>
+      <stop offset="0.48" stop-color="#7656a6"/>
+      <stop offset="1" stop-color="#301d49"/>
+    </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#17202a" flood-opacity="0.18"/>
     </filter>
@@ -671,7 +671,7 @@ function simplifiedGraphSceneSvg(metrics) {
   return `<rect x="0" y="0" width="1548" height="624" rx="22" fill="#0b151e" stroke="#314653"/>
     <rect x="18" y="18" width="1512" height="588" rx="18" fill="url(#nightGlow)" stroke="#213a48"/>
     ${graphSceneFloor()}
-    <g opacity="0.86">${edges}</g>
+    <g opacity="0.9">${edges}</g>
     <g>${nodeMarkup}</g>
     ${graphLayerLabel(58, 36, "#2ad0bc", "NEPA", `${metrics.nepaFamilyCount || 4} authority families`)}
     ${graphLayerLabel(1106, 34, "#e7aa54", "USDA Regulations", `${metrics.regulationAuthorityCount.toLocaleString()} regulation families`)}
@@ -816,31 +816,63 @@ function graphSceneEdge(from, to, color, width, opacity) {
   if (!from || !to) {
     return "";
   }
-  const lift = Math.min(from.screenY, to.screenY) - 28;
-  const cx = (from.screenX + to.screenX) / 2;
-  return `<path d="M ${from.screenX.toFixed(1)} ${from.screenY.toFixed(1)} C ${cx.toFixed(1)} ${lift.toFixed(1)} ${cx.toFixed(1)} ${lift.toFixed(1)} ${to.screenX.toFixed(1)} ${to.screenY.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-opacity="${opacity}" stroke-linecap="round"/>`;
+  const railY = Math.min(from.screenY, to.screenY) - 22;
+  const startX = from.screenX.toFixed(1);
+  const startY = from.screenY.toFixed(1);
+  const endX = to.screenX.toFixed(1);
+  const endY = to.screenY.toFixed(1);
+  const rail = railY.toFixed(1);
+  return `<path d="M ${startX} ${startY} L ${startX} ${rail} L ${endX} ${rail} L ${endX} ${endY}" fill="none" stroke="#07121a" stroke-width="${width + 4}" stroke-opacity="${opacity * 0.32}" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M ${startX} ${startY} L ${startX} ${rail} L ${endX} ${rail} L ${endX} ${endY}" fill="none" stroke="${color}" stroke-width="${width}" stroke-opacity="${opacity}" stroke-linecap="square" stroke-linejoin="miter"/>`;
 }
 
 function graphSceneNode(node) {
-  const shadowOpacity = node.id === "hub" ? 0.36 : 0.24;
+  const shadowOpacity = node.id === "hub" ? 0.34 : 0.22;
+  const plateWidth = node.screenR * (node.id === "hub" ? 2.9 : 2.42);
+  const plateHeight = node.screenR * (node.id === "hub" ? 1.38 : 1.14);
+  const depth = Math.max(8, node.screenR * 0.24);
+  const bevel = Math.min(18, plateHeight * 0.34);
+  const halfWidth = plateWidth / 2;
+  const halfHeight = plateHeight / 2;
+  const topPoints = [
+    [-halfWidth + bevel, -halfHeight],
+    [halfWidth, -halfHeight],
+    [halfWidth - bevel, halfHeight],
+    [-halfWidth, halfHeight],
+    [-halfWidth + bevel, -halfHeight]
+  ]
+    .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
+  const sidePoints = [
+    [-halfWidth, halfHeight],
+    [halfWidth - bevel, halfHeight],
+    [halfWidth - bevel - depth * 0.75, halfHeight + depth],
+    [-halfWidth - depth * 0.75, halfHeight + depth],
+    [-halfWidth, halfHeight]
+  ]
+    .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
   const label = node.label
-    ? `<text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#f8faf7">${escapeXml(node.label)}</text>
-      <text y="21" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="760" fill="#d6e6e2">${escapeXml(node.sublabel)}</text>`
+    ? `<text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="900" fill="#f8faf7">${escapeXml(node.label)}</text>
+      <text y="19" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="760" fill="#d6e6e2">${escapeXml(node.sublabel)}</text>`
     : "";
   const filter = node.id === "hub" ? ' filter="url(#glow)"' : "";
   const labelMarkup = label ? `\n    ${label}` : "";
   return `<g transform="translate(${node.screenX.toFixed(1)} ${node.screenY.toFixed(1)})"${filter}>
-    <ellipse cx="0" cy="${(node.screenR * 0.88).toFixed(1)}" rx="${(node.screenR * 1.08).toFixed(1)}" ry="${(node.screenR * 0.32).toFixed(1)}" fill="#000000" opacity="${shadowOpacity}" filter="url(#softBlur)"/>
-    <circle r="${node.screenR.toFixed(1)}" fill="url(#${node.gradient})" stroke="${node.color}" stroke-width="${node.id === "hub" ? 4 : 2.2}"/>
-    <circle cx="${(-node.screenR * 0.34).toFixed(1)}" cy="${(-node.screenR * 0.36).toFixed(1)}" r="${(node.screenR * 0.24).toFixed(1)}" fill="#ffffff" opacity="0.38"/>${labelMarkup}
+    <ellipse cx="${(-depth * 0.34).toFixed(1)}" cy="${(halfHeight + depth * 0.86).toFixed(1)}" rx="${(plateWidth * 0.58).toFixed(1)}" ry="${(plateHeight * 0.34).toFixed(1)}" fill="#000000" opacity="${shadowOpacity}" filter="url(#softBlur)"/>
+    <polygon points="${sidePoints}" fill="#07131b" stroke="${node.color}" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="${topPoints}" fill="url(#${node.gradient})" stroke="${node.color}" stroke-width="${node.id === "hub" ? 3.2 : 1.8}"/>
+    <polyline points="${(-halfWidth + bevel + 7).toFixed(1)},${(-halfHeight + 7).toFixed(1)} ${(halfWidth - 9).toFixed(1)},${(-halfHeight + 7).toFixed(1)} ${(halfWidth - bevel - 9).toFixed(1)},${(halfHeight - 7).toFixed(1)}" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="${(-halfWidth + 10).toFixed(1)}" y="${(-halfHeight + 10).toFixed(1)}" width="${Math.max(7, node.screenR * 0.22).toFixed(1)}" height="${Math.max(7, node.screenR * 0.22).toFixed(1)}" fill="#f8faf7" opacity="0.42"/>${labelMarkup}
   </g>`;
 }
 
 function graphLayerLabel(x, y, color, title, subtitle) {
   const width = Math.max(232, Math.min(342, title.length * 14 + subtitle.length * 6 + 42));
   return `<g transform="translate(${x} ${y})">
-    <rect width="${width}" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="${color}"/>
+    <path d="M 0 0 H ${width} V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="${width}" height="4" fill="${color}"/>
+    <rect x="24" y="29" width="14" height="14" fill="${color}"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">${escapeXml(title)}</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="${color}">${escapeXml(subtitle)}</text>
   </g>`;
@@ -849,8 +881,8 @@ function graphLayerLabel(x, y, color, title, subtitle) {
 function graphLegendChip(x, y, color, label) {
   const width = Math.max(210, label.length * 11 + 54);
   return `<g transform="translate(${x} ${y})">
-    <rect width="${width}" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="${color}"/>
+    <path d="M 0 0 H ${width} V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="${color}"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">${escapeXml(label)}</text>
   </g>`;
 }

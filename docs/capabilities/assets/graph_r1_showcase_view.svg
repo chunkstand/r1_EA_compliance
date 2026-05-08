@@ -11,36 +11,36 @@
       <stop offset="0.72" stop-color="#122633" stop-opacity="0.42"/>
       <stop offset="1" stop-color="#0d1821" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="nodeHub" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.35" stop-color="#d9f1ec"/>
-      <stop offset="1" stop-color="#1f6f68"/>
-    </radialGradient>
-    <radialGradient id="nodeNep" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#e9fffb"/>
-      <stop offset="0.36" stop-color="#2ad0bc"/>
-      <stop offset="1" stop-color="#0b5b54"/>
-    </radialGradient>
-    <radialGradient id="nodeUsda" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#fff4da"/>
-      <stop offset="0.36" stop-color="#e7aa54"/>
-      <stop offset="1" stop-color="#734b15"/>
-    </radialGradient>
-    <radialGradient id="nodeSource" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#eaf6ff"/>
-      <stop offset="0.36" stop-color="#66a9e7"/>
-      <stop offset="1" stop-color="#19496e"/>
-    </radialGradient>
-    <radialGradient id="nodeForest" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#eaffef"/>
-      <stop offset="0.36" stop-color="#71d58a"/>
-      <stop offset="1" stop-color="#20623c"/>
-    </radialGradient>
-    <radialGradient id="nodeReview" cx="34%" cy="28%" r="70%">
-      <stop offset="0" stop-color="#f4eaff"/>
-      <stop offset="0.36" stop-color="#b38ee8"/>
-      <stop offset="1" stop-color="#4e3373"/>
-    </radialGradient>
+    <linearGradient id="nodeHub" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8faf7"/>
+      <stop offset="0.48" stop-color="#7da49d"/>
+      <stop offset="1" stop-color="#163b40"/>
+    </linearGradient>
+    <linearGradient id="nodeNep" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#65fff0"/>
+      <stop offset="0.46" stop-color="#178d83"/>
+      <stop offset="1" stop-color="#073b3a"/>
+    </linearGradient>
+    <linearGradient id="nodeUsda" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd179"/>
+      <stop offset="0.48" stop-color="#a56822"/>
+      <stop offset="1" stop-color="#3d280f"/>
+    </linearGradient>
+    <linearGradient id="nodeSource" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9bd4ff"/>
+      <stop offset="0.48" stop-color="#326a98"/>
+      <stop offset="1" stop-color="#102f49"/>
+    </linearGradient>
+    <linearGradient id="nodeForest" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9cffaa"/>
+      <stop offset="0.48" stop-color="#347449"/>
+      <stop offset="1" stop-color="#12391f"/>
+    </linearGradient>
+    <linearGradient id="nodeReview" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d6b4ff"/>
+      <stop offset="0.48" stop-color="#7656a6"/>
+      <stop offset="1" stop-color="#301d49"/>
+    </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#17202a" flood-opacity="0.18"/>
     </filter>
@@ -59,8 +59,8 @@
   <g transform="translate(72 82)" filter="url(#shadow)">
     <rect width="1656" height="940" rx="30" fill="#0d1821"/>
     <rect x="18" y="18" width="1620" height="904" rx="24" fill="url(#nightGlow)" stroke="#314653"/>
-    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Simplified Region 1 graph model</text>
-    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">A reduced 3D view of the graph: separate layers, shared evidence paths, and readable depth.</text>
+    <text x="54" y="78" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#f8faf7">Region 1 graph control model</text>
+    <text x="54" y="118" font-family="Inter, Arial, sans-serif" font-size="21" fill="#c8d7d3">A reduced industrial view of the graph: distinct layers, conduit paths, and readable depth.</text>
 
     <g transform="translate(54 150)">
       <rect x="0" y="0" width="1548" height="624" rx="22" fill="#0b151e" stroke="#314653"/>
@@ -70,197 +70,323 @@
     <path d="M 92.7 283.6 Q 774 255.6 1392.7 283.6" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 320.8 Q 774 292.8 1392.7 320.8" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 358.0 Q 774 330.0 1392.7 358.0" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 395.2 Q 774 367.2 1392.7 395.2" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 432.4 Q 774 404.4 1392.7 432.4" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 469.6 Q 774 441.6 1392.7 469.6" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 506.8 Q 774 478.8 1392.7 506.8" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/><path d="M 92.7 544.0 Q 774 516.0 1392.7 544.0" fill="none" stroke="#355363" stroke-width="1.6" stroke-opacity="0.32"/>
     <path d="M 142.7 267.5 L 142.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 292.7 267.5 L 292.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 442.7 267.5 L 442.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 592.7 267.5 L 592.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 742.7 267.5 L 742.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 892.7 267.5 L 892.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 1042.7 267.5 L 1042.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 1192.7 267.5 L 1192.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/><path d="M 1342.7 267.5 L 1342.7 560.2" fill="none" stroke="#355363" stroke-width="1.4" stroke-opacity="0.24"/>
   </g>
-    <g opacity="0.86"><path d="M 837.9 257.1 C 605.8 203.8 605.8 203.8 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="5" stroke-opacity="0.62" stroke-linecap="round"/><path d="M 837.9 257.1 C 612.2 176.0 612.2 176.0 386.4 204.0" fill="none" stroke="#2ad0bc" stroke-width="4" stroke-opacity="0.48" stroke-linecap="round"/><path d="M 837.9 257.1 C 1014.2 186.0 1014.2 186.0 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="5" stroke-opacity="0.62" stroke-linecap="round"/><path d="M 837.9 257.1 C 1022.1 179.8 1022.1 179.8 1206.3 207.8" fill="none" stroke="#e7aa54" stroke-width="4" stroke-opacity="0.48" stroke-linecap="round"/><path d="M 837.9 257.1 C 612.9 229.1 612.9 229.1 387.8 428.8" fill="none" stroke="#66a9e7" stroke-width="4" stroke-opacity="0.44" stroke-linecap="round"/><path d="M 837.9 257.1 C 838.0 229.1 838.0 229.1 838.2 483.7" fill="none" stroke="#71d58a" stroke-width="5" stroke-opacity="0.62" stroke-linecap="round"/><path d="M 837.9 257.1 C 1037.3 229.1 1037.3 229.1 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="4" stroke-opacity="0.5" stroke-linecap="round"/><path d="M 387.8 428.8 C 613.0 400.8 613.0 400.8 838.2 483.7" fill="none" stroke="#6fa6b7" stroke-width="3" stroke-opacity="0.36" stroke-linecap="round"/><path d="M 399.0 466.5 C 817.8 374.9 817.8 374.9 1236.6 402.9" fill="none" stroke="#6f85ba" stroke-width="3" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 838.2 483.7 C 1037.4 374.9 1037.4 374.9 1236.6 402.9" fill="none" stroke="#8fb6a1" stroke-width="3" stroke-opacity="0.36" stroke-linecap="round"/><path d="M 386.4 204.0 C 788.4 176.0 788.4 176.0 1190.4 214.0" fill="none" stroke="#526b78" stroke-width="2" stroke-opacity="0.32" stroke-linecap="round"/><path d="M 288.1 208.6 C 334.5 148.4 334.5 148.4 380.9 176.4" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 380.9 176.4 C 410.9 148.4 410.9 148.4 440.8 208.7" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 288.1 208.6 C 330.9 180.6 330.9 180.6 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 373.6 231.8 C 409.8 203.8 409.8 203.8 446.0 266.9" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 272.7 262.1 C 323.2 203.8 323.2 203.8 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 373.6 231.8 C 380.0 176.0 380.0 176.0 386.4 204.0" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1090.2 196.1 C 1131.9 141.8 1131.9 141.8 1173.6 169.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1173.6 169.8 C 1212.6 141.8 1212.6 141.8 1251.5 192.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1090.2 196.1 C 1140.3 168.1 1140.3 168.1 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1190.4 214.0 C 1222.6 186.0 1222.6 186.0 1254.8 249.7" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1080.1 249.5 C 1135.3 186.0 1135.3 186.0 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1190.4 214.0 C 1198.4 179.8 1198.4 179.8 1206.3 207.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 258.8 440.6 C 294.8 384.0 294.8 384.0 330.9 412.0" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 330.9 412.0 C 364.6 384.0 364.6 384.0 398.2 423.6" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 258.8 440.6 C 250.7 412.6 250.7 412.6 242.7 491.4" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 242.7 491.4 C 280.4 456.3 280.4 456.3 318.2 484.3" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 458.1 445.9 C 350.4 417.9 350.4 417.9 242.7 491.4" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 242.7 491.4 C 320.8 438.5 320.8 438.5 399.0 466.5" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 709.2 480.0 C 747.2 432.0 747.2 432.0 785.3 460.0" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 785.3 460.0 C 827.0 432.0 827.0 432.0 868.6 472.9" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 709.2 480.0 C 701.8 452.0 701.8 452.0 694.4 545.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 694.4 545.5 C 731.8 514.5 731.8 514.5 769.3 542.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 936.5 505.8 C 815.4 477.8 815.4 477.8 694.4 545.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 694.4 545.5 C 773.2 507.2 773.2 507.2 852.0 535.2" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1133.0 383.4 C 1174.4 327.6 1174.4 327.6 1215.9 355.6" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1215.9 355.6 C 1252.5 327.6 1252.5 327.6 1289.1 383.4" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/><path d="M 1133.0 383.4 C 1184.8 355.4 1184.8 355.4 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1236.6 402.9 C 1267.8 374.9 1267.8 374.9 1299.0 436.7" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1127.0 436.1 C 1181.8 374.9 1181.8 374.9 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="round"/><path d="M 1236.6 402.9 C 1251.2 366.7 1251.2 366.7 1265.8 394.7" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/></g>
+    <g opacity="0.9"><path d="M 837.9 257.1 L 837.9 209.8 L 373.6 209.8 L 373.6 231.8" fill="none" stroke="#07121a" stroke-width="9" stroke-opacity="0.1984" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 209.8 L 373.6 209.8 L 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="5" stroke-opacity="0.62" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 182.0 L 386.4 182.0 L 386.4 204.0" fill="none" stroke="#07121a" stroke-width="8" stroke-opacity="0.1536" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 182.0 L 386.4 182.0 L 386.4 204.0" fill="none" stroke="#2ad0bc" stroke-width="4" stroke-opacity="0.48" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 192.0 L 1190.4 192.0 L 1190.4 214.0" fill="none" stroke="#07121a" stroke-width="9" stroke-opacity="0.1984" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 192.0 L 1190.4 192.0 L 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="5" stroke-opacity="0.62" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 185.8 L 1206.3 185.8 L 1206.3 207.8" fill="none" stroke="#07121a" stroke-width="8" stroke-opacity="0.1536" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 185.8 L 1206.3 185.8 L 1206.3 207.8" fill="none" stroke="#e7aa54" stroke-width="4" stroke-opacity="0.48" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 235.1 L 387.8 235.1 L 387.8 428.8" fill="none" stroke="#07121a" stroke-width="8" stroke-opacity="0.1408" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 235.1 L 387.8 235.1 L 387.8 428.8" fill="none" stroke="#66a9e7" stroke-width="4" stroke-opacity="0.44" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 235.1 L 838.2 235.1 L 838.2 483.7" fill="none" stroke="#07121a" stroke-width="9" stroke-opacity="0.1984" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 235.1 L 838.2 235.1 L 838.2 483.7" fill="none" stroke="#71d58a" stroke-width="5" stroke-opacity="0.62" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 837.9 257.1 L 837.9 235.1 L 1236.6 235.1 L 1236.6 402.9" fill="none" stroke="#07121a" stroke-width="8" stroke-opacity="0.16" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 837.9 257.1 L 837.9 235.1 L 1236.6 235.1 L 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="4" stroke-opacity="0.5" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 387.8 428.8 L 387.8 406.8 L 838.2 406.8 L 838.2 483.7" fill="none" stroke="#07121a" stroke-width="7" stroke-opacity="0.1152" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 387.8 428.8 L 387.8 406.8 L 838.2 406.8 L 838.2 483.7" fill="none" stroke="#6fa6b7" stroke-width="3" stroke-opacity="0.36" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 399.0 466.5 L 399.0 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#07121a" stroke-width="7" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 399.0 466.5 L 399.0 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#6f85ba" stroke-width="3" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 838.2 483.7 L 838.2 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#07121a" stroke-width="7" stroke-opacity="0.1152" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 838.2 483.7 L 838.2 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#8fb6a1" stroke-width="3" stroke-opacity="0.36" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 386.4 204.0 L 386.4 182.0 L 1190.4 182.0 L 1190.4 214.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.1024" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 386.4 204.0 L 386.4 182.0 L 1190.4 182.0 L 1190.4 214.0" fill="none" stroke="#526b78" stroke-width="2" stroke-opacity="0.32" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 288.1 208.6 L 288.1 154.4 L 380.9 154.4 L 380.9 176.4" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 288.1 208.6 L 288.1 154.4 L 380.9 154.4 L 380.9 176.4" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 380.9 176.4 L 380.9 154.4 L 440.8 154.4 L 440.8 208.7" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 380.9 176.4 L 380.9 154.4 L 440.8 154.4 L 440.8 208.7" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 288.1 208.6 L 288.1 186.6 L 373.6 186.6 L 373.6 231.8" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 288.1 208.6 L 288.1 186.6 L 373.6 186.6 L 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 373.6 231.8 L 373.6 209.8 L 446.0 209.8 L 446.0 266.9" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 373.6 231.8 L 373.6 209.8 L 446.0 209.8 L 446.0 266.9" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 272.7 262.1 L 272.7 209.8 L 373.6 209.8 L 373.6 231.8" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 272.7 262.1 L 272.7 209.8 L 373.6 209.8 L 373.6 231.8" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 373.6 231.8 L 373.6 182.0 L 386.4 182.0 L 386.4 204.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 373.6 231.8 L 373.6 182.0 L 386.4 182.0 L 386.4 204.0" fill="none" stroke="#2ad0bc" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1090.2 196.1 L 1090.2 147.8 L 1173.6 147.8 L 1173.6 169.8" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1090.2 196.1 L 1090.2 147.8 L 1173.6 147.8 L 1173.6 169.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1173.6 169.8 L 1173.6 147.8 L 1251.5 147.8 L 1251.5 192.8" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1173.6 169.8 L 1173.6 147.8 L 1251.5 147.8 L 1251.5 192.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1090.2 196.1 L 1090.2 174.1 L 1190.4 174.1 L 1190.4 214.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1090.2 196.1 L 1090.2 174.1 L 1190.4 174.1 L 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1190.4 214.0 L 1190.4 192.0 L 1254.8 192.0 L 1254.8 249.7" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1190.4 214.0 L 1190.4 192.0 L 1254.8 192.0 L 1254.8 249.7" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1080.1 249.5 L 1080.1 192.0 L 1190.4 192.0 L 1190.4 214.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1080.1 249.5 L 1080.1 192.0 L 1190.4 192.0 L 1190.4 214.0" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1190.4 214.0 L 1190.4 185.8 L 1206.3 185.8 L 1206.3 207.8" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1190.4 214.0 L 1190.4 185.8 L 1206.3 185.8 L 1206.3 207.8" fill="none" stroke="#e7aa54" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 258.8 440.6 L 258.8 390.0 L 330.9 390.0 L 330.9 412.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 258.8 440.6 L 258.8 390.0 L 330.9 390.0 L 330.9 412.0" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 330.9 412.0 L 330.9 390.0 L 398.2 390.0 L 398.2 423.6" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 330.9 412.0 L 330.9 390.0 L 398.2 390.0 L 398.2 423.6" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 258.8 440.6 L 258.8 418.6 L 242.7 418.6 L 242.7 491.4" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 258.8 440.6 L 258.8 418.6 L 242.7 418.6 L 242.7 491.4" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 242.7 491.4 L 242.7 462.3 L 318.2 462.3 L 318.2 484.3" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 242.7 491.4 L 242.7 462.3 L 318.2 462.3 L 318.2 484.3" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 458.1 445.9 L 458.1 423.9 L 242.7 423.9 L 242.7 491.4" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 458.1 445.9 L 458.1 423.9 L 242.7 423.9 L 242.7 491.4" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 242.7 491.4 L 242.7 444.5 L 399.0 444.5 L 399.0 466.5" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 242.7 491.4 L 242.7 444.5 L 399.0 444.5 L 399.0 466.5" fill="none" stroke="#66a9e7" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 709.2 480.0 L 709.2 438.0 L 785.3 438.0 L 785.3 460.0" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 709.2 480.0 L 709.2 438.0 L 785.3 438.0 L 785.3 460.0" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 785.3 460.0 L 785.3 438.0 L 868.6 438.0 L 868.6 472.9" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 785.3 460.0 L 785.3 438.0 L 868.6 438.0 L 868.6 472.9" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 709.2 480.0 L 709.2 458.0 L 694.4 458.0 L 694.4 545.5" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 709.2 480.0 L 709.2 458.0 L 694.4 458.0 L 694.4 545.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 694.4 545.5 L 694.4 520.5 L 769.3 520.5 L 769.3 542.5" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 694.4 545.5 L 694.4 520.5 L 769.3 520.5 L 769.3 542.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 936.5 505.8 L 936.5 483.8 L 694.4 483.8 L 694.4 545.5" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 936.5 505.8 L 936.5 483.8 L 694.4 483.8 L 694.4 545.5" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 694.4 545.5 L 694.4 513.2 L 852.0 513.2 L 852.0 535.2" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 694.4 545.5 L 694.4 513.2 L 852.0 513.2 L 852.0 535.2" fill="none" stroke="#71d58a" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1133.0 383.4 L 1133.0 333.6 L 1215.9 333.6 L 1215.9 355.6" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1133.0 383.4 L 1133.0 333.6 L 1215.9 333.6 L 1215.9 355.6" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1215.9 355.6 L 1215.9 333.6 L 1289.1 333.6 L 1289.1 383.4" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1215.9 355.6 L 1215.9 333.6 L 1289.1 333.6 L 1289.1 383.4" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1133.0 383.4 L 1133.0 361.4 L 1236.6 361.4 L 1236.6 402.9" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1133.0 383.4 L 1133.0 361.4 L 1236.6 361.4 L 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1236.6 402.9 L 1236.6 380.9 L 1299.0 380.9 L 1299.0 436.7" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1236.6 402.9 L 1236.6 380.9 L 1299.0 380.9 L 1299.0 436.7" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1127.0 436.1 L 1127.0 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.10880000000000001" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1127.0 436.1 L 1127.0 380.9 L 1236.6 380.9 L 1236.6 402.9" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.34" stroke-linecap="square" stroke-linejoin="miter"/><path d="M 1236.6 402.9 L 1236.6 372.7 L 1265.8 372.7 L 1265.8 394.7" fill="none" stroke="#07121a" stroke-width="6" stroke-opacity="0.128" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M 1236.6 402.9 L 1236.6 372.7 L 1265.8 372.7 L 1265.8 394.7" fill="none" stroke="#b38ee8" stroke-width="2" stroke-opacity="0.4" stroke-linecap="square" stroke-linejoin="miter"/></g>
     <g><g transform="translate(1173.6 169.8)">
-    <ellipse cx="0" cy="16.4" rx="20.1" ry="6.0" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="18.7" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-6.3" cy="-6.7" r="4.5" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="17.5" rx="26.2" ry="7.2" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-22.6,10.6 15.3,10.6 9.3,18.6 -28.6,18.6 -22.6,10.6" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-15.3,-10.6 22.6,-10.6 15.3,10.6 -22.6,10.6 -15.3,-10.6" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-8.3,-3.6 13.6,-3.6 6.3,3.6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-12.6" y="-0.6" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(380.9 176.4)">
-    <ellipse cx="0" cy="15.3" rx="18.7" ry="5.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="17.4" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-5.9" cy="-6.2" r="4.2" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="16.8" rx="24.4" ry="6.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-21.0,9.9 14.3,9.9 8.3,17.9 -27.0,17.9 -21.0,9.9" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-14.3,-9.9 21.0,-9.9 14.3,9.9 -21.0,9.9 -14.3,-9.9" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-7.3,-2.9 12.0,-2.9 5.3,2.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-11.0" y="0.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1251.5 192.8)">
-    <ellipse cx="0" cy="14.1" rx="17.3" ry="5.1" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="16.0" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-5.5" cy="-5.8" r="3.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="16.0" rx="22.5" ry="6.2" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-19.4,9.1 13.2,9.1 7.2,17.1 -25.4,17.1 -19.4,9.1" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.2,-9.1 19.4,-9.1 13.2,9.1 -19.4,9.1 -13.2,-9.1" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-6.2,-2.1 10.4,-2.1 4.2,2.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-9.4" y="0.9" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1090.2 196.1)">
-    <ellipse cx="0" cy="17.1" rx="20.9" ry="6.2" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="19.4" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-6.6" cy="-7.0" r="4.7" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="17.9" rx="27.2" ry="7.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-23.5,11.1 16.0,11.1 10.0,19.1 -29.5,19.1 -23.5,11.1" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-16.0,-11.1 23.5,-11.1 16.0,11.1 -23.5,11.1 -16.0,-11.1" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-9.0,-4.1 14.5,-4.1 7.0,4.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-13.5" y="-1.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(386.4 204.0)">
-    <ellipse cx="0" cy="29.3" rx="35.9" ry="10.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="33.3" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-11.3" cy="-12.0" r="8.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="25.9" rx="46.7" ry="12.9" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-40.3,19.0 27.4,19.0 21.4,27.0 -46.3,27.0 -40.3,19.0" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-27.4,-19.0 40.3,-19.0 27.4,19.0 -40.3,19.0 -27.4,-19.0" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-20.4,-12.0 31.3,-12.0 18.4,12.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-30.3" y="-9.0" width="7.3" height="7.3" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1206.3 207.8)">
-    <ellipse cx="0" cy="21.5" rx="26.3" ry="7.8" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="24.4" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-8.3" cy="-8.8" r="5.9" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="20.8" rx="34.2" ry="9.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-29.5,13.9 20.1,13.9 14.1,21.9 -35.5,21.9 -29.5,13.9" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-20.1,-13.9 29.5,-13.9 20.1,13.9 -29.5,13.9 -20.1,-13.9" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-13.1,-6.9 20.5,-6.9 11.1,6.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-19.5" y="-3.9" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(288.1 208.6)">
-    <ellipse cx="0" cy="19.8" rx="24.3" ry="7.2" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="22.5" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-7.7" cy="-8.1" r="5.4" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="19.7" rx="31.6" ry="8.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-27.3,12.9 18.5,12.9 12.5,20.9 -33.3,20.9 -27.3,12.9" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-18.5,-12.9 27.3,-12.9 18.5,12.9 -27.3,12.9 -18.5,-12.9" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-11.5,-5.9 18.3,-5.9 9.5,5.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-17.3" y="-2.9" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(440.8 208.7)">
-    <ellipse cx="0" cy="14.0" rx="17.2" ry="5.1" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="15.9" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-5.4" cy="-5.7" r="3.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.9" rx="22.3" ry="6.2" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-19.2,9.1 13.1,9.1 7.1,17.1 -25.2,17.1 -19.2,9.1" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.1,-9.1 19.2,-9.1 13.1,9.1 -19.2,9.1 -13.1,-9.1" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-6.1,-2.1 10.2,-2.1 4.1,2.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-9.2" y="0.9" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1190.4 214.0)">
-    <ellipse cx="0" cy="29.3" rx="35.9" ry="10.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="33.3" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-11.3" cy="-12.0" r="8.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="25.9" rx="46.7" ry="12.9" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-40.3,19.0 27.4,19.0 21.4,27.0 -46.3,27.0 -40.3,19.0" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-27.4,-19.0 40.3,-19.0 27.4,19.0 -40.3,19.0 -27.4,-19.0" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-20.4,-12.0 31.3,-12.0 18.4,12.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-30.3" y="-9.0" width="7.3" height="7.3" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(373.6 231.8)">
-    <ellipse cx="0" cy="23.6" rx="29.0" ry="8.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="26.8" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-9.1" cy="-9.7" r="6.4" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="22.2" rx="37.6" ry="10.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-32.4,15.3 22.1,15.3 16.1,23.3 -38.4,23.3 -32.4,15.3" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-22.1,-15.3 32.4,-15.3 22.1,15.3 -32.4,15.3 -22.1,-15.3" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-15.1,-8.3 23.4,-8.3 13.1,8.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-22.4" y="-5.3" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1080.1 249.5)">
-    <ellipse cx="0" cy="13.9" rx="17.0" ry="5.1" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="15.8" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-5.4" cy="-5.7" r="3.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.9" rx="22.2" ry="6.1" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-19.1,9.0 13.0,9.0 7.0,17.0 -25.1,17.0 -19.1,9.0" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.0,-9.0 19.1,-9.0 13.0,9.0 -19.1,9.0 -13.0,-9.0" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-6.0,-2.0 10.1,-2.0 4.0,2.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-9.1" y="1.0" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1254.8 249.7)">
-    <ellipse cx="0" cy="12.9" rx="15.9" ry="4.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="14.7" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="2.2"/>
-    <circle cx="-5.0" cy="-5.3" r="3.5" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.2" rx="20.6" ry="5.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-17.8,8.4 12.1,8.4 6.1,16.4 -23.8,16.4 -17.8,8.4" fill="#07131b" stroke="#e7aa54" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-12.1,-8.4 17.8,-8.4 12.1,8.4 -17.8,8.4 -12.1,-8.4" fill="url(#nodeUsda)" stroke="#e7aa54" stroke-width="1.8"/>
+    <polyline points="-5.1,-1.4 8.8,-1.4 3.1,1.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-7.8" y="1.6" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(837.9 257.1)" filter="url(#glow)">
-    <ellipse cx="0" cy="48.1" rx="59.0" ry="17.5" fill="#000000" opacity="0.36" filter="url(#softBlur)"/>
-    <circle r="54.6" fill="url(#nodeHub)" stroke="#f8faf7" stroke-width="4"/>
-    <circle cx="-18.6" cy="-19.7" r="13.1" fill="#ffffff" opacity="0.38"/>
-    <text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#f8faf7">R1 Graph</text>
-      <text y="21" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="760" fill="#d6e6e2">1,410 / 2,564</text>
+    <ellipse cx="-4.5" cy="49.0" rx="91.9" ry="25.6" fill="#000000" opacity="0.34" filter="url(#softBlur)"/>
+    <polygon points="-79.2,37.7 61.2,37.7 51.4,50.8 -89.0,50.8 -79.2,37.7" fill="#07131b" stroke="#f8faf7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-61.2,-37.7 79.2,-37.7 61.2,37.7 -79.2,37.7 -61.2,-37.7" fill="url(#nodeHub)" stroke="#f8faf7" stroke-width="3.2"/>
+    <polyline points="-54.2,-30.7 70.2,-30.7 52.2,30.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-69.2" y="-27.7" width="12.0" height="12.0" fill="#f8faf7" opacity="0.42"/>
+    <text y="-7" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="900" fill="#f8faf7">R1 Graph</text>
+      <text y="19" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="760" fill="#d6e6e2">1,410 / 2,564</text>
   </g><g transform="translate(272.7 262.1)">
-    <ellipse cx="0" cy="13.7" rx="16.9" ry="5.0" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="15.6" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-5.3" cy="-5.6" r="3.7" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.8" rx="21.9" ry="6.1" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-18.9,8.9 12.8,8.9 6.8,16.9 -24.9,16.9 -18.9,8.9" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-12.8,-8.9 18.9,-8.9 12.8,8.9 -18.9,8.9 -12.8,-8.9" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-5.8,-1.9 9.9,-1.9 3.8,1.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-8.9" y="1.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(446.0 266.9)">
-    <ellipse cx="0" cy="11.8" rx="14.4" ry="4.3" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.4" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="2.2"/>
-    <circle cx="-4.5" cy="-4.8" r="3.2" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.5" rx="18.8" ry="5.2" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-16.2,7.6 11.0,7.6 5.0,15.6 -22.2,15.6 -16.2,7.6" fill="#07131b" stroke="#2ad0bc" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.0,-7.6 16.2,-7.6 11.0,7.6 -16.2,7.6 -11.0,-7.6" fill="url(#nodeNep)" stroke="#2ad0bc" stroke-width="1.8"/>
+    <polyline points="-4.0,-0.6 7.2,-0.6 2.0,0.6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-6.2" y="2.4" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1215.9 355.6)">
-    <ellipse cx="0" cy="15.4" rx="18.9" ry="5.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="17.5" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-5.9" cy="-6.3" r="4.2" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="16.8" rx="24.6" ry="6.8" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-21.2,10.0 14.4,10.0 8.4,18.0 -27.2,18.0 -21.2,10.0" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-14.4,-10.0 21.2,-10.0 14.4,10.0 -21.2,10.0 -14.4,-10.0" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-7.4,-3.0 12.2,-3.0 5.4,3.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-11.2" y="0.0" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1289.1 383.4)">
-    <ellipse cx="0" cy="12.2" rx="15.0" ry="4.5" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.9" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-4.7" cy="-5.0" r="3.3" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.8" rx="19.5" ry="5.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-16.8,7.9 11.4,7.9 5.4,15.9 -22.8,15.9 -16.8,7.9" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.4,-7.9 16.8,-7.9 11.4,7.9 -16.8,7.9 -11.4,-7.9" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-4.4,-0.9 7.8,-0.9 2.4,0.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-6.8" y="2.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1133.0 383.4)">
-    <ellipse cx="0" cy="14.0" rx="17.1" ry="5.1" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="15.9" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-5.4" cy="-5.7" r="3.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.9" rx="22.3" ry="6.1" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-19.2,9.0 13.0,9.0 7.0,17.0 -25.2,17.0 -19.2,9.0" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.0,-9.0 19.2,-9.0 13.0,9.0 -19.2,9.0 -13.0,-9.0" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-6.0,-2.0 10.2,-2.0 4.0,2.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-9.2" y="1.0" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1265.8 394.7)">
-    <ellipse cx="0" cy="18.2" rx="22.3" ry="6.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="20.6" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-7.0" cy="-7.4" r="5.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="18.6" rx="29.0" ry="8.0" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-25.0,11.8 17.0,11.8 11.0,19.8 -31.0,19.8 -25.0,11.8" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-17.0,-11.8 25.0,-11.8 17.0,11.8 -25.0,11.8 -17.0,-11.8" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-10.0,-4.8 16.0,-4.8 8.0,4.8" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-15.0" y="-1.8" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1236.6 402.9)">
-    <ellipse cx="0" cy="23.4" rx="28.7" ry="8.5" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="26.6" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-9.1" cy="-9.6" r="6.4" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="22.1" rx="37.4" ry="10.3" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-32.2,15.2 21.9,15.2 15.9,23.2 -38.2,23.2 -32.2,15.2" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-21.9,-15.2 32.2,-15.2 21.9,15.2 -32.2,15.2 -21.9,-15.2" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-14.9,-8.2 23.2,-8.2 12.9,8.2" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-22.2" y="-5.2" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(330.9 412.0)">
-    <ellipse cx="0" cy="12.9" rx="15.8" ry="4.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="14.6" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-5.0" cy="-5.3" r="3.5" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.2" rx="20.5" ry="5.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-17.7,8.3 12.0,8.3 6.0,16.3 -23.7,16.3 -17.7,8.3" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-12.0,-8.3 17.7,-8.3 12.0,8.3 -17.7,8.3 -12.0,-8.3" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-5.0,-1.3 8.7,-1.3 3.0,1.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-7.7" y="1.7" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(398.2 423.6)">
-    <ellipse cx="0" cy="11.8" rx="14.5" ry="4.3" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.4" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-4.6" cy="-4.8" r="3.2" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.5" rx="18.9" ry="5.2" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-16.3,7.7 11.1,7.7 5.1,15.7 -22.3,15.7 -16.3,7.7" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.1,-7.7 16.3,-7.7 11.1,7.7 -16.3,7.7 -11.1,-7.7" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-4.1,-0.7 7.3,-0.7 2.1,0.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-6.3" y="2.3" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(387.8 428.8)">
-    <ellipse cx="0" cy="23.8" rx="29.1" ry="8.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="27.0" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-9.2" cy="-9.7" r="6.5" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="22.3" rx="37.9" ry="10.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-32.7,15.4 22.2,15.4 16.2,23.4 -38.7,23.4 -32.7,15.4" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-22.2,-15.4 32.7,-15.4 22.2,15.4 -32.7,15.4 -22.2,-15.4" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-15.2,-8.4 23.7,-8.4 13.2,8.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-22.7" y="-5.4" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1127.0 436.1)">
-    <ellipse cx="0" cy="12.0" rx="14.7" ry="4.4" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.7" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-4.6" cy="-4.9" r="3.3" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.7" rx="19.2" ry="5.3" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-16.5,7.8 11.2,7.8 5.2,15.8 -22.5,15.8 -16.5,7.8" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.2,-7.8 16.5,-7.8 11.2,7.8 -16.5,7.8 -11.2,-7.8" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-4.2,-0.8 7.5,-0.8 2.2,0.8" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-6.5" y="2.2" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(1299.0 436.7)">
-    <ellipse cx="0" cy="11.2" rx="13.7" ry="4.1" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="12.7" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="2.2"/>
-    <circle cx="-4.3" cy="-4.6" r="3.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.1" rx="17.8" ry="4.9" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-15.3,7.2 10.4,7.2 4.4,15.2 -21.3,15.2 -15.3,7.2" fill="#07131b" stroke="#b38ee8" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-10.4,-7.2 15.3,-7.2 10.4,7.2 -15.3,7.2 -10.4,-7.2" fill="url(#nodeReview)" stroke="#b38ee8" stroke-width="1.8"/>
+    <polyline points="-3.4,-0.2 6.3,-0.2 1.4,0.2" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-5.3" y="2.8" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(258.8 440.6)">
-    <ellipse cx="0" cy="12.5" rx="15.4" ry="4.6" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="14.2" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-4.8" cy="-5.1" r="3.4" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.0" rx="20.0" ry="5.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-17.2,8.1 11.7,8.1 5.7,16.1 -23.2,16.1 -17.2,8.1" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.7,-8.1 17.2,-8.1 11.7,8.1 -17.2,8.1 -11.7,-8.1" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-4.7,-1.1 8.2,-1.1 2.7,1.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-7.2" y="1.9" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(458.1 445.9)">
-    <ellipse cx="0" cy="10.8" rx="13.2" ry="3.9" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="12.2" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-4.2" cy="-4.4" r="2.9" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="13.9" rx="17.2" ry="4.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-14.8,7.0 10.1,7.0 4.1,15.0 -20.8,15.0 -14.8,7.0" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-10.1,-7.0 14.8,-7.0 10.1,7.0 -14.8,7.0 -10.1,-7.0" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-3.1,0.0 5.8,0.0 1.1,-0.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-4.8" y="3.0" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(785.3 460.0)">
-    <ellipse cx="0" cy="13.2" rx="16.2" ry="4.8" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="15.0" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-5.1" cy="-5.4" r="3.6" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.4" rx="21.0" ry="5.8" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-18.1,8.5 12.3,8.5 6.3,16.5 -24.1,16.5 -18.1,8.5" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-12.3,-8.5 18.1,-8.5 12.3,8.5 -18.1,8.5 -12.3,-8.5" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-5.3,-1.5 9.1,-1.5 3.3,1.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-8.1" y="1.5" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(399.0 466.5)">
-    <ellipse cx="0" cy="20.5" rx="25.1" ry="7.4" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="23.3" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-7.9" cy="-8.4" r="5.6" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="20.1" rx="32.6" ry="9.0" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-28.1,13.3 19.1,13.3 13.1,21.3 -34.1,21.3 -28.1,13.3" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-19.1,-13.3 28.1,-13.3 19.1,13.3 -28.1,13.3 -19.1,-13.3" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-12.1,-6.3 19.1,-6.3 10.1,6.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-18.1" y="-3.3" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(868.6 472.9)">
-    <ellipse cx="0" cy="12.2" rx="14.9" ry="4.4" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.8" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-4.7" cy="-5.0" r="3.3" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.8" rx="19.4" ry="5.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-16.7,7.9 11.4,7.9 5.4,15.9 -22.7,15.9 -16.7,7.9" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-11.4,-7.9 16.7,-7.9 11.4,7.9 -16.7,7.9 -11.4,-7.9" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-4.4,-0.9 7.7,-0.9 2.4,0.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-6.7" y="2.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(709.2 480.0)">
-    <ellipse cx="0" cy="12.8" rx="15.7" ry="4.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="14.6" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-4.9" cy="-5.2" r="3.5" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="15.2" rx="20.4" ry="5.6" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-17.6,8.3 12.0,8.3 6.0,16.3 -23.6,16.3 -17.6,8.3" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-12.0,-8.3 17.6,-8.3 12.0,8.3 -17.6,8.3 -12.0,-8.3" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-5.0,-1.3 8.6,-1.3 3.0,1.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-7.6" y="1.7" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(838.2 483.7)">
-    <ellipse cx="0" cy="26.2" rx="32.2" ry="9.5" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="29.8" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-10.1" cy="-10.7" r="7.1" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="23.9" rx="41.8" ry="11.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-36.0,17.0 24.5,17.0 18.5,25.0 -42.0,25.0 -36.0,17.0" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-24.5,-17.0 36.0,-17.0 24.5,17.0 -36.0,17.0 -24.5,-17.0" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-17.5,-10.0 27.0,-10.0 15.5,10.0" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-26.0" y="-7.0" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(318.2 484.3)">
-    <ellipse cx="0" cy="14.6" rx="17.9" ry="5.3" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="16.5" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-5.6" cy="-6.0" r="4.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="16.3" rx="23.2" ry="6.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-20.0,9.4 13.6,9.4 7.6,17.4 -26.0,17.4 -20.0,9.4" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.6,-9.4 20.0,-9.4 13.6,9.4 -20.0,9.4 -13.6,-9.4" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-6.6,-2.4 11.0,-2.4 4.6,2.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-10.0" y="0.6" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(460.1 487.5)">
-    <ellipse cx="0" cy="11.6" rx="14.2" ry="4.2" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="13.2" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-4.5" cy="-4.7" r="3.2" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.4" rx="18.5" ry="5.1" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-15.9,7.5 10.8,7.5 4.8,15.5 -21.9,15.5 -15.9,7.5" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-10.8,-7.5 15.9,-7.5 10.8,7.5 -15.9,7.5 -10.8,-7.5" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-3.8,-0.5 6.9,-0.5 1.8,0.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-5.9" y="2.5" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(242.7 491.4)">
-    <ellipse cx="0" cy="10.6" rx="13.0" ry="3.8" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="12.0" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="2.2"/>
-    <circle cx="-4.1" cy="-4.3" r="2.9" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="13.7" rx="16.9" ry="4.7" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-14.6,6.9 9.9,6.9 3.9,14.9 -20.6,14.9 -14.6,6.9" fill="#07131b" stroke="#66a9e7" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-9.9,-6.9 14.6,-6.9 9.9,6.9 -14.6,6.9 -9.9,-6.9" fill="url(#nodeSource)" stroke="#66a9e7" stroke-width="1.8"/>
+    <polyline points="-2.9,0.1 5.6,0.1 0.9,-0.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-4.6" y="3.1" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(936.5 505.8)">
-    <ellipse cx="0" cy="10.2" rx="12.5" ry="3.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="11.6" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-4.0" cy="-4.2" r="2.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="13.5" rx="16.3" ry="4.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-14.1,6.6 9.6,6.6 3.6,14.6 -20.1,14.6 -14.1,6.6" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-9.6,-6.6 14.1,-6.6 9.6,6.6 -14.1,6.6 -9.6,-6.6" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-2.6,0.4 5.1,0.4 0.6,-0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-4.1" y="3.4" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(852.0 535.2)">
-    <ellipse cx="0" cy="21.3" rx="26.1" ry="7.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="24.2" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-8.2" cy="-8.7" r="5.8" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="20.7" rx="33.9" ry="9.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-29.2,13.8 19.9,13.8 13.9,21.8 -35.2,21.8 -29.2,13.8" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-19.9,-13.8 29.2,-13.8 19.9,13.8 -29.2,13.8 -19.9,-13.8" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-12.9,-6.8 20.2,-6.8 10.9,6.8" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-19.2" y="-3.8" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(769.3 542.5)">
-    <ellipse cx="0" cy="14.8" rx="18.2" ry="5.4" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="16.8" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-5.7" cy="-6.1" r="4.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="16.5" rx="23.6" ry="6.5" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-20.4,9.6 13.9,9.6 7.9,17.6 -26.4,17.6 -20.4,9.6" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-13.9,-9.6 20.4,-9.6 13.9,9.6 -20.4,9.6 -13.9,-9.6" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-6.9,-2.6 11.4,-2.6 4.9,2.6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-10.4" y="0.4" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(694.4 545.5)">
-    <ellipse cx="0" cy="10.1" rx="12.4" ry="3.7" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="11.5" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-3.9" cy="-4.1" r="2.7" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="13.4" rx="16.1" ry="4.4" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-13.9,6.5 9.4,6.5 3.4,14.5 -19.9,14.5 -13.9,6.5" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-9.4,-6.5 13.9,-6.5 9.4,6.5 -13.9,6.5 -9.4,-6.5" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-2.4,0.5 4.9,0.5 0.4,-0.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-3.9" y="3.5" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g><g transform="translate(913.8 547.8)">
-    <ellipse cx="0" cy="11.1" rx="13.6" ry="4.0" fill="#000000" opacity="0.24" filter="url(#softBlur)"/>
-    <circle r="12.6" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="2.2"/>
-    <circle cx="-4.3" cy="-4.5" r="3.0" fill="#ffffff" opacity="0.38"/>
+    <ellipse cx="-2.7" cy="14.0" rx="17.6" ry="4.9" fill="#000000" opacity="0.22" filter="url(#softBlur)"/>
+    <polygon points="-15.2,7.2 10.3,7.2 4.3,15.2 -21.2,15.2 -15.2,7.2" fill="#07131b" stroke="#71d58a" stroke-width="1.2" stroke-opacity="0.48"/>
+    <polygon points="-10.3,-7.2 15.2,-7.2 10.3,7.2 -15.2,7.2 -10.3,-7.2" fill="url(#nodeForest)" stroke="#71d58a" stroke-width="1.8"/>
+    <polyline points="-3.3,-0.2 6.2,-0.2 1.3,0.2" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.22"/>
+    <rect x="-5.2" y="2.8" width="7.0" height="7.0" fill="#f8faf7" opacity="0.42"/>
   </g></g>
     <g transform="translate(58 36)">
-    <rect width="232" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="#2ad0bc"/>
+    <path d="M 0 0 H 232 V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="232" height="4" fill="#2ad0bc"/>
+    <rect x="24" y="29" width="14" height="14" fill="#2ad0bc"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">NEPA</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="#2ad0bc">6 authority families</text>
   </g>
     <g transform="translate(1106 34)">
-    <rect width="342" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="#e7aa54"/>
+    <path d="M 0 0 H 342 V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="342" height="4" fill="#e7aa54"/>
+    <rect x="24" y="29" width="14" height="14" fill="#e7aa54"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">USDA Regulations</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="#e7aa54">19 regulation families</text>
   </g>
     <g transform="translate(64 486)">
-    <rect width="342" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="#66a9e7"/>
+    <path d="M 0 0 H 342 V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="342" height="4" fill="#66a9e7"/>
+    <rect x="24" y="29" width="14" height="14" fill="#66a9e7"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">Source Evidence</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="#66a9e7">190 source records</text>
   </g>
     <g transform="translate(642 508)">
-    <rect width="342" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="#71d58a"/>
+    <path d="M 0 0 H 342 V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="342" height="4" fill="#71d58a"/>
+    <rect x="24" y="29" width="14" height="14" fill="#71d58a"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">Forest Plans</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="#71d58a">10 profiles / 329 components</text>
   </g>
     <g transform="translate(1120 476)">
-    <rect width="342" height="70" rx="16" fill="#102431" stroke="#314653" opacity="0.94"/>
-    <circle cx="28" cy="35" r="9" fill="#b38ee8"/>
+    <path d="M 0 0 H 342 V 70 H 14 L 0 56 Z" fill="#102431" stroke="#314653" opacity="0.96"/>
+    <rect x="0" y="0" width="342" height="4" fill="#b38ee8"/>
+    <rect x="24" y="29" width="14" height="14" fill="#b38ee8"/>
     <text x="48" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#f8faf7">Review Views</text>
     <text x="48" y="52" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="720" fill="#b38ee8">lenses, scenes, outputs</text>
   </g>
@@ -268,28 +394,28 @@
 
     <g transform="translate(54 812)">
       <g transform="translate(0 0)">
-    <rect width="210" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="#2ad0bc"/>
+    <path d="M 0 0 H 210 V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="#2ad0bc"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">NEPA</text>
   </g>
       <g transform="translate(186 0)">
-    <rect width="230" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="#e7aa54"/>
+    <path d="M 0 0 H 230 V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="#e7aa54"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">USDA regulations</text>
   </g>
       <g transform="translate(472 0)">
-    <rect width="219" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="#66a9e7"/>
+    <path d="M 0 0 H 219 V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="#66a9e7"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">Source evidence</text>
   </g>
       <g transform="translate(764 0)">
-    <rect width="210" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="#71d58a"/>
+    <path d="M 0 0 H 210 V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="#71d58a"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">Forest plans</text>
   </g>
       <g transform="translate(1038 0)">
-    <rect width="210" height="54" rx="27" fill="#122633" stroke="#314653"/>
-    <circle cx="28" cy="27" r="10" fill="#b38ee8"/>
+    <path d="M 0 0 H 210 V 54 H 12 L 0 42 Z" fill="#122633" stroke="#314653"/>
+    <rect x="18" y="21" width="14" height="14" fill="#b38ee8"/>
     <text x="48" y="34" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#f8faf7">Review views</text>
   </g>
     </g>
