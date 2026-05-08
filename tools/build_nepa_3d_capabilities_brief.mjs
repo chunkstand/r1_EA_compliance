@@ -224,7 +224,7 @@ function briefHtml(metrics) {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>NEPA 3D Knowledge Graph Capabilities Brief</title>
+  <title>Region 1 Knowledge System Capabilities Brief</title>
   <style>
     @page { size: Letter; margin: 0; }
     * { box-sizing: border-box; }
@@ -401,10 +401,10 @@ function briefHtml(metrics) {
 <body>
   <section class="page">
     <header>
-      <div class="kicker">Client Brief / Core Message</div>
-      <h1>Make NEPA Review Risk Visible Early</h1>
-      <p class="lede">The system is an auditable NEPA review engine, not a stand-alone visualization. It connects source material, authority, evidence, findings, and forest-plan readiness so review teams can identify risk while the record can still be fixed.</p>
-      <p class="metric-context">Current Region 1 graph surface.</p>
+      <div class="kicker">Client Brief / Core System</div>
+      <h1>Region 1 Knowledge System</h1>
+      <p class="lede">A fully functional Region 1 knowledge system turns fragmented source, authority, evidence, and forest-plan data into a structured relational graph. It supports defensible, efficient land exchange execution now through NEPA review, with the same foundation ready to expand into additional workflows.</p>
+      <p class="metric-context">Current Region 1 knowledge graph surface.</p>
       <div class="metric-grid">
         ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
         ${metric(metrics.edgeCount.toLocaleString(), "Region 1 graph edges")}
@@ -413,20 +413,20 @@ function briefHtml(metrics) {
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review risk visibility architecture" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Region 1 knowledge system architecture" />
       <div class="proof-grid">
         <div class="proof-panel">
-          <strong>What the engine shows</strong>
+          <strong>What the system organizes</strong>
           <ul>
-            <li>Applicable and screened-out authorities.</li>
-            <li>The evidence path behind each finding.</li>
-            <li>Forest Plan consistency support and profile readiness.</li>
-            <li>Missing, stale, or unsupported source dependencies.</li>
+            <li>Source records, artifacts, and evidence spans.</li>
+            <li>NEPA, USDA, Forest Service, and Forest Plan authority.</li>
+            <li>Forest-plan profiles, components, and readiness state.</li>
+            <li>V1 review outputs that can be traced back to source data.</li>
           </ul>
         </div>
         <div class="proof-panel">
           <strong>Why it matters</strong>
-          <p>The system points reviewers to the record defects that drive delay: source gaps, unsupported claims, stale authority language, and forest-plan blockers.</p>
+          <p>Teams can prepare packages faster, inspect support paths, and extend the same graph foundation to new services.</p>
         </div>
       </div>
     </main>
@@ -439,12 +439,12 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Traceability Architecture</div>
-      <h2>Trace Every Finding to Governed Evidence</h2>
-      <p class="lede">Each output is generated from governed sources. The trail runs from workbook scope and artifact hash to evidence span, source claim, authority decision, and finding.</p>
+      <h2>Trace Every Output to Governed Evidence</h2>
+      <p class="lede">Each capability is generated from governed sources. The trail runs from workbook scope and artifact hash to evidence span, source claim, authority decision, and output.</p>
     </header>
     <main>
       <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same path supports reports, QA replay, graph views, and reverse checks.</p>
+      <p class="caption">Traceability model: the output is the end of a chain, not a free-standing conclusion. The same path supports reports, QA replay, graph views, and reverse checks.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
           <strong>Source boundary</strong>
@@ -452,7 +452,7 @@ function briefHtml(metrics) {
         </div>
         <div class="callout">
           <strong>Reverse check</strong>
-          <p>Findings can be tested backward for unsupported claims, stale authority dependencies, missing support, unresolved applicability, and forest-plan gaps.</p>
+          <p>Generated outputs can be tested backward for unsupported claims, stale authority dependencies, missing support, unresolved applicability, and forest-plan gaps.</p>
         </div>
       </div>
     </main>
@@ -465,7 +465,7 @@ function briefHtml(metrics) {
   <section class="page">
     <header>
       <div class="kicker">Knowledge Graph / Region 1</div>
-      <h2>NEPA, USDA regulations, and forest plans in one graph</h2>
+      <h2>NEPA, USDA regulations, forest plans, and source evidence in one graph</h2>
       <p class="lede">The Region 1 graph presents NEPA authority, USDA regulations and procedures, source evidence, review views, and forest-plan data as connected layers without collapsing them into one undifferentiated network.</p>
     </header>
     <main>
@@ -492,19 +492,19 @@ function briefHtml(metrics) {
 
 function currentAuthorityStackSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="NEPA review risk made visible early">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="Region 1 knowledge system architecture">
   ${svgDefs()}
   <rect width="1280" height="760" rx="28" fill="#f4f6f2"/>
   <rect x="34" y="32" width="1212" height="696" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
-  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">From package to review risk signal</text>
-  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">Source records, authority logic, and evidence traces converge before decision support is produced.</text>
+  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">From fragmented data to structured knowledge</text>
+  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">Source records, authority logic, evidence traces, and forest-plan data resolve into a governed Region 1 graph for land exchange execution.</text>
 
-  ${riskNode(150, 378, "#17202a", "NEPA Package", "draft package, appendices, source records")}
-  ${riskNode(418, 248, "#1f6f68", "Authority Logic", "NEPA, USDA, Forest Service, Forest Plan")}
-  ${riskNode(418, 508, "#835b2f", "Evidence Trace", "source record to finding")}
-  ${riskHub(700, 378, "#2e5e88", "Risk Visible Early", "before objection, litigation, or rework")}
-  ${riskNode(982, 248, "#6f4f86", "Decision Support", "findings, gaps, signer readout")}
-  ${riskNode(982, 508, "#a65332", "Readiness Blockers", "missing sources, stale authority, profile gaps")}
+  ${systemNode(150, 378, "#17202a", "Source Records", "workbook rows, artifacts, citations")}
+  ${systemNode(418, 248, "#1f6f68", "Authority Layer", "NEPA, USDA, Forest Service, Forest Plan")}
+  ${systemNode(418, 508, "#835b2f", "Evidence Layer", "spans, claims, support links")}
+  ${systemHub(700, 378, "#2e5e88", "Structured R1 Knowledge", "relational graph foundation")}
+  ${systemNode(982, 248, "#6f4f86", "NEPA V1 Review", "current function")}
+  ${systemNode(982, 508, "#a65332", "Expandable Services", "future workflows and views")}
 
   ${flowArrow(270, 378, 565, 378)}
   ${flowArrow(520, 280, 610, 330)}
@@ -514,7 +514,7 @@ function currentAuthorityStackSvg(metrics) {
 
   <g transform="translate(76 628)" filter="url(#shadow)">
     <rect width="1126" height="70" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">Reusable value: focus record repair before the decision path is locked.</text>
+    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">Reusable value: turn fragmented Region 1 knowledge into a governed execution system.</text>
   </g>
 </svg>`;
 }
@@ -525,7 +525,7 @@ function evidenceTraceSvg(metrics) {
   ${svgDefs()}
   <rect width="1800" height="1120" rx="34" fill="#f4f6f2"/>
   <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Evidence trace</text>
-  ${wrapSvgText("Every finding remains linked to source identity, text evidence, authority status, and generated output.", 72, 138, 1560, 22, "#58615b", 2)}
+  ${wrapSvgText("Every generated output remains linked to source identity, text evidence, authority status, and the graph record.", 72, 138, 1560, 22, "#58615b", 2)}
 
   <g transform="translate(72 214)" filter="url(#shadow)">
     <rect width="1656" height="430" rx="24" fill="#ffffff" stroke="#d4d9d0"/>
@@ -533,12 +533,12 @@ function evidenceTraceSvg(metrics) {
     ${traceStep(374, 108, "#1f6f68", "Evidence Span", "extracted text with artifact hash")}
     ${traceStep(704, 108, "#835b2f", "Source Claim", `${metrics.sourceClaims.toLocaleString()} support links`)}
     ${traceStep(1034, 108, "#6f4f86", "Authority Decision", "applies, screened out, unresolved")}
-    ${traceStep(1364, 108, "#2e5e88", "Finding", "review result with evidence path")}
+    ${traceStep(1364, 108, "#2e5e88", "Generated Output", "review result with evidence path")}
     ${flowArrow(300, 198, 364, 198)}
     ${flowArrow(630, 198, 694, 198)}
     ${flowArrow(960, 198, 1024, 198)}
     ${flowArrow(1290, 198, 1354, 198)}
-    <text x="44" y="362" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#17202a">Backward checks test the finding against the record.</text>
+    <text x="44" y="362" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#17202a">Backward checks test the output against the record.</text>
     <text x="44" y="397" font-family="Inter, Arial, sans-serif" font-size="19" fill="#58615b">The trace exposes missing evidence, stale authority language, and unresolved applicability.</text>
   </g>
 
@@ -546,7 +546,7 @@ function evidenceTraceSvg(metrics) {
     <rect width="1656" height="234" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
     <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Outputs generated from the trace</text>
     ${outputTile(32, 88, "#2e5e88", "Compliance Matrix", "authorities, findings, evidence")}
-    ${outputTile(432, 88, "#1f6f68", "Decision Support", "risks, gaps, signer readout")}
+    ${outputTile(432, 88, "#1f6f68", "Decision Support", "gaps, findings, signer readout")}
     ${outputTile(832, 88, "#835b2f", "Final QA", "replay checks and packet validation")}
     ${outputTile(1232, 88, "#6f4f86", "Knowledge Graph", "nodes, edges, scenes, validation")}
   </g>
@@ -580,7 +580,7 @@ function r1GraphShowcaseSvg(metrics) {
 </svg>`;
 }
 
-function riskNode(x, y, color, title, body) {
+function systemNode(x, y, color, title, body) {
   return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
     <rect x="-112" y="-62" width="224" height="124" rx="18" fill="#ffffff" stroke="#d4d9d0"/>
     <rect x="-112" y="-62" width="224" height="8" rx="4" fill="${color}"/>
@@ -590,7 +590,7 @@ function riskNode(x, y, color, title, body) {
   </g>`;
 }
 
-function riskHub(x, y, color, title, body) {
+function systemHub(x, y, color, title, body) {
   return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
     <circle r="100" fill="#ffffff" stroke="${color}" stroke-width="7"/>
     <circle r="64" fill="${color}" opacity="0.12"/>

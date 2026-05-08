@@ -116,10 +116,11 @@ larger set of node labels without changing the validated graph data. Advanced se
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
 3-page system capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
 with matching HTML and asset-backed graphics. The brief is organized as a reusable client-facing
-system overview: the system makes NEPA review risk visible early, applies authority, traces findings
-to source evidence, flags readiness blockers before decision, and shows NEPA, USDA regulations,
-source evidence, and forest plans in the R1 graph without named project examples. The earlier
-authority-universe Milestone 3 adds
+system overview: the system structures fragmented Region 1 source, authority, evidence, and
+forest-plan data for defensible, efficient land exchange execution; NEPA review is the V1 function,
+and the same graph foundation can expand to additional workflows. The brief shows NEPA, USDA
+regulations, source evidence, and forest plans in the R1 graph without named project examples. The
+earlier authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
 independent applicability eval and gold-adjudication coverage for those expanded families: seed evals

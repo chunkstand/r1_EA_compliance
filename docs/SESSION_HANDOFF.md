@@ -940,9 +940,11 @@ legal conclusion.
   graph figures under `docs/capabilities/assets/`. The brief is built by
   `tools/build_nepa_3d_capabilities_brief.mjs` from current catalog, source-set graph,
   phase-eval, and promotion-suite artifacts. The current version is a reusable system-level brief
-  organized around early review-risk visibility: trace findings to governed source evidence, flag
-  readiness blockers, and showcase distinct NEPA, USDA regulation, source-evidence, and forest-plan
-  layers in the Region 1 graph without named project examples.
+  organized around the Region 1 knowledge-system message: fragmented source, authority, evidence,
+  and forest-plan data is structured into a relational graph for defensible, efficient land exchange
+  execution. NEPA review is the V1 function, and the same graph foundation can expand to additional
+  workflows while showcasing distinct NEPA, USDA regulation, source-evidence, and forest-plan layers
+  without named project examples.
 - NEPA 3D Milestone 7 initial graph validation and promotion gates are implemented for the current
   source-set and V1 review overlay. A follow-up pass should either deepen graph-specific failure
   fixtures, move to Milestone 8 operating runbook/demo closeout, or deepen the Milestone 5
