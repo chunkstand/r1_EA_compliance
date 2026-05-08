@@ -385,12 +385,12 @@ A NEPA 3D service capabilities brief is generated at
 `docs/capabilities/nepa_3d_capabilities_brief.html`. The generator
 `tools/build_nepa_3d_capabilities_brief.mjs` reads the current catalog manifest, source-set graph
 summary and validation, phase-eval results, and promotion-suite status. It writes high-resolution
-system graphics for the source-governed operating model, evidence traceability, and readiness gates.
-The brief now presents system capabilities and boundaries without named project examples: local
-source capture, currentness and source partitions, extraction/retrieval/evidence layers,
-authority-family modeling, applicability, reverse compliance, review products, the graph viewer
-surface, promotion gates, and expansion blockers. The brief is four pages so each figure stays
-legible at capabilities-brief scale.
+system graphics for early-risk visibility, evidence traceability, and the Region 1 graph surface.
+The brief now presents system capabilities and boundaries without named project examples: WLG can
+use the system to make NEPA review risk visible early, trace findings back to governed source
+records, flag readiness blockers before decision, and inspect separate NEPA, USDA regulation,
+source-evidence, and forest-plan graph layers. The brief is three pages: core message, supporting
+traceability architecture, and the R1 knowledge graph showcase.
 
 ## EA Consistency Decision-Support Generator
 

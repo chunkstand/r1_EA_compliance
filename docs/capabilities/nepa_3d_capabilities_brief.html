@@ -98,6 +98,30 @@
       color: #58615b;
       font-weight: 720;
     }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 0.16in;
+      align-items: stretch;
+      margin-top: 0.15in;
+    }
+    .proof-panel {
+      background: #ffffff;
+      border: 1px solid #d4d9d0;
+      border-radius: 8px;
+      padding: 0.14in;
+      box-shadow: 0 8px 18px rgba(29, 39, 34, 0.06);
+    }
+    .proof-panel strong {
+      display: block;
+      margin-bottom: 0.06in;
+      color: #17202a;
+      font-size: 11.1pt;
+    }
+    .proof-panel ul {
+      margin: 0;
+      padding-left: 0.16in;
+    }
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -112,8 +136,8 @@
       background: #ffffff;
       box-shadow: 0 12px 28px rgba(29, 39, 34, 0.12);
     }
-    .hero-img { height: 5.25in; object-fit: contain; object-position: center; }
-    .graph-figure { height: 4.95in; object-fit: contain; object-position: center; }
+    .hero-img { height: 4.05in; object-fit: contain; object-position: center; }
+    .graph-figure { height: 5.65in; object-fit: contain; object-position: center; }
     .graph-figure.tall { height: 5.38in; }
     .caption {
       margin-top: 0.06in;
@@ -185,10 +209,10 @@
 <body>
   <section class="page">
     <header>
-      <div class="kicker">System Capabilities Brief</div>
-      <h1>NEPA 3D Knowledge Graph Review System</h1>
-      <p class="lede">The system turns Region 1 NEPA source material into auditable review intelligence. It preserves source provenance, builds an authority graph, traces evidence to findings, and gates readiness before outputs reach reviewers. The result is a transparent operating layer for compliance review, decision support, and graph exploration.</p>
-      <p class="metric-context">Current Region 1 implementation snapshot.</p>
+      <div class="kicker">WLG Brief / Core Message</div>
+      <h1>Make NEPA Review Risk Visible Early</h1>
+      <p class="lede">This is not a visualization or report generator. It is an auditable NEPA review engine that makes review risk visible early. It connects source material, authority, evidence, findings, and forest-plan readiness before a package reaches decision, objection, litigation, or consultant rework.</p>
+      <p class="metric-context">Current Region 1 graph surface.</p>
       <div class="metric-grid">
         <div class="metric"><strong>1,410</strong><span>Region 1 graph nodes</span></div>
         <div class="metric"><strong>2,564</strong><span>Region 1 graph edges</span></div>
@@ -197,7 +221,22 @@
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Architecture components for the NEPA review system" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review risk visibility architecture" />
+      <div class="proof-grid">
+        <div class="proof-panel">
+          <strong>What the engine shows</strong>
+          <ul>
+            <li>Which NEPA, USDA, and Forest Service authorities apply.</li>
+            <li>Which authorities were screened out and why.</li>
+            <li>Where each finding came from in the source record.</li>
+            <li>Whether Forest Plan consistency is supported.</li>
+          </ul>
+        </div>
+        <div class="proof-panel">
+          <strong>Why it matters</strong>
+          <p>Risk becomes visible while there is still time to fix source gaps, unsupported claims, stale authority language, and forest-plan profile blockers.</p>
+        </div>
+      </div>
     </main>
     <footer class="footer">
       <span>Brief generated 2026-05-08 from current local system artifacts.</span>
@@ -207,21 +246,21 @@
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 1 / Source-Governed Operating Model</div>
-      <h2>Controlled source library to graph-ready review layer</h2>
-      <p class="lede">Every review starts with a controlled source contract. Workbook rows, exclusions, URL repairs, source partitions, catalog records, and artifact hashes define what can support review logic. Derived layers are rebuilt from those surfaces, not loose files.</p>
+      <div class="kicker">How The Engine Supports The Message</div>
+      <h2>Trace Every Finding to Governed Evidence</h2>
+      <p class="lede">The engine preserves the full path: source contract, evidence span, authority decision, finding. That path powers compliance review, reverse compliance, decision support, final QA, and graph exploration.</p>
     </header>
     <main>
-      <img class="graph-figure" src="assets/graph_applicability_service_view.png" alt="Operating model showing source library, extraction, authority graph, and review outputs" />
-      <p class="caption">Source governance model: only eligible catalog records feed review logic. Superseded, candidate, blocked, or currentness-only records stay visible as context and readiness evidence.</p>
+      <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
+      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Contract enforced</strong>
-          <p>Workbook scope, source identity, URL overrides, exclusions, and partitions are checked before downstream review artifacts can rely on a source.</p>
+          <strong>Source governed</strong>
+          <p>Workbook scope, exclusions, source partitions, catalog records, and artifact hashes define what can support review logic.</p>
         </div>
         <div class="callout">
-          <strong>Rebuildable layers</strong>
-          <p>Extraction, retrieval, claims, graph exports, reports, and validation summaries are generated from catalog surfaces and can be replayed.</p>
+          <strong>Reverse compliance</strong>
+          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps.</p>
         </div>
       </div>
     </main>
@@ -233,33 +272,7 @@
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 2 / Evidence Traceability And Review Products</div>
-      <h2>Every finding stays connected to evidence</h2>
-      <p class="lede">Findings are produced from inspectable evidence paths. The system links source records, artifacts, evidence spans, claims, authority decisions, and review findings before it renders reports or graph views.</p>
-    </header>
-    <main>
-      <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
-      <div class="grid-2" style="margin-top:0.14in">
-        <div class="callout">
-          <strong>Audit surface</strong>
-          <p>Each product can be traced back to source record, artifact hash, evidence span, and decision path. Reviewers can inspect the basis without relying on narrative alone.</p>
-        </div>
-        <div class="callout">
-          <strong>Reverse compliance</strong>
-          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps before readiness is claimed.</p>
-        </div>
-      </div>
-    </main>
-    <footer class="footer">
-      <span>Current source-claim links: 191.</span>
-      <span>Phase-eval status: 20/20 passing phases.</span>
-    </footer>
-  </section>
-
-  <section class="page">
-    <header>
-      <div class="kicker">Capability 3 / Region 1 3D Graph</div>
+      <div class="kicker">Knowledge Graph / Region 1</div>
       <h2>NEPA, USDA regulations, and forest plans in one graph</h2>
       <p class="lede">The Region 1 graph is the client-facing surface for the system. It shows NEPA authority, USDA regulations and procedures, source evidence, and forest-plan layers as connected but distinct parts of the review universe.</p>
     </header>

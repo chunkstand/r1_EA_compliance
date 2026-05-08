@@ -87,13 +87,13 @@ async function main() {
 
   const pdfBytes = await fs.readFile(briefPdfPath);
   const pdf = await PDFDocument.load(pdfBytes);
-  if (pdf.getPageCount() !== 4) {
-    throw new Error(`Expected a 4-page PDF, got ${pdf.getPageCount()} pages.`);
+  if (pdf.getPageCount() !== 3) {
+    throw new Error(`Expected a 3-page PDF, got ${pdf.getPageCount()} pages.`);
   }
   console.log(`Wrote ${path.relative(repoRoot, briefHtmlPath)}`);
   console.log(`Wrote ${path.relative(repoRoot, briefPdfPath)}`);
   console.log(`Wrote visual QA PNGs under ${qaDir}`);
-  console.log("Verified 4 PDF pages.");
+  console.log("Verified 3 PDF pages.");
 }
 
 async function currentMetrics() {
@@ -166,7 +166,6 @@ async function readJsonIfExists(filePath) {
 async function writeAssets(metrics) {
   const assets = [
     ["current_authority_stack", currentAuthorityStackSvg(metrics)],
-    ["graph_applicability_service_view", operatingModelSvg(metrics)],
     ["graph_evidence_trace_service_view", evidenceTraceSvg(metrics)],
     ["graph_r1_showcase_view", r1GraphShowcaseSvg(metrics)]
   ];
@@ -204,6 +203,11 @@ async function renderPdf(browser, htmlPath, pdfPath) {
 }
 
 async function renderQaScreenshots(browser, htmlPath, outputDir) {
+  for (const entry of await fs.readdir(outputDir)) {
+    if (/^page-\d+\.png$/.test(entry)) {
+      await fs.rm(path.join(outputDir, entry));
+    }
+  }
   const page = await browser.newPage({ viewport: { width: 1320, height: 1700 }, deviceScaleFactor: 1 });
   await page.goto(`file://${htmlPath}`, { waitUntil: "load" });
   const pages = await page.locator(".page").count();
@@ -316,6 +320,30 @@ function briefHtml(metrics) {
       color: #58615b;
       font-weight: 720;
     }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 0.16in;
+      align-items: stretch;
+      margin-top: 0.15in;
+    }
+    .proof-panel {
+      background: #ffffff;
+      border: 1px solid #d4d9d0;
+      border-radius: 8px;
+      padding: 0.14in;
+      box-shadow: 0 8px 18px rgba(29, 39, 34, 0.06);
+    }
+    .proof-panel strong {
+      display: block;
+      margin-bottom: 0.06in;
+      color: #17202a;
+      font-size: 11.1pt;
+    }
+    .proof-panel ul {
+      margin: 0;
+      padding-left: 0.16in;
+    }
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -330,8 +358,8 @@ function briefHtml(metrics) {
       background: #ffffff;
       box-shadow: 0 12px 28px rgba(29, 39, 34, 0.12);
     }
-    .hero-img { height: 5.25in; object-fit: contain; object-position: center; }
-    .graph-figure { height: 4.95in; object-fit: contain; object-position: center; }
+    .hero-img { height: 4.05in; object-fit: contain; object-position: center; }
+    .graph-figure { height: 5.65in; object-fit: contain; object-position: center; }
     .graph-figure.tall { height: 5.38in; }
     .caption {
       margin-top: 0.06in;
@@ -403,10 +431,10 @@ function briefHtml(metrics) {
 <body>
   <section class="page">
     <header>
-      <div class="kicker">System Capabilities Brief</div>
-      <h1>NEPA 3D Knowledge Graph Review System</h1>
-      <p class="lede">The system turns Region 1 NEPA source material into auditable review intelligence. It preserves source provenance, builds an authority graph, traces evidence to findings, and gates readiness before outputs reach reviewers. The result is a transparent operating layer for compliance review, decision support, and graph exploration.</p>
-      <p class="metric-context">Current Region 1 implementation snapshot.</p>
+      <div class="kicker">WLG Brief / Core Message</div>
+      <h1>Make NEPA Review Risk Visible Early</h1>
+      <p class="lede">This is not a visualization or report generator. It is an auditable NEPA review engine that makes review risk visible early. It connects source material, authority, evidence, findings, and forest-plan readiness before a package reaches decision, objection, litigation, or consultant rework.</p>
+      <p class="metric-context">Current Region 1 graph surface.</p>
       <div class="metric-grid">
         ${metric(metrics.nodeCount.toLocaleString(), "Region 1 graph nodes")}
         ${metric(metrics.edgeCount.toLocaleString(), "Region 1 graph edges")}
@@ -415,7 +443,22 @@ function briefHtml(metrics) {
       </div>
     </header>
     <main>
-      <img class="hero-img" src="assets/current_authority_stack.svg" alt="Architecture components for the NEPA review system" />
+      <img class="hero-img" src="assets/current_authority_stack.svg" alt="NEPA review risk visibility architecture" />
+      <div class="proof-grid">
+        <div class="proof-panel">
+          <strong>What the engine shows</strong>
+          <ul>
+            <li>Which NEPA, USDA, and Forest Service authorities apply.</li>
+            <li>Which authorities were screened out and why.</li>
+            <li>Where each finding came from in the source record.</li>
+            <li>Whether Forest Plan consistency is supported.</li>
+          </ul>
+        </div>
+        <div class="proof-panel">
+          <strong>Why it matters</strong>
+          <p>Risk becomes visible while there is still time to fix source gaps, unsupported claims, stale authority language, and forest-plan profile blockers.</p>
+        </div>
+      </div>
     </main>
     <footer class="footer">
       <span>Brief generated ${escapeHtml(metrics.generatedAt)} from current local system artifacts.</span>
@@ -425,21 +468,21 @@ function briefHtml(metrics) {
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 1 / Source-Governed Operating Model</div>
-      <h2>Controlled source library to graph-ready review layer</h2>
-      <p class="lede">Every review starts with a controlled source contract. Workbook rows, exclusions, URL repairs, source partitions, catalog records, and artifact hashes define what can support review logic. Derived layers are rebuilt from those surfaces, not loose files.</p>
+      <div class="kicker">How The Engine Supports The Message</div>
+      <h2>Trace Every Finding to Governed Evidence</h2>
+      <p class="lede">The engine preserves the full path: source contract, evidence span, authority decision, finding. That path powers compliance review, reverse compliance, decision support, final QA, and graph exploration.</p>
     </header>
     <main>
-      <img class="graph-figure" src="assets/graph_applicability_service_view.png" alt="Operating model showing source library, extraction, authority graph, and review outputs" />
-      <p class="caption">Source governance model: only eligible catalog records feed review logic. Superseded, candidate, blocked, or currentness-only records stay visible as context and readiness evidence.</p>
+      <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
+      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
       <div class="grid-2" style="margin-top:0.14in">
         <div class="callout">
-          <strong>Contract enforced</strong>
-          <p>Workbook scope, source identity, URL overrides, exclusions, and partitions are checked before downstream review artifacts can rely on a source.</p>
+          <strong>Source governed</strong>
+          <p>Workbook scope, exclusions, source partitions, catalog records, and artifact hashes define what can support review logic.</p>
         </div>
         <div class="callout">
-          <strong>Rebuildable layers</strong>
-          <p>Extraction, retrieval, claims, graph exports, reports, and validation summaries are generated from catalog surfaces and can be replayed.</p>
+          <strong>Reverse compliance</strong>
+          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps.</p>
         </div>
       </div>
     </main>
@@ -451,33 +494,7 @@ function briefHtml(metrics) {
 
   <section class="page">
     <header>
-      <div class="kicker">Capability 2 / Evidence Traceability And Review Products</div>
-      <h2>Every finding stays connected to evidence</h2>
-      <p class="lede">Findings are produced from inspectable evidence paths. The system links source records, artifacts, evidence spans, claims, authority decisions, and review findings before it renders reports or graph views.</p>
-    </header>
-    <main>
-      <img class="graph-figure" src="assets/graph_evidence_trace_service_view.png" alt="Evidence path from source record through extraction and review outputs" />
-      <p class="caption">Traceability model: the finding is the end of a chain, not a free-standing conclusion. The same chain supports reports, QA replay, and graph exploration.</p>
-      <div class="grid-2" style="margin-top:0.14in">
-        <div class="callout">
-          <strong>Audit surface</strong>
-          <p>Each product can be traced back to source record, artifact hash, evidence span, and decision path. Reviewers can inspect the basis without relying on narrative alone.</p>
-        </div>
-        <div class="callout">
-          <strong>Reverse compliance</strong>
-          <p>The evidence model flags unsupported claims, older-regulation dependencies, missing source support, unresolved applicability, and forest-plan gaps before readiness is claimed.</p>
-        </div>
-      </div>
-    </main>
-    <footer class="footer">
-      <span>Current source-claim links: ${metrics.sourceClaims.toLocaleString()}.</span>
-      <span>Phase-eval status: ${passRatio(metrics.phasePassed, metrics.phaseTotal)} passing phases.</span>
-    </footer>
-  </section>
-
-  <section class="page">
-    <header>
-      <div class="kicker">Capability 3 / Region 1 3D Graph</div>
+      <div class="kicker">Knowledge Graph / Region 1</div>
       <h2>NEPA, USDA regulations, and forest plans in one graph</h2>
       <p class="lede">The Region 1 graph is the client-facing surface for the system. It shows NEPA authority, USDA regulations and procedures, source evidence, and forest-plan layers as connected but distinct parts of the review universe.</p>
     </header>
@@ -505,77 +522,29 @@ function briefHtml(metrics) {
 
 function currentAuthorityStackSvg(metrics) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="840" viewBox="0 0 1280 840" role="img" aria-label="Architecture components for the NEPA review system">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-label="NEPA review risk made visible early">
   ${svgDefs()}
-  <rect width="1280" height="840" rx="28" fill="#f4f6f2"/>
-  <rect x="34" y="32" width="1212" height="776" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
-  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">Architecture components at a glance</text>
-  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">A source-governed review engine with traceable evidence, explicit authority logic, and gated outputs.</text>
+  <rect width="1280" height="760" rx="28" fill="#f4f6f2"/>
+  <rect x="34" y="32" width="1212" height="696" rx="26" fill="#ffffff" stroke="#d4d9d0"/>
+  <text x="72" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="880" fill="#17202a">Risk visibility before the decision point</text>
+  <text x="72" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#58615b">The engine turns a NEPA package into traceable review intelligence while the record can still be improved.</text>
 
-  ${architectureCard(76, 188, 330, 150, "#17202a", "Source Contract", "Workbook rows set scope, exclusions, source identity, and review boundaries.")}
-  ${architectureCard(474, 188, 330, 150, "#1f6f68", "Audited Source Library", "Catalogs, manifests, hashes, partitions, and SQLite preserve provenance.")}
-  ${architectureCard(872, 188, 330, 150, "#835b2f", "Evidence Pipeline", "Extraction, retrieval, evidence spans, graph edges, and source claims.")}
-  ${flowArrow(406, 263, 464, 263)}
-  ${flowArrow(804, 263, 862, 263)}
+  ${riskNode(150, 378, "#17202a", "NEPA Package", "draft package, appendices, source records")}
+  ${riskNode(418, 248, "#1f6f68", "Authority Applies", "NEPA, USDA, Forest Service, Forest Plan")}
+  ${riskNode(418, 508, "#835b2f", "Evidence Trace", "source record to finding")}
+  ${riskHub(700, 378, "#2e5e88", "Risk Visible Early", "before objection, litigation, or rework")}
+  ${riskNode(982, 248, "#6f4f86", "Decision Support", "findings, gaps, signer readout")}
+  ${riskNode(982, 508, "#a65332", "Readiness Blockers", "missing sources, stale authority, profile gaps")}
 
-  ${architectureCard(76, 416, 330, 150, "#6f4f86", "Authority Engine", "Authority families, currentness, rule templates, and applicability decisions.")}
-  ${architectureCard(474, 416, 330, 150, "#2e5e88", "Reviewer Outputs", "Compliance matrix, decision support, final QA, and report PDFs.")}
-  ${architectureCard(872, 416, 330, 150, "#a65332", "Graph Experience", "3D scenes, lenses, search, and evidence paths from validated graph JSON.")}
-  ${flowArrow(406, 491, 464, 491)}
-  ${flowArrow(804, 491, 862, 491)}
+  ${flowArrow(270, 378, 565, 378)}
+  ${flowArrow(520, 280, 610, 330)}
+  ${flowArrow(520, 476, 610, 426)}
+  ${flowArrow(795, 344, 882, 282)}
+  ${flowArrow(795, 412, 882, 480)}
 
-  <g transform="translate(76 640)" filter="url(#shadow)">
-    <rect width="1126" height="98" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
-    <text x="28" y="38" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="850" fill="#17202a">Readiness layer</text>
-    ${wrapSvgText("Validation, phase-eval, promotion, and expansion gates run across the architecture before the system claims reviewer readiness.", 28, 70, 1044, 17, "#435049", 2)}
-  </g>
-</svg>`;
-}
-
-function operatingModelSvg(metrics) {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-label="Operating model from source library to review outputs">
-  ${svgDefs()}
-  <rect width="1800" height="1120" rx="34" fill="#f4f6f2"/>
-  <text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#17202a">Source governance before analysis</text>
-  ${wrapSvgText("Only cataloged, eligible, current sources can feed review logic. Blocked and superseded material stays visible without becoming controlling authority.", 72, 138, 1560, 22, "#58615b", 2)}
-
-  ${governanceCard(72, 222, 470, 188, "#17202a", "1. Workbook Contract", [
-    "Defines review universe",
-    "Preserves row identity",
-    "Applies scope and exclusions"
-  ])}
-  ${governanceCard(665, 222, 470, 188, "#1f6f68", "2. Local Source Library", [
-    "Catalog, manifests, hashes",
-    "Artifact provenance",
-    "SQLite review index"
-  ])}
-  ${governanceCard(1258, 222, 470, 188, "#835b2f", "3. Source Partitions", [
-    "Active review corpus",
-    "Candidate or blocked sources",
-    "Currentness archive"
-  ])}
-  ${flowArrow(542, 316, 655, 316)}
-  ${flowArrow(1135, 316, 1248, 316)}
-
-  <g transform="translate(72 500)" filter="url(#shadow)">
-    <rect width="1656" height="186" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="48" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Partition rule</text>
-    ${partitionPill(32, 82, 486, "#1f6f68", "Active review corpus", `${metrics.activeReviewCorpus.toLocaleString()} records may support review logic`)}
-    ${partitionPill(584, 82, 486, "#a65332", "Candidate / blocked", `${metrics.candidateBlockedSources.toLocaleString()} record visible as a blocker`)}
-    ${partitionPill(1136, 82, 486, "#68706a", "Superseded / currentness-only", "visible for context, not active authority")}
-  </g>
-
-  <g transform="translate(72 760)" filter="url(#shadow)">
-    <rect width="1656" height="230" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
-    <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="880" fill="#17202a">Derived after the source gate</text>
-    ${processStep(34, 92, "#835b2f", "Extraction", "source text and evidence spans")}
-    ${processStep(420, 92, "#1f6f68", "Retrieval", "indexed evidence for review")}
-    ${processStep(806, 92, "#6f4f86", "Claims", "source claims and rule support")}
-    ${processStep(1192, 92, "#2e5e88", "Graph Export", "validated nodes, edges, and reports")}
-    ${flowArrow(316, 152, 410, 152)}
-    ${flowArrow(702, 152, 796, 152)}
-    ${flowArrow(1088, 152, 1182, 152)}
+  <g transform="translate(76 628)" filter="url(#shadow)">
+    <rect width="1126" height="70" rx="18" fill="#eef5f2" stroke="#c3d5ce"/>
+    <text x="28" y="43" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850" fill="#1f6f68">WLG value: find the review risk early enough to fix the record, not after the decision path is locked.</text>
   </g>
 </svg>`;
 }
@@ -676,13 +645,22 @@ function r1GraphShowcaseSvg(metrics) {
 </svg>`;
 }
 
-function architectureCard(x, y, width, height, color, title, body) {
+function riskNode(x, y, color, title, body) {
   return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <rect width="${width}" height="${height}" rx="18" fill="#ffffff" stroke="#d4d9d0"/>
-    <rect width="${width}" height="10" rx="5" fill="${color}"/>
-    <circle cx="28" cy="48" r="10" fill="${color}"/>
-    ${wrapSvgText(title, 48, 55, width - 74, 21, "#17202a", 1, "start", "870")}
-    ${wrapSvgText(body, 24, 92, width - 48, 16, "#58615b", 3)}
+    <rect x="-112" y="-62" width="224" height="124" rx="18" fill="#ffffff" stroke="#d4d9d0"/>
+    <rect x="-112" y="-62" width="224" height="8" rx="4" fill="${color}"/>
+    <circle cx="-78" cy="-16" r="9" fill="${color}"/>
+    ${wrapSvgText(title, -58, -10, 148, 18, "#17202a", 1, "start", "870")}
+    ${wrapSvgText(body, 0, 30, 172, 14, "#58615b", 2, "middle")}
+  </g>`;
+}
+
+function riskHub(x, y, color, title, body) {
+  return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
+    <circle r="100" fill="#ffffff" stroke="${color}" stroke-width="7"/>
+    <circle r="64" fill="${color}" opacity="0.12"/>
+    ${wrapSvgText(title, 0, -14, 150, 20, "#17202a", 2, "middle", "900")}
+    ${wrapSvgText(body, 0, 38, 154, 14, "#58615b", 2, "middle")}
   </g>`;
 }
 
@@ -756,40 +734,6 @@ function showcaseLegend(x, y, color, label) {
   </g>`;
 }
 
-function governanceCard(x, y, width, height, color, title, rows) {
-  return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <rect width="${width}" height="${height}" rx="20" fill="#ffffff" stroke="#d4d9d0"/>
-    <rect width="${width}" height="10" rx="5" fill="${color}"/>
-    <text x="28" y="54" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="880" fill="#17202a">${escapeXml(title)}</text>
-    ${rows.map((row, index) => checklistRow(30, 88 + index * 30, color, row)).join("")}
-  </g>`;
-}
-
-function checklistRow(x, y, color, label) {
-  return `<g transform="translate(${x} ${y})">
-    <circle cx="8" cy="-6" r="7" fill="${color}"/>
-    <text x="26" y="0" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="730" fill="#435049">${escapeXml(label)}</text>
-  </g>`;
-}
-
-function partitionPill(x, y, width, color, title, value) {
-  return `<g transform="translate(${x} ${y})">
-    <rect width="${width}" height="72" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
-    <circle cx="30" cy="36" r="11" fill="${color}"/>
-    <text x="52" y="30" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
-    <text x="52" y="54" font-family="Inter, Arial, sans-serif" font-size="15" fill="#58615b">${escapeXml(value)}</text>
-  </g>`;
-}
-
-function processStep(x, y, color, title, body) {
-  return `<g transform="translate(${x} ${y})">
-    <rect width="284" height="98" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
-    <rect width="284" height="8" rx="4" fill="${color}"/>
-    <text x="24" y="42" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="860" fill="#17202a">${escapeXml(title)}</text>
-    ${wrapSvgText(body, 24, 70, 236, 15, "#58615b", 2)}
-  </g>`;
-}
-
 function traceStep(x, y, color, title, body) {
   return `<g transform="translate(${x} ${y})">
     <rect width="256" height="180" rx="20" fill="#f8faf7" stroke="#d4d9d0"/>
@@ -808,110 +752,8 @@ function outputTile(x, y, color, title, body) {
   </g>`;
 }
 
-function blockerTile(x, y, color, title, count, body) {
-  return `<g transform="translate(${x} ${y})">
-    <rect width="508" height="112" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
-    <text x="24" y="36" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
-    <text x="24" y="78" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="920" fill="${color}">${escapeXml(String(count))}</text>
-    <text x="108" y="78" font-family="Inter, Arial, sans-serif" font-size="17" fill="#58615b">${escapeXml(body)}</text>
-  </g>`;
-}
-
-function readinessCount(metrics, key) {
-  return Number(metrics.readinessBlockers?.[key] || 0).toLocaleString();
-}
-
-function laneCard(x, y, width, height, color, title, rows) {
-  return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <rect width="${width}" height="${height}" rx="22" fill="#ffffff" stroke="#d4d9d0"/>
-    <rect width="${width}" height="12" rx="6" fill="${color}"/>
-    ${wrapSvgText(title, 24, 62, width - 48, 28, "#17202a", 2, "start", "880")}
-    ${rows
-      .map((row, index) => `<g transform="translate(24 ${178 + index * 108})">
-        <rect width="${width - 48}" height="78" rx="15" fill="#f8faf7" stroke="#d4d9d0"/>
-        <circle cx="28" cy="39" r="10" fill="${color}"/>
-        ${wrapSvgText(row, 52, 46, width - 112, 19, "#435049", 2)}
-      </g>`)
-      .join("")}
-  </g>`;
-}
-
-function statusPill(x, y, title, value, color) {
-  return `<g transform="translate(${x} ${y})">
-    <rect width="300" height="66" rx="33" fill="#f8faf7" stroke="#d4d9d0"/>
-    <circle cx="36" cy="33" r="11" fill="${color}"/>
-    <text x="58" y="28" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
-    <text x="58" y="50" font-family="Inter, Arial, sans-serif" font-size="14" fill="#58615b">${escapeXml(value)}</text>
-  </g>`;
-}
-
-function metricBlock(x, y, title, value, subtitle) {
-  return `<g transform="translate(${x} ${y})">
-    <rect width="478" height="110" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
-    <text x="24" y="38" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
-    <text x="24" y="78" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="920" fill="#1f6f68">${escapeXml(value)}</text>
-    <text x="156" y="78" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="760" fill="#58615b">${escapeXml(subtitle)}</text>
-  </g>`;
-}
-
-function gateRow(x, y, title, value, passed) {
-  const color = passed ? "#1f6f68" : "#a65332";
-  const label = passed ? "PASS" : "BLOCKED";
-  return `<g transform="translate(${x} ${y})">
-    <rect width="920" height="78" rx="18" fill="#f8faf7" stroke="#d4d9d0"/>
-    <circle cx="48" cy="46" r="22" fill="${color}"/>
-    <path d="M 38 46 L 45 54 L 60 36" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="88" y="38" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="870" fill="#17202a">${escapeXml(title)}</text>
-    <text x="88" y="66" font-family="Inter, Arial, sans-serif" font-size="17" fill="#58615b">${escapeXml(value)}</text>
-    <rect x="760" y="20" width="126" height="38" rx="19" fill="${color}"/>
-    <text x="823" y="45" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#ffffff">${label}</text>
-  </g>`;
-}
-
-function graphNode(x, y, radius, color, title, value, subtitle) {
-  return `<g transform="translate(${x} ${y})" filter="url(#shadow)">
-    <circle r="${radius}" fill="#ffffff" stroke="${color}" stroke-width="8"/>
-    <circle r="${Math.max(radius - 20, 20)}" fill="${color}" opacity="0.09"/>
-    <text y="${-radius - 26}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="850" fill="#17202a">${escapeXml(title)}</text>
-    ${wrapSvgText(value, 0, -12, radius * 1.48, 21, "#17202a", 2, "middle", "820")}
-    <text y="${radius + 36}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="760" fill="${color}">${escapeXml(subtitle)}</text>
-  </g>`;
-}
-
-function graphEdge(x1, y1, x2, y2, color, width, label) {
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2;
-  const labelWidth = Math.max(160, Math.min(360, label.length * 11 + 42));
-  return `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-opacity="0.62" marker-end="url(#arrow)"/>
-  <g transform="translate(${mx - labelWidth / 2} ${my - 24})">
-    <rect width="${labelWidth}" height="42" rx="21" fill="#ffffff" stroke="#d4d9d0" opacity="0.96"/>
-    <text x="${labelWidth / 2}" y="27" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="800" fill="#435049">${escapeXml(label)}</text>
-  </g>`;
-}
-
 function flowArrow(x1, y1, x2, y2) {
   return `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="#8b948d" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>`;
-}
-
-function arrow(x1, y1, x2, y2) {
-  return `<path d="M ${x1} ${y1} L ${x2} ${y2}" stroke="#8b948d" stroke-width="4" stroke-linecap="round"/>
-  <path d="M ${x2 - 10} ${y2 - 9} L ${x2} ${y2} L ${x2 - 10} ${y2 + 9}" fill="none" stroke="#8b948d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
-}
-
-function inlineList(x, y, items) {
-  let cursor = x;
-  return items
-    .map((item) => {
-      const width = item.length * 10 + 46;
-      const svg = `<g transform="translate(${cursor} ${y - 28})">
-        <rect width="${width}" height="42" rx="21" fill="#eef5f2" stroke="#c3d5ce"/>
-        <circle cx="22" cy="21" r="6" fill="#1f6f68"/>
-        <text x="36" y="27" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="780" fill="#435049">${escapeXml(item)}</text>
-      </g>`;
-      cursor += width + 18;
-      return svg;
-    })
-    .join("");
 }
 
 function svgDefs() {
@@ -927,25 +769,6 @@ function svgDefs() {
 
 function metric(value, label) {
   return `<div class="metric"><strong>${escapeHtml(String(value))}</strong><span>${escapeHtml(label)}</span></div>`;
-}
-
-function capability(title, copy) {
-  return `<div class="capability"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(copy)}</span></div>`;
-}
-
-function passRatio(passed, total) {
-  if (!total) {
-    return "ready";
-  }
-  return `${passed}/${total}`;
-}
-
-function failureCategoryText(categories) {
-  const entries = Object.entries(categories || {}).filter(([, count]) => count);
-  if (!entries.length) {
-    return "0";
-  }
-  return entries.map(([name, count]) => `${count} ${name}`).join(", ");
 }
 
 function wrapSvgText(text, x, y, width, fontSize, fill, maxLines = 5, textAnchor = "start", fontWeight = "") {

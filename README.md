@@ -114,11 +114,11 @@ now adds human-readable scene labels plus graph-native
 node labels: zoomed-out views show scene anchors, mid-zoom adds focus labels, and close zoom adds a
 larger set of node labels without changing the validated graph data. Advanced search and category
 filters remain available under a visually subordinate Advanced filters disclosure. A generated
-4-page system capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
-with matching HTML and asset-backed graphics. The brief covers the current source-governed
-operating model, authority-currentness and partitioning, evidence traceability, review-product
-surfaces, reverse compliance, readiness gates, promotion status, and expansion boundaries without
-named project examples. The earlier
+3-page system capabilities brief now lives at `docs/capabilities/nepa_3d_capabilities_brief.pdf`
+with matching HTML and asset-backed graphics. The brief is organized around the client message that
+WLG can make NEPA review risk visible early: the system applies authority, traces findings to source
+evidence, flags readiness blockers before decision, and shows NEPA, USDA regulations, source
+evidence, and forest plans in the R1 graph without named project examples. The earlier
 authority-universe Milestone 3 adds
 `19` data-backed authority-family rule templates with positive/negative trigger contracts,
 source evidence requirements, retrieval/graph contracts, and coverage rows. Milestone 4 adds
@@ -241,7 +241,6 @@ Generated outputs are written under `source_library/` and ignored by git:
 - NEPA 3D service capabilities brief:
   - `docs/capabilities/nepa_3d_capabilities_brief.pdf`
   - `docs/capabilities/nepa_3d_capabilities_brief.html`
-  - `docs/capabilities/assets/graph_applicability_service_view.png`
   - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
   - `docs/capabilities/assets/graph_r1_showcase_view.png`
   - `tools/build_nepa_3d_capabilities_brief.mjs`

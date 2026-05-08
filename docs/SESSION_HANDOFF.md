@@ -935,13 +935,14 @@ legal conclusion.
   labels while zoomed out, reveal focus labels at mid zoom, and reveal additional node labels when
   zoomed closer. This is a visual legibility layer only; it does not alter graph validation,
   readiness, or source evidence.
-- NEPA 3D service capabilities brief closeout adds a generated 4-page brief at
+- NEPA 3D service capabilities brief closeout adds a generated 3-page brief at
   `docs/capabilities/nepa_3d_capabilities_brief.pdf` with a matching HTML source and high-resolution
   graph figures under `docs/capabilities/assets/`. The brief is built by
   `tools/build_nepa_3d_capabilities_brief.mjs` from current catalog, source-set graph,
-  phase-eval, and promotion-suite artifacts. The current version is a system-level brief without
-  named project examples and covers source-governed operation, authority currentness, evidence
-  traceability, review products, reverse compliance, readiness gates, promotion state, and expansion
+  phase-eval, and promotion-suite artifacts. The current version is a system-level brief organized
+  around WLG's early-risk message: make NEPA review risk visible before decision, trace findings to
+  governed source evidence, flag readiness blockers, and showcase distinct NEPA, USDA regulation,
+  source-evidence, and forest-plan layers in the Region 1 graph without named project examples.
   blockers.
 - NEPA 3D Milestone 7 initial graph validation and promotion gates are implemented for the current
   source-set and V1 review overlay. A follow-up pass should either deepen graph-specific failure
