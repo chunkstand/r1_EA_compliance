@@ -30,6 +30,7 @@ REQUIRED_SECTIONS = [
     "finding_qa",
     "forest_plan_qa",
     "decision_support_qa",
+    "review_packet_index_qa",
     "accepted_v1_risk_ledger",
     "certification_statement",
     "residual_blockers_and_stop_conditions",
@@ -43,6 +44,7 @@ REQUIRED_GATES = {
     "forest_plan_context",
     "forest_plan_component_eval",
     "decision_support_validation",
+    "review_packet_index_validation",
     "phase_eval",
     "v1_ea_eval",
     "current_promotion_suite",
@@ -69,10 +71,17 @@ EXPECTED_COUNTS = {
     "applicable_standard_count": 12,
     "applied_standard_count": 12,
     "forest_plan_component_eval_case_count": 35,
-    "phase_eval_phase_count": 19,
-    "phase_eval_passed_phase_count": 19,
-    "promotion_suite_required_current_result_count": 22,
-    "promotion_suite_passed_required_current_result_count": 22,
+    "phase_eval_phase_count": 20,
+    "phase_eval_passed_phase_count": 20,
+    "promotion_suite_required_current_result_count": 27,
+    "promotion_suite_passed_required_current_result_count": 27,
+    "review_packet_index_applicable_authority_count": 37,
+    "review_packet_index_non_applicable_authority_count": 340,
+    "review_packet_index_forest_plan_component_row_count": 79,
+    "review_packet_index_applicable_standard_count": 12,
+    "review_packet_index_render_manifest_authority_row_count": 37,
+    "review_packet_index_render_manifest_forest_plan_row_count": 79,
+    "review_packet_index_validation_failed_check_count": 0,
     "accepted_v1_risk_count": 14,
     "actual_pending_applicable_count": 7,
     "litigation_risk_legal_conclusion_count": 0,
@@ -92,6 +101,11 @@ REQUIRED_FAILURE_CATEGORIES = {
     "unresolved_reviewer_item",
     "invalid_report_pdf_header",
     "manual_draft_dependency",
+    "missing_matrix_render_row",
+    "missing_packet_index_row",
+    "missing_forest_plan_row",
+    "missing_non_applicable_boundary",
+    "non_canonical_draft_dependency",
     "accepted_v1_risk_hidden",
     "legal_conclusion_leak",
     "human_certification_overclaim",
@@ -254,6 +268,11 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
         "decision_support_markdown_sha256",
         "decision_support_pdf_sha256",
         "decision_support_manifest_sha256",
+        "review_packet_row_inventory_sha256",
+        "compliance_matrix_render_manifest_sha256",
+        "review_packet_index_sha256",
+        "review_packet_index_validation_sha256",
+        "review_packet_index_pdf_sha256",
         "v1_ea_eval_results_sha256",
         "phase_eval_results_sha256",
         "promotion_suite_results_sha256",
@@ -612,9 +631,11 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     source_set_id = "source-set-test"
     review_dir = output_dir / "reviews" / review_id
     decision_dir = review_dir / "decision_support"
+    review_packet_dir = review_dir / "review_packet_index"
     app_dir = review_dir / "applicability"
     suite_dir = output_dir / "reviews" / "promotion_suite" / "post-v1-region1-ea-promotion-suite"
     decision_dir.mkdir(parents=True)
+    review_packet_dir.mkdir(parents=True)
     app_dir.mkdir(parents=True)
     suite_dir.mkdir(parents=True)
 
@@ -647,6 +668,109 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
             "validation_status": "passed",
         },
     )
+    _write_json_file(
+        review_packet_dir / "review_packet_row_inventory.json",
+        {
+            "schema_version": "review-packet-row-inventory-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "summary": {
+                "applicable_authority_count": 2,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 2,
+                "applicable_standard_count": 1,
+                "row_set_sha256": "synthetic-row-set",
+            },
+            "applicable_authority_rows": [
+                {"rule_id": "rule-a"},
+                {"rule_id": "rule-b"},
+            ],
+            "non_applicable_authority_rows": [
+                {"candidate_authority_id": "candidate:rule-b"}
+            ],
+            "forest_plan_component_rows": [
+                {"component_id": "component-1"},
+                {"component_id": "component-2"},
+            ],
+            "applicable_forest_plan_standard_rows": [
+                {"component_id": "component-1", "component_key": "FW-STD-01"}
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "compliance_matrix_render_manifest.json",
+        {
+            "schema_version": "compliance-matrix-render-manifest-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "summary": {
+                "passed": True,
+                "row_count": 4,
+                "authority_row_count": 2,
+                "forest_plan_row_count": 2,
+                "row_set_sha256": "synthetic-render-row-set",
+            },
+            "rows": [
+                {"row_class": "applicable_authority", "row_identity": {"rule_id": "rule-a"}},
+                {"row_class": "applicable_authority", "row_identity": {"rule_id": "rule-b"}},
+                {"row_class": "forest_plan_component", "row_identity": {"component_id": "component-1"}},
+                {"row_class": "forest_plan_component", "row_identity": {"component_id": "component-2"}},
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "review_packet_index.json",
+        {
+            "schema_version": "review-packet-index-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "row_inventory_summary": {
+                "applicable_authority_count": 2,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 2,
+                "applicable_standard_count": 1,
+            },
+            "render_manifest_summary": {
+                "passed": True,
+                "authority_row_count": 2,
+                "forest_plan_row_count": 2,
+            },
+            "applicable_authority_rows": [
+                {"rule_id": "rule-a"},
+                {"rule_id": "rule-b"},
+            ],
+            "non_applicable_authority_boundary": {
+                "non_applicable_authority_count": 1,
+                "rows": [{"candidate_authority_id": "candidate:rule-b"}],
+            },
+            "forest_plan_component_rows": [
+                {"component_id": "component-1"},
+                {"component_id": "component-2"},
+            ],
+            "applicable_forest_plan_standard_rows": [
+                {"component_id": "component-1", "component_key": "FW-STD-01"}
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "review_packet_index_validation.json",
+        {
+            "schema_version": "review-packet-index-validation-v1",
+            "review_id": review_id,
+            "source_set_id": source_set_id,
+            "passed": True,
+            "reviewer_ready": True,
+            "summary": {
+                "failed_check_count": 0,
+                "applicable_authority_count": 2,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 2,
+                "applicable_standard_count": 1,
+                "row_set_sha256": "synthetic-row-set",
+            },
+        },
+    )
+    (review_packet_dir / "review_packet_index.pdf").write_bytes(b"%PDF-1.4\n")
     _write_json_file(
         app_dir / "applicability_validation.json",
         {
@@ -875,6 +999,7 @@ def _sequence_2_config(review_id: str, source_set_id: str) -> dict:
             _gate("forest_plan_context", f"{review_root}/forest_plan_context_summary.json", "reviewer_ready", True),
             _gate("forest_plan_component_eval", f"{review_root}/forest_plan_component_eval_results.json", "passed", True),
             _gate("decision_support_validation", f"{review_root}/decision_support/ea_consistency_decision_support_manifest.json", "validation_status", "passed"),
+            _gate("review_packet_index_validation", f"{review_root}/review_packet_index/review_packet_index_validation.json", "passed", True),
             _gate("phase_eval", f"{review_root}/phase_eval_results.json", "reviewer_ready", True),
             _gate("v1_ea_eval", f"{review_root}/v1_ea_eval_results.json", "passed", True),
             _gate(
@@ -1012,6 +1137,11 @@ def _sequence_2_expected(output_dir: Path, review_id: str, source_set_id: str) -
         "decision_support_markdown_sha256": output_dir / "reviews" / review_id / "decision_support" / "ea_consistency_decision_support.md",
         "decision_support_pdf_sha256": output_dir / "reviews" / review_id / "decision_support" / "ea_consistency_decision_support.pdf",
         "decision_support_manifest_sha256": output_dir / "reviews" / review_id / "decision_support" / "ea_consistency_decision_support_manifest.json",
+        "review_packet_row_inventory_sha256": output_dir / "reviews" / review_id / "review_packet_index" / "review_packet_row_inventory.json",
+        "compliance_matrix_render_manifest_sha256": output_dir / "reviews" / review_id / "review_packet_index" / "compliance_matrix_render_manifest.json",
+        "review_packet_index_sha256": output_dir / "reviews" / review_id / "review_packet_index" / "review_packet_index.json",
+        "review_packet_index_validation_sha256": output_dir / "reviews" / review_id / "review_packet_index" / "review_packet_index_validation.json",
+        "review_packet_index_pdf_sha256": output_dir / "reviews" / review_id / "review_packet_index" / "review_packet_index.pdf",
         "v1_ea_eval_results_sha256": output_dir / "reviews" / review_id / "v1_ea_eval_results.json",
         "phase_eval_results_sha256": output_dir / "reviews" / review_id / "phase_eval_results.json",
         "promotion_suite_results_sha256": output_dir / "reviews" / "promotion_suite" / "post-v1-region1-ea-promotion-suite" / "promotion_suite_results.json",
@@ -1055,6 +1185,13 @@ def _sequence_2_counts() -> dict:
         "phase_eval_passed_phase_count": 2,
         "promotion_suite_required_current_result_count": 2,
         "promotion_suite_passed_required_current_result_count": 2,
+        "review_packet_index_applicable_authority_count": 2,
+        "review_packet_index_non_applicable_authority_count": 1,
+        "review_packet_index_forest_plan_component_row_count": 2,
+        "review_packet_index_applicable_standard_count": 1,
+        "review_packet_index_render_manifest_authority_row_count": 2,
+        "review_packet_index_render_manifest_forest_plan_row_count": 2,
+        "review_packet_index_validation_failed_check_count": 0,
         "accepted_v1_risk_count": 2,
         "actual_pending_applicable_count": 1,
         "litigation_risk_legal_conclusion_count": 0,
@@ -1088,6 +1225,13 @@ def _sequence_2_count_selector(field: str) -> str:
         "phase_eval_passed_phase_count": "gate_replay_summary.phase_eval.passed_phase_count",
         "promotion_suite_required_current_result_count": "gate_replay_summary.current_promotion_suite.required_current_result_count",
         "promotion_suite_passed_required_current_result_count": "gate_replay_summary.current_promotion_suite.passed_required_current_result_count",
+        "review_packet_index_applicable_authority_count": "review_packet_index_qa.applicable_authority_count",
+        "review_packet_index_non_applicable_authority_count": "review_packet_index_qa.non_applicable_authority_count",
+        "review_packet_index_forest_plan_component_row_count": "review_packet_index_qa.forest_plan_component_row_count",
+        "review_packet_index_applicable_standard_count": "review_packet_index_qa.applicable_standard_count",
+        "review_packet_index_render_manifest_authority_row_count": "review_packet_index_qa.render_manifest_authority_row_count",
+        "review_packet_index_render_manifest_forest_plan_row_count": "review_packet_index_qa.render_manifest_forest_plan_row_count",
+        "review_packet_index_validation_failed_check_count": "review_packet_index_qa.validation_failed_check_count",
         "accepted_v1_risk_count": "accepted_v1_risk_ledger.accepted_pending_count",
         "actual_pending_applicable_count": "accepted_v1_risk_ledger.actual_pending_applicable_count",
         "litigation_risk_legal_conclusion_count": "decision_support_qa.litigation_risk_legal_conclusion_count",

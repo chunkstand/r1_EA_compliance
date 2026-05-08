@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from datetime import UTC, datetime
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -12,6 +13,7 @@ from .rule_packs import _baseline_source_record_ids
 
 COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 FOREST_PLAN_COMPLIANCE_SCHEMA_VERSION = "forest-plan-compliance-matrix-v0"
+COMPLIANCE_MATRIX_RENDER_MANIFEST_SCHEMA_VERSION = "compliance-matrix-render-manifest-v1"
 CLAIM_STATUSES = {"pass", "gap"}
 VALID_FINDING_STATUSES = {"pass", "gap", "uncertain", "not_applicable"}
 
@@ -183,7 +185,12 @@ def matrix_markdown(matrix: dict) -> str:
             "| "
             + " | ".join(
                 [
-                    _md_cell(_nepa_topic_cell(row)),
+                    _md_cell(
+                        "<!-- "
+                        + _matrix_row_marker("authority", row.get("rule_id"))
+                        + " --><br>"
+                        + _nepa_topic_cell(row)
+                    ),
                     _md_cell(_nepa_signer_question_cell(row)),
                     _md_cell(_nepa_decision_support_cell(row)),
                     _md_cell(_evidence_support_cell(row.get("ea_package_citation"), ea_evidence)),
@@ -202,6 +209,83 @@ def matrix_markdown(matrix: dict) -> str:
 def write_compliance_matrix_pdf(path: Path, matrix: dict) -> None:
     pages = _matrix_pdf_pages(matrix)
     _write_simple_pdf(path, pages, title="Compliance Matrix")
+
+
+def build_compliance_matrix_render_manifest(
+    *,
+    matrix: dict,
+    markdown: str,
+    pdf_path: Path,
+) -> dict:
+    rows = []
+    for index, row in enumerate(matrix.get("rows", []), start=1):
+        rule_id = str(row.get("rule_id") or "")
+        marker = _matrix_row_marker("authority", rule_id)
+        rows.append(
+            _render_manifest_row(
+                row_class="applicable_authority",
+                row=row,
+                row_order=index,
+                section="NEPA / Authority Compliance",
+                table_id="nepa_authority_compliance",
+                json_selector=f"rows[rule_id={rule_id}]",
+                markdown_marker=marker,
+                row_identity={"rule_id": rule_id},
+            )
+        )
+    forest_section = matrix.get("forest_plan_compliance") or {}
+    forest_rows = forest_section.get("rows") if isinstance(forest_section, dict) else []
+    for index, row in enumerate(forest_rows or [], start=1):
+        component_id = str(row.get("component_id") or "")
+        marker = _matrix_row_marker("forest-plan", component_id)
+        rows.append(
+            _render_manifest_row(
+                row_class="forest_plan_component",
+                row=row,
+                row_order=index,
+                section="Forest Plan Compliance",
+                table_id="forest_plan_compliance",
+                json_selector=f"forest_plan_compliance.rows[component_id={component_id}]",
+                markdown_marker=marker,
+                row_identity={
+                    "component_id": component_id,
+                    "component_key": row.get("component_key"),
+                    "component_type": row.get("component_type"),
+                },
+            )
+        )
+    missing_markdown_markers = [
+        row["markdown_marker"] for row in rows if row["markdown_marker"] not in markdown
+    ]
+    pdf_header_valid = (
+        pdf_path.exists()
+        and pdf_path.stat().st_size > 0
+        and pdf_path.read_bytes().startswith(b"%PDF-")
+    )
+    authority_row_count = sum(1 for row in rows if row["row_class"] == "applicable_authority")
+    forest_plan_row_count = sum(1 for row in rows if row["row_class"] == "forest_plan_component")
+    passed = not missing_markdown_markers and pdf_header_valid
+    return {
+        "schema_version": COMPLIANCE_MATRIX_RENDER_MANIFEST_SCHEMA_VERSION,
+        "created_at": _utc_now(),
+        "review_id": matrix.get("review_id"),
+        "source_set_id": matrix.get("source_set_id"),
+        "matrix_schema_version": matrix.get("schema_version"),
+        "matrix_row_count": len(matrix.get("rows", [])),
+        "forest_plan_matrix_row_count": len(forest_rows or []),
+        "summary": {
+            "passed": passed,
+            "row_count": len(rows),
+            "authority_row_count": authority_row_count,
+            "forest_plan_row_count": forest_plan_row_count,
+            "markdown_marker_count": len(rows) - len(missing_markdown_markers),
+            "missing_markdown_markers": missing_markdown_markers,
+            "pdf_path": str(pdf_path),
+            "pdf_header_valid": pdf_header_valid,
+            "row_set_sha256": _row_set_sha256(rows),
+        },
+        "rows": rows,
+    }
 
 
 def _matrix_row(review_id: str, finding: dict) -> dict:
@@ -631,7 +715,12 @@ def _forest_plan_compliance_markdown_lines(section: dict) -> list[str]:
             "| "
             + " | ".join(
                 [
-                    _md_cell(_forest_component_cell(row)),
+                    _md_cell(
+                        "<!-- "
+                        + _matrix_row_marker("forest-plan", row.get("component_id"))
+                        + " --><br>"
+                        + _forest_component_cell(row)
+                    ),
                     _md_cell(_forest_direction_cell(row, plan_evidence)),
                     _md_cell(_forest_decision_support_cell(row)),
                     _md_cell(_forest_ea_support_cell(row, ea_evidence)),
@@ -1181,6 +1270,76 @@ def _matrix_failure_category(finding: dict) -> str | None:
     if status not in VALID_FINDING_STATUSES:
         return "unsupported_status"
     return "uncertain_finding"
+
+
+def _matrix_row_marker(row_class: str, row_id: object) -> str:
+    return f"matrix-row:{row_class}:{_safe_marker_id(row_id)}"
+
+
+def _safe_marker_id(value: object) -> str:
+    text = str(value or "unknown")
+    return re.sub(r"[^A-Za-z0-9_.:-]+", "-", text).strip("-") or "unknown"
+
+
+def _render_manifest_row(
+    *,
+    row_class: str,
+    row: dict,
+    row_order: int,
+    section: str,
+    table_id: str,
+    json_selector: str,
+    markdown_marker: str,
+    row_identity: dict,
+) -> dict:
+    return {
+        "row_render_id": f"render:{row_class}:{_safe_marker_id(row.get('row_id') or row_identity)}",
+        "row_class": row_class,
+        "row_id": row.get("row_id"),
+        "row_order": row_order,
+        "section": section,
+        "table_id": table_id,
+        "json_selector": json_selector,
+        "markdown_marker": markdown_marker,
+        "pdf_render_contract": "pdf_generated_from_manifested_matrix_rows",
+        "row_identity": row_identity,
+        "source_record_ids": _render_source_record_ids(row),
+        "status": row.get("status") or row.get("compliance_status"),
+        "applicability_status": row.get("applicability_status"),
+        "row_hash": _row_hash(row),
+    }
+
+
+def _render_source_record_ids(row: dict) -> list[str]:
+    values = []
+    for key in (
+        "authority_source_record_id",
+        "applied_source_record_ids",
+    ):
+        value = row.get(key)
+        if isinstance(value, list):
+            values.extend(str(item) for item in value if item)
+        elif value:
+            values.append(str(value))
+    return sorted(set(values))
+
+
+def _row_hash(row: dict) -> str:
+    payload = json.dumps(row, sort_keys=True, ensure_ascii=True, default=str).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _row_set_sha256(rows: list[dict]) -> str:
+    identities = [
+        {
+            "row_class": row.get("row_class"),
+            "row_identity": row.get("row_identity"),
+            "row_hash": row.get("row_hash"),
+        }
+        for row in rows
+    ]
+    payload = json.dumps(identities, sort_keys=True, ensure_ascii=True).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def _matrix_pdf_pages(matrix: dict) -> list[list[str]]:

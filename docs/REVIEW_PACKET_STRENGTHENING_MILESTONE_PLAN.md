@@ -1,7 +1,7 @@
 # Review Packet Strengthening And Matrix Row Completeness Milestone Plan
 
 Date: 2026-05-08
-Status: proposed; ready for Sequence 0 baseline implementation
+Status: implemented; closeout verified on 2026-05-08
 
 This milestone strengthens the East Crazy Inspiration Divide review packet so every applicable
 authority and Forest Plan row is visible, traceable, and validated across the canonical review
@@ -64,9 +64,10 @@ The current promoted East Crazies packet has the right ingredients:
 - Forest Plan component findings: `329`;
 - Forest Plan applicable component rows carried into the matrix: `79`;
 - Forest Plan applicable standards: `12/12`, all applied;
-- final QA validation: `168/168`;
-- review-scoped phase eval: `20/20`;
-- current-promotion suite: `26/26`, with South Plateau blockers kept expansion-only.
+- review packet index validation: `29/29`;
+- final QA validation: `196/196`;
+- review-scoped phase eval: `21/21`;
+- current-promotion suite: `31/31`, with South Plateau blockers kept expansion-only.
 
 The latest gap-close added a fail-closed `required_applicable_authority_rows` contract for the four
 current land-exchange rows:
@@ -76,8 +77,28 @@ current land-exchange rows:
 - `land_exchange_regulatory_requirements` from `R1EA-124`;
 - `land_exchange_fs_policy_and_project_references` from `R1EA-150`.
 
-That is necessary but not sufficient. The next contract must cover the full applicable row universe,
-not just selected required rows or aggregate counts.
+The implemented contract now covers the full applicable row universe, not just selected required
+rows or aggregate counts.
+
+## Closeout Evidence
+
+The implemented artifact family is:
+
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_row_inventory.json`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_row_inventory.md`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/compliance_matrix_render_manifest.json`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_index.json`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_index.md`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_index.pdf`
+- `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_index_validation.json`
+
+Closeout replay:
+
+- `review-packet-index`: passed, `29` checks, `0` failures.
+- `phase-eval --review-id v1-cg-ecid-compliance-review`: passed `21/21`.
+- `promotion-suite --manifest config/promotion_suite_v1.json`: current promotion passed `31/31`;
+  South Plateau remains expansion-only with `forest_plan_reviewer_not_ready`.
+- `final-qa-certification --validate-only`: passed `196/196`.
 
 ## Gap To Close
 

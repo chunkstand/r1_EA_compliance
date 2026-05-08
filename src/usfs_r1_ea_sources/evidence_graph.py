@@ -24,6 +24,15 @@ from .final_qa_certification import PDF_FILENAME as FINAL_QA_PDF_FILENAME
 from .final_qa_certification import REPORT_FILENAME as FINAL_QA_REPORT_FILENAME
 from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
 from .final_qa_certification import VALIDATION_SCHEMA_VERSION as FINAL_QA_VALIDATION_SCHEMA_VERSION
+from .review_packet_index import PACKET_INDEX_FILENAME as REVIEW_PACKET_INDEX_FILENAME
+from .review_packet_index import PACKET_INDEX_PDF_FILENAME as REVIEW_PACKET_INDEX_PDF_FILENAME
+from .review_packet_index import PACKET_INDEX_SCHEMA_VERSION as REVIEW_PACKET_INDEX_SCHEMA_VERSION
+from .review_packet_index import RENDER_MANIFEST_FILENAME as REVIEW_PACKET_RENDER_MANIFEST_FILENAME
+from .review_packet_index import RENDER_MANIFEST_SCHEMA_VERSION as REVIEW_PACKET_RENDER_SCHEMA_VERSION
+from .review_packet_index import ROW_INVENTORY_FILENAME as REVIEW_PACKET_ROW_INVENTORY_FILENAME
+from .review_packet_index import ROW_INVENTORY_SCHEMA_VERSION as REVIEW_PACKET_ROW_SCHEMA_VERSION
+from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION_FILENAME
+from .review_packet_index import VALIDATION_SCHEMA_VERSION as REVIEW_PACKET_VALIDATION_SCHEMA_VERSION
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -405,6 +414,9 @@ def run_phase_aligned_eval(
     )
     decision_support_dir = (
         review_dir / "decision_support" if review_dir is not None else None
+    )
+    review_packet_index_dir = (
+        review_dir / "review_packet_index" if review_dir is not None else None
     )
     final_qa_dir = review_dir / "final_qa" if review_dir is not None else None
     review_nepa_3d_graph_dir = (
@@ -1193,6 +1205,17 @@ def run_phase_aligned_eval(
                 output_dir=output_dir,
                 review_id=review_id or review_dir.name,
                 decision_support_dir=decision_support_dir,
+            )
+        )
+    if review_packet_index_dir is not None and _should_include_review_packet_index_phase(
+        review_packet_index_dir
+    ):
+        phases.append(
+            _review_packet_index_phase(
+                review_id=review_id or review_dir.name,
+                source_set_id=source_set_id,
+                review_dir=review_dir,
+                review_packet_index_dir=review_packet_index_dir,
             )
         )
     if final_qa_dir is not None and _should_include_final_qa_phase(final_qa_dir):
@@ -2052,6 +2075,136 @@ def _should_include_decision_support_phase(
 
 def _should_include_final_qa_phase(final_qa_dir: Path) -> bool:
     return (final_qa_dir / FINAL_QA_VALIDATION_FILENAME).exists()
+
+
+def _should_include_review_packet_index_phase(review_packet_index_dir: Path) -> bool:
+    return (review_packet_index_dir / REVIEW_PACKET_VALIDATION_FILENAME).exists()
+
+
+def _review_packet_index_phase(
+    *,
+    review_id: str,
+    source_set_id: str,
+    review_dir: Path,
+    review_packet_index_dir: Path,
+) -> dict:
+    inventory_path = review_packet_index_dir / REVIEW_PACKET_ROW_INVENTORY_FILENAME
+    render_manifest_path = (
+        review_packet_index_dir / REVIEW_PACKET_RENDER_MANIFEST_FILENAME
+    )
+    packet_index_path = review_packet_index_dir / REVIEW_PACKET_INDEX_FILENAME
+    validation_path = review_packet_index_dir / REVIEW_PACKET_VALIDATION_FILENAME
+    pdf_path = review_packet_index_dir / REVIEW_PACKET_INDEX_PDF_FILENAME
+    matrix_path = review_dir / "compliance_matrix.json"
+
+    inventory = _read_json_if_exists(inventory_path)
+    render_manifest = _read_json_if_exists(render_manifest_path)
+    packet_index = _read_json_if_exists(packet_index_path)
+    validation = _read_json_if_exists(validation_path)
+    matrix = _read_json_if_exists(matrix_path)
+    validation_summary = _dict((validation or {}).get("summary"))
+    matrix_rows = _dict_list((matrix or {}).get("rows"))
+    matrix_forest_rows = _dict_list(
+        _dict((matrix or {}).get("forest_plan_compliance")).get("rows")
+    )
+    authority_row_ids = {str(row.get("rule_id")) for row in matrix_rows if row.get("rule_id")}
+    inventory_authority_ids = {
+        str(row.get("rule_id"))
+        for row in _dict_list((inventory or {}).get("applicable_authority_rows"))
+        if row.get("rule_id")
+    }
+    packet_authority_ids = {
+        str(row.get("rule_id"))
+        for row in _dict_list((packet_index or {}).get("applicable_authority_rows"))
+        if row.get("rule_id")
+    }
+    render_authority_ids = {
+        str(_dict(row.get("row_identity")).get("rule_id"))
+        for row in _dict_list((render_manifest or {}).get("rows"))
+        if row.get("row_class") == "applicable_authority"
+        and _dict(row.get("row_identity")).get("rule_id")
+    }
+    forest_component_ids = {
+        str(row.get("component_id"))
+        for row in matrix_forest_rows
+        if row.get("component_id")
+    }
+    render_forest_ids = {
+        str(_dict(row.get("row_identity")).get("component_id"))
+        for row in _dict_list((render_manifest or {}).get("rows"))
+        if row.get("row_class") == "forest_plan_component"
+        and _dict(row.get("row_identity")).get("component_id")
+    }
+    packet_forest_ids = {
+        str(row.get("component_id"))
+        for row in _dict_list((packet_index or {}).get("forest_plan_component_rows"))
+        if row.get("component_id")
+    }
+    checks = {
+        "inventory_exists": inventory is not None,
+        "render_manifest_exists": render_manifest is not None,
+        "packet_index_exists": packet_index is not None,
+        "validation_exists": validation is not None,
+        "pdf_exists": pdf_path.exists(),
+        "inventory_schema_matches": (inventory or {}).get("schema_version")
+        == REVIEW_PACKET_ROW_SCHEMA_VERSION,
+        "render_manifest_schema_matches": (render_manifest or {}).get("schema_version")
+        == REVIEW_PACKET_RENDER_SCHEMA_VERSION,
+        "packet_index_schema_matches": (packet_index or {}).get("schema_version")
+        == REVIEW_PACKET_INDEX_SCHEMA_VERSION,
+        "validation_schema_matches": (validation or {}).get("schema_version")
+        == REVIEW_PACKET_VALIDATION_SCHEMA_VERSION,
+        "packet_identity_matches": (packet_index or {}).get("review_id") == review_id
+        and (packet_index or {}).get("source_set_id") == source_set_id,
+        "validation_identity_matches": (validation or {}).get("review_id") == review_id
+        and (validation or {}).get("source_set_id") == source_set_id,
+        "validation_passed": (validation or {}).get("passed") is True,
+        "validation_reviewer_ready": (validation or {}).get("reviewer_ready") is True,
+        "validation_failed_check_count_zero": validation_summary.get("failed_check_count") == 0,
+        "render_manifest_passed": _dict((render_manifest or {}).get("summary")).get("passed")
+        is True,
+        "authority_inventory_rows_match_matrix": inventory_authority_ids == authority_row_ids,
+        "authority_render_rows_match_matrix": render_authority_ids == authority_row_ids,
+        "authority_packet_rows_match_matrix": packet_authority_ids == authority_row_ids,
+        "forest_render_rows_match_matrix": render_forest_ids == forest_component_ids,
+        "forest_packet_rows_match_matrix": packet_forest_ids == forest_component_ids,
+        "pdf_header_valid": (
+            pdf_path.exists()
+            and pdf_path.stat().st_size > 0
+            and pdf_path.read_bytes().startswith(b"%PDF-")
+        ),
+    }
+    passed = all(checks.values())
+    return _phase(
+        "review_packet_index",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "row_inventory_path": str(inventory_path),
+            "render_manifest_path": str(render_manifest_path),
+            "packet_index_path": str(packet_index_path),
+            "validation_path": str(validation_path),
+            "pdf_path": str(pdf_path),
+            "failed_checks": sorted(name for name, passed in checks.items() if not passed),
+            "applicable_authority_count": validation_summary.get(
+                "applicable_authority_count"
+            ),
+            "non_applicable_authority_count": validation_summary.get(
+                "non_applicable_authority_count"
+            ),
+            "forest_plan_component_row_count": validation_summary.get(
+                "forest_plan_component_row_count"
+            ),
+            "applicable_standard_count": validation_summary.get(
+                "applicable_standard_count"
+            ),
+            "failure_category_counts": validation_summary.get(
+                "failure_category_counts",
+                {},
+            ),
+            **checks,
+        },
+    )
 
 
 def _final_qa_certification_phase(
@@ -3025,6 +3178,10 @@ def _dict_list(value: Any) -> list[dict[str, Any]]:
     if not isinstance(value, list):
         return []
     return [item for item in value if isinstance(item, dict)]
+
+
+def _dict(value: Any) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
 
 
 def _safe_detail_value(value: object) -> object:

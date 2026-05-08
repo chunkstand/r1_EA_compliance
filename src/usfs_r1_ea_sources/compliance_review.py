@@ -19,6 +19,7 @@ from .compliance_inputs import applicability_gate_context as _applicability_gate
 from .compliance_inputs import first_present as _first_present
 from .compliance_inputs import write_evaluation_rule_pack as _write_evaluation_rule_pack
 from .compliance_outputs import build_compliance_matrix
+from .compliance_outputs import build_compliance_matrix_render_manifest
 from .compliance_outputs import matrix_markdown
 from .compliance_outputs import write_compliance_matrix_pdf
 from .compliance_validation import compliance_summary as _summary
@@ -44,6 +45,7 @@ class ComplianceReviewResult:
     compliance_matrix_path: Path
     compliance_matrix_markdown_path: Path
     compliance_matrix_pdf_path: Path
+    compliance_matrix_render_manifest_path: Path
     compliance_validation_path: Path
     authority_provenance_path: Path
     non_applicable_authority_appendix_path: Path
@@ -107,6 +109,10 @@ def run_compliance_review(
     compliance_matrix_path = review_dir / "compliance_matrix.json"
     compliance_matrix_markdown_path = review_dir / "compliance_matrix.md"
     compliance_matrix_pdf_path = review_dir / "compliance_matrix.pdf"
+    review_packet_index_dir = review_dir / "review_packet_index"
+    compliance_matrix_render_manifest_path = (
+        review_packet_index_dir / "compliance_matrix_render_manifest.json"
+    )
     compliance_validation_path = review_dir / "compliance_validation.json"
     authority_provenance_path = review_dir / "authority_family_provenance.json"
     non_applicable_authority_appendix_path = review_dir / "non_applicable_authority_appendix.json"
@@ -122,6 +128,7 @@ def run_compliance_review(
         compliance_matrix_path=compliance_matrix_path,
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
+        compliance_matrix_render_manifest_path=compliance_matrix_render_manifest_path,
         compliance_validation_path=compliance_validation_path,
         authority_provenance_path=authority_provenance_path,
         non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
@@ -279,6 +286,9 @@ def run_compliance_review(
         validation=validation,
         applicability_gate=applicability_gate,
     )
+    matrix["summary"]["compliance_matrix_render_manifest_path"] = str(
+        compliance_matrix_render_manifest_path
+    )
     _write_authority_integration_artifacts(
         context=authority_integration,
         summary=summary,
@@ -288,11 +298,18 @@ def run_compliance_review(
     _write_jsonl(finding_edges_path, edges)
     _write_json(compliance_matrix_path, matrix)
     compliance_matrix_markdown_path.parent.mkdir(parents=True, exist_ok=True)
+    matrix_markdown_text = matrix_markdown(matrix)
     compliance_matrix_markdown_path.write_text(
-        matrix_markdown(matrix),
+        matrix_markdown_text,
         encoding="utf-8",
     )
     write_compliance_matrix_pdf(compliance_matrix_pdf_path, matrix)
+    render_manifest = build_compliance_matrix_render_manifest(
+        matrix=matrix,
+        markdown=matrix_markdown_text,
+        pdf_path=compliance_matrix_pdf_path,
+    )
+    _write_json(compliance_matrix_render_manifest_path, render_manifest)
     _write_json(compliance_validation_path, validation)
     _write_json(compliance_review_path, report)
     return ComplianceReviewResult(
@@ -302,6 +319,7 @@ def run_compliance_review(
         compliance_matrix_path=compliance_matrix_path,
         compliance_matrix_markdown_path=compliance_matrix_markdown_path,
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
+        compliance_matrix_render_manifest_path=compliance_matrix_render_manifest_path,
         compliance_validation_path=compliance_validation_path,
         authority_provenance_path=authority_provenance_path,
         non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
@@ -324,6 +342,7 @@ def _prepare_outputs(
     compliance_matrix_path: Path,
     compliance_matrix_markdown_path: Path,
     compliance_matrix_pdf_path: Path,
+    compliance_matrix_render_manifest_path: Path,
     compliance_validation_path: Path,
     authority_provenance_path: Path,
     non_applicable_authority_appendix_path: Path,
@@ -338,6 +357,7 @@ def _prepare_outputs(
         compliance_matrix_path,
         compliance_matrix_markdown_path,
         compliance_matrix_pdf_path,
+        compliance_matrix_render_manifest_path,
         compliance_validation_path,
         authority_provenance_path,
         non_applicable_authority_appendix_path,

@@ -46,8 +46,8 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `26` baseline source records through the generated applicability rule pack, validates a
 `377`-candidate authority universe with `37` applicable and `340` non-applicable authorities,
 emits `37` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
-review-bound `phase-eval` `20/20` with the post-V1 applicability, decision-support, NEPA 3D graph,
-and final QA certification gates included, passes
+review-bound `phase-eval` `21/21` with the post-V1 applicability, decision-support, review packet
+index, NEPA 3D graph, and final QA certification gates included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
 rows as explicit accepted V1 reviewer risk. The current matrix includes four first-class
 land-exchange authority rows: FLPMA Section 206 (`R1EA-146`), land-exchange statutory authorities
@@ -55,6 +55,10 @@ land-exchange authority rows: FLPMA Section 206 (`R1EA-146`), land-exchange stat
 project references (`R1EA-150`). The decision-support and final-QA packet contracts now fail closed
 if any of those required land-exchange rows disappear or lose their expected source-record,
 authority-family, applicability, or pass-status metadata.
+The signer-facing review packet index under
+`source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/` proves the full
+`37`/`340`/`79`/`12` row universe, the compliance matrix render manifest, and the root-level draft
+quarantine boundary; the current final-QA validate-only replay passes `196/196`.
 
 Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_universe_families_nepa_ea_v1.json`,
@@ -902,11 +906,12 @@ promotion signal.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.
-For the East Crazies final QA lane, the current-promotion case also requires the final QA JSON,
-manifest, PDF, and validation sidecar, and review-scoped `phase-eval` includes
-`final_qa_certification_report` once that sidecar exists. The validation sidecar records
-JSON/Markdown/PDF/manifest hashes, and promotion-suite checks those hashes against the local packet
-files.
+For the East Crazies packet lane, the current-promotion case also requires the review packet row
+inventory, compliance matrix render manifest, review packet index JSON/PDF, review packet
+validation sidecar, final QA JSON, final QA manifest, final QA PDF, and final QA validation sidecar.
+Review-scoped `phase-eval` includes `review_packet_index` and `final_qa_certification_report` once
+those sidecars exist. The validation sidecars record JSON/Markdown/PDF/manifest hashes where
+applicable, and promotion-suite checks those hashes against the local packet files.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,

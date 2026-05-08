@@ -17,6 +17,13 @@ DEFAULT_CONFIG_PATH = Path("config/ea_consistency_decision_support_v1.json")
 DEFAULT_EXPECTED_SUMMARY_PATH = Path(
     "config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json"
 )
+REVIEW_PACKET_ARTIFACT_KEYS = {
+    "review_packet_row_inventory",
+    "compliance_matrix_render_manifest",
+    "review_packet_index",
+    "review_packet_index_validation",
+    "review_packet_index_pdf",
+}
 
 
 @dataclass(frozen=True)
@@ -304,6 +311,7 @@ def _load_required_artifacts(
         if plan_text_candidates
         else review_dir / "package" / "extracted_text" / "EA-PACKAGE-042_missing.txt"
     )
+    review_packet_dir = review_dir / "review_packet_index"
     specs = {
         "package_manifest": (review_dir / "package" / "package_manifest.jsonl", "jsonl", True),
         "package_chunks": (review_dir / "package" / "package_chunks.jsonl", "jsonl", True),
@@ -374,6 +382,31 @@ def _load_required_artifacts(
         "forest_plan_reviewer_resolution_queue": (
             review_dir / "forest_plan_reviewer_resolution_queue.json",
             "json",
+            True,
+        ),
+        "review_packet_row_inventory": (
+            review_packet_dir / "review_packet_row_inventory.json",
+            "json",
+            True,
+        ),
+        "compliance_matrix_render_manifest": (
+            review_packet_dir / "compliance_matrix_render_manifest.json",
+            "json",
+            True,
+        ),
+        "review_packet_index": (
+            review_packet_dir / "review_packet_index.json",
+            "json",
+            True,
+        ),
+        "review_packet_index_validation": (
+            review_packet_dir / "review_packet_index_validation.json",
+            "json",
+            True,
+        ),
+        "review_packet_index_pdf": (
+            review_packet_dir / "review_packet_index.pdf",
+            "pdf",
             True,
         ),
         "plan_consistency_table_text": (plan_text_path, "text", True),
@@ -600,6 +633,7 @@ def _validate_inputs(context: _DecisionSupportContext) -> dict[str, Any]:
     _validate_review_source_set(context, checks, failures)
     _validate_readiness(context, checks, failures)
     _validate_authority_rows(context, checks, failures)
+    _validate_review_packet_index(context, checks, failures)
     _validate_non_applicable_boundary(context, checks, failures)
     _validate_forest_plan_standards(context, checks, failures)
     _validate_confirmation_selectors(context, checks, failures)
@@ -798,6 +832,148 @@ def _validate_authority_rows(
         checks=checks,
         failures=failures,
         source_selector="compliance_matrix.rows",
+    )
+
+
+def _validate_review_packet_index(
+    context: _DecisionSupportContext,
+    checks: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+) -> None:
+    matrix = context.payload("compliance_matrix")
+    inventory = context.payload("review_packet_row_inventory")
+    render_manifest = context.payload("compliance_matrix_render_manifest")
+    packet_index = context.payload("review_packet_index")
+    validation = context.payload("review_packet_index_validation")
+    matrix_rows = _dict_list(matrix.get("rows"))
+    expected_authority_ids = {str(row.get("rule_id")) for row in matrix_rows if row.get("rule_id")}
+    inventory_authority_ids = {
+        str(row.get("rule_id"))
+        for row in _dict_list(inventory.get("applicable_authority_rows"))
+        if row.get("rule_id")
+    }
+    packet_authority_ids = {
+        str(row.get("rule_id"))
+        for row in _dict_list(packet_index.get("applicable_authority_rows"))
+        if row.get("rule_id")
+    }
+    render_authority_ids = {
+        str(_dict(row.get("row_identity")).get("rule_id"))
+        for row in _dict_list(render_manifest.get("rows"))
+        if row.get("row_class") == "applicable_authority"
+        and _dict(row.get("row_identity")).get("rule_id")
+    }
+    forest_matrix_ids = {
+        str(row.get("component_id"))
+        for row in _dict_list(_dict(matrix.get("forest_plan_compliance")).get("rows"))
+        if row.get("component_id")
+    }
+    inventory_forest_ids = {
+        str(row.get("component_id"))
+        for row in _dict_list(inventory.get("forest_plan_component_rows"))
+        if row.get("component_id")
+    }
+    packet_forest_ids = {
+        str(row.get("component_id"))
+        for row in _dict_list(packet_index.get("forest_plan_component_rows"))
+        if row.get("component_id")
+    }
+    render_forest_ids = {
+        str(_dict(row.get("row_identity")).get("component_id"))
+        for row in _dict_list(render_manifest.get("rows"))
+        if row.get("row_class") == "forest_plan_component"
+        and _dict(row.get("row_identity")).get("component_id")
+    }
+    packet_summary = _dict(packet_index.get("row_inventory_summary"))
+    validation_summary = _dict(validation.get("summary"))
+    readiness_checks = {
+        "review_packet_index_validation_passed": validation.get("passed") is True,
+        "review_packet_index_validation_reviewer_ready": validation.get("reviewer_ready")
+        is True,
+        "review_packet_index_validation_no_failed_checks": (
+            validation_summary.get("failed_check_count") == 0
+        ),
+        "review_packet_index_schema_matches": (
+            packet_index.get("schema_version") == "review-packet-index-v1"
+        ),
+        "review_packet_row_inventory_schema_matches": (
+            inventory.get("schema_version") == "review-packet-row-inventory-v1"
+        ),
+        "compliance_matrix_render_manifest_schema_matches": (
+            render_manifest.get("schema_version") == "compliance-matrix-render-manifest-v1"
+        ),
+        "compliance_matrix_render_manifest_passed": (
+            _dict(render_manifest.get("summary")).get("passed") is True
+        ),
+    }
+    for name, passed in readiness_checks.items():
+        _record_check(
+            checks,
+            failures,
+            name=name,
+            passed=passed,
+            failure_category="missing_packet_index_row"
+            if name.startswith("review_packet")
+            else "missing_matrix_render_row",
+            source_selector=f"review_packet_index.{name}",
+            expected=True,
+            actual=passed,
+        )
+    row_sets = {
+        "inventory": inventory_authority_ids,
+        "render_manifest": render_authority_ids,
+        "packet_index": packet_authority_ids,
+    }
+    for name, row_ids in row_sets.items():
+        _record_check(
+            checks,
+            failures,
+            name=f"{name}_authority_rows_match_compliance_matrix",
+            passed=row_ids == expected_authority_ids,
+            failure_category=(
+                "missing_matrix_render_row"
+                if name == "render_manifest"
+                else "missing_packet_index_row"
+            ),
+            source_selector=f"review_packet_index.{name}.authority_rows",
+            expected=sorted(expected_authority_ids),
+            actual={
+                "missing": sorted(expected_authority_ids - row_ids),
+                "extra": sorted(row_ids - expected_authority_ids),
+            },
+        )
+    forest_sets = {
+        "inventory": inventory_forest_ids,
+        "render_manifest": render_forest_ids,
+        "packet_index": packet_forest_ids,
+    }
+    for name, row_ids in forest_sets.items():
+        _record_check(
+            checks,
+            failures,
+            name=f"{name}_forest_plan_rows_match_compliance_matrix",
+            passed=row_ids == forest_matrix_ids,
+            failure_category=(
+                "missing_matrix_render_row"
+                if name == "render_manifest"
+                else "missing_forest_plan_row"
+            ),
+            source_selector=f"review_packet_index.{name}.forest_plan_rows",
+            expected=sorted(forest_matrix_ids),
+            actual={
+                "missing": sorted(forest_matrix_ids - row_ids),
+                "extra": sorted(row_ids - forest_matrix_ids),
+            },
+        )
+    _record_check(
+        checks,
+        failures,
+        name="review_packet_non_applicable_boundary_present",
+        passed=packet_summary.get("non_applicable_authority_count", 0) > 0,
+        failure_category="missing_non_applicable_boundary",
+        source_selector="review_packet_index.non_applicable_authority_boundary",
+        expected="non-applicable boundary rows",
+        actual=packet_summary.get("non_applicable_authority_count"),
     )
 
 
@@ -1075,6 +1251,14 @@ def _authority_findings(context: _DecisionSupportContext) -> list[dict[str, Any]
                     _selector(
                         context.artifacts["applicable_authorities"].path,
                         f"candidate_authority_id={row.get('candidate_authority_id')}",
+                    ),
+                    _selector(
+                        context.artifacts["compliance_matrix_render_manifest"].path,
+                        f"rows[row_identity.rule_id={rule_id}]",
+                    ),
+                    _selector(
+                        context.artifacts["review_packet_index"].path,
+                        f"applicable_authority_rows[rule_id={rule_id}]",
                     ),
                 ],
             }
@@ -1360,6 +1544,7 @@ def _manifest(
     input_hashes = {
         f"{key}_sha256": artifact.sha256
         for key, artifact in sorted(context.artifacts.items())
+        if key not in REVIEW_PACKET_ARTIFACT_KEYS
         if artifact.sha256 is not None
     }
     input_hashes["decision_support_config_sha256"] = _sha256_file(context.config_path)
@@ -1386,7 +1571,10 @@ def _source_dependencies(context: _DecisionSupportContext) -> list[dict[str, Any
         {
             "artifact_key": key,
             "artifact_path": str(artifact.path),
-            "sha256": artifact.sha256,
+            "sha256": None if key in REVIEW_PACKET_ARTIFACT_KEYS else artifact.sha256,
+            "hash_contract": "live_validated"
+            if key in REVIEW_PACKET_ARTIFACT_KEYS
+            else "manifest_input_hash",
         }
         for key, artifact in sorted(context.artifacts.items())
     ]
@@ -1421,10 +1609,14 @@ def _section_dependencies(context: _DecisionSupportContext) -> dict[str, list[st
         "authority_findings": [
             str(context.artifacts["compliance_matrix"].path),
             str(context.artifacts["applicable_authorities"].path),
+            str(context.artifacts["compliance_matrix_render_manifest"].path),
+            str(context.artifacts["review_packet_index"].path),
         ],
         "forest_plan_consistency": [
             str(context.artifacts["forest_plan_component_findings"].path),
             str(context.artifacts["forest_plan_context_summary"].path),
+            str(context.artifacts["review_packet_row_inventory"].path),
+            str(context.artifacts["compliance_matrix_render_manifest"].path),
         ],
         "applicable_forest_plan_standards": [
             str(context.artifacts["forest_plan_applicable_standard_coverage"].path),
@@ -1447,6 +1639,12 @@ def _section_dependencies(context: _DecisionSupportContext) -> dict[str, list[st
             str(context.artifacts["forest_plan_reviewer_resolution_queue"].path),
         ],
         "validation_and_replay": [str(context.expected_summary_path)],
+        "review_packet_index": [
+            str(context.artifacts["review_packet_row_inventory"].path),
+            str(context.artifacts["compliance_matrix_render_manifest"].path),
+            str(context.artifacts["review_packet_index"].path),
+            str(context.artifacts["review_packet_index_validation"].path),
+        ],
     }
 
 
@@ -1460,6 +1658,13 @@ def _current_counts(context: _DecisionSupportContext) -> dict[str, Any]:
     authority_resolution = context.payload("authority_reviewer_resolution_report")
     forest_queue = context.payload("forest_plan_reviewer_resolution_queue")
     risk_summary = context.payload("litigation_risk_summary")
+    row_inventory_summary = _dict(context.payload("review_packet_row_inventory").get("summary"))
+    render_manifest_summary = _dict(
+        context.payload("compliance_matrix_render_manifest").get("summary")
+    )
+    packet_validation_summary = _dict(
+        context.payload("review_packet_index_validation").get("summary")
+    )
     return {
         "applicable_authority_count": len(applicable),
         "non_applicable_authority_count": len(non_applicable),
@@ -1492,6 +1697,27 @@ def _current_counts(context: _DecisionSupportContext) -> dict[str, Any]:
         "litigation_risk_legal_conclusion_count": (
             risk_summary.get("summary") or {}
         ).get("legal_conclusion_count"),
+        "review_packet_index_applicable_authority_count": row_inventory_summary.get(
+            "applicable_authority_count"
+        ),
+        "review_packet_index_non_applicable_authority_count": row_inventory_summary.get(
+            "non_applicable_authority_count"
+        ),
+        "review_packet_index_forest_plan_component_row_count": (
+            row_inventory_summary.get("forest_plan_component_row_count")
+        ),
+        "review_packet_index_applicable_standard_count": row_inventory_summary.get(
+            "applicable_standard_count"
+        ),
+        "review_packet_index_render_manifest_authority_row_count": (
+            render_manifest_summary.get("authority_row_count")
+        ),
+        "review_packet_index_render_manifest_forest_plan_row_count": (
+            render_manifest_summary.get("forest_plan_row_count")
+        ),
+        "review_packet_index_validation_failed_check_count": (
+            packet_validation_summary.get("failed_check_count")
+        ),
         "package_file_count": len(_list(context.payload("package_manifest"))),
         "package_chunk_count": len(_list(context.payload("package_chunks"))),
     }
@@ -2262,6 +2488,7 @@ def _current_input_hashes(context: _DecisionSupportContext) -> dict[str, str]:
     input_hashes = {
         f"{key}_sha256": str(artifact.sha256)
         for key, artifact in sorted(context.artifacts.items())
+        if key not in REVIEW_PACKET_ARTIFACT_KEYS
         if artifact.sha256 is not None
     }
     input_hashes["decision_support_config_sha256"] = _sha256_file(context.config_path)

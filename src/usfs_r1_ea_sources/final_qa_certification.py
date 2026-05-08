@@ -590,6 +590,48 @@ def _build_report(
             )
             or [],
         },
+        "review_packet_index_qa": {
+            "validation_passed": _selector_value(
+                data_by_key.get("review_packet_index_validation", {}),
+                "passed",
+            ),
+            "reviewer_ready": _selector_value(
+                data_by_key.get("review_packet_index_validation", {}),
+                "reviewer_ready",
+            ),
+            "row_set_sha256": _selector_value(
+                data_by_key.get("review_packet_index_validation", {}),
+                "summary.row_set_sha256",
+            )
+            or _selector_value(data_by_key.get("review_packet_row_inventory", {}), "summary.row_set_sha256"),
+            "applicable_authority_count": counts[
+                "review_packet_index_applicable_authority_count"
+            ],
+            "non_applicable_authority_count": counts[
+                "review_packet_index_non_applicable_authority_count"
+            ],
+            "forest_plan_component_row_count": counts[
+                "review_packet_index_forest_plan_component_row_count"
+            ],
+            "applicable_standard_count": counts[
+                "review_packet_index_applicable_standard_count"
+            ],
+            "render_manifest_authority_row_count": counts[
+                "review_packet_index_render_manifest_authority_row_count"
+            ],
+            "render_manifest_forest_plan_row_count": counts[
+                "review_packet_index_render_manifest_forest_plan_row_count"
+            ],
+            "validation_failed_check_count": counts[
+                "review_packet_index_validation_failed_check_count"
+            ],
+            "artifact_path": f"source_library/reviews/{review_id}/review_packet_index/review_packet_index.json",
+            "validation_path": (
+                f"source_library/reviews/{review_id}/review_packet_index/"
+                "review_packet_index_validation.json"
+            ),
+            "legal_conclusion": False,
+        },
         "accepted_v1_risk_ledger": accepted_risk,
         "certification_statement": {
             "machine_replay_status": "passed",
@@ -981,6 +1023,9 @@ def _derive_actual_counts(
     phase_eval = data_by_key.get("phase_eval", {})
     promotion = data_by_key.get("promotion_suite", {})
     v1_eval = data_by_key.get("v1_ea_eval", {})
+    review_packet_validation = data_by_key.get("review_packet_index_validation", {})
+    review_packet_inventory = data_by_key.get("review_packet_row_inventory", {})
+    render_manifest = data_by_key.get("compliance_matrix_render_manifest", {})
     phase_eval_counts = _phase_eval_counts_for_packet(phase_eval)
     promotion_counts = _promotion_suite_counts_for_packet(promotion)
 
@@ -998,6 +1043,14 @@ def _derive_actual_counts(
         _selector_value(matrix_summary, "authority_integration")
         or _selector_value(compliance, "authority_integration")
         or {}
+    )
+    review_packet_summary = (
+        _selector_value(review_packet_validation, "summary")
+        or _selector_value(review_packet_inventory, "summary")
+        or {}
+    )
+    render_manifest_summary = (
+        render_manifest.get("summary", {}) if isinstance(render_manifest, Mapping) else {}
     )
 
     counts = {
@@ -1073,6 +1126,27 @@ def _derive_actual_counts(
         "litigation_risk_legal_conclusion_count": authority_integration.get(
             "legal_conclusion_count"
         ),
+        "review_packet_index_applicable_authority_count": review_packet_summary.get(
+            "applicable_authority_count"
+        ),
+        "review_packet_index_non_applicable_authority_count": review_packet_summary.get(
+            "non_applicable_authority_count"
+        ),
+        "review_packet_index_forest_plan_component_row_count": review_packet_summary.get(
+            "forest_plan_component_row_count"
+        ),
+        "review_packet_index_applicable_standard_count": review_packet_summary.get(
+            "applicable_standard_count"
+        ),
+        "review_packet_index_render_manifest_authority_row_count": render_manifest_summary.get(
+            "authority_row_count"
+        ),
+        "review_packet_index_render_manifest_forest_plan_row_count": (
+            render_manifest_summary.get("forest_plan_row_count")
+        ),
+        "review_packet_index_validation_failed_check_count": review_packet_summary.get(
+            "failed_check_count"
+        ),
     }
     missing = sorted(key for key, value in counts.items() if value is None)
     _add_check(
@@ -1123,6 +1197,19 @@ def _validate_source_pdf_header(
         passed=path.read_bytes().startswith(b"%PDF-"),
         category="invalid_report_pdf_header",
         details={"path": str(path)},
+    )
+    packet_path = _resolve_artifact_path(
+        f"source_library/reviews/{review_id}/review_packet_index/review_packet_index.pdf",
+        output_dir,
+    )
+    if not packet_path.exists():
+        return
+    _add_check(
+        checks,
+        name="review_packet_index_pdf_header_valid",
+        passed=packet_path.read_bytes().startswith(b"%PDF-"),
+        category="invalid_report_pdf_header",
+        details={"path": str(packet_path)},
     )
 
 
@@ -1385,6 +1472,7 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
     forest = report["forest_plan_qa"]
     phase = report["gate_replay_summary"]["phase_eval"]
     promotion = report["gate_replay_summary"]["current_promotion_suite"]
+    packet = report["review_packet_index_qa"]
     accepted = report["accepted_v1_risk_ledger"]
     lines = [
         "# East Crazies Final QA Certification",
@@ -1466,6 +1554,17 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
             "- Litigation-risk legal conclusion count: "
             f"`{report['decision_support_qa']['litigation_risk_legal_conclusion_count']}`",
             "",
+            "## Review Packet Index QA",
+            "",
+            f"- Packet validation passed: `{packet['validation_passed']}`",
+            f"- Applicable authority rows: `{packet['applicable_authority_count']}`",
+            f"- Non-applicable authorities: `{packet['non_applicable_authority_count']}`",
+            f"- Forest Plan component rows: `{packet['forest_plan_component_row_count']}`",
+            f"- Applicable Forest Plan standards: `{packet['applicable_standard_count']}`",
+            "- Render manifest rows: "
+            f"`{packet['render_manifest_authority_row_count']}` authority / "
+            f"`{packet['render_manifest_forest_plan_row_count']}` Forest Plan",
+            "",
             "## Accepted V1 Risk Ledger",
             "",
             f"- Policy mode: `{accepted['policy_mode']}`",
@@ -1496,6 +1595,7 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
 
 def _pdf_lines(report: Mapping[str, Any]) -> list[str]:
     phase = report["gate_replay_summary"]["phase_eval"]
+    packet = report["review_packet_index_qa"]
     accepted = report["accepted_v1_risk_ledger"]
     return [
         "East Crazies Final QA Certification",
@@ -1507,6 +1607,9 @@ def _pdf_lines(report: Mapping[str, Any]) -> list[str]:
         f"{phase['passed_phase_count']}/{phase['phase_count']} phases passed",
         "Phase eval live gate: "
         f"{phase['live_passed_phase_count']}/{phase['live_phase_count']} phases passed",
+        "Review Packet Index",
+        f"Packet authority rows: {packet['applicable_authority_count']}",
+        f"Packet Forest Plan rows: {packet['forest_plan_component_row_count']}",
         "Accepted V1 Risk Ledger",
         f"Accepted pending rows: {accepted['accepted_pending_count']}",
         "Reviewer Signoff",
@@ -1583,6 +1686,31 @@ def _input_hash_specs(review_id: str) -> list[dict[str, str]]:
             "artifact_key": "decision_support_manifest",
             "hash_key": "decision_support_manifest_sha256",
             "path": f"{review_root}/decision_support/ea_consistency_decision_support_manifest.json",
+        },
+        {
+            "artifact_key": "review_packet_row_inventory",
+            "hash_key": "review_packet_row_inventory_sha256",
+            "path": f"{review_root}/review_packet_index/review_packet_row_inventory.json",
+        },
+        {
+            "artifact_key": "compliance_matrix_render_manifest",
+            "hash_key": "compliance_matrix_render_manifest_sha256",
+            "path": f"{review_root}/review_packet_index/compliance_matrix_render_manifest.json",
+        },
+        {
+            "artifact_key": "review_packet_index",
+            "hash_key": "review_packet_index_sha256",
+            "path": f"{review_root}/review_packet_index/review_packet_index.json",
+        },
+        {
+            "artifact_key": "review_packet_index_validation",
+            "hash_key": "review_packet_index_validation_sha256",
+            "path": f"{review_root}/review_packet_index/review_packet_index_validation.json",
+        },
+        {
+            "artifact_key": "review_packet_index_pdf",
+            "hash_key": "review_packet_index_pdf_sha256",
+            "path": f"{review_root}/review_packet_index/review_packet_index.pdf",
         },
         {
             "artifact_key": "v1_ea_eval",

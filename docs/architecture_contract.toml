@@ -163,7 +163,7 @@ allowed_import_layers = [
 [[layers]]
 name = "decision_support"
 summary = "Supervisor-facing EA consistency report synthesis over audited review artifacts."
-modules = ["ea_consistency_decision_support", "final_qa_certification"]
+modules = ["ea_consistency_decision_support", "final_qa_certification", "review_packet_index"]
 allowed_import_layers = [
   "foundation",
   "decision_support",
@@ -200,6 +200,7 @@ modules = [
   "cli_derived",
   "cli_eval",
   "cli_final_qa",
+  "cli_review_packet",
   "cli_review",
 ]
 allowed_import_layers = [
@@ -337,6 +338,13 @@ paths = [
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.pdf",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_manifest.json",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_validation.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_row_inventory.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_row_inventory.md",
+  "source_library/reviews/<review_id>/review_packet_index/compliance_matrix_render_manifest.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_index.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_index.md",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_index.pdf",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_index_validation.json",
 ]
 
 [[artifacts]]
@@ -417,7 +425,7 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 
 [[command_groups]]
 name = "decision_support"
-commands = ["ea-consistency-document", "final-qa-certification"]
+commands = ["ea-consistency-document", "final-qa-certification", "review-packet-index"]
 
 [[command_groups]]
 name = "eval"

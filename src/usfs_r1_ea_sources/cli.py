@@ -19,6 +19,8 @@ from .cli_final_qa import handle_final_qa_command
 from .cli_final_qa import register_final_qa_commands
 from .cli_review import handle_review_command
 from .cli_review import register_review_commands
+from .cli_review_packet import handle_review_packet_command
+from .cli_review_packet import register_review_packet_commands
 
 
 CommandHandler = Callable[[argparse.Namespace, argparse.ArgumentParser], int | None]
@@ -31,6 +33,7 @@ COMMAND_HANDLERS: tuple[CommandHandler, ...] = (
     handle_compliance_command,
     handle_decision_support_command,
     handle_final_qa_command,
+    handle_review_packet_command,
 )
 
 
@@ -49,6 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_compliance_commands(subparsers)
     register_decision_support_commands(subparsers)
     register_final_qa_commands(subparsers)
+    register_review_packet_commands(subparsers)
 
     return parser
 

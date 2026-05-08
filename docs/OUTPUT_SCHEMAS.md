@@ -2337,6 +2337,60 @@ Decision-support validation must fail closed on:
 - synthesis false negatives such as omitted required rows, reported as
   `false_negative_synthesis_omission`.
 
+## Review Packet Row Index Outputs
+
+Path: `source_library/reviews/<review_id>/review_packet_index/`
+
+The review packet index is a deterministic row ledger over the canonical compliance review,
+applicability, compliance matrix, decision-support, final-QA, Forest Plan, and non-applicable
+boundary artifacts. It is not a new source of legal truth and does not replace responsible official,
+line officer, counsel, or specialist judgment.
+
+Generate it with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources review-packet-index \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+Generated files:
+
+- `review_packet_row_inventory.json`
+- `review_packet_row_inventory.md`
+- `compliance_matrix_render_manifest.json`
+- `review_packet_index.json`
+- `review_packet_index.md`
+- `review_packet_index.pdf`
+- `review_packet_index_validation.json`
+
+`review_packet_row_inventory.json` has schema version `review-packet-row-inventory-v1`. It records
+the row universe, artifact paths, row-set comparisons, applicable authority rows, non-applicable
+boundary rows, Forest Plan component rows, and applicable Forest Plan standard rows. For the current
+East Crazies review it validates `37` applicable authority rows, `340` non-applicable boundary
+rows, `79` Forest Plan component rows, and `12` applicable standards.
+
+`compliance_matrix_render_manifest.json` has schema version
+`compliance-matrix-render-manifest-v1`. It records one rendered-row entry per compliance matrix
+authority row and per Forest Plan matrix row, including row class, row order, section, table ID,
+JSON selector, Markdown marker, row identity, source record IDs, status, applicability status, and
+row hash. The current manifest validates `37` authority and `79` Forest Plan rendered rows and a
+valid `%PDF-` compliance matrix PDF.
+
+`review_packet_index.json` has schema version `review-packet-index-v1`. It carries the reviewer
+boundary, artifact inventory, row-inventory summary, render-manifest summary, applicable authority
+rows, non-applicable authority boundary, Forest Plan component rows, applicable standards,
+implementation confirmations, residual risks, and replay commands. It includes selectors to
+decision-support and final-QA rows but does not make root-level `East_Crazies_*` drafts canonical.
+
+`review_packet_index_validation.json` has schema version `review-packet-index-validation-v1`. It
+fails closed on missing or unparsable required artifacts, missing applicable authority rows, missing
+matrix render rows, missing packet index rows, missing Forest Plan rows, missing non-applicable
+boundary evidence, invalid packet PDF header, and non-canonical root draft dependencies. Review-
+scoped `phase-eval` includes a `review_packet_index` phase when this sidecar exists, and
+`config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
+and validation sidecar for current East Crazies promotion.
+
 ## East Crazies Final QA And Certification Outputs
 
 Path: `source_library/reviews/<review_id>/final_qa/`
@@ -2388,6 +2442,7 @@ JSON. The report must include these top-level sections:
 - `finding_qa`
 - `forest_plan_qa`
 - `decision_support_qa`
+- `review_packet_index_qa`
 - `accepted_v1_risk_ledger`
 - `certification_statement`
 - `residual_blockers_and_stop_conditions`
@@ -2396,11 +2451,12 @@ JSON. The report must include these top-level sections:
 policy that root-level `East_Crazies_*` draft exports are not canonical. `gate_replay_summary`
 records replay status for applicability validation, generated rule-pack validation, compliance
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
-validation, phase eval, V1 EA eval, and current-promotion suite. For the outer gates it records
-both baseline counts that exclude the final QA self-reference (`19/19` phase eval and `22/22`
-current-promotion results for this packet) and live integrated counts after gate integration
-(`20/20` phase eval and `26/26` current-promotion results). `artifact_freshness_ledger` records
-required artifact paths, schema versions where applicable, SHA-256 values, and selectors.
+validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
+For the outer gates it records both baseline counts that exclude the final QA self-reference
+(`20/20` phase eval and `27/27` current-promotion results for this packet) and live integrated
+counts after gate integration (`21/21` phase eval and `31/31` current-promotion results).
+`artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
+SHA-256 values, and selectors.
 
 `applicability_partition` preserves the applicability boundary before compliance: `37` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
@@ -2412,7 +2468,10 @@ records Custer Gallatin context, `329` Forest Plan components, `58` standards, `
 standards, component-eval status, limitations, and
 reviewer-resolution status. `decision_support_qa` records the existing decision-support validation
 result, PDF-header validity, residual-risk rows, implementation-confirmation rows, and
-legal-conclusion safeguards.
+legal-conclusion safeguards. `review_packet_index_qa` records packet validation status, row-set
+hash, `37` applicable authority rows, `340` non-applicable authority rows, `79` Forest Plan
+component rows, `12` applicable standards, `37` authority render-manifest rows, `79` Forest Plan
+render-manifest rows, packet artifact paths, and legal-conclusion safeguards.
 
 `accepted_v1_risk_ledger` is required. It records
 `conditional_adjudication.policy_mode=accepted_pending_v1`, `accepted_pending_count=14`,
@@ -2429,9 +2488,10 @@ counsel, or specialist judgment. Empty signoff fields do not fail machine valida
 `east_crazies_final_qa_certification_manifest.json` has schema version
 `east-crazies-final-qa-certification-manifest-v1`. It records review ID, source set ID, validation
 status, input artifact paths, required gate names, per-section dependencies, and SHA-256 values for
-the decision-support report family, V1 EA eval, review-scoped phase eval, non-strict promotion
-suite, compliance validation, applicability validation, generated rule-pack validation, compliance
-matrix/PDF/review, Forest Plan context summary, and Forest Plan component eval.
+the decision-support report family, review packet index family, V1 EA eval, review-scoped phase
+eval, non-strict promotion suite, compliance validation, applicability validation, generated
+rule-pack validation, compliance matrix/PDF/review, Forest Plan context summary, and Forest Plan
+component eval.
 
 `east_crazies_final_qa_certification_validation.json` has schema version
 `east-crazies-final-qa-certification-validation-v1`. It records the generator validation result
@@ -2441,11 +2501,10 @@ validation sidecar, and SHA-256 hashes for the non-circular JSON, Markdown, PDF,
 outputs. Sequence 3 makes this sidecar a required current-promotion artifact, verifies those
 sidecar hashes back against local files in `promotion-suite`, and adds an optional
 `final_qa_certification_report` phase to review-scoped `phase-eval` when the sidecar exists.
-In the 2026-05-08 gap-close state the stored sidecar records the inner packet replay at `159/159`
-checks, while `final-qa-certification --validate-only` reports `168/168` after adding outer
-self-reference, freshness, and required-row checks around the sidecar. This distinction is
-expected; outer gates use the sidecar plus output hashes to fail closed if a packet file is edited
-after validation.
+In the 2026-05-08 row-completeness closeout state, `final-qa-certification --validate-only` reports
+`196/196` checks after adding review packet index, render-manifest, outer self-reference,
+freshness, and required-row checks around the sidecar. Outer gates use the sidecar plus output
+hashes to fail closed if a packet file is edited after validation.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set

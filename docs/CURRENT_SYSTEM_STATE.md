@@ -366,10 +366,29 @@ The summary now reports the Milestone 7 count dimensions explicitly: node type, 
 authority category, source status, source partition, source currentness status, applicability
 status, and readiness blocker.
 `phase-eval` adds `nepa_3d_source_set_graph` and `nepa_3d_review_graph` phases when those artifacts
-exist. After final QA gate integration, the latest V1 review-bound phase eval passes `20/20` phases
-with `reviewer_ready=true`, including both graph phases, the final QA certification report, the
-post-V1 applicability family, generated rule pack, decision-support report, compliance review,
-forest-plan component eval, and gold eval.
+exist. After review-packet row-completeness integration, the latest V1 review-bound phase eval
+passes `21/21` phases with `reviewer_ready=true`, including both graph phases, the
+`review_packet_index` phase, the final QA certification report, the post-V1 applicability family,
+generated rule pack, decision-support report, compliance review, forest-plan component eval, and
+gold eval.
+
+## Review Packet Row Completeness
+
+The East Crazies review packet now has a first-class row ledger and signer-facing index under
+`source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/`. The generated family
+includes `review_packet_row_inventory.json`, `review_packet_row_inventory.md`,
+`compliance_matrix_render_manifest.json`, `review_packet_index.json`, `review_packet_index.md`,
+`review_packet_index.pdf`, and `review_packet_index_validation.json`. The validation sidecar passes
+with `37` applicable authority rows, `340` non-applicable authority boundary rows, `79` Forest Plan
+component rows, `12` applicable Forest Plan standards, `116` rendered matrix rows, and no failed
+checks. It also keeps root-level `East_Crazies_*` drafts out of the canonical packet boundary.
+
+Decision support now live-validates that packet row sets match the compliance matrix and render
+manifest without hashing downstream packet artifacts into the decision-support manifest. Final QA
+does hash and gate the packet artifacts, exposes a `review_packet_index_qa` section, and validates
+the refreshed packet at `196/196` checks. The current promotion suite requires the packet index
+family plus final QA and passes current promotion with `31/31` required current results; South
+Plateau remains expansion-blocked only by typed `forest_plan_reviewer_not_ready` gaps.
 
 `config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
 the V1 review graph validation/summary artifacts before current promotion passes. The current live
@@ -459,7 +478,7 @@ applicable standards, non-applicable boundary, implementation confirmations, res
 validation status, and concise table summaries before long evidence sections. The same closeout
 replayed `phase-eval --review-id v1-cg-ecid-compliance-review`, which includes
 `decision_support_report`; the current graph-gate pass now has V1 review-bound phase eval passing
-`20/20` phases with `reviewer_ready=true`. `promotion-suite` also reports the decision-support
+`21/21` phases with `review_packet_index` and `reviewer_ready=true`. `promotion-suite` also reports the decision-support
 JSON, manifest, PDF, and NEPA 3D graph validation/summary artifacts as required current-promotion
 artifacts.
 The post-sequence gap-close pass also makes validation fail closed when otherwise-current Markdown
@@ -481,17 +500,19 @@ review ID
 the claim to other Region 1 packages, does not resolve the South Plateau strict-expansion blocker,
 and does not treat root-level `East_Crazies_*` draft exports as canonical artifacts.
 
-Sequence 0 verified the current promoted baseline from generated artifacts: `37` applicable
+Sequence 0 verified the promoted final-QA baseline from generated artifacts: `37` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, `377` candidate
 authorities, `37` generated compliance findings, `162` generated-pack rule-claim links,
 `0` rule-claim gaps,
 `43` package files, `1,265` package chunks, `329` Forest Plan component rows, `58` Forest Plan
 standards, `12/12` Custer Gallatin applicable standards, passing decision-support validation, and
 review-bound baseline `phase-eval` at `19/19` before final QA gate integration. Sequence 3 added
-the final QA validation sidecar, review-scoped `phase-eval` now passes `20/20` with
-`final_qa_certification_report`, and non-strict `promotion-suite` remains current-green with
-`26/26` required current-promotion results passed. South Plateau strict-expansion blockers remain
-separate as `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
+the final QA validation sidecar, review-scoped `phase-eval` passed `20/20` with
+`final_qa_certification_report`, and non-strict `promotion-suite` passed `26/26` required
+current-promotion results. The later row-completeness closeout adds the `review_packet_index` phase,
+and the current replay passes `21/21` phase results and `31/31` current-promotion results. South
+Plateau strict-expansion blockers remain separate as
+`expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 Generated final QA outputs live under
 `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/` and stay ignored unless repository
 policy changes.
@@ -507,26 +528,26 @@ The replay sequences are:
   2026-05-07.
 
 Sequence 4 closed the remaining packet QA issues. `v1-ea-eval` now preserves `generated_at` when
-the semantic payload is unchanged, so reruns no longer churn the final QA input hash. The final QA
-report renders both baseline counts that exclude final-QA self-reference (`19/19` phase eval and
-`22/22` current-promotion results) and live integrated counts (`20/20` phase eval and `26/26`
-current-promotion results). The final closeout stack is ordered so mutating V1 eval output runs
-before the final QA refresh; the final validate-only replay then still passes after `phase-eval`
-and non-strict `promotion-suite` add only the permitted final-QA outer-gate drift.
+the semantic payload is unchanged, so reruns no longer churn the final QA input hash. After the
+row-completeness closeout, the final QA report renders both baseline counts that exclude final-QA
+self-reference (`20/20` phase eval and `27/27` current-promotion results) and live integrated
+counts (`21/21` phase eval and `31/31` current-promotion results). The final closeout stack is
+ordered so mutating V1 eval output runs before the final QA refresh; the final validate-only replay
+then still passes after `phase-eval` and non-strict `promotion-suite` add only the permitted final-QA
+outer-gate drift.
 
 The 2026-05-08 gap-close replay accepted the land-exchange row-contract hardening. The
 decision-support expected summary and final-QA expected summary now carry
 `required_applicable_authority_rows` for all four first-class land-exchange rows, and validation
 fails closed with `missing_applicable_authority_row` if any required row is absent or loses its
 expected source record, authority family, applicability mode/status, or pass status.
-`final-qa-certification` refreshed the ignored packet and passed `168/168`;
-`final-qa-certification --validate-only` also passed `168/168` without rewriting outputs after the
-outer gate replay. The stored validation sidecar
-records the inner packet replay at `159/159` checks plus output hashes for the JSON, Markdown, PDF,
-and manifest; the CLI's `168/168` result includes the additional outer self-reference, freshness,
-and required-row checks around that sidecar. The rendered Markdown exposes the required caveats,
-source pointers, accepted V1 risk ledger, residual blockers, baseline/live gate counts, and
-root-level draft exclusion, and the generated PDF starts with `%PDF-1.4`.
+`final-qa-certification` refreshed the ignored packet and passed `196/196`;
+`final-qa-certification --validate-only` also passed `196/196` without rewriting outputs after the
+outer gate replay. The CLI result includes the review packet index, render-manifest, outer
+self-reference, freshness, and required-row checks around that sidecar. The rendered Markdown
+exposes the required caveats, source pointers, accepted V1 risk ledger, residual blockers,
+baseline/live gate counts, and root-level draft exclusion, and the generated PDF starts with
+`%PDF-1.4`.
 
 Sequence 1 added `config/east_crazies_final_qa_certification_v1.json`,
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,
@@ -1784,10 +1805,10 @@ passes with `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
 `failure_category_counts={}`, `failed_rule_ids=[]`, `rule_section_match_rate=1.0`,
 `conditional_false_positive=0`, `conditional_false_negative=0`, and `14` accepted-pending
 conditional adjudication rows carried as explicit V1 reviewer risk. Review-bound `phase-eval` now
-passes `20/20` phases with `reviewer_ready=true`; the compliance gold phase is satisfied by the
-passing base-pack gold suite through `rule_pack_match_mode=generated_base`. Embeddings, reranking,
-model-assisted synthesis, and broader Region 1 package expansion remain post-V1 work and should
-start under a new milestone plan.
+passes `21/21` phases with `review_packet_index` and `reviewer_ready=true`; the compliance gold
+phase is satisfied by the passing base-pack gold suite through
+`rule_pack_match_mode=generated_base`. Embeddings, reranking, model-assisted synthesis, and broader
+Region 1 package expansion remain post-V1 work and should start under a new milestone plan.
 
 ## Verification Commands
 

@@ -57,6 +57,13 @@ EXPECTED_COUNTS = {
     "forest_plan_reviewer_resolution_item_count": 0,
     "litigation_risk_flag_count": 340,
     "litigation_risk_legal_conclusion_count": 0,
+    "review_packet_index_applicable_authority_count": 37,
+    "review_packet_index_non_applicable_authority_count": 340,
+    "review_packet_index_forest_plan_component_row_count": 79,
+    "review_packet_index_applicable_standard_count": 12,
+    "review_packet_index_render_manifest_authority_row_count": 37,
+    "review_packet_index_render_manifest_forest_plan_row_count": 79,
+    "review_packet_index_validation_failed_check_count": 0,
     "package_file_count": 43,
     "package_chunk_count": 1265,
 }
@@ -81,6 +88,11 @@ EXPECTED_FAILURE_CATEGORIES = {
     "implementation_confirmation_selector_unresolved",
     "residual_risk_legal_conclusion",
     "manual_draft_dependency",
+    "missing_matrix_render_row",
+    "missing_packet_index_row",
+    "missing_forest_plan_row",
+    "missing_non_applicable_boundary",
+    "non_canonical_draft_dependency",
     "missing_report_pdf",
     "invalid_report_pdf_header",
     "false_positive_synthesis_claim",
@@ -700,6 +712,21 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
                     "source_library_evidence": source_evidence,
                 }
             ],
+            "forest_plan_compliance": {
+                "summary": {"row_count": 1, "applicable_standard_row_count": 1},
+                "rows": [
+                    {
+                        "row_id": "forest-plan-matrix:review-test:R1PLAN-TEST-FW-STD-01",
+                        "component_id": "R1PLAN-TEST-FW-STD-01",
+                        "component_key": "FW-STD-01",
+                        "component_type": "standard",
+                        "applicability_status": "applicable",
+                        "compliance_status": "complies",
+                        "finding_status": "supported",
+                        "standard_applied": True,
+                    }
+                ],
+            },
         },
     )
     _write_json_file(
@@ -897,6 +924,101 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     )
     _write_jsonl_file(package_dir / "package_chunks.jsonl", [package_evidence])
     (extracted_dir / "EA-PACKAGE-042_test.txt").write_text("Plan Consistency Table\n")
+    review_packet_dir = review_dir / "review_packet_index"
+    _write_json_file(
+        review_packet_dir / "review_packet_row_inventory.json",
+        {
+            "schema_version": "review-packet-row-inventory-v1",
+            "review_id": "review-test",
+            "source_set_id": "source-set-test",
+            "summary": {
+                "applicable_authority_count": 1,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 1,
+                "applicable_standard_count": 1,
+                "row_set_sha256": "packet-row-set-test",
+            },
+            "applicable_authority_rows": [
+                {"rule_id": "sample_authority", "authority_source_record_id": "R1EA-TEST"}
+            ],
+            "non_applicable_authority_rows": [
+                {"candidate_authority_id": "candidate:non-applicable"}
+            ],
+            "forest_plan_component_rows": [
+                {"component_id": "R1PLAN-TEST-FW-STD-01", "component_key": "FW-STD-01"}
+            ],
+            "applicable_forest_plan_standard_rows": [
+                {"component_id": "R1PLAN-TEST-FW-STD-01", "component_key": "FW-STD-01"}
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "compliance_matrix_render_manifest.json",
+        {
+            "schema_version": "compliance-matrix-render-manifest-v1",
+            "review_id": "review-test",
+            "source_set_id": "source-set-test",
+            "summary": {
+                "passed": True,
+                "authority_row_count": 1,
+                "forest_plan_row_count": 1,
+                "row_count": 2,
+            },
+            "rows": [
+                {
+                    "row_class": "applicable_authority",
+                    "row_identity": {"rule_id": "sample_authority"},
+                },
+                {
+                    "row_class": "forest_plan_component",
+                    "row_identity": {"component_id": "R1PLAN-TEST-FW-STD-01"},
+                },
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "review_packet_index.json",
+        {
+            "schema_version": "review-packet-index-v1",
+            "review_id": "review-test",
+            "source_set_id": "source-set-test",
+            "row_inventory_summary": {
+                "applicable_authority_count": 1,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 1,
+                "applicable_standard_count": 1,
+            },
+            "applicable_authority_rows": [{"rule_id": "sample_authority"}],
+            "non_applicable_authority_boundary": {
+                "non_applicable_authority_count": 1,
+                "rows": [{"candidate_authority_id": "candidate:non-applicable"}],
+            },
+            "forest_plan_component_rows": [
+                {"component_id": "R1PLAN-TEST-FW-STD-01", "component_key": "FW-STD-01"}
+            ],
+            "applicable_forest_plan_standard_rows": [
+                {"component_id": "R1PLAN-TEST-FW-STD-01", "component_key": "FW-STD-01"}
+            ],
+        },
+    )
+    _write_json_file(
+        review_packet_dir / "review_packet_index_validation.json",
+        {
+            "schema_version": "review-packet-index-validation-v1",
+            "review_id": "review-test",
+            "source_set_id": "source-set-test",
+            "passed": True,
+            "reviewer_ready": True,
+            "summary": {
+                "failed_check_count": 0,
+                "applicable_authority_count": 1,
+                "non_applicable_authority_count": 1,
+                "forest_plan_component_row_count": 1,
+                "applicable_standard_count": 1,
+            },
+        },
+    )
+    (review_packet_dir / "review_packet_index.pdf").write_bytes(b"%PDF-1.4\n")
 
     config_path = tmp_path / "decision_support_config.json"
     _write_json_file(
@@ -974,6 +1096,13 @@ def _write_sequence_2_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
                 "forest_plan_reviewer_resolution_item_count": 0,
                 "litigation_risk_flag_count": 1,
                 "litigation_risk_legal_conclusion_count": 0,
+                "review_packet_index_applicable_authority_count": 1,
+                "review_packet_index_non_applicable_authority_count": 1,
+                "review_packet_index_forest_plan_component_row_count": 1,
+                "review_packet_index_applicable_standard_count": 1,
+                "review_packet_index_render_manifest_authority_row_count": 1,
+                "review_packet_index_render_manifest_forest_plan_row_count": 1,
+                "review_packet_index_validation_failed_check_count": 0,
                 "package_file_count": 1,
                 "package_chunk_count": 1,
             },

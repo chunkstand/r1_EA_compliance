@@ -9,6 +9,7 @@ from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources import cli_final_qa
+from usfs_r1_ea_sources import cli_review_packet
 from usfs_r1_ea_sources.cli import build_parser
 
 
@@ -276,6 +277,40 @@ def test_final_qa_handler_propagates_validate_only(monkeypatch) -> None:
         "config/custom_final_qa_expected_summary.json"
     )
     assert captured["results_dir"] == Path("final-qa-output")
+
+
+def test_review_packet_index_handler_propagates_report_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_review_packet_index(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_review_packet,
+        "run_review_packet_index",
+        fake_run_review_packet_index,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "review-packet-index",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--results-dir",
+            "review-packet-output",
+        ]
+    )
+
+    result = cli_review_packet.handle_review_packet_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["results_dir"] == Path("review-packet-output")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

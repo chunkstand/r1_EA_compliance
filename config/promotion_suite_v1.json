@@ -113,6 +113,211 @@
           ]
         },
         {
+          "id": "review_packet_row_inventory",
+          "label": "Review packet row inventory",
+          "path": "reviews/{review_id}/review_packet_index/review_packet_row_inventory.json",
+          "required_for_current_promotion": true,
+          "failure_category": "missing_packet_index_row",
+          "checks": [
+            {
+              "name": "row_inventory_schema",
+              "json_path": "schema_version",
+              "equals": "review-packet-row-inventory-v1"
+            },
+            {
+              "name": "row_inventory_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "row_inventory_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "row_inventory_applicable_authorities",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 37
+            },
+            {
+              "name": "row_inventory_non_applicable_authorities",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 340
+            },
+            {
+              "name": "row_inventory_forest_plan_components",
+              "json_path": "summary.forest_plan_component_row_count",
+              "equals": 79
+            },
+            {
+              "name": "row_inventory_applicable_standards",
+              "json_path": "summary.applicable_standard_count",
+              "equals": 12
+            }
+          ]
+        },
+        {
+          "id": "compliance_matrix_render_manifest",
+          "label": "Compliance matrix render manifest",
+          "path": "reviews/{review_id}/review_packet_index/compliance_matrix_render_manifest.json",
+          "required_for_current_promotion": true,
+          "failure_category": "missing_matrix_render_row",
+          "checks": [
+            {
+              "name": "render_manifest_schema",
+              "json_path": "schema_version",
+              "equals": "compliance-matrix-render-manifest-v1"
+            },
+            {
+              "name": "render_manifest_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "render_manifest_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "render_manifest_passed",
+              "json_path": "summary.passed",
+              "equals": true
+            },
+            {
+              "name": "render_manifest_authority_rows",
+              "json_path": "summary.authority_row_count",
+              "equals": 37
+            },
+            {
+              "name": "render_manifest_forest_plan_rows",
+              "json_path": "summary.forest_plan_row_count",
+              "equals": 79
+            }
+          ]
+        },
+        {
+          "id": "review_packet_index",
+          "label": "Review packet index",
+          "path": "reviews/{review_id}/review_packet_index/review_packet_index.json",
+          "required_for_current_promotion": true,
+          "failure_category": "missing_packet_index_row",
+          "checks": [
+            {
+              "name": "review_packet_index_schema",
+              "json_path": "schema_version",
+              "equals": "review-packet-index-v1"
+            },
+            {
+              "name": "review_packet_index_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "review_packet_index_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "review_packet_index_applicable_authorities",
+              "json_path": "row_inventory_summary.applicable_authority_count",
+              "equals": 37
+            },
+            {
+              "name": "review_packet_index_non_applicable_authorities",
+              "json_path": "row_inventory_summary.non_applicable_authority_count",
+              "equals": 340
+            },
+            {
+              "name": "review_packet_index_forest_plan_components",
+              "json_path": "row_inventory_summary.forest_plan_component_row_count",
+              "equals": 79
+            },
+            {
+              "name": "review_packet_index_applicable_standards",
+              "json_path": "row_inventory_summary.applicable_standard_count",
+              "equals": 12
+            },
+            {
+              "name": "review_packet_index_render_manifest_passed",
+              "json_path": "render_manifest_summary.passed",
+              "equals": true
+            }
+          ]
+        },
+        {
+          "id": "review_packet_index_pdf",
+          "label": "Review packet index PDF",
+          "path": "reviews/{review_id}/review_packet_index/review_packet_index.pdf",
+          "format": "binary",
+          "required_for_current_promotion": true,
+          "failure_category": "missing_packet_index_row",
+          "checks": [
+            {
+              "name": "review_packet_index_pdf_header_valid",
+              "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
+          "id": "review_packet_index_validation",
+          "label": "Review packet index validation result",
+          "path": "reviews/{review_id}/review_packet_index/review_packet_index_validation.json",
+          "required_for_current_promotion": true,
+          "failure_category": "missing_packet_index_row",
+          "checks": [
+            {
+              "name": "review_packet_index_validation_schema",
+              "json_path": "schema_version",
+              "equals": "review-packet-index-validation-v1"
+            },
+            {
+              "name": "review_packet_index_validation_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "review_packet_index_validation_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-ba8d0feae79501b8"
+            },
+            {
+              "name": "review_packet_index_validation_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "review_packet_index_validation_reviewer_ready",
+              "json_path": "reviewer_ready",
+              "equals": true
+            },
+            {
+              "name": "review_packet_index_failed_check_count",
+              "json_path": "summary.failed_check_count",
+              "equals": 0
+            },
+            {
+              "name": "review_packet_index_validation_applicable_authorities",
+              "json_path": "summary.applicable_authority_count",
+              "equals": 37
+            },
+            {
+              "name": "review_packet_index_validation_non_applicable_authorities",
+              "json_path": "summary.non_applicable_authority_count",
+              "equals": 340
+            },
+            {
+              "name": "review_packet_index_validation_forest_plan_components",
+              "json_path": "summary.forest_plan_component_row_count",
+              "equals": 79
+            },
+            {
+              "name": "review_packet_index_validation_applicable_standards",
+              "json_path": "summary.applicable_standard_count",
+              "equals": 12
+            }
+          ]
+        },
+        {
           "id": "decision_support_report",
           "label": "EA consistency decision-support report",
           "path": "reviews/{review_id}/decision_support/ea_consistency_decision_support.json",

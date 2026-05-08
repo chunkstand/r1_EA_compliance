@@ -12,6 +12,11 @@
     "input_hashes": {
       "decision_support_report_sha256": "sha256-decision-support-report",
       "decision_support_manifest_sha256": "sha256-decision-support-manifest",
+      "review_packet_row_inventory_sha256": "sha256-review-packet-row-inventory",
+      "compliance_matrix_render_manifest_sha256": "sha256-compliance-matrix-render-manifest",
+      "review_packet_index_sha256": "sha256-review-packet-index",
+      "review_packet_index_validation_sha256": "sha256-review-packet-index-validation",
+      "review_packet_index_pdf_sha256": "sha256-review-packet-index-pdf",
       "phase_eval_results_sha256": "sha256-phase-eval",
       "promotion_suite_results_sha256": "sha256-promotion-suite",
       "v1_ea_eval_results_sha256": "sha256-v1-eval"
@@ -41,6 +46,12 @@
         "source_selector": "passed"
       },
       {
+        "gate_name": "review_packet_index_validation",
+        "status": "passed",
+        "source_artifact_path": "source_library/reviews/review-test/review_packet_index/review_packet_index_validation.json",
+        "source_selector": "passed"
+      },
+      {
         "gate_name": "phase_eval",
         "status": "passed",
         "source_artifact_path": "source_library/reviews/review-test/phase_eval_results.json",
@@ -55,6 +66,13 @@
         "path": "source_library/reviews/review-test/decision_support/ea_consistency_decision_support.json",
         "sha256": "sha256-decision-support-report",
         "schema_version": "ea-consistency-decision-support-report-v1",
+        "source_selector": "schema_version"
+      },
+      {
+        "artifact_key": "review_packet_index",
+        "path": "source_library/reviews/review-test/review_packet_index/review_packet_index.json",
+        "sha256": "sha256-review-packet-index",
+        "schema_version": "review-packet-index-v1",
         "source_selector": "schema_version"
       },
       {
@@ -164,6 +182,21 @@
         ]
       }
     ]
+  },
+  "review_packet_index_qa": {
+    "validation_passed": true,
+    "reviewer_ready": true,
+    "row_set_sha256": "sha256-row-set",
+    "applicable_authority_count": 1,
+    "non_applicable_authority_count": 1,
+    "forest_plan_component_row_count": 1,
+    "applicable_standard_count": 1,
+    "render_manifest_authority_row_count": 1,
+    "render_manifest_forest_plan_row_count": 1,
+    "validation_failed_check_count": 0,
+    "artifact_path": "source_library/reviews/review-test/review_packet_index/review_packet_index.json",
+    "validation_path": "source_library/reviews/review-test/review_packet_index/review_packet_index_validation.json",
+    "legal_conclusion": false
   },
   "accepted_v1_risk_ledger": {
     "policy_mode": "accepted_pending_v1",
