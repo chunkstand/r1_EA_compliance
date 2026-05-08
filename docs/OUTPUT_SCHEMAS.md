@@ -1308,9 +1308,9 @@ It reads catalog and derived review surfaces, including source graph seeds, auth
 authority inventory, evidence graph nodes/edges, source claims, rule-claim links, the base rule
 pack, authority-family templates, forest-plan profiles, the Region 1 forest-plan readiness matrix,
 and forest-plan component inventory. It does not scan raw artifact filenames. The live source-set
-export for `source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes,
-`2,564` edges, `35` authority-family nodes, `190` source-record nodes, `63` rule-template nodes,
-`191` source-claim nodes, `329` inventory forest-plan component nodes, `10` forest-unit nodes, `10`
+export for `source-set-ba8d0feae79501b8` passes `62` validation checks with `1,426` nodes,
+`2,586` edges, `35` authority-family nodes, `190` source-record nodes, `64` rule-template nodes,
+`196` source-claim nodes, `329` inventory forest-plan component nodes, `10` forest-unit nodes, `10`
 forest-plan nodes, `387` total forest-plan component/requirement nodes, and zero failed validation
 checks. It reports node, edge, authority-category, source-status, source-partition,
 applicability-status, and readiness-blocker count dimensions. It tracks `10` Region 1
@@ -1332,8 +1332,8 @@ span nodes over the source-set graph, then validates that every candidate author
 `authority_universe_snapshot.json` has a graph node and exactly one decision, non-applicable
 decisions carry search coverage or adjudication support, generated rules derive only from validated
 applicable decisions, and compliance findings link to generated rules plus evidence spans. The live
-V1 review export passes `76` validation checks with `1,916` nodes, `3,442` edges, `373` candidate
-authorities/decisions, `33` generated rules/findings, `340` non-applicable authorities, and the
+V1 review export passes `76` validation checks with `1,937` nodes, `3,470` edges, `374` candidate
+authorities/decisions, `34` generated rules/findings, `340` non-applicable authorities, and the
 same Region 1 forest-plan readiness blockers.
 
 ## Applicability-First Review Outputs
@@ -2401,11 +2401,11 @@ current-promotion results for this packet) and live integrated counts after gate
 (`20/20` phase eval and `26/26` current-promotion results). `artifact_freshness_ledger` records
 required artifact paths, schema versions where applicable, SHA-256 values, and selectors.
 
-`applicability_partition` preserves the applicability boundary before compliance: `33` applicable
+`applicability_partition` preserves the applicability boundary before compliance: `34` applicable
 authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
-support for the non-applicable boundary. `finding_qa` records all `33` generated findings, finding
+support for the non-applicable boundary. `finding_qa` records all `34` generated findings, finding
 status counts, citation/source selectors, package-evidence selectors, per-finding package/source
-evidence pointers, trace IDs, `142` rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
+evidence pointers, trace IDs, `147` rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
 records Custer Gallatin context, `329` Forest Plan components, `58` standards, `12/12` applicable
 standards, component-eval status, limitations, and
 reviewer-resolution status. `decision_support_qa` records the existing decision-support validation

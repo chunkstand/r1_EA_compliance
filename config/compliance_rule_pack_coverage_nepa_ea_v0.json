@@ -456,6 +456,24 @@
         "baseline-nepa-only",
         "unrelated-package-produces-baseline-gaps"
       ],
+      "expected_package_evidence": "The EA package should identify FLPMA Section 206 land-exchange authority and address public-interest, same-state, equal-value, cash-equalization, appraisal, and exchange-processing requirements where a federal land exchange is proposed.",
+      "obligation_area": "FLPMA Section 206 land-exchange requirements are addressed",
+      "rule_id": "flpma_section_206_land_exchange",
+      "source_claim_terms": [
+        "public interest",
+        "equal value",
+        "cash equalization"
+      ],
+      "source_record_ids": [
+        "R1EA-146"
+      ]
+    },
+    {
+      "eval_case_ids": [
+        "all-authorities-pass",
+        "baseline-nepa-only",
+        "unrelated-package-produces-baseline-gaps"
+      ],
       "expected_package_evidence": "The EA package should use current Regional Forester species-of-conservation-concern information when plan consistency or biological resources are reviewed.",
       "obligation_area": "Northern Region species of conservation concern page is reviewed",
       "rule_id": "region1_species_of_conservation_concern",

@@ -44,8 +44,8 @@ component-like labels with nonnumeric number tokens. Older reviewer-ready downst
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
 `26` baseline source records through the generated applicability rule pack, validates a
-`373`-candidate authority universe with `33` applicable and `340` non-applicable authorities,
-emits `33` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
+`374`-candidate authority universe with `34` applicable and `340` non-applicable authorities,
+emits `34` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
 review-bound `phase-eval` `20/20` with the post-V1 applicability, decision-support, NEPA 3D graph,
 and final QA certification gates included, passes
 `v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
@@ -60,7 +60,7 @@ Authority-universe completion Milestones 1 through 4 are now represented by
 `config/applicability_eval_seed.json`, `config/applicability_gold_eval_v0.json`, the expanded
 applicability fixture under `config/fixtures/applicability/`, and the `authority-currentness`
 command. The inventory has `35` authority families, `18` required authority
-requirement groups, `33` active families, all `44/44` current rule-pack rules crosswalked, and all
+requirement groups, `33` active families, all `45/45` current rule-pack rules crosswalked, and all
 `190/190` workbook source records mapped to an authority family. The currentness gate validates
 `source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
 confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
@@ -76,12 +76,12 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,410` nodes, `2,564` edges, all
-`35` authority families, all `190` catalog source records, all `44` base rules, all `19`
-authority-family templates, `191` rule-claim links, and `329` forest-plan components. NEPA 3D
+`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,426` nodes, `2,586` edges, all
+`35` authority families, all `190` catalog source records, all `45` base rules, all `19`
+authority-family templates, `196` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
 under `source_library/reviews/<review_id>/knowledge_graph/` passes `76` validation checks with
-`1,916` nodes, `3,442` edges, `373` candidate authorities/decisions, `33` generated rules and
+`1,937` nodes, `3,470` edges, `374` candidate authorities/decisions, `34` generated rules and
 compliance findings, `340` non-applicable authorities with search coverage, and explicit validation
 that review artifact, search-coverage, retrieval-trace, and graph-trace references resolve. NEPA 3D
 Milestone 5 now adds the Region 1 forest-plan readiness matrix and first added profile contract:

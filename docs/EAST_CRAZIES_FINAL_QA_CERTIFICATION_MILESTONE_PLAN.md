@@ -76,12 +76,12 @@ The final QA replay starts from the current promoted review state:
 - source set: `source-set-ba8d0feae79501b8`;
 - package extraction: `43` package manifest rows and `1,265` chunks;
 - baseline source records evaluated: `26`;
-- authority universe: `373` candidate authorities;
-- applicability validation: `33` applicable authorities, `340` non-applicable authorities, `0`
+- authority universe: `374` candidate authorities;
+- applicability validation: `34` applicable authorities, `340` non-applicable authorities, `0`
   unresolved authorities, `generated_rule_pack_ready=true`;
-- generated compliance findings: `33`, all currently `pass`;
-- rule-claim binding: `142` rule-claim links and `0` rule-claim gaps;
-- compliance matrix: `33` generated authority rows plus `79` forest-plan compliance rows;
+- generated compliance findings: `34`, all currently `pass`;
+- rule-claim binding: `147` rule-claim links and `0` rule-claim gaps;
+- compliance matrix: `34` generated authority rows plus `79` forest-plan compliance rows;
 - forest-plan context: Custer Gallatin reviewer-ready context;
 - forest-plan component inventory: `329` components, `58` standards;
 - applicable standards: `12/12` Custer Gallatin standards applied;

@@ -41,10 +41,10 @@ REQUIRED_SECTIONS = [
 ]
 
 EXPECTED_COUNTS = {
-    "applicable_authority_count": 33,
+    "applicable_authority_count": 34,
     "non_applicable_authority_count": 340,
-    "candidate_authority_count": 373,
-    "authority_finding_count": 33,
+    "candidate_authority_count": 374,
+    "authority_finding_count": 34,
     "non_applicable_search_coverage_certificate_count": 340,
     "forest_plan_component_finding_count": 329,
     "forest_plan_supported_component_count": 79,
@@ -158,7 +158,7 @@ def test_expected_summary_locks_pass_8_counts_hashes_samples_and_failures() -> N
     assert expected["required_sections"] == REQUIRED_SECTIONS
     for key, value in EXPECTED_COUNTS.items():
         assert expected["expected_counts"][key] == value
-    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 33
+    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 34
 
     assert len(expected["input_hashes"]) >= 18
     assert set(expected["input_hashes"]) >= {
@@ -175,7 +175,9 @@ def test_expected_summary_locks_pass_8_counts_hashes_samples_and_failures() -> N
     }
 
     applicable = expected["required_fixture_rows"]["applicable_authority"]
-    assert applicable["rule_id"] == "eo_11990_wetlands"
+    assert applicable["rule_id"] == "flpma_section_206_land_exchange"
+    assert applicable["authority_source_record_id"] == "R1EA-146"
+    assert applicable["authority_family_id"] == "land_exchange_statutory_authorities"
     assert applicable["applicability_status"] == "applicable"
     assert applicable["status"] == "pass"
     assert applicable["limitations"] == []

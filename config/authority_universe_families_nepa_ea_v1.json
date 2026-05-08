@@ -1760,7 +1760,9 @@
           "predicate_id": "land_exchange_statutory_authorities:authority-family-rule-template",
           "predicate_source": "config/authority_family_rule_templates_nepa_ea_v1.json.templates[]",
           "predicate_status": "implemented",
-          "rule_ids": [],
+          "rule_ids": [
+            "flpma_section_206_land_exchange"
+          ],
           "trigger_terms": [
             "land exchange",
             "exchange of lands",
@@ -1789,6 +1791,7 @@
       ],
       "coverage_requirements": {
         "coverage_matrix_rule_ids": [
+          "flpma_section_206_land_exchange",
           "land_exchange_statutory_authorities_authority_template"
         ],
         "eval_case_ids": [
@@ -1827,7 +1830,9 @@
       "required_authority_requirement_ids": [
         "land_exchange"
       ],
-      "rule_ids": [],
+      "rule_ids": [
+        "flpma_section_206_land_exchange"
+      ],
       "source_evidence_requirements": [
         "exchange statute source",
         "package evidence for public-interest determination, exchange authority, acquisition/access, reservations, equal value, congressional reporting, or statutory exchange mechanism"
@@ -3922,7 +3927,7 @@
   ],
   "rule_pack": {
     "path": "config/compliance_rule_pack_nepa_ea_v0.json",
-    "rule_count": 44,
+    "rule_count": 45,
     "rule_pack_id": "nepa-ea-v0",
     "version": "0.4.0"
   },
@@ -5739,14 +5744,14 @@
     "families_confirmed_by_milestone_2_source_currentness": 21,
     "families_requiring_milestone_2_source_currentness": 0,
     "families_requiring_milestone_3_rule_template_work": 0,
-    "mapped_rule_count": 44,
+    "mapped_rule_count": 45,
     "mapped_source_record_count": 190,
     "milestone_2_source_currentness_gate_status": "passed",
     "milestone_2_source_currentness_report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
     "orphan_rule_ids": [],
     "orphan_source_record_ids": [],
     "required_authority_requirement_count": 18,
-    "rule_count": 44,
+    "rule_count": 45,
     "rule_pack_id": "nepa-ea-v0",
     "rule_pack_version": "0.4.0",
     "source_record_crosswalk_count": 190,

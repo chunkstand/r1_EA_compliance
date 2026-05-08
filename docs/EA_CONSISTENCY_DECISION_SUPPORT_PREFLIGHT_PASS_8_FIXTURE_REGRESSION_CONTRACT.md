@@ -85,11 +85,11 @@ The real-review expected-summary fixture must lock these count fields for
 
 | Field | Expected value |
 | --- | ---: |
-| `applicable_authority_count` | `33` |
+| `applicable_authority_count` | `34` |
 | `non_applicable_authority_count` | `340` |
-| `candidate_authority_count` | `373` |
-| `authority_finding_count` | `33` |
-| `authority_finding_status_counts.pass` | `33` |
+| `candidate_authority_count` | `374` |
+| `authority_finding_count` | `34` |
+| `authority_finding_status_counts.pass` | `34` |
 | `non_applicable_search_coverage_certificate_count` | `340` |
 | `forest_plan_component_finding_count` | `329` |
 | `forest_plan_supported_component_count` | `79` |

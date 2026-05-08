@@ -583,6 +583,83 @@
       "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
     },
     {
+      "id": "flpma_section_206_land_exchange",
+      "title": "FLPMA Section 206 land-exchange requirements are addressed",
+      "authority_category": "law",
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "authority_family_ids": [
+        "land_exchange_statutory_authorities"
+      ],
+      "authority_source_record_id": "R1EA-146",
+      "applicability_mode": "conditional",
+      "applies_if_package_terms": [
+        "Federal Land Policy and Management Act",
+        "FLPMA",
+        "43 U.S.C. 1716",
+        "Section 206",
+        "land exchange",
+        "equal value",
+        "cash equalization",
+        "public interest"
+      ],
+      "applies_if_package_term_groups": [
+        [
+          "Federal Land Policy and Management Act"
+        ],
+        [
+          "FLPMA"
+        ],
+        [
+          "43 U.S.C. 1716"
+        ],
+        [
+          "Section 206"
+        ],
+        [
+          "land exchange",
+          "equal value"
+        ],
+        [
+          "land exchange",
+          "cash equalization"
+        ],
+        [
+          "land exchange",
+          "public interest"
+        ]
+      ],
+      "question": "If a land exchange is proposed under FLPMA, does the EA package address Section 206 exchange requirements?",
+      "requirement": "The EA package should identify the FLPMA exchange authority and address public-interest, same-state, equal-value, cash-equalization, appraisal, and exchange-processing requirements where a federal land exchange is proposed.",
+      "severity": "high",
+      "package_query": "FLPMA Section 206 land exchange public interest equal value cash equalization",
+      "package_terms": [
+        "FLPMA",
+        "Section 206",
+        "land exchange",
+        "public interest",
+        "equal value",
+        "cash equalization"
+      ],
+      "package_section_term_groups": [
+        [
+          "proposed action",
+          "proposal",
+          "land exchange"
+        ],
+        [
+          "decision notice",
+          "FONSI",
+          "public interest"
+        ]
+      ],
+      "source_query": "43 U.S.C. 1716 FLPMA Section 206 exchanges of public lands public interest same State equal value cash equalization appraisal",
+      "source_filters": {
+        "document_role": "law",
+        "source_record_id": "R1EA-146"
+      },
+      "evidence_expectation": "A supported finding requires one source-library evidence span and one package evidence span."
+    },
+    {
       "id": "region1_species_of_conservation_concern",
       "title": "Northern Region species of conservation concern page is reviewed",
       "authority_category": "agency_policy",

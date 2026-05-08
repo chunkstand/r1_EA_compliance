@@ -316,6 +316,23 @@
       "expected_source_document_roles": ["forest_plan"]
     },
     {
+      "rule_id": "flpma_section_206_land_exchange",
+      "expected_applicability": "applicable",
+      "trigger_terms": [
+        "Federal Land Policy and Management Act",
+        "FLPMA",
+        "43 U.S.C. 1716",
+        "Section 206",
+        "land exchange",
+        "equal value",
+        "cash equalization",
+        "public interest"
+      ],
+      "classification_rationale": "The package identifies the land exchange authority, public-interest determination, equal-value basis, appraisal values, and cash equalization strategy for the East Crazy Inspiration Divide land exchange.",
+      "expected_source_record_ids": ["R1EA-146"],
+      "expected_source_document_roles": ["law"]
+    },
+    {
       "rule_id": "esa_section_7",
       "expected_applicability": "adjudicate",
       "trigger_terms": [

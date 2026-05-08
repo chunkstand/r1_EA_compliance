@@ -24,6 +24,85 @@ from usfs_r1_ea_sources.rule_packs import validate_rule_pack
 
 
 class ComplianceReviewTests(unittest.TestCase):
+    def test_v1_flpma_rule_is_first_class_compliance_contract(self) -> None:
+        rule_pack = json.loads(
+            Path("config/compliance_rule_pack_nepa_ea_v0.json").read_text(encoding="utf-8")
+        )
+        coverage = json.loads(
+            Path("config/compliance_rule_pack_coverage_nepa_ea_v0.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        eval_cases = {
+            case["id"]: case
+            for case in json.loads(
+                Path("config/compliance_review_eval_seed.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+        }
+        v1_contract = json.loads(
+            Path("config/v1_ecid_real_ea_eval.json").read_text(encoding="utf-8")
+        )
+
+        rule = _rule_by_id(rule_pack, "flpma_section_206_land_exchange")
+        self.assertEqual(rule["authority_source_record_id"], "R1EA-146")
+        self.assertEqual(rule["applicability_mode"], "conditional")
+        self.assertEqual(
+            rule["source_filters"],
+            {"document_role": "law", "source_record_id": "R1EA-146"},
+        )
+        self.assertIn("FLPMA", rule["applies_if_package_terms"])
+        self.assertIn("cash equalization", rule["package_terms"])
+
+        coverage_item = _coverage_item_by_rule_id(
+            coverage,
+            "flpma_section_206_land_exchange",
+        )
+        self.assertEqual(coverage_item["source_record_ids"], ["R1EA-146"])
+        self.assertEqual(
+            set(coverage_item["eval_case_ids"]),
+            {
+                "all-authorities-pass",
+                "baseline-nepa-only",
+                "unrelated-package-produces-baseline-gaps",
+            },
+        )
+
+        self.assertEqual(
+            eval_cases["all-authorities-pass"]["expected_statuses"][
+                "flpma_section_206_land_exchange"
+            ],
+            "pass",
+        )
+        self.assertEqual(
+            eval_cases["all-authorities-pass"]["expected_source_record_ids"][
+                "flpma_section_206_land_exchange"
+            ],
+            ["R1EA-146"],
+        )
+        self.assertEqual(
+            eval_cases["baseline-nepa-only"]["expected_statuses"][
+                "flpma_section_206_land_exchange"
+            ],
+            "not_applicable",
+        )
+        self.assertEqual(
+            eval_cases["unrelated-package-produces-baseline-gaps"]["expected_statuses"][
+                "flpma_section_206_land_exchange"
+            ],
+            "not_applicable",
+        )
+
+        conditional_expectations = {
+            expectation["rule_id"]: expectation
+            for expectation in v1_contract["conditional_source_expectations"]
+        }
+        flpma_expectation = conditional_expectations["flpma_section_206_land_exchange"]
+        self.assertEqual(flpma_expectation["expected_applicability"], "applicable")
+        self.assertEqual(flpma_expectation["expected_source_record_ids"], ["R1EA-146"])
+        self.assertEqual(flpma_expectation["expected_source_document_roles"], ["law"])
+
     def test_compliance_review_refuses_base_rule_pack_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -3483,6 +3562,14 @@ def _rule_pack() -> dict:
             },
         ],
     }
+
+
+def _rule_by_id(rule_pack: dict, rule_id: str) -> dict:
+    return next(rule for rule in rule_pack["rules"] if rule["id"] == rule_id)
+
+
+def _coverage_item_by_rule_id(coverage: dict, rule_id: str) -> dict:
+    return next(item for item in coverage["coverage_items"] if item["rule_id"] == rule_id)
 
 
 def _read_jsonl(path: Path) -> list[dict]:

@@ -52,15 +52,15 @@ EXPECTED_COUNTS = {
     "package_file_count": 43,
     "package_chunk_count": 1265,
     "baseline_source_record_count": 26,
-    "candidate_authority_count": 373,
-    "applicable_authority_count": 33,
+    "candidate_authority_count": 374,
+    "applicable_authority_count": 34,
     "non_applicable_authority_count": 340,
     "unresolved_authority_count": 0,
-    "generated_rule_count": 33,
-    "authority_finding_count": 33,
-    "rule_claim_link_count": 142,
+    "generated_rule_count": 34,
+    "authority_finding_count": 34,
+    "rule_claim_link_count": 147,
     "rule_claim_gap_count": 0,
-    "compliance_matrix_authority_row_count": 33,
+    "compliance_matrix_authority_row_count": 34,
     "forest_plan_component_count": 329,
     "forest_plan_supported_component_count": 79,
     "forest_plan_not_applicable_component_count": 250,
@@ -239,7 +239,7 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert expected["required_sections"] == REQUIRED_SECTIONS
     for key, value in EXPECTED_COUNTS.items():
         assert expected["expected_counts"][key] == value
-    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 33
+    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 34
 
     assert set(expected["input_hashes"]) >= {
         "decision_support_report_sha256",
@@ -257,7 +257,9 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     }
 
     applicable = expected["required_fixture_rows"]["applicable_authority"]
-    assert applicable["rule_id"] == "eo_11990_wetlands"
+    assert applicable["rule_id"] == "flpma_section_206_land_exchange"
+    assert applicable["authority_source_record_id"] == "R1EA-146"
+    assert applicable["authority_family_id"] == "land_exchange_statutory_authorities"
     assert applicable["status"] == "pass"
     assert applicable["applicability_status"] == "applicable"
     assert applicable["source_selectors"]
