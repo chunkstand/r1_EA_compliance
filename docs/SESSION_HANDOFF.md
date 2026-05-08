@@ -2,6 +2,22 @@
 
 Date: 2026-05-08
 
+## Latest Review Packet Strengthening Plan
+
+`docs/REVIEW_PACKET_STRENGTHENING_MILESTONE_PLAN.md` now defines the next East Crazies packet
+strengthening milestone. The milestone target is row-set completeness across the canonical
+review-packet family: every applicable authority row identified by applicability must be present in
+the compliance matrix JSON, represented in a deterministic render manifest, carried into
+decision-support and final QA, and surfaced in a signer-facing review packet index. Forest Plan
+component rows, applicable standards, non-applicable authority boundary artifacts, residual risks,
+and implementation confirmations remain distinct first-class packet rows.
+
+The immediate next implementation slice is Sequence 0 of that plan: build a baseline row inventory
+and drift audit for `v1-cg-ecid-compliance-review`, proving the current `37` applicable authority
+rows, `340` non-applicable authorities, `79` applicable Forest Plan component rows, `12` applicable
+standards, and the four land-exchange rows match across canonical artifacts before renderer or gate
+changes begin.
+
 ## Latest East Crazies Review-Packet Gap Close
 
 The land-exchange matrix milestone gap-close is complete. The review packet now has a
