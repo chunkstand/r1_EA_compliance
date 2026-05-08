@@ -76,6 +76,7 @@ class PackageFactGraphTests(unittest.TestCase):
                 if node["confidence_class"] == "weak_signal"
             }
             self.assertIn(("action", "land_exchange"), observed_pairs)
+            self.assertIn(("authority", "flpma_section_206_land_exchange"), observed_pairs)
             self.assertIn(("agency", "usfs"), observed_pairs)
             self.assertIn(("nepa_level", "environmental_assessment"), observed_pairs)
             self.assertIn(("geography", "project_area"), observed_pairs)
@@ -152,6 +153,24 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertTrue(context["management_areas"])
             self.assertTrue(context["consultations"])
             self.assertTrue(context["permits"])
+            flpma_authority_signals = [
+                fact
+                for fact in context["authority_signals"]
+                if fact["normalized_value"] == "flpma_section_206_land_exchange"
+                and fact["confidence_class"] != "negative_context"
+            ]
+            self.assertTrue(flpma_authority_signals)
+            self.assertTrue(
+                any(
+                    fact["source_metadata"] == {
+                        "authority_family_id": "land_exchange_statutory_authorities",
+                        "rule_id": "flpma_section_206_land_exchange",
+                        "source_record_id": "R1EA-146",
+                        "statutory_citation": "43 U.S.C. 1716",
+                    }
+                    for fact in flpma_authority_signals
+                )
+            )
             uncertainty_check = _check(
                 graph["validation"],
                 "uncertain_facts_are_recorded_without_applicability_decisions",
@@ -178,6 +197,71 @@ class PackageFactGraphTests(unittest.TestCase):
             context_facts = context["extracted_package_facts"]
             self.assertTrue(
                 all("evidence_strength" in fact for fact in context_facts)
+            )
+            self.assertTrue(
+                any(
+                    fact["fact_type"] == "authority"
+                    and fact["normalized_value"] == "flpma_section_206_land_exchange"
+                    and fact["source_metadata"]["source_record_id"] == "R1EA-146"
+                    for fact in context_facts
+                )
+            )
+
+    def test_intake_identifies_flpma_from_statutory_citation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "flpma-citation-unit"
+            artifact_sha256 = hashlib.sha256(review_id.encode("utf-8")).hexdigest()
+            _write_package_cache(
+                output_dir,
+                review_id,
+                chunks=[
+                    _chunk(
+                        review_id=review_id,
+                        artifact_sha256=artifact_sha256,
+                        index=0,
+                        section="Purpose and Need",
+                        heading="Land Exchange Authority",
+                        text=(
+                            "The Forest Service proposes an exchange of lands under "
+                            "43 U.S.C. \u00a7 1716. The record includes a public-interest "
+                            "determination and equal-value finding."
+                        ),
+                    )
+                ],
+            )
+
+            result = build_package_fact_graph(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id="source-set-unit",
+            )
+
+            graph = json.loads(result.package_fact_graph_path.read_text(encoding="utf-8"))
+            context = json.loads(
+                result.package_applicability_context_path.read_text(encoding="utf-8")
+            )
+            fact_nodes = [
+                node
+                for node in graph["nodes"]
+                if node.get("node_type") == "authority"
+                and node.get("normalized_value") == "flpma_section_206_land_exchange"
+                and node.get("confidence_class") != "negative_context"
+            ]
+            self.assertTrue(fact_nodes)
+            self.assertTrue(
+                any("43 U.S.C." in node["raw_value"] for node in fact_nodes)
+            )
+            context_signals = [
+                fact
+                for fact in context["authority_signals"]
+                if fact["normalized_value"] == "flpma_section_206_land_exchange"
+            ]
+            self.assertTrue(context_signals)
+            self.assertEqual(
+                context_signals[0]["source_metadata"]["authority_family_id"],
+                "land_exchange_statutory_authorities",
             )
 
     def test_contradictory_location_facts_are_uncertainty_records(self) -> None:
@@ -331,7 +415,7 @@ def _write_package_cache(
             text=(
                 "The East Crazy Inspiration Divide Land Exchange Project is an "
                 "environmental assessment. The Forest Service proposes a land exchange "
-                "on the Custer Gallatin National Forest."
+                "on the Custer Gallatin National Forest under FLPMA Section 206."
             ),
         ),
         _chunk(

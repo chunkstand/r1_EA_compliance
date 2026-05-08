@@ -962,7 +962,7 @@ rule-to-source-claim bindings, and writes compliance validation, a compliance re
 reviewer-facing compliance matrix, and a finding graph for rules, findings, source claims, source
 evidence, package evidence, and package gaps.
 
-Rule-pack `0.4.0` contains `44` rules. It declares `baseline_source_record_ids` for the 26
+Rule-pack `0.4.0` contains `45` rules. It declares `baseline_source_record_ids` for the 26
 workbook rows where `Scope=Baseline`, and rule-pack validation enforces that each declared baseline
 source record has a corresponding `applicability_mode=baseline` rule.
 
@@ -980,9 +980,12 @@ dependency/exception/supersession fields, and search coverage requirements for l
 non-applicability proof. `applicability-context-build` reads the existing EA package cache and
 writes `package_fact_graph.json`, `package_applicability_context.json`, and
 `package_fact_graph_validation.json` with typed, span-bound package facts for project/action,
-agency, NEPA level, geography, Forest Plan areas/overlays, resource topics, consultations, permits,
-public involvement, alternatives, and decision/finding signals. It records negative or
-out-of-scope location statements as negative-context facts instead of positive geography facts, and
+agency, NEPA level, authority signals, geography, Forest Plan areas/overlays, resource topics,
+consultations, permits, public involvement, alternatives, and decision/finding signals. FLPMA
+Section 206 is extracted at intake as `authority:flpma_section_206_land_exchange` with the
+`R1EA-146` source-record binding before applicability or compliance decisions are attempted. It
+records negative or out-of-scope location statements as negative-context facts instead of positive
+geography facts, and
 records weakly worded or missing common fact types as graph uncertainty rather than resolving them
 as package applicability decisions. `applicability-retrieve` reads the authority universe, package
 fact graph, local retrieval index, and available graph/link artifacts, then writes

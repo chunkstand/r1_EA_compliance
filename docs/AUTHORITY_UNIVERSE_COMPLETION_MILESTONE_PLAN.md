@@ -67,14 +67,14 @@ Complete and validate the authority universe so every reviewer-ready EA complian
 
 ## Current Baseline
 
-The current active rule pack is `nepa-ea-v0` version `0.4.0` with `44` rules and `26` declared
+The current active rule pack is `nepa-ea-v0` version `0.4.0` with `45` rules and `26` declared
 baseline source records. Its rule categories are:
 
 - `agency_policy`: 5
 - `case_law`: 1
 - `executive_order`: 2
 - `forest_plan`: 1
-- `law`: 15
+- `law`: 16
 - `regulation`: 19
 - `state_requirement`: 1
 

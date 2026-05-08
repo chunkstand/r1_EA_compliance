@@ -127,6 +127,7 @@ def test_package_fact_cues_map_to_active_authority_family_templates() -> None:
     assert ("permit", "wilderness") in package_fact_values
     assert ("overlay", "designated_area") in package_fact_values
     assert ("action", "land_exchange") in package_fact_values
+    assert ("authority", "flpma_section_206_land_exchange") in package_fact_values
 
 
 def _load_json(path: Path) -> dict:

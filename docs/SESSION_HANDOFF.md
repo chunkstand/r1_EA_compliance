@@ -63,6 +63,9 @@ The East Crazies compliance-matrix replay refreshed the current gates on 2026-05
   The generated V1 matrix now includes the first-class FLPMA Section 206 land-exchange row
   (`flpma_section_206_land_exchange`, `R1EA-146`) as a passing authority finding in the
   `land_exchange_statutory_authorities` family.
+- FLPMA is now first-class at intake as well: `applicability-context-build` extracts
+  `authority:flpma_section_206_land_exchange` from FLPMA/43 U.S.C. 1716 package text and carries
+  the `R1EA-146` source-record binding into `package_applicability_context.json`.
 - `ea-consistency-document`: refreshed the decision-support JSON, Markdown, PDF, and manifest from
   the refreshed compliance artifacts; the follow-on phase replay validated the report with
   `reviewer_ready=true`.

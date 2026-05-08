@@ -1451,7 +1451,7 @@ Each candidate authority record includes:
 - source evidence availability, required source-claim link IDs, rule-claim link IDs, or an explicit
   no-claim expectation
 - required package fact types, such as action, agency, decision posture, NEPA level, geography,
-  management area, overlay, resource topic, package section, and evidence span
+  management area, overlay, resource topic, authority signal, package section, and evidence span
 - positive trigger groups and negative trigger groups carried as explicit candidate-universe data,
   not hidden runtime branches
 - required source evidence, source-role filters, and package-section filters
@@ -1483,6 +1483,7 @@ facts used before applicability decisions are attempted. It includes:
 - required package fact node types:
   - `action`
   - `agency`
+  - `authority`
   - `decision_posture`
   - `nepa_level`
   - `geography`
@@ -1526,9 +1527,9 @@ includes:
 - `package_fact_graph_sha256`
 - `package_context_sha256`
 - package section map and section-family bindings
-- project type, federal action signals, forest unit, project location signals, geography,
-  management areas, overlays, consultations, permits, public-involvement signals, decision posture,
-  and supporting-document signals used for applicability
+- project type, federal action signals, authority signals, forest unit, project location signals,
+  geography, management areas, overlays, consultations, permits, public-involvement signals,
+  decision posture, and supporting-document signals used for applicability
 - extracted package facts with chunk IDs, citations, page labels, character offsets, and extraction
   source metadata
 
