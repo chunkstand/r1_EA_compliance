@@ -2549,6 +2549,381 @@ Final QA validation must fail closed on:
 - legal-conclusion wording, reported as `legal_conclusion_leak`;
 - human-certification overclaim, reported as `human_certification_overclaim`.
 
+## Project SOW Requirements Package Outputs
+
+Path: `source_library/projects/<project_id>/requirements_package/`
+
+The project SOW requirements package is an upstream planning artifact for a proposed NEPA action
+before a complete EA review package exists. It scopes resource-specialist work needed to prepare a
+defensible EA package. It is planning support only: it does not create applicability decisions,
+compliance findings, legal advice, a legal sufficiency determination, or a final agency decision.
+
+Generate the artifact family with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+```
+
+Validate an intake without writing generated package outputs with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-validate \
+  --intake config/templates/project_sow_land_exchange_intake_template.json
+```
+
+The package command also accepts `--validate-only` for the same no-write validation workflow.
+
+Draft an unreviewed intake from proposed-action text with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-intake-draft \
+  --proposed-action config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt \
+  --output /tmp/red_rock_ridge_draft_intake.json \
+  --forest "Example National Forest" \
+  --district "Example Ranger District"
+```
+
+Drafting uses `config/project_sow_intake_draft_rules_v1.json`. The draft output is a
+`project-sow-intake-v0` JSON object with additional `draft_metadata`. It is schema-valid as an
+intake shape, and the tracked `project_sow_intake_v0` schema declares the optional
+`draft_metadata` object. Drafted intakes are explicitly unreviewed:
+
+- `draft_metadata.schema_version` is `project-sow-intake-draft-v0`;
+- `review_status` starts as `unreviewed`;
+- `reviewer_confirmation_required` starts as `true`;
+- `uncertainty_flags[]` records draft work such as `draft_requires_reviewer_confirmation`,
+  `resource_area_candidates_require_review`, and federal-action ambiguity flags;
+- `source_text_path` and `source_text_sha256` preserve the proposed-action source;
+- generated evidence refs point to the proposed-action source text and paragraph locators.
+
+`project-sow-intake-validate` fails unreviewed drafts with
+`draft_reviewer_confirmation_complete` until a reviewer confirms the draft, clears uncertainty
+flags, and sets `reviewer_confirmation_required=false`. This makes draft output upstream authoring
+support only; it is not an accepted package input. The draft command reports success only when
+`draft_reviewer_confirmation_complete` is the sole validation failure; unrelated schema, scope, or
+inventory failures are reported in `unexpected_failed_validation_checks`.
+
+Run the proving-intake eval harness with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-eval \
+  --output-dir /tmp/project_sow_eval
+```
+
+The default eval config is `config/project_sow_eval_proving_intakes_v1.json`. The command writes
+local generated packages under `<output-dir>/cases/<case_id>/` and writes
+`project_sow_eval_summary.json` with schema version `project-sow-eval-summary-v0`.
+
+Each eval case reports:
+
+- `actual_metrics`, including package pass status, output-written status, selected scope count,
+  proposed-action resource-area count, intake graph node/edge counts, validation failures, PDF
+  header validity, rendering-check status, contract-field pass status, contract-ready scope count,
+  required-deliverable scope count, optional-deliverable scope count, and diagnostic counts;
+- `diagnostics`, including expected resource areas, `system_miss_resource_area_ids`,
+  `intake_omission_resource_area_ids`, `calibration_gap_resource_area_ids`, and
+  `expected_no_observed_report_resource_area_ids`;
+- `validation_checks`, comparing actual metrics and diagnostics to the tracked expected values in
+  the eval config.
+
+The diagnostic categories are intentionally separate: system misses are graph/scope failures,
+intake omissions are observed reports that were not derived from proposed-action resource areas,
+calibration gaps are expected resource areas without observed reports when a completed comparison
+package is available, and expected no-observed-report cases are new proving intakes where no
+completed specialist package exists yet.
+
+Create a reviewer adjudication worklist with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir /tmp/project_sow_adjudication
+```
+
+The command writes `project_sow_adjudication_template.json` and
+`project_sow_adjudication_worklist.md` under
+`<output-dir>/projects/<project_id>/requirements_package/` by default. The JSON template has schema
+version `project-sow-adjudication-v0` and contains current input hashes, project/source-set
+identity, reviewer metadata, artifact boundaries, and one editable item per review queue row. Queue
+item types are:
+
+- `unresolved_resource_area`
+- `missing_evidence_ref`
+- `unknown_resource_area_id`
+- `calibration_gap`
+- `optional_deliverable_decision`
+
+Reviewers complete each row by setting `decision` to `accepted`, `rejected`,
+`needs_information`, or `out_of_scope` and supplying `rationale`, `adjudicated_by`,
+`adjudicated_at`, and `decision_source`. The top-level `reviewer_metadata` must also record
+`review_status=complete`, `reviewed_by`, `reviewed_at`, and `review_source`. Queue identity fields
+such as item ID, item type, current status, resource area, action element, resource scope, optional
+deliverable, source check, and selected SOW scopes are immutable reviewer context; changing them is
+treated as a stale or tampered adjudication row rather than as a reviewer decision. Evaluate a
+completed artifact with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/project_sow_adjudication/projects/east-crazies-land-exchange/requirements_package/project_sow_adjudication_template.json
+```
+
+`project_sow_adjudication_eval.json` has schema version `project-sow-adjudication-eval-v0` and
+records identity/hash checks, queue coverage checks, per-item failure categories, decision counts,
+and an adjudication status. It fails closed on stale input hashes, missing queue rows, unexpected or
+duplicate items, changed queue identity fields, invalid item types, invalid decisions, pending
+decisions, missing per-item reviewer fields, or incomplete top-level reviewer metadata.
+
+Replay a passing adjudication into package-generation input with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication /tmp/completed_project_sow_adjudication.json \
+  --output-intake /tmp/east_crazies_adjudicated_intake.json
+```
+
+`project_sow_adjudication_apply.json` has schema version `project-sow-adjudication-apply-v0`.
+Apply first reruns the eval; only a passing eval writes the adjudicated intake copy. The copied
+intake receives a `project_sow_adjudication` object with schema version
+`project-sow-intake-adjudication-v0`, replay status, item count, decision counts, artifact hashes,
+top-level reviewer metadata, and completed item decisions. Package JSON generated from that
+adjudicated intake surfaces the adjudication status in `intake_summary` and
+`reviewer_summary.snapshot`; package and validation-only CLI summaries also expose adjudication
+status, item count, and decision counts. Apply does not mutate the original intake and does not edit
+generated package outputs.
+
+Generate the downstream EA package assembly handoff from an accepted package with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command writes `project_sow_ea_package_handoff.json` and
+`project_sow_ea_package_handoff.md` next to the package unless explicit output paths are supplied.
+It reads the canonical `project_sow_package.json` plus
+`config/project_sow_ea_handoff_rules_v1.json`; it does not inspect future EA package files and does
+not require them to exist.
+
+`project_sow_ea_package_handoff.json` has schema version
+`project-sow-ea-package-handoff-v0`. It includes:
+
+- `package_identity`, with project ID/name, source set, scope set, and package schema version;
+- `derived_from`, including the canonical package path, package schema version, package validation
+  status, and package fields used to derive the handoff;
+- `input_paths` and `input_hashes` for the package JSON and handoff rules config;
+- `downstream_boundaries`, including explicit no-applicability-review, no-generated-rule-pack,
+  no-compliance-review, no-legal-sufficiency, and future-artifacts-not-required-now boundaries;
+- `downstream_consumption_contract`, which names the handoff fields future commands may consume,
+  the conclusions they must not infer, and the preconditions required before downstream review
+  commands assess actual EA package artifacts;
+- `assembly_categories`, with configured categories and slot counts;
+- `assembly_slots[]`, one expected future-artifact checklist slot per selected SOW
+  scope/category match. Slots include `slot_id`, `slot_category`, selected `resource_scope_id`,
+  covered and matched resource areas, selected authority families, required and optional SOW
+  deliverables, expected future artifact types, and `future_artifact_required_now=false`;
+- `validation`, with fail-closed checks for package schema, package validation status, configured
+  resource scopes, handoff rules schema, complete category metadata, required categories,
+  category-rule resolution, complete rule metadata, complete and explicit downstream boundaries,
+  slot presence, and future-artifact slot completeness.
+
+The East Crazies proving package currently emits `27` slots: `10` source-collection, `10`
+specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
+consistency, and `2` decision-record-support slots. This handoff is an assembly checklist only; it
+does not create applicability decisions, generated rule packs, compliance findings, legal advice,
+legal sufficiency conclusions, or final agency decisions.
+
+The consumption contract permits future commands to consume package identity, input hashes,
+assembly categories, assembly slots, and downstream boundaries. It explicitly bars inference that
+expected future artifacts already exist, are sufficient, are reviewer-ready, decide authority
+applicability, support generated rule-pack creation, or create compliance/legal conclusions.
+
+`project_sow_operational_gate_summary.json` has schema version
+`project-sow-operational-gate-summary-v0`. It is written by the local-only
+`project-sow-operational-gate` command and includes:
+
+- `checks[]`, the top-level operational gate checks for intake validation, proving eval,
+  package/rendering smoke, EA handoff smoke, and tracked docs/schema coverage;
+- `intake_validations[]`, no-write validation summaries for the minimal template and each proving
+  intake;
+- `proving_eval`, a compact pointer to the `project_sow_eval_summary.json` run and its case counts,
+  failed cases, and diagnostic totals;
+- `ea_handoff_smoke`, the East Crazies handoff smoke summary including slot counts and validation
+  failure counts;
+- `tracked_docs_schema_checks`, parse checks for the tracked JSON inputs and required docs
+  references, including the checked JSON paths, checked durable-doc paths, invalid JSON paths, and
+  missing doc terms. The durable-doc path set includes the operationalization acceptance matrix so
+  stale sequence-level acceptance evidence fails the gate;
+- `closeout_contract`, a machine-readable release-closeout contract that records required green
+  checks, generated-output locations, durable doc/schema paths, local-only CI policy, downstream
+  use, artifact boundaries, and conclusions the gate must not imply;
+- `output_hashes`, including hashes for the operational readiness report, proving eval summary,
+  gate summary content, and EA handoff smoke JSON/Markdown outputs;
+- `ci_policy`, currently `local-only`, because adding this generated-output gate to broader CI is a
+  separate milestone decision;
+- `artifact_boundaries`, preserving the non-downloader, non-review, non-applicability,
+  non-compliance, and non-legal-sufficiency limits of the Project SOW lane.
+
+The command also writes `project_sow_operational_readiness_report.md`, a Markdown rendering of the
+same operational readiness gate. These generated reports stay under the caller-selected output
+directory and are not staged from `source_library/`. The gate fails closed if the tracked
+durable-doc closeout set does not contain the expected operational-gate references.
+
+The generated artifact family includes:
+
+- `project_sow_package.json`
+- `project_sow_package.md`
+- `project_sow_package.pdf`
+- `project_sow_package_manifest.json`
+- `project_sow_ea_package_handoff.json`
+- `project_sow_ea_package_handoff.md`
+- `project_sow_operational_gate_summary.json`
+- `project_sow_operational_readiness_report.md`
+
+`project_sow_package.json` has schema version `project-sow-package-v0` and is the canonical
+machine-readable package. The Markdown and PDF renderings must derive from that JSON. The report
+includes:
+
+- `intake_summary`, including forest, districts, project type, NEPA level, geography, forest-plan
+  profile, federal land action count, proposed-action element count, proposed-action resource
+  area IDs, observed specialist/supporting report count, resource indicator keys, and any replayed
+  project-SOW adjudication status/counts;
+- `resource_scope_records[]`, with `resource_scope_id`, discipline, selected authority families,
+  covered resource-area IDs, selection reasons, matched terms, matched resource areas or resource
+  indicators, SOW tasks, data needs, required deliverables, optional deliverables, assumptions,
+  dependencies, acceptance criteria, reviewer role, review timing, reviewer signoff fields, and
+  defensibility checks;
+- `resource_analysis_matrix[]`, comparing proposed-action-derived resource areas to selected SOW
+  scopes and, when supplied by the intake, observed specialist or supporting reports from a
+  completed example package;
+- `observed_specialist_reports[]`, preserving the example report title, source record ID, document
+  role, covered resource-area IDs, and any observed-report evidence refs supplied by the intake;
+- `intake_evidence_graph`, a package-local graph with `nodes[]`, `edges[]`, `node_count`,
+  `edge_count`, and schema version `project-sow-intake-evidence-graph-v0`;
+- `reviewer_summary`, a compact reviewer-facing snapshot with package boundaries, review
+  checklist, project context, package counts, graph counts, unresolved resource-area IDs, and
+  calibration-gap resource-area IDs where the SOW is required but no observed East Crazies report
+  was supplied for that area, plus any replayed project-SOW adjudication status/counts;
+- `missing_resource_area_requests[]`, listing proposed-action resource areas that do not have SOW
+  scope coverage;
+- `authority_requirement_matrix[]`, mapping authority-family IDs to resource scope IDs;
+- `validation`, with fail-closed checks for required intake fields, supported intake schema,
+  resource-scope config integrity, authority-family resolution, proposed-action resource-area
+  coverage, observed specialist-report comparison coverage, selected scope count, and SOW content
+  and contract-field presence;
+- `manifest`, with input paths and SHA-256 hashes for the intake, resource-scope config, and
+  authority-family inventory.
+
+`config/project_sow_resource_scopes_v1.json` owns the resource-scope templates. Those templates are
+data, not hidden runtime branches. Each scope can define:
+
+- `resource_scope_id`, `resource_name`, and `discipline`;
+- `covered_resource_area_ids`, which define the resource-analysis areas this SOW can satisfy;
+- `always_required` or `required_for_project_types`;
+- `trigger_terms` and `trigger_indicator_keys`;
+- `authority_family_ids` from `config/authority_universe_families_nepa_ea_v1.json`;
+- `sow_tasks`, `data_needs`, `required_deliverables`, `optional_deliverables`,
+  `assumptions`, `dependencies`, `acceptance_criteria`, `reviewer_role`, `review_timing`,
+  `reviewer_signoff_fields`, and `defensibility_checks`.
+
+Selected scopes must include the contract fields before package generation. Runtime validation uses
+`selected_resource_scopes_have_contract_fields` for assumptions, dependencies, optional
+deliverables, acceptance criteria, reviewer role, review timing, and reviewer signoff fields.
+Optional deliverables are rendered for planning visibility, but they do not satisfy the required
+deliverable gate enforced by `selected_resource_scopes_have_sow_content`.
+
+The tracked intake schema is
+`docs/schemas/project_sow_intake_v0.schema.json`. The minimal land-exchange starting template is
+`config/templates/project_sow_land_exchange_intake_template.json`. Both use schema version
+`project-sow-intake-v0`. A reviewer-ready intake must include at least project ID, project name,
+forest, districts, project type, NEPA level, proposed action summary, and federal land actions.
+The validation-only summary has schema version `project-sow-intake-validation-summary-v0` and
+reports selected scope IDs, proposed-action resource-area count, graph node/edge counts, all
+validation checks, failed checks, and `output_written=false`. Runtime validation includes an
+`intake_schema_shape_valid` check for nested federal land action, proposed-action element,
+evidence-ref, resource expectation, and observed-report rows. The East Crazies calibration fixture at
+`config/fixtures/project_sow/east_crazies_land_exchange_intake.json` also records structured
+`proposed_action_elements` with `evidence_refs`, `resource_analysis_expectations`, and the actual
+specialist/supporting reports observed in the completed East Crazies package, including minerals,
+aquatics, at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation
+special uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the
+plan-consistency table.
+
+The intake evidence graph uses deterministic node and edge IDs. Required node types are:
+
+- `project`
+- `proposed_action`
+- `action_element`
+- `evidence_ref`
+- `resource_area`
+- `sow_scope`
+- `expected_deliverable`
+- `observed_specialist_report`
+
+Required edge types are:
+
+- `HAS_PROPOSED_ACTION`
+- `HAS_ACTION_ELEMENT`
+- `SUPPORTED_BY`
+- `TRIGGERS_RESOURCE_AREA`
+- `COVERED_BY_SOW_SCOPE`
+- `REQUIRES_DELIVERABLE`
+- `OBSERVED_REPORT_COVERS_RESOURCE_AREA`
+
+Every proposed-action-derived resource area must have the canonical planning path:
+
+```text
+proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
+```
+
+Observed specialist/supporting report edges are calibration evidence only:
+
+```text
+observed_specialist_report -> resource_area
+```
+
+They do not create review evidence, applicability decisions, compliance findings, or legal
+conclusions.
+
+Project SOW package validation must fail closed on:
+
+- missing required intake fields;
+- unsupported intake schema;
+- schema-shape defects in nested federal land action, proposed-action element, evidence-ref,
+  resource expectation, or observed-report rows;
+- unreviewed draft metadata that still requires reviewer confirmation;
+- land-exchange intakes with no federal land action;
+- missing or empty resource-scope config;
+- duplicate resource scope IDs;
+- resource scopes that reference unknown authority-family IDs;
+- proposed-action resource areas that no configured SOW scope can satisfy;
+- proposed-action resource areas that are not selected into the package;
+- observed specialist/supporting reports whose resource areas were not derived from the proposed
+  action;
+- observed specialist/supporting reports whose resource areas do not have selected SOW scope
+  coverage;
+- duplicate intake-derived evidence graph node or edge IDs, including collisions detected before
+  graph assembly deduplicates nodes and edges;
+- dangling intake evidence graph edges;
+- proposed-action elements with resource areas but no evidence refs;
+- proposed-action elements with evidence refs but no triggered resource area;
+- proposed-action resource areas without the canonical graph path;
+- observed specialist/supporting report resource areas without a matching proposed-action graph
+  path;
+- no selected resource scope;
+- selected resource scopes that lack SOW tasks or deliverables;
+- selected resource scopes that lack required contract fields;
+- Markdown renderings missing required reviewer-facing sections;
+- PDF renderings missing required reviewer-facing items.
+
+The generated PDF must be written from `project_sow_package.json` and start with `%PDF-`.
+
+Use `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the tracked workflow for creating a new land-exchange
+intake from a proposed action.
+
 `finding_graph_nodes.jsonl` contains:
 
 - `ComplianceRulePack`

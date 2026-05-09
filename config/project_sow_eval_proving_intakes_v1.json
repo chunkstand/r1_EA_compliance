@@ -1,0 +1,172 @@
+{
+  "description": "Proving-intake eval manifest for project SOW operationalization. Eval cases are planning-support fixtures only; they do not create applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+  "eval_cases": [
+    {
+      "case_id": "east_crazies_land_exchange",
+      "description": "Completed East Crazies calibration intake with observed specialist/supporting reports.",
+      "expected_diagnostics": {
+        "calibration_gap_resource_area_ids": [
+          "agencies_persons_consulted",
+          "federal_land_regulations",
+          "grazing_permits_and_leases",
+          "hazardous_materials",
+          "land_exchange_case",
+          "land_special_use_authorizations",
+          "public_involvement"
+        ],
+        "expected_no_observed_report_resource_area_ids": [],
+        "expected_resource_area_ids": [
+          "agencies_persons_consulted",
+          "aquatic_resources",
+          "botanical_resources",
+          "climate_carbon",
+          "cultural_resources",
+          "developed_dispersed_recreation",
+          "federal_land_regulations",
+          "floodplains_wetlands",
+          "geology_minerals",
+          "grazing_permits_and_leases",
+          "hazardous_materials",
+          "land_exchange_case",
+          "land_management_plan_consistency",
+          "land_special_use_authorizations",
+          "public_involvement",
+          "recreation_special_designations",
+          "recreation_special_uses",
+          "roads_trails_access",
+          "species_consultation",
+          "tribal_relations",
+          "water_quality",
+          "water_rights",
+          "wildlife_resources"
+        ],
+        "intake_omission_resource_area_ids": [],
+        "system_miss_resource_area_ids": []
+      },
+      "expected_metrics": {
+        "calibration_gap_count": 7,
+        "contract_fields_passed": true,
+        "contract_ready_resource_scope_count": 10,
+        "expected_no_observed_report_count": 0,
+        "intake_evidence_graph_edge_count": 134,
+        "intake_evidence_graph_node_count": 115,
+        "intake_omission_count": 0,
+        "optional_deliverable_resource_scope_count": 10,
+        "output_written": true,
+        "package_passed": true,
+        "pdf_header_valid": true,
+        "proposed_action_resource_area_count": 23,
+        "rendering_checks_passed": true,
+        "required_deliverable_resource_scope_count": 10,
+        "resource_scope_count": 10,
+        "system_miss_count": 0,
+        "validation_failure_count": 0
+      },
+      "intake_path": "config/fixtures/project_sow/east_crazies_land_exchange_intake.json",
+      "observed_reports_available": true
+    },
+    {
+      "case_id": "red_rock_ridge_land_exchange",
+      "description": "New land-exchange proving intake with no completed specialist report package yet.",
+      "expected_diagnostics": {
+        "calibration_gap_resource_area_ids": [],
+        "expected_no_observed_report_resource_area_ids": [
+          "cultural_resources",
+          "floodplains_wetlands",
+          "land_exchange_case",
+          "land_management_plan_consistency",
+          "roads_trails_access",
+          "tribal_relations",
+          "water_quality"
+        ],
+        "expected_resource_area_ids": [
+          "cultural_resources",
+          "floodplains_wetlands",
+          "land_exchange_case",
+          "land_management_plan_consistency",
+          "roads_trails_access",
+          "tribal_relations",
+          "water_quality"
+        ],
+        "intake_omission_resource_area_ids": [],
+        "system_miss_resource_area_ids": []
+      },
+      "expected_metrics": {
+        "calibration_gap_count": 0,
+        "contract_fields_passed": true,
+        "contract_ready_resource_scope_count": 7,
+        "expected_no_observed_report_count": 7,
+        "intake_evidence_graph_edge_count": 58,
+        "intake_evidence_graph_node_count": 59,
+        "intake_omission_count": 0,
+        "optional_deliverable_resource_scope_count": 7,
+        "output_written": true,
+        "package_passed": true,
+        "pdf_header_valid": true,
+        "proposed_action_resource_area_count": 7,
+        "rendering_checks_passed": true,
+        "required_deliverable_resource_scope_count": 7,
+        "resource_scope_count": 7,
+        "system_miss_count": 0,
+        "validation_failure_count": 0
+      },
+      "intake_path": "config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json",
+      "observed_reports_available": false
+    },
+    {
+      "case_id": "silver_creek_access_land_adjustment",
+      "description": "Adjacent land-adjustment proving intake with access, species, water, vegetation, minerals, and hazardous-materials triggers.",
+      "expected_diagnostics": {
+        "calibration_gap_resource_area_ids": [],
+        "expected_no_observed_report_resource_area_ids": [
+          "floodplains_wetlands",
+          "geology_minerals",
+          "hazardous_materials",
+          "land_exchange_case",
+          "land_management_plan_consistency",
+          "roads_trails_access",
+          "species_consultation",
+          "vegetation_resources",
+          "water_quality",
+          "wildlife_resources"
+        ],
+        "expected_resource_area_ids": [
+          "floodplains_wetlands",
+          "geology_minerals",
+          "hazardous_materials",
+          "land_exchange_case",
+          "land_management_plan_consistency",
+          "roads_trails_access",
+          "species_consultation",
+          "vegetation_resources",
+          "water_quality",
+          "wildlife_resources"
+        ],
+        "intake_omission_resource_area_ids": [],
+        "system_miss_resource_area_ids": []
+      },
+      "expected_metrics": {
+        "calibration_gap_count": 0,
+        "contract_fields_passed": true,
+        "contract_ready_resource_scope_count": 9,
+        "expected_no_observed_report_count": 10,
+        "intake_evidence_graph_edge_count": 75,
+        "intake_evidence_graph_node_count": 74,
+        "intake_omission_count": 0,
+        "optional_deliverable_resource_scope_count": 9,
+        "output_written": true,
+        "package_passed": true,
+        "pdf_header_valid": true,
+        "proposed_action_resource_area_count": 10,
+        "rendering_checks_passed": true,
+        "required_deliverable_resource_scope_count": 9,
+        "resource_scope_count": 9,
+        "system_miss_count": 0,
+        "validation_failure_count": 0
+      },
+      "intake_path": "config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json",
+      "observed_reports_available": false
+    }
+  ],
+  "schema_version": "project-sow-eval-config-v1"
+}

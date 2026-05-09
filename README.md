@@ -164,6 +164,48 @@ audited artifacts without broadening the legal or Region 1 readiness claim. Sequ
 complete and accepted: Sequence 4 closed the final packet QA pass by making the rendered packet
 distinguish baseline replay counts from live outer-gate counts, preserving idempotent V1 eval
 hashes across unchanged reruns, and validating the final current-promotion stack. See
+`docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
+proposed-action intake into resource SOW requirements and, for the East Crazies calibration fixture,
+compares proposed-action resource areas to the actual specialist/supporting reports produced through
+a package-local intake evidence graph. The supported operational first step is now the no-write
+`project-sow-intake-validate` command against the minimal land-exchange template before package
+generation; plain-text proposed actions can first use `project-sow-intake-draft` to create an
+explicitly unreviewed draft intake that must be reviewer-confirmed before validation passes. The
+`project-sow-eval` command now runs the tracked proving-intake manifest across East Crazies, Red
+Rock Ridge, and Silver Creek to compare expected metrics, graph coverage, rendering checks, and
+resource-area diagnostics before treating the workflow as operationally green. The eval also tracks
+contract-readiness metrics so every selected scope in the proving set must carry required
+deliverables, optional deliverables, and contract fields. Resource scope templates now include
+contract-ready assumptions, dependencies, required and optional deliverables, acceptance criteria,
+reviewer role, review timing, and reviewer signoff fields that render into the canonical package
+outputs. The `project-sow-adjudication-template`, `project-sow-adjudication-eval`, and
+`project-sow-adjudication-apply` commands now make unresolved resource areas, missing evidence
+refs, unknown resource-area IDs, calibration gaps, and optional deliverable decisions reviewable and
+replayable into an adjudicated intake copy before package regeneration. The package is a planning
+and contracting support artifact for scoping resource SOW needs; it is not a final SOW award
+document. `project-sow-ea-package-handoff` now reads accepted `project_sow_package.json` and writes
+a downstream EA package assembly checklist for future source collection, specialist reports, public
+involvement, consultation, Forest Plan consistency, and decision-record support without requiring
+those future artifacts to exist or triggering applicability/compliance review. The handoff includes
+a downstream consumption contract and fails closed on malformed handoff rules before emitting
+checklist outputs. See
+`docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` for the sequence plan that carries that
+lane through the intake evidence graph and package-quality passes. See
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md` for the successor plan that turns the proved
+generator into a repeatable intake, calibration, reviewer-adjudication, and downstream handoff
+workflow. The local-only `project-sow-operational-gate` command is the operational readiness gate
+for this lane: it runs intake validation, the proving-intake eval, package/rendering smoke checks,
+EA handoff smoke, and tracked docs/schema checks before writing an operational readiness report.
+The gate also emits a machine-readable closeout contract and hashes the gate, eval, and handoff
+smoke outputs so release evidence can be audited without staging ignored generated artifacts. The
+tracked acceptance matrix is
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`. A generated 2-page scope of work
+capabilities brief now lives at `docs/capabilities/project_sow_capabilities_brief.pdf` with a
+matching HTML source and generated figures under `docs/capabilities/assets/`; it frames the
+purpose of reducing scope-development bottlenecks, proposed-action intake, traceable resource
+selection, contract-ready work package rendering, reviewer adjudication, and downstream EA assembly
+handoff as the current service capability for producing scopes of work. See
+`docs/PROJECT_SOW_PACKAGE_RUNBOOK.md` for the land-exchange intake setup runbook. See
 `docs/POST_V1_PROMOTION_SUITE.md` for the manifest-driven promotion-suite runbook. See
 `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md` for the completed South Plateau
 forest-plan context pass, which narrows the strict-expansion blocker to pending component
@@ -196,6 +238,18 @@ heuristics.
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - `config/ea_consistency_decision_support_v1.json`
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
+- `docs/schemas/project_sow_intake_v0.schema.json`
+- `config/templates/project_sow_land_exchange_intake_template.json`
+- `config/project_sow_intake_draft_rules_v1.json`
+- `config/project_sow_eval_proving_intakes_v1.json`
+- `config/project_sow_ea_handoff_rules_v1.json`
+- `config/fixtures/project_sow/red_rock_ridge_land_exchange_intake.json`
+- `config/fixtures/project_sow/silver_creek_access_land_adjustment_intake.json`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_land_exchange_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/ambiguous_land_adjustment_proposed_action.txt`
+- `config/fixtures/project_sow/proposed_action_text/red_rock_ridge_expected_draft_metadata.json`
+- `config/project_sow_resource_scopes_v1.json`
+- `config/fixtures/project_sow/east_crazies_land_exchange_intake.json`
 - `config/ea_review_checklist_seed.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`
@@ -255,6 +309,12 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `docs/capabilities/assets/graph_evidence_trace_service_view.png`
   - `docs/capabilities/assets/graph_r1_showcase_view.png`
   - `tools/build_nepa_3d_capabilities_brief.mjs`
+- Scope of work service capabilities brief:
+  - `docs/capabilities/project_sow_capabilities_brief.pdf`
+  - `docs/capabilities/project_sow_capabilities_brief.html`
+  - `docs/capabilities/assets/project_sow_delivery_stack.svg`
+  - `docs/capabilities/assets/project_sow_system_capabilities_view.png`
+  - `tools/build_project_sow_capabilities_brief.mjs`
 - Source claim graph outputs:
   - `source_library/derived/<source_set_id>/claims/claims.jsonl`
   - `source_library/derived/<source_set_id>/claims/entities.jsonl`
@@ -272,6 +332,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory_build_coverage.json`
   - `source_library/derived/<source_set_id>/forest_plan_components/components.jsonl`
   - `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
+- Project SOW requirements package outputs:
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.json`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.md`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package.pdf`
+  - `source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json`
 - EA package review outputs:
   - `source_library/reviews/<review_id>/package/package_manifest.jsonl`
   - `source_library/reviews/<review_id>/package/package_chunks.jsonl`

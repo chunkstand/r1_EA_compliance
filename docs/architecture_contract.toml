@@ -170,6 +170,15 @@ allowed_import_layers = [
 ]
 
 [[layers]]
+name = "project_planning"
+summary = "Proposed-action NEPA project requirements and resource SOW package generation before review artifacts exist."
+modules = ["project_sow_package"]
+allowed_import_layers = [
+  "foundation",
+  "project_planning",
+]
+
+[[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = ["applicability_eval", "promotion_suite", "v1_ea_eval"]
@@ -183,6 +192,7 @@ allowed_import_layers = [
   "review",
   "compliance",
   "decision_support",
+  "project_planning",
   "eval",
 ]
 
@@ -200,6 +210,7 @@ modules = [
   "cli_derived",
   "cli_eval",
   "cli_final_qa",
+  "cli_project_planning",
   "cli_review_packet",
   "cli_review",
 ]
@@ -219,6 +230,7 @@ allowed_import_layers = [
   "applicability",
   "compliance",
   "decision_support",
+  "project_planning",
   "eval",
   "cli",
 ]
@@ -348,6 +360,19 @@ paths = [
 ]
 
 [[artifacts]]
+owner_layer = "project_planning"
+paths = [
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.md",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package.pdf",
+  "source_library/projects/<project_id>/requirements_package/project_sow_package_manifest.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.json",
+  "source_library/projects/<project_id>/requirements_package/project_sow_ea_package_handoff.md",
+  "source_library/project_sow_operational_gate/project_sow_operational_gate_summary.json",
+  "source_library/project_sow_operational_gate/project_sow_operational_readiness_report.md",
+]
+
+[[artifacts]]
 owner_layer = "eval"
 paths = [
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
@@ -426,6 +451,20 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 [[command_groups]]
 name = "decision_support"
 commands = ["ea-consistency-document", "final-qa-certification", "review-packet-index"]
+
+[[command_groups]]
+name = "project_planning"
+commands = [
+  "project-sow-adjudication-apply",
+  "project-sow-adjudication-eval",
+  "project-sow-adjudication-template",
+  "project-sow-ea-package-handoff",
+  "project-sow-eval",
+  "project-sow-intake-draft",
+  "project-sow-intake-validate",
+  "project-sow-operational-gate",
+  "project-sow-package",
+]
 
 [[command_groups]]
 name = "eval"

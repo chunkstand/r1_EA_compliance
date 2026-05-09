@@ -1,0 +1,175 @@
+{
+  "description": "Deterministic draft-intake rules for proposed-action text. These rules only create unreviewed intake candidates for human confirmation; they do not create applicability decisions, compliance findings, legal advice, legal sufficiency conclusions, or final agency decisions.",
+  "federal_land_action_rules": [
+    {
+      "action_type": "dispose",
+      "trigger_terms": [
+        "convey",
+        "dispose",
+        "federal land disposal",
+        "out of federal ownership"
+      ]
+    },
+    {
+      "action_type": "acquire",
+      "trigger_terms": [
+        "acquire",
+        "acquisition",
+        "non-federal land acquisition",
+        "enter federal ownership"
+      ]
+    },
+    {
+      "action_type": "reserve_rights",
+      "trigger_terms": [
+        "access easement",
+        "easement",
+        "reserve",
+        "reservation",
+        "right-of-way",
+        "trail access"
+      ]
+    }
+  ],
+  "resource_area_rules": [
+    {
+      "always_for_project_types": [
+        "land_exchange"
+      ],
+      "indicator_key": "lands_realty",
+      "resource_area_id": "land_exchange_case",
+      "resource_area_name": "Land exchange case",
+      "trigger_terms": [
+        "land exchange",
+        "exchange",
+        "convey",
+        "dispose",
+        "acquire",
+        "non-federal land",
+        "federal land"
+      ]
+    },
+    {
+      "always_for_project_types": [
+        "land_exchange"
+      ],
+      "indicator_key": "forest_plan",
+      "resource_area_id": "land_management_plan_consistency",
+      "resource_area_name": "Forest Plan consistency",
+      "trigger_terms": [
+        "forest plan",
+        "land management plan",
+        "management area"
+      ]
+    },
+    {
+      "indicator_key": "access",
+      "resource_area_id": "roads_trails_access",
+      "resource_area_name": "Roads, trails, and access",
+      "trigger_terms": [
+        "access",
+        "easement",
+        "right-of-way",
+        "road",
+        "trail"
+      ]
+    },
+    {
+      "indicator_key": "water",
+      "resource_area_id": "floodplains_wetlands",
+      "resource_area_name": "Floodplains and wetlands",
+      "trigger_terms": [
+        "floodplain",
+        "riparian",
+        "wetland",
+        "wetlands"
+      ]
+    },
+    {
+      "indicator_key": "water",
+      "resource_area_id": "water_quality",
+      "resource_area_name": "Water quality",
+      "trigger_terms": [
+        "stream",
+        "water quality",
+        "wetland",
+        "wetlands"
+      ]
+    },
+    {
+      "indicator_key": "species",
+      "resource_area_id": "species_consultation",
+      "resource_area_name": "Species consultation",
+      "trigger_terms": [
+        "candidate species",
+        "endangered species",
+        "listed species",
+        "section 7",
+        "sensitive species",
+        "threatened species"
+      ]
+    },
+    {
+      "indicator_key": "species",
+      "resource_area_id": "wildlife_resources",
+      "resource_area_name": "Wildlife resources",
+      "trigger_terms": [
+        "habitat",
+        "wildlife"
+      ]
+    },
+    {
+      "indicator_key": "cultural",
+      "resource_area_id": "cultural_resources",
+      "resource_area_name": "Cultural resources",
+      "trigger_terms": [
+        "archaeological",
+        "cultural resource",
+        "historic property",
+        "section 106",
+        "shpo"
+      ]
+    },
+    {
+      "indicator_key": "tribal",
+      "resource_area_id": "tribal_relations",
+      "resource_area_name": "Tribal relations",
+      "trigger_terms": [
+        "sacred site",
+        "tribal",
+        "tribe"
+      ]
+    },
+    {
+      "indicator_key": "minerals",
+      "resource_area_id": "geology_minerals",
+      "resource_area_name": "Geology and minerals",
+      "trigger_terms": [
+        "mineral",
+        "minerals",
+        "mining claim"
+      ]
+    },
+    {
+      "indicator_key": "hazardous_materials",
+      "resource_area_id": "hazardous_materials",
+      "resource_area_name": "Hazardous materials",
+      "trigger_terms": [
+        "contamination",
+        "hazardous material",
+        "hazardous substance",
+        "phase i environmental site assessment"
+      ]
+    },
+    {
+      "indicator_key": "recreation",
+      "resource_area_id": "developed_dispersed_recreation",
+      "resource_area_name": "Developed and dispersed recreation",
+      "trigger_terms": [
+        "recreation",
+        "trailhead"
+      ]
+    }
+  ],
+  "schema_version": "project-sow-intake-draft-rules-v1"
+}

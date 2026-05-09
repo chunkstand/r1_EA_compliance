@@ -586,6 +586,164 @@ Certification in this plan means deterministic machine replay plus optional huma
 fields. It does not mean final legal sufficiency, responsible-official approval, or counsel
 certification.
 
+## Project SOW Requirements Package
+
+Project SOW package generation and operationalization through Sequence 7 are implemented as an
+upstream planning lane for proposed-action intake before a complete EA review package exists. The
+core package command is:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-package \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+```
+
+The command reads a structured `project-sow-intake-v0` JSON file, the tracked resource-scope config
+at `config/project_sow_resource_scopes_v1.json`, and
+`config/authority_universe_families_nepa_ea_v1.json`. It writes a local requirements package under
+`source_library/projects/<project_id>/requirements_package/`:
+
+- `project_sow_package.json`
+- `project_sow_package.md`
+- `project_sow_package.pdf`
+- `project_sow_package_manifest.json`
+
+The package scopes resource-specialist work needed to prepare a defensible EA package. It selects
+resource scopes from explicit intake fields, project type, trigger terms, resource indicator keys,
+and proposed-action resource-area IDs, then records scope of work tasks, data needs, deliverables,
+defensibility checks, selected authority families, an authority-to-resource matrix, and a
+resource-analysis coverage matrix, and a compact reviewer summary with package boundaries and a
+review checklist. The reviewer summary separates unresolved resource areas from calibration gaps
+where scope of work content is required but no observed East Crazies report was supplied for that area. It also
+emits a package-local intake evidence graph connecting project, proposed action, action elements,
+evidence refs, triggered resource areas, selected resource scopes, required deliverables, and observed
+specialist/supporting reports. JSON is canonical; Markdown and PDF are renderings from the same
+package JSON. The first checked-in intake fixture is the East Crazies
+land-exchange proposed action and currently selects ten resource scopes: NEPA project management,
+lands/realty land exchange, Forest Plan consistency, wildlife/species/botany, cultural/tribal
+resources, hydrology/wetlands/water quality, roads/access/recreation/designated areas,
+vegetation/soils/air-quality/climate/carbon, minerals/energy/hazardous materials, and public
+involvement/coordination.
+
+The East Crazies fixture now also compares proposed-action-derived resource areas to the actual
+specialist/supporting reports observed in the completed package: mineral potential, aquatics,
+at-risk plants/botany, carbon, cultural resources, recreation special areas, recreation special
+uses, roads/trails/access, tribal relations, wetlands, wildlife, water rights, and the
+plan-consistency table. Validation requires every observed report resource area to have selected
+resource scope coverage and to be traceable to a proposed-action resource area in the intake.
+
+Operationalization Sequence 5 adds the reviewer adjudication loop:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-template \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-eval \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication <completed-project-sow-adjudication.json>
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-adjudication-apply \
+  --intake config/fixtures/project_sow/east_crazies_land_exchange_intake.json \
+  --adjudication <completed-project-sow-adjudication.json> \
+  --output-intake <adjudicated-intake.json>
+```
+
+The template/worklist covers unresolved resource areas, missing evidence refs, unknown resource-area
+IDs, calibration gaps, and optional deliverable decisions. Eval fails closed on stale input hashes,
+missing, duplicated, unexpected, pending, invalid, or queue-identity-tampered rows, and incomplete
+top-level or per-item reviewer metadata. Apply reruns eval and writes an adjudicated intake copy
+with `project_sow_adjudication` replay metadata, including top-level reviewer metadata. Generated
+packages from that intake surface adjudication status and decision counts in the reviewer snapshot
+and command summaries. It does not mutate the original intake and does not edit generated package
+outputs by hand.
+
+Operationalization Sequence 6 adds the downstream EA package assembly handoff:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-ea-package-handoff \
+  --package source_library/projects/<project_id>/requirements_package/project_sow_package.json
+```
+
+The command reads a passing canonical `project_sow_package.json` plus
+`config/project_sow_ea_handoff_rules_v1.json` and writes
+`project_sow_ea_package_handoff.json` plus `project_sow_ea_package_handoff.md`. East Crazies
+currently emits `27` expected future-artifact slots: `10` source-collection, `10`
+specialist-report-production, `1` public-involvement, `3` consultation, `1` Forest Plan
+consistency, and `2` decision-record-support slots. Future artifacts are checklist expectations
+only; the command does not require them to exist.
+
+The Sequence 6 gap-close pass adds an explicit downstream consumption contract and tightens
+handoff-rules validation. Future commands may consume package identity, input hashes, assembly
+categories, assembly slots, and downstream boundaries, but must not infer artifact existence,
+artifact sufficiency, authority applicability, generated rule-pack readiness, compliance findings,
+legal advice, legal sufficiency conclusions, or final agency decisions from the handoff alone.
+
+Operationalization Sequence 7 adds the local-only operational readiness gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources project-sow-operational-gate \
+  --output-dir source_library/project_sow_operational_gate
+```
+
+The gate runs no-write intake validation for the minimal template and the three proving intakes,
+the three-case `project-sow-eval`, package/rendering smoke checks for generated proving packages,
+an East Crazies EA handoff smoke, and tracked JSON/docs checks before writing
+`project_sow_operational_gate_summary.json` and `project_sow_operational_readiness_report.md`.
+The command is intentionally not broad CI yet; the Sequence 7 closeout records it as local-only
+until CI adoption is scoped as a separate milestone.
+The Sequence 7 gap-close pass adds a machine-readable `closeout_contract`, expands tracked
+docs/schema checks across the durable closeout set, fails closed on missing closeout-doc references,
+and records output hashes for the gate report, proving eval summary, and EA handoff smoke artifacts.
+The milestone closeout alignment pass adds
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`, which maps Sequences 1 through 7 to
+their acceptance criteria and verification evidence; the operational gate now checks that matrix as
+part of the durable-doc closeout set.
+
+A scope of work service capabilities brief is generated at
+`docs/capabilities/project_sow_capabilities_brief.pdf` with matching HTML at
+`docs/capabilities/project_sow_capabilities_brief.html`. The generator
+`tools/build_project_sow_capabilities_brief.mjs` mirrors the NEPA 3D capabilities-brief style and
+uses the tracked system design artifacts rather than a single project example. The brief explains the service lane
+for producing scopes of work: structured proposed-action intake, traceable resource selection,
+contract-ready work package rendering, reviewer adjudication, operational-readiness gate, and
+downstream EA package assembly handoff. It is two pages and intentionally general, with page-one
+purpose and system facts sections plus a consolidated system-capability graphic replacing
+project-example metric tiles.
+
+An earlier requirements-package Sequence 5 CLI smoke run for the East Crazies intake selected `10`
+resource scopes, found `23` proposed-action resource areas, emitted a `115`-node and `134`-edge intake
+evidence graph, wrote a PDF with a valid `%PDF-` header, and reported `0` validation failures. Each
+proposed-action-derived resource area has the canonical planning path:
+
+```text
+proposed_action -> action_element -> evidence_ref -> resource_area -> sow_scope
+```
+
+The requirements-package sequence plan for this lane is
+`docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md`. The successor operationalization plan is
+`docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`; Sequence 7 closes the operational gate and
+release-closeout boundary for this branch.
+
+This is a planning artifact only. It does not create applicability decisions, generated rule packs,
+compliance findings, legal advice, legal sufficiency determinations, or final agency decisions.
+Validation fails closed on missing required intake fields, unsupported intake schema, empty or
+duplicated resource-scope config, unknown authority-family IDs, proposed-action resource areas that
+cannot resolve to selected resource scope coverage, observed specialist-report resource areas that are
+not derived from the proposed action or lack selected resource scope coverage, no selected resource
+scopes, selected scopes without scope of work content, duplicate intake-derived graph IDs including
+observed-report and required-deliverable collisions before graph assembly deduplicates nodes and
+edges, dangling graph edges, missing action-element evidence refs, evidence-bearing action elements
+with no triggered resource area, incomplete canonical resource-area graph paths, observed
+specialist report areas without a proposed-action support path, land-exchange intakes with no
+federal land action, or Markdown/PDF renderings missing required reviewer-facing sections.
+Project-SOW adjudication eval additionally fails closed on stale hashes, missing queue rows,
+unexpected or duplicate rows, changed queue identity fields, invalid item types, invalid decisions,
+pending decisions, or incomplete reviewer metadata.
+Project-SOW EA handoff validation additionally fails closed on invalid package schema, failed
+package validation, missing selected scopes, unsupported handoff rules schema, incomplete handoff
+categories, missing required handoff categories, unresolved or incomplete category rules,
+incomplete downstream boundaries, missing explicit downstream boundary IDs, empty slots, or slots
+without expected future artifact content.
+
 ## Verified State Snapshot
 
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer

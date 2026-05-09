@@ -46,6 +46,7 @@ instructions for agents or privileged tools.
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
 | Compliance | Produce citation-bearing compliance findings, authority-integration artifacts, matrices, finding graphs, coverage, review evals, and gold evals. | `compliance_review.py`, `compliance_review_eval.py`, `compliance_inputs.py`, `compliance_findings.py`, `compliance_authority_integration.py`, `compliance_finding_graph.py`, `compliance_validation.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
+| Project planning | Generate proposed-action resource SOW requirements packages before a review package exists. | `project_sow_package.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
 | CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
@@ -126,6 +127,45 @@ writes the local `decision_support/` JSON, Markdown, PDF, and manifest family. I
 missing, stale, hash-mismatched, or non-reviewer-ready inputs and must not promote manual root-level
 draft prose as canonical evidence.
 
+Project planning is an upstream lane for proposed-action intake before a complete EA package exists.
+The `project-sow-intake-draft` command drafts an explicitly unreviewed intake from proposed-action
+text using tracked draft rules. The `project-sow-intake-validate` command validates a structured
+intake plus tracked resource-scope templates without writing generated outputs. The
+`project-sow-package` command reads the same intake contract, selects resource SOW requirements from
+explicit project facts, proposed-action resource areas, and trigger terms, and writes a local
+requirements package under `source_library/projects/<project_id>/requirements_package/`. JSON is
+canonical; Markdown and PDF are reviewer-facing renderings from that JSON. When the intake supplies
+a completed example package comparison, the command also records a resource-analysis matrix that
+compares proposed-action-derived resource areas to observed specialist/supporting reports. The
+`project-sow-eval` command runs tracked proving intakes from
+`config/project_sow_eval_proving_intakes_v1.json`, writes local eval package outputs, and reports
+expected metrics, graph-path coverage, rendering checks, system misses, intake omissions,
+calibration gaps, expected no-observed-report cases, and contract-readiness counts for required
+deliverables, optional deliverables, and selected-scope contract fields. Resource scope templates
+carry contract-ready assumptions, dependencies, required and optional deliverables, acceptance
+criteria, reviewer role, review timing, and reviewer signoff fields as tracked data; selected
+scopes must include those fields before package generation. The
+`project-sow-adjudication-template`, `project-sow-adjudication-eval`, and
+`project-sow-adjudication-apply` commands provide a reviewer worklist and deterministic replay path
+for unresolved resource areas, missing evidence refs, unknown resource-area IDs, calibration gaps,
+and optional deliverable decisions. Apply writes an adjudicated intake copy with replay metadata;
+generated packages must be regenerated from that input rather than edited by hand. The
+`project-sow-ea-package-handoff` command reads accepted package JSON and tracked handoff rules to
+write a downstream EA package assembly checklist for source collection, specialist report
+production, public involvement, consultation, Forest Plan consistency, and decision-record support.
+The handoff includes a downstream consumption contract and fails closed on malformed rules or empty
+future-artifact slots before downstream commands can treat it as a usable checklist.
+The `project-sow-operational-gate` command composes the intake validation, proving eval,
+package/rendering smoke, EA handoff smoke, and tracked docs/schema checks into one local-only
+operational readiness report for milestone closeout. Its gap-close contract makes the durable-doc
+set, local-only CI boundary, generated-output locations, and output hashes machine-readable.
+The tracked acceptance matrix
+`docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md` maps each operationalization sequence to
+acceptance criteria and verification evidence.
+These commands do not create applicability decisions, generated rule packs, compliance findings, or
+legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
+reviewer-confirmation metadata is cleared.
+
 ## Public CLI Surface
 
 `src/usfs_r1_ea_sources/cli.py` remains the public entrypoint. Command registration can be split by
@@ -140,6 +180,7 @@ Current command groups are recorded in `docs/architecture_contract.toml`:
 - review and forest-plan;
 - compliance;
 - decision support;
+- project planning;
 - eval and promotion.
 
 ## Architecture Fitness Gates
