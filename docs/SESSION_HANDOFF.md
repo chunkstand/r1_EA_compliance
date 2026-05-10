@@ -29,7 +29,7 @@ It made the active-vs-archived inventory ownership gap executable and documented
 
 Verification in this pass:
 
-- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `35/35`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `31/31`
 - `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md --strict`: passed
 - `git diff --check`: passed
 
