@@ -5,6 +5,68 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Primary Plan Role Classification Milestone
+
+The primary-plan role-classification milestone in
+`docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now implemented in
+code and focused tests.
+
+- classifier change:
+  `src/usfs_r1_ea_sources/catalog.py` now promotes only manifest-declared supplemental primary plan
+  rows from `forest_plan_support` to `forest_plan`; ordinary register rows remain support-scoped
+- tracked authority:
+  the override is derived from
+  `config/r1_forest_plan_component_inventory_build_manifest.json`, not a Python-only allowlist
+- focused gates now pass:
+  `tests/test_catalog.py`, `tests/test_forest_plan_source_delta_readiness.py`, and
+  `tests/test_architecture_contract.py`
+- live catalog replay proof:
+  rebuilding `source_library/catalog/` from
+  `corpus-update-2026-05-01-cg-support-batches` plus
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current uncommitted
+  worktree produced transient active catalog `source-set-5e65d845ce77e1a0`
+- active catalog result:
+  `R1PLAN-dakota-prairie-grasslands-03`, `R1PLAN-flathead-nf-02`, `R1PLAN-kootenai-nf-02`,
+  `R1PLAN-lolo-nf-02`, and `R1PLAN-nez-perce-clearwater-nfs-06` now classify as
+  `document_role=forest_plan`; negative control `R1PLAN-beaverhead-deerlodge-nf-03` remains
+  `forest_plan_support`
+- active chunk proof:
+  `source_library/derived/source-set-5e65d845ce77e1a0/chunks/chunks.jsonl` now carries
+  `document_role=forest_plan` chunks for all five promoted source IDs with chunk counts
+  `2`, `899`, `336`, `580`, and `278` respectively
+- isolated downstream proof:
+  single-forest builds against the refreshed chunks now show `flathead-nf` building `80`
+  components / `20` standards and `kootenai-nf` building `1` component / `1` standard; Dakota
+  Prairie, Lolo, and Nez Perce-Clearwater now fail downstream of role classification rather than
+  because the primary plan body is absent from `document_role=forest_plan`
+- explicit non-goal boundary preserved:
+  this milestone did not expand legacy parser support or promote a new active-source-set manifest
+  reference
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py tests/test_architecture_contract.py`: passed `22/22`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --config config/downloader.toml --batch-run-id corpus-update-2026-05-01-cg-support-batches --batch-run-id r1-forest-plan-source-delta-capture-20260510-refresh-batches --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv`: passed with transient active catalog `source-set-5e65d845ce77e1a0`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `reuse_extraction_count=349`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing --reuse-inventory-path source_library/derived/source-set-5e65d845ce77e1a0/reuse_inventory/reuse_inventory.json`: passed with `349` extracted rows and `75,745` chunks
+- isolated Python-driven single-forest inventory runs against `source-set-5e65d845ce77e1a0` refreshed chunks: passed for `flathead-nf` and `kootenai-nf`; produced downstream non-role blockers for Dakota Prairie, Lolo, and Nez Perce-Clearwater
+
+Residual risks:
+
+- the tracked manifest still pins active full-canonical build rows to committed source set
+  `source-set-34061d1e4bf6c460`, so a manifest-batch replay against transient active catalog
+  `source-set-5e65d845ce77e1a0` correctly stops on source-set-reference mismatch
+- the next real blockers for these five forests are parser/plan-format issues, not catalog role
+  classification
+
+Immediate next step if this slice is continued:
+
+1. Decide whether to refresh the tracked full-canonical source-set reference before broader
+   promotion work, or keep the committed `source-set-34061d1e4bf6c460` contract and move directly
+   into parser expansion for the newly visible primary plan bodies.
+
 ## Region 1 Forest-Plan Inventory Sequence 3
 
 Sequence 3 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now

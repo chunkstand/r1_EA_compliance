@@ -349,8 +349,11 @@ The `catalog-build` command writes:
 When `catalog-build` is run with
 `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`,
 the catalog is scoped to supplemental `R1_Forest_Plan_Document_Register` rows. Those rows are
-classified as `forest_plan_support` records with forest-level authority and are validated against
-the linked source-delta batch manifests.
+validated against the linked source-delta batch manifests and keep forest-level authority. By
+default they remain `forest_plan_support`, but any supplemental row whose `source_record_id`
+matches a manifest-declared `primary_plan_source_record_id` in
+`config/r1_forest_plan_component_inventory_build_manifest.json` is classified as `forest_plan`
+instead.
 
 When `catalog-build` is run with repeated `--batch-run-id` values and a Region 1 forest-plan
 register without `--source-delta-only`, it builds a merged catalog view from the canonical workbook

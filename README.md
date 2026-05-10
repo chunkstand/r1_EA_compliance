@@ -89,6 +89,18 @@ Current full-corpus promotion boundary:
   `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
   `full_canonical_corpus_ready=true`, `full_canonical_failure_category_counts={}`,
   `current_promotion_ready=true`, and `expansion_ready=false`.
+- The primary-plan role-classification milestone is now implemented in code and focused tests.
+  When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
+  primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` now classify as `document_role=forest_plan` instead of blanket
+  `forest_plan_support`, while ordinary supplemental register rows remain support-scoped.
+- Live local replay under the current uncommitted worktree produced transient active catalog
+  `source-set-5e65d845ce77e1a0`: those five rows now emit `forest_plan` chunks, and isolated
+  single-forest builds on that replay show `flathead-nf` now builds `80` components / `20`
+  standards and `kootenai-nf` builds `1` component / `1` standard. The tracked manifest remains
+  pinned to committed full-canonical source set `source-set-34061d1e4bf6c460`, so batch-manifest
+  promotion of the transient replay is a later active-source-set refresh step, not part of this
+  classifier milestone.
 - The next required implementation boundary is Sequence 4: promote the active build results into
   `config/region1_forest_plan_readiness_nepa_3d_v1.json` and companion graph/readiness summaries so
   the three validated inventories and seven typed blockers replace the current one-validated,

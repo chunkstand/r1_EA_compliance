@@ -10,6 +10,9 @@ import unittest
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.forest_plan_inventory_build_manifest import (
+    load_region1_forest_plan_inventory_build_manifest,
+)
 from usfs_r1_ea_sources.workbook import load_canonical_sources
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
@@ -217,6 +220,13 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(record["authority_level"], "forest")
             self.assertEqual(record["source_status"], "downloaded")
             self.assertEqual(record["expected_parser"], "pdf")
+            self.assertEqual(manifest["document_role_counts"], {"forest_plan": 5, "forest_plan_support": 155})
+
+            for primary_source_id in _source_delta_primary_plan_source_record_ids(register):
+                primary_record = next(
+                    row for row in records if row["source_record_id"] == primary_source_id
+                )
+                self.assertEqual(primary_record["document_role"], "forest_plan")
 
     def test_build_review_catalog_merges_canonical_and_source_delta_batch_runs(self) -> None:
         config = load_config(CONFIG)
@@ -291,6 +301,8 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(manifest["supplemental_source_count"], 160)
             self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 160)
             self.assertEqual(manifest["source_record_id_filter_count"], None)
+            self.assertEqual(manifest["document_role_counts"]["forest_plan"], 33)
+            self.assertEqual(manifest["document_role_counts"]["forest_plan_support"], 155)
             self.assertEqual(r1ea001["source_status"], "downloaded")
             self.assertEqual(r1ea001["download_batch_run_id"], "unit-canonical-batches")
             self.assertEqual(source_delta["source_status"], "downloaded")
@@ -627,6 +639,16 @@ def _artifact_body() -> bytes:
 
 def _artifact_sha256(body: bytes | None = None) -> str:
     return hashlib.sha256(body or _artifact_body()).hexdigest()
+
+
+def _source_delta_primary_plan_source_record_ids(register) -> list[str]:
+    manifest = load_region1_forest_plan_inventory_build_manifest()
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+    return sorted(
+        row.primary_plan_source_record_id
+        for row in manifest.profile_rows
+        if row.primary_plan_source_record_id in source_delta_ids
+    )
 
 
 def _check(validation: dict, name: str) -> dict:

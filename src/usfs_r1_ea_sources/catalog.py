@@ -4,6 +4,7 @@ from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import cache
 from pathlib import Path
 from urllib.parse import urlsplit
 import hashlib
@@ -29,6 +30,13 @@ class CatalogBuildResult:
     graph_nodes_path: Path
     graph_edges_path: Path
     summary: dict
+
+
+DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "config"
+    / "r1_forest_plan_component_inventory_build_manifest.json"
+)
 
 
 def build_review_catalog(
@@ -1085,6 +1093,8 @@ def _source_status(manifest_record: dict | None, run_scope_present: bool) -> str
 
 def _document_role(source: WorkbookSource, document_type: str | None) -> str:
     if source.metadata.get("source_input") == "r1_forest_plan_document_register":
+        if source.source_record_id in _r1_forest_plan_register_primary_plan_source_record_ids():
+            return "forest_plan"
         return "forest_plan_support"
     if source.sheet == "R1_Forest_Plans":
         return "forest_plan"
@@ -1122,6 +1132,48 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
     if "case" in value or "court" in title:
         return "case_law"
     return "source_document"
+
+
+@cache
+def _r1_forest_plan_register_primary_plan_source_record_ids() -> frozenset[str]:
+    try:
+        payload = json.loads(
+            DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH.read_text(
+                encoding="utf-8"
+            )
+        )
+    except FileNotFoundError as exc:
+        raise ValueError(
+            "Missing Region 1 inventory build manifest for catalog role classification: "
+            f"{DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH}"
+        ) from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "Invalid Region 1 inventory build manifest JSON for catalog role classification: "
+            f"{DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH}"
+        ) from exc
+    profile_rows = payload.get("profile_rows")
+    if not isinstance(profile_rows, list):
+        raise ValueError(
+            "Region 1 inventory build manifest must contain a profile_rows list for "
+            "catalog role classification."
+        )
+    primary_plan_source_record_ids = []
+    for index, row in enumerate(profile_rows):
+        if not isinstance(row, dict):
+            raise ValueError(
+                "Region 1 inventory build manifest.profile_rows entries must be objects for "
+                "catalog role classification."
+            )
+        source_record_id = row.get("primary_plan_source_record_id")
+        if not isinstance(source_record_id, str) or not source_record_id.strip():
+            raise ValueError(
+                "Region 1 inventory build manifest.profile_rows"
+                f"[{index}].primary_plan_source_record_id must be a non-empty string for "
+                "catalog role classification."
+            )
+        primary_plan_source_record_ids.append(source_record_id.strip())
+    return frozenset(primary_plan_source_record_ids)
 
 
 def _authority_level(source: WorkbookSource, issuer: str | None, host: str) -> str:

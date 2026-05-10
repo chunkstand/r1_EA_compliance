@@ -5,6 +5,9 @@ import json
 import sqlite3
 import tempfile
 
+from usfs_r1_ea_sources.forest_plan_inventory_build_manifest import (
+    load_region1_forest_plan_inventory_build_manifest,
+)
 from usfs_r1_ea_sources.forest_plan_source_delta_readiness import (
     build_forest_plan_source_delta_readiness_report,
 )
@@ -360,7 +363,7 @@ def _write_sequence_zero_fixture(
             source_record_id_filter_count=len(source_delta_ids),
             supplemental_source_count=len(source_delta_ids),
             source_partition_counts={"active_review_corpus": len(source_delta_ids)},
-            document_role_counts={"forest_plan_support": len(source_delta_ids)},
+            document_role_counts=_source_delta_catalog_role_counts(register),
         )
     _write_catalog_fixture(
         output_dir / "catalog",
@@ -374,10 +377,7 @@ def _write_sequence_zero_fixture(
         source_record_id_filter_count=None,
         supplemental_source_count=len(source_delta_ids),
         source_partition_counts={"active_review_corpus": 349, "candidate_blocked_source": 1},
-        document_role_counts={
-            "forest_plan": 28,
-            "forest_plan_support": len(source_delta_ids),
-        },
+        document_role_counts=_merged_catalog_role_counts(register),
     )
 
 
@@ -442,7 +442,7 @@ def _write_merged_catalog_fixture(output_dir: Path, *, register) -> Path:
         source_record_id_filter_count=None,
         supplemental_source_count=len(register.source_delta_sources),
         source_partition_counts={"active_review_corpus": 349, "candidate_blocked_source": 1},
-        document_role_counts={"forest_plan": 28, "forest_plan_support": len(register.source_delta_sources)},
+        document_role_counts=_merged_catalog_role_counts(register),
     )
     return merged_dir
 
@@ -649,6 +649,33 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
 
 def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _source_delta_catalog_role_counts(register) -> dict[str, int]:
+    primary_count = len(_source_delta_primary_plan_source_record_ids(register))
+    source_delta_count = len(register.source_delta_sources)
+    return {
+        "forest_plan": primary_count,
+        "forest_plan_support": source_delta_count - primary_count,
+    }
+
+
+def _merged_catalog_role_counts(register) -> dict[str, int]:
+    source_delta_counts = _source_delta_catalog_role_counts(register)
+    return {
+        "forest_plan": 28 + source_delta_counts["forest_plan"],
+        "forest_plan_support": source_delta_counts["forest_plan_support"],
+    }
+
+
+def _source_delta_primary_plan_source_record_ids(register) -> list[str]:
+    manifest = load_region1_forest_plan_inventory_build_manifest()
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+    return sorted(
+        row.primary_plan_source_record_id
+        for row in manifest.profile_rows
+        if row.primary_plan_source_record_id in source_delta_ids
+    )
 
 
 def _check(report: dict, name: str) -> dict:

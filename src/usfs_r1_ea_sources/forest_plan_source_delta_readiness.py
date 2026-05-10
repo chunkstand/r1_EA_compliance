@@ -21,6 +21,9 @@ DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
 DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH = Path(
     "config/r1_forest_plan_official_source_gap_evidence.json"
 )
+DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH = Path(
+    "config/r1_forest_plan_component_inventory_build_manifest.json"
+)
 DEFAULT_SOURCE_DELTA_BATCH_RUN_ID = "r1-forest-plan-source-delta-capture-20260510-batches"
 EXPECTED_BASE_CANONICAL_SOURCE_COUNT = 190
 
@@ -1385,10 +1388,16 @@ def _source_delta_catalog_partition_check(
     manifest: dict[str, Any],
 ) -> dict[str, Any]:
     expected_count = len(register.source_delta_sources)
+    expected_primary_plan_ids = _register_primary_plan_source_record_ids(register)
     partition_counts = manifest.get("source_partition_counts") or {}
     role_counts = manifest.get("document_role_counts") or {}
     details = {
         "expected_source_delta_count": expected_count,
+        "expected_primary_plan_source_record_ids": sorted(expected_primary_plan_ids),
+        "expected_document_role_counts": {
+            "forest_plan": len(expected_primary_plan_ids),
+            "forest_plan_support": expected_count - len(expected_primary_plan_ids),
+        },
         "source_partition_counts": partition_counts,
         "document_role_counts": role_counts,
         "status_counts": manifest.get("status_counts") or {},
@@ -1396,13 +1405,33 @@ def _source_delta_catalog_partition_check(
     }
     passed = (
         partition_counts.get("active_review_corpus") == expected_count
-        and role_counts.get("forest_plan_support") == expected_count
+        and role_counts.get("forest_plan") == len(expected_primary_plan_ids)
+        and role_counts.get("forest_plan_support") == expected_count - len(expected_primary_plan_ids)
         and int(manifest.get("artifact_count") or 0) > 0
     )
     return {
         "name": "source_delta_catalog_gate_keeps_rows_active_and_support_scoped",
         "passed": passed,
         "details": details,
+    }
+
+
+def _register_primary_plan_source_record_ids(register: R1ForestPlanDocumentRegister) -> set[str]:
+    payload = json.loads(
+        DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH.read_text(encoding="utf-8")
+    )
+    profile_rows = payload.get("profile_rows")
+    if not isinstance(profile_rows, list):
+        raise ValueError(
+            "Region 1 inventory build manifest must contain a profile_rows list for "
+            "source-delta readiness checks."
+        )
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+    return {
+        str(row.get("primary_plan_source_record_id") or "")
+        for row in profile_rows
+        if isinstance(row, dict)
+        and str(row.get("primary_plan_source_record_id") or "") in source_delta_ids
     }
 
 

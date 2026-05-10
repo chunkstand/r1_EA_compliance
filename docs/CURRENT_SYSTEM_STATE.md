@@ -95,6 +95,21 @@ Latest closeout on 2026-05-10:
   the three validated inventories and seven typed blockers replace the current one-validated,
   nine-`component_inventory_build_required` readiness snapshot without weakening
   `region1_completeness_claim=false`.
+- The primary-plan role-classification milestone is now implemented in code and focused tests.
+  When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
+  primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` classify as `document_role=forest_plan`, while ordinary supplemental
+  register rows remain `forest_plan_support`.
+- Live local replay under the current uncommitted worktree produced transient active catalog
+  `source-set-5e65d845ce77e1a0`. In that replay, all five promoted source IDs now emit
+  `document_role=forest_plan` chunks. Isolated single-forest builds against those chunks show
+  `flathead-nf` now builds `80` components / `20` standards and `kootenai-nf` builds `1`
+  component / `1` standard; `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` now receive real plan-body chunk selection (`2`, `580`, and `278`
+  chunks respectively) instead of upstream role starvation. The tracked manifest remains pinned to
+  committed full-canonical source set `source-set-34061d1e4bf6c460`, so manifest-batch promotion of
+  the transient replay is a later active-source-set refresh step rather than part of this
+  classifier milestone.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
