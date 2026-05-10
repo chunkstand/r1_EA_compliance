@@ -244,7 +244,10 @@ names required node types, edge types, display states, review-readiness states, 
 top-level graph shape, node/edge shape, summary shape, lens metadata, and validation shape. The
 gap-closure pass now fails closed on missing node-type provenance fields, undeclared edge endpoint
 types, incomplete required graph lenses, or lens metadata that references unknown node, edge, or
-display-status values.
+display-status values. Focused follow-on closeout on 2026-05-10 adds
+`readiness_semantic_class` so the contract also fails closed when red graph items are not
+distinguished as synthetic blocker nodes, blocked domain nodes, explicit blocker edges, or blocked
+relationship edges.
 
 Required outputs:
 

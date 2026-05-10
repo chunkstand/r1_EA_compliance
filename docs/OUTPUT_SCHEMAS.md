@@ -1137,6 +1137,10 @@ Top-level graph shape:
 - `summary`
 - `validation`
 
+Every node and edge record also carries a contract-owned `readiness_semantic_class` field. This is
+separate from `display_status` and `readiness_blockers`: it exists so reviewer-facing graph
+surfaces can distinguish why a red item is red without inferring semantics from color alone.
+
 Required node types:
 
 - `source_set`
@@ -1192,9 +1196,13 @@ Required readiness blocker types are `missing_source`, `stale_artifact`, `supers
 `retrieval_miss`, `graph_trace_gap`, `search_coverage_gap`, `adjudication_needed`,
 `package_fixture_missing`, `forest_profile_not_ready`, and `fsh_chapter_delta_required`.
 
+Required readiness semantic classes are `none`, `synthetic_blocker_node`,
+`blocked_domain_node`, `blocker_relationship_edge`, and `blocked_relationship_edge`.
+
 Validation enforces contract-required provenance for each emitted node type, edge source/target node
-types against the contract's declared endpoint rules, required lens metadata fields and lenses, and
-known node, edge, and display-status values inside each lens definition.
+types against the contract's declared endpoint rules, required lens metadata fields and lenses,
+known node, edge, and display-status values inside each lens definition, and explicit
+readiness-semantic classification for every red node and edge.
 
 Node example:
 
@@ -1205,6 +1213,7 @@ Node example:
   "label": "7 CFR part 1b",
   "display_status": "active",
   "review_readiness_status": "reviewer_ready",
+  "readiness_semantic_class": "none",
   "provenance": {
     "source_set_id": "source-set-ba8d0feae79501b8",
     "source_record_id": "R1EA-001",
@@ -1231,6 +1240,7 @@ Edge example:
   "target_node_id": "source_record:R1EA-001",
   "display_status": "active",
   "review_readiness_status": "reviewer_ready",
+  "readiness_semantic_class": "none",
   "provenance": {
     "source_set_id": "source-set-ba8d0feae79501b8",
     "authority_family_id": "usda_nepa_procedures",
@@ -1332,15 +1342,21 @@ promote readiness, and does not replace export validation. Its local manifest ha
 
 The viewer expects each dataset target to use the `nepa-3d-knowledge-graph-v1` export contract. It
 derives selectors from `lens_metadata`, graph node fields, edge fields, `provenance`,
-`currentness_metadata`, `metadata`, and `readiness_blockers`. It also exposes
+`currentness_metadata`, `metadata`, `readiness_blockers`, and `readiness_semantic_class`. It also exposes
 `window.__NEPA_3D_VIEWER_READY__` in the browser for local smoke checks; that marker reports the
 loaded dataset ID, source set, review, selected lens, rendered node and edge counts, canvas count,
 and export validation status.
 
 Committed fixtures for the smallest contract slices live under
 `tests/fixtures/nepa_3d_graph/`. `minimal_source_set_graph.json` proves source-set currentness and
-source partition display. `minimal_review_graph.json` proves review-specific applicability,
-generated-rule, compliance-finding, and adjudication-blocker display.
+source partition display plus the distinction among synthetic blocker nodes, blocked domain nodes,
+explicit blocker edges, and blocked relationship edges. `minimal_review_graph.json` proves
+review-specific applicability, generated-rule, compliance-finding, and adjudication-blocker
+display.
+
+Viewer rendering uses that same semantic field for legend, tooltip, detail-rail, filter, and red
+edge/node styling. The viewer may fall back to the historical heuristics when an older graph export
+lacks the field, but fresh exports are required to carry the explicit semantic class.
 
 The Milestone 3 source-set builder is:
 

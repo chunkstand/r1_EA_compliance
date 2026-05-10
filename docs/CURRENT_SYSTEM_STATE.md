@@ -147,9 +147,9 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   chunks.
 - merged source-set replay is fully green: retrieval eval passes `12/12`, evidence graph validates
   with `153,198` nodes and `533,949` edges, claim extraction validates with `101,856` claims,
-  rule-claim binding validates with `211` links and `0` gaps, NEPA 3D source-set export validates
-  with `1,831` nodes and `2,835` edges, and source-set `phase-eval` passes `7/7` with
-  `reviewer_ready=true`.
+  rule-claim binding validates with `211` links and `0` gaps, the refreshed NEPA 3D source-set
+  export validates with `1,789` nodes, `2,808` edges, `65` checks, and `0` failed checks, and
+  source-set `phase-eval` passes `7/7` with `reviewer_ready=true`.
 - `forest-plan-source-delta-readiness` now reports `160` source-delta rows, `0` extraction
   blockers, retrieval `ready`, and one official-source gap. Source readiness is broad enough to
   mark `beaverhead-deerlodge-nf` source-ready, but NEPA 3D graph promotion remains limited to
@@ -365,7 +365,10 @@ The contract validates:
 - display states for active, superseded, reserved, candidate, out-of-scope, applicable,
   not-applicable, unresolved, adjudicated, and readiness-blocked records;
 - review-readiness states and blocker types so graph display status cannot be confused with
-  reviewer readiness.
+  reviewer readiness; and
+- explicit `readiness_semantic_class` values so red graph items are exported as synthetic blocker
+  nodes, blocked domain nodes, explicit blocker edges, or blocked relationship edges instead of
+  relying on `display_status="readiness_blocked"` alone.
 - lens metadata fields, required lenses, and referenced node, edge, and display-status values.
 
 ## NEPA 3D Source-Set Knowledge Graph Export
@@ -401,6 +404,14 @@ The live export for `source-set-ba8d0feae79501b8` now records:
   graph-visible overlay requirement groups;
 - readiness blockers remain visible as graph nodes and edges, including the scoped
   `fsh_chapter_delta_required`, `forest_profile_not_ready`, and `missing_source` blockers.
+- exporter-owned red semantics now distinguish blocker records from blocked domain surfaces and
+  explicit blocker edges from inherited blocked relationships. The archived merged graph export for
+  `source-set-8a4005c8a083af1a` has now been refreshed under this code path and records
+  `validation_passed=true`, `65` checks, `0` failed checks, `1,789` nodes, `2,808` edges, `350`
+  catalog source records, source partitions `active_review_corpus=349` plus
+  `candidate_blocked_source=1`, and readiness blocker counts
+  `forest_profile_not_ready=62`, `fsh_chapter_delta_required=2`, `missing_source=33`, and
+  `superseded_source=3`.
 
 ## NEPA 3D Review-Specific Applicability Overlay
 
@@ -519,10 +530,15 @@ dropdowns use graph-export counts and grounding metadata,
 separate authority category from authority family, keep node/edge type distinct from evidence and
 basis fields, read forest-unit values from exported forest codes, and treat selections as context
 seeds so matching nodes remain visible even when the selected lens has no matching edges. The
-detail panel shows node/edge provenance, citation labels, artifact hashes, source paths, currentness
-metadata, and validation status. Static tests now lock the runtime URLs, relative graph-export
-manifest paths, category/filter boundaries, and the `node_id`/edge endpoint mapping used by
-`3d-force-graph`. The viewer status line explicitly records that layout does not change readiness.
+detail panel shows node/edge provenance, citation labels, artifact hashes, source paths,
+currentness metadata, validation status, and exported readiness classes for red items. Static tests
+now lock the runtime URLs, relative graph-export manifest paths, category/filter boundaries, and
+the `node_id`/edge endpoint mapping used by `3d-force-graph`. The viewer status line explicitly
+records that layout does not change readiness. Legend, tooltip, detail, and status/readiness
+filters now distinguish synthetic blocker nodes, blocked domain nodes, explicit blocker edges, and
+blocked relationship edges when the export supplies the semantic field. Local browser smoke against
+the refreshed `source-set-8a4005c8a083af1a` export verified the legend/filter taxonomy plus detail
+rail rendering for one blocked forest-plan node and one explicit `HAS_READINESS_BLOCKER` edge.
 
 ## NEPA 3D Graph Validation And Promotion Gates
 

@@ -11,6 +11,7 @@ from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_LENSES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_LENS_FIELDS
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_NODE_TYPES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_READINESS_BLOCKER_TYPES
+from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_READINESS_SEMANTIC_CLASSES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import REQUIRED_REVIEW_READINESS_STATUSES
 from usfs_r1_ea_sources.nepa_3d_graph_contract import load_nepa_3d_graph_contract
 from usfs_r1_ea_sources.nepa_3d_graph_contract import validate_nepa_3d_graph
@@ -32,6 +33,7 @@ def test_nepa_3d_graph_contract_covers_milestone_1_required_types_and_states() -
     assert REQUIRED_DISPLAY_STATUSES <= set(contract["display_status_values"])
     assert REQUIRED_REVIEW_READINESS_STATUSES <= set(contract["review_readiness_status_values"])
     assert REQUIRED_READINESS_BLOCKER_TYPES <= set(contract["readiness_blocker_types"])
+    assert REQUIRED_READINESS_SEMANTIC_CLASSES <= set(contract["readiness_semantic_classes"])
     assert REQUIRED_LENS_FIELDS <= set(contract["lens_metadata_contract"]["required_fields"])
     assert REQUIRED_LENSES <= set(contract["lens_metadata_contract"]["required_lenses"])
     assert {"source_set", "review"} <= set(contract["export_scopes"])
@@ -103,6 +105,53 @@ def test_graph_contract_validation_fails_on_missing_provenance_lens_and_edge_typ
     ]
 
 
+def test_graph_contract_validation_fails_on_missing_red_semantic_classes() -> None:
+    contract = load_nepa_3d_graph_contract(REPO_ROOT / DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH)
+    graph = deepcopy(_read_json(FIXTURE_DIR / "minimal_source_set_graph.json"))
+    blocker_node = next(
+        node for node in graph["nodes"] if node["node_id"] == "readiness_blocker:superseded_source:R1EA-220"
+    )
+    blocked_edge = next(
+        edge
+        for edge in graph["edges"]
+        if edge["edge_id"]
+        == "forest_unit:other-test-forest->forest_plan:other-test-forest:R1EA-001:HAS_FOREST_PLAN"
+    )
+    blocker_edge = next(
+        edge
+        for edge in graph["edges"]
+        if edge["edge_id"]
+        == "source_record:R1EA-220->readiness_blocker:superseded_source:R1EA-220:BLOCKED_BY"
+    )
+    blocker_node["readiness_semantic_class"] = "none"
+    blocked_edge["readiness_semantic_class"] = "none"
+    blocker_edge["readiness_semantic_class"] = "blocked_relationship_edge"
+
+    checks = {check["name"]: check for check in validate_nepa_3d_graph(graph, contract)}
+
+    assert not checks["nepa_3d_graph_explicitly_classifies_red_semantics"]["passed"]
+    assert checks["nepa_3d_graph_explicitly_classifies_red_semantics"]["actual"] == [
+        {
+            "record_kind": "node",
+            "record_id": "readiness_blocker:superseded_source:R1EA-220",
+            "expected": "synthetic_blocker_node",
+            "actual": "none",
+        },
+        {
+            "record_kind": "edge",
+            "record_id": "source_record:R1EA-220->readiness_blocker:superseded_source:R1EA-220:BLOCKED_BY",
+            "expected": "blocker_relationship_edge",
+            "actual": "blocked_relationship_edge",
+        },
+        {
+            "record_kind": "edge",
+            "record_id": "forest_unit:other-test-forest->forest_plan:other-test-forest:R1EA-001:HAS_FOREST_PLAN",
+            "expected": "blocked_relationship_edge",
+            "actual": "none",
+        },
+    ]
+
+
 def test_contract_validation_fails_when_contract_drops_milestone_1_requirements() -> None:
     contract = load_nepa_3d_graph_contract(REPO_ROOT / DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH)
     broken = deepcopy(contract)
@@ -120,6 +169,7 @@ def test_contract_validation_fails_when_contract_drops_milestone_1_requirements(
     supports_rule["source_node_types"] = []
     broken["lens_metadata_contract"]["required_fields"].remove("description")
     broken["lens_metadata_contract"]["required_lenses"].remove("readiness_blockers")
+    broken["readiness_semantic_classes"].remove("blocked_relationship_edge")
 
     checks = {check["name"]: check for check in validate_nepa_3d_graph_contract(broken)}
 
@@ -127,6 +177,7 @@ def test_contract_validation_fails_when_contract_drops_milestone_1_requirements(
     assert not checks["nepa_3d_graph_contract_defines_edge_endpoint_types"]["passed"]
     assert not checks["nepa_3d_graph_contract_defines_lens_metadata_shape"]["passed"]
     assert not checks["nepa_3d_graph_contract_defines_required_lenses"]["passed"]
+    assert not checks["nepa_3d_graph_contract_names_readiness_semantic_classes"]["passed"]
 
 
 def test_review_graph_contract_requires_review_id_for_review_scope() -> None:

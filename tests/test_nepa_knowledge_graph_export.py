@@ -101,9 +101,24 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert "forest_plan_component" in graph["summary"]["node_type_counts"]
         assert "source_claim" in graph["summary"]["node_type_counts"]
         assert "forest_profile_not_ready" in graph["summary"]["readiness_blocker_counts"]
+        blocker_nodes = [
+            node
+            for node in nodes
+            if node["node_type"] == "readiness_blocker"
+            and node["provenance"].get("blocker_type") == "forest_profile_not_ready"
+        ]
+        assert blocker_nodes
+        assert all(
+            node["readiness_semantic_class"] == "synthetic_blocker_node"
+            for node in blocker_nodes
+        )
         assert (
             nodes_by_id["forest_unit:other-test-forest"]["display_status"]
             == "readiness_blocked"
+        )
+        assert (
+            nodes_by_id["forest_unit:other-test-forest"]["readiness_semantic_class"]
+            == "blocked_domain_node"
         )
         assert (
             nodes_by_id[
@@ -120,6 +135,14 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert any(
             edge["edge_type"] == "HAS_READINESS_BLOCKER"
             and edge["source_node_id"] == "forest_unit:other-test-forest"
+            and edge["readiness_semantic_class"] == "blocker_relationship_edge"
+            for edge in edges
+        )
+        assert any(
+            edge["edge_type"] == "HAS_FOREST_PLAN"
+            and edge["source_node_id"] == "forest_unit:other-test-forest"
+            and edge["target_node_id"] == "forest_plan:other-test-forest:R1PLAN-OTHER-001"
+            and edge["readiness_semantic_class"] == "blocked_relationship_edge"
             for edge in edges
         )
         assert any(
@@ -157,7 +180,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         nepa_phase = _phase(phase_eval.summary, "nepa_3d_source_set_graph")
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
-        assert nepa_phase["details"]["validation_check_count"] == 62
+        assert nepa_phase["details"]["validation_check_count"] == 65
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
@@ -360,7 +383,7 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
         assert nepa_phase["details"]["review_id"] == review_id
-        assert nepa_phase["details"]["validation_check_count"] == 76
+        assert nepa_phase["details"]["validation_check_count"] == 79
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 

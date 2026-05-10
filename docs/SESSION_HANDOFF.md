@@ -2,6 +2,61 @@
 
 Date: 2026-05-10
 
+## NEPA 3D Readiness Blocker Clarity
+
+The NEPA 3D blocker-clarity follow-on is now implemented and locally closed through code, tests,
+refreshed graph artifacts, and browser smoke.
+
+- contract/exporter change: `readiness_semantic_class` is now a required node/edge field in
+  `config/nepa_3d_graph_contract_v1.json` and
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`
+- exporter behavior: fresh graph exports classify red items as `synthetic_blocker_node`,
+  `blocked_domain_node`, `blocker_relationship_edge`, or `blocked_relationship_edge` instead of
+  relying on `display_status="readiness_blocked"` alone
+- viewer behavior: `viewer/nepa-3d/app.js` now uses that field for legend, tooltip, detail,
+  filter, and red edge/node styling, with heuristic fallback for older graph exports
+- fixture/test coverage: smallest source-set/review graph fixtures now fail closed when those red
+  semantics collapse together again
+- live archived export refresh: rerunning `nepa-knowledge-graph-export` against the archived merged
+  catalog gate for `source-set-8a4005c8a083af1a` now writes a graph with `validation_passed=true`,
+  `65` checks, `0` failed checks, `1,789` nodes, `2,808` edges, `350` catalog source records,
+  source partitions `active_review_corpus=349` plus `candidate_blocked_source=1`, and readiness
+  blocker counts `forest_profile_not_ready=62`, `fsh_chapter_delta_required=2`,
+  `missing_source=33`, `superseded_source=3`
+- local browser smoke: served `viewer/nepa-3d/` on `http://127.0.0.1:8765/viewer/nepa-3d/`,
+  verified the refreshed source set resolved at load, verified the legend and status/readiness
+  filter taxonomy, and verified the detail rail for a blocked forest-plan node
+  (`Blocked domain node`) plus an explicit `HAS_READINESS_BLOCKER` edge (`Explicit blocker edge`)
+  against live DOM output
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_3d_graph_contract.py`: passed `8/8`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py`: passed `4/4`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_3d_viewer.py`: passed `5/5`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py`: passed `5/5`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-8a4005c8a083af1a --catalog-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/source_catalog.jsonl --catalog-graph-nodes-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/source_graph_nodes.jsonl --catalog-graph-edges-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/source_graph_edges.jsonl --source-set-manifest-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/source_set_manifest.json`: passed with `validation_passed=true`, `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges
+- headless local browser smoke via Chrome channel + Playwright against `http://127.0.0.1:8765/viewer/nepa-3d/`: passed with resolved dataset `source-set-8a4005c8a083af1a`, `1,789/2,808` rendered at load, blocked-domain-node detail text present for `forest_plan:beaverhead-deerlodge-nf:R1PLAN-beaverhead-deerlodge-nf-02`, and explicit-blocker-edge detail text present for `edge:09a097081a624c08dfc9b85d`
+- `git diff --check`: passed
+
+Residual risks:
+
+- the active promoted catalog source set `source-set-34061d1e4bf6c460` still lacks the
+  authority-currentness artifact path the exporter expects, so the blocker-clarity live refresh was
+  verified against the freshest archived merged gate (`source-set-8a4005c8a083af1a`) rather than
+  the active catalog source set
+- review-overlay graph artifacts were not regenerated in this pass; the live smoke covered the
+  source-set graph path only
+
+Immediate next step if this slice is continued:
+
+1. If the active full canonical catalog needs to become the viewer default without fallback,
+   generate the missing currentness-derived inputs under `source-set-34061d1e4bf6c460` and rerun
+   the source-set NEPA 3D export there.
+2. If reviewer workflows need the same red-taxonomy proof on review overlays, rerun the
+   review-scoped export and smoke one live review overlay detail case.
+3. Otherwise, the next milestone boundary is blocker reduction, not blocker-clarity semantics.
+
 ## Latest Full Canonical Corpus Promotion
 
 The active `source_library/catalog/` contract has now been promoted to the full merged corpus under

@@ -89,6 +89,13 @@ REQUIRED_READINESS_BLOCKER_TYPES = {
     "forest_profile_not_ready",
     "fsh_chapter_delta_required",
 }
+REQUIRED_READINESS_SEMANTIC_CLASSES = {
+    "none",
+    "synthetic_blocker_node",
+    "blocked_domain_node",
+    "blocker_relationship_edge",
+    "blocked_relationship_edge",
+}
 REQUIRED_TOP_LEVEL_FIELDS = {
     "schema_version",
     "graph_id",
@@ -107,6 +114,7 @@ REQUIRED_NODE_FIELDS = {
     "label",
     "display_status",
     "review_readiness_status",
+    "readiness_semantic_class",
     "provenance",
     "currentness_metadata",
     "readiness_blockers",
@@ -118,6 +126,7 @@ REQUIRED_EDGE_FIELDS = {
     "target_node_id",
     "display_status",
     "review_readiness_status",
+    "readiness_semantic_class",
     "provenance",
 }
 REQUIRED_SUMMARY_FIELDS = {
@@ -160,6 +169,7 @@ def validate_nepa_3d_graph_contract(contract: dict[str, Any]) -> list[dict[str, 
     display_statuses = set(_strings(contract.get("display_status_values")))
     review_readiness_statuses = set(_strings(contract.get("review_readiness_status_values")))
     readiness_blocker_types = set(_strings(contract.get("readiness_blocker_types")))
+    readiness_semantic_classes = set(_strings(contract.get("readiness_semantic_classes")))
     graph_shape = _dict(contract.get("graph_shape"))
     lens_contract = _dict(contract.get("lens_metadata_contract"))
     node_provenance_requirements = _node_provenance_requirements(contract)
@@ -240,6 +250,12 @@ def validate_nepa_3d_graph_contract(contract: dict[str, Any]) -> list[dict[str, 
             sorted(REQUIRED_READINESS_BLOCKER_TYPES - readiness_blocker_types),
         ),
         _check(
+            "nepa_3d_graph_contract_names_readiness_semantic_classes",
+            REQUIRED_READINESS_SEMANTIC_CLASSES <= readiness_semantic_classes,
+            sorted(REQUIRED_READINESS_SEMANTIC_CLASSES),
+            sorted(REQUIRED_READINESS_SEMANTIC_CLASSES - readiness_semantic_classes),
+        ),
+        _check(
             "nepa_3d_graph_contract_defines_top_level_shape",
             REQUIRED_TOP_LEVEL_FIELDS <= set(_strings(graph_shape.get("required_top_level_fields"))),
             sorted(REQUIRED_TOP_LEVEL_FIELDS),
@@ -304,6 +320,7 @@ def validate_nepa_3d_graph(
     display_statuses = set(_strings(contract.get("display_status_values")))
     readiness_statuses = set(_strings(contract.get("review_readiness_status_values")))
     readiness_blocker_types = set(_strings(contract.get("readiness_blocker_types")))
+    readiness_semantic_classes = set(_strings(contract.get("readiness_semantic_classes")))
     export_scopes = set(_strings(contract.get("export_scopes")))
     node_provenance_requirements = _node_provenance_requirements(contract)
     edge_endpoint_rules = _edge_endpoint_rules(contract)
@@ -359,12 +376,20 @@ def validate_nepa_3d_graph(
             if blocker not in readiness_blocker_types
         }
     )
+    invalid_readiness_semantic_classes = sorted(
+        {
+            str(record.get("readiness_semantic_class") or "")
+            for record in nodes + edges
+            if str(record.get("readiness_semantic_class") or "") not in readiness_semantic_classes
+        }
+    )
     node_provenance_gaps = _records_missing_provenance(nodes, node_provenance_requirements)
     edge_endpoint_type_violations = _edge_endpoint_type_violations(
         edges,
         node_by_id,
         edge_endpoint_rules,
     )
+    readiness_semantic_gaps = _readiness_semantic_gaps(nodes=nodes, edges=edges, node_by_id=node_by_id)
     lens_required_fields = _strings(lens_contract.get("required_fields"))
     lens_missing_fields = _records_missing_fields(lens_metadata, lens_required_fields, "lens_id")
     required_lenses = set(_strings(lens_contract.get("required_lenses")))
@@ -471,10 +496,22 @@ def validate_nepa_3d_graph(
             invalid_readiness_blockers,
         ),
         _check(
+            "nepa_3d_graph_uses_known_readiness_semantic_classes",
+            not invalid_readiness_semantic_classes,
+            sorted(readiness_semantic_classes),
+            invalid_readiness_semantic_classes,
+        ),
+        _check(
             "nepa_3d_graph_nodes_have_required_provenance",
             not node_provenance_gaps,
             "node-type required_provenance_fields from contract",
             node_provenance_gaps,
+        ),
+        _check(
+            "nepa_3d_graph_explicitly_classifies_red_semantics",
+            not readiness_semantic_gaps,
+            "red nodes and edges must carry the contract semantic class",
+            readiness_semantic_gaps,
         ),
         _check(
             "nepa_3d_graph_edges_match_declared_endpoint_types",
@@ -612,6 +649,60 @@ def _edge_endpoint_type_violations(
                 }
             )
     return sorted(violations, key=lambda item: str(item.get("edge_id") or ""))
+
+
+def _readiness_semantic_gaps(
+    *,
+    nodes: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+    node_by_id: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    gaps: list[dict[str, Any]] = []
+    for node in nodes:
+        expected = _expected_node_readiness_semantic_class(node)
+        actual = str(node.get("readiness_semantic_class") or "")
+        if actual != expected:
+            gaps.append(
+                {
+                    "record_kind": "node",
+                    "record_id": node.get("node_id"),
+                    "expected": expected,
+                    "actual": actual,
+                }
+            )
+    for edge in edges:
+        target_node = node_by_id.get(str(edge.get("target_node_id") or ""))
+        expected = _expected_edge_readiness_semantic_class(edge, target_node)
+        actual = str(edge.get("readiness_semantic_class") or "")
+        if actual != expected:
+            gaps.append(
+                {
+                    "record_kind": "edge",
+                    "record_id": edge.get("edge_id"),
+                    "expected": expected,
+                    "actual": actual,
+                }
+            )
+    return gaps
+
+
+def _expected_node_readiness_semantic_class(node: dict[str, Any]) -> str:
+    if str(node.get("node_type") or "") == "readiness_blocker":
+        return "synthetic_blocker_node"
+    if str(node.get("display_status") or "") == "readiness_blocked":
+        return "blocked_domain_node"
+    return "none"
+
+
+def _expected_edge_readiness_semantic_class(
+    edge: dict[str, Any],
+    target_node: dict[str, Any] | None,
+) -> str:
+    if str(_dict(target_node).get("node_type") or "") == "readiness_blocker":
+        return "blocker_relationship_edge"
+    if str(edge.get("display_status") or "") == "readiness_blocked":
+        return "blocked_relationship_edge"
+    return "none"
 
 
 def _is_missing_value(value: object) -> bool:

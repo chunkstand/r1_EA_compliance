@@ -135,6 +135,7 @@
       "label": "review-test",
       "display_status": "active",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "review_id": "review-test",
         "source_set_id": "source-set-test"
@@ -148,6 +149,7 @@
       "label": "Land exchange authority",
       "display_status": "active",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "land_exchange",
         "source_set_id": "source-set-test"
@@ -166,6 +168,7 @@
       "label": "Land exchange applies to review-test",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "land_exchange",
         "review_id": "review-test",
@@ -184,6 +187,7 @@
       "label": "Cultural resources needs adjudication",
       "display_status": "unresolved",
       "review_readiness_status": "needs_adjudication",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "cultural_resources",
         "review_id": "review-test",
@@ -204,6 +208,7 @@
       "label": "Applicability adjudication needed",
       "display_status": "readiness_blocked",
       "review_readiness_status": "blocked",
+      "readiness_semantic_class": "synthetic_blocker_node",
       "provenance": {
         "blocker_type": "adjudication_needed",
         "review_id": "review-test",
@@ -218,6 +223,7 @@
       "label": "Generated land exchange rule",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "generated_rule_id": "LAND_EXCHANGE_001",
         "authority_family_id": "land_exchange",
@@ -237,6 +243,7 @@
       "label": "Finding for generated land exchange rule",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "finding_id": "LAND_EXCHANGE_001",
         "review_id": "review-test",
@@ -258,6 +265,7 @@
       "target_node_id": "applicability_decision:review-test:land_exchange",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "land_exchange",
         "review_id": "review-test",
@@ -272,6 +280,7 @@
       "target_node_id": "review:review-test",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "land_exchange",
         "review_id": "review-test",
@@ -286,6 +295,7 @@
       "target_node_id": "generated_rule:review-test:LAND_EXCHANGE_001",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "land_exchange",
         "review_id": "review-test",
@@ -300,6 +310,7 @@
       "target_node_id": "compliance_finding:review-test:LAND_EXCHANGE_001",
       "display_status": "applicable",
       "review_readiness_status": "reviewer_ready",
+      "readiness_semantic_class": "none",
       "provenance": {
         "finding_id": "LAND_EXCHANGE_001",
         "review_id": "review-test",
@@ -314,6 +325,7 @@
       "target_node_id": "applicability_decision:review-test:cultural_resources",
       "display_status": "unresolved",
       "review_readiness_status": "needs_adjudication",
+      "readiness_semantic_class": "none",
       "provenance": {
         "authority_family_id": "cultural_resources",
         "review_id": "review-test",
@@ -330,6 +342,7 @@
       "target_node_id": "readiness_blocker:review-test:adjudication_needed",
       "display_status": "readiness_blocked",
       "review_readiness_status": "needs_adjudication",
+      "readiness_semantic_class": "blocker_relationship_edge",
       "provenance": {
         "authority_family_id": "cultural_resources",
         "review_id": "review-test",

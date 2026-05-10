@@ -144,9 +144,9 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   chunks.
 - merged source-set replay is fully green: retrieval eval passes `12/12`, evidence graph validates
   with `153,198` nodes and `533,949` edges, claim extraction validates with `101,856` claims,
-  rule-claim binding validates with `211` links and `0` gaps, NEPA 3D source-set export validates
-  with `1,831` nodes and `2,835` edges, and source-set `phase-eval` passes `7/7` with
-  `reviewer_ready=true`.
+  rule-claim binding validates with `211` links and `0` gaps, the refreshed NEPA 3D source-set
+  export validates with `1,789` nodes, `2,808` edges, `65` checks, and `0` failed checks, and
+  source-set `phase-eval` passes `7/7` with `reviewer_ready=true`.
 - `forest-plan-source-delta-readiness` now reports `160` source-delta rows, `0` extraction
   blockers, retrieval `ready`, and one official-source gap. Source readiness is broad enough to
   mark `beaverhead-deerlodge-nf` source-ready, but NEPA 3D graph promotion remains limited to
@@ -243,9 +243,12 @@ validation/readiness stays tied to the exported artifacts rather than viewer lay
 the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
 dropdown gap passes separate authority category from authority family, split node/edge type from
 evidence/basis semantics, read forest-unit values from exported forest codes, ground lens and filter
-options with graph-export counts, treat filter selections as context seeds instead of strict
-edge-endpoint requirements, add a Clear filters action, and live sweep source-set/review dropdown
-selections so populated options no longer blank the graph. A demo-mode pass now adds one-click
+options in export data, and now uses `readiness_semantic_class` so red items distinguish synthetic
+blocker nodes, blocked domain nodes, explicit blocker edges, and blocked relationship edges without
+changing the underlying readiness truth. The viewer also grounds option counts in export data,
+treats filter selections as context seeds instead of strict edge-endpoint requirements, adds a
+Clear filters action, and live-sweeps source-set/review dropdown selections so populated options no
+longer blank the graph. A demo-mode pass now adds one-click
 scene buttons for source library, authority graph, applicability, evidence path, forest plan,
 readiness, and full graph views; the evidence-path scene derives a clickable source-to-finding
 spotlight from the graph itself, and a right-side Capability shown panel keeps demo claims grounded

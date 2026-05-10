@@ -112,6 +112,7 @@ class _GraphBuilder:
         label: str,
         display_status: str,
         review_readiness_status: str,
+        readiness_semantic_class: str | None = None,
         provenance: dict[str, Any],
         currentness_metadata: dict[str, Any] | None = None,
         readiness_blockers: list[str] | None = None,
@@ -123,6 +124,11 @@ class _GraphBuilder:
             "label": label,
             "display_status": display_status,
             "review_readiness_status": review_readiness_status,
+            "readiness_semantic_class": readiness_semantic_class
+            or _default_node_readiness_semantic_class(
+                node_type=node_type,
+                display_status=display_status,
+            ),
             "provenance": _compact_dict(provenance),
             "currentness_metadata": _compact_dict(currentness_metadata or {}),
             "readiness_blockers": sorted(set(readiness_blockers or [])),
@@ -146,6 +152,13 @@ class _GraphBuilder:
         existing["readiness_blockers"] = sorted(
             set(existing.get("readiness_blockers", [])) | set(record.get("readiness_blockers", []))
         )
+        existing["readiness_semantic_class"] = (
+            readiness_semantic_class
+            or _default_node_readiness_semantic_class(
+                node_type=str(existing.get("node_type") or node_type),
+                display_status=str(existing.get("display_status") or display_status),
+            )
+        )
         if metadata:
             existing["metadata"] = {**existing.get("metadata", {}), **record["metadata"]}
         return node_id
@@ -158,6 +171,7 @@ class _GraphBuilder:
         target_node_id: str,
         display_status: str,
         review_readiness_status: str,
+        readiness_semantic_class: str | None = None,
         provenance: dict[str, Any],
         readiness_blockers: list[str] | None = None,
         edge_key: str | None = None,
@@ -178,6 +192,13 @@ class _GraphBuilder:
             "target_node_id": target_node_id,
             "display_status": display_status,
             "review_readiness_status": review_readiness_status,
+            "readiness_semantic_class": readiness_semantic_class
+            or _default_edge_readiness_semantic_class(
+                display_status=display_status,
+                target_node_type=str(
+                    _dict(self.nodes.get(target_node_id)).get("node_type") or ""
+                ),
+            ),
             "provenance": _compact_dict(provenance),
             "readiness_blockers": sorted(set(readiness_blockers or [])),
         }
@@ -192,6 +213,7 @@ class _GraphBuilder:
         *,
         display_status: str | None = None,
         review_readiness_status: str | None = None,
+        readiness_semantic_class: str | None = None,
         provenance: dict[str, Any] | None = None,
         readiness_blockers: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
@@ -203,6 +225,10 @@ class _GraphBuilder:
             record["display_status"] = display_status
         if review_readiness_status:
             record["review_readiness_status"] = review_readiness_status
+        record["readiness_semantic_class"] = readiness_semantic_class or _default_node_readiness_semantic_class(
+            node_type=str(record.get("node_type") or ""),
+            display_status=str(record.get("display_status") or ""),
+        )
         if provenance:
             record["provenance"] = {
                 **record.get("provenance", {}),
@@ -220,6 +246,22 @@ class _GraphBuilder:
 
     def sorted_edges(self) -> list[dict[str, Any]]:
         return [self.edges[edge_id] for edge_id in sorted(self.edges)]
+
+
+def _default_node_readiness_semantic_class(*, node_type: str, display_status: str) -> str:
+    if node_type == "readiness_blocker":
+        return "synthetic_blocker_node"
+    if display_status == "readiness_blocked":
+        return "blocked_domain_node"
+    return "none"
+
+
+def _default_edge_readiness_semantic_class(*, display_status: str, target_node_type: str) -> str:
+    if target_node_type == "readiness_blocker":
+        return "blocker_relationship_edge"
+    if display_status == "readiness_blocked":
+        return "blocked_relationship_edge"
+    return "none"
 
 
 def build_nepa_knowledge_graph_export(

@@ -26,6 +26,7 @@
       "label",
       "display_status",
       "review_readiness_status",
+      "readiness_semantic_class",
       "provenance",
       "currentness_metadata",
       "readiness_blockers"
@@ -37,6 +38,7 @@
       "target_node_id",
       "display_status",
       "review_readiness_status",
+      "readiness_semantic_class",
       "provenance",
       "readiness_blockers"
     ],
@@ -479,6 +481,13 @@
     "package_fixture_missing",
     "forest_profile_not_ready",
     "fsh_chapter_delta_required"
+  ],
+  "readiness_semantic_classes": [
+    "none",
+    "synthetic_blocker_node",
+    "blocked_domain_node",
+    "blocker_relationship_edge",
+    "blocked_relationship_edge"
   ],
   "source_partition_values": [
     "active_review_corpus",

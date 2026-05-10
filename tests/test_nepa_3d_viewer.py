@@ -152,6 +152,10 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
         "clearFilters",
         "exportScreenshot",
         "exportViewerState",
+        "READINESS_SEMANTIC_LABELS",
+        "readinessSemanticClass",
+        "readinessSemanticExplanation",
+        "edgeTargetNodeType",
         "__NEPA_3D_VIEWER_READY__",
     ]:
         assert required in script
@@ -170,6 +174,11 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
     assert '"artifact path"' in script
     assert "validation_passed" in script
     assert "Viewer layout does not change readiness" in script
+    assert "readiness_semantic_class" in script
+    assert "Synthetic blocker node" in script
+    assert "Blocked domain node" in script
+    assert "Explicit blocker edge" in script
+    assert "Blocked relationship edge" in script
     assert 'id: "full_graph"' in script
     assert 'reviewId: ""' in script
     assert "Full validated corpus graph" in script
@@ -202,6 +211,7 @@ def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:
     assert "Clear filters" in html
     assert "dataset.grounding" in script
     assert "lensGraph(lens)" in script
+    assert 'return `readiness class: ${READINESS_SEMANTIC_LABELS[raw].toLowerCase()}`;' in script
 
 
 def test_nepa_3d_viewer_styles_define_desktop_and_mobile_graph_surfaces() -> None:

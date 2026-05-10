@@ -28,6 +28,19 @@ const STATUS_COLORS = {
   unresolved: "#a75a22",
   adjudicated: "#3f7667"
 };
+const READINESS_SEMANTIC_LABELS = {
+  synthetic_blocker_node: "Synthetic blocker node",
+  blocked_domain_node: "Blocked domain node",
+  blocker_relationship_edge: "Explicit blocker edge",
+  blocked_relationship_edge: "Blocked relationship edge",
+  none: "No readiness class"
+};
+const READINESS_SEMANTIC_COLORS = {
+  synthetic_blocker_node: "#b13d38",
+  blocked_domain_node: "#cf6c45",
+  blocker_relationship_edge: "rgba(177, 61, 56, 0.82)",
+  blocked_relationship_edge: "rgba(207, 108, 69, 0.64)"
+};
 const NODE_TYPE_COLORS = {
   authority_family: "#26786f",
   source_record: "#356a9b",
@@ -1174,7 +1187,7 @@ function renderGraph() {
     }
   }, 900);
   renderTitle();
-  renderLegend(filtered.nodes);
+  renderLegend(filtered);
   renderCounts(filtered);
   renderGraphSceneLabel(filtered);
   renderCapabilityPanel(filtered);
@@ -1464,8 +1477,20 @@ function activeContextLabels() {
   return labels;
 }
 
-function renderLegend(nodes) {
-  const statuses = uniqueValues(nodes.map((node) => node.display_status).filter(Boolean)).slice(0, 8);
+function renderLegend(filtered) {
+  const nodes = filtered?.nodes || [];
+  const edges = filtered?.edges || [];
+  const statuses = uniqueValues(
+    nodes
+      .map((node) => node.display_status)
+      .filter((status) => status && status !== "readiness_blocked")
+  ).slice(0, 8);
+  const readinessClasses = uniqueValues(
+    nodes
+      .concat(edges)
+      .map((item) => readinessSemanticClass(item))
+      .filter((value) => value && value !== "none")
+  );
   els.legend.innerHTML = "";
   for (const status of statuses) {
     const item = document.createElement("div");
@@ -1475,6 +1500,17 @@ function renderLegend(nodes) {
     swatch.style.background = STATUS_COLORS[status] || "#7f7b73";
     const label = document.createElement("span");
     label.textContent = status.replaceAll("_", " ");
+    item.append(swatch, label);
+    els.legend.append(item);
+  }
+  for (const readinessClass of readinessClasses) {
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    const swatch = document.createElement("span");
+    swatch.className = "legend-swatch";
+    swatch.style.background = READINESS_SEMANTIC_COLORS[readinessClass] || STATUS_COLORS.readiness_blocked;
+    const label = document.createElement("span");
+    label.textContent = readinessSemanticLabel(readinessClass);
     item.append(swatch, label);
     els.legend.append(item);
   }
@@ -1596,12 +1632,15 @@ function selectCapabilityNode(nodeId) {
 }
 
 function renderNodeDetails(node) {
+  const readinessClass = readinessSemanticClass(node);
   const rows = [
     ["label", node.label],
     ["node id", node.node_id],
     ["type", node.node_type],
     ["status", node.display_status],
     ["review readiness", node.review_readiness_status],
+    ["readiness class", readinessClass !== "none" ? readinessSemanticLabel(readinessClass) : ""],
+    ["readiness meaning", readinessSemanticExplanation(node)],
     ["source record", node.provenance?.source_record_id],
     ["citation", node.provenance?.citation_label],
     ["artifact hash", node.provenance?.artifact_sha256],
@@ -1614,7 +1653,12 @@ function renderNodeDetails(node) {
   ];
   els.detailPanel.innerHTML = [
     `<div class="detail-title">${escapeHtml(node.label || node.node_id)}</div>`,
-    badgeRow([node.node_type, node.display_status, node.review_readiness_status]),
+    badgeRow([
+      node.node_type,
+      node.display_status,
+      node.review_readiness_status,
+      readinessClass !== "none" ? readinessSemanticLabel(readinessClass) : ""
+    ]),
     detailMarkup(rows),
     jsonBlock("provenance", node.provenance),
     jsonBlock("currentness", node.currentness_metadata),
@@ -1624,6 +1668,7 @@ function renderNodeDetails(node) {
 }
 
 function renderEdgeDetails(edge) {
+  const readinessClass = readinessSemanticClass(edge);
   const rows = [
     ["edge id", edge.edge_id],
     ["type", edge.edge_type],
@@ -1631,6 +1676,8 @@ function renderEdgeDetails(edge) {
     ["target", edge.target_node_id || edge.target?.node_id || edge.target],
     ["status", edge.display_status],
     ["review readiness", edge.review_readiness_status],
+    ["readiness class", readinessClass !== "none" ? readinessSemanticLabel(readinessClass) : ""],
+    ["readiness meaning", readinessSemanticExplanation(edge)],
     ["source record", edge.provenance?.source_record_id],
     ["citation", edge.provenance?.citation_label],
     ["artifact hash", edge.provenance?.artifact_sha256],
@@ -1638,7 +1685,12 @@ function renderEdgeDetails(edge) {
   ];
   els.detailPanel.innerHTML = [
     `<div class="detail-title">${escapeHtml(edge.edge_type || edge.edge_id)}</div>`,
-    badgeRow([edge.edge_type, edge.display_status, edge.review_readiness_status]),
+    badgeRow([
+      edge.edge_type,
+      edge.display_status,
+      edge.review_readiness_status,
+      readinessClass !== "none" ? readinessSemanticLabel(readinessClass) : ""
+    ]),
     detailMarkup(rows),
     jsonBlock("provenance", edge.provenance),
     jsonBlock("readiness blockers", edge.readiness_blockers)
@@ -2143,18 +2195,23 @@ function stableHash(value) {
 }
 
 function nodeColor(node) {
+  const readinessClass = readinessSemanticClass(node);
   if (state.spotlightNodeIds.has(node.node_id)) {
     return "#d7932f";
+  }
+  if (readinessClass !== "none") {
+    return READINESS_SEMANTIC_COLORS[readinessClass] || STATUS_COLORS.readiness_blocked;
   }
   return STATUS_COLORS[node.display_status] || NODE_TYPE_COLORS[node.node_type] || "#7f7b73";
 }
 
 function edgeColor(edge) {
+  const readinessClass = readinessSemanticClass(edge);
   if (state.spotlightEdgeIds.has(edge.edge_id)) {
     return "rgba(215, 147, 47, 0.92)";
   }
-  if (edge.edge_type === "HAS_READINESS_BLOCKER" || edge.display_status === "readiness_blocked") {
-    return "rgba(177, 61, 56, 0.72)";
+  if (readinessClass === "blocker_relationship_edge" || readinessClass === "blocked_relationship_edge") {
+    return READINESS_SEMANTIC_COLORS[readinessClass];
   }
   if (edge.edge_type === "APPLIES_TO_REVIEW" || edge.edge_type === "GENERATES_RULE") {
     return "rgba(47, 143, 69, 0.66)";
@@ -2166,14 +2223,18 @@ function edgeColor(edge) {
 }
 
 function edgeWidth(edge) {
+  const readinessClass = readinessSemanticClass(edge);
   if (state.selectedEdgeId && state.selectedEdgeId === edge.edge_id) {
     return 3;
   }
   if (state.spotlightEdgeIds.has(edge.edge_id)) {
     return 3;
   }
-  if (edge.edge_type === "HAS_READINESS_BLOCKER") {
+  if (readinessClass === "blocker_relationship_edge") {
     return 2;
+  }
+  if (readinessClass === "blocked_relationship_edge") {
+    return 1.4;
   }
   if (edge.edge_type === "APPLIES_TO_REVIEW" || edge.edge_type === "GENERATES_RULE") {
     return 1.4;
@@ -2199,7 +2260,16 @@ function linkParticles(edge) {
 
 function nodeTooltip(node) {
   const citation = node.provenance?.citation_label || node.provenance?.source_record_id || "";
-  return [node.label, node.node_type, node.display_status, citation].filter(Boolean).join(" | ");
+  const readinessClass = readinessSemanticClass(node);
+  return [
+    node.label,
+    node.node_type,
+    node.display_status,
+    readinessClass !== "none" ? readinessSemanticLabel(readinessClass) : "",
+    citation
+  ]
+    .filter(Boolean)
+    .join(" | ");
 }
 
 function nodeSearchText(node) {
@@ -2220,7 +2290,11 @@ function nodeSearchText(node) {
 }
 
 function statusValues(item) {
-  return compactValues([item.display_status, item.review_readiness_status]);
+  return compactValues([
+    item.display_status,
+    item.review_readiness_status,
+    readinessSemanticClass(item) !== "none" ? readinessSemanticClass(item) : ""
+  ]);
 }
 
 function authorityCategoryValues(item) {
@@ -2320,6 +2394,9 @@ function replaceOptions(select, values, selectedValue) {
 function formatOptionLabel(value, filterId = "") {
   const raw = String(value);
   const label = raw.replaceAll("_", " ");
+  if (filterId === "status" && READINESS_SEMANTIC_LABELS[raw]) {
+    return `readiness class: ${READINESS_SEMANTIC_LABELS[raw].toLowerCase()}`;
+  }
   if (filterId === "nodeEdgeType") {
     return raw === raw.toUpperCase() ? `edge: ${label.toLowerCase()}` : `node: ${label}`;
   }
@@ -2385,6 +2462,58 @@ function flattenObject(value) {
     return String(value);
   }
   return Object.values(value).map(flattenObject).join(" ");
+}
+
+function readinessSemanticClass(item) {
+  return item?.readiness_semantic_class || inferReadinessSemanticClass(item);
+}
+
+function inferReadinessSemanticClass(item) {
+  if (!item) {
+    return "none";
+  }
+  if (item.node_type === "readiness_blocker") {
+    return "synthetic_blocker_node";
+  }
+  if (item.edge_type) {
+    if (edgeTargetNodeType(item) === "readiness_blocker") {
+      return "blocker_relationship_edge";
+    }
+    if (item.display_status === "readiness_blocked") {
+      return "blocked_relationship_edge";
+    }
+    return "none";
+  }
+  if (item.display_status === "readiness_blocked") {
+    return "blocked_domain_node";
+  }
+  return "none";
+}
+
+function edgeTargetNodeType(edge) {
+  const targetNodeId = edge.target_node_id || edge.target?.node_id || edge.target;
+  return state.nodeIndex.get(targetNodeId)?.node_type || "";
+}
+
+function readinessSemanticLabel(readinessClass) {
+  return READINESS_SEMANTIC_LABELS[readinessClass] || String(readinessClass || "none").replaceAll("_", " ");
+}
+
+function readinessSemanticExplanation(item) {
+  const readinessClass = readinessSemanticClass(item);
+  if (readinessClass === "synthetic_blocker_node") {
+    return "Explicit blocker record emitted by the exporter.";
+  }
+  if (readinessClass === "blocked_domain_node") {
+    return "Domain surface remains visible, but its readiness state is blocked.";
+  }
+  if (readinessClass === "blocker_relationship_edge") {
+    return "Explicit relationship from a subject to a blocker record.";
+  }
+  if (readinessClass === "blocked_relationship_edge") {
+    return "Normal relationship shown as blocked because its owning surface is blocked.";
+  }
+  return "";
 }
 
 function validationPassedText() {
