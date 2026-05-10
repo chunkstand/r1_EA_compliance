@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 from urllib.request import Request, urlopen
 import json
 import re
@@ -17,6 +17,8 @@ class AdaptedURL:
 
 
 _ECFR_DATE_CACHE: dict[int, str | None] = {}
+_BOX_PUBLIC_HOSTS = {"usfs-public.app.box.com", "usfs-public.box.com"}
+_BOX_PUBLIC_FILE_RE = re.compile(r"/(?:s|v)/[^/]+/file/(?P<file_id>\d+)(?:/|$)")
 
 
 def adapt_download_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
@@ -26,6 +28,8 @@ def adapt_download_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
         return _adapt_ecfr_url(url, network)
     if host == "www.federalregister.gov":
         return _adapt_federal_register_url(url)
+    if host in _BOX_PUBLIC_HOSTS:
+        return _adapt_box_public_file_url(url, network)
     return None
 
 
@@ -69,6 +73,115 @@ def _adapt_federal_register_url(url: str) -> AdaptedURL | None:
         adapter="federal_register_full_text_xml",
         expected_content_type="text/xml",
     )
+
+
+def _adapt_box_public_file_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
+    match = _BOX_PUBLIC_FILE_RE.search(urlsplit(url).path)
+    if not match:
+        return None
+    file_id = match.group("file_id")
+    page_text = _read_text_url(url, network)
+    if not page_text:
+        return None
+    stream_data = _extract_box_stream_data(page_text)
+    if not isinstance(stream_data, dict):
+        return None
+    download_url = _find_key_value(stream_data, "authenticated_download_url")
+    token_map = _find_key_value(stream_data, "preview_prefetch_token_map")
+    read_token = _box_read_token(token_map, file_id)
+    if not isinstance(download_url, str) or not read_token:
+        return None
+    separator = "&" if "?" in download_url else "?"
+    return AdaptedURL(
+        url=f"{download_url}{separator}access_token={quote(read_token, safe='')}",
+        adapter="box_public_file_download",
+    )
+
+
+def _read_text_url(url: str, network: NetworkConfig) -> str | None:
+    request = Request(
+        url,
+        headers={
+            "User-Agent": network.user_agent,
+            "Accept": "text/html,application/xhtml+xml",
+        },
+    )
+    timeout = max(network.connect_timeout_seconds, network.read_timeout_seconds)
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            return response.read().decode("utf-8", errors="replace")
+    except Exception:
+        return None
+
+
+def _extract_box_stream_data(page_text: str) -> dict | None:
+    for marker in ("Box.prefetchedData", "Box.postStreamData"):
+        object_text = _extract_json_object_after(page_text, marker)
+        if not object_text:
+            continue
+        try:
+            data = json.loads(object_text)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict):
+            return data
+    return None
+
+
+def _extract_json_object_after(text: str, marker: str) -> str | None:
+    marker_index = text.find(marker)
+    if marker_index < 0:
+        return None
+    start = text.find("{", marker_index)
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escaped = False
+    for index, char in enumerate(text[start:], start=start):
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : index + 1]
+    return None
+
+
+def _find_key_value(data: object, key: str) -> object | None:
+    if isinstance(data, dict):
+        if key in data:
+            return data[key]
+        for value in data.values():
+            found = _find_key_value(value, key)
+            if found is not None:
+                return found
+    elif isinstance(data, list):
+        for item in data:
+            found = _find_key_value(item, key)
+            if found is not None:
+                return found
+    return None
+
+
+def _box_read_token(token_map: object, file_id: str) -> str | None:
+    if not isinstance(token_map, dict):
+        return None
+    token_entry = token_map.get(file_id)
+    if isinstance(token_entry, dict):
+        token = token_entry.get("read")
+        return token if isinstance(token, str) else None
+    return token_entry if isinstance(token_entry, str) else None
 
 
 def _extract_path_component(path: str, name: str) -> str | None:

@@ -199,6 +199,7 @@ source_library/
 
 - eCFR and Federal Register pages may return challenge/interstitial pages. Detect and reject `unblock.federalregister.gov`.
 - For eCFR and Federal Register, prefer official structured export/API endpoints when normal HTML capture is blocked or unstable.
+- For `usfs-public.app.box.com` or `usfs-public.box.com` public file links, preserve the official Box share URL in workbook/register rows and let the downloader resolve the temporary BoxCloud file URL at fetch time; do not store expiring access tokens in source rows.
 - For `uscode.house.gov`, detect `docnotfound.xhtml` as invalid content.
 - For `fs.usda.gov`, preserve final redirected media URLs, especially PDF redirects from `/media/<id>`.
 - For state agency pages, expect certificate, redirect, and content-type irregularities. Do not weaken TLS globally to accommodate one host.

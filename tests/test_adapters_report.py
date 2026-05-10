@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 import json
 import tempfile
 import unittest
@@ -46,6 +47,54 @@ class AdapterAndReportTests(unittest.TestCase):
         self.assertEqual(
             adapted.url,
             "https://www.federalregister.gov/documents/full_text/xml/2026/04/03/2026-06537.xml",
+        )
+
+    def test_box_public_file_adapter_uses_authenticated_download_token(self) -> None:
+        config = load_config(CONFIG)
+        stream_data = {
+            "file": {
+                "authenticated_download_url": (
+                    "https://public.boxcloud.com/api/2.0/files/1801300506566/content"
+                ),
+                "preview_prefetch_token_map": {
+                    "1801300506566": {"read": "read token/with spaces+"}
+                },
+            }
+        }
+        page = (
+            "<html><script>Box.prefetchedData = "
+            f"{json.dumps(stream_data)}"
+            ";</script></html>"
+        )
+
+        class FakeResponse:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):  # noqa: ANN001
+                return False
+
+            def read(self, *_args):  # noqa: ANN002
+                return page.encode()
+
+        with patch("usfs_r1_ea_sources.adapters.urlopen", return_value=FakeResponse()):
+            adapted = adapt_download_url(
+                "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
+                config.network,
+            )
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "box_public_file_download")
+        self.assertTrue(
+            adapted.url.startswith(
+                "https://public.boxcloud.com/api/2.0/files/1801300506566/content?access_token="
+            )
+        )
+        self.assertEqual(
+            parse_qs(urlsplit(adapted.url).query)["access_token"],
+            ["read token/with spaces+"],
         )
 
     def test_report_builds_repair_queue_from_failed_manifest(self) -> None:

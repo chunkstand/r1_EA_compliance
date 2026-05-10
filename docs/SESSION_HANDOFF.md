@@ -2,6 +2,50 @@
 
 Date: 2026-05-09
 
+## Region 1 Forest-Plan Document Register Hardening
+
+`config/r1_forest_plan_document_register_draft.csv` is now an ingest-ready draft register for
+Region 1 forest-plan support documents, subject to the two explicit consultation-package gaps
+below. The register has `187` rows: `28` already catalog-confirmed rows, `157` source-delta rows,
+and `2` documented official-source gaps. No rows remain in the prior placeholder statuses
+`needs_direct_link_resolution`, `needs_child_document_expansion`, or
+`missing_official_source_research`.
+
+The hardening slice resolved Flathead public reading-room Box files to stable official file-share
+rows, expanded Dakota Prairie Appendices A-N, expanded Idaho Panhandle 2015 Biological Opinion
+chapters, and resolved Kootenai Biological Opinion chapters 2-4 from official Forest Service
+legacy-media URLs. Downloader support now includes `box_public_file_download`, which keeps stable
+Box share URLs in the register/workbook while resolving temporary BoxCloud PDF URLs at fetch time.
+
+Remaining register gaps are explicit:
+
+- `R1PLAN-bitterroot-nf-12`: current Bitterroot official planning page exposes the plan, FEIS,
+  ROD, amendments, and monitoring documents, but not a direct plan-level BA/BO PDF. FWS catalogue
+  lookup found project code `06E11000-2021-F-0020` for Bitterroot Forest Plan Amendment - Grizzly
+  Bears and still requires direct-record acquisition before corpus promotion.
+- `R1PLAN-kootenai-nf-17`: current Kootenai official pages expose BO chapters 2-4, but this pass
+  did not locate a current official BA PDF or BO Chapter 1/full-package PDF.
+
+Verification for this slice:
+
+- Custom CSV structural validation passed: `187` rows, `0` duplicate IDs, `0` unresolved
+  placeholder statuses, valid HTTP(S) links, and documented gap IDs
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-kootenai-nf-17`.
+- Live Flathead Box preflight smoke passed for `R1PLAN-flathead-nf-02`: `preflight_ok`, HTTP
+  `206`, `application/pdf`, adapter `box_public_file_download`.
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_adapters_report.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+git diff --check
+```
+
+Next sequence: promote the draft register into the workbook-backed ingest path or a dedicated
+source-delta sheet, then run a scoped dry-run/preflight against only the new `R1PLAN-*` source-delta
+rows before any full download. Do not treat the two documented gap rows as corpus-ready until direct
+official BA/BO source records are acquired or the gap policy is explicitly accepted.
+
 ## Project SOW Integration Merge
 
 The SOW branch is being integrated through isolated branch
