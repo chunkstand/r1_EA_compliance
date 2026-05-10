@@ -53,14 +53,17 @@ Current full-corpus promotion boundary:
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
 - The promotion suite now separates full-corpus truth from reviewer-ready V1 truth:
-  `full_canonical_corpus_ready=false` for active catalog `source-set-34061d1e4bf6c460` until the
-  active full-canonical lane has its own `authority_currentness` plus NEPA 3D graph artifacts,
+  `full_canonical_corpus_ready=true` for active catalog `source-set-34061d1e4bf6c460`,
   `current_promotion_ready=true` for the East Crazies V1 lane pinned to
   `source-set-ba8d0feae79501b8`, and `expansion_ready=false` because South Plateau remains blocked
   on `forest_plan_reviewer_not_ready`.
-- The current full-canonical failures are explicit rather than hidden:
-  `graph_missing_currentness_status=1` and `graph_viewer_export_invalid=2`, corresponding to the
-  missing active-source-set `authority_currentness`, graph validation, and graph summary files.
+- The stronger active full-canonical gate is now satisfied locally:
+  `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
+  validates `35` authority families and `207` source-currentness records across source partitions
+  `active_review_corpus=349` and `candidate_blocked_source=1`, while the active NEPA 3D source-set
+  export validates with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges.
+- `full_canonical_failure_category_counts={}` after the replay, and the local viewer now resolves
+  `source-set-34061d1e4bf6c460` directly instead of falling back to the archived merged source set.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the

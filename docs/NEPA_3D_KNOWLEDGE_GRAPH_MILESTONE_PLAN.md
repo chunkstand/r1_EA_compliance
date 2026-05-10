@@ -624,7 +624,11 @@ artifacts for current promotion. The current source-set graph passes
 `19/19`. Focused follow-on closeout on 2026-05-10 also tightens the full-canonical promotion lane:
 `full_canonical_corpus_ready` now requires the active full-canonical source set to have its own
 `authority_currentness` report plus NEPA 3D source-set graph validation and summary artifacts,
-instead of relying on catalog manifest/validation alone.
+instead of relying on catalog manifest/validation alone. That stricter gate is now also closed
+locally for `source-set-34061d1e4bf6c460`: the active-source-set `authority_currentness` artifact
+passes with `35` authority families and `207` source-currentness records, the active source-set
+graph validates with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges, and the
+viewer resolves the active source set directly without archived fallback.
 
 Goal:
 Make graph completeness and viewer-readiness testable.

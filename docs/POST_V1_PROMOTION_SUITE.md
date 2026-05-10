@@ -171,16 +171,18 @@ Strict expansion now fails closed only on the South Plateau forest-plan blocker 
 
 Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the default manifest.
 The current local non-strict run now reports `current_promotion_ready=true`,
-`full_canonical_corpus_ready=false`, `promotion_ready=true`, and `expansion_ready=false`. The
+`full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`. The
 active catalog checks still pin `source_library/catalog/source_set_manifest.json` and
 `catalog_validation.json` to full canonical source set `source-set-34061d1e4bf6c460` with
 `350` source rows, `319` artifacts, `160` supplemental source-delta rows, and preserved gap
-`R1PLAN-kootenai-nf-18`, but the stronger full-canonical gate now also requires
+`R1PLAN-kootenai-nf-18`, and the stronger full-canonical gate now also requires
 `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`,
 `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`,
 and `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_summary.json`.
-Until those files exist, `full_canonical_failure_category_counts` stays
-`{"graph_missing_currentness_status": 1, "graph_viewer_export_invalid": 2}`.
+Those active-source-set artifacts are now materialized locally: `authority_currentness` passes with
+`35` authority families and `207` source-currentness records, the active NEPA 3D source-set export
+passes with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges, and
+`full_canonical_failure_category_counts={}` after the replay.
 
 The South Plateau expansion slot remains `ready=false` and carries
 `forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:

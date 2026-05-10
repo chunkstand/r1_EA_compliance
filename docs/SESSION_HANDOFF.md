@@ -4,10 +4,11 @@ Date: 2026-05-10
 
 ## Full Canonical Graph-Capability Gate
 
-The next NEPA 3D milestone is now implemented as a promotion-contract hardening pass: the
-full-canonical readiness lane can no longer report green from catalog promotion alone. The default
-promotion manifest now requires the active full-canonical source set to carry its own
-`authority_currentness` report plus NEPA 3D source-set graph validation and summary artifacts.
+The full-canonical graph-capability milestone is now closed through operational artifact
+materialization plus aligned docs. The default promotion manifest still requires the active
+full-canonical source set to carry its own `authority_currentness` report plus NEPA 3D source-set
+graph validation and summary artifacts, and the active lane now satisfies that stricter boundary
+locally.
 
 - manifest change: `config/promotion_suite_v1.json` now adds
   `full_canonical_authority_currentness`,
@@ -18,34 +19,43 @@ promotion manifest now requires the active full-canonical source set to carry it
 - test coverage: `tests/test_promotion_suite.py` now locks the committed manifest shape for those
   full-canonical graph-capability artifacts and proves runtime path resolution with
   `{full_canonical_source_set_id}` placeholders
+- operational closeout: `authority-currentness` now materializes
+  `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
+  with `validation_passed=true`, `35` authority families, `207` source-currentness records, and
+  source partitions `active_review_corpus=349` plus `candidate_blocked_source=1`
+- operational closeout: `nepa-knowledge-graph-export` now materializes
+  `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`
+  and `nepa_3d_graph_summary.json` with `validation_passed=true`, `65` checks, `0` failed checks,
+  `1,789` nodes, `2,808` edges, and readiness blocker counts
+  `forest_profile_not_ready=62`, `fsh_chapter_delta_required=2`, `missing_source=33`,
+  `superseded_source=3`
 - live replay status: rerunning `promotion-suite` against the current local `source_library/`
-  keeps `current_promotion_ready=true` and `promotion_ready=true`, but changes
-  `full_canonical_corpus_ready` from a stale green to the real current value `false`
+  now reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `expansion_ready=false`, and
+  `passed_required_full_canonical_result_count=5/5`
 
 Verification in this pass:
 
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py`: passed `19/19`
-- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=false`, `promotion_ready=true`, `expansion_ready=false`, `passed_required_full_canonical_result_count=2/5`, and `full_canonical_failure_category_counts={"graph_missing_currentness_status": 1, "graph_viewer_export_invalid": 2}`
-
-Concrete missing full-canonical artifacts after the replay:
-
-- `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
-- `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`
-- `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_summary.json`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-34061d1e4bf6c460`: passed with `validation_passed=true`, `35` authority families, `207` source-currentness records, and source partitions `active_review_corpus=349` plus `candidate_blocked_source=1`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --authority-currentness-path source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json --evidence-graph-nodes-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_nodes.jsonl --evidence-graph-edges-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_edges.jsonl --claims-path source_library/derived/source-set-8a4005c8a083af1a/claims/claims.jsonl --rule-claim-links-path source_library/derived/source-set-8a4005c8a083af1a/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_links.jsonl --forest-plan-components-path source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`: passed with `validation_passed=true`, `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, `passed_required_full_canonical_result_count=5/5`, and `full_canonical_failure_category_counts={}`
+- headless local browser smoke via Chrome channel + Playwright against `http://127.0.0.1:8765/viewer/nepa-3d/`: passed with resolved dataset `source-set-34061d1e4bf6c460`, `1,789/2,808` rendered at load, and validation text pointing to `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph.json`
 
 Residual risks:
 
-- the active catalog promotion remains real, but the active full-canonical source set is still not
-  graph-capable in local derived artifacts
-- the viewer therefore still falls back to the archived merged graph-capable source set
-  `source-set-8a4005c8a083af1a` for live NEPA 3D inspection
+- the stronger full-canonical gate is now green locally, but reviewer-facing promotion remains
+  intentionally pinned to `source-set-ba8d0feae79501b8`
+- merged-corpus East Crazies review replay on `source-set-8a4005c8a083af1a` is still blocked by
+  `7` applicability adjudications and failing forest-plan component evaluation
 
 Immediate next step if this slice is continued:
 
-1. Materialize `authority-currentness` for `source-set-34061d1e4bf6c460`.
-2. Materialize the active full-canonical NEPA 3D source-set graph validation and summary artifacts
-   for that same source set.
-3. Rerun `promotion-suite`; only then should `full_canonical_corpus_ready` return to true.
+1. Keep reviewer-facing promotion pinned to `source-set-ba8d0feae79501b8` until the merged-corpus
+   East Crazies replay becomes reviewer-ready.
+2. Close the `7` applicability adjudications in
+   `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/`.
+3. Close the remaining East Crazies forest-plan component gaps for the merged-corpus replay.
 
 ## NEPA 3D Readiness Blocker Clarity
 
@@ -121,9 +131,15 @@ the current code while keeping reviewer-ready East Crazies promotion explicit an
   `source-set-ba8d0feae79501b8`
 - promotion-suite closeout now reports:
   `current_promotion_ready=true`,
-  `full_canonical_corpus_ready=false`,
+  `full_canonical_corpus_ready=true`,
   `promotion_ready=true`,
   `expansion_ready=false`
+
+The stronger full-canonical gate is now satisfied locally for
+`source-set-34061d1e4bf6c460`: the active `authority_currentness` artifact passes with `35`
+authority families and `207` source-currentness records, the active NEPA 3D source-set export
+passes with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges, and the local
+viewer resolves that active dataset directly without fallback.
 
 Important boundary:
 
@@ -151,7 +167,7 @@ Verification replay for plan alignment:
   passed with `failed_check_count=0`, `canonical_catalog_source_set_id=source-set-34061d1e4bf6c460`,
   and preserved gap `R1PLAN-kootenai-nf-18`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`:
-  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=false`,
+  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
   `promotion_ready=true`, `expansion_ready=false`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review --validate-only`:
   passed `196/196` with `output_written=false`
