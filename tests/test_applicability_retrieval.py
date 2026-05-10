@@ -491,6 +491,7 @@ def _chunk(
         "chunk_index": 0,
         "title": f"{source_record_id} title",
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "text",

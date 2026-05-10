@@ -123,12 +123,40 @@ Latest Sequence 6 alignment verification:
   passed with schema `r1-forest-plan-source-delta-readiness-v3`, configured profile readiness
   `1` ready / `1` blocked, and tracking-only readiness separated from configured-profile counts.
 
-Immediate next sequence: Sequence 7 corpus incorporation and downstream replay. Promote the merged
-support-document corpus cleanly into downstream source-set-aware surfaces without stale-source-set
-confusion, and keep the two official-source gaps explicit until they are actually resolved.
+Sequence 7 corpus incorporation and downstream replay is complete for merged support-document
+source set `source-set-7e2652d23e764068`. The downstream source-set-aware replay surfaces are now
+fresh without stale-source-set confusion, and the remaining blockers are the explicit parser
+failures plus the two official-source gaps.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
+
+Latest Sequence 7 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_3d_graph_contract.py tests/test_claim_extraction.py tests/test_rule_claim_binding.py tests/test_evidence_graph.py tests/test_nepa_knowledge_graph_export.py tests/test_cli.py tests/test_authority_currentness.py`
+  passed `77`.
+- `PYTHONPATH=src uv run --extra dev pytest` passed `517`.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py` passed `5`.
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`, `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check` passed.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-sqlite-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/review_sources.sqlite --allow-partial-retrieval`
+  passed with `validation_passed=true`, `reviewer_ready=false`, and `101,824` claims.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --allow-partial-retrieval`
+  passed with `validation_passed=true`, `reviewer_ready=false`, `178,912` nodes, and `559,467`
+  edges.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-7e2652d23e764068 --allow-partial-claims`
+  passed with `validation_passed=true`, `reviewer_ready=false`, `211` links, and `0` gaps.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/source_catalog.jsonl --catalog-graph-nodes-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/source_graph_nodes.jsonl --catalog-graph-edges-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/source_graph_edges.jsonl --source-set-manifest-path source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/source_set_manifest.json --region1-forest-plan-readiness source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json`
+  passed with `validation_passed=true`, `1,837` nodes, `2,842` edges, and readiness blockers
+  including `extraction_blocked` plus `official_source_gap`.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate`
+  wrote a fresh source-set replay with `phase_count=7`, `passed_phase_count=6`,
+  `reviewer_ready_phase_count=2`, `reviewer_ready=false`, and no stale `compliance_gold_eval`
+  source-set mismatch phase.
+
+Next work from this point: resolve the seven parser-blocked support-document rows, resolve the two
+official-source gaps, or explicitly ask for a review replay against the merged corpus. No additional
+Sequence 7 source-set alignment work is pending.
 
 Latest Sequence 1 verification:
 

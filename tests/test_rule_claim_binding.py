@@ -112,6 +112,76 @@ class RuleClaimBindingTests(unittest.TestCase):
             self.assertEqual(links[0]["source_record_id"], "R1EA-082")
             self.assertEqual(links[0]["rule_source_filters"]["topic"], "clean_water_act_wotus_permits")
 
+    def test_rule_claim_link_allows_partial_claims_when_explicit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="EA requirements",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | EA requirements | artifact abc123",
+                        text="An environmental assessment should describe the purpose and need.",
+                    )
+                ],
+            )
+            diagnostics_summary_path = (
+                output_dir / "derived" / source_set_id / "diagnostics" / "summary.json"
+            )
+            diagnostics_summary = json.loads(
+                diagnostics_summary_path.read_text(encoding="utf-8")
+            )
+            diagnostics_summary["catalog_source_count"] = 2
+            diagnostics_summary["selected_source_count"] = 1
+            diagnostics_summary_path.write_text(
+                json.dumps(diagnostics_summary, sort_keys=True),
+                encoding="utf-8",
+            )
+            build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                allow_partial_extraction=True,
+            )
+            claims = build_claim_extraction(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                allow_partial_retrieval=True,
+            )
+            self.assertTrue(claims.summary["validation_passed"])
+            self.assertFalse(claims.summary["reviewer_ready"])
+            rule_pack_path = _write_rule_pack(Path(tmp))
+
+            with self.assertRaisesRegex(ValueError, "Claim artifacts are not reviewer-ready"):
+                build_rule_claim_links(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    rule_pack_path=rule_pack_path,
+                )
+
+            result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                allow_partial_claims=True,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertFalse(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["allow_partial_claims"])
+            self.assertTrue(result.summary["claims_validation_passed"])
+            self.assertFalse(result.summary["claims_reviewer_ready"])
+            self.assertTrue(result.sqlite_path.exists())
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            self.assertTrue(validation["passed"])
+            self.assertTrue(_check(validation, "claims_validation_passed")["passed"])
+            self.assertFalse(_check(validation, "claims_are_reviewer_ready")["passed"])
+
     def test_rule_claim_eval_scores_expected_rule_claim_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -390,6 +460,8 @@ def _write_extraction_diagnostics(
     source_set_id: str,
     *,
     source_record_ids: list[str],
+    skipped_source_record_ids: list[str] | None = None,
+    catalog_source_count: int | None = None,
 ) -> None:
     diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
     diagnostics_dir.mkdir(parents=True, exist_ok=True)
@@ -397,6 +469,7 @@ def _write_extraction_diagnostics(
         json.dumps({"passed": True}, sort_keys=True),
         encoding="utf-8",
     )
+    skipped_source_record_ids = skipped_source_record_ids or []
     manifest_records = [
         {
             "source_set_id": source_set_id,
@@ -405,15 +478,31 @@ def _write_extraction_diagnostics(
         }
         for source_record_id in source_record_ids
     ]
+    manifest_records.extend(
+        {
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "status": "skipped_excluded",
+        }
+        for source_record_id in skipped_source_record_ids
+    )
     (diagnostics_dir / "extraction_manifest.jsonl").write_text(
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in manifest_records),
         encoding="utf-8",
     )
+    selected_count = len(source_record_ids) + len(skipped_source_record_ids)
+    catalog_count = catalog_source_count if catalog_source_count is not None else selected_count
+    required_count = catalog_count - len(skipped_source_record_ids)
     summary = {
         "source_set_id": source_set_id,
-        "catalog_source_count": len(source_record_ids),
-        "selected_source_count": len(source_record_ids),
+        "catalog_source_count": catalog_count,
+        "artifact_bearing_source_count": required_count,
+        "required_extraction_source_count": required_count,
+        "selected_source_count": selected_count,
+        "selected_required_extraction_source_count": len(source_record_ids),
         "extracted_count": len(source_record_ids),
+        "failed_count": 0,
+        "skipped_excluded_count": len(skipped_source_record_ids),
         "filters": {"id": None, "parser": None, "limit": None},
     }
     (diagnostics_dir / "summary.json").write_text(
@@ -505,6 +594,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",

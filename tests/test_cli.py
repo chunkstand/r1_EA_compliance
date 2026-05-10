@@ -7,6 +7,7 @@ from types import SimpleNamespace
 
 from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_decision_support
+from usfs_r1_ea_sources import cli_derived
 from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources import cli_final_qa
 from usfs_r1_ea_sources import cli_project_planning
@@ -176,6 +177,27 @@ def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     )
 
 
+def test_evidence_graph_build_parser_accepts_archived_catalog_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "evidence-graph-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-7e2652d23e764068",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+            "--allow-partial-retrieval",
+        ]
+    )
+
+    assert args.command == "evidence-graph-build"
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+    assert args.allow_partial_retrieval is True
+
+
 def test_retrieval_query_parser_accepts_support_document_role_filter() -> None:
     args = build_parser().parse_args(
         [
@@ -207,6 +229,41 @@ def test_reuse_inventory_parser_accepts_archived_catalog_dir() -> None:
     assert args.catalog_dir == Path(
         "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
     )
+
+
+def test_phase_eval_parser_accepts_archived_catalog_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "phase-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-7e2652d23e764068",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+        ]
+    )
+
+    assert args.command == "phase-eval"
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+
+
+def test_rule_claim_link_parser_accepts_allow_partial_claims() -> None:
+    args = build_parser().parse_args(
+        [
+            "rule-claim-link",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-7e2652d23e764068",
+            "--allow-partial-claims",
+        ]
+    )
+
+    assert args.command == "rule-claim-link"
+    assert args.allow_partial_claims is True
 
 
 def test_forest_plan_source_delta_readiness_parser_accepts_sequence_four_inputs() -> None:
@@ -263,6 +320,95 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
     assert captured["reuse_package_cache"] is True
     assert captured["docling_timeout_seconds"] is None
     assert captured["package_path"] == Path("package")
+
+
+def test_evidence_graph_build_handler_propagates_catalog_dir(monkeypatch) -> None:
+    captured = {}
+
+    def fake_build_evidence_graph(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"validation_passed": True})
+
+    monkeypatch.setattr(cli_derived, "build_evidence_graph", fake_build_evidence_graph)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "evidence-graph-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-1",
+            "--catalog-dir",
+            "archived-catalog",
+        ]
+    )
+
+    result = cli_derived.handle_derived_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["catalog_dir"] == Path("archived-catalog")
+
+
+def test_phase_eval_handler_propagates_catalog_dir(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_phase_aligned_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"reviewer_ready": True})
+
+    monkeypatch.setattr(cli_eval, "run_phase_aligned_eval", fake_run_phase_aligned_eval)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "phase-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-1",
+            "--catalog-dir",
+            "archived-catalog",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["catalog_dir"] == Path("archived-catalog")
+
+
+def test_rule_claim_link_handler_propagates_allow_partial_claims(monkeypatch) -> None:
+    captured = {}
+
+    def fake_build_rule_claim_links(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"validation_passed": True})
+
+    monkeypatch.setattr(cli_derived, "build_rule_claim_links", fake_build_rule_claim_links)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "rule-claim-link",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-1",
+            "--allow-partial-claims",
+        ]
+    )
+
+    result = cli_derived.handle_derived_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["allow_partial_claims"] is True
 
 
 def test_promotion_suite_handler_propagates_manifest_and_strict_mode(monkeypatch) -> None:

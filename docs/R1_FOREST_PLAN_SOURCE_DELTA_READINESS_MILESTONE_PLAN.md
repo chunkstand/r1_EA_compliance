@@ -536,7 +536,7 @@ Closeout:
   `R1PLAN-lolo-nf-12`, and `R1PLAN-nez-perce-clearwater-nfs-18`.
 - Custer Gallatin remains ready under the existing proving-package assumptions with `7/7` required
   support-document roles retrieval-ready.
-- Sequence 7 is now the next milestone boundary.
+- Sequence 7 is now complete for the merged support-document corpus.
 
 ### Sequence 7 - Corpus Incorporation And Downstream Replay
 
@@ -582,6 +582,20 @@ Stop conditions:
   readiness.
 - The corpus is called Region 1 complete while the two official-source gap rows remain unresolved.
 
+Closeout status:
+
+- implemented. Archived-catalog replay is explicit for `evidence-graph-build` and `phase-eval`;
+  `claim-extract --allow-partial-retrieval`, `evidence-graph-build --allow-partial-retrieval`, and
+  `rule-claim-link --allow-partial-claims` now preserve fresh downstream artifacts while inherited
+  extraction blockers remain explicit; source-set-only phase replay ignores unrelated root
+  `compliance_gold_eval`; and the NEPA 3D graph contract now recognizes `extraction_blocked` and
+  `official_source_gap`.
+- live merged-corpus replay now validates downstream source-set surfaces without stale-source-set
+  confusion: claim extraction `101,824` claims, evidence graph `178,912` nodes / `559,467` edges,
+  rule-claim binding `211` links / `0` gaps, NEPA 3D source-set graph `1,837` nodes / `2,842`
+  edges, and source-set `phase-eval` `6/7` passed with the remaining non-reviewer-ready phases
+  caused only by extraction-derived blockers.
+
 ## Milestone Closeout
 
 Close the milestone only after:
@@ -608,11 +622,7 @@ The local atomic commit for closeout should include:
 
 ## Next Immediate Slice
 
-Sequences 4 through 6 are now closed for the current baseline: the merged extraction path is
-implemented without touching the canonical catalog, the readiness gate accounts for all
-support-document rows with explicit parser blockers, default PDF extraction no longer hard-fails on
-`docling_unavailable`, retrieval validation is running against the archived merged catalog, the
-source-delta retrieval eval suite is passing, and forest-profile readiness is now source-ID-specific
-instead of placeholder-based. The next immediate slice is Sequence 7 corpus incorporation and
-downstream replay so the merged support-document corpus can become a clean downstream promotion
-surface without stale source-set confusion.
+The source-delta milestone plan is complete through Sequence 7. Remaining work is outside this
+sequence ladder: resolve the seven parser-blocked support-document rows, resolve the two explicit
+official-source gaps, or replay a specific review against the merged support-document corpus if the
+user asks for that downstream promotion claim.

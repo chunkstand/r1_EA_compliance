@@ -403,6 +403,64 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             self.assertFalse(report["validation"]["passed"])
             self.assertFalse(checks["fsh_1909_15_chapter_records_are_not_collapsed"]["passed"])
 
+    def test_report_allows_superset_manifest_when_inventory_rows_are_present(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            catalog_dir = output_dir / "runs" / "merged_catalog"
+            manifest_path = catalog_dir / "source_set_manifest.json"
+            catalog_path = catalog_dir / "source_catalog.jsonl"
+            _write_json(
+                manifest_path,
+                {
+                    "source_set_id": "source-set-merged",
+                    "created_at": "2026-05-10T00:00:00Z",
+                    "source_count": 4,
+                    "artifact_count": 3,
+                },
+            )
+            _write_jsonl(
+                catalog_path,
+                [
+                    {**_catalog_row(source_record_id="R1EA-001"), "source_set_id": "source-set-merged"},
+                    {**_catalog_row(source_record_id="R1EA-002"), "source_set_id": "source-set-merged"},
+                    {
+                        **_catalog_row(
+                        source_record_id="R1EA-160",
+                        source_status="skipped_excluded",
+                        artifact_path=None,
+                        artifact_sha256=None,
+                        artifact_byte_size=None,
+                    ),
+                        "source_set_id": "source-set-merged",
+                    },
+                    {
+                        **_catalog_row(
+                        source_record_id="R1PLAN-001",
+                        title="Forest Plan source row",
+                    ),
+                        "source_set_id": "source-set-merged",
+                    },
+                ],
+            )
+            _write_json(inventory_path, _inventory())
+            _write_json(decisions_path, _decisions())
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+                catalog_path=catalog_path,
+                source_set_manifest_path=manifest_path,
+                source_set_id="source-set-merged",
+            )
+
+            report = _read_json(result.report_path)
+            checks = {check["name"]: check for check in report["validation"]["checks"]}
+            self.assertTrue(checks["inventory_source_set_matches_manifest"]["passed"])
+
 
 def _write_catalog(output_dir: Path, *, rows: list[dict]) -> None:
     catalog_dir = output_dir / "catalog"

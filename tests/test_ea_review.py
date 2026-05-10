@@ -471,6 +471,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",

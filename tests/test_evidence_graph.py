@@ -5,6 +5,7 @@ from pathlib import Path
 import hashlib
 import json
 import sqlite3
+import shutil
 import tempfile
 import unittest
 
@@ -313,6 +314,107 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertIn("evidence_graph", blocker_phases)
             self.assertTrue(result.output_path.exists())
 
+    def test_source_set_replay_uses_archived_catalog_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            archived_catalog_dir = output_dir / "runs" / "archived_catalog"
+            _write_catalog_validation(output_dir, passed=False)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-020"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-020",
+                        title="Archived catalog source",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-020 | Archived catalog source | artifact abc123",
+                        text="Archived catalog replay should stay scoped to the selected source set.",
+                    )
+                ],
+            )
+            active_sqlite = _write_catalog_sqlite(output_dir, {"R1EA-020": ["Replay"]})
+            archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+            (archived_catalog_dir / "catalog_validation.json").write_text(
+                json.dumps({"passed": True}, sort_keys=True),
+                encoding="utf-8",
+            )
+            shutil.copyfile(active_sqlite, archived_catalog_dir / "review_sources.sqlite")
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            result = build_evidence_graph(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                catalog_dir=archived_catalog_dir,
+            )
+            phase_eval = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                catalog_dir=archived_catalog_dir,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["catalog_dir"], str(archived_catalog_dir))
+            self.assertEqual(phase_eval.summary["catalog_dir"], str(archived_catalog_dir))
+            graph_phase = _phase(phase_eval.summary, "evidence_graph")
+            self.assertTrue(graph_phase["passed"])
+            self.assertTrue(graph_phase["reviewer_ready"])
+
+    def test_source_set_phase_eval_ignores_unrelated_gold_eval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-021"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-021",
+                        title="Scoped replay source",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-021 | Scoped replay source | artifact abc123",
+                        text="Source-set phase replay should ignore unrelated global gold evals.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-021": ["Replay"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            gold_eval_dir = output_dir / "reviews" / "compliance_gold_eval"
+            gold_eval_dir.mkdir(parents=True, exist_ok=True)
+            (gold_eval_dir / "compliance_gold_eval_results.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": "source-set-other",
+                        "passed": True,
+                        "promotion_ready": True,
+                        "rule_pack_id": "unit-nepa-ea",
+                        "rule_pack_version": "0.4.0",
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            phase_names = {phase["name"] for phase in result.summary["phases"]}
+            self.assertNotIn("compliance_gold_eval", phase_names)
+
 
 def _write_catalog_validation(output_dir: Path, *, passed: bool) -> None:
     path = output_dir / "catalog" / "catalog_validation.json"
@@ -461,6 +563,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",

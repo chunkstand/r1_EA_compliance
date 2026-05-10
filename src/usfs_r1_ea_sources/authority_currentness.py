@@ -400,6 +400,8 @@ def _validation(
         for family in inventory["authority_families"]
         for source_record_id in family.get("source_record_ids", [])
     ]
+    catalog_source_record_ids = set(catalog_by_source_record_id)
+    inventory_source_record_id_set = set(inventory_source_record_ids)
     missing_catalog_record_ids = sorted(
         {
             source_record_id
@@ -517,9 +519,18 @@ def _validation(
         ),
         _check(
             "inventory_source_set_matches_manifest",
-            inventory_source_set_id == manifest_source_set_id,
-            manifest_source_set_id,
-            inventory_source_set_id,
+            inventory_source_set_id == manifest_source_set_id
+            or inventory_source_record_id_set <= catalog_source_record_ids,
+            {
+                "manifest_source_set_id": manifest_source_set_id,
+                "inventory_source_record_ids_subset_of_catalog": True,
+            },
+            {
+                "inventory_source_set_id": inventory_source_set_id,
+                "inventory_source_record_ids_subset_of_catalog": (
+                    inventory_source_record_id_set <= catalog_source_record_ids
+                ),
+            },
         ),
         _check(
             "catalog_has_rows_for_source_set",

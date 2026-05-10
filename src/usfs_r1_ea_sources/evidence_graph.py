@@ -106,6 +106,7 @@ def build_evidence_graph(
     *,
     output_dir: Path,
     source_set_id: str | None = None,
+    catalog_dir: Path | None = None,
     allow_partial_retrieval: bool = False,
 ) -> EvidenceGraphBuildResult:
     """Build the v1 document evidence graph from extracted chunks and retrieval metadata."""
@@ -116,10 +117,11 @@ def build_evidence_graph(
     source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
     graph_dir = source_derived_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
+    catalog_dir = Path(catalog_dir) if catalog_dir is not None else output_dir / "catalog"
 
     chunks_path = source_derived_dir / "chunks" / "chunks.jsonl"
-    catalog_sqlite_path = output_dir / "catalog" / "review_sources.sqlite"
-    catalog_validation_path = output_dir / "catalog" / "catalog_validation.json"
+    catalog_sqlite_path = catalog_dir / "review_sources.sqlite"
+    catalog_validation_path = catalog_dir / "catalog_validation.json"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
     retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
@@ -229,6 +231,7 @@ def build_evidence_graph(
         "validation_path": str(validation_path),
         "summary_path": str(summary_path),
         "chunks_path": str(chunks_path),
+        "catalog_dir": str(catalog_dir),
         "catalog_sqlite_path": str(catalog_sqlite_path),
         "retrieval_summary_path": str(retrieval_summary_path),
         "retrieval_validation_path": str(retrieval_validation_path),
@@ -274,6 +277,7 @@ def run_phase_aligned_eval(
     *,
     output_dir: Path,
     source_set_id: str | None = None,
+    catalog_dir: Path | None = None,
     review_id: str | None = None,
     review_dir: Path | None = None,
 ) -> PhaseEvalResult:
@@ -286,8 +290,9 @@ def run_phase_aligned_eval(
     graph_dir = source_derived_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
     output_path = graph_dir / "phase_eval_results.json"
+    catalog_dir = Path(catalog_dir) if catalog_dir is not None else output_dir / "catalog"
 
-    catalog_validation_path = output_dir / "catalog" / "catalog_validation.json"
+    catalog_validation_path = catalog_dir / "catalog_validation.json"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
     retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
@@ -541,6 +546,10 @@ def run_phase_aligned_eval(
     compliance_gold_eval = (
         _read_json(compliance_gold_eval_path) if compliance_gold_eval_path.exists() else None
     )
+    if compliance_gold_eval is not None and review_id is None:
+        gold_source_set_id = str(compliance_gold_eval.get("source_set_id") or "")
+        if gold_source_set_id and gold_source_set_id != source_set_id:
+            compliance_gold_eval = None
     applicability_artifacts = _read_applicability_phase_artifacts(
         authority_universe_path=authority_universe_path,
         package_fact_graph_path=package_fact_graph_path,
@@ -1243,6 +1252,7 @@ def run_phase_aligned_eval(
         "review_id": review_id or (review_dir.name if review_dir is not None else None),
         "review_dir": str(review_dir) if review_dir is not None else None,
         "created_at": _utc_now(),
+        "catalog_dir": str(catalog_dir),
         "passed": all(phase["passed"] for phase in phases),
         "reviewer_ready": all(phase["reviewer_ready"] for phase in phases),
         "phase_count": len(phases),
@@ -1590,7 +1600,11 @@ def _validation_report(
         _check_chunks_have_topic_edges(chunks, edges),
         _check_graph_health(metrics),
     ]
-    strict_blockers = {"extraction_scope_is_complete", "retrieval_is_reviewer_ready"}
+    strict_blockers = {
+        "extraction_validation_passed",
+        "extraction_scope_is_complete",
+        "retrieval_is_reviewer_ready",
+    }
     passed = all(check["passed"] for check in checks)
     if allow_partial_retrieval:
         passed = all(
@@ -3076,7 +3090,11 @@ def _with_additional_checks(
     allow_partial_retrieval: bool,
 ) -> dict:
     merged_checks = [*validation["checks"], *checks]
-    ignored = {"extraction_scope_is_complete", "retrieval_is_reviewer_ready"}
+    ignored = {
+        "extraction_validation_passed",
+        "extraction_scope_is_complete",
+        "retrieval_is_reviewer_ready",
+    }
     passed = all(
         check["passed"] or (allow_partial_retrieval and check["name"] in ignored)
         for check in merged_checks

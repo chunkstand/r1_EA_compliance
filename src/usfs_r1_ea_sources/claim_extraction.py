@@ -659,7 +659,11 @@ def validate_claim_outputs(
         _check_graph_integrity(claims, entities, nodes, edges),
         _check_graph_health(metrics),
     ]
-    strict_blockers = {"extraction_scope_is_complete", "retrieval_is_reviewer_ready"}
+    strict_blockers = {
+        "extraction_validation_passed",
+        "extraction_scope_is_complete",
+        "retrieval_is_reviewer_ready",
+    }
     passed = all(check["passed"] for check in checks)
     if allow_partial_retrieval:
         passed = all(
@@ -1578,7 +1582,11 @@ def _query_claims(
     return [_claim_eval_result(claim, score) for score, claim in scored[:limit]]
 
 
-def _load_validated_claims_for_eval(claims_path: Path) -> list[dict]:
+def _load_validated_claims_for_eval(
+    claims_path: Path,
+    *,
+    require_reviewer_ready: bool = True,
+) -> list[dict]:
     if not claims_path.exists():
         raise FileNotFoundError(f"Missing claims file: {claims_path}")
     claims_path = claims_path.resolve()
@@ -1596,7 +1604,22 @@ def _load_validated_claims_for_eval(claims_path: Path) -> list[dict]:
         )
     summary = _read_json(summary_path)
     validation = _read_json(validation_path)
-    if not validation.get("passed") or not summary.get("reviewer_ready"):
+    allowed_partial_failures = {
+        "extraction_validation_passed",
+        "extraction_scope_is_complete",
+        "retrieval_is_reviewer_ready",
+    }
+    if not validation.get("passed"):
+        failed = ", ".join(_failed_check_names(validation))
+        if require_reviewer_ready or any(
+            name not in allowed_partial_failures
+            for name in _failed_check_names(validation)
+        ):
+            raise ValueError(
+                f"Claim artifacts failed validation: {claims_dir}. "
+                f"Resolve claim_validation.json failures before reuse. Failed checks: {failed}"
+            )
+    if require_reviewer_ready and not summary.get("reviewer_ready"):
         raise ValueError(
             f"Claim artifacts are not reviewer-ready: {claims_dir}. "
             "Run claim-extract and resolve claim_validation.json failures before claim-eval."
@@ -1616,9 +1639,13 @@ def _load_validated_claims_for_eval(claims_path: Path) -> list[dict]:
     )
     if not current_validation["passed"]:
         failed = ", ".join(_failed_check_names(current_validation))
-        raise ValueError(
-            f"Current claim artifacts failed validation before eval: {failed}"
-        )
+        if require_reviewer_ready or any(
+            name not in allowed_partial_failures
+            for name in _failed_check_names(current_validation)
+        ):
+            raise ValueError(
+                f"Current claim artifacts failed validation before eval: {failed}"
+            )
     return _read_jsonl(claims_path)
 
 
@@ -1896,7 +1923,11 @@ def _with_additional_checks(
     allow_partial_retrieval: bool,
 ) -> dict:
     merged_checks = [*validation["checks"], *checks]
-    ignored = {"extraction_scope_is_complete", "retrieval_is_reviewer_ready"}
+    ignored = {
+        "extraction_validation_passed",
+        "extraction_scope_is_complete",
+        "retrieval_is_reviewer_ready",
+    }
     passed = all(
         check["passed"] or (allow_partial_retrieval and check["name"] in ignored)
         for check in merged_checks

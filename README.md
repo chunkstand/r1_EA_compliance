@@ -115,8 +115,23 @@ source IDs are explicit: parser blockers at
 `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, plus the
 preserved official-source gaps `R1PLAN-kootenai-nf-18` and
-`R1PLAN-nez-perce-clearwater-nfs-18`. The next milestone boundary is Sequence 7 corpus
-incorporation and downstream replay, not another readiness-schema pass.
+`R1PLAN-nez-perce-clearwater-nfs-18`.
+
+Sequence 7 corpus incorporation and downstream replay is now implemented for merged support-document
+source set `source-set-7e2652d23e764068`. Archived-catalog replay is explicit for
+`evidence-graph-build` and `phase-eval`, `claim-extract` and `evidence-graph-build` now keep
+validated downstream artifacts in partial mode when the only remaining blockers are inherited
+extraction failures, `rule-claim-link --allow-partial-claims` writes current rule-claim artifacts
+with `validation_passed=true` and `reviewer_ready=false`, source-set-only `phase-eval` ignores an
+unrelated root `compliance_gold_eval`, and the NEPA 3D graph contract now recognizes
+`extraction_blocked` and `official_source_gap` readiness blockers. The live merged-corpus replay is
+fresh through the downstream graph layer: claim extraction validates with `101,824` claims,
+evidence graph validates with `178,912` nodes and `559,467` edges, rule-claim binding validates
+with `211` links and `0` gaps, NEPA 3D source-set graph export validates with `1,837` nodes and
+`2,842` edges, and source-set `phase-eval` now passes `6/7` phases while remaining
+`reviewer_ready=false` only because extraction and the inherited downstream reviewer-ready gates are
+still blocked by the known parser failures and official-source gaps. The next work is source-gap or
+parser recovery, or an explicit review replay request, not another source-set alignment pass.
 
 The first merged catalog gate is archived, not promoted over the canonical catalog, at
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`.
@@ -1174,10 +1189,13 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json
 ```
 
-`rule-claim-link` reads reviewer-ready claim artifacts and a versioned compliance rule pack. It
-writes rule-to-claim links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links
-carry rule ID, claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash,
-and exact source offsets. Rule-claim outputs are versioned by rule-pack ID and version. Old
+`rule-claim-link` reads reviewer-ready claim artifacts by default and a versioned compliance rule
+pack. With `--allow-partial-claims`, it can reuse current claim artifacts for blocker-aware
+support-corpus replay when inherited extraction blockers remain explicit; that mode can still write
+`validation_passed=true` while keeping `reviewer_ready=false`. The command writes rule-to-claim
+links, explicit no-claim gaps, SQLite, validation, and summary artifacts. Links carry rule ID,
+claim ID, claim type, score, matched terms, citation label, chunk ID, artifact hash, and exact
+source offsets. Rule-claim outputs are versioned by rule-pack ID and version. Old
 `0.3.0`/20-rule link, coverage, compliance-eval, and gold-eval artifacts should be treated as stale
 for base-pack diagnostics. Current base rule-claim and coverage evidence must come from the
 regenerated `0.4.0`/44-rule artifacts for `source-set-ba8d0feae79501b8`; reviewer-ready V1

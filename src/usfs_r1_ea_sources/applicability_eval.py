@@ -1397,6 +1397,7 @@ def _source_chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": document_role,
         "host": "applicability-eval.local",
         "expected_parser": "text",

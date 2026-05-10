@@ -194,6 +194,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     evidence_graph.add_argument("--output-dir", default=Path("source_library"), type=Path)
     evidence_graph.add_argument("--source-set-id")
+    evidence_graph.add_argument("--catalog-dir", type=Path)
     evidence_graph.add_argument("--allow-partial-retrieval", action="store_true")
 
     nepa_graph = subparsers.add_parser(
@@ -270,6 +271,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     rule_claim_link.add_argument("--claims-path", type=Path)
     rule_claim_link.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
     rule_claim_link.add_argument("--top-k", type=int, default=5)
+    rule_claim_link.add_argument("--allow-partial-claims", action="store_true")
 
     rule_claim_eval = subparsers.add_parser(
         "rule-claim-eval",
@@ -403,6 +405,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         result = build_evidence_graph(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
+            catalog_dir=args.catalog_dir,
             allow_partial_retrieval=args.allow_partial_retrieval,
         )
         print_summary(result.summary)
@@ -462,6 +465,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             claims_path=args.claims_path,
             rule_pack_path=args.rule_pack,
             top_k=args.top_k,
+            allow_partial_claims=args.allow_partial_claims,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1

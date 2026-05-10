@@ -3759,6 +3759,12 @@ The `rule-claim-link` command writes:
 - a versioned compliance rule pack, defaulting to
   `config/compliance_rule_pack_nepa_ea_v0.json`
 
+By default the command requires reviewer-ready claim artifacts. With `--allow-partial-claims`, it
+can reuse current claim artifacts when the only remaining upstream blockers are inherited
+extraction/readiness failures from partial support-corpus replay. In that mode, validation can pass
+while the summary still records `reviewer_ready=false` and the inherited blocker check remains
+explicit in `rule_claim_link_validation.json`.
+
 Each `rule_claim_links.jsonl` record includes:
 
 - `rule_pack_id`, `rule_pack_version`, and `rule_id`
@@ -3777,7 +3783,9 @@ claim match. A rule is covered only when it has at least one validated link or o
 `rule_claim_link_validation.json` checks:
 
 - rule pack validity
-- source claims are reviewer-ready and still validate
+- source claims still validate for the requested binding mode
+- source claims are reviewer-ready unless `--allow-partial-claims` explicitly allows inherited
+  upstream blockers to remain non-reviewer-ready
 - link and gap files exist
 - link and gap records contain required fields and schema versions
 - link IDs and gap IDs are unique
@@ -3794,8 +3802,9 @@ claim match. A rule is covered only when it has at least one validated link or o
 - link claim types are supported
 - SQLite counts match JSONL outputs
 
-`summary.json` includes source set, rule-pack identity, top-k, rule count, claim count, link count,
-gap count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
+`summary.json` includes source set, rule-pack identity, top-k, `allow_partial_claims`,
+`claims_validation_passed`, `claims_reviewer_ready`, rule count, claim count, link count, gap
+count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
 source-record count, validation status, and `reviewer_ready`.
 
 `rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. It writes
@@ -3902,7 +3911,10 @@ readiness blocker counts, and graph failure-category counts. When `compliance_go
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
 not-promotion-ready artifacts. For generated review rule packs, a passing gold eval against the
 generated pack's declared base rule pack can satisfy this phase and is reported with
-`rule_pack_match_mode=generated_base`. When `--review-id` or `--review-dir` is supplied, phase eval also
+`rule_pack_match_mode=generated_base`. Source-set-only replay ignores an unrelated root
+`compliance_gold_eval_results.json` artifact when its `source_set_id` does not match the requested
+source set, so downstream source-set replay does not fail on stale review-level gold artifacts.
+When `--review-id` or `--review-dir` is supplied, phase eval also
 requires the applicability phases `authority_universe`, `package_fact_graph`,
 `applicability_retrieval_trace`, `applicability_graph_trace`, `applicability_determination`,
 `applicability_validation`, and `generated_rule_pack` before evaluating `compliance_review`.

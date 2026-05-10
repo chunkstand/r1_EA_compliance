@@ -95,8 +95,23 @@ Sequence 4 runtime alignment update after that artifact:
   `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
   `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
   `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
-- the next milestone is Sequence 7 corpus incorporation and downstream replay, not another
-  readiness baseline replay.
+- Sequence 7 corpus incorporation and downstream replay is now implemented for merged support-document
+  source set `source-set-7e2652d23e764068`.
+- live downstream replay against the merged corpus is fresh through the source-set graph layer:
+  `claim-extract --allow-partial-retrieval` now validates with `101,824` claims and
+  `reviewer_ready=false`; `evidence-graph-build --allow-partial-retrieval` validates with
+  `178,912` nodes and `559,467` edges while keeping inherited extraction blockers explicit;
+  `rule-claim-link --allow-partial-claims` validates with `211` links, `0` gaps, and
+  `reviewer_ready=false`; `nepa-knowledge-graph-export` validates with `1,837` nodes and `2,842`
+  edges; and source-set `phase-eval` now passes `6/7` phases while remaining `reviewer_ready=false`
+  only because extraction and inherited downstream reviewer-ready gates remain blocked.
+- the stale-source-set gaps are closed for source-set replay: archived-catalog routing is explicit
+  for evidence graph and phase eval, source-set-only phase replay ignores an unrelated root
+  `compliance_gold_eval`, and the NEPA 3D graph contract now recognizes `extraction_blocked` and
+  `official_source_gap`.
+- the next work is not another source-set alignment pass. It is parser recovery for the seven
+  blocked source IDs, resolution of the two official-source gaps, or an explicit review replay
+  request against the merged corpus.
 
 The Sequence 3 merged catalog contract is implemented without replacing the active canonical
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit

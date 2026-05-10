@@ -76,7 +76,9 @@ REQUIRED_REVIEW_READINESS_STATUSES = {
     "needs_adjudication",
 }
 REQUIRED_READINESS_BLOCKER_TYPES = {
+    "extraction_blocked",
     "missing_source",
+    "official_source_gap",
     "stale_artifact",
     "superseded_source",
     "retrieval_miss",

@@ -2098,7 +2098,7 @@ class ComplianceReviewTests(unittest.TestCase):
                 ["compliance_review_eval_not_run"],
             )
 
-    def test_phase_eval_rejects_stale_compliance_gold_source_set(self) -> None:
+    def test_phase_eval_ignores_unrelated_compliance_gold_source_set_for_source_set_replay(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
             source_set_id = "source-set-test"
@@ -2124,12 +2124,9 @@ class ComplianceReviewTests(unittest.TestCase):
                 source_set_id=source_set_id,
             )
 
-            self.assertFalse(phase_result.summary["reviewer_ready"])
-            gold_phase = _phase(phase_result.summary, "compliance_gold_eval")
-            self.assertFalse(gold_phase["passed"])
-            self.assertFalse(gold_phase["reviewer_ready"])
-            self.assertFalse(gold_phase["details"]["source_set_matches"])
-            self.assertIn("source_set_mismatch", gold_phase["details"]["failed_checks"])
+            self.assertTrue(phase_result.summary["reviewer_ready"])
+            phase_names = {phase["name"] for phase in phase_result.summary["phases"]}
+            self.assertNotIn("compliance_gold_eval", phase_names)
 
     def test_phase_eval_can_include_compliance_review_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -2993,6 +2990,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",

@@ -467,7 +467,9 @@
     "needs_adjudication"
   ],
   "readiness_blocker_types": [
+    "extraction_blocked",
     "missing_source",
+    "official_source_gap",
     "stale_artifact",
     "superseded_source",
     "retrieval_miss",

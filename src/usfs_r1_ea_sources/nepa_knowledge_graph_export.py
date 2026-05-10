@@ -25,6 +25,8 @@ DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
 DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH = Path(
     "config/region1_forest_plan_readiness_nepa_3d_v1.json"
 )
+REGION1_FOREST_PLAN_READINESS_SCHEMA_VERSION = "region1-forest-plan-readiness-v1"
+SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v3"
 
 SOURCE_SET_EXPORT_SCHEMA_VERSION = NEPA_3D_GRAPH_SCHEMA_VERSION
 BASE_RULE_NODE_PREFIX = "rule_template:base"
@@ -290,7 +292,9 @@ def build_nepa_knowledge_graph_export(
     inventory = _read_json(authority_inventory_path)
     template_config = _read_json(authority_family_rule_templates_path)
     forest_plan_profiles = _read_json(forest_plan_profiles_path)
-    region1_forest_plan_readiness = _read_json(region1_forest_plan_readiness_path)
+    region1_forest_plan_readiness = _load_region1_forest_plan_readiness(
+        region1_forest_plan_readiness_path
+    )
     currentness = _read_json(authority_currentness_path)
     catalog_rows = [
         row
@@ -2008,6 +2012,154 @@ def _region1_profile_readiness_rows(readiness: dict[str, Any]) -> list[dict[str,
     return _dict_list(readiness.get("profile_rows"))
 
 
+def _load_region1_forest_plan_readiness(path: Path) -> dict[str, Any]:
+    readiness = _read_json(path)
+    if readiness.get("schema_version") == SOURCE_DELTA_READINESS_SCHEMA_VERSION:
+        return _normalize_source_delta_region1_readiness(readiness)
+    return readiness
+
+
+def _normalize_source_delta_region1_readiness(report: dict[str, Any]) -> dict[str, Any]:
+    baseline = _read_json(DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH)
+    baseline_rows_by_unit = {
+        str(row.get("forest_unit_id") or ""): row
+        for row in _dict_list(baseline.get("profile_rows"))
+        if row.get("forest_unit_id")
+    }
+    merged_source_set_id = str(
+        _dict(report.get("merged_source_delta_catalog")).get("source_set_id") or ""
+    )
+    profile_rows = []
+    for row in _dict_list(_dict(report.get("forest_profile_readiness")).get("profile_rows")):
+        forest_unit_id = str(row.get("forest_unit_id") or "")
+        baseline_row = _dict(baseline_rows_by_unit.get(forest_unit_id))
+        configured_profile = bool(row.get("configured_profile"))
+        profile_readiness_status = str(row.get("profile_readiness_status") or "")
+        graph_promotion_status = _source_delta_graph_promotion_status(
+            configured_profile=configured_profile,
+            profile_readiness_status=profile_readiness_status,
+        )
+        profile_rows.append(
+            {
+                "active_plan_source_record_id": row.get("active_plan_source_record_id"),
+                "applicability_eval_coverage": _dict(
+                    baseline_row.get("applicability_eval_coverage")
+                ),
+                "component_inventory_validation": _normalized_component_inventory_validation(
+                    baseline_row=_dict(baseline_row.get("component_inventory_validation")),
+                    merged_source_set_id=merged_source_set_id,
+                    graph_promotion_status=graph_promotion_status,
+                ),
+                "forest_unit_id": forest_unit_id,
+                "forest_unit_names": _strings(row.get("forest_unit_names")),
+                "graph_promotion_status": graph_promotion_status,
+                "milestone_5_added_profile": bool(
+                    baseline_row.get("milestone_5_added_profile")
+                ),
+                "profile_kind": row.get("profile_kind"),
+                "readiness_blockers": sorted(
+                    set(_strings(row.get("blocker_types")))
+                    | (
+                        set()
+                        if graph_promotion_status == "promoted"
+                        else {"forest_profile_not_ready"}
+                    )
+                ),
+                "source_requirements": _dict_list(row.get("source_requirements")),
+            }
+        )
+    return {
+        "schema_version": REGION1_FOREST_PLAN_READINESS_SCHEMA_VERSION,
+        "readiness_matrix_id": "region1-forest-plan-readiness-support-corpus-v1",
+        "source_set_id": merged_source_set_id,
+        "region1_completeness_claim": False,
+        "field_directive_requirements": _dict_list(
+            baseline.get("field_directive_requirements")
+        ),
+        "overlay_requirements": _dict_list(baseline.get("overlay_requirements")),
+        "profile_rows": profile_rows,
+        "support_document_corpus_summary": _source_delta_support_document_summary(report),
+        "source_delta_readiness_schema_version": report.get("schema_version"),
+    }
+
+
+def _source_delta_graph_promotion_status(
+    *,
+    configured_profile: bool,
+    profile_readiness_status: str,
+) -> str:
+    if configured_profile and profile_readiness_status == "ready":
+        return "promoted"
+    if configured_profile:
+        return "blocked"
+    if profile_readiness_status == "ready":
+        return "tracked_not_promoted"
+    return "blocked"
+
+
+def _normalized_component_inventory_validation(
+    *,
+    baseline_row: dict[str, Any],
+    merged_source_set_id: str,
+    graph_promotion_status: str,
+) -> dict[str, Any]:
+    if not baseline_row:
+        return {"status": "component_inventory_build_required"}
+    normalized = dict(baseline_row)
+    artifact_path = str(normalized.get("artifact_path") or "")
+    if artifact_path and graph_promotion_status == "promoted":
+        normalized["artifact_path"] = _rewrite_support_corpus_artifact_path(
+            artifact_path,
+            merged_source_set_id=merged_source_set_id,
+        )
+    return normalized
+
+
+def _rewrite_support_corpus_artifact_path(
+    path: str, *, merged_source_set_id: str
+) -> str:
+    parts = list(Path(path).parts)
+    for index, part in enumerate(parts):
+        if part.startswith("source-set-"):
+            parts[index] = merged_source_set_id
+            break
+    return str(Path(*parts))
+
+
+def _source_delta_support_document_summary(report: dict[str, Any]) -> dict[str, Any]:
+    merged_catalog = _dict(report.get("merged_source_delta_catalog"))
+    source_delta_input = _dict(merged_catalog.get("source_delta_input"))
+    extraction = _dict(report.get("extraction_readiness"))
+    retrieval = _dict(report.get("retrieval_readiness"))
+    profiles = _dict(report.get("forest_profile_readiness"))
+    official_gaps = _dict(report.get("official_source_gap_evidence"))
+    return {
+        "source_set_id": merged_catalog.get("source_set_id"),
+        "catalog_source_record_count": merged_catalog.get("catalog_source_record_count"),
+        "catalog_confirmed_source_record_count": source_delta_input.get(
+            "catalog_confirmed_count"
+        ),
+        "support_document_source_delta_count": source_delta_input.get("source_delta_count"),
+        "official_source_gap_count": official_gaps.get("record_count"),
+        "official_source_gap_source_record_ids": _strings(
+            official_gaps.get("source_record_ids")
+        ),
+        "extracted_support_document_source_record_count": extraction.get(
+            "extracted_source_record_count"
+        ),
+        "blocked_support_document_source_record_count": extraction.get(
+            "blocked_source_record_count"
+        ),
+        "indexed_support_document_source_record_count": retrieval.get(
+            "indexed_source_record_count_for_expected_sources"
+        ),
+        "configured_profile_ready_count": profiles.get("ready_profile_count"),
+        "configured_profile_blocked_count": profiles.get("blocked_profile_count"),
+        "tracking_only_ready_count": profiles.get("ready_tracking_only_count"),
+        "tracking_only_blocked_count": profiles.get("blocked_tracking_only_count"),
+    }
+
+
 def _region1_profile_readiness_by_unit(readiness: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {
         str(row.get("forest_unit_id")): row
@@ -2148,6 +2300,7 @@ def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
     blocked_rows = [row for row in rows if row.get("graph_promotion_status") != "promoted"]
     field_directive_requirements = _dict_list(readiness.get("field_directive_requirements"))
     overlay_requirements = _dict_list(readiness.get("overlay_requirements"))
+    support_document_summary = _dict(readiness.get("support_document_corpus_summary"))
     return {
         "region1_forest_plan_readiness_profile_count": len(rows),
         "region1_forest_plan_graph_ready_profile_count": len(promoted_rows),
@@ -2168,6 +2321,33 @@ def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
         ),
         "region1_overlay_requirement_graph_node_count": sum(
             1 for requirement in overlay_requirements if requirement.get("overlay_id")
+        ),
+        "region1_support_document_corpus_catalog_source_record_count": support_document_summary.get(
+            "catalog_source_record_count"
+        ),
+        "region1_support_document_corpus_source_delta_count": support_document_summary.get(
+            "support_document_source_delta_count"
+        ),
+        "region1_support_document_corpus_catalog_confirmed_source_record_count": support_document_summary.get(
+            "catalog_confirmed_source_record_count"
+        ),
+        "region1_support_document_corpus_official_source_gap_count": support_document_summary.get(
+            "official_source_gap_count"
+        ),
+        "region1_support_document_corpus_extracted_source_record_count": support_document_summary.get(
+            "extracted_support_document_source_record_count"
+        ),
+        "region1_support_document_corpus_blocked_source_record_count": support_document_summary.get(
+            "blocked_support_document_source_record_count"
+        ),
+        "region1_support_document_corpus_indexed_source_record_count": support_document_summary.get(
+            "indexed_support_document_source_record_count"
+        ),
+        "region1_support_document_corpus_tracking_only_ready_count": support_document_summary.get(
+            "tracking_only_ready_count"
+        ),
+        "region1_support_document_corpus_tracking_only_blocked_count": support_document_summary.get(
+            "tracking_only_blocked_count"
         ),
     }
 
@@ -2654,8 +2834,8 @@ def _milestone_validation_checks(
         _check(
             "nepa_3d_graph_region1_readiness_matrix_loaded",
             region1_forest_plan_readiness.get("schema_version")
-            == "region1-forest-plan-readiness-v1",
-            "region1-forest-plan-readiness-v1",
+            == REGION1_FOREST_PLAN_READINESS_SCHEMA_VERSION,
+            REGION1_FOREST_PLAN_READINESS_SCHEMA_VERSION,
             region1_forest_plan_readiness.get("schema_version"),
         ),
         _check(

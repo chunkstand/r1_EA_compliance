@@ -81,6 +81,7 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
     phase_eval.add_argument("--source-set-id")
+    phase_eval.add_argument("--catalog-dir", type=Path)
     phase_eval.add_argument("--review-id")
     phase_eval.add_argument("--review-dir", type=Path)
 
@@ -139,6 +140,7 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
         result = run_phase_aligned_eval(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
+            catalog_dir=args.catalog_dir,
             review_id=args.review_id,
             review_dir=args.review_dir,
         )

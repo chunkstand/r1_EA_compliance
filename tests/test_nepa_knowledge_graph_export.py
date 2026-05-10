@@ -161,6 +161,41 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
+def test_nepa_knowledge_graph_export_accepts_source_delta_readiness_report() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        source_delta_readiness = _write_minimal_source_delta_readiness_report(
+            output_dir,
+            source_set_id=source_set_id,
+        )
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            authority_family_rule_templates_path=paths["templates"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=source_delta_readiness,
+            rule_pack_path=paths["rule_pack"],
+        )
+
+        assert result.summary["region1_forest_plan_readiness_profile_count"] == 2
+        assert result.summary["region1_support_document_corpus_source_delta_count"] == 1
+        assert result.summary["region1_support_document_corpus_official_source_gap_count"] == 1
+        assert result.summary["region1_support_document_corpus_tracking_only_ready_count"] == 0
+
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+        assert checks["nepa_3d_graph_region1_readiness_matrix_loaded"]["passed"]
+        assert not result.summary["validation_passed"]
+        assert (
+            checks["nepa_3d_graph_region1_requirement_sources_are_cataloged"]["passed"] is False
+        )
+
+
 def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
@@ -597,6 +632,78 @@ def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[s
         "forest_profiles": forest_profiles,
         "region1_readiness": region1_readiness,
     }
+
+
+def _write_minimal_source_delta_readiness_report(
+    output_dir: Path, *, source_set_id: str
+) -> Path:
+    report_path = output_dir / "source_delta_readiness_report.json"
+    _write_json(
+        report_path,
+        {
+            "schema_version": "r1-forest-plan-source-delta-readiness-v3",
+            "merged_source_delta_catalog": {
+                "source_set_id": source_set_id,
+                "catalog_source_record_count": 5,
+                "source_delta_input": {
+                    "catalog_confirmed_count": 1,
+                    "source_delta_count": 1,
+                },
+            },
+            "extraction_readiness": {
+                "extracted_source_record_count": 1,
+                "blocked_source_record_count": 0,
+            },
+            "retrieval_readiness": {
+                "indexed_source_record_count_for_expected_sources": 1,
+            },
+            "official_source_gap_evidence": {
+                "record_count": 1,
+                "source_record_ids": ["R1PLAN-OTHER-001"],
+            },
+            "forest_profile_readiness": {
+                "ready_profile_count": 1,
+                "blocked_profile_count": 1,
+                "ready_tracking_only_count": 0,
+                "blocked_tracking_only_count": 0,
+                "profile_rows": [
+                    {
+                        "forest_unit_id": "test-forest",
+                        "forest_unit_names": ["Test Forest"],
+                        "profile_kind": "configured_profile",
+                        "configured_profile": True,
+                        "profile_readiness_status": "ready",
+                        "active_plan_source_record_id": "R1PLAN-001",
+                        "blocker_types": [],
+                        "source_requirements": [
+                            {
+                                "role": "primary_land_management_plan",
+                                "readiness_status": "catalog_confirmed",
+                                "source_record_id": "R1PLAN-001",
+                            }
+                        ],
+                    },
+                    {
+                        "forest_unit_id": "other-test-forest",
+                        "forest_unit_names": ["Other Test Forest"],
+                        "profile_kind": "register_tracking_only",
+                        "configured_profile": False,
+                        "profile_readiness_status": "blocked",
+                        "active_plan_source_record_id": "R1PLAN-OTHER-001",
+                        "blocker_types": ["missing_source"],
+                        "source_requirements": [
+                            {
+                                "role": "primary_land_management_plan",
+                                "readiness_status": "source_delta_required",
+                                "source_record_id": None,
+                            }
+                        ],
+                    },
+                ],
+            },
+        },
+    )
+    return report_path
 
 
 def _catalog_row(

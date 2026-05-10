@@ -124,6 +124,7 @@ def build_rule_claim_links(
     source_set_id: str | None = None,
     claims_path: Path | None = None,
     top_k: int = DEFAULT_TOP_K,
+    allow_partial_claims: bool = False,
 ) -> RuleClaimLinkResult:
     """Build deterministic links from compliance rules to validated source claims."""
 
@@ -142,7 +143,13 @@ def build_rule_claim_links(
         raise ValueError(f"Compliance rule pack is invalid. Failed checks: {failed}")
 
     claims_path = claims_path or default_claims_path(output_dir, source_set_id)
-    claims = _load_validated_claims_for_eval(claims_path)
+    claims_summary, claims_validation = _claim_artifact_readiness(claims_path)
+    claims_reviewer_ready = bool(claims_summary and claims_summary.get("reviewer_ready"))
+    claims_validation_passed = bool(claims_validation and claims_validation.get("passed"))
+    claims = _load_validated_claims_for_eval(
+        claims_path,
+        require_reviewer_ready=not allow_partial_claims,
+    )
     links_dir = default_rule_claim_links_dir(
         output_dir,
         source_set_id=source_set_id,
@@ -172,6 +179,7 @@ def build_rule_claim_links(
         claims_path=claims_path,
         links_path=links_path,
         gaps_path=gaps_path,
+        allow_partial_claims=allow_partial_claims,
     )
     if validation["passed"]:
         _write_sqlite_links(
@@ -188,6 +196,7 @@ def build_rule_claim_links(
                 expected_link_count=len(links),
                 expected_gap_count=len(gaps),
             ),
+            allow_partial_claims=allow_partial_claims,
         )
         if not validation["passed"]:
             sqlite_path.unlink(missing_ok=True)
@@ -213,6 +222,9 @@ def build_rule_claim_links(
         "rule_pack_id": rule_pack["rule_pack_id"],
         "rule_pack_version": rule_pack["version"],
         "top_k": top_k,
+        "allow_partial_claims": allow_partial_claims,
+        "claims_validation_passed": claims_validation_passed,
+        "claims_reviewer_ready": claims_reviewer_ready,
         "rule_count": len(rule_ids),
         "claim_count": len(claims),
         "link_count": len(links),
@@ -224,7 +236,7 @@ def build_rule_claim_links(
         "claim_type_counts": dict(Counter(link["claim_type"] for link in links)),
         "source_record_count": len({link["source_record_id"] for link in links}),
         "validation_passed": validation["passed"],
-        "reviewer_ready": validation["passed"],
+        "reviewer_ready": validation["passed"] and claims_reviewer_ready,
     }
     _write_json(validation_path, validation)
     _write_json(summary_path, summary)
@@ -248,6 +260,7 @@ def validate_rule_claim_links(
     claims_path: Path,
     links_path: Path,
     gaps_path: Path,
+    allow_partial_claims: bool = False,
 ) -> dict:
     output_dir = Path(output_dir)
     rule_pack_path = Path(rule_pack_path)
@@ -257,7 +270,10 @@ def validate_rule_claim_links(
 
     rule_pack = load_rule_pack(rule_pack_path) if rule_pack_path.exists() else {}
     rule_pack_validation = validate_rule_pack(rule_pack) if rule_pack else {"passed": False, "checks": []}
-    claims, claim_error = _load_claims_for_validation(claims_path)
+    claims, claim_error, claim_validation_passed, claim_reviewer_ready = _load_claims_for_validation(
+        claims_path,
+        allow_partial_claims=allow_partial_claims,
+    )
     links = _read_jsonl(links_path) if links_path.exists() else []
     gaps = _read_jsonl(gaps_path) if gaps_path.exists() else []
     checks = [
@@ -271,12 +287,28 @@ def validate_rule_claim_links(
             },
         },
         {
-            "name": "claims_are_reviewer_ready",
-            "passed": claim_error is None and bool(claims),
+            "name": "claims_validation_passed",
+            "passed": claim_error is None and claim_validation_passed and bool(claims),
             "details": {
                 "path": str(claims_path),
                 "exists": claims_path.exists(),
                 "claim_count": len(claims),
+                "validation_passed": claim_validation_passed,
+                "reviewer_ready": claim_reviewer_ready,
+                "allow_partial_claims": allow_partial_claims,
+                "error": claim_error,
+            },
+        },
+        {
+            "name": "claims_are_reviewer_ready",
+            "passed": claim_error is None and claim_reviewer_ready,
+            "details": {
+                "path": str(claims_path),
+                "exists": claims_path.exists(),
+                "claim_count": len(claims),
+                "validation_passed": claim_validation_passed,
+                "reviewer_ready": claim_reviewer_ready,
+                "allow_partial_claims": allow_partial_claims,
                 "error": claim_error,
             },
         },
@@ -300,11 +332,18 @@ def validate_rule_claim_links(
         _check_link_scores_and_terms(rule_pack, links),
         _check_link_ranks_are_contiguous(links),
     ]
+    strict_blockers = {"claims_are_reviewer_ready"}
+    passed = all(check["passed"] for check in checks)
+    if allow_partial_claims:
+        passed = all(
+            check["passed"] or check["name"] in strict_blockers
+            for check in checks
+        )
     return {
         "schema_version": RULE_CLAIM_LINK_VALIDATION_SCHEMA_VERSION,
         "source_set_id": source_set_id,
         "created_at": _utc_now(),
-        "passed": all(check["passed"] for check in checks),
+        "passed": passed,
         "checks": checks,
     }
 
@@ -1040,11 +1079,48 @@ def _load_validated_links_for_eval(links_path: Path) -> list[dict]:
     return _read_jsonl(links_path)
 
 
-def _load_claims_for_validation(claims_path: Path) -> tuple[list[dict], str | None]:
+def _load_claims_for_validation(
+    claims_path: Path,
+    *,
+    allow_partial_claims: bool = False,
+) -> tuple[list[dict], str | None, bool, bool]:
+    summary, validation = _claim_artifact_readiness(claims_path)
+    claim_validation_failed_checks = _failed_check_names(validation)
+    claim_validation_passed = bool(validation and validation.get("passed")) or (
+        allow_partial_claims
+        and bool(claim_validation_failed_checks)
+        and all(
+            name
+            in {
+                "extraction_validation_passed",
+                "extraction_scope_is_complete",
+                "retrieval_is_reviewer_ready",
+            }
+            for name in claim_validation_failed_checks
+        )
+    )
+    claim_reviewer_ready = bool(summary and summary.get("reviewer_ready"))
     try:
-        return _load_validated_claims_for_eval(claims_path), None
+        return (
+            _load_validated_claims_for_eval(
+                claims_path,
+                require_reviewer_ready=not allow_partial_claims,
+            ),
+            None,
+            claim_validation_passed,
+            claim_reviewer_ready,
+        )
     except (FileNotFoundError, ValueError) as error:
-        return [], str(error)
+        return [], str(error), claim_validation_passed, claim_reviewer_ready
+
+
+def _claim_artifact_readiness(claims_path: Path) -> tuple[dict | None, dict | None]:
+    claims_dir = Path(claims_path).parent
+    summary_path = claims_dir / "summary.json"
+    validation_path = claims_dir / "claim_validation.json"
+    summary = _read_json(summary_path) if summary_path.exists() else None
+    validation = _read_json(validation_path) if validation_path.exists() else None
+    return summary, validation
 
 
 def _query_links(
@@ -1506,11 +1582,21 @@ def _sqlite_link_checks(
     ]
 
 
-def _with_additional_checks(validation: dict, checks: list[dict]) -> dict:
+def _with_additional_checks(
+    validation: dict,
+    checks: list[dict],
+    *,
+    allow_partial_claims: bool,
+) -> dict:
     merged_checks = [*validation["checks"], *checks]
+    ignored = {"claims_are_reviewer_ready"}
+    passed = all(
+        check["passed"] or (allow_partial_claims and check["name"] in ignored)
+        for check in merged_checks
+    )
     return {
         **validation,
-        "passed": all(check["passed"] for check in merged_checks),
+        "passed": passed,
         "checks": merged_checks,
     }
 
