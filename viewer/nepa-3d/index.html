@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NEPA 3D Graph Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
     <script
       defer
@@ -18,8 +24,14 @@
   <body>
     <main class="viewer-shell" aria-label="NEPA 3D knowledge graph viewer">
       <aside class="control-rail" aria-label="Graph controls">
-        <section class="rail-section">
-          <h1>NEPA 3D</h1>
+        <section class="rail-section rail-section-brand">
+          <div class="brand-plate">
+            <div class="section-kicker">Region 1 Graph Atlas</div>
+            <h1><span>NEPA</span><span>3D</span></h1>
+            <p class="brand-deck">
+              Neoindustrial command surface for source sets, review overlays, and promotion blockers.
+            </p>
+          </div>
           <div class="field-group">
             <label for="source-set-select">Source set</label>
             <select id="source-set-select"></select>
@@ -32,6 +44,7 @@
             <label for="graph-file-input">Graph JSON</label>
             <input id="graph-file-input" type="file" accept="application/json,.json" />
           </div>
+          <div class="rail-note">Static viewer over normalized graph exports and review overlays.</div>
         </section>
 
         <section class="rail-section">
@@ -107,6 +120,8 @@
         </section>
 
         <section class="rail-section">
+          <div class="section-kicker">Field machinery</div>
+          <h2>Layout controls</h2>
           <div class="slider-row">
             <label for="neighbor-depth">Depth</label>
             <input id="neighbor-depth" type="range" min="0" max="4" step="1" value="1" />
@@ -135,9 +150,17 @@
       </aside>
 
       <section class="graph-stage" aria-label="Graph canvas">
+        <div class="stage-grid" aria-hidden="true"></div>
+        <div class="stage-badge" aria-hidden="true">Operational Atlas</div>
         <div class="graph-toolbar">
-          <div id="dataset-title" class="dataset-title">Loading graph</div>
-          <div id="graph-counts" class="graph-counts"></div>
+          <div class="toolbar-block">
+            <div class="toolbar-kicker">Loaded dataset</div>
+            <div id="dataset-title" class="dataset-title">Loading graph</div>
+          </div>
+          <div class="toolbar-block toolbar-block-end">
+            <div class="toolbar-kicker">Rendered graph</div>
+            <div id="graph-counts" class="graph-counts"></div>
+          </div>
         </div>
         <div id="graph-scene-label" class="graph-scene-label" aria-live="polite"></div>
         <div id="graph-root" class="graph-root" aria-label="3D force graph"></div>
