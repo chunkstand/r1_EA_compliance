@@ -636,9 +636,17 @@ checks. Inventory-quality issues are non-blocking warnings unless they are emitt
 closed if a future inventory-quality rule is promoted to blocking. In manifest-batch mode the same
 coverage file also records `source_record_ids`, `build_scope`, and per-profile `profile_results`
 summarizing each forest row's chunk counts, component counts, standard counts, duplicate IDs,
-validation-error count, and failed checks. Source-set generated inventories under
+validation-error count, failed checks, and typed `blocker_types`. The aggregate
+`all_profile_builds_pass` check fails closed when any manifest row stays blocked, and the failed
+check details identify the blocked `forest_unit_id` values. Source-set generated inventories under
 `source_library/derived/<source_set_id>/forest_plan_components/` require passing build coverage
 before component evaluation can mark inventory coverage as passed.
+
+`summary.json` has schema version `forest-plan-component-inventory-build-summary-v0` and records
+the aggregate build result for the same inventory family, including `build_scope`,
+`profile_result_count`, `blocked_forest_unit_ids`, and `profile_blocker_types_by_forest_unit` so
+downstream readiness and handoff surfaces can describe which forests validated and which stopped on
+typed blockers without reparsing the full coverage file.
 
 The component inventory is data, not runtime branching. The seed inventory at
 `config/forest_plan_component_inventory_seed.json` currently covers the East Crazies-relevant Crazy

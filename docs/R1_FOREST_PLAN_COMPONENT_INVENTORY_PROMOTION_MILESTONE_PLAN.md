@@ -2,7 +2,7 @@
 
 Date: 2026-05-10
 
-Status: Sequence 0 implemented; Sequence 1 implemented; Sequence 2 implemented in code/tests; commit closeout blocked by unrelated dirty durable docs
+Status: Sequences 0 through 3 implemented and cleanly closed; Sequence 4 is next
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -12,33 +12,40 @@ review, promotion, or source-truth boundaries.
 
 ## Purpose
 
-The current system has a strong Custer Gallatin forest-plan component lane, but the broader Region 1
-inventory lane is still incomplete. That incompleteness now shows up in three places:
+The active full-canonical source set now owns its own multi-forest
+`forest_plan_components/` artifact family, and the active NEPA 3D source-set graph no longer
+borrows the archived merged inventory path. The remaining gap has narrowed to readiness and graph
+promotion truth:
 
-- the active full-canonical source set `source-set-34061d1e4bf6c460` has no owned
-  `forest_plan_components/` artifact family under `source_library/derived/`;
-- the full-canonical NEPA 3D source-set graph is currently replayed using a forest-plan component
-  inventory borrowed from the archived merged source set `source-set-8a4005c8a083af1a`;
-- only `custer-gallatin-nf` is graph-promoted with validated component inventory, while the other
-  tracked Region 1 profiles remain `component_inventory_build_required` and
-  `forest_profile_not_ready`.
+- the live Sequence 3 build validates `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and
+  `idaho-panhandle-nfs`;
+- the same build stops on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`;
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` still promotes only
+  `custer-gallatin-nf` and leaves the other nine profiles at
+  `component_inventory_build_required`, so the current readiness/config truth lags the owned
+  inventory artifacts.
 
-The milestone exists to build and promote component inventories for all current Region 1
-forest/grassland profiles tracked by the repo so the active full-canonical source set owns its
-forest-plan inventory truth directly instead of inheriting a one-forest inventory surface.
+The remaining milestone job is to promote these live inventory results into the readiness and NEPA
+3D graph surfaces without weakening typed blocker handling, current promotion truth, or source-set
+ownership gates.
 
 ## Current Evidence
 
 - The active full-canonical catalog source set is `source-set-34061d1e4bf6c460` and is now the
   default viewer dataset in the local NEPA 3D viewer. See [README.md](/Users/chunkstand/projects/usfs-r1-EA-sources/README.md:41).
+- The active full-canonical source set now owns
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`, with a combined
+  inventory of `587` components and `87` standards.
 - The archived merged source set `source-set-8a4005c8a083af1a` remains the freshest all-green merged
-  extraction/retrieval/graph surface and currently owns the only generated
-  `forest_plan_components/` directory on disk.
-- The current promoted component inventory is still Custer Gallatin-only: the existing generated
-  inventory has `329` components, `58` standards, passing build coverage, and currently supports
-  the promoted East Crazies forest-plan review lane.
-- The Region 1 readiness matrix currently tracks `10` forest/grassland profiles, but only `1`
-  graph-ready profile:
+  extraction/retrieval/graph surface, but it is no longer the active inventory-ownership source
+  for the full-canonical lane.
+- The promoted East Crazies forest-plan review lane is still Custer Gallatin-specific, but the
+  active full-canonical inventory is no longer Custer-only: the live Sequence 3 build validates
+  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`.
+- The readiness config currently tracks `10` forest/grassland profiles, but its promoted status is
+  stale relative to the live build:
   - `custer-gallatin-nf`: `component_inventory_validation.status="validated"`
   - `beaverhead-deerlodge-nf`: `component_inventory_build_required`
   - `bitterroot-nf`: `component_inventory_build_required`
@@ -49,9 +56,13 @@ forest-plan inventory truth directly instead of inheriting a one-forest inventor
   - `kootenai-nf`: `component_inventory_build_required`
   - `lolo-nf`: `component_inventory_build_required`
   - `nez-perce-clearwater-nfs`: `component_inventory_build_required`
-- The current `config/forest_plan_profiles.json` contains one full forest profile
-  (`custer-gallatin-nf`) plus `known_other_forest_units`, not full resolver/build contracts for the
-  other forests.
+- The live Sequence 3 build result is broader than that config snapshot:
+  `helena-lewis-and-clark-nf` and `idaho-panhandle-nfs` are now validated in the active inventory,
+  while the seven remaining forests stop on explicit typed blockers rather than missing ownership.
+- `config/forest_plan_profiles.json` still contains one full forest profile
+  (`custer-gallatin-nf`) plus `known_other_forest_units`; the multi-forest build contract for the
+  broader Region 1 roster currently lives in
+  `config/r1_forest_plan_component_inventory_build_manifest.json`.
 - The current `forest-plan-components-build` CLI now supports both targeted and manifest-driven
   execution:
 
@@ -445,11 +456,9 @@ Implementation closeout on 2026-05-10:
   passes with `66` checks, `0` failed checks, `2,047` nodes, and `3,582` edges
 - the promotion suite no longer reports a full-canonical inventory-ownership failure:
   `full_canonical_corpus_ready=true` and `full_canonical_failure_category_counts={}`
-- closeout remains a sequence-boundary issue rather than an implementation issue:
-  the active readiness config still records only one validated inventory, so Sequence 4 remains the
+- the active readiness config still records only one validated inventory, so Sequence 4 remains the
   next required boundary for promoting the three validated inventories and seven typed blockers into
-  graph/readiness truth; this sequence was not committed because Sequence 2 and Sequence 3 still
-  share uncommitted file surfaces and the worktree also contains unrelated viewer edits
+  graph/readiness truth without weakening `region1_completeness_claim=false`
 
 Acceptance signals:
 

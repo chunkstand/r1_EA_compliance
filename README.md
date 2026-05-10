@@ -53,19 +53,10 @@ Current full-corpus promotion boundary:
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
 - The promotion suite now separates full-corpus truth from reviewer-ready V1 truth:
-  `full_canonical_corpus_ready=false` for active catalog `source-set-34061d1e4bf6c460`,
+  `full_canonical_corpus_ready=true` for active catalog `source-set-34061d1e4bf6c460`,
   `current_promotion_ready=true` for the East Crazies V1 lane pinned to
   `source-set-ba8d0feae79501b8`, and `expansion_ready=false` because South Plateau remains blocked
   on `forest_plan_reviewer_not_ready`.
-- The stronger active full-canonical gate is not yet satisfied locally:
-  `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
-  validates `35` authority families and `207` source-currentness records across source partitions
-  `active_review_corpus=349` and `candidate_blocked_source=1`, while the active NEPA 3D source-set
-  export now fails with `66` checks, `1` failed check, `1,789` nodes, and `2,808` edges.
-- `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}` after the refreshed
-  replay because the active graph export still borrows
-  `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
-  instead of owning an active-source-set inventory artifact.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now implemented as a tracked
   config contract:
   `config/r1_forest_plan_component_inventory_build_manifest.json` covers all `10` readiness
@@ -79,11 +70,30 @@ Current full-corpus promotion boundary:
   preserves the existing single-forest `--source-record-id` / `--plan-version` repair path, and
   emits aggregate multi-forest build coverage with per-profile results plus fail-closed
   cross-profile duplicate-ID checks.
-- Active-source-set inventory ownership is still not closed at this boundary. The next required
-  implementation boundary is Sequence 3: run the manifest-driven builder against
-  `source-set-34061d1e4bf6c460`, materialize the canonical
-  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/` artifact family,
-  and stop on any typed profile blocker instead of borrowing the archived merged inventory path.
+- Sequence 3 of the Region 1 forest-plan inventory promotion plan is now implemented on the active
+  source set. The manifest-driven build on `source-set-34061d1e4bf6c460` validates
+  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`, and stops the
+  combined build on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` with blocker types
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`.
+- The stronger active full-canonical ownership gate is now satisfied locally:
+  `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
+  validates `35` authority families and `207` source-currentness records across source partitions
+  `active_review_corpus=349` and `candidate_blocked_source=1`; the active source set now owns
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
+  with `587` components and `87` standards; and an active-source-set `nepa-knowledge-graph-export`
+  replay against that owned inventory passes `66` checks with `0` failed, `2,047` nodes, and
+  `3,582` edges.
+- The promotion suite no longer carries a full-canonical inventory-ownership blocker:
+  `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
+  `full_canonical_corpus_ready=true`, `full_canonical_failure_category_counts={}`,
+  `current_promotion_ready=true`, and `expansion_ready=false`.
+- The next required implementation boundary is Sequence 4: promote the active build results into
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and companion graph/readiness summaries so
+  the three validated inventories and seven typed blockers replace the current one-validated,
+  nine-`component_inventory_build_required` readiness snapshot while keeping
+  `region1_completeness_claim=false`.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the

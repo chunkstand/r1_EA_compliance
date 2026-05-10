@@ -58,19 +58,18 @@ Latest closeout on 2026-05-10:
 - The post-V1 promotion suite now separates current-promotion truth from full-corpus truth:
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
   `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
-  `current_promotion_ready=true`, `full_canonical_corpus_ready=false`, and `expansion_ready=false`.
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, and `expansion_ready=false`.
   The active full-canonical lane now requires its own `authority_currentness` plus NEPA 3D
-  source-set graph artifacts, and that stricter gate is not yet satisfied locally for
+  source-set graph artifacts, and that stricter gate is now satisfied locally for
   `source-set-34061d1e4bf6c460`.
 - The active full-canonical derived artifacts are now materialized under
   `source_library/derived/source-set-34061d1e4bf6c460/`: `authority_currentness` validates `35`
   authority families and `207` source-currentness records across source partitions
-  `active_review_corpus=349` and `candidate_blocked_source=1`, while the active NEPA 3D source-set
-  export now fails with `66` checks, `1` failed check, `1,789` nodes, and `2,808` edges.
-- `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}` after the latest
-  replay because the active graph export still borrows the archived
-  `source-set-8a4005c8a083af1a` component inventory instead of an active-source-set-owned
-  `forest_plan_components/` artifact family.
+  `active_review_corpus=349` and `candidate_blocked_source=1`; the active source set now also owns
+  `forest_plan_components/component_inventory.json`, `components.jsonl`,
+  `component_inventory_build_coverage.json`, and `summary.json`. The latest active NEPA 3D
+  source-set export against that owned inventory passes with `66` checks, `0` failed checks,
+  `2,047` nodes, and `3,582` edges.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
   contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
   readiness profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
@@ -82,11 +81,20 @@ Latest closeout on 2026-05-10:
   preserves the existing single-forest `--source-record-id` / `--plan-version` path, and emits
   aggregate build coverage with per-profile results plus fail-closed cross-profile duplicate-ID
   checks.
-- Active-source-set inventory ownership is still not closed at this milestone. The next required
-  boundary is Sequence 3: run the manifest-driven builder for
-  `source-set-34061d1e4bf6c460`, materialize the canonical
-  `forest_plan_components/` artifact family under the active source set, and stop on any typed
-  profile blocker instead of reusing the archived merged inventory path.
+- Sequence 3 of the Region 1 forest-plan inventory promotion plan is now implemented on the active
+  source set. The live build writes `587` components and `87` standards, validates
+  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`, and stops the
+  aggregate build on explicit typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`. Every blocked profile currently reports the same blocker pair:
+  `plan_component_labels_not_detected` and `plan_standard_labels_not_detected`.
+- The promotion suite no longer reports a full-canonical inventory-ownership failure:
+  `full_canonical_failure_category_counts={}` after the active-source-set graph replay. The next
+  required boundary is Sequence 4: promote the live build results into
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and related graph/readiness summaries so
+  the three validated inventories and seven typed blockers replace the current one-validated,
+  nine-`component_inventory_build_required` readiness snapshot without weakening
+  `region1_completeness_claim=false`.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

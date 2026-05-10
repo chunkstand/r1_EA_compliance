@@ -627,6 +627,19 @@ def _component_inventory_build_summary(
         summary["forest_unit_id"] = forest_unit_ids[0]
     if manifest_path is not None:
         summary["manifest_path"] = str(manifest_path)
+    profile_results = coverage.get("profile_results", [])
+    blocked_profile_results = [
+        row for row in profile_results if not row.get("passed")
+    ]
+    if profile_results:
+        summary["profile_result_count"] = len(profile_results)
+        summary["blocked_forest_unit_ids"] = [
+            row["forest_unit_id"] for row in blocked_profile_results
+        ]
+        summary["profile_blocker_types_by_forest_unit"] = {
+            row["forest_unit_id"]: row.get("blocker_types", [])
+            for row in blocked_profile_results
+        }
     return summary
 
 
@@ -648,6 +661,13 @@ def _components_from_chunk(
         code = match.group("code")
         number = match.group("number")
         component_body = _compact(match.group("text"), limit=10000)
+        if _suppress_tabular_component_label(
+            label=label,
+            code=code,
+            number=number,
+            text=component_body,
+        ):
+            continue
         component_text = _compact(f"{label} ({code}) {number} {component_body}", limit=10000)
         section_heading = _section_heading_for_match(
             text=text,
@@ -818,6 +838,14 @@ def _component_inventory_build_coverage(
                 for check in profile_coverage["checks"]
                 if not check["passed"]
             ]
+            blocker_types = _component_inventory_profile_blocker_types(
+                failed_checks=failed_checks,
+                selected_chunk_count=profile_coverage["selected_chunk_count"],
+                built_component_count=profile_coverage["built_component_count"],
+                built_standard_count=profile_coverage["built_standard_count"],
+                duplicate_component_ids=profile_coverage["duplicate_component_ids"],
+                duplicate_standard_ids=profile_coverage["duplicate_standard_ids"],
+            )
             profile_results.append(
                 {
                     "forest_unit_id": profile_build.forest_unit_id,
@@ -843,6 +871,7 @@ def _component_inventory_build_coverage(
                     ],
                     "validation_error_count": len(profile_coverage["validation_errors"]),
                     "failed_checks": failed_checks,
+                    "blocker_types": blocker_types,
                     "passed": profile_coverage["passed"],
                 }
             )
@@ -891,11 +920,52 @@ def _component_inventory_build_coverage(
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
     }
+
+
+def _component_inventory_profile_blocker_types(
+    *,
+    failed_checks: list[str],
+    selected_chunk_count: int,
+    built_component_count: int,
+    built_standard_count: int,
+    duplicate_component_ids: list[str],
+    duplicate_standard_ids: list[str],
+) -> list[str]:
+    blockers = []
+    failed = set(failed_checks)
+    if selected_chunk_count == 0:
+        blockers.append("no_selected_forest_plan_chunks")
+    if (
+        "labeled_components_detected" in failed
+        and built_component_count == 0
+    ):
+        blockers.append("plan_component_labels_not_detected")
+    if (
+        "standard_components_detected" in failed
+        and built_standard_count == 0
+    ):
+        blockers.append("plan_standard_labels_not_detected")
+    if "built_component_ids_are_unique" in failed and duplicate_component_ids:
+        blockers.append("duplicate_component_ids_detected")
+    if "detected_standard_labels_are_unique" in failed and duplicate_standard_ids:
+        blockers.append("duplicate_standard_ids_detected")
+    if not blockers and failed_checks:
+        blockers.extend(sorted(failed))
+    return blockers
+
+
 def _detected_component_labels(chunks: list[dict]) -> list[dict]:
     labels = []
     for chunk in chunks:
         text = str(chunk.get("text") or "")
         for match in COMPONENT_LABEL_RE.finditer(text):
+            if _suppress_tabular_component_label(
+                label=match.group("label"),
+                code=match.group("code"),
+                number=match.group("number"),
+                text=match.group("text"),
+            ):
+                continue
             component_type = _component_type_from_label(match.group("label"))
             component_id = _component_id(
                 source_record_id=str(chunk.get("source_record_id") or ""),
@@ -934,6 +1004,59 @@ def _component_inventory_quality_issues(chunks: list[dict]) -> list[dict]:
     seen = set()
     for chunk in chunks:
         text = str(chunk.get("text") or "")
+        for match in COMPONENT_LABEL_RE.finditer(text):
+            label = match.group("label")
+            code = match.group("code")
+            number = match.group("number")
+            component_text = match.group("text")
+            if not _suppress_tabular_component_label(
+                label=label,
+                code=code,
+                number=number,
+                text=component_text,
+            ):
+                continue
+            source_record_id = str(chunk.get("source_record_id") or "")
+            candidate_component_id = _component_id(
+                source_record_id=source_record_id,
+                code=code,
+                number=number,
+            )
+            chunk_id = str(chunk.get("chunk_id") or "")
+            dedupe_key = ("tabular_component_label", candidate_component_id, chunk_id)
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            section_heading = _section_heading_for_match(
+                text=text,
+                start=match.start(),
+                fallback=str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components"),
+            )
+            issues.append(
+                {
+                    "issue_id": _safe_identifier(
+                        f"{candidate_component_id}-tabular-component-label-{chunk_id or 'chunk'}"
+                    ),
+                    "issue_type": "tabular_component_label",
+                    "severity": "warning",
+                    "candidate_component_id": candidate_component_id,
+                    "suggested_component_id": None,
+                    "label": label,
+                    "code": code,
+                    "number_token": number,
+                    "source_record_id": source_record_id,
+                    "chunk_id": chunk_id,
+                    "section_heading": section_heading,
+                    "candidate_text": _compact(
+                        f"{label} ({code}) {number} {component_text}",
+                        limit=1200,
+                    ),
+                    "message": (
+                        "Component-like label was suppressed because it matches a tabular "
+                        "max/min statistic heading rather than a plan component."
+                    ),
+                }
+            )
         for match in COMPONENT_LABEL_CANDIDATE_RE.finditer(text):
             number = match.group("number")
             if COMPONENT_NUMBER_RE.match(number):
@@ -1013,6 +1136,25 @@ def _component_inventory_quality_issue_type(*, number: str, text: str) -> str:
     if normalized_number in {"see", "table"} or normalized_text.startswith("see "):
         return "cross_reference_component_label"
     return "non_numeric_component_label"
+
+
+def _suppress_tabular_component_label(
+    *,
+    label: str,
+    code: str,
+    number: str,
+    text: str,
+) -> bool:
+    normalized_label = label.strip().lower()
+    normalized_code = code.strip().lower()
+    normalized_text = _normalized_component_text(text)
+    if normalized_label not in {"standard", "standards"}:
+        return False
+    if normalized_code not in {"max", "min"}:
+        return False
+    if not number.isdigit():
+        return False
+    return normalized_text.startswith("status selected standard")
 
 
 def _suggested_component_number(*, number_token: str, text: str) -> str | None:

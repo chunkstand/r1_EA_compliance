@@ -773,6 +773,46 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertTrue(coverage["passed"])
             self.assertEqual(coverage["inventory_quality_issue_count"], 1)
 
+    def test_build_suppresses_tabular_max_standard_labels(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-idaho-panhandle-nfs-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "2015 Idaho Panhandle Land Management Plan PDF\n"
+                            "Standard (max) 2009 Status Selected Standard (min.) 1-Cedar 2 14 15."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="idaho-panhandle-nfs",
+                plan_version="2015",
+                chunks_path=chunks_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["component_count"], 0)
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["duplicate_component_ids"], [])
+            self.assertEqual(coverage["duplicate_standard_ids"], [])
+            self.assertEqual(coverage["inventory_quality_issue_count"], 1)
+            self.assertEqual(
+                coverage["inventory_quality_issues"][0]["issue_type"],
+                "tabular_component_label",
+            )
+
     def test_duplicate_standard_labels_fail_build_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -1000,6 +1040,7 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertEqual(len(coverage["profile_results"]), 2)
             self.assertTrue(_check(coverage, "all_profile_builds_pass")["passed"])
             self.assertTrue(_check(coverage, "all_profile_builds_have_selected_chunks")["passed"])
+            self.assertEqual(coverage["profile_results"][0]["blocker_types"], [])
             inventory = json.loads(result.inventory_path.read_text(encoding="utf-8"))
             self.assertEqual(inventory["build_scope"], "manifest_batch")
             self.assertEqual(
@@ -1078,7 +1119,7 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                 for row in coverage["profile_results"]
                 if row["forest_unit_id"] == "custer-gallatin-nf"
             )
-            self.assertTrue(failed_row["passed"])
+            self.assertEqual(failed_row["blocker_types"], [])
 
     def test_cli_parser_exposes_inventory_builder_command(self) -> None:
         parser = build_parser()

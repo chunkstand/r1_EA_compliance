@@ -2,6 +2,66 @@
 
 Date: 2026-05-10
 
+Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
+that lane supersedes older sections below when they disagree.
+
+## Region 1 Forest-Plan Inventory Sequence 3
+
+Sequence 3 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
+implemented in the working tree. This slice materializes the active-source-set inventory artifacts,
+stops the combined Region 1 build on typed blockers instead of borrowed inventory reuse, and proves
+the active graph export can run against the owned inventory path.
+
+- reuse-first extraction materialized the active chunk layer:
+  `reuse-inventory` reported `349` reusable extraction rows, `0` new extraction requirements, and
+  `1` excluded row; `extract-build --reuse-existing` then wrote `349/349` extracted rows and
+  `75,745` chunks under `source-set-34061d1e4bf6c460`
+- active inventory ownership closed:
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  now writes `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`
+- live build result:
+  the active combined inventory contains `587` components and `87` standards; validated profiles
+  are `custer-gallatin-nf` (`329/58`), `helena-lewis-and-clark-nf` (`257/28`), and
+  `idaho-panhandle-nfs` (`1/1`)
+- explicit typed blockers preserved:
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `flathead-nf`,
+  `kootenai-nf`, `lolo-nf`, and `nez-perce-clearwater-nfs` each stop on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`
+- aggregate coverage shape:
+  the only failing build-coverage check is `all_profile_builds_pass`; there are no duplicate-ID,
+  validation-error, or inventory-ownership failures left in the active build
+- active graph replay is now green with the owned inventory path:
+  `nepa-knowledge-graph-export` against `source-set-34061d1e4bf6c460` and
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
+  passed with `66` checks, `0` failed checks, `2,047` nodes, and `3,582` edges
+- promotion-suite replay result:
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `full_canonical_failure_category_counts={}`, and `expansion_ready=false`
+
+Verification in this pass:
+
+- `PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-34061d1e4bf6c460`: passed with `reuse_extraction_count=349`, `needs_extract_count=0`, `excluded_count=1`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing --reuse-inventory-path source_library/derived/source-set-34061d1e4bf6c460/reuse_inventory/reuse_inventory.json`: passed with `extracted_count=349`, `failed_count=0`, `chunk_count=75745`, `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`: stopped as intended with typed blockers and summary `component_count=587`, `standard_count=87`, `coverage_passed=false`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --authority-currentness-path source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json --evidence-graph-nodes-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_nodes.jsonl --evidence-graph-edges-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_edges.jsonl --claims-path source_library/derived/source-set-8a4005c8a083af1a/claims/claims.jsonl --rule-claim-links-path source_library/derived/source-set-8a4005c8a083af1a/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_links.jsonl --forest-plan-components-path source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `full_canonical_corpus_ready=true`
+
+Residual risks:
+
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records only `custer-gallatin-nf`
+  as `component_inventory_validation.status="validated"` and leaves the other nine profiles at
+  `component_inventory_build_required`, so graph/readiness profile truth is the remaining stale
+  surface rather than inventory ownership
+- the seven blocked forests still need parser/profile promotion work before Region 1 inventory
+  completeness can be described as broadly validated
+
+Immediate next step if this slice is continued:
+
+1. Implement Sequence 4 by promoting the active build results into
+   `config/region1_forest_plan_readiness_nepa_3d_v1.json` and related graph/readiness summaries so
+   the three validated inventories and seven typed blockers replace the current stale profile
+   statuses without weakening `region1_completeness_claim=false`.
+
 ## Region 1 Forest-Plan Inventory Sequence 2
 
 Sequence 2 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
