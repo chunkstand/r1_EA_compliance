@@ -14,6 +14,7 @@ from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
 from .validate_run import validate_run
+from .workbook import load_r1_forest_plan_document_register
 
 
 CAPTURE_COMMANDS = {
@@ -116,6 +117,7 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
 def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
     if args.command == "dry-run":
         config = load_config(args.config)
+        source_delta_options = _source_delta_options(args, parser)
         result = run_dry_run(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -125,12 +127,14 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             id_filter=args.id,
             host_filter=args.host,
             limit=args.limit,
+            **source_delta_options,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1
 
     if args.command == "preflight":
         config = load_config(args.config)
+        source_delta_options = _source_delta_options(args, parser)
         result = run_preflight(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -140,12 +144,14 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             id_filter=args.id,
             host_filter=args.host,
             limit=args.limit,
+            **source_delta_options,
         )
         print_summary(result.summary)
         return 0
 
     if args.command == "download":
         config = load_config(args.config)
+        source_delta_options = _source_delta_options(args, parser)
         result = run_download(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -155,6 +161,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             id_filter=args.id,
             host_filter=args.host,
             limit=args.limit,
+            **source_delta_options,
             force=args.force,
         )
         print_summary(result.summary)
@@ -232,3 +239,35 @@ def _add_workbook_run_filters(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--id")
     parser.add_argument("--host")
     parser.add_argument("--limit", type=int)
+    parser.add_argument(
+        "--r1-forest-plan-register",
+        type=Path,
+        help=(
+            "Optional Region 1 forest-plan document register CSV. Only source_delta_required "
+            "rows are emitted as supplemental corpus-ready source rows."
+        ),
+    )
+    parser.add_argument(
+        "--source-delta-only",
+        action="store_true",
+        help="Limit the run to supplemental source-delta rows from --r1-forest-plan-register.",
+    )
+
+
+def _source_delta_options(args: argparse.Namespace, parser: argparse.ArgumentParser) -> dict:
+    register_path = getattr(args, "r1_forest_plan_register", None)
+    source_delta_only = bool(getattr(args, "source_delta_only", False))
+    if source_delta_only and not register_path:
+        parser.error("--source-delta-only requires --r1-forest-plan-register")
+    if not register_path:
+        return {}
+
+    register = load_r1_forest_plan_document_register(register_path)
+    source_delta_sources = register.source_delta_sources
+    options = {
+        "supplemental_sources": source_delta_sources,
+        "source_delta_input": register.summary(),
+    }
+    if source_delta_only:
+        options["source_record_ids"] = {source.source_record_id for source in source_delta_sources}
+    return options

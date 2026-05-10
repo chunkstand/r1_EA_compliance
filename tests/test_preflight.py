@@ -8,11 +8,13 @@ import unittest
 from usfs_r1_ea_sources.config import load_config
 from usfs_r1_ea_sources.preflight import PreflightFetchResult, _classify_response
 from usfs_r1_ea_sources.preflight import _request_headers, run_preflight
+from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+R1_FOREST_PLAN_REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 
 
 def ok_result(url: str) -> PreflightFetchResult:
@@ -66,6 +68,7 @@ class PreflightTests(unittest.TestCase):
             self.assertEqual(result.summary["duplicate_url_count"], 18)
             self.assertEqual(result.summary["skipped_excluded_count"], 1)
             self.assertEqual(result.summary["failed_count"], 0)
+            self.assertTrue(result.summary["validation_passed"])
 
             duplicate_records = [record for record in records if record["status"] == "duplicate_url"]
             self.assertEqual(len(duplicate_records), 18)
@@ -142,6 +145,42 @@ class PreflightTests(unittest.TestCase):
             self.assertEqual(result.summary["checked_url_count"], 46)
             self.assertEqual(result.summary["preflight_ok_count"], 46)
             self.assertEqual(result.summary["duplicate_url_count"], 15)
+
+    def test_preflight_promotes_r1_forest_plan_source_delta_only(self) -> None:
+        config = load_config(CONFIG)
+        fetcher = FakeFetcher()
+        register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
+        source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_preflight(
+                workbook_path=WORKBOOK,
+                output_dir=Path(tmp),
+                config=config,
+                run_id="r1-forest-plan-source-delta-preflight",
+                source_record_ids=source_delta_ids,
+                supplemental_sources=register.source_delta_sources,
+                source_delta_input=register.summary(),
+                fetcher=fetcher,
+                sleep_fn=lambda _: None,
+            )
+
+            records = [
+                json.loads(line)
+                for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(result.summary["workbook_rows"], 190)
+            self.assertEqual(result.summary["canonical_rows"], 349)
+            self.assertEqual(result.summary["supplemental_source_count"], 159)
+            self.assertEqual(result.summary["filtered_rows"], 159)
+            self.assertEqual(result.summary["checked_url_count"], 159)
+            self.assertEqual(result.summary["preflight_ok_count"], 159)
+            self.assertEqual(result.summary["failed_count"], 0)
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["source_delta_input"]["gap_count"], 2)
+            self.assertEqual(len(fetcher.calls), 159)
+            self.assertEqual({record["source_record_id"] for record in records}, source_delta_ids)
 
     def test_preflight_classifies_document_not_found_body_as_not_found(self) -> None:
         config = load_config(CONFIG)

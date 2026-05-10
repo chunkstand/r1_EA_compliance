@@ -5,9 +5,15 @@ from pathlib import Path
 from urllib.parse import urlsplit
 import csv
 
+from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.workbook import load_canonical_sources
+from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
+WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CONFIG = ROOT / "config" / "downloader.toml"
 
 
 def _rows() -> list[dict[str, str]]:
@@ -106,3 +112,37 @@ def test_r1_forest_plan_document_register_corrects_nez_perce_clearwater_links() 
     assert "usfs-public.box.com/s/a6tlve91fe1ma9u4hgfggd12oj8xmnwv" in (
         rows["R1PLAN-nez-perce-clearwater-nfs-18"]["notes"]
     )
+
+
+def test_r1_forest_plan_document_register_loader_emits_source_delta_only() -> None:
+    config = load_config(CONFIG)
+    workbook_source_ids = {
+        source.source_record_id for source in load_canonical_sources(WORKBOOK, config.workbook)
+    }
+    register = load_r1_forest_plan_document_register(REGISTER)
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+
+    assert register.status_counts == {
+        "catalog_confirmed": 28,
+        "source_delta_required": 159,
+        "official_source_gap_documented": 2,
+    }
+    assert len(register.rows) == 189
+    assert len(register.source_delta_sources) == 159
+    assert register.gap_source_record_ids == [
+        "R1PLAN-kootenai-nf-18",
+        "R1PLAN-nez-perce-clearwater-nfs-18",
+    ]
+    assert not source_delta_ids & workbook_source_ids
+    assert not source_delta_ids & set(register.gap_source_record_ids)
+    assert set(register.catalog_confirmed_source_record_ids) <= workbook_source_ids
+
+    bitterroot = next(
+        source
+        for source in register.source_delta_sources
+        if source.source_record_id == "R1PLAN-bitterroot-nf-12"
+    )
+    assert bitterroot.sheet == "R1_Forest_Plan_Document_Register"
+    assert bitterroot.metadata["source_input"] == "r1_forest_plan_document_register"
+    assert bitterroot.metadata["forest_unit_id"] == "bitterroot-nf"
+    assert bitterroot.metadata["draft_status"] == "source_delta_required"

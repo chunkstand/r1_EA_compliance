@@ -16,7 +16,7 @@ from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write_event
 from .records import WorkbookSource, planned_artifact_path, sha256_file
-from .workbook import load_canonical_sources, load_excluded_urls
+from .workbook import load_canonical_sources, load_excluded_urls, merge_supplemental_sources
 
 
 BROWSER_COMPATIBLE_USER_AGENT = "Mozilla/5.0"
@@ -67,6 +67,8 @@ def run_preflight(
     host_filter: str | None = None,
     limit: int | None = None,
     source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
     fetcher=None,
     sleep_fn=sleep,
 ) -> PreflightResult:
@@ -86,7 +88,8 @@ def run_preflight(
 
     write_event(events_path, run_id, "run_started", details={"mode": "preflight"})
     workbook_sha256 = sha256_file(workbook_path)
-    sources = load_canonical_sources(workbook_path, config.workbook)
+    workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     excluded_urls = load_excluded_urls(workbook_path, config.workbook)
     filtered_sources = _apply_filters(
         sources,
@@ -103,7 +106,10 @@ def run_preflight(
         details={
             "workbook_path": str(workbook_path),
             "workbook_sha256": workbook_sha256,
+            "workbook_rows": len(workbook_sources),
             "canonical_rows": len(sources),
+            "supplemental_source_count": len(supplemental_sources or []),
+            "source_delta_input": source_delta_input,
             "filtered_rows": len(filtered_sources),
             "override_count": _override_count(sources),
             "filtered_override_count": _override_count(filtered_sources),
@@ -201,7 +207,10 @@ def run_preflight(
         "mode": "preflight",
         "workbook_path": str(workbook_path),
         "workbook_sha256": workbook_sha256,
+        "workbook_rows": len(workbook_sources),
         "canonical_rows": len(sources),
+        "supplemental_source_count": len(supplemental_sources or []),
+        "source_delta_input": source_delta_input,
         "filtered_rows": len(records),
         "override_count": _override_count(sources),
         "filtered_override_count": _override_count(filtered_sources),
@@ -218,6 +227,7 @@ def run_preflight(
         "manifest_path": str(manifest_path),
     }
     validation_report = _validation_report(run_id, summary, records, excluded_urls)
+    summary["validation_passed"] = validation_report["passed"]
 
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     validation_report_path.write_text(

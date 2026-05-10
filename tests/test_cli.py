@@ -51,6 +51,23 @@ def test_compliance_review_parser_preserves_authority_gate_options() -> None:
     assert args.rule_pack == Path("config/compliance_rule_pack_nepa_ea_v0.json")
 
 
+def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
+    args = build_parser().parse_args(
+        [
+            "preflight",
+            "--workbook",
+            "workbook.xlsx",
+            "--r1-forest-plan-register",
+            "config/r1_forest_plan_document_register_draft.csv",
+            "--source-delta-only",
+        ]
+    )
+
+    assert args.command == "preflight"
+    assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
+    assert args.source_delta_only is True
+
+
 def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch) -> None:
     captured = {}
 

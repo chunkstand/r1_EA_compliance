@@ -10,6 +10,12 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Do not treat `Audit_Trail`, `Legend`, `EA_Record_Checklist`, or `Project_AddOns` as default download targets. They may contribute metadata or optional follow-up sources only when explicitly enabled.
 - Read URLs from the workbook cells, not by regex over text exports.
 - Compute and record the workbook SHA256 before each run.
+- Region 1 forest-plan support-document expansion may be loaded only through the explicit
+  supplemental register option
+  `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv`.
+  The loader emits only `source_delta_required` rows. `catalog_confirmed` rows remain de-duplicated
+  against the workbook/catalog contract, and `official_source_gap_documented` rows are reported as
+  skipped gaps, not corpus-ready download targets.
 
 ## 2. Row Identity And Provenance
 
@@ -90,6 +96,8 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Support resume by default. Existing validated artifacts must not be fetched again unless `--force` is passed.
 - Support `--dry-run` with no network writes.
 - Support `--limit`, `--sheet`, `--id`, and `--host` filters for controlled testing.
+- Support `--source-delta-only` with an explicit Region 1 forest-plan register when planning,
+  preflighting, or downloading only supplemental `R1PLAN-*` source-delta rows.
 - Do not disable TLS verification by default. If a site requires a certificate exception, record the exception and mark the record `needs_review` unless a project-level allowlist is approved.
 
 ## 6. Artifact Storage

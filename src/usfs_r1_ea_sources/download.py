@@ -21,7 +21,7 @@ from .preflight import _int_or_none, _is_failure_status
 from .preflight import _request_headers, _uses_browser_compatible_user_agent
 from .preflight import _respect_host_delay
 from .records import WorkbookSource, planned_artifact_path, sha256_file
-from .workbook import load_canonical_sources, load_excluded_urls
+from .workbook import load_canonical_sources, load_excluded_urls, merge_supplemental_sources
 
 
 @dataclass(frozen=True)
@@ -69,6 +69,8 @@ def run_download(
     host_filter: str | None = None,
     limit: int | None = None,
     source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
     force: bool = False,
     fetcher=None,
     sleep_fn=sleep,
@@ -89,7 +91,8 @@ def run_download(
 
     write_event(events_path, run_id, "run_started", details={"mode": "download", "force": force})
     workbook_sha256 = sha256_file(workbook_path)
-    sources = load_canonical_sources(workbook_path, config.workbook)
+    workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     excluded_urls = load_excluded_urls(workbook_path, config.workbook)
     filtered_sources = _apply_filters(
         sources,
@@ -106,7 +109,10 @@ def run_download(
         details={
             "workbook_path": str(workbook_path),
             "workbook_sha256": workbook_sha256,
+            "workbook_rows": len(workbook_sources),
             "canonical_rows": len(sources),
+            "supplemental_source_count": len(supplemental_sources or []),
+            "source_delta_input": source_delta_input,
             "filtered_rows": len(filtered_sources),
             "override_count": _override_count(sources),
             "filtered_override_count": _override_count(filtered_sources),
@@ -317,7 +323,10 @@ def run_download(
         "mode": "download",
         "workbook_path": str(workbook_path),
         "workbook_sha256": workbook_sha256,
+        "workbook_rows": len(workbook_sources),
         "canonical_rows": len(sources),
+        "supplemental_source_count": len(supplemental_sources or []),
+        "source_delta_input": source_delta_input,
         "filtered_rows": len(records),
         "override_count": _override_count(sources),
         "filtered_override_count": _override_count(filtered_sources),
@@ -338,6 +347,7 @@ def run_download(
         "manifest_path": str(manifest_path),
     }
     validation_report = _validation_report(run_id, summary, records, excluded_urls)
+    summary["validation_passed"] = validation_report["passed"]
 
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     validation_report_path.write_text(

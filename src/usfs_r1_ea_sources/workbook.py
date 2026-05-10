@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+from urllib.parse import urlsplit
+import csv
 
 from openpyxl import load_workbook
 
@@ -17,6 +21,57 @@ from .records import WorkbookSource, normalize_url, slugify
 INGEST_LINK_COLUMN = "Official_Link"
 FOREST_PLAN_LINK_COLUMN = "Official_Link"
 EXCLUSION_LINK_COLUMN = "Link"
+R1_FOREST_PLAN_DOCUMENT_REGISTER_SHEET = "R1_Forest_Plan_Document_Register"
+R1_FOREST_PLAN_REGISTER_SOURCE_DELTA_STATUS = "source_delta_required"
+R1_FOREST_PLAN_REGISTER_CATALOG_STATUS = "catalog_confirmed"
+R1_FOREST_PLAN_REGISTER_GAP_STATUS = "official_source_gap_documented"
+R1_FOREST_PLAN_REGISTER_ALLOWED_STATUSES = {
+    R1_FOREST_PLAN_REGISTER_SOURCE_DELTA_STATUS,
+    R1_FOREST_PLAN_REGISTER_CATALOG_STATUS,
+    R1_FOREST_PLAN_REGISTER_GAP_STATUS,
+}
+R1_FOREST_PLAN_REGISTER_COLUMNS = (
+    "proposed_source_record_id",
+    "forest_unit_id",
+    "forest_unit_name",
+    "document_role",
+    "document_title",
+    "official_link",
+    "existing_source_record_id",
+    "readiness_tier",
+    "draft_status",
+    "required_for",
+    "notes",
+)
+
+
+@dataclass(frozen=True)
+class R1ForestPlanDocumentRegister:
+    path: Path
+    rows: list[dict[str, str]]
+    source_delta_sources: list[WorkbookSource]
+    catalog_confirmed_source_record_ids: list[str]
+    gap_source_record_ids: list[str]
+    status_counts: dict[str, int]
+    forest_unit_ids: list[str]
+
+    def summary(self) -> dict:
+        return {
+            "schema": "r1-forest-plan-document-register-v0",
+            "path": str(self.path),
+            "total_rows": len(self.rows),
+            "forest_unit_count": len(self.forest_unit_ids),
+            "forest_unit_ids": self.forest_unit_ids,
+            "status_counts": self.status_counts,
+            "source_delta_count": len(self.source_delta_sources),
+            "catalog_confirmed_count": len(self.catalog_confirmed_source_record_ids),
+            "gap_count": len(self.gap_source_record_ids),
+            "source_delta_source_record_ids": [
+                source.source_record_id for source in self.source_delta_sources
+            ],
+            "catalog_confirmed_source_record_ids": self.catalog_confirmed_source_record_ids,
+            "skipped_gap_source_record_ids": self.gap_source_record_ids,
+        }
 
 
 def _headers_by_name(sheet, header_row: int) -> dict[str, int]:
@@ -79,6 +134,84 @@ def load_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[
     sources = apply_url_overrides(sources, overrides)
     validate_overrides_do_not_target_exclusions(sources, load_excluded_urls(workbook_path, config))
     return sources
+
+
+def merge_supplemental_sources(
+    workbook_sources: list[WorkbookSource],
+    supplemental_sources: Iterable[WorkbookSource] | None = None,
+) -> list[WorkbookSource]:
+    sources = list(workbook_sources)
+    supplemental = list(supplemental_sources or [])
+    duplicate_ids = _duplicate_values(
+        [source.source_record_id for source in [*sources, *supplemental]]
+    )
+    if duplicate_ids:
+        raise ValueError(f"Supplemental sources duplicate existing source IDs: {duplicate_ids}")
+    return [*sources, *supplemental]
+
+
+def load_r1_forest_plan_document_register(
+    register_path: Path | str,
+) -> R1ForestPlanDocumentRegister:
+    path = Path(register_path)
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        missing_columns = [
+            column for column in R1_FOREST_PLAN_REGISTER_COLUMNS if column not in (reader.fieldnames or [])
+        ]
+        if missing_columns:
+            raise ValueError(f"Missing required R1 forest-plan register columns: {missing_columns}")
+        rows = [
+            _normalize_register_row(row, csv_row_number=index)
+            for index, row in enumerate(reader, start=2)
+            if any((value or "").strip() for value in row.values())
+        ]
+
+    duplicate_ids = _duplicate_values([row["proposed_source_record_id"] for row in rows])
+    if duplicate_ids:
+        raise ValueError(f"Duplicate R1 forest-plan register source IDs: {duplicate_ids}")
+
+    invalid_statuses = sorted(
+        {
+            row["draft_status"]
+            for row in rows
+            if row["draft_status"] not in R1_FOREST_PLAN_REGISTER_ALLOWED_STATUSES
+        }
+    )
+    if invalid_statuses:
+        raise ValueError(f"Unsupported R1 forest-plan register statuses: {invalid_statuses}")
+
+    bad_links = [
+        row["proposed_source_record_id"]
+        for row in rows
+        if urlsplit(row["official_link"]).scheme not in {"http", "https"}
+    ]
+    if bad_links:
+        raise ValueError(f"R1 forest-plan register rows without HTTP(S) official links: {bad_links}")
+
+    source_delta_rows = [
+        row for row in rows if row["draft_status"] == R1_FOREST_PLAN_REGISTER_SOURCE_DELTA_STATUS
+    ]
+    catalog_confirmed_ids = [
+        row["proposed_source_record_id"]
+        for row in rows
+        if row["draft_status"] == R1_FOREST_PLAN_REGISTER_CATALOG_STATUS
+    ]
+    gap_ids = [
+        row["proposed_source_record_id"]
+        for row in rows
+        if row["draft_status"] == R1_FOREST_PLAN_REGISTER_GAP_STATUS
+    ]
+    status_counts = Counter(row["draft_status"] for row in rows)
+    return R1ForestPlanDocumentRegister(
+        path=path,
+        rows=rows,
+        source_delta_sources=[_register_row_to_workbook_source(row, path) for row in source_delta_rows],
+        catalog_confirmed_source_record_ids=catalog_confirmed_ids,
+        gap_source_record_ids=gap_ids,
+        status_counts=dict(status_counts),
+        forest_unit_ids=sorted({row["forest_unit_id"] for row in rows}),
+    )
 
 
 def _load_ingest_checklist(sheet, headers: dict[str, int], header_row: int) -> Iterable[WorkbookSource]:
@@ -153,3 +286,57 @@ def _load_forest_plans(sheet, headers: dict[str, int], header_row: int) -> Itera
                 "currentness_notes": _cell(sheet, row, headers, "Notes"),
             },
         )
+
+
+def _normalize_register_row(row: dict[str, str | None], *, csv_row_number: int) -> dict[str, str]:
+    normalized = {
+        column: (row.get(column) or "").strip() for column in R1_FOREST_PLAN_REGISTER_COLUMNS
+    }
+    missing_values = [
+        column
+        for column in R1_FOREST_PLAN_REGISTER_COLUMNS
+        if column != "existing_source_record_id" and not normalized[column]
+    ]
+    if missing_values:
+        raise ValueError(
+            f"R1 forest-plan register row {csv_row_number} missing required values: {missing_values}"
+        )
+    normalized["register_row"] = str(csv_row_number)
+    return normalized
+
+
+def _register_row_to_workbook_source(row: dict[str, str], register_path: Path) -> WorkbookSource:
+    source_id = row["proposed_source_record_id"]
+    original_url = row["official_link"]
+    return WorkbookSource(
+        source_record_id=source_id,
+        sheet=R1_FOREST_PLAN_DOCUMENT_REGISTER_SHEET,
+        excel_row=int(row["register_row"]),
+        source_id=source_id,
+        title=row["document_title"],
+        original_url=original_url,
+        effective_url=original_url,
+        normalized_url=normalize_url(original_url),
+        metadata={
+            "source_input": "r1_forest_plan_document_register",
+            "register_path": str(register_path),
+            "register_row": row["register_row"],
+            "forest_unit_id": row["forest_unit_id"],
+            "forest_unit_name": row["forest_unit_name"],
+            "unit_or_overlay": row["forest_unit_name"],
+            "document_role": row["document_role"],
+            "document_type": row["document_role"],
+            "existing_source_record_id": row["existing_source_record_id"],
+            "readiness_tier": row["readiness_tier"],
+            "draft_status": row["draft_status"],
+            "review_engine_checks": row["required_for"],
+            "required_for": row["required_for"],
+            "currentness_notes": row["notes"],
+            "notes": row["notes"],
+        },
+    )
+
+
+def _duplicate_values(values: Iterable[str]) -> list[str]:
+    counts = Counter(values)
+    return sorted(value for value, count in counts.items() if count > 1)

@@ -8,7 +8,11 @@ applicability-first review, and phase-eval artifacts.
 
 Path: `source_library/manifests/dry_run_<run_id>.jsonl`
 
-One JSON object per workbook data row.
+One JSON object per workbook data row. When a supplemental Region 1 forest-plan register is supplied
+through `--r1-forest-plan-register`, the manifest may also include supplemental
+`R1_Forest_Plan_Document_Register` rows emitted from `source_delta_required` register entries.
+Register rows with `catalog_confirmed` or `official_source_gap_documented` status are counted in
+the run summary but are not emitted as corpus-ready manifest rows.
 
 Required fields:
 
@@ -101,6 +105,9 @@ Required fields:
 - `workbook_path`
 - `workbook_sha256`
 - `canonical_rows`
+- `workbook_rows`
+- `supplemental_source_count`
+- `source_delta_input`
 - `unique_canonical_urls`
 - `excluded_url_count`
 - `override_count`
@@ -114,6 +121,11 @@ Required fields:
 - `status_counts`
 - `top_hosts`
 - `manifest_path`
+- `validation_passed`
+
+`source_delta_input` is `null` unless a supplemental source-delta register is supplied. For the
+Region 1 forest-plan document register, it includes register row counts, status counts, emitted
+source-delta IDs, catalog-confirmed IDs, and skipped gap source IDs.
 
 Preflight summaries also include:
 

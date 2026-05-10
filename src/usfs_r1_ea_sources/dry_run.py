@@ -11,7 +11,7 @@ import uuid
 
 from .config import DownloaderConfig
 from .records import WorkbookSource, planned_artifact_path, sha256_file
-from .workbook import load_canonical_sources, load_excluded_urls
+from .workbook import load_canonical_sources, load_excluded_urls, merge_supplemental_sources
 
 
 @dataclass(frozen=True)
@@ -65,6 +65,9 @@ def run_dry_run(
     id_filter: str | None = None,
     host_filter: str | None = None,
     limit: int | None = None,
+    source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
 ) -> DryRunResult:
     run_id = run_id or new_run_id()
     started_at = utc_now()
@@ -82,7 +85,8 @@ def run_dry_run(
 
     write_event(events_path, run_id, "run_started", details={"mode": "dry-run"})
     workbook_sha256 = sha256_file(workbook_path)
-    sources = load_canonical_sources(workbook_path, config.workbook)
+    workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     excluded_urls = load_excluded_urls(workbook_path, config.workbook)
     write_event(
         events_path,
@@ -91,12 +95,22 @@ def run_dry_run(
         details={
             "workbook_path": str(workbook_path),
             "workbook_sha256": workbook_sha256,
+            "workbook_rows": len(workbook_sources),
             "canonical_rows": len(sources),
+            "supplemental_source_count": len(supplemental_sources or []),
+            "source_delta_input": source_delta_input,
             "excluded_url_count": len(excluded_urls),
         },
     )
 
-    filtered_sources = _apply_filters(sources, sheet_filter, id_filter, host_filter, limit)
+    filtered_sources = _apply_filters(
+        sources,
+        sheet_filter,
+        id_filter,
+        host_filter,
+        limit,
+        source_record_ids=source_record_ids,
+    )
     first_record_by_url: dict[str, str] = {}
     artifact_by_url: dict[str, Path] = {}
     records: list[dict] = []
@@ -151,7 +165,10 @@ def run_dry_run(
         "mode": "dry-run",
         "workbook_path": str(workbook_path),
         "workbook_sha256": workbook_sha256,
+        "workbook_rows": len(workbook_sources),
         "canonical_rows": len(sources),
+        "supplemental_source_count": len(supplemental_sources or []),
+        "source_delta_input": source_delta_input,
         "filtered_rows": len(records),
         "override_count": _override_count(sources),
         "filtered_override_count": _override_count(filtered_sources),
@@ -168,6 +185,7 @@ def run_dry_run(
         "manifest_path": str(manifest_path),
     }
     validation_report = _validation_report(run_id, summary, records, excluded_urls)
+    summary["validation_passed"] = validation_report["passed"]
 
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     validation_report_path.write_text(

@@ -2,6 +2,36 @@
 
 Date: 2026-05-09
 
+## Region 1 Forest-Plan Document Register Promotion
+
+The Region 1 forest-plan support-document register is now promoted into the controlled capture
+pipeline as an explicit source-delta input. Use:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
+PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
+```
+
+Promotion behavior is intentionally narrow:
+
+- `source_delta_required` rows emit supplemental `WorkbookSource` records.
+- `catalog_confirmed` rows are counted but are not re-emitted because they already exist in the
+  workbook/catalog contract.
+- `official_source_gap_documented` rows are counted as skipped gaps and are not corpus-ready.
+
+Promotion acceptance is documented in
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. The real dry-run
+`r1-forest-plan-promotion-dry-run-20260510` planned all `159` source-delta rows with no duplicates.
+The scoped live preflight `r1-forest-plan-promotion-preflight-20260510` returned `158`
+`preflight_ok` rows and one transient Forest Service `429` for
+`R1PLAN-dakota-prairie-grasslands-19`; targeted retry
+`r1-forest-plan-promotion-preflight-retry-dpg19-20260510` passed `1/1`.
+
+Next sequence: controlled source-delta capture. Run a batch download against only the `159`
+supplemental source-delta rows, then validate/report/catalog-build the resulting source set. Keep
+`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` out of download planning until
+replacement official sources are found or a documented gap policy is accepted.
+
 ## Region 1 Forest-Plan Document Register Hardening
 
 `config/r1_forest_plan_document_register_draft.csv` is now an ingest-ready draft register for
@@ -54,11 +84,8 @@ PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 
-Next sequence: promote the draft register into the workbook-backed ingest path or a dedicated
-source-delta sheet, then run a scoped dry-run/preflight against only the new `R1PLAN-*` source-delta
-rows before any full download. Do not treat the remaining Kootenai BA or Nez Perce-Clearwater
-project-record gap rows as corpus-ready until direct official source records are acquired or the gap
-policy is explicitly accepted.
+This hardening section is retained for source-discovery context. Promotion is now implemented in the
+section above; the next work is controlled source-delta capture, not another register review pass.
 
 ## Project SOW Integration Merge
 

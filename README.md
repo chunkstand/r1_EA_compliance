@@ -16,6 +16,15 @@ Current workbook source contract:
 - `Scope=Conditional` rows loaded for trigger-based review: `136`
 - `R1_Forest_Plans` unit/overlay rows: `28`
 
+Region 1 forest-plan support-document expansion is promoted as a controlled source-delta input, not
+as a replacement for the workbook contract. `config/r1_forest_plan_document_register_draft.csv`
+currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `159`
+corpus-ready source-delta rows, and `2` documented official-source gaps. Use
+`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
+with `dry-run`, `preflight`, or `download` when planning only the supplemental `R1PLAN-*`
+source-delta rows. See `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the
+promotion evidence and scoped preflight run IDs.
+
 Current generated source-library capture:
 
 - Run ID: `corpus-update-2026-05-01-cg-support-batches`

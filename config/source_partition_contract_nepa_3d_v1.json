@@ -98,6 +98,7 @@
   "workbook_source_delta_plan": {
     "environmental_justice_civil_rights": "Keep candidate-blocked until a scoped workbook/source delta adds official Title VI and USDA nondiscrimination sources.",
     "fsh_1909_15": "Add separate workbook rows for current official FSH 1909.15 contents/zero-code and chapter records used by EA review before graph export claims handbook completeness.",
+    "r1_forest_plan_support_documents": "Promoted through config/r1_forest_plan_document_register_draft.csv; source_delta_required rows emit supplemental R1PLAN-* records, while documented gap rows remain excluded from corpus-ready planning.",
     "reserved_36_cfr_part_220": "If an explicit 36 CFR part 220 source record is added, place it in the currentness/supersession archive and link it to current USDA NEPA procedure sources."
   }
 }

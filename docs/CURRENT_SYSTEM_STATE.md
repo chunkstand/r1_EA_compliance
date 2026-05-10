@@ -18,6 +18,21 @@ The uploaded workbook now defines the active source contract:
 - `R1_Forest_Plans` unit/overlay rows: `28`
 - Total rows in the default ingest-driving sheets: `190`
 
+The Region 1 forest-plan support-document register is promoted as a controlled supplemental
+source-delta input at `config/r1_forest_plan_document_register_draft.csv`. The register has `189`
+reviewed rows: `28` rows already confirmed in the workbook/catalog contract, `159`
+`source_delta_required` rows that can be emitted as supplemental `WorkbookSource` records, and `2`
+documented official-source gaps that are counted but not planned for corpus download. The promoted
+CLI path is:
+
+```text
+--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
+```
+
+The promotion validation is documented in
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. No full download of the supplemental
+source-delta rows has been run yet.
+
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.
 
