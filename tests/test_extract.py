@@ -551,32 +551,148 @@ class ExtractionTests(unittest.TestCase):
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
         config = load_config(CONFIG)
-        with tempfile.TemporaryDirectory() as tmp:
-            output_dir = Path(tmp)
-            _write_download_run(
-                output_dir,
-                "unit-download",
-                source_record_id="R1EA-001",
-                artifact_body=_pdf_body(),
-                content_type="application/pdf",
-                suffix=".pdf",
-            )
-            build_review_catalog(
-                workbook_path=WORKBOOK,
-                output_dir=output_dir,
-                config=config,
-                config_path=CONFIG,
-                run_id="unit-download",
+        original_resolve_external = extract_module._resolve_external_docling_python
+        original_pdf_fallback = extract_module._try_extract_pdf_text_fallback
+        extract_module._resolve_external_docling_python = lambda: None
+        extract_module._try_extract_pdf_text_fallback = lambda artifact_path: None
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1EA-001",
+                    artifact_body=_pdf_body(),
+                    content_type="application/pdf",
+                    suffix=".pdf",
+                )
+                build_review_catalog(
+                    workbook_path=WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+
+                self.assertFalse(result.summary["validation_passed"])
+                self.assertEqual(result.summary["expected_parser_counts"], {"pdf": 1})
+                self.assertEqual(result.summary["failure_counts"], {"docling_unavailable": 1})
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["status"], "parser_error")
+                self.assertEqual(manifest[0]["failure"]["error_class"], "docling_unavailable")
+        finally:
+            extract_module._resolve_external_docling_python = original_resolve_external
+            extract_module._try_extract_pdf_text_fallback = original_pdf_fallback
+
+    def test_build_extraction_falls_back_when_docling_is_unavailable(self) -> None:
+        if importlib.util.find_spec("docling") is not None:
+            self.skipTest("Docling is installed in this Python environment.")
+        config = load_config(CONFIG)
+        original_resolve_external = extract_module._resolve_external_docling_python
+        original_pdf_fallback = extract_module._try_extract_pdf_text_fallback
+        extract_module._resolve_external_docling_python = lambda: None
+        extract_module._try_extract_pdf_text_fallback = lambda artifact_path: extract_module.ExtractionPayload(
+            text="Fallback text when docling is unavailable.",
+            blocks=[extract_module.TextBlock(text="Fallback text when docling is unavailable.", page=1)],
+            parser_name="pypdf_text_fallback",
+            parser_version="test",
+            metadata={"pypdf_max_decompress_bytes": extract_module.PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES},
+        )
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1EA-001",
+                    artifact_body=_pdf_body(),
+                    content_type="application/pdf",
+                    suffix=".pdf",
+                )
+                build_review_catalog(
+                    workbook_path=WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+
+                self.assertTrue(result.summary["validation_passed"])
+                self.assertEqual(result.summary["parser_counts"], {"pypdf_text_fallback": 1})
+                self.assertEqual(result.summary["fallback_counts"], {"docling": 1})
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["status"], "extracted")
+                self.assertEqual(manifest[0]["parser_name"], "pypdf_text_fallback")
+                self.assertEqual(
+                    manifest[0]["parser_metadata"]["fallback_error_class"],
+                    "docling_unavailable",
+                )
+        finally:
+            extract_module._resolve_external_docling_python = original_resolve_external
+            extract_module._try_extract_pdf_text_fallback = original_pdf_fallback
+
+    def test_build_extraction_uses_external_docling_when_active_python_lacks_docling(self) -> None:
+        if importlib.util.find_spec("docling") is not None:
+            self.skipTest("Docling is installed in this Python environment.")
+        config = load_config(CONFIG)
+        original_find_spec = extract_module.importlib.util.find_spec
+        original_resolve_external = extract_module._resolve_external_docling_python
+        original_try_external = extract_module._try_extract_docling_external
+
+        def fake_find_spec(name: str):  # noqa: ANN202
+            if name == "docling":
+                return None
+            return original_find_spec(name)
+
+        def fake_try_external(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202, ARG001
+            text = "External Docling text."
+            return extract_module.ExtractionPayload(
+                text=text,
+                blocks=[extract_module.TextBlock(text=text, page=1)],
+                parser_name="docling",
+                parser_version="test",
             )
 
-            result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+        extract_module.importlib.util.find_spec = fake_find_spec
+        extract_module._resolve_external_docling_python = lambda: Path("/tmp/fake-docling-python")
+        extract_module._try_extract_docling_external = fake_try_external
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1EA-001",
+                    artifact_body=_pdf_body(),
+                    content_type="application/pdf",
+                    suffix=".pdf",
+                )
+                build_review_catalog(
+                    workbook_path=WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                )
 
-            self.assertFalse(result.summary["validation_passed"])
-            self.assertEqual(result.summary["expected_parser_counts"], {"pdf": 1})
-            self.assertEqual(result.summary["failure_counts"], {"docling_unavailable": 1})
-            manifest = _read_jsonl(result.extraction_manifest_path)
-            self.assertEqual(manifest[0]["status"], "parser_error")
-            self.assertEqual(manifest[0]["failure"]["error_class"], "docling_unavailable")
+                result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+
+                self.assertTrue(result.summary["validation_passed"])
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["status"], "extracted")
+                self.assertEqual(manifest[0]["parser_name"], "docling")
+                self.assertEqual(
+                    manifest[0]["parser_metadata"]["docling_execution"],
+                    "external_python",
+                )
+        finally:
+            extract_module.importlib.util.find_spec = original_find_spec
+            extract_module._resolve_external_docling_python = original_resolve_external
+            extract_module._try_extract_docling_external = original_try_external
 
     def test_build_extraction_accepts_reuse_inventory_bundle_path(self) -> None:
         config = load_config(CONFIG)

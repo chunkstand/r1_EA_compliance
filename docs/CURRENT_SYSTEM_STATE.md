@@ -45,11 +45,12 @@ distinguishes the scoped source-delta source set `source-set-411b3736b3691eed` f
 canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
 `R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` as explicit official-source gaps,
 validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and now
-also evaluates the live Sequence 4 merged-catalog extraction state. The generated JSON/Markdown
-report uses schema `r1-forest-plan-source-delta-readiness-v2` and is under the source-delta run's
-ignored `source_delta_readiness/` directory. The live merged extraction pass uses archived merged
-catalog `source-set-7e2652d23e764068`, reuse inventory, and `extract-build --catalog-dir ...` so
-the active canonical catalog remains untouched. Current live Sequence 4 results:
+also evaluates the Sequence 4 merged-catalog extraction state. The generated JSON/Markdown report
+uses schema `r1-forest-plan-source-delta-readiness-v2` and is under the source-delta run's ignored
+`source_delta_readiness/` directory. The committed merged extraction/readiness artifacts currently
+reflect the pre-fallback run; they use archived merged catalog `source-set-7e2652d23e764068`,
+reuse inventory, and `extract-build --catalog-dir ...` so the active canonical catalog remains
+untouched. Current committed Sequence 4 artifact results:
 
 - merged reuse inventory: `reuse_extraction=189`, `needs_extract=159`, `excluded=1`
 - merged extraction summary: `195` extracted rows, `153` explicit `parser_error` rows, `1`
@@ -58,6 +59,19 @@ the active canonical catalog remains untouched. Current live Sequence 4 results:
   explicit parser blockers, status `ready_with_blockers`
 - current blocker class: `docling_unavailable=153`
 - retrieval readiness: `not_started`
+
+Sequence 4 runtime alignment update after that artifact:
+
+- `extract-build` now treats `docling_unavailable` the same way it already treated
+  `docling_timeout`: it falls back to `pypdf_text_fallback` when born-digital PDF text is
+  extractable.
+- external Docling execution is now opt-in through `USFS_R1_DOCLING_PYTHON` instead of being
+  assumed from a repo-local `.venv-docling`.
+- targeted live smoke over merged-catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and
+  `-04` succeeded with `parser_name=pypdf_text_fallback`,
+  `fallback_error_class=docling_unavailable`, and large extracted text payloads.
+- the full merged extraction and readiness artifact replay still needs to be rerun to replace the
+  older `153`-blocker report with post-fallback counts.
 
 The Sequence 3 merged catalog contract is implemented without replacing the active canonical
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit

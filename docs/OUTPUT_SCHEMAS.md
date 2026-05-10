@@ -3332,12 +3332,14 @@ at an archived catalog gate so merged or scoped source-set extraction can run wi
 - scopes eCFR XML section and subpart records to the matching source XML element when the source
   URL includes `/section-...` or `/subpart-...`
 - uses built-in HTML and DOCX parsers unless `--prefer-docling` is passed
-- uses Docling first for PDF parsing
+- uses Docling first for PDF parsing when Docling is available in the active Python environment or
+  when `USFS_R1_DOCLING_PYTHON` points to an alternate interpreter with Docling installed
 - disables Docling OCR by default for born-digital PDFs; `--docling-ocr` enables OCR explicitly
 - isolates Docling conversion in a child process and applies a hard per-document timeout;
   `--docling-timeout-seconds 0` disables the hard timeout
-- falls back to `pypdf_text_fallback` for born-digital PDFs when Docling exceeds the timeout, and
-  records that parser name/version in the manifest and chunks
+- falls back to `pypdf_text_fallback` for born-digital PDFs when Docling exceeds the timeout or is
+  unavailable, and records that parser name/version plus fallback metadata in the manifest and
+  chunks
 
 `extraction_manifest.jsonl` contains one terminal row per selected source:
 

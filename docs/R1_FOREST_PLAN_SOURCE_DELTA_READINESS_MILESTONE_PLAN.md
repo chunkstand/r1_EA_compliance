@@ -410,8 +410,13 @@ Implementation status:
 - The live Sequence 4 readiness gate passes with `0` failed checks, status
   `ready_with_blockers`, complete coverage for all `159` support-document source-delta rows,
   `6` extracted support-document rows, and `153` explicit support-document parser blockers.
-- All `153` current blockers are `docling_unavailable` PDF rows, so retrieval remains
-  `not_started` until PDF parser availability is restored or an accepted fallback is added.
+- The runtime gap behind those blockers is now closed in code: default `extract-build` falls back to
+  `pypdf_text_fallback` when Docling is unavailable, and `USFS_R1_DOCLING_PYTHON` can opt into an
+  alternate Docling interpreter explicitly.
+- Targeted live smoke on merged-catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and `-04`
+  now succeeds with `pypdf_text_fallback` and `fallback_error_class=docling_unavailable`.
+- The remaining closeout step for this sequence is a full merged extraction and readiness replay to
+  replace the earlier `153`-blocker artifact with post-fallback counts before Sequence 5 starts.
 
 ### Sequence 5 - Retrieval Readiness And Evaluation
 
@@ -563,8 +568,9 @@ The local atomic commit for closeout should include:
 
 ## Next Immediate Slice
 
-Sequence 4 gate implementation is now closed for the current baseline: the merged extraction path
-is implemented without touching the canonical catalog, and the readiness gate accounts for all
-support-document rows with explicit parser blockers. The next immediate slice is to clear the
-`153` `docling_unavailable` PDF blockers on `source-set-7e2652d23e764068`, rerun the merged
-extraction pass, and only then advance to Sequence 5 retrieval readiness.
+Sequence 4 gate and runtime-gap implementation are now closed for the current baseline: the merged
+extraction path is implemented without touching the canonical catalog, the readiness gate accounts
+for all support-document rows with explicit parser blockers, and default PDF extraction no longer
+hard-fails on `docling_unavailable`. The next immediate slice is to rerun the full merged
+extraction/readiness artifacts on `source-set-7e2652d23e764068` and then advance to Sequence 5
+retrieval readiness with refreshed post-fallback counts.

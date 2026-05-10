@@ -12,9 +12,11 @@ import importlib.util
 import importlib.metadata
 import json
 import multiprocessing
+import os
 import re
 import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
 from urllib.parse import unquote
@@ -26,8 +28,9 @@ from .records import sha256_file
 
 
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout"}
+PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout", "docling_unavailable"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
+DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
 NON_EXTRACTABLE_SOURCE_STATUSES = {"skipped_excluded"}
 CURRENT_REUSE_INVENTORY_CLASSIFICATIONS = {"already_current", "already_current_cg_slice"}
@@ -866,6 +869,19 @@ def _extract_pdf(
         raise
     if payload is not None:
         return payload
+    fallback_payload = _try_extract_pdf_text_fallback(artifact_path)
+    if fallback_payload is not None:
+        return _with_payload_metadata(
+            fallback_payload,
+            {
+                "fallback_from": "docling",
+                "fallback_error_class": "docling_unavailable",
+                "fallback_error_message": (
+                    "Docling is not installed in the active Python environment."
+                ),
+                "pypdf_max_decompress_bytes": PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES,
+            },
+        )
     raise ExtractionFailure(
         "docling_unavailable",
         "Docling is required for this parser but is not installed in the active Python "
@@ -880,7 +896,24 @@ def _try_extract_docling(
     timeout_seconds: float | None,
 ) -> ExtractionPayload | None:
     if importlib.util.find_spec("docling") is None:
-        return None
+        external_python = _resolve_external_docling_python()
+        if external_python is None:
+            return None
+        payload = _try_extract_docling_external(
+            artifact_path,
+            ocr_enabled=ocr_enabled,
+            timeout_seconds=timeout_seconds,
+            python_path=external_python,
+        )
+        if payload is None:
+            return None
+        return _with_payload_metadata(
+            payload,
+            {
+                "docling_execution": "external_python",
+                "docling_python": str(external_python),
+            },
+        )
 
     if timeout_seconds is not None:
         return _try_extract_docling_isolated(
@@ -894,6 +927,95 @@ def _try_extract_docling(
         ocr_enabled=ocr_enabled,
         timeout_seconds=timeout_seconds,
     )
+
+
+def _resolve_external_docling_python() -> Path | None:
+    env_path = os.environ.get(DOCLING_PYTHON_ENV_VAR)
+    if not env_path:
+        return None
+    candidate = Path(env_path)
+    if candidate.exists() and candidate.is_file() and os.access(candidate, os.X_OK):
+        return candidate
+    return None
+
+
+def _try_extract_docling_external(
+    artifact_path: Path,
+    *,
+    ocr_enabled: bool,
+    timeout_seconds: float | None,
+    python_path: Path,
+) -> ExtractionPayload | None:
+    with tempfile.NamedTemporaryFile(
+        prefix="usfs-r1-docling-external-",
+        suffix=".json",
+        delete=False,
+    ) as handle:
+        result_path = Path(handle.name)
+    try:
+        repo_root = Path(__file__).resolve().parents[2]
+        src_path = repo_root / "src"
+        env = os.environ.copy()
+        existing_pythonpath = env.get("PYTHONPATH")
+        env["PYTHONPATH"] = (
+            f"{src_path}{os.pathsep}{existing_pythonpath}"
+            if existing_pythonpath
+            else str(src_path)
+        )
+        command = [
+            str(python_path),
+            "-c",
+            (
+                "from usfs_r1_ea_sources.extract import _docling_child_main; "
+                "import sys; "
+                "_docling_child_main("
+                "sys.argv[1], "
+                "sys.argv[2] == '1', "
+                "None if sys.argv[3] == 'none' else float(sys.argv[3]), "
+                "sys.argv[4])"
+            ),
+            str(artifact_path),
+            "1" if ocr_enabled else "0",
+            "none" if timeout_seconds is None else str(timeout_seconds),
+            str(result_path),
+        ]
+        try:
+            completed = subprocess.run(
+                command,
+                check=False,
+                env=env,
+                timeout=timeout_seconds,
+                capture_output=True,
+                text=True,
+            )
+        except subprocess.TimeoutExpired as error:
+            raise ExtractionFailure(
+                "docling_timeout",
+                f"Docling conversion exceeded hard timeout of {timeout_seconds:g} seconds.",
+            ) from error
+        if not result_path.exists() or result_path.stat().st_size == 0:
+            raise ExtractionFailure(
+                "docling_worker_failed",
+                "External Docling worker exited without a result file; "
+                f"returncode={completed.returncode}.",
+            )
+        result = _read_json(result_path)
+        status = result.get("status")
+        if status == "unavailable":
+            return None
+        if status == "error":
+            raise ExtractionFailure(
+                result.get("error_class") or "docling_conversion_failed",
+                result.get("error_message") or "External Docling worker failed.",
+            )
+        if status != "ok":
+            raise ExtractionFailure(
+                "docling_worker_failed",
+                f"External Docling worker returned unknown status: {status}",
+            )
+        return _payload_from_wire(result["payload"])
+    finally:
+        result_path.unlink(missing_ok=True)
 
 
 def _try_extract_docling_isolated(
