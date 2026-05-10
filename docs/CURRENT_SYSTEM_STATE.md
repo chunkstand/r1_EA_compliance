@@ -71,6 +71,15 @@ Latest closeout on 2026-05-10:
   replay because the active graph export still borrows the archived
   `source-set-8a4005c8a083af1a` component inventory instead of an active-source-set-owned
   `forest_plan_components/` artifact family.
+- Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
+  contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
+  readiness profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
+  `plan_version` plus grouped build `source_record_id` inputs in tracked config, and validates
+  against the live readiness roster through
+  `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py`.
+- The runtime boundary is unchanged at this milestone: `forest-plan-components-build` is still a
+  single-forest command, so active-source-set inventory ownership is not closed yet. The next
+  required boundary is Sequence 2 multi-forest builder hardening.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

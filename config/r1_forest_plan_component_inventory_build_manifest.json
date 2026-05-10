@@ -1,0 +1,408 @@
+{
+  "schema_version": "region1-forest-plan-component-inventory-build-manifest-v0",
+  "manifest_id": "region1-forest-plan-component-inventory-build-manifest-v1",
+  "source_set_references": [
+    {
+      "reference_id": "active_full_canonical",
+      "reference_type": "explicit_source_set_id",
+      "source_set_id": "source-set-34061d1e4bf6c460",
+      "description": "Active full-canonical source set that must own the canonical Region 1 multi-forest component inventory."
+    }
+  ],
+  "profile_rows": [
+    {
+      "forest_unit_id": "custer-gallatin-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "plan_version": "2022",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-custer-gallatin-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-custer-gallatin-nf-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-custer-gallatin-nf-03"
+        ],
+        "final_environmental_impact_statement_volume_1": [
+          "R1PLAN-custer-gallatin-nf-04"
+        ],
+        "final_environmental_impact_statement_volume_2": [
+          "R1PLAN-custer-gallatin-nf-05"
+        ],
+        "biological_assessment": [
+          "R1PLAN-custer-gallatin-nf-06"
+        ],
+        "biological_opinion": [
+          "R1PLAN-custer-gallatin-nf-07"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible",
+        "accepted_blockers": []
+      }
+    },
+    {
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+      "plan_version": "2009",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-beaverhead-deerlodge-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-beaverhead-deerlodge-nf-02"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-beaverhead-deerlodge-nf-03"
+        ],
+        "record_of_decision": [
+          "R1PLAN-beaverhead-deerlodge-nf-04",
+          "R1PLAN-beaverhead-deerlodge-nf-05"
+        ],
+        "biological_assessment": [
+          "R1PLAN-beaverhead-deerlodge-nf-18",
+          "R1PLAN-beaverhead-deerlodge-nf-22",
+          "R1PLAN-beaverhead-deerlodge-nf-24"
+        ],
+        "biological_opinion": [
+          "R1PLAN-beaverhead-deerlodge-nf-19",
+          "R1PLAN-beaverhead-deerlodge-nf-23",
+          "R1PLAN-beaverhead-deerlodge-nf-25"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "bitterroot-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-bitterroot-nf-02",
+      "plan_version": "1987",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-bitterroot-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-bitterroot-nf-02"
+        ],
+        "forest_plan_amendments": [
+          "R1PLAN-bitterroot-nf-03"
+        ],
+        "final_environmental_impact_statement_volume_1": [
+          "R1PLAN-bitterroot-nf-04"
+        ],
+        "final_environmental_impact_statement_volume_2": [
+          "R1PLAN-bitterroot-nf-05"
+        ],
+        "record_of_decision": [
+          "R1PLAN-bitterroot-nf-06"
+        ],
+        "biological_assessment": [
+          "R1PLAN-bitterroot-nf-12"
+        ],
+        "biological_opinion": [
+          "R1PLAN-bitterroot-nf-13"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
+      "plan_version": "2001",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-dakota-prairie-grasslands-01"
+        ],
+        "region1_cross_check": [
+          "R1PLAN-dakota-prairie-grasslands-02"
+        ],
+        "primary_land_resource_management_plan_part": [
+          "R1PLAN-dakota-prairie-grasslands-03",
+          "R1PLAN-dakota-prairie-grasslands-04",
+          "R1PLAN-dakota-prairie-grasslands-05",
+          "R1PLAN-dakota-prairie-grasslands-06",
+          "R1PLAN-dakota-prairie-grasslands-07"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-dakota-prairie-grasslands-10",
+          "R1PLAN-dakota-prairie-grasslands-12"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-dakota-prairie-grasslands-11"
+        ],
+        "administrative_change": [
+          "R1PLAN-dakota-prairie-grasslands-16"
+        ],
+        "record_of_decision": [
+          "R1PLAN-dakota-prairie-grasslands-15"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "flathead-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-flathead-nf-02",
+      "plan_version": "2018",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-flathead-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-flathead-nf-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-flathead-nf-03"
+        ],
+        "final_environmental_impact_statement_volume_1_part_1": [
+          "R1PLAN-flathead-nf-04"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-flathead-nf-05"
+        ],
+        "biological_assessment": [
+          "R1PLAN-flathead-nf-06"
+        ],
+        "biological_opinion": [
+          "R1PLAN-flathead-nf-07",
+          "R1PLAN-flathead-nf-16"
+        ],
+        "administrative_change": [
+          "R1PLAN-flathead-nf-10"
+        ],
+        "final_environmental_impact_statement_volume_2": [
+          "R1PLAN-flathead-nf-12"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
+      "plan_version": "2021",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-helena-lewis-and-clark-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-helena-lewis-and-clark-nf-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-helena-lewis-and-clark-nf-03"
+        ],
+        "final_environmental_impact_statement_volume_1": [
+          "R1PLAN-helena-lewis-and-clark-nf-05"
+        ],
+        "final_environmental_impact_statement_volume_2": [
+          "R1PLAN-helena-lewis-and-clark-nf-06"
+        ],
+        "biological_assessment": [
+          "R1PLAN-helena-lewis-and-clark-nf-12"
+        ],
+        "biological_opinion": [
+          "R1PLAN-helena-lewis-and-clark-nf-13"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+      "plan_version": "2015",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-idaho-panhandle-nfs-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-idaho-panhandle-nfs-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-idaho-panhandle-nfs-03"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-idaho-panhandle-nfs-04"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-idaho-panhandle-nfs-05"
+        ],
+        "biological_opinion": [
+          "R1PLAN-idaho-panhandle-nfs-11",
+          "R1PLAN-idaho-panhandle-nfs-12"
+        ],
+        "administrative_change": [
+          "R1PLAN-idaho-panhandle-nfs-16",
+          "R1PLAN-idaho-panhandle-nfs-17"
+        ],
+        "biological_opinion_chapter": [
+          "R1PLAN-idaho-panhandle-nfs-18",
+          "R1PLAN-idaho-panhandle-nfs-19",
+          "R1PLAN-idaho-panhandle-nfs-20",
+          "R1PLAN-idaho-panhandle-nfs-21",
+          "R1PLAN-idaho-panhandle-nfs-22"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "kootenai-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-kootenai-nf-02",
+      "plan_version": "2015",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-kootenai-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-kootenai-nf-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-kootenai-nf-03"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-kootenai-nf-04"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-kootenai-nf-05"
+        ],
+        "administrative_change": [
+          "R1PLAN-kootenai-nf-13"
+        ],
+        "biological_opinion_chapter": [
+          "R1PLAN-kootenai-nf-14",
+          "R1PLAN-kootenai-nf-15",
+          "R1PLAN-kootenai-nf-16",
+          "R1PLAN-kootenai-nf-17"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required",
+          "official_source_gap_documented"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "lolo-nf",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-lolo-nf-02",
+      "plan_version": "1986",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-lolo-nf-01"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-lolo-nf-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-lolo-nf-03"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-lolo-nf-04"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-lolo-nf-05"
+        ],
+        "biological_assessment": [
+          "R1PLAN-lolo-nf-06"
+        ],
+        "biological_opinion": [
+          "R1PLAN-lolo-nf-07"
+        ],
+        "administrative_change": [
+          "R1PLAN-lolo-nf-09"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    },
+    {
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "source_set_reference_id": "active_full_canonical",
+      "primary_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+      "plan_version": "2025",
+      "build_source_record_ids_by_role": {
+        "planning_page": [
+          "R1PLAN-nez-perce-clearwater-nfs-01"
+        ],
+        "plan_document_set_page": [
+          "R1PLAN-nez-perce-clearwater-nfs-02"
+        ],
+        "record_of_decision": [
+          "R1PLAN-nez-perce-clearwater-nfs-03"
+        ],
+        "notice_of_plan_approval": [
+          "R1PLAN-nez-perce-clearwater-nfs-04"
+        ],
+        "administrative_changes": [
+          "R1PLAN-nez-perce-clearwater-nfs-05"
+        ],
+        "primary_land_management_plan": [
+          "R1PLAN-nez-perce-clearwater-nfs-06"
+        ],
+        "biological_assessment": [
+          "R1PLAN-nez-perce-clearwater-nfs-10"
+        ],
+        "biological_assessment_supplement": [
+          "R1PLAN-nez-perce-clearwater-nfs-11"
+        ],
+        "biological_opinion": [
+          "R1PLAN-nez-perce-clearwater-nfs-12",
+          "R1PLAN-nez-perce-clearwater-nfs-13"
+        ],
+        "final_environmental_impact_statement": [
+          "R1PLAN-nez-perce-clearwater-nfs-15"
+        ],
+        "final_environmental_impact_statement_appendices": [
+          "R1PLAN-nez-perce-clearwater-nfs-16"
+        ]
+      },
+      "promotion_eligibility": {
+        "status": "eligible_with_blockers",
+        "accepted_blockers": [
+          "component_inventory_build_required"
+        ]
+      }
+    }
+  ]
+}

@@ -66,6 +66,16 @@ Current full-corpus promotion boundary:
   replay because the active graph export still borrows
   `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
   instead of owning an active-source-set inventory artifact.
+- Sequence 1 of the Region 1 forest-plan inventory promotion plan is now implemented as a tracked
+  config contract:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` covers all `10` readiness
+  profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
+  per-forest `plan_version` plus grouped build `source_record_id` inputs in config, and is
+  validated by `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py` against the live
+  readiness roster.
+- The builder runtime is still single-forest at this boundary. The next implementation milestone is
+  Sequence 2: use that tracked manifest to harden `forest-plan-components-build` into a canonical
+  multi-forest source-set builder without breaking the current single-forest path.
 - Sequence 0 of the Region 1 forest-plan component inventory promotion plan now adds a fail-closed
   graph-export ownership gate: using
   `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`

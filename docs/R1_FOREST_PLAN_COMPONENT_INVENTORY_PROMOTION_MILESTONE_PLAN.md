@@ -2,7 +2,7 @@
 
 Date: 2026-05-10
 
-Status: Sequence 0 implemented; Sequence 1 pending
+Status: Sequence 0 implemented; Sequence 1 implemented; Sequence 2 pending
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -115,15 +115,17 @@ system contract.
 - Build contract/config:
   - `config/forest_plan_profiles.json`
   - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
-  - new tracked Region 1 inventory-build manifest/config
+  - `config/r1_forest_plan_component_inventory_build_manifest.json`
   - `config/r1_forest_plan_document_register_draft.csv`
 - Builder/runtime:
   - `src/usfs_r1_ea_sources/forest_plan_components.py`
+  - `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py`
   - `src/usfs_r1_ea_sources/cli_review.py`
   - `src/usfs_r1_ea_sources/forest_plan_resolver.py`
   - `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
 - Tests:
   - `tests/test_forest_plan_components.py`
+  - `tests/test_forest_plan_inventory_build_manifest.py`
   - `tests/test_forest_plan_resolver.py`
   - `tests/test_nepa_knowledge_graph_export.py`
   - `tests/test_architecture_contract.py`
@@ -277,6 +279,27 @@ Implementation tasks:
 - Reconcile the readiness matrix and build manifest so every tracked profile has one explicit build
   contract row.
 
+Implementation closeout on 2026-05-10:
+
+- added tracked build-contract config:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now enumerates all `10` current
+  Region 1 readiness profiles against active full-canonical source set
+  `source-set-34061d1e4bf6c460`
+- build inputs now live in config instead of Python branches:
+  each profile row records `plan_version`, `primary_plan_source_record_id`, grouped
+  `build_source_record_ids_by_role`, and typed `promotion_eligibility`
+- the manifest preserves source-surface boundaries:
+  resolver identity stays in `config/forest_plan_profiles.json`, while the new manifest carries
+  build-only inputs such as Dakota Prairie multipart plan anchors and Nez Perce-Clearwater's split
+  currentness-vs-primary-plan sources
+- installed strict validation in
+  `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py`:
+  load fails on unsupported source-set reference types, duplicate forest IDs, manifest/readiness
+  roster drift, missing readiness source-record coverage, or a primary-plan source ID that is not
+  present in the row's build inputs
+- added regression coverage in `tests/test_forest_plan_inventory_build_manifest.py` for the new
+  contract loader plus the default manifest's all-10-profile baseline
+
 Acceptance signals:
 
 - Every current Region 1 readiness profile is present in the build contract.
@@ -287,9 +310,9 @@ Acceptance signals:
 Required verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_components.py tests/test_architecture_contract.py
 python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json
-python -m json.tool <new-region1-inventory-build-config> /tmp/r1_inventory_build_manifest.validated.json
+python -m json.tool config/r1_forest_plan_component_inventory_build_manifest.json /tmp/r1_inventory_build_manifest.validated.json
 git diff --check
 ```
 

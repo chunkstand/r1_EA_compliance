@@ -2,6 +2,48 @@
 
 Date: 2026-05-10
 
+## Region 1 Forest-Plan Inventory Sequence 1
+
+Sequence 1 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
+implemented. This slice adds the tracked Region 1 build contract but does not change the
+single-forest builder runtime yet.
+
+- tracked build manifest added:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10` Region 1
+  readiness profiles against active full-canonical source set `source-set-34061d1e4bf6c460`
+- config-owned build inputs:
+  each row records `plan_version`, `primary_plan_source_record_id`, grouped
+  `build_source_record_ids_by_role`, and typed `promotion_eligibility`, including multipart Dakota
+  Prairie plan inputs and the Nez Perce-Clearwater currentness-vs-primary-plan split
+- validation contract added:
+  `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py` now fails on unsupported
+  source-set reference types, duplicate forest IDs, missing readiness-profile coverage, missing
+  readiness source-record coverage, and rows whose declared primary-plan source ID is absent from
+  their grouped build inputs
+- regression coverage:
+  `tests/test_forest_plan_inventory_build_manifest.py` locks the default all-10-profile manifest
+  and the new fail-closed validation paths
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_components.py tests/test_architecture_contract.py`: passed `34/34`
+- `python -m json.tool config/forest_plan_profiles.json /tmp/forest_plan_profiles.validated.json`: passed
+- `python -m json.tool config/r1_forest_plan_component_inventory_build_manifest.json /tmp/r1_inventory_build_manifest.validated.json`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- this milestone only closes the tracked config contract; `forest-plan-components-build` is still a
+  single-forest command
+- active full-canonical source set `source-set-34061d1e4bf6c460` still does not own a canonical
+  multi-forest `forest_plan_components/` artifact family
+
+Immediate next step if this slice is continued:
+
+1. Implement Sequence 2 by teaching `forest-plan-components-build` to consume the tracked manifest
+   and emit one canonical multi-forest inventory artifact family for the active full-canonical
+   source set while preserving the current single-forest invocation path.
+
 ## Region 1 Forest-Plan Inventory Alignment Check
 
 The post-Sequence-0 alignment replay is now closed. The new ownership gate is behaving correctly,
