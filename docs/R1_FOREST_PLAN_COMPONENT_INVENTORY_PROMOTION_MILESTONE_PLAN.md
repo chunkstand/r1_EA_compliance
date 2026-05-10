@@ -2,7 +2,7 @@
 
 Date: 2026-05-10
 
-Status: Sequence 0 implemented; Sequence 1 implemented; Sequence 2 pending
+Status: Sequence 0 implemented; Sequence 1 implemented; Sequence 2 implemented in code/tests; commit closeout blocked by unrelated dirty durable docs
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -52,7 +52,8 @@ forest-plan inventory truth directly instead of inheriting a one-forest inventor
 - The current `config/forest_plan_profiles.json` contains one full forest profile
   (`custer-gallatin-nf`) plus `known_other_forest_units`, not full resolver/build contracts for the
   other forests.
-- The current `forest-plan-components-build` CLI is single-plan oriented:
+- The current `forest-plan-components-build` CLI now supports both targeted and manifest-driven
+  execution:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
@@ -61,6 +62,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
   --source-record-id <plan-source-record-id> \
   --forest-unit-id <forest-unit-id> \
   --plan-version <plan-version>
+
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
+  --output-dir source_library \
+  --source-set-id <source-set-id> \
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
 ```
 
 - The NEPA 3D forest-plan lens shows the resulting imbalance directly: Custer Gallatin dominates
@@ -358,6 +364,30 @@ Implementation tasks:
 - Ensure the canonical `component_inventory.json` can hold multi-forest records safely and that
   resolver consumers filter by `forest_unit_id` rather than assuming one forest only.
 
+Implementation closeout on 2026-05-10:
+
+- `forest-plan-components-build` now supports a manifest-driven batch path:
+  `--manifest-path` loads the tracked Region 1 inventory build contract and emits one canonical
+  source-set inventory artifact family without breaking the existing single-forest invocation
+  shape
+- single-forest compatibility is preserved:
+  `--source-record-id` plus `--plan-version` still drives focused rebuilds, and the CLI now fails
+  clearly when single-forest-only overrides are mixed with manifest-driven batch mode
+- `src/usfs_r1_ea_sources/forest_plan_components.py` now emits aggregate multi-forest inventory
+  coverage plus per-profile build summaries, while keeping the canonical output path at
+  `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json`
+- aggregate coverage now fails closed on cross-profile component-ID and standard-ID collisions even
+  when each per-profile build passes in isolation
+- regression coverage now proves:
+  manifest-driven multi-forest builds produce one canonical inventory artifact family, selected
+  forest filtering still works when loading the combined inventory, and a manifest row collision can
+  fail the aggregate build without weakening per-profile checks
+- stop condition reached at closeout:
+  the required durable docs for this sequence (`README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md`) were already dirty with unrelated NEPA 3D viewer edits before this
+  sequence started, so the repo's commit-closeout rule blocked a truthful atomic milestone commit in
+  this pass
+
 Acceptance signals:
 
 - The builder can produce one canonical multi-forest inventory artifact family for a source set.
@@ -393,6 +423,33 @@ Implementation tasks:
   promotion-ready.
 - If a profile fails because the primary plan source row is unusable, preserve a typed blocker and
   stop promotion rather than silently excluding it.
+
+Implementation closeout on 2026-05-10:
+
+- reuse-first extraction materialized the active source-set chunk layer before the build:
+  `reuse-inventory` reported `349` reusable extraction rows, `0` new extraction requirements, and
+  `1` excluded row, then `extract-build --reuse-existing` wrote `349/349` extracted rows with
+  `75,745` chunks under `source-set-34061d1e4bf6c460`
+- the live manifest-driven builder now writes the canonical active-source-set artifact family under
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`
+- the active combined build writes `587` components and `87` standards, validates
+  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`, and stops on typed
+  blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`,
+  `flathead-nf`, `kootenai-nf`, `lolo-nf`, and `nez-perce-clearwater-nfs`
+- the only failing aggregate build-coverage check is `all_profile_builds_pass`; every blocked
+  profile currently reports `plan_component_labels_not_detected` plus
+  `plan_standard_labels_not_detected`
+- active-source-set graph ownership is now closed in runtime evidence:
+  rerunning `nepa-knowledge-graph-export` against
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
+  passes with `66` checks, `0` failed checks, `2,047` nodes, and `3,582` edges
+- the promotion suite no longer reports a full-canonical inventory-ownership failure:
+  `full_canonical_corpus_ready=true` and `full_canonical_failure_category_counts={}`
+- closeout remains a sequence-boundary issue rather than an implementation issue:
+  the active readiness config still records only one validated inventory, so Sequence 4 remains the
+  next required boundary for promoting the three validated inventories and seven typed blockers into
+  graph/readiness truth; this sequence was not committed because Sequence 2 and Sequence 3 still
+  share uncommitted file surfaces and the worktree also contains unrelated viewer edits
 
 Acceptance signals:
 

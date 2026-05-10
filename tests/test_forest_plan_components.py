@@ -940,6 +940,146 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertFalse(check["passed"])
             self.assertTrue(check["details"]["present"])
 
+    def test_manifest_build_writes_multi_forest_inventory_and_aggregate_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            manifest_path, readiness_path = _write_inventory_build_contract(
+                output_dir,
+                source_set_id=source_set_id,
+                rows=[
+                    {
+                        "forest_unit_id": "custer-gallatin-nf",
+                        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+                        "plan_version": "2022",
+                    },
+                    {
+                        "forest_unit_id": "beaverhead-deerlodge-nf",
+                        "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+                        "plan_version": "2009",
+                    },
+                ],
+            )
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-custer-gallatin-nf-02",
+                        text=_FOREST_PLAN_TEXT,
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-beaverhead-deerlodge-nf-02",
+                        text=(
+                            "Plan Components-Beaverhead-Deerlodge Forestwide.\n"
+                            "Standards (BD-STD-TRVL) 01 New road construction is not allowed."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=chunks_path,
+                manifest_path=manifest_path,
+                manifest_readiness_path=readiness_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["build_scope"], "manifest_batch")
+            self.assertEqual(
+                result.summary["forest_unit_ids"],
+                ["custer-gallatin-nf", "beaverhead-deerlodge-nf"],
+            )
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertTrue(coverage["passed"])
+            self.assertEqual(coverage["build_scope"], "manifest_batch")
+            self.assertEqual(len(coverage["profile_results"]), 2)
+            self.assertTrue(_check(coverage, "all_profile_builds_pass")["passed"])
+            self.assertTrue(_check(coverage, "all_profile_builds_have_selected_chunks")["passed"])
+            inventory = json.loads(result.inventory_path.read_text(encoding="utf-8"))
+            self.assertEqual(inventory["build_scope"], "manifest_batch")
+            self.assertEqual(
+                inventory["forest_unit_ids"],
+                ["custer-gallatin-nf", "beaverhead-deerlodge-nf"],
+            )
+            self.assertEqual(len(load_forest_plan_component_inventory(result.inventory_path)), 4)
+            self.assertEqual(
+                len(
+                    load_forest_plan_component_inventory(
+                        result.inventory_path,
+                        forest_unit_id="beaverhead-deerlodge-nf",
+                    )
+                ),
+                1,
+            )
+
+    def test_manifest_build_fails_on_cross_forest_duplicate_component_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            shared_source_record_id = "R1PLAN-shared-forest-plan-02"
+            manifest_path, readiness_path = _write_inventory_build_contract(
+                output_dir,
+                source_set_id=source_set_id,
+                rows=[
+                    {
+                        "forest_unit_id": "custer-gallatin-nf",
+                        "source_record_id": shared_source_record_id,
+                        "plan_version": "2022",
+                    },
+                    {
+                        "forest_unit_id": "beaverhead-deerlodge-nf",
+                        "source_record_id": shared_source_record_id,
+                        "plan_version": "2009",
+                    },
+                ],
+            )
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=shared_source_record_id,
+                        text=(
+                            "Plan Components-Test Forestwide.\n"
+                            "Standards (SH-STD-01) 01 Shared standard text."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=chunks_path,
+                manifest_path=manifest_path,
+                manifest_readiness_path=readiness_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertFalse(coverage["passed"])
+            self.assertEqual(
+                coverage["duplicate_component_ids"],
+                [f"{shared_source_record_id}-SH-STD-01-01"],
+            )
+            self.assertEqual(
+                coverage["duplicate_standard_ids"],
+                [f"{shared_source_record_id}-SH-STD-01-01"],
+            )
+            self.assertFalse(_check(coverage, "built_component_ids_are_unique")["passed"])
+            failed_row = next(
+                row
+                for row in coverage["profile_results"]
+                if row["forest_unit_id"] == "custer-gallatin-nf"
+            )
+            self.assertTrue(failed_row["passed"])
+
     def test_cli_parser_exposes_inventory_builder_command(self) -> None:
         parser = build_parser()
         args = parser.parse_args(
@@ -958,6 +1098,23 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
 
         self.assertEqual(args.command, "forest-plan-components-build")
         self.assertEqual(args.management_area_ids, ["mgmt-crazy-mountains-bca"])
+        self.assertIsNone(args.manifest_path)
+
+    def test_cli_parser_accepts_manifest_driven_inventory_build(self) -> None:
+        parser = build_parser()
+        args = parser.parse_args(
+            [
+                "forest-plan-components-build",
+                "--source-set-id",
+                "source-set-test",
+                "--manifest-path",
+            ]
+        )
+
+        self.assertEqual(args.command, "forest-plan-components-build")
+        self.assertIsNotNone(args.manifest_path)
+        self.assertIsNone(args.source_record_id)
+        self.assertIsNone(args.plan_version)
 
 
 _FOREST_PLAN_TEXT = """
@@ -1024,6 +1181,62 @@ def _write_chunks(*, output_dir: Path, source_set_id: str, chunks: list[dict]) -
         encoding="utf-8",
     )
     return path
+
+
+def _write_inventory_build_contract(
+    output_dir: Path,
+    *,
+    source_set_id: str,
+    rows: list[dict[str, str]],
+) -> tuple[Path, Path]:
+    manifest_path = output_dir / "config" / "inventory_build_manifest.json"
+    readiness_path = output_dir / "config" / "readiness.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "schema_version": "region1-forest-plan-component-inventory-build-manifest-v0",
+        "manifest_id": "unit-test-build-manifest",
+        "source_set_references": [
+            {
+                "reference_id": "test_source_set",
+                "reference_type": "explicit_source_set_id",
+                "source_set_id": source_set_id,
+                "description": "Unit-test source set.",
+            }
+        ],
+        "profile_rows": [
+            {
+                "forest_unit_id": row["forest_unit_id"],
+                "source_set_reference_id": "test_source_set",
+                "primary_plan_source_record_id": row["source_record_id"],
+                "plan_version": row["plan_version"],
+                "build_source_record_ids_by_role": {
+                    "primary_land_management_plan": [row["source_record_id"]]
+                },
+                "promotion_eligibility": {
+                    "status": "eligible",
+                    "accepted_blockers": [],
+                },
+            }
+            for row in rows
+        ],
+    }
+    readiness = {
+        "schema_version": "region1-forest-plan-readiness-nepa-3d-v1",
+        "profile_rows": [
+            {
+                "forest_unit_id": row["forest_unit_id"],
+                "source_requirements": [
+                    {
+                        "source_record_id": row["source_record_id"],
+                    }
+                ],
+            }
+            for row in rows
+        ],
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+    readiness_path.write_text(json.dumps(readiness, indent=2, sort_keys=True), encoding="utf-8")
+    return manifest_path, readiness_path
 
 
 def _check(report: dict, name: str) -> dict:

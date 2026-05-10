@@ -73,15 +73,17 @@ Current full-corpus promotion boundary:
   per-forest `plan_version` plus grouped build `source_record_id` inputs in config, and is
   validated by `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py` against the live
   readiness roster.
-- The builder runtime is still single-forest at this boundary. The next implementation milestone is
-  Sequence 2: use that tracked manifest to harden `forest-plan-components-build` into a canonical
-  multi-forest source-set builder without breaking the current single-forest path.
-- Sequence 0 of the Region 1 forest-plan component inventory promotion plan now adds a fail-closed
-  graph-export ownership gate: using
-  `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
-  while exporting `source-set-34061d1e4bf6c460` is no longer accepted as active-source-set truth.
-  Until the active source set owns its own `forest_plan_components/` artifact family, that replay
-  is a documented baseline gap rather than a clean promotion signal.
+- Sequence 2 of the Region 1 forest-plan inventory promotion plan is now implemented in the
+  builder/runtime surface:
+  `forest-plan-components-build` now accepts `--manifest-path` for tracked Region 1 batch builds,
+  preserves the existing single-forest `--source-record-id` / `--plan-version` repair path, and
+  emits aggregate multi-forest build coverage with per-profile results plus fail-closed
+  cross-profile duplicate-ID checks.
+- Active-source-set inventory ownership is still not closed at this boundary. The next required
+  implementation boundary is Sequence 3: run the manifest-driven builder against
+  `source-set-34061d1e4bf6c460`, materialize the canonical
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/` artifact family,
+  and stop on any typed profile blocker instead of borrowing the archived merged inventory path.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
@@ -262,8 +264,9 @@ under `source_library/derived/`, and only offers review overlays whose graph sum
 selected source set. The checked-in fallback manifest currently points to
 `source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-34061d1e4bf6c460`
 and will take over automatically once it has a graph export. A fresh load opens on the full
-validated source-set corpus graph by default; scene buttons remain above Lens and narrow from that
-full-corpus starting point, and
+validated knowledge base by default, covering laws, regulations, policies, forest plans, and
+supporting documents for the resolved source set; scene buttons remain above Lens and narrow from
+that full-knowledge-base starting point into optional review/example views, and
 validation/readiness stays tied to the exported artifacts rather than viewer layout while tests lock
 the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
 dropdown gap passes separate authority category from authority family, split node/edge type from

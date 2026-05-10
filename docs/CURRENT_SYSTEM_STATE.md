@@ -77,9 +77,16 @@ Latest closeout on 2026-05-10:
   `plan_version` plus grouped build `source_record_id` inputs in tracked config, and validates
   against the live readiness roster through
   `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py`.
-- The runtime boundary is unchanged at this milestone: `forest-plan-components-build` is still a
-  single-forest command, so active-source-set inventory ownership is not closed yet. The next
-  required boundary is Sequence 2 multi-forest builder hardening.
+- Sequence 2 multi-forest builder hardening is now implemented in code and tests.
+  `forest-plan-components-build` now supports `--manifest-path` for tracked Region 1 batch builds,
+  preserves the existing single-forest `--source-record-id` / `--plan-version` path, and emits
+  aggregate build coverage with per-profile results plus fail-closed cross-profile duplicate-ID
+  checks.
+- Active-source-set inventory ownership is still not closed at this milestone. The next required
+  boundary is Sequence 3: run the manifest-driven builder for
+  `source-set-34061d1e4bf6c460`, materialize the canonical
+  `forest_plan_components/` artifact family under the active source set, and stop on any typed
+  profile blocker instead of reusing the archived merged inventory path.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
@@ -537,10 +544,12 @@ http://127.0.0.1:8765/viewer/nepa-3d/
 ```
 
 The first viewport opens directly into the graph experience. It now defaults to the
-full validated source-set corpus graph for the resolved current dataset, with no review overlay
-attached unless the user selects or demos into one. Demo buttons above the Lens dropdown switch
-among source library, authority graph, applicability, evidence path, forest plan, readiness, and
-full graph scenes; Reset demo returns to that full-corpus starting scene.
+full validated knowledge base for the resolved current dataset, with laws, regulations, policies,
+forest plans, and supporting documents visible before any review-specific narrowing. No review
+overlay is attached unless the user selects or demos into one. Demo buttons above the Lens
+dropdown switch among source library, authority graph, applicability, evidence path, forest plan,
+readiness, and knowledge-base scenes; Reset demo returns to that full-knowledge-base starting
+scene.
 The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
 source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
 edges, then exposes each step as a clickable item in the right-side Capability shown panel. Advanced

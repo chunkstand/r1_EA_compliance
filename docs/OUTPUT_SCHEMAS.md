@@ -607,8 +607,19 @@ forest-plan chunks and writes:
 - `source_library/derived/<source_set_id>/forest_plan_components/component_inventory_build_coverage.json`
 - `source_library/derived/<source_set_id>/forest_plan_components/summary.json`
 
-The builder is deterministic and only consumes chunks whose `source_set_id`, `source_record_id`, and
-`document_role=forest_plan` match the requested source. It extracts labeled plan components such as
+The builder is deterministic and supports two execution modes:
+
+- single-forest mode:
+  `--source-record-id <plan-source-record-id> --plan-version <plan-version>` selects one forest-plan
+  source record, preserves the targeted repair path, and emits `build_scope="single_forest"`
+- manifest-batch mode:
+  `--manifest-path [path]` loads the tracked Region 1 build contract, selects all manifest rows for
+  the requested `source_set_id`, emits one canonical combined inventory artifact family, and records
+  `build_scope="manifest_batch"`
+
+In either mode, the builder only consumes chunks whose `source_set_id` matches the requested source
+set, whose `source_record_id` is included in the selected build scope, and whose
+`document_role=forest_plan`. It extracts labeled plan components such as
 `Standards (BC-STD-CMBCA) 01 ...`, requires a numeric component number after the label, preserves
 source chunk IDs, hashes, citation labels, and provenance, and fails validation if generated
 component records are malformed. This avoids treating cross-reference labels such as `Guidelines
@@ -622,7 +633,10 @@ missing detected standard IDs, duplicate component IDs, duplicate standard IDs, 
 inventory-quality issues for component-like labels with nonnumeric number tokens, and pass/fail
 checks. Inventory-quality issues are non-blocking warnings unless they are emitted with
 `severity=error`; the `blocking_inventory_quality_issues_absent` check keeps build coverage fail
-closed if a future inventory-quality rule is promoted to blocking. Source-set generated inventories under
+closed if a future inventory-quality rule is promoted to blocking. In manifest-batch mode the same
+coverage file also records `source_record_ids`, `build_scope`, and per-profile `profile_results`
+summarizing each forest row's chunk counts, component counts, standard counts, duplicate IDs,
+validation-error count, and failed checks. Source-set generated inventories under
 `source_library/derived/<source_set_id>/forest_plan_components/` require passing build coverage
 before component evaluation can mark inventory coverage as passed.
 

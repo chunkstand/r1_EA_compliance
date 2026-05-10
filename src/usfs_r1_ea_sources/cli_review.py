@@ -15,6 +15,9 @@ from .forest_plan_component_eval import DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH
 from .forest_plan_component_eval import run_forest_plan_component_eval
 from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_inventory_build_manifest import (
+    DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH,
+)
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver import run_forest_plan_resolver
 
@@ -52,13 +55,24 @@ def register_review_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     components.add_argument("--output-dir", default=Path("source_library"), type=Path)
     components.add_argument("--source-set-id", required=True)
-    components.add_argument("--source-record-id", required=True)
-    components.add_argument("--forest-unit-id", default=DEFAULT_FOREST_PLAN_PROFILE_ID)
-    components.add_argument("--plan-version", required=True)
+    components.add_argument("--source-record-id")
+    components.add_argument("--forest-unit-id")
+    components.add_argument("--plan-version")
     components.add_argument("--chunks-path", type=Path)
     components.add_argument("--geographic-area-id", action="append", dest="geographic_area_ids")
     components.add_argument("--management-area-id", action="append", dest="management_area_ids")
     components.add_argument("--overlay-id", action="append", dest="overlay_ids")
+    components.add_argument(
+        "--manifest-path",
+        type=Path,
+        default=None,
+        const=DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH,
+        nargs="?",
+        help=(
+            "Build from the tracked Region 1 inventory manifest. Omit the value to use the "
+            "default manifest path."
+        ),
+    )
 
     adjudication_template = subparsers.add_parser(
         "forest-plan-component-adjudication-template",
@@ -131,16 +145,38 @@ def handle_review_command(args: argparse.Namespace, parser: argparse.ArgumentPar
         return 0 if result.summary["reviewer_ready"] else 1
 
     if args.command == "forest-plan-components-build":
+        if args.manifest_path is None:
+            if not args.source_record_id or not args.plan_version:
+                parser.error(
+                    "forest-plan-components-build requires --source-record-id and "
+                    "--plan-version unless --manifest-path is provided."
+                )
+        else:
+            if args.source_record_id or args.plan_version:
+                parser.error(
+                    "forest-plan-components-build does not accept --source-record-id or "
+                    "--plan-version when --manifest-path is provided."
+                )
+            if args.geographic_area_ids or args.management_area_ids or args.overlay_ids:
+                parser.error(
+                    "forest-plan-components-build does not accept geographic or overlay id "
+                    "overrides when --manifest-path is provided."
+                )
         result = build_forest_plan_component_inventory(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             source_record_id=args.source_record_id,
-            forest_unit_id=args.forest_unit_id,
+            forest_unit_id=(
+                args.forest_unit_id
+                if args.manifest_path is not None
+                else (args.forest_unit_id or DEFAULT_FOREST_PLAN_PROFILE_ID)
+            ),
             plan_version=args.plan_version,
             chunks_path=args.chunks_path,
             geographic_area_ids=args.geographic_area_ids,
             management_area_ids=args.management_area_ids,
             overlay_ids=args.overlay_ids,
+            manifest_path=args.manifest_path,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

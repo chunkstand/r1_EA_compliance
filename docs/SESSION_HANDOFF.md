@@ -2,6 +2,57 @@
 
 Date: 2026-05-10
 
+## Region 1 Forest-Plan Inventory Sequence 2
+
+Sequence 2 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
+implemented in code, tests, and durable alignment docs. This slice hardens the builder/runtime but
+does not yet run the live active-source-set inventory build.
+
+- builder runtime hardened:
+  `forest-plan-components-build` now supports `--manifest-path` for tracked Region 1 batch builds
+  while preserving the existing single-forest `--source-record-id` / `--plan-version` rebuild path
+- canonical inventory contract preserved:
+  manifest-driven builds still write one source-set inventory artifact family at
+  `source_library/derived/<source_set_id>/forest_plan_components/` instead of switching consumers
+  to ad hoc per-forest files
+- aggregate coverage added:
+  `component_inventory_build_coverage.json` now records `build_scope`, `source_record_ids`, and
+  per-profile `profile_results` in addition to aggregate selected chunk, component, standard,
+  duplicate-ID, validation-error, and quality-issue checks
+- fail-closed collision proof added:
+  regression coverage now proves a manifest-driven cross-profile duplicate component ID fails the
+  aggregate build even when per-profile rows can each build in isolation
+- resolver compatibility preserved:
+  `load_forest_plan_component_inventory(..., forest_unit_id=...)` continues to filter the combined
+  inventory safely for existing review lanes
+- durable alignment closed:
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/OUTPUT_SCHEMAS.md`, and the milestone plan now
+  route the next boundary to Sequence 3 instead of incorrectly describing the builder as
+  single-forest-only or “next up”
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_resolver.py tests/test_architecture_contract.py`: passed `56/56`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md --strict`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- this slice hardens the runtime contract but does not yet materialize
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`
+- the active full-canonical lane still fails ownership/readiness until the live Sequence 3 build is
+  run and either passes or stops on typed profile blockers
+- unrelated viewer code/test worktree edits remain present, so this sequence is aligned in working
+  tree state but still not closed as a local atomic commit in this pass
+
+Immediate next step if this slice is continued:
+
+1. Implement Sequence 3 by running the manifest-driven builder for
+   `source-set-34061d1e4bf6c460`, validating the resulting multi-forest inventory artifact family,
+   and preserving explicit typed blockers for any forest that still cannot be promoted.
+
 ## Region 1 Forest-Plan Inventory Sequence 1
 
 Sequence 1 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
@@ -163,6 +214,10 @@ locally.
   `1,789` nodes, `2,808` edges, and readiness blocker counts
   `forest_profile_not_ready=62`, `fsh_chapter_delta_required=2`, `missing_source=33`,
   `superseded_source=3`
+- viewer default behavior: `viewer/nepa-3d/` now opens on the full validated knowledge base for
+  the resolved source set, keeping laws, regulations, policies, forest plans, and supporting
+  documents in the default scene while review-specific and single-example views remain optional
+  scene or selector choices
 - historical replay status before the Sequence 0 ownership-gate refresh:
   rerunning `promotion-suite` against the current local `source_library/` reported
   `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
