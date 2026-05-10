@@ -96,8 +96,12 @@ The retrieval index validates over the archived merged catalog without touching 
 canonical catalog, the `12`-case Region 1 source-delta eval suite passes, and the refreshed
 `forest-plan-source-delta-readiness` report now records retrieval `ready_with_blockers` with
 `152/152` extracted support-document rows indexed and the same `7` upstream parser blockers kept
-explicit. The completion plan for incorporating this support-document layer into forest-profile
-readiness and downstream replay is
+explicit. Alignment closeout for this milestone: extracted chunks now carry
+register-backed `support_document_role` values for matching `R1PLAN-*` rows, including
+catalog-confirmed rows such as `R1PLAN-custer-gallatin-nf-06`, so the `12/12` eval pass now comes
+from actual role-aware retrieval filters instead of source-ID-targeted shortcuts. The completion
+plan for incorporating this support-document layer into forest-profile readiness and downstream
+replay is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 The first merged catalog gate is archived, not promoted over the canonical catalog, at

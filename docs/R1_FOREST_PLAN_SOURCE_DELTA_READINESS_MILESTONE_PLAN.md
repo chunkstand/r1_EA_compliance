@@ -464,6 +464,10 @@ Closeout:
   negatives.
 - The Region 1 source-delta retrieval suite is tracked at
   `config/r1_forest_plan_source_delta_retrieval_eval.json`.
+- Extracted chunks/manifests now carry register-backed `support_document_role` values for matching
+  `R1PLAN-*` rows, including catalog-confirmed rows that originate in the canonical workbook
+  catalog, so retrieval/eval can measure role-aware hits without relying on source-ID-targeted
+  shortcuts.
 - Live retrieval validation now passes on `source-set-7e2652d23e764068` with
   `--allow-failed-extraction --allow-partial-extraction`, the `12`-case source-delta eval passes,
   and the refreshed readiness gate reports retrieval `ready_with_blockers` with `152/152`

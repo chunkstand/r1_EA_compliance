@@ -434,6 +434,7 @@ def _write_extraction_fixture(
                 "parser_name": "unit-parser",
                 "parser_version": "1",
                 "extracted_at": "2026-05-10T00:00:00Z",
+                "support_document_role": "primary_land_management_plan",
                 "char_start": 0,
                 "char_end": len(text),
                 "content_sha256": f"content-sha-{source_record_id}",

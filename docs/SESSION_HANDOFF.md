@@ -93,7 +93,11 @@ suite is `config/r1_forest_plan_source_delta_retrieval_eval.json`. Live retrieva
 passes on `source-set-7e2652d23e764068` with
 `--allow-failed-extraction --allow-partial-extraction`, the `12`-case source-delta eval passes,
 and the refreshed readiness gate reports retrieval `ready_with_blockers` with `152/152` extracted
-support-document rows indexed and the same `7` upstream parser blockers preserved explicitly:
+support-document rows indexed and the same `7` upstream parser blockers preserved explicitly.
+Alignment closeout for this milestone: extracted chunks now carry register-backed
+`support_document_role` values for matching `R1PLAN-*` rows, including catalog-confirmed rows such
+as `R1PLAN-custer-gallatin-nf-06`, so the current `12/12` eval pass is based on actual role-aware
+filters rather than source-ID-targeted shortcuts. Current upstream parser blockers remain:
 `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
 `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.

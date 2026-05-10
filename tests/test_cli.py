@@ -176,6 +176,22 @@ def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     )
 
 
+def test_retrieval_query_parser_accepts_support_document_role_filter() -> None:
+    args = build_parser().parse_args(
+        [
+            "retrieval-query",
+            "flathead revised land management plan 2018",
+            "--output-dir",
+            "source_library",
+            "--support-document-role",
+            "primary_land_management_plan",
+        ]
+    )
+
+    assert args.command == "retrieval-query"
+    assert args.support_document_role == "primary_land_management_plan"
+
+
 def test_reuse_inventory_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

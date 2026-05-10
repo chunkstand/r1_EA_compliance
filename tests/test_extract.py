@@ -24,6 +24,20 @@ DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessin
 
 
 class ExtractionTests(unittest.TestCase):
+    def test_resolve_support_document_role_prefers_r1_register_override(self) -> None:
+        role = extract_module._resolve_support_document_role(
+            {
+                "source_record_id": "R1PLAN-custer-gallatin-nf-06",
+                "document_role": "forest_plan",
+                "metadata": {},
+            },
+            support_document_role_overrides={
+                "R1PLAN-custer-gallatin-nf-06": "biological_assessment",
+            },
+        )
+
+        self.assertEqual(role, "biological_assessment")
+
     def test_build_extraction_writes_html_text_chunks_and_manifest_provenance(self) -> None:
         config = load_config(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:
@@ -68,6 +82,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertEqual(chunk["source_record_id"], "R1EA-001")
             self.assertEqual(chunk["artifact_sha256"], _artifact_sha256(body))
             self.assertTrue(chunk["citation_label"].startswith("R1EA-001"))
+            self.assertEqual(chunk["support_document_role"], "law")
             self.assertEqual(chunk["char_start"], 0)
             self.assertGreater(chunk["char_end"], chunk["char_start"])
             self.assertEqual(

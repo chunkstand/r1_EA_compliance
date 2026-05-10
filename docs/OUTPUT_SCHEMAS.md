@@ -3487,6 +3487,9 @@ text, rebuild chunks, build retrieval, or run any EA/compliance review.
 - stable `chunk_id`
 - `source_set_id`
 - `source_record_id`
+- `support_document_role`, when available; for Region 1 forest-plan rows this may be overlaid from
+  the promoted register so catalog-confirmed and source-delta rows share the same support-document
+  role contract
 - `artifact_sha256`
 - `artifact_path`
 - `citation_label`
@@ -3560,6 +3563,7 @@ diagnostic index can be built with `--allow-partial-extraction`, but that summar
 - chunk count and indexed source count
 - catalog source count, selected source count, required extraction source count, selected required
   extraction source count, skipped-excluded count, and extracted source count
+- support-document-role counts across indexed chunks
 - extraction filters
 - FTS5 availability
 - validation status
@@ -3588,6 +3592,7 @@ Each result includes:
 - `source_record_id`
 - `title`
 - `document_role`
+- `support_document_role`
 - `authority_level`
 - `citation_label`
 - `review_topics`

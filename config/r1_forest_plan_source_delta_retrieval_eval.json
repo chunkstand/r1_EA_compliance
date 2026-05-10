@@ -1,7 +1,7 @@
 [
   {
     "id": "beaverhead-deerlodge-rod",
-    "query": "beaverhead deerlodge forest plan record of decision",
+    "query": "beaverhead deerlodge revised land and resource management plan record of decision",
     "expected_source_record_ids": [
       "R1PLAN-beaverhead-deerlodge-nf-04"
     ],
@@ -10,7 +10,7 @@
       "decision"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-04"
+      "support_document_role": "record_of_decision"
     }
   },
   {
@@ -24,12 +24,12 @@
       "biological assessment"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-bitterroot-nf-12"
+      "support_document_role": "biological_assessment"
     }
   },
   {
     "id": "custer-gallatin-biological-assessment",
-    "query": "custer gallatin biological assessment threatened endangered proposed candidate species",
+    "query": "custer gallatin revised land management plan biological assessment threatened endangered proposed candidate species",
     "expected_source_record_ids": [
       "R1PLAN-custer-gallatin-nf-06"
     ],
@@ -38,7 +38,7 @@
       "candidate species"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-custer-gallatin-nf-06"
+      "support_document_role": "biological_assessment"
     }
   },
   {
@@ -52,7 +52,7 @@
       "geographic area direction"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-dakota-prairie-grasslands-06"
+      "support_document_role": "primary_land_resource_management_plan_part"
     }
   },
   {
@@ -66,7 +66,7 @@
       "2018"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-flathead-nf-02"
+      "support_document_role": "primary_land_management_plan"
     }
   },
   {
@@ -80,7 +80,7 @@
       "decision"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-03"
+      "support_document_role": "record_of_decision"
     }
   },
   {
@@ -94,7 +94,7 @@
       "2013"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-idaho-panhandle-nfs-04"
+      "support_document_role": "final_environmental_impact_statement"
     }
   },
   {
@@ -108,7 +108,7 @@
       "2015"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-kootenai-nf-02"
+      "support_document_role": "primary_land_management_plan"
     }
   },
   {
@@ -122,7 +122,7 @@
       "appendices"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-lolo-nf-02"
+      "support_document_role": "primary_land_management_plan"
     }
   },
   {
@@ -135,7 +135,7 @@
       "land management plan"
     ],
     "filters": {
-      "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06"
+      "support_document_role": "primary_land_management_plan"
     }
   },
   {

@@ -4,6 +4,7 @@ from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 import hashlib
@@ -25,12 +26,14 @@ import zipfile
 import xml.etree.ElementTree as ET
 
 from .records import sha256_file
+from .workbook import load_r1_forest_plan_document_register
 
 
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout", "docling_unavailable"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
+DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
 NON_EXTRACTABLE_SOURCE_STATUSES = {"skipped_excluded"}
 CURRENT_REUSE_INVENTORY_CLASSIFICATIONS = {"already_current", "already_current_cg_slice"}
@@ -283,6 +286,7 @@ def _load_catalog_rows(
     parser_filter: str | None,
     limit: int | None,
 ) -> list[dict]:
+    support_document_role_overrides = _load_support_document_role_overrides()
     query = """
         SELECT
           s.source_record_id,
@@ -343,7 +347,35 @@ def _load_catalog_rows(
 
     for row in rows:
         row["metadata"] = json.loads(row.pop("metadata_json") or "{}")
+        row["support_document_role"] = _resolve_support_document_role(
+            row,
+            support_document_role_overrides=support_document_role_overrides,
+        )
     return rows
+
+
+@lru_cache(maxsize=1)
+def _load_support_document_role_overrides() -> dict[str, str]:
+    if not DEFAULT_R1_FOREST_PLAN_REGISTER_PATH.exists():
+        return {}
+    register = load_r1_forest_plan_document_register(DEFAULT_R1_FOREST_PLAN_REGISTER_PATH)
+    return {
+        row["proposed_source_record_id"]: row["document_role"]
+        for row in register.rows
+    }
+
+
+def _resolve_support_document_role(
+    row: dict,
+    *,
+    support_document_role_overrides: dict[str, str],
+) -> str:
+    return str(
+        support_document_role_overrides.get(str(row.get("source_record_id") or ""))
+        or row.get("metadata", {}).get("document_role")
+        or row.get("document_role")
+        or ""
+    )
 
 
 def _extract_row(
@@ -722,11 +754,17 @@ def _reuse_inventory_record_matches_row(
 
 
 def _base_manifest_record(*, row: dict, extracted_at: str) -> dict:
+    support_document_role = str(
+        (row.get("metadata") or {}).get("document_role")
+        or row.get("document_role")
+        or ""
+    )
     return {
         "source_set_id": row["source_set_id"],
         "source_record_id": row["source_record_id"],
         "title": row["title"],
         "document_role": row["document_role"],
+        "support_document_role": support_document_role,
         "authority_level": row["authority_level"],
         "host": row["host"],
         "expected_parser": row["expected_parser"],
@@ -1701,6 +1739,7 @@ def _chunks_for_payload(
                 "chunk_index": index,
                 "title": row["title"],
                 "document_role": row["document_role"],
+                "support_document_role": row.get("support_document_role"),
                 "authority_level": row["authority_level"],
                 "host": row["host"],
                 "expected_parser": row["expected_parser"],

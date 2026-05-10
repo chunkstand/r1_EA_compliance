@@ -46,6 +46,7 @@ REQUIRED_CHUNK_FIELDS = {
     "source_record_id",
     "title",
     "document_role",
+    "support_document_role",
     "authority_level",
     "artifact_sha256",
     "artifact_path",
@@ -196,6 +197,9 @@ def build_retrieval_index(
         "document_role_counts": dict(
             Counter(chunk.get("document_role") for chunk in indexed_chunks)
         ),
+        "support_document_role_counts": dict(
+            Counter(chunk.get("support_document_role") for chunk in indexed_chunks)
+        ),
         "authority_level_counts": dict(
             Counter(chunk.get("authority_level") for chunk in indexed_chunks)
         ),
@@ -223,6 +227,7 @@ def query_retrieval_index(
     query: str,
     limit: int = 5,
     document_role: str | None = None,
+    support_document_role: str | None = None,
     authority_level: str | None = None,
     source_record_id: str | None = None,
     review_topic: str | None = None,
@@ -239,6 +244,7 @@ def query_retrieval_index(
 
     filters = {
         "document_role": document_role,
+        "support_document_role": support_document_role,
         "authority_level": authority_level,
         "source_record_id": source_record_id,
         "review_topic": review_topic,
@@ -253,6 +259,7 @@ def query_retrieval_index(
         rows = _load_candidate_rows(
             connection,
             document_role=document_role,
+            support_document_role=support_document_role,
             authority_level=authority_level,
             source_record_id=source_record_id,
             host=host,
@@ -317,6 +324,7 @@ def run_retrieval_eval(
             query=str(case["query"]),
             limit=int(case.get("top_k") or top_k),
             document_role=filters.get("document_role"),
+            support_document_role=filters.get("support_document_role"),
             authority_level=filters.get("authority_level"),
             source_record_id=filters.get("source_record_id"),
             review_topic=filters.get("review_topic") or filters.get("topic"),
@@ -483,6 +491,7 @@ def _create_index_schema(connection: sqlite3.Connection) -> None:
           chunk_index INTEGER NOT NULL,
           title TEXT NOT NULL,
           document_role TEXT NOT NULL,
+          support_document_role TEXT NOT NULL,
           authority_level TEXT NOT NULL,
           host TEXT,
           expected_parser TEXT,
@@ -508,6 +517,7 @@ def _create_index_schema(connection: sqlite3.Connection) -> None:
 
         CREATE INDEX idx_chunks_source_record_id ON chunks(source_record_id);
         CREATE INDEX idx_chunks_document_role ON chunks(document_role);
+        CREATE INDEX idx_chunks_support_document_role ON chunks(support_document_role);
         CREATE INDEX idx_chunks_authority_level ON chunks(authority_level);
         CREATE INDEX idx_chunks_host ON chunks(host);
         CREATE INDEX idx_chunks_artifact_sha256 ON chunks(artifact_sha256);
@@ -547,11 +557,11 @@ def _insert_chunk(connection: sqlite3.Connection, chunk: dict) -> int:
         """
         INSERT INTO chunks (
           chunk_id, source_set_id, source_record_id, chunk_index, title, document_role,
-          authority_level, host, expected_parser, artifact_sha256, artifact_path,
+          support_document_role, authority_level, host, expected_parser, artifact_sha256, artifact_path,
           citation_label, original_url, effective_url, final_url, parser_name,
           parser_version, extracted_at, source_text_path, char_start, char_end, page,
           section, heading, content_sha256, review_topics_json, text
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             chunk["chunk_id"],
@@ -560,6 +570,7 @@ def _insert_chunk(connection: sqlite3.Connection, chunk: dict) -> int:
             int(chunk.get("chunk_index") or 0),
             chunk["title"],
             chunk["document_role"],
+            chunk["support_document_role"],
             chunk["authority_level"],
             chunk.get("host"),
             chunk.get("expected_parser"),
@@ -590,6 +601,7 @@ def _load_candidate_rows(
     connection: sqlite3.Connection,
     *,
     document_role: str | None,
+    support_document_role: str | None,
     authority_level: str | None,
     source_record_id: str | None,
     host: str | None,
@@ -599,6 +611,9 @@ def _load_candidate_rows(
     if document_role:
         query += " AND document_role = ?"
         params.append(document_role)
+    if support_document_role:
+        query += " AND support_document_role = ?"
+        params.append(support_document_role)
     if authority_level:
         query += " AND authority_level = ?"
         params.append(authority_level)
@@ -628,6 +643,7 @@ def _result_from_row(
         "source_record_id": row["source_record_id"],
         "title": row["title"],
         "document_role": row["document_role"],
+        "support_document_role": row["support_document_role"],
         "authority_level": row["authority_level"],
         "citation_label": row["citation_label"],
         "review_topics": topics,

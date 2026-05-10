@@ -65,6 +65,10 @@ Sequence 4 plus Sequence 5 readiness results:
   `config/r1_forest_plan_source_delta_retrieval_eval.json`
 - retrieval readiness: `ready_with_blockers`, with `152/152` extracted support-document rows
   indexed and the same `7` upstream parser blockers kept explicit
+- Sequence 5 alignment closeout: merged-corpus chunks now carry register-backed
+  `support_document_role` values for matching `R1PLAN-*` rows, including catalog-confirmed rows
+  such as `R1PLAN-custer-gallatin-nf-06`, so the current retrieval eval pass is based on actual
+  role-aware filters rather than source-ID-targeted shortcuts
 
 Sequence 4 runtime alignment update after that artifact:
 

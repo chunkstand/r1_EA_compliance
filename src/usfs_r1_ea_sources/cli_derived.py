@@ -170,6 +170,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     retrieval_query.add_argument("--index-path", type=Path)
     retrieval_query.add_argument("--limit", type=int, default=5)
     retrieval_query.add_argument("--document-role")
+    retrieval_query.add_argument("--support-document-role")
     retrieval_query.add_argument("--authority-level")
     retrieval_query.add_argument("--source-record-id")
     retrieval_query.add_argument("--review-topic")
@@ -377,6 +378,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             query=args.query,
             limit=args.limit,
             document_role=args.document_role,
+            support_document_role=args.support_document_role,
             authority_level=args.authority_level,
             source_record_id=args.source_record_id,
             review_topic=args.review_topic,

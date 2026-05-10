@@ -1222,6 +1222,16 @@ _CUSTER_TEST_REVIEW_TOPICS = {
     "R1PLAN-custer-gallatin-nf-07": "Check plan-level ESA consultation terms",
 }
 
+_CUSTER_TEST_SUPPORT_DOCUMENT_ROLES = {
+    "R1PLAN-custer-gallatin-nf-01": "plan_document_set_page",
+    "R1PLAN-custer-gallatin-nf-02": "primary_land_management_plan",
+    "R1PLAN-custer-gallatin-nf-03": "record_of_decision",
+    "R1PLAN-custer-gallatin-nf-04": "final_environmental_impact_statement",
+    "R1PLAN-custer-gallatin-nf-05": "final_environmental_impact_statement",
+    "R1PLAN-custer-gallatin-nf-06": "biological_assessment",
+    "R1PLAN-custer-gallatin-nf-07": "biological_opinion",
+}
+
 _WEAK_SOURCE_TEXT = (
     "This source chunk is intentionally generic for a negative resolver test. "
     "It has catalog provenance but no matching routed evidence terms."
@@ -1244,6 +1254,7 @@ def _build_custer_source_library(
             source_record_id=source_record_id,
             title=title,
             document_role="forest_plan",
+            support_document_role=_CUSTER_TEST_SUPPORT_DOCUMENT_ROLES[source_record_id],
             authority_level="forest",
             citation_label=f"{source_record_id} | {title} | artifact abc123",
             text=(
@@ -1390,6 +1401,7 @@ def _chunk(
     source_record_id: str,
     title: str,
     document_role: str,
+    support_document_role: str | None = None,
     authority_level: str,
     citation_label: str,
     text: str,
@@ -1403,6 +1415,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": support_document_role or document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",

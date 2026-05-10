@@ -117,6 +117,63 @@ class RetrievalTests(unittest.TestCase):
             self.assertEqual(query["results"][0]["source_record_id"], "R1EA-010")
             self.assertIn("mitigation measures", query["results"][0]["evidence_span"]["text"])
 
+    def test_retrieval_query_supports_support_document_role_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-flathead-nf-02", "R1PLAN-flathead-nf-03"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-flathead-nf-02",
+                        title="2018 Revised Land Management Plan",
+                        document_role="forest_plan_support",
+                        support_document_role="primary_land_management_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-flathead-nf-02 | 2018 Revised Land Management Plan | artifact abc123",
+                        text="Flathead revised land management plan 2018 forest plan direction.",
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-flathead-nf-03",
+                        title="Record of Decision",
+                        document_role="forest_plan_support",
+                        support_document_role="record_of_decision",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-flathead-nf-03 | Record of Decision | artifact def456",
+                        text="Flathead record of decision approving the revised forest plan.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1PLAN-flathead-nf-02": ["Forest-plan direction"],
+                    "R1PLAN-flathead-nf-03": ["Forest-plan decision"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="flathead revised land management plan 2018",
+                support_document_role="primary_land_management_plan",
+            )
+
+            self.assertEqual(query["hit_count"], 1)
+            self.assertEqual(query["results"][0]["source_record_id"], "R1PLAN-flathead-nf-02")
+            self.assertEqual(
+                query["results"][0]["support_document_role"],
+                "primary_land_management_plan",
+            )
+
     def test_retrieval_eval_scores_expected_sources_terms_and_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -520,6 +577,7 @@ def _chunk(
     source_record_id: str,
     title: str,
     document_role: str,
+    support_document_role: str | None = None,
     authority_level: str,
     citation_label: str,
     text: str,
@@ -533,6 +591,7 @@ def _chunk(
         "chunk_index": 0,
         "title": title,
         "document_role": document_role,
+        "support_document_role": support_document_role or document_role,
         "authority_level": authority_level,
         "host": "example.test",
         "expected_parser": "html",
