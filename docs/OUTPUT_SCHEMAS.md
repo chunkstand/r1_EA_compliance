@@ -269,9 +269,17 @@ The `batch-download` command writes:
 - `batch_size`
 - `limit_per_host`
 - `hosts_requested`
+- `source_record_id_filter_count`
+- `supplemental_source_count`
+- `source_delta_input`
 - `batch_count`
 - `planned_row_count`
 - `batches`
+
+`source_delta_input` is `null` unless a supplemental source-delta register is supplied. For the
+Region 1 forest-plan document register, batch planning records the same register summary used by
+`dry-run`, `preflight`, and `download`, while child download runs receive the supplemental
+`WorkbookSource` rows needed to resolve `R1PLAN-*` source-delta IDs.
 
 Each planned batch includes:
 
@@ -304,6 +312,10 @@ Batch statuses are:
 - `failed`
 
 `repair_queue.csv` consolidates failed or review-needed rows across executed batches.
+
+`summary.json` repeats the parent batch counts plus `source_record_id_filter_count`,
+`supplemental_source_count`, and `source_delta_input` so plan-only register runs can be validated
+without reading child manifests.
 
 ## Reviewer Catalog Outputs
 

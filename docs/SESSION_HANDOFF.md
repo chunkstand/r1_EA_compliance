@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-09
+Date: 2026-05-10
 
 ## Region 1 Forest-Plan Document Register Promotion
 
@@ -10,6 +10,7 @@ pipeline as an explicit source-delta input. Use:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
 PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
+PYTHONPATH=src python -m usfs_r1_ea_sources batch-download --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --run-id-prefix r1-forest-plan-source-delta-capture --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only --batch-size 5 --plan-only
 ```
 
 Promotion behavior is intentionally narrow:
@@ -27,10 +28,17 @@ The scoped live preflight `r1-forest-plan-promotion-preflight-20260510` returned
 `R1PLAN-dakota-prairie-grasslands-19`; targeted retry
 `r1-forest-plan-promotion-preflight-retry-dpg19-20260510` passed `1/1`.
 
-Next sequence: controlled source-delta capture. Run a batch download against only the `159`
-supplemental source-delta rows, then validate/report/catalog-build the resulting source set. Keep
-`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` out of download planning until
-replacement official sources are found or a documented gap policy is accepted.
+Gap-closure update: `batch-download` now accepts the same Region 1 register source-delta contract.
+Plan-only smoke run `r1-forest-plan-source-delta-capture-plan-20260510-batches` planned all `159`
+source-delta rows in `33` batches: `139` `www.fs.usda.gov`, `18` `usfs-public.app.box.com`, and
+`2` `federalregister.gov`. No full source-delta download has been run.
+
+Next sequence: controlled source-delta capture execution. Rerun the plan-only command with the
+intended capture prefix, inspect `batch_plan.json`, then run the same command without
+`--plan-only`. After all child batches pass, run the parent batch report/validation path and
+`catalog-build --batch-run-id <parent-run-id>`. Keep `R1PLAN-kootenai-nf-18` and
+`R1PLAN-nez-perce-clearwater-nfs-18` out of download planning until replacement official sources
+are found or a documented gap policy is accepted.
 
 ## Region 1 Forest-Plan Document Register Hardening
 

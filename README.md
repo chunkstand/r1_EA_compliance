@@ -21,9 +21,10 @@ as a replacement for the workbook contract. `config/r1_forest_plan_document_regi
 currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `159`
 corpus-ready source-delta rows, and `2` documented official-source gaps. Use
 `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-with `dry-run`, `preflight`, or `download` when planning only the supplemental `R1PLAN-*`
-source-delta rows. See `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the
-promotion evidence and scoped preflight run IDs.
+with `dry-run`, `preflight`, `download`, or `batch-download` when planning only the supplemental
+`R1PLAN-*` source-delta rows. See
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the promotion evidence, scoped
+preflight run IDs, and batch plan smoke result.
 
 Current generated source-library capture:
 
@@ -613,6 +614,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
 
 Remove `--plan-only` to execute the planned batches. Each batch runs `download`, `report`, and `validate-run`, writes a parent `batch_plan.json`, `batch_ledger.json`, and `repair_queue.csv`, then stops on the first failed or repair-needed batch unless `--continue-on-failure` is passed.
 Use `--resume` to skip already passed batches under the same run prefix.
+For the promoted Region 1 forest-plan source delta, add
+`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
+to batch only the `159` supplemental `R1PLAN-*` rows.
 
 Run or refresh the full captured library:
 

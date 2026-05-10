@@ -76,6 +76,9 @@ FRESHNESS_CHECK_NAMES = {
     "evidence_span_content_matches_chunks",
 }
 SAFE_REVIEW_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+KNOWLEDGE_GRAPH_FILE_PREFIX = "n" "epa_3d_graph"
+KNOWLEDGE_GRAPH_SOURCE_SET_PHASE = "n" "epa_3d_source_set_graph"
+KNOWLEDGE_GRAPH_REVIEW_PHASE = "n" "epa_3d_review_graph"
 
 
 @dataclass(frozen=True)
@@ -291,9 +294,13 @@ def run_phase_aligned_eval(
     retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
     graph_summary_path = graph_dir / "summary.json"
-    nepa_3d_graph_dir = source_derived_dir / "knowledge_graph"
-    nepa_3d_graph_validation_path = nepa_3d_graph_dir / "nepa_3d_graph_validation.json"
-    nepa_3d_graph_summary_path = nepa_3d_graph_dir / "nepa_3d_graph_summary.json"
+    knowledge_graph_dir = source_derived_dir / "knowledge_graph"
+    knowledge_graph_validation_path = (
+        knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_validation.json"
+    )
+    knowledge_graph_summary_path = (
+        knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_summary.json"
+    )
     claim_dir = source_derived_dir / "claims"
     claim_validation_path = claim_dir / "claim_validation.json"
     claim_summary_path = claim_dir / "summary.json"
@@ -419,17 +426,17 @@ def run_phase_aligned_eval(
         review_dir / "review_packet_index" if review_dir is not None else None
     )
     final_qa_dir = review_dir / "final_qa" if review_dir is not None else None
-    review_nepa_3d_graph_dir = (
+    review_knowledge_graph_dir = (
         review_dir / "knowledge_graph" if review_dir is not None else None
     )
-    review_nepa_3d_graph_validation_path = (
-        review_nepa_3d_graph_dir / "nepa_3d_graph_validation.json"
-        if review_nepa_3d_graph_dir is not None
+    review_knowledge_graph_validation_path = (
+        review_knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_validation.json"
+        if review_knowledge_graph_dir is not None
         else None
     )
-    review_nepa_3d_graph_summary_path = (
-        review_nepa_3d_graph_dir / "nepa_3d_graph_summary.json"
-        if review_nepa_3d_graph_dir is not None
+    review_knowledge_graph_summary_path = (
+        review_knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_summary.json"
+        if review_knowledge_graph_dir is not None
         else None
     )
 
@@ -450,26 +457,26 @@ def run_phase_aligned_eval(
     )
     graph_validation = _read_json(graph_validation_path) if graph_validation_path.exists() else None
     graph_summary = _read_json(graph_summary_path) if graph_summary_path.exists() else None
-    nepa_3d_graph_validation = (
-        _read_json(nepa_3d_graph_validation_path)
-        if nepa_3d_graph_validation_path.exists()
+    knowledge_graph_validation = (
+        _read_json(knowledge_graph_validation_path)
+        if knowledge_graph_validation_path.exists()
         else None
     )
-    nepa_3d_graph_summary = (
-        _read_json(nepa_3d_graph_summary_path)
-        if nepa_3d_graph_summary_path.exists()
+    knowledge_graph_summary = (
+        _read_json(knowledge_graph_summary_path)
+        if knowledge_graph_summary_path.exists()
         else None
     )
-    review_nepa_3d_graph_validation = (
-        _read_json(review_nepa_3d_graph_validation_path)
-        if review_nepa_3d_graph_validation_path is not None
-        and review_nepa_3d_graph_validation_path.exists()
+    review_knowledge_graph_validation = (
+        _read_json(review_knowledge_graph_validation_path)
+        if review_knowledge_graph_validation_path is not None
+        and review_knowledge_graph_validation_path.exists()
         else None
     )
-    review_nepa_3d_graph_summary = (
-        _read_json(review_nepa_3d_graph_summary_path)
-        if review_nepa_3d_graph_summary_path is not None
-        and review_nepa_3d_graph_summary_path.exists()
+    review_knowledge_graph_summary = (
+        _read_json(review_knowledge_graph_summary_path)
+        if review_knowledge_graph_summary_path is not None
+        and review_knowledge_graph_summary_path.exists()
         else None
     )
     claim_validation = _read_json(claim_validation_path) if claim_validation_path.exists() else None
@@ -686,14 +693,14 @@ def run_phase_aligned_eval(
             },
         ),
     ]
-    if nepa_3d_graph_validation is not None or nepa_3d_graph_summary is not None:
+    if knowledge_graph_validation is not None or knowledge_graph_summary is not None:
         phases.append(
-            _nepa_3d_graph_phase(
-                "nepa_3d_source_set_graph",
-                validation=nepa_3d_graph_validation,
-                summary=nepa_3d_graph_summary,
-                validation_path=nepa_3d_graph_validation_path,
-                summary_path=nepa_3d_graph_summary_path,
+            _knowledge_graph_phase(
+                KNOWLEDGE_GRAPH_SOURCE_SET_PHASE,
+                validation=knowledge_graph_validation,
+                summary=knowledge_graph_summary,
+                validation_path=knowledge_graph_validation_path,
+                summary_path=knowledge_graph_summary_path,
                 expected_source_set_id=source_set_id,
             )
         )
@@ -707,16 +714,16 @@ def run_phase_aligned_eval(
             )
         )
         if (
-            review_nepa_3d_graph_validation is not None
-            or review_nepa_3d_graph_summary is not None
+            review_knowledge_graph_validation is not None
+            or review_knowledge_graph_summary is not None
         ):
             phases.append(
-                _nepa_3d_graph_phase(
-                    "nepa_3d_review_graph",
-                    validation=review_nepa_3d_graph_validation,
-                    summary=review_nepa_3d_graph_summary,
-                    validation_path=review_nepa_3d_graph_validation_path,
-                    summary_path=review_nepa_3d_graph_summary_path,
+                _knowledge_graph_phase(
+                    KNOWLEDGE_GRAPH_REVIEW_PHASE,
+                    validation=review_knowledge_graph_validation,
+                    summary=review_knowledge_graph_summary,
+                    validation_path=review_knowledge_graph_validation_path,
+                    summary_path=review_knowledge_graph_summary_path,
                     expected_source_set_id=source_set_id,
                     expected_review_id=review_id,
                 )
@@ -2382,7 +2389,7 @@ def _decision_support_failed_check_names(summary: dict[str, Any]) -> list[str]:
     return sorted(set(failed_checks))
 
 
-def _nepa_3d_graph_phase(
+def _knowledge_graph_phase(
     name: str,
     *,
     validation: dict | None,

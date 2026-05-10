@@ -30,8 +30,11 @@ CLI path is:
 ```
 
 The promotion validation is documented in
-`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. No full download of the supplemental
-source-delta rows has been run yet.
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. The register options are accepted by
+`dry-run`, `preflight`, `download`, and `batch-download`. A plan-only batch smoke run
+`r1-forest-plan-source-delta-capture-plan-20260510-batches` planned all `159` source-delta rows in
+`33` batches (`139` Forest Service media rows, `18` Box rows, and `2` Federal Register rows). No
+full download of the supplemental source-delta rows has been run yet.
 
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.

@@ -99,6 +99,7 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
     batches.add_argument("--plan-only", action="store_true")
     batches.add_argument("--resume", action="store_true")
     batches.add_argument("--continue-on-failure", action="store_true")
+    _add_source_delta_options(batches)
 
     catalog = subparsers.add_parser(
         "catalog-build",
@@ -196,6 +197,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
 
     if args.command == "batch-download":
         config = load_config(args.config)
+        source_delta_options = _source_delta_options(args, parser)
         result = run_batch_downloads(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -208,6 +210,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             plan_only=args.plan_only,
             resume=args.resume,
             continue_on_failure=args.continue_on_failure,
+            **source_delta_options,
         )
         print_summary(result.summary)
         return 0 if result.summary["all_passed"] or args.plan_only else 1
@@ -239,6 +242,10 @@ def _add_workbook_run_filters(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--id")
     parser.add_argument("--host")
     parser.add_argument("--limit", type=int)
+    _add_source_delta_options(parser)
+
+
+def _add_source_delta_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--r1-forest-plan-register",
         type=Path,

@@ -12,7 +12,7 @@ from .download import run_download
 from .records import WorkbookSource, slugify
 from .report import build_run_report
 from .validate_run import validate_run
-from .workbook import load_canonical_sources
+from .workbook import load_canonical_sources, merge_supplemental_sources
 
 
 @dataclass(frozen=True)
@@ -34,15 +34,28 @@ def build_batch_plan(
     hosts: list[str] | None = None,
     batch_size: int = 5,
     limit_per_host: int | None = None,
+    source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
 ) -> list[dict]:
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
-    sources = load_canonical_sources(workbook_path, config.workbook)
+    workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
+    if source_record_ids is not None:
+        available_source_ids = {source.source_record_id for source in sources}
+        missing_source_ids = sorted(source_record_ids - available_source_ids)
+        if missing_source_ids:
+            raise ValueError(
+                f"Batch plan requested source IDs with no loaded sources: {missing_source_ids}"
+            )
+        sources = [source for source in sources if source.source_record_id in source_record_ids]
     available_hosts = {source_host(source) for source in sources}
     if hosts:
         unknown_hosts = sorted(set(hosts) - available_hosts)
         if unknown_hosts:
-            raise ValueError(f"Batch plan requested hosts with no workbook sources: {unknown_hosts}")
+            raise ValueError(
+                f"Batch plan requested hosts with no workbook sources selected: {unknown_hosts}"
+            )
     selected_hosts = hosts or sorted(available_hosts)
     batches: list[dict] = []
     for host in selected_hosts:
@@ -87,6 +100,9 @@ def run_batch_downloads(
     plan_only: bool = False,
     resume: bool = False,
     continue_on_failure: bool = False,
+    source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
     downloader=run_download,
     reporter=build_run_report,
     validator=validate_run,
@@ -108,6 +124,11 @@ def run_batch_downloads(
         hosts=hosts,
         batch_size=batch_size,
         limit_per_host=limit_per_host,
+        source_record_ids=source_record_ids,
+        supplemental_sources=supplemental_sources,
+    )
+    source_record_id_filter_count = (
+        len(source_record_ids) if source_record_ids is not None else None
     )
     _write_json(
         plan_path,
@@ -117,6 +138,9 @@ def run_batch_downloads(
             "batch_size": batch_size,
             "limit_per_host": limit_per_host,
             "hosts_requested": hosts,
+            "source_record_id_filter_count": source_record_id_filter_count,
+            "supplemental_source_count": len(supplemental_sources or []),
+            "source_delta_input": source_delta_input,
             "batch_count": len(planned_batches),
             "planned_row_count": sum(batch["row_count"] for batch in planned_batches),
             "batches": planned_batches,
@@ -144,6 +168,8 @@ def run_batch_downloads(
                     run_id=entry["batch_id"],
                     host_filter=entry["host"],
                     source_record_ids=set(entry["source_record_ids"]),
+                    supplemental_sources=supplemental_sources,
+                    source_delta_input=source_delta_input,
                     force=force,
                 )
                 report_result = reporter(output_dir=output_dir, run_id=entry["batch_id"])
@@ -209,6 +235,9 @@ def run_batch_downloads(
         run_id_prefix=run_id_prefix,
         batch_size=batch_size,
         limit_per_host=limit_per_host,
+        source_record_id_filter_count=source_record_id_filter_count,
+        supplemental_source_count=len(supplemental_sources or []),
+        source_delta_input=source_delta_input,
         plan_only=plan_only,
         stopped_after_batch_id=stopped_after_batch_id,
         ledger_entries=ledger_entries,
@@ -235,6 +264,7 @@ def render_batch_report(summary: dict, ledger_entries: list[dict]) -> str:
         "",
         f"- Batches: `{summary['batch_count']}`",
         f"- Planned rows: `{summary['planned_row_count']}`",
+        f"- Supplemental sources: `{summary.get('supplemental_source_count', 0)}`",
         f"- Passed: `{summary['passed_batch_count']}`",
         f"- Failed: `{summary['failed_batch_count']}`",
         f"- Needs repair: `{summary['needs_repair_batch_count']}`",
@@ -308,6 +338,9 @@ def _batch_summary(
     run_id_prefix: str,
     batch_size: int,
     limit_per_host: int | None,
+    source_record_id_filter_count: int | None,
+    supplemental_source_count: int,
+    source_delta_input: dict | None,
     plan_only: bool,
     stopped_after_batch_id: str | None,
     ledger_entries: list[dict],
@@ -327,6 +360,9 @@ def _batch_summary(
         "run_id_prefix": run_id_prefix,
         "batch_size": batch_size,
         "limit_per_host": limit_per_host,
+        "source_record_id_filter_count": source_record_id_filter_count,
+        "supplemental_source_count": supplemental_source_count,
+        "source_delta_input": source_delta_input,
         "plan_only": plan_only,
         "batch_count": len(ledger_entries),
         "planned_row_count": sum(entry["row_count"] for entry in ledger_entries),

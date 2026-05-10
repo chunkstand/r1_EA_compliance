@@ -60,8 +60,32 @@ Targeted retry:
 - `preflight_ok`: `1`
 - Failed rows: `0`
 
+Plan-only batch smoke:
+
+- Parent run ID: `r1-forest-plan-source-delta-capture-plan-20260510-batches`
+- Planned rows: `159`
+- Planned batches: `33`
+- Host split: `139` `www.fs.usda.gov`, `18` `usfs-public.app.box.com`, and `2`
+  `federalregister.gov`
+- Supplemental source count: `159`
+- Source-record filter count: `159`
+- Downloads executed: `0`
+
+## Gap Closure
+
+The promotion gap-close slice extends `batch-download` to accept the same
+`--r1-forest-plan-register ... --source-delta-only` contract as `dry-run`, `preflight`, and
+`download`. Parent batch plans and summaries now record `source_delta_input`,
+`supplemental_source_count`, and `source_record_id_filter_count`, and child download runs receive
+the supplemental `WorkbookSource` records needed to resolve the emitted `R1PLAN-*` source-delta
+IDs.
+
+Full repository verification passed after removing a domain-specific token from the general
+evidence-graph runtime while preserving the existing knowledge-graph artifact filenames.
+
 ## Promotion Boundary
 
-The register is ready for controlled source-delta capture planning. The next slice should batch
-download only the `159` emitted source-delta rows, preserving the two gap rows as non-corpus-ready
-until replacement official sources are acquired or a documented gap policy is accepted.
+The register is ready for controlled source-delta capture execution. The next slice should run the
+planned batch download against only the `159` emitted source-delta rows, preserving the two gap rows
+as non-corpus-ready until replacement official sources are acquired or a documented gap policy is
+accepted.
