@@ -23,6 +23,11 @@ single-forest builder runtime yet.
 - regression coverage:
   `tests/test_forest_plan_inventory_build_manifest.py` locks the default all-10-profile manifest
   and the new fail-closed validation paths
+- alignment recheck:
+  current `source_library/catalog/source_set_manifest.json` still resolves to
+  `source-set-34061d1e4bf6c460`, the manifest's `active_full_canonical` reference matches that
+  live source set, and manifest roster coverage is `10/10` against
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 
 Verification in this pass:
 
@@ -85,8 +90,8 @@ Residual risks:
 
 Immediate next step if this slice is continued:
 
-1. Implement Sequence 1 of the Region 1 component inventory milestone by adding the tracked
-   multi-forest build contract and active-source-set inventory ownership path.
+1. Sequence 1 is now closed. The next implementation boundary is Sequence 2 multi-forest builder
+   hardening.
 
 ## Region 1 Forest-Plan Component Inventory Promotion Sequence 0
 
@@ -123,13 +128,13 @@ Residual risks:
 
 - the active full-canonical source set still lacks owned `forest_plan_components/` artifacts, so
   the new gate currently documents a real blocker rather than closing it
-- no multi-forest build contract exists yet; Sequence 1 remains the next required implementation
-  boundary
+- the tracked multi-forest build contract now exists, but the builder runtime still cannot consume
+  it to materialize an active-source-set-owned canonical inventory artifact family
 
 Immediate next step if this slice is continued:
 
-1. Implement Sequence 1 by adding a tracked Region 1 inventory-build manifest that covers every
-   readiness profile without hardcoded Python branching.
+1. Sequence 1 is now closed. The next implementation boundary is Sequence 2 multi-forest builder
+   hardening over the tracked manifest contract.
 
 ## Full Canonical Graph-Capability Gate
 

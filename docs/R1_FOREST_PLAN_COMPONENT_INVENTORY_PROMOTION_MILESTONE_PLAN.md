@@ -299,6 +299,10 @@ Implementation closeout on 2026-05-10:
   present in the row's build inputs
 - added regression coverage in `tests/test_forest_plan_inventory_build_manifest.py` for the new
   contract loader plus the default manifest's all-10-profile baseline
+- alignment recheck confirms the default build contract matches the live repo boundary:
+  the manifest's `active_full_canonical` reference points to current
+  `source_library/catalog/source_set_manifest.json` source set `source-set-34061d1e4bf6c460`, and
+  manifest roster coverage is `10/10` against `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 
 Acceptance signals:
 
@@ -391,7 +395,7 @@ Required verification:
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
   --output-dir source_library \
   --source-set-id source-set-34061d1e4bf6c460 \
-  --manifest-path <new-region1-inventory-build-config>
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
 
 PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py
 git diff --check
