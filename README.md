@@ -60,9 +60,13 @@ register rows, with an empty repair queue and `158` unique artifacts. The scoped
 catalog gate is archived under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/` as
 `source-set-411b3736b3691eed` with `159` source rows, `158` artifacts, and `159`
-`active_review_corpus` rows. The completion plan for finding any remaining official support
-documents, finishing extraction/retrieval readiness, and incorporating the support-document layer
-into a merged corpus is `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
+`active_review_corpus` rows. The source-delta readiness baseline gate now passes with:
+`PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches`.
+The generated report remains ignored under the source-delta run directory and records extraction and
+retrieval as not started for the support-document source set. The completion plan for finding any
+remaining official support documents, finishing extraction/retrieval readiness, and incorporating
+the support-document layer into a merged corpus is
+`docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all

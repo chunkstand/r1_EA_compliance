@@ -39,6 +39,15 @@ catalog gate is archived under
 `source-set-411b3736b3691eed` with `159` forest-plan support rows, `158` artifacts, `159`
 `active_review_corpus` rows, and `catalog_validation.json` passing.
 
+The Sequence 0 readiness baseline is implemented by `forest-plan-source-delta-readiness`. The live
+gate over `r1-forest-plan-source-delta-capture-20260510-batches` passes with `0` failed checks,
+distinguishes the scoped source-delta source set `source-set-411b3736b3691eed` from the active
+canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
+`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` as explicit official-source gaps,
+and records extraction and retrieval readiness as `not_started` for the support-document source
+set. The generated JSON/Markdown report is under the source-delta run's ignored
+`source_delta_readiness/` directory.
+
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.
 

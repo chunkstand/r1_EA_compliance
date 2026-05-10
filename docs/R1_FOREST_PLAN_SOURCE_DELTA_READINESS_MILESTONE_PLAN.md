@@ -58,6 +58,37 @@ Known official-source gaps:
   package. The current official 2025 LMP page links a Box plan revision project record URL, but live
   preflight returned `404`.
 
+Sequence 0 implementation status:
+
+- Implemented command:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches`
+- Generated report family:
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json`
+  and `.md`
+- Live result: passed with `0` failed checks, `159` captured source-delta rows, scoped source set
+  `source-set-411b3736b3691eed`, active canonical source set `source-set-d3b9e2a728accda6`, and
+  extraction/retrieval readiness recorded as `not_started`.
+- Remaining blockers: the two official-source gaps above, plus downstream extraction/retrieval
+  readiness for the scoped support-document source set.
+
+## Weak-Point Prevention Contract
+
+- Weak point forecast: stale or missing source-delta gate artifacts could let later sequences build
+  on an unverified support-document baseline.
+- Owner surface: `forest_plan_source_delta_readiness.py`, the source-delta batch run directory, the
+  archived scoped catalog gate, and the active canonical catalog.
+- Prevention gate: `forest-plan-source-delta-readiness` fails when required batch, ledger,
+  repair-queue, scoped catalog, or canonical catalog files are absent or invalid.
+- Fail threshold: any missing required artifact, non-passing scoped catalog validation, non-passing
+  canonical catalog validation, source-delta/source-register mismatch, or canonical source count not
+  equal to `190` fails the milestone.
+- Controlled violation: focused tests remove the scoped catalog gate and remove one source-delta ID
+  from the gate fixture; both negative cases must fail before the command can be accepted.
+- Future-Codex misuse scenario: a later session might scan raw artifacts, collapse
+  catalog-confirmed rows into the source-delta set, or silently omit gap rows. This contract
+  prevents that by requiring the gate to read register, batch, catalog, extraction, retrieval, and
+  profile-placeholder surfaces and to list the two gap IDs as explicit blockers.
+
 ## Non-Goals
 
 - Do not broaden this milestone into a full Region 1 EA package review.
@@ -114,6 +145,8 @@ Acceptance signals:
 Required verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_source_delta_readiness.py tests/test_cli.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_captured_library.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 git diff --check
@@ -449,9 +482,8 @@ Atomic closeout commit should include:
 
 ## Next Immediate Slice
 
-Implement Sequence 0: a source-delta readiness report/gate that reads the current register,
-`r1-forest-plan-source-delta-capture-20260510-batches`, the archived scoped catalog gate, and the
-active canonical catalog, then emits one report with captured rows, gap rows, catalog status,
-extraction readiness placeholders, retrieval readiness placeholders, and forest-profile blocker
-placeholders. This gives the following sequences a stable acceptance surface before more downloads
-or extraction work begin.
+Implement Sequence 1: official-source gap resolution for `R1PLAN-kootenai-nf-18` and
+`R1PLAN-nez-perce-clearwater-nfs-18`. Keep the scope to official Forest Service or other official
+source locations, record accepted/rejected candidate evidence, and do not convert either gap row to
+`source_delta_required` until a targeted preflight passes. If no replacement official source is
+found, preserve `official_source_gap_documented` and refresh the gap evidence notes.

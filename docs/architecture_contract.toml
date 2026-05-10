@@ -70,7 +70,7 @@ allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]
 [[layers]]
 name = "review_support"
 summary = "Cross-source-set reuse planning helpers that may inspect review-derived source-set requirements without writing review outputs."
-modules = ["authority_currentness", "reuse_inventory"]
+modules = ["authority_currentness", "forest_plan_source_delta_readiness", "reuse_inventory"]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
 [[layers]]
@@ -275,6 +275,8 @@ paths = [
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory.json",
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl",
   "source_library/derived/<source_set_id>/reuse_inventory/summary.json",
+  "source_library/runs/<run_id>/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json",
+  "source_library/runs/<run_id>/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.md",
 ]
 
 [[artifacts]]
@@ -402,6 +404,7 @@ commands = [
   "authority-currentness",
   "extract-build",
   "reuse-inventory",
+  "forest-plan-source-delta-readiness",
   "extraction-accuracy-audit",
   "retrieval-build",
   "retrieval-query",

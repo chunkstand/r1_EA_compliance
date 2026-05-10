@@ -3353,6 +3353,42 @@ extracted count, failed count, chunk count, parser counts, validation status, an
 filters. The `filters` object includes the legacy singular `id`, the repeated `ids` list when
 multiple source records were selected, `parser`, and `limit`.
 
+## Forest-Plan Source-Delta Readiness Outputs
+
+Path: `source_library/runs/<run_id>/source_delta_readiness/`
+
+The `forest-plan-source-delta-readiness` command is a read-only Sequence 0 gate for the Region 1
+forest-plan support-document source delta. It reads the supplemental register, the source-delta
+batch summary and ledger, the archived scoped catalog gate, the active canonical catalog, extraction
+placeholders, retrieval placeholders, and forest-profile placeholder blockers. It writes:
+
+- `r1_forest_plan_source_delta_readiness_report.json`
+- `r1_forest_plan_source_delta_readiness_report.md`
+
+The JSON report has schema version `r1-forest-plan-source-delta-readiness-v0` and includes:
+
+- `inputs`, with register, batch, scoped catalog, canonical catalog, and forest-profile config paths
+  plus hashes where available
+- `register`, including total rows, status counts, emitted source-delta IDs, catalog-confirmed IDs,
+  skipped official-source gap IDs, and per-forest-unit counts
+- `source_delta_batch_capture`, including batch pass counts, planned row count, artifact count,
+  ledger source-record count, repair-queue row count, and the embedded `source_delta_input`
+- `scoped_source_delta_catalog`, with source-set ID, source count, artifact count, status counts,
+  source partitions, document-role counts, and validation status
+- `active_canonical_catalog`, with the same catalog summary fields for the active 190-row workbook
+  catalog
+- `extraction_readiness` and `retrieval_readiness`, which are placeholders until later sequences
+  build those layers for the scoped source-delta source set
+- `forest_profile_readiness_placeholders`, with source-delta, catalog-confirmed, gap, and blocker
+  counts by forest unit
+- `checks`, each with `name`, `passed`, and `details`
+
+The gate fails when required batch/catalog artifacts are missing, when the source-delta batch no
+longer covers the emitted register IDs, when the scoped catalog gate no longer validates, when
+catalog source IDs diverge from the register source-delta rows, when gap/catalog-confirmed rows leak
+into the scoped source-delta catalog, or when the active canonical catalog is not the 190-row
+non-source-delta view.
+
 ## Extraction Reuse Inventory Outputs
 
 Path: `source_library/derived/<source_set_id>/reuse_inventory/`

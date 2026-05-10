@@ -48,18 +48,25 @@ from `corpus-update-2026-05-01-cg-support-batches` after the source-delta gate, 
 set `source-set-d3b9e2a728accda6` under the current code. The promoted downstream V1 derived
 artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
 
-Next sequence: source-delta extraction/retrieval readiness. Start from the scoped
-`source-set-411b3736b3691eed` catalog, run a reuse/extraction inventory for the `159` captured
-support-document rows, then build extracted text and retrieval inputs without broadening the two
-documented gap rows. Keep `R1PLAN-kootenai-nf-18` and
-`R1PLAN-nez-perce-clearwater-nfs-18` out of corpus planning until replacement official sources are
-found or a documented gap policy is accepted.
+Sequence 0 readiness baseline update: `forest-plan-source-delta-readiness` now builds the
+source-delta baseline report/gate over the promoted register, source-delta batch capture, archived
+scoped catalog gate, active canonical catalog, extraction placeholders, retrieval placeholders, and
+forest-profile blocker placeholders. The live gate passes with `0` failed checks, scoped source set
+`source-set-411b3736b3691eed`, canonical catalog source set `source-set-d3b9e2a728accda6`, `159`
+captured source-delta rows, and official-source gaps
+`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18`. Generated JSON/Markdown reports
+are ignored under
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/`.
+
+Immediate next sequence: Sequence 1 official-source gap resolution for
+`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18`. Keep both out of corpus planning
+until replacement official sources are found and targeted preflight passes, or a documented gap
+policy is accepted. Extraction/retrieval readiness for the captured `159` support-document rows
+should start from scoped source set `source-set-411b3736b3691eed` after the Sequence 1 gap decision
+is current.
 
 Milestone plan:
-`docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`. The immediate next slice is
-Sequence 0: build a source-delta readiness report/gate over the register, passed source-delta batch
-capture, archived scoped catalog gate, active canonical catalog, extraction placeholders, retrieval
-placeholders, and forest-profile blocker placeholders.
+`docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 ## Region 1 Forest-Plan Document Register Hardening
 

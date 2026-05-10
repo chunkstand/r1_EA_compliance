@@ -107,6 +107,25 @@ def test_catalog_build_parser_accepts_r1_forest_plan_source_delta_register() -> 
     assert args.source_delta_only is True
 
 
+def test_forest_plan_source_delta_readiness_parser_accepts_sequence_zero_inputs() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-plan-source-delta-readiness",
+            "--output-dir",
+            "source_library",
+            "--r1-forest-plan-register",
+            "config/r1_forest_plan_document_register_draft.csv",
+            "--source-delta-batch-run-id",
+            "r1-delta-batches",
+        ]
+    )
+
+    assert args.command == "forest-plan-source-delta-readiness"
+    assert args.output_dir == Path("source_library")
+    assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
+    assert args.source_delta_batch_run_id == "r1-delta-batches"
+
+
 def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch) -> None:
     captured = {}
 
