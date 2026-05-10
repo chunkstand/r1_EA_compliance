@@ -2,6 +2,39 @@
 
 Date: 2026-05-10
 
+## Latest Full Canonical Corpus Promotion
+
+The active `source_library/catalog/` contract has now been promoted to the full merged corpus under
+the current code while keeping reviewer-ready East Crazies promotion explicit and separate.
+
+- active full canonical catalog source set: `source-set-34061d1e4bf6c460`
+- active catalog inputs:
+  `corpus-update-2026-05-01-cg-support-batches` plus
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
+- active catalog counts: `350` source rows, `319` artifacts, `332` unique URLs,
+  `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160`
+  supplemental source-delta rows
+- preserved explicit gap: `R1PLAN-kootenai-nf-18` remains visible through
+  `source_delta_input.skipped_gap_source_record_ids` and
+  `config/r1_forest_plan_official_source_gap_evidence.json`
+- current-promotion lane remains pinned to reviewer-ready source set
+  `source-set-ba8d0feae79501b8`
+- promotion-suite closeout now reports:
+  `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=false`
+
+Important boundary:
+
+- archived merged source set `source-set-8a4005c8a083af1a` remains the freshest fully replayed
+  merged extraction/retrieval/graph surface
+- active full canonical catalog source set `source-set-34061d1e4bf6c460` is the current code's
+  promoted catalog truth
+- merged-corpus East Crazies replay on `source-set-8a4005c8a083af1a` is still blocked by
+  `7` applicability adjudications and failing forest-plan component evaluation, so full-corpus
+  promotion does not mean reviewer-ready merged review promotion
+
 ## Latest Source-Delta Refresh
 
 The 2026-05-10 refresh closes the remaining source-delta corpus gaps and moves the remaining work

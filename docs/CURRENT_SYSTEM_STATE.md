@@ -20,9 +20,9 @@ The uploaded workbook now defines the active source contract:
 
 The Region 1 forest-plan support-document register is promoted as a controlled supplemental
 source-delta input at `config/r1_forest_plan_document_register_draft.csv`. The register has `189`
-reviewed rows: `28` rows already confirmed in the workbook/catalog contract, `159`
-`source_delta_required` rows that can be emitted as supplemental `WorkbookSource` records, and `2`
-documented official-source gaps that are counted but not planned for corpus download. The promoted
+reviewed rows: `28` rows already confirmed in the workbook/catalog contract, `160`
+`source_delta_required` rows that can be emitted as supplemental `WorkbookSource` records, and `1`
+documented official-source gap that is counted but not planned for corpus download. The promoted
 CLI path is:
 
 ```text
@@ -39,18 +39,39 @@ catalog gate is archived under
 `source-set-411b3736b3691eed` with `159` forest-plan support rows, `158` artifacts, `159`
 `active_review_corpus` rows, and `catalog_validation.json` passing.
 
+## Full Canonical Corpus Promotion
+
+Latest closeout on 2026-05-10:
+
+- Active full canonical catalog in `source_library/catalog/` is now
+  `source-set-34061d1e4bf6c460`.
+- The active catalog was rebuilt from
+  `corpus-update-2026-05-01-cg-support-batches` plus
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`.
+- Active catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
+  `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160` supplemental
+  source-delta rows.
+- The preserved Kootenai gap remains explicit through
+  `source_delta_input.skipped_gap_source_record_ids=["R1PLAN-kootenai-nf-18"]` and
+  `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently promoted into a
+  downloaded source row.
+- The post-V1 promotion suite now separates current-promotion truth from full-corpus truth:
+  `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
+  `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, and `expansion_ready=false`.
+- The freshest fully replayed merged source-set evidence surface remains archived under
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+  as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
+  extraction/retrieval/graph/phase surface, while the merged-corpus East Crazies review replay on
+  `source-set-8a4005c8a083af1a` remains blocked by `7` applicability adjudications and failing
+  forest-plan component evaluation.
+
 The source-delta readiness gate is implemented by `forest-plan-source-delta-readiness`. The live
-gate over `r1-forest-plan-source-delta-capture-20260510-batches` passes with `0` failed checks,
-distinguishes the scoped source-delta source set `source-set-411b3736b3691eed` from the active
-canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
-`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` as explicit official-source gaps,
-validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and now
-also evaluates the Sequence 4 merged-catalog extraction state. The generated JSON/Markdown report
-uses schema `r1-forest-plan-source-delta-readiness-v3` and is under the source-delta run's ignored
-`source_delta_readiness/` directory. The committed earlier artifact still reflects the pre-fallback
-run, but the live merged replay is now refreshed on archived merged catalog
-`source-set-7e2652d23e764068` with the active canonical catalog still untouched. Current live
-Sequence 4 through Sequence 6 readiness results:
+gate over `r1-forest-plan-source-delta-capture-20260510-batches` passed the earlier scoped source
+delta baseline and now serves as the promotion guardrail for the active full catalog. The generated
+JSON/Markdown report uses schema `r1-forest-plan-source-delta-readiness-v3` and is under the
+source-delta run's ignored `source_delta_readiness/` directory. Historical Sequence 4 through
+Sequence 6 readiness results:
 
 - merged reuse inventory: `reuse_extraction=189`, `needs_extract=159`, `excluded=1`
 - merged extraction summary: `341` extracted rows, `7` explicit `parser_error` rows, `1`
@@ -166,29 +187,26 @@ R1EA-021, R1EA-022, R1EA-023, R1EA-024, R1EA-025, R1EA-028, R1EA-029,
 R1EA-031, R1EA-033, R1EA-034, R1EA-035, R1EA-067
 ```
 
-The canonical generated downloader/catalog corpus covers the full 190-row workbook contract:
+The active full canonical downloader/catalog corpus now combines the full 190-row workbook contract
+with the completed 160-row supplemental support-document capture:
 
-- Parent batch run: `corpus-update-2026-05-01-cg-support-batches`
-- Canonical workbook rows: `190`
-- Batch count: `52`
-- Passed batches: `52`
-- Failed batches: `0`
-- Repair-needed batches: `0`
-- Repair queue: empty except the CSV header
-- Unique effective URLs: `172`
-- Promoted downstream V1 source set: `source-set-ba8d0feae79501b8`
-- Latest regenerated canonical catalog source set: `source-set-d3b9e2a728accda6`
-- Reviewer catalog source rows: `190`
-- Reviewer catalog unique artifacts: `160`
-- Reviewer catalog source-artifact links: `189`
-- Source statuses: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
-  `duplicate_url=9`, `skipped_excluded=1`
+- Parent batch runs:
+  `corpus-update-2026-05-01-cg-support-batches` and
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
+- Active full canonical catalog source set: `source-set-34061d1e4bf6c460`
+- Current-promotion reviewer-ready V1 source set: `source-set-ba8d0feae79501b8`
+- Active reviewer catalog source rows: `350`
+- Active reviewer catalog unique artifacts: `319`
+- Active reviewer catalog source-artifact links: `349`
+- Active source partitions: `active_review_corpus=349`, `candidate_blocked_source=1`
+- Supplemental source-delta rows carried in the active catalog: `160`
+- Preserved official-source gaps carried in `source_delta_input`: `1`
 
-`R1EA-160` is present in the workbook/catalog as a `project_reference`, but has no artifact because
-its URL remains in `Scope_Exclusions`. The canonical catalog validation passes, and the
-captured-library integrity test suite passes against these generated outputs. The scoped
-source-delta catalog gate is preserved under the source-delta parent run directory rather than left
-as the active `source_library/catalog/` view.
+`R1EA-160` is still present in the catalog as a blocked `project_reference` because its URL remains
+in `Scope_Exclusions`. `R1PLAN-kootenai-nf-18` remains explicit through the register/gap-evidence
+contract rather than as a downloaded catalog row. The active catalog validation passes, the
+captured-library integrity test suite passes against the promoted `source_library/catalog/`, and
+the archived merged replay gate remains available as a separate downstream evidence surface.
 
 ## Authority Universe Family Inventory
 

@@ -14,6 +14,37 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
 
 
+def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    suite_results = {result["id"]: result for result in manifest["suite_results"]}
+
+    assert manifest["source_set_id"] == "source-set-ba8d0feae79501b8"
+    assert manifest["full_canonical_source_set_id"] == "source-set-34061d1e4bf6c460"
+
+    active_catalog = suite_results["full_canonical_catalog_manifest"]
+    assert active_catalog["required_for_current_promotion"] is False
+    assert active_catalog["required_for_full_canonical_corpus"] is True
+    active_catalog_checks = {check["name"]: check for check in active_catalog["checks"]}
+    assert active_catalog_checks["full_canonical_source_set_matches"]["equals"] == (
+        "source-set-34061d1e4bf6c460"
+    )
+    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 350
+    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 319
+    assert active_catalog_checks["full_canonical_source_delta_count"]["equals"] == 160
+    assert active_catalog_checks["full_canonical_gap_count"]["equals"] == 1
+
+    active_validation = suite_results["full_canonical_catalog_validation"]
+    assert active_validation["required_for_current_promotion"] is False
+    assert active_validation["required_for_full_canonical_corpus"] is True
+    active_validation_checks = {
+        check["name"]: check for check in active_validation["checks"]
+    }
+    assert active_validation_checks["full_canonical_catalog_validation_passed"]["equals"] is True
+    assert active_validation_checks["full_canonical_catalog_validation_source_set"]["equals"] == (
+        "source-set-34061d1e4bf6c460"
+    )
+
+
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
@@ -247,6 +278,113 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     )
     assert review_summary_checks["review_graph_decision_count"]["equals"] == 377
     assert review_summary_checks["review_graph_validation_checks"]["min"] == 76
+
+
+def test_run_promotion_suite_reports_full_canonical_corpus_readiness_separately(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "source_library"
+    (output_dir / "catalog").mkdir(parents=True)
+    (tmp_path / "config").mkdir()
+
+    rule_pack_path = tmp_path / "config" / "rule_pack.json"
+    rule_pack_path.write_text(
+        json.dumps(
+            {
+                "rule_pack_id": "rule-pack-test",
+                "version": "1.0.0",
+                "rules": [{"id": "r1"}],
+                "baseline_source_record_ids": ["R1EA-001"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output_dir / "catalog" / "source_set_manifest.json").write_text(
+        json.dumps(
+            {
+                "source_set_id": "source-set-stale",
+                "download_batch_run_ids": ["run-a", "run-b"],
+                "source_count": 350,
+                "artifact_count": 319,
+                "source_partition_counts": {"active_review_corpus": 349},
+                "source_delta_input": {
+                    "source_delta_count": 160,
+                    "gap_count": 1,
+                    "skipped_gap_source_record_ids": ["R1PLAN-kootenai-nf-18"],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output_dir / "catalog" / "catalog_validation.json").write_text(
+        json.dumps({"source_set_id": "source-set-full", "passed": True}),
+        encoding="utf-8",
+    )
+
+    manifest_path = tmp_path / "config" / "promotion_suite.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": PROMOTION_SUITE_SCHEMA_VERSION,
+                "id": "suite-test",
+                "source_set_id": "source-set-current",
+                "full_canonical_source_set_id": "source-set-full",
+                "rule_pack_path": "config/rule_pack.json",
+                "rule_pack_id": "rule-pack-test",
+                "rule_pack_version": "1.0.0",
+                "expected_rule_count": 1,
+                "expected_baseline_source_record_count": 1,
+                "review_cases": [],
+                "suite_results": [
+                    {
+                        "id": "full_canonical_catalog_manifest",
+                        "path": "catalog/source_set_manifest.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "failure_category": "stale_artifact",
+                        "checks": [
+                            {
+                                "name": "full_canonical_source_set_matches",
+                                "json_path": "source_set_id",
+                                "equals": "source-set-full",
+                            }
+                        ],
+                    },
+                    {
+                        "id": "full_canonical_catalog_validation",
+                        "path": "catalog/catalog_validation.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_catalog_validation_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
+                ],
+                "expansion_slots": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+    assert result.summary["source_set_id"] == "source-set-current"
+    assert result.summary["current_promotion_source_set_id"] == "source-set-current"
+    assert result.summary["full_canonical_source_set_id"] == "source-set-full"
+    assert result.summary["current_promotion_ready"] is True
+    assert result.summary["full_canonical_corpus_ready"] is False
+    assert result.summary["required_full_canonical_result_count"] == 2
+    assert result.summary["passed_required_full_canonical_result_count"] == 1
+    assert result.summary["full_canonical_failure_category_counts"] == {
+        "stale_artifact": 1
+    }
+    report_text = result.markdown_path.read_text(encoding="utf-8")
+    assert "Full canonical source set" in report_text
+    assert "Full canonical corpus ready" in report_text
 
 
 def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:

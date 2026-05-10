@@ -206,12 +206,12 @@ class CatalogTests(unittest.TestCase):
             record = next(row for row in records if row["source_record_id"] == source_id)
 
             self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["source_count"], 159)
-            self.assertEqual(result.summary["supplemental_source_count"], 159)
-            self.assertEqual(result.summary["source_record_id_filter_count"], 159)
-            self.assertEqual(result.summary["source_delta_input"]["source_delta_count"], 159)
-            self.assertEqual(manifest["source_count"], 159)
-            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(result.summary["source_count"], 160)
+            self.assertEqual(result.summary["supplemental_source_count"], 160)
+            self.assertEqual(result.summary["source_record_id_filter_count"], 160)
+            self.assertEqual(result.summary["source_delta_input"]["source_delta_count"], 160)
+            self.assertEqual(manifest["source_count"], 160)
+            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 160)
             self.assertEqual(record["sheet"], "R1_Forest_Plan_Document_Register")
             self.assertEqual(record["document_role"], "forest_plan_support")
             self.assertEqual(record["authority_level"], "forest")
@@ -276,20 +276,20 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(result.catalog_dir, archive_dir)
             self.assertFalse((output_dir / "catalog").exists())
             self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["source_count"], 349)
+            self.assertEqual(result.summary["source_count"], 350)
             self.assertIsNone(result.summary["download_batch_run_id"])
             self.assertEqual(
                 result.summary["download_batch_run_ids"],
                 ["unit-canonical-batches", "unit-r1-delta-batches"],
             )
-            self.assertEqual(manifest["source_count"], 349)
+            self.assertEqual(manifest["source_count"], 350)
             self.assertEqual(manifest["download_batch_run_id"], None)
             self.assertEqual(
                 manifest["download_batch_run_ids"],
                 ["unit-canonical-batches", "unit-r1-delta-batches"],
             )
-            self.assertEqual(manifest["supplemental_source_count"], 159)
-            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(manifest["supplemental_source_count"], 160)
+            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 160)
             self.assertEqual(manifest["source_record_id_filter_count"], None)
             self.assertEqual(r1ea001["source_status"], "downloaded")
             self.assertEqual(r1ea001["download_batch_run_id"], "unit-canonical-batches")
@@ -317,8 +317,8 @@ class CatalogTests(unittest.TestCase):
                 link_count = connection.execute(
                     "SELECT count(*) FROM source_artifacts"
                 ).fetchone()[0]
-            self.assertEqual(source_count, 349)
-            self.assertEqual(link_count, 349)
+            self.assertEqual(source_count, 350)
+            self.assertEqual(link_count, 350)
 
     def test_build_review_catalog_validation_fails_for_duplicate_sources_across_batch_runs(self) -> None:
         config = load_config(CONFIG)

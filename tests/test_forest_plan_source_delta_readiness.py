@@ -41,7 +41,9 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
             "R1PLAN-kootenai-nf-18",
         ]
         assert report["scoped_source_delta_catalog"]["source_set_id"] == "source-set-delta-test"
-        assert report["active_canonical_catalog"]["source_set_id"] == "source-set-canonical-test"
+        assert report["active_canonical_catalog"]["source_set_id"] == (
+            "source-set-canonical-promoted-test"
+        )
         assert report["extraction_readiness"]["status"] == "not_started"
         assert report["retrieval_readiness"]["status"] == "not_started"
         assert report["official_source_gap_evidence"]["source_record_ids"] == [
@@ -362,16 +364,20 @@ def _write_sequence_zero_fixture(
         )
     _write_catalog_fixture(
         output_dir / "catalog",
-        source_set_id="source-set-canonical-test",
-        source_ids=register.catalog_confirmed_source_record_ids,
-        source_count=190,
-        artifact_count=160,
-        download_batch_run_id="canonical-batches",
-        source_delta_input=None,
+        source_set_id="source-set-canonical-promoted-test",
+        source_ids=register.catalog_confirmed_source_record_ids + source_delta_ids,
+        source_count=190 + len(source_delta_ids),
+        artifact_count=319,
+        download_batch_run_id=None,
+        download_batch_run_ids=["canonical-batches", BATCH_RUN_ID],
+        source_delta_input=register.summary(),
         source_record_id_filter_count=None,
-        supplemental_source_count=0,
-        source_partition_counts={"active_review_corpus": 189, "candidate_blocked_source": 1},
-        document_role_counts={"forest_plan": 28},
+        supplemental_source_count=len(source_delta_ids),
+        source_partition_counts={"active_review_corpus": 349, "candidate_blocked_source": 1},
+        document_role_counts={
+            "forest_plan": 28,
+            "forest_plan_support": len(source_delta_ids),
+        },
     )
 
 
@@ -382,7 +388,8 @@ def _write_catalog_fixture(
     source_ids: list[str],
     source_count: int,
     artifact_count: int,
-    download_batch_run_id: str,
+    download_batch_run_id: str | None,
+    download_batch_run_ids: list[str] | None = None,
     source_delta_input: dict | None,
     source_record_id_filter_count: int | None,
     supplemental_source_count: int,
@@ -397,6 +404,7 @@ def _write_catalog_fixture(
             "source_count": source_count,
             "artifact_count": artifact_count,
             "download_batch_run_id": download_batch_run_id,
+            "download_batch_run_ids": download_batch_run_ids,
             "source_delta_input": source_delta_input,
             "source_record_id_filter_count": source_record_id_filter_count,
             "supplemental_source_count": supplemental_source_count,
@@ -427,12 +435,13 @@ def _write_merged_catalog_fixture(output_dir: Path, *, register) -> Path:
         source_set_id="source-set-merged-test",
         source_ids=source_ids,
         source_count=190 + len(register.source_delta_sources),
-        artifact_count=318,
-        download_batch_run_id="merged-batches",
+        artifact_count=319,
+        download_batch_run_id=None,
+        download_batch_run_ids=["canonical-batches", BATCH_RUN_ID],
         source_delta_input=register.summary(),
         source_record_id_filter_count=None,
         supplemental_source_count=len(register.source_delta_sources),
-        source_partition_counts={"active_review_corpus": 348, "candidate_blocked_source": 1},
+        source_partition_counts={"active_review_corpus": 349, "candidate_blocked_source": 1},
         document_role_counts={"forest_plan": 28, "forest_plan_support": len(register.source_delta_sources)},
     )
     return merged_dir

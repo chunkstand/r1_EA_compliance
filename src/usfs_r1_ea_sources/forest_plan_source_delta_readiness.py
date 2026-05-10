@@ -22,7 +22,7 @@ DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH = Path(
     "config/r1_forest_plan_official_source_gap_evidence.json"
 )
 DEFAULT_SOURCE_DELTA_BATCH_RUN_ID = "r1-forest-plan-source-delta-capture-20260510-batches"
-EXPECTED_CANONICAL_SOURCE_COUNT = 190
+EXPECTED_BASE_CANONICAL_SOURCE_COUNT = 190
 
 
 @dataclass(frozen=True)
@@ -175,8 +175,10 @@ def build_forest_plan_source_delta_readiness_report(
             ],
         ),
         _canonical_catalog_validation_check(
+            register=register,
             manifest=canonical_manifest,
             validation=canonical_validation,
+            catalog_ids=canonical_catalog_ids,
         ),
         _catalog_confirmed_sources_present_check(
             register=register,
@@ -1413,7 +1415,7 @@ def _merged_catalog_matches_expected_counts_check(
     source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
     catalog_confirmed_ids = set(register.catalog_confirmed_source_record_ids)
     gap_ids = set(register.gap_source_record_ids)
-    expected_source_count = EXPECTED_CANONICAL_SOURCE_COUNT + len(source_delta_ids)
+    expected_source_count = EXPECTED_BASE_CANONICAL_SOURCE_COUNT + len(source_delta_ids)
     details = {
         "expected_source_count": expected_source_count,
         "manifest_source_count": manifest.get("source_count"),
@@ -1465,8 +1467,10 @@ def _extraction_readiness_covers_source_delta_rows_check(
 
 def _canonical_catalog_validation_check(
     *,
+    register: R1ForestPlanDocumentRegister,
     manifest: dict[str, Any],
     validation: dict[str, Any],
+    catalog_ids: set[str],
 ) -> dict[str, Any]:
     base_check = _catalog_validation_check(
         name="canonical_catalog_validation_passed",
@@ -1474,16 +1478,25 @@ def _canonical_catalog_validation_check(
         validation=validation,
         expected_batch_run_id=None,
     )
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+    expected_source_count = EXPECTED_BASE_CANONICAL_SOURCE_COUNT + len(source_delta_ids)
+    expected_source_delta_input = register.summary()
     details = {
         **base_check["details"],
-        "expected_canonical_source_count": EXPECTED_CANONICAL_SOURCE_COUNT,
+        "expected_canonical_source_count": expected_source_count,
         "manifest_source_count": manifest.get("source_count"),
+        "expected_source_delta_input": expected_source_delta_input,
         "source_delta_input": manifest.get("source_delta_input"),
+        "expected_supplemental_source_count": len(source_delta_ids),
+        "manifest_supplemental_source_count": manifest.get("supplemental_source_count"),
+        "missing_source_delta_ids": sorted(source_delta_ids - catalog_ids),
     }
     passed = (
         base_check["passed"]
-        and manifest.get("source_count") == EXPECTED_CANONICAL_SOURCE_COUNT
-        and manifest.get("source_delta_input") is None
+        and manifest.get("source_count") == expected_source_count
+        and manifest.get("supplemental_source_count") == len(source_delta_ids)
+        and manifest.get("source_delta_input") == expected_source_delta_input
+        and source_delta_ids <= catalog_ids
     )
     return {"name": "canonical_catalog_validation_passed", "passed": passed, "details": details}
 

@@ -18,8 +18,8 @@ Current workbook source contract:
 
 Region 1 forest-plan support-document expansion is promoted as a controlled source-delta input, not
 as a replacement for the workbook contract. `config/r1_forest_plan_document_register_draft.csv`
-currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `159`
-corpus-ready source-delta rows, and `2` documented official-source gaps. Use
+currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `160`
+corpus-ready source-delta rows, and `1` documented official-source gap. Use
 `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
 with `dry-run`, `preflight`, `download`, `batch-download`, or `catalog-build` when planning,
 capturing, or cataloging only the supplemental `R1PLAN-*` source-delta rows. See
@@ -38,43 +38,41 @@ Current generated source-library capture:
 - Status counts: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
   `duplicate_url=9`, `skipped_excluded=1`
 
-The promoted downstream V1 source set remains `source-set-ba8d0feae79501b8`. The latest canonical
-corpus update added the
-Custer Gallatin FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion as
-forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. The
-Custer Gallatin forest-plan resolver now requires the planning page, LMP, ROD, FEIS Volumes 1 and 2,
-Biological Assessment, and Biological Opinion to be present in the retrieval index before it reviews
-a Custer Gallatin EA. Full all-source extraction, retrieval, evidence graph, source-claim,
-rule-claim, compliance coverage, compliance-review eval, compliance-gold eval, and phase-eval
-artifacts have been promoted for this source set. The source-set Custer Gallatin Land Management
-Plan component inventory has also been generated from current chunks with `329` components, `58`
-standards, passing build coverage, and `2` inventory-quality warnings for suppressed
-component-like labels with nonnumeric number tokens. Older reviewer-ready downstream artifacts under
+Current full-corpus promotion boundary:
+
+- Active full canonical catalog in `source_library/catalog/` is now
+  `source-set-34061d1e4bf6c460`.
+- The active catalog was rebuilt from
+  `corpus-update-2026-05-01-cg-support-batches` plus
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current code.
+- Active catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
+  `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160` supplemental
+  source-delta rows.
+- The preserved Kootenai gap remains explicit through
+  `source_delta_input.skipped_gap_source_record_ids=["R1PLAN-kootenai-nf-18"]` and
+  `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
+  downloaded source row.
+- The promotion suite now separates full-corpus truth from reviewer-ready V1 truth:
+  `full_canonical_corpus_ready=true` for active catalog `source-set-34061d1e4bf6c460`,
+  `current_promotion_ready=true` for the East Crazies V1 lane pinned to
+  `source-set-ba8d0feae79501b8`, and `expansion_ready=false` because South Plateau remains blocked
+  on `forest_plan_reviewer_not_ready`.
+
+The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
+owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
+current promotion/final-QA contract. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
-The latest regenerated canonical catalog in `source_library/catalog/` is
-`source-set-d3b9e2a728accda6` for the same `corpus-update-2026-05-01-cg-support-batches` parent
-run under the current code. The latest supplemental Region 1 forest-plan source-delta capture run is
-`r1-forest-plan-source-delta-capture-20260510-batches`: `33/33` batches passed for `159` emitted
-register rows, with an empty repair queue and `158` unique artifacts. The scoped source-delta
-catalog gate is archived under
-`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/` as
-`source-set-411b3736b3691eed` with `159` source rows, `158` artifacts, and `159`
-`active_review_corpus` rows. The source-delta readiness baseline gate now passes with:
-`PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`.
-The generated report remains ignored under the source-delta run directory, records
-`config/r1_forest_plan_official_source_gap_evidence.json` as the current evidence for the two
-preserved official-source gaps, and now also records the Sequence 4 merged-catalog extraction gate
-under schema `r1-forest-plan-source-delta-readiness-v3`. The latest committed readiness artifact
-still reflects the older pre-fallback state, but the live merged-catalog replay is now refreshed:
-`extract-build --catalog-dir ... --reuse-existing --reuse-inventory-path ...` on
-`source-set-7e2652d23e764068` now yields `341/349` extracted rows, `7` explicit `parser_error`
-rows, and `75,708` chunks. For the `159` support-document source-delta rows specifically, that is
-`152` extracted rows plus `7` explicit blockers:
-`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
-`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
-`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, with blocker
-classes `pdf_text_fallback_empty=5` and `pdf_text_fallback_failed=2`.
+The latest fully replayed merged support-document source-set surface remains archived under
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+as `source-set-8a4005c8a083af1a`. That archived replay is still the freshest all-green merged
+source-set evidence surface: extraction `349/349`, retrieval eval `12/12`, evidence graph
+`153,198` nodes / `533,949` edges, claim extraction `101,856` claims, rule-claim binding `211`
+links / `0` gaps, NEPA 3D source-set graph `1,831` nodes / `2,835` edges, and source-set
+`phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East Crazies replay on
+`source-set-8a4005c8a083af1a` is still blocked by `7` applicability adjudications and failing
+forest-plan component evaluation, so full-corpus promotion does not overclaim reviewer-ready merged
+review status.
 
 Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
 

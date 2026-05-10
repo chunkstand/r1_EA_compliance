@@ -3,6 +3,7 @@
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
   "source_set_id": "source-set-ba8d0feae79501b8",
+  "full_canonical_source_set_id": "source-set-34061d1e4bf6c460",
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
@@ -1510,6 +1511,81 @@
     }
   ],
   "suite_results": [
+    {
+      "id": "full_canonical_catalog_manifest",
+      "label": "Active full canonical catalog manifest",
+      "path": "catalog/source_set_manifest.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "stale_artifact",
+      "checks": [
+        {
+          "name": "full_canonical_source_set_matches",
+          "json_path": "source_set_id",
+          "equals": "source-set-34061d1e4bf6c460"
+        },
+        {
+          "name": "full_canonical_batch_run_ids_present",
+          "json_path": "download_batch_run_ids",
+          "contains_all": [
+            "corpus-update-2026-05-01-cg-support-batches",
+            "r1-forest-plan-source-delta-capture-20260510-refresh-batches"
+          ]
+        },
+        {
+          "name": "full_canonical_source_count",
+          "json_path": "source_count",
+          "equals": 350
+        },
+        {
+          "name": "full_canonical_artifact_count",
+          "json_path": "artifact_count",
+          "equals": 319
+        },
+        {
+          "name": "full_canonical_active_review_corpus_count",
+          "json_path": "source_partition_counts.active_review_corpus",
+          "equals": 349
+        },
+        {
+          "name": "full_canonical_source_delta_count",
+          "json_path": "source_delta_input.source_delta_count",
+          "equals": 160
+        },
+        {
+          "name": "full_canonical_gap_count",
+          "json_path": "source_delta_input.gap_count",
+          "equals": 1
+        },
+        {
+          "name": "full_canonical_gap_ids",
+          "json_path": "source_delta_input.skipped_gap_source_record_ids",
+          "contains_all": [
+            "R1PLAN-kootenai-nf-18"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full_canonical_catalog_validation",
+      "label": "Active full canonical catalog validation",
+      "path": "catalog/catalog_validation.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "stale_artifact",
+      "checks": [
+        {
+          "name": "full_canonical_catalog_validation_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_catalog_validation_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-34061d1e4bf6c460"
+        }
+      ]
+    },
     {
       "id": "phase_eval_core",
       "label": "Core phase eval readiness",

@@ -77,6 +77,9 @@ def run_promotion_suite(
     required_suite_results = [
         result for result in suite_results if result["required_for_current_promotion"]
     ]
+    required_full_canonical_results = [
+        result for result in suite_results if result["required_for_full_canonical_corpus"]
+    ]
     required_expansion_review_results = [
         result
         for case in review_results
@@ -91,6 +94,9 @@ def run_promotion_suite(
         and all(result["passed"] for result in required_review_results)
         and all(result["passed"] for result in required_suite_results)
     )
+    full_canonical_corpus_ready = bool(context["full_canonical_source_set_id"]) and bool(
+        required_full_canonical_results
+    ) and all(result["passed"] for result in required_full_canonical_results)
     expansion_artifacts_ready = all(
         result["passed"]
         for result in required_expansion_review_results + required_expansion_suite_results
@@ -111,6 +117,9 @@ def run_promotion_suite(
         suite_results=suite_results,
         expansion_slots=expansion_slots,
     )
+    full_canonical_failure_category_counts = _full_canonical_failure_category_counts(
+        suite_results=suite_results
+    )
     summary = {
         "schema_version": PROMOTION_SUITE_RESULTS_SCHEMA_VERSION,
         "suite_schema_version": manifest.get("schema_version"),
@@ -122,11 +131,14 @@ def run_promotion_suite(
         "output_path": str(output_path),
         "markdown_path": str(markdown_path),
         "source_set_id": context["source_set_id"],
+        "current_promotion_source_set_id": context["source_set_id"],
+        "full_canonical_source_set_id": context["full_canonical_source_set_id"],
         "rule_pack_path": manifest.get("rule_pack_path"),
         "rule_pack_id": manifest.get("rule_pack_id"),
         "rule_pack_version": manifest.get("rule_pack_version"),
         "strict_expansion": strict_expansion,
         "current_promotion_ready": current_promotion_ready,
+        "full_canonical_corpus_ready": full_canonical_corpus_ready,
         "expansion_ready": expansion_ready,
         "promotion_ready": promotion_ready,
         "review_case_count": len(review_results),
@@ -149,8 +161,15 @@ def run_promotion_suite(
             if result["passed"]
         )
         + sum(1 for slot in expansion_slots if slot["ready"]),
+        "required_full_canonical_result_count": len(required_full_canonical_results),
+        "passed_required_full_canonical_result_count": sum(
+            1 for result in required_full_canonical_results if result["passed"]
+        ),
         "expansion_artifacts_ready": expansion_artifacts_ready,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "full_canonical_failure_category_counts": dict(
+            sorted(full_canonical_failure_category_counts.items())
+        ),
         "expansion_failure_category_counts": dict(
             sorted(expansion_failure_category_counts.items())
         ),
@@ -181,6 +200,9 @@ def _manifest_context(manifest: dict[str, Any], output_dir: Path) -> dict[str, s
     return {
         "output_dir": str(output_dir),
         "source_set_id": str(manifest.get("source_set_id") or ""),
+        "full_canonical_source_set_id": str(
+            manifest.get("full_canonical_source_set_id") or ""
+        ),
         "rule_pack_id": str(manifest.get("rule_pack_id") or ""),
         "rule_pack_version": str(manifest.get("rule_pack_version") or ""),
     }
@@ -344,6 +366,9 @@ def _artifact_result(
         "exists": path.exists(),
         "required_for_current_promotion": bool(
             spec.get("required_for_current_promotion", True)
+        ),
+        "required_for_full_canonical_corpus": bool(
+            spec.get("required_for_full_canonical_corpus", False)
         ),
         "required_for_expansion": bool(spec.get("required_for_expansion", False)),
         "passed": path.exists() and all(check["passed"] for check in checks),
@@ -740,6 +765,17 @@ def _expansion_failure_category_counts(
     return counts
 
 
+def _full_canonical_failure_category_counts(
+    *,
+    suite_results: list[dict[str, Any]],
+) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for result in suite_results:
+        if not result["passed"] and result["required_for_full_canonical_corpus"]:
+            counts.update(result.get("failure_categories", []))
+    return counts
+
+
 def _failure_category(spec: dict[str, Any], *, missing: bool) -> str:
     if missing and spec.get("missing_failure_category"):
         return str(spec["missing_failure_category"])
@@ -823,6 +859,12 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
         if not str(manifest.get(key) or "").strip():
             raise ValueError(f"Promotion suite manifest is missing {key!r}.")
     _validate_safe_id(str(manifest["id"]), "suite id")
+    full_canonical_source_set_id = str(manifest.get("full_canonical_source_set_id") or "")
+    if full_canonical_source_set_id:
+        _validate_safe_id(
+            full_canonical_source_set_id,
+            "full canonical source set id",
+        )
     for case in manifest.get("review_cases", []):
         _validate_safe_id(str(case.get("id") or ""), "review case id")
         _validate_safe_id(str(case.get("review_id") or ""), "review id")
@@ -830,6 +872,21 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
             _validate_result_spec(result)
     for result in manifest.get("suite_results", []):
         _validate_result_spec(result)
+    required_full_canonical_results = [
+        result
+        for result in manifest.get("suite_results", [])
+        if result.get("required_for_full_canonical_corpus")
+    ]
+    if full_canonical_source_set_id and not required_full_canonical_results:
+        raise ValueError(
+            "Promotion suite manifest with full_canonical_source_set_id must define at least one "
+            "suite_result required_for_full_canonical_corpus."
+        )
+    if required_full_canonical_results and not full_canonical_source_set_id:
+        raise ValueError(
+            "Promotion suite manifest with required_for_full_canonical_corpus results must define "
+            "full_canonical_source_set_id."
+        )
     expansion_result_ids_by_review_id = _required_expansion_result_ids_by_review_id(
         manifest
     )
@@ -1001,17 +1058,21 @@ def _validate_safe_id(value: str, label: str) -> None:
 
 
 def _markdown_report(summary: dict[str, Any]) -> str:
+    full_canonical_source_set_id = summary.get("full_canonical_source_set_id") or "None"
     lines = [
         "# Promotion Suite Report",
         "",
         f"- Suite: `{summary['suite_id']}`",
         f"- Source set: `{summary['source_set_id']}`",
+        f"- Full canonical source set: `{full_canonical_source_set_id}`",
         f"- Rule pack: `{summary['rule_pack_id']}` `{summary['rule_pack_version']}`",
         f"- Current promotion ready: `{summary['current_promotion_ready']}`",
+        f"- Full canonical corpus ready: `{summary['full_canonical_corpus_ready']}`",
         f"- Expansion ready: `{summary['expansion_ready']}`",
         f"- Promotion ready: `{summary['promotion_ready']}`",
         f"- Strict expansion: `{summary['strict_expansion']}`",
         f"- Failure categories: `{summary['failure_category_counts']}`",
+        f"- Full canonical failure categories: `{summary['full_canonical_failure_category_counts']}`",
         f"- Expansion failure categories: `{summary['expansion_failure_category_counts']}`",
         f"- Open expansion slots: `{summary['open_expansion_slot_count']}`",
         "",

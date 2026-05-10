@@ -42,10 +42,14 @@ strict mode even though current promotion remains ready without `--strict-expans
 
 ## Readiness Semantics
 
-The result separates three statuses:
+The result now separates four statuses:
 
 - `current_promotion_ready`: the tracked V1 review and suite-level eval artifacts satisfy the
   manifest for the current Custer Gallatin proving case.
+- `full_canonical_corpus_ready`: the active `source_library/catalog/` contract matches the promoted
+  full canonical corpus under the current code. This is intentionally separate from
+  reviewer-ready V1 promotion because the active catalog can move ahead of the current
+  review-ready proving package lane.
 - `expansion_ready`: every declared post-V1 real-package slot is filled and ready, and every
   manifest-declared `required_for_expansion` artifact check passes.
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
@@ -60,6 +64,18 @@ positive, negative, unresolved, replay-adjudicated, and arbitration-field covera
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the
 promoted V1 review: authority-family provenance, non-applicable authority appendix,
 reviewer-resolution report, and deterministic litigation-risk summary.
+
+The default manifest now also records two different source-set identities on purpose:
+
+- `current_promotion_source_set_id=source-set-ba8d0feae79501b8` for the reviewer-ready East Crazies
+  V1 lane.
+- `full_canonical_source_set_id=source-set-34061d1e4bf6c460` for the active full canonical catalog
+  rebuilt from the base workbook batch plus the 2026-05-10 refresh batch.
+
+The archived fully replayed merged support-document surface remains
+`source-set-8a4005c8a083af1a`. That archived source set is still the freshest all-green merged
+extraction/retrieval/graph replay, but it is no longer the active `source_library/catalog/`
+identity after full-corpus promotion under the current code.
 
 ## Failure Taxonomy
 
@@ -151,6 +167,14 @@ V1 review-bound phase eval now passes `20/20` phases, the non-strict promotion s
 `26/26` required current-promotion results, and the current gates report `failure_category_counts={}`.
 Strict expansion now fails closed only on the South Plateau forest-plan blocker while still passing
 `26/26` required current-promotion results.
+
+Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the default manifest.
+The current local non-strict run now reports `current_promotion_ready=true`,
+`full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`. The active
+catalog checks pin `source_library/catalog/source_set_manifest.json` and
+`catalog_validation.json` to full canonical source set `source-set-34061d1e4bf6c460` with
+`350` source rows, `319` artifacts, `160` supplemental source-delta rows, and preserved gap
+`R1PLAN-kootenai-nf-18`.
 
 The South Plateau expansion slot remains `ready=false` and carries
 `forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:
