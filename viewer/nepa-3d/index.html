@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260510b" />
     <script
       defer
       src="https://unpkg.com/three@0.149.0/build/three.min.js"
@@ -19,7 +19,7 @@
       defer
       src="https://unpkg.com/3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
     ></script>
-    <script defer src="app.js"></script>
+    <script defer src="app.js?v=20260510b"></script>
   </head>
   <body>
     <main id="viewer-shell" class="viewer-shell" aria-label="NEPA 3D knowledge graph viewer">
@@ -140,6 +140,10 @@
             <input id="pin-selected" type="checkbox" />
             <span>Pin selected node</span>
           </label>
+          <label class="toggle-row" for="show-node-labels">
+            <input id="show-node-labels" type="checkbox" />
+            <span>Show node labels</span>
+          </label>
           <div class="button-row">
             <button id="fit-graph" type="button">Fit</button>
             <button id="reset-layout" type="button">Reset</button>
@@ -149,18 +153,19 @@
         </section>
       </aside>
 
+      <button
+        id="detail-rail-toggle"
+        class="detail-rail-toggle"
+        type="button"
+        aria-controls="detail-rail"
+        aria-expanded="true"
+      >
+        <span class="detail-rail-toggle-label">Details</span>
+      </button>
+
       <section class="graph-stage" aria-label="Graph canvas">
         <div class="stage-grid" aria-hidden="true"></div>
         <div class="stage-badge" aria-hidden="true">Operational Atlas</div>
-        <button
-          id="detail-rail-toggle"
-          class="detail-rail-toggle"
-          type="button"
-          aria-controls="detail-rail"
-          aria-expanded="true"
-        >
-          Hide details
-        </button>
         <div class="graph-toolbar">
           <div class="toolbar-block">
             <div class="toolbar-kicker">Loaded dataset</div>

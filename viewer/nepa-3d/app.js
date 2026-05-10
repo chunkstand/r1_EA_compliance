@@ -4,7 +4,8 @@ const DEFAULT_LENS_REVIEW = "package_applicability";
 const DEFAULT_DEMO_REVIEW_ID = "v1-cg-ecid-compliance-review";
 const DEMO_START_SCENE_ID = "applicability";
 const CUSTOM_DEMO_SCENE_ID = "custom";
-const DETAIL_RAIL_STORAGE_KEY = "nepa-3d-detail-rail-collapsed";
+const DETAIL_RAIL_STORAGE_KEY = "nepa-3d-detail-rail-collapsed-v2";
+const NODE_LABELS_STORAGE_KEY = "nepa-3d-show-node-labels";
 const REQUIRED_EXPORT_LENSES = [
   "authority_currentness",
   "forest_plan",
@@ -330,7 +331,8 @@ const state = {
   labelNodeLevels: new Map(),
   labelSprites: new Map(),
   labelZoomTier: "overview",
-  labelStats: { overview: 0, focus: 0, detail: 0 }
+  labelStats: { overview: 0, focus: 0, detail: 0 },
+  labelsEnabled: false
 };
 
 const els = {};
@@ -361,6 +363,7 @@ function waitForRuntime() {
 async function initialize() {
   createGraph();
   initializeLayoutState();
+  initializeLabelState();
   await loadManifest();
 }
 
@@ -390,6 +393,7 @@ function bindElements() {
     "degree-threshold-value",
     "hide-high-degree",
     "pin-selected",
+    "show-node-labels",
     "fit-graph",
     "reset-layout",
     "clear-filters",
@@ -449,6 +453,7 @@ function bindEvents() {
     renderGraph();
   });
   els.pinSelected.addEventListener("change", updatePinnedSelection);
+  els.showNodeLabels.addEventListener("change", updateNodeLabelPreference);
   els.fitGraph.addEventListener("click", fitGraph);
   els.resetLayout.addEventListener("click", resetLayout);
   els.clearFilters.addEventListener("click", clearFilters);
@@ -481,11 +486,12 @@ function bindEvents() {
 }
 
 function initializeLayoutState() {
-  let collapsed = false;
+  let collapsed = true;
   try {
-    collapsed = window.localStorage.getItem(DETAIL_RAIL_STORAGE_KEY) === "true";
+    const storedValue = window.localStorage.getItem(DETAIL_RAIL_STORAGE_KEY);
+    collapsed = storedValue === null ? true : storedValue === "true";
   } catch {
-    collapsed = false;
+    collapsed = true;
   }
   applyDetailRailState(collapsed, { persist: false });
 }
@@ -498,7 +504,8 @@ function toggleDetailRail() {
 function applyDetailRailState(collapsed, { persist = true } = {}) {
   els.viewerShell.classList.toggle("is-detail-collapsed", collapsed);
   els.detailRail.setAttribute("aria-hidden", collapsed ? "true" : "false");
-  els.detailRailToggle.textContent = collapsed ? "Show details" : "Hide details";
+  els.detailRail.hidden = collapsed;
+  els.detailRailToggle.classList.toggle("is-collapsed", collapsed);
   els.detailRailToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
   els.detailRailToggle.setAttribute(
     "aria-label",
@@ -517,6 +524,27 @@ function applyDetailRailState(collapsed, { persist = true } = {}) {
       resizeGraphViewport();
     }, 220);
   });
+}
+
+function initializeLabelState() {
+  let enabled = false;
+  try {
+    enabled = window.localStorage.getItem(NODE_LABELS_STORAGE_KEY) === "true";
+  } catch {
+    enabled = false;
+  }
+  state.labelsEnabled = enabled;
+  els.showNodeLabels.checked = enabled;
+}
+
+function updateNodeLabelPreference() {
+  state.labelsEnabled = els.showNodeLabels.checked;
+  try {
+    window.localStorage.setItem(NODE_LABELS_STORAGE_KEY, String(state.labelsEnabled));
+  } catch {
+    // Ignore storage failures; label visibility can still work for this session.
+  }
+  renderGraph();
 }
 
 function resizeGraphViewport() {
@@ -1284,10 +1312,13 @@ function renderGraphSceneLabel(filtered = state.currentRender) {
   const scene = activeDemoScene();
   const title = scene?.graphLabel || scene?.label || "Custom graph view";
   const subtitle = scene?.graphSubLabel || selectedLens()?.label || "Validated graph export";
+  const labelMode = state.labelsEnabled
+    ? `${LABEL_TIER_COPY[state.labelZoomTier] || "Overview labels"}: ${state.labelStats[state.labelZoomTier] || 0} visible of ${filtered.nodes.length} nodes`
+    : "Node labels: off";
   els.graphSceneLabel.innerHTML = [
     `<div class="graph-scene-title">${escapeHtml(title)}</div>`,
     `<div class="graph-scene-subtitle">${escapeHtml(subtitle)}</div>`,
-    `<div class="graph-label-mode">${escapeHtml(LABEL_TIER_COPY[state.labelZoomTier] || "Overview labels")}: ${state.labelStats[state.labelZoomTier] || 0} visible of ${filtered.nodes.length} nodes</div>`
+    `<div class="graph-label-mode">${escapeHtml(labelMode)}</div>`
   ].join("");
 }
 
@@ -1572,6 +1603,8 @@ function exportViewerState() {
     search: els.graphSearch.value,
     neighbor_depth: Number(els.neighborDepth.value),
     hide_high_degree_nodes: els.hideHighDegree.checked,
+    labels_enabled: state.labelsEnabled,
+    detail_rail_collapsed: els.viewerShell.classList.contains("is-detail-collapsed"),
     degree_threshold: Number(els.degreeThreshold.value),
     spotlight_title: state.spotlightTitle || null,
     spotlight_node_ids: [...state.spotlightNodeIds],
@@ -1598,6 +1631,7 @@ function updateViewerReadyState(filtered) {
     lens_id: els.lensSelect.value,
     label_zoom_tier: state.labelZoomTier,
     visible_label_count: state.labelStats[state.labelZoomTier] || 0,
+    labels_enabled: state.labelsEnabled,
     spotlight_node_count: state.spotlightNodeIds.size,
     spotlight_edge_count: state.spotlightEdgeIds.size,
     rendered_node_count: filtered.nodes.length,
@@ -1636,6 +1670,11 @@ function graphNodeObject(node, sphereGeometry) {
 }
 
 function buildLabelPlan(filtered) {
+  if (!state.labelsEnabled) {
+    state.labelNodeLevels = new Map();
+    state.labelStats = { overview: 0, focus: 0, detail: 0 };
+    return;
+  }
   const descriptors = new Map();
   const addLabel = (node, level, reason = "") => {
     if (!node) {

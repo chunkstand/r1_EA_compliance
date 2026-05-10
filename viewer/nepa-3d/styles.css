@@ -70,9 +70,11 @@ select {
 }
 
 .viewer-shell {
+  --control-rail-width: clamp(300px, 24vw, 360px);
+  --detail-rail-width: clamp(320px, 25vw, 400px);
   position: relative;
   display: grid;
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) minmax(320px, 400px);
+  grid-template-columns: var(--control-rail-width) minmax(0, 1fr) var(--detail-rail-width);
   height: 100vh;
   min-height: 620px;
   background:
@@ -82,7 +84,7 @@ select {
 }
 
 .viewer-shell.is-detail-collapsed {
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) 0;
+  grid-template-columns: var(--control-rail-width) minmax(0, 1fr) 0;
 }
 
 .viewer-shell::before {
@@ -146,6 +148,59 @@ select {
 .viewer-shell.is-detail-collapsed .detail-rail::before,
 .viewer-shell.is-detail-collapsed .detail-rail .rail-section {
   opacity: 0;
+}
+
+.detail-rail-toggle {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  right: calc(var(--detail-rail-width) - 18px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 38px;
+  min-height: 132px;
+  padding: 10px 6px;
+  color: var(--ink-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%),
+    rgba(10, 12, 13, 0.92);
+  border: 1px solid rgba(210, 164, 84, 0.26);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  transform: translateY(-50%);
+  transition:
+    right 180ms ease,
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.detail-rail-toggle::before {
+  content: "›";
+  color: var(--accent-strong);
+  font-family: "Oswald", "Arial Narrow", sans-serif;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.detail-rail-toggle-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.viewer-shell.is-detail-collapsed .detail-rail-toggle {
+  right: 10px;
+}
+
+.viewer-shell.is-detail-collapsed .detail-rail-toggle::before {
+  content: "‹";
 }
 
 .rail-section {
@@ -510,27 +565,6 @@ button:hover {
   backdrop-filter: blur(8px);
 }
 
-.detail-rail-toggle {
-  position: absolute;
-  z-index: 3;
-  top: 58px;
-  right: 18px;
-  min-height: 34px;
-  padding: 7px 11px;
-  color: var(--ink-strong);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%),
-    rgba(10, 12, 13, 0.78);
-  border: 1px solid rgba(210, 164, 84, 0.26);
-  border-radius: 999px;
-  box-shadow: var(--shadow-soft);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-}
-
 .graph-root {
   position: relative;
   z-index: 1;
@@ -829,7 +863,8 @@ button:hover {
 
 @media (max-width: 1200px) {
   .viewer-shell {
-    grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(280px, 340px);
+    --control-rail-width: clamp(280px, 28vw, 330px);
+    --detail-rail-width: clamp(280px, 28vw, 340px);
   }
 
   .graph-toolbar {
@@ -838,10 +873,6 @@ button:hover {
 
   .stage-badge {
     display: none;
-  }
-
-  .detail-rail-toggle {
-    top: 18px;
   }
 }
 
@@ -895,8 +926,8 @@ button:hover {
   }
 
   .detail-rail-toggle {
-    top: 14px;
-    right: 14px;
+    top: calc(74vh / 2);
+    right: 10px;
   }
 
   .toolbar-block-end {
@@ -951,8 +982,10 @@ button:hover {
 
   .detail-rail-toggle {
     top: auto;
-    right: 14px;
-    bottom: 14px;
+    right: 8px;
+    bottom: 72px;
+    min-height: 112px;
+    transform: none;
   }
 
   .graph-scene-label {
