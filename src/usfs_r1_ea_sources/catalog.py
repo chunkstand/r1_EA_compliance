@@ -15,7 +15,7 @@ from .config import DownloaderConfig
 from .records import WorkbookSource, sha256_file, slugify
 from .report import _read_jsonl, _resolve_manifest_path
 from .source_partitions import catalog_source_partition
-from .workbook import load_canonical_sources
+from .workbook import load_canonical_sources, merge_supplemental_sources
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,9 @@ def build_review_catalog(
     config_path: Path | None = None,
     run_id: str | None = None,
     batch_run_id: str | None = None,
+    source_record_ids: set[str] | None = None,
+    supplemental_sources: list[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
 ) -> CatalogBuildResult:
     if run_id and batch_run_id:
         raise ValueError("run_id and batch_run_id are mutually exclusive")
@@ -55,6 +58,17 @@ def build_review_catalog(
     config_sha256 = sha256_file(config_path) if config_path and config_path.exists() else None
     overrides_sha256 = _optional_sha256(config.workbook.overrides_path)
     git_commit = _git_commit(workbook_path.parent)
+    workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
+    if source_record_ids is not None:
+        available_source_ids = {source.source_record_id for source in sources}
+        missing_source_ids = sorted(source_record_ids - available_source_ids)
+        if missing_source_ids:
+            raise ValueError(
+                f"Catalog build requested source IDs with no loaded sources: {missing_source_ids}"
+            )
+        sources = [source for source in sources if source.source_record_id in source_record_ids]
+
     source_set_id = _source_set_id(
         workbook_sha256=workbook_sha256,
         config_sha256=config_sha256,
@@ -62,9 +76,13 @@ def build_review_catalog(
         run_id=run_id,
         batch_run_id=batch_run_id,
         git_commit=git_commit,
+        source_scope=_source_scope(
+            source_record_ids=source_record_ids,
+            supplemental_sources=supplemental_sources,
+            source_delta_input=source_delta_input,
+        ),
     )
 
-    sources = load_canonical_sources(workbook_path, config.workbook)
     manifest_records, manifest_load_checks = _load_manifest_records(
         output_dir,
         run_id,
@@ -92,6 +110,11 @@ def build_review_catalog(
         git_commit=git_commit,
         run_id=run_id,
         batch_run_id=batch_run_id,
+        source_record_id_filter_count=(
+            len(source_record_ids) if source_record_ids is not None else None
+        ),
+        supplemental_source_count=len(supplemental_sources or []),
+        source_delta_input=source_delta_input,
         records=catalog_records,
     )
     graph_nodes, graph_edges = _graph_records(catalog_records)
@@ -118,6 +141,11 @@ def build_review_catalog(
         "source_partition_counts": manifest["source_partition_counts"],
         "download_run_id": run_id,
         "download_batch_run_id": batch_run_id,
+        "source_record_id_filter_count": (
+            len(source_record_ids) if source_record_ids is not None else None
+        ),
+        "supplemental_source_count": len(supplemental_sources or []),
+        "source_delta_input": source_delta_input,
         "validation_passed": validation_report["passed"],
         "validation_path": str(validation_path),
         "source_catalog_path": str(source_catalog_path),
@@ -213,6 +241,9 @@ def _source_set_manifest(
     git_commit: str | None,
     run_id: str | None,
     batch_run_id: str | None,
+    source_record_id_filter_count: int | None,
+    supplemental_source_count: int,
+    source_delta_input: dict | None,
     records: list[dict],
 ) -> dict:
     status_counts = Counter(record["source_status"] for record in records)
@@ -232,6 +263,9 @@ def _source_set_manifest(
         "git_commit": git_commit,
         "download_run_id": run_id,
         "download_batch_run_id": batch_run_id,
+        "source_record_id_filter_count": source_record_id_filter_count,
+        "supplemental_source_count": supplemental_source_count,
+        "source_delta_input": source_delta_input,
         "source_count": len(records),
         "unique_url_count": len({record["normalized_url"] for record in records}),
         "artifact_count": _artifact_count(records),
@@ -891,6 +925,7 @@ def _source_set_id(
     run_id: str | None,
     batch_run_id: str | None,
     git_commit: str | None,
+    source_scope: dict | None = None,
 ) -> str:
     payload = {
         "workbook_sha256": workbook_sha256,
@@ -900,8 +935,27 @@ def _source_set_id(
         "download_batch_run_id": batch_run_id,
         "git_commit": git_commit,
     }
+    if source_scope is not None:
+        payload["source_scope"] = source_scope
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
     return f"source-set-{digest[:16]}"
+
+
+def _source_scope(
+    *,
+    source_record_ids: set[str] | None,
+    supplemental_sources: list[WorkbookSource] | None,
+    source_delta_input: dict | None,
+) -> dict | None:
+    if source_record_ids is None and not supplemental_sources and not source_delta_input:
+        return None
+    return {
+        "source_record_ids": sorted(source_record_ids) if source_record_ids is not None else None,
+        "supplemental_source_record_ids": sorted(
+            source.source_record_id for source in supplemental_sources or []
+        ),
+        "source_delta_input": source_delta_input,
+    }
 
 
 def _optional_sha256(path: Path | None) -> str | None:
@@ -931,6 +985,8 @@ def _source_status(manifest_record: dict | None, run_scope_present: bool) -> str
 
 
 def _document_role(source: WorkbookSource, document_type: str | None) -> str:
+    if source.metadata.get("source_input") == "r1_forest_plan_document_register":
+        return "forest_plan_support"
     if source.sheet == "R1_Forest_Plans":
         return "forest_plan"
     value = (document_type or "").lower()
@@ -970,6 +1026,8 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
 
 
 def _authority_level(source: WorkbookSource, issuer: str | None, host: str) -> str:
+    if source.metadata.get("source_input") == "r1_forest_plan_document_register":
+        return "forest"
     if source.sheet == "R1_Forest_Plans":
         return "forest"
     value = (issuer or "").lower()

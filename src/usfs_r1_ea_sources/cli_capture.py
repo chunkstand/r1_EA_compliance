@@ -113,6 +113,7 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
         "--batch-run-id",
         help="Optional parent batch-download run ID to link artifacts from all passed child batches.",
     )
+    _add_source_delta_options(catalog)
 
 
 def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
@@ -219,6 +220,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         if args.run_id and args.batch_run_id:
             parser.error("catalog-build accepts either --run-id or --batch-run-id, not both")
         config = load_config(args.config)
+        source_delta_options = _source_delta_options(args, parser)
         result = build_review_catalog(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -226,6 +228,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             config_path=args.config,
             run_id=args.run_id,
             batch_run_id=args.batch_run_id,
+            **source_delta_options,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1

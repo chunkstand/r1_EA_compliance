@@ -11,6 +11,7 @@ pipeline as an explicit source-delta input. Use:
 PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
 PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
 PYTHONPATH=src python -m usfs_r1_ea_sources batch-download --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --run-id-prefix r1-forest-plan-source-delta-capture --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only --batch-size 5 --plan-only
+PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only
 ```
 
 Promotion behavior is intentionally narrow:
@@ -31,14 +32,28 @@ The scoped live preflight `r1-forest-plan-promotion-preflight-20260510` returned
 Gap-closure update: `batch-download` now accepts the same Region 1 register source-delta contract.
 Plan-only smoke run `r1-forest-plan-source-delta-capture-plan-20260510-batches` planned all `159`
 source-delta rows in `33` batches: `139` `www.fs.usda.gov`, `18` `usfs-public.app.box.com`, and
-`2` `federalregister.gov`. No full source-delta download has been run.
+`2` `federalregister.gov`.
 
-Next sequence: controlled source-delta capture execution. Rerun the plan-only command with the
-intended capture prefix, inspect `batch_plan.json`, then run the same command without
-`--plan-only`. After all child batches pass, run the parent batch report/validation path and
-`catalog-build --batch-run-id <parent-run-id>`. Keep `R1PLAN-kootenai-nf-18` and
-`R1PLAN-nez-perce-clearwater-nfs-18` out of download planning until replacement official sources
-are found or a documented gap policy is accepted.
+Capture execution update: live batch run
+`r1-forest-plan-source-delta-capture-20260510-batches` passed `33/33` child batches for all `159`
+source-delta rows, with `158` unique artifacts and an empty repair queue. `catalog-build` now
+accepts the same register source-delta contract. The scoped catalog gate built
+`source-set-411b3736b3691eed` with `159` `forest_plan_support` rows, `158` artifacts,
+`downloaded=158`, `duplicate_content=1`, and `catalog_validation.json` passing. That scoped catalog
+snapshot is archived under
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/`.
+
+The active `source_library/catalog/` view was restored to the canonical 190-row workbook catalog
+from `corpus-update-2026-05-01-cg-support-batches` after the source-delta gate, and now has source
+set `source-set-d3b9e2a728accda6` under the current code. The promoted downstream V1 derived
+artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
+
+Next sequence: source-delta extraction/retrieval readiness. Start from the scoped
+`source-set-411b3736b3691eed` catalog, run a reuse/extraction inventory for the `159` captured
+support-document rows, then build extracted text and retrieval inputs without broadening the two
+documented gap rows. Keep `R1PLAN-kootenai-nf-18` and
+`R1PLAN-nez-perce-clearwater-nfs-18` out of corpus planning until replacement official sources are
+found or a documented gap policy is accepted.
 
 ## Region 1 Forest-Plan Document Register Hardening
 
@@ -92,8 +107,9 @@ PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 
-This hardening section is retained for source-discovery context. Promotion is now implemented in the
-section above; the next work is controlled source-delta capture, not another register review pass.
+This hardening section is retained for source-discovery context. Promotion and controlled
+source-delta capture are now implemented in the section above; the next work is extraction/retrieval
+readiness for the captured support-document rows, not another register review pass.
 
 ## Project SOW Integration Merge
 

@@ -31,10 +31,13 @@ CLI path is:
 
 The promotion validation is documented in
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. The register options are accepted by
-`dry-run`, `preflight`, `download`, and `batch-download`. A plan-only batch smoke run
-`r1-forest-plan-source-delta-capture-plan-20260510-batches` planned all `159` source-delta rows in
-`33` batches (`139` Forest Service media rows, `18` Box rows, and `2` Federal Register rows). No
-full download of the supplemental source-delta rows has been run yet.
+`dry-run`, `preflight`, `download`, `batch-download`, and `catalog-build`. The live source-delta
+capture run `r1-forest-plan-source-delta-capture-20260510-batches` passed `33/33` batches for all
+`159` emitted rows, with an empty repair queue and `158` unique artifacts. The scoped source-delta
+catalog gate is archived under
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/` as
+`source-set-411b3736b3691eed` with `159` forest-plan support rows, `158` artifacts, `159`
+`active_review_corpus` rows, and `catalog_validation.json` passing.
 
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.
@@ -48,7 +51,7 @@ R1EA-021, R1EA-022, R1EA-023, R1EA-024, R1EA-025, R1EA-028, R1EA-029,
 R1EA-031, R1EA-033, R1EA-034, R1EA-035, R1EA-067
 ```
 
-The current generated downloader/catalog corpus now covers the full 190-row workbook contract:
+The canonical generated downloader/catalog corpus covers the full 190-row workbook contract:
 
 - Parent batch run: `corpus-update-2026-05-01-cg-support-batches`
 - Canonical workbook rows: `190`
@@ -58,7 +61,8 @@ The current generated downloader/catalog corpus now covers the full 190-row work
 - Repair-needed batches: `0`
 - Repair queue: empty except the CSV header
 - Unique effective URLs: `172`
-- Reviewer catalog source set: `source-set-ba8d0feae79501b8`
+- Promoted downstream V1 source set: `source-set-ba8d0feae79501b8`
+- Latest regenerated canonical catalog source set: `source-set-d3b9e2a728accda6`
 - Reviewer catalog source rows: `190`
 - Reviewer catalog unique artifacts: `160`
 - Reviewer catalog source-artifact links: `189`
@@ -66,8 +70,10 @@ The current generated downloader/catalog corpus now covers the full 190-row work
   `duplicate_url=9`, `skipped_excluded=1`
 
 `R1EA-160` is present in the workbook/catalog as a `project_reference`, but has no artifact because
-its URL remains in `Scope_Exclusions`. The current catalog validation passes, and the
-captured-library integrity test suite passes against these generated outputs.
+its URL remains in `Scope_Exclusions`. The canonical catalog validation passes, and the
+captured-library integrity test suite passes against these generated outputs. The scoped
+source-delta catalog gate is preserved under the source-delta parent run directory rather than left
+as the active `source_library/catalog/` view.
 
 ## Authority Universe Family Inventory
 

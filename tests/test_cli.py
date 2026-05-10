@@ -87,6 +87,26 @@ def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() ->
     assert args.plan_only is True
 
 
+def test_catalog_build_parser_accepts_r1_forest_plan_source_delta_register() -> None:
+    args = build_parser().parse_args(
+        [
+            "catalog-build",
+            "--workbook",
+            "workbook.xlsx",
+            "--batch-run-id",
+            "r1-delta-batches",
+            "--r1-forest-plan-register",
+            "config/r1_forest_plan_document_register_draft.csv",
+            "--source-delta-only",
+        ]
+    )
+
+    assert args.command == "catalog-build"
+    assert args.batch_run_id == "r1-delta-batches"
+    assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
+    assert args.source_delta_only is True
+
+
 def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch) -> None:
     captured = {}
 

@@ -10,11 +10,13 @@ import unittest
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+R1_FOREST_PLAN_REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 
 
 class CatalogTests(unittest.TestCase):
@@ -168,6 +170,52 @@ class CatalogTests(unittest.TestCase):
                 ).fetchone()[0]
             self.assertEqual(artifact_count, 2)
             self.assertEqual(batch_id, "unit-batches")
+
+    def test_build_review_catalog_accepts_r1_forest_plan_source_delta_batch(self) -> None:
+        config = load_config(CONFIG)
+        register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
+        source_id = "R1PLAN-beaverhead-deerlodge-nf-03"
+        source_delta_ids = {
+            source.source_record_id for source in register.source_delta_sources
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            manifest_path = _write_download_run(
+                output_dir,
+                "unit-r1-delta-batch-001",
+                source_record_id=source_id,
+                artifact_body=b"%PDF-1.4 catalog artifact" + b" " * 128,
+                content_type="application/pdf",
+            )
+            _write_batch_run(output_dir, "unit-r1-delta-batches", [("unit-r1-delta-batch-001", manifest_path)])
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_id="unit-r1-delta-batches",
+                source_record_ids=source_delta_ids,
+                supplemental_sources=register.source_delta_sources,
+                source_delta_input=register.summary(),
+            )
+
+            records = _read_jsonl(result.source_catalog_path)
+            manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
+            record = next(row for row in records if row["source_record_id"] == source_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["source_count"], 159)
+            self.assertEqual(result.summary["supplemental_source_count"], 159)
+            self.assertEqual(result.summary["source_record_id_filter_count"], 159)
+            self.assertEqual(result.summary["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(manifest["source_count"], 159)
+            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(record["sheet"], "R1_Forest_Plan_Document_Register")
+            self.assertEqual(record["document_role"], "forest_plan_support")
+            self.assertEqual(record["authority_level"], "forest")
+            self.assertEqual(record["source_status"], "downloaded")
+            self.assertEqual(record["expected_parser"], "pdf")
 
     def test_build_review_catalog_validation_fails_for_unknown_manifest_source(self) -> None:
         config = load_config(CONFIG)

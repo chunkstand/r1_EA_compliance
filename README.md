@@ -21,10 +21,10 @@ as a replacement for the workbook contract. `config/r1_forest_plan_document_regi
 currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `159`
 corpus-ready source-delta rows, and `2` documented official-source gaps. Use
 `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-with `dry-run`, `preflight`, `download`, or `batch-download` when planning only the supplemental
-`R1PLAN-*` source-delta rows. See
+with `dry-run`, `preflight`, `download`, `batch-download`, or `catalog-build` when planning,
+capturing, or cataloging only the supplemental `R1PLAN-*` source-delta rows. See
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the promotion evidence, scoped
-preflight run IDs, and batch plan smoke result.
+preflight run IDs, capture run ID, and source-delta catalog gate.
 
 Current generated source-library capture:
 
@@ -38,7 +38,8 @@ Current generated source-library capture:
 - Status counts: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
   `duplicate_url=9`, `skipped_excluded=1`
 
-The current catalog source set is `source-set-ba8d0feae79501b8`. The latest corpus update added the
+The promoted downstream V1 source set remains `source-set-ba8d0feae79501b8`. The latest canonical
+corpus update added the
 Custer Gallatin FEIS Volume 1, FEIS Volume 2, Biological Assessment, and Biological Opinion as
 forest-plan supporting records beside the 2022 Custer Gallatin Land Management Plan and ROD. The
 Custer Gallatin forest-plan resolver now requires the planning page, LMP, ROD, FEIS Volumes 1 and 2,
@@ -50,6 +51,16 @@ Plan component inventory has also been generated from current chunks with `329` 
 standards, passing build coverage, and `2` inventory-quality warnings for suppressed
 component-like labels with nonnumeric number tokens. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
+
+The latest regenerated canonical catalog in `source_library/catalog/` is
+`source-set-d3b9e2a728accda6` for the same `corpus-update-2026-05-01-cg-support-batches` parent
+run under the current code. The latest supplemental Region 1 forest-plan source-delta capture run is
+`r1-forest-plan-source-delta-capture-20260510-batches`: `33/33` batches passed for `159` emitted
+register rows, with an empty repair queue and `158` unique artifacts. The scoped source-delta
+catalog gate is archived under
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/` as
+`source-set-411b3736b3691eed` with `159` source rows, `158` artifacts, and `159`
+`active_review_corpus` rows.
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
@@ -641,6 +652,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
 The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `catalog_validation.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
 Pass `--run-id <download-run-id>` after downloads to link artifact hashes, paths, content types, and retrieval timestamps into the same reviewer-facing catalog.
 Pass `--batch-run-id <run-id-prefix>-batches` after controlled batch downloads to link artifacts from every passed child batch through the parent batch ledger.
+For the promoted Region 1 forest-plan source delta, add
+`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
+to catalog only the captured supplemental rows. This rebuilds `source_library/catalog/` as a scoped
+source-delta catalog; rebuild the canonical catalog before running canonical V1 review workflows.
 
 Build the verified extraction/chunk layer from the reviewer catalog:
 

@@ -343,6 +343,12 @@ The `catalog-build` command writes:
 - review topics
 - citation label
 
+When `catalog-build` is run with
+`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`,
+the catalog is scoped to supplemental `R1_Forest_Plan_Document_Register` rows. Those rows are
+classified as `forest_plan_support` records with forest-level authority and are validated against
+the linked source-delta batch manifests.
+
 `source_set_manifest.json` versions the source set with:
 
 - workbook SHA256
@@ -351,6 +357,9 @@ The `catalog-build` command writes:
 - git commit
 - optional download run ID
 - optional parent batch-download run ID
+- `source_record_id_filter_count`
+- `supplemental_source_count`
+- `source_delta_input`
 - source, artifact, URL, authority, topic, host, role, parser, and status counts
 
 `catalog_validation.json` is the reviewer-engine gate. Checks cover:
