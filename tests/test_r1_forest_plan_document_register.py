@@ -41,14 +41,14 @@ def test_r1_forest_plan_document_register_has_no_placeholder_gaps() -> None:
     )
     assert Counter(row["draft_status"] for row in rows) == {
         "catalog_confirmed": 28,
-        "source_delta_required": 159,
-        "official_source_gap_documented": 2,
+        "source_delta_required": 160,
+        "official_source_gap_documented": 1,
     }
     assert [
         row["proposed_source_record_id"]
         for row in rows
         if row["draft_status"] == "official_source_gap_documented"
-    ] == ["R1PLAN-kootenai-nf-18", "R1PLAN-nez-perce-clearwater-nfs-18"]
+    ] == ["R1PLAN-kootenai-nf-18"]
 
 
 def test_r1_forest_plan_document_register_closes_bitterroot_and_kootenai_consultation_gaps() -> None:
@@ -103,15 +103,14 @@ def test_r1_forest_plan_document_register_corrects_nez_perce_clearwater_links() 
     assert "2025-00363" in rows["R1PLAN-nez-perce-clearwater-nfs-14"]["notes"]
     assert "2023-26162" in rows["R1PLAN-nez-perce-clearwater-nfs-14"]["notes"]
 
-    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["document_role"] == "project_record_gap"
-    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["readiness_tier"] == "gap_required"
-    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["draft_status"] == (
-        "official_source_gap_documented"
-    )
+    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["document_role"] == "project_record"
+    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["readiness_tier"] == "currentness_required"
+    assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["draft_status"] == "source_delta_required"
     assert rows["R1PLAN-nez-perce-clearwater-nfs-18"]["official_link"] == (
-        "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan"
+        "https://www.fs.usda.gov/r01/nezperce-clearwater/projects/44089"
     )
-    assert "usfs-public.box.com/s/a6tlve91fe1ma9u4hgfggd12oj8xmnwv" in (
+    assert "document browser" in rows["R1PLAN-nez-perce-clearwater-nfs-18"]["document_title"].lower()
+    assert "Pinyon Public project-record folder" in (
         rows["R1PLAN-nez-perce-clearwater-nfs-18"]["notes"]
     )
 
@@ -126,15 +125,12 @@ def test_r1_forest_plan_document_register_loader_emits_source_delta_only() -> No
 
     assert register.status_counts == {
         "catalog_confirmed": 28,
-        "source_delta_required": 159,
-        "official_source_gap_documented": 2,
+        "source_delta_required": 160,
+        "official_source_gap_documented": 1,
     }
     assert len(register.rows) == 189
-    assert len(register.source_delta_sources) == 159
-    assert register.gap_source_record_ids == [
-        "R1PLAN-kootenai-nf-18",
-        "R1PLAN-nez-perce-clearwater-nfs-18",
-    ]
+    assert len(register.source_delta_sources) == 160
+    assert register.gap_source_record_ids == ["R1PLAN-kootenai-nf-18"]
     assert not source_delta_ids & workbook_source_ids
     assert not source_delta_ids & set(register.gap_source_record_ids)
     assert set(register.catalog_confirmed_source_record_ids) <= workbook_source_ids

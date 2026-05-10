@@ -21,6 +21,22 @@ retrieval, and readiness artifacts, that:
 - forest-plan resolver/readiness outputs can consume the support-document corpus through catalog
   surfaces instead of raw artifact paths.
 
+Closeout refresh on 2026-05-10:
+
+- live register state is now `160` source-delta rows plus `1` preserved official-source gap after
+  promoting `R1PLAN-nez-perce-clearwater-nfs-18` to the official project-record page;
+- refreshed capture is archived under
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/`, with scoped
+  source set `source-set-bfe49a94e22fd1e2` and merged source set `source-set-8a4005c8a083af1a`;
+- merged extraction, retrieval, evidence graph, claim extraction, rule-claim binding, NEPA 3D
+  source-set export, and source-set `phase-eval` are now all green on the refreshed merged source
+  set;
+- no additional work remains inside the source-delta milestone ladder itself;
+- remaining work is downstream and reviewer-facing: the explicit Kootenai official-source gap,
+  `7` applicability adjudications in
+  `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_adjudication_template.json`,
+  and the failing East Crazies forest-plan component review artifacts for the merged-corpus replay.
+
 ## Current Baseline
 
 Already completed:
@@ -28,21 +44,21 @@ Already completed:
 - Register: `config/r1_forest_plan_document_register_draft.csv`
   - `189` rows
   - `28` catalog-confirmed rows
-  - `159` corpus-ready source-delta rows
-  - `2` documented official-source gaps
+  - `160` corpus-ready source-delta rows
+  - `1` documented official-source gap
 - Source-delta capture:
-  - parent run: `r1-forest-plan-source-delta-capture-20260510-batches`
+  - parent run: `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
   - `33/33` child batches passed
-  - `159` planned rows
-  - `158` unique artifacts
+  - `160` planned rows
+  - `159` unique artifacts
   - repair queue empty except header
 - Scoped source-delta catalog gate:
   - archived path:
-    `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/`
-  - source set: `source-set-411b3736b3691eed`
-  - `159` `forest_plan_support` rows
-  - `158` artifacts
-  - `159` `active_review_corpus` rows
+    `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/catalog_gate/`
+  - source set: `source-set-bfe49a94e22fd1e2`
+  - `160` `forest_plan_support` rows
+  - `159` artifacts
+  - `160` `active_review_corpus` rows
   - catalog validation passed
 - Active canonical catalog restored:
   - parent run: `corpus-update-2026-05-01-cg-support-batches`
@@ -52,46 +68,41 @@ Already completed:
   - tracked config: `config/r1_forest_plan_official_source_gap_evidence.json`
   - evidence date: `2026-05-10`
   - schema: `r1-forest-plan-official-source-gap-evidence-v0`
-  - gap records: `R1PLAN-kootenai-nf-18`,
-    `R1PLAN-nez-perce-clearwater-nfs-18`
+  - gap records: `R1PLAN-kootenai-nf-18`
 
-Known official-source gaps:
+Known official-source gap:
 
 - `R1PLAN-kootenai-nf-18`: Kootenai plan-level Biological Assessment. The 2026-05-10 official
   source check confirmed that current official planning pages expose Biological Opinion chapters
-  1-4, but no current official plan-level BA PDF was found.
-- `R1PLAN-nez-perce-clearwater-nfs-18`: Nez Perce-Clearwater project record / revision support
-  package. The 2026-05-10 official source check confirmed that the current official 2025 LMP page
-  links a Box plan revision project record URL, but live access returned `404`.
+  1-4 plus the archived project summary page, but no current official plan-level BA PDF was found.
 
 Readiness gate implementation status:
 
 - Implemented command:
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`
 - Generated report family:
-  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json`
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json`
   and `.md`
-- Live result: passed with `0` failed checks, `159` captured source-delta rows, scoped source set
-  `source-set-411b3736b3691eed`, active canonical source set `source-set-d3b9e2a728accda6`, and
-  extraction/retrieval readiness initially recorded as `not_started`. The report schema is now
-  `r1-forest-plan-source-delta-readiness-v2` and includes a fail-closed check that the tracked gap
-  evidence matches the current register gap IDs, optional merged-catalog validation, and
-  source-delta extraction coverage/blocker accounting.
-- Remaining blockers: downstream extraction/retrieval readiness for the scoped support-document
-  source set, plus the two preserved official-source gaps unless future official URLs are found and
-  targeted preflight passes.
+- Live result: passed with `0` failed checks, `160` captured source-delta rows, scoped source set
+  `source-set-bfe49a94e22fd1e2`, merged source set `source-set-8a4005c8a083af1a`, active canonical
+  source set `source-set-d3b9e2a728accda6`, extraction readiness `ready`, retrieval readiness
+  `ready`, `0` extraction blockers, and `1` official-source gap. The report schema remains
+  `r1-forest-plan-source-delta-readiness-v3`.
+- Remaining blockers: no source-delta corpus blockers remain beyond the explicit Kootenai official
+  source gap; remaining work is downstream review replay/adjudication rather than support-document
+  capture or replay alignment.
 
 Merged catalog implementation status:
 
 - `catalog-build` accepts repeated `--batch-run-id` values and `--catalog-dir`.
 - Live archived merged gate:
-  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`
-- Merged source set: `source-set-7e2652d23e764068`
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+- Merged source set: `source-set-8a4005c8a083af1a`
 - Inputs: canonical batch run `corpus-update-2026-05-01-cg-support-batches`, source-delta batch run
   `r1-forest-plan-source-delta-capture-20260510-batches`, and
   `config/r1_forest_plan_document_register_draft.csv`.
-- Live result: `349` source rows, `318` artifacts, `331` unique URLs, `348`
-  `active_review_corpus` rows, `1` `candidate_blocked_source` row, `159` supplemental source-delta
+- Live result: `350` source rows, `319` artifacts, `332` unique URLs, `349`
+  `active_review_corpus` rows, `1` `candidate_blocked_source` row, `160` supplemental source-delta
   rows, `0` `not_in_run` rows, and catalog validation passed with `0` failed checks.
 - Active canonical catalog remains `source-set-d3b9e2a728accda6` under `source_library/catalog/`.
 

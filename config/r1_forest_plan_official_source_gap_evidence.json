@@ -24,6 +24,17 @@
           "operator_notes": "HEAD check returned HTTP 200 on 2026-05-10; page body search found official BO chapter links and no BA replacement.",
           "search_date": "2026-05-10",
           "url": "https://www.fs.usda.gov/r01/kootenai/planning/kootenai-national-forest-plan-revision-supporting-documentation"
+        },
+        {
+          "accepted_as_replacement": false,
+          "accepted_or_rejected_reason": "Rejected as replacement because the archived official project summary exposes Forest Plan, Decision, and Analysis folders, but no descendant file or folder name indicates a plan-level Biological Assessment artifact for this Kootenai row.",
+          "access_result": "http_200_html",
+          "content_type": "text/html; charset=UTF-8",
+          "http_status": 200,
+          "official_source_type": "forest_service_archived_project_summary",
+          "operator_notes": "Live page search on 2026-05-10 found the embedded Pinyon Public folder and recursively enumerated its visible folder tree without locating a plan-level BA file.",
+          "search_date": "2026-05-10",
+          "url": "https://www.fs.usda.gov/r01/kootenai/projects/archive/46286"
         }
       ],
       "conclusion": "No current official Forest Service page or file URL was found for the Kootenai 2015 Forest Plan plan-level Biological Assessment. Preserve the row as an official-source gap until an official replacement URL passes targeted preflight.",
@@ -32,38 +43,6 @@
       "forest_unit_id": "kootenai-nf",
       "search_date": "2026-05-10",
       "source_record_id": "R1PLAN-kootenai-nf-18"
-    },
-    {
-      "candidate_evidence": [
-        {
-          "accepted_as_replacement": false,
-          "accepted_or_rejected_reason": "Rejected as replacement because the current official Land Management Plan page is an index page. It still routes the Planning Record click-through to a Box share, while the direct plan, BA, BO, FEIS, and map files on the page are already represented by other register rows and do not replace the project-record gap.",
-          "access_result": "http_200_html",
-          "content_type": "text/html; charset=UTF-8",
-          "http_status": 200,
-          "official_source_type": "forest_service_planning_page",
-          "operator_notes": "HEAD check returned HTTP 200 on 2026-05-10; page body search found the Planning Record click-through and direct official media links for other document roles.",
-          "search_date": "2026-05-10",
-          "url": "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan"
-        },
-        {
-          "accepted_as_replacement": false,
-          "accepted_or_rejected_reason": "Rejected as replacement because the official planning page's Planning Record target returned HTTP 404 and text/html on live access.",
-          "access_result": "http_404_html",
-          "content_type": "text/html; charset=UTF-8",
-          "http_status": 404,
-          "official_source_type": "forest_service_linked_box_share",
-          "operator_notes": "HEAD check against the linked Box share returned HTTP 404 on 2026-05-10.",
-          "search_date": "2026-05-10",
-          "url": "https://usfs-public.box.com/s/a6tlve91fe1ma9u4hgfggd12oj8xmnwv"
-        }
-      ],
-      "conclusion": "No current official replacement URL was found for the Nez Perce-Clearwater 2025 Land Management Plan project record. Preserve the row as an official-source gap until the official Planning Record URL resolves and passes targeted preflight.",
-      "decision": "preserve_official_source_gap",
-      "document_role": "project_record_gap",
-      "forest_unit_id": "nez-perce-clearwater-nfs",
-      "search_date": "2026-05-10",
-      "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-18"
     }
   ],
   "schema_version": "r1-forest-plan-official-source-gap-evidence-v0"

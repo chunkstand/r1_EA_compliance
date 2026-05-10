@@ -36,10 +36,9 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
         assert result.summary["passed"] is True
         assert result.markdown_path.exists()
         assert report["schema_version"] == "r1-forest-plan-source-delta-readiness-v3"
-        assert report["register"]["source_delta_count"] == 159
+        assert report["register"]["source_delta_count"] == 160
         assert report["register"]["skipped_gap_source_record_ids"] == [
             "R1PLAN-kootenai-nf-18",
-            "R1PLAN-nez-perce-clearwater-nfs-18",
         ]
         assert report["scoped_source_delta_catalog"]["source_set_id"] == "source-set-delta-test"
         assert report["active_canonical_catalog"]["source_set_id"] == "source-set-canonical-test"
@@ -47,7 +46,6 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
         assert report["retrieval_readiness"]["status"] == "not_started"
         assert report["official_source_gap_evidence"]["source_record_ids"] == [
             "R1PLAN-kootenai-nf-18",
-            "R1PLAN-nez-perce-clearwater-nfs-18",
         ]
         assert _check(report, "official_source_gap_evidence_current_for_register")["passed"] is True
         assert "R1PLAN-kootenai-nf-18" in _profile_row(
@@ -129,10 +127,7 @@ def test_forest_plan_source_delta_readiness_fails_when_gap_evidence_missing() ->
         gap_check = _check(report, "official_source_gap_evidence_current_for_register")
         assert result.summary["passed"] is False
         assert gap_check["passed"] is False
-        assert gap_check["details"]["missing_gap_source_record_ids"] == [
-            "R1PLAN-kootenai-nf-18",
-            "R1PLAN-nez-perce-clearwater-nfs-18",
-        ]
+        assert gap_check["details"]["missing_gap_source_record_ids"] == ["R1PLAN-kootenai-nf-18"]
 
 
 def test_forest_plan_source_delta_readiness_sequence_four_uses_merged_extraction_coverage() -> None:
@@ -222,9 +217,9 @@ def test_forest_plan_source_delta_readiness_sequence_five_uses_retrieval_coverag
         assert result.summary["passed"] is True
         assert report["retrieval_readiness"]["status"] == "ready_with_blockers"
         assert report["retrieval_readiness"]["retrieval_eval_passed"] is True
-        assert report["retrieval_readiness"]["expected_source_record_count"] == 159
-        assert report["retrieval_readiness"]["expected_extracted_source_record_count"] == 158
-        assert report["retrieval_readiness"]["indexed_source_record_count_for_expected_sources"] == 158
+        assert report["retrieval_readiness"]["expected_source_record_count"] == 160
+        assert report["retrieval_readiness"]["expected_extracted_source_record_count"] == 159
+        assert report["retrieval_readiness"]["indexed_source_record_count_for_expected_sources"] == 159
         assert report["retrieval_readiness"]["missing_indexed_extracted_source_record_ids"] == []
         assert report["retrieval_readiness"]["upstream_blocked_source_record_ids"] == [blocker_id]
         assert report["retrieval_readiness"]["document_role_counts"]["expected"][

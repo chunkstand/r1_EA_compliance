@@ -164,6 +164,47 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 5,
             )
 
+    def test_snapshot_accepts_catalog_override_for_noncanonical_source_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            merged_catalog_root = root / "merged_catalog_root"
+            source_set_id = "source-set-test"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                merged_catalog_root,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_component_inventory(output_dir, source_set_id)
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id="override-unit",
+                source_set_id=source_set_id,
+                source_catalog_path=merged_catalog_root / "catalog" / "source_catalog.jsonl",
+                source_set_manifest_path=merged_catalog_root
+                / "catalog"
+                / "source_set_manifest.json",
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
+                forest_plan_component_inventory_path=component_inventory_path,
+            )
+
+            self.assertTrue(result.snapshot_path.exists())
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["candidate_authority_count"], 5)
+
     def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

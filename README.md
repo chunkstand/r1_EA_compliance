@@ -133,6 +133,35 @@ with `211` links and `0` gaps, NEPA 3D source-set graph export validates with `1
 still blocked by the known parser failures and official-source gaps. The next work is source-gap or
 parser recovery, or an explicit review replay request, not another source-set alignment pass.
 
+Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
+
+- `R1PLAN-nez-perce-clearwater-nfs-18` is now promoted from official-source gap to live
+  `project_record`, so the Region 1 register now carries `160` source-delta rows and `1`
+  preserved official-source gap (`R1PLAN-kootenai-nf-18`).
+- refreshed source-delta capture is archived under
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/`, with scoped
+  source set `source-set-bfe49a94e22fd1e2` and merged source set `source-set-8a4005c8a083af1a`.
+- external Docling OCR replay clears all seven former PDF parser blockers. The merged extraction
+  replay now validates with `349/349` required rows extracted, `0` failed rows, and `75,745`
+  chunks.
+- merged source-set replay is fully green: retrieval eval passes `12/12`, evidence graph validates
+  with `153,198` nodes and `533,949` edges, claim extraction validates with `101,856` claims,
+  rule-claim binding validates with `211` links and `0` gaps, NEPA 3D source-set export validates
+  with `1,831` nodes and `2,835` edges, and source-set `phase-eval` passes `7/7` with
+  `reviewer_ready=true`.
+- `forest-plan-source-delta-readiness` now reports `160` source-delta rows, `0` extraction
+  blockers, retrieval `ready`, and one official-source gap. Source readiness is broad enough to
+  mark `beaverhead-deerlodge-nf` source-ready, but NEPA 3D graph promotion remains limited to
+  `custer-gallatin-nf` until Beaverhead has a validated component inventory.
+- merged-corpus review replay is now explicit under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/`. The review-scoped replay against
+  `source-set-8a4005c8a083af1a` is blocked by `7` applicability adjudications and failing
+  forest-plan component evaluation (`9` failing seed cases, `6` resolver gaps); review `phase-eval`
+  is `12/17` with `reviewer_ready=false`.
+- `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
+  so noncanonical merged-corpus review replays can use archived merged catalog gates without
+  replacing `source_library/catalog/`.
+
 The first merged catalog gate is archived, not promoted over the canonical catalog, at
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`.
 It was built with repeated `--batch-run-id` values for

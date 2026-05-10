@@ -147,9 +147,15 @@
     }
   },
   {
-    "id": "nez-perce-clearwater-project-record-gap",
+    "id": "nez-perce-clearwater-project-record",
     "query": "nez perce clearwater revised land management plan project record",
-    "expect_no_hits": true,
+    "expected_source_record_ids": [
+      "R1PLAN-nez-perce-clearwater-nfs-18"
+    ],
+    "expected_terms": [
+      "project summary",
+      "project documents"
+    ],
     "filters": {
       "citation": "R1PLAN-nez-perce-clearwater-nfs-18"
     }

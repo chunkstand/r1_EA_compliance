@@ -59,6 +59,8 @@ def register_applicability_commands(subparsers: argparse._SubParsersAction) -> N
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
         type=Path,
     )
+    authority_universe.add_argument("--catalog-path", type=Path)
+    authority_universe.add_argument("--source-set-manifest-path", type=Path)
     authority_universe.add_argument("--forest-plan-component-inventory-path", type=Path)
     authority_universe.add_argument("--claims-path", type=Path)
     authority_universe.add_argument("--rule-claim-links-path", type=Path)
@@ -173,6 +175,8 @@ def handle_applicability_command(
             output_dir=args.output_dir,
             review_id=args.review_id,
             source_set_id=args.source_set_id,
+            source_catalog_path=args.catalog_path,
+            source_set_manifest_path=args.source_set_manifest_path,
             base_rule_pack_path=args.base_rule_pack,
             authority_family_templates_path=args.authority_family_templates_path,
             forest_plan_profiles_path=args.forest_plan_profiles_path,

@@ -82,6 +82,8 @@ def build_authority_universe_snapshot(
     output_dir: Path,
     review_id: str,
     source_set_id: str | None = None,
+    source_catalog_path: Path | None = None,
+    source_set_manifest_path: Path | None = None,
     base_rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
@@ -94,8 +96,16 @@ def build_authority_universe_snapshot(
     output_dir = Path(output_dir)
     _validate_safe_segment(review_id, "review_id")
     catalog_dir = output_dir / "catalog"
-    source_set_manifest_path = catalog_dir / "source_set_manifest.json"
-    source_catalog_path = catalog_dir / "source_catalog.jsonl"
+    source_set_manifest_path = (
+        Path(source_set_manifest_path)
+        if source_set_manifest_path
+        else catalog_dir / "source_set_manifest.json"
+    )
+    source_catalog_path = (
+        Path(source_catalog_path)
+        if source_catalog_path
+        else catalog_dir / "source_catalog.jsonl"
+    )
     source_set_manifest = _read_json_if_exists(source_set_manifest_path) or {}
     if source_set_id is None:
         source_set_id = _source_set_id_from_manifest(source_set_manifest_path, source_set_manifest)

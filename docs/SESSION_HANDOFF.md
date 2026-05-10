@@ -2,6 +2,57 @@
 
 Date: 2026-05-10
 
+## Latest Source-Delta Refresh
+
+The 2026-05-10 refresh closes the remaining source-delta corpus gaps and moves the remaining work
+fully into downstream review closure.
+
+- register state: `160` source-delta rows and `1` preserved official-source gap after promoting
+  `R1PLAN-nez-perce-clearwater-nfs-18` to the official project-record page
+- refreshed capture run:
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
+- refreshed scoped source set: `source-set-bfe49a94e22fd1e2`
+- refreshed merged source set: `source-set-8a4005c8a083af1a`
+- merged extraction replay with external Docling OCR now validates with `349/349` required rows
+  extracted, `0` failed rows, and `75,745` chunks
+- merged source-set replay is fully green:
+  `retrieval-eval` `12/12`, evidence graph `153,198` nodes / `533,949` edges, claim extraction
+  `101,856` claims, rule-claim binding `211` links / `0` gaps, NEPA 3D source-set graph
+  `1,831` nodes / `2,835` edges, and source-set `phase-eval` `7/7` with `reviewer_ready=true`
+- readiness gate now reports `160` source-delta rows, `0` extraction blockers, retrieval `ready`,
+  and one preserved official-source gap (`R1PLAN-kootenai-nf-18`)
+- `applicability-authority-universe` now accepts `--catalog-path` and
+  `--source-set-manifest-path` so archived merged catalogs can be used for noncanonical review
+  replays without replacing `source_library/catalog/`
+
+Merged-corpus review replay is now explicit under
+`source_library/reviews/v1-cg-ecid-source-delta-review/` for the East Crazies package on
+`source-set-8a4005c8a083af1a`. The replay is blocked, but the blockers are now concrete:
+
+- applicability-first lane:
+  `49` applicable authorities, `340` non-applicable authorities, `7` `needs_adjudication`
+  authority-family template candidates, and adjudication template/worklist written under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/`
+- forest-plan lane:
+  resolver context validates, but component findings still report `6` gaps and component eval fails
+  `9/35` seed cases
+- review-scoped phase gate:
+  `phase-eval --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a`
+  now reports `12/17` phases passing with `reviewer_ready=false`
+
+Immediate next work from this handoff:
+
+1. Resolve the `7` applicability adjudications in
+   `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_adjudication_template.json`
+   and rerun `applicability-adjudication-eval`, `applicability-adjudication-apply`,
+   `applicability-validate`, and `applicability-generate-rule-pack`.
+2. Resolve the remaining East Crazies forest-plan component gaps shown in
+   `source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_component_findings.json` and
+   `forest_plan_component_eval_results.json`.
+3. Once applicability and component-eval are green, rerun `compliance-review`,
+   `phase-eval --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a`,
+   and any desired reviewer-facing artifacts.
+
 ## Region 1 Forest-Plan Document Register Promotion
 
 The Region 1 forest-plan support-document register is now promoted into the controlled capture

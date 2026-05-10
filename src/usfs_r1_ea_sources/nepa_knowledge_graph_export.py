@@ -2036,6 +2036,7 @@ def _normalize_source_delta_region1_readiness(report: dict[str, Any]) -> dict[st
         configured_profile = bool(row.get("configured_profile"))
         profile_readiness_status = str(row.get("profile_readiness_status") or "")
         graph_promotion_status = _source_delta_graph_promotion_status(
+            baseline_row=baseline_row,
             configured_profile=configured_profile,
             profile_readiness_status=profile_readiness_status,
         )
@@ -2085,10 +2086,14 @@ def _normalize_source_delta_region1_readiness(report: dict[str, Any]) -> dict[st
 
 def _source_delta_graph_promotion_status(
     *,
+    baseline_row: dict[str, Any],
     configured_profile: bool,
     profile_readiness_status: str,
 ) -> str:
-    if configured_profile and profile_readiness_status == "ready":
+    component_inventory_validation = _dict(baseline_row.get("component_inventory_validation"))
+    component_inventory_status = str(component_inventory_validation.get("status") or "")
+    component_inventory_ready = not component_inventory_status or component_inventory_status == "validated"
+    if configured_profile and profile_readiness_status == "ready" and component_inventory_ready:
         return "promoted"
     if configured_profile:
         return "blocked"
