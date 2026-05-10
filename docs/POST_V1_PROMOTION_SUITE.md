@@ -171,7 +171,7 @@ Strict expansion now fails closed only on the South Plateau forest-plan blocker 
 
 Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the default manifest.
 The current local non-strict run now reports `current_promotion_ready=true`,
-`full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`. The
+`full_canonical_corpus_ready=false`, `promotion_ready=true`, and `expansion_ready=false`. The
 active catalog checks still pin `source_library/catalog/source_set_manifest.json` and
 `catalog_validation.json` to full canonical source set `source-set-34061d1e4bf6c460` with
 `350` source rows, `319` artifacts, `160` supplemental source-delta rows, and preserved gap
@@ -180,9 +180,13 @@ active catalog checks still pin `source_library/catalog/source_set_manifest.json
 `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`,
 and `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_summary.json`.
 Those active-source-set artifacts are now materialized locally: `authority_currentness` passes with
-`35` authority families and `207` source-currentness records, the active NEPA 3D source-set export
-passes with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges, and
-`full_canonical_failure_category_counts={}` after the replay.
+`35` authority families and `207` source-currentness records, while the refreshed active NEPA 3D
+source-set export now fails with `66` checks, `1` failed check, `1,789` nodes, `2,808` edges, and
+typed ownership failure `graph_forest_plan_inventory_ownership_gap=1`. As a result,
+`full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}` after the replay.
+The remaining blocker is specific: the active source-set export still points at
+`source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
+instead of an active-source-set-owned `forest_plan_components/` artifact family.
 
 The South Plateau expansion slot remains `ready=false` and carries
 `forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:

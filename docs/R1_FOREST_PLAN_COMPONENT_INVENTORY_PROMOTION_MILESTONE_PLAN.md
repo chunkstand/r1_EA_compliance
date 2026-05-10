@@ -233,6 +233,11 @@ Implementation closeout on 2026-05-10:
   a validation failure instead of silently accepted baseline truth
 - added regression coverage proving a borrowed inventory can still satisfy the old forest-unit
   presence check but now fails the new ownership gate
+- alignment replay result:
+  after refreshing the active-source-set graph artifact, `promotion-suite` now reports
+  `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}` until the active
+  source set owns its own `forest_plan_components/` artifact family
 
 Acceptance signals:
 

@@ -2,6 +2,50 @@
 
 Date: 2026-05-10
 
+## Region 1 Forest-Plan Inventory Alignment Check
+
+The post-Sequence-0 alignment replay is now closed. The new ownership gate is behaving correctly,
+and the current gap is status/doc drift rather than missing enforcement.
+
+- fresh active-source-set replay:
+  rerunning `nepa-knowledge-graph-export` for `source-set-34061d1e4bf6c460` against the archived
+  component inventory now fails exactly where Sequence 0 said it should
+- live failure shape:
+  `validation_passed=false`, `validation_check_count=66`,
+  `failed_validation_check_count=1`, and
+  `failure_category_counts={"graph_forest_plan_inventory_ownership_gap": 1}`
+- concrete failing check:
+  `nepa_3d_graph_forest_plan_inventory_owned_by_source_set` expects
+  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
+  with payload `source_set_id=source-set-34061d1e4bf6c460`, but the current replay still points at
+  `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
+  with payload `source_set_id=source-set-8a4005c8a083af1a`
+- promotion-suite alignment:
+  after refreshing the active graph artifact, `promotion-suite` now reports
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=false`, `promotion_ready=true`,
+  `expansion_ready=false`, `passed_required_full_canonical_result_count=3`, and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`
+- affected full-canonical checks:
+  `full_canonical_nepa_3d_source_set_graph_validation` and
+  `full_canonical_nepa_3d_source_set_graph_summary` now fail closed as expected because the active
+  source-set graph validation is no longer green
+
+Verification in this pass:
+
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --authority-currentness-path source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json --evidence-graph-nodes-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_nodes.jsonl --evidence-graph-edges-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_edges.jsonl --claims-path source_library/derived/source-set-8a4005c8a083af1a/claims/claims.jsonl --rule-claim-links-path source_library/derived/source-set-8a4005c8a083af1a/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_links.jsonl --forest-plan-components-path source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`: failed as expected with `graph_forest_plan_inventory_ownership_gap`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed as a command and reported `full_canonical_corpus_ready=false`
+
+Residual risks:
+
+- the active full-canonical lane is now explicitly not promotion-ready until it owns a local
+  component inventory artifact family
+- top-level repo docs that claimed full-canonical green required alignment to this refreshed state
+
+Immediate next step if this slice is continued:
+
+1. Implement Sequence 1 of the Region 1 component inventory milestone by adding the tracked
+   multi-forest build contract and active-source-set inventory ownership path.
+
 ## Region 1 Forest-Plan Component Inventory Promotion Sequence 0
 
 Sequence 0 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
@@ -72,23 +116,26 @@ locally.
   `1,789` nodes, `2,808` edges, and readiness blocker counts
   `forest_profile_not_ready=62`, `fsh_chapter_delta_required=2`, `missing_source=33`,
   `superseded_source=3`
-- live replay status: rerunning `promotion-suite` against the current local `source_library/`
-  now reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+- historical replay status before the Sequence 0 ownership-gate refresh:
+  rerunning `promotion-suite` against the current local `source_library/` reported
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
   `promotion_ready=true`, `expansion_ready=false`, and
-  `passed_required_full_canonical_result_count=5/5`
+  `passed_required_full_canonical_result_count=5/5`. This is superseded by the alignment check
+  above.
 
 Verification in this pass:
 
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py`: passed `19/19`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-34061d1e4bf6c460`: passed with `validation_passed=true`, `35` authority families, `207` source-currentness records, and source partitions `active_review_corpus=349` plus `candidate_blocked_source=1`
-- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --authority-currentness-path source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json --evidence-graph-nodes-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_nodes.jsonl --evidence-graph-edges-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_edges.jsonl --claims-path source_library/derived/source-set-8a4005c8a083af1a/claims/claims.jsonl --rule-claim-links-path source_library/derived/source-set-8a4005c8a083af1a/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_links.jsonl --forest-plan-components-path source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`: passed with `validation_passed=true`, `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges
-- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, `passed_required_full_canonical_result_count=5/5`, and `full_canonical_failure_category_counts={}`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-34061d1e4bf6c460 --authority-currentness-path source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json --evidence-graph-nodes-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_nodes.jsonl --evidence-graph-edges-path source_library/derived/source-set-8a4005c8a083af1a/evidence_graph/document_graph_edges.jsonl --claims-path source_library/derived/source-set-8a4005c8a083af1a/claims/claims.jsonl --rule-claim-links-path source_library/derived/source-set-8a4005c8a083af1a/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_links.jsonl --forest-plan-components-path source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`: this historical pre-refresh pass recorded `validation_passed=true`, `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges; it is superseded by the failing ownership-gate replay above
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: this historical pre-refresh pass reported `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, `passed_required_full_canonical_result_count=5/5`, and `full_canonical_failure_category_counts={}`; it is superseded by the alignment replay above
 - headless local browser smoke via Chrome channel + Playwright against `http://127.0.0.1:8765/viewer/nepa-3d/`: passed with resolved dataset `source-set-34061d1e4bf6c460`, `1,789/2,808` rendered at load, and validation text pointing to `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph.json`
 
 Residual risks:
 
-- the stronger full-canonical gate is now green locally, but reviewer-facing promotion remains
-  intentionally pinned to `source-set-ba8d0feae79501b8`
+- the stronger full-canonical gate was green only on the pre-refresh artifact set; the current
+  aligned state above blocks full-canonical readiness on inventory ownership while reviewer-facing
+  promotion remains intentionally pinned to `source-set-ba8d0feae79501b8`
 - merged-corpus East Crazies review replay on `source-set-8a4005c8a083af1a` is still blocked by
   `7` applicability adjudications and failing forest-plan component evaluation
 
@@ -172,17 +219,18 @@ the current code while keeping reviewer-ready East Crazies promotion explicit an
   `config/r1_forest_plan_official_source_gap_evidence.json`
 - current-promotion lane remains pinned to reviewer-ready source set
   `source-set-ba8d0feae79501b8`
-- promotion-suite closeout now reports:
+- historical promotion-suite closeout before the Sequence 0 alignment replay reported:
   `current_promotion_ready=true`,
   `full_canonical_corpus_ready=true`,
   `promotion_ready=true`,
   `expansion_ready=false`
 
-The stronger full-canonical gate is now satisfied locally for
+That earlier full-canonical gate state was satisfied locally for
 `source-set-34061d1e4bf6c460`: the active `authority_currentness` artifact passes with `35`
-authority families and `207` source-currentness records, the active NEPA 3D source-set export
-passes with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges, and the local
-viewer resolves that active dataset directly without fallback.
+authority families and `207` source-currentness records, the pre-refresh active NEPA 3D
+source-set export passed with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges,
+and the local viewer resolved that active dataset directly without fallback. The alignment replay
+above supersedes this state.
 
 Important boundary:
 
@@ -210,8 +258,9 @@ Verification replay for plan alignment:
   passed with `failed_check_count=0`, `canonical_catalog_source_set_id=source-set-34061d1e4bf6c460`,
   and preserved gap `R1PLAN-kootenai-nf-18`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`:
-  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
-  `promotion_ready=true`, `expansion_ready=false`
+  this historical pre-refresh run passed with `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`; the current
+  aligned state is `full_canonical_corpus_ready=false` per the alignment check above
 - `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review --validate-only`:
   passed `196/196` with `output_written=false`
 
