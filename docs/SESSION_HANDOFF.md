@@ -55,6 +55,12 @@ documented gap rows. Keep `R1PLAN-kootenai-nf-18` and
 `R1PLAN-nez-perce-clearwater-nfs-18` out of corpus planning until replacement official sources are
 found or a documented gap policy is accepted.
 
+Milestone plan:
+`docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`. The immediate next slice is
+Sequence 0: build a source-delta readiness report/gate over the register, passed source-delta batch
+capture, archived scoped catalog gate, active canonical catalog, extraction placeholders, retrieval
+placeholders, and forest-profile blocker placeholders.
+
 ## Region 1 Forest-Plan Document Register Hardening
 
 `config/r1_forest_plan_document_register_draft.csv` is now an ingest-ready draft register for

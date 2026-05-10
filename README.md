@@ -60,7 +60,9 @@ register rows, with an empty repair queue and `158` unique artifacts. The scoped
 catalog gate is archived under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/` as
 `source-set-411b3736b3691eed` with `159` source rows, `158` artifacts, and `159`
-`active_review_corpus` rows.
+`active_review_corpus` rows. The completion plan for finding any remaining official support
+documents, finishing extraction/retrieval readiness, and incorporating the support-document layer
+into a merged corpus is `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
