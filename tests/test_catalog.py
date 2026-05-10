@@ -217,6 +217,137 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(record["source_status"], "downloaded")
             self.assertEqual(record["expected_parser"], "pdf")
 
+    def test_build_review_catalog_merges_canonical_and_source_delta_batch_runs(self) -> None:
+        config = load_config(CONFIG)
+        register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
+        source_id = "R1PLAN-beaverhead-deerlodge-nf-03"
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            canonical_manifest_path = _write_download_run(
+                output_dir,
+                "unit-canonical-batch-001",
+                source_record_id="R1EA-001",
+            )
+            source_delta_manifest_path = _write_download_run(
+                output_dir,
+                "unit-r1-delta-batch-001",
+                source_record_id=source_id,
+                artifact_body=b"%PDF-1.4 catalog artifact" + b" " * 128,
+                content_type="application/pdf",
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-canonical-batches",
+                [("unit-canonical-batch-001", canonical_manifest_path)],
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-r1-delta-batches",
+                [("unit-r1-delta-batch-001", source_delta_manifest_path)],
+            )
+            archive_dir = output_dir / "runs" / "unit-merged-gate" / "catalog_gate"
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_ids=["unit-canonical-batches", "unit-r1-delta-batches"],
+                supplemental_sources=register.source_delta_sources,
+                source_delta_input=register.summary(),
+                catalog_dir=archive_dir,
+            )
+
+            records = _read_jsonl(result.source_catalog_path)
+            manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            r1ea001 = next(record for record in records if record["source_record_id"] == "R1EA-001")
+            r1ea002 = next(record for record in records if record["source_record_id"] == "R1EA-002")
+            source_delta = next(record for record in records if record["source_record_id"] == source_id)
+
+            self.assertEqual(result.catalog_dir, archive_dir)
+            self.assertFalse((output_dir / "catalog").exists())
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["source_count"], 349)
+            self.assertIsNone(result.summary["download_batch_run_id"])
+            self.assertEqual(
+                result.summary["download_batch_run_ids"],
+                ["unit-canonical-batches", "unit-r1-delta-batches"],
+            )
+            self.assertEqual(manifest["source_count"], 349)
+            self.assertEqual(manifest["download_batch_run_id"], None)
+            self.assertEqual(
+                manifest["download_batch_run_ids"],
+                ["unit-canonical-batches", "unit-r1-delta-batches"],
+            )
+            self.assertEqual(manifest["supplemental_source_count"], 159)
+            self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(manifest["source_record_id_filter_count"], None)
+            self.assertEqual(r1ea001["source_status"], "downloaded")
+            self.assertEqual(r1ea001["download_batch_run_id"], "unit-canonical-batches")
+            self.assertEqual(source_delta["source_status"], "downloaded")
+            self.assertEqual(source_delta["download_batch_run_id"], "unit-r1-delta-batches")
+            self.assertEqual(source_delta["document_role"], "forest_plan_support")
+            self.assertEqual(r1ea002["source_status"], "not_in_run")
+            self.assertIsNone(r1ea002["download_batch_run_id"])
+            self.assertTrue(_check(validation, "merged_batch_download_parent_count")["passed"])
+            self.assertTrue(
+                _check(
+                    validation,
+                    "merged_batch_download_manifest_has_no_duplicate_source_records",
+                )["passed"]
+            )
+
+            with closing(sqlite3.connect(result.sqlite_path)) as connection:
+                source_count = connection.execute("SELECT count(*) FROM sources").fetchone()[0]
+                link_count = connection.execute(
+                    "SELECT count(*) FROM source_artifacts"
+                ).fetchone()[0]
+            self.assertEqual(source_count, 349)
+            self.assertEqual(link_count, 2)
+
+    def test_build_review_catalog_validation_fails_for_duplicate_sources_across_batch_runs(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            first_manifest_path = _write_download_run(
+                output_dir,
+                "unit-canonical-batch-001",
+                source_record_id="R1EA-001",
+            )
+            second_manifest_path = _write_download_run(
+                output_dir,
+                "unit-second-batch-001",
+                source_record_id="R1EA-001",
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-canonical-batches",
+                [("unit-canonical-batch-001", first_manifest_path)],
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-second-batches",
+                [("unit-second-batch-001", second_manifest_path)],
+            )
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_ids=["unit-canonical-batches", "unit-second-batches"],
+            )
+
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            check = _check(
+                validation,
+                "merged_batch_download_manifest_has_no_duplicate_source_records",
+            )
+            self.assertFalse(result.summary["validation_passed"])
+            self.assertFalse(check["passed"])
+            self.assertEqual(check["details"]["duplicate_source_record_ids"], ["R1EA-001"])
+
     def test_build_review_catalog_validation_fails_for_unknown_manifest_source(self) -> None:
         config = load_config(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:

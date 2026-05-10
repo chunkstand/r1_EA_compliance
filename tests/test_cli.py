@@ -94,7 +94,11 @@ def test_catalog_build_parser_accepts_r1_forest_plan_source_delta_register() -> 
             "--workbook",
             "workbook.xlsx",
             "--batch-run-id",
+            "canonical-batches",
+            "--batch-run-id",
             "r1-delta-batches",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
             "--r1-forest-plan-register",
             "config/r1_forest_plan_document_register_draft.csv",
             "--source-delta-only",
@@ -102,7 +106,10 @@ def test_catalog_build_parser_accepts_r1_forest_plan_source_delta_register() -> 
     )
 
     assert args.command == "catalog-build"
-    assert args.batch_run_id == "r1-delta-batches"
+    assert args.batch_run_id == ["canonical-batches", "r1-delta-batches"]
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
     assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
     assert args.source_delta_only is True
 

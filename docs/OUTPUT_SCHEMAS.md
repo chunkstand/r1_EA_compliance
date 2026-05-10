@@ -319,7 +319,10 @@ without reading child manifests.
 
 ## Reviewer Catalog Outputs
 
-Path: `source_library/catalog/`
+Default path: `source_library/catalog/`
+
+Archived scoped or merged gates may be written elsewhere with `--catalog-dir`, for example
+`source_library/runs/<run_id>/merged_catalog_gate/`.
 
 The `catalog-build` command writes:
 
@@ -349,6 +352,11 @@ the catalog is scoped to supplemental `R1_Forest_Plan_Document_Register` rows. T
 classified as `forest_plan_support` records with forest-level authority and are validated against
 the linked source-delta batch manifests.
 
+When `catalog-build` is run with repeated `--batch-run-id` values and a Region 1 forest-plan
+register without `--source-delta-only`, it builds a merged catalog view from the canonical workbook
+batch manifests plus the emitted source-delta batch manifests. Use `--catalog-dir` for this flow so
+the merged gate is archived without replacing the active canonical `source_library/catalog/` view.
+
 `source_set_manifest.json` versions the source set with:
 
 - workbook SHA256
@@ -357,6 +365,7 @@ the linked source-delta batch manifests.
 - git commit
 - optional download run ID
 - optional parent batch-download run ID
+- optional `download_batch_run_ids` list for merged catalog gates
 - `source_record_id_filter_count`
 - `supplemental_source_count`
 - `source_delta_input`
@@ -370,6 +379,8 @@ the linked source-delta batch manifests.
 - review graph links, including role, authority level, and review topics
 - duplicate or unknown rows in linked download manifests
 - parent batch-download completion, child manifest availability, and ledger-to-manifest row matching when `--batch-run-id` is used
+- duplicate source records across parent batch-download runs when repeated `--batch-run-id` values
+  are used
 
 `review_sources.sqlite` exposes graph-ready review tables:
 

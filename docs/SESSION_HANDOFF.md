@@ -60,12 +60,20 @@ captured source-delta rows, and official-source gaps
 ignored under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/`.
 
-Immediate next sequence: Sequence 3 merged corpus catalog contract. Sequence 1 is closed for the
-current official-source pass because no replacement official URL was accepted; Sequence 2 is skipped
-unless a future official replacement URL passes targeted preflight. Keep both gap rows out of corpus
-planning as downloads, carry them as explicit blockers, and start the merged-corpus contract from
-canonical source set `source-set-d3b9e2a728accda6` plus scoped support-document source set
-`source-set-411b3736b3691eed`.
+Sequence 3 merged catalog contract update: `catalog-build` now accepts repeated `--batch-run-id`
+values plus `--catalog-dir` for archived gates. The live merged gate is archived at
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/` as
+`source-set-fd7487b6bffc36a8`. It combines canonical batch run
+`corpus-update-2026-05-01-cg-support-batches` with source-delta batch run
+`r1-forest-plan-source-delta-capture-20260510-batches`, validates `349` source rows, `318`
+artifacts, `331` unique URLs, `348` `active_review_corpus` rows, `1` `candidate_blocked_source`
+row, `159` supplemental source-delta rows, and `0` failed catalog checks. The active
+`source_library/catalog/` view remains canonical source set `source-set-d3b9e2a728accda6`.
+
+Immediate next sequence: Sequence 4 extraction and parser readiness. Start from merged source set
+`source-set-fd7487b6bffc36a8` and scoped support-document source set
+`source-set-411b3736b3691eed`; run reuse inventory before any extraction rebuild, keep both gap
+rows as explicit blockers, and do not rerun unrelated downloads.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
@@ -78,6 +86,15 @@ Latest Sequence 1 verification:
   passed.
 - `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`
   passed with `0` failed checks.
+
+Latest Sequence 3 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_cli.py` passed `32`.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --batch-run-id corpus-update-2026-05-01-cg-support-batches --batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate`
+  passed and produced `source-set-fd7487b6bffc36a8`.
+- `PYTHONPATH=src uv run --extra dev pytest` passed `489`.
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`, `PYTHONPATH=src python -m compileall src`,
+  milestone plan lint, and `git diff --check` passed.
 
 ## Region 1 Forest-Plan Document Register Hardening
 

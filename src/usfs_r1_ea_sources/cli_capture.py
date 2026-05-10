@@ -108,9 +108,18 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
     catalog.add_argument("--workbook", required=True, type=Path)
     catalog.add_argument("--output-dir", default=Path("source_library"), type=Path)
     catalog.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    catalog.add_argument(
+        "--catalog-dir",
+        type=Path,
+        help=(
+            "Optional output directory for catalog artifacts. Use this to archive scoped or "
+            "merged catalog gates without replacing source_library/catalog."
+        ),
+    )
     catalog.add_argument("--run-id", help="Optional download run ID to link artifacts.")
     catalog.add_argument(
         "--batch-run-id",
+        action="append",
         help="Optional parent batch-download run ID to link artifacts from all passed child batches.",
     )
     _add_source_delta_options(catalog)
@@ -217,17 +226,24 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         return 0 if result.summary["all_passed"] or args.plan_only else 1
 
     if args.command == "catalog-build":
-        if args.run_id and args.batch_run_id:
+        batch_run_ids = list(args.batch_run_id or [])
+        if args.run_id and batch_run_ids:
             parser.error("catalog-build accepts either --run-id or --batch-run-id, not both")
         config = load_config(args.config)
         source_delta_options = _source_delta_options(args, parser)
+        batch_kwargs = {}
+        if len(batch_run_ids) == 1:
+            batch_kwargs["batch_run_id"] = batch_run_ids[0]
+        elif len(batch_run_ids) > 1:
+            batch_kwargs["batch_run_ids"] = batch_run_ids
         result = build_review_catalog(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
             config=config,
             config_path=args.config,
             run_id=args.run_id,
-            batch_run_id=args.batch_run_id,
+            catalog_dir=args.catalog_dir,
+            **batch_kwargs,
             **source_delta_options,
         )
         print_summary(result.summary)

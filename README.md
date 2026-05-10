@@ -69,6 +69,14 @@ support-document source set. The completion plan for finishing extraction/retrie
 incorporating the support-document layer into a merged corpus is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
+The first merged catalog gate is archived, not promoted over the canonical catalog, at
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`.
+It was built with repeated `--batch-run-id` values for
+`corpus-update-2026-05-01-cg-support-batches` and
+`r1-forest-plan-source-delta-capture-20260510-batches`, plus the Region 1 register. The merged
+source set is `source-set-fd7487b6bffc36a8` with `349` source rows, `318` artifacts, `348`
+`active_review_corpus` rows, `1` `candidate_blocked_source` row, and passing catalog validation.
+
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all
 `26` baseline source records through the generated applicability rule pack, validates a

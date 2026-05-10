@@ -98,6 +98,9 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Support `--limit`, `--sheet`, `--id`, and `--host` filters for controlled testing.
 - Support `--source-delta-only` with an explicit Region 1 forest-plan register when planning,
   preflighting, downloading, batching, or cataloging only supplemental `R1PLAN-*` source-delta rows.
+- Support repeated `catalog-build --batch-run-id` values for explicit merged catalog gates. Merged
+  catalog gates must use `--catalog-dir` when they are archived evidence and must not silently
+  replace the canonical `source_library/catalog/` view.
 - Do not disable TLS verification by default. If a site requires a certificate exception, record the exception and mark the record `needs_review` unless a project-level allowlist is approved.
 
 ## 6. Artifact Storage

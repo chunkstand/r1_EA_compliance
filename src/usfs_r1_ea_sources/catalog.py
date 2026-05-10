@@ -39,13 +39,20 @@ def build_review_catalog(
     config_path: Path | None = None,
     run_id: str | None = None,
     batch_run_id: str | None = None,
+    batch_run_ids: list[str] | None = None,
     source_record_ids: set[str] | None = None,
     supplemental_sources: list[WorkbookSource] | None = None,
     source_delta_input: dict | None = None,
+    catalog_dir: Path | None = None,
 ) -> CatalogBuildResult:
-    if run_id and batch_run_id:
-        raise ValueError("run_id and batch_run_id are mutually exclusive")
-    catalog_dir = output_dir / "catalog"
+    if batch_run_id and batch_run_ids:
+        raise ValueError("batch_run_id and batch_run_ids are mutually exclusive")
+    active_batch_run_ids = list(batch_run_ids or ([batch_run_id] if batch_run_id else []))
+    if run_id and active_batch_run_ids:
+        raise ValueError("run_id and batch run IDs are mutually exclusive")
+    single_batch_run_id = active_batch_run_ids[0] if len(active_batch_run_ids) == 1 else None
+
+    catalog_dir = Path(catalog_dir) if catalog_dir else output_dir / "catalog"
     catalog_dir.mkdir(parents=True, exist_ok=True)
     source_catalog_path = catalog_dir / "source_catalog.jsonl"
     source_set_manifest_path = catalog_dir / "source_set_manifest.json"
@@ -74,7 +81,8 @@ def build_review_catalog(
         config_sha256=config_sha256,
         overrides_sha256=overrides_sha256,
         run_id=run_id,
-        batch_run_id=batch_run_id,
+        batch_run_id=single_batch_run_id,
+        batch_run_ids=active_batch_run_ids if len(active_batch_run_ids) > 1 else None,
         git_commit=git_commit,
         source_scope=_source_scope(
             source_record_ids=source_record_ids,
@@ -86,8 +94,9 @@ def build_review_catalog(
     manifest_records, manifest_load_checks = _load_manifest_records(
         output_dir,
         run_id,
-        batch_run_id,
-        sources,
+        single_batch_run_id,
+        batch_run_ids=active_batch_run_ids if len(active_batch_run_ids) > 1 else None,
+        sources=sources,
     )
     catalog_records = [
         _catalog_record(
@@ -95,7 +104,8 @@ def build_review_catalog(
             source=source,
             manifest_record=manifest_records.get(source.source_record_id),
             run_id=run_id,
-            batch_run_id=batch_run_id,
+            batch_run_id=single_batch_run_id,
+            batch_run_scope_present=bool(active_batch_run_ids),
         )
         for source in sources
     ]
@@ -109,7 +119,8 @@ def build_review_catalog(
         overrides_sha256=overrides_sha256,
         git_commit=git_commit,
         run_id=run_id,
-        batch_run_id=batch_run_id,
+        batch_run_id=single_batch_run_id,
+        batch_run_ids=active_batch_run_ids,
         source_record_id_filter_count=(
             len(source_record_ids) if source_record_ids is not None else None
         ),
@@ -140,7 +151,8 @@ def build_review_catalog(
         "authority_count": _authority_count(catalog_records),
         "source_partition_counts": manifest["source_partition_counts"],
         "download_run_id": run_id,
-        "download_batch_run_id": batch_run_id,
+        "download_batch_run_id": single_batch_run_id,
+        "download_batch_run_ids": active_batch_run_ids,
         "source_record_id_filter_count": (
             len(source_record_ids) if source_record_ids is not None else None
         ),
@@ -174,6 +186,7 @@ def _catalog_record(
     manifest_record: dict | None,
     run_id: str | None,
     batch_run_id: str | None,
+    batch_run_scope_present: bool = False,
 ) -> dict:
     metadata = source.metadata
     host = urlsplit(source.normalized_url).netloc.lower()
@@ -184,8 +197,12 @@ def _catalog_record(
     review_topics = _review_topics(review_engine_checks)
     artifact_sha256 = _from_manifest(manifest_record, "artifact_sha256")
     content_type = _from_manifest(manifest_record, "content_type")
-    source_status = _source_status(manifest_record, bool(run_id or batch_run_id))
+    source_status = _source_status(
+        manifest_record,
+        bool(run_id or batch_run_id or batch_run_scope_present),
+    )
     artifact_run_id = _from_manifest(manifest_record, "run_id") or run_id
+    artifact_batch_run_id = _from_manifest(manifest_record, "download_batch_run_id") or batch_run_id
     record = {
         "source_set_id": source_set_id,
         "source_record_id": source.source_record_id,
@@ -212,7 +229,7 @@ def _catalog_record(
         "expected_parser": _expected_parser(source, content_type),
         "source_status": source_status,
         "download_run_id": artifact_run_id,
-        "download_batch_run_id": batch_run_id,
+        "download_batch_run_id": artifact_batch_run_id,
         "final_url": _from_manifest(manifest_record, "final_url"),
         "artifact_sha256": artifact_sha256,
         "artifact_path": _from_manifest(manifest_record, "artifact_path"),
@@ -241,6 +258,7 @@ def _source_set_manifest(
     git_commit: str | None,
     run_id: str | None,
     batch_run_id: str | None,
+    batch_run_ids: list[str],
     source_record_id_filter_count: int | None,
     supplemental_source_count: int,
     source_delta_input: dict | None,
@@ -263,6 +281,7 @@ def _source_set_manifest(
         "git_commit": git_commit,
         "download_run_id": run_id,
         "download_batch_run_id": batch_run_id,
+        "download_batch_run_ids": batch_run_ids,
         "source_record_id_filter_count": source_record_id_filter_count,
         "supplemental_source_count": supplemental_source_count,
         "source_delta_input": source_delta_input,
@@ -637,15 +656,18 @@ def _load_manifest_records(
     output_dir: Path,
     run_id: str | None,
     batch_run_id: str | None,
+    *,
+    batch_run_ids: list[str] | None = None,
     sources: list[WorkbookSource],
 ) -> tuple[dict[str, dict], list[dict]]:
-    if not run_id and not batch_run_id:
+    active_batch_run_ids = list(batch_run_ids or ([batch_run_id] if batch_run_id else []))
+    if not run_id and not active_batch_run_ids:
         return {}, []
     if run_id:
         return _load_single_manifest_records(output_dir, run_id, sources)
-    if not batch_run_id:
-        return {}, []
-    return _load_batch_manifest_records(output_dir, batch_run_id, sources)
+    if len(active_batch_run_ids) == 1:
+        return _load_batch_manifest_records(output_dir, active_batch_run_ids[0], sources)
+    return _load_multiple_batch_manifest_records(output_dir, active_batch_run_ids, sources)
 
 
 def _load_single_manifest_records(
@@ -766,6 +788,45 @@ def _load_batch_manifest_records(
             "details": {"unknown_source_record_ids": sorted(set(unknown_ids))},
         },
     ]
+    return records_by_id, checks
+
+
+def _load_multiple_batch_manifest_records(
+    output_dir: Path,
+    batch_run_ids: list[str],
+    sources: list[WorkbookSource],
+) -> tuple[dict[str, dict], list[dict]]:
+    records_by_id: dict[str, dict] = {}
+    duplicate_ids = []
+    checks = [
+        {
+            "name": "merged_batch_download_parent_count",
+            "passed": len(batch_run_ids) >= 2,
+            "details": {"batch_run_ids": batch_run_ids, "batch_run_count": len(batch_run_ids)},
+        }
+    ]
+    for batch_run_id in batch_run_ids:
+        batch_records_by_id, batch_checks = _load_batch_manifest_records(
+            output_dir,
+            batch_run_id,
+            sources,
+        )
+        checks.extend(batch_checks)
+        for source_record_id, record in batch_records_by_id.items():
+            if source_record_id in records_by_id:
+                duplicate_ids.append(source_record_id)
+            records_by_id[source_record_id] = record
+
+    checks.append(
+        {
+            "name": "merged_batch_download_manifest_has_no_duplicate_source_records",
+            "passed": not duplicate_ids,
+            "details": {
+                "batch_run_ids": batch_run_ids,
+                "duplicate_source_record_ids": sorted(set(duplicate_ids)),
+            },
+        }
+    )
     return records_by_id, checks
 
 
@@ -925,6 +986,7 @@ def _source_set_id(
     run_id: str | None,
     batch_run_id: str | None,
     git_commit: str | None,
+    batch_run_ids: list[str] | None = None,
     source_scope: dict | None = None,
 ) -> str:
     payload = {
@@ -935,6 +997,8 @@ def _source_set_id(
         "download_batch_run_id": batch_run_id,
         "git_commit": git_commit,
     }
+    if batch_run_ids is not None:
+        payload["download_batch_run_ids"] = batch_run_ids
     if source_scope is not None:
         payload["source_scope"] = source_scope
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()

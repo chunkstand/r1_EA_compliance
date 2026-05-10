@@ -252,6 +252,12 @@ paths = [
   "source_library/catalog/review_sources.sqlite",
   "source_library/catalog/source_graph_nodes.jsonl",
   "source_library/catalog/source_graph_edges.jsonl",
+  "source_library/runs/<run_id>/merged_catalog_gate/source_catalog.jsonl",
+  "source_library/runs/<run_id>/merged_catalog_gate/source_set_manifest.json",
+  "source_library/runs/<run_id>/merged_catalog_gate/catalog_validation.json",
+  "source_library/runs/<run_id>/merged_catalog_gate/review_sources.sqlite",
+  "source_library/runs/<run_id>/merged_catalog_gate/source_graph_nodes.jsonl",
+  "source_library/runs/<run_id>/merged_catalog_gate/source_graph_edges.jsonl",
 ]
 
 [[artifacts]]
