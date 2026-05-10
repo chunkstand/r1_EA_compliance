@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import json
+import sqlite3
 import tempfile
 
 from usfs_r1_ea_sources.forest_plan_source_delta_readiness import (
@@ -166,6 +167,62 @@ def test_forest_plan_source_delta_readiness_sequence_four_uses_merged_extraction
         assert report["extraction_readiness"]["reuse_inventory"]["status"] == "ready"
         assert _check(report, "merged_catalog_gate_validation_passed")["passed"] is True
         assert _check(report, "source_delta_extraction_readiness_covers_expected_rows")["passed"] is True
+
+
+def test_forest_plan_source_delta_readiness_sequence_five_uses_retrieval_coverage_and_eval() -> None:
+    register = load_r1_forest_plan_document_register(REGISTER)
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_sequence_zero_fixture(output_dir, register=register)
+        merged_catalog_dir = _write_merged_catalog_fixture(output_dir, register=register)
+        merged_source_set_id = "source-set-merged-test"
+        blocker_id = register.source_delta_sources[0].source_record_id
+        reuse_inventory_path = _write_reuse_inventory_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=[source.source_record_id for source in register.source_delta_sources],
+        )
+        _write_extraction_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=[source.source_record_id for source in register.source_delta_sources],
+            blocker_id=blocker_id,
+        )
+        _write_retrieval_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            indexed_source_record_ids=[
+                source.source_record_id
+                for source in register.source_delta_sources
+                if source.source_record_id != blocker_id
+            ],
+        )
+
+        result = build_forest_plan_source_delta_readiness_report(
+            output_dir=output_dir,
+            register_path=REGISTER,
+            source_delta_batch_run_id=BATCH_RUN_ID,
+            merged_catalog_gate_dir=merged_catalog_dir,
+            extraction_source_set_id=merged_source_set_id,
+            reuse_inventory_path=reuse_inventory_path,
+            forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
+        )
+
+        report = _read_json(result.report_path)
+        assert result.summary["passed"] is True
+        assert report["retrieval_readiness"]["status"] == "ready_with_blockers"
+        assert report["retrieval_readiness"]["retrieval_eval_passed"] is True
+        assert report["retrieval_readiness"]["expected_source_record_count"] == 159
+        assert report["retrieval_readiness"]["expected_extracted_source_record_count"] == 158
+        assert report["retrieval_readiness"]["indexed_source_record_count_for_expected_sources"] == 158
+        assert report["retrieval_readiness"]["missing_indexed_extracted_source_record_ids"] == []
+        assert report["retrieval_readiness"]["upstream_blocked_source_record_ids"] == [blocker_id]
+        assert report["retrieval_readiness"]["document_role_counts"]["expected"][
+            "primary_land_management_plan"
+        ] == 4
+        assert _check(report, "source_delta_retrieval_readiness_covers_extracted_rows")["passed"] is True
+        assert _check(report, "source_delta_retrieval_eval_passed")["passed"] is True
 
 
 def _write_sequence_zero_fixture(
@@ -441,6 +498,53 @@ def _write_reuse_inventory_fixture(
         },
     )
     return inventory_dir / "reuse_inventory.json"
+
+
+def _write_retrieval_fixture(
+    output_dir: Path,
+    *,
+    source_set_id: str,
+    indexed_source_record_ids: list[str],
+) -> None:
+    retrieval_dir = output_dir / "derived" / source_set_id / "retrieval"
+    retrieval_dir.mkdir(parents=True, exist_ok=True)
+    sqlite_path = retrieval_dir / "evidence_index.sqlite"
+    with sqlite3.connect(sqlite_path) as connection:
+        connection.execute("CREATE TABLE chunks (source_record_id TEXT NOT NULL)")
+        connection.executemany(
+            "INSERT INTO chunks(source_record_id) VALUES (?)",
+            [(source_record_id,) for source_record_id in indexed_source_record_ids],
+        )
+        connection.commit()
+
+    _write_json(
+        retrieval_dir / "retrieval_validation.json",
+        {"source_set_id": source_set_id, "passed": True, "checks": []},
+    )
+    _write_json(
+        retrieval_dir / "summary.json",
+        {
+            "source_set_id": source_set_id,
+            "validation_passed": True,
+            "reviewer_ready": True,
+            "chunk_count": len(indexed_source_record_ids),
+            "source_count": len(indexed_source_record_ids),
+        },
+    )
+    _write_json(
+        retrieval_dir / "retrieval_eval_results.json",
+        {
+            "index_path": str(sqlite_path),
+            "query_count": 2,
+            "passed_count": 2,
+            "failed_count": 0,
+            "passed": True,
+            "cases": [
+                {"id": "flathead-plan", "passed": True},
+                {"id": "kootenai-gap", "passed": True, "expect_no_hits": True},
+            ],
+        },
+    )
 
 
 def _write_json(path: Path, payload: dict) -> None:

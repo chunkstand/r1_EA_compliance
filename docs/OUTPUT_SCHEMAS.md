@@ -3405,8 +3405,9 @@ The JSON report has schema version `r1-forest-plan-source-delta-readiness-v2` an
 - `extraction_readiness`, including manifest/validation/summary paths, per-status counts, extracted
   vs blocked source counts, blocker error classes, source-record coverage completeness, and nested
   reuse-inventory coverage details for the expected source-delta rows
-- `retrieval_readiness`, which remains a placeholder until retrieval artifacts are built for the
-  chosen extraction source set
+- `retrieval_readiness`, including index/validation/summary paths, retrieval-eval path and pass
+  state, expected-vs-indexed extracted source coverage, upstream blocked source IDs, document-role
+  coverage counts, and per-forest-unit retrieval coverage summaries
 - `forest_profile_readiness_placeholders`, with source-delta, catalog-confirmed, gap, and blocker
   counts by forest unit
 - `checks`, each with `name`, `passed`, and `details`
@@ -3416,7 +3417,9 @@ longer covers the emitted register IDs, when the scoped catalog gate no longer v
 catalog source IDs diverge from the register source-delta rows, when gap/catalog-confirmed rows leak
 into the scoped source-delta catalog, when the active canonical catalog is not the 190-row
 non-source-delta view, or when official-source gap evidence is missing, stale, or accepts a
-replacement candidate without the register moving out of `official_source_gap_documented`.
+replacement candidate without the register moving out of `official_source_gap_documented`. When
+retrieval artifacts exist, the gate also fails if extracted source-delta rows are missing from the
+retrieval index or if retrieval eval results do not pass.
 
 ## Forest-Plan Official-Source Gap Evidence Config
 
@@ -3538,7 +3541,8 @@ The `retrieval-build` command writes:
 - `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
 - `source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl`
 - `source_library/derived/<source_set_id>/diagnostics/summary.json`
-- `source_library/catalog/review_sources.sqlite`
+- `source_library/catalog/review_sources.sqlite` by default, or
+  `<catalog-dir>/review_sources.sqlite` when `--catalog-dir` is supplied
 
 The command validates that extraction passed, extraction scope is complete, chunk IDs are unique,
 chunk text hashes still match, chunk offsets are valid, catalog topics are available, linked
@@ -3599,6 +3603,7 @@ and chunk content hash.
 
 - eval file path
 - top-k setting
+- per-case `expect_no_hits` state when declared
 - query count, passed count, failed count
 - pass rate
 - source hit rate
@@ -3608,6 +3613,9 @@ and chunk content hash.
 - zero-result rate
 - per-case query, filters, expectations, failure reasons, missing expected source IDs, missing
   expected terms, top source IDs, and top evidence results
+
+Cases may declare `expect_no_hits: true` for deterministic negative checks. Those cases pass only
+when retrieval returns zero hits and do not require provenance-bearing results.
 
 ## Source Claim Graph Outputs
 

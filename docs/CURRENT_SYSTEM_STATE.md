@@ -47,18 +47,24 @@ canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
 validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and now
 also evaluates the Sequence 4 merged-catalog extraction state. The generated JSON/Markdown report
 uses schema `r1-forest-plan-source-delta-readiness-v2` and is under the source-delta run's ignored
-`source_delta_readiness/` directory. The committed merged extraction/readiness artifacts currently
-reflect the pre-fallback run; they use archived merged catalog `source-set-7e2652d23e764068`,
-reuse inventory, and `extract-build --catalog-dir ...` so the active canonical catalog remains
-untouched. Current committed Sequence 4 artifact results:
+`source_delta_readiness/` directory. The committed earlier artifact still reflects the pre-fallback
+run, but the live merged replay is now refreshed on archived merged catalog
+`source-set-7e2652d23e764068` with the active canonical catalog still untouched. Current live
+Sequence 4 plus Sequence 5 readiness results:
 
 - merged reuse inventory: `reuse_extraction=189`, `needs_extract=159`, `excluded=1`
-- merged extraction summary: `195` extracted rows, `153` explicit `parser_error` rows, `1`
-  scope-excluded row, `19,133` chunks
-- support-document readiness: `159` expected source-delta rows covered, `6` extracted rows, `153`
-  explicit parser blockers, status `ready_with_blockers`
-- current blocker class: `docling_unavailable=153`
-- retrieval readiness: `not_started`
+- merged extraction summary: `341` extracted rows, `7` explicit `parser_error` rows, `1`
+  scope-excluded row, `75,708` chunks
+- support-document extraction readiness: `159` expected source-delta rows covered, `152` extracted
+  rows, `7` explicit parser blockers, status `ready_with_blockers`
+- current blocker classes: `pdf_text_fallback_empty=5`, `pdf_text_fallback_failed=2`
+- retrieval validation: passed on `source-set-7e2652d23e764068` with
+  `--catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate`
+  plus `--allow-failed-extraction --allow-partial-extraction`
+- source-delta retrieval eval: `12/12` passed from
+  `config/r1_forest_plan_source_delta_retrieval_eval.json`
+- retrieval readiness: `ready_with_blockers`, with `152/152` extracted support-document rows
+  indexed and the same `7` upstream parser blockers kept explicit
 
 Sequence 4 runtime alignment update after that artifact:
 
@@ -70,8 +76,12 @@ Sequence 4 runtime alignment update after that artifact:
 - targeted live smoke over merged-catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and
   `-04` succeeded with `parser_name=pypdf_text_fallback`,
   `fallback_error_class=docling_unavailable`, and large extracted text payloads.
-- the full merged extraction and readiness artifact replay still needs to be rerun to replace the
-  older `153`-blocker report with post-fallback counts.
+- the remaining blocker set is now narrow and explicit:
+  `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+  `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+  `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
+- the next milestone is Sequence 6 forest-profile readiness integration, not another extraction or
+  retrieval baseline replay.
 
 The Sequence 3 merged catalog contract is implemented without replacing the active canonical
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit

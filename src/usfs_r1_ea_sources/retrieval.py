@@ -311,6 +311,7 @@ def run_retrieval_eval(
     case_results = []
     for case in cases:
         filters = dict(case.get("filters") or {})
+        expect_no_hits = bool(case.get("expect_no_hits"))
         result = query_retrieval_index(
             index_path=index_path,
             query=str(case["query"]),
@@ -325,21 +326,29 @@ def run_retrieval_eval(
         hits = result["results"]
         expected_sources = [str(value) for value in case.get("expected_source_record_ids", [])]
         expected_terms = [str(value) for value in case.get("expected_terms", [])]
-        min_hits = int(case.get("min_hits", 1))
-        source_hit = not expected_sources or any(
-            hit["source_record_id"] in expected_sources for hit in hits
+        min_hits = 0 if expect_no_hits else int(case.get("min_hits", 1))
+        zero_hits = len(hits) == 0
+        source_hit = (
+            zero_hits
+            if expect_no_hits
+            else (not expected_sources or any(hit["source_record_id"] in expected_sources for hit in hits))
         )
-        term_hit = not expected_terms or _expected_terms_found(expected_terms, hits)
+        term_hit = zero_hits if expect_no_hits else (
+            not expected_terms or _expected_terms_found(expected_terms, hits)
+        )
         missing_expected_sources = [
             source_id
             for source_id in expected_sources
             if source_id not in {hit["source_record_id"] for hit in hits}
         ]
-        missing_expected_terms = _missing_expected_terms(expected_terms, hits)
+        missing_expected_terms = [] if expect_no_hits else _missing_expected_terms(expected_terms, hits)
         min_hits_met = len(hits) >= min_hits
-        provenance_supported = bool(hits) and any(_hit_has_required_provenance(hit) for hit in hits)
+        provenance_supported = (
+            zero_hits if expect_no_hits else (bool(hits) and any(_hit_has_required_provenance(hit) for hit in hits))
+        )
         passed = min_hits_met and source_hit and term_hit and provenance_supported
         failure_reasons = _eval_failure_reasons(
+            expect_no_hits=expect_no_hits,
             min_hits_met=min_hits_met,
             source_hit=source_hit,
             term_hit=term_hit,
@@ -352,6 +361,7 @@ def run_retrieval_eval(
                 "filters": filters,
                 "expected_source_record_ids": expected_sources,
                 "expected_terms": expected_terms,
+                "expect_no_hits": expect_no_hits,
                 "top_k": result["limit"],
                 "hit_count": len(hits),
                 "top_source_record_ids": [hit["source_record_id"] for hit in hits],
@@ -1166,12 +1176,17 @@ def _missing_expected_terms(expected_terms: list[str], hits: list[dict]) -> list
 
 def _eval_failure_reasons(
     *,
+    expect_no_hits: bool,
     min_hits_met: bool,
     source_hit: bool,
     term_hit: bool,
     provenance_supported: bool,
 ) -> list[str]:
     reasons = []
+    if expect_no_hits:
+        if not source_hit:
+            reasons.append("expected_zero_hits")
+        return reasons
     if not min_hits_met:
         reasons.append("min_hits_not_met")
     if not source_hit:

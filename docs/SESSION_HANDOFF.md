@@ -75,10 +75,10 @@ Sequence 4 extraction/parser readiness update: the merged reuse inventory on
 `source-set-7e2652d23e764068` classified `reuse_extraction=189`, `needs_extract=159`, and
 `excluded=1`. `extract-build --catalog-dir ... --reuse-existing --reuse-inventory-path ...` ran
 against the archived merged gate without touching `source_library/catalog`, reused `189` prior
-rows, extracted `195/349` merged-corpus rows, and left `153` explicit `parser_error` rows with
-`error_class=docling_unavailable`. For the `159` support-document source-delta rows specifically,
-the readiness gate now reports `ready_with_blockers`, `6` extracted rows, `153` explicit parser
-blockers, complete source-record coverage, and retrieval still `not_started`.
+rows, and after the fallback replay now extracts `341/349` merged-corpus rows with `7` explicit
+`parser_error` rows. For the `159` support-document source-delta rows specifically, extraction
+readiness is now `ready_with_blockers` with `152` extracted rows, `7` explicit parser blockers,
+and complete source-record coverage.
 
 Sequence 4 runtime-gap update after that artifact: `extract-build` now falls back to
 `pypdf_text_fallback` when Docling is unavailable, and alternate-interpreter Docling is opt-in
@@ -86,10 +86,22 @@ through `USFS_R1_DOCLING_PYTHON` instead of being assumed implicitly. Targeted l
 catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and `-04` now succeeds with
 `parser_name=pypdf_text_fallback` and `fallback_error_class=docling_unavailable`.
 
-Immediate next sequence: rerun the full merged extraction and source-delta readiness artifacts on
-`source-set-7e2652d23e764068` to refresh the older `153`-blocker report, then advance to Sequence 5
-retrieval readiness. Keep both official-source gap rows explicit and do not rerun unrelated
-downloads.
+Sequence 5 retrieval readiness update: `retrieval-build` now accepts `--catalog-dir` so the
+archived merged catalog can supply review topics without replacing `source_library/catalog`.
+`retrieval-eval` now supports `expect_no_hits: true` cases, and the tracked Region 1 source-delta
+suite is `config/r1_forest_plan_source_delta_retrieval_eval.json`. Live retrieval validation now
+passes on `source-set-7e2652d23e764068` with
+`--allow-failed-extraction --allow-partial-extraction`, the `12`-case source-delta eval passes,
+and the refreshed readiness gate reports retrieval `ready_with_blockers` with `152/152` extracted
+support-document rows indexed and the same `7` upstream parser blockers preserved explicitly:
+`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
+
+Immediate next sequence: Sequence 6 forest-profile readiness integration. Wire the support-document
+corpus into profile readiness so blockers become document-role-specific by forest unit rather than
+generic source-delta placeholders. Keep both official-source gap rows explicit and do not rerun
+unrelated downloads.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
@@ -121,10 +133,17 @@ Latest Sequence 4 verification:
 - `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py src/usfs_r1_ea_sources/reuse_inventory.py src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py src/usfs_r1_ea_sources/cli_derived.py tests/test_cli.py tests/test_extract.py tests/test_reuse_inventory.py tests/test_forest_plan_source_delta_readiness.py` passed.
 - `PYTHONPATH=src python -m compileall src` and `git diff --check` passed.
 - `PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate` passed with `reuse_extraction=189`, `needs_extract=159`, `excluded=1`.
-- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --reuse-existing --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json` completed with `195` extracted rows, `153` explicit `parser_error` rows, `1` excluded row, and `validation_passed=false` because all current blockers are real parser failures rather than hidden omissions.
-- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --merged-catalog-gate-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --extraction-source-set-id source-set-7e2652d23e764068 --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json` passed with schema `r1-forest-plan-source-delta-readiness-v2`, `ready_with_blockers`, `6` extracted support-document rows, and `153` explicit support-document parser blockers.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --reuse-existing --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json` completed with `341` extracted rows, `7` explicit `parser_error` rows, `1` excluded row, and `validation_passed=false` because the remaining blockers are real parser failures rather than hidden omissions.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --merged-catalog-gate-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --extraction-source-set-id source-set-7e2652d23e764068 --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json` passed with schema `r1-forest-plan-source-delta-readiness-v2`, extraction `ready_with_blockers`, retrieval `ready_with_blockers`, `152` extracted support-document rows, and `7` explicit support-document parser blockers.
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_cli.py tests/test_forest_plan_source_delta_readiness.py tests/test_reuse_inventory.py` passed `52`.
 - `PYTHONPATH=src python - <<'PY' ... _extract_pdf(...) ... PY` smoke over merged-catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and `-04` succeeded with `parser_name=pypdf_text_fallback`, `fallback_error_class=docling_unavailable`, and large extracted text payloads (`942,552`, `3,878,548`, and `137,467` chars respectively).
+
+Latest Sequence 5 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_forest_plan_source_delta_readiness.py tests/test_cli.py` passed `42`.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py` passed `27`.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --allow-failed-extraction --allow-partial-extraction` passed with `validation_passed=true`, `reviewer_ready=false`, and `75,708` indexed chunks across `341` extracted sources.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-7e2652d23e764068 --eval-file config/r1_forest_plan_source_delta_retrieval_eval.json` passed `12/12`.
 
 ## Region 1 Forest-Plan Document Register Hardening
 

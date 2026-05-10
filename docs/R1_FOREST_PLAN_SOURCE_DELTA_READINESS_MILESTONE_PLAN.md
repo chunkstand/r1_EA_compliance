@@ -405,18 +405,20 @@ Implementation status:
   `reuse_inventory_records.jsonl`.
 - The live merged reuse inventory over `source-set-7e2652d23e764068` classified
   `reuse_extraction=189`, `needs_extract=159`, and `excluded=1`.
-- The live merged extraction pass reused prior extracted text for `189` rows and produced
-  `195` extracted rows plus `153` explicit `parser_error` rows.
+- The live merged extraction replay reused prior extracted text for `189` rows and now produces
+  `341` extracted rows plus `7` explicit `parser_error` rows.
 - The live Sequence 4 readiness gate passes with `0` failed checks, status
   `ready_with_blockers`, complete coverage for all `159` support-document source-delta rows,
-  `6` extracted support-document rows, and `153` explicit support-document parser blockers.
+  `152` extracted support-document rows, and `7` explicit support-document parser blockers.
 - The runtime gap behind those blockers is now closed in code: default `extract-build` falls back to
   `pypdf_text_fallback` when Docling is unavailable, and `USFS_R1_DOCLING_PYTHON` can opt into an
   alternate Docling interpreter explicitly.
 - Targeted live smoke on merged-catalog PDFs `R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and `-04`
   now succeeds with `pypdf_text_fallback` and `fallback_error_class=docling_unavailable`.
-- The remaining closeout step for this sequence is a full merged extraction and readiness replay to
-  replace the earlier `153`-blocker artifact with post-fallback counts before Sequence 5 starts.
+- The remaining blocker set is now explicit and narrow:
+  `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+  `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+  `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
 
 ### Sequence 5 - Retrieval Readiness And Evaluation
 
@@ -453,6 +455,21 @@ Stop conditions:
 
 - Retrieval cannot distinguish a missing official-source gap from a retrieved support document.
 - Evaluation requires model-generated assertions without source citations.
+
+Closeout:
+
+- `retrieval-build` now accepts `--catalog-dir` so the archived merged catalog can supply review
+  topics without replacing `source_library/catalog`.
+- `retrieval-eval` now supports `expect_no_hits: true` cases for deterministic official-source-gap
+  negatives.
+- The Region 1 source-delta retrieval suite is tracked at
+  `config/r1_forest_plan_source_delta_retrieval_eval.json`.
+- Live retrieval validation now passes on `source-set-7e2652d23e764068` with
+  `--allow-failed-extraction --allow-partial-extraction`, the `12`-case source-delta eval passes,
+  and the refreshed readiness gate reports retrieval `ready_with_blockers` with `152/152`
+  extracted support-document rows indexed and the same `7` upstream parser blockers preserved as
+  blockers rather than hidden omissions.
+- Sequence 6 is now the next milestone boundary.
 
 ### Sequence 6 - Forest-Profile Readiness Integration
 
@@ -568,9 +585,10 @@ The local atomic commit for closeout should include:
 
 ## Next Immediate Slice
 
-Sequence 4 gate and runtime-gap implementation are now closed for the current baseline: the merged
-extraction path is implemented without touching the canonical catalog, the readiness gate accounts
-for all support-document rows with explicit parser blockers, and default PDF extraction no longer
-hard-fails on `docling_unavailable`. The next immediate slice is to rerun the full merged
-extraction/readiness artifacts on `source-set-7e2652d23e764068` and then advance to Sequence 5
-retrieval readiness with refreshed post-fallback counts.
+Sequences 4 and 5 are now closed for the current baseline: the merged extraction path is
+implemented without touching the canonical catalog, the readiness gate accounts for all
+support-document rows with explicit parser blockers, default PDF extraction no longer hard-fails on
+`docling_unavailable`, retrieval validation is running against the archived merged catalog, and the
+source-delta retrieval eval suite is passing. The next immediate slice is Sequence 6 forest-profile
+readiness integration so Region 1 blockers become document-role-specific by forest unit instead of
+generic source-delta placeholders.

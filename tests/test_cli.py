@@ -157,6 +157,25 @@ def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
     assert args.reuse_existing is True
 
 
+def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "retrieval-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-7e2652d23e764068",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+        ]
+    )
+
+    assert args.command == "retrieval-build"
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+
+
 def test_reuse_inventory_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

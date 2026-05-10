@@ -155,6 +155,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     retrieval_build.add_argument("--output-dir", default=Path("source_library"), type=Path)
     retrieval_build.add_argument("--source-set-id")
     retrieval_build.add_argument("--chunks-path", type=Path)
+    retrieval_build.add_argument("--catalog-dir", type=Path)
     retrieval_build.add_argument("--catalog-sqlite-path", type=Path)
     retrieval_build.add_argument("--allow-failed-extraction", action="store_true")
     retrieval_build.add_argument("--allow-partial-extraction", action="store_true")
@@ -355,11 +356,14 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         return 0 if result.summary["validation_passed"] else 1
 
     if args.command == "retrieval-build":
+        catalog_sqlite_path = args.catalog_sqlite_path
+        if args.catalog_dir is not None:
+            catalog_sqlite_path = args.catalog_dir / "review_sources.sqlite"
         result = build_retrieval_index(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             chunks_path=args.chunks_path,
-            catalog_sqlite_path=args.catalog_sqlite_path,
+            catalog_sqlite_path=catalog_sqlite_path,
             allow_failed_extraction=args.allow_failed_extraction,
             allow_partial_extraction=args.allow_partial_extraction,
         )

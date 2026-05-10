@@ -66,15 +66,38 @@ The generated report remains ignored under the source-delta run directory, recor
 `config/r1_forest_plan_official_source_gap_evidence.json` as the current evidence for the two
 preserved official-source gaps, and now also records the Sequence 4 merged-catalog extraction gate
 under schema `r1-forest-plan-source-delta-readiness-v2`. The latest committed readiness artifact
-still reflects the pre-fallback merged extraction pass (`195/349` extracted rows, `153`
-`docling_unavailable` parser blockers, and `ready_with_blockers` for the `159` support-document
-rows), but the extractor has now been aligned so default `python` runs no longer stop at
-`docling_unavailable`: representative merged-catalog support-document PDFs
-`R1PLAN-beaverhead-deerlodge-nf-02`, `-03`, and `-04` now parse successfully through
-`pypdf_text_fallback` with `fallback_error_class=docling_unavailable`. The next operational step is
-to rerun the full merged extraction and refresh the readiness artifact before moving to retrieval.
-The completion plan for finishing parser/retrieval readiness and incorporating the support-document
-layer into a merged corpus is
+still reflects the older pre-fallback state, but the live merged-catalog replay is now refreshed:
+`extract-build --catalog-dir ... --reuse-existing --reuse-inventory-path ...` on
+`source-set-7e2652d23e764068` now yields `341/349` extracted rows, `7` explicit `parser_error`
+rows, and `75,708` chunks. For the `159` support-document source-delta rows specifically, that is
+`152` extracted rows plus `7` explicit blockers:
+`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, with blocker
+classes `pdf_text_fallback_empty=5` and `pdf_text_fallback_failed=2`.
+
+Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build \
+  --output-dir source_library \
+  --source-set-id source-set-7e2652d23e764068 \
+  --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate \
+  --allow-failed-extraction \
+  --allow-partial-extraction
+
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval \
+  --output-dir source_library \
+  --source-set-id source-set-7e2652d23e764068 \
+  --eval-file config/r1_forest_plan_source_delta_retrieval_eval.json
+```
+
+The retrieval index validates over the archived merged catalog without touching the active
+canonical catalog, the `12`-case Region 1 source-delta eval suite passes, and the refreshed
+`forest-plan-source-delta-readiness` report now records retrieval `ready_with_blockers` with
+`152/152` extracted support-document rows indexed and the same `7` upstream parser blockers kept
+explicit. The completion plan for incorporating this support-document layer into forest-profile
+readiness and downstream replay is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 The first merged catalog gate is archived, not promoted over the canonical catalog, at
@@ -763,6 +786,9 @@ indexed chunk source for every extracted source. Scope-excluded rows remain term
 but do not require chunks. For a one-source diagnostic slice, pass `--allow-partial-extraction`; the
 command will build the index but mark `reviewer_ready` as `false`.
 
+For archived Region 1 merged-catalog gates, pass `--catalog-dir <archived-catalog-dir>` so review
+topics come from the same archived gate instead of the active canonical catalog.
+
 Query the evidence index with text and reviewer filters:
 
 ```bash
@@ -1079,7 +1105,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval \
 
 The eval checks whether expected compliance-review evidence can be retrieved with citation-bearing
 provenance. It reports hit rate, expected-term coverage, citation coverage, unsupported-answer rate,
-and zero-result rate.
+and zero-result rate. Eval cases may also declare `expect_no_hits: true` for deterministic negative
+cases such as official-source gaps. The Region 1 forest-plan source-delta suite lives at
+`config/r1_forest_plan_source_delta_retrieval_eval.json`.
 
 Build the document evidence graph:
 

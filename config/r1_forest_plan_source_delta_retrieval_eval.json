@@ -1,0 +1,157 @@
+[
+  {
+    "id": "beaverhead-deerlodge-rod",
+    "query": "beaverhead deerlodge forest plan record of decision",
+    "expected_source_record_ids": [
+      "R1PLAN-beaverhead-deerlodge-nf-04"
+    ],
+    "expected_terms": [
+      "record",
+      "decision"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-04"
+    }
+  },
+  {
+    "id": "bitterroot-grizzly-biological-assessment",
+    "query": "bitterroot grizzly biological assessment re-consultation forest plan elk amendment",
+    "expected_source_record_ids": [
+      "R1PLAN-bitterroot-nf-12"
+    ],
+    "expected_terms": [
+      "grizzly",
+      "biological assessment"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-bitterroot-nf-12"
+    }
+  },
+  {
+    "id": "custer-gallatin-biological-assessment",
+    "query": "custer gallatin biological assessment threatened endangered proposed candidate species",
+    "expected_source_record_ids": [
+      "R1PLAN-custer-gallatin-nf-06"
+    ],
+    "expected_terms": [
+      "biological assessment",
+      "candidate species"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-custer-gallatin-nf-06"
+    }
+  },
+  {
+    "id": "dakota-prairie-plan-part",
+    "query": "dakota prairie chapter 2 geographic area direction grassland",
+    "expected_source_record_ids": [
+      "R1PLAN-dakota-prairie-grasslands-06"
+    ],
+    "expected_terms": [
+      "chapter 2",
+      "geographic area direction"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-dakota-prairie-grasslands-06"
+    }
+  },
+  {
+    "id": "flathead-revised-land-management-plan",
+    "query": "flathead revised land management plan 2018",
+    "expected_source_record_ids": [
+      "R1PLAN-flathead-nf-02"
+    ],
+    "expected_terms": [
+      "land management plan",
+      "2018"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-flathead-nf-02"
+    }
+  },
+  {
+    "id": "helena-lewis-and-clark-rod",
+    "query": "helena lewis clark forest plan record of decision",
+    "expected_source_record_ids": [
+      "R1PLAN-helena-lewis-and-clark-nf-03"
+    ],
+    "expected_terms": [
+      "record",
+      "decision"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-03"
+    }
+  },
+  {
+    "id": "idaho-panhandle-feis",
+    "query": "idaho panhandle final eis 2013 forest plan",
+    "expected_source_record_ids": [
+      "R1PLAN-idaho-panhandle-nfs-04"
+    ],
+    "expected_terms": [
+      "final",
+      "2013"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-idaho-panhandle-nfs-04"
+    }
+  },
+  {
+    "id": "kootenai-forest-plan",
+    "query": "kootenai 2015 forest plan",
+    "expected_source_record_ids": [
+      "R1PLAN-kootenai-nf-02"
+    ],
+    "expected_terms": [
+      "forest plan",
+      "2015"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-kootenai-nf-02"
+    }
+  },
+  {
+    "id": "lolo-forest-plan",
+    "query": "lolo 1986 forest plan appendices",
+    "expected_source_record_ids": [
+      "R1PLAN-lolo-nf-02"
+    ],
+    "expected_terms": [
+      "forest plan",
+      "appendices"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-lolo-nf-02"
+    }
+  },
+  {
+    "id": "nez-perce-clearwater-land-management-plan",
+    "query": "nez perce clearwater land management plan",
+    "expected_source_record_ids": [
+      "R1PLAN-nez-perce-clearwater-nfs-06"
+    ],
+    "expected_terms": [
+      "land management plan"
+    ],
+    "filters": {
+      "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06"
+    }
+  },
+  {
+    "id": "kootenai-biological-assessment-gap",
+    "query": "kootenai plan level biological assessment 2015 forest plan",
+    "expect_no_hits": true,
+    "filters": {
+      "citation": "R1PLAN-kootenai-nf-18"
+    }
+  },
+  {
+    "id": "nez-perce-clearwater-project-record-gap",
+    "query": "nez perce clearwater revised land management plan project record",
+    "expect_no_hits": true,
+    "filters": {
+      "citation": "R1PLAN-nez-perce-clearwater-nfs-18"
+    }
+  }
+]

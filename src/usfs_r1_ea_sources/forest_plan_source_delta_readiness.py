@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 import json
+import sqlite3
 
 from .records import sha256_file
 from .workbook import R1ForestPlanDocumentRegister
@@ -223,11 +224,20 @@ def build_forest_plan_source_delta_readiness_report(
     retrieval_readiness = _retrieval_readiness(
         output_dir=output_dir,
         source_set_id=effective_extraction_source_set_id,
+        register=register,
+        expected_source_ids=source_delta_source_ids,
     )
     profile_readiness = _profile_readiness_placeholders(
         register=register,
         forest_plan_profiles_path=forest_plan_profiles_path,
     )
+    if retrieval_readiness["started"]:
+        checks.extend(
+            [
+                _retrieval_readiness_covers_extracted_source_delta_rows_check(retrieval_readiness),
+                _retrieval_eval_passed_check(retrieval_readiness),
+            ]
+        )
     passed = all(check["passed"] for check in checks)
     report = {
         "schema_version": SOURCE_DELTA_READINESS_SCHEMA_VERSION,
@@ -318,6 +328,7 @@ def build_forest_plan_source_delta_readiness_report(
         "extraction_readiness_status": extraction_readiness["status"],
         "extraction_blocker_count": extraction_readiness["blocked_source_record_count"],
         "retrieval_readiness_status": retrieval_readiness["status"],
+        "retrieval_eval_passed": retrieval_readiness["retrieval_eval_passed"],
         "failed_check_count": sum(1 for check in checks if not check["passed"]),
         "report_path": str(report_path),
         "markdown_path": str(markdown_path),
@@ -532,17 +543,50 @@ def _extraction_readiness(
     }
 
 
-def _retrieval_readiness(*, output_dir: Path, source_set_id: str) -> dict[str, Any]:
+def _retrieval_readiness(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    register: R1ForestPlanDocumentRegister,
+    expected_source_ids: set[str],
+) -> dict[str, Any]:
     derived_dir = output_dir / "derived" / source_set_id if source_set_id else output_dir / "derived"
+    diagnostics_dir = derived_dir / "diagnostics"
     retrieval_dir = derived_dir / "retrieval"
     index_path = retrieval_dir / "evidence_index.sqlite"
     validation_path = retrieval_dir / "retrieval_validation.json"
     summary_path = retrieval_dir / "summary.json"
+    eval_path = retrieval_dir / "retrieval_eval_results.json"
+    extraction_manifest_path = diagnostics_dir / "extraction_manifest.jsonl"
     validation = _read_json_if_exists(validation_path)
+    eval_results = _read_json_if_exists(eval_path)
+    manifest_records = _read_jsonl_if_exists(extraction_manifest_path)
+    extracted_source_ids = {
+        str(record.get("source_record_id") or "")
+        for record in manifest_records
+        if str(record.get("source_record_id") or "") in expected_source_ids
+        and str(record.get("status") or "") == "extracted"
+    }
+    indexed_source_ids = _retrieval_index_source_ids(index_path, expected_source_ids)
+    missing_indexed_extracted_source_ids = sorted(extracted_source_ids - indexed_source_ids)
+    upstream_blocked_source_ids = sorted(expected_source_ids - extracted_source_ids)
+    coverage_by_unit = _retrieval_coverage_by_unit(
+        register=register,
+        expected_source_ids=expected_source_ids,
+        extracted_source_ids=extracted_source_ids,
+        indexed_source_ids=indexed_source_ids,
+    )
+    started = index_path.exists() or validation_path.exists() or summary_path.exists() or eval_path.exists()
     status = "not_started"
-    if index_path.exists() or validation_path.exists():
-        status = "ready" if validation.get("passed") else "partial"
+    if started:
+        validation_passed = bool(validation.get("passed"))
+        eval_passed = bool(eval_results.get("passed"))
+        if validation_passed and eval_passed and not missing_indexed_extracted_source_ids:
+            status = "ready_with_blockers" if upstream_blocked_source_ids else "ready"
+        else:
+            status = "partial"
     return {
+        "started": started,
         "status": status,
         "source_set_id": source_set_id or None,
         "index_path": str(index_path),
@@ -552,6 +596,144 @@ def _retrieval_readiness(*, output_dir: Path, source_set_id: str) -> dict[str, A
         "retrieval_validation_passed": bool(validation.get("passed")),
         "retrieval_summary_path": str(summary_path),
         "retrieval_summary_exists": summary_path.exists(),
+        "retrieval_summary": _read_json_if_exists(summary_path) or None,
+        "retrieval_eval_path": str(eval_path),
+        "retrieval_eval_exists": eval_path.exists(),
+        "retrieval_eval_passed": bool(eval_results.get("passed")),
+        "retrieval_eval_query_count": int(eval_results.get("query_count") or 0),
+        "retrieval_eval_failed_case_ids": [
+            str(case.get("id") or "")
+            for case in (eval_results.get("cases") or [])
+            if not case.get("passed")
+        ],
+        "expected_source_record_count": len(expected_source_ids),
+        "expected_extracted_source_record_count": len(extracted_source_ids),
+        "indexed_source_record_count_for_expected_sources": len(indexed_source_ids),
+        "missing_indexed_extracted_source_record_ids": missing_indexed_extracted_source_ids[:20],
+        "upstream_blocked_source_record_ids": upstream_blocked_source_ids[:20],
+        "document_role_counts": coverage_by_unit["document_role_counts"],
+        "forest_units": coverage_by_unit["forest_units"],
+    }
+
+
+def _retrieval_index_source_ids(index_path: Path, expected_source_ids: set[str]) -> set[str]:
+    if not index_path.exists():
+        return set()
+    try:
+        with sqlite3.connect(index_path) as connection:
+            rows = connection.execute(
+                "SELECT DISTINCT source_record_id FROM chunks WHERE source_record_id IS NOT NULL"
+            ).fetchall()
+    except sqlite3.Error:
+        return set()
+    return {
+        str(row[0] or "")
+        for row in rows
+        if str(row[0] or "") in expected_source_ids
+    }
+
+
+def _retrieval_coverage_by_unit(
+    *,
+    register: R1ForestPlanDocumentRegister,
+    expected_source_ids: set[str],
+    extracted_source_ids: set[str],
+    indexed_source_ids: set[str],
+) -> dict[str, Any]:
+    document_role_counts = Counter()
+    extracted_role_counts = Counter()
+    indexed_role_counts = Counter()
+    rows_by_unit = defaultdict(list)
+    for row in register.rows:
+        if (
+            row["draft_status"] == "source_delta_required"
+            and row["proposed_source_record_id"] in expected_source_ids
+        ):
+            rows_by_unit[row["forest_unit_id"]].append(row)
+            document_role_counts[row["document_role"]] += 1
+            if row["proposed_source_record_id"] in extracted_source_ids:
+                extracted_role_counts[row["document_role"]] += 1
+            if row["proposed_source_record_id"] in indexed_source_ids:
+                indexed_role_counts[row["document_role"]] += 1
+
+    forest_units = []
+    for forest_unit_id, rows in sorted(rows_by_unit.items()):
+        forest_units.append(
+            {
+                "forest_unit_id": forest_unit_id,
+                "expected_source_record_count": len(rows),
+                "expected_extracted_source_record_count": sum(
+                    1 for row in rows if row["proposed_source_record_id"] in extracted_source_ids
+                ),
+                "indexed_source_record_count": sum(
+                    1 for row in rows if row["proposed_source_record_id"] in indexed_source_ids
+                ),
+                "document_role_counts": dict(Counter(row["document_role"] for row in rows)),
+                "extracted_document_role_counts": dict(
+                    Counter(
+                        row["document_role"]
+                        for row in rows
+                        if row["proposed_source_record_id"] in extracted_source_ids
+                    )
+                ),
+                "indexed_document_role_counts": dict(
+                    Counter(
+                        row["document_role"]
+                        for row in rows
+                        if row["proposed_source_record_id"] in indexed_source_ids
+                    )
+                ),
+                "missing_indexed_extracted_source_record_ids": [
+                    row["proposed_source_record_id"]
+                    for row in rows
+                    if row["proposed_source_record_id"] in extracted_source_ids
+                    and row["proposed_source_record_id"] not in indexed_source_ids
+                ][:20],
+            }
+        )
+
+    return {
+        "document_role_counts": {
+            "expected": dict(document_role_counts),
+            "extracted": dict(extracted_role_counts),
+            "indexed": dict(indexed_role_counts),
+        },
+        "forest_units": forest_units,
+    }
+
+
+def _retrieval_readiness_covers_extracted_source_delta_rows_check(
+    retrieval_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    missing_ids = list(retrieval_readiness.get("missing_indexed_extracted_source_record_ids") or [])
+    return {
+        "name": "source_delta_retrieval_readiness_covers_extracted_rows",
+        "passed": not missing_ids,
+        "details": {
+            "expected_extracted_source_record_count": retrieval_readiness.get(
+                "expected_extracted_source_record_count"
+            ),
+            "indexed_source_record_count_for_expected_sources": retrieval_readiness.get(
+                "indexed_source_record_count_for_expected_sources"
+            ),
+            "missing_indexed_extracted_source_record_ids": missing_ids,
+        },
+    }
+
+
+def _retrieval_eval_passed_check(retrieval_readiness: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "name": "source_delta_retrieval_eval_passed",
+        "passed": bool(retrieval_readiness.get("retrieval_eval_passed")),
+        "details": {
+            "retrieval_eval_exists": bool(retrieval_readiness.get("retrieval_eval_exists")),
+            "retrieval_eval_path": retrieval_readiness.get("retrieval_eval_path"),
+            "retrieval_eval_query_count": retrieval_readiness.get("retrieval_eval_query_count"),
+            "retrieval_eval_failed_case_ids": retrieval_readiness.get(
+                "retrieval_eval_failed_case_ids"
+            )
+            or [],
+        },
     }
 
 
@@ -1126,6 +1308,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
         f"- Extraction source set: `{report['extraction_readiness']['source_set_id']}`",
         f"- Extraction readiness: `{report['extraction_readiness']['status']}`",
         f"- Retrieval readiness: `{report['retrieval_readiness']['status']}`",
+        f"- Retrieval eval passed: `{str(report['retrieval_readiness']['retrieval_eval_passed']).lower()}`",
         "",
         "## Checks",
         "",
