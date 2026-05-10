@@ -35,6 +35,7 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
         report = _read_json(result.report_path)
         assert result.summary["passed"] is True
         assert result.markdown_path.exists()
+        assert report["schema_version"] == "r1-forest-plan-source-delta-readiness-v3"
         assert report["register"]["source_delta_count"] == 159
         assert report["register"]["skipped_gap_source_record_ids"] == [
             "R1PLAN-kootenai-nf-18",
@@ -49,10 +50,15 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
             "R1PLAN-nez-perce-clearwater-nfs-18",
         ]
         assert _check(report, "official_source_gap_evidence_current_for_register")["passed"] is True
-        assert any(
-            unit["official_source_gap_ids"] == ["R1PLAN-kootenai-nf-18"]
-            for unit in report["forest_profile_readiness_placeholders"]["forest_units"]
-        )
+        assert "R1PLAN-kootenai-nf-18" in _profile_row(
+            report, "kootenai-nf"
+        )["blocker_source_record_ids"]
+        assert _check(
+            report, "forest_profile_readiness_tracks_configured_and_register_units"
+        )["passed"] is True
+        assert _check(
+            report, "forest_profile_readiness_blockers_are_source_specific"
+        )["passed"] is True
 
 
 def test_forest_plan_source_delta_readiness_fails_when_scoped_catalog_gate_missing() -> None:
@@ -159,7 +165,7 @@ def test_forest_plan_source_delta_readiness_sequence_four_uses_merged_extraction
 
         report = _read_json(result.report_path)
         assert result.summary["passed"] is True
-        assert report["schema_version"] == "r1-forest-plan-source-delta-readiness-v2"
+        assert report["schema_version"] == "r1-forest-plan-source-delta-readiness-v3"
         assert report["merged_source_delta_catalog"]["source_set_id"] == merged_source_set_id
         assert report["extraction_readiness"]["status"] == "ready_with_blockers"
         assert report["extraction_readiness"]["coverage_complete"] is True
@@ -223,6 +229,74 @@ def test_forest_plan_source_delta_readiness_sequence_five_uses_retrieval_coverag
         ] == 4
         assert _check(report, "source_delta_retrieval_readiness_covers_extracted_rows")["passed"] is True
         assert _check(report, "source_delta_retrieval_eval_passed")["passed"] is True
+
+
+def test_forest_plan_source_delta_readiness_sequence_six_emits_concrete_profile_blockers() -> None:
+    register = load_r1_forest_plan_document_register(REGISTER)
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_sequence_zero_fixture(output_dir, register=register)
+        merged_catalog_dir = _write_merged_catalog_fixture(output_dir, register=register)
+        merged_source_set_id = "source-set-merged-test"
+        blocker_id = register.source_delta_sources[0].source_record_id
+        all_captured_source_ids = register.catalog_confirmed_source_record_ids + [
+            source.source_record_id for source in register.source_delta_sources
+        ]
+        reuse_inventory_path = _write_reuse_inventory_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=all_captured_source_ids,
+        )
+        _write_extraction_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=all_captured_source_ids,
+            blocker_id=blocker_id,
+        )
+        _write_retrieval_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            indexed_source_record_ids=[
+                source_record_id
+                for source_record_id in all_captured_source_ids
+                if source_record_id != blocker_id
+            ],
+        )
+
+        result = build_forest_plan_source_delta_readiness_report(
+            output_dir=output_dir,
+            register_path=REGISTER,
+            source_delta_batch_run_id=BATCH_RUN_ID,
+            merged_catalog_gate_dir=merged_catalog_dir,
+            extraction_source_set_id=merged_source_set_id,
+            reuse_inventory_path=reuse_inventory_path,
+            forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
+        )
+
+        report = _read_json(result.report_path)
+        blocker_row = next(
+            row for row in register.rows if row["proposed_source_record_id"] == blocker_id
+        )
+        custer = _profile_row(report, "custer-gallatin-nf")
+        blocked_unit = _profile_row(report, blocker_row["forest_unit_id"])
+        blocked_requirement = _source_requirement(blocked_unit, blocker_id)
+        kootenai = _profile_row(report, "kootenai-nf")
+
+        assert result.summary["passed"] is True
+        assert report["forest_profile_readiness"]["status"] == "ready_with_blockers"
+        assert custer["profile_readiness_status"] == "ready"
+        assert custer["required_retrieval_ready_count"] == custer["required_source_record_count"] == 7
+        assert blocker_id in blocked_unit["blocker_source_record_ids"]
+        assert blocked_requirement["readiness_status"] == "extraction_blocked"
+        assert blocked_requirement["blocker_types"] == ["extraction_blocked"]
+        assert "R1PLAN-kootenai-nf-18" in kootenai["blocker_source_record_ids"]
+        assert _check(
+            report, "forest_profile_readiness_tracks_configured_and_register_units"
+        )["passed"] is True
+        assert _check(
+            report, "forest_profile_readiness_blockers_are_source_specific"
+        )["passed"] is True
 
 
 def _write_sequence_zero_fixture(
@@ -568,3 +642,17 @@ def _check(report: dict, name: str) -> dict:
         if check["name"] == name:
             return check
     raise AssertionError(f"Missing check {name}")
+
+
+def _profile_row(report: dict, forest_unit_id: str) -> dict:
+    for row in report["forest_profile_readiness"]["profile_rows"]:
+        if row["forest_unit_id"] == forest_unit_id:
+            return row
+    raise AssertionError(f"Missing profile readiness row {forest_unit_id}")
+
+
+def _source_requirement(profile_row: dict, source_record_id: str) -> dict:
+    for requirement in profile_row["source_requirements"]:
+        if requirement["source_record_id"] == source_record_id:
+            return requirement
+    raise AssertionError(f"Missing source requirement {source_record_id}")

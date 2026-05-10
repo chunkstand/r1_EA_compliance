@@ -3385,7 +3385,7 @@ merged or scoped source set. It writes:
 - `r1_forest_plan_source_delta_readiness_report.json`
 - `r1_forest_plan_source_delta_readiness_report.md`
 
-The JSON report has schema version `r1-forest-plan-source-delta-readiness-v2` and includes:
+The JSON report has schema version `r1-forest-plan-source-delta-readiness-v3` and includes:
 
 - `inputs`, with register, batch, scoped catalog, canonical catalog, optional merged catalog,
   extraction source set, reuse inventory, forest-profile config, and official-source gap evidence
@@ -3408,8 +3408,10 @@ The JSON report has schema version `r1-forest-plan-source-delta-readiness-v2` an
 - `retrieval_readiness`, including index/validation/summary paths, retrieval-eval path and pass
   state, expected-vs-indexed extracted source coverage, upstream blocked source IDs, document-role
   coverage counts, and per-forest-unit retrieval coverage summaries
-- `forest_profile_readiness_placeholders`, with source-delta, catalog-confirmed, gap, and blocker
-  counts by forest unit
+- `forest_profile_readiness`, with configured-profile coverage, tracked forest-unit counts,
+  ready-vs-blocked profile counts, per-profile blocker source IDs, per-role readiness states,
+  register status, catalog surface presence, extraction status, retrieval status, and source
+  requirement counts
 - `checks`, each with `name`, `passed`, and `details`
 
 The gate fails when required batch/catalog artifacts are missing, when the source-delta batch no

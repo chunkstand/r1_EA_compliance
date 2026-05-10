@@ -473,7 +473,7 @@ Closeout:
   and the refreshed readiness gate reports retrieval `ready_with_blockers` with `152/152`
   extracted support-document rows indexed and the same `7` upstream parser blockers preserved as
   blockers rather than hidden omissions.
-- Sequence 6 is now the next milestone boundary.
+- Sequence 6 is now implemented for the archived merged-corpus replay.
 
 ### Sequence 6 - Forest-Profile Readiness Integration
 
@@ -518,6 +518,23 @@ Stop conditions:
 
 - A profile becomes ready without all required support-document roles present and retrieval-ready.
 - Gap rows are treated as corpus-ready evidence.
+
+Closeout:
+
+- The readiness report now emits `forest_profile_readiness` instead of placeholders and uses schema
+  `r1-forest-plan-source-delta-readiness-v3`.
+- The live replay on `source-set-7e2652d23e764068` keeps `4` forest-unit rows ready:
+  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
+  `region-1-northern-region`.
+- The same live replay keeps `7` forest-unit rows blocked with source-ID-level blockers instead of
+  generic profile blockers:
+  `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+  `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+  `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, `R1PLAN-kootenai-nf-18`,
+  `R1PLAN-lolo-nf-12`, and `R1PLAN-nez-perce-clearwater-nfs-18`.
+- Custer Gallatin remains ready under the existing proving-package assumptions with `7/7` required
+  support-document roles retrieval-ready.
+- Sequence 7 is now the next milestone boundary.
 
 ### Sequence 7 - Corpus Incorporation And Downstream Replay
 
@@ -589,10 +606,11 @@ The local atomic commit for closeout should include:
 
 ## Next Immediate Slice
 
-Sequences 4 and 5 are now closed for the current baseline: the merged extraction path is
+Sequences 4 through 6 are now closed for the current baseline: the merged extraction path is
 implemented without touching the canonical catalog, the readiness gate accounts for all
 support-document rows with explicit parser blockers, default PDF extraction no longer hard-fails on
-`docling_unavailable`, retrieval validation is running against the archived merged catalog, and the
-source-delta retrieval eval suite is passing. The next immediate slice is Sequence 6 forest-profile
-readiness integration so Region 1 blockers become document-role-specific by forest unit instead of
-generic source-delta placeholders.
+`docling_unavailable`, retrieval validation is running against the archived merged catalog, the
+source-delta retrieval eval suite is passing, and forest-profile readiness is now source-ID-specific
+instead of placeholder-based. The next immediate slice is Sequence 7 corpus incorporation and
+downstream replay so the merged support-document corpus can become a clean downstream promotion
+surface without stale source-set confusion.

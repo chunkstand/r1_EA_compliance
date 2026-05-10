@@ -9,11 +9,12 @@ import json
 import sqlite3
 
 from .records import sha256_file
+from .forest_plan_profiles import load_forest_plan_profiles
 from .workbook import R1ForestPlanDocumentRegister
 from .workbook import load_r1_forest_plan_document_register
 
 
-SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v2"
+SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v3"
 OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION = "r1-forest-plan-official-source-gap-evidence-v0"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
@@ -227,9 +228,14 @@ def build_forest_plan_source_delta_readiness_report(
         register=register,
         expected_source_ids=source_delta_source_ids,
     )
-    profile_readiness = _profile_readiness_placeholders(
+    profile_readiness = _forest_profile_readiness(
         register=register,
         forest_plan_profiles_path=forest_plan_profiles_path,
+        scoped_catalog_ids=scoped_catalog_ids,
+        merged_catalog_ids=merged_catalog_ids,
+        canonical_catalog_ids=canonical_catalog_ids,
+        output_dir=output_dir,
+        source_set_id=effective_extraction_source_set_id,
     )
     if retrieval_readiness["started"]:
         checks.extend(
@@ -238,6 +244,12 @@ def build_forest_plan_source_delta_readiness_report(
                 _retrieval_eval_passed_check(retrieval_readiness),
             ]
         )
+    checks.extend(
+        [
+            _forest_profile_readiness_covers_tracked_units_check(profile_readiness),
+            _forest_profile_readiness_blockers_are_source_specific_check(profile_readiness),
+        ]
+    )
     passed = all(check["passed"] for check in checks)
     report = {
         "schema_version": SOURCE_DELTA_READINESS_SCHEMA_VERSION,
@@ -302,7 +314,7 @@ def build_forest_plan_source_delta_readiness_report(
             evidence=official_source_gap_evidence,
             path=official_source_gap_evidence_path,
         ),
-        "forest_profile_readiness_placeholders": profile_readiness,
+        "forest_profile_readiness": profile_readiness,
         "checks": checks,
     }
 
@@ -329,6 +341,9 @@ def build_forest_plan_source_delta_readiness_report(
         "extraction_blocker_count": extraction_readiness["blocked_source_record_count"],
         "retrieval_readiness_status": retrieval_readiness["status"],
         "retrieval_eval_passed": retrieval_readiness["retrieval_eval_passed"],
+        "forest_profile_readiness_status": profile_readiness["status"],
+        "forest_profile_ready_count": profile_readiness["ready_profile_count"],
+        "forest_profile_blocked_count": profile_readiness["blocked_profile_count"],
         "failed_check_count": sum(1 for check in checks if not check["passed"]),
         "report_path": str(report_path),
         "markdown_path": str(markdown_path),
@@ -812,67 +827,338 @@ def _reuse_inventory_readiness(
     }
 
 
-def _profile_readiness_placeholders(
+def _forest_profile_readiness(
     *,
     register: R1ForestPlanDocumentRegister,
     forest_plan_profiles_path: Path,
+    scoped_catalog_ids: set[str],
+    merged_catalog_ids: set[str],
+    canonical_catalog_ids: set[str],
+    output_dir: Path,
+    source_set_id: str,
 ) -> dict[str, Any]:
-    profiles = _read_json_if_exists(forest_plan_profiles_path)
-    configured_profile_ids = [
-        str(profile.get("forest_unit_id"))
-        for profile in profiles.get("profiles", [])
-        if profile.get("forest_unit_id")
-    ]
+    collection = load_forest_plan_profiles(forest_plan_profiles_path)
+    configured_profiles = {
+        profile.forest_unit_id: profile for profile in collection.profiles
+    }
+    configured_profile_ids = sorted(configured_profiles)
     rows_by_unit = defaultdict(list)
+    rows_by_source_id = {}
     for row in register.rows:
         rows_by_unit[row["forest_unit_id"]].append(row)
+        rows_by_source_id[row["proposed_source_record_id"]] = row
 
-    units = []
-    for forest_unit_id, rows in sorted(rows_by_unit.items()):
-        status_counts = Counter(row["draft_status"] for row in rows)
-        gap_ids = [
-            row["proposed_source_record_id"]
-            for row in rows
-            if row["draft_status"] == "official_source_gap_documented"
-        ]
-        source_delta_ids = [
-            row["proposed_source_record_id"]
-            for row in rows
-            if row["draft_status"] == "source_delta_required"
-        ]
-        blocker_types = []
-        if source_delta_ids:
-            blocker_types.extend(
-                [
-                    "source_delta_extraction_pending",
-                    "source_delta_retrieval_pending",
-                ]
+    catalog_surfaces_by_source_id: dict[str, set[str]] = defaultdict(set)
+    for source_id in scoped_catalog_ids:
+        catalog_surfaces_by_source_id[source_id].add("scoped_source_delta_catalog")
+    for source_id in merged_catalog_ids:
+        catalog_surfaces_by_source_id[source_id].add("merged_source_delta_catalog")
+    for source_id in canonical_catalog_ids:
+        catalog_surfaces_by_source_id[source_id].add("active_canonical_catalog")
+
+    extraction_manifest_path = (
+        output_dir / "derived" / source_set_id / "diagnostics" / "extraction_manifest.jsonl"
+        if source_set_id
+        else output_dir / "derived" / "diagnostics" / "extraction_manifest.jsonl"
+    )
+    retrieval_index_path = (
+        output_dir / "derived" / source_set_id / "retrieval" / "evidence_index.sqlite"
+        if source_set_id
+        else output_dir / "derived" / "retrieval" / "evidence_index.sqlite"
+    )
+    extraction_manifest_records = _read_jsonl_if_exists(extraction_manifest_path)
+    extraction_records_by_source_id = {
+        str(record.get("source_record_id") or ""): record for record in extraction_manifest_records
+    }
+    indexed_source_ids = _retrieval_index_all_source_ids(retrieval_index_path)
+
+    tracked_forest_unit_ids = sorted(set(register.forest_unit_ids) | set(configured_profile_ids))
+    profile_rows = []
+    for forest_unit_id in tracked_forest_unit_ids:
+        profile = configured_profiles.get(forest_unit_id)
+        register_rows = sorted(
+            rows_by_unit.get(forest_unit_id, []),
+            key=lambda row: (row["document_role"], row["proposed_source_record_id"]),
+        )
+        source_requirements = []
+        seen_source_ids = set()
+
+        if profile is not None:
+            for role, source_record in sorted(
+                profile.supporting_source_record_ids_by_role.items(),
+                key=lambda item: item[0],
+            ):
+                source_id = source_record.source_record_id
+                source_requirements.append(
+                    _forest_profile_source_requirement(
+                        forest_unit_id=forest_unit_id,
+                        role=role,
+                        required_for=source_record.required_for,
+                        source_record_id=source_id,
+                        required_readiness=role in profile.required_readiness_source_roles,
+                        register_row=rows_by_source_id.get(source_id),
+                        catalog_surfaces=sorted(catalog_surfaces_by_source_id.get(source_id, set())),
+                        extraction_record=extraction_records_by_source_id.get(source_id),
+                        indexed_source_ids=indexed_source_ids,
+                    )
+                )
+                seen_source_ids.add(source_id)
+
+        for row in register_rows:
+            source_id = row["proposed_source_record_id"]
+            if source_id in seen_source_ids:
+                continue
+            source_requirements.append(
+                _forest_profile_source_requirement(
+                    forest_unit_id=forest_unit_id,
+                    role=row["document_role"],
+                    required_for=row["required_for"],
+                    source_record_id=source_id,
+                    required_readiness=False,
+                    register_row=row,
+                    catalog_surfaces=sorted(catalog_surfaces_by_source_id.get(source_id, set())),
+                    extraction_record=extraction_records_by_source_id.get(source_id),
+                    indexed_source_ids=indexed_source_ids,
+                )
             )
-        if gap_ids:
-            blocker_types.append("official_source_gap")
-        units.append(
+            seen_source_ids.add(source_id)
+
+        requirement_status_counts = Counter(
+            requirement["readiness_status"] for requirement in source_requirements
+        )
+        blocker_types = sorted(
+            {
+                blocker
+                for requirement in source_requirements
+                for blocker in requirement["blocker_types"]
+            }
+        )
+        blocker_source_record_ids = sorted(
+            {
+                requirement["source_record_id"]
+                for requirement in source_requirements
+                if requirement["blocker_types"] and requirement["source_record_id"]
+            }
+        )
+        ready_required_count = sum(
+            1
+            for requirement in source_requirements
+            if requirement["required_readiness"]
+            and requirement["readiness_status"] == "retrieval_ready"
+        )
+        required_count = sum(
+            1 for requirement in source_requirements if requirement["required_readiness"]
+        )
+        retrieval_ready_count = sum(
+            1
+            for requirement in source_requirements
+            if requirement["readiness_status"] == "retrieval_ready"
+        )
+        profile_rows.append(
             {
                 "forest_unit_id": forest_unit_id,
-                "configured_profile": forest_unit_id in configured_profile_ids,
-                "status": "placeholder_pending_extraction_retrieval",
-                "row_count": len(rows),
-                "status_counts": dict(status_counts),
-                "catalog_confirmed_count": status_counts.get("catalog_confirmed", 0),
-                "source_delta_count": len(source_delta_ids),
-                "official_source_gap_count": len(gap_ids),
-                "official_source_gap_ids": gap_ids,
+                "forest_unit_names": _forest_profile_unit_names(
+                    forest_unit_id=forest_unit_id,
+                    profile=profile,
+                    register_rows=register_rows,
+                ),
+                "configured_profile": profile is not None,
+                "profile_kind": "configured_profile" if profile is not None else "register_tracking_only",
+                "profile_readiness_status": "ready" if not blocker_types else "blocked",
+                "active_plan_source_record_id": (
+                    profile.active_plan_source_record_id if profile is not None else None
+                ),
+                "required_source_record_count": required_count,
+                "required_retrieval_ready_count": ready_required_count,
+                "source_requirement_count": len(source_requirements),
+                "retrieval_ready_source_record_count": retrieval_ready_count,
+                "readiness_status_counts": dict(requirement_status_counts),
                 "blocker_types": blocker_types,
+                "blocker_source_record_ids": blocker_source_record_ids,
+                "register_status_counts": dict(Counter(row["draft_status"] for row in register_rows)),
+                "source_requirements": source_requirements,
             }
         )
 
+    ready_profile_ids = sorted(
+        row["forest_unit_id"] for row in profile_rows if row["profile_readiness_status"] == "ready"
+    )
+    blocked_profile_ids = sorted(
+        row["forest_unit_id"] for row in profile_rows if row["profile_readiness_status"] != "ready"
+    )
+
     return {
-        "status": "placeholder_pending_extraction_retrieval",
+        "status": "ready" if not blocked_profile_ids else "ready_with_blockers",
         "forest_plan_profiles_path": str(forest_plan_profiles_path),
+        "source_set_id": source_set_id or None,
+        "extraction_manifest_path": str(extraction_manifest_path),
+        "extraction_manifest_exists": extraction_manifest_path.exists(),
+        "retrieval_index_path": str(retrieval_index_path),
+        "retrieval_index_exists": retrieval_index_path.exists(),
         "configured_profile_count": len(configured_profile_ids),
         "configured_profile_ids": configured_profile_ids,
-        "forest_unit_count": len(units),
-        "forest_units": units,
+        "tracked_forest_unit_count": len(tracked_forest_unit_ids),
+        "tracked_forest_unit_ids": tracked_forest_unit_ids,
+        "ready_profile_count": len(ready_profile_ids),
+        "ready_profile_ids": ready_profile_ids,
+        "blocked_profile_count": len(blocked_profile_ids),
+        "blocked_profile_ids": blocked_profile_ids,
+        "profile_rows": profile_rows,
     }
+
+
+def _forest_profile_source_requirement(
+    *,
+    forest_unit_id: str,
+    role: str,
+    required_for: str,
+    source_record_id: str,
+    required_readiness: bool,
+    register_row: dict[str, str] | None,
+    catalog_surfaces: list[str],
+    extraction_record: dict[str, Any] | None,
+    indexed_source_ids: set[str],
+) -> dict[str, Any]:
+    register_status = (
+        register_row.get("draft_status") if register_row is not None else "profile_source_missing_from_register"
+    )
+    readiness_status = "retrieval_ready"
+    blocker_types: list[str] = []
+    extraction_status = None
+    extraction_error_class = None
+
+    if register_status == "profile_source_missing_from_register":
+        readiness_status = "profile_source_missing_from_register"
+        blocker_types = ["missing_register_row"]
+    elif register_status == "official_source_gap_documented":
+        readiness_status = "official_source_gap"
+        blocker_types = ["official_source_gap"]
+    elif source_record_id in indexed_source_ids:
+        readiness_status = "retrieval_ready"
+    elif extraction_record is not None:
+        extraction_status = str(extraction_record.get("status") or "")
+        failure = extraction_record.get("failure") or {}
+        extraction_error_class = str(failure.get("error_class") or "") or None
+        if extraction_status == "extracted":
+            readiness_status = "extracted_not_retrieval_ready"
+            blocker_types = ["retrieval_gap"]
+        elif extraction_status in {
+            "parser_error",
+            "parser_timeout",
+            "empty_text",
+            "artifact_missing",
+            "hash_mismatch",
+            "no_artifact",
+        }:
+            readiness_status = "extraction_blocked"
+            blocker_types = ["extraction_blocked"]
+        else:
+            readiness_status = "extraction_pending"
+            blocker_types = ["extraction_pending"]
+    elif catalog_surfaces:
+        readiness_status = (
+            "captured_source_delta"
+            if register_status == "source_delta_required"
+            else "catalog_confirmed"
+        )
+        blocker_types = ["downstream_readiness_pending"]
+    elif register_status == "source_delta_required":
+        readiness_status = "source_delta_capture_missing"
+        blocker_types = ["catalog_capture_missing"]
+    else:
+        readiness_status = "catalog_confirmed_missing_from_catalog"
+        blocker_types = ["catalog_missing"]
+
+    return {
+        "forest_unit_id": forest_unit_id,
+        "role": role,
+        "required_for": required_for,
+        "source_record_id": source_record_id,
+        "required_readiness": required_readiness,
+        "register_status": register_status,
+        "catalog_surfaces": catalog_surfaces,
+        "readiness_status": readiness_status,
+        "extraction_status": extraction_status,
+        "extraction_error_class": extraction_error_class,
+        "retrieval_ready": source_record_id in indexed_source_ids,
+        "blocker_types": blocker_types,
+        "readiness_tier": register_row.get("readiness_tier") if register_row is not None else None,
+        "notes": register_row.get("notes") if register_row is not None else None,
+    }
+
+
+def _forest_profile_unit_names(
+    *,
+    forest_unit_id: str,
+    profile: Any,
+    register_rows: list[dict[str, str]],
+) -> list[str]:
+    if profile is not None:
+        return list(profile.forest_unit_names)
+    names = []
+    for row in register_rows:
+        name = str(row.get("forest_unit_name") or "").strip()
+        if name and name not in names:
+            names.append(name)
+    return names or [forest_unit_id]
+
+
+def _forest_profile_readiness_covers_tracked_units_check(
+    profile_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    expected = set(profile_readiness.get("tracked_forest_unit_ids") or [])
+    actual = {
+        str(row.get("forest_unit_id") or "")
+        for row in profile_readiness.get("profile_rows") or []
+        if row.get("forest_unit_id")
+    }
+    return {
+        "name": "forest_profile_readiness_tracks_configured_and_register_units",
+        "passed": expected == actual,
+        "details": {
+            "expected_forest_unit_ids": sorted(expected),
+            "actual_forest_unit_ids": sorted(actual),
+            "missing_forest_unit_ids": sorted(expected - actual),
+            "unexpected_forest_unit_ids": sorted(actual - expected),
+        },
+    }
+
+
+def _forest_profile_readiness_blockers_are_source_specific_check(
+    profile_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    missing_source_specific_blockers = [
+        str(row.get("forest_unit_id") or "")
+        for row in profile_readiness.get("profile_rows") or []
+        if row.get("profile_readiness_status") != "ready"
+        and not list(row.get("blocker_source_record_ids") or [])
+    ]
+    generic_blocker_rows = [
+        str(row.get("forest_unit_id") or "")
+        for row in profile_readiness.get("profile_rows") or []
+        if "forest_profile_not_ready" in set(row.get("blocker_types") or [])
+    ]
+    return {
+        "name": "forest_profile_readiness_blockers_are_source_specific",
+        "passed": not missing_source_specific_blockers and not generic_blocker_rows,
+        "details": {
+            "missing_source_specific_blockers": missing_source_specific_blockers,
+            "generic_blocker_rows": generic_blocker_rows,
+        },
+    }
+
+
+def _retrieval_index_all_source_ids(index_path: Path) -> set[str]:
+    if not index_path.exists():
+        return set()
+    try:
+        with sqlite3.connect(index_path) as connection:
+            rows = connection.execute(
+                "SELECT DISTINCT source_record_id FROM chunks WHERE source_record_id IS NOT NULL"
+            ).fetchall()
+    except sqlite3.Error:
+        return set()
+    return {str(row[0] or "") for row in rows if str(row[0] or "")}
 
 
 def _required_paths_check(name: str, paths: list[Path]) -> dict[str, Any]:
@@ -1319,17 +1605,19 @@ def _render_markdown(report: dict[str, Any]) -> str:
     summary_lines.extend(
         [
             "",
-            "## Forest-Profile Placeholders",
+            "## Forest-Profile Readiness",
             "",
         ]
     )
-    for unit in report["forest_profile_readiness_placeholders"]["forest_units"]:
-        blockers = ", ".join(f"`{item}`" for item in unit["blocker_types"]) or "`none`"
+    for unit in report["forest_profile_readiness"]["profile_rows"]:
+        blockers = ", ".join(
+            f"`{item}`" for item in unit["blocker_source_record_ids"]
+        ) or "`none`"
         summary_lines.append(
             "- "
             + f"`{unit['forest_unit_id']}`: "
-            + f"source_delta=`{unit['source_delta_count']}`, "
-            + f"gaps=`{unit['official_source_gap_count']}`, "
+            + f"status=`{unit['profile_readiness_status']}`, "
+            + f"retrieval_ready=`{unit['retrieval_ready_source_record_count']}/{unit['source_requirement_count']}`, "
             + f"blockers={blockers}"
         )
     summary_lines.append("")

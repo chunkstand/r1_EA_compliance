@@ -46,11 +46,11 @@ canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
 `R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` as explicit official-source gaps,
 validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and now
 also evaluates the Sequence 4 merged-catalog extraction state. The generated JSON/Markdown report
-uses schema `r1-forest-plan-source-delta-readiness-v2` and is under the source-delta run's ignored
+uses schema `r1-forest-plan-source-delta-readiness-v3` and is under the source-delta run's ignored
 `source_delta_readiness/` directory. The committed earlier artifact still reflects the pre-fallback
 run, but the live merged replay is now refreshed on archived merged catalog
 `source-set-7e2652d23e764068` with the active canonical catalog still untouched. Current live
-Sequence 4 plus Sequence 5 readiness results:
+Sequence 4 through Sequence 6 readiness results:
 
 - merged reuse inventory: `reuse_extraction=189`, `needs_extract=159`, `excluded=1`
 - merged extraction summary: `341` extracted rows, `7` explicit `parser_error` rows, `1`
@@ -69,6 +69,15 @@ Sequence 4 plus Sequence 5 readiness results:
   `support_document_role` values for matching `R1PLAN-*` rows, including catalog-confirmed rows
   such as `R1PLAN-custer-gallatin-nf-06`, so the current retrieval eval pass is based on actual
   role-aware filters rather than source-ID-targeted shortcuts
+- forest-profile readiness: `ready_with_blockers`, with `4` ready forest-unit rows
+  (`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
+  `region-1-northern-region`) and `7` blocked rows carrying source-ID-level blockers instead of
+  generic profile blockers
+- current blocked forest-profile source IDs:
+  `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+  `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+  `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, `R1PLAN-kootenai-nf-18`,
+  `R1PLAN-lolo-nf-12`, and `R1PLAN-nez-perce-clearwater-nfs-18`
 
 Sequence 4 runtime alignment update after that artifact:
 
@@ -84,8 +93,8 @@ Sequence 4 runtime alignment update after that artifact:
   `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
   `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
   `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
-- the next milestone is Sequence 6 forest-profile readiness integration, not another extraction or
-  retrieval baseline replay.
+- the next milestone is Sequence 7 corpus incorporation and downstream replay, not another
+  readiness baseline replay.
 
 The Sequence 3 merged catalog contract is implemented without replacing the active canonical
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit

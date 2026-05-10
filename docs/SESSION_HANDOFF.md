@@ -50,9 +50,9 @@ artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
 
 Source-delta readiness update: `forest-plan-source-delta-readiness` now builds the source-delta
 report/gate over the promoted register, source-delta batch capture, archived scoped catalog gate,
-active canonical catalog, tracked official-source gap evidence, and now the optional merged-catalog
-plus extraction/reuse surfaces for Sequence 4. The live gate passes with `0` failed checks, schema
-`r1-forest-plan-source-delta-readiness-v2`, scoped source set `source-set-411b3736b3691eed`,
+active canonical catalog, tracked official-source gap evidence, the archived merged catalog, and
+the live merged extraction/retrieval surfaces. The live gate passes with `0` failed checks, schema
+`r1-forest-plan-source-delta-readiness-v3`, scoped source set `source-set-411b3736b3691eed`,
 merged source set `source-set-7e2652d23e764068`, canonical catalog source set
 `source-set-d3b9e2a728accda6`, `159` captured source-delta rows, and official-source gaps
 `R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` validated against
@@ -102,10 +102,19 @@ filters rather than source-ID-targeted shortcuts. Current upstream parser blocke
 `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
 
-Immediate next sequence: Sequence 6 forest-profile readiness integration. Wire the support-document
-corpus into profile readiness so blockers become document-role-specific by forest unit rather than
-generic source-delta placeholders. Keep both official-source gap rows explicit and do not rerun
-unrelated downloads.
+Sequence 6 forest-profile readiness update: the same readiness report now emits concrete
+`forest_profile_readiness` rows instead of placeholders. The live replay marks `4` forest-unit rows
+ready (`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
+`region-1-northern-region`) and keeps `7` rows blocked with source-ID-level blockers:
+`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, `R1PLAN-kootenai-nf-18`,
+`R1PLAN-lolo-nf-12`, and `R1PLAN-nez-perce-clearwater-nfs-18`. Custer Gallatin stays ready under
+the current proving assumptions with `7/7` required support-document roles retrieval-ready.
+
+Immediate next sequence: Sequence 7 corpus incorporation and downstream replay. Promote the merged
+support-document corpus cleanly into downstream source-set-aware surfaces without stale-source-set
+confusion, and keep the two official-source gaps explicit until they are actually resolved.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.

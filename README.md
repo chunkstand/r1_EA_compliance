@@ -65,7 +65,7 @@ catalog gate is archived under
 The generated report remains ignored under the source-delta run directory, records
 `config/r1_forest_plan_official_source_gap_evidence.json` as the current evidence for the two
 preserved official-source gaps, and now also records the Sequence 4 merged-catalog extraction gate
-under schema `r1-forest-plan-source-delta-readiness-v2`. The latest committed readiness artifact
+under schema `r1-forest-plan-source-delta-readiness-v3`. The latest committed readiness artifact
 still reflects the older pre-fallback state, but the live merged-catalog replay is now refreshed:
 `extract-build --catalog-dir ... --reuse-existing --reuse-inventory-path ...` on
 `source-set-7e2652d23e764068` now yields `341/349` extracted rows, `7` explicit `parser_error`
@@ -103,6 +103,18 @@ from actual role-aware retrieval filters instead of source-ID-targeted shortcuts
 plan for incorporating this support-document layer into forest-profile readiness and downstream
 replay is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
+
+Sequence 6 forest-profile readiness integration is now implemented in the same readiness report.
+The live replay marks `4` forest-unit rows ready
+(`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
+`region-1-northern-region`) and keeps `7` rows blocked with concrete source IDs instead of generic
+profile blockers. The remaining blockers are explicit: parser blockers at
+`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
+`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
+`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, plus the
+preserved official-source gaps `R1PLAN-kootenai-nf-18` and
+`R1PLAN-nez-perce-clearwater-nfs-18`. The next milestone boundary is Sequence 7 corpus
+incorporation and downstream replay, not another readiness-schema pass.
 
 The first merged catalog gate is archived, not promoted over the canonical catalog, at
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`.
