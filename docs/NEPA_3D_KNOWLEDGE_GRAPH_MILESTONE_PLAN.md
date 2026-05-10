@@ -621,7 +621,10 @@ graph-specific failure categories, validation and summary artifacts record
 `config/promotion_suite_v1.json` requires source-set plus V1 review graph validation/summary
 artifacts for current promotion. The current source-set graph passes
 `62/62` checks; the V1 review overlay graph passes `76/76`; the review-bound phase eval passes
-`19/19`.
+`19/19`. Focused follow-on closeout on 2026-05-10 also tightens the full-canonical promotion lane:
+`full_canonical_corpus_ready` now requires the active full-canonical source set to have its own
+`authority_currentness` report plus NEPA 3D source-set graph validation and summary artifacts,
+instead of relying on catalog manifest/validation alone.
 
 Goal:
 Make graph completeness and viewer-readiness testable.

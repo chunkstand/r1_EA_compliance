@@ -58,7 +58,13 @@ Latest closeout on 2026-05-10:
 - The post-V1 promotion suite now separates current-promotion truth from full-corpus truth:
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
   `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
-  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, and `expansion_ready=false`.
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=false`, and `expansion_ready=false`.
+  The active full-canonical lane now requires its own `authority_currentness` plus NEPA 3D
+  source-set graph artifacts before that status can return to true.
+- The current explicit full-canonical failure categories are
+  `graph_missing_currentness_status=1` and `graph_viewer_export_invalid=2`, caused by the missing
+  derived active-source-set `authority_currentness` report plus NEPA 3D graph validation and
+  summary files.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

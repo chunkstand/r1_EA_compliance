@@ -2,6 +2,51 @@
 
 Date: 2026-05-10
 
+## Full Canonical Graph-Capability Gate
+
+The next NEPA 3D milestone is now implemented as a promotion-contract hardening pass: the
+full-canonical readiness lane can no longer report green from catalog promotion alone. The default
+promotion manifest now requires the active full-canonical source set to carry its own
+`authority_currentness` report plus NEPA 3D source-set graph validation and summary artifacts.
+
+- manifest change: `config/promotion_suite_v1.json` now adds
+  `full_canonical_authority_currentness`,
+  `full_canonical_nepa_3d_source_set_graph_validation`, and
+  `full_canonical_nepa_3d_source_set_graph_summary` as
+  `required_for_full_canonical_corpus=true` results, all keyed to
+  `derived/{full_canonical_source_set_id}/...`
+- test coverage: `tests/test_promotion_suite.py` now locks the committed manifest shape for those
+  full-canonical graph-capability artifacts and proves runtime path resolution with
+  `{full_canonical_source_set_id}` placeholders
+- live replay status: rerunning `promotion-suite` against the current local `source_library/`
+  keeps `current_promotion_ready=true` and `promotion_ready=true`, but changes
+  `full_canonical_corpus_ready` from a stale green to the real current value `false`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py`: passed `19/19`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=false`, `promotion_ready=true`, `expansion_ready=false`, `passed_required_full_canonical_result_count=2/5`, and `full_canonical_failure_category_counts={"graph_missing_currentness_status": 1, "graph_viewer_export_invalid": 2}`
+
+Concrete missing full-canonical artifacts after the replay:
+
+- `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
+- `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`
+- `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_summary.json`
+
+Residual risks:
+
+- the active catalog promotion remains real, but the active full-canonical source set is still not
+  graph-capable in local derived artifacts
+- the viewer therefore still falls back to the archived merged graph-capable source set
+  `source-set-8a4005c8a083af1a` for live NEPA 3D inspection
+
+Immediate next step if this slice is continued:
+
+1. Materialize `authority-currentness` for `source-set-34061d1e4bf6c460`.
+2. Materialize the active full-canonical NEPA 3D source-set graph validation and summary artifacts
+   for that same source set.
+3. Rerun `promotion-suite`; only then should `full_canonical_corpus_ready` return to true.
+
 ## NEPA 3D Readiness Blocker Clarity
 
 The NEPA 3D blocker-clarity follow-on is now implemented and locally closed through code, tests,
@@ -76,7 +121,7 @@ the current code while keeping reviewer-ready East Crazies promotion explicit an
   `source-set-ba8d0feae79501b8`
 - promotion-suite closeout now reports:
   `current_promotion_ready=true`,
-  `full_canonical_corpus_ready=true`,
+  `full_canonical_corpus_ready=false`,
   `promotion_ready=true`,
   `expansion_ready=false`
 
@@ -106,7 +151,7 @@ Verification replay for plan alignment:
   passed with `failed_check_count=0`, `canonical_catalog_source_set_id=source-set-34061d1e4bf6c460`,
   and preserved gap `R1PLAN-kootenai-nf-18`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`:
-  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=false`,
   `promotion_ready=true`, `expansion_ready=false`
 - `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review --validate-only`:
   passed `196/196` with `output_written=false`
@@ -145,7 +190,7 @@ fully into downstream review closure.
 - merged source-set replay is fully green:
   `retrieval-eval` `12/12`, evidence graph `153,198` nodes / `533,949` edges, claim extraction
   `101,856` claims, rule-claim binding `211` links / `0` gaps, NEPA 3D source-set graph
-  `1,831` nodes / `2,835` edges, and source-set `phase-eval` `7/7` with `reviewer_ready=true`
+  `1,789` nodes / `2,808` edges, and source-set `phase-eval` `7/7` with `reviewer_ready=true`
 - readiness gate now reports `160` source-delta rows, `0` extraction blockers, retrieval `ready`,
   and one preserved official-source gap (`R1PLAN-kootenai-nf-18`)
 - `applicability-authority-universe` now accepts `--catalog-path` and

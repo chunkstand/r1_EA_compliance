@@ -1587,6 +1587,115 @@
       ]
     },
     {
+      "id": "full_canonical_authority_currentness",
+      "label": "Active full canonical authority-currentness report",
+      "path": "derived/{full_canonical_source_set_id}/authority_currentness/authority_currentness_report.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "graph_missing_currentness_status",
+      "checks": [
+        {
+          "name": "full_canonical_authority_currentness_schema",
+          "json_path": "schema_version",
+          "equals": "authority-currentness-report-v0"
+        },
+        {
+          "name": "full_canonical_authority_currentness_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-34061d1e4bf6c460",
+          "failure_category": "graph_stale_artifact"
+        },
+        {
+          "name": "full_canonical_authority_currentness_validation_passed",
+          "json_path": "summary.validation_passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_authority_currentness_active_review_corpus_count",
+          "json_path": "summary.catalog_source_partition_counts.active_review_corpus",
+          "equals": 349
+        },
+        {
+          "name": "full_canonical_authority_currentness_candidate_blocked_count",
+          "json_path": "summary.catalog_source_partition_counts.candidate_blocked_source",
+          "equals": 1
+        }
+      ]
+    },
+    {
+      "id": "full_canonical_nepa_3d_source_set_graph_validation",
+      "label": "Active full canonical NEPA 3D source-set graph validation",
+      "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "graph_viewer_export_invalid",
+      "checks": [
+        {
+          "name": "full_canonical_source_set_graph_validation_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_source_set_graph_no_failure_categories",
+          "json_path": "failure_category_counts",
+          "equals": {}
+        }
+      ]
+    },
+    {
+      "id": "full_canonical_nepa_3d_source_set_graph_summary",
+      "label": "Active full canonical NEPA 3D source-set graph summary",
+      "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_summary.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "graph_viewer_export_invalid",
+      "checks": [
+        {
+          "name": "full_canonical_source_set_graph_validation_passed",
+          "json_path": "validation_passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_source_set_graph_source_set_matches",
+          "json_path": "source_set_id",
+          "equals": "source-set-34061d1e4bf6c460",
+          "failure_category": "graph_stale_artifact"
+        },
+        {
+          "name": "full_canonical_source_set_graph_catalog_source_record_count",
+          "json_path": "catalog_source_record_count",
+          "equals": 350,
+          "failure_category": "graph_missing_source_record"
+        },
+        {
+          "name": "full_canonical_source_set_graph_node_count",
+          "json_path": "node_count",
+          "min": 1
+        },
+        {
+          "name": "full_canonical_source_set_graph_edge_count",
+          "json_path": "edge_count",
+          "min": 1
+        },
+        {
+          "name": "full_canonical_source_set_graph_validation_checks",
+          "json_path": "validation_check_count",
+          "min": 65
+        },
+        {
+          "name": "full_canonical_source_set_graph_failed_validation_check_count",
+          "json_path": "failed_validation_check_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_source_set_graph_region1_blocked_profiles_visible",
+          "json_path": "region1_forest_plan_blocked_profile_count",
+          "min": 1,
+          "failure_category": "graph_region1_profile_gap"
+        }
+      ]
+    },
+    {
       "id": "phase_eval_core",
       "label": "Core phase eval readiness",
       "path": "derived/{source_set_id}/evidence_graph/phase_eval_results.json",

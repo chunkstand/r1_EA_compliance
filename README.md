@@ -53,10 +53,14 @@ Current full-corpus promotion boundary:
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
 - The promotion suite now separates full-corpus truth from reviewer-ready V1 truth:
-  `full_canonical_corpus_ready=true` for active catalog `source-set-34061d1e4bf6c460`,
+  `full_canonical_corpus_ready=false` for active catalog `source-set-34061d1e4bf6c460` until the
+  active full-canonical lane has its own `authority_currentness` plus NEPA 3D graph artifacts,
   `current_promotion_ready=true` for the East Crazies V1 lane pinned to
   `source-set-ba8d0feae79501b8`, and `expansion_ready=false` because South Plateau remains blocked
   on `forest_plan_reviewer_not_ready`.
+- The current full-canonical failures are explicit rather than hidden:
+  `graph_missing_currentness_status=1` and `graph_viewer_export_invalid=2`, corresponding to the
+  missing active-source-set `authority_currentness`, graph validation, and graph summary files.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
@@ -68,8 +72,8 @@ The latest fully replayed merged support-document source-set surface remains arc
 as `source-set-8a4005c8a083af1a`. That archived replay is still the freshest all-green merged
 source-set evidence surface: extraction `349/349`, retrieval eval `12/12`, evidence graph
 `153,198` nodes / `533,949` edges, claim extraction `101,856` claims, rule-claim binding `211`
-links / `0` gaps, NEPA 3D source-set graph `1,831` nodes / `2,835` edges, and source-set
-`phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East Crazies replay on
+links / `0` gaps, refreshed NEPA 3D source-set graph `1,789` nodes / `2,808` edges, and
+source-set `phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East Crazies replay on
 `source-set-8a4005c8a083af1a` is still blocked by `7` applicability adjudications and failing
 forest-plan component evaluation, so full-corpus promotion does not overclaim reviewer-ready merged
 review status.

@@ -44,6 +44,86 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         "source-set-34061d1e4bf6c460"
     )
 
+    full_canonical_currentness = suite_results["full_canonical_authority_currentness"]
+    assert full_canonical_currentness["required_for_current_promotion"] is False
+    assert full_canonical_currentness["required_for_full_canonical_corpus"] is True
+    assert (
+        full_canonical_currentness["path"]
+        == "derived/{full_canonical_source_set_id}/authority_currentness/authority_currentness_report.json"
+    )
+    currentness_checks = {
+        check["name"]: check for check in full_canonical_currentness["checks"]
+    }
+    assert currentness_checks["full_canonical_authority_currentness_schema"]["equals"] == (
+        "authority-currentness-report-v0"
+    )
+    assert currentness_checks["full_canonical_authority_currentness_source_set"]["equals"] == (
+        "source-set-34061d1e4bf6c460"
+    )
+    assert (
+        currentness_checks["full_canonical_authority_currentness_validation_passed"][
+            "equals"
+        ]
+        is True
+    )
+    assert (
+        currentness_checks[
+            "full_canonical_authority_currentness_active_review_corpus_count"
+        ]["equals"]
+        == 349
+    )
+    assert (
+        currentness_checks["full_canonical_authority_currentness_candidate_blocked_count"][
+            "equals"
+        ]
+        == 1
+    )
+
+    full_canonical_graph = suite_results["full_canonical_nepa_3d_source_set_graph_validation"]
+    assert full_canonical_graph["required_for_current_promotion"] is False
+    assert full_canonical_graph["required_for_full_canonical_corpus"] is True
+    assert (
+        full_canonical_graph["path"]
+        == "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json"
+    )
+    full_graph_checks = {check["name"]: check for check in full_canonical_graph["checks"]}
+    assert full_graph_checks["full_canonical_source_set_graph_validation_passed"]["equals"] is True
+    assert (
+        full_graph_checks["full_canonical_source_set_graph_no_failure_categories"]["equals"]
+        == {}
+    )
+
+    full_canonical_graph_summary = suite_results[
+        "full_canonical_nepa_3d_source_set_graph_summary"
+    ]
+    assert full_canonical_graph_summary["required_for_current_promotion"] is False
+    assert full_canonical_graph_summary["required_for_full_canonical_corpus"] is True
+    assert (
+        full_canonical_graph_summary["path"]
+        == "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_summary.json"
+    )
+    full_graph_summary_checks = {
+        check["name"]: check for check in full_canonical_graph_summary["checks"]
+    }
+    assert (
+        full_graph_summary_checks["full_canonical_source_set_graph_source_set_matches"][
+            "equals"
+        ]
+        == "source-set-34061d1e4bf6c460"
+    )
+    assert (
+        full_graph_summary_checks[
+            "full_canonical_source_set_graph_catalog_source_record_count"
+        ]["equals"]
+        == 350
+    )
+    assert (
+        full_graph_summary_checks["full_canonical_source_set_graph_validation_checks"][
+            "min"
+        ]
+        == 65
+    )
+
 
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
@@ -385,6 +465,183 @@ def test_run_promotion_suite_reports_full_canonical_corpus_readiness_separately(
     report_text = result.markdown_path.read_text(encoding="utf-8")
     assert "Full canonical source set" in report_text
     assert "Full canonical corpus ready" in report_text
+
+
+def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Path) -> None:
+    output_dir = tmp_path / "source_library"
+    (output_dir / "catalog").mkdir(parents=True)
+    (tmp_path / "config").mkdir()
+    full_source_set_id = "source-set-full"
+
+    rule_pack_path = tmp_path / "config" / "rule_pack.json"
+    rule_pack_path.write_text(
+        json.dumps(
+            {
+                "rule_pack_id": "rule-pack-test",
+                "version": "1.0.0",
+                "rules": [{"id": "r1"}],
+                "baseline_source_record_ids": ["R1EA-001"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    (output_dir / "catalog" / "source_set_manifest.json").write_text(
+        json.dumps({"source_set_id": full_source_set_id}),
+        encoding="utf-8",
+    )
+    (output_dir / "catalog" / "catalog_validation.json").write_text(
+        json.dumps({"source_set_id": full_source_set_id, "passed": True}),
+        encoding="utf-8",
+    )
+
+    currentness_dir = (
+        output_dir
+        / "derived"
+        / full_source_set_id
+        / "authority_currentness"
+    )
+    currentness_dir.mkdir(parents=True)
+    (currentness_dir / "authority_currentness_report.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "authority-currentness-report-v0",
+                "source_set_id": full_source_set_id,
+                "summary": {
+                    "validation_passed": True,
+                    "catalog_source_partition_counts": {
+                        "active_review_corpus": 349,
+                        "candidate_blocked_source": 1,
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    graph_dir = output_dir / "derived" / full_source_set_id / "knowledge_graph"
+    graph_dir.mkdir(parents=True)
+    (graph_dir / "nepa_3d_graph_validation.json").write_text(
+        json.dumps({"passed": True, "failure_category_counts": {}}),
+        encoding="utf-8",
+    )
+    (graph_dir / "nepa_3d_graph_summary.json").write_text(
+        json.dumps(
+            {
+                "source_set_id": full_source_set_id,
+                "validation_passed": True,
+                "catalog_source_record_count": 350,
+                "node_count": 10,
+                "edge_count": 12,
+                "validation_check_count": 65,
+                "failed_validation_check_count": 0,
+                "region1_forest_plan_blocked_profile_count": 1,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    manifest_path = tmp_path / "config" / "promotion_suite.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": PROMOTION_SUITE_SCHEMA_VERSION,
+                "id": "suite-test",
+                "source_set_id": "source-set-current",
+                "full_canonical_source_set_id": full_source_set_id,
+                "rule_pack_path": "config/rule_pack.json",
+                "rule_pack_id": "rule-pack-test",
+                "rule_pack_version": "1.0.0",
+                "expected_rule_count": 1,
+                "expected_baseline_source_record_count": 1,
+                "review_cases": [],
+                "suite_results": [
+                    {
+                        "id": "full_canonical_catalog_manifest",
+                        "path": "catalog/source_set_manifest.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_source_set_matches",
+                                "json_path": "source_set_id",
+                                "equals": full_source_set_id,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "full_canonical_catalog_validation",
+                        "path": "catalog/catalog_validation.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_catalog_validation_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "full_canonical_authority_currentness",
+                        "path": "derived/{full_canonical_source_set_id}/authority_currentness/authority_currentness_report.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_authority_currentness_validation_passed",
+                                "json_path": "summary.validation_passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "full_canonical_nepa_3d_source_set_graph_validation",
+                        "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_source_set_graph_validation_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
+                    {
+                        "id": "full_canonical_nepa_3d_source_set_graph_summary",
+                        "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_summary.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_source_set_graph_validation_passed",
+                                "json_path": "validation_passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
+                ],
+                "expansion_slots": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+    assert result.summary["full_canonical_corpus_ready"] is True
+    assert result.summary["required_full_canonical_result_count"] == 5
+    assert result.summary["passed_required_full_canonical_result_count"] == 5
+    suite_results = {item["id"]: item for item in result.summary["suite_results"]}
+    assert suite_results["full_canonical_authority_currentness"]["path"].endswith(
+        f"derived/{full_source_set_id}/authority_currentness/authority_currentness_report.json"
+    )
+    assert suite_results["full_canonical_nepa_3d_source_set_graph_validation"][
+        "path"
+    ].endswith(
+        f"derived/{full_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json"
+    )
 
 
 def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:
