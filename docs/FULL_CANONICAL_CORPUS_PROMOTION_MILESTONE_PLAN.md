@@ -38,6 +38,17 @@ Closed on 2026-05-10 with the following repo-grounded outcome:
   replay
 - the preserved Kootenai gap remains explicit in `source_delta_input` and
   `config/r1_forest_plan_official_source_gap_evidence.json`, not as a silently downloaded source row
+- stale Sequence 4 wording was corrected so the plan now matches the implemented full-corpus
+  semantics instead of telling `README.md` to call the archived merged replay surface the active
+  full canonical corpus
+- closeout implementation commit: `5aa32d9`
+- verification replay after closeout alignment:
+  - `tests/test_catalog.py tests/test_captured_library.py`: `19/19` passed
+  - `tests/test_forest_plan_source_delta_readiness.py tests/test_cli.py`: `41/41` passed
+  - `tests/test_promotion_suite.py tests/test_final_qa_certification.py`: `30/30` passed
+  - `tests/test_architecture_contract.py`: `5/5` passed
+  - `ruff check src tests`, `python -m compileall src`, `forest-plan-source-delta-readiness`,
+    `promotion-suite`, and `final-qa-certification --validate-only` all passed
 
 ## Current Evidence
 
@@ -355,8 +366,9 @@ blocked merged-review truth.
 
 Implementation steps:
 
-1. Update `README.md` to state that the full canonical corpus is the refreshed merged source set and
-   to distinguish that from reviewer-ready East Crazies promotion.
+1. Update `README.md` to state that the active full canonical corpus is the promoted current-code
+   catalog source set and to distinguish that from both the archived merged replay surface and
+   reviewer-ready East Crazies promotion.
 2. Update `docs/CURRENT_SYSTEM_STATE.md` with the active-catalog source set, preserved official
    source gap, and current downstream blocker boundary.
 3. Update `docs/POST_V1_PROMOTION_SUITE.md` if promotion semantics or manifest ownership changed.

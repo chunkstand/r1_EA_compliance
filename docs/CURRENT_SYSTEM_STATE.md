@@ -163,17 +163,17 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.
 
-The Sequence 3 merged catalog contract is implemented without replacing the active canonical
-catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit
-`--catalog-dir` archive target. The live merged gate is archived at
-`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/` as
-`source-set-7e2652d23e764068`. It combines canonical batch run
-`corpus-update-2026-05-01-cg-support-batches` with source-delta batch run
-`r1-forest-plan-source-delta-capture-20260510-batches`, keeps the active
-`source_library/catalog/` view at canonical source set `source-set-d3b9e2a728accda6`, and validates
-`349` source rows, `318` artifacts, `331` unique URLs, `348` `active_review_corpus` rows, `1`
-`candidate_blocked_source` row, `159` supplemental source-delta rows, `0` `not_in_run` rows, and
-`0` failed catalog checks.
+The merged-catalog contract now supports both archived replay gates and active-catalog promotion.
+`catalog-build` accepts repeated `--batch-run-id` values and an explicit `--catalog-dir` archive
+target. The freshest fully replayed merged gate is archived at
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+as `source-set-8a4005c8a083af1a`. The active `source_library/catalog/` view is now the promoted
+current-code full canonical source set `source-set-34061d1e4bf6c460`, built from
+`corpus-update-2026-05-01-cg-support-batches` plus
+`r1-forest-plan-source-delta-capture-20260510-refresh-batches`, and validates `350` source rows,
+`319` artifacts, `332` unique URLs, `349` `active_review_corpus` rows, `1`
+`candidate_blocked_source` row, `160` supplemental source-delta rows, and one preserved official
+source gap carried through `source_delta_input`.
 
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.
@@ -477,7 +477,7 @@ picker for ad hoc inspection.
 Current viewer resolution state:
 
 - active catalog source set:
-  `source-set-d3b9e2a728accda6`
+  `source-set-34061d1e4bf6c460`
 - newest graph-capable source set on disk:
   `source-set-8a4005c8a083af1a`
 - current checked-in fallback manifest default:
@@ -913,14 +913,17 @@ without expected future artifact content.
 
 ## Verified State Snapshot
 
-Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
-Gallatin FEIS and ESA-supporting plan documents.
+Latest full-corpus promotion verification was run locally on 2026-05-10 after the completed
+forest-plan support-document refresh was promoted into the active catalog.
 
-- Active catalog source set: `source-set-d3b9e2a728accda6`
-- Download/catalog batch: `corpus-update-2026-05-01-cg-support-batches`, `52/52` batches passed
-- Catalog: `190` source rows, `160` unique raw artifacts, `189` source-artifact links
-- Custer Gallatin supporting PDF records added: `R1PLAN-custer-gallatin-nf-04` through
-  `R1PLAN-custer-gallatin-nf-07`
+- Active catalog source set: `source-set-34061d1e4bf6c460`
+- Active download/catalog batch inputs:
+  `corpus-update-2026-05-01-cg-support-batches` and
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
+- Catalog: `350` source rows, `319` unique raw artifacts, `349` source-artifact links, `332`
+  unique URLs
+- Supplemental support-document rows carried in the active catalog: `160`
+- Preserved official-source gaps carried in `source_delta_input`: `1`
 - Reuse inventory for the current source set is implemented and has been run locally. It classified
   `7` sources as already current in the Custer Gallatin slice, `181` sources as reusable from prior
   extraction outputs, `1` source as needing extraction, and `1` source as excluded.

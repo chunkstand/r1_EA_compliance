@@ -35,6 +35,45 @@ Important boundary:
   `7` applicability adjudications and failing forest-plan component evaluation, so full-corpus
   promotion does not mean reviewer-ready merged review promotion
 
+Verification replay for plan alignment:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_captured_library.py`:
+  passed `19/19`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_source_delta_readiness.py tests/test_cli.py`:
+  passed `41/41`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_final_qa_certification.py`:
+  passed `30/30`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py`:
+  passed `5/5`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-refresh-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`:
+  passed with `failed_check_count=0`, `canonical_catalog_source_set_id=source-set-34061d1e4bf6c460`,
+  and preserved gap `R1PLAN-kootenai-nf-18`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`:
+  passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `expansion_ready=false`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review --validate-only`:
+  passed `196/196` with `output_written=false`
+
+Closeout implementation commit: `5aa32d9`
+
+Residual risks:
+
+- merged-corpus East Crazies replay on `source-set-8a4005c8a083af1a` still has `7` applicability
+  adjudications and failing forest-plan component evaluation
+- `R1PLAN-kootenai-nf-18` remains an accepted official-source gap, not a resolved download
+- reviewer-facing promotion artifacts remain intentionally pinned to `source-set-ba8d0feae79501b8`
+  until the merged review replay becomes reviewer-ready
+
+Next milestone routing:
+
+1. Close the `7` applicability adjudications in
+   `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/`.
+2. Close the remaining East Crazies forest-plan component gaps for the merged-corpus replay.
+3. After those are green, update reviewer-facing promotion and final-QA lanes to the merged
+   full-corpus lane if the replay proves reviewer-ready.
+
 ## Latest Source-Delta Refresh
 
 The 2026-05-10 refresh closes the remaining source-delta corpus gaps and moves the remaining work
@@ -127,33 +166,33 @@ accepts the same register source-delta contract. The scoped catalog gate built
 snapshot is archived under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/catalog_gate/`.
 
-The active `source_library/catalog/` view was restored to the canonical 190-row workbook catalog
-from `corpus-update-2026-05-01-cg-support-batches` after the source-delta gate, and now has source
-set `source-set-d3b9e2a728accda6` under the current code. The promoted downstream V1 derived
-artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
+This older sequence snapshot is superseded by the full canonical promotion at the top of this
+handoff. The active `source_library/catalog/` view is now full canonical source set
+`source-set-34061d1e4bf6c460`, while the promoted downstream V1 derived artifacts remain pinned to
+reviewer-ready source set `source-set-ba8d0feae79501b8`.
 
 Source-delta readiness update: `forest-plan-source-delta-readiness` now builds the source-delta
-report/gate over the promoted register, source-delta batch capture, archived scoped catalog gate,
-active canonical catalog, tracked official-source gap evidence, the archived merged catalog, and
-the live merged extraction/retrieval surfaces. The live gate passes with `0` failed checks, schema
-`r1-forest-plan-source-delta-readiness-v3`, scoped source set `source-set-411b3736b3691eed`,
-merged source set `source-set-7e2652d23e764068`, canonical catalog source set
-`source-set-d3b9e2a728accda6`, `159` captured source-delta rows, and official-source gaps
-`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` validated against
+report/gate over the promoted register, refresh batch capture, archived scoped catalog gate,
+active full canonical catalog, tracked official-source gap evidence, and the live merged
+extraction/retrieval surfaces. The live gate passes with `0` failed checks, schema
+`r1-forest-plan-source-delta-readiness-v3`, scoped source set `source-set-bfe49a94e22fd1e2`,
+canonical catalog source set `source-set-34061d1e4bf6c460`, `160` captured source-delta rows, and
+official-source gap `R1PLAN-kootenai-nf-18` validated against
 `config/r1_forest_plan_official_source_gap_evidence.json`. Generated JSON/Markdown reports are
 ignored under
-`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/`.
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/source_delta_readiness/`.
 
 Sequence 3 merged catalog contract update: `catalog-build` now accepts repeated `--batch-run-id`
-values plus `--catalog-dir` for archived gates. The live merged gate is archived at
-`source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/` as
-`source-set-7e2652d23e764068`. It combines canonical batch run
-`corpus-update-2026-05-01-cg-support-batches` with source-delta batch run
-`r1-forest-plan-source-delta-capture-20260510-batches`, validates `349` source rows, `318`
-artifacts, `331` unique URLs, `348` `active_review_corpus` rows, `1` `candidate_blocked_source`
-row, `159` supplemental source-delta rows, `0` `not_in_run` rows, and `0` failed catalog checks.
-The active
-`source_library/catalog/` view remains canonical source set `source-set-d3b9e2a728accda6`.
+values plus `--catalog-dir` for archived gates. The freshest fully replayed merged gate is
+archived at
+`source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+as `source-set-8a4005c8a083af1a`. It combines canonical batch run
+`corpus-update-2026-05-01-cg-support-batches` with refresh batch run
+`r1-forest-plan-source-delta-capture-20260510-refresh-batches`, validates `350` source rows,
+`319` artifacts, `332` unique URLs, `349` `active_review_corpus` rows, `1`
+`candidate_blocked_source` row, `160` supplemental source-delta rows, and the preserved explicit
+gap carried outside the downloaded catalog rows. The active `source_library/catalog/` view is now
+promoted full canonical source set `source-set-34061d1e4bf6c460`.
 
 Sequence 4 extraction/parser readiness update: the merged reuse inventory on
 `source-set-7e2652d23e764068` classified `reuse_extraction=189`, `needs_extract=159`, and
