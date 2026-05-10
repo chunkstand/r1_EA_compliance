@@ -4,6 +4,7 @@ const DEFAULT_LENS_REVIEW = "package_applicability";
 const DEFAULT_DEMO_REVIEW_ID = "v1-cg-ecid-compliance-review";
 const DEMO_START_SCENE_ID = "applicability";
 const CUSTOM_DEMO_SCENE_ID = "custom";
+const DETAIL_RAIL_STORAGE_KEY = "nepa-3d-detail-rail-collapsed";
 const REQUIRED_EXPORT_LENSES = [
   "authority_currentness",
   "forest_plan",
@@ -359,6 +360,7 @@ function waitForRuntime() {
 
 async function initialize() {
   createGraph();
+  initializeLayoutState();
   await loadManifest();
 }
 
@@ -397,6 +399,9 @@ function bindElements() {
     "graph-counts",
     "graph-scene-label",
     "graph-root",
+    "viewer-shell",
+    "detail-rail",
+    "detail-rail-toggle",
     "status-line",
     "legend",
     "capability-panel",
@@ -409,6 +414,7 @@ function bindElements() {
 }
 
 function bindEvents() {
+  els.detailRailToggle.addEventListener("click", toggleDetailRail);
   els.sourceSetSelect.addEventListener("change", () => {
     markCustomScene();
     populateReviewSelector();
@@ -470,10 +476,53 @@ function bindEvents() {
     });
   }
   window.addEventListener("resize", () => {
-    if (state.graphApi) {
-      state.graphApi.width(els.graphRoot.clientWidth).height(els.graphRoot.clientHeight);
-    }
+    resizeGraphViewport();
   });
+}
+
+function initializeLayoutState() {
+  let collapsed = false;
+  try {
+    collapsed = window.localStorage.getItem(DETAIL_RAIL_STORAGE_KEY) === "true";
+  } catch {
+    collapsed = false;
+  }
+  applyDetailRailState(collapsed, { persist: false });
+}
+
+function toggleDetailRail() {
+  const collapsed = !els.viewerShell.classList.contains("is-detail-collapsed");
+  applyDetailRailState(collapsed);
+}
+
+function applyDetailRailState(collapsed, { persist = true } = {}) {
+  els.viewerShell.classList.toggle("is-detail-collapsed", collapsed);
+  els.detailRail.setAttribute("aria-hidden", collapsed ? "true" : "false");
+  els.detailRailToggle.textContent = collapsed ? "Show details" : "Hide details";
+  els.detailRailToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  els.detailRailToggle.setAttribute(
+    "aria-label",
+    collapsed ? "Show right sidebar details" : "Hide right sidebar details"
+  );
+  if (persist) {
+    try {
+      window.localStorage.setItem(DETAIL_RAIL_STORAGE_KEY, String(collapsed));
+    } catch {
+      // Ignore storage failures; the viewer can still function without persistence.
+    }
+  }
+  window.requestAnimationFrame(() => {
+    resizeGraphViewport();
+    window.setTimeout(() => {
+      resizeGraphViewport();
+    }, 220);
+  });
+}
+
+function resizeGraphViewport() {
+  if (state.graphApi) {
+    state.graphApi.width(els.graphRoot.clientWidth).height(els.graphRoot.clientHeight);
+  }
 }
 
 function createGraph() {

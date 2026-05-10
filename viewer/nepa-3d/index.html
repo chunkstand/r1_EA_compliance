@@ -22,7 +22,7 @@
     <script defer src="app.js"></script>
   </head>
   <body>
-    <main class="viewer-shell" aria-label="NEPA 3D knowledge graph viewer">
+    <main id="viewer-shell" class="viewer-shell" aria-label="NEPA 3D knowledge graph viewer">
       <aside class="control-rail" aria-label="Graph controls">
         <section class="rail-section rail-section-brand">
           <div class="brand-plate">
@@ -152,6 +152,15 @@
       <section class="graph-stage" aria-label="Graph canvas">
         <div class="stage-grid" aria-hidden="true"></div>
         <div class="stage-badge" aria-hidden="true">Operational Atlas</div>
+        <button
+          id="detail-rail-toggle"
+          class="detail-rail-toggle"
+          type="button"
+          aria-controls="detail-rail"
+          aria-expanded="true"
+        >
+          Hide details
+        </button>
         <div class="graph-toolbar">
           <div class="toolbar-block">
             <div class="toolbar-kicker">Loaded dataset</div>
@@ -168,7 +177,7 @@
         <div id="legend" class="legend" aria-label="Graph legend"></div>
       </section>
 
-      <aside class="detail-rail" aria-label="Graph details">
+      <aside id="detail-rail" class="detail-rail" aria-label="Graph details">
         <section class="rail-section">
           <h2>Capability shown</h2>
           <div id="capability-panel" class="capability-panel"></div>

@@ -81,6 +81,10 @@ select {
     var(--bg);
 }
 
+.viewer-shell.is-detail-collapsed {
+  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) 0;
+}
+
 .viewer-shell::before {
   content: "";
   position: absolute;
@@ -102,6 +106,11 @@ select {
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 18%),
     linear-gradient(180deg, rgba(210, 164, 84, 0.05), transparent 30%),
     var(--surface);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    padding 180ms ease,
+    border-color 180ms ease;
 }
 
 .control-rail::before,
@@ -122,6 +131,21 @@ select {
 
 .detail-rail {
   border-left: 1px solid var(--border);
+}
+
+.viewer-shell.is-detail-collapsed .detail-rail {
+  padding-left: 0;
+  padding-right: 0;
+  border-left-color: transparent;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateX(14px);
+}
+
+.viewer-shell.is-detail-collapsed .detail-rail::before,
+.viewer-shell.is-detail-collapsed .detail-rail .rail-section {
+  opacity: 0;
 }
 
 .rail-section {
@@ -486,6 +510,27 @@ button:hover {
   backdrop-filter: blur(8px);
 }
 
+.detail-rail-toggle {
+  position: absolute;
+  z-index: 3;
+  top: 58px;
+  right: 18px;
+  min-height: 34px;
+  padding: 7px 11px;
+  color: var(--ink-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%),
+    rgba(10, 12, 13, 0.78);
+  border: 1px solid rgba(210, 164, 84, 0.26);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
 .graph-root {
   position: relative;
   z-index: 1;
@@ -794,6 +839,10 @@ button:hover {
   .stage-badge {
     display: none;
   }
+
+  .detail-rail-toggle {
+    top: 18px;
+  }
 }
 
 @media (max-width: 1020px) {
@@ -806,6 +855,11 @@ button:hover {
     grid-template-rows: auto minmax(600px, 74vh) auto;
     height: auto;
     min-height: 100vh;
+  }
+
+  .viewer-shell.is-detail-collapsed {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(600px, 74vh) 0;
   }
 
   .viewer-shell::before {
@@ -838,6 +892,11 @@ button:hover {
   .graph-toolbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .detail-rail-toggle {
+    top: 14px;
+    right: 14px;
   }
 
   .toolbar-block-end {
@@ -888,6 +947,12 @@ button:hover {
     top: 14px;
     left: 14px;
     right: 14px;
+  }
+
+  .detail-rail-toggle {
+    top: auto;
+    right: 14px;
+    bottom: 14px;
   }
 
   .graph-scene-label {
