@@ -103,14 +103,25 @@ filters rather than source-ID-targeted shortcuts. Current upstream parser blocke
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`.
 
 Sequence 6 forest-profile readiness update: the same readiness report now emits concrete
-`forest_profile_readiness` rows instead of placeholders. The live replay marks `4` forest-unit rows
-ready (`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
-`region-1-northern-region`) and keeps `7` rows blocked with source-ID-level blockers:
+`forest_profile_readiness` rows instead of placeholders. The live replay now keeps configured
+profiles aligned with `config/forest_plan_profiles.json`: `custer-gallatin-nf` is the only ready
+configured profile and `beaverhead-deerlodge-nf` is the only blocked configured profile. The
+retrieval-ready register-only tracking rows are reported separately:
+`flathead-nf`, `helena-lewis-and-clark-nf`, and `region-1-northern-region`. The remaining blocked
+rows still carry source-ID-level blockers:
 `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
 `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, `R1PLAN-kootenai-nf-18`,
 `R1PLAN-lolo-nf-12`, and `R1PLAN-nez-perce-clearwater-nfs-18`. Custer Gallatin stays ready under
 the current proving assumptions with `7/7` required support-document roles retrieval-ready.
+
+Latest Sequence 6 alignment verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_source_delta_readiness.py`
+  passed `7`.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --merged-catalog-gate-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --extraction-source-set-id source-set-7e2652d23e764068 --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`
+  passed with schema `r1-forest-plan-source-delta-readiness-v3`, configured profile readiness
+  `1` ready / `1` blocked, and tracking-only readiness separated from configured-profile counts.
 
 Immediate next sequence: Sequence 7 corpus incorporation and downstream replay. Promote the merged
 support-document corpus cleanly into downstream source-set-aware surfaces without stale-source-set

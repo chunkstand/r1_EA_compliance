@@ -105,10 +105,12 @@ replay is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 Sequence 6 forest-profile readiness integration is now implemented in the same readiness report.
-The live replay marks `4` forest-unit rows ready
-(`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
-`region-1-northern-region`) and keeps `7` rows blocked with concrete source IDs instead of generic
-profile blockers. The remaining blockers are explicit: parser blockers at
+The live replay now separates configured profiles from register-only tracking rows. Configured
+profile readiness is `1` ready profile (`custer-gallatin-nf`) and `1` blocked profile
+(`beaverhead-deerlodge-nf`). Register-only tracking rows that are already retrieval-ready are
+reported separately (`flathead-nf`, `helena-lewis-and-clark-nf`, and
+`region-1-northern-region`) instead of being counted as ready profiles. The remaining blocked
+source IDs are explicit: parser blockers at
 `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
 `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
 `R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, plus the

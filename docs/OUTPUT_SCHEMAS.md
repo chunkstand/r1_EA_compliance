@@ -3409,9 +3409,9 @@ The JSON report has schema version `r1-forest-plan-source-delta-readiness-v3` an
   state, expected-vs-indexed extracted source coverage, upstream blocked source IDs, document-role
   coverage counts, and per-forest-unit retrieval coverage summaries
 - `forest_profile_readiness`, with configured-profile coverage, tracked forest-unit counts,
-  ready-vs-blocked profile counts, per-profile blocker source IDs, per-role readiness states,
-  register status, catalog surface presence, extraction status, retrieval status, and source
-  requirement counts
+  ready-vs-blocked configured-profile counts, separate ready-vs-blocked register-only tracking-row
+  counts, per-profile blocker source IDs, per-role readiness states, register status, catalog
+  surface presence, extraction status, retrieval status, and source requirement counts
 - `checks`, each with `name`, `passed`, and `details`
 
 The gate fails when required batch/catalog artifacts are missing, when the source-delta batch no

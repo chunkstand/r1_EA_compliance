@@ -523,9 +523,11 @@ Closeout:
 
 - The readiness report now emits `forest_profile_readiness` instead of placeholders and uses schema
   `r1-forest-plan-source-delta-readiness-v3`.
-- The live replay on `source-set-7e2652d23e764068` keeps `4` forest-unit rows ready:
-  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
-  `region-1-northern-region`.
+- The live replay on `source-set-7e2652d23e764068` now keeps configured-profile readiness aligned
+  with `config/forest_plan_profiles.json`: `custer-gallatin-nf` is the only ready configured
+  profile and `beaverhead-deerlodge-nf` remains the only blocked configured profile.
+- Retrieval-ready register-only tracking rows are reported separately:
+  `flathead-nf`, `helena-lewis-and-clark-nf`, and `region-1-northern-region`.
 - The same live replay keeps `7` forest-unit rows blocked with source-ID-level blockers instead of
   generic profile blockers:
   `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,

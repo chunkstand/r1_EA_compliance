@@ -69,10 +69,12 @@ Sequence 4 through Sequence 6 readiness results:
   `support_document_role` values for matching `R1PLAN-*` rows, including catalog-confirmed rows
   such as `R1PLAN-custer-gallatin-nf-06`, so the current retrieval eval pass is based on actual
   role-aware filters rather than source-ID-targeted shortcuts
-- forest-profile readiness: `ready_with_blockers`, with `4` ready forest-unit rows
-  (`custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, and
-  `region-1-northern-region`) and `7` blocked rows carrying source-ID-level blockers instead of
-  generic profile blockers
+- forest-profile readiness: `ready_with_blockers`, with configured profile readiness separated from
+  register-only tracking coverage
+- configured-profile status: `1` ready profile (`custer-gallatin-nf`) and `1` blocked profile
+  (`beaverhead-deerlodge-nf`)
+- retrieval-ready tracking-only rows: `flathead-nf`, `helena-lewis-and-clark-nf`, and
+  `region-1-northern-region`; these remain tracked rows, not configured profiles
 - current blocked forest-profile source IDs:
   `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
   `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,

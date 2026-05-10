@@ -59,6 +59,9 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
         assert _check(
             report, "forest_profile_readiness_blockers_are_source_specific"
         )["passed"] is True
+        assert _check(
+            report, "forest_profile_readiness_summary_counts_align"
+        )["passed"] is True
 
 
 def test_forest_plan_source_delta_readiness_fails_when_scoped_catalog_gate_missing() -> None:
@@ -287,6 +290,10 @@ def test_forest_plan_source_delta_readiness_sequence_six_emits_concrete_profile_
         assert report["forest_profile_readiness"]["status"] == "ready_with_blockers"
         assert custer["profile_readiness_status"] == "ready"
         assert custer["required_retrieval_ready_count"] == custer["required_source_record_count"] == 7
+        assert report["forest_profile_readiness"]["ready_profile_ids"] == ["custer-gallatin-nf"]
+        assert report["forest_profile_readiness"]["blocked_profile_ids"] == [
+            "beaverhead-deerlodge-nf"
+        ]
         assert blocker_id in blocked_unit["blocker_source_record_ids"]
         assert blocked_requirement["readiness_status"] == "extraction_blocked"
         assert blocked_requirement["blocker_types"] == ["extraction_blocked"]
@@ -296,6 +303,9 @@ def test_forest_plan_source_delta_readiness_sequence_six_emits_concrete_profile_
         )["passed"] is True
         assert _check(
             report, "forest_profile_readiness_blockers_are_source_specific"
+        )["passed"] is True
+        assert _check(
+            report, "forest_profile_readiness_summary_counts_align"
         )["passed"] is True
 
 

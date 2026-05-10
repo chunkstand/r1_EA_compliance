@@ -248,6 +248,7 @@ def build_forest_plan_source_delta_readiness_report(
         [
             _forest_profile_readiness_covers_tracked_units_check(profile_readiness),
             _forest_profile_readiness_blockers_are_source_specific_check(profile_readiness),
+            _forest_profile_readiness_summary_counts_align_check(profile_readiness),
         ]
     )
     passed = all(check["passed"] for check in checks)
@@ -980,15 +981,31 @@ def _forest_profile_readiness(
             }
         )
 
+    configured_rows = [row for row in profile_rows if row["configured_profile"]]
+    tracking_only_rows = [row for row in profile_rows if not row["configured_profile"]]
     ready_profile_ids = sorted(
-        row["forest_unit_id"] for row in profile_rows if row["profile_readiness_status"] == "ready"
+        row["forest_unit_id"]
+        for row in configured_rows
+        if row["profile_readiness_status"] == "ready"
     )
     blocked_profile_ids = sorted(
-        row["forest_unit_id"] for row in profile_rows if row["profile_readiness_status"] != "ready"
+        row["forest_unit_id"]
+        for row in configured_rows
+        if row["profile_readiness_status"] != "ready"
+    )
+    ready_tracking_only_ids = sorted(
+        row["forest_unit_id"]
+        for row in tracking_only_rows
+        if row["profile_readiness_status"] == "ready"
+    )
+    blocked_tracking_only_ids = sorted(
+        row["forest_unit_id"]
+        for row in tracking_only_rows
+        if row["profile_readiness_status"] != "ready"
     )
 
     return {
-        "status": "ready" if not blocked_profile_ids else "ready_with_blockers",
+        "status": "ready" if not blocked_profile_ids and not blocked_tracking_only_ids else "ready_with_blockers",
         "forest_plan_profiles_path": str(forest_plan_profiles_path),
         "source_set_id": source_set_id or None,
         "extraction_manifest_path": str(extraction_manifest_path),
@@ -999,10 +1016,15 @@ def _forest_profile_readiness(
         "configured_profile_ids": configured_profile_ids,
         "tracked_forest_unit_count": len(tracked_forest_unit_ids),
         "tracked_forest_unit_ids": tracked_forest_unit_ids,
+        "tracking_only_row_count": len(tracking_only_rows),
         "ready_profile_count": len(ready_profile_ids),
         "ready_profile_ids": ready_profile_ids,
         "blocked_profile_count": len(blocked_profile_ids),
         "blocked_profile_ids": blocked_profile_ids,
+        "ready_tracking_only_count": len(ready_tracking_only_ids),
+        "ready_tracking_only_ids": ready_tracking_only_ids,
+        "blocked_tracking_only_count": len(blocked_tracking_only_ids),
+        "blocked_tracking_only_ids": blocked_tracking_only_ids,
         "profile_rows": profile_rows,
     }
 
@@ -1145,6 +1167,64 @@ def _forest_profile_readiness_blockers_are_source_specific_check(
             "missing_source_specific_blockers": missing_source_specific_blockers,
             "generic_blocker_rows": generic_blocker_rows,
         },
+    }
+
+
+def _forest_profile_readiness_summary_counts_align_check(
+    profile_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    configured_rows = [
+        row for row in profile_readiness.get("profile_rows") or [] if row.get("configured_profile")
+    ]
+    tracking_only_rows = [
+        row for row in profile_readiness.get("profile_rows") or [] if not row.get("configured_profile")
+    ]
+    expected_ready_profile_ids = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in configured_rows
+        if row.get("profile_readiness_status") == "ready"
+    )
+    expected_blocked_profile_ids = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in configured_rows
+        if row.get("profile_readiness_status") != "ready"
+    )
+    expected_ready_tracking_only_ids = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in tracking_only_rows
+        if row.get("profile_readiness_status") == "ready"
+    )
+    expected_blocked_tracking_only_ids = sorted(
+        str(row.get("forest_unit_id") or "")
+        for row in tracking_only_rows
+        if row.get("profile_readiness_status") != "ready"
+    )
+    details = {
+        "expected_ready_profile_ids": expected_ready_profile_ids,
+        "actual_ready_profile_ids": sorted(profile_readiness.get("ready_profile_ids") or []),
+        "expected_blocked_profile_ids": expected_blocked_profile_ids,
+        "actual_blocked_profile_ids": sorted(profile_readiness.get("blocked_profile_ids") or []),
+        "expected_ready_tracking_only_ids": expected_ready_tracking_only_ids,
+        "actual_ready_tracking_only_ids": sorted(
+            profile_readiness.get("ready_tracking_only_ids") or []
+        ),
+        "expected_blocked_tracking_only_ids": expected_blocked_tracking_only_ids,
+        "actual_blocked_tracking_only_ids": sorted(
+            profile_readiness.get("blocked_tracking_only_ids") or []
+        ),
+    }
+    passed = (
+        details["expected_ready_profile_ids"] == details["actual_ready_profile_ids"]
+        and details["expected_blocked_profile_ids"] == details["actual_blocked_profile_ids"]
+        and details["expected_ready_tracking_only_ids"]
+        == details["actual_ready_tracking_only_ids"]
+        and details["expected_blocked_tracking_only_ids"]
+        == details["actual_blocked_tracking_only_ids"]
+    )
+    return {
+        "name": "forest_profile_readiness_summary_counts_align",
+        "passed": passed,
+        "details": details,
     }
 
 
