@@ -232,10 +232,15 @@ hard-negative applicability fixture contracts, renders `3` field-directive requi
 overlay requirement groups as graph-visible nodes with source links, and leaves component inventory
 validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the
 checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
-the normalized source-set and review overlay JSON exports, defaults to the
-`v1-cg-ecid-compliance-review` demo review with scene buttons above Lens, and keeps
-validation/readiness status tied to the exported artifacts rather than viewer layout while tests
-lock the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
+the normalized source-set and review overlay JSON exports, resolves the current graph dataset at
+load time from `source_library/catalog/source_set_manifest.json`, prefers that catalog source set
+when a matching graph export exists, otherwise falls back to the newest graph-capable source set
+under `source_library/derived/`, and only offers review overlays whose graph summaries match the
+selected source set. The checked-in fallback manifest currently points to
+`source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-d3b9e2a728accda6`
+and will take over automatically once it has a graph export. Scene buttons remain above Lens, and
+validation/readiness stays tied to the exported artifacts rather than viewer layout while tests lock
+the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
 dropdown gap passes separate authority category from authority family, split node/edge type from
 evidence/basis semantics, read forest-unit values from exported forest codes, ground lens and filter
 options with graph-export counts, treat filter selections as context seeds instead of strict

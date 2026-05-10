@@ -1721,13 +1721,16 @@ legal conclusion.
   `2,648` edges, `1` graph-ready profile, `9` broader Region 1 profiles blocked from completeness
   claims, and graph-visible field-directive/overlay requirement nodes linked to catalog sources.
 - NEPA 3D Milestone 6 is implemented. `viewer/nepa-3d/` is a checked-in static viewer over the
-  normalized graph export. It uses `viewer/nepa-3d/manifest.json` to load the current source-set
-  graph and selectable V1 review overlay graph, uses Three.js plus `3d-force-graph`, defaults to a
+  normalized graph export. It uses `viewer/nepa-3d/manifest.json` as a fallback manifest, resolves
+  the live source-set default from `source_library/catalog/source_set_manifest.json`, prefers that
+  catalog source set when a graph export exists, otherwise falls back to the newest graph-capable
+  source set under `source_library/derived/`, and only offers review overlays whose graph summaries
+  match the resolved source set. It still uses Three.js plus `3d-force-graph`, defaults to a
   bounded readiness-blocker lens, exposes the required selectors/search/filters/layout controls,
   and keeps readiness tied to graph validation rather than layout. Static tests now lock the pinned
-  runtime URLs, relative graph paths, and `node_id`/edge endpoint mapping; local browser
-  verification covered desktop source-set, desktop review overlay, and mobile graph canvas
-  screenshots with nonblank graph-root pixel checks.
+  runtime URLs, fallback relative graph paths, runtime dataset discovery hooks, and `node_id`/edge
+  endpoint mapping; local browser verification covered desktop source-set, desktop review overlay,
+  and mobile graph canvas screenshots with nonblank graph-root pixel checks.
 - NEPA 3D Milestone 6 dropdown gap closure is implemented in the isolated worktree branch
   `codex/nepa-3d-dropdown-gaps`. The viewer now separates authority category and authority family,
   labels status/readiness and currentness/partition filters more accurately, splits node/edge type

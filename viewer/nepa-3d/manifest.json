@@ -1,13 +1,33 @@
 {
   "schema_version": "nepa-3d-viewer-manifest-v1",
-  "default_source_set_id": "source-set-ba8d0feae79501b8",
-  "default_review_id": "v1-cg-ecid-compliance-review",
+  "default_source_set_id": "source-set-8a4005c8a083af1a",
+  "default_review_id": null,
   "runtime": {
     "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
     "graph_runtime": "3d-force-graph",
     "graph_runtime_url": "https://unpkg.com/3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
   },
   "datasets": [
+    {
+      "dataset_id": "source-set-8a4005c8a083af1a",
+      "label": "Source Set: source-set-8a4005c8a083af1a",
+      "scope": "source_set",
+      "source_set_id": "source-set-8a4005c8a083af1a",
+      "review_id": null,
+      "graph_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph_validation.json"
+    },
+    {
+      "dataset_id": "source-set-7e2652d23e764068",
+      "label": "Source Set: source-set-7e2652d23e764068",
+      "scope": "source_set",
+      "source_set_id": "source-set-7e2652d23e764068",
+      "review_id": null,
+      "graph_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph_validation.json"
+    },
     {
       "dataset_id": "source-set-ba8d0feae79501b8",
       "label": "Source Set: source-set-ba8d0feae79501b8",

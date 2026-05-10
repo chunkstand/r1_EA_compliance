@@ -449,15 +449,24 @@ while any tracked profile remains blocked.
 NEPA 3D Milestone 6 is implemented as a checked-in static viewer under `viewer/nepa-3d/`. The
 chosen option is a repo-local browser surface over the normalized graph exports, not a generated
 `source_library/` artifact and not a second knowledge base. The viewer uses Three.js plus
-`3d-force-graph` from pinned CDN URLs, reads `viewer/nepa-3d/manifest.json`, and can load either
-the source-set graph or the V1 review overlay graph. It also accepts a local graph JSON file through
-the browser file picker for ad hoc inspection.
+`3d-force-graph` from pinned CDN URLs, reads `viewer/nepa-3d/manifest.json` as a fallback manifest,
+resolves the live dataset from `source_library/catalog/source_set_manifest.json` when possible, and
+can load either the source-set graph or a matching review overlay graph. If the active catalog
+source set has no graph export yet, the viewer falls back to the newest graph-capable source set
+under `source_library/derived/`. It also accepts a local graph JSON file through the browser file
+picker for ad hoc inspection.
 
-Current default viewer manifest entries:
+Current viewer resolution state:
 
-- source-set graph:
-  `source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json`
-- V1 review overlay:
+- active catalog source set:
+  `source-set-d3b9e2a728accda6`
+- newest graph-capable source set on disk:
+  `source-set-8a4005c8a083af1a`
+- current checked-in fallback manifest default:
+  `source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph.json`
+- matching review overlays currently available for the resolved source set:
+  none
+- older review overlay still available for manual selection from the fallback manifest:
   `source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json`
 
 Launch locally from the repo root:
@@ -888,7 +897,7 @@ without expected future artifact content.
 Latest corpus-update verification was run locally on 2026-05-01 after adding the missed Custer
 Gallatin FEIS and ESA-supporting plan documents.
 
-- Active catalog source set: `source-set-ba8d0feae79501b8`
+- Active catalog source set: `source-set-d3b9e2a728accda6`
 - Download/catalog batch: `corpus-update-2026-05-01-cg-support-batches`, `52/52` batches passed
 - Catalog: `190` source rows, `160` unique raw artifacts, `189` source-artifact links
 - Custer Gallatin supporting PDF records added: `R1PLAN-custer-gallatin-nf-04` through
