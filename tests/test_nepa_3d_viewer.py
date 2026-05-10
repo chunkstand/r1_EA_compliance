@@ -108,6 +108,8 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
 def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary() -> None:
     script = (VIEWER_ROOT / "app.js").read_text()
 
+    assert 'const DEMO_START_SCENE_ID = "full_graph";' in script
+
     for required in [
         "ForceGraph3D",
         "DEFAULT_DEMO_REVIEW_ID",
@@ -168,6 +170,10 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
     assert '"artifact path"' in script
     assert "validation_passed" in script
     assert "Viewer layout does not change readiness" in script
+    assert 'id: "full_graph"' in script
+    assert 'reviewId: ""' in script
+    assert "Full validated corpus graph" in script
+    assert "Complete validated source-set corpus" in script
 
 
 def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:

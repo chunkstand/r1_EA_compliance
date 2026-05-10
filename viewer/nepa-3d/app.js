@@ -2,7 +2,7 @@ const MANIFEST_PATH = "manifest.json";
 const DEFAULT_LENS_SOURCE_SET = "readiness_blockers";
 const DEFAULT_LENS_REVIEW = "package_applicability";
 const DEFAULT_DEMO_REVIEW_ID = "v1-cg-ecid-compliance-review";
-const DEMO_START_SCENE_ID = "applicability";
+const DEMO_START_SCENE_ID = "full_graph";
 const CUSTOM_DEMO_SCENE_ID = "custom";
 const DETAIL_RAIL_STORAGE_KEY = "nepa-3d-detail-rail-collapsed-v2";
 const NODE_LABELS_STORAGE_KEY = "nepa-3d-show-node-labels";
@@ -286,21 +286,24 @@ const DEMO_SCENES = [
   {
     id: "full_graph",
     label: "Full graph",
-    reviewId: DEFAULT_DEMO_REVIEW_ID,
+    reviewId: "",
     lensId: "all",
     filters: {},
     neighborDepth: 1,
     degreeThreshold: 120,
     hideHighDegree: false,
-    capabilityTitle: "Full validated graph",
+    capabilityTitle: "Full validated corpus graph",
     capabilityCopy:
-      "Shows the complete validated review overlay when a client wants to see the breadth behind the curated scenes.",
+      "Shows the complete validated source-set corpus graph before demo scenes narrow to specific reviewer questions.",
     proofLabels: ["all node and edge tables are loaded", "validation remains visible", "advanced filters can narrow the view"],
     graphLabel: "Full graph",
-    graphSubLabel: "Complete validated review overlay",
+    graphSubLabel: "Complete validated source-set corpus",
     labelNodeTypes: [
+      "source_set",
       "review",
       "authority_family",
+      "source_record",
+      "artifact",
       "applicability_decision",
       "generated_rule",
       "compliance_finding",

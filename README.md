@@ -238,7 +238,9 @@ when a matching graph export exists, otherwise falls back to the newest graph-ca
 under `source_library/derived/`, and only offers review overlays whose graph summaries match the
 selected source set. The checked-in fallback manifest currently points to
 `source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-d3b9e2a728accda6`
-and will take over automatically once it has a graph export. Scene buttons remain above Lens, and
+and will take over automatically once it has a graph export. A fresh load opens on the full
+validated source-set corpus graph by default; scene buttons remain above Lens and narrow from that
+full-corpus starting point, and
 validation/readiness stays tied to the exported artifacts rather than viewer layout while tests lock
 the `node_id` and edge-endpoint mapping needed by the 3D runtime. The viewer
 dropdown gap passes separate authority category from authority family, split node/edge type from

@@ -482,9 +482,10 @@ http://127.0.0.1:8765/viewer/nepa-3d/
 ```
 
 The first viewport opens directly into the graph experience. It now defaults to the
-`v1-cg-ecid-compliance-review` review overlay and its Applicability demo scene. Demo buttons above
-the Lens dropdown switch among source library, authority graph, applicability, evidence path,
-forest plan, readiness, and full graph scenes; Reset demo returns to the starting review and scene.
+full validated source-set corpus graph for the resolved current dataset, with no review overlay
+attached unless the user selects or demos into one. Demo buttons above the Lens dropdown switch
+among source library, authority graph, applicability, evidence path, forest plan, readiness, and
+full graph scenes; Reset demo returns to that full-corpus starting scene.
 The evidence-path scene derives a source-record -> artifact -> chunk -> evidence-span ->
 source-claim -> rule -> decision -> generated-rule -> compliance-finding spotlight from graph
 edges, then exposes each step as a clickable item in the right-side Capability shown panel. Advanced

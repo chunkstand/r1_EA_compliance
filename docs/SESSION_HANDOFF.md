@@ -1725,8 +1725,10 @@ legal conclusion.
   the live source-set default from `source_library/catalog/source_set_manifest.json`, prefers that
   catalog source set when a graph export exists, otherwise falls back to the newest graph-capable
   source set under `source_library/derived/`, and only offers review overlays whose graph summaries
-  match the resolved source set. It still uses Three.js plus `3d-force-graph`, defaults to a
-  bounded readiness-blocker lens, exposes the required selectors/search/filters/layout controls,
+  match the resolved source set. A fresh load and Reset demo now return to the full validated
+  source-set corpus graph for that resolved dataset; demo scenes narrow from that full-corpus
+  start instead of opening in a review-specific applicability view. It still uses Three.js plus
+  `3d-force-graph`, exposes the required selectors/search/filters/layout controls,
   and keeps readiness tied to graph validation rather than layout. Static tests now lock the pinned
   runtime URLs, fallback relative graph paths, runtime dataset discovery hooks, and `node_id`/edge
   endpoint mapping; local browser verification covered desktop source-set, desktop review overlay,
