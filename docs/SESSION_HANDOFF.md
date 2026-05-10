@@ -127,6 +127,9 @@ Sequence 7 corpus incorporation and downstream replay is complete for merged sup
 source set `source-set-7e2652d23e764068`. The downstream source-set-aware replay surfaces are now
 fresh without stale-source-set confusion, and the remaining blockers are the explicit parser
 failures plus the two official-source gaps.
+The Sequence 7 alignment closeout confirmed that this remaining work is runtime-only; the durable
+schema docs now also distinguish default reviewer-ready claim inputs from the explicit
+`--allow-partial-claims` blocker-aware replay path.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.

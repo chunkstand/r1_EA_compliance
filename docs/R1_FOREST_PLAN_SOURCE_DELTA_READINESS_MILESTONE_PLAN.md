@@ -590,6 +590,10 @@ Closeout status:
   extraction blockers remain explicit; source-set-only phase replay ignores unrelated root
   `compliance_gold_eval`; and the NEPA 3D graph contract now recognizes `extraction_blocked` and
   `official_source_gap`.
+- aligned. The durable schema docs now match the implemented Sequence 7 replay contract: reviewer-ready
+  claim artifacts remain the default input for `rule-claim-link`, while
+  `--allow-partial-claims` is the explicit blocker-aware replay escape hatch that still records
+  `reviewer_ready=false`.
 - live merged-corpus replay now validates downstream source-set surfaces without stale-source-set
   confusion: claim extraction `101,824` claims, evidence graph `178,912` nodes / `559,467` edges,
   rule-claim binding `211` links / `0` gaps, NEPA 3D source-set graph `1,837` nodes / `2,842`

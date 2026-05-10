@@ -3754,7 +3754,7 @@ The `rule-claim-link` command writes:
 
 `rule-claim-link` reads:
 
-- reviewer-ready source claims from `source_library/derived/<source_set_id>/claims/claims.jsonl`
+- source claims from `source_library/derived/<source_set_id>/claims/claims.jsonl`
 - the claim readiness artifacts beside that file
 - a versioned compliance rule pack, defaulting to
   `config/compliance_rule_pack_nepa_ea_v0.json`
