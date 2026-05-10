@@ -50,6 +50,9 @@ GRAPH_FAILURE_CATEGORY_BY_CHECK_NAME = {
     "nepa_3d_graph_exports_superseded_families": "graph_superseded_as_current",
     "nepa_3d_graph_exports_all_catalog_source_records": "graph_missing_source_record",
     "nepa_3d_graph_currentness_gate_passed": "graph_missing_currentness_status",
+    "nepa_3d_graph_forest_plan_inventory_owned_by_source_set": (
+        "graph_forest_plan_inventory_ownership_gap"
+    ),
     "nepa_3d_graph_region1_promoted_profiles_have_catalog_sources": (
         "graph_missing_source_record"
     ),
@@ -518,9 +521,12 @@ def build_nepa_knowledge_graph_export(
         forest_components=forest_components,
         forest_plan_profiles=forest_plan_profiles,
         region1_forest_plan_readiness=region1_forest_plan_readiness,
+        forest_plan_components_path=forest_plan_components_path,
         inputs=inputs,
         catalog_graph_node_count=catalog_graph_node_count,
         catalog_graph_edge_count=catalog_graph_edge_count,
+        output_dir=output_dir,
+        source_set_id=source_set_id,
     )
     if review_id:
         checks.extend(
@@ -2651,9 +2657,12 @@ def _milestone_validation_checks(
     forest_components: dict[str, Any],
     forest_plan_profiles: dict[str, Any],
     region1_forest_plan_readiness: dict[str, Any],
+    forest_plan_components_path: Path,
     inputs: list[dict[str, Any]],
     catalog_graph_node_count: int,
     catalog_graph_edge_count: int,
+    output_dir: Path,
+    source_set_id: str,
 ) -> list[dict[str, Any]]:
     node_ids = {node["node_id"] for node in graph["nodes"]}
     edge_tuples = {
@@ -2787,6 +2796,12 @@ def _milestone_validation_checks(
         region1_forest_plan_readiness,
         edge_tuples=edge_tuples,
     )
+    inventory_ownership = _forest_plan_inventory_ownership(
+        forest_components=forest_components,
+        forest_plan_components_path=forest_plan_components_path,
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
     return [
         _check("nepa_3d_graph_inputs_exist", not input_failures, [], input_failures),
         _check(
@@ -2877,6 +2892,12 @@ def _milestone_validation_checks(
             bool(forest_components.get("components")),
             "at least one forest plan component",
             len(forest_components.get("components", [])),
+        ),
+        _check(
+            "nepa_3d_graph_forest_plan_inventory_owned_by_source_set",
+            inventory_ownership["passed"],
+            inventory_ownership["expected"],
+            inventory_ownership["actual"],
         ),
         _check(
             "nepa_3d_graph_region1_readiness_matrix_loaded",
@@ -3219,6 +3240,35 @@ def _review_overlay_validation_checks(
             finding_evidence_edge_gaps,
         ),
     ]
+
+
+def _forest_plan_inventory_ownership(
+    *,
+    forest_components: dict[str, Any],
+    forest_plan_components_path: Path,
+    output_dir: Path,
+    source_set_id: str,
+) -> dict[str, Any]:
+    expected_path = (
+        output_dir
+        / "derived"
+        / source_set_id
+        / "forest_plan_components"
+        / "component_inventory.json"
+    ).resolve()
+    actual_path = Path(forest_plan_components_path).resolve()
+    inventory_source_set_id = str(forest_components.get("source_set_id") or "")
+    return {
+        "passed": actual_path == expected_path and inventory_source_set_id == source_set_id,
+        "expected": {
+            "source_set_id": source_set_id,
+            "artifact_path": str(expected_path),
+        },
+        "actual": {
+            "source_set_id": inventory_source_set_id or None,
+            "artifact_path": str(actual_path),
+        },
+    }
 
 
 def _review_required_input_gaps(graph: dict[str, Any]) -> dict[str, str]:

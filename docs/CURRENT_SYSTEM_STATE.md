@@ -483,6 +483,11 @@ readiness matrix, added profiles have source requirements and eval fixture contr
 profiles have catalog-confirmed sources and component inventory coverage, field-directive and
 overlay requirements have graph nodes and source links, and `region1_completeness_claim=false`
 while any tracked profile remains blocked.
+Sequence 0 of the Region 1 component-inventory promotion plan now also requires the forest-plan
+component inventory input to be owned by the exporting source set. Borrowing
+`source-set-8a4005c8a083af1a` component inventory artifacts while exporting
+`source-set-34061d1e4bf6c460` is treated as an explicit validation failure until the active source
+set owns its own `forest_plan_components/` artifact family.
 
 ## NEPA 3D Local Viewer
 

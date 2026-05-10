@@ -64,6 +64,12 @@ Current full-corpus promotion boundary:
   export validates with `65` checks, `0` failed checks, `1,789` nodes, and `2,808` edges.
 - `full_canonical_failure_category_counts={}` after the replay, and the local viewer now resolves
   `source-set-34061d1e4bf6c460` directly instead of falling back to the archived merged source set.
+- Sequence 0 of the Region 1 forest-plan component inventory promotion plan now adds a fail-closed
+  graph-export ownership gate: using
+  `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
+  while exporting `source-set-34061d1e4bf6c460` is no longer accepted as active-source-set truth.
+  Until the active source set owns its own `forest_plan_components/` artifact family, that replay
+  is a documented baseline gap rather than a clean promotion signal.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the

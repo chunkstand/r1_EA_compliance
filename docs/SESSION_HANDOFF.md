@@ -2,6 +2,49 @@
 
 Date: 2026-05-10
 
+## Region 1 Forest-Plan Component Inventory Promotion Sequence 0
+
+Sequence 0 of `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` is now
+implemented as a gate-first baseline slice. This pass did not build multi-forest inventories yet.
+It made the active-vs-archived inventory ownership gap executable and documented.
+
+- live baseline confirmed from local artifacts:
+  - active source set `source-set-34061d1e4bf6c460` does not own
+    `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
+  - archived source set `source-set-8a4005c8a083af1a` owns the only local
+    `forest_plan_components/component_inventory.json`
+  - readiness config still records `10` tracked Region 1 profiles, `1` validated inventory, and
+    `9` `component_inventory_build_required` profiles
+- implementation change:
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py` now adds
+  `nepa_3d_graph_forest_plan_inventory_owned_by_source_set`, which fails closed when a
+  `nepa-knowledge-graph-export` replay borrows another source set's
+  `forest_plan_components/component_inventory.json` or payload `source_set_id`
+- regression coverage:
+  `tests/test_nepa_knowledge_graph_export.py` now proves the old promoted-profile inventory
+  presence check can still pass while the new ownership gate fails on a borrowed inventory path
+- plan review correction:
+  Sequence 0 verification now includes `tests/test_architecture_contract.py` because this is a
+  generated-artifact ownership boundary change, not only a fixture/test slice
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `35/35`
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md --strict`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- the active full-canonical source set still lacks owned `forest_plan_components/` artifacts, so
+  the new gate currently documents a real blocker rather than closing it
+- no multi-forest build contract exists yet; Sequence 1 remains the next required implementation
+  boundary
+
+Immediate next step if this slice is continued:
+
+1. Implement Sequence 1 by adding a tracked Region 1 inventory-build manifest that covers every
+   readiness profile without hardcoded Python branching.
+
 ## Full Canonical Graph-Capability Gate
 
 The full-canonical graph-capability milestone is now closed through operational artifact

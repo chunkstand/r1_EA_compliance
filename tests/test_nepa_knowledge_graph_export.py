@@ -87,6 +87,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_exports_superseded_families"]["passed"]
         assert checks["nepa_3d_graph_reads_catalog_graph_seeds"]["passed"]
         assert checks["nepa_3d_graph_reports_required_summary_count_fields"]["passed"]
+        assert checks["nepa_3d_graph_forest_plan_inventory_owned_by_source_set"]["passed"]
         assert checks["nepa_3d_graph_nodes_have_required_provenance"]["passed"]
         assert checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
         assert checks["nepa_3d_graph_region1_readiness_prevents_overclaim"]["passed"]
@@ -180,7 +181,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         nepa_phase = _phase(phase_eval.summary, "nepa_3d_source_set_graph")
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
-        assert nepa_phase["details"]["validation_check_count"] == 65
+        assert nepa_phase["details"]["validation_check_count"] == 66
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
@@ -263,6 +264,65 @@ def test_source_delta_readiness_does_not_graph_promote_profiles_without_inventor
         checks = {check["name"]: check for check in graph["validation"]["checks"]}
         assert result.summary["region1_forest_plan_graph_ready_profile_count"] == 1
         assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
+
+
+def test_nepa_knowledge_graph_export_fails_when_inventory_is_borrowed_from_other_source_set() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        borrowed_source_set_id = "source-set-borrowed"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _write_minimal_source_set(output_dir, source_set_id=borrowed_source_set_id)
+        borrowed_inventory_path = (
+            output_dir
+            / "derived"
+            / borrowed_source_set_id
+            / "forest_plan_components"
+            / "component_inventory.json"
+        )
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            authority_family_rule_templates_path=paths["templates"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+            rule_pack_path=paths["rule_pack"],
+            forest_plan_components_path=borrowed_inventory_path,
+        )
+
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+
+        assert not result.summary["validation_passed"]
+        assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
+        assert not checks["nepa_3d_graph_forest_plan_inventory_owned_by_source_set"]["passed"]
+        assert (
+            checks["nepa_3d_graph_forest_plan_inventory_owned_by_source_set"][
+                "failure_category"
+            ]
+            == "graph_forest_plan_inventory_ownership_gap"
+        )
+        assert checks["nepa_3d_graph_forest_plan_inventory_owned_by_source_set"]["actual"] == {
+            "source_set_id": borrowed_source_set_id,
+            "artifact_path": str(borrowed_inventory_path.resolve()),
+        }
+        assert checks["nepa_3d_graph_forest_plan_inventory_owned_by_source_set"][
+            "expected"
+        ] == {
+            "source_set_id": source_set_id,
+            "artifact_path": str(
+                (
+                    output_dir
+                    / "derived"
+                    / source_set_id
+                    / "forest_plan_components"
+                    / "component_inventory.json"
+                ).resolve()
+            ),
+        }
 
 
 def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
@@ -383,7 +443,7 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert nepa_phase["passed"]
         assert nepa_phase["reviewer_ready"]
         assert nepa_phase["details"]["review_id"] == review_id
-        assert nepa_phase["details"]["validation_check_count"] == 79
+        assert nepa_phase["details"]["validation_check_count"] == 80
         assert nepa_phase["details"]["failure_category_counts"] == {}
 
 
