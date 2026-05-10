@@ -203,6 +203,18 @@ system contract.
 
 ## Milestone Sequence
 
+Every sequence in this milestone closes the same way before the next sequence begins:
+
+- align every affected durable doc surface to the just-completed sequence state, including this
+  plan, `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, any affected milestone/status docs, and
+  `docs/SESSION_HANDOFF.md`
+- record the verification commands and the resulting repo state in the handoff for that completed
+  sequence
+- stage only that verified sequence slice and land one local atomic commit before moving to the next
+  sequence
+- stop instead of rolling uncommitted or doc-misaligned work forward if verification fails or the
+  sequence slice cannot be separated from unrelated dirty worktree changes
+
 ### Sequence 0 - Baseline Gate And Active-Source-Set Ownership
 
 Goal: reproduce the current one-forest baseline and install a failing gate that proves the active
@@ -495,11 +507,17 @@ Stop conditions:
 
 ## Required Documentation And Handoff Updates
 
+After each completed sequence, update every affected durable doc before commit. At minimum, review
+and update the following when the sequence changes their truth:
+
 - this plan
 - `README.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/FOREST_PLAN_COMPONENT_EVALUATION_MILESTONE_PLAN.md`
 - `docs/SESSION_HANDOFF.md`
+
+Do not defer doc alignment to the last sequence. Sequence closeout is incomplete until the docs and
+handoff that describe that sequence are aligned and committed with it.
 
 ## Required Verification Gates
 
@@ -545,10 +563,13 @@ same source set.
 
 ## Local Commit Closeout Policy
 
-Close this milestone with one local atomic commit only after verification passes. Stage only the
-verified multi-forest component inventory promotion slice. Leave unrelated existing worktree changes
-alone, including the current viewer-default edits and unrelated root-level `East_Crazies_*` draft
-outputs unless the user explicitly broadens scope.
+Close each completed sequence with one local atomic commit only after that sequence's verification
+passes and the affected docs/handoff are aligned. Stage only the verified sequence slice. Leave
+unrelated existing worktree changes alone, including the current viewer-default edits and unrelated
+root-level `East_Crazies_*` draft outputs unless the user explicitly broadens scope.
+
+Do not batch multiple completed sequences into one commit, and do not advance to the next sequence
+with stale docs or an uncommitted verified slice.
 
 ## Residual Risks And Next Milestone Routing
 
