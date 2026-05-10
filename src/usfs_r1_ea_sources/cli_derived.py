@@ -14,6 +14,7 @@ from .cli_common import print_summary
 from .evidence_graph import build_evidence_graph
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
+from .forest_plan_source_delta_readiness import DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH
 from .forest_plan_source_delta_readiness import DEFAULT_R1_FOREST_PLAN_REGISTER_PATH
 from .forest_plan_source_delta_readiness import DEFAULT_SOURCE_DELTA_BATCH_RUN_ID
 from .forest_plan_source_delta_readiness import build_forest_plan_source_delta_readiness_report
@@ -100,6 +101,11 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     source_delta_readiness.add_argument(
         "--forest-plan-profiles",
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
+    source_delta_readiness.add_argument(
+        "--official-source-gap-evidence",
+        default=DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH,
         type=Path,
     )
     source_delta_readiness.add_argument("--results-dir", type=Path)
@@ -309,6 +315,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             scoped_catalog_gate_dir=args.scoped_catalog_gate_dir,
             canonical_catalog_dir=args.canonical_catalog_dir,
             forest_plan_profiles_path=args.forest_plan_profiles,
+            official_source_gap_evidence_path=args.official_source_gap_evidence,
             results_dir=args.results_dir,
         )
         print_summary(result.summary)

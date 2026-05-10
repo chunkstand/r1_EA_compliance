@@ -12,9 +12,13 @@ from .workbook import R1ForestPlanDocumentRegister
 from .workbook import load_r1_forest_plan_document_register
 
 
-SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v0"
+SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v1"
+OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION = "r1-forest-plan-official-source-gap-evidence-v0"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
+DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH = Path(
+    "config/r1_forest_plan_official_source_gap_evidence.json"
+)
 DEFAULT_SOURCE_DELTA_BATCH_RUN_ID = "r1-forest-plan-source-delta-capture-20260510-batches"
 EXPECTED_CANONICAL_SOURCE_COUNT = 190
 
@@ -34,9 +38,10 @@ def build_forest_plan_source_delta_readiness_report(
     scoped_catalog_gate_dir: Path | None = None,
     canonical_catalog_dir: Path | None = None,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
+    official_source_gap_evidence_path: Path = DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH,
     results_dir: Path | None = None,
 ) -> SourceDeltaReadinessResult:
-    """Build the Sequence 0 readiness gate for the Region 1 forest-plan source delta."""
+    """Build the readiness gate for the Region 1 forest-plan source delta."""
 
     output_dir = Path(output_dir)
     register_path = Path(register_path)
@@ -55,6 +60,8 @@ def build_forest_plan_source_delta_readiness_report(
     )
 
     register = load_r1_forest_plan_document_register(register_path)
+    official_source_gap_evidence_path = Path(official_source_gap_evidence_path)
+    official_source_gap_evidence = _read_json_if_exists(official_source_gap_evidence_path)
     run_dir = output_dir / "runs" / source_delta_batch_run_id
     batch_summary_path = run_dir / "summary.json"
     batch_ledger_path = run_dir / "batch_ledger.json"
@@ -142,6 +149,11 @@ def build_forest_plan_source_delta_readiness_report(
             register=register,
             canonical_catalog_ids=canonical_catalog_ids,
         ),
+        _official_source_gap_evidence_check(
+            register=register,
+            evidence=official_source_gap_evidence,
+            path=official_source_gap_evidence_path,
+        ),
     ]
     passed = all(check["passed"] for check in checks)
 
@@ -176,6 +188,12 @@ def build_forest_plan_source_delta_readiness_report(
             "forest_plan_profiles_sha256": sha256_file(forest_plan_profiles_path)
             if forest_plan_profiles_path.exists()
             else None,
+            "official_source_gap_evidence_path": str(official_source_gap_evidence_path),
+            "official_source_gap_evidence_sha256": sha256_file(
+                official_source_gap_evidence_path
+            )
+            if official_source_gap_evidence_path.exists()
+            else None,
         },
         "register": _register_summary(register),
         "source_delta_batch_capture": _batch_capture_summary(
@@ -197,6 +215,11 @@ def build_forest_plan_source_delta_readiness_report(
         ),
         "extraction_readiness": extraction_readiness,
         "retrieval_readiness": retrieval_readiness,
+        "official_source_gap_evidence": _official_source_gap_evidence_summary(
+            register=register,
+            evidence=official_source_gap_evidence,
+            path=official_source_gap_evidence_path,
+        ),
         "forest_profile_readiness_placeholders": profile_readiness,
         "checks": checks,
     }
@@ -215,6 +238,7 @@ def build_forest_plan_source_delta_readiness_report(
         "catalog_confirmed_count": len(register.catalog_confirmed_source_record_ids),
         "official_source_gap_count": len(register.gap_source_record_ids),
         "official_source_gap_ids": register.gap_source_record_ids,
+        "official_source_gap_evidence_path": str(official_source_gap_evidence_path),
         "scoped_source_delta_source_set_id": scoped_manifest.get("source_set_id"),
         "canonical_catalog_source_set_id": canonical_manifest.get("source_set_id"),
         "extraction_readiness_status": extraction_readiness["status"],
@@ -649,6 +673,141 @@ def _catalog_confirmed_sources_present_check(
     }
 
 
+def _official_source_gap_evidence_summary(
+    *,
+    register: R1ForestPlanDocumentRegister,
+    evidence: dict[str, Any],
+    path: Path,
+) -> dict[str, Any]:
+    records = _official_source_gap_evidence_records(evidence)
+    expected_gap_ids = set(register.gap_source_record_ids)
+    record_ids = [record.get("source_record_id") for record in records]
+    current_records = [
+        _official_source_gap_record_summary(record)
+        for record in records
+        if record.get("source_record_id") in expected_gap_ids
+    ]
+    return {
+        "path": str(path),
+        "exists": path.exists(),
+        "schema_version": evidence.get("schema_version"),
+        "expected_schema_version": OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION,
+        "as_of_date": evidence.get("as_of_date"),
+        "record_count": len(records),
+        "source_record_ids": record_ids,
+        "expected_gap_source_record_ids": register.gap_source_record_ids,
+        "missing_gap_source_record_ids": sorted(expected_gap_ids - set(record_ids)),
+        "unexpected_source_record_ids": sorted(set(record_ids) - expected_gap_ids),
+        "records": current_records,
+    }
+
+
+def _official_source_gap_record_summary(record: dict[str, Any]) -> dict[str, Any]:
+    candidates = _official_source_gap_candidate_records(record)
+    return {
+        "source_record_id": record.get("source_record_id"),
+        "decision": record.get("decision"),
+        "search_date": record.get("search_date"),
+        "conclusion": record.get("conclusion"),
+        "candidate_count": len(candidates),
+        "candidate_urls": [
+            str(candidate.get("url") or "") for candidate in candidates if candidate.get("url")
+        ],
+    }
+
+
+def _official_source_gap_evidence_check(
+    *,
+    register: R1ForestPlanDocumentRegister,
+    evidence: dict[str, Any],
+    path: Path,
+) -> dict[str, Any]:
+    records = _official_source_gap_evidence_records(evidence)
+    expected_ids = set(register.gap_source_record_ids)
+    record_ids = [str(record.get("source_record_id") or "") for record in records]
+    record_id_counts = Counter(record_ids)
+    duplicate_ids = sorted(source_id for source_id, count in record_id_counts.items() if count > 1)
+    unexpected_ids = sorted(set(record_ids) - expected_ids)
+    missing_ids = sorted(expected_ids - set(record_ids))
+    records_by_id = {str(record.get("source_record_id") or ""): record for record in records}
+
+    missing_record_fields: list[dict[str, str]] = []
+    missing_candidate_fields: list[dict[str, str]] = []
+    accepted_replacement_candidate_ids: list[str] = []
+    non_preserved_decision_ids: list[str] = []
+    records_without_candidates: list[str] = []
+    for source_record_id in sorted(expected_ids):
+        record = records_by_id.get(source_record_id) or {}
+        for field in ("decision", "search_date", "conclusion"):
+            if not str(record.get(field) or "").strip():
+                missing_record_fields.append({"source_record_id": source_record_id, "field": field})
+        if record.get("decision") != "preserve_official_source_gap":
+            non_preserved_decision_ids.append(source_record_id)
+        candidates = _official_source_gap_candidate_records(record)
+        if not candidates:
+            records_without_candidates.append(source_record_id)
+        for index, candidate in enumerate(candidates):
+            candidate_key = f"{source_record_id}#{index + 1}"
+            required_fields = (
+                "url",
+                "access_result",
+                "content_type",
+                "accepted_or_rejected_reason",
+                "search_date",
+                "operator_notes",
+            )
+            for field in required_fields:
+                if not str(candidate.get(field) or "").strip():
+                    missing_candidate_fields.append({"candidate": candidate_key, "field": field})
+            if candidate.get("accepted_as_replacement") is not False:
+                accepted_replacement_candidate_ids.append(candidate_key)
+
+    details = {
+        "path": str(path),
+        "exists": path.exists(),
+        "schema_version": evidence.get("schema_version"),
+        "expected_schema_version": OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION,
+        "expected_gap_source_record_ids": sorted(expected_ids),
+        "evidence_source_record_ids": sorted(record_ids),
+        "missing_gap_source_record_ids": missing_ids,
+        "unexpected_source_record_ids": unexpected_ids,
+        "duplicate_source_record_ids": duplicate_ids,
+        "missing_record_fields": missing_record_fields,
+        "missing_candidate_fields": missing_candidate_fields,
+        "records_without_candidates": records_without_candidates,
+        "non_preserved_decision_ids": non_preserved_decision_ids,
+        "accepted_replacement_candidate_ids": accepted_replacement_candidate_ids,
+    }
+    passed = (
+        path.exists()
+        and evidence.get("schema_version") == OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION
+        and set(record_ids) == expected_ids
+        and not duplicate_ids
+        and not missing_record_fields
+        and not missing_candidate_fields
+        and not records_without_candidates
+        and not non_preserved_decision_ids
+        and not accepted_replacement_candidate_ids
+    )
+    return {
+        "name": "official_source_gap_evidence_current_for_register",
+        "passed": passed,
+        "details": details,
+    }
+
+
+def _official_source_gap_evidence_records(evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    return [record for record in evidence.get("gap_records") or [] if isinstance(record, dict)]
+
+
+def _official_source_gap_candidate_records(record: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        candidate
+        for candidate in record.get("candidate_evidence") or []
+        if isinstance(candidate, dict)
+    ]
+
+
 def _repair_queue_non_header_row_count(path: Path) -> int:
     if not path.exists():
         return -1
@@ -670,6 +829,7 @@ def _render_markdown(report: dict[str, Any]) -> str:
         f"- Official-source gaps: `{report['register']['gap_count']}`",
         "- Gap source IDs: "
         + ", ".join(f"`{source_id}`" for source_id in report["register"]["skipped_gap_source_record_ids"]),
+        f"- Official-source gap evidence: `{report['official_source_gap_evidence']['path']}`",
         f"- Scoped source-delta source set: `{report['scoped_source_delta_catalog']['source_set_id']}`",
         f"- Active canonical source set: `{report['active_canonical_catalog']['source_set_id']}`",
         f"- Extraction readiness: `{report['extraction_readiness']['status']}`",

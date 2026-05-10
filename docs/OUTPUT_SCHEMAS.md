@@ -3357,18 +3357,19 @@ multiple source records were selected, `parser`, and `limit`.
 
 Path: `source_library/runs/<run_id>/source_delta_readiness/`
 
-The `forest-plan-source-delta-readiness` command is a read-only Sequence 0 gate for the Region 1
-forest-plan support-document source delta. It reads the supplemental register, the source-delta
-batch summary and ledger, the archived scoped catalog gate, the active canonical catalog, extraction
-placeholders, retrieval placeholders, and forest-profile placeholder blockers. It writes:
+The `forest-plan-source-delta-readiness` command is a read-only gate for the Region 1 forest-plan
+support-document source delta. It reads the supplemental register, the source-delta batch summary
+and ledger, the archived scoped catalog gate, the active canonical catalog, official-source gap
+evidence, extraction placeholders, retrieval placeholders, and forest-profile placeholder blockers.
+It writes:
 
 - `r1_forest_plan_source_delta_readiness_report.json`
 - `r1_forest_plan_source_delta_readiness_report.md`
 
-The JSON report has schema version `r1-forest-plan-source-delta-readiness-v0` and includes:
+The JSON report has schema version `r1-forest-plan-source-delta-readiness-v1` and includes:
 
-- `inputs`, with register, batch, scoped catalog, canonical catalog, and forest-profile config paths
-  plus hashes where available
+- `inputs`, with register, batch, scoped catalog, canonical catalog, forest-profile config, and
+  official-source gap evidence paths plus hashes where available
 - `register`, including total rows, status counts, emitted source-delta IDs, catalog-confirmed IDs,
   skipped official-source gap IDs, and per-forest-unit counts
 - `source_delta_batch_capture`, including batch pass counts, planned row count, artifact count,
@@ -3377,6 +3378,8 @@ The JSON report has schema version `r1-forest-plan-source-delta-readiness-v0` an
   source partitions, document-role counts, and validation status
 - `active_canonical_catalog`, with the same catalog summary fields for the active 190-row workbook
   catalog
+- `official_source_gap_evidence`, with the tracked evidence path, schema version, evidence date,
+  expected gap IDs, evidence record IDs, rejected candidate URLs, and missing or unexpected gap IDs
 - `extraction_readiness` and `retrieval_readiness`, which are placeholders until later sequences
   build those layers for the scoped source-delta source set
 - `forest_profile_readiness_placeholders`, with source-delta, catalog-confirmed, gap, and blocker
@@ -3386,8 +3389,43 @@ The JSON report has schema version `r1-forest-plan-source-delta-readiness-v0` an
 The gate fails when required batch/catalog artifacts are missing, when the source-delta batch no
 longer covers the emitted register IDs, when the scoped catalog gate no longer validates, when
 catalog source IDs diverge from the register source-delta rows, when gap/catalog-confirmed rows leak
-into the scoped source-delta catalog, or when the active canonical catalog is not the 190-row
-non-source-delta view.
+into the scoped source-delta catalog, when the active canonical catalog is not the 190-row
+non-source-delta view, or when official-source gap evidence is missing, stale, or accepts a
+replacement candidate without the register moving out of `official_source_gap_documented`.
+
+## Forest-Plan Official-Source Gap Evidence Config
+
+Path: `config/r1_forest_plan_official_source_gap_evidence.json`
+
+This tracked config documents official-source search results for register rows that remain
+`official_source_gap_documented`. It has schema version
+`r1-forest-plan-official-source-gap-evidence-v0` and includes:
+
+- `as_of_date`
+- `gap_records`
+
+Each `gap_records` item includes:
+
+- `source_record_id`, `forest_unit_id`, `document_role`, `decision`, `search_date`, and
+  `conclusion`
+- `candidate_evidence`
+
+Each candidate evidence item includes:
+
+- `url`
+- `official_source_type`
+- `access_result`
+- `http_status`
+- `content_type`
+- `accepted_as_replacement`
+- `accepted_or_rejected_reason`
+- `search_date`
+- `operator_notes`
+
+The readiness gate requires exactly one evidence record for each current register
+`official_source_gap_documented` row. Current gap evidence must preserve the gap decision and must
+not accept a replacement source; a resolved official source must move through targeted preflight and
+register promotion instead of being hidden in this config.
 
 ## Extraction Reuse Inventory Outputs
 

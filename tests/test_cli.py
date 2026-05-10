@@ -117,6 +117,8 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_zero_inputs(
             "config/r1_forest_plan_document_register_draft.csv",
             "--source-delta-batch-run-id",
             "r1-delta-batches",
+            "--official-source-gap-evidence",
+            "config/r1_forest_plan_official_source_gap_evidence.json",
         ]
     )
 
@@ -124,6 +126,9 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_zero_inputs(
     assert args.output_dir == Path("source_library")
     assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
     assert args.source_delta_batch_run_id == "r1-delta-batches"
+    assert args.official_source_gap_evidence == Path(
+        "config/r1_forest_plan_official_source_gap_evidence.json"
+    )
 
 
 def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch) -> None:

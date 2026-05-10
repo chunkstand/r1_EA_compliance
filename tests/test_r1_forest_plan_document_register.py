@@ -4,6 +4,7 @@ from collections import Counter
 from pathlib import Path
 from urllib.parse import urlsplit
 import csv
+import json
 
 from usfs_r1_ea_sources.config import load_config
 from usfs_r1_ea_sources.workbook import load_canonical_sources
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+GAP_EVIDENCE = ROOT / "config" / "r1_forest_plan_official_source_gap_evidence.json"
 
 
 def _rows() -> list[dict[str, str]]:
@@ -146,3 +148,24 @@ def test_r1_forest_plan_document_register_loader_emits_source_delta_only() -> No
     assert bitterroot.metadata["source_input"] == "r1_forest_plan_document_register"
     assert bitterroot.metadata["forest_unit_id"] == "bitterroot-nf"
     assert bitterroot.metadata["draft_status"] == "source_delta_required"
+
+
+def test_r1_forest_plan_official_source_gap_evidence_matches_register_gaps() -> None:
+    rows = _rows()
+    gap_ids = [
+        row["proposed_source_record_id"]
+        for row in rows
+        if row["draft_status"] == "official_source_gap_documented"
+    ]
+    evidence = json.loads(GAP_EVIDENCE.read_text(encoding="utf-8"))
+    records = evidence["gap_records"]
+
+    assert evidence["schema_version"] == "r1-forest-plan-official-source-gap-evidence-v0"
+    assert [record["source_record_id"] for record in records] == gap_ids
+    assert all(record["decision"] == "preserve_official_source_gap" for record in records)
+    assert all(record["candidate_evidence"] for record in records)
+    assert not any(
+        candidate.get("accepted_as_replacement")
+        for record in records
+        for candidate in record["candidate_evidence"]
+    )

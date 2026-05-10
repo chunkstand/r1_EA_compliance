@@ -48,25 +48,36 @@ from `corpus-update-2026-05-01-cg-support-batches` after the source-delta gate, 
 set `source-set-d3b9e2a728accda6` under the current code. The promoted downstream V1 derived
 artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
 
-Sequence 0 readiness baseline update: `forest-plan-source-delta-readiness` now builds the
-source-delta baseline report/gate over the promoted register, source-delta batch capture, archived
-scoped catalog gate, active canonical catalog, extraction placeholders, retrieval placeholders, and
-forest-profile blocker placeholders. The live gate passes with `0` failed checks, scoped source set
+Source-delta readiness update: `forest-plan-source-delta-readiness` now builds the source-delta
+report/gate over the promoted register, source-delta batch capture, archived scoped catalog gate,
+active canonical catalog, tracked official-source gap evidence, extraction placeholders, retrieval
+placeholders, and forest-profile blocker placeholders. The live gate passes with `0` failed checks,
+schema `r1-forest-plan-source-delta-readiness-v1`, scoped source set
 `source-set-411b3736b3691eed`, canonical catalog source set `source-set-d3b9e2a728accda6`, `159`
 captured source-delta rows, and official-source gaps
-`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18`. Generated JSON/Markdown reports
-are ignored under
+`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` validated against
+`config/r1_forest_plan_official_source_gap_evidence.json`. Generated JSON/Markdown reports are
+ignored under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/`.
 
-Immediate next sequence: Sequence 1 official-source gap resolution for
-`R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18`. Keep both out of corpus planning
-until replacement official sources are found and targeted preflight passes, or a documented gap
-policy is accepted. Extraction/retrieval readiness for the captured `159` support-document rows
-should start from scoped source set `source-set-411b3736b3691eed` after the Sequence 1 gap decision
-is current.
+Immediate next sequence: Sequence 3 merged corpus catalog contract. Sequence 1 is closed for the
+current official-source pass because no replacement official URL was accepted; Sequence 2 is skipped
+unless a future official replacement URL passes targeted preflight. Keep both gap rows out of corpus
+planning as downloads, carry them as explicit blockers, and start the merged-corpus contract from
+canonical source set `source-set-d3b9e2a728accda6` plus scoped support-document source set
+`source-set-411b3736b3691eed`.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
+
+Latest Sequence 1 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_source_delta_readiness.py tests/test_r1_forest_plan_document_register.py tests/test_cli.py`
+  passed `32`.
+- `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py src/usfs_r1_ea_sources/cli_derived.py tests/test_forest_plan_source_delta_readiness.py tests/test_r1_forest_plan_document_register.py tests/test_cli.py`
+  passed.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`
+  passed with `0` failed checks.
 
 ## Region 1 Forest-Plan Document Register Hardening
 
@@ -88,11 +99,12 @@ accepts ZIP artifacts for official support-document packages such as Lolo append
 
 Remaining register gaps are explicit:
 
-- `R1PLAN-kootenai-nf-18`: current Kootenai official planning/supporting pages expose BO chapters
-  1-4, but this pass did not locate a current official plan-level BA PDF.
+- `R1PLAN-kootenai-nf-18`: 2026-05-10 official-source check found current Kootenai official
+  planning/supporting pages with BO chapters 1-4, but no current official plan-level BA PDF.
 - `R1PLAN-nez-perce-clearwater-nfs-18`: current Nez Perce-Clearwater official 2025 LMP page links
-  a Box plan revision project record URL, but live preflight returned 404; the row points to the
-  official planning page as gap evidence until a replacement official project-record URL is acquired.
+  a Box plan revision project record URL, but live access returned 404; the row points to the
+  official planning page and tracked gap evidence until a replacement official project-record URL is
+  acquired.
 
 Verification for this slice:
 

@@ -48,28 +48,37 @@ Already completed:
   - parent run: `corpus-update-2026-05-01-cg-support-batches`
   - latest regenerated catalog source set: `source-set-d3b9e2a728accda6`
   - promoted downstream V1 derived source set remains `source-set-ba8d0feae79501b8`
+- Official-source gap evidence:
+  - tracked config: `config/r1_forest_plan_official_source_gap_evidence.json`
+  - evidence date: `2026-05-10`
+  - schema: `r1-forest-plan-official-source-gap-evidence-v0`
+  - gap records: `R1PLAN-kootenai-nf-18`,
+    `R1PLAN-nez-perce-clearwater-nfs-18`
 
 Known official-source gaps:
 
-- `R1PLAN-kootenai-nf-18`: Kootenai plan-level Biological Assessment. Current official planning
-  pages expose Biological Opinion chapters 1-4, but the current register pass did not locate a
-  current official plan-level BA PDF.
+- `R1PLAN-kootenai-nf-18`: Kootenai plan-level Biological Assessment. The 2026-05-10 official
+  source check confirmed that current official planning pages expose Biological Opinion chapters
+  1-4, but no current official plan-level BA PDF was found.
 - `R1PLAN-nez-perce-clearwater-nfs-18`: Nez Perce-Clearwater project record / revision support
-  package. The current official 2025 LMP page links a Box plan revision project record URL, but live
-  preflight returned `404`.
+  package. The 2026-05-10 official source check confirmed that the current official 2025 LMP page
+  links a Box plan revision project record URL, but live access returned `404`.
 
-Sequence 0 implementation status:
+Readiness gate implementation status:
 
 - Implemented command:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`
 - Generated report family:
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/source_delta_readiness/r1_forest_plan_source_delta_readiness_report.json`
   and `.md`
 - Live result: passed with `0` failed checks, `159` captured source-delta rows, scoped source set
   `source-set-411b3736b3691eed`, active canonical source set `source-set-d3b9e2a728accda6`, and
-  extraction/retrieval readiness recorded as `not_started`.
-- Remaining blockers: the two official-source gaps above, plus downstream extraction/retrieval
-  readiness for the scoped support-document source set.
+  extraction/retrieval readiness recorded as `not_started`. The report schema is now
+  `r1-forest-plan-source-delta-readiness-v1` and includes a fail-closed check that the tracked gap
+  evidence matches the current register gap IDs.
+- Remaining blockers: downstream extraction/retrieval readiness for the scoped support-document
+  source set, plus the two preserved official-source gaps unless future official URLs are found and
+  targeted preflight passes.
 
 ## Weak-Point Prevention Contract
 
@@ -78,12 +87,15 @@ Sequence 0 implementation status:
 - Owner surface: `forest_plan_source_delta_readiness.py`, the source-delta batch run directory, the
   archived scoped catalog gate, and the active canonical catalog.
 - Prevention gate: `forest-plan-source-delta-readiness` fails when required batch, ledger,
-  repair-queue, scoped catalog, or canonical catalog files are absent or invalid.
+  repair-queue, scoped catalog, canonical catalog, or official-source gap evidence files are absent
+  or invalid.
 - Fail threshold: any missing required artifact, non-passing scoped catalog validation, non-passing
   canonical catalog validation, source-delta/source-register mismatch, or canonical source count not
-  equal to `190` fails the milestone.
-- Controlled violation: focused tests remove the scoped catalog gate and remove one source-delta ID
-  from the gate fixture; both negative cases must fail before the command can be accepted.
+  equal to `190` fails the milestone. Missing, stale, duplicate, or replacement-accepting gap
+  evidence also fails the gate.
+- Controlled violation: focused tests remove the scoped catalog gate, remove one source-delta ID
+  from the gate fixture, and omit official-source gap evidence; all negative cases must fail before
+  the command can be accepted.
 - Future-Codex misuse scenario: a later session might scan raw artifacts, collapse
   catalog-confirmed rows into the source-delta set, or silently omit gap rows. This contract
   prevents that by requiring the gate to read register, batch, catalog, extraction, retrieval, and
@@ -187,10 +199,27 @@ Acceptance signals:
 - No non-official mirror, search result, or local copy is treated as a replacement source.
 - Register validation still reports no duplicate IDs and no unsupported statuses.
 
+Implementation status:
+
+- Complete for the current official-source pass. No replacement URL was accepted.
+- `config/r1_forest_plan_official_source_gap_evidence.json` records the checked official pages and
+  rejected candidates for both remaining gap rows.
+- `config/r1_forest_plan_document_register_draft.csv` preserves both rows as
+  `official_source_gap_documented` and points to the tracked evidence file in the notes.
+- The readiness gate now fails if these evidence records are missing, stale relative to the register
+  gap IDs, or mark a replacement source accepted without the register moving through targeted
+  preflight and status promotion.
+
 Required verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_r1_forest_plan_document_register.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_source_delta_readiness.py tests/test_cli.py
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness \
+  --output-dir source_library \
+  --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv \
+  --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches \
+  --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json
 PYTHONPATH=src python -m usfs_r1_ea_sources preflight \
   --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
   --output-dir source_library \
@@ -199,6 +228,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources preflight \
   --id <resolved-gap-source-id>
 git diff --check
 ```
+
+The targeted preflight command applies only if a gap row is promoted to `source_delta_required`;
+the 2026-05-10 pass found no accepted replacement URL, so no gap-source preflight was run.
 
 Stop conditions:
 
@@ -482,8 +514,9 @@ Atomic closeout commit should include:
 
 ## Next Immediate Slice
 
-Implement Sequence 1: official-source gap resolution for `R1PLAN-kootenai-nf-18` and
-`R1PLAN-nez-perce-clearwater-nfs-18`. Keep the scope to official Forest Service or other official
-source locations, record accepted/rejected candidate evidence, and do not convert either gap row to
-`source_delta_required` until a targeted preflight passes. If no replacement official source is
-found, preserve `official_source_gap_documented` and refresh the gap evidence notes.
+Sequence 1 is closed for the current official-source pass: both gap rows remain documented gaps and
+the tracked evidence file is enforced by the readiness gate. Sequence 2 is skipped unless a future
+official replacement URL is found. The next immediate slice is Sequence 3: define and verify the
+merged corpus catalog contract that can incorporate the canonical workbook catalog and the scoped
+source-delta catalog without losing source-row identity, source-set provenance, or the preserved
+official-source gap blockers.

@@ -13,6 +13,7 @@ from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 PROFILES = ROOT / "config" / "forest_plan_profiles.json"
+GAP_EVIDENCE = ROOT / "config" / "r1_forest_plan_official_source_gap_evidence.json"
 BATCH_RUN_ID = "unit-source-delta-batches"
 
 
@@ -27,6 +28,7 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
             register_path=REGISTER,
             source_delta_batch_run_id=BATCH_RUN_ID,
             forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
         )
 
         report = _read_json(result.report_path)
@@ -41,6 +43,11 @@ def test_forest_plan_source_delta_readiness_report_passes_sequence_zero_baseline
         assert report["active_canonical_catalog"]["source_set_id"] == "source-set-canonical-test"
         assert report["extraction_readiness"]["status"] == "not_started"
         assert report["retrieval_readiness"]["status"] == "not_started"
+        assert report["official_source_gap_evidence"]["source_record_ids"] == [
+            "R1PLAN-kootenai-nf-18",
+            "R1PLAN-nez-perce-clearwater-nfs-18",
+        ]
+        assert _check(report, "official_source_gap_evidence_current_for_register")["passed"] is True
         assert any(
             unit["official_source_gap_ids"] == ["R1PLAN-kootenai-nf-18"]
             for unit in report["forest_profile_readiness_placeholders"]["forest_units"]
@@ -58,6 +65,7 @@ def test_forest_plan_source_delta_readiness_fails_when_scoped_catalog_gate_missi
             register_path=REGISTER,
             source_delta_batch_run_id=BATCH_RUN_ID,
             forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
         )
 
         report = _read_json(result.report_path)
@@ -83,6 +91,7 @@ def test_forest_plan_source_delta_readiness_fails_on_stale_catalog_gate_source_i
             register_path=REGISTER,
             source_delta_batch_run_id=BATCH_RUN_ID,
             forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
         )
 
         report = _read_json(result.report_path)
@@ -90,6 +99,30 @@ def test_forest_plan_source_delta_readiness_fails_on_stale_catalog_gate_source_i
         assert result.summary["passed"] is False
         assert stale_check["passed"] is False
         assert stale_check["details"]["missing_source_delta_ids"] == [missing_id]
+
+
+def test_forest_plan_source_delta_readiness_fails_when_gap_evidence_missing() -> None:
+    register = load_r1_forest_plan_document_register(REGISTER)
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_sequence_zero_fixture(output_dir, register=register)
+
+        result = build_forest_plan_source_delta_readiness_report(
+            output_dir=output_dir,
+            register_path=REGISTER,
+            source_delta_batch_run_id=BATCH_RUN_ID,
+            forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=output_dir / "missing_gap_evidence.json",
+        )
+
+        report = _read_json(result.report_path)
+        gap_check = _check(report, "official_source_gap_evidence_current_for_register")
+        assert result.summary["passed"] is False
+        assert gap_check["passed"] is False
+        assert gap_check["details"]["missing_gap_source_record_ids"] == [
+            "R1PLAN-kootenai-nf-18",
+            "R1PLAN-nez-perce-clearwater-nfs-18",
+        ]
 
 
 def _write_sequence_zero_fixture(
