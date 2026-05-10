@@ -53,13 +53,13 @@ The Sequence 3 merged catalog contract is implemented without replacing the acti
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit
 `--catalog-dir` archive target. The live merged gate is archived at
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/` as
-`source-set-fd7487b6bffc36a8`. It combines canonical batch run
+`source-set-7e2652d23e764068`. It combines canonical batch run
 `corpus-update-2026-05-01-cg-support-batches` with source-delta batch run
 `r1-forest-plan-source-delta-capture-20260510-batches`, keeps the active
 `source_library/catalog/` view at canonical source set `source-set-d3b9e2a728accda6`, and validates
 `349` source rows, `318` artifacts, `331` unique URLs, `348` `active_review_corpus` rows, `1`
-`candidate_blocked_source` row, `159` supplemental source-delta rows, and `0` failed catalog
-checks.
+`candidate_blocked_source` row, `159` supplemental source-delta rows, `0` `not_in_run` rows, and
+`0` failed catalog checks.
 
 The 26 `Scope=Baseline` rows are the baseline source records every EA compliance review must
 evaluate. They are identified by the workbook `Scope` column, not by row position.

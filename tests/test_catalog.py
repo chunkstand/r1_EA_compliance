@@ -10,6 +10,7 @@ import unittest
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.workbook import load_canonical_sources
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
@@ -221,18 +222,25 @@ class CatalogTests(unittest.TestCase):
         config = load_config(CONFIG)
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_id = "R1PLAN-beaverhead-deerlodge-nf-03"
+        canonical_source_ids = [
+            source.source_record_id
+            for source in load_canonical_sources(WORKBOOK, config.workbook)
+        ]
+        source_delta_ids = [
+            source.source_record_id for source in register.source_delta_sources
+        ]
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            canonical_manifest_path = _write_download_run(
+            canonical_manifest_path = _write_download_run_records(
                 output_dir,
                 "unit-canonical-batch-001",
-                source_record_id="R1EA-001",
+                source_record_ids=canonical_source_ids,
+                content_type="text/html",
             )
-            source_delta_manifest_path = _write_download_run(
+            source_delta_manifest_path = _write_download_run_records(
                 output_dir,
                 "unit-r1-delta-batch-001",
-                source_record_id=source_id,
-                artifact_body=b"%PDF-1.4 catalog artifact" + b" " * 128,
+                source_record_ids=source_delta_ids,
                 content_type="application/pdf",
             )
             _write_batch_run(
@@ -288,9 +296,15 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(source_delta["source_status"], "downloaded")
             self.assertEqual(source_delta["download_batch_run_id"], "unit-r1-delta-batches")
             self.assertEqual(source_delta["document_role"], "forest_plan_support")
-            self.assertEqual(r1ea002["source_status"], "not_in_run")
-            self.assertIsNone(r1ea002["download_batch_run_id"])
+            self.assertEqual(r1ea002["source_status"], "downloaded")
+            self.assertEqual(r1ea002["download_batch_run_id"], "unit-canonical-batches")
             self.assertTrue(_check(validation, "merged_batch_download_parent_count")["passed"])
+            self.assertTrue(
+                _check(
+                    validation,
+                    "merged_catalog_batch_runs_cover_all_catalog_records",
+                )["passed"]
+            )
             self.assertTrue(
                 _check(
                     validation,
@@ -304,7 +318,7 @@ class CatalogTests(unittest.TestCase):
                     "SELECT count(*) FROM source_artifacts"
                 ).fetchone()[0]
             self.assertEqual(source_count, 349)
-            self.assertEqual(link_count, 2)
+            self.assertEqual(link_count, 349)
 
     def test_build_review_catalog_validation_fails_for_duplicate_sources_across_batch_runs(self) -> None:
         config = load_config(CONFIG)
@@ -347,6 +361,53 @@ class CatalogTests(unittest.TestCase):
             self.assertFalse(result.summary["validation_passed"])
             self.assertFalse(check["passed"])
             self.assertEqual(check["details"]["duplicate_source_record_ids"], ["R1EA-001"])
+
+    def test_build_review_catalog_validation_fails_when_merged_batch_runs_leave_rows_uncovered(self) -> None:
+        config = load_config(CONFIG)
+        register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            canonical_manifest_path = _write_download_run(
+                output_dir,
+                "unit-canonical-batch-001",
+                source_record_id="R1EA-001",
+            )
+            source_delta_manifest_path = _write_download_run(
+                output_dir,
+                "unit-r1-delta-batch-001",
+                source_record_id="R1PLAN-beaverhead-deerlodge-nf-03",
+                artifact_body=b"%PDF-1.4 catalog artifact" + b" " * 128,
+                content_type="application/pdf",
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-canonical-batches",
+                [("unit-canonical-batch-001", canonical_manifest_path)],
+            )
+            _write_batch_run(
+                output_dir,
+                "unit-r1-delta-batches",
+                [("unit-r1-delta-batch-001", source_delta_manifest_path)],
+            )
+
+            result = build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                batch_run_ids=["unit-canonical-batches", "unit-r1-delta-batches"],
+                supplemental_sources=register.source_delta_sources,
+                source_delta_input=register.summary(),
+            )
+
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            check = _check(
+                validation,
+                "merged_catalog_batch_runs_cover_all_catalog_records",
+            )
+            self.assertFalse(result.summary["validation_passed"])
+            self.assertFalse(check["passed"])
+            self.assertGreater(check["details"]["not_in_run_count"], 300)
 
     def test_build_review_catalog_validation_fails_for_unknown_manifest_source(self) -> None:
         config = load_config(CONFIG)
@@ -462,6 +523,60 @@ def _write_download_run(
         "manifest_path": str(manifest_path),
         "filtered_rows": 1,
         "status_counts": {"downloaded": 1},
+    }
+    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
+    return manifest_path
+
+
+def _write_download_run_records(
+    output_dir: Path,
+    run_id: str,
+    *,
+    source_record_ids: list[str],
+    content_type: str,
+) -> Path:
+    run_dir = output_dir / "runs" / run_id
+    manifest_dir = output_dir / "manifests"
+    artifact_dir = output_dir / "artifacts" / "raw"
+    run_dir.mkdir(parents=True)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = manifest_dir / f"download_{run_id}.jsonl"
+    extension = "pdf" if content_type == "application/pdf" else "html"
+    records = []
+    for source_record_id in source_record_ids:
+        if extension == "pdf":
+            body = f"%PDF-1.4 catalog artifact {source_record_id}".encode("utf-8") + b" " * 128
+        else:
+            body = (
+                f"<html><body>catalog artifact {source_record_id}</body></html>".encode("utf-8")
+                + b" " * 128
+            )
+        artifact = artifact_dir / f"{run_id}-{source_record_id}.{extension}"
+        artifact.write_bytes(body)
+        records.append(
+            {
+                "run_id": run_id,
+                "source_record_id": source_record_id,
+                "status": "downloaded",
+                "artifact_path": str(artifact),
+                "artifact_sha256": _artifact_sha256(body),
+                "artifact_byte_size": len(body),
+                "content_type": content_type,
+                "fetch_timestamp": "2026-04-30T00:00:00Z",
+                "final_url": f"https://example.test/{source_record_id}",
+            }
+        )
+    manifest_path.write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
+        encoding="utf-8",
+    )
+    summary = {
+        "run_id": run_id,
+        "mode": "download",
+        "manifest_path": str(manifest_path),
+        "filtered_rows": len(source_record_ids),
+        "status_counts": {"downloaded": len(source_record_ids)},
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
     return manifest_path

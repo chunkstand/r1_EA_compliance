@@ -132,6 +132,8 @@ def build_review_catalog(
     validation_report = _validation_report(
         source_set_id=source_set_id,
         records=catalog_records,
+        batch_run_ids=active_batch_run_ids,
+        source_delta_input=source_delta_input,
         manifest_load_checks=manifest_load_checks,
     )
 
@@ -850,6 +852,8 @@ def _validation_report(
     *,
     source_set_id: str,
     records: list[dict],
+    batch_run_ids: list[str],
+    source_delta_input: dict | None,
     manifest_load_checks: list[dict],
 ) -> dict:
     checks = [
@@ -857,12 +861,43 @@ def _validation_report(
         _check_required_reviewer_fields(records),
         _check_artifact_metadata(records),
         _check_review_graph_links(records),
+        _check_merged_catalog_has_no_not_in_run_records(
+            records=records,
+            batch_run_ids=batch_run_ids,
+            source_delta_input=source_delta_input,
+        ),
         *manifest_load_checks,
     ]
     return {
         "source_set_id": source_set_id,
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
+    }
+
+
+def _check_merged_catalog_has_no_not_in_run_records(
+    *,
+    records: list[dict],
+    batch_run_ids: list[str],
+    source_delta_input: dict | None,
+) -> dict:
+    not_in_run_ids = sorted(
+        record["source_record_id"]
+        for record in records
+        if record["source_status"] == "not_in_run"
+    )
+    enabled = len(batch_run_ids) > 1 and source_delta_input is not None
+    return {
+        "name": "merged_catalog_batch_runs_cover_all_catalog_records",
+        "passed": not enabled or not not_in_run_ids,
+        "details": {
+            "enabled": enabled,
+            "batch_run_ids": batch_run_ids,
+            "source_delta_count": (source_delta_input or {}).get("source_delta_count"),
+            "source_count": len(records),
+            "not_in_run_count": len(not_in_run_ids),
+            "not_in_run_source_record_ids_sample": not_in_run_ids[:20],
+        },
     }
 
 

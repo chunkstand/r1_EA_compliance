@@ -74,8 +74,9 @@ The first merged catalog gate is archived, not promoted over the canonical catal
 It was built with repeated `--batch-run-id` values for
 `corpus-update-2026-05-01-cg-support-batches` and
 `r1-forest-plan-source-delta-capture-20260510-batches`, plus the Region 1 register. The merged
-source set is `source-set-fd7487b6bffc36a8` with `349` source rows, `318` artifacts, `348`
-`active_review_corpus` rows, `1` `candidate_blocked_source` row, and passing catalog validation.
+source set is `source-set-7e2652d23e764068` with `349` source rows, `318` artifacts, `348`
+`active_review_corpus` rows, `1` `candidate_blocked_source` row, and passing catalog validation
+with the merged-coverage check enabled.
 
 The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `v1-cg-ecid-compliance-review`: the regenerated compliance review is reviewer-ready, evaluates all

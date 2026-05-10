@@ -379,6 +379,8 @@ the merged gate is archived without replacing the active canonical `source_libra
 - review graph links, including role, authority level, and review topics
 - duplicate or unknown rows in linked download manifests
 - parent batch-download completion, child manifest availability, and ledger-to-manifest row matching when `--batch-run-id` is used
+- full catalog-row coverage for merged Region 1 source-delta gates, so repeated parent batch runs
+  cannot leave rows as `not_in_run`
 - duplicate source records across parent batch-download runs when repeated `--batch-run-id` values
   are used
 

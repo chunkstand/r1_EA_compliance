@@ -85,13 +85,13 @@ Merged catalog implementation status:
 - `catalog-build` accepts repeated `--batch-run-id` values and `--catalog-dir`.
 - Live archived merged gate:
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate/`
-- Merged source set: `source-set-fd7487b6bffc36a8`
+- Merged source set: `source-set-7e2652d23e764068`
 - Inputs: canonical batch run `corpus-update-2026-05-01-cg-support-batches`, source-delta batch run
   `r1-forest-plan-source-delta-capture-20260510-batches`, and
   `config/r1_forest_plan_document_register_draft.csv`.
 - Live result: `349` source rows, `318` artifacts, `331` unique URLs, `348`
   `active_review_corpus` rows, `1` `candidate_blocked_source` row, `159` supplemental source-delta
-  rows, and catalog validation passed with `0` failed checks.
+  rows, `0` `not_in_run` rows, and catalog validation passed with `0` failed checks.
 - Active canonical catalog remains `source-set-d3b9e2a728accda6` under `source_library/catalog/`.
 
 ## Weak-Point Prevention Contract
@@ -333,7 +333,8 @@ Implementation status:
 - Archive strategy: `--catalog-dir` writes merged catalog artifacts outside `source_library/catalog/`
   so the canonical gate remains intact.
 - Controlled violation: unit coverage creates duplicate source IDs across parent batch runs and
-  verifies the merged catalog validation fails before closeout.
+  separately creates an incomplete merged run with `not_in_run` rows; both cases verify the merged
+  catalog validation fails before closeout.
 
 Required verification:
 
@@ -541,6 +542,6 @@ Atomic closeout commit should include:
 Sequence 3 is closed for the current baseline: the merged catalog contract is implemented,
 generated, and validated while the canonical catalog remains intact. The next immediate slice is
 Sequence 4: run support-document extraction/parser readiness from merged source set
-`source-set-fd7487b6bffc36a8` and scoped support-document source set
+`source-set-7e2652d23e764068` and scoped support-document source set
 `source-set-411b3736b3691eed`, using reuse inventory before any extraction rebuild and preserving
 the two official-source gaps as explicit blockers.
