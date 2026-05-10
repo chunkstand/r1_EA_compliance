@@ -49,6 +49,36 @@ class AdapterAndReportTests(unittest.TestCase):
             "https://www.federalregister.gov/documents/full_text/xml/2026/04/03/2026-06537.xml",
         )
 
+    def test_federal_register_short_adapter_uses_document_api(self) -> None:
+        config = load_config(CONFIG)
+
+        class FakeResponse:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):  # noqa: ANN001
+                return False
+
+            def read(self, *_args):  # noqa: ANN002
+                return (
+                    b'{"full_text_xml_url":'
+                    b'"https://www.federalregister.gov/documents/full_text/xml/'
+                    b'2025/01/10/2024-30342.xml"}'
+                )
+
+        with patch("usfs_r1_ea_sources.adapters.urlopen", return_value=FakeResponse()):
+            adapted = adapt_download_url("https://federalregister.gov/d/2024-30342", config.network)
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "federal_register_full_text_xml")
+        self.assertEqual(
+            adapted.url,
+            "https://www.federalregister.gov/documents/full_text/xml/2025/01/10/2024-30342.xml",
+        )
+        self.assertEqual(adapted.expected_content_type, "text/xml")
+
     def test_box_public_file_adapter_uses_authenticated_download_token(self) -> None:
         config = load_config(CONFIG)
         stream_data = {
@@ -79,23 +109,27 @@ class AdapterAndReportTests(unittest.TestCase):
             def read(self, *_args):  # noqa: ANN002
                 return page.encode()
 
+        urls = [
+            "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
+            "https://usfs-public.app.box.com/v/PinyonPublic/file/1801300506566",
+        ]
         with patch("usfs_r1_ea_sources.adapters.urlopen", return_value=FakeResponse()):
-            adapted = adapt_download_url(
-                "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
-                config.network,
-            )
+            for url in urls:
+                with self.subTest(url=url):
+                    adapted = adapt_download_url(url, config.network)
 
-        self.assertIsNotNone(adapted)
-        self.assertEqual(adapted.adapter, "box_public_file_download")
-        self.assertTrue(
-            adapted.url.startswith(
-                "https://public.boxcloud.com/api/2.0/files/1801300506566/content?access_token="
-            )
-        )
-        self.assertEqual(
-            parse_qs(urlsplit(adapted.url).query)["access_token"],
-            ["read token/with spaces+"],
-        )
+                    self.assertIsNotNone(adapted)
+                    self.assertEqual(adapted.adapter, "box_public_file_download")
+                    self.assertTrue(
+                        adapted.url.startswith(
+                            "https://public.boxcloud.com/api/2.0/files/"
+                            "1801300506566/content?access_token="
+                        )
+                    )
+                    self.assertEqual(
+                        parse_qs(urlsplit(adapted.url).query)["access_token"],
+                        ["read token/with spaces+"],
+                    )
 
     def test_report_builds_repair_queue_from_failed_manifest(self) -> None:
         config = load_config(CONFIG)

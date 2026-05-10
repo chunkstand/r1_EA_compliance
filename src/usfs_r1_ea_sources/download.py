@@ -605,6 +605,8 @@ def _suffix_for_content_type(content_type: str | None) -> str:
         return ".html"
     if content_type in {"application/xml", "text/xml"}:
         return ".xml"
+    if content_type == "application/zip":
+        return ".zip"
     if content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return ".docx"
     return ".bin"
@@ -615,6 +617,7 @@ def _content_type_for_suffix(suffix: str) -> str | None:
         ".pdf": "application/pdf",
         ".html": "text/html",
         ".xml": "application/xml",
+        ".zip": "application/zip",
         ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     }.get(suffix.lower())
 

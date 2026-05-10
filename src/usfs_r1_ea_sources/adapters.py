@@ -26,8 +26,8 @@ def adapt_download_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
     host = parsed.netloc.lower()
     if host == "www.ecfr.gov":
         return _adapt_ecfr_url(url, network)
-    if host == "www.federalregister.gov":
-        return _adapt_federal_register_url(url)
+    if host in {"www.federalregister.gov", "federalregister.gov"}:
+        return _adapt_federal_register_url(url, network)
     if host in _BOX_PUBLIC_HOSTS:
         return _adapt_box_public_file_url(url, network)
     return None
@@ -55,24 +55,49 @@ def _adapt_ecfr_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
     return AdaptedURL(url=api_url, adapter="ecfr_full_xml", expected_content_type="application/xml")
 
 
-def _adapt_federal_register_url(url: str) -> AdaptedURL | None:
+def _adapt_federal_register_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
     parsed = urlsplit(url)
     match = re.search(
         r"/documents/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<docnum>[^/]+)",
         parsed.path,
     )
-    if not match:
+    if match:
+        api_url = (
+            "https://www.federalregister.gov/documents/full_text/xml/"
+            f"{match.group('year')}/{match.group('month')}/{match.group('day')}/"
+            f"{match.group('docnum')}.xml"
+        )
+        return AdaptedURL(
+            url=api_url,
+            adapter="federal_register_full_text_xml",
+            expected_content_type="text/xml",
+        )
+    short_match = re.search(r"/d/(?P<docnum>\d{4}-\d+)", parsed.path)
+    if not short_match:
         return None
-    api_url = (
-        "https://www.federalregister.gov/documents/full_text/xml/"
-        f"{match.group('year')}/{match.group('month')}/{match.group('day')}/"
-        f"{match.group('docnum')}.xml"
-    )
+    api_url = _federal_register_document_xml_url(short_match.group("docnum"), network)
+    if not api_url:
+        return None
     return AdaptedURL(
         url=api_url,
         adapter="federal_register_full_text_xml",
         expected_content_type="text/xml",
     )
+
+
+def _federal_register_document_xml_url(docnum: str, network: NetworkConfig) -> str | None:
+    request = Request(
+        f"https://www.federalregister.gov/api/v1/documents/{docnum}",
+        headers={"User-Agent": network.user_agent, "Accept": "application/json"},
+    )
+    timeout = max(network.connect_timeout_seconds, network.read_timeout_seconds)
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            data = json.load(response)
+    except Exception:
+        return None
+    xml_url = data.get("full_text_xml_url")
+    return xml_url if isinstance(xml_url, str) else None
 
 
 def _adapt_box_public_file_url(url: str, network: NetworkConfig) -> AdaptedURL | None:

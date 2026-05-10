@@ -7,7 +7,13 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.config import load_config
-from usfs_r1_ea_sources.download import DownloadFetchResult, _classify_download_response, run_download
+from usfs_r1_ea_sources.download import (
+    DownloadFetchResult,
+    _classify_download_response,
+    _content_type_for_suffix,
+    _suffix_for_content_type,
+    run_download,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +73,10 @@ class FakeDownloader:
 
 
 class DownloadTests(unittest.TestCase):
+    def test_zip_content_type_uses_zip_suffix(self) -> None:
+        self.assertEqual(_suffix_for_content_type("application/zip"), ".zip")
+        self.assertEqual(_content_type_for_suffix(".zip"), "application/zip")
+
     def test_download_writes_artifacts_hashes_and_preserves_duplicate_url_rows(self) -> None:
         config = load_config(CONFIG)
         fetcher = FakeDownloader()

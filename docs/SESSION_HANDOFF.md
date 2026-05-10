@@ -5,37 +5,50 @@ Date: 2026-05-09
 ## Region 1 Forest-Plan Document Register Hardening
 
 `config/r1_forest_plan_document_register_draft.csv` is now an ingest-ready draft register for
-Region 1 forest-plan support documents, subject to the two explicit consultation-package gaps
-below. The register has `187` rows: `28` already catalog-confirmed rows, `157` source-delta rows,
-and `2` documented official-source gaps. No rows remain in the prior placeholder statuses
+Region 1 forest-plan support documents, subject to the explicit official-source gaps below. The
+register has `189` rows: `28` already catalog-confirmed rows, `159` source-delta rows, and `2`
+documented official-source gaps. No rows remain in the prior placeholder statuses
 `needs_direct_link_resolution`, `needs_child_document_expansion`, or
 `missing_official_source_research`.
 
 The hardening slice resolved Flathead public reading-room Box files to stable official file-share
 rows, expanded Dakota Prairie Appendices A-N, expanded Idaho Panhandle 2015 Biological Opinion
-chapters, and resolved Kootenai Biological Opinion chapters 2-4 from official Forest Service
-legacy-media URLs. Downloader support now includes `box_public_file_download`, which keeps stable
-Box share URLs in the register/workbook while resolving temporary BoxCloud PDF URLs at fetch time.
+chapters, resolved Kootenai Biological Opinion chapters 1-4 from current official Forest Service
+media links, resolved the Bitterroot grizzly-bear re-consultation BA/BO from the official Forest
+Service Pinyon Public project record, and corrected Nez Perce-Clearwater Federal Register coverage.
+Downloader support includes `box_public_file_download`, which keeps stable Box share URLs in the
+register/workbook while resolving temporary BoxCloud PDF URLs at fetch time. Downloader support also
+accepts ZIP artifacts for official support-document packages such as Lolo appendices.
 
 Remaining register gaps are explicit:
 
-- `R1PLAN-bitterroot-nf-12`: current Bitterroot official planning page exposes the plan, FEIS,
-  ROD, amendments, and monitoring documents, but not a direct plan-level BA/BO PDF. FWS catalogue
-  lookup found project code `06E11000-2021-F-0020` for Bitterroot Forest Plan Amendment - Grizzly
-  Bears and still requires direct-record acquisition before corpus promotion.
-- `R1PLAN-kootenai-nf-17`: current Kootenai official pages expose BO chapters 2-4, but this pass
-  did not locate a current official BA PDF or BO Chapter 1/full-package PDF.
+- `R1PLAN-kootenai-nf-18`: current Kootenai official planning/supporting pages expose BO chapters
+  1-4, but this pass did not locate a current official plan-level BA PDF.
+- `R1PLAN-nez-perce-clearwater-nfs-18`: current Nez Perce-Clearwater official 2025 LMP page links
+  a Box plan revision project record URL, but live preflight returned 404; the row points to the
+  official planning page as gap evidence until a replacement official project-record URL is acquired.
 
 Verification for this slice:
 
-- Custom CSV structural validation passed: `187` rows, `0` duplicate IDs, `0` unresolved
-  placeholder statuses, valid HTTP(S) links, and documented gap IDs
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-kootenai-nf-17`.
+- Custom CSV structural validation passed: `189` rows, `0` duplicate IDs, `0` unresolved
+  placeholder statuses, valid HTTP(S) links, and documented gap IDs `R1PLAN-kootenai-nf-18` and
+  `R1PLAN-nez-perce-clearwater-nfs-18`.
 - Live Flathead Box preflight smoke passed for `R1PLAN-flathead-nf-02`: `preflight_ok`, HTTP
   `206`, `application/pdf`, adapter `box_public_file_download`.
+- Live Bitterroot Box preflight smoke passed for `R1PLAN-bitterroot-nf-12` and
+  `R1PLAN-bitterroot-nf-13`: `preflight_ok`, HTTP `206`, `application/pdf`, adapter
+  `box_public_file_download`; PDF text confirms the grizzly-bear BA and BO titles, and the BO
+  text confirms FWS project code `06E11000-2021-F-0020`.
+- Live Kootenai BO chapter preflight passed for `R1PLAN-kootenai-nf-14` through
+  `R1PLAN-kootenai-nf-17`: each resolves to `application/pdf`.
+- Live targeted closeout preflight passed for the corrected rows: `R1PLAN-nez-perce-clearwater-nfs-04`
+  and `R1PLAN-nez-perce-clearwater-nfs-14` resolve through `federal_register_full_text_xml`,
+  `R1PLAN-lolo-nf-08` resolves as `application/zip`, and the
+  `R1PLAN-nez-perce-clearwater-nfs-18` gap evidence page resolves as `text/html`.
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_adapters_report.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_adapters_report.py tests/test_download.py tests/test_r1_forest_plan_document_register.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_captured_library.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 git diff --check
@@ -43,8 +56,9 @@ git diff --check
 
 Next sequence: promote the draft register into the workbook-backed ingest path or a dedicated
 source-delta sheet, then run a scoped dry-run/preflight against only the new `R1PLAN-*` source-delta
-rows before any full download. Do not treat the two documented gap rows as corpus-ready until direct
-official BA/BO source records are acquired or the gap policy is explicitly accepted.
+rows before any full download. Do not treat the remaining Kootenai BA or Nez Perce-Clearwater
+project-record gap rows as corpus-ready until direct official source records are acquired or the gap
+policy is explicitly accepted.
 
 ## Project SOW Integration Merge
 
