@@ -125,6 +125,49 @@ def test_forest_plan_source_delta_readiness_fails_when_gap_evidence_missing() ->
         ]
 
 
+def test_forest_plan_source_delta_readiness_sequence_four_uses_merged_extraction_coverage() -> None:
+    register = load_r1_forest_plan_document_register(REGISTER)
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_sequence_zero_fixture(output_dir, register=register)
+        merged_catalog_dir = _write_merged_catalog_fixture(output_dir, register=register)
+        merged_source_set_id = "source-set-merged-test"
+        blocker_id = register.source_delta_sources[0].source_record_id
+        reuse_inventory_path = _write_reuse_inventory_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=[source.source_record_id for source in register.source_delta_sources],
+        )
+        _write_extraction_fixture(
+            output_dir,
+            source_set_id=merged_source_set_id,
+            source_record_ids=[source.source_record_id for source in register.source_delta_sources],
+            blocker_id=blocker_id,
+        )
+
+        result = build_forest_plan_source_delta_readiness_report(
+            output_dir=output_dir,
+            register_path=REGISTER,
+            source_delta_batch_run_id=BATCH_RUN_ID,
+            merged_catalog_gate_dir=merged_catalog_dir,
+            extraction_source_set_id=merged_source_set_id,
+            reuse_inventory_path=reuse_inventory_path,
+            forest_plan_profiles_path=PROFILES,
+            official_source_gap_evidence_path=GAP_EVIDENCE,
+        )
+
+        report = _read_json(result.report_path)
+        assert result.summary["passed"] is True
+        assert report["schema_version"] == "r1-forest-plan-source-delta-readiness-v2"
+        assert report["merged_source_delta_catalog"]["source_set_id"] == merged_source_set_id
+        assert report["extraction_readiness"]["status"] == "ready_with_blockers"
+        assert report["extraction_readiness"]["coverage_complete"] is True
+        assert report["extraction_readiness"]["blocked_status_counts"] == {"parser_error": 1}
+        assert report["extraction_readiness"]["reuse_inventory"]["status"] == "ready"
+        assert _check(report, "merged_catalog_gate_validation_passed")["passed"] is True
+        assert _check(report, "source_delta_extraction_readiness_covers_expected_rows")["passed"] is True
+
+
 def _write_sequence_zero_fixture(
     output_dir: Path,
     *,
@@ -238,8 +281,177 @@ def _write_catalog_fixture(
     (catalog_dir / "review_sources.sqlite").write_bytes(b"")
 
 
+def _write_merged_catalog_fixture(output_dir: Path, *, register) -> Path:
+    merged_dir = output_dir / "runs" / BATCH_RUN_ID / "merged_catalog_gate"
+    source_ids = register.catalog_confirmed_source_record_ids + [
+        source.source_record_id for source in register.source_delta_sources
+    ]
+    _write_catalog_fixture(
+        merged_dir,
+        source_set_id="source-set-merged-test",
+        source_ids=source_ids,
+        source_count=190 + len(register.source_delta_sources),
+        artifact_count=318,
+        download_batch_run_id="merged-batches",
+        source_delta_input=register.summary(),
+        source_record_id_filter_count=None,
+        supplemental_source_count=len(register.source_delta_sources),
+        source_partition_counts={"active_review_corpus": 348, "candidate_blocked_source": 1},
+        document_role_counts={"forest_plan": 28, "forest_plan_support": len(register.source_delta_sources)},
+    )
+    return merged_dir
+
+
+def _write_extraction_fixture(
+    output_dir: Path,
+    *,
+    source_set_id: str,
+    source_record_ids: list[str],
+    blocker_id: str,
+) -> None:
+    diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
+    chunks_dir = output_dir / "derived" / source_set_id / "chunks"
+    text_dir = output_dir / "derived" / source_set_id / "extracted_text"
+    diagnostics_dir.mkdir(parents=True, exist_ok=True)
+    chunks_dir.mkdir(parents=True, exist_ok=True)
+    text_dir.mkdir(parents=True, exist_ok=True)
+
+    manifest_records = []
+    chunks = []
+    for source_record_id in source_record_ids:
+        base_record = {
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "title": source_record_id,
+            "document_role": "forest_plan_support",
+            "authority_level": "forest_service",
+            "expected_parser": "pdf",
+            "source_status": "downloaded",
+            "artifact_sha256": f"sha-{source_record_id}",
+            "artifact_path": f"artifacts/{source_record_id}.pdf",
+            "content_type": "application/pdf",
+            "text_char_count": 0,
+            "chunk_count": 0,
+        }
+        if source_record_id == blocker_id:
+            manifest_records.append(
+                {
+                    **base_record,
+                    "status": "parser_error",
+                    "failure": {
+                        "error_class": "unsupported_zip_member",
+                        "error_message": "Unsupported ZIP entry.",
+                    },
+                }
+            )
+            continue
+
+        text_path = text_dir / f"{source_record_id}.txt"
+        text = f"Extracted text for {source_record_id}"
+        text_path.write_text(text, encoding="utf-8")
+        manifest_records.append(
+            {
+                **base_record,
+                "status": "extracted",
+                "parser_name": "unit-parser",
+                "parser_version": "1",
+                "parser_metadata": {"reused_existing": False},
+                "text_path": str(text_path),
+                "text_char_count": len(text),
+                "text_sha256": f"text-sha-{source_record_id}",
+                "chunk_count": 1,
+                "failure": None,
+            }
+        )
+        chunks.append(
+            {
+                "chunk_id": f"chunk:{source_record_id}:0",
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "artifact_sha256": f"sha-{source_record_id}",
+                "artifact_path": f"artifacts/{source_record_id}.pdf",
+                "citation_label": source_record_id,
+                "original_url": f"https://example.com/{source_record_id}",
+                "effective_url": f"https://example.com/{source_record_id}",
+                "final_url": f"https://example.com/{source_record_id}",
+                "parser_name": "unit-parser",
+                "parser_version": "1",
+                "extracted_at": "2026-05-10T00:00:00Z",
+                "char_start": 0,
+                "char_end": len(text),
+                "content_sha256": f"content-sha-{source_record_id}",
+                "text": text,
+            }
+        )
+
+    _write_jsonl(diagnostics_dir / "extraction_manifest.jsonl", manifest_records)
+    _write_json(
+        diagnostics_dir / "extraction_validation.json",
+        {"source_set_id": source_set_id, "passed": False, "checks": []},
+    )
+    _write_json(
+        diagnostics_dir / "summary.json",
+        {
+            "source_set_id": source_set_id,
+            "selected_source_count": len(source_record_ids),
+            "extracted_count": len(source_record_ids) - 1,
+            "failed_count": 1,
+            "status_counts": {
+                "extracted": len(source_record_ids) - 1,
+                "parser_error": 1,
+            },
+            "validation_passed": False,
+        },
+    )
+    _write_jsonl(chunks_dir / "chunks.jsonl", chunks)
+
+
+def _write_reuse_inventory_fixture(
+    output_dir: Path,
+    *,
+    source_set_id: str,
+    source_record_ids: list[str],
+) -> Path:
+    inventory_dir = output_dir / "derived" / source_set_id / "reuse_inventory"
+    inventory_dir.mkdir(parents=True, exist_ok=True)
+    records = [
+        {
+            "source_record_id": source_record_id,
+            "source_set_id": source_set_id,
+            "classification": "needs_extract",
+        }
+        for source_record_id in source_record_ids
+    ]
+    _write_jsonl(inventory_dir / "reuse_inventory_records.jsonl", records)
+    _write_json(
+        inventory_dir / "summary.json",
+        {
+            "source_set_id": source_set_id,
+            "classification_counts": {"needs_extract": len(source_record_ids)},
+        },
+    )
+    _write_json(
+        inventory_dir / "reuse_inventory.json",
+        {
+            "summary": {
+                "source_set_id": source_set_id,
+                "classification_counts": {"needs_extract": len(source_record_ids)},
+            },
+            "records": records,
+        },
+    )
+    return inventory_dir / "reuse_inventory.json"
+
+
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_jsonl(path: Path, records: list[dict]) -> None:
+    path.write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
+        encoding="utf-8",
+    )
 
 
 def _read_json(path: Path) -> dict:

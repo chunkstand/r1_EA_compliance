@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 
@@ -142,6 +143,26 @@ class ReuseInventoryTests(unittest.TestCase):
                 records[0]["candidate_failures"][0]["failures"],
                 ["text_sha256_mismatch"],
             )
+
+    def test_inventory_accepts_archived_catalog_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            _write_catalog(
+                output_dir,
+                [_catalog_row(output_dir, source_record_id="R1EA-001", body=b"law one")],
+            )
+            archived_catalog_dir = output_dir / "runs" / "unit-archived-catalog"
+            shutil.copytree(output_dir / "catalog", archived_catalog_dir)
+            shutil.rmtree(output_dir / "catalog")
+
+            result = build_reuse_inventory(
+                output_dir=output_dir,
+                catalog_dir=archived_catalog_dir,
+            )
+
+            self.assertEqual(result.summary["source_set_id"], "source-set-current")
+            records = _read_jsonl(result.records_path)
+            self.assertEqual(records[0]["source_record_id"], "R1EA-001")
 
 
 def _write_catalog(output_dir: Path, rows: list[dict]) -> None:

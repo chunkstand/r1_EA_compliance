@@ -3314,10 +3314,14 @@ repair or update work, but downstream retrieval remains non-reviewer-ready unles
 built with partial-extraction allowance.
 
 `--reuse-existing` reuses matching current source-set text/cache entries. `--reuse-inventory-path`
-points to `reuse_inventory_records.jsonl` and lets extraction copy validated prior source-set text
-for `reuse_extraction` candidates before reparsing any remaining `needs_extract` rows.
+accepts `reuse_inventory_records.jsonl`, `reuse_inventory.json`, or the `reuse_inventory/`
+directory and lets extraction copy validated prior source-set text for `reuse_extraction`
+candidates before reparsing any remaining `needs_extract` rows. `--catalog-dir` points extraction
+at an archived catalog gate so merged or scoped source-set extraction can run without replacing
+`source_library/catalog`.
 
-`extract-build` reads `source_library/catalog/review_sources.sqlite`; it does not scan
+`extract-build` reads `review_sources.sqlite` from the active catalog by default or from
+`--catalog-dir` when an archived gate is supplied; it does not scan
 `source_library/artifacts/raw/` as its authority source. For each selected catalog row it:
 
 - verifies the catalog validation gate unless `--allow-invalid-catalog` is passed
@@ -3373,28 +3377,34 @@ Path: `source_library/runs/<run_id>/source_delta_readiness/`
 The `forest-plan-source-delta-readiness` command is a read-only gate for the Region 1 forest-plan
 support-document source delta. It reads the supplemental register, the source-delta batch summary
 and ledger, the archived scoped catalog gate, the active canonical catalog, official-source gap
-evidence, extraction placeholders, retrieval placeholders, and forest-profile placeholder blockers.
-It writes:
+evidence, and optionally the archived merged catalog gate plus live extraction/reuse artifacts for a
+merged or scoped source set. It writes:
 
 - `r1_forest_plan_source_delta_readiness_report.json`
 - `r1_forest_plan_source_delta_readiness_report.md`
 
-The JSON report has schema version `r1-forest-plan-source-delta-readiness-v1` and includes:
+The JSON report has schema version `r1-forest-plan-source-delta-readiness-v2` and includes:
 
-- `inputs`, with register, batch, scoped catalog, canonical catalog, forest-profile config, and
-  official-source gap evidence paths plus hashes where available
+- `inputs`, with register, batch, scoped catalog, canonical catalog, optional merged catalog,
+  extraction source set, reuse inventory, forest-profile config, and official-source gap evidence
+  paths plus hashes where available
 - `register`, including total rows, status counts, emitted source-delta IDs, catalog-confirmed IDs,
   skipped official-source gap IDs, and per-forest-unit counts
 - `source_delta_batch_capture`, including batch pass counts, planned row count, artifact count,
   ledger source-record count, repair-queue row count, and the embedded `source_delta_input`
 - `scoped_source_delta_catalog`, with source-set ID, source count, artifact count, status counts,
   source partitions, document-role counts, and validation status
+- `merged_source_delta_catalog`, when a merged gate is provided, with the same summary fields plus
+  merged source-count and supplemental-row validation context
 - `active_canonical_catalog`, with the same catalog summary fields for the active 190-row workbook
   catalog
 - `official_source_gap_evidence`, with the tracked evidence path, schema version, evidence date,
   expected gap IDs, evidence record IDs, rejected candidate URLs, and missing or unexpected gap IDs
-- `extraction_readiness` and `retrieval_readiness`, which are placeholders until later sequences
-  build those layers for the scoped source-delta source set
+- `extraction_readiness`, including manifest/validation/summary paths, per-status counts, extracted
+  vs blocked source counts, blocker error classes, source-record coverage completeness, and nested
+  reuse-inventory coverage details for the expected source-delta rows
+- `retrieval_readiness`, which remains a placeholder until retrieval artifacts are built for the
+  chosen extraction source set
 - `forest_profile_readiness_placeholders`, with source-delta, catalog-confirmed, gap, and blocker
   counts by forest unit
 - `checks`, each with `name`, `passed`, and `details`

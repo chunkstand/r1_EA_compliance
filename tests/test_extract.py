@@ -5,6 +5,7 @@ import hashlib
 import io
 import importlib.util
 import json
+import shutil
 import tempfile
 import unittest
 import zipfile
@@ -259,6 +260,43 @@ class ExtractionTests(unittest.TestCase):
 
             self.assertTrue(second.summary["validation_passed"])
             self.assertFalse(stale.exists())
+
+    def test_build_extraction_accepts_archived_catalog_dir(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-001",
+                artifact_body=_html_body(),
+                content_type="text/html",
+                suffix=".html",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+            archived_catalog_dir = output_dir / "runs" / "unit-archived-catalog"
+            shutil.copytree(output_dir / "catalog", archived_catalog_dir)
+            shutil.rmtree(output_dir / "catalog")
+
+            result = build_extraction(
+                output_dir=output_dir,
+                catalog_dir=archived_catalog_dir,
+                id_filter="R1EA-001",
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(
+                result.summary["extraction_options"]["catalog_dir"],
+                str(archived_catalog_dir),
+            )
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["source_record_id"], "R1EA-001")
 
     def test_build_extraction_reuses_existing_payload_when_requested(self) -> None:
         config = load_config(CONFIG)
@@ -539,6 +577,85 @@ class ExtractionTests(unittest.TestCase):
             manifest = _read_jsonl(result.extraction_manifest_path)
             self.assertEqual(manifest[0]["status"], "parser_error")
             self.assertEqual(manifest[0]["failure"]["error_class"], "docling_unavailable")
+
+    def test_build_extraction_accepts_reuse_inventory_bundle_path(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1EA-001",
+                artifact_body=_html_body(),
+                content_type="text/html",
+                suffix=".html",
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            catalog_row = next(
+                row
+                for row in _read_jsonl(output_dir / "catalog" / "source_catalog.jsonl")
+                if row["source_record_id"] == "R1EA-001"
+            )
+            source_set_id = json.loads(
+                (output_dir / "catalog" / "source_set_manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )["source_set_id"]
+            prior_text_dir = output_dir / "derived" / "source-set-prior" / "extracted_text"
+            prior_text_dir.mkdir(parents=True, exist_ok=True)
+            prior_text_path = prior_text_dir / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.txt"
+            prior_text = "Prior reusable text."
+            prior_text_path.write_text(prior_text, encoding="utf-8")
+            inventory_path = output_dir / "derived" / source_set_id / "reuse_inventory"
+            inventory_path.mkdir(parents=True, exist_ok=True)
+            inventory_record = {
+                "source_set_id": source_set_id,
+                "source_record_id": "R1EA-001",
+                "classification": "reuse_extraction",
+                "artifact_check": {"passed": True},
+                "artifact_sha256": catalog_row["artifact_sha256"],
+                "expected_parser": catalog_row["expected_parser"],
+                "content_type": catalog_row["content_type"],
+                "reuse_candidate": {
+                    "source_set_id": "source-set-prior",
+                    "source_record_id": "R1EA-001",
+                    "status": "extracted",
+                    "artifact_sha256": catalog_row["artifact_sha256"],
+                    "expected_parser": catalog_row["expected_parser"],
+                    "content_type": catalog_row["content_type"],
+                    "chunk_count": 1,
+                    "text_path": str(prior_text_path),
+                    "text_sha256": hashlib.sha256(prior_text.encode("utf-8")).hexdigest(),
+                    "parser_name": "unit-parser",
+                    "parser_version": "1",
+                    "parser_metadata": {},
+                },
+            }
+            (inventory_path / "reuse_inventory.json").write_text(
+                json.dumps({"summary": {"source_set_id": source_set_id}, "records": [inventory_record]}),
+                encoding="utf-8",
+            )
+
+            result = build_extraction(
+                output_dir=output_dir,
+                id_filter="R1EA-001",
+                reuse_inventory_path=inventory_path / "reuse_inventory.json",
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["reused_count"], 1)
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(
+                manifest[0]["parser_metadata"]["reuse_from"],
+                "inventory_prior_extraction",
+            )
 
     def test_build_extraction_uses_pdf_text_fallback_after_docling_timeout(self) -> None:
         config = load_config(CONFIG)

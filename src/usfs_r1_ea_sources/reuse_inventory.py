@@ -35,13 +35,14 @@ def build_reuse_inventory(
     output_dir: Path,
     source_set_id: str | None = None,
     previous_source_set_ids: list[str] | None = None,
+    catalog_dir: Path | None = None,
     catalog_path: Path | None = None,
     verify_artifact_hashes: bool = True,
 ) -> ReuseInventoryResult:
     """Inventory extraction reuse opportunities for the current source set."""
 
     output_dir = Path(output_dir)
-    catalog_dir = output_dir / "catalog"
+    catalog_dir = Path(catalog_dir) if catalog_dir else output_dir / "catalog"
     source_set_manifest_path = catalog_dir / "source_set_manifest.json"
     if source_set_id is None:
         source_set_id = _read_json(source_set_manifest_path)["source_set_id"]

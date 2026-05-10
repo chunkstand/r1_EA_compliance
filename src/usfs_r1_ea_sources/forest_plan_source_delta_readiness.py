@@ -12,7 +12,7 @@ from .workbook import R1ForestPlanDocumentRegister
 from .workbook import load_r1_forest_plan_document_register
 
 
-SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v1"
+SOURCE_DELTA_READINESS_SCHEMA_VERSION = "r1-forest-plan-source-delta-readiness-v2"
 OFFICIAL_SOURCE_GAP_EVIDENCE_SCHEMA_VERSION = "r1-forest-plan-official-source-gap-evidence-v0"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 DEFAULT_FOREST_PLAN_PROFILES_PATH = Path("config/forest_plan_profiles.json")
@@ -36,7 +36,10 @@ def build_forest_plan_source_delta_readiness_report(
     register_path: Path = DEFAULT_R1_FOREST_PLAN_REGISTER_PATH,
     source_delta_batch_run_id: str = DEFAULT_SOURCE_DELTA_BATCH_RUN_ID,
     scoped_catalog_gate_dir: Path | None = None,
+    merged_catalog_gate_dir: Path | None = None,
     canonical_catalog_dir: Path | None = None,
+    extraction_source_set_id: str | None = None,
+    reuse_inventory_path: Path | None = None,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     official_source_gap_evidence_path: Path = DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH,
     results_dir: Path | None = None,
@@ -77,6 +80,25 @@ def build_forest_plan_source_delta_readiness_report(
     scoped_validation = _read_json_if_exists(scoped_validation_path)
     scoped_catalog_records = _read_jsonl_if_exists(scoped_catalog_path)
 
+    merged_catalog_gate_dir = Path(merged_catalog_gate_dir) if merged_catalog_gate_dir else None
+    merged_manifest_path = (
+        merged_catalog_gate_dir / "source_set_manifest.json" if merged_catalog_gate_dir else None
+    )
+    merged_validation_path = (
+        merged_catalog_gate_dir / "catalog_validation.json" if merged_catalog_gate_dir else None
+    )
+    merged_catalog_path = (
+        merged_catalog_gate_dir / "source_catalog.jsonl" if merged_catalog_gate_dir else None
+    )
+    merged_sqlite_path = (
+        merged_catalog_gate_dir / "review_sources.sqlite" if merged_catalog_gate_dir else None
+    )
+    merged_manifest = _read_json_if_exists(merged_manifest_path) if merged_manifest_path else {}
+    merged_validation = (
+        _read_json_if_exists(merged_validation_path) if merged_validation_path else {}
+    )
+    merged_catalog_records = _read_jsonl_if_exists(merged_catalog_path) if merged_catalog_path else []
+
     canonical_manifest_path = canonical_catalog_dir / "source_set_manifest.json"
     canonical_validation_path = canonical_catalog_dir / "catalog_validation.json"
     canonical_catalog_path = canonical_catalog_dir / "source_catalog.jsonl"
@@ -91,11 +113,20 @@ def build_forest_plan_source_delta_readiness_report(
     scoped_catalog_ids = {
         str(record.get("source_record_id") or "") for record in scoped_catalog_records
     }
+    merged_catalog_ids = {
+        str(record.get("source_record_id") or "") for record in merged_catalog_records
+    }
     canonical_catalog_ids = {
         str(record.get("source_record_id") or "") for record in canonical_catalog_records
     }
 
     scoped_source_set_id = str(scoped_manifest.get("source_set_id") or "")
+    merged_source_set_id = str(merged_manifest.get("source_set_id") or "")
+    effective_extraction_source_set_id = (
+        str(extraction_source_set_id)
+        if extraction_source_set_id
+        else (merged_source_set_id or scoped_source_set_id)
+    )
     checks = [
         _required_paths_check(
             "source_delta_batch_artifacts_exist",
@@ -155,21 +186,49 @@ def build_forest_plan_source_delta_readiness_report(
             path=official_source_gap_evidence_path,
         ),
     ]
-    passed = all(check["passed"] for check in checks)
+    if merged_catalog_gate_dir:
+        checks.extend(
+            [
+                _required_paths_check(
+                    "merged_catalog_gate_artifacts_exist",
+                    [
+                        merged_manifest_path,
+                        merged_validation_path,
+                        merged_catalog_path,
+                        merged_sqlite_path,
+                    ],
+                ),
+                _catalog_validation_check(
+                    name="merged_catalog_gate_validation_passed",
+                    manifest=merged_manifest,
+                    validation=merged_validation,
+                    expected_batch_run_id=None,
+                ),
+                _merged_catalog_matches_expected_counts_check(
+                    register=register,
+                    manifest=merged_manifest,
+                    catalog_ids=merged_catalog_ids,
+                ),
+            ]
+        )
 
     extraction_readiness = _extraction_readiness(
         output_dir=output_dir,
-        source_set_id=scoped_source_set_id,
+        source_set_id=effective_extraction_source_set_id,
         expected_source_ids=source_delta_source_ids,
+        reuse_inventory_path=Path(reuse_inventory_path) if reuse_inventory_path else None,
     )
+    if merged_catalog_gate_dir or extraction_source_set_id or reuse_inventory_path:
+        checks.append(_extraction_readiness_covers_source_delta_rows_check(extraction_readiness))
     retrieval_readiness = _retrieval_readiness(
         output_dir=output_dir,
-        source_set_id=scoped_source_set_id,
+        source_set_id=effective_extraction_source_set_id,
     )
     profile_readiness = _profile_readiness_placeholders(
         register=register,
         forest_plan_profiles_path=forest_plan_profiles_path,
     )
+    passed = all(check["passed"] for check in checks)
     report = {
         "schema_version": SOURCE_DELTA_READINESS_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -183,7 +242,12 @@ def build_forest_plan_source_delta_readiness_report(
             "source_delta_batch_ledger_path": str(batch_ledger_path),
             "source_delta_repair_queue_path": str(repair_queue_path),
             "scoped_catalog_gate_dir": str(scoped_catalog_gate_dir),
+            "merged_catalog_gate_dir": str(merged_catalog_gate_dir)
+            if merged_catalog_gate_dir
+            else None,
             "canonical_catalog_dir": str(canonical_catalog_dir),
+            "extraction_source_set_id": effective_extraction_source_set_id or None,
+            "reuse_inventory_path": str(reuse_inventory_path) if reuse_inventory_path else None,
             "forest_plan_profiles_path": str(forest_plan_profiles_path),
             "forest_plan_profiles_sha256": sha256_file(forest_plan_profiles_path)
             if forest_plan_profiles_path.exists()
@@ -207,6 +271,14 @@ def build_forest_plan_source_delta_readiness_report(
             records=scoped_catalog_records,
             catalog_dir=scoped_catalog_gate_dir,
         ),
+        "merged_source_delta_catalog": _catalog_summary(
+            manifest=merged_manifest,
+            validation=merged_validation,
+            records=merged_catalog_records,
+            catalog_dir=merged_catalog_gate_dir,
+        )
+        if merged_catalog_gate_dir
+        else None,
         "active_canonical_catalog": _catalog_summary(
             manifest=canonical_manifest,
             validation=canonical_validation,
@@ -240,8 +312,11 @@ def build_forest_plan_source_delta_readiness_report(
         "official_source_gap_ids": register.gap_source_record_ids,
         "official_source_gap_evidence_path": str(official_source_gap_evidence_path),
         "scoped_source_delta_source_set_id": scoped_manifest.get("source_set_id"),
+        "merged_source_delta_source_set_id": merged_manifest.get("source_set_id"),
+        "extraction_source_set_id": effective_extraction_source_set_id or None,
         "canonical_catalog_source_set_id": canonical_manifest.get("source_set_id"),
         "extraction_readiness_status": extraction_readiness["status"],
+        "extraction_blocker_count": extraction_readiness["blocked_source_record_count"],
         "retrieval_readiness_status": retrieval_readiness["status"],
         "failed_check_count": sum(1 for check in checks if not check["passed"]),
         "report_path": str(report_path),
@@ -320,10 +395,10 @@ def _catalog_summary(
     manifest: dict[str, Any],
     validation: dict[str, Any],
     records: list[dict[str, Any]],
-    catalog_dir: Path,
+    catalog_dir: Path | None,
 ) -> dict[str, Any]:
     return {
-        "catalog_dir": str(catalog_dir),
+        "catalog_dir": str(catalog_dir) if catalog_dir else None,
         "source_set_id": manifest.get("source_set_id"),
         "validation_passed": bool(validation.get("passed")),
         "source_count": manifest.get("source_count"),
@@ -347,6 +422,7 @@ def _extraction_readiness(
     output_dir: Path,
     source_set_id: str,
     expected_source_ids: set[str],
+    reuse_inventory_path: Path | None = None,
 ) -> dict[str, Any]:
     derived_dir = output_dir / "derived" / source_set_id if source_set_id else output_dir / "derived"
     manifest_path = derived_dir / "diagnostics" / "extraction_manifest.jsonl"
@@ -354,14 +430,70 @@ def _extraction_readiness(
     summary_path = derived_dir / "diagnostics" / "summary.json"
     chunks_path = derived_dir / "chunks" / "chunks.jsonl"
     manifest_records = _read_jsonl_if_exists(manifest_path)
-    extracted_source_ids = {
-        str(record.get("source_record_id") or "") for record in manifest_records
+    summary = _read_json_if_exists(summary_path)
+    expected_records = [
+        record
+        for record in manifest_records
+        if str(record.get("source_record_id") or "") in expected_source_ids
+    ]
+    accounted_source_ids = {
+        str(record.get("source_record_id") or "") for record in expected_records
     }
-    missing_source_ids = sorted(expected_source_ids - extracted_source_ids)
+    missing_source_ids = sorted(expected_source_ids - accounted_source_ids)
+    status_counts = Counter(str(record.get("status") or "") for record in expected_records)
+    blocked_records = [
+        record
+        for record in expected_records
+        if record.get("status") != "extracted"
+        and record.get("source_status") not in {"skipped_excluded"}
+    ]
+    blocked_status_counts = Counter(str(record.get("status") or "") for record in blocked_records)
+    blocker_error_class_counts = Counter(
+        str((record.get("failure") or {}).get("error_class") or "")
+        for record in blocked_records
+        if (record.get("failure") or {}).get("error_class")
+    )
+    nonterminal_source_ids = sorted(
+        record.get("source_record_id")
+        for record in expected_records
+        if record.get("status") not in {
+            "extracted",
+            "skipped_excluded",
+            "no_artifact",
+            "artifact_missing",
+            "hash_mismatch",
+            "parser_error",
+            "parser_timeout",
+            "empty_text",
+        }
+    )
+    extracted_without_chunks = sorted(
+        str(record.get("source_record_id") or "")
+        for record in expected_records
+        if record.get("status") == "extracted" and int(record.get("chunk_count") or 0) <= 0
+    )
+    extracted_without_text = sorted(
+        str(record.get("source_record_id") or "")
+        for record in expected_records
+        if record.get("status") == "extracted" and int(record.get("text_char_count") or 0) <= 0
+    )
     validation = _read_json_if_exists(validation_path)
     status = "not_started"
     if manifest_path.exists() or chunks_path.exists() or validation_path.exists():
-        status = "ready" if validation.get("passed") and not missing_source_ids else "partial"
+        if (
+            not missing_source_ids
+            and not nonterminal_source_ids
+            and not extracted_without_chunks
+            and not extracted_without_text
+        ):
+            status = "ready_with_blockers" if blocked_records else "ready"
+        else:
+            status = "partial"
+    reuse_inventory = _reuse_inventory_readiness(
+        path=reuse_inventory_path,
+        expected_source_ids=expected_source_ids,
+        expected_source_set_id=source_set_id,
+    )
     return {
         "status": status,
         "source_set_id": source_set_id or None,
@@ -372,12 +504,31 @@ def _extraction_readiness(
         "extraction_validation_passed": bool(validation.get("passed")),
         "extraction_summary_path": str(summary_path),
         "extraction_summary_exists": summary_path.exists(),
+        "extraction_summary": summary or None,
         "chunks_path": str(chunks_path),
         "chunks_exists": chunks_path.exists(),
-        "extracted_source_record_count": len(extracted_source_ids),
+        "manifest_record_count_for_expected_sources": len(expected_records),
+        "status_counts": dict(status_counts),
+        "extracted_source_record_count": status_counts.get("extracted", 0),
+        "blocked_source_record_count": len(blocked_records),
+        "blocked_status_counts": dict(blocked_status_counts),
+        "blocker_error_class_counts": {
+            key: count for key, count in blocker_error_class_counts.items() if key
+        },
+        "blocked_source_record_ids_sample": [
+            str(record.get("source_record_id") or "") for record in blocked_records[:20]
+        ],
         "expected_source_record_count": len(expected_source_ids),
+        "coverage_complete": not missing_source_ids
+        and not nonterminal_source_ids
+        and not extracted_without_chunks
+        and not extracted_without_text,
         "missing_source_record_count": len(missing_source_ids),
         "missing_source_record_ids_sample": missing_source_ids[:20],
+        "nonterminal_source_record_ids": nonterminal_source_ids[:20],
+        "extracted_without_chunks_source_record_ids": extracted_without_chunks[:20],
+        "extracted_without_text_source_record_ids": extracted_without_text[:20],
+        "reuse_inventory": reuse_inventory,
     }
 
 
@@ -401,6 +552,81 @@ def _retrieval_readiness(*, output_dir: Path, source_set_id: str) -> dict[str, A
         "retrieval_validation_passed": bool(validation.get("passed")),
         "retrieval_summary_path": str(summary_path),
         "retrieval_summary_exists": summary_path.exists(),
+    }
+
+
+def _reuse_inventory_readiness(
+    *,
+    path: Path | None,
+    expected_source_ids: set[str],
+    expected_source_set_id: str,
+) -> dict[str, Any]:
+    if path is None:
+        return {"path": None, "exists": False, "status": "not_provided"}
+
+    inventory_dir = path if path.is_dir() else path.parent
+    inventory_path = None
+    records_path = None
+    summary_path = None
+    if path.is_dir():
+        inventory_path = path / "reuse_inventory.json"
+        records_path = path / "reuse_inventory_records.jsonl"
+        summary_path = path / "summary.json"
+    elif path.name == "reuse_inventory.json":
+        inventory_path = path
+        records_path = inventory_dir / "reuse_inventory_records.jsonl"
+        summary_path = inventory_dir / "summary.json"
+    elif path.name == "reuse_inventory_records.jsonl":
+        records_path = path
+        inventory_path = inventory_dir / "reuse_inventory.json"
+        summary_path = inventory_dir / "summary.json"
+    elif path.name == "summary.json":
+        summary_path = path
+        inventory_path = inventory_dir / "reuse_inventory.json"
+        records_path = inventory_dir / "reuse_inventory_records.jsonl"
+    else:
+        inventory_path = path
+        records_path = inventory_dir / "reuse_inventory_records.jsonl"
+        summary_path = inventory_dir / "summary.json"
+
+    inventory = _read_json_if_exists(inventory_path) if inventory_path else {}
+    summary = _read_json_if_exists(summary_path) if summary_path else {}
+    records = _read_jsonl_if_exists(records_path) if records_path else []
+    expected_records = [
+        record
+        for record in records
+        if str(record.get("source_record_id") or "") in expected_source_ids
+    ]
+    record_ids = {str(record.get("source_record_id") or "") for record in expected_records}
+    classification_counts = Counter(
+        str(record.get("classification") or "") for record in expected_records
+    )
+    status = "ready"
+    if not (inventory_path and inventory_path.exists()) and not (records_path and records_path.exists()):
+        status = "missing"
+    elif expected_source_ids - record_ids:
+        status = "partial"
+    return {
+        "path": str(path),
+        "exists": bool(path.exists()),
+        "status": status,
+        "inventory_path": str(inventory_path) if inventory_path else None,
+        "inventory_exists": bool(inventory_path and inventory_path.exists()),
+        "records_path": str(records_path) if records_path else None,
+        "records_exists": bool(records_path and records_path.exists()),
+        "summary_path": str(summary_path) if summary_path else None,
+        "summary_exists": bool(summary_path and summary_path.exists()),
+        "source_set_id": summary.get("source_set_id")
+        or (inventory.get("summary") or {}).get("source_set_id"),
+        "source_set_id_matches_extraction_source_set": (
+            summary.get("source_set_id")
+            or (inventory.get("summary") or {}).get("source_set_id")
+            or expected_source_set_id
+        )
+        == expected_source_set_id,
+        "record_count_for_expected_sources": len(expected_records),
+        "missing_source_record_ids": sorted(expected_source_ids - record_ids)[:20],
+        "classification_counts": {key: count for key, count in classification_counts.items() if key},
     }
 
 
@@ -630,6 +856,65 @@ def _source_delta_catalog_partition_check(
     }
 
 
+def _merged_catalog_matches_expected_counts_check(
+    *,
+    register: R1ForestPlanDocumentRegister,
+    manifest: dict[str, Any],
+    catalog_ids: set[str],
+) -> dict[str, Any]:
+    source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
+    catalog_confirmed_ids = set(register.catalog_confirmed_source_record_ids)
+    gap_ids = set(register.gap_source_record_ids)
+    expected_source_count = EXPECTED_CANONICAL_SOURCE_COUNT + len(source_delta_ids)
+    details = {
+        "expected_source_count": expected_source_count,
+        "manifest_source_count": manifest.get("source_count"),
+        "expected_supplemental_source_count": len(source_delta_ids),
+        "manifest_supplemental_source_count": manifest.get("supplemental_source_count"),
+        "missing_source_delta_ids": sorted(source_delta_ids - catalog_ids),
+        "missing_catalog_confirmed_ids": sorted(catalog_confirmed_ids - catalog_ids),
+        "gap_ids_in_catalog": sorted(gap_ids & catalog_ids),
+    }
+    passed = (
+        manifest.get("source_count") == expected_source_count
+        and manifest.get("supplemental_source_count") == len(source_delta_ids)
+        and source_delta_ids <= catalog_ids
+        and catalog_confirmed_ids <= catalog_ids
+        and not (gap_ids & catalog_ids)
+    )
+    return {
+        "name": "merged_catalog_gate_matches_expected_source_delta_and_canonical_counts",
+        "passed": passed,
+        "details": details,
+    }
+
+
+def _extraction_readiness_covers_source_delta_rows_check(
+    extraction_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    coverage_complete = bool(extraction_readiness.get("coverage_complete"))
+    reuse_inventory = extraction_readiness.get("reuse_inventory") or {}
+    passed = coverage_complete and (
+        reuse_inventory.get("status") in {"not_provided", "ready"}
+    )
+    return {
+        "name": "source_delta_extraction_readiness_covers_expected_rows",
+        "passed": passed,
+        "details": {
+            "status": extraction_readiness.get("status"),
+            "coverage_complete": coverage_complete,
+            "missing_source_record_ids": extraction_readiness.get("missing_source_record_ids_sample")
+            or [],
+            "blocked_status_counts": extraction_readiness.get("blocked_status_counts") or {},
+            "reuse_inventory_status": reuse_inventory.get("status"),
+            "reuse_inventory_missing_source_record_ids": reuse_inventory.get(
+                "missing_source_record_ids"
+            )
+            or [],
+        },
+    }
+
+
 def _canonical_catalog_validation_check(
     *,
     manifest: dict[str, Any],
@@ -831,7 +1116,14 @@ def _render_markdown(report: dict[str, Any]) -> str:
         + ", ".join(f"`{source_id}`" for source_id in report["register"]["skipped_gap_source_record_ids"]),
         f"- Official-source gap evidence: `{report['official_source_gap_evidence']['path']}`",
         f"- Scoped source-delta source set: `{report['scoped_source_delta_catalog']['source_set_id']}`",
+        (
+            f"- Merged source-delta source set: "
+            f"`{report['merged_source_delta_catalog']['source_set_id']}`"
+        )
+        if report.get("merged_source_delta_catalog")
+        else "- Merged source-delta source set: `not_evaluated`",
         f"- Active canonical source set: `{report['active_canonical_catalog']['source_set_id']}`",
+        f"- Extraction source set: `{report['extraction_readiness']['source_set_id']}`",
         f"- Extraction readiness: `{report['extraction_readiness']['status']}`",
         f"- Retrieval readiness: `{report['retrieval_readiness']['status']}`",
         "",

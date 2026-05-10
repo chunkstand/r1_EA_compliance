@@ -50,11 +50,11 @@ artifacts still refer to prior source set `source-set-ba8d0feae79501b8`.
 
 Source-delta readiness update: `forest-plan-source-delta-readiness` now builds the source-delta
 report/gate over the promoted register, source-delta batch capture, archived scoped catalog gate,
-active canonical catalog, tracked official-source gap evidence, extraction placeholders, retrieval
-placeholders, and forest-profile blocker placeholders. The live gate passes with `0` failed checks,
-schema `r1-forest-plan-source-delta-readiness-v1`, scoped source set
-`source-set-411b3736b3691eed`, canonical catalog source set `source-set-d3b9e2a728accda6`, `159`
-captured source-delta rows, and official-source gaps
+active canonical catalog, tracked official-source gap evidence, and now the optional merged-catalog
+plus extraction/reuse surfaces for Sequence 4. The live gate passes with `0` failed checks, schema
+`r1-forest-plan-source-delta-readiness-v2`, scoped source set `source-set-411b3736b3691eed`,
+merged source set `source-set-7e2652d23e764068`, canonical catalog source set
+`source-set-d3b9e2a728accda6`, `159` captured source-delta rows, and official-source gaps
 `R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` validated against
 `config/r1_forest_plan_official_source_gap_evidence.json`. Generated JSON/Markdown reports are
 ignored under
@@ -71,10 +71,18 @@ row, `159` supplemental source-delta rows, `0` `not_in_run` rows, and `0` failed
 The active
 `source_library/catalog/` view remains canonical source set `source-set-d3b9e2a728accda6`.
 
-Immediate next sequence: Sequence 4 extraction and parser readiness. Start from merged source set
-`source-set-7e2652d23e764068` and scoped support-document source set
-`source-set-411b3736b3691eed`; run reuse inventory before any extraction rebuild, keep both gap
-rows as explicit blockers, and do not rerun unrelated downloads.
+Sequence 4 extraction/parser readiness update: the merged reuse inventory on
+`source-set-7e2652d23e764068` classified `reuse_extraction=189`, `needs_extract=159`, and
+`excluded=1`. `extract-build --catalog-dir ... --reuse-existing --reuse-inventory-path ...` ran
+against the archived merged gate without touching `source_library/catalog`, reused `189` prior
+rows, extracted `195/349` merged-corpus rows, and left `153` explicit `parser_error` rows with
+`error_class=docling_unavailable`. For the `159` support-document source-delta rows specifically,
+the readiness gate now reports `ready_with_blockers`, `6` extracted rows, `153` explicit parser
+blockers, complete source-record coverage, and retrieval still `not_started`.
+
+Immediate next sequence: clear the `153` `docling_unavailable` PDF blockers on merged source set
+`source-set-7e2652d23e764068`, rerun merged extraction, then advance to Sequence 5 retrieval
+readiness. Keep both official-source gap rows explicit and do not rerun unrelated downloads.
 
 Milestone plan:
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
@@ -98,6 +106,16 @@ Latest Sequence 3 alignment verification:
 - `PYTHONPATH=src uv run --extra dev pytest` passed `490`.
 - `PYTHONPATH=src uv run --extra dev ruff check src tests`, `PYTHONPATH=src python -m compileall src`,
   milestone plan lint, and `git diff --check` passed.
+
+Latest Sequence 4 verification:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_extract.py tests/test_reuse_inventory.py tests/test_forest_plan_source_delta_readiness.py` passed `50`.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py` passed `5`.
+- `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py src/usfs_r1_ea_sources/reuse_inventory.py src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py src/usfs_r1_ea_sources/cli_derived.py tests/test_cli.py tests/test_extract.py tests/test_reuse_inventory.py tests/test_forest_plan_source_delta_readiness.py` passed.
+- `PYTHONPATH=src python -m compileall src` and `git diff --check` passed.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-7e2652d23e764068 --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate` passed with `reuse_extraction=189`, `needs_extract=159`, `excluded=1`.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --reuse-existing --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json` completed with `195` extracted rows, `153` explicit `parser_error` rows, `1` excluded row, and `validation_passed=false` because all current blockers are real parser failures rather than hidden omissions.
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --merged-catalog-gate-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate --extraction-source-set-id source-set-7e2652d23e764068 --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json` passed with schema `r1-forest-plan-source-delta-readiness-v2`, `ready_with_blockers`, `6` extracted support-document rows, and `153` explicit support-document parser blockers.
 
 ## Region 1 Forest-Plan Document Register Hardening
 

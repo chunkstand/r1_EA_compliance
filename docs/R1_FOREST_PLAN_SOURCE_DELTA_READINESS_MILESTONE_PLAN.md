@@ -73,9 +73,10 @@ Readiness gate implementation status:
   and `.md`
 - Live result: passed with `0` failed checks, `159` captured source-delta rows, scoped source set
   `source-set-411b3736b3691eed`, active canonical source set `source-set-d3b9e2a728accda6`, and
-  extraction/retrieval readiness recorded as `not_started`. The report schema is now
-  `r1-forest-plan-source-delta-readiness-v1` and includes a fail-closed check that the tracked gap
-  evidence matches the current register gap IDs.
+  extraction/retrieval readiness initially recorded as `not_started`. The report schema is now
+  `r1-forest-plan-source-delta-readiness-v2` and includes a fail-closed check that the tracked gap
+  evidence matches the current register gap IDs, optional merged-catalog validation, and
+  source-delta extraction coverage/blocker accounting.
 - Remaining blockers: downstream extraction/retrieval readiness for the scoped support-document
   source set, plus the two preserved official-source gaps unless future official URLs are found and
   targeted preflight passes.
@@ -377,10 +378,15 @@ Acceptance signals:
 Required verification:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory \
+  --output-dir source_library \
+  --source-set-id source-set-7e2652d23e764068 \
+  --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
   --output-dir source_library \
-  --reuse-existing
+  --catalog-dir source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate \
+  --reuse-existing \
+  --reuse-inventory-path source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json
 PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_reuse_inventory.py
 ```
 
@@ -389,6 +395,23 @@ Stop conditions:
 - Artifact hash mismatches appear in reuse inventory.
 - Extraction produces chunks for fewer rows than the readiness report expects without explicit
   blocker records.
+
+Implementation status:
+
+- Complete for the current coverage gate.
+- `extract-build` and `reuse-inventory` now accept `--catalog-dir` so Sequence 4 can target the
+  archived merged gate without replacing `source_library/catalog`.
+- `extract-build --reuse-inventory-path` now accepts `reuse_inventory.json` as well as
+  `reuse_inventory_records.jsonl`.
+- The live merged reuse inventory over `source-set-7e2652d23e764068` classified
+  `reuse_extraction=189`, `needs_extract=159`, and `excluded=1`.
+- The live merged extraction pass reused prior extracted text for `189` rows and produced
+  `195` extracted rows plus `153` explicit `parser_error` rows.
+- The live Sequence 4 readiness gate passes with `0` failed checks, status
+  `ready_with_blockers`, complete coverage for all `159` support-document source-delta rows,
+  `6` extracted support-document rows, and `153` explicit support-document parser blockers.
+- All `153` current blockers are `docling_unavailable` PDF rows, so retrieval remains
+  `not_started` until PDF parser availability is restored or an accepted fallback is added.
 
 ### Sequence 5 - Retrieval Readiness And Evaluation
 
@@ -527,8 +550,9 @@ Close the milestone only after:
 - docs and session handoff name the active source-set IDs and the remaining gap rows;
 - focused tests, architecture contract, ruff, compileall, `git diff --check`, and the full test suite
   pass.
+- the verified milestone slice is ready to land as one local atomic commit.
 
-Atomic closeout commit should include:
+The local atomic commit for closeout should include:
 
 - implementation changes;
 - focused tests and fixtures;
@@ -539,9 +563,8 @@ Atomic closeout commit should include:
 
 ## Next Immediate Slice
 
-Sequence 3 is closed for the current baseline: the merged catalog contract is implemented,
-generated, and validated while the canonical catalog remains intact. The next immediate slice is
-Sequence 4: run support-document extraction/parser readiness from merged source set
-`source-set-7e2652d23e764068` and scoped support-document source set
-`source-set-411b3736b3691eed`, using reuse inventory before any extraction rebuild and preserving
-the two official-source gaps as explicit blockers.
+Sequence 4 gate implementation is now closed for the current baseline: the merged extraction path
+is implemented without touching the canonical catalog, and the readiness gate accounts for all
+support-document rows with explicit parser blockers. The next immediate slice is to clear the
+`153` `docling_unavailable` PDF blockers on `source-set-7e2652d23e764068`, rerun the merged
+extraction pass, and only then advance to Sequence 5 retrieval readiness.

@@ -64,9 +64,15 @@ catalog gate is archived under
 `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-source-delta-readiness --output-dir source_library --r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-batch-run-id r1-forest-plan-source-delta-capture-20260510-batches --official-source-gap-evidence config/r1_forest_plan_official_source_gap_evidence.json`.
 The generated report remains ignored under the source-delta run directory, records
 `config/r1_forest_plan_official_source_gap_evidence.json` as the current evidence for the two
-preserved official-source gaps, and records extraction and retrieval as not started for the
-support-document source set. The completion plan for finishing extraction/retrieval readiness and
-incorporating the support-document layer into a merged corpus is
+preserved official-source gaps, and now also records the live Sequence 4 merged-catalog extraction
+state under schema `r1-forest-plan-source-delta-readiness-v2`. The merged extraction run over
+`source-set-7e2652d23e764068` reused `189` prior rows, extracted `195/349` merged-corpus rows, and
+left `153` explicit `parser_error` blockers with `error_class=docling_unavailable`. For the `159`
+support-document source-delta rows specifically, the readiness gate reports
+`extraction_readiness_status=ready_with_blockers`, `6` extracted rows, `153` explicit parser
+blockers, full source-record coverage, and retrieval still `not_started`. The completion plan for
+finishing parser/retrieval readiness and incorporating the support-document layer into a merged
+corpus is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 The first merged catalog gate is archived, not promoted over the canonical catalog, at
@@ -717,7 +723,7 @@ source set while reparsing only rows that the inventory classified as `needs_ext
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
   --output-dir source_library \
   --reuse-existing \
-  --reuse-inventory-path source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl
+  --reuse-inventory-path source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory.json
 ```
 
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text

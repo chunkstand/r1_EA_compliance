@@ -60,6 +60,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
         help="Build derived extracted text, chunks, and extraction diagnostics.",
     )
     extract.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    extract.add_argument("--catalog-dir", type=Path)
     extract.add_argument("--id", action="append", dest="ids")
     extract.add_argument("--parser")
     extract.add_argument("--limit", type=int)
@@ -78,6 +79,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     reuse_inventory.add_argument("--output-dir", default=Path("source_library"), type=Path)
     reuse_inventory.add_argument("--source-set-id")
+    reuse_inventory.add_argument("--catalog-dir", type=Path)
     reuse_inventory.add_argument("--previous-source-set-id", action="append", dest="previous_source_set_ids")
     reuse_inventory.add_argument("--catalog-path", type=Path)
     reuse_inventory.add_argument("--skip-artifact-hash-check", action="store_true")
@@ -97,7 +99,10 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
         default=DEFAULT_SOURCE_DELTA_BATCH_RUN_ID,
     )
     source_delta_readiness.add_argument("--scoped-catalog-gate-dir", type=Path)
+    source_delta_readiness.add_argument("--merged-catalog-gate-dir", type=Path)
     source_delta_readiness.add_argument("--canonical-catalog-dir", type=Path)
+    source_delta_readiness.add_argument("--extraction-source-set-id")
+    source_delta_readiness.add_argument("--reuse-inventory-path", type=Path)
     source_delta_readiness.add_argument(
         "--forest-plan-profiles",
         default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
@@ -281,6 +286,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
     if args.command == "extract-build":
         result = build_extraction(
             output_dir=args.output_dir,
+            catalog_dir=args.catalog_dir,
             id_filters=set(args.ids or []),
             parser_filter=args.parser,
             limit=args.limit,
@@ -301,6 +307,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             previous_source_set_ids=args.previous_source_set_ids,
+            catalog_dir=args.catalog_dir,
             catalog_path=args.catalog_path,
             verify_artifact_hashes=not args.skip_artifact_hash_check,
         )
@@ -313,7 +320,10 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             register_path=args.r1_forest_plan_register,
             source_delta_batch_run_id=args.source_delta_batch_run_id,
             scoped_catalog_gate_dir=args.scoped_catalog_gate_dir,
+            merged_catalog_gate_dir=args.merged_catalog_gate_dir,
             canonical_catalog_dir=args.canonical_catalog_dir,
+            extraction_source_set_id=args.extraction_source_set_id,
+            reuse_inventory_path=args.reuse_inventory_path,
             forest_plan_profiles_path=args.forest_plan_profiles,
             official_source_gap_evidence_path=args.official_source_gap_evidence,
             results_dir=args.results_dir,

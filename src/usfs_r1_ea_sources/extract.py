@@ -102,6 +102,7 @@ class ExtractionFailure(Exception):
 def build_extraction(
     *,
     output_dir: Path,
+    catalog_dir: Path | None = None,
     id_filter: str | None = None,
     id_filters: set[str] | None = None,
     parser_filter: str | None = None,
@@ -126,7 +127,7 @@ def build_extraction(
     if docling_timeout_seconds is not None and docling_timeout_seconds <= 0:
         docling_timeout_seconds = None
 
-    catalog_dir = output_dir / "catalog"
+    catalog_dir = Path(catalog_dir) if catalog_dir else output_dir / "catalog"
     manifest_path = catalog_dir / "source_set_manifest.json"
     sqlite_path = catalog_dir / "review_sources.sqlite"
     validation_path = catalog_dir / "catalog_validation.json"
@@ -224,6 +225,7 @@ def build_extraction(
             "limit": limit,
         },
         extraction_options={
+            "catalog_dir": str(catalog_dir),
             "chunk_max_chars": chunk_max_chars,
             "chunk_overlap_chars": chunk_overlap_chars,
             "prefer_docling": prefer_docling,
@@ -2121,8 +2123,9 @@ def _load_reuse_inventory_records(
 ) -> dict[str, dict] | None:
     if reuse_inventory_path is None:
         return None
+    raw_records = _load_reuse_inventory_payload_records(Path(reuse_inventory_path))
     records: dict[str, dict] = {}
-    for record in _read_jsonl(reuse_inventory_path):
+    for record in raw_records:
         if record.get("source_set_id") != source_set_id:
             raise ValueError(
                 "Reuse inventory source_set_id does not match catalog source_set_id: "
@@ -2132,6 +2135,21 @@ def _load_reuse_inventory_records(
         if source_record_id:
             records[source_record_id] = record
     return records
+
+
+def _load_reuse_inventory_payload_records(path: Path) -> list[dict]:
+    if path.is_dir():
+        return _read_jsonl(path / "reuse_inventory_records.jsonl")
+    if path.name == "reuse_inventory.json":
+        payload = _read_json(path)
+        records = payload.get("records")
+        if isinstance(records, list):
+            return [record for record in records if isinstance(record, dict)]
+        sibling_records = path.parent / "reuse_inventory_records.jsonl"
+        return _read_jsonl(sibling_records)
+    if path.name == "summary.json":
+        return _read_jsonl(path.parent / "reuse_inventory_records.jsonl")
+    return _read_jsonl(path)
 
 
 def _read_jsonl(path: Path) -> list[dict]:

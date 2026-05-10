@@ -44,10 +44,20 @@ gate over `r1-forest-plan-source-delta-capture-20260510-batches` passes with `0`
 distinguishes the scoped source-delta source set `source-set-411b3736b3691eed` from the active
 canonical catalog source set `source-set-d3b9e2a728accda6`, keeps
 `R1PLAN-kootenai-nf-18` and `R1PLAN-nez-perce-clearwater-nfs-18` as explicit official-source gaps,
-validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and
-records extraction and retrieval readiness as `not_started` for the support-document source set.
-The generated JSON/Markdown report uses schema `r1-forest-plan-source-delta-readiness-v1` and is
-under the source-delta run's ignored `source_delta_readiness/` directory.
+validates `config/r1_forest_plan_official_source_gap_evidence.json` against those gap IDs, and now
+also evaluates the live Sequence 4 merged-catalog extraction state. The generated JSON/Markdown
+report uses schema `r1-forest-plan-source-delta-readiness-v2` and is under the source-delta run's
+ignored `source_delta_readiness/` directory. The live merged extraction pass uses archived merged
+catalog `source-set-7e2652d23e764068`, reuse inventory, and `extract-build --catalog-dir ...` so
+the active canonical catalog remains untouched. Current live Sequence 4 results:
+
+- merged reuse inventory: `reuse_extraction=189`, `needs_extract=159`, `excluded=1`
+- merged extraction summary: `195` extracted rows, `153` explicit `parser_error` rows, `1`
+  scope-excluded row, `19,133` chunks
+- support-document readiness: `159` expected source-delta rows covered, `6` extracted rows, `153`
+  explicit parser blockers, status `ready_with_blockers`
+- current blocker class: `docling_unavailable=153`
+- retrieval readiness: `not_started`
 
 The Sequence 3 merged catalog contract is implemented without replacing the active canonical
 catalog. `catalog-build` now accepts repeated `--batch-run-id` values and an explicit
@@ -2059,7 +2069,7 @@ or prior extraction candidate:
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
   --output-dir source_library \
   --reuse-existing \
-  --reuse-inventory-path source_library/derived/source-set-ba8d0feae79501b8/reuse_inventory/reuse_inventory_records.jsonl
+  --reuse-inventory-path source_library/derived/source-set-ba8d0feae79501b8/reuse_inventory/reuse_inventory.json
 ```
 
 For a delta-only extraction, repeat `--id` for each selected source record. The 2026-04-30

@@ -138,6 +138,67 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_zero_inputs(
     )
 
 
+def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "extract-build",
+            "--output-dir",
+            "source_library",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+            "--reuse-existing",
+        ]
+    )
+
+    assert args.command == "extract-build"
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+    assert args.reuse_existing is True
+
+
+def test_reuse_inventory_parser_accepts_archived_catalog_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "reuse-inventory",
+            "--output-dir",
+            "source_library",
+            "--catalog-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+        ]
+    )
+
+    assert args.command == "reuse-inventory"
+    assert args.catalog_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+
+
+def test_forest_plan_source_delta_readiness_parser_accepts_sequence_four_inputs() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-plan-source-delta-readiness",
+            "--output-dir",
+            "source_library",
+            "--merged-catalog-gate-dir",
+            "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
+            "--extraction-source-set-id",
+            "source-set-7e2652d23e764068",
+            "--reuse-inventory-path",
+            "source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json",
+        ]
+    )
+
+    assert args.command == "forest-plan-source-delta-readiness"
+    assert args.merged_catalog_gate_dir == Path(
+        "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
+    )
+    assert args.extraction_source_set_id == "source-set-7e2652d23e764068"
+    assert args.reuse_inventory_path == Path(
+        "source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json"
+    )
+
+
 def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch) -> None:
     captured = {}
 
