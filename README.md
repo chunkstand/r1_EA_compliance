@@ -41,10 +41,10 @@ Current generated source-library capture:
 Current full-corpus promotion boundary:
 
 - Active full canonical catalog in `source_library/catalog/` is now
-  `source-set-34061d1e4bf6c460`.
-- The active catalog was rebuilt from
+  `source-set-5e65d845ce77e1a0`.
+- The live active catalog was rebuilt from
   `corpus-update-2026-05-01-cg-support-batches` plus
-  `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current code.
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current working tree.
 - Active catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
   `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160` supplemental
   source-delta rows.
@@ -52,60 +52,40 @@ Current full-corpus promotion boundary:
   `source_delta_input.skipped_gap_source_record_ids=["R1PLAN-kootenai-nf-18"]` and
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
-- The promotion suite now separates full-corpus truth from reviewer-ready V1 truth:
-  `full_canonical_corpus_ready=true` for active catalog `source-set-34061d1e4bf6c460`,
-  `current_promotion_ready=true` for the East Crazies V1 lane pinned to
-  `source-set-ba8d0feae79501b8`, and `expansion_ready=false` because South Plateau remains blocked
-  on `forest_plan_reviewer_not_ready`.
-- Sequence 1 of the Region 1 forest-plan inventory promotion plan is now implemented as a tracked
-  config contract:
-  `config/r1_forest_plan_component_inventory_build_manifest.json` covers all `10` readiness
-  profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
-  per-forest `plan_version` plus grouped build `source_record_id` inputs in config, and is
-  validated by `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py` against the live
-  readiness roster.
-- Sequence 2 of the Region 1 forest-plan inventory promotion plan is now implemented in the
-  builder/runtime surface:
-  `forest-plan-components-build` now accepts `--manifest-path` for tracked Region 1 batch builds,
-  preserves the existing single-forest `--source-record-id` / `--plan-version` repair path, and
-  emits aggregate multi-forest build coverage with per-profile results plus fail-closed
-  cross-profile duplicate-ID checks.
-- Sequence 3 of the Region 1 forest-plan inventory promotion plan is now implemented on the active
-  source set. The manifest-driven build on `source-set-34061d1e4bf6c460` validates
-  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`, and stops the
-  combined build on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
-  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs` with blocker types
+- The active full-canonical derived lane is now materially refreshed on
+  `source-set-5e65d845ce77e1a0`. That source set now owns fresh
+  `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
+  `rule_claim_links`, and `knowledge_graph` artifact families under
+  `source_library/derived/source-set-5e65d845ce77e1a0/`.
+- The refreshed active-source-set multi-forest inventory now builds `668` components and `108`
+  standards. Passing forests are `custer-gallatin-nf` (`329/58`), `flathead-nf` (`80/20`),
+  `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`1/1`), and `kootenai-nf`
+  (`1/1`). Remaining typed blockers are `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+  `dakota-prairie-grasslands`, `lolo-nf`, and `nez-perce-clearwater-nfs`, all still stopping on
   `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`.
-- The stronger active full-canonical ownership gate is now satisfied locally:
-  `source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`
-  validates `35` authority families and `207` source-currentness records across source partitions
-  `active_review_corpus=349` and `candidate_blocked_source=1`; the active source set now owns
-  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/component_inventory.json`
-  with `587` components and `87` standards; and an active-source-set `nepa-knowledge-graph-export`
-  replay against that owned inventory passes `66` checks with `0` failed, `2,047` nodes, and
-  `3,582` edges.
-- The promotion suite no longer carries a full-canonical inventory-ownership blocker:
-  `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
-  `full_canonical_corpus_ready=true`, `full_canonical_failure_category_counts={}`,
-  `current_promotion_ready=true`, and `expansion_ready=false`.
+- The refreshed active-source-set currentness and graph surfaces now validate locally:
+  `authority_currentness` reports `35` authority families and `207` source-currentness records;
+  retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`; evidence graph rebuilds with
+  `153,187` nodes and `533,938` edges; claim extraction rebuilds with `101,856` claims; rule-claim
+  binding rebuilds with `211` links and `0` gaps; and the active-source-set
+  `nepa-knowledge-graph-export` replay passes `66` checks with `0` failed, `2,128` nodes, and
+  `3,825` edges.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
   `nez-perce-clearwater-nfs` now classify as `document_role=forest_plan` instead of blanket
   `forest_plan_support`, while ordinary supplemental register rows remain support-scoped.
-- Live local replay under the current uncommitted worktree produced transient active catalog
-  `source-set-5e65d845ce77e1a0`: those five rows now emit `forest_plan` chunks, and isolated
-  single-forest builds on that replay show `flathead-nf` now builds `80` components / `20`
-  standards and `kootenai-nf` builds `1` component / `1` standard. The tracked manifest remains
-  pinned to committed full-canonical source set `source-set-34061d1e4bf6c460`, so batch-manifest
-  promotion of the transient replay is a later active-source-set refresh step, not part of this
-  classifier milestone.
-- The next required implementation boundary is Sequence 4: promote the active build results into
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and companion graph/readiness summaries so
-  the three validated inventories and seven typed blockers replace the current one-validated,
-  nine-`component_inventory_build_required` readiness snapshot while keeping
-  `region1_completeness_claim=false`.
+- The tracked inventory-build manifest is now re-anchored to `source-set-5e65d845ce77e1a0`, but
+  readiness and promotion-suite truth still lag the refreshed replay:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records only `custer-gallatin-nf`
+  as validated, and `promotion-suite` still points its full-canonical contract at
+  `source-set-34061d1e4bf6c460`, reporting `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={\"stale_artifact\": 2}`.
+- The next required implementation boundary is readiness/promotion alignment: promote the refreshed
+  `source-set-5e65d845ce77e1a0` inventory results into
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and update the full-canonical
+  promotion-suite contract so those five validated forests and five typed blockers become the
+  current full-canonical truth.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the

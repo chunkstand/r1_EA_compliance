@@ -44,10 +44,10 @@ catalog gate is archived under
 Latest closeout on 2026-05-10:
 
 - Active full canonical catalog in `source_library/catalog/` is now
-  `source-set-34061d1e4bf6c460`.
-- The active catalog was rebuilt from
+  `source-set-5e65d845ce77e1a0`.
+- The live active catalog was rebuilt from
   `corpus-update-2026-05-01-cg-support-batches` plus
-  `r1-forest-plan-source-delta-capture-20260510-refresh-batches`.
+  `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current working tree.
 - Active catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
   `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160` supplemental
   source-delta rows.
@@ -55,21 +55,32 @@ Latest closeout on 2026-05-10:
   `source_delta_input.skipped_gap_source_record_ids=["R1PLAN-kootenai-nf-18"]` and
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently promoted into a
   downloaded source row.
-- The post-V1 promotion suite now separates current-promotion truth from full-corpus truth:
+- The active full-canonical derived lane is now materially refreshed on
+  `source-set-5e65d845ce77e1a0`. That source set now owns fresh
+  `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
+  `rule_claim_links`, and `knowledge_graph` artifact families under
+  `source_library/derived/source-set-5e65d845ce77e1a0/`.
+- The refreshed full-canonical inventory on `source-set-5e65d845ce77e1a0` now builds `668`
+  components and `108` standards. Passing forests are `custer-gallatin-nf` (`329/58`),
+  `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`1/1`),
+  and `kootenai-nf` (`1/1`). Remaining typed blockers are `beaverhead-deerlodge-nf`,
+  `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`, each still stopping on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`.
+- The refreshed currentness and downstream derived surfaces on `source-set-5e65d845ce77e1a0`
+  validate locally: `authority_currentness` reports `35` authority families and `207`
+  source-currentness records; retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`;
+  evidence graph rebuilds with `153,187` nodes and `533,938` edges; claim extraction rebuilds with
+  `101,856` claims; rule-claim binding rebuilds with `211` links and `0` gaps; and the active
+  NEPA 3D source-set export passes with `66` checks, `0` failed checks, `2,128` nodes, and
+  `3,825` edges.
+- The post-V1 promotion suite still separates current-promotion truth from full-corpus truth, but
+  its full-canonical contract has not yet been repointed to the refreshed active source set. The
+  latest replay still reports
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
-  `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
-  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, and `expansion_ready=false`.
-  The active full-canonical lane now requires its own `authority_currentness` plus NEPA 3D
-  source-set graph artifacts, and that stricter gate is now satisfied locally for
-  `source-set-34061d1e4bf6c460`.
-- The active full-canonical derived artifacts are now materialized under
-  `source_library/derived/source-set-34061d1e4bf6c460/`: `authority_currentness` validates `35`
-  authority families and `207` source-currentness records across source partitions
-  `active_review_corpus=349` and `candidate_blocked_source=1`; the active source set now also owns
-  `forest_plan_components/component_inventory.json`, `components.jsonl`,
-  `component_inventory_build_coverage.json`, and `summary.json`. The latest active NEPA 3D
-  source-set export against that owned inventory passes with `66` checks, `0` failed checks,
-  `2,047` nodes, and `3,582` edges.
+  `current_promotion_ready=true`, `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
+  `full_canonical_corpus_ready=false`, `full_canonical_failure_category_counts={"stale_artifact": 2}`,
+  and `expansion_ready=false`.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
   contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
   readiness profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
@@ -100,16 +111,19 @@ Latest closeout on 2026-05-10:
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
   `nez-perce-clearwater-nfs` classify as `document_role=forest_plan`, while ordinary supplemental
   register rows remain `forest_plan_support`.
-- Live local replay under the current uncommitted worktree produced transient active catalog
-  `source-set-5e65d845ce77e1a0`. In that replay, all five promoted source IDs now emit
+- The live active catalog source set is now `source-set-5e65d845ce77e1a0`. In that current
+  catalog, all five promoted source IDs now emit
   `document_role=forest_plan` chunks. Isolated single-forest builds against those chunks show
   `flathead-nf` now builds `80` components / `20` standards and `kootenai-nf` builds `1`
   component / `1` standard; `dakota-prairie-grasslands`, `lolo-nf`, and
   `nez-perce-clearwater-nfs` now receive real plan-body chunk selection (`2`, `580`, and `278`
-  chunks respectively) instead of upstream role starvation. The tracked manifest remains pinned to
-  committed full-canonical source set `source-set-34061d1e4bf6c460`, so manifest-batch promotion of
-  the transient replay is a later active-source-set refresh step rather than part of this
-  classifier milestone.
+  chunks respectively) instead of upstream role starvation. That role-classification gain is now
+  reflected in the refreshed full-canonical inventory/currentness/graph lane on the same active
+  source set.
+- The next required implementation boundary is readiness and promotion-suite alignment: update
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and the full-canonical promotion-suite
+  contract so the refreshed `source-set-5e65d845ce77e1a0` replay, with five passing forests and
+  five typed blockers, becomes the current promoted full-canonical truth.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
@@ -526,8 +540,10 @@ while any tracked profile remains blocked.
 Sequence 0 of the Region 1 component-inventory promotion plan now also requires the forest-plan
 component inventory input to be owned by the exporting source set. Borrowing
 `source-set-8a4005c8a083af1a` component inventory artifacts while exporting
-`source-set-34061d1e4bf6c460` is treated as an explicit validation failure until the active source
-set owns its own `forest_plan_components/` artifact family.
+`source-set-5e65d845ce77e1a0` is treated as an explicit validation failure until the active source
+set owns its own `forest_plan_components/` artifact family. That ownership gate is now satisfied on
+the refreshed active-source-set replay; the remaining stale surfaces are readiness config and
+promotion-suite full-canonical pointers.
 
 ## NEPA 3D Local Viewer
 
@@ -544,9 +560,9 @@ picker for ad hoc inspection.
 Current viewer resolution state:
 
 - active catalog source set:
-  `source-set-34061d1e4bf6c460`
+  `source-set-5e65d845ce77e1a0`
 - newest graph-capable source set on disk:
-  `source-set-8a4005c8a083af1a`
+  `source-set-5e65d845ce77e1a0`
 - current checked-in fallback manifest default:
   `source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph.json`
 - matching review overlays currently available for the resolved source set:

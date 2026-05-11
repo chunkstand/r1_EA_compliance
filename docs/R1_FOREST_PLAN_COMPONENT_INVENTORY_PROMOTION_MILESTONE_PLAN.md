@@ -2,7 +2,8 @@
 
 Date: 2026-05-10
 
-Status: Sequences 0 through 3 implemented and cleanly closed; Sequence 4 is next
+Status: Sequence 4 active-source-set refresh implemented on `source-set-5e65d845ce77e1a0`;
+readiness promotion and promotion-suite alignment are next
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -12,38 +13,53 @@ review, promotion, or source-truth boundaries.
 
 ## Purpose
 
-The active full-canonical source set now owns its own multi-forest
-`forest_plan_components/` artifact family, and the active NEPA 3D source-set graph no longer
-borrows the archived merged inventory path. The remaining gap has narrowed to readiness and graph
-promotion truth:
+The repository's live active catalog and its last fully materialized full-canonical
+inventory/graph lane are no longer the same source set. `source_library/catalog/` now points to
+`source-set-5e65d845ce77e1a0`, while the latest full-canonical
+`forest_plan_components/` plus NEPA 3D graph proofs still belong to
+`source-set-34061d1e4bf6c460`. The remaining gap is no longer only readiness promotion. It is
+active-source-set drift first, then readiness and graph promotion truth:
 
-- the live Sequence 3 build validates `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and
-  `idaho-panhandle-nfs`;
-- the same build stops on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+- the last verified full-canonical inventory replay on `source-set-34061d1e4bf6c460` validates
+  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`;
+- the same replay stops on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
   `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
   `nez-perce-clearwater-nfs`;
+- the live active catalog `source-set-5e65d845ce77e1a0` already carries the newer primary-plan role
+  classifications, and it now owns refreshed full-canonical `authority_currentness`,
+  `forest_plan_components`, retrieval/evidence/claim/rule-link outputs, and a passing NEPA 3D
+  graph lane;
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json` still promotes only
   `custer-gallatin-nf` and leaves the other nine profiles at
-  `component_inventory_build_required`, so the current readiness/config truth lags the owned
-  inventory artifacts.
+  `component_inventory_build_required`, so readiness/config truth still lags even the older
+  `source-set-5e65d845ce77e1a0` inventory replay;
+- `promotion-suite` still pins its full-canonical contract to `source-set-34061d1e4bf6c460`, so
+  full-canonical promotion truth also lags the refreshed active-source-set replay.
 
-The remaining milestone job is to promote these live inventory results into the readiness and NEPA
-3D graph surfaces without weakening typed blocker handling, current promotion truth, or source-set
-ownership gates.
+The remaining milestone job is to re-anchor the inventory lane to the actual live active catalog
+source set, refresh the owned derived artifacts on that source set, and only then promote the live
+inventory results into readiness and NEPA 3D graph surfaces without weakening typed blocker
+handling, current promotion truth, or source-set ownership gates.
 
 ## Current Evidence
 
-- The active full-canonical catalog source set is `source-set-34061d1e4bf6c460` and is now the
-  default viewer dataset in the local NEPA 3D viewer. See [README.md](/Users/chunkstand/projects/usfs-r1-EA-sources/README.md:41).
-- The active full-canonical source set now owns
-  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`, with a combined
-  inventory of `587` components and `87` standards.
+- The live active full-canonical catalog source set in `source_library/catalog/` is now
+  `source-set-5e65d845ce77e1a0`.
+- The live active full-canonical source set `source-set-5e65d845ce77e1a0` now owns a refreshed
+  full-canonical derived lane, including
+  `source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/`, with a combined
+  inventory of `668` components and `108` standards.
 - The archived merged source set `source-set-8a4005c8a083af1a` remains the freshest all-green merged
   extraction/retrieval/graph surface, but it is no longer the active inventory-ownership source
   for the full-canonical lane.
 - The promoted East Crazies forest-plan review lane is still Custer Gallatin-specific, but the
-  active full-canonical inventory is no longer Custer-only: the live Sequence 3 build validates
-  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`.
+  refreshed active-source-set inventory replay is broader: `source-set-5e65d845ce77e1a0` now
+  validates `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`, and `kootenai-nf`.
+- The remaining blocked forests on the refreshed active-source-set replay are
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`, all still stopping on explicit typed blockers rather than missing
+  inventory ownership.
 - The readiness config currently tracks `10` forest/grassland profiles, but its promoted status is
   stale relative to the live build:
   - `custer-gallatin-nf`: `component_inventory_validation.status="validated"`
@@ -56,9 +72,10 @@ ownership gates.
   - `kootenai-nf`: `component_inventory_build_required`
   - `lolo-nf`: `component_inventory_build_required`
   - `nez-perce-clearwater-nfs`: `component_inventory_build_required`
-- The live Sequence 3 build result is broader than that config snapshot:
-  `helena-lewis-and-clark-nf` and `idaho-panhandle-nfs` are now validated in the active inventory,
-  while the seven remaining forests stop on explicit typed blockers rather than missing ownership.
+- The refreshed active-source-set build result is broader than that config snapshot:
+  `flathead-nf` and `kootenai-nf` now join `custer-gallatin-nf`,
+  `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs` in the passing set, while the five
+  remaining forests stop on explicit typed blockers rather than missing ownership.
 - `config/forest_plan_profiles.json` still contains one full forest profile
   (`custer-gallatin-nf`) plus `known_other_forest_units`; the multi-forest build contract for the
   broader Region 1 roster currently lives in
@@ -80,16 +97,19 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
   --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
 ```
 
-- The NEPA 3D forest-plan lens shows the resulting imbalance directly: Custer Gallatin dominates
-  the component graph while other tracked forests appear only as readiness-tracking unit/plan
-  shells.
+- The NEPA 3D forest-plan lens now has a refreshed active-source-set graph lane:
+  `source_library/catalog/source_set_manifest.json` resolves the live catalog to
+  `source-set-5e65d845ce77e1a0`, and the active-source-set `nepa-knowledge-graph-export` replay now
+  passes on that same source set with `2,128` nodes, `3,825` edges, and `0` failed checks.
 
 ## Goal
 
-Build and promote validated forest-plan component inventories for every current Region 1
-forest/grassland profile tracked by the repo, so the active full-canonical source set
-`source-set-34061d1e4bf6c460` owns a canonical multi-forest component inventory and the readiness
-plus NEPA 3D graph surfaces no longer depend on the archived Custer-only inventory path.
+Re-anchor the forest-plan inventory lane to the actual live active catalog source set
+`source-set-5e65d845ce77e1a0`, refresh a canonical multi-forest inventory plus derived
+currentness/graph artifacts on that source set, and then promote validated forest-plan component
+inventory truth for every current Region 1 forest/grassland profile tracked by the repo so the
+readiness plus NEPA 3D graph surfaces no longer depend on the older
+`source-set-34061d1e4bf6c460` replay or the archived Custer-only inventory path.
 
 For this milestone, "all R1 National Forests" is interpreted as the repo's current tracked Region 1
 forest/grassland roster in `config/region1_forest_plan_readiness_nepa_3d_v1.json`. That includes
@@ -165,8 +185,10 @@ system contract.
   in config, not hidden branches.
 - Preserve single-forest CLI compatibility where possible; add multi-forest/batch behavior behind a
   tracked manifest contract rather than breaking the current interface abruptly.
-- Promotion must target the active full-canonical source set `source-set-34061d1e4bf6c460`, not
-  only the archived merged source set.
+- Promotion must target the source set currently named by
+  `source_library/catalog/source_set_manifest.json`. As of this re-baseline, that live
+  active-source-set target is `source-set-5e65d845ce77e1a0`, not only the archived merged source
+  set and not the older derived replay `source-set-34061d1e4bf6c460`.
 - If a forest cannot be promoted, leave an explicit typed blocker in readiness/config/report
   surfaces. Do not silently omit it from the canonical inventory.
 
@@ -217,6 +239,22 @@ system contract.
   graph validation must fail.
   Future-Codex misuse scenario: a later session flips readiness status in config to clean up the
   viewer; the graph gate must catch it.
+- Weak point forecast: the repo mixes a newer active catalog source set with an older derived
+  inventory/currentness/graph lane and accidentally promotes readiness from the wrong replay.
+  Owner surface: `source_library/catalog/source_set_manifest.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`, this plan, and
+  `docs/CURRENT_SYSTEM_STATE.md`
+  Prevention gate: doc/config re-baseline plus active-source-set replay checks must confirm the live
+  catalog source set, the manifest's `active_full_canonical` reference, and the refreshed derived
+  inventory/currentness/graph artifacts all name the same `source_set_id`.
+  Fail threshold: `source_library/catalog/source_set_manifest.json` points at one source set while
+  the tracked inventory build contract or current-state docs still promote another as the active
+  full-canonical lane.
+  Controlled violation: keep the manifest pinned to `source-set-34061d1e4bf6c460` while the live
+  catalog points at `source-set-5e65d845ce77e1a0`; the re-baseline gate must stop Sequence 4 before
+  readiness promotion continues.
+  Future-Codex misuse scenario: a future session treats the newer catalog as "just transient" and
+  continues promoting readiness from an older derived replay; the alignment gate must prevent that.
 
 ## Milestone Sequence
 
@@ -231,6 +269,15 @@ Every sequence in this milestone closes the same way before the next sequence be
   sequence
 - stop instead of rolling uncommitted or doc-misaligned work forward if verification fails or the
   sequence slice cannot be separated from unrelated dirty worktree changes
+
+Re-baseline note on 2026-05-10:
+
+- Sequence 0 through Sequence 3 closeout sections below preserve the historical
+  `source-set-34061d1e4bf6c460` implementation evidence that was current when those slices landed.
+- The live active catalog has since advanced to `source-set-5e65d845ce77e1a0`.
+- Sequence 4 was therefore no longer a pure readiness-promotion slice. It first needed to refresh
+  the manifest-owned derived lane onto the live active catalog source set before readiness/config
+  promotion could truthfully continue.
 
 ### Sequence 0 - Baseline Gate And Active-Source-Set Ownership
 
@@ -485,17 +532,24 @@ Stop conditions:
   blocked in a way that prevents typed inventory generation.
 - Aggregate build coverage passes only by dropping failing forests from the canonical inventory.
 
-### Sequence 4 - Readiness Promotion And Graph Integration
+### Sequence 4 - Active-Source-Set Refresh, Readiness Promotion, And Graph Integration
 
-Goal: promote validated multi-forest inventory truth into the Region 1 readiness and NEPA 3D graph
-surfaces.
+Goal: refresh the full-canonical derived inventory/currentness/graph lane onto the live active
+catalog source set `source-set-5e65d845ce77e1a0`, then promote validated multi-forest inventory
+truth into the Region 1 readiness and NEPA 3D graph surfaces from that refreshed replay.
 
 Implementation tasks:
 
+- Re-baseline the tracked build contract to the live active catalog source set:
+  update the `active_full_canonical` source-set reference and any paired current-state docs that
+  still promote `source-set-34061d1e4bf6c460` as the active catalog.
+- Refresh the active-source-set derived lane on `source-set-5e65d845ce77e1a0`, including the
+  manifest-driven `forest_plan_components/` replay and the required currentness/graph artifacts
+  needed for readiness and viewer truth.
 - Update `config/region1_forest_plan_readiness_nepa_3d_v1.json` and any generated companion report
   surfaces so all promoted profiles record validated inventory IDs, counts, and artifact paths.
-- Refresh the NEPA 3D source-set export against `source-set-34061d1e4bf6c460` using the active
-  source-set's owned multi-forest inventory.
+- Refresh the NEPA 3D source-set export against `source-set-5e65d845ce77e1a0` using that active
+  source set's owned multi-forest inventory.
 - Ensure the forest-plan lens and related graph summaries now reflect multi-forest component
   presence instead of one component-rich forest plus nine shell profiles.
 - Keep `region1_completeness_claim=false` unless every in-scope readiness requirement for every
@@ -503,8 +557,11 @@ Implementation tasks:
 
 Acceptance signals:
 
+- `source_library/catalog/source_set_manifest.json`, the tracked build manifest, and the refreshed
+  full-canonical derived artifacts all agree on `source-set-5e65d845ce77e1a0` as the active
+  full-canonical source set.
 - The active graph export uses the active source-set inventory path, not the archived merged
-  inventory path.
+  inventory path and not the older `source-set-34061d1e4bf6c460` replay.
 - Region 1 graph promotion no longer stops at Custer Gallatin because of missing component
   inventories.
 - Graph validation fails closed if a promoted profile lacks validated inventory coverage.
@@ -512,9 +569,14 @@ Acceptance signals:
 Required verification:
 
 ```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
+  --output-dir source_library \
+  --source-set-id source-set-5e65d845ce77e1a0 \
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
+
 PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export \
   --output-dir source_library \
-  --source-set-id source-set-34061d1e4bf6c460
+  --source-set-id source-set-5e65d845ce77e1a0
 
 PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py
 git diff --check
@@ -522,8 +584,40 @@ git diff --check
 
 Stop conditions:
 
-- Graph promotion requires undocumented manual inventory-path overrides.
+- The live active catalog source set cannot be replayed cleanly into owned derived artifacts without
+  undocumented manual source-set overrides.
 - Viewer/readiness truth would overclaim all-Region-1 readiness despite remaining typed blockers.
+
+Implementation refresh slice on 2026-05-10:
+
+- re-anchored the tracked build contract:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now points its
+  `active_full_canonical` source-set reference at `source-set-5e65d845ce77e1a0`
+- refreshed extraction reuse on the active source set:
+  `reuse-inventory` reported `already_current_count=349`, `needs_extract_count=0`, and
+  `excluded_count=1`; `extract-build --reuse-existing` then wrote `349/349` extracted rows and
+  `75,745` chunks under `source-set-5e65d845ce77e1a0`
+- refreshed full-canonical inventory ownership on the active source set:
+  `forest-plan-components-build --manifest-path ... --source-set-id source-set-5e65d845ce77e1a0`
+  now writes `668` components and `108` standards under
+  `source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/`
+- passing forests improved on the refreshed active-source-set replay:
+  `flathead-nf` now validates with `80` components / `20` standards and `kootenai-nf` now
+  validates with `1` component / `1` standard, reducing blockers from seven forests to five
+- refreshed downstream derived lane on the same source set:
+  `authority-currentness` passed with `35` authority families and `207` source-currentness records;
+  `retrieval-build` passed with `75,745` chunks and `reviewer_ready=true`;
+  `evidence-graph-build` passed with `153,187` nodes and `533,938` edges;
+  `claim-extract` passed with `101,856` claims;
+  `rule-claim-link` passed with `211` links and `0` gaps;
+  `nepa-knowledge-graph-export` passed with `66` checks, `0` failed checks, `2,128` nodes, and
+  `3,825` edges
+- remaining stale surfaces after the refresh slice:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records only one validated
+  inventory, and `promotion-suite` still reports
+  `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
+  `full_canonical_corpus_ready=false`, and
+  `full_canonical_failure_category_counts={\"stale_artifact\": 2}`
 
 ### Sequence 5 - Evaluation, Docs, Handoff, And Closeout
 
@@ -565,8 +659,8 @@ Stop conditions:
 ## Required Implementation Artifacts
 
 - tracked Region 1 component-inventory build manifest/config
-- active full-canonical multi-forest component inventory artifacts under
-  `source_library/derived/source-set-34061d1e4bf6c460/forest_plan_components/`
+- active full-canonical multi-forest component inventory artifacts under the source set currently
+  named by `source_library/catalog/source_set_manifest.json`
 - per-forest and aggregate build coverage proving inventory validity
 - readiness/profile contract updates reflecting validated inventory promotion
 - focused multi-forest builder, resolver-compatibility, and graph-promotion tests
@@ -598,13 +692,13 @@ git diff --check
 ```
 
 Operational closeout should also include a live `forest-plan-components-build` replay against
-`source-set-34061d1e4bf6c460` and a refreshed `nepa-knowledge-graph-export` replay against that
-same source set.
+the source set currently named by `source_library/catalog/source_set_manifest.json` and a refreshed
+`nepa-knowledge-graph-export` replay against that same active source set.
 
 ## Acceptance Criteria
 
-- The active full-canonical source set `source-set-34061d1e4bf6c460` owns a canonical
-  multi-forest `forest_plan_components/` artifact family.
+- The source set currently named by `source_library/catalog/source_set_manifest.json` owns a
+  canonical multi-forest `forest_plan_components/` artifact family.
 - Every currently tracked Region 1 forest/grassland profile in the readiness matrix has a tracked
   build contract and a validated component inventory, or the milestone stops on an explicit typed
   blocker.
@@ -614,7 +708,8 @@ same source set.
   drift, missing component IDs, or incomplete roster coverage.
 - Resolver consumers remain compatible with the canonical source-set inventory path.
 - The NEPA 3D graph export uses the active source-set inventory path and no longer borrows the
-  archived Custer-only inventory for full-canonical replay.
+  archived Custer-only inventory or an older full-canonical replay for active full-canonical
+  promotion.
 - Docs and handoff identify Region 1 inventory promotion as a completed source-set milestone and
   name any residual non-inventory blockers separately.
 

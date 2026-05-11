@@ -5,6 +5,114 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Forest-Plan Active-Source-Set Refresh
+
+The active full-canonical derived lane has now been refreshed onto the live catalog source set
+`source-set-5e65d845ce77e1a0`.
+
+- tracked build-contract alignment:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now points
+  `active_full_canonical` at `source-set-5e65d845ce77e1a0`
+- refreshed extraction/currentness/inventory/graph lane:
+  `reuse-inventory` reported `already_current_count=349`, `needs_extract_count=0`, and
+  `excluded_count=1`; `extract-build --reuse-existing` rewrote `349/349` extracted rows and
+  `75,745` chunks under `source-set-5e65d845ce77e1a0`
+- refreshed full-canonical inventory result:
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json --source-set-id source-set-5e65d845ce77e1a0`
+  now writes `668` components and `108` standards under
+  `source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/`
+- passing forests on the refreshed active-source-set replay:
+  `custer-gallatin-nf` (`329/58`), `flathead-nf` (`80/20`),
+  `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`1/1`), and
+  `kootenai-nf` (`1/1`)
+- remaining typed blockers on the refreshed replay:
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`, all still failing on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`
+- refreshed downstream derived lane on the same source set:
+  `authority-currentness` passed with `35` authority families and `207` source-currentness records;
+  `retrieval-build` passed with `75,745` chunks and `reviewer_ready=true`;
+  `evidence-graph-build` passed with `153,187` nodes and `533,938` edges;
+  `claim-extract` passed with `101,856` claims;
+  `rule-claim-link` passed with `211` links and `0` gaps;
+  `nepa-knowledge-graph-export` passed with `66` checks, `0` failed checks, `2,128` nodes, and
+  `3,825` edges
+- durable-doc alignment in this pass:
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` now describe
+  `source-set-5e65d845ce77e1a0` as both the live active catalog and the refreshed full-canonical
+  derived lane
+- remaining stale surfaces:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records only one validated
+  inventory, and `promotion-suite` still points
+  `full_canonical_source_set_id` at `source-set-34061d1e4bf6c460`, reporting
+  `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_architecture_contract.py`: passed `13/13`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing --reuse-inventory-path source_library/derived/source-set-5e65d845ce77e1a0/reuse_inventory/reuse_inventory.json`: passed with `349` extracted rows, `75,745` chunks, and `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`: stopped as intended with five typed blockers and summary `component_count=668`, `standard_count=108`, `coverage_passed=false`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `reviewer_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed as a command and reported stale full-canonical artifacts against `source-set-34061d1e4bf6c460`
+
+Immediate next step if this slice is continued:
+
+1. Promote the refreshed `source-set-5e65d845ce77e1a0` results into
+   `config/region1_forest_plan_readiness_nepa_3d_v1.json` and repoint the full-canonical
+   promotion-suite contract so the five validated forests and five typed blockers become the
+   current promoted full-canonical truth.
+
+## Region 1 Forest-Plan Inventory Re-Baseline
+
+The Region 1 forest-plan component inventory promotion lane has now been re-baselined in durable
+docs to the live active catalog source set.
+
+- live active catalog source set:
+  `source-set-5e65d845ce77e1a0` now resolves from `source_library/catalog/source_set_manifest.json`
+- latest fully materialized full-canonical derived lane:
+  `source-set-34061d1e4bf6c460` still owns the newest local `authority_currentness`,
+  `forest_plan_components`, and `knowledge_graph` artifact families
+- key correction:
+  Sequence 4 is no longer a pure readiness-promotion step; it must first refresh the manifest-owned
+  full-canonical derived lane onto `source-set-5e65d845ce77e1a0`, then promote readiness and graph
+  truth from that refreshed replay
+- durable-doc updates in this pass:
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md` now state that the repo is
+  split between a newer live catalog and an older fully materialized inventory/graph lane instead
+  of describing `source-set-34061d1e4bf6c460` as the current active catalog
+- explicit non-goal:
+  this pass did not refresh `config/r1_forest_plan_component_inventory_build_manifest.json` or run
+  a new active-source-set inventory/currentness/graph replay; it only corrected the milestone
+  baseline and next-sequence routing
+
+Verification in this pass:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/R1_FOREST_PLAN_COMPONENT_INVENTORY_PROMOTION_MILESTONE_PLAN.md --strict`
+- `git diff --check`
+
+Residual risks:
+
+- `config/r1_forest_plan_component_inventory_build_manifest.json` still points at
+  `source-set-34061d1e4bf6c460`, so config/runtime truth is still split until the active-source-set
+  refresh sequence lands
+- the readiness config still records only one validated inventory and has not yet been promoted to
+  reflect the three validated / seven blocked replay on the older full-canonical lane
+
+Immediate next step if this slice is continued:
+
+1. Refresh the tracked full-canonical build manifest and derived replay surfaces onto
+   `source-set-5e65d845ce77e1a0`, then resume readiness and NEPA 3D graph promotion from that
+   active-source-set replay.
+
 ## Region 1 Primary Plan Role Classification Milestone
 
 The primary-plan role-classification milestone in
