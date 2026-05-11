@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 from datetime import UTC, datetime
+import hashlib
 from pathlib import Path
 import json
 import re
@@ -99,10 +100,10 @@ CODED_COMPONENT_RE = re.compile(
 )
 COLON_COMPONENT_RE = re.compile(
     rf"\b(?P<label>{COMPONENT_LABEL_PATTERN})\s+"
-    r"(?P<number>[0-9][A-Za-z0-9.:-]*)\s*:\s+"
+    r"(?:(?P<number_prefix>No\.)\s*)?(?P<number>[0-9][A-Za-z0-9.:-]*)\s*(?P<delimiter>[.:])\s+"
     r"(?P<text>.*?)(?=\b(?:"
     + COMPONENT_LABEL_PATTERN
-    + r")\s+[0-9][A-Za-z0-9.:-]*\s*:|\bPlan Components[-\u2013\u2014]|\Z)",
+    + r")\s+(?:No\.\s*)?[0-9][A-Za-z0-9.:-]*\s*[.:]|\bPlan Components[-\u2013\u2014]|\Z)",
     re.DOTALL,
 )
 SECTION_HEADING_RE = re.compile(
@@ -595,7 +596,7 @@ def _selected_forest_plan_chunks(
         for chunk in all_chunks
         if chunk.get("source_set_id") == source_set_id
         and chunk.get("source_record_id") in selected_source_record_ids
-        and chunk.get("document_role") == "forest_plan"
+        and chunk.get("document_role") in {"forest_plan", "forest_plan_support"}
     ]
 
 
@@ -1058,6 +1059,7 @@ def _normalized_component_match(
             start=start,
             fallback=fallback_heading,
         )
+        delimiter = str(groups.get("delimiter") or "").strip()
         code = _legacy_component_code(
             section_heading=section_heading,
             label=label,
@@ -1065,6 +1067,7 @@ def _normalized_component_match(
             text=text,
             start=start,
             fallback_heading=fallback_heading,
+            prefer_body_code=delimiter == "." or bool(groups.get("number_prefix")),
         )
         return {
             "label": label,
@@ -1136,11 +1139,17 @@ def _legacy_component_code(
     text: str,
     start: int,
     fallback_heading: str,
+    prefer_body_code: bool = False,
 ) -> str:
     section_code = _legacy_section_code(section_heading)
     fallback_code = _legacy_section_code(fallback_heading)
-    body_code = _legacy_body_code(component_body)
-    if section_code and (
+    body_code = _legacy_body_code(
+        component_body,
+        max_parts=12 if prefer_body_code else 4,
+    )
+    if prefer_body_code and body_code:
+        section_code = f"{body_code}-{_legacy_component_text_digest(component_body)}"
+    if not prefer_body_code and section_code and (
         section_code == fallback_code
         or _legacy_section_code_is_generic(
             section_code=section_code,
@@ -1212,13 +1221,20 @@ def _looks_like_coded_component_header(text: str) -> bool:
     )
 
 
-def _legacy_body_code(text: str) -> str:
+def _legacy_body_code(text: str, *, max_parts: int = 4) -> str:
     parts = [
         token.upper()
         for token in TOKEN_RE.findall(text.lower())
         if token not in TERM_STOPWORDS
     ]
-    return "-".join(parts[:4])
+    return "-".join(parts[:max_parts])
+
+
+def _legacy_component_text_digest(text: str) -> str:
+    normalized = _normalized_component_text(text)
+    if not normalized:
+        return "text"
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:8].upper()
 
 
 def _suppress_component_match(match: dict[str, object], component_body: str) -> bool:

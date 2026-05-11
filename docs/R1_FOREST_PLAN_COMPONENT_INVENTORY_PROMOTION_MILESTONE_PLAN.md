@@ -1,9 +1,9 @@
 # Region 1 Forest-Plan Component Inventory Promotion Milestone Plan
 
-Date: 2026-05-10
+Date: 2026-05-11
 
-Status: parser/component recovery active on `source-set-5e65d845ce77e1a0`; readiness promotion now
-tracks `8` validated forests and `2` typed blockers
+Status: active full-canonical parser/component recovery closed on `source-set-5e65d845ce77e1a0`;
+readiness promotion now tracks `10` validated forests and `0` typed blockers
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -17,22 +17,21 @@ The repository's live active catalog, full-canonical derived lane, readiness con
 promotion-suite full-canonical contract are now aligned to the same source set:
 `source-set-5e65d845ce77e1a0`.
 
-- the active full-canonical inventory replay on `source-set-5e65d845ce77e1a0` validates
-  `custer-gallatin-nf`, `beaverhead-deerlodge-nf`, `bitterroot-nf`, `flathead-nf`,
-  `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, `kootenai-nf`, and
-  `nez-perce-clearwater-nfs`;
-- the same replay now stops on typed blockers for `dakota-prairie-grasslands` and `lolo-nf`;
-- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes those eight validated
-  forests and keeps the two blocked forests explicit with live blocker types;
+- the active full-canonical inventory replay on `source-set-5e65d845ce77e1a0` validates all `10`
+  tracked forests/grasslands:
+  `custer-gallatin-nf`, `beaverhead-deerlodge-nf`, `bitterroot-nf`,
+  `dakota-prairie-grasslands`, `flathead-nf`, `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`, `kootenai-nf`, `lolo-nf`, and `nez-perce-clearwater-nfs`;
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes all `10` validated
+  forests with no remaining active full-canonical parser blockers;
 - the active-source-set NEPA 3D graph lane now passes with `66` checks, `0` failed,
-  `2,448` nodes, `4,856` edges, `region1_forest_plan_graph_ready_profile_count=8`, and
-  `region1_forest_plan_blocked_profile_count=2`;
+  `2,850` nodes, `6,086` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`;
 - `promotion-suite` now pins its full-canonical contract to `source-set-5e65d845ce77e1a0` and
   reports `full_canonical_corpus_ready=true`.
 
-The remaining milestone job is no longer stale-surface repair. It is parser/component recovery on
-the final two blocked forests while preserving typed blocker handling, current promotion truth, and
-source-set ownership gates.
+The remaining work is no longer active full-canonical parser repair. This milestone lane is closed;
+the next implementation boundary is the separate post-V1 expansion lane.
 
 ## Current Evidence
 
@@ -41,17 +40,13 @@ source-set ownership gates.
 - The live active full-canonical source set `source-set-5e65d845ce77e1a0` now owns a refreshed
   full-canonical derived lane, including
   `source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/`, with a combined
-  inventory of `1002` components and `233` standards.
+  inventory of `1416` components and `397` standards.
 - The archived merged source set `source-set-8a4005c8a083af1a` remains the freshest all-green merged
   extraction/retrieval/graph surface, but it is no longer the active inventory-ownership source
   for the full-canonical lane.
 - The promoted East Crazies forest-plan review lane is still Custer Gallatin-specific, but the
   refreshed active-source-set inventory replay is broader: `source-set-5e65d845ce77e1a0` now
-  validates `custer-gallatin-nf`, `beaverhead-deerlodge-nf`, `bitterroot-nf`, `flathead-nf`,
-  `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, `kootenai-nf`, and
-  `nez-perce-clearwater-nfs`.
-- The remaining blocked forests on the refreshed active-source-set replay are
-  `dakota-prairie-grasslands` and `lolo-nf`, both still blocked on label detection.
+  validates all `10` tracked readiness profiles.
 - The readiness config now tracks `10` forest/grassland profiles on the refreshed active source
   set:
   - `custer-gallatin-nf`: `validated`
@@ -62,8 +57,8 @@ source-set ownership gates.
   - `kootenai-nf`: `validated`
   - `nez-perce-clearwater-nfs`: `validated`
   - `beaverhead-deerlodge-nf`: `validated`
-  - `dakota-prairie-grasslands`: blocked on typed label detection
-  - `lolo-nf`: blocked on typed label detection
+  - `dakota-prairie-grasslands`: `validated`
+  - `lolo-nf`: `validated`
 - The refreshed readiness config now also carries current catalog-confirmed source requirements for
   the promoted plan and supporting-document rows that the multi-forest build actually uses.
 - `config/forest_plan_profiles.json` still contains one full forest profile
@@ -90,7 +85,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build \
 - The NEPA 3D forest-plan lens now has a refreshed active-source-set graph lane:
   `source_library/catalog/source_set_manifest.json` resolves the live catalog to
   `source-set-5e65d845ce77e1a0`, and the active-source-set `nepa-knowledge-graph-export` replay now
-  passes on that same source set with `2,128` nodes, `3,825` edges, and `0` failed checks.
+  passes on that same source set with `2,850` nodes, `6,086` edges, and `0` failed checks.
 
 ## Goal
 

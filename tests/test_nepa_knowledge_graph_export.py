@@ -220,7 +220,7 @@ def test_nepa_knowledge_graph_export_accepts_source_delta_readiness_report() -> 
         )
 
 
-def test_source_delta_readiness_does_not_graph_promote_profiles_without_inventory() -> None:
+def test_source_delta_readiness_fails_inventory_gate_when_promoted_artifact_is_missing() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
         source_set_id = "source-set-test"
@@ -231,18 +231,18 @@ def test_source_delta_readiness_does_not_graph_promote_profiles_without_inventor
         )
         report = _read_json(source_delta_readiness)
         other_profile = report["forest_profile_readiness"]["profile_rows"][1]
-        other_profile["forest_unit_id"] = "beaverhead-deerlodge-nf"
-        other_profile["forest_unit_names"] = ["Beaverhead-Deerlodge National Forest"]
+        other_profile["forest_unit_id"] = "dakota-prairie-grasslands"
+        other_profile["forest_unit_names"] = ["Dakota Prairie Grasslands"]
         other_profile["configured_profile"] = True
         other_profile["profile_kind"] = "configured_profile"
         other_profile["profile_readiness_status"] = "ready"
-        other_profile["active_plan_source_record_id"] = "R1PLAN-beaverhead-deerlodge-nf-02"
+        other_profile["active_plan_source_record_id"] = "R1PLAN-dakota-prairie-grasslands-03"
         other_profile["blocker_types"] = []
         other_profile["source_requirements"] = [
             {
-                "role": "primary_land_management_plan",
+                "role": "primary_land_resource_management_plan_part",
                 "readiness_status": "catalog_confirmed",
-                "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+                "source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
             }
         ]
         report["forest_profile_readiness"]["ready_profile_count"] = 2
@@ -262,8 +262,9 @@ def test_source_delta_readiness_does_not_graph_promote_profiles_without_inventor
 
         graph = _read_json(result.graph_path)
         checks = {check["name"]: check for check in graph["validation"]["checks"]}
-        assert result.summary["region1_forest_plan_graph_ready_profile_count"] == 1
-        assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
+        assert result.summary["region1_forest_plan_graph_ready_profile_count"] == 2
+        assert result.summary["region1_forest_plan_blocked_profile_count"] == 0
+        assert not checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
 
 
 def test_nepa_knowledge_graph_export_fails_when_inventory_is_borrowed_from_other_source_set() -> None:

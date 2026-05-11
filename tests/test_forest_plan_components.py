@@ -700,6 +700,49 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-1", component_ids)
             self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-2", component_ids)
 
+    def test_builds_inventory_from_period_number_components_and_standard_no(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-dakota-prairie-grasslands-05"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Goal 1: Ensure sustainable ecosystems. Standard 2. Meet air "
+                            "quality requirements. Guideline 7. Design stream crossings "
+                            "to pass flow and sediment. Standard No. 21. Special "
+                            "prescriptions protect riparian areas."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="dakota-prairie-grasslands",
+                plan_version="2001",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="dakota-prairie-grasslands",
+            )
+            self.assertEqual(len(components), 4)
+            component_ids = {component["component_id"] for component in components}
+            self.assertTrue(any(component_id.endswith("-GO-1") for component_id in component_ids))
+            self.assertTrue(any(component_id.endswith("-STD-2") for component_id in component_ids))
+            self.assertTrue(any(component_id.endswith("-GL-7") for component_id in component_ids))
+            self.assertTrue(any(component_id.endswith("-STD-21") for component_id in component_ids))
+
     def test_colon_number_table_of_contents_entries_are_suppressed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -1407,6 +1450,60 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
             self.assertEqual(coverage["duplicate_component_ids"], [])
             self.assertEqual(coverage["duplicate_standard_ids"], [])
+
+    def test_manifest_build_accepts_forest_plan_support_for_component_bearing_source_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            manifest_path, readiness_path = _write_inventory_build_contract(
+                output_dir,
+                source_set_id=source_set_id,
+                rows=[
+                    {
+                        "forest_unit_id": "dakota-prairie-grasslands",
+                        "source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
+                        "plan_version": "2001",
+                        "build_source_record_ids_by_role": {
+                            "primary_land_resource_management_plan_part": [
+                                "R1PLAN-dakota-prairie-grasslands-03",
+                                "R1PLAN-dakota-prairie-grasslands-05"
+                            ],
+                        },
+                    }
+                ],
+            )
+            support_chunk = _chunk(
+                source_set_id=source_set_id,
+                source_record_id="R1PLAN-dakota-prairie-grasslands-05",
+                text=(
+                    "Goal 1: Ensure sustainable ecosystems. Standard 2. Meet air "
+                    "quality requirements."
+                ),
+            )
+            support_chunk["document_role"] = "forest_plan_support"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[support_chunk],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=chunks_path,
+                manifest_path=manifest_path,
+                manifest_readiness_path=readiness_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            profile = next(
+                row
+                for row in coverage["profile_results"]
+                if row["forest_unit_id"] == "dakota-prairie-grasslands"
+            )
+            self.assertEqual(profile["selected_chunk_count"], 1)
+            self.assertEqual(profile["built_standard_count"], 1)
 
     def test_cli_parser_exposes_inventory_builder_command(self) -> None:
         parser = build_parser()

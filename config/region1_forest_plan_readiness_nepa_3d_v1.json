@@ -157,8 +157,8 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 88,
-        "standard_count": 88,
+        "component_count": 90,
+        "standard_count": 89,
         "status": "validated"
       },
       "forest_unit_id": "beaverhead-deerlodge-nf",
@@ -222,8 +222,8 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 9,
-        "standard_count": 2,
+        "component_count": 23,
+        "standard_count": 3,
         "status": "validated"
       },
       "forest_unit_id": "bitterroot-nf",
@@ -284,23 +284,18 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 0,
-        "required_before_graph_promotion": true,
-        "standard_count": 0,
-        "status": "component_inventory_build_required"
+        "component_count": 394,
+        "standard_count": 161,
+        "status": "validated"
       },
       "forest_unit_id": "dakota-prairie-grasslands",
       "forest_unit_names": [
         "Dakota Prairie Grasslands"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready",
-        "plan_component_labels_not_detected",
-        "plan_standard_labels_not_detected"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -425,7 +420,7 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 257,
+        "component_count": 258,
         "status": "validated",
         "standard_count": 28
       },
@@ -619,23 +614,18 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 0,
-        "required_before_graph_promotion": true,
-        "standard_count": 0,
-        "status": "component_inventory_build_required"
+        "component_count": 1,
+        "standard_count": 1,
+        "status": "validated"
       },
       "forest_unit_id": "lolo-nf",
       "forest_unit_names": [
         "Lolo National Forest"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready",
-        "plan_component_labels_not_detected",
-        "plan_standard_labels_not_detected"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -686,7 +676,7 @@
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
-        "component_count": 134,
+        "component_count": 136,
         "standard_count": 21,
         "status": "validated"
       },

@@ -1,9 +1,64 @@
 # Session Handoff
 
-Date: 2026-05-10
+Date: 2026-05-11
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Region 1 Forest-Plan Parser Recovery Closeout
+
+The active full-canonical forest-plan inventory lane on `source-set-5e65d845ce77e1a0` now closes
+the final Dakota Prairie and Lolo parser blockers without reopening stale-surface work or
+weakening duplicate-ID protection.
+
+- parser/runtime alignment:
+  manifest-selected component-bearing plan chunks now parse even when their catalog
+  `document_role` is `forest_plan_support`; legacy period-numbered forms such as `Standard 2.` and
+  `Guideline 7.` now resolve as plan components; `Standard No. 21.` style headings now parse; and
+  period-style legacy IDs now use longer body context plus a deterministic short text digest so
+  repeated numbered headings do not collapse onto the same identifier
+- regression coverage:
+  `tests/test_forest_plan_components.py` now proves period-numbered legacy items, `Standard No.`
+  headings, and manifest-selected `forest_plan_support` primary-plan chunks all build component
+  inventory correctly
+- live full-canonical outcome:
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  on `source-set-5e65d845ce77e1a0` now validates all `10` tracked forests:
+  `custer-gallatin-nf` (`329/58`), `beaverhead-deerlodge-nf` (`90/89`), `bitterroot-nf` (`23/3`),
+  `dakota-prairie-grasslands` (`394/161`), `flathead-nf` (`80/20`),
+  `helena-lewis-and-clark-nf` (`258/28`), `idaho-panhandle-nfs` (`52/8`),
+  `kootenai-nf` (`53/8`), `lolo-nf` (`1/1`), and `nez-perce-clearwater-nfs` (`136/21`)
+- readiness/graph alignment:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes all `10` validated
+  inventories with no remaining active parser blockers; active
+  `nepa-knowledge-graph-export` now passes with `66` checks, `0` failed, `2,850` nodes,
+  `6,086` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`
+- promotion truth remains unchanged at the high level:
+  `promotion-suite` still reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=false`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_nepa_knowledge_graph_export.py`: passed `38/38`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_architecture_contract.py`: passed `13/13`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`: passed with `10` validated forests, `0` blocked forests, `1416` components, and `397` standards
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `66` checks, `0` failed, `2,850` nodes, and `6,086` edges
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`
+
+Residual risks:
+
+- the active full-canonical parser lane is closed, but `promotion-suite` still reports
+  `expansion_ready=false`
+- the remaining work is the separate post-V1 expansion lane, currently surfaced as
+  `forest_plan_reviewer_not_ready` counts in expansion reporting
+
+Immediate next step if this slice is continued:
+
+1. Move to the post-V1 expansion lane; do not reopen active full-canonical parser recovery unless
+   the newly green inventory surfaces drift.
 
 ## Region 1 Beaverhead Duplicate-ID Closeout
 
