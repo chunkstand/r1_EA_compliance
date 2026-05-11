@@ -5,6 +5,50 @@ Date: 2026-05-11
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Resolver Profile Expansion
+
+The next any-R1-review capability slice is now implemented in tracked config, but it does not yet
+generalize reviewer-ready forest-plan review beyond the long-lived Custer Gallatin path.
+
+- profile/config alignment:
+  `config/forest_plan_profiles.json` now contains explicit resolver-profile entries for all `10`
+  tracked readiness units instead of only Custer Gallatin plus the earlier Beaverhead expansion
+  slice
+- source-contract alignment:
+  the new non-Custer profiles flatten readiness-contract multi-record document families into
+  tracked per-part source roles, so the resolver can now carry the full source-record readiness
+  contract for Beaverhead-Deerlodge, Bitterroot, Dakota Prairie, Flathead,
+  Helena-Lewis-and-Clark, Idaho Panhandle, Kootenai, Lolo, and Nez Perce-Clearwater without
+  hiding source lists in Python
+- preserved limitation:
+  most newly expanded profiles still have empty district, geographic-area, management-area, overlay,
+  and supporting-trigger vocabularies, so this pass does not by itself make non-Custer packages
+  reviewer-ready; it makes the resolver-profile ownership surface complete and explicit
+- docs/state alignment:
+  README and current-state docs now distinguish full profile coverage from the still-open work of
+  authoring per-forest geography/overlay/trigger vocabularies and generalizing the non-Custer
+  review gate
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_forest_plan_source_delta_readiness.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `58/58`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `python -m json.tool config/forest_plan_profiles.json >/dev/null`: passed
+
+Residual risks:
+
+- the default resolver path still preserves the Custer Gallatin V0 scope contract
+- non-Custer profiles now have tracked source-record readiness contracts, but they still lack the
+  richer location and supporting-route vocabularies needed for Custer-level review depth
+- compliance validation still treats Custer Gallatin as the only scope that currently requires the
+  full forest-plan reviewer-ready gate
+
+Immediate next step if this slice is continued:
+
+1. Author the first non-Custer profile vocabularies and supporting-plan routes, then generalize the
+   forest-plan review gate away from the Custer-only assumption.
+
 ## Region 1 Forest-Plan Parser Recovery Closeout
 
 The active full-canonical forest-plan inventory lane on `source-set-5e65d845ce77e1a0` now closes

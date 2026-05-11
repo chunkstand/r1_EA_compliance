@@ -762,7 +762,7 @@
         "Deerlodge"
       ],
       "active_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
-      "profile_data_source": "Workbook R1_Forest_Plans Beaverhead-Deerlodge planning page and 2009 Forest Plan rows added as the first NEPA 3D Milestone 5 Region 1 profile-expansion contract.",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Beaverhead-Deerlodge National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
           "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01",
@@ -771,11 +771,56 @@
         "primary_land_management_plan": {
           "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
           "required_for": "plan component and area resolution"
+        },
+        "final_environmental_impact_statement": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "record_of_decision_1": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "record_of_decision_2": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment_1": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-18",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment_2": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-22",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment_3": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-24",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_1": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-19",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_2": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-23",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_3": {
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-25",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
         }
       },
       "required_readiness_source_roles": [
         "planning_page",
-        "primary_land_management_plan"
+        "primary_land_management_plan",
+        "final_environmental_impact_statement",
+        "record_of_decision_1",
+        "record_of_decision_2",
+        "biological_assessment_1",
+        "biological_assessment_2",
+        "biological_assessment_3",
+        "biological_opinion_1",
+        "biological_opinion_2",
+        "biological_opinion_3"
       ],
       "ranger_district_terms": [],
       "geographic_area_terms": [],
@@ -793,8 +838,689 @@
       ],
       "supporting_record_trigger_rules": [],
       "review_topics": [
-        "Extract Beaverhead-Deerlodge plan components by resource and geography",
-        "validate plan consistency and area-specific direction before graph promotion"
+        "Resolve Beaverhead-Deerlodge National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "bitterroot-nf",
+      "forest_unit_names": [
+        "Bitterroot National Forest"
+      ],
+      "ambiguous_unit_terms": [
+        "Bitterroot"
+      ],
+      "active_plan_source_record_id": "R1PLAN-bitterroot-nf-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Bitterroot National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-bitterroot-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-bitterroot-nf-02",
+          "required_for": "plan component and area resolution"
+        },
+        "forest_plan_amendments": {
+          "source_record_id": "R1PLAN-bitterroot-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_1": {
+          "source_record_id": "R1PLAN-bitterroot-nf-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_2": {
+          "source_record_id": "R1PLAN-bitterroot-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-bitterroot-nf-06",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment": {
+          "source_record_id": "R1PLAN-bitterroot-nf-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion": {
+          "source_record_id": "R1PLAN-bitterroot-nf-13",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "forest_plan_amendments",
+        "final_environmental_impact_statement_volume_1",
+        "final_environmental_impact_statement_volume_2",
+        "record_of_decision",
+        "biological_assessment",
+        "biological_opinion"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Bitterroot National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "forest_unit_names": [
+        "Dakota Prairie Grasslands"
+      ],
+      "ambiguous_unit_terms": [
+        "Dakota Prairie"
+      ],
+      "active_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Dakota Prairie Grasslands promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "region1_cross_check": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-02",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "primary_land_resource_management_plan_part_1": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
+          "required_for": "plan component and area resolution"
+        },
+        "primary_land_resource_management_plan_part_2": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "primary_land_resource_management_plan_part_3": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "primary_land_resource_management_plan_part_4": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-06",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "primary_land_resource_management_plan_part_5": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_1": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-10",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_2": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-11",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-16",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-15",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "region1_cross_check",
+        "primary_land_resource_management_plan_part_1",
+        "primary_land_resource_management_plan_part_2",
+        "primary_land_resource_management_plan_part_3",
+        "primary_land_resource_management_plan_part_4",
+        "primary_land_resource_management_plan_part_5",
+        "final_environmental_impact_statement_1",
+        "final_environmental_impact_statement_2",
+        "final_environmental_impact_statement_appendices",
+        "administrative_change",
+        "record_of_decision"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Dakota Prairie Grasslands forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "flathead-nf",
+      "forest_unit_names": [
+        "Flathead National Forest"
+      ],
+      "ambiguous_unit_terms": [
+        "Flathead"
+      ],
+      "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Flathead National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-flathead-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-flathead-nf-02",
+          "required_for": "plan component and area resolution"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-flathead-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_1_part_1": {
+          "source_record_id": "R1PLAN-flathead-nf-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-flathead-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment": {
+          "source_record_id": "R1PLAN-flathead-nf-06",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_1": {
+          "source_record_id": "R1PLAN-flathead-nf-07",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_2": {
+          "source_record_id": "R1PLAN-flathead-nf-16",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change": {
+          "source_record_id": "R1PLAN-flathead-nf-10",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_2": {
+          "source_record_id": "R1PLAN-flathead-nf-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "record_of_decision",
+        "final_environmental_impact_statement_volume_1_part_1",
+        "final_environmental_impact_statement_appendices",
+        "biological_assessment",
+        "biological_opinion_1",
+        "biological_opinion_2",
+        "administrative_change",
+        "final_environmental_impact_statement_volume_2"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Flathead National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "forest_unit_names": [
+        "Helena-Lewis and Clark National Forest",
+        "Helena Lewis and Clark National Forest"
+      ],
+      "ambiguous_unit_terms": [
+        "Helena Lewis and Clark",
+        "Helena-Lewis and Clark"
+      ],
+      "active_plan_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Helena-Lewis and Clark National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
+          "required_for": "plan component and area resolution"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_1": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_2": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-06",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion": {
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-13",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "record_of_decision",
+        "final_environmental_impact_statement_volume_1",
+        "final_environmental_impact_statement_volume_2",
+        "biological_assessment",
+        "biological_opinion"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Helena-Lewis and Clark National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "forest_unit_names": [
+        "Idaho Panhandle National Forests"
+      ],
+      "ambiguous_unit_terms": [
+        "Idaho Panhandle"
+      ],
+      "active_plan_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Idaho Panhandle National Forests promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+          "required_for": "plan component and area resolution"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_1": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-11",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_2": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change_1": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-16",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change_2": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-17",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_1": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-18",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_2": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-19",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_3": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-20",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_4": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-21",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_5": {
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-22",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "record_of_decision",
+        "final_environmental_impact_statement",
+        "final_environmental_impact_statement_appendices",
+        "biological_opinion_1",
+        "biological_opinion_2",
+        "administrative_change_1",
+        "administrative_change_2",
+        "biological_opinion_chapter_1",
+        "biological_opinion_chapter_2",
+        "biological_opinion_chapter_3",
+        "biological_opinion_chapter_4",
+        "biological_opinion_chapter_5"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Idaho Panhandle National Forests forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "kootenai-nf",
+      "forest_unit_names": [
+        "Kootenai National Forest"
+      ],
+      "ambiguous_unit_terms": [
+        "Kootenai"
+      ],
+      "active_plan_source_record_id": "R1PLAN-kootenai-nf-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Kootenai National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-kootenai-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-kootenai-nf-02",
+          "required_for": "plan component and area resolution"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-kootenai-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement": {
+          "source_record_id": "R1PLAN-kootenai-nf-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-kootenai-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change": {
+          "source_record_id": "R1PLAN-kootenai-nf-13",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_1": {
+          "source_record_id": "R1PLAN-kootenai-nf-14",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_2": {
+          "source_record_id": "R1PLAN-kootenai-nf-15",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_3": {
+          "source_record_id": "R1PLAN-kootenai-nf-16",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_chapter_4": {
+          "source_record_id": "R1PLAN-kootenai-nf-17",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "record_of_decision",
+        "final_environmental_impact_statement",
+        "final_environmental_impact_statement_appendices",
+        "administrative_change",
+        "biological_opinion_chapter_1",
+        "biological_opinion_chapter_2",
+        "biological_opinion_chapter_3",
+        "biological_opinion_chapter_4"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Kootenai National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "lolo-nf",
+      "forest_unit_names": [
+        "Lolo National Forest"
+      ],
+      "ambiguous_unit_terms": [
+        "Lolo"
+      ],
+      "active_plan_source_record_id": "R1PLAN-lolo-nf-02",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Lolo National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-lolo-nf-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-lolo-nf-02",
+          "required_for": "plan component and area resolution"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-lolo-nf-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement": {
+          "source_record_id": "R1PLAN-lolo-nf-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-lolo-nf-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment": {
+          "source_record_id": "R1PLAN-lolo-nf-06",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion": {
+          "source_record_id": "R1PLAN-lolo-nf-07",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_change": {
+          "source_record_id": "R1PLAN-lolo-nf-09",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "primary_land_management_plan",
+        "record_of_decision",
+        "final_environmental_impact_statement",
+        "final_environmental_impact_statement_appendices",
+        "biological_assessment",
+        "biological_opinion",
+        "administrative_change"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Lolo National Forest forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
+      ]
+    },
+    {
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "forest_unit_names": [
+        "Nez Perce-Clearwater National Forests",
+        "Nez Perce Clearwater National Forests"
+      ],
+      "ambiguous_unit_terms": [
+        "Nez Perce-Clearwater",
+        "Nez Perce Clearwater"
+      ],
+      "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Nez Perce-Clearwater National Forests promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "supporting_source_record_ids_by_role": {
+        "planning_page": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01",
+          "required_for": "currentness and document-set resolution"
+        },
+        "plan_document_set_page": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "record_of_decision": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-03",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "notice_of_plan_approval": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "administrative_changes": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-05",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "primary_land_management_plan": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+          "required_for": "plan component and area resolution"
+        },
+        "biological_assessment": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-10",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_assessment_supplement": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-11",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_1": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-12",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "biological_opinion_2": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-13",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-15",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_appendices": {
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-16",
+          "required_for": "supporting forest-plan review evidence and source-record readiness"
+        }
+      },
+      "required_readiness_source_roles": [
+        "planning_page",
+        "plan_document_set_page",
+        "record_of_decision",
+        "notice_of_plan_approval",
+        "administrative_changes",
+        "primary_land_management_plan",
+        "biological_assessment",
+        "biological_assessment_supplement",
+        "biological_opinion_1",
+        "biological_opinion_2",
+        "final_environmental_impact_statement",
+        "final_environmental_impact_statement_appendices"
+      ],
+      "ranger_district_terms": [],
+      "geographic_area_terms": [],
+      "management_area_terms": [],
+      "overlay_terms": [],
+      "plan_component_types": [
+        "desired_condition",
+        "goal",
+        "guideline",
+        "monitoring",
+        "objective",
+        "plan_amendment",
+        "standard",
+        "suitability"
+      ],
+      "supporting_record_trigger_rules": [],
+      "review_topics": [
+        "Resolve Nez Perce-Clearwater National Forests forest-plan scope and source-record readiness",
+        "validate plan consistency against applicable plan components and supporting forest-plan records"
       ]
     }
   ]

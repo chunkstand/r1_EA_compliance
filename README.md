@@ -1003,8 +1003,12 @@ operative project scope, but incidental background, reference, bibliography, or 
 mentions do not force an otherwise Custer Gallatin package to `ambiguous`; package evidence now
 carries an `evidence_role` so project-location and background/reference mentions are auditable.
 Negative package-location text such as `not part of the project area` is filtered before geographic
-and management area resolution. Non-Custer packages are marked `not_custer_gallatin` and treated as
-out of scope.
+and management area resolution. When the default Custer Gallatin profile is selected, non-Custer
+packages are marked `not_custer_gallatin` and treated as out of scope. The tracked resolver config
+now carries explicit profiles for all `10` Region 1 readiness units, but most of those newly
+expanded profiles currently provide source-record readiness contracts only; district terms,
+geographic areas, overlays, and supporting evidence routes remain a separate follow-on authoring
+lane before they can match the current Custer Gallatin review depth.
 
 Export and evaluate a forest-plan component adjudication file for an existing review:
 

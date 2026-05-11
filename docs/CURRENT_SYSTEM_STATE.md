@@ -111,6 +111,12 @@ Latest closeout on 2026-05-11:
   selected source rows are `forest_plan_support`, legacy period-numbered forms such as
   `Standard 2.` and `Guideline 7.` now emit deterministic IDs, and `Standard No. 21.` style
   headings now parse without reopening duplicate-ID regressions.
+- `config/forest_plan_profiles.json` now carries explicit resolver-profile entries for all `10`
+  tracked readiness units rather than only the original Custer Gallatin plus the earlier
+  Beaverhead expansion slice. The newly added non-Custer profiles flatten readiness-contract
+  multi-record document families into tracked per-part source roles so resolver selection can now
+  be profile-owned across the full roster, even though most of those profiles still have empty
+  district, area, overlay, and supporting-trigger vocabularies.
 - The next required implementation boundary is no longer stale-surface alignment or active
   parser/component recovery. It is the separate post-V1 expansion lane.
 - The freshest fully replayed merged source-set evidence surface remains archived under
@@ -1869,13 +1875,17 @@ The default resolver profile is Custer Gallatin and preserves the V0 output cont
 `scope_status=custer_gallatin`, `not_custer_gallatin`, or `ambiguous`; ambiguous `Gallatin`-only
 packages are not guessed. The command now accepts `--forest-unit-id` and
 `--forest-plan-profiles-path` so profile data, not Python constants, defines forest names, required
-source records, area terms, overlays, and supporting evidence routes. Other configured forest
-profiles are still blocking evidence when mentioned as operative project scope, but incidental
-background, reference, bibliography, or coordination mentions do not force an otherwise
-Custer-Gallatin package to `ambiguous`. Location evidence now carries `evidence_role` metadata and
-the context includes `background_location_mentions` so reviewers can see which references were
-excluded from project-location resolution. Negative package-location text such as `not part of the
-project area` is also filtered before area resolution. For Custer Gallatin packages it extracts:
+source records, area terms, overlays, and supporting evidence routes. The config now has explicit
+profiles for all `10` tracked Region 1 units, but only the long-lived Custer Gallatin profile
+currently has authored district, geographic-area, management-area, overlay, and supporting-route
+vocabularies. Other configured forest profiles now carry their source-record contracts in tracked
+config, but they are still blocking evidence when mentioned as operative project scope until those
+richer vocabularies are authored. Incidental background, reference, bibliography, or coordination
+mentions do not force an otherwise Custer-Gallatin package to `ambiguous`. Location evidence now
+carries `evidence_role` metadata and the context includes `background_location_mentions` so
+reviewers can see which references were excluded from project-location resolution. Negative
+package-location text such as `not part of the project area` is also filtered before area
+resolution. For Custer Gallatin packages it extracts:
 
 - forest unit and ranger district signals
 - project location snippets

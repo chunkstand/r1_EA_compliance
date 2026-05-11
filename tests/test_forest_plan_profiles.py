@@ -16,6 +16,8 @@ from usfs_r1_ea_sources.forest_plan_resolver import CUSTER_GALLATIN_PLAN_SOURCE_
 from usfs_r1_ea_sources.forest_plan_resolver import CUSTER_GALLATIN_REQUIRED_SOURCE_IDS
 from usfs_r1_ea_sources.forest_plan_resolver import SUPPORTING_PLAN_EVIDENCE_ROUTES
 
+READINESS_PATH = Path("config/region1_forest_plan_readiness_nepa_3d_v1.json")
+
 
 class ForestPlanProfileTests(unittest.TestCase):
     def test_default_profile_path_is_repo_absolute(self) -> None:
@@ -64,12 +66,65 @@ class ForestPlanProfileTests(unittest.TestCase):
             (
                 "R1PLAN-beaverhead-deerlodge-nf-01",
                 "R1PLAN-beaverhead-deerlodge-nf-02",
+                "R1PLAN-beaverhead-deerlodge-nf-03",
+                "R1PLAN-beaverhead-deerlodge-nf-04",
+                "R1PLAN-beaverhead-deerlodge-nf-05",
+                "R1PLAN-beaverhead-deerlodge-nf-18",
+                "R1PLAN-beaverhead-deerlodge-nf-22",
+                "R1PLAN-beaverhead-deerlodge-nf-24",
+                "R1PLAN-beaverhead-deerlodge-nf-19",
+                "R1PLAN-beaverhead-deerlodge-nf-23",
+                "R1PLAN-beaverhead-deerlodge-nf-25",
             ),
         )
         self.assertEqual(
             profile.source_record_id_for_role("primary_land_management_plan"),
             "R1PLAN-beaverhead-deerlodge-nf-02",
         )
+        self.assertEqual(
+            profile.source_record_id_for_role("record_of_decision_1"),
+            "R1PLAN-beaverhead-deerlodge-nf-04",
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("biological_opinion_3"),
+            "R1PLAN-beaverhead-deerlodge-nf-25",
+        )
+
+    def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
+        profiles = load_forest_plan_profiles()
+        readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
+
+        readiness_unit_ids = {
+            row["forest_unit_id"] for row in readiness["profile_rows"]
+        }
+        profile_unit_ids = {profile.forest_unit_id for profile in profiles.profiles}
+
+        self.assertEqual(profile_unit_ids, readiness_unit_ids)
+        self.assertEqual(len(profiles.profiles), 10)
+
+    def test_non_custer_profiles_flatten_readiness_source_requirements(self) -> None:
+        readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
+
+        for row in readiness["profile_rows"]:
+            if row["forest_unit_id"] == "custer-gallatin-nf":
+                continue
+            profile = load_forest_plan_profile(row["forest_unit_id"])
+            expected_source_record_ids = []
+            for requirement in row["source_requirements"]:
+                if "source_record_id" in requirement:
+                    expected_source_record_ids.append(requirement["source_record_id"])
+                else:
+                    expected_source_record_ids.extend(requirement["source_record_ids"])
+            self.assertEqual(
+                set(profile.required_source_record_ids),
+                set(expected_source_record_ids),
+                row["forest_unit_id"],
+            )
+            self.assertEqual(
+                profile.active_plan_source_record_id,
+                row["active_plan_source_record_id"],
+                row["forest_unit_id"],
+            )
 
     def test_custer_gallatin_profile_matches_current_supporting_routes(self) -> None:
         profile = load_forest_plan_profile("custer-gallatin-nf")
