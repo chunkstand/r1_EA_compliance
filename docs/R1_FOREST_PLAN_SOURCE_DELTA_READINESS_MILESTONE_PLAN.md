@@ -32,10 +32,11 @@ Closeout refresh on 2026-05-10:
   source-set export, and source-set `phase-eval` are now all green on the refreshed merged source
   set;
 - no additional work remains inside the source-delta milestone ladder itself;
-- remaining work is downstream and reviewer-facing: the explicit Kootenai official-source gap,
-  `7` applicability adjudications in
-  `source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_adjudication_template.json`,
-  and the failing East Crazies forest-plan component review artifacts for the merged-corpus replay.
+- remaining work is downstream and reviewer-facing: the explicit Kootenai official-source gap plus
+  the East Crazies merged-corpus replay's failing forest-plan component evaluation and replay-scoped
+  compliance/gold-eval artifacts. The applicability conflicts in that replay are now resolved
+  through tracked contract
+  `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`.
 
 ## Current Baseline
 

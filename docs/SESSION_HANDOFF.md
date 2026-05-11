@@ -5,6 +5,53 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Replay Applicability Adjudication Closeout
+
+The next East Crazies replay-repair slice is now implemented for archived review lane
+`v1-cg-ecid-source-delta-review`.
+
+- tracked replay adjudication authority:
+  `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json` now owns the `7`
+  replay-specific applicability adjudications for archived merged source set
+  `source-set-8a4005c8a083af1a`
+- regression coverage:
+  `tests/test_applicability_decisions.py` now proves `applicability-adjudication-eval` and
+  `applicability-adjudication-apply` accept a minimal external adjudication contract outside
+  `source_library/`
+- live replay outcome:
+  replaying the tracked contract closed all `7` prior applicability conflicts, refreshed
+  `applicable_authorities.json` / `non_applicable_authorities.json`, regenerated a `56`-rule
+  `generated_rule_pack.json`, and moved review-scoped `phase-eval` from `12/17` to `14/17`
+- preserved non-goal boundary:
+  this pass did not repair East Crazies forest-plan component findings and did not regenerate
+  replay-scoped compliance review or compliance gold-eval artifacts
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a --adjudication-file config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`: passed with `7` resolved adjudications and `0` pending
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a --adjudication-file config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`: passed with `applied_item_count=7` and `remaining_unresolved_authority_count=0`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a`: passed with `56` applicable authorities, `340` non-applicable authorities, and `0` unresolved decisions
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a`: passed with `56` generated rules
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review`: failed closed as expected at `14/17`; remaining blockers are `compliance_gold_eval`, `compliance_review`, and `forest_plan_component_eval`
+
+Residual risks:
+
+- the replay is still `reviewer_ready=false`; the remaining blockers are no longer applicability
+  adjudications, but replay-scoped compliance/gold-eval artifacts and East Crazies forest-plan
+  component findings
+- `phase-eval` still surfaces `compliance_gold_eval` as a replay blocker because the current gold
+  eval remains bound to proving-lane source set `source-set-ba8d0feae79501b8`
+
+Immediate next step if this slice is continued:
+
+1. Repair the East Crazies forest-plan component gaps in
+   `source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_component_eval_results.json`.
+2. Regenerate replay-scoped `compliance_review` artifacts for
+   `v1-cg-ecid-source-delta-review`.
+3. Refresh replay-scoped compliance-gold evidence if `phase-eval` still blocks on
+   `source_set_mismatch`, then rerun `phase-eval --review-id v1-cg-ecid-source-delta-review`.
+
 ## Replay Context Contract Hardening
 
 The replay-context hardening milestone is now implemented for archived review lane

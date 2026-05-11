@@ -1196,6 +1196,113 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             )
             self.assertTrue((applicability_dir / "applicability_validation.json").exists())
 
+    def test_apply_accepts_minimal_external_adjudication_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture = _write_decision_fixture(root)
+            build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            template_result = write_applicability_adjudication_template(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            template = json.loads(template_result.output_path.read_text(encoding="utf-8"))
+            item = template["items"][0]
+            external_adjudication_path = root / "tracked" / "adjudication.json"
+            _write_json(
+                external_adjudication_path,
+                {
+                    "schema_version": "applicability-adjudication-template-v0",
+                    "adjudication_id": template["adjudication_id"],
+                    "created_at": template["created_at"],
+                    "review_id": fixture["review_id"],
+                    "source_set_id": fixture["source_set_id"],
+                    "decisions_path": template["decisions_path"],
+                    "applicability_decisions_sha256": template[
+                        "applicability_decisions_sha256"
+                    ],
+                    "allowed_final_statuses": template["allowed_final_statuses"],
+                    "allowed_dispositions": template["allowed_dispositions"],
+                    "resolved_dispositions": template["resolved_dispositions"],
+                    "required_adjudication_fields": template[
+                        "required_adjudication_fields"
+                    ],
+                    "summary": {
+                        **template["summary"],
+                        "output_path": str(external_adjudication_path),
+                        "markdown_path": str(
+                            external_adjudication_path.with_suffix(".worklist.md")
+                        ),
+                        "pending_item_count": 0,
+                    },
+                    "items": [
+                        {
+                            "item_id": item["item_id"],
+                            "decision_id": item["decision_id"],
+                            "candidate_authority_id": item["candidate_authority_id"],
+                            "authority_category": item["authority_category"],
+                            "authority_document_role": item["authority_document_role"],
+                            "current_status": item["current_status"],
+                            "current_basis_type": item["current_basis_type"],
+                            "expected_current": item["expected_current"],
+                            "final_status": "applicable",
+                            "disposition": "human_applicable",
+                            "allowed_final_statuses": item["allowed_final_statuses"],
+                            "allowed_dispositions": item["allowed_dispositions"],
+                            "adjudicated_at": "2026-05-04T00:00:00Z",
+                            "adjudicated_by": ["codex"],
+                            "source_type": "codex_artifact_review",
+                            "rationale": (
+                                "Applicable for replay: the package contains wetlands and "
+                                "possible Clean Water Act trigger evidence, and the negative "
+                                "phrases are parcel-specific or no-action context."
+                            ),
+                            "supporting_citation_refs": [
+                                "EA-PACKAGE-001",
+                                "EA-PACKAGE-004",
+                                "R1EA-082",
+                            ],
+                            "reviewer_notes": "",
+                        }
+                    ],
+                },
+            )
+
+            eval_result = evaluate_applicability_adjudication(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                adjudication_file=external_adjudication_path,
+            )
+            self.assertTrue(eval_result.summary["passed"])
+            self.assertEqual(
+                eval_result.summary["adjudication_file"],
+                str(external_adjudication_path),
+            )
+
+            apply_result = apply_applicability_adjudication(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+                adjudication_file=external_adjudication_path,
+            )
+            self.assertTrue(apply_result.summary["passed"])
+            self.assertEqual(
+                apply_result.summary["adjudication_file"],
+                str(external_adjudication_path),
+            )
+
+            validation_result = validate_applicability_run(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+            self.assertTrue(validation_result.summary["passed"])
+
 
 def _build_adjudicated_applicability_dir(fixture: dict) -> Path:
     build_applicability_decisions(

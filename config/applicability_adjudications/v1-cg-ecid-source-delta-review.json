@@ -1,0 +1,264 @@
+{
+  "schema_version": "applicability-adjudication-template-v0",
+  "adjudication_id": "v1-cg-ecid-source-delta-review-applicability-adjudication",
+  "created_at": "2026-05-11T03:43:44Z",
+  "review_id": "v1-cg-ecid-source-delta-review",
+  "source_set_id": "source-set-8a4005c8a083af1a",
+  "decisions_path": "source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_decisions.jsonl",
+  "applicability_decisions_sha256": "b715130ac712ce89cbdc42e2b2d7e638b516056b8125bb3dd1fc97fb73c5cc10",
+  "allowed_final_statuses": [
+    "applicable",
+    "not_applicable"
+  ],
+  "allowed_dispositions": [
+    "human_applicable",
+    "human_not_applicable",
+    "pending"
+  ],
+  "resolved_dispositions": [
+    "human_applicable",
+    "human_not_applicable"
+  ],
+  "required_adjudication_fields": [
+    "adjudicated_at",
+    "adjudicated_by",
+    "source_type",
+    "rationale",
+    "supporting_citation_refs"
+  ],
+  "summary": {
+    "schema_version": "applicability-adjudication-template-summary-v0",
+    "created_at": "2026-05-11T03:43:44Z",
+    "review_id": "v1-cg-ecid-source-delta-review",
+    "source_set_id": "source-set-8a4005c8a083af1a",
+    "decision_count": 396,
+    "adjudication_item_count": 7,
+    "pending_item_count": 0,
+    "decisions_path": "source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_decisions.jsonl",
+    "decisions_sha256": "b715130ac712ce89cbdc42e2b2d7e638b516056b8125bb3dd1fc97fb73c5cc10",
+    "output_path": "config/applicability_adjudications/v1-cg-ecid-source-delta-review.json",
+    "markdown_path": "config/applicability_adjudications/v1-cg-ecid-source-delta-review.worklist.md",
+    "instructions": "Replay this tracked adjudication with applicability-adjudication-eval and applicability-adjudication-apply. Regenerate the file if applicability_decisions.jsonl changes."
+  },
+  "items": [
+    {
+      "item_id": "applicability-adjudication-item:62424e0ea1ae6677",
+      "decision_id": "dc0d826bfce46e41a0e52659",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:clean_water_act_wotus_permits:clean_water_act_wotus_permits_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "dc0d826bfce46e41a0e52659",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:clean_water_act_wotus_permits:clean_water_act_wotus_permits_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package contains wetlands, streams, floodplain, and headwaters evidence plus possible Clean Water Act and permit context. Parcel-specific no-wetlands or no-action phrases narrow particular locations or alternatives and do not negate the broader Clean Water Act/waters trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-004 (1df29c3643de)",
+        "EA-PACKAGE-006 (6abe49e5ebdf)",
+        "EA-PACKAGE-014 (cd92321eec8e)",
+        "R1EA-082"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:6ccf85ac0f067107",
+      "decision_id": "b46729ad11bbbe191a78177d",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:cultural_resource_protection_and_state_shpo_sources:cultural_resource_protection_and_state_shpo_sources_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "b46729ad11bbbe191a78177d",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:cultural_resource_protection_and_state_shpo_sources:cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package contains a cultural resources section, cultural resource survey evidence, SHPO/NHPA context, and paleontological-resource support evidence. Parcel-specific no-resource or no-action phrases are compliance facts for particular parcels or effects and do not negate the broader cultural-resource/SHPO trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-003 (548d0c6d5f68)",
+        "EA-PACKAGE-009 (d8d07c2e3b3f)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "R1EA-072",
+        "R1EA-073"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:f800280d6128eacc",
+      "decision_id": "d178dc7fa5b90354fb23e92b",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:invasive_pesticide_soils_farmland_drinking_water:invasive_pesticide_soils_farmland_drinking_water_authority_template",
+      "authority_category": "executive_order",
+      "authority_document_role": "executive_order",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "d178dc7fa5b90354fb23e92b",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:invasive_pesticide_soils_farmland_drinking_water:invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package includes invasive species prevention, soils, water quality, watershed, BMP, and project-design evidence. No-invasive-species, no-action, and no-measurable-watershed-effect phrases are effects or alternatives context, not a negation of the broader invasive/pesticide/soil/water authority-family trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-007 (9a075b74e71d)",
+        "EA-PACKAGE-015 (546f3d70cff9)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "R1EA-030"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:178b6f761ec67a06",
+      "decision_id": "6fd9fbc7f98365e92d269460",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:minerals_energy_authorities:minerals_energy_authorities_authority_template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "6fd9fbc7f98365e92d269460",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:minerals_energy_authorities:minerals_energy_authorities_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package contains a minerals section, mineral assessment context, mineral estate conveyance, mining/oil-and-gas history, and mineral-materials evidence. No-current-mining or no-current-claim phrases narrow compliance facts but do not negate the broader minerals and energy authority-family trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-005 (6b8562102442)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "R1EA-041",
+        "R1EA-063"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:f59afa17c2d7bb7d",
+      "decision_id": "5e9959859709e2355e2fcb83",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "5e9959859709e2355e2fcb83",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package contains listed or sensitive species, lynx and aquatic habitat, Biological Assessment context, Fish and Wildlife Service support sources, and broader species-of-concern evidence. Species-specific no-habitat or no-effect phrases are compliance facts for particular species and do not negate the broader species-supporting trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-006 (6abe49e5ebdf)",
+        "EA-PACKAGE-010 (27137f23cd60)",
+        "EA-PACKAGE-015 (546f3d70cff9)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "R1EA-064",
+        "R1EA-068"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:c461600f3b20a223",
+      "decision_id": "19b939b412a9ff9f1652bffb",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "19b939b412a9ff9f1652bffb",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the East Crazies package and support sources contain wildfire, vegetation, timber-suitability, forest-health, insect and disease, and restoration-direction evidence. No-restoration-included and not-suitable-for-timber-production phrases narrow particular components or treatments and do not negate the broader vegetation/wildfire/forest-health authority-family trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-015 (546f3d70cff9)",
+        "EA-PACKAGE-033 (2259556c2475)",
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "R1EA-056",
+        "R1EA-057",
+        "R1EA-058"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:9ab7fc7394db3ac8",
+      "decision_id": "c782f726a7801df16b300358",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "decision_id": "c782f726a7801df16b300358",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
+        "status": "needs_adjudication",
+        "basis_type": "unresolved_evidence_conflict"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "adjudicated_at": "2026-05-11T03:43:44Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package includes recommended wilderness, backcountry, trail, designated-area, special-area, paleontological-resource, and Wild and Scenic River context. No-designated-wilderness, no-cave, or no-eligible-WSR phrases narrow specific subresources and do not negate the broader wilderness, trails, and designated-areas trigger.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-003 (548d0c6d5f68)",
+        "EA-PACKAGE-010 (27137f23cd60)",
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "R1EA-045",
+        "R1EA-046",
+        "R1EA-047"
+      ],
+      "reviewer_notes": ""
+    }
+  ]
+}

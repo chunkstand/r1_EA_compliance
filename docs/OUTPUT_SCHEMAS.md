@@ -1910,6 +1910,11 @@ adjudication rewrites `applicability_decisions.jsonl`, `applicable_authorities.j
 `non_applicable_authorities.json` with `human_adjudication` bases and updates provenance after the
 apply artifact is written so provenance records the final apply-artifact hash.
 
+The adjudication schema is path-agnostic. The default template lives under
+`source_library/reviews/<review-id>/applicability/`, but the same JSON schema may be stored in
+tracked repo config and replayed by passing `--adjudication-file <path>` to
+`applicability-adjudication-eval` and `applicability-adjudication-apply`.
+
 `llm_evidence_proposals.jsonl`, when present, is diagnostic-only. It may propose evidence spans,
 query expansions, graph neighbors, or reviewer questions, but it cannot write final applicability
 statuses, satisfy search coverage by itself, or make generated rule packs reviewer-ready.

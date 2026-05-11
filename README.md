@@ -102,9 +102,12 @@ source-set evidence surface: extraction `349/349`, retrieval eval `12/12`, evide
 `153,198` nodes / `533,949` edges, claim extraction `101,856` claims, rule-claim binding `211`
 links / `0` gaps, refreshed NEPA 3D source-set graph `1,789` nodes / `2,808` edges, and
 source-set `phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East Crazies replay on
-`source-set-8a4005c8a083af1a` is still blocked by `7` applicability adjudications and failing
-forest-plan component evaluation, so full-corpus promotion does not overclaim reviewer-ready merged
-review status.
+`source-set-8a4005c8a083af1a` now has tracked applicability adjudications at
+`config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. The replay-scoped
+applicability lane now validates with `56` applicable authorities, `340` non-applicable
+authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack, but the
+merged review remains `reviewer_ready=false`: `phase-eval` is `14/17` and still blocked by
+forest-plan component evaluation plus replay-scoped compliance/gold-eval artifacts.
 
 Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
 
@@ -185,16 +188,20 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `custer-gallatin-nf` until Beaverhead has a validated component inventory.
 - merged-corpus review replay is now explicit under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`. The review-scoped replay against
-  `source-set-8a4005c8a083af1a` is blocked by `7` applicability adjudications and failing
-  forest-plan component evaluation (`9` failing seed cases, `6` resolver gaps); review `phase-eval`
-  is `12/17` with `reviewer_ready=false`.
+  `source-set-8a4005c8a083af1a` now carries a tracked applicability adjudication contract at
+  `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying that
+  contract closes all `7` prior applicability conflicts: applicability validation now passes with
+  `56` applicable authorities, `340` non-applicable authorities, `0` unresolved decisions, and a
+  regenerated `56`-rule generated rule pack. Review `phase-eval` is now `14/17` with
+  `reviewer_ready=false`; the remaining blockers are `compliance_gold_eval`, absent replay-scoped
+  `compliance_review` artifacts, and failing forest-plan component evaluation (`9` failing seed
+  cases, `6` resolver gaps).
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
   `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
-  active catalog. This is architecture hardening only; the replay remains blocked on the same
-  applicability adjudications, forest-plan component repair, and replay-scoped compliance-review
-  regeneration.
+  active catalog. The remaining replay repair work is now content-only: forest-plan component
+  repair plus replay-scoped compliance/gold-eval regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.
@@ -1424,7 +1431,10 @@ The template command writes `applicability_adjudication_template.json` and
 completed adjudication is current, complete, and replayable. The apply command rewrites the decision
 ledger and applicable/non-applicable authority artifacts with `human_adjudication` bases, writes
 `applicability_adjudication_apply.json`, and updates provenance. These commands still do not create
-a generated rule pack or compliance findings.
+a generated rule pack or compliance findings. For replay repair lanes, the same adjudication schema
+can live in tracked repo config and be replayed with `--adjudication-file`; the current East
+Crazies merged replay contract is
+`config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`.
 
 Generate the applicability-derived rule pack:
 

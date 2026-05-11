@@ -125,8 +125,12 @@ Latest closeout on 2026-05-10:
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
   extraction/retrieval/graph/phase surface, while the merged-corpus East Crazies review replay on
-  `source-set-8a4005c8a083af1a` remains blocked by `7` applicability adjudications and failing
-  forest-plan component evaluation.
+  `source-set-8a4005c8a083af1a` now has tracked applicability adjudications at
+  `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. The replay-scoped
+  applicability lane now passes with `56` applicable authorities, `340` non-applicable
+  authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack, while
+  the broader review replay remains blocked by forest-plan component evaluation and replay-scoped
+  compliance/gold-eval artifacts.
 
 The source-delta readiness gate is implemented by `forest-plan-source-delta-readiness`. The live
 gate over `r1-forest-plan-source-delta-capture-20260510-batches` passed the earlier scoped source
@@ -218,16 +222,20 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `custer-gallatin-nf` until Beaverhead has a validated component inventory.
 - merged-corpus review replay is now explicit under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`. The review-scoped replay against
-  `source-set-8a4005c8a083af1a` is blocked by `7` applicability adjudications and failing
-  forest-plan component evaluation (`9` failing seed cases, `6` resolver gaps); review `phase-eval`
-  is `12/17` with `reviewer_ready=false`.
+  `source-set-8a4005c8a083af1a` now carries a tracked applicability adjudication contract at
+  `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying that
+  contract closes all `7` prior applicability conflicts: applicability validation now passes with
+  `56` applicable authorities, `340` non-applicable authorities, `0` unresolved decisions, and a
+  regenerated `56`-rule generated rule pack. Review `phase-eval` is now `14/17` with
+  `reviewer_ready=false`; the remaining blockers are `compliance_gold_eval`, absent replay-scoped
+  `compliance_review` artifacts, and failing forest-plan component evaluation (`9` failing seed
+  cases, `6` resolver gaps).
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
   `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
-  active catalog. This is architecture hardening only; the replay remains blocked on the same
-  applicability adjudications, forest-plan component repair, and replay-scoped compliance-review
-  regeneration.
+  active catalog. The remaining replay repair work is now content-only: forest-plan component
+  repair plus replay-scoped compliance/gold-eval regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.
@@ -1465,7 +1473,10 @@ duplicated candidate decisions, unresolved or `needs_adjudication` decisions, st
 missing retrieval/graph traceability, non-applicable decisions without coverage/adjudication, and
 provenance gaps. `applicability-adjudication-template`, `applicability-adjudication-eval`, and
 `applicability-adjudication-apply` provide a machine-readable replay path for resolving open
-decisions into `human_adjudication` bases before validation can pass.
+decisions into `human_adjudication` bases before validation can pass. The same adjudication schema
+can live in tracked repo config and be replayed with `--adjudication-file`; the live merged East
+Crazies replay currently uses
+`config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`.
 `applicability-generate-rule-pack` now writes and validates generated compliance rule packs from the
 validated applicable-authority partition only, and reviewer-ready `compliance-review` is gated on
 that generated pack plus current applicability validation, generated-pack validation,
