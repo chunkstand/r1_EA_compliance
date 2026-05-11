@@ -1937,6 +1937,55 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(gold_phase["details"]["case_count"], 3)
             self.assertIn("gold_eval_not_promotion_ready", gold_phase["details"]["failed_checks"])
 
+    def test_review_phase_eval_prefers_review_scoped_compliance_gold_eval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "review-test"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            gold_path = _write_gold_eval_file(Path(tmp))
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+
+            run_compliance_gold_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                gold_file=gold_path,
+                results_dir=review_dir,
+            )
+            global_gold_dir = output_dir / "reviews" / "compliance_gold_eval"
+            global_gold_dir.mkdir(parents=True, exist_ok=True)
+            (global_gold_dir / "compliance_gold_eval_results.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": "source-set-other",
+                        "passed": True,
+                        "promotion_ready": True,
+                        "rule_pack_id": "unit-nepa-ea",
+                        "rule_pack_version": "0.4.0",
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+
+            gold_phase = _phase(phase_result.summary, "compliance_gold_eval")
+            self.assertEqual(
+                gold_phase["details"]["gold_eval_path"],
+                str(review_dir / "compliance_gold_eval_results.json"),
+            )
+            self.assertTrue(gold_phase["details"]["source_set_matches"])
+            self.assertEqual(gold_phase["details"]["case_count"], 3)
+
     def test_compliance_gold_eval_fails_missing_required_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

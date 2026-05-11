@@ -565,9 +565,18 @@ def run_phase_aligned_eval(
     compliance_coverage = (
         _read_json(compliance_coverage_path) if compliance_coverage_path.exists() else None
     )
-    compliance_gold_eval_path = (
+    review_scoped_compliance_gold_eval_path = (
+        review_dir / "compliance_gold_eval_results.json" if review_dir is not None else None
+    )
+    default_compliance_gold_eval_path = (
         output_dir / "reviews" / "compliance_gold_eval" / "compliance_gold_eval_results.json"
     )
+    compliance_gold_eval_path = default_compliance_gold_eval_path
+    if (
+        review_scoped_compliance_gold_eval_path is not None
+        and review_scoped_compliance_gold_eval_path.exists()
+    ):
+        compliance_gold_eval_path = review_scoped_compliance_gold_eval_path
     compliance_gold_eval = (
         _read_json(compliance_gold_eval_path) if compliance_gold_eval_path.exists() else None
     )

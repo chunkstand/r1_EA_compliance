@@ -5,6 +5,45 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Replay Compliance Regeneration And Review-Local Gold Preference
+
+The next East Crazies replay-repair slice is now implemented for archived review lane
+`v1-cg-ecid-source-delta-review`.
+
+- new replay-safe gold behavior:
+  `phase-eval --review-id <review-id>` now prefers
+  `source_library/reviews/<review_id>/compliance_gold_eval_results.json` when that review-local
+  gold artifact exists, instead of always reading the unrelated global
+  `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
+- live replay outcome:
+  replay-scoped compliance regeneration now writes
+  `source_library/reviews/v1-cg-ecid-source-delta-review/compliance_review.json` plus
+  `source_library/reviews/v1-cg-ecid-source-delta-review/compliance_gold_eval_results.json`, and
+  review-bound `phase-eval` now reads that local gold artifact rather than failing on the proving
+  lane's stale source-set binding
+- preserved non-goal boundary:
+  this pass did not repair the stale gold adjudication contract itself and did not close the
+  replay compliance review's embedded forest-plan gate
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py -k 'compliance_gold_eval or review_phase_eval_prefers_review_scoped_compliance_gold_eval'`: passed `8/8`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py -k 'gold_eval or unrelated_gold_eval'`: passed `1/1`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path 'source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)' --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a --rule-pack source_library/reviews/v1-cg-ecid-source-delta-review/applicability/generated_rule_pack.json --reuse-package-cache`: wrote replay-scoped compliance artifacts; summary remained `reviewer_ready=false`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-8a4005c8a083af1a --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/compliance_gold_eval_v0.json --results-dir source_library/reviews/v1-cg-ecid-source-delta-review`: wrote review-local gold artifacts but failed closed because the tracked gold file is stale for the current base rule pack
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review`: failed closed at `16/18`; blockers are now the replay-local `compliance_gold_eval` contract and replay `compliance_review`, not a global gold source-set mismatch
+
+Residual risks:
+
+- `config/compliance_gold_eval_v0.json` no longer covers the current base rule-pack shape; live failure details show missing land-exchange rule expectations and stale status-count expectations
+- replay `compliance_review` still fails `forest_plan_component_gate_reviewer_ready`; the rerun writes matrix/PDF/validation artifacts, but `compliance_validation.json` still records `system_miss_adjudication` from the six replay component adjudications
+
+Immediate next step if this slice is continued:
+
+1. Repair or supersede the stale compliance-gold adjudication contract so the review-local gold eval can pass against the current base/generated rule-pack pair.
+2. Decide whether the six replay forest-plan `system_miss` adjudications should be converted into true repair work or a reviewed acceptance path; until that changes, replay `compliance_review` remains non-reviewer-ready.
+3. Rerun `phase-eval --review-id v1-cg-ecid-source-delta-review`.
+
 ## Replay Forest-Plan Component Closeout
 
 The next East Crazies replay-repair slice is now implemented for archived review lane

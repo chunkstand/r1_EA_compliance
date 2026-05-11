@@ -3292,6 +3292,9 @@ evidence, source record IDs, source-claim terms, and eval case IDs.
 Default path:
 `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
 
+Review-scoped replay path:
+`source_library/reviews/<review_id>/compliance_gold_eval_results.json`
+
 Related generated artifacts:
 
 - `adjudicated_cases.compliance_review_eval.json`, the gold cases normalized into the underlying
@@ -3955,11 +3958,15 @@ source-set/review identity checks, validation check counts, failed check names, 
 readiness blocker counts, and graph failure-category counts. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
-not-promotion-ready artifacts. For generated review rule packs, a passing gold eval against the
-generated pack's declared base rule pack can satisfy this phase and is reported with
-`rule_pack_match_mode=generated_base`. Source-set-only replay ignores an unrelated root
-`compliance_gold_eval_results.json` artifact when its `source_set_id` does not match the requested
-source set, so downstream source-set replay does not fail on stale review-level gold artifacts.
+not-promotion-ready artifacts. For review-bound runs, phase eval prefers
+`source_library/reviews/<review_id>/compliance_gold_eval_results.json` when that review-local gold
+artifact exists, and otherwise falls back to the global
+`source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`. For generated
+review rule packs, a passing gold eval against the generated pack's declared base rule pack can
+satisfy this phase and is reported with `rule_pack_match_mode=generated_base`. Source-set-only
+replay ignores an unrelated root `compliance_gold_eval_results.json` artifact when its
+`source_set_id` does not match the requested source set, so downstream source-set replay does not
+fail on stale review-level gold artifacts.
 When `--review-id` or `--review-dir` is supplied, phase eval also
 requires the applicability phases `authority_universe`, `package_fact_graph`,
 `applicability_retrieval_trace`, `applicability_graph_trace`, `applicability_determination`,

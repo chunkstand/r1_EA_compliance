@@ -109,9 +109,13 @@ authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rul
 replay now also has tracked forest-plan component contracts at
 `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
 `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying those
-contracts moves review `phase-eval` to `16/18`; the merged review still remains
-`reviewer_ready=false`, but the only remaining blockers are replay-scoped `compliance_review` and
-`compliance_gold_eval` artifacts.
+contracts moves review `phase-eval` to `16/18`. Replay-scoped compliance regeneration now writes
+`compliance_review.json` and a review-local `compliance_gold_eval_results.json` under
+`source_library/reviews/v1-cg-ecid-source-delta-review/`, and `phase-eval --review-id
+v1-cg-ecid-source-delta-review` now prefers that review-local gold artifact over the unrelated
+global proving-lane gold result. The merged review still remains `reviewer_ready=false`; the
+remaining blockers are a stale gold contract and a replay `compliance_review` that still fails
+`forest_plan_component_gate_reviewer_ready`.
 
 Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
 
@@ -200,8 +204,13 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   component eval and adjudication contracts at
   `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
   `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying
-  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`; the remaining
-  blockers are `compliance_gold_eval` and absent replay-scoped `compliance_review` artifacts.
+  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`. Replay-scoped
+  compliance regeneration now writes `compliance_review.json` and a review-local
+  `compliance_gold_eval_results.json` under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
+  prefers that review-local gold artifact over the unrelated global proving-lane result. The
+  remaining blockers are a stale gold contract and replay `compliance_review` failing
+  `forest_plan_component_gate_reviewer_ready`.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
@@ -581,6 +590,8 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/reviews/compliance_review_eval/reviews/<case_id>/`
 - Compliance gold eval outputs:
   - `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`
+  - `source_library/reviews/<review_id>/compliance_gold_eval_results.json` when `--results-dir`
+    targets a review directory
   - `source_library/reviews/compliance_gold_eval/adjudicated_cases.compliance_review_eval.json`
   - `source_library/reviews/compliance_gold_eval/compliance_review_eval/`
 - Promotion suite outputs:
@@ -1541,9 +1552,13 @@ When `compliance_coverage_results.json` exists beside the rule-claim outputs, it
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,
-rule-pack, failed-gold, or not-promotion-ready artifacts. If a review uses a generated rule pack,
-phase eval can accept a passing gold eval against the generated pack's declared base rule pack and
-reports `rule_pack_match_mode=generated_base`. Pass `--review-id <review-id>` or
+rule-pack, failed-gold, or not-promotion-ready artifacts. For review-bound runs,
+`phase-eval --review-id <review-id>` prefers
+`source_library/reviews/<review_id>/compliance_gold_eval_results.json` when that review-local gold
+artifact exists, and otherwise falls back to the global
+`source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json`. If a review uses a
+generated rule pack, phase eval can accept a passing gold eval against the generated pack's
+declared base rule pack and reports `rule_pack_match_mode=generated_base`. Pass `--review-id <review-id>` or
 `--review-dir <path>` to include the applicability phase gates for `authority_universe`,
 `package_fact_graph`, `applicability_retrieval_trace`, `applicability_graph_trace`,
 `applicability_determination`, `applicability_validation`, and `generated_rule_pack`, followed by

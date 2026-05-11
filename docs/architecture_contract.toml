@@ -388,6 +388,7 @@ paths = [
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",
   "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
   "source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json",
+  "source_library/reviews/<review_id>/compliance_gold_eval_results.json",
   "source_library/reviews/promotion_suite/<suite_id>/promotion_suite_results.json",
   "source_library/reviews/promotion_suite/<suite_id>/promotion_suite_report.md",
 ]

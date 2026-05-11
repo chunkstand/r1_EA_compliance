@@ -128,9 +128,13 @@ Latest closeout on 2026-05-10:
   `source-set-8a4005c8a083af1a` now has tracked applicability adjudications at
   `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. The replay-scoped
   applicability lane now passes with `56` applicable authorities, `340` non-applicable
-  authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack, while
-  the broader review replay remains blocked by forest-plan component evaluation and replay-scoped
-  compliance/gold-eval artifacts.
+  authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack. Replay
+  compliance regeneration now writes `compliance_review.json` and a review-local
+  `compliance_gold_eval_results.json` under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
+  prefers that review-local gold artifact over the unrelated global proving-lane result. The
+  broader review replay remains blocked by a stale gold contract and replay `compliance_review`
+  failing `forest_plan_component_gate_reviewer_ready`.
 
 The source-delta readiness gate is implemented by `forest-plan-source-delta-readiness`. The live
 gate over `r1-forest-plan-source-delta-capture-20260510-batches` passed the earlier scoped source
@@ -230,14 +234,20 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   component eval and adjudication contracts at
   `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
   `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying
-  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`; the remaining
-  blockers are `compliance_gold_eval` and absent replay-scoped `compliance_review` artifacts.
+  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`. Replay-scoped
+  compliance regeneration now writes `compliance_review.json` and a review-local
+  `compliance_gold_eval_results.json` under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
+  prefers that review-local gold artifact over the unrelated global proving-lane result. The
+  remaining blockers are a stale gold contract and replay `compliance_review` failing
+  `forest_plan_component_gate_reviewer_ready`.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
   `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
-  active catalog. The remaining replay repair work is now narrower: replay-scoped
-  `compliance_review` plus `compliance_gold_eval` regeneration.
+  active catalog. The remaining replay repair work is now narrower: repair the stale gold
+  contract and close the replay compliance review's `forest_plan_component_gate_reviewer_ready`
+  blocker.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.
