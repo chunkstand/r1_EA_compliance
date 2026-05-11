@@ -5,6 +5,40 @@ Date: 2026-05-11
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Beaverhead Single-Forest Profile Expansion Plan
+
+The prior multi-forest expansion plan has been retired in favor of a Beaverhead-specific reference
+milestone at `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  Beaverhead-Deerlodge is now the documented single-forest reference slice, and future non-Custer
+  expansion work should create one forest-specific milestone plan at a time instead of widening a
+  roster-level plan
+- gate alignment:
+  the Beaverhead plan preserves the gate-first sequence: profile completeness contract, config
+  depth, resolver proofs, compliance-gate parity, and mandatory all-R1
+  `forest-plan-components-build` verification before closeout
+- routing alignment:
+  `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is now only a retired routing note,
+  not an active implementation plan
+
+Immediate next step if this lane is continued:
+
+1. Pick the next single forest and write a new forest-specific milestone plan using
+   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` as the baseline contract.
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_compliance_review.py tests/test_cli.py tests/test_architecture_contract.py`: passed `143/143`
+- `git diff --check`: passed
+
+Residual risks:
+
+- Beaverhead is now the documented reference slice, but the remaining non-Custer forests still need
+  their own forest-specific milestone files rather than ad hoc expansion under Beaverhead
+- older append-only handoff sections still mention the retired multi-forest plan, so future
+  sessions must follow the newest Beaverhead routing section when those older notes conflict
+
 ## Region 1 Multi-Forest Profile Expansion Plan
 
 The next post-V1 expansion lane is now formalized in

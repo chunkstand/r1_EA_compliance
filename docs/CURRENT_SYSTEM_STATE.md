@@ -128,7 +128,10 @@ Latest closeout on 2026-05-11:
 - The next required implementation boundary is no longer stale-surface alignment or active
   parser/component recovery. It is the separate post-V1 expansion lane, beginning with repeating
   Beaverhead-level profile vocabularies and supporting-route depth across the remaining non-Custer
-  forest units and then proving those profiles against real package reviews.
+  forest units and then proving those profiles against real package reviews. Expansion planning now
+  proceeds one forest at a time: `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the
+  Beaverhead reference slice, and `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is
+  retired to routing-note status only.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
