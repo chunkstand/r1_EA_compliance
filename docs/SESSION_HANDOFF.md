@@ -5,6 +5,45 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Replay Forest-Plan Component Closeout
+
+The next East Crazies replay-repair slice is now implemented for archived review lane
+`v1-cg-ecid-source-delta-review`.
+
+- tracked replay forest-plan component authority:
+  `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` now owns the replay
+  component eval contract for archived merged source set `source-set-8a4005c8a083af1a`, and
+  `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json` now owns the
+  six replay-scoped reviewer adjudications for the open component queue
+- live replay outcome:
+  replaying those tracked contracts writes a passing
+  `forest_plan_component_eval_results.json`, writes a passing
+  `forest_plan_component_adjudication_eval.json`, and moves review-scoped `phase-eval` from
+  `14/17` to `16/18`
+- preserved non-goal boundary:
+  this pass did not regenerate replay-scoped `compliance_review` artifacts and did not refresh the
+  replay `compliance_gold_eval` source-set binding
+
+Verification in this pass:
+
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review --eval-file config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`: passed with `36/36` cases and `0` failed checks
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review --adjudication-file config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`: passed with `6` resolved adjudications, `0` pending, and `0` expectation mismatches
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review`: failed closed as expected at `16/18`; remaining blockers are `compliance_gold_eval` and `compliance_review`
+
+Residual risks:
+
+- the replay is still `reviewer_ready=false`; only replay-scoped compliance regeneration remains
+- `compliance_gold_eval` is still bound to proving-lane source set `source-set-ba8d0feae79501b8`
+- replay `compliance_review` artifacts are still absent under
+  `source_library/reviews/v1-cg-ecid-source-delta-review/`
+
+Immediate next step if this slice is continued:
+
+1. Regenerate replay-scoped `compliance_review` artifacts for
+   `v1-cg-ecid-source-delta-review`.
+2. Refresh replay-scoped compliance-gold evidence to remove the remaining `source_set_mismatch`.
+3. Rerun `phase-eval --review-id v1-cg-ecid-source-delta-review`.
+
 ## Replay Applicability Adjudication Closeout
 
 The next East Crazies replay-repair slice is now implemented for archived review lane

@@ -226,16 +226,18 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying that
   contract closes all `7` prior applicability conflicts: applicability validation now passes with
   `56` applicable authorities, `340` non-applicable authorities, `0` unresolved decisions, and a
-  regenerated `56`-rule generated rule pack. Review `phase-eval` is now `14/17` with
-  `reviewer_ready=false`; the remaining blockers are `compliance_gold_eval`, absent replay-scoped
-  `compliance_review` artifacts, and failing forest-plan component evaluation (`9` failing seed
-  cases, `6` resolver gaps).
+  regenerated `56`-rule generated rule pack. The replay also now carries tracked forest-plan
+  component eval and adjudication contracts at
+  `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
+  `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying
+  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`; the remaining
+  blockers are `compliance_gold_eval` and absent replay-scoped `compliance_review` artifacts.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
   `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
-  active catalog. The remaining replay repair work is now content-only: forest-plan component
-  repair plus replay-scoped compliance/gold-eval regeneration.
+  active catalog. The remaining replay repair work is now narrower: replay-scoped
+  `compliance_review` plus `compliance_gold_eval` regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.

@@ -1,0 +1,386 @@
+{
+  "schema_version": "forest-plan-component-adjudication-v0",
+  "adjudication_id": "v1-cg-ecid-source-delta-review-component-adjudication",
+  "title": "Forest Plan Component Adjudication",
+  "created_at": "2026-05-10T12:00:00Z",
+  "review_id": "v1-cg-ecid-source-delta-review",
+  "source_set_id": "source-set-8a4005c8a083af1a",
+  "component_findings_path": "source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_component_findings.json",
+  "reviewer_resolution_queue_path": "source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_reviewer_resolution_queue.json",
+  "adjudication": {
+    "status": "complete",
+    "method": "tracked_replay_artifact_review",
+    "adjudicated_by": [
+      "codex"
+    ],
+    "adjudicated_at": "2026-05-10T12:00:00Z",
+    "notes": "Replay-scoped adjudication for the six open East Crazies forest-plan component queue items."
+  },
+  "allowed_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "pending",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "resolved_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "items": [
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "component_type": "standard",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "evidence_linking_miss",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable riparian-management-zone standard; nearby plan-consistency package evidence exists, but the replay finding did not link it to this standard.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:29f90df807cd568f9d6be304f5785d7e",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "e64f03b5f9925f51f509e187680b38278075b6b3d1a861d5e035da1fa8710b1b"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:29f90df807cd568f9d6be304f5785d7e",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "e64f03b5f9925f51f509e187680b38278075b6b3d1a861d5e035da1fa8710b1b"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:f34747e54e8eb6f1ea6982b72f86edb7",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "c3d3715ca8c39d23a6a1434a9681aa81a72bb8260120812913315fb0a3eb48f8"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-PRISK-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-PRISK-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-PRISK-01",
+      "component_type": "goal",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "applicability_false_positive",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "The package marks adjacent at-risk-plant direction not applicable and documents no restoration or whitebark treatment work, so this goal should not stay replay-applicable.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:53bff1c69a7fd16034d0c78b6cb8e00c",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "7e260c4ebdbb6dd1b7f2d7e0ba3cf4673a12acb07e1faedd6e012779f1745be2"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:53bff1c69a7fd16034d0c78b6cb8e00c",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "7e260c4ebdbb6dd1b7f2d7e0ba3cf4673a12acb07e1faedd6e012779f1745be2"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:114f2f1d99f864336e6083119277801b",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "1e36cd6503e0f1d4b2b894c0c459aa11dfb535bcad64fe0b4c55baa39a44dc46"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-VEGF-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-VEGF-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-VEGF-01",
+      "component_type": "guideline",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "applicability_false_positive",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "The package describes no vegetation-management treatments for this land exchange, so the old-growth vegetation-management guideline is a replay applicability false positive.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:eba366a9c18627af35c51a44e0379d5b",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "c0b0744ec0fedda11c1d7e4e7e8fbca4b5daf25952b1572a823ef9aee4ca66b7"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:eba366a9c18627af35c51a44e0379d5b",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "c0b0744ec0fedda11c1d7e4e7e8fbca4b5daf25952b1572a823ef9aee4ca66b7"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:11daacf8463a868f27a053c524a5f013",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "e102008d32c8ac9981717eda627c96c413c4becfacc6fff3acce3071b2f73f92"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-WLBI-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-WLBI-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-WLBI-01",
+      "component_type": "guideline",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "applicability_false_positive",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "The package places the project outside the Montana bison tolerance zone with no bison present, so the bison-expansion guideline should not stay replay-applicable.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:ade9e6dba6701e88364fde02235d04a5",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "cf40120a66eb17911ec595dd9d09a5c39793e3d9d465221bcea0e0aba2fe4878"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:ade9e6dba6701e88364fde02235d04a5",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "cf40120a66eb17911ec595dd9d09a5c39793e3d9d465221bcea0e0aba2fe4878"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:fb16e83164c4e91af2da95c19a2e40ae",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "3d9fca3fb4a9375fc5725924bb23e296a6926673617cc0f3624d318fd0bf2c00"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-ROSRN-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-ROSRN-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-ROSRN-01",
+      "component_type": "guideline",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "package_section_chunking_miss",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "The package already includes adjacent trailhead and accessibility context for the ROSRN section, but the replay finding did not bind the ROSRN guideline to that package chunk.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:034d82ee56fbd4c111743af59561d175",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "9f1c89ae68fa777cb387ac0faed72eec17dcc7dd967c4db17c9de25a7c847094"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:034d82ee56fbd4c111743af59561d175",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "9f1c89ae68fa777cb387ac0faed72eec17dcc7dd967c4db17c9de25a7c847094"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:002c4698ab9ce259b31acf0eecb99a09",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "10eda594ae4310a843717f0da804f7622331b0bf515d540cb33cfd00a9851d40"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01-missing_package_evidence",
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01-finding",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01",
+      "component_type": "standard",
+      "queue_reason": "missing_package_evidence",
+      "disposition": "applicability_false_positive",
+      "adjudicated_at": "2026-05-10T12:00:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "The package treats analogous recreation and pack-goat direction as not relevant to this exchange, so the pack-goat permit standard should not stay replay-applicable.",
+      "component_source_ref": {
+        "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+        "chunk_id": "chunk:7e44ae89a67a187187ee9059546b7402",
+        "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+        "content_sha256": "55424aa7d56b6e264f0483539a801f9c9696676f03e222ce8ec62210d0960a5c"
+      },
+      "plan_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "citation_label": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+          "chunk_id": "chunk:7e44ae89a67a187187ee9059546b7402",
+          "artifact_sha256": "ff30e8b4530e207c24311b18762924364b7007174f24fc93050fc55f645642fd",
+          "content_sha256": "55424aa7d56b6e264f0483539a801f9c9696676f03e222ce8ec62210d0960a5c"
+        }
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-042"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "package_evidence_refs": [
+        {
+          "citation_label": "EA-PACKAGE-042 (bebc890bc3da)",
+          "source_record_id": "EA-PACKAGE-042",
+          "chunk_id": "chunk:479f499df119610d7d9bb10bb5f9ef88",
+          "artifact_sha256": "bebc890bc3da89c03d0cf8d906b4c9c9b7b29fe7a9abe2237bd17605c1db300c",
+          "content_sha256": "a7e8719490d9166b4f527ffcdd0720a89d0fb67b6f2ffa5d31e6f7bb2a2d448f"
+        }
+      ],
+      "expected_current": {
+        "finding_status": "gap",
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "queue_reason": "missing_package_evidence"
+      },
+      "reviewer_notes": ""
+    }
+  ]
+}

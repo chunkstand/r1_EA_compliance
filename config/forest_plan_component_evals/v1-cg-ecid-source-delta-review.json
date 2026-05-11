@@ -1,0 +1,631 @@
+{
+  "schema_version": "forest-plan-component-eval-v0",
+  "eval_id": "east-crazies-forest-plan-components-source-delta-replay-v0",
+  "review_id": "v1-cg-ecid-source-delta-review",
+  "source_set_id": "source-set-8a4005c8a083af1a",
+  "description": "Replay-scoped adjudicated component-level eval cases for the East Crazy Inspiration Divide merged-corpus review. Covers the current replay applicable standards plus representative non-standard positives, negatives, and queue-bound cases.",
+  "coverage_requirements": {
+    "require_all_applicable_standards": true,
+    "minimum_cases_by_component_type": {
+      "desired_condition": 6,
+      "goal": 3,
+      "guideline": 3,
+      "objective": 3,
+      "standard": 17,
+      "suitability": 3
+    },
+    "minimum_cases_by_applicability_status": {
+      "applicable": 23,
+      "not_applicable": 12
+    },
+    "minimum_not_applicable_cases": 12,
+    "minimum_section_bound_cases": 34
+  },
+  "metric_thresholds": {
+    "case_count": {
+      "min": 35
+    },
+    "expected_applicable_standard_count": {
+      "min": 11
+    },
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "false_applicable_component_rate": {
+      "max": 0.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "cases": [
+    {
+      "case_id": "fw-std-rmz-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "description": "Riparian management zone standard remains an applicable replay standard, but the replay still has unresolved package-evidence linkage.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "fw-std-prisk-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-PRISK-01",
+      "description": "At-risk plant mitigation standard is marked not applicable in the replay plan-consistency artifact.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wl-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WL-01",
+      "description": "Forestwide food and attractant storage special order standard is applicable and bound to the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlbat-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLBAT-01",
+      "description": "Bat decontamination standard is forestwide and explicitly marked applicable in the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlgb-01-applicable-ea-section-3-4",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLGB-01",
+      "description": "Grizzly bear secure-habitat standard is applicable and bound to EA section 3.4 plus the plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "EA section 3.4",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-tribal-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-TRIBAL-01",
+      "description": "Tribal temporary-closure standard is applicable and bound to the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-ros-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROS-01",
+      "description": "Recreation opportunity spectrum route-location standard is applicable and bound to the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-ira-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-IRA-01",
+      "description": "Inventoried roadless area road-construction standard is applicable and bound to the EA plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-rwa-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RWA-01",
+      "description": "Recommended wilderness area roads and utility standard is applicable and has plan-consistency and package evidence.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-003 (548d0c6d5f68)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-bca-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-BCA-01",
+      "description": "Backcountry area energy, communication, and recreation-site standard is applicable and bound to the plan-consistency table.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "ab-std-rcrea-01-applicable-final-ea-access",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RCREA-01",
+      "description": "Absaroka-Beartooth recreation-access standard is applicable and supported by final EA and road/trail/access package evidence.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "East Crazy Inspiration Divide Final Environmental Assessment January 2025.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-003 (548d0c6d5f68)",
+        "EA-PACKAGE-012 (533c439d7ce5)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "bc-std-cmbca-01-applicable-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
+      "description": "Crazy Mountains Backcountry Area road standard is marked not applicable in the replay plan-consistency artifact.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlsg-01-hard-negative-no-sage-grouse",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLSG-01",
+      "description": "Greater sage-grouse standard is a hard negative because the package states no sage-grouse habitat.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-wlpd-01-hard-negative-no-prairie-dog",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLPD-01",
+      "description": "Prairie dog standard is a hard negative because the package states no prairie dog habitat.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-dwa-01-hard-negative-no-designated-wilderness",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-DWA-01",
+      "description": "Designated wilderness standard is a hard negative because no designated wilderness is in or affected by the project.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "pr-std-vegnf-01-hard-negative-outside-pryor-mountains",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-PR-STD-VEGNF-01",
+      "description": "Pryor Mountains vegetation standard is a context hard negative because the project resolved to East Crazies, not the Pryor Mountains.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "ab-std-rna-01-hard-negative-no-research-natural-area",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RNA-01",
+      "description": "Absaroka-Beartooth research-natural-area standard is a hard negative because no research natural area is affected.",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-wtr-01-nonstandard-positive-plan-consistency",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WTR-01",
+      "description": "Water desired condition is applicable and supported by the EA plan-consistency table.",
+      "component_type": "desired_condition",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-soil-01-nonstandard-positive-split-row",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-SOIL-01",
+      "description": "Soil desired condition is applicable and exercises split-row Plan Consistency Table binding.",
+      "component_type": "desired_condition",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-prisk-01-nonstandard-positive-multi-evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-PRISK-01",
+      "description": "Desired condition PRISK case is replay-applicable with supporting botany and resource package evidence, but not scored for compliance.",
+      "component_type": "desired_condition",
+      "applicability_status": "applicable",
+      "package_section": "2024 At Risk Plants Botany Report.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-007 (9a075b74e71d)",
+        "EA-PACKAGE-033 (2259556c2475)"
+      ],
+      "reviewer_resolution_state": "closed",
+      "compliance_status": "not_evaluated_for_compliance"
+    },
+    {
+      "case_id": "fw-go-wtr-01-nonstandard-positive-goal",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-WTR-01",
+      "description": "Water goal is applicable and supported by the EA plan-consistency table.",
+      "component_type": "goal",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-go-wl-01-nonstandard-positive-wildlife-goal",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-WL-01",
+      "description": "Wildlife goal is applicable and supported by the EA plan-consistency table.",
+      "component_type": "goal",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-gdl-inv-01-nonstandard-positive-guideline",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-INV-01",
+      "description": "Invasive-species guideline is applicable and supported by the EA plan-consistency table.",
+      "component_type": "guideline",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-gdl-wl-01-nonstandard-positive-wildlife-guideline",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-WL-01",
+      "description": "Wildlife habitat-connectivity guideline is applicable and supported by the EA plan-consistency table.",
+      "component_type": "guideline",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-obj-inv-01-nonstandard-positive-objective",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-OBJ-INV-01",
+      "description": "Invasive-species objective is applicable and supported by the EA plan-consistency table.",
+      "component_type": "objective",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-obj-wl-01-nonstandard-positive-wildlife-objective",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-OBJ-WL-01",
+      "description": "Wildlife conservation objective is applicable and supported by the EA plan-consistency table.",
+      "component_type": "objective",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-suit-rmz-01-nonstandard-positive-suitability",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RMZ-01",
+      "description": "Riparian management zone suitability component is applicable and supported by the EA plan-consistency table.",
+      "component_type": "suitability",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-suit-wl-01-nonstandard-positive-wildlife-suitability",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-WL-01",
+      "description": "Wildlife suitability component is applicable and supported by the EA plan-consistency table.",
+      "component_type": "suitability",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-gdl-cwn-01-hard-negative-conservation-watershed-guideline",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-CWN-01",
+      "description": "Conservation watershed guideline is a hard negative despite package table evidence because the component is not applicable to the project.",
+      "component_type": "guideline",
+      "applicability_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-go-prisk-01-hard-negative-at-risk-plant-goal",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-PRISK-01",
+      "description": "At-risk plant goal remains in the replay reviewer queue as an applicability false-positive candidate pending adjudication.",
+      "component_type": "goal",
+      "applicability_status": "applicable",
+      "package_section": null,
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open",
+      "compliance_status": "not_evaluated_for_compliance"
+    },
+    {
+      "case_id": "fw-dc-vegf-01-hard-negative-forest-vegetation-dc",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-VEGF-01",
+      "description": "Forest vegetation desired condition is a hard negative with package evidence but no project applicability.",
+      "component_type": "desired_condition",
+      "applicability_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-wlbat-01-hard-negative-sioux-bat-dc",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WLBAT-01",
+      "description": "Bat desired condition is a hard negative tied to non-project geography.",
+      "component_type": "desired_condition",
+      "applicability_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-dc-wlsg-01-hard-negative-sage-grouse-dc",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WLSG-01",
+      "description": "Greater sage-grouse desired condition is a hard negative because sage-grouse habitat is absent.",
+      "component_type": "desired_condition",
+      "applicability_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-suit-wlgb-01-hard-negative-designated-wilderness-suitability",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-WLGB-01",
+      "description": "Whitebark/grizzly suitability remains replay-applicable with no compliance score recorded.",
+      "component_type": "suitability",
+      "applicability_status": "applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed",
+      "compliance_status": "not_evaluated_for_compliance"
+    },
+    {
+      "case_id": "fw-obj-tim-01-hard-negative-timber-objective",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-OBJ-TIM-01",
+      "description": "Timber objective is a hard negative with package table evidence but no project applicability.",
+      "component_type": "objective",
+      "applicability_status": "not_applicable",
+      "package_section": "Plan Consistency Table.pdf",
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (bebc890bc3da)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "fw-std-recog-01-open-pack-goat-standard",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01",
+      "description": "Pack-goat disease-transmission standard remains an applicable replay standard with unresolved package evidence pending adjudication.",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    }
+  ]
+}

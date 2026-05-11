@@ -105,9 +105,13 @@ source-set `phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East
 `source-set-8a4005c8a083af1a` now has tracked applicability adjudications at
 `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. The replay-scoped
 applicability lane now validates with `56` applicable authorities, `340` non-applicable
-authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack, but the
-merged review remains `reviewer_ready=false`: `phase-eval` is `14/17` and still blocked by
-forest-plan component evaluation plus replay-scoped compliance/gold-eval artifacts.
+authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack. The same
+replay now also has tracked forest-plan component contracts at
+`config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
+`config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying those
+contracts moves review `phase-eval` to `16/18`; the merged review still remains
+`reviewer_ready=false`, but the only remaining blockers are replay-scoped `compliance_review` and
+`compliance_gold_eval` artifacts.
 
 Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
 
@@ -192,10 +196,12 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying that
   contract closes all `7` prior applicability conflicts: applicability validation now passes with
   `56` applicable authorities, `340` non-applicable authorities, `0` unresolved decisions, and a
-  regenerated `56`-rule generated rule pack. Review `phase-eval` is now `14/17` with
-  `reviewer_ready=false`; the remaining blockers are `compliance_gold_eval`, absent replay-scoped
-  `compliance_review` artifacts, and failing forest-plan component evaluation (`9` failing seed
-  cases, `6` resolver gaps).
+  regenerated `56`-rule generated rule pack. The replay also now carries tracked forest-plan
+  component eval and adjudication contracts at
+  `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json` and
+  `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying
+  those contracts moves review `phase-eval` to `16/18` with `reviewer_ready=false`; the remaining
+  blockers are `compliance_gold_eval` and absent replay-scoped `compliance_review` artifacts.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
@@ -440,6 +446,8 @@ heuristics.
 - `config/forest_plan_profiles.json`
 - `config/forest_plan_component_inventory_seed.json`
 - `config/forest_plan_component_eval_seed.json`
+- `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`
+- `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`
 - `config/v1_ecid_real_ea_eval.json`
 - `config/promotion_suite_v1.json`
 - `config/east_crazies_final_qa_certification_v1.json`
@@ -1517,6 +1525,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
 and reviewer-resolution queue, then writes `forest_plan_component_eval_results.json` beside the
 review artifacts. Use this after `forest-plan-resolve` or `compliance-review` when changing
 component applicability, source binding, package evidence extraction, or reviewer-resolution logic.
+Replay-scoped component contracts can live outside `source_library`; the current East Crazies replay
+uses `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`.
 
 Run phase-aligned readiness evaluation:
 
