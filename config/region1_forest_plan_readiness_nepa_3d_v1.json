@@ -1,5 +1,5 @@
 {
-  "as_of_date": "2026-05-06",
+  "as_of_date": "2026-05-10",
   "field_directive_requirements": [
     {
       "readiness_status": "catalog_confirmed",
@@ -73,7 +73,7 @@
         "status": "covered"
       },
       "component_inventory_validation": {
-        "artifact_path": "source_library/derived/source-set-ba8d0feae79501b8/forest_plan_components/component_inventory_build_coverage.json",
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
         "component_count": 329,
         "inventory_id": "custer-gallatin-nf-2022-components",
         "status": "validated",
@@ -156,8 +156,8 @@
         "status": "fixture_contract_defined"
       },
       "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
         "component_count": 0,
-        "inventory_id": null,
         "required_before_graph_promotion": true,
         "standard_count": 0,
         "status": "component_inventory_build_required"
@@ -172,7 +172,9 @@
       "milestone_5_added_profile": true,
       "profile_kind": "active_profile_added_milestone_5",
       "readiness_blockers": [
-        "forest_profile_not_ready"
+        "forest_profile_not_ready",
+        "plan_component_labels_not_detected",
+        "plan_standard_labels_not_detected"
       ],
       "source_requirements": [
         {
@@ -186,14 +188,35 @@
           "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02"
         },
         {
-          "readiness_status": "source_delta_required",
-          "role": "record_of_decision",
-          "source_record_id": null
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-03"
         },
         {
-          "readiness_status": "source_delta_required",
-          "role": "forest_plan_amendments",
-          "source_record_id": null
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_ids": [
+            "R1PLAN-beaverhead-deerlodge-nf-04",
+            "R1PLAN-beaverhead-deerlodge-nf-05"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_ids": [
+            "R1PLAN-beaverhead-deerlodge-nf-18",
+            "R1PLAN-beaverhead-deerlodge-nf-22",
+            "R1PLAN-beaverhead-deerlodge-nf-24"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_ids": [
+            "R1PLAN-beaverhead-deerlodge-nf-19",
+            "R1PLAN-beaverhead-deerlodge-nf-23",
+            "R1PLAN-beaverhead-deerlodge-nf-25"
+          ]
         }
       ]
     },
@@ -203,6 +226,10 @@
         "status": "not_started"
       },
       "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 0,
+        "required_before_graph_promotion": true,
+        "standard_count": 0,
         "status": "component_inventory_build_required"
       },
       "forest_unit_id": "bitterroot-nf",
@@ -213,7 +240,9 @@
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
       "readiness_blockers": [
-        "forest_profile_not_ready"
+        "forest_profile_not_ready",
+        "plan_component_labels_not_detected",
+        "plan_standard_labels_not_detected"
       ],
       "source_requirements": [
         {
@@ -230,15 +259,44 @@
           "readiness_status": "catalog_confirmed",
           "role": "forest_plan_amendments",
           "source_record_id": "R1PLAN-bitterroot-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_1",
+          "source_record_id": "R1PLAN-bitterroot-nf-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_2",
+          "source_record_id": "R1PLAN-bitterroot-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-bitterroot-nf-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-bitterroot-nf-12"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_id": "R1PLAN-bitterroot-nf-13"
         }
       ]
     },
     {
-      "active_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-01",
+      "active_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
       "applicability_eval_coverage": {
         "status": "not_started"
       },
       "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 0,
+        "required_before_graph_promotion": true,
+        "standard_count": 0,
         "status": "component_inventory_build_required"
       },
       "forest_unit_id": "dakota-prairie-grasslands",
@@ -249,7 +307,9 @@
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
       "readiness_blockers": [
-        "forest_profile_not_ready"
+        "forest_profile_not_ready",
+        "plan_component_labels_not_detected",
+        "plan_standard_labels_not_detected"
       ],
       "source_requirements": [
         {
@@ -261,27 +321,62 @@
           "readiness_status": "catalog_confirmed",
           "role": "region1_cross_check",
           "source_record_id": "R1PLAN-dakota-prairie-grasslands-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_resource_management_plan_part",
+          "source_record_ids": [
+            "R1PLAN-dakota-prairie-grasslands-03",
+            "R1PLAN-dakota-prairie-grasslands-04",
+            "R1PLAN-dakota-prairie-grasslands-05",
+            "R1PLAN-dakota-prairie-grasslands-06",
+            "R1PLAN-dakota-prairie-grasslands-07"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_ids": [
+            "R1PLAN-dakota-prairie-grasslands-10",
+            "R1PLAN-dakota-prairie-grasslands-12"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-11"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_change",
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-16"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-15"
         }
       ]
     },
     {
-      "active_plan_source_record_id": "R1PLAN-flathead-nf-01",
+      "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
       "applicability_eval_coverage": {
         "status": "not_started"
       },
       "component_inventory_validation": {
-        "status": "component_inventory_build_required"
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 80,
+        "status": "validated",
+        "standard_count": 20
       },
       "forest_unit_id": "flathead-nf",
       "forest_unit_names": [
         "Flathead National Forest"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -289,9 +384,47 @@
           "source_record_id": "R1PLAN-flathead-nf-01"
         },
         {
-          "readiness_status": "source_delta_required",
+          "readiness_status": "catalog_confirmed",
           "role": "primary_land_management_plan",
-          "source_record_id": null
+          "source_record_id": "R1PLAN-flathead-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-flathead-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_1_part_1",
+          "source_record_id": "R1PLAN-flathead-nf-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-flathead-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-flathead-nf-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_ids": [
+            "R1PLAN-flathead-nf-07",
+            "R1PLAN-flathead-nf-16"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_change",
+          "source_record_id": "R1PLAN-flathead-nf-10"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_2",
+          "source_record_id": "R1PLAN-flathead-nf-12"
         }
       ]
     },
@@ -301,19 +434,20 @@
         "status": "not_started"
       },
       "component_inventory_validation": {
-        "status": "component_inventory_build_required"
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 257,
+        "status": "validated",
+        "standard_count": 28
       },
       "forest_unit_id": "helena-lewis-and-clark-nf",
       "forest_unit_names": [
         "Helena-Lewis and Clark National Forest",
         "Helena Lewis and Clark National Forest"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -324,6 +458,31 @@
           "readiness_status": "catalog_confirmed",
           "role": "primary_land_management_plan",
           "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_1",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_volume_2",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-12"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_id": "R1PLAN-helena-lewis-and-clark-nf-13"
         }
       ]
     },
@@ -333,18 +492,19 @@
         "status": "not_started"
       },
       "component_inventory_validation": {
-        "status": "component_inventory_build_required"
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 1,
+        "status": "validated",
+        "standard_count": 1
       },
       "forest_unit_id": "idaho-panhandle-nfs",
       "forest_unit_names": [
         "Idaho Panhandle National Forests"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -355,27 +515,70 @@
           "readiness_status": "catalog_confirmed",
           "role": "primary_land_management_plan",
           "source_record_id": "R1PLAN-idaho-panhandle-nfs-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-idaho-panhandle-nfs-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_ids": [
+            "R1PLAN-idaho-panhandle-nfs-11",
+            "R1PLAN-idaho-panhandle-nfs-12"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_change",
+          "source_record_ids": [
+            "R1PLAN-idaho-panhandle-nfs-16",
+            "R1PLAN-idaho-panhandle-nfs-17"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion_chapter",
+          "source_record_ids": [
+            "R1PLAN-idaho-panhandle-nfs-18",
+            "R1PLAN-idaho-panhandle-nfs-19",
+            "R1PLAN-idaho-panhandle-nfs-20",
+            "R1PLAN-idaho-panhandle-nfs-21",
+            "R1PLAN-idaho-panhandle-nfs-22"
+          ]
         }
       ]
     },
     {
-      "active_plan_source_record_id": "R1PLAN-kootenai-nf-01",
+      "active_plan_source_record_id": "R1PLAN-kootenai-nf-02",
       "applicability_eval_coverage": {
         "status": "not_started"
       },
       "component_inventory_validation": {
-        "status": "component_inventory_build_required"
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 1,
+        "status": "validated",
+        "standard_count": 1
       },
       "forest_unit_id": "kootenai-nf",
       "forest_unit_names": [
         "Kootenai National Forest"
       ],
-      "graph_promotion_status": "blocked",
+      "graph_promotion_status": "promoted",
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
-      "readiness_blockers": [
-        "forest_profile_not_ready"
-      ],
+      "readiness_blockers": [],
       "source_requirements": [
         {
           "readiness_status": "catalog_confirmed",
@@ -383,18 +586,52 @@
           "source_record_id": "R1PLAN-kootenai-nf-01"
         },
         {
-          "readiness_status": "source_delta_required",
+          "readiness_status": "catalog_confirmed",
           "role": "primary_land_management_plan",
-          "source_record_id": null
+          "source_record_id": "R1PLAN-kootenai-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-kootenai-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_id": "R1PLAN-kootenai-nf-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-kootenai-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_change",
+          "source_record_id": "R1PLAN-kootenai-nf-13"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion_chapter",
+          "source_record_ids": [
+            "R1PLAN-kootenai-nf-14",
+            "R1PLAN-kootenai-nf-15",
+            "R1PLAN-kootenai-nf-16",
+            "R1PLAN-kootenai-nf-17"
+          ]
         }
       ]
     },
     {
-      "active_plan_source_record_id": "R1PLAN-lolo-nf-01",
+      "active_plan_source_record_id": "R1PLAN-lolo-nf-02",
       "applicability_eval_coverage": {
         "status": "not_started"
       },
       "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 0,
+        "required_before_graph_promotion": true,
+        "standard_count": 0,
         "status": "component_inventory_build_required"
       },
       "forest_unit_id": "lolo-nf",
@@ -405,7 +642,9 @@
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
       "readiness_blockers": [
-        "forest_profile_not_ready"
+        "forest_profile_not_ready",
+        "plan_component_labels_not_detected",
+        "plan_standard_labels_not_detected"
       ],
       "source_requirements": [
         {
@@ -414,18 +653,52 @@
           "source_record_id": "R1PLAN-lolo-nf-01"
         },
         {
-          "readiness_status": "source_delta_required",
+          "readiness_status": "catalog_confirmed",
           "role": "primary_land_management_plan",
-          "source_record_id": null
+          "source_record_id": "R1PLAN-lolo-nf-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-lolo-nf-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_id": "R1PLAN-lolo-nf-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-lolo-nf-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-lolo-nf-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_id": "R1PLAN-lolo-nf-07"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_change",
+          "source_record_id": "R1PLAN-lolo-nf-09"
         }
       ]
     },
     {
-      "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02",
+      "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
       "applicability_eval_coverage": {
         "status": "not_started"
       },
       "component_inventory_validation": {
+        "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
+        "component_count": 0,
+        "required_before_graph_promotion": true,
+        "standard_count": 0,
         "status": "component_inventory_build_required"
       },
       "forest_unit_id": "nez-perce-clearwater-nfs",
@@ -437,7 +710,9 @@
       "milestone_5_added_profile": false,
       "profile_kind": "region1_tracking_only",
       "readiness_blockers": [
-        "forest_profile_not_ready"
+        "forest_profile_not_ready",
+        "plan_component_labels_not_detected",
+        "plan_standard_labels_not_detected"
       ],
       "source_requirements": [
         {
@@ -447,8 +722,56 @@
         },
         {
           "readiness_status": "catalog_confirmed",
-          "role": "primary_land_management_plan",
+          "role": "plan_document_set_page",
           "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "record_of_decision",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-03"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "notice_of_plan_approval",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "administrative_changes",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-05"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "primary_land_management_plan",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-10"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_assessment_supplement",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-11"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "biological_opinion",
+          "source_record_ids": [
+            "R1PLAN-nez-perce-clearwater-nfs-12",
+            "R1PLAN-nez-perce-clearwater-nfs-13"
+          ]
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-15"
+        },
+        {
+          "readiness_status": "catalog_confirmed",
+          "role": "final_environmental_impact_statement_appendices",
+          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-16"
         }
       ]
     }
@@ -456,5 +779,5 @@
   "readiness_matrix_id": "region1-forest-plan-readiness-nepa-3d-v1",
   "region1_completeness_claim": false,
   "schema_version": "region1-forest-plan-readiness-v1",
-  "source_set_id": "source-set-ba8d0feae79501b8"
+  "source_set_id": "source-set-5e65d845ce77e1a0"
 }

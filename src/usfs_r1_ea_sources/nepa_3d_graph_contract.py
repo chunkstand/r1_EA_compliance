@@ -88,6 +88,8 @@ REQUIRED_READINESS_BLOCKER_TYPES = {
     "package_fixture_missing",
     "forest_profile_not_ready",
     "fsh_chapter_delta_required",
+    "plan_component_labels_not_detected",
+    "plan_standard_labels_not_detected",
 }
 REQUIRED_READINESS_SEMANTIC_CLASSES = {
     "none",

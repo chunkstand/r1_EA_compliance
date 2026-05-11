@@ -70,7 +70,7 @@ The default manifest now also records two different source-set identities on pur
 
 - `current_promotion_source_set_id=source-set-ba8d0feae79501b8` for the reviewer-ready East Crazies
   V1 lane.
-- `full_canonical_source_set_id=source-set-34061d1e4bf6c460` for the active full canonical catalog
+- `full_canonical_source_set_id=source-set-5e65d845ce77e1a0` for the active full canonical catalog
   rebuilt from the base workbook batch plus the 2026-05-10 refresh batch.
 
 The archived fully replayed merged support-document surface remains
@@ -171,19 +171,15 @@ Strict expansion now fails closed only on the South Plateau forest-plan blocker 
 
 Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the default manifest.
 The current local non-strict run now reports `current_promotion_ready=true`,
-`full_canonical_corpus_ready=false`, `promotion_ready=true`, and `expansion_ready=false`. The
-active catalog checks still pin `source_library/catalog/source_set_manifest.json` and
-`catalog_validation.json` to full canonical source set `source-set-34061d1e4bf6c460` with
-`350` source rows, `319` artifacts, `160` supplemental source-delta rows, and preserved gap
-`R1PLAN-kootenai-nf-18`, and the stronger full-canonical gate now also requires
-`source_library/derived/source-set-34061d1e4bf6c460/authority_currentness/authority_currentness_report.json`,
-`source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_validation.json`,
-and `source_library/derived/source-set-34061d1e4bf6c460/knowledge_graph/nepa_3d_graph_summary.json`.
-Those active-source-set artifacts are now materialized locally: `authority_currentness` passes with
-`35` authority families and `207` source-currentness records, while the refreshed active NEPA 3D
-source-set export now fails with `66` checks, `1` failed check, `1,789` nodes, `2,808` edges, and
-typed ownership failure `graph_forest_plan_inventory_ownership_gap=1`. As a result,
-`full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}` after the replay.
+`full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`. The
+active catalog checks now pin `source_library/catalog/source_set_manifest.json`,
+`catalog_validation.json`, `authority_currentness`, and the NEPA 3D graph surfaces to full
+canonical source set `source-set-5e65d845ce77e1a0` with `350` source rows, `319` artifacts, `160`
+supplemental source-delta rows, preserved gap `R1PLAN-kootenai-nf-18`, and
+`full_canonical_failure_category_counts={}`. The refreshed active NEPA 3D source-set export now
+passes with `66` checks, `0` failed checks, `2,132` nodes, `3,872` edges,
+`region1_forest_plan_graph_ready_profile_count=5`, and
+`region1_forest_plan_blocked_profile_count=5`.
 The remaining blocker is specific: the active source-set export still points at
 `source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
 instead of an active-source-set-owned `forest_plan_components/` artifact family.

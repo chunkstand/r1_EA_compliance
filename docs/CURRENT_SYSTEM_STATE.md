@@ -75,15 +75,15 @@ Latest closeout on 2026-05-10:
   NEPA 3D source-set export passes with `66` checks, `0` failed checks, `2,128` nodes, and
   `3,825` edges.
 - The post-V1 promotion suite still separates current-promotion truth from full-corpus truth, but
-  its full-canonical contract has not yet been repointed to the refreshed active source set. The
-  latest replay still reports
+  its full-canonical contract is now aligned to the refreshed active source set. The latest
+  non-strict replay reports
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
-  `current_promotion_ready=true`, `full_canonical_source_set_id=source-set-34061d1e4bf6c460`,
-  `full_canonical_corpus_ready=false`, `full_canonical_failure_category_counts={"stale_artifact": 2}`,
-  and `expansion_ready=false`.
+  `current_promotion_ready=true`, `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`,
+  `full_canonical_corpus_ready=true`, `full_canonical_failure_category_counts={}`, and
+  `expansion_ready=false`.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
   contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
-  readiness profiles for active full-canonical source set `source-set-34061d1e4bf6c460`, keeps
+  readiness profiles for active full-canonical source set `source-set-5e65d845ce77e1a0`, keeps
   `plan_version` plus grouped build `source_record_id` inputs in tracked config, and validates
   against the live readiness roster through
   `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py`.
@@ -93,18 +93,17 @@ Latest closeout on 2026-05-10:
   aggregate build coverage with per-profile results plus fail-closed cross-profile duplicate-ID
   checks.
 - Sequence 3 of the Region 1 forest-plan inventory promotion plan is now implemented on the active
-  source set. The live build writes `587` components and `87` standards, validates
-  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`, and stops the
-  aggregate build on explicit typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
-  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  source set. The live build writes `668` components and `108` standards, validates
+  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, and
+  `kootenai-nf`, and stops the aggregate build on explicit typed blockers for
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
   `nez-perce-clearwater-nfs`. Every blocked profile currently reports the same blocker pair:
   `plan_component_labels_not_detected` and `plan_standard_labels_not_detected`.
-- The promotion suite no longer reports a full-canonical inventory-ownership failure:
-  `full_canonical_failure_category_counts={}` after the active-source-set graph replay. The next
-  required boundary is Sequence 4: promote the live build results into
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and related graph/readiness summaries so
-  the three validated inventories and seven typed blockers replace the current one-validated,
-  nine-`component_inventory_build_required` readiness snapshot without weakening
+- Sequence 4 readiness and promotion alignment is now closed for stale-surface repair.
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes five validated inventories,
+  keeps five typed blockers explicit, points at the refreshed `5e65...` coverage artifact, and the
+  active NEPA 3D source-set export now reports `region1_forest_plan_graph_ready_profile_count=5`
+  plus `region1_forest_plan_blocked_profile_count=5` without weakening
   `region1_completeness_claim=false`.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
@@ -120,10 +119,8 @@ Latest closeout on 2026-05-10:
   chunks respectively) instead of upstream role starvation. That role-classification gain is now
   reflected in the refreshed full-canonical inventory/currentness/graph lane on the same active
   source set.
-- The next required implementation boundary is readiness and promotion-suite alignment: update
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and the full-canonical promotion-suite
-  contract so the refreshed `source-set-5e65d845ce77e1a0` replay, with five passing forests and
-  five typed blockers, becomes the current promoted full-canonical truth.
+- The next required implementation boundary is no longer stale-surface alignment. It is forest-plan
+  parser/component recovery for the five blocked forests, plus the separate post-V1 expansion lane.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged
@@ -233,7 +230,7 @@ The merged-catalog contract now supports both archived replay gates and active-c
 target. The freshest fully replayed merged gate is archived at
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
 as `source-set-8a4005c8a083af1a`. The active `source_library/catalog/` view is now the promoted
-current-code full canonical source set `source-set-34061d1e4bf6c460`, built from
+current-code full canonical source set `source-set-5e65d845ce77e1a0`, built from
 `corpus-update-2026-05-01-cg-support-batches` plus
 `r1-forest-plan-source-delta-capture-20260510-refresh-batches`, and validates `350` source rows,
 `319` artifacts, `332` unique URLs, `349` `active_review_corpus` rows, `1`
@@ -258,7 +255,7 @@ with the completed 160-row supplemental support-document capture:
 - Parent batch runs:
   `corpus-update-2026-05-01-cg-support-batches` and
   `r1-forest-plan-source-delta-capture-20260510-refresh-batches`
-- Active full canonical catalog source set: `source-set-34061d1e4bf6c460`
+- Active full canonical catalog source set: `source-set-5e65d845ce77e1a0`
 - Current-promotion reviewer-ready V1 source set: `source-set-ba8d0feae79501b8`
 - Active reviewer catalog source rows: `350`
 - Active reviewer catalog unique artifacts: `319`
@@ -1006,7 +1003,7 @@ without expected future artifact content.
 Latest full-corpus promotion verification was run locally on 2026-05-10 after the completed
 forest-plan support-document refresh was promoted into the active catalog.
 
-- Active catalog source set: `source-set-34061d1e4bf6c460`
+- Active catalog source set: `source-set-5e65d845ce77e1a0`
 - Active download/catalog batch inputs:
   `corpus-update-2026-05-01-cg-support-batches` and
   `r1-forest-plan-source-delta-capture-20260510-refresh-batches`

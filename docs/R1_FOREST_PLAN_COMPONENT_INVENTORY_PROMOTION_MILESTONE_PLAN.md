@@ -13,33 +13,27 @@ review, promotion, or source-truth boundaries.
 
 ## Purpose
 
-The repository's live active catalog and its last fully materialized full-canonical
-inventory/graph lane are no longer the same source set. `source_library/catalog/` now points to
-`source-set-5e65d845ce77e1a0`, while the latest full-canonical
-`forest_plan_components/` plus NEPA 3D graph proofs still belong to
-`source-set-34061d1e4bf6c460`. The remaining gap is no longer only readiness promotion. It is
-active-source-set drift first, then readiness and graph promotion truth:
+The repository's live active catalog, full-canonical derived lane, readiness config, and
+promotion-suite full-canonical contract are now aligned to the same source set:
+`source-set-5e65d845ce77e1a0`.
 
-- the last verified full-canonical inventory replay on `source-set-34061d1e4bf6c460` validates
-  `custer-gallatin-nf`, `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs`;
+- the active full-canonical inventory replay on `source-set-5e65d845ce77e1a0` validates
+  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, and
+  `kootenai-nf`;
 - the same replay stops on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
-  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs`;
-- the live active catalog `source-set-5e65d845ce77e1a0` already carries the newer primary-plan role
-  classifications, and it now owns refreshed full-canonical `authority_currentness`,
-  `forest_plan_components`, retrieval/evidence/claim/rule-link outputs, and a passing NEPA 3D
-  graph lane;
-- `config/region1_forest_plan_readiness_nepa_3d_v1.json` still promotes only
-  `custer-gallatin-nf` and leaves the other nine profiles at
-  `component_inventory_build_required`, so readiness/config truth still lags even the older
-  `source-set-5e65d845ce77e1a0` inventory replay;
-- `promotion-suite` still pins its full-canonical contract to `source-set-34061d1e4bf6c460`, so
-  full-canonical promotion truth also lags the refreshed active-source-set replay.
+  `dakota-prairie-grasslands`, `lolo-nf`, and `nez-perce-clearwater-nfs`;
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes those five validated forests
+  and keeps the five blocked forests explicit with
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`;
+- the active-source-set NEPA 3D graph lane now passes with `66` checks, `0` failed,
+  `2,132` nodes, `3,872` edges, `region1_forest_plan_graph_ready_profile_count=5`, and
+  `region1_forest_plan_blocked_profile_count=5`;
+- `promotion-suite` now pins its full-canonical contract to `source-set-5e65d845ce77e1a0` and
+  reports `full_canonical_corpus_ready=true`.
 
-The remaining milestone job is to re-anchor the inventory lane to the actual live active catalog
-source set, refresh the owned derived artifacts on that source set, and only then promote the live
-inventory results into readiness and NEPA 3D graph surfaces without weakening typed blocker
-handling, current promotion truth, or source-set ownership gates.
+The remaining milestone job is no longer stale-surface repair. It is parser/component recovery on
+the five blocked forests while preserving typed blocker handling, current promotion truth, and
+source-set ownership gates.
 
 ## Current Evidence
 
@@ -60,22 +54,20 @@ handling, current promotion truth, or source-set ownership gates.
   `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
   `nez-perce-clearwater-nfs`, all still stopping on explicit typed blockers rather than missing
   inventory ownership.
-- The readiness config currently tracks `10` forest/grassland profiles, but its promoted status is
-  stale relative to the live build:
-  - `custer-gallatin-nf`: `component_inventory_validation.status="validated"`
-  - `beaverhead-deerlodge-nf`: `component_inventory_build_required`
-  - `bitterroot-nf`: `component_inventory_build_required`
-  - `dakota-prairie-grasslands`: `component_inventory_build_required`
-  - `flathead-nf`: `component_inventory_build_required`
-  - `helena-lewis-and-clark-nf`: `component_inventory_build_required`
-  - `idaho-panhandle-nfs`: `component_inventory_build_required`
-  - `kootenai-nf`: `component_inventory_build_required`
-  - `lolo-nf`: `component_inventory_build_required`
-  - `nez-perce-clearwater-nfs`: `component_inventory_build_required`
-- The refreshed active-source-set build result is broader than that config snapshot:
-  `flathead-nf` and `kootenai-nf` now join `custer-gallatin-nf`,
-  `helena-lewis-and-clark-nf`, and `idaho-panhandle-nfs` in the passing set, while the five
-  remaining forests stop on explicit typed blockers rather than missing ownership.
+- The readiness config now tracks `10` forest/grassland profiles on the refreshed active source
+  set:
+  - `custer-gallatin-nf`: `validated`
+  - `flathead-nf`: `validated`
+  - `helena-lewis-and-clark-nf`: `validated`
+  - `idaho-panhandle-nfs`: `validated`
+  - `kootenai-nf`: `validated`
+  - `beaverhead-deerlodge-nf`: blocked on typed label detection
+  - `bitterroot-nf`: blocked on typed label detection
+  - `dakota-prairie-grasslands`: blocked on typed label detection
+  - `lolo-nf`: blocked on typed label detection
+  - `nez-perce-clearwater-nfs`: blocked on typed label detection
+- The refreshed readiness config now also carries current catalog-confirmed source requirements for
+  the promoted plan and supporting-document rows that the multi-forest build actually uses.
 - `config/forest_plan_profiles.json` still contains one full forest profile
   (`custer-gallatin-nf`) plus `known_other_forest_units`; the multi-forest build contract for the
   broader Region 1 roster currently lives in

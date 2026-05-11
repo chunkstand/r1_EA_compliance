@@ -480,7 +480,9 @@
     "adjudication_needed",
     "package_fixture_missing",
     "forest_profile_not_ready",
-    "fsh_chapter_delta_required"
+    "fsh_chapter_delta_required",
+    "plan_component_labels_not_detected",
+    "plan_standard_labels_not_detected"
   ],
   "readiness_semantic_classes": [
     "none",

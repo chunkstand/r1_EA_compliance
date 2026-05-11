@@ -5,6 +5,47 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Forest-Plan Stale-Surface Refresh
+
+The Region 1 forest-plan stale surfaces are now resolved and committed truth is aligned to the live
+active full-canonical source set `source-set-5e65d845ce77e1a0`.
+
+- config alignment:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now points at the `5e65...`
+  `component_inventory_build_coverage.json`, promotes `custer-gallatin-nf`, `flathead-nf`,
+  `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, and `kootenai-nf`, and keeps
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` blocked on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`
+- promotion-suite alignment:
+  `config/promotion_suite_v1.json` now pins `full_canonical_source_set_id` and all embedded
+  full-canonical source-set checks to `source-set-5e65d845ce77e1a0`
+- graph-contract alignment:
+  `config/nepa_3d_graph_contract_v1.json` and
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py` now recognize
+  `plan_component_labels_not_detected` and `plan_standard_labels_not_detected` as valid readiness
+  blocker types
+- refreshed downstream truth:
+  `nepa-knowledge-graph-export` on `source-set-5e65d845ce77e1a0` now passes with `66` checks,
+  `0` failed, `2,132` nodes, `3,872` edges,
+  `region1_forest_plan_graph_ready_profile_count=5`, and
+  `region1_forest_plan_blocked_profile_count=5`
+- refreshed promotion truth:
+  `promotion-suite` now reports `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
+  `full_canonical_failure_category_counts={}`
+- next real blocker boundary:
+  stale-surface repair is complete; remaining work is parser/component recovery for the five blocked
+  forests plus the separate expansion lane
+
+Verification in this pass:
+
+- `python -m json.tool config/region1_forest_plan_readiness_nepa_3d_v1.json`: passed
+- `python -m json.tool config/promotion_suite_v1.json`: passed
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `29/29`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `full_canonical_corpus_ready=true`
+
 ## Region 1 Forest-Plan Active-Source-Set Refresh
 
 The active full-canonical derived lane has now been refreshed onto the live catalog source set

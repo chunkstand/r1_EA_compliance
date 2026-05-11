@@ -75,17 +75,20 @@ Current full-corpus promotion boundary:
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
   `nez-perce-clearwater-nfs` now classify as `document_role=forest_plan` instead of blanket
   `forest_plan_support`, while ordinary supplemental register rows remain support-scoped.
-- The tracked inventory-build manifest is now re-anchored to `source-set-5e65d845ce77e1a0`, but
-  readiness and promotion-suite truth still lag the refreshed replay:
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records only `custer-gallatin-nf`
-  as validated, and `promotion-suite` still points its full-canonical contract at
-  `source-set-34061d1e4bf6c460`, reporting `full_canonical_corpus_ready=false` with
-  `full_canonical_failure_category_counts={\"stale_artifact\": 2}`.
-- The next required implementation boundary is readiness/promotion alignment: promote the refreshed
-  `source-set-5e65d845ce77e1a0` inventory results into
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` and update the full-canonical
-  promotion-suite contract so those five validated forests and five typed blockers become the
-  current full-canonical truth.
+- The tracked inventory-build manifest, Region 1 readiness config, and post-V1 promotion-suite
+  contract are now aligned to `source-set-5e65d845ce77e1a0`. The refreshed readiness truth now
+  promotes `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`, and `kootenai-nf`, while keeping
+  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs` blocked on explicit typed label-detection failures.
+- The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
+  `2,132` nodes, `3,872` edges, `region1_forest_plan_graph_ready_profile_count=5`, and
+  `region1_forest_plan_blocked_profile_count=5`.
+- The non-strict post-V1 promotion suite now reports `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
+  `full_canonical_failure_category_counts={}`. Remaining work is no longer stale-surface
+  alignment; it is the five real forest-plan inventory blocker recoveries plus the separate
+  expansion lane.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
@@ -264,8 +267,8 @@ load time from `source_library/catalog/source_set_manifest.json`, prefers that c
 when a matching graph export exists, otherwise falls back to the newest graph-capable source set
 under `source_library/derived/`, and only offers review overlays whose graph summaries match the
 selected source set. The checked-in fallback manifest currently points to
-`source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-34061d1e4bf6c460`
-and will take over automatically once it has a graph export. A fresh load opens on the full
+`source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-5e65d845ce77e1a0`
+and now supplies the default graph export. A fresh load opens on the full
 validated knowledge base by default, covering laws, regulations, policies, forest plans, and
 supporting documents for the resolved source set; scene buttons remain above Lens and narrow from
 that full-knowledge-base starting point into optional review/example views, and

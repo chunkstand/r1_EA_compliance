@@ -19,14 +19,14 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
 
     assert manifest["source_set_id"] == "source-set-ba8d0feae79501b8"
-    assert manifest["full_canonical_source_set_id"] == "source-set-34061d1e4bf6c460"
+    assert manifest["full_canonical_source_set_id"] == "source-set-5e65d845ce77e1a0"
 
     active_catalog = suite_results["full_canonical_catalog_manifest"]
     assert active_catalog["required_for_current_promotion"] is False
     assert active_catalog["required_for_full_canonical_corpus"] is True
     active_catalog_checks = {check["name"]: check for check in active_catalog["checks"]}
     assert active_catalog_checks["full_canonical_source_set_matches"]["equals"] == (
-        "source-set-34061d1e4bf6c460"
+        "source-set-5e65d845ce77e1a0"
     )
     assert active_catalog_checks["full_canonical_source_count"]["equals"] == 350
     assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 319
@@ -41,7 +41,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     }
     assert active_validation_checks["full_canonical_catalog_validation_passed"]["equals"] is True
     assert active_validation_checks["full_canonical_catalog_validation_source_set"]["equals"] == (
-        "source-set-34061d1e4bf6c460"
+        "source-set-5e65d845ce77e1a0"
     )
 
     full_canonical_currentness = suite_results["full_canonical_authority_currentness"]
@@ -58,7 +58,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         "authority-currentness-report-v0"
     )
     assert currentness_checks["full_canonical_authority_currentness_source_set"]["equals"] == (
-        "source-set-34061d1e4bf6c460"
+        "source-set-5e65d845ce77e1a0"
     )
     assert (
         currentness_checks["full_canonical_authority_currentness_validation_passed"][
@@ -109,7 +109,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_graph_summary_checks["full_canonical_source_set_graph_source_set_matches"][
             "equals"
         ]
-        == "source-set-34061d1e4bf6c460"
+        == "source-set-5e65d845ce77e1a0"
     )
     assert (
         full_graph_summary_checks[
