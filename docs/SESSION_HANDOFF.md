@@ -5,6 +5,55 @@ Date: 2026-05-11
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Non-Custer Review Gate Expansion
+
+The first non-Custer reviewer-ready forest-plan review slice is now implemented and verified for
+Beaverhead-Deerlodge without breaking the long-lived default Custer contract.
+
+- profile/config alignment:
+  `config/forest_plan_profiles.json` still carries explicit profiles for all `10` tracked
+  readiness units, and the Beaverhead-Deerlodge profile now adds tracked district, landscape,
+  management-area, overlay, and supporting-route vocabularies grounded in the active local BDNF
+  plan, FEIS, ROD, and ESA support records
+- compliance-path alignment:
+  `run_compliance_review(...)` now threads explicit forest-plan profile selection into
+  `run_forest_plan_resolver(...)`, and `compliance-review`, `compliance-review-eval`, plus
+  `compliance-gold-eval` now accept `--forest-unit-id` and `--forest-plan-profiles-path`
+- gate alignment:
+  `forest_plan_component_gate_reviewer_ready` is no longer hard-coded to
+  `scope_status="custer_gallatin"`; any explicitly selected in-scope profile now has to clear the
+  reviewer-ready component/adjudication gate, while ambiguous and out-of-scope packages still keep
+  the gate non-required
+- proving coverage:
+  focused tests now prove a Beaverhead-selected compliance review resolves `scope_status` to
+  `beaverhead_deerlodge_nf`, resolves Dillon District plus Big Hole / West Big Hole / IRA context,
+  routes FEIS/ROD/ESA supporting evidence, and fails closed unless the selected profile’s forest
+  plan component gate is reviewer-ready
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_compliance_review.py tests/test_architecture_contract.py`: passed `143/143`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `python -m json.tool config/forest_plan_profiles.json >/dev/null`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- the default resolver/compliance path still centers Custer Gallatin unless a non-default
+  `forest_unit_id` is selected explicitly
+- Beaverhead is now the first non-Custer reviewer-ready path, but the remaining non-Custer
+  profiles still mostly stop at source-record readiness and need their own richer
+  district/area/overlay/trigger authoring
+- this pass generalized the gate and one proving profile; it did not yet prove reviewer-ready
+  package review across the rest of the Region 1 roster
+
+Immediate next step if this slice is continued:
+
+1. Repeat the Beaverhead profile-depth pattern across the next non-Custer units, then prove those
+   richer profiles through selected real package reviews before claiming broader any-R1 reviewer
+   readiness.
+
 ## Region 1 Resolver Profile Expansion
 
 The next any-R1-review capability slice is now implemented in tracked config, but it does not yet

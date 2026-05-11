@@ -10,6 +10,8 @@ import re
 
 from .compliance_review_eval import run_compliance_review_eval
 from .compliance_validation import VALID_FINDING_STATUSES
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import GENERATED_RULE_PACK_SCHEMA_VERSION
 from .rule_packs import load_rule_pack
@@ -38,6 +40,8 @@ def run_compliance_gold_eval(
     rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     source_set_id: str | None = None,
     index_path: Path | None = None,
+    forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
+    forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     results_dir: Path | None = None,
     source_top_k: int = 3,
     package_top_k: int = 3,
@@ -87,6 +91,8 @@ def run_compliance_gold_eval(
                 rule_pack_path=rule_pack_path,
                 source_set_id=source_set_id,
                 index_path=index_path,
+                forest_unit_id=forest_unit_id,
+                forest_plan_profiles_path=forest_plan_profiles_path,
                 results_dir=compliance_review_eval_dir,
                 source_top_k=source_top_k,
                 package_top_k=package_top_k,

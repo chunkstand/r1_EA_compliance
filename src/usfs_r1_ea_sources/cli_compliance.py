@@ -12,6 +12,8 @@ from .compliance_gold_eval import run_compliance_gold_eval
 from .compliance_review import run_compliance_review
 from .compliance_review_eval import DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH
 from .compliance_review_eval import run_compliance_review_eval
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 
 
@@ -75,6 +77,8 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            forest_unit_id=args.forest_unit_id,
+            forest_plan_profiles_path=args.forest_plan_profiles_path,
             review_id=args.review_id,
             results_dir=args.results_dir,
             source_top_k=args.source_top_k,
@@ -96,6 +100,8 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            forest_unit_id=args.forest_unit_id,
+            forest_plan_profiles_path=args.forest_plan_profiles_path,
             results_dir=args.results_dir,
             source_top_k=args.source_top_k,
             package_top_k=args.package_top_k,
@@ -114,6 +120,8 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            forest_unit_id=args.forest_unit_id,
+            forest_plan_profiles_path=args.forest_plan_profiles_path,
             results_dir=args.results_dir,
             source_top_k=args.source_top_k,
             package_top_k=args.package_top_k,
@@ -145,6 +153,12 @@ def _add_compliance_review_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output-dir", default=Path("source_library"), type=Path)
     parser.add_argument("--source-set-id")
     parser.add_argument("--index-path", type=Path)
+    parser.add_argument("--forest-unit-id", default=DEFAULT_FOREST_PLAN_PROFILE_ID)
+    parser.add_argument(
+        "--forest-plan-profiles-path",
+        default=DEFAULT_FOREST_PLAN_PROFILES_PATH,
+        type=Path,
+    )
     parser.add_argument("--rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
     parser.add_argument("--source-top-k", type=int, default=3)
     parser.add_argument("--package-top-k", type=int, default=3)

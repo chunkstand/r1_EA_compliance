@@ -762,7 +762,7 @@
         "Deerlodge"
       ],
       "active_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
-      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Beaverhead-Deerlodge National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Beaverhead-Deerlodge National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion, then enriched with district, landscape, management-area, overlay, and supporting-route terms from the active local BDNF plan, FEIS, ROD, and ESA support records.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
           "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01",
@@ -822,10 +822,202 @@
         "biological_opinion_2",
         "biological_opinion_3"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-butte",
+          "category": "district",
+          "name": "Butte Ranger District",
+          "aliases": [
+            "Butte District"
+          ]
+        },
+        {
+          "entry_id": "district-dillon",
+          "category": "district",
+          "name": "Dillon Ranger District",
+          "aliases": [
+            "Dillon District"
+          ]
+        },
+        {
+          "entry_id": "district-jefferson",
+          "category": "district",
+          "name": "Jefferson Ranger District",
+          "aliases": [
+            "Jefferson District"
+          ]
+        },
+        {
+          "entry_id": "district-madison",
+          "category": "district",
+          "name": "Madison Ranger District",
+          "aliases": [
+            "Madison District"
+          ]
+        },
+        {
+          "entry_id": "district-pintler",
+          "category": "district",
+          "name": "Pintler Ranger District",
+          "aliases": [
+            "Pintler District"
+          ]
+        },
+        {
+          "entry_id": "district-wisdom",
+          "category": "district",
+          "name": "Wisdom Ranger District",
+          "aliases": [
+            "Wisdom District"
+          ]
+        },
+        {
+          "entry_id": "district-wise-river",
+          "category": "district",
+          "name": "Wise River Ranger District",
+          "aliases": [
+            "Wise River District"
+          ]
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-big-hole-landscape",
+          "category": "geographic_area",
+          "name": "Big Hole Landscape",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-clark-fork-flint-landscape",
+          "category": "geographic_area",
+          "name": "Clark Fork Flint Landscape",
+          "aliases": [
+            "Clark Fork-Flint Landscape",
+            "Clark Fork-Flints Landscape"
+          ]
+        },
+        {
+          "entry_id": "geo-gravelly-landscape",
+          "category": "geographic_area",
+          "name": "Gravelly Landscape",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-madison-landscape",
+          "category": "geographic_area",
+          "name": "Madison Landscape",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-pioneer-landscape",
+          "category": "geographic_area",
+          "name": "Pioneer Landscape",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-tobacco-root-landscape",
+          "category": "geographic_area",
+          "name": "Tobacco Root Landscape",
+          "aliases": []
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-west-big-hole",
+          "category": "management_area",
+          "name": "West Big Hole Management Area",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-anderson-mountain",
+          "category": "management_area",
+          "name": "Anderson Mountain",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-antelope-basin",
+          "category": "management_area",
+          "name": "Antelope Basin",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-basin",
+          "category": "management_area",
+          "name": "Basin",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-east-deerlodge",
+          "category": "management_area",
+          "name": "East Deerlodge",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-greenhorn-mountains",
+          "category": "management_area",
+          "name": "Greenhorn Mountains",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-lobo-mesa",
+          "category": "management_area",
+          "name": "Lobo Mesa",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-middle-mountain",
+          "category": "management_area",
+          "name": "Middle Mountain",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-mt-jefferson",
+          "category": "management_area",
+          "name": "Mt. Jefferson",
+          "aliases": [
+            "Mount Jefferson"
+          ]
+        },
+        {
+          "entry_id": "mgmt-pintler-face",
+          "category": "management_area",
+          "name": "Pintler Face",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-whitetail",
+          "category": "management_area",
+          "name": "Whitetail",
+          "aliases": []
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-inventoried-roadless-area",
+          "category": "overlay",
+          "name": "Inventoried Roadless Area",
+          "aliases": [
+            "Inventoried Roadless Areas"
+          ]
+        },
+        {
+          "entry_id": "overlay-recommended-wilderness",
+          "category": "overlay",
+          "name": "Recommended Wilderness",
+          "aliases": [
+            "Recommended Wilderness Areas"
+          ]
+        },
+        {
+          "entry_id": "overlay-wilderness-study-area",
+          "category": "overlay",
+          "name": "Wilderness Study Area",
+          "aliases": [
+            "Wilderness Study Areas",
+            "WSA"
+          ]
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",
@@ -836,7 +1028,170 @@
         "standard",
         "suitability"
       ],
-      "supporting_record_trigger_rules": [],
+      "supporting_record_trigger_rules": [
+        {
+          "route_id": "support-feis-plan-context",
+          "category": "feis_context",
+          "name": "FEIS travel-management and recreation context",
+          "target_source_role": "final_environmental_impact_statement",
+          "package_terms": [
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiers to",
+            "tiered to",
+            "incorporates by reference",
+            "travel management"
+          ],
+          "source_query": "Beaverhead Deerlodge final environmental impact statement travel management recreation allocations recommended wilderness roadless areas",
+          "source_terms": [
+            "final environmental impact statement",
+            "travel management",
+            "recreation allocations",
+            "recommended wilderness",
+            "roadless areas"
+          ],
+          "trigger_terms": [
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiers to",
+            "tiered to",
+            "incorporates by reference"
+          ]
+        },
+        {
+          "route_id": "support-rod-travel-management",
+          "category": "decision_basis",
+          "name": "Travel-management record of decision",
+          "target_source_role": "record_of_decision_2",
+          "package_terms": [
+            "Record of Decision",
+            "ROD",
+            "travel management",
+            "summer non-motorized",
+            "winter non-motorized"
+          ],
+          "source_query": "Beaverhead Deerlodge record of decision travel management summer non-motorized winter non-motorized recommended wilderness",
+          "source_terms": [
+            "record of decision",
+            "travel management",
+            "summer non-motorized",
+            "winter non-motorized",
+            "recommended wilderness"
+          ],
+          "trigger_terms": [
+            "Record of Decision",
+            "ROD"
+          ]
+        },
+        {
+          "route_id": "support-lynx-biological-assessment",
+          "category": "esa_consultation",
+          "name": "Canada lynx biological assessment",
+          "target_source_role": "biological_assessment_1",
+          "package_terms": [
+            "Biological Assessment",
+            "BA",
+            "Canada lynx",
+            "ESA",
+            "critical habitat"
+          ],
+          "source_query": "Beaverhead Deerlodge Canada lynx biological assessment ESA critical habitat",
+          "source_terms": [
+            "biological assessment",
+            "Canada lynx",
+            "critical habitat",
+            "ESA"
+          ],
+          "trigger_terms": [
+            "Biological Assessment",
+            "BA",
+            "Canada lynx",
+            "ESA",
+            "critical habitat"
+          ]
+        },
+        {
+          "route_id": "support-lynx-biological-opinion",
+          "category": "esa_consultation",
+          "name": "Canada lynx biological opinion",
+          "target_source_role": "biological_opinion_1",
+          "package_terms": [
+            "Biological Opinion",
+            "BO",
+            "Canada lynx",
+            "ESA",
+            "terms and conditions"
+          ],
+          "source_query": "Beaverhead Deerlodge Canada lynx biological opinion ESA terms and conditions",
+          "source_terms": [
+            "biological opinion",
+            "Canada lynx",
+            "terms and conditions",
+            "ESA"
+          ],
+          "trigger_terms": [
+            "Biological Opinion",
+            "BO",
+            "Canada lynx",
+            "ESA",
+            "terms and conditions"
+          ]
+        },
+        {
+          "route_id": "support-grizzly-biological-assessment",
+          "category": "esa_consultation",
+          "name": "Grizzly bear biological assessment",
+          "target_source_role": "biological_assessment_2",
+          "package_terms": [
+            "Biological Assessment",
+            "BA",
+            "grizzly bear",
+            "ESA",
+            "action area"
+          ],
+          "source_query": "Beaverhead Deerlodge grizzly bear biological assessment ESA action area",
+          "source_terms": [
+            "biological assessment",
+            "grizzly bear",
+            "action area",
+            "ESA"
+          ],
+          "trigger_terms": [
+            "Biological Assessment",
+            "BA",
+            "grizzly bear",
+            "ESA",
+            "action area"
+          ]
+        },
+        {
+          "route_id": "support-grizzly-biological-opinion",
+          "category": "esa_consultation",
+          "name": "Grizzly bear biological opinion",
+          "target_source_role": "biological_opinion_2",
+          "package_terms": [
+            "Biological Opinion",
+            "BO",
+            "grizzly bear",
+            "ESA",
+            "reinitiation"
+          ],
+          "source_query": "Beaverhead Deerlodge grizzly bear biological opinion ESA reinitiation",
+          "source_terms": [
+            "biological opinion",
+            "grizzly bear",
+            "reinitiation",
+            "ESA"
+          ],
+          "trigger_terms": [
+            "Biological Opinion",
+            "BO",
+            "grizzly bear",
+            "ESA",
+            "reinitiation"
+          ]
+        }
+      ],
       "review_topics": [
         "Resolve Beaverhead-Deerlodge National Forest forest-plan scope and source-record readiness",
         "validate plan consistency against applicable plan components and supporting forest-plan records"

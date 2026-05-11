@@ -492,7 +492,7 @@ def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
     component_adjudication_reviewer_ready = bool(
         component_adjudication.get("reviewer_ready")
     )
-    required = scope_status == "custer_gallatin"
+    required = _forest_plan_component_gate_required(scope_status)
     if not required:
         passed = True
     else:
@@ -535,6 +535,12 @@ def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
             ),
         },
     }
+
+
+def _forest_plan_component_gate_required(scope_status: str) -> bool:
+    if not scope_status:
+        return False
+    return scope_status not in {"ambiguous", "not_custer_gallatin", "not_selected_forest_unit"}
 
 
 def check_claim_findings_have_source_citations(findings: list[dict]) -> dict:

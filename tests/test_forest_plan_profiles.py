@@ -89,6 +89,30 @@ class ForestPlanProfileTests(unittest.TestCase):
             profile.source_record_id_for_role("biological_opinion_3"),
             "R1PLAN-beaverhead-deerlodge-nf-25",
         )
+        self.assertIn(
+            "Dillon Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Big Hole Landscape",
+            [entry.name for entry in profile.geographic_area_terms],
+        )
+        self.assertIn(
+            "West Big Hole Management Area",
+            [entry.name for entry in profile.management_area_terms],
+        )
+        self.assertIn(
+            "Inventoried Roadless Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertIn(
+            "support-feis-plan-context",
+            [rule.route_id for rule in profile.supporting_record_trigger_rules],
+        )
+        self.assertIn(
+            "support-lynx-biological-opinion",
+            [rule.route_id for rule in profile.supporting_record_trigger_rules],
+        )
 
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()

@@ -115,10 +115,20 @@ Latest closeout on 2026-05-11:
   tracked readiness units rather than only the original Custer Gallatin plus the earlier
   Beaverhead expansion slice. The newly added non-Custer profiles flatten readiness-contract
   multi-record document families into tracked per-part source roles so resolver selection can now
-  be profile-owned across the full roster, even though most of those profiles still have empty
-  district, area, overlay, and supporting-trigger vocabularies.
+  be profile-owned across the full roster. The first non-Custer reviewer-ready depth slice is now
+  implemented for Beaverhead-Deerlodge: its tracked profile carries district, landscape,
+  management-area, overlay, and supporting-trigger vocabularies derived from the active local
+  BDNF plan/support records, and the compliance-review path now threads explicit
+  `forest_unit_id` / `forest_plan_profiles_path` selection through `compliance-review`,
+  `compliance-review-eval`, and `compliance-gold-eval`.
+- `forest_plan_component_gate_reviewer_ready` is no longer hard-coded to
+  `scope_status="custer_gallatin"`. Any explicitly selected in-scope forest-plan profile now has
+  to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
+  packages still remain non-required.
 - The next required implementation boundary is no longer stale-surface alignment or active
-  parser/component recovery. It is the separate post-V1 expansion lane.
+  parser/component recovery. It is the separate post-V1 expansion lane, beginning with repeating
+  Beaverhead-level profile vocabularies and supporting-route depth across the remaining non-Custer
+  forest units and then proving those profiles against real package reviews.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

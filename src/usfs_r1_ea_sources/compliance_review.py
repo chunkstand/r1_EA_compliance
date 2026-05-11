@@ -26,6 +26,8 @@ from .compliance_validation import compliance_summary as _summary
 from .compliance_validation import rule_pack_summary as _rule_pack_summary
 from .compliance_validation import validation_report as _validation_report
 from .ea_review import run_ea_review
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver import run_forest_plan_resolver
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import SAFE_ID_RE
@@ -68,6 +70,8 @@ def run_compliance_review(
     rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     source_set_id: str | None = None,
     index_path: Path | None = None,
+    forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
+    forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     review_id: str | None = None,
     results_dir: Path | None = None,
     source_top_k: int = 3,
@@ -185,6 +189,8 @@ def run_compliance_review(
     forest_plan_result = run_forest_plan_resolver(
         package_path=package_path,
         output_dir=output_dir,
+        forest_unit_id=forest_unit_id,
+        profiles_path=forest_plan_profiles_path,
         source_set_id=source_set_id,
         index_path=index_path,
         review_id=review_id,

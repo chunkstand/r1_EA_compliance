@@ -1005,10 +1005,14 @@ carries an `evidence_role` so project-location and background/reference mentions
 Negative package-location text such as `not part of the project area` is filtered before geographic
 and management area resolution. When the default Custer Gallatin profile is selected, non-Custer
 packages are marked `not_custer_gallatin` and treated as out of scope. The tracked resolver config
-now carries explicit profiles for all `10` Region 1 readiness units, but most of those newly
-expanded profiles currently provide source-record readiness contracts only; district terms,
-geographic areas, overlays, and supporting evidence routes remain a separate follow-on authoring
-lane before they can match the current Custer Gallatin review depth.
+now carries explicit profiles for all `10` Region 1 readiness units. The first non-Custer
+reviewer-ready slice is now implemented for Beaverhead-Deerlodge: its profile carries district,
+landscape, management-area, overlay, and supporting-evidence routes, and `compliance-review`,
+`compliance-review-eval`, and `compliance-gold-eval` now accept `--forest-unit-id` plus
+`--forest-plan-profiles-path` so the selected profile drives resolver scope and the
+`forest_plan_component_gate_reviewer_ready` requirement. The default profile still preserves the
+long-lived Custer Gallatin V0 contract, and most other non-Custer profiles still need the same
+richer vocabulary and supporting-route authoring before they can match that review depth.
 
 Export and evaluate a forest-plan component adjudication file for an existing review:
 

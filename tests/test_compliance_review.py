@@ -830,6 +830,83 @@ class ComplianceReviewTests(unittest.TestCase):
                 {edge["relationship"] for edge in edges},
             )
 
+    def test_beaverhead_compliance_review_requires_selected_profile_component_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_beaverhead_compliance_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Beaverhead-Deerlodge National Forest on the "
+                    "Dillon Ranger District in the Big Hole Landscape and the West Big Hole "
+                    "Management Area. The EA tiers to the FEIS and references the Record of "
+                    "Decision. Inventoried Roadless Area direction applies. ESA consultation "
+                    "includes a Biological Assessment and Biological Opinion for grizzly bear. "
+                    "No new permanent or temporary roads are proposed. "
+                    "| BD-STD-WBH-01 | New permanent or temporary roads shall not be allowed. "
+                    "| Yes | EA section 2.2 says no new permanent or temporary roads are "
+                    "proposed. |"
+                ),
+            )
+            rule_pack_path = _write_beaverhead_rule_pack(Path(tmp))
+
+            result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id="beaverhead-compliance-unit",
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+                forest_unit_id="beaverhead-deerlodge-nf",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertEqual(forest_plan["scope_status"], "beaverhead_deerlodge_nf")
+            self.assertTrue(forest_plan["reviewer_ready"])
+            self.assertTrue(forest_plan["component_evaluation"]["validation_passed"])
+            self.assertTrue(forest_plan["component_evaluation"]["reviewer_ready"])
+            context = json.loads(Path(forest_plan["context_path"]).read_text(encoding="utf-8"))
+            self.assertEqual(
+                [entry["name"] for entry in context["project_location_signals"]],
+                ["Dillon Ranger District"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["geographic_areas"]],
+                ["Big Hole Landscape"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["management_areas"]],
+                ["West Big Hole Management Area"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["overlays"]],
+                ["Inventoried Roadless Area"],
+            )
+            self.assertEqual(
+                {entry["route_id"] for entry in context["supporting_plan_evidence"]},
+                {
+                    "support-feis-plan-context",
+                    "support-rod-travel-management",
+                    "support-lynx-biological-assessment",
+                    "support-lynx-biological-opinion",
+                    "support-grizzly-biological-assessment",
+                    "support-grizzly-biological-opinion",
+                },
+            )
+
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertTrue(forest_plan_gate["details"]["required"])
+            self.assertEqual(
+                forest_plan_gate["details"]["scope_status"],
+                "beaverhead_deerlodge_nf",
+            )
+            self.assertTrue(forest_plan_gate["details"]["component_reviewer_ready"])
+
     def test_custer_component_adjudication_resolves_real_ea_omission_gate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -2634,6 +2711,14 @@ _CUSTER_PLAN_COMPONENT_TEXT = (
     "Standards (BC-STD-CMBCA) 01 New permanent or temporary roads shall not be allowed."
 )
 
+_BEAVERHEAD_PLAN_COMPONENT_TEXT = (
+    "The 2009 Beaverhead-Deerlodge Forest Plan includes the Big Hole Landscape and the West Big "
+    "Hole Management Area. Inventoried Roadless Area and recommended wilderness direction apply "
+    "where mapped. "
+    "West Big Hole Management Area Standards Standard 1: New permanent or temporary roads "
+    "shall not be allowed."
+)
+
 _CUSTER_SOURCES = (
     (
         "R1PLAN-custer-gallatin-nf-01",
@@ -2673,6 +2758,73 @@ _CUSTER_SOURCES = (
         "R1PLAN-custer-gallatin-nf-07",
         "Custer Gallatin LMP Biological Opinion PDF",
         "The biological opinion documents ESA section 7 consultation.",
+    ),
+)
+
+_BEAVERHEAD_SOURCES = (
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-01",
+        "Beaverhead-Deerlodge planning page",
+        (
+            "The Beaverhead-Deerlodge planning page lists the forest plan, corrected FEIS, "
+            "records of decision, and biological assessment and biological opinion support records."
+        ),
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-02",
+        "2009 Beaverhead-Deerlodge Forest Plan PDF",
+        _BEAVERHEAD_PLAN_COMPONENT_TEXT,
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-03",
+        "Beaverhead-Deerlodge Corrected FEIS PDF",
+        (
+            "The final environmental impact statement describes travel management, recreation "
+            "allocations, recommended wilderness, and roadless areas."
+        ),
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-04",
+        "Beaverhead-Deerlodge Record of Decision PDF",
+        "The record of decision identifies the selected alternative and plan approval.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-05",
+        "Beaverhead-Deerlodge Travel Management Record of Decision PDF",
+        (
+            "The record of decision enacts travel management direction for summer non-motorized "
+            "and winter non-motorized allocations and recommended wilderness closures."
+        ),
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-18",
+        "Beaverhead-Deerlodge Canada Lynx Biological Assessment PDF",
+        "The biological assessment evaluates Canada lynx habitat and critical habitat under ESA.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-19",
+        "Beaverhead-Deerlodge Canada Lynx Biological Opinion PDF",
+        "The biological opinion documents Canada lynx ESA consultation terms and conditions.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-22",
+        "Beaverhead-Deerlodge Grizzly Bear Biological Assessment PDF",
+        "The biological assessment evaluates grizzly bear action area effects under ESA.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-23",
+        "Beaverhead-Deerlodge Grizzly Bear Biological Opinion PDF",
+        "The biological opinion discusses grizzly bear ESA reinitiation and consultation terms.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-24",
+        "Beaverhead-Deerlodge Supplemental Grizzly Bear Biological Assessment PDF",
+        "The supplemental biological assessment describes grizzly bear action area effects.",
+    ),
+    (
+        "R1PLAN-beaverhead-deerlodge-nf-25",
+        "Beaverhead-Deerlodge Supplemental Grizzly Bear Biological Opinion PDF",
+        "The supplemental biological opinion discusses grizzly bear consultation and reinitiation.",
     ),
 )
 
@@ -2761,6 +2913,41 @@ def _build_custer_compliance_source_library(output_dir: Path, source_set_id: str
     )
 
 
+def _build_beaverhead_compliance_source_library(output_dir: Path, source_set_id: str) -> None:
+    source_record_ids = [source_record_id for source_record_id, _title, _text in _BEAVERHEAD_SOURCES]
+    _write_extraction_diagnostics(
+        output_dir,
+        source_set_id,
+        source_record_ids=source_record_ids,
+    )
+    _write_chunks(
+        output_dir,
+        source_set_id,
+        [
+            _chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                title=title,
+                document_role="forest_plan",
+                authority_level="forest_plan",
+                citation_label=f"{source_record_id} | {title} | artifact abc123",
+                text=text,
+            )
+            for source_record_id, title, text in _BEAVERHEAD_SOURCES
+        ],
+    )
+    _write_catalog_sqlite(
+        output_dir,
+        {
+            source_record_id: [title]
+            for source_record_id, title, _text in _BEAVERHEAD_SOURCES
+        },
+    )
+    build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+    build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+    _write_beaverhead_component_inventory(output_dir, source_set_id)
+
+
 def _write_extraction_diagnostics(
     output_dir: Path,
     source_set_id: str,
@@ -2823,6 +3010,125 @@ def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> P
         encoding="utf-8",
     )
     return path
+
+
+def _write_beaverhead_component_inventory(output_dir: Path, source_set_id: str) -> None:
+    components_dir = output_dir / "derived" / source_set_id / "forest_plan_components"
+    inventory_path = components_dir / "component_inventory.json"
+    coverage_path = components_dir / "component_inventory_build_coverage.json"
+    components_dir.mkdir(parents=True, exist_ok=True)
+    source_record_id = "R1PLAN-beaverhead-deerlodge-nf-02"
+    artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
+    content_sha256 = hashlib.sha256(_BEAVERHEAD_PLAN_COMPONENT_TEXT.encode("utf-8")).hexdigest()
+    source_chunk_ids = [f"chunk:{source_record_id}"]
+    provenance = {
+        "entity": {
+            "type": "forest_plan_component",
+            "source_record_id": source_record_id,
+            "source_chunk_ids": source_chunk_ids,
+            "artifact_sha256": artifact_sha256,
+            "content_sha256": content_sha256,
+        },
+        "activity": {
+            "type": "component_inventory_fixture",
+            "created_at": "2026-05-11T00:00:00Z",
+        },
+        "agent": {
+            "type": "deterministic_test_fixture",
+            "name": "tests/test_compliance_review.py",
+            "version": "forest-plan-component-inventory-v0",
+        },
+    }
+    inventory = {
+        "schema_version": "forest-plan-component-inventory-v0",
+        "inventory_id": "beaverhead-test-components-v0",
+        "forest_unit_id": "beaverhead-deerlodge-nf",
+        "plan_version": "2009",
+        "source_set_id": source_set_id,
+        "components": [
+            {
+                "component_id": "bdnf-west-big-hole-std-01",
+                "component_type": "standard",
+                "component_text": (
+                    "Standards (BD-STD-WBH) 01 New permanent or temporary roads shall not be "
+                    "allowed."
+                ),
+                "forest_unit_id": "beaverhead-deerlodge-nf",
+                "plan_version": "2009",
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "section_id": "west-big-hole-standard-1",
+                "section_heading": "West Big Hole Management Area Standards",
+                "page": None,
+                "citation_label": (
+                    "R1PLAN-beaverhead-deerlodge-nf-02 | test plan | artifact abc123"
+                ),
+                "geographic_area_ids": ["geo-big-hole-landscape"],
+                "management_area_ids": ["mgmt-west-big-hole"],
+                "overlay_ids": ["overlay-inventoried-roadless-area"],
+                "resource_topics": ["travel management"],
+                "source_chunk_ids": source_chunk_ids,
+                "artifact_sha256": artifact_sha256,
+                "content_sha256": content_sha256,
+                "activity_tags": ["new roads"],
+                "package_evidence_terms": ["new permanent or temporary roads"],
+                "provenance": provenance,
+            }
+        ],
+    }
+    inventory_path.write_text(json.dumps(inventory, indent=2, sort_keys=True), encoding="utf-8")
+    coverage = {
+        "schema_version": "forest-plan-component-inventory-build-coverage-v0",
+        "created_at": "2026-05-11T00:00:00Z",
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "chunks_path": str(output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"),
+        "selected_chunk_count": 1,
+        "detected_component_count": 1,
+        "detected_standard_count": 1,
+        "built_component_count": 1,
+        "built_standard_count": 1,
+        "missing_component_ids": [],
+        "missing_standard_ids": [],
+        "duplicate_component_ids": [],
+        "duplicate_standard_ids": [],
+        "validation_errors": [],
+        "detected_component_labels": [
+            {
+                "component_id": "bdnf-west-big-hole-std-01",
+                "component_type": "standard",
+                "label": "Standards",
+                "code": "West Big Hole Management Area",
+                "number": "1",
+                "source_record_id": source_record_id,
+                "chunk_id": source_chunk_ids[0],
+                "section_heading": "West Big Hole Management Area Standards",
+            }
+        ],
+        "detected_standard_labels": [
+            {
+                "component_id": "bdnf-west-big-hole-std-01",
+                "component_type": "standard",
+                "label": "Standards",
+                "code": "West Big Hole Management Area",
+                "number": "1",
+                "source_record_id": source_record_id,
+                "chunk_id": source_chunk_ids[0],
+                "section_heading": "West Big Hole Management Area Standards",
+            }
+        ],
+        "passed": True,
+        "checks": [
+            {"name": "selected_forest_plan_chunks_present", "passed": True, "details": {}},
+            {"name": "labeled_components_detected", "passed": True, "details": {}},
+            {"name": "standard_components_detected", "passed": True, "details": {}},
+            {"name": "all_detected_components_built", "passed": True, "details": {}},
+            {"name": "all_detected_standards_built", "passed": True, "details": {}},
+            {"name": "built_component_ids_are_unique", "passed": True, "details": {}},
+            {"name": "detected_standard_labels_are_unique", "passed": True, "details": {}},
+        ],
+    }
+    coverage_path.write_text(json.dumps(coverage, indent=2, sort_keys=True), encoding="utf-8")
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> None:
@@ -3414,6 +3720,7 @@ def _run_generated_compliance_review(
     package_path: Path,
     base_rule_pack_path: Path,
     include_non_applicable: bool = False,
+    forest_unit_id: str = "custer-gallatin-nf",
 ):
     generated_rule_pack_path = _write_generated_review_gate(
         output_dir=output_dir,
@@ -3428,6 +3735,7 @@ def _run_generated_compliance_review(
         output_dir=output_dir,
         source_set_id=source_set_id,
         rule_pack_path=generated_rule_pack_path,
+        forest_unit_id=forest_unit_id,
         review_id=review_id,
         reuse_package_cache=True,
     )
@@ -3525,6 +3833,44 @@ def _write_custer_rule_pack(directory: Path) -> Path:
         ],
     }
     path = directory / "custer-rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_beaverhead_rule_pack(directory: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-beaverhead-ea",
+        "version": "0.1.0",
+        "title": "Unit Beaverhead-Deerlodge EA Rule Pack",
+        "description": "Unit test Beaverhead-Deerlodge forest-plan rule pack.",
+        "baseline_source_record_ids": ["R1PLAN-beaverhead-deerlodge-nf-02"],
+        "rules": [
+            {
+                "id": "beaverhead_west_big_hole_lmp_2009",
+                "title": "Beaverhead-Deerlodge forest-plan standard is addressed",
+                "authority_category": "forest_plan",
+                "authority_family_id": "unit_beaverhead_forest_plan",
+                "authority_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+                "authority_document_role": "forest_plan",
+                "applicability_mode": "baseline",
+                "question": "Does the EA package address the applicable Beaverhead standard?",
+                "requirement": (
+                    "Beaverhead-Deerlodge EAs in the West Big Hole Management Area must "
+                    "address the standard prohibiting new permanent or temporary roads."
+                ),
+                "package_query": "new permanent or temporary roads",
+                "package_terms": ["new permanent or temporary roads"],
+                "source_query": "new permanent or temporary roads shall not be allowed",
+                "source_filters": {
+                    "document_role": "forest_plan",
+                    "source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+                },
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "beaverhead-rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
 

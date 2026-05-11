@@ -19,6 +19,8 @@ from .compliance_validation import (
 )
 from .compliance_validation import failed_check_names
 from .compliance_validation import validation_checks_passed
+from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import SAFE_ID_RE
 from .rule_packs import load_rule_pack
@@ -45,6 +47,8 @@ def run_compliance_review_eval(
     rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     source_set_id: str | None = None,
     index_path: Path | None = None,
+    forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
+    forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     results_dir: Path | None = None,
     source_top_k: int = 3,
     package_top_k: int = 3,
@@ -104,6 +108,8 @@ def run_compliance_review_eval(
             rule_pack_path=rule_pack_path,
             source_set_id=source_set_id,
             index_path=index_path,
+            forest_unit_id=forest_unit_id,
+            forest_plan_profiles_path=forest_plan_profiles_path,
             review_id=review_id,
             results_dir=review_dir,
             source_top_k=case_source_top_k,
