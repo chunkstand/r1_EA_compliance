@@ -133,8 +133,10 @@ Latest closeout on 2026-05-10:
   `compliance_gold_eval_results.json` under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
   prefers that review-local gold artifact over the unrelated global proving-lane result. The
-  broader review replay remains blocked by a stale gold contract and replay `compliance_review`
-  failing `forest_plan_component_gate_reviewer_ready`.
+  tracked gold contract now includes the current land-exchange rules, completed replay forest-plan
+  adjudications no longer block review readiness merely because they are classified as
+  `system_miss`, and the broader review replay now closes green at review `phase-eval` `18/18`
+  with `reviewer_ready=true`.
 
 The source-delta readiness gate is implemented by `forest-plan-source-delta-readiness`. The live
 gate over `r1-forest-plan-source-delta-capture-20260510-batches` passed the earlier scoped source
@@ -239,15 +241,16 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `compliance_gold_eval_results.json` under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
   prefers that review-local gold artifact over the unrelated global proving-lane result. The
-  remaining blockers are a stale gold contract and replay `compliance_review` failing
-  `forest_plan_component_gate_reviewer_ready`.
+  tracked gold contract now includes the current land-exchange rules, completed replay forest-plan
+  adjudications no longer block review readiness merely because they are classified as
+  `system_miss`, and the replay now closes green at review `phase-eval` `18/18` with
+  `reviewer_ready=true`.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
   `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
-  active catalog. The remaining replay repair work is now narrower: repair the stale gold
-  contract and close the replay compliance review's `forest_plan_component_gate_reviewer_ready`
-  blocker.
+  active catalog. The replay repair lane is now closed: replay-scoped compliance review, review-local
+  gold eval, and review-bound phase evaluation all pass against the archived merged catalog.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.

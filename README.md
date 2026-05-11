@@ -113,9 +113,10 @@ contracts moves review `phase-eval` to `16/18`. Replay-scoped compliance regener
 `compliance_review.json` and a review-local `compliance_gold_eval_results.json` under
 `source_library/reviews/v1-cg-ecid-source-delta-review/`, and `phase-eval --review-id
 v1-cg-ecid-source-delta-review` now prefers that review-local gold artifact over the unrelated
-global proving-lane gold result. The merged review still remains `reviewer_ready=false`; the
-remaining blockers are a stale gold contract and a replay `compliance_review` that still fails
-`forest_plan_component_gate_reviewer_ready`.
+global proving-lane gold result. The tracked gold contract now includes the current land-exchange
+rules, completed replay forest-plan adjudications no longer block review readiness merely because
+they are classified as `system_miss`, and the replay now closes green at review `phase-eval`
+`18/18` with `reviewer_ready=true`.
 
 Sequence 5 retrieval readiness is now implemented against the archived merged catalog. Use:
 
@@ -209,8 +210,10 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `compliance_gold_eval_results.json` under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`, and review-bound phase eval now
   prefers that review-local gold artifact over the unrelated global proving-lane result. The
-  remaining blockers are a stale gold contract and replay `compliance_review` failing
-  `forest_plan_component_gate_reviewer_ready`.
+  tracked gold contract now includes the current land-exchange rules, completed replay forest-plan
+  adjudications no longer block review readiness merely because they are classified as
+  `system_miss`, and the replay now closes green at review `phase-eval` `18/18` with
+  `reviewer_ready=true`.
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived

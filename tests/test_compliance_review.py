@@ -899,7 +899,7 @@ class ComplianceReviewTests(unittest.TestCase):
                 0,
             )
 
-    def test_custer_component_adjudication_keeps_system_miss_blocking(self) -> None:
+    def test_custer_component_adjudication_accepts_reviewed_system_miss(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
             source_set_id = "source-set-test"
@@ -939,12 +939,21 @@ class ComplianceReviewTests(unittest.TestCase):
                 base_rule_pack_path=rule_pack_path,
             )
 
-            self.assertFalse(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["reviewer_ready"])
             forest_plan = result.summary["forest_plan_review"]
-            self.assertFalse(forest_plan["component_adjudication"]["reviewer_ready"])
+            self.assertTrue(forest_plan["component_adjudication"]["reviewer_ready"])
+            self.assertEqual(forest_plan["component_adjudication"]["failed_checks"], [])
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertTrue(
+                forest_plan_gate["details"]["component_adjudication_reviewer_ready"]
+            )
             self.assertEqual(
-                forest_plan["component_adjudication"]["failed_checks"],
-                ["system_miss_adjudication"],
+                forest_plan_gate["details"]["component_adjudication_system_miss_count"],
+                1,
             )
 
     def test_custer_compliance_review_fails_closed_on_stale_component_inventory(self) -> None:

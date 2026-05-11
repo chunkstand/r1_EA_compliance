@@ -5,6 +5,42 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Replay Compliance And Gold Alignment Closeout
+
+The last two East Crazies replay-repair slices are now aligned and closed for archived review lane
+`v1-cg-ecid-source-delta-review`.
+
+- forest-plan gate alignment:
+  completed replay component adjudications no longer block `compliance_review` merely because the
+  resolved dispositions are classified as `system_miss`; the miss counts remain explicit in
+  `forest_plan_context_summary.json` and `compliance_validation.json`, but a completed reviewed
+  adjudication path now counts as reviewer-ready
+- gold-contract alignment:
+  `config/compliance_gold_eval_v0.json` now includes the four current land-exchange rules, so the
+  review-local gold rerun covers the full current base rule pack instead of failing closed on stale
+  rule coverage
+- live replay outcome:
+  replay `compliance_review` is now reviewer-ready, the review-local gold eval now passes `10/10`
+  adjudicated cases for `source-set-8a4005c8a083af1a`, and
+  `phase-eval --review-id v1-cg-ecid-source-delta-review` now passes `18/18` with
+  `reviewer_ready=true`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py -k 'custer_component_adjudication or compliance_gold_eval'`: passed `10/10`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path 'source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)' --output-dir source_library --review-id v1-cg-ecid-source-delta-review --source-set-id source-set-8a4005c8a083af1a --rule-pack source_library/reviews/v1-cg-ecid-source-delta-review/applicability/generated_rule_pack.json --reuse-package-cache`: passed with replay `compliance_validation.json` green and `reviewer_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-8a4005c8a083af1a --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/compliance_gold_eval_v0.json --results-dir source_library/reviews/v1-cg-ecid-source-delta-review`: passed with `10/10` cases and review-local `compliance_gold_eval_results.json`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-source-delta-review`: passed `18/18` with `reviewer_ready=true`
+
+Residual risks:
+
+- the reviewed replay still records `system_miss_count=6` in the component adjudication summary; that is now an accepted reviewed-resolution signal rather than a readiness blocker
+- the replay lane is green, but those six typed misses still describe real system-improvement opportunities if we later want the component findings themselves, not just the reviewed adjudication path, to go green without operator resolution
+
+Immediate next step if this slice is continued:
+
+1. Treat the archived replay lane as closed and move back to the active promotion or expansion lanes; do not reopen replay repair unless the archived artifacts drift.
+
 ## Replay Compliance Regeneration And Review-Local Gold Preference
 
 The next East Crazies replay-repair slice is now implemented for archived review lane

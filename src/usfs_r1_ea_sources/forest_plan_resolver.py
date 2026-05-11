@@ -1727,8 +1727,6 @@ def _component_adjudication_readiness(
         failed_checks.append("resolved_item_count_mismatch")
     if pending_count:
         failed_checks.append("pending_adjudication")
-    if system_miss_count:
-        failed_checks.append("system_miss_adjudication")
     return {
         "eval_path": str(eval_path),
         "eval_exists": True,

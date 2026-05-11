@@ -64,9 +64,14 @@
         "roadless_rule_36cfr_294b": "pass",
         "eo_11990_wetlands": "pass",
         "mbta_migratory_birds": "pass",
-        "eo_13186_migratory_birds": "pass"
+        "eo_13186_migratory_birds": "pass",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
+        "not_applicable": 4,
         "pass": 44
       },
       "expected_unsupported_finding_ids": [],
@@ -397,11 +402,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 14,
-        "not_applicable": 18,
+        "not_applicable": 22,
         "pass": 12
       },
       "expected_unsupported_finding_ids": [],
@@ -626,11 +635,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 11,
-        "not_applicable": 17,
+        "not_applicable": 21,
         "pass": 16
       },
       "expected_unsupported_finding_ids": [],
@@ -859,11 +872,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 12,
-        "not_applicable": 16,
+        "not_applicable": 20,
         "pass": 16
       },
       "expected_unsupported_finding_ids": [],
@@ -1098,11 +1115,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 14,
-        "not_applicable": 15,
+        "not_applicable": 19,
         "pass": 15
       },
       "expected_unsupported_finding_ids": [],
@@ -1343,11 +1364,15 @@
         "roadless_rule_36cfr_294b": "pass",
         "eo_11990_wetlands": "pass",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 13,
-        "not_applicable": 16,
+        "not_applicable": 20,
         "pass": 15
       },
       "expected_unsupported_finding_ids": [],
@@ -1582,11 +1607,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "pass",
-        "eo_13186_migratory_birds": "pass"
+        "eo_13186_migratory_birds": "pass",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 14,
-        "not_applicable": 16,
+        "not_applicable": 20,
         "pass": 14
       },
       "expected_unsupported_finding_ids": [],
@@ -1821,11 +1850,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 12,
-        "not_applicable": 18,
+        "not_applicable": 22,
         "pass": 14
       },
       "expected_unsupported_finding_ids": [],
@@ -2048,11 +2081,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 14,
-        "not_applicable": 17,
+        "not_applicable": 21,
         "pass": 13
       },
       "expected_unsupported_finding_ids": [],
@@ -2281,11 +2318,15 @@
         "roadless_rule_36cfr_294b": "not_applicable",
         "eo_11990_wetlands": "not_applicable",
         "mbta_migratory_birds": "not_applicable",
-        "eo_13186_migratory_birds": "not_applicable"
+        "eo_13186_migratory_birds": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_fs_policy_and_project_references": "not_applicable"
       },
       "expected_finding_status_counts": {
         "gap": 26,
-        "not_applicable": 18
+        "not_applicable": 22
       },
       "expected_unsupported_finding_ids": [],
       "expected_source_record_ids": {
