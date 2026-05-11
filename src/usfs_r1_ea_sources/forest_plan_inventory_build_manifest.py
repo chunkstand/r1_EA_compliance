@@ -26,6 +26,13 @@ SUPPORTED_ACCEPTED_BLOCKERS = {
     "component_inventory_build_required",
     "official_source_gap_documented",
 }
+COMPONENT_SOURCE_RECORD_ROLES = {
+    "administrative_change",
+    "administrative_changes",
+    "forest_plan_amendments",
+    "primary_land_management_plan",
+    "primary_land_resource_management_plan_part",
+}
 SOURCE_SET_ID_RE = re.compile(r"^source-set-[A-Za-z0-9]+$")
 
 
@@ -59,6 +66,18 @@ class InventoryBuildProfile:
             for source_record_ids in self.build_source_record_ids_by_role.values()
             for source_record_id in source_record_ids
         )
+
+    @property
+    def component_source_record_ids(self) -> tuple[str, ...]:
+        selected = tuple(
+            source_record_id
+            for role, source_record_ids in self.build_source_record_ids_by_role.items()
+            if role in COMPONENT_SOURCE_RECORD_ROLES
+            for source_record_id in source_record_ids
+        )
+        if selected:
+            return selected
+        return (self.primary_plan_source_record_id,)
 
 
 @dataclass(frozen=True)

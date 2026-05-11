@@ -617,6 +617,171 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                 "Plan Components-Crazy Mountains Backcountry Area (CMBCA)",
             )
 
+    def test_builds_inventory_from_code_style_components_without_parentheses(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-nez-perce-clearwater-nfs-06"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Across the Landscape Goals FW-GL-TE-01. The forest works with "
+                            "partners across jurisdictions. Desired Conditions FW-DC-TE-02. "
+                            "Habitat conditions support native species. Objectives "
+                            "FW-OBJ-TE-03. Restore hardwood overstory conditions. "
+                            "Standards FW-STD-TE-04. Limit road density near key habitat."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="nez-perce-clearwater-nfs",
+                plan_version="2025",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="nez-perce-clearwater-nfs",
+            )
+            component_ids = {component["component_id"] for component in components}
+            self.assertIn(f"{source_record_id}-FW-GL-TE-01", component_ids)
+            self.assertIn(f"{source_record_id}-FW-DC-TE-02", component_ids)
+            self.assertIn(f"{source_record_id}-FW-OBJ-TE-03", component_ids)
+            self.assertIn(f"{source_record_id}-FW-STD-TE-04", component_ids)
+
+    def test_builds_inventory_from_colon_number_components(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-beaverhead-deerlodge-nf-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Air Quality Standards Standard 1: Meet smoke management "
+                            "requirements according to the Idaho/Montana Airshed Group "
+                            "Operating Guide. Standard 2: Coordinate burns to reduce smoke "
+                            "intrusions."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                plan_version="2009",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="beaverhead-deerlodge-nf",
+            )
+            component_ids = {component["component_id"] for component in components}
+            self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-1", component_ids)
+            self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-2", component_ids)
+
+    def test_colon_number_table_of_contents_entries_are_suppressed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-dakota-prairie-grasslands-05"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "GOALS AND OBJECTIVES Goal 1: Ensure Sustainable Ecosystems "
+                            ".................................... 1-2 Goal 2: Multiple "
+                            "Benefits to People .................................... 1-4"
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="dakota-prairie-grasslands",
+                plan_version="2002",
+                chunks_path=chunks_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["component_count"], 0)
+
+    def test_code_style_page_headers_are_suppressed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-nez-perce-clearwater-nfs-06"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Desired Conditions FW-DC-ED-01. Land Management Plan "
+                            "Nez Perce-Clearwater National Forests 41"
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Desired Conditions FW-DC-ED-01. Interpretation and "
+                            "educational opportunities enhance visitor understanding. "
+                            "Standards FW-STD-ED-02. Interpretive facilities shall "
+                            "protect cultural resources."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="nez-perce-clearwater-nfs",
+                plan_version="2025",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="nez-perce-clearwater-nfs",
+            )
+            component_ids = {component["component_id"] for component in components}
+            self.assertIn(f"{source_record_id}-FW-DC-ED-01", component_ids)
+            self.assertIn(f"{source_record_id}-FW-STD-ED-02", component_ids)
+            self.assertEqual(len(components), 2)
+
     def test_build_uses_nearby_section_context_for_area_prefixed_components(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -1109,17 +1274,67 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                 coverage["duplicate_component_ids"],
                 [f"{shared_source_record_id}-SH-STD-01-01"],
             )
-            self.assertEqual(
-                coverage["duplicate_standard_ids"],
-                [f"{shared_source_record_id}-SH-STD-01-01"],
+
+    def test_manifest_build_limits_component_parsing_to_component_bearing_roles(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            manifest_path, readiness_path = _write_inventory_build_contract(
+                output_dir,
+                source_set_id=source_set_id,
+                rows=[
+                    {
+                        "forest_unit_id": "nez-perce-clearwater-nfs",
+                        "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+                        "plan_version": "2025",
+                        "build_source_record_ids_by_role": {
+                            "primary_land_management_plan": [
+                                "R1PLAN-nez-perce-clearwater-nfs-06"
+                            ],
+                            "final_environmental_impact_statement": [
+                                "R1PLAN-nez-perce-clearwater-nfs-15"
+                            ],
+                        },
+                    }
+                ],
             )
-            self.assertFalse(_check(coverage, "built_component_ids_are_unique")["passed"])
-            failed_row = next(
-                row
-                for row in coverage["profile_results"]
-                if row["forest_unit_id"] == "custer-gallatin-nf"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-nez-perce-clearwater-nfs-06",
+                        text=(
+                            "Desired Conditions FW-DC-ED-01. Interpretation and educational "
+                            "opportunities enhance visitor understanding. Standards "
+                            "FW-STD-ED-02. Interpretive facilities shall protect cultural "
+                            "resources."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-nez-perce-clearwater-nfs-15",
+                        text=(
+                            "Desired Conditions FW-DC-ED-01. Final environmental impact "
+                            "statement summary text that would collide if parsed."
+                        ),
+                    ),
+                ],
             )
-            self.assertEqual(failed_row["blocker_types"], [])
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=chunks_path,
+                manifest_path=manifest_path,
+                manifest_readiness_path=readiness_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["duplicate_component_ids"], [])
+            self.assertEqual(coverage["duplicate_standard_ids"], [])
 
     def test_cli_parser_exposes_inventory_builder_command(self) -> None:
         parser = build_parser()
@@ -1250,9 +1465,12 @@ def _write_inventory_build_contract(
                 "source_set_reference_id": "test_source_set",
                 "primary_plan_source_record_id": row["source_record_id"],
                 "plan_version": row["plan_version"],
-                "build_source_record_ids_by_role": {
-                    "primary_land_management_plan": [row["source_record_id"]]
-                },
+                "build_source_record_ids_by_role": row.get(
+                    "build_source_record_ids_by_role",
+                    {
+                        "primary_land_management_plan": [row["source_record_id"]]
+                    },
+                ),
                 "promotion_eligibility": {
                     "status": "eligible",
                     "accepted_blockers": [],

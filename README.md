@@ -57,12 +57,15 @@ Current full-corpus promotion boundary:
   `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
   `rule_claim_links`, and `knowledge_graph` artifact families under
   `source_library/derived/source-set-5e65d845ce77e1a0/`.
-- The refreshed active-source-set multi-forest inventory now builds `668` components and `108`
-  standards. Passing forests are `custer-gallatin-nf` (`329/58`), `flathead-nf` (`80/20`),
-  `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`1/1`), and `kootenai-nf`
-  (`1/1`). Remaining typed blockers are `beaverhead-deerlodge-nf`, `bitterroot-nf`,
-  `dakota-prairie-grasslands`, `lolo-nf`, and `nez-perce-clearwater-nfs`, all still stopping on
-  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`.
+- The refreshed active-source-set multi-forest inventory now builds `1003` components and `234`
+  standards. Passing forests are `custer-gallatin-nf` (`329/58`), `bitterroot-nf` (`9/2`),
+  `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`),
+  `idaho-panhandle-nfs` (`52/8`), `kootenai-nf` (`53/8`), and
+  `nez-perce-clearwater-nfs` (`134/21`). Remaining typed blockers are
+  `beaverhead-deerlodge-nf` (`duplicate_component_ids_detected`,
+  `duplicate_standard_ids_detected`), `dakota-prairie-grasslands`
+  (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`), and `lolo-nf`
+  (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`).
 - The refreshed active-source-set currentness and graph surfaces now validate locally:
   `authority_currentness` reports `35` authority families and `207` source-currentness records;
   retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`; evidence graph rebuilds with
@@ -77,13 +80,13 @@ Current full-corpus promotion boundary:
   `forest_plan_support`, while ordinary supplemental register rows remain support-scoped.
 - The tracked inventory-build manifest, Region 1 readiness config, and post-V1 promotion-suite
   contract are now aligned to `source-set-5e65d845ce77e1a0`. The refreshed readiness truth now
-  promotes `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
-  `idaho-panhandle-nfs`, and `kootenai-nf`, while keeping
-  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs` blocked on explicit typed label-detection failures.
+  promotes `custer-gallatin-nf`, `bitterroot-nf`, `flathead-nf`,
+  `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, `kootenai-nf`, and
+  `nez-perce-clearwater-nfs`, while keeping `beaverhead-deerlodge-nf`,
+  `dakota-prairie-grasslands`, and `lolo-nf` blocked on explicit parser/inventory blocker types.
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
-  `2,132` nodes, `3,872` edges, `region1_forest_plan_graph_ready_profile_count=5`, and
-  `region1_forest_plan_blocked_profile_count=5`.
+  `2,451` nodes, `4,853` edges, `region1_forest_plan_graph_ready_profile_count=7`, and
+  `region1_forest_plan_blocked_profile_count=3`.
 - The non-strict post-V1 promotion suite now reports `current_promotion_ready=true`,
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
   `full_canonical_failure_category_counts={}`. Remaining work is no longer stale-surface

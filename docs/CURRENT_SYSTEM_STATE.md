@@ -60,13 +60,15 @@ Latest closeout on 2026-05-10:
   `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
   `rule_claim_links`, and `knowledge_graph` artifact families under
   `source_library/derived/source-set-5e65d845ce77e1a0/`.
-- The refreshed full-canonical inventory on `source-set-5e65d845ce77e1a0` now builds `668`
-  components and `108` standards. Passing forests are `custer-gallatin-nf` (`329/58`),
-  `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`1/1`),
-  and `kootenai-nf` (`1/1`). Remaining typed blockers are `beaverhead-deerlodge-nf`,
-  `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs`, each still stopping on
-  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`.
+- The refreshed full-canonical inventory on `source-set-5e65d845ce77e1a0` now builds `1003`
+  components and `234` standards. Passing forests are `custer-gallatin-nf` (`329/58`),
+  `bitterroot-nf` (`9/2`), `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`),
+  `idaho-panhandle-nfs` (`52/8`), `kootenai-nf` (`53/8`), and
+  `nez-perce-clearwater-nfs` (`134/21`). Remaining typed blockers are
+  `beaverhead-deerlodge-nf` (`duplicate_component_ids_detected`,
+  `duplicate_standard_ids_detected`), `dakota-prairie-grasslands`
+  (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`), and `lolo-nf`
+  (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`).
 - The refreshed currentness and downstream derived surfaces on `source-set-5e65d845ce77e1a0`
   validate locally: `authority_currentness` reports `35` authority families and `207`
   source-currentness records; retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`;
@@ -93,17 +95,18 @@ Latest closeout on 2026-05-10:
   aggregate build coverage with per-profile results plus fail-closed cross-profile duplicate-ID
   checks.
 - Sequence 3 of the Region 1 forest-plan inventory promotion plan is now implemented on the active
-  source set. The live build writes `668` components and `108` standards, validates
-  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, and
-  `kootenai-nf`, and stops the aggregate build on explicit typed blockers for
-  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs`. Every blocked profile currently reports the same blocker pair:
-  `plan_component_labels_not_detected` and `plan_standard_labels_not_detected`.
-- Sequence 4 readiness and promotion alignment is now closed for stale-surface repair.
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes five validated inventories,
-  keeps five typed blockers explicit, points at the refreshed `5e65...` coverage artifact, and the
-  active NEPA 3D source-set export now reports `region1_forest_plan_graph_ready_profile_count=5`
-  plus `region1_forest_plan_blocked_profile_count=5` without weakening
+  source set. The live build writes `1003` components and `234` standards, validates
+  `custer-gallatin-nf`, `bitterroot-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`, `kootenai-nf`, and `nez-perce-clearwater-nfs`, and stops the aggregate
+  build on explicit typed blockers for `beaverhead-deerlodge-nf`,
+  `dakota-prairie-grasslands`, and `lolo-nf`.
+- Sequence 4 readiness and promotion alignment is now closed for stale-surface repair, and the
+  current parser/component recovery slice has promoted the newly validated forests into tracked
+  readiness. `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes seven validated
+  inventories, keeps three typed blockers explicit, points at the refreshed `5e65...` coverage
+  artifact, and the active NEPA 3D source-set export now reports
+  `region1_forest_plan_graph_ready_profile_count=7` plus
+  `region1_forest_plan_blocked_profile_count=3` without weakening
   `region1_completeness_claim=false`.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
@@ -111,16 +114,14 @@ Latest closeout on 2026-05-10:
   `nez-perce-clearwater-nfs` classify as `document_role=forest_plan`, while ordinary supplemental
   register rows remain `forest_plan_support`.
 - The live active catalog source set is now `source-set-5e65d845ce77e1a0`. In that current
-  catalog, all five promoted source IDs now emit
-  `document_role=forest_plan` chunks. Isolated single-forest builds against those chunks show
-  `flathead-nf` now builds `80` components / `20` standards and `kootenai-nf` builds `1`
-  component / `1` standard; `dakota-prairie-grasslands`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs` now receive real plan-body chunk selection (`2`, `580`, and `278`
-  chunks respectively) instead of upstream role starvation. That role-classification gain is now
-  reflected in the refreshed full-canonical inventory/currentness/graph lane on the same active
-  source set.
-- The next required implementation boundary is no longer stale-surface alignment. It is forest-plan
-  parser/component recovery for the five blocked forests, plus the separate post-V1 expansion lane.
+  catalog, all five promoted source IDs now emit `document_role=forest_plan` chunks. The current
+  parser/component recovery slice now validates `bitterroot-nf` and `nez-perce-clearwater-nfs`,
+  expands `idaho-panhandle-nfs` and `kootenai-nf` from provisional `1/1` inventories to `52/8`
+  and `53/8`, and leaves only `beaverhead-deerlodge-nf`, `dakota-prairie-grasslands`, and
+  `lolo-nf` as active blockers.
+- The next required implementation boundary is no longer stale-surface alignment. It is final
+  parser/component recovery for the remaining three blocked forests, plus the separate post-V1
+  expansion lane.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

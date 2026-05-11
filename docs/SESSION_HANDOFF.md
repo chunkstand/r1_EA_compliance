@@ -5,6 +5,62 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Forest-Plan Parser Recovery Narrowed Active Blockers
+
+The active full-canonical forest-plan inventory lane on `source-set-5e65d845ce77e1a0` now closes a
+meaningful parser-recovery slice without reopening stale-surface work.
+
+- parser/runtime alignment:
+  `forest_plan_components.py` now recognizes two additional live plan-component formats that were
+  blocking current Region 1 plans: explicit code-style headings such as
+  `Desired Conditions FW-DC-...-01.` and legacy colon-number forms such as `Standard 1: ...`
+- build-input hardening:
+  manifest-driven inventory builds now parse component-bearing roles only
+  (`primary_land_management_plan`, multipart primary-plan parts, amendments, and administrative
+  changes) instead of every `forest_plan`-role supporting artifact tied to a profile
+- live full-canonical outcome:
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  on `source-set-5e65d845ce77e1a0` now validates `7` forests:
+  `custer-gallatin-nf` (`329/58`), `bitterroot-nf` (`9/2`), `flathead-nf` (`80/20`),
+  `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`52/8`), `kootenai-nf` (`53/8`),
+  and `nez-perce-clearwater-nfs` (`134/21`)
+- remaining blockers are narrower and explicit:
+  `beaverhead-deerlodge-nf` now fails on `duplicate_component_ids_detected` plus
+  `duplicate_standard_ids_detected`; `dakota-prairie-grasslands` and `lolo-nf` still fail on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`
+- readiness/graph alignment:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes `7` validated inventories
+  and keeps `3` blockers explicit; `config/nepa_3d_graph_contract_v1.json` and
+  `nepa_3d_graph_contract.py` now recognize duplicate-ID blocker classes; active
+  `nepa-knowledge-graph-export` now passes with `66` checks, `0` failed, `2,451` nodes,
+  `4,853` edges, `region1_forest_plan_graph_ready_profile_count=7`, and
+  `region1_forest_plan_blocked_profile_count=3`
+- promotion truth remains unchanged at the high level:
+  `promotion-suite` still reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=false`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_inventory_build_manifest.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `48/48`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`: stopped as intended with `7` validated forests, `3` blocked forests, `1003` components, and `234` standards
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `full_canonical_corpus_ready=true`
+
+Residual risks:
+
+- `beaverhead-deerlodge-nf` still needs duplicate-ID disambiguation inside the 2009 plan parser
+  path before it can be promoted
+- `dakota-prairie-grasslands` and `lolo-nf` still need additional legacy section-scoped parsing
+  before they will emit component inventories
+
+Immediate next step if this slice is continued:
+
+1. Resolve the Beaverhead duplicate-ID path first, then add the next legacy section-scoped parser
+   pass for Dakota Prairie and Lolo so the remaining `3` blocked forests can close without
+   weakening duplicate-ID gates.
+
 ## Replay Compliance And Gold Alignment Closeout
 
 The last two East Crazies replay-repair slices are now aligned and closed for archived review lane

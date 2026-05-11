@@ -2,8 +2,8 @@
 
 Date: 2026-05-10
 
-Status: Sequence 4 active-source-set refresh implemented on `source-set-5e65d845ce77e1a0`;
-readiness promotion and promotion-suite alignment are next
+Status: parser/component recovery active on `source-set-5e65d845ce77e1a0`; readiness promotion now
+tracks `7` validated forests and `3` typed blockers
 
 Owner context: This is a full-canonical, source-set-level forest-plan inventory milestone. It is
 not a one-package review milestone. Its job is to make the active full-canonical source set own a
@@ -18,16 +18,15 @@ promotion-suite full-canonical contract are now aligned to the same source set:
 `source-set-5e65d845ce77e1a0`.
 
 - the active full-canonical inventory replay on `source-set-5e65d845ce77e1a0` validates
-  `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, and
-  `kootenai-nf`;
-- the same replay stops on typed blockers for `beaverhead-deerlodge-nf`, `bitterroot-nf`,
-  `dakota-prairie-grasslands`, `lolo-nf`, and `nez-perce-clearwater-nfs`;
-- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes those five validated forests
-  and keeps the five blocked forests explicit with
-  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`;
+  `custer-gallatin-nf`, `bitterroot-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`, `kootenai-nf`, and `nez-perce-clearwater-nfs`;
+- the same replay now stops on typed blockers for `beaverhead-deerlodge-nf`,
+  `dakota-prairie-grasslands`, and `lolo-nf`;
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes those seven validated
+  forests and keeps the three blocked forests explicit with live blocker types;
 - the active-source-set NEPA 3D graph lane now passes with `66` checks, `0` failed,
-  `2,132` nodes, `3,872` edges, `region1_forest_plan_graph_ready_profile_count=5`, and
-  `region1_forest_plan_blocked_profile_count=5`;
+  `2,451` nodes, `4,853` edges, `region1_forest_plan_graph_ready_profile_count=7`, and
+  `region1_forest_plan_blocked_profile_count=3`;
 - `promotion-suite` now pins its full-canonical contract to `source-set-5e65d845ce77e1a0` and
   reports `full_canonical_corpus_ready=true`.
 
@@ -42,30 +41,31 @@ source-set ownership gates.
 - The live active full-canonical source set `source-set-5e65d845ce77e1a0` now owns a refreshed
   full-canonical derived lane, including
   `source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/`, with a combined
-  inventory of `668` components and `108` standards.
+  inventory of `1003` components and `234` standards.
 - The archived merged source set `source-set-8a4005c8a083af1a` remains the freshest all-green merged
   extraction/retrieval/graph surface, but it is no longer the active inventory-ownership source
   for the full-canonical lane.
 - The promoted East Crazies forest-plan review lane is still Custer Gallatin-specific, but the
   refreshed active-source-set inventory replay is broader: `source-set-5e65d845ce77e1a0` now
-  validates `custer-gallatin-nf`, `flathead-nf`, `helena-lewis-and-clark-nf`,
-  `idaho-panhandle-nfs`, and `kootenai-nf`.
+  validates `custer-gallatin-nf`, `bitterroot-nf`, `flathead-nf`,
+  `helena-lewis-and-clark-nf`, `idaho-panhandle-nfs`, `kootenai-nf`, and
+  `nez-perce-clearwater-nfs`.
 - The remaining blocked forests on the refreshed active-source-set replay are
-  `beaverhead-deerlodge-nf`, `bitterroot-nf`, `dakota-prairie-grasslands`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs`, all still stopping on explicit typed blockers rather than missing
-  inventory ownership.
+  `beaverhead-deerlodge-nf`, `dakota-prairie-grasslands`, and `lolo-nf`.
+  `beaverhead-deerlodge-nf` is now blocked on duplicate component/standard IDs; Dakota Prairie and
+  Lolo remain blocked on label detection.
 - The readiness config now tracks `10` forest/grassland profiles on the refreshed active source
   set:
   - `custer-gallatin-nf`: `validated`
+  - `bitterroot-nf`: `validated`
   - `flathead-nf`: `validated`
   - `helena-lewis-and-clark-nf`: `validated`
   - `idaho-panhandle-nfs`: `validated`
   - `kootenai-nf`: `validated`
-  - `beaverhead-deerlodge-nf`: blocked on typed label detection
-  - `bitterroot-nf`: blocked on typed label detection
+  - `nez-perce-clearwater-nfs`: `validated`
+  - `beaverhead-deerlodge-nf`: blocked on duplicate IDs
   - `dakota-prairie-grasslands`: blocked on typed label detection
   - `lolo-nf`: blocked on typed label detection
-  - `nez-perce-clearwater-nfs`: blocked on typed label detection
 - The refreshed readiness config now also carries current catalog-confirmed source requirements for
   the promoted plan and supporting-document rows that the multi-forest build actually uses.
 - `config/forest_plan_profiles.json` still contains one full forest profile
