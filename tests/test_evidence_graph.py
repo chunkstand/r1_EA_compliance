@@ -11,6 +11,7 @@ import unittest
 
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.replay_context import ReplayContextMismatchError
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
 
@@ -367,6 +368,88 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertTrue(graph_phase["passed"])
             self.assertTrue(graph_phase["reviewer_ready"])
 
+    def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp)
+            output_dir = repo_root / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "tracked-replay-review"
+            archived_catalog_dir = output_dir / "runs" / "archived_catalog"
+            _write_catalog_validation(output_dir, passed=False)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-022"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-022",
+                        title="Tracked replay source",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-022 | Tracked replay source | artifact abc123",
+                        text="Tracked replay context should resolve archived catalog state.",
+                    )
+                ],
+            )
+            active_sqlite = _write_catalog_sqlite(output_dir, {"R1EA-022": ["Replay"]})
+            archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+            (archived_catalog_dir / "catalog_validation.json").write_text(
+                json.dumps({"passed": True}, sort_keys=True),
+                encoding="utf-8",
+            )
+            shutil.copyfile(active_sqlite, archived_catalog_dir / "review_sources.sqlite")
+            _write_replay_context(
+                repo_root,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                catalog_dir=Path("source_library/runs/archived_catalog"),
+            )
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            build_evidence_graph(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                catalog_dir=archived_catalog_dir,
+            )
+
+            phase_eval = run_phase_aligned_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+            )
+
+            self.assertEqual(phase_eval.summary["review_id"], review_id)
+            self.assertEqual(phase_eval.summary["source_set_id"], source_set_id)
+            self.assertEqual(
+                Path(phase_eval.summary["catalog_dir"]),
+                archived_catalog_dir.resolve(),
+            )
+            self.assertTrue(phase_eval.review_output_path.exists())
+            catalog_phase = _phase(phase_eval.summary, "catalog_capture")
+            self.assertTrue(catalog_phase["passed"])
+
+    def test_review_phase_eval_rejects_mismatched_tracked_catalog_override(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp)
+            output_dir = repo_root / "source_library"
+            review_id = "tracked-replay-review"
+            _write_replay_context(
+                repo_root,
+                review_id=review_id,
+                source_set_id="source-set-test",
+                catalog_dir=Path("source_library/runs/archived_catalog"),
+            )
+
+            with self.assertRaises(ReplayContextMismatchError):
+                run_phase_aligned_eval(
+                    output_dir=output_dir,
+                    review_id=review_id,
+                    catalog_dir=output_dir / "catalog",
+                )
+
     def test_source_set_phase_eval_ignores_unrelated_gold_eval(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -541,6 +624,29 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
                     (source_record_id, topic_id),
                 )
         connection.commit()
+    return path
+
+
+def _write_replay_context(
+    repo_root: Path,
+    *,
+    review_id: str,
+    source_set_id: str,
+    catalog_dir: Path,
+) -> Path:
+    path = repo_root / "config" / "replay_contexts" / f"{review_id}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "catalog_dir": str(catalog_dir),
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
     return path
 
 

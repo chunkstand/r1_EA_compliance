@@ -188,6 +188,13 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `source-set-8a4005c8a083af1a` is blocked by `7` applicability adjudications and failing
   forest-plan component evaluation (`9` failing seed cases, `6` resolver gaps); review `phase-eval`
   is `12/17` with `reviewer_ready=false`.
+- replay-context hardening is now implemented for that archived review lane. Tracked replay
+  authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
+  `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
+  `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
+  active catalog. This is architecture hardening only; the replay remains blocked on the same
+  applicability adjudications, forest-plan component repair, and replay-scoped compliance-review
+  regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.
@@ -1526,7 +1533,12 @@ phase with component-level metrics and failure categories. If the review directo
 `forest_plan_component_adjudication_eval.json`, or a completed
 `forest_plan_component_adjudication.json` that still needs an eval, phase eval also reports a
 `forest_plan_component_adjudication` phase with completion rate, expectation match rate,
-disposition counts, and failure categories. The applicability phases require current validation,
+disposition counts, and failure categories. For archived noncanonical review lanes, tracked replay
+context now lives under `config/replay_contexts/<review_id>.json`. When that file exists,
+`phase-eval --review-id <review-id>` auto-resolves the archived `source_set_id` and `catalog_dir`
+from tracked config, and explicit `source_set_id` or `catalog_dir` overrides must match that
+tracked replay context or phase eval fails closed instead of silently falling back to the active
+catalog. The applicability phases require current validation,
 hash-aligned traces, complete applicable/non-applicable partitions, coverage certificates for
 non-applicable authorities, and generated-rule-pack rules that exactly match applicable
 authorities. The compliance phase requires the review source set to match the evaluated source set

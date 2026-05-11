@@ -221,6 +221,13 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `source-set-8a4005c8a083af1a` is blocked by `7` applicability adjudications and failing
   forest-plan component evaluation (`9` failing seed cases, `6` resolver gaps); review `phase-eval`
   is `12/17` with `reviewer_ready=false`.
+- replay-context hardening is now implemented for that archived review lane. Tracked replay
+  authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
+  `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
+  `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
+  active catalog. This is architecture hardening only; the replay remains blocked on the same
+  applicability adjudications, forest-plan component repair, and replay-scoped compliance-review
+  regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
   so noncanonical merged-corpus review replays can use archived merged catalog gates without
   replacing `source_library/catalog/`.

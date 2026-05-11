@@ -3989,7 +3989,16 @@ details include queue count, current reviewer-resolution queue count when availa
 counts match, resolved and pending adjudication counts, real EA omission and system-miss
 counts/rates, completion rate, expectation match rate, disposition counts, adjudication-outcome
 counts, and failure-category counts. Stale adjudication evals whose recorded queue count differs
-from the current queue fail the phase. The evidence-graph and claim-extraction
+from the current queue fail the phase. Archived noncanonical review lanes can also declare tracked
+replay context under `config/replay_contexts/<review_id>.json`. The tracked replay-context
+authority uses required fields `review_id`, `source_set_id`, and `catalog_dir`, plus optional
+`package_path` for later replay-regeneration milestones. Child catalog artifact paths are derived
+from `catalog_dir`; if debug echoes such as `source_catalog_path`, `source_set_manifest_path`, or
+`catalog_sqlite_path` are emitted, they must exactly match the loader-derived paths. When
+`phase-eval --review-id` finds a tracked replay-context file, that context becomes the authority
+for archived `source_set_id` and `catalog_dir` defaults. Explicit `source_set_id` or `catalog_dir`
+overrides must match the tracked replay context or phase eval fails closed instead of silently
+reading the active catalog. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

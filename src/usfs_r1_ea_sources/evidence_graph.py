@@ -33,6 +33,9 @@ from .review_packet_index import ROW_INVENTORY_FILENAME as REVIEW_PACKET_ROW_INV
 from .review_packet_index import ROW_INVENTORY_SCHEMA_VERSION as REVIEW_PACKET_ROW_SCHEMA_VERSION
 from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION_FILENAME
 from .review_packet_index import VALIDATION_SCHEMA_VERSION as REVIEW_PACKET_VALIDATION_SCHEMA_VERSION
+from .replay_context import ReplayContextMismatchError
+from .replay_context import load_replay_context
+from .replay_context import tracked_replay_context_path
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -284,6 +287,36 @@ def run_phase_aligned_eval(
     """Evaluate capture, extraction, retrieval, graph, and optional compliance readiness."""
 
     output_dir = Path(output_dir)
+    if review_id and not SAFE_REVIEW_ID_RE.fullmatch(review_id):
+        raise ValueError(
+            "review_id must contain only letters, numbers, dot, underscore, or hyphen."
+        )
+    if review_dir is None and review_id:
+        review_dir = output_dir / "reviews" / review_id
+    if review_dir is not None:
+        review_dir = Path(review_dir)
+    resolved_review_id = review_id or (review_dir.name if review_dir is not None else None)
+    if resolved_review_id is not None:
+        replay_context_path = tracked_replay_context_path(output_dir, resolved_review_id)
+        if replay_context_path.exists():
+            replay_context = load_replay_context(replay_context_path)
+            if source_set_id is None:
+                source_set_id = replay_context.source_set_id
+            elif source_set_id != replay_context.source_set_id:
+                raise ReplayContextMismatchError(
+                    "source_set_id override does not match tracked replay context for "
+                    f"{resolved_review_id}"
+                )
+            if catalog_dir is None:
+                catalog_dir = replay_context.resolved_catalog_dir
+            else:
+                resolved_catalog_dir = Path(catalog_dir).resolve()
+                if resolved_catalog_dir != replay_context.resolved_catalog_dir:
+                    raise ReplayContextMismatchError(
+                        "catalog_dir override does not match tracked replay context for "
+                        f"{resolved_review_id}"
+                    )
+                catalog_dir = resolved_catalog_dir
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
     source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
@@ -323,14 +356,6 @@ def run_phase_aligned_eval(
         if candidates:
             rule_claim_summary_path = candidates[0]
             rule_claim_validation_path = rule_claim_summary_path.parent / "rule_claim_link_validation.json"
-    if review_id and not SAFE_REVIEW_ID_RE.fullmatch(review_id):
-        raise ValueError(
-            "review_id must contain only letters, numbers, dot, underscore, or hyphen."
-        )
-    if review_dir is None and review_id:
-        review_dir = output_dir / "reviews" / review_id
-    if review_dir is not None:
-        review_dir = Path(review_dir)
     review_phase_output_path = (
         review_dir / "phase_eval_results.json" if review_dir is not None else None
     )
@@ -1249,7 +1274,7 @@ def run_phase_aligned_eval(
     ]
     summary = {
         "source_set_id": source_set_id,
-        "review_id": review_id or (review_dir.name if review_dir is not None else None),
+        "review_id": resolved_review_id,
         "review_dir": str(review_dir) if review_dir is not None else None,
         "created_at": _utc_now(),
         "catalog_dir": str(catalog_dir),

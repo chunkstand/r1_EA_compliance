@@ -5,6 +5,70 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Replay Context Contract Hardening
+
+The replay-context hardening milestone is now implemented for archived review lane
+`v1-cg-ecid-source-delta-review`.
+
+- tracked replay authority:
+  `config/replay_contexts/v1-cg-ecid-source-delta-review.json` now binds the current replay to
+  archived merged source set `source-set-8a4005c8a083af1a` and archived merged catalog gate
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
+- new code surface:
+  `src/usfs_r1_ea_sources/replay_context.py` now owns tracked replay-context loading, derives
+  `source_catalog_path`, `source_set_manifest_path`, and `catalog_sqlite_path` from tracked
+  `catalog_dir`, and rejects mismatched child-path echoes
+- phase-eval hardening:
+  `src/usfs_r1_ea_sources/evidence_graph.py` now auto-resolves tracked replay context from
+  `review_id` (or the supplied review directory name), loads archived `source_set_id` and
+  `catalog_dir` from tracked config, and fails closed on mismatched explicit `source_set_id` or
+  `catalog_dir` overrides instead of silently falling back to the active catalog
+- CLI/documentation alignment:
+  `tests/test_cli.py`, `tests/test_evidence_graph.py`, `tests/test_replay_context.py`, `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/CGNF_CURRENT_REPLAY_REPAIR_MILESTONE_PLAN.md` now describe the tracked replay-context
+  contract and review-identity auto-resolution path
+- preserved non-goal boundary:
+  no replay-specific forest-plan component eval contract was added; the proving-lane contract
+  remains `config/forest_plan_component_eval_seed.json`
+- live replay status after hardening:
+  `phase-eval --review-id v1-cg-ecid-source-delta-review` now binds to the archived merged catalog
+  gate, but the replay remains `reviewer_ready=false`; this milestone did not resolve the `7`
+  applicability adjudications, the East Crazies forest-plan component repair lane, or replay
+  compliance-review regeneration
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_evidence_graph.py tests/test_v1_ea_eval.py tests/test_replay_context.py tests/test_architecture_contract.py`: passed `74/74`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- replay-context negative proof:
+  `PYTHONPATH=src python - <<'PY' ... run_phase_aligned_eval(output_dir=Path("source_library"), review_id="v1-cg-ecid-source-delta-review", catalog_dir=Path("source_library/catalog")) ... PY`
+  raised `ReplayContextMismatchError`
+- replay-context positive proof:
+  `PYTHONPATH=src python - <<'PY' ... run_phase_aligned_eval(output_dir=Path("source_library"), review_id="v1-cg-ecid-source-delta-review") ... PY`
+  returned `review_id=v1-cg-ecid-source-delta-review`,
+  `source_set_id=source-set-8a4005c8a083af1a`, archived merged `catalog_dir`, and
+  `reviewer_ready=False`
+- proving-lane regression:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/forest_plan_component_eval_seed.json`
+  passed `35/35`
+- `git diff --check`: passed
+
+Residual risks:
+
+- the current replay is still blocked on the same content work: `7` applicability adjudications,
+  forest-plan component-gap repair, and replay-scoped compliance-review regeneration
+- tracked replay context is wired only into `phase-eval` in this milestone; any later replay
+  commands that still need archived-path awareness should be reviewed explicitly rather than
+  assumed safe by analogy
+
+Immediate next step if this slice is continued:
+
+1. Continue the current East Crazies replay repair lane: close the `7` applicability adjudications,
+   repair the remaining forest-plan component gaps, regenerate replay-scoped `compliance-review`,
+   then rerun review-scoped `phase-eval`.
+
 ## Region 1 Forest-Plan Stale-Surface Refresh
 
 The Region 1 forest-plan stale surfaces are now resolved and committed truth is aligned to the live

@@ -382,6 +382,35 @@ def test_phase_eval_handler_propagates_catalog_dir(monkeypatch) -> None:
     assert captured["catalog_dir"] == Path("archived-catalog")
 
 
+def test_phase_eval_handler_propagates_review_id_only(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_phase_aligned_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"reviewer_ready": False})
+
+    monkeypatch.setattr(cli_eval, "run_phase_aligned_eval", fake_run_phase_aligned_eval)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "phase-eval",
+            "--output-dir",
+            "source_library",
+            "--review-id",
+            "tracked-replay-review",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 1
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["review_id"] == "tracked-replay-review"
+    assert captured["source_set_id"] is None
+    assert captured["catalog_dir"] is None
+
+
 def test_rule_claim_link_handler_propagates_allow_partial_claims(monkeypatch) -> None:
     captured = {}
 
