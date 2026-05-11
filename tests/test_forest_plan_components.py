@@ -733,6 +733,78 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertFalse(result.summary["passed"])
             self.assertEqual(result.summary["component_count"], 0)
 
+    def test_colon_number_components_avoid_generic_legacy_duplicate_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-beaverhead-deerlodge-nf-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Chapter Three Forestwide Direction Standards Standard 1: "
+                            "No impact to identified TCPs shall occur until Forest "
+                            "officials consult with affected tribes."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Chapter Three Forestwide Direction Standards Standard 1: "
+                            "On lands suitable for timber production, even aged harvest "
+                            "may occur only upon a finding that it is the appropriate "
+                            "method."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Objectives None Standards Standard 1: Energy transmission "
+                            "facilities shall be located only in designated utility "
+                            "corridors."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Objectives None Standards Standards 1: The interim standards "
+                            "in Table 6 apply to livestock grazing operations."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                plan_version="2009",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["duplicate_component_ids"], [])
+            self.assertEqual(coverage["duplicate_standard_ids"], [])
+            component_ids = {
+                component["component_id"]
+                for component in load_forest_plan_component_inventory(
+                    result.inventory_path,
+                    forest_unit_id="beaverhead-deerlodge-nf",
+                )
+            }
+            self.assertNotIn(f"{source_record_id}-THREE-STD-1", component_ids)
+            self.assertNotIn(f"{source_record_id}-NONE-STD-1", component_ids)
+            self.assertEqual(len(component_ids), 4)
+
     def test_code_style_page_headers_are_suppressed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

@@ -57,14 +57,13 @@ Current full-corpus promotion boundary:
   `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
   `rule_claim_links`, and `knowledge_graph` artifact families under
   `source_library/derived/source-set-5e65d845ce77e1a0/`.
-- The refreshed active-source-set multi-forest inventory now builds `1003` components and `234`
-  standards. Passing forests are `custer-gallatin-nf` (`329/58`), `bitterroot-nf` (`9/2`),
-  `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`),
-  `idaho-panhandle-nfs` (`52/8`), `kootenai-nf` (`53/8`), and
-  `nez-perce-clearwater-nfs` (`134/21`). Remaining typed blockers are
-  `beaverhead-deerlodge-nf` (`duplicate_component_ids_detected`,
-  `duplicate_standard_ids_detected`), `dakota-prairie-grasslands`
-  (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`), and `lolo-nf`
+- The refreshed active-source-set multi-forest inventory now builds `1002` components and `233`
+  standards. Passing forests are `custer-gallatin-nf` (`329/58`),
+  `beaverhead-deerlodge-nf` (`88/88`), `bitterroot-nf` (`9/2`), `flathead-nf` (`80/20`),
+  `helena-lewis-and-clark-nf` (`257/28`), `idaho-panhandle-nfs` (`52/8`),
+  `kootenai-nf` (`53/8`), and `nez-perce-clearwater-nfs` (`134/21`). Remaining typed blockers are
+  `dakota-prairie-grasslands` (`plan_component_labels_not_detected`,
+  `plan_standard_labels_not_detected`) and `lolo-nf`
   (`plan_component_labels_not_detected`, `plan_standard_labels_not_detected`).
 - The refreshed active-source-set currentness and graph surfaces now validate locally:
   `authority_currentness` reports `35` authority families and `207` source-currentness records;
@@ -85,12 +84,12 @@ Current full-corpus promotion boundary:
   `nez-perce-clearwater-nfs`, while keeping `beaverhead-deerlodge-nf`,
   `dakota-prairie-grasslands`, and `lolo-nf` blocked on explicit parser/inventory blocker types.
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
-  `2,451` nodes, `4,853` edges, `region1_forest_plan_graph_ready_profile_count=7`, and
-  `region1_forest_plan_blocked_profile_count=3`.
+  `2,448` nodes, `4,856` edges, `region1_forest_plan_graph_ready_profile_count=8`, and
+  `region1_forest_plan_blocked_profile_count=2`.
 - The non-strict post-V1 promotion suite now reports `current_promotion_ready=true`,
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
   `full_canonical_failure_category_counts={}`. Remaining work is no longer stale-surface
-  alignment; it is the five real forest-plan inventory blocker recoveries plus the separate
+  alignment; it is the final two real forest-plan inventory blocker recoveries plus the separate
   expansion lane.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still

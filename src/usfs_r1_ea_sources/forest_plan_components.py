@@ -200,6 +200,19 @@ LEGACY_SECTION_STOPWORDS = {
     "standards",
     "standard",
 }
+GENERIC_LEGACY_SECTION_CODES = {
+    "NONE",
+    "ONE",
+    "TWO",
+    "THREE",
+    "FOUR",
+    "FIVE",
+    "SIX",
+    "SEVEN",
+    "EIGHT",
+    "NINE",
+    "TEN",
+}
 SECTION_FAMILY_KEYWORDS = {
     "hydrology": {
         "aquatic",
@@ -1126,14 +1139,21 @@ def _legacy_component_code(
 ) -> str:
     section_code = _legacy_section_code(section_heading)
     fallback_code = _legacy_section_code(fallback_heading)
-    if section_code and section_code == fallback_code:
-        section_code = _legacy_body_code(component_body)
+    body_code = _legacy_body_code(component_body)
+    if section_code and (
+        section_code == fallback_code
+        or _legacy_section_code_is_generic(
+            section_code=section_code,
+            section_heading=section_heading,
+        )
+    ):
+        section_code = body_code
     if not section_code:
         goal_number = _legacy_parent_goal_number(text=text, start=start)
         if goal_number:
             section_code = f"GOAL-{goal_number}"
     if not section_code:
-        section_code = _legacy_body_code(component_body)
+        section_code = body_code
     abbreviation = _component_abbreviation_from_label(label)
     if section_code:
         return _safe_identifier(f"{section_code}-{abbreviation}").upper()
@@ -1155,6 +1175,26 @@ def _legacy_section_code(section_heading: str) -> str:
         if part not in LEGACY_SECTION_STOPWORDS
     ]
     return "-".join(parts[:4])
+
+
+def _legacy_section_code_is_generic(*, section_code: str, section_heading: str) -> bool:
+    normalized_heading = " ".join(section_heading.lower().split())
+    code_tokens = [token for token in section_code.split("-") if token]
+    if normalized_heading.startswith("chapter "):
+        return True
+    if normalized_heading in {
+        "goal",
+        "goals",
+        "guideline",
+        "guidelines",
+        "objective",
+        "objectives",
+        "objectives none",
+        "standard",
+        "standards",
+    }:
+        return True
+    return len(code_tokens) == 1 and code_tokens[0] in GENERIC_LEGACY_SECTION_CODES
 
 
 def _looks_like_component_table_of_contents(text: str) -> bool:

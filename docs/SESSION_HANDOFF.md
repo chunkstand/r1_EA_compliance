@@ -5,6 +5,61 @@ Date: 2026-05-10
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Beaverhead Duplicate-ID Closeout
+
+The active full-canonical forest-plan inventory lane on `source-set-5e65d845ce77e1a0` now closes
+the Beaverhead duplicate-ID blocker without reopening stale-surface work.
+
+- parser/runtime alignment:
+  `forest_plan_components.py` now treats generic legacy section headings such as chapter headings
+  and `Objectives None` as insufficient ID context for colon-number components, and falls back to
+  body-derived legacy codes instead of collapsing distinct `Standard 1:` records onto
+  `THREE-STD-1` or `NONE-STD-1`
+- regression coverage:
+  `tests/test_forest_plan_components.py` now proves Beaverhead-style generic legacy headings do
+  not emit duplicate standard IDs across distinct colon-number standards
+- live full-canonical outcome:
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  on `source-set-5e65d845ce77e1a0` now validates `8` forests:
+  `custer-gallatin-nf` (`329/58`), `beaverhead-deerlodge-nf` (`88/88`), `bitterroot-nf` (`9/2`),
+  `flathead-nf` (`80/20`), `helena-lewis-and-clark-nf` (`257/28`),
+  `idaho-panhandle-nfs` (`52/8`), `kootenai-nf` (`53/8`), and
+  `nez-perce-clearwater-nfs` (`134/21`)
+- remaining blockers are narrower and explicit:
+  only `dakota-prairie-grasslands` and `lolo-nf` still fail on
+  `plan_component_labels_not_detected` plus `plan_standard_labels_not_detected`
+- readiness/graph alignment:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now promotes `8` validated inventories
+  and keeps `2` blockers explicit; active `nepa-knowledge-graph-export` now passes with `66`
+  checks, `0` failed, `2,448` nodes, `4,856` edges,
+  `region1_forest_plan_graph_ready_profile_count=8`, and
+  `region1_forest_plan_blocked_profile_count=2`
+- promotion truth remains unchanged at the high level:
+  `promotion-suite` still reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=false`
+
+Verification in this pass:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py`: passed `31/31`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`: passed `18/18`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`: stopped as intended with `8` validated forests, `2` blocked forests, `1002` components, and `233` standards
+- `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed with `validation_passed=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`: passed with `full_canonical_corpus_ready=true`
+
+Residual risks:
+
+- `dakota-prairie-grasslands` still needs legacy section-scoped parser recovery before it can emit
+  component inventory labels
+- `lolo-nf` still needs legacy section-scoped parser recovery before it can emit component
+  inventory labels
+
+Immediate next step if this slice is continued:
+
+1. Implement the next legacy section-scoped parser pass for Dakota Prairie and Lolo so the final
+   two blocked forests can close without weakening the current duplicate-ID gates.
+
 ## Region 1 Forest-Plan Parser Recovery Narrowed Active Blockers
 
 The active full-canonical forest-plan inventory lane on `source-set-5e65d845ce77e1a0` now closes a
