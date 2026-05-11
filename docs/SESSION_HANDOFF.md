@@ -5,6 +5,32 @@ Date: 2026-05-11
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Multi-Forest Profile Expansion Plan
+
+The next post-V1 expansion lane is now formalized in
+`docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  the plan is narrowly scoped to enriching the remaining non-Custer
+  `config/forest_plan_profiles.json` entries to Beaverhead-level review depth, preserving the
+  default Custer path, and proving selected-profile resolver/compliance behavior without reopening
+  parser, catalog, or replay work
+- gate alignment:
+  the plan requires a gate-first Sequence 0 profile-depth contract, then config-driven vocabulary
+  expansion, selected-profile resolver/compliance regressions, and a mandatory all-R1
+  forest-plan verification replay before closeout
+- closeout rule:
+  the milestone cannot close from unit tests alone; it must rerun
+  `forest-plan-components-build --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  on active source set `source-set-5e65d845ce77e1a0` and validate all `10` tracked Region 1 forest
+  plans before docs, handoff, and commit closeout are allowed
+
+Immediate next step if this lane is continued:
+
+1. Execute Sequence 0 from `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`, then move
+   into the first profile-family config expansion only after the roster-level completeness gate is
+   failing or fully defined.
+
 ## Region 1 Non-Custer Review Gate Expansion
 
 The first non-Custer reviewer-ready forest-plan review slice is now implemented and verified for
