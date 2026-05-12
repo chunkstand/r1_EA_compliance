@@ -678,6 +678,12 @@ def _component_inventory_build_summary(
         "blocking_inventory_quality_issue_count": coverage[
             "blocking_inventory_quality_issue_count"
         ],
+        "component_source_accuracy_passed": coverage[
+            "component_source_accuracy_passed"
+        ],
+        "component_source_accuracy_failure_count": coverage[
+            "component_source_accuracy_failure_count"
+        ],
         "coverage_passed": coverage["passed"],
         "passed": coverage["passed"],
     }
@@ -814,6 +820,10 @@ def _component_inventory_build_coverage(
     blocking_inventory_quality_issues = [
         issue for issue in inventory_quality_issues if issue.get("severity") == "error"
     ]
+    component_source_accuracy = _component_inventory_source_accuracy(
+        chunks=chunks,
+        components=components,
+    )
     detected_standards = [
         label for label in detected_labels if label["component_type"] == "standard"
     ]
@@ -878,6 +888,7 @@ def _component_inventory_build_coverage(
                 "issues": blocking_inventory_quality_issues,
             },
         },
+        *component_source_accuracy["checks"],
     ]
     profile_results = []
     if profile_builds:
@@ -966,6 +977,11 @@ def _component_inventory_build_coverage(
         "duplicate_standard_ids": duplicate_standard_ids,
         "validation_errors": validation_errors,
         "inventory_quality_issues": inventory_quality_issues,
+        "component_source_accuracy_passed": component_source_accuracy["passed"],
+        "component_source_accuracy_failure_count": component_source_accuracy[
+            "failure_count"
+        ],
+        "component_source_accuracy_failures": component_source_accuracy["failures"],
         "detected_component_labels": detected_labels,
         "detected_standard_labels": detected_standards,
         "profile_results": profile_results,
@@ -1004,6 +1020,189 @@ def _component_inventory_profile_blocker_types(
     if not blockers and failed_checks:
         blockers.extend(sorted(failed))
     return blockers
+
+
+def _component_inventory_source_accuracy(*, chunks: list[dict], components: list[dict]) -> dict:
+    chunk_by_id = {
+        str(chunk.get("chunk_id") or ""): chunk
+        for chunk in chunks
+        if str(chunk.get("chunk_id") or "").strip()
+    }
+    reparsed_by_key: dict[tuple[str, str, str, str], list[dict]] = {}
+    failures = []
+    for component in components:
+        component_id = str(component.get("component_id") or "")
+        source_chunk_ids = [
+            str(chunk_id).strip()
+            for chunk_id in component.get("source_chunk_ids", [])
+            if str(chunk_id).strip()
+        ]
+        failure = {
+            "component_id": component_id,
+            "source_record_id": str(component.get("source_record_id") or ""),
+            "primary_source_chunk_id": _primary_source_chunk_id(component),
+            "source_chunk_ids": source_chunk_ids,
+            "reasons": [],
+        }
+        missing_source_chunk_ids = [
+            chunk_id for chunk_id in source_chunk_ids if chunk_id not in chunk_by_id
+        ]
+        if missing_source_chunk_ids:
+            failure["reasons"].append("missing_source_chunks")
+            failure["missing_source_chunk_ids"] = missing_source_chunk_ids
+        source_record_mismatches = [
+            {
+                "chunk_id": chunk_id,
+                "chunk_source_record_id": str(
+                    (chunk_by_id.get(chunk_id) or {}).get("source_record_id") or ""
+                ),
+            }
+            for chunk_id in source_chunk_ids
+            if chunk_id in chunk_by_id
+            and str(chunk_by_id[chunk_id].get("source_record_id") or "")
+            != str(component.get("source_record_id") or "")
+        ]
+        if source_record_mismatches:
+            failure["reasons"].append("source_record_mismatch")
+            failure["source_record_mismatches"] = source_record_mismatches
+        artifact_sha256_mismatches = [
+            {
+                "chunk_id": chunk_id,
+                "chunk_artifact_sha256": str(
+                    (chunk_by_id.get(chunk_id) or {}).get("artifact_sha256") or ""
+                ),
+            }
+            for chunk_id in source_chunk_ids
+            if chunk_id in chunk_by_id
+            and str(chunk_by_id[chunk_id].get("artifact_sha256") or "")
+            != str(component.get("artifact_sha256") or "")
+        ]
+        if artifact_sha256_mismatches:
+            failure["reasons"].append("artifact_sha256_mismatch")
+            failure["artifact_sha256_mismatches"] = artifact_sha256_mismatches
+        primary_chunk_id = failure["primary_source_chunk_id"]
+        primary_chunk = chunk_by_id.get(primary_chunk_id)
+        if primary_chunk is None:
+            failure["reasons"].append("missing_primary_source_chunk")
+        else:
+            if str(primary_chunk.get("content_sha256") or "") != str(
+                component.get("content_sha256") or ""
+            ):
+                failure["reasons"].append("primary_content_sha256_mismatch")
+                failure["primary_chunk_content_sha256"] = str(
+                    primary_chunk.get("content_sha256") or ""
+                )
+                failure["component_content_sha256"] = str(
+                    component.get("content_sha256") or ""
+                )
+            reparse_key = (
+                primary_chunk_id,
+                str(component.get("forest_unit_id") or ""),
+                str(component.get("plan_version") or ""),
+                str(component.get("source_set_id") or ""),
+            )
+            reparsed_components = reparsed_by_key.get(reparse_key)
+            if reparsed_components is None:
+                reparsed_components = _components_from_chunk(
+                    chunk=primary_chunk,
+                    forest_unit_id=str(component.get("forest_unit_id") or ""),
+                    plan_version=str(component.get("plan_version") or ""),
+                    source_set_id=str(component.get("source_set_id") or ""),
+                    geographic_area_ids=[],
+                    management_area_ids=[],
+                    overlay_ids=[],
+                    profile_context=_profile_context_terms(
+                        str(component.get("forest_unit_id") or "")
+                    ),
+                )
+                reparsed_by_key[reparse_key] = reparsed_components
+            if not any(
+                candidate.get("component_id") == component_id
+                and candidate.get("component_text") == component.get("component_text")
+                and candidate.get("content_sha256") == component.get("content_sha256")
+                and candidate.get("artifact_sha256") == component.get("artifact_sha256")
+                for candidate in reparsed_components
+            ):
+                failure["reasons"].append(
+                    "component_not_redetected_from_primary_source_chunk"
+                )
+        if failure["reasons"]:
+            failures.append(failure)
+    checks = [
+        {
+            "name": "component_source_chunks_exist",
+            "passed": not _component_accuracy_failure_ids(failures, "missing_source_chunks"),
+            "details": {
+                "component_ids": _component_accuracy_failure_ids(
+                    failures,
+                    "missing_source_chunks",
+                )
+            },
+        },
+        {
+            "name": "component_source_chunks_match_source_record",
+            "passed": not _component_accuracy_failure_ids(failures, "source_record_mismatch"),
+            "details": {
+                "component_ids": _component_accuracy_failure_ids(
+                    failures,
+                    "source_record_mismatch",
+                )
+            },
+        },
+        {
+            "name": "component_source_chunks_match_artifact_sha256",
+            "passed": not _component_accuracy_failure_ids(
+                failures,
+                "artifact_sha256_mismatch",
+            ),
+            "details": {
+                "component_ids": _component_accuracy_failure_ids(
+                    failures,
+                    "artifact_sha256_mismatch",
+                )
+            },
+        },
+        {
+            "name": "component_primary_source_chunk_matches_content_sha256",
+            "passed": not _component_accuracy_failure_ids(
+                failures,
+                "primary_content_sha256_mismatch",
+            ),
+            "details": {
+                "component_ids": _component_accuracy_failure_ids(
+                    failures,
+                    "primary_content_sha256_mismatch",
+                )
+            },
+        },
+        {
+            "name": "component_redetects_from_primary_source_chunk",
+            "passed": not _component_accuracy_failure_ids(
+                failures,
+                "component_not_redetected_from_primary_source_chunk",
+            ),
+            "details": {
+                "component_ids": _component_accuracy_failure_ids(
+                    failures,
+                    "component_not_redetected_from_primary_source_chunk",
+                )
+            },
+        },
+    ]
+    return {
+        "passed": all(check["passed"] for check in checks),
+        "failure_count": len(failures),
+        "failures": failures,
+        "checks": checks,
+    }
+
+
+def _component_accuracy_failure_ids(failures: list[dict], reason: str) -> list[str]:
+    return sorted(
+        failure["component_id"]
+        for failure in failures
+        if reason in failure.get("reasons", [])
+    )
 
 
 def _component_matches(text: str, *, fallback_heading: str) -> list[dict[str, object]]:
@@ -1515,6 +1714,11 @@ def _merge_overlapping_component_records(components: list[dict]) -> list[dict]:
         combined = dict(base)
         source_chunk_ids = _dedupe_preserve_order(
             [
+                chunk_id
+                for chunk_id in base.get("source_chunk_ids", [])
+                if str(chunk_id).strip()
+            ]
+            + [
                 chunk_id
                 for component in group
                 for chunk_id in component.get("source_chunk_ids", [])
@@ -3310,6 +3514,16 @@ def _component_inventory_coverage(
                 ),
                 "duplicate_standard_ids": (
                     build_coverage.get("duplicate_standard_ids") if build_coverage else None
+                ),
+                "component_source_accuracy_passed": (
+                    build_coverage.get("component_source_accuracy_passed")
+                    if build_coverage
+                    else None
+                ),
+                "component_source_accuracy_failure_count": (
+                    build_coverage.get("component_source_accuracy_failure_count")
+                    if build_coverage
+                    else None
                 ),
             },
         },

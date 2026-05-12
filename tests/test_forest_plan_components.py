@@ -794,33 +794,45 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                             "officials consult with affected tribes."
                         ),
                     ),
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id=source_record_id,
-                        text=(
-                            "Chapter Three Forestwide Direction Standards Standard 1: "
-                            "On lands suitable for timber production, even aged harvest "
-                            "may occur only upon a finding that it is the appropriate "
-                            "method."
+                    {
+                        **_chunk(
+                            source_set_id=source_set_id,
+                            source_record_id=source_record_id,
+                            text=(
+                                "Chapter Three Forestwide Direction Standards Standard 1: "
+                                "On lands suitable for timber production, even aged harvest "
+                                "may occur only upon a finding that it is the appropriate "
+                                "method."
+                            ),
                         ),
-                    ),
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id=source_record_id,
-                        text=(
-                            "Objectives None Standards Standard 1: Energy transmission "
-                            "facilities shall be located only in designated utility "
-                            "corridors."
+                        "chunk_id": f"chunk:{source_record_id}:1",
+                        "chunk_index": 1,
+                    },
+                    {
+                        **_chunk(
+                            source_set_id=source_set_id,
+                            source_record_id=source_record_id,
+                            text=(
+                                "Objectives None Standards Standard 1: Energy transmission "
+                                "facilities shall be located only in designated utility "
+                                "corridors."
+                            ),
                         ),
-                    ),
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id=source_record_id,
-                        text=(
-                            "Objectives None Standards Standards 1: The interim standards "
-                            "in Table 6 apply to livestock grazing operations."
+                        "chunk_id": f"chunk:{source_record_id}:2",
+                        "chunk_index": 2,
+                    },
+                    {
+                        **_chunk(
+                            source_set_id=source_set_id,
+                            source_record_id=source_record_id,
+                            text=(
+                                "Objectives None Standards Standards 1: The interim standards "
+                                "in Table 6 apply to livestock grazing operations."
+                            ),
                         ),
-                    ),
+                        "chunk_id": f"chunk:{source_record_id}:3",
+                        "chunk_index": 3,
+                    },
                 ],
             )
 
@@ -1185,12 +1197,23 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
 
             self.assertTrue(result.summary["passed"])
             self.assertTrue(result.summary["coverage_passed"])
+            self.assertTrue(result.summary["component_source_accuracy_passed"])
+            self.assertEqual(result.summary["component_source_accuracy_failure_count"], 0)
             self.assertEqual(result.summary["component_count"], 1)
             self.assertEqual(result.summary["standard_count"], 1)
             coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
             self.assertEqual(coverage["duplicate_component_ids"], [])
             self.assertEqual(coverage["duplicate_standard_ids"], [])
             self.assertEqual(coverage["detected_component_count"], 1)
+            self.assertTrue(coverage["component_source_accuracy_passed"])
+            self.assertEqual(coverage["component_source_accuracy_failure_count"], 0)
+            failed_checks = [
+                check["name"] for check in coverage["checks"] if not check["passed"]
+            ]
+            self.assertNotIn(
+                "component_redetects_from_primary_source_chunk",
+                failed_checks,
+            )
             components = load_forest_plan_component_inventory(
                 result.inventory_path,
                 forest_unit_id="custer-gallatin-nf",
@@ -1198,7 +1221,7 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
             self.assertEqual(len(components), 1)
             self.assertEqual(
                 components[0]["source_chunk_ids"],
-                [f"chunk:{source_record_id}", f"chunk:{source_record_id}:overlap"],
+                [f"chunk:{source_record_id}:overlap", f"chunk:{source_record_id}"],
             )
             self.assertEqual(
                 components[0]["management_area_ids"],

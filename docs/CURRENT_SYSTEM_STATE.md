@@ -66,6 +66,12 @@ Latest closeout on 2026-05-12:
   `bitterroot-nf` (`23/3`), `dakota-prairie-grasslands` (`394/161`), `flathead-nf` (`80/20`),
   `helena-lewis-and-clark-nf` (`258/28`), `idaho-panhandle-nfs` (`52/8`),
   `kootenai-nf` (`53/8`), `lolo-nf` (`1/1`), and `nez-perce-clearwater-nfs` (`136/21`).
+- The active inventory coverage now also verifies source-text accuracy for every emitted
+  forest-plan component. `forest-plan-components-build` fail-closes if the canonical primary source
+  chunk is missing, points at the wrong source record or artifact hash, or fails to re-emit the
+  same component through `_components_from_chunk(...)`. The current active build on
+  `source-set-5e65d845ce77e1a0` passed with `component_source_accuracy_passed=true` and
+  `component_source_accuracy_failure_count=0`.
 - The refreshed currentness and downstream derived surfaces on `source-set-5e65d845ce77e1a0`
   validate locally: `authority_currentness` reports `35` authority families and `207`
   source-currentness records; retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`;

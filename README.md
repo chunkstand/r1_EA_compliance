@@ -63,6 +63,11 @@ Current full-corpus promotion boundary:
   `bitterroot-nf` (`23/3`), `dakota-prairie-grasslands` (`394/161`), `flathead-nf` (`80/20`),
   `helena-lewis-and-clark-nf` (`258/28`), `idaho-panhandle-nfs` (`52/8`),
   `kootenai-nf` (`53/8`), `lolo-nf` (`1/1`), and `nez-perce-clearwater-nfs` (`136/21`).
+- `forest-plan-components-build` now also fail-closes on source-text accuracy. The active
+  `source-set-5e65d845ce77e1a0` coverage artifact verifies each emitted component against its
+  canonical source chunk, artifact hash, and parser round-trip from extracted text, and the live
+  build currently records `component_source_accuracy_passed=true` with
+  `component_source_accuracy_failure_count=0`.
 - The refreshed active-source-set currentness and graph surfaces now validate locally:
   `authority_currentness` reports `35` authority families and `207` source-currentness records;
   retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`; evidence graph rebuilds with

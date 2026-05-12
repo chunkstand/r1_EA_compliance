@@ -5,6 +5,37 @@ Date: 2026-05-12
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Source-Text Accuracy Closeout
+
+Forest-plan component verification is now tightened against the live source documents and extracted
+text on the active full-canonical source set.
+
+- outcome:
+  `forest-plan-components-build` now fails closed unless each emitted component can be traced to a
+  canonical primary source chunk with the expected `source_record_id`, `artifact_sha256`, and
+  `content_sha256`, and unless reparsing that canonical chunk re-emits the same component from the
+  extracted text
+- implementation note:
+  overlapping merged component records now keep canonical chunk ordering stable, which closes the
+  earlier ambiguity where a merged component could carry the right text/hash but point evidence at a
+  shorter non-canonical chunk
+- proving surface:
+  the live active build on `source-set-5e65d845ce77e1a0` now records
+  `component_source_accuracy_passed=true` and `component_source_accuracy_failure_count=0`; a
+  targeted Flathead probe over the live inventory also passed with `80` components, `20`
+  standards, and `0` primary-chunk accuracy failures
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_compliance_review.py tests/test_forest_plan_resolver.py`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_nepa_knowledge_graph_export.py`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`,
+  and `git diff --check` passed in this closeout pass
+- next step:
+  keep this source-text accuracy gate as part of the standard active-source-set component replay,
+  then treat future forest-profile or review promotions as separate proving lanes rather than
+  assuming component/source-document fidelity from inventory counts alone
+
 ## Region 1 Flathead Direct Extraction Admission Closeout
 
 The Flathead source-document extraction gap from the last pass is now closed on the active source
