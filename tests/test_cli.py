@@ -70,6 +70,24 @@ def test_compliance_review_parser_accepts_forest_plan_profile_selection() -> Non
     assert args.forest_plan_profiles_path == Path("config/forest_plan_profiles.json")
 
 
+def test_compliance_review_parser_accepts_flathead_profile_selection() -> None:
+    args = build_parser().parse_args(
+        [
+            "compliance-review",
+            "--package-path",
+            "package",
+            "--forest-unit-id",
+            "flathead-nf",
+            "--forest-plan-profiles-path",
+            "config/forest_plan_profiles.json",
+        ]
+    )
+
+    assert args.command == "compliance-review"
+    assert args.forest_unit_id == "flathead-nf"
+    assert args.forest_plan_profiles_path == Path("config/forest_plan_profiles.json")
+
+
 def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

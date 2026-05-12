@@ -80,7 +80,7 @@ Current full-corpus promotion boundary:
   promotes all `10` tracked forests/grasslands, with no remaining active full-canonical
   parser/inventory blockers.
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
-  `2,850` nodes, `6,086` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
+  `2,889` nodes, `6,212` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
   `region1_forest_plan_blocked_profile_count=0`.
 - The non-strict post-V1 promotion suite now reports `current_promotion_ready=true`,
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
@@ -144,17 +144,11 @@ replay is
 `docs/R1_FOREST_PLAN_SOURCE_DELTA_READINESS_MILESTONE_PLAN.md`.
 
 Sequence 6 forest-profile readiness integration is now implemented in the same readiness report.
-The live replay now separates configured profiles from register-only tracking rows. Configured
-profile readiness is `1` ready profile (`custer-gallatin-nf`) and `1` blocked profile
-(`beaverhead-deerlodge-nf`). Register-only tracking rows that are already retrieval-ready are
-reported separately (`flathead-nf`, `helena-lewis-and-clark-nf`, and
-`region-1-northern-region`) instead of being counted as ready profiles. The remaining blocked
-source IDs are explicit: parser blockers at
-`R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
-`R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
-`R1PLAN-idaho-panhandle-nfs-10`, `R1PLAN-kootenai-nf-08`, and `R1PLAN-lolo-nf-12`, plus the
-preserved official-source gaps `R1PLAN-kootenai-nf-18` and
-`R1PLAN-nez-perce-clearwater-nfs-18`.
+That earlier live replay separated configured profiles from register-only tracking rows, but that
+state is now historical. On the active full-canonical source set
+`source-set-5e65d845ce77e1a0`, configured profile readiness is now `10` graph-ready profiles and
+`0` blocked profiles. The readiness surface still preserves explicit source blockers where they
+exist, but they no longer block the active full-canonical profile roster.
 
 Sequence 7 corpus incorporation and downstream replay is now implemented for merged support-document
 source set `source-set-7e2652d23e764068`. Archived-catalog replay is explicit for
@@ -283,13 +277,14 @@ under `source_library/reviews/<review_id>/knowledge_graph/` passes `76` validati
 `1,996` nodes, `3,550` edges, `377` candidate authorities/decisions, `37` generated rules and
 compliance findings, `340` non-applicable authorities with search coverage, and explicit validation
 that review artifact, search-coverage, retrieval-trace, and graph-trace references resolve. NEPA 3D
-Milestone 5 now adds the Region 1 forest-plan readiness matrix and first added profile contract:
-the source-set graph tracks `10` Region 1 forest/grassland profiles, keeps `1` Custer Gallatin
-profile graph-ready, blocks `9` broader Region 1 profiles from completeness claims, adds the
-Beaverhead-Deerlodge profile with catalog-confirmed planning page/LMP sources plus positive and
-hard-negative applicability fixture contracts, renders `3` field-directive requirements and `5`
-overlay requirement groups as graph-visible nodes with source links, and leaves component inventory
-validation as a reviewer-visible blocker before graph promotion. NEPA 3D Milestone 6 now adds the
+Milestone 5 now adds the Region 1 forest-plan readiness matrix and active profile contracts: the
+source-set graph tracks `10` Region 1 forest/grassland profiles, keeps
+`region1_completeness_claim=false`, carries `2` Milestone 5 added active profile contracts
+(Beaverhead-Deerlodge and Flathead) with positive and hard-negative applicability fixture
+contracts, renders `3` field-directive requirements and `5` overlay requirement groups as
+graph-visible nodes with source links, and now validates the active full-canonical roster with
+`region1_forest_plan_graph_ready_profile_count=10` and
+`region1_forest_plan_blocked_profile_count=0`. NEPA 3D Milestone 6 now adds the
 checked-in local viewer under `viewer/nepa-3d/`; it opens directly into the graph experience, reads
 the normalized source-set and review overlay JSON exports, resolves the current graph dataset at
 load time from `source_library/catalog/source_set_manifest.json`, prefers that catalog source set
@@ -1005,14 +1000,16 @@ carries an `evidence_role` so project-location and background/reference mentions
 Negative package-location text such as `not part of the project area` is filtered before geographic
 and management area resolution. When the default Custer Gallatin profile is selected, non-Custer
 packages are marked `not_custer_gallatin` and treated as out of scope. The tracked resolver config
-now carries explicit profiles for all `10` Region 1 readiness units. The first non-Custer
-reviewer-ready slice is now implemented for Beaverhead-Deerlodge: its profile carries district,
-landscape, management-area, overlay, and supporting-evidence routes, and `compliance-review`,
-`compliance-review-eval`, and `compliance-gold-eval` now accept `--forest-unit-id` plus
-`--forest-plan-profiles-path` so the selected profile drives resolver scope and the
-`forest_plan_component_gate_reviewer_ready` requirement. The default profile still preserves the
-long-lived Custer Gallatin V0 contract, and most other non-Custer profiles still need the same
-richer vocabulary and supporting-route authoring before they can match that review depth.
+now carries explicit profiles for all `10` Region 1 readiness units. The first two non-Custer
+reviewer-ready slices are now implemented for Beaverhead-Deerlodge and Flathead. Beaverhead carries
+district, landscape, management-area, overlay, and supporting-evidence routes; Flathead now adds
+district, geographic-area, focused-recreation, overlay, currentness, and supporting-route depth.
+`compliance-review`, `compliance-review-eval`, and `compliance-gold-eval` accept
+`--forest-unit-id` plus `--forest-plan-profiles-path` so the selected profile drives resolver
+scope and the `forest_plan_component_gate_reviewer_ready` requirement. The default profile still
+preserves the long-lived Custer Gallatin V0 contract, and the remaining non-Custer profiles still
+need the same richer vocabulary and proving-review depth before they can match that reviewer-ready
+path.
 
 Export and evaluate a forest-plan component adjudication file for an existing review:
 

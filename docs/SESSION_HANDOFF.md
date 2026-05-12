@@ -5,6 +5,79 @@ Date: 2026-05-11
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Flathead Profile Expansion Closeout
+
+The Flathead single-forest profile-expansion milestone is now implemented.
+
+- outcome:
+  `flathead-nf` is now a configured Milestone 5 added active profile, the tracked profile owns all
+  `17` Flathead register rows, and the selected-profile resolver/compliance path now proves
+  district, geographic-area, focused-recreation, overlay, currentness, and supporting-route depth
+- proving surface:
+  closeout used tracked Flathead proving fixtures in
+  `tests/test_forest_plan_resolver.py` and `tests/test_compliance_review.py`; this milestone is
+  verified, but it is still weaker than a live local Flathead EA package replay
+- verification:
+  `python -m json.tool config/forest_plan_profiles.json`,
+  `python -m json.tool config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_compliance_review.py tests/test_cli.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  and `git diff --check` all passed on 2026-05-11
+- downstream alignment:
+  the live graph export now reports `region1_forest_plan_graph_ready_profile_count=10`,
+  `region1_forest_plan_added_profile_count=2`,
+  `region1_forest_plan_added_profiles_with_eval_fixture_count=2`, and
+  `region1_forest_plan_blocked_profile_count=0`
+- next step:
+  route to the next selected remaining non-Custer forest-specific expansion lane, preserving the
+  distinction between tracked-fixture proof and live-package proof
+
+## Region 1 Flathead Single-Forest Profile Expansion Plan
+
+The next active single-forest expansion lane is now formalized in
+`docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  this plan is narrower than the retired multi-forest lane and narrower than the Beaverhead
+  reference artifact; it targets Flathead only and explicitly includes the remaining work needed to
+  complete the Flathead forest plan plus all tracked Flathead supporting/currentness documents for a
+  reviewer-ready review path
+- current Flathead state:
+  the live Flathead inventory is already validated at `80` components and `20` standards on active
+  source set `source-set-5e65d845ce77e1a0`, the primary plan is already promoted to
+  `document_role=forest_plan`, and isolated single-forest inventory proof already passed; however,
+  Flathead still sits at `profile_kind=region1_tracking_only`, `applicability_eval_coverage.status=not_started`,
+  empty district/geography/management-area/overlay/trigger arrays, and only `10` explicit source
+  roles in `config/forest_plan_profiles.json`
+- completeness alignment:
+  the new plan treats the full Flathead register as the authoritative support-document contract:
+  `17` tracked rows total, with the current omitted profile roles called out explicitly
+  (`08`, `09`, `11`, `13`, `14`, `15`, `17`)
+- gate alignment:
+  the milestone now requires register-backed profile completeness, Flathead resolver depth,
+  Flathead selected-profile compliance and CLI parity, a Flathead EA proving review path, and the
+  mandatory all-R1 `forest-plan-components-build` replay plus live
+  `nepa-knowledge-graph-export` before closeout
+
+Immediate next step if this lane is continued:
+
+1. Execute Sequence 0 from `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md`, starting with
+   the failing Flathead completeness and proving-package contract.
+
+Verification in this pass:
+
+- `git diff --check`: passed
+
+Residual risks:
+
+- no tracked Flathead reviewer-ready proving fixture or package is yet identified in the repo, so
+  the new plan keeps that as an explicit gate and stop condition rather than assuming it exists
+- older append-only handoff sections still describe Beaverhead as the newest active expansion
+  routing, so future sessions must follow this Flathead section when those older notes conflict
+
 ## Region 1 Beaverhead Single-Forest Profile Expansion Plan
 
 The prior multi-forest expansion plan has been retired in favor of a Beaverhead-specific reference

@@ -71,8 +71,8 @@ Latest closeout on 2026-05-11:
   source-currentness records; retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`;
   evidence graph rebuilds with `153,187` nodes and `533,938` edges; claim extraction rebuilds with
   `101,856` claims; rule-claim binding rebuilds with `211` links and `0` gaps; and the active
-  NEPA 3D source-set export passes with `66` checks, `0` failed checks, `2,850` nodes, and
-  `6,086` edges.
+  NEPA 3D source-set export passes with `66` checks, `0` failed checks, `2,889` nodes, and
+  `6,212` edges.
 - The post-V1 promotion suite still separates current-promotion truth from full-corpus truth, but
   its full-canonical contract is now aligned to the refreshed active source set. The latest
   non-strict replay reports
@@ -113,24 +113,27 @@ Latest closeout on 2026-05-11:
   headings now parse without reopening duplicate-ID regressions.
 - `config/forest_plan_profiles.json` now carries explicit resolver-profile entries for all `10`
   tracked readiness units rather than only the original Custer Gallatin plus the earlier
-  Beaverhead expansion slice. The newly added non-Custer profiles flatten readiness-contract
-  multi-record document families into tracked per-part source roles so resolver selection can now
-  be profile-owned across the full roster. The first non-Custer reviewer-ready depth slice is now
-  implemented for Beaverhead-Deerlodge: its tracked profile carries district, landscape,
-  management-area, overlay, and supporting-trigger vocabularies derived from the active local
-  BDNF plan/support records, and the compliance-review path now threads explicit
-  `forest_unit_id` / `forest_plan_profiles_path` selection through `compliance-review`,
-  `compliance-review-eval`, and `compliance-gold-eval`.
+  Beaverhead and Flathead expansion slices. The newly added non-Custer profiles flatten
+  readiness-contract multi-record document families into tracked per-part source roles so resolver
+  selection can now be profile-owned across the full roster. The first two non-Custer
+  reviewer-ready depth slices are now implemented for Beaverhead-Deerlodge and Flathead.
+  Beaverhead carries district, landscape, management-area, overlay, and supporting-trigger
+  vocabularies derived from the active local BDNF plan/support records; Flathead now adds
+  district, geographic-area, focused-recreation, overlay, currentness, and supporting-route depth
+  derived from the active local Flathead plan/support records. The compliance-review path now
+  threads explicit `forest_unit_id` / `forest_plan_profiles_path` selection through
+  `compliance-review`, `compliance-review-eval`, and `compliance-gold-eval`.
 - `forest_plan_component_gate_reviewer_ready` is no longer hard-coded to
   `scope_status="custer_gallatin"`. Any explicitly selected in-scope forest-plan profile now has
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The next required implementation boundary is no longer stale-surface alignment or active
-  parser/component recovery. It is the separate post-V1 expansion lane, beginning with repeating
-  Beaverhead-level profile vocabularies and supporting-route depth across the remaining non-Custer
-  forest units and then proving those profiles against real package reviews. Expansion planning now
+  parser/component recovery. It is the separate post-V1 expansion lane for the next selected
+  remaining non-Custer forest unit, using Beaverhead and Flathead as the verified reference
+  slices, then proving that next profile against a real package review. Expansion planning now
   proceeds one forest at a time: `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the
-  Beaverhead reference slice, and `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is
+  original reference slice, `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is now the
+  implemented second slice, and `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is
   retired to routing-note status only.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
@@ -175,10 +178,9 @@ Sequence 6 readiness results:
   role-aware filters rather than source-ID-targeted shortcuts
 - forest-profile readiness: `ready_with_blockers`, with configured profile readiness separated from
   register-only tracking coverage
-- configured-profile status: `1` ready profile (`custer-gallatin-nf`) and `1` blocked profile
-  (`beaverhead-deerlodge-nf`)
-- retrieval-ready tracking-only rows: `flathead-nf`, `helena-lewis-and-clark-nf`, and
-  `region-1-northern-region`; these remain tracked rows, not configured profiles
+- this archived readiness snapshot is now superseded by the active full-canonical truth on
+  `source-set-5e65d845ce77e1a0`, which reports `10` graph-ready configured profiles and `0`
+  blocked profiles
 - current blocked forest-profile source IDs:
   `R1PLAN-beaverhead-deerlodge-nf-08`, `R1PLAN-bitterroot-nf-07`,
   `R1PLAN-dakota-prairie-grasslands-25`, `R1PLAN-idaho-panhandle-nfs-09`,
@@ -550,22 +552,20 @@ The live overlay for `v1-cg-ecid-compliance-review` now records:
 ## NEPA 3D Region 1 Forest-Plan Readiness Expansion
 
 NEPA 3D Milestone 5 is implemented by
-`config/region1_forest_plan_readiness_nepa_3d_v1.json`, the Beaverhead-Deerlodge profile addition
-in `config/forest_plan_profiles.json`, and expanded `nepa-knowledge-graph-export` validation. This
-is a graph-readiness slice, not a broad source-capture rerun: it makes the broader Region 1
-forest-plan universe visible while blocking any claim that Custer Gallatin artifacts prove Region 1
-forest-plan completeness.
+`config/region1_forest_plan_readiness_nepa_3d_v1.json`, the Beaverhead-Deerlodge and Flathead
+profile additions in `config/forest_plan_profiles.json`, and expanded
+`nepa-knowledge-graph-export` validation. This is a graph-readiness slice, not a broad
+source-capture rerun: it makes the broader Region 1 forest-plan universe visible while blocking
+any claim that Custer Gallatin artifacts prove Region 1 forest-plan completeness.
 
 The readiness matrix now records:
 
 - `10` tracked Region 1 forest/grassland profiles;
-- `1` graph-ready profile: Custer Gallatin with validated `329`-component inventory and `58`
-  standards;
-- `1` Milestone 5 added active profile contract: Beaverhead-Deerlodge, with catalog-confirmed
-  planning page and 2009 Forest Plan rows, positive and hard-negative applicability fixture
-  contracts, and `component_inventory_build_required` before graph promotion;
-- `9` blocked broader Region 1 profiles, visible through `forest_profile_not_ready` and
-  `missing_source` graph blockers;
+- `10` graph-ready profiles on the active full-canonical source set;
+- `2` Milestone 5 added active profile contracts: Beaverhead-Deerlodge and Flathead, each with
+  positive and hard-negative applicability fixture contracts;
+- `0` active full-canonical blocked profiles, while archived blocker nodes remain visible for older
+  readiness states and archived exports;
 - `3` field-directive requirements and `5` overlay requirement groups, now rendered as
   graph-visible requirement nodes with source-record links where the readiness matrix has
   catalog-confirmed sources.
@@ -574,7 +574,10 @@ The graph export now validates that configured profiles and known Region 1 units
 readiness matrix, added profiles have source requirements and eval fixture contracts, promoted
 profiles have catalog-confirmed sources and component inventory coverage, field-directive and
 overlay requirements have graph nodes and source links, and `region1_completeness_claim=false`
-while any tracked profile remains blocked.
+even after the active full-canonical roster reaches `region1_forest_plan_graph_ready_profile_count=10`
+with `region1_forest_plan_added_profile_count=2`,
+`region1_forest_plan_added_profiles_with_eval_fixture_count=2`, and
+`region1_forest_plan_blocked_profile_count=0`.
 Sequence 0 of the Region 1 component-inventory promotion plan now also requires the forest-plan
 component inventory input to be owned by the exporting source set. Borrowing
 `source-set-8a4005c8a083af1a` component inventory artifacts while exporting

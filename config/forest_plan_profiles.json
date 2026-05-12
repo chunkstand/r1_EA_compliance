@@ -1374,7 +1374,7 @@
         "Flathead"
       ],
       "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
-      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Flathead National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Flathead National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion, then enriched with district, geographic-area, focused-recreation, overlay, currentness, and supporting-route terms from the active local Flathead plan, ROD, FEIS, monitoring, and ESA support records.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
           "source_record_id": "R1PLAN-flathead-nf-01",
@@ -1408,13 +1408,41 @@
           "source_record_id": "R1PLAN-flathead-nf-16",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
+        "forest_plan_monitoring_program": {
+          "source_record_id": "R1PLAN-flathead-nf-08",
+          "required_for": "monitoring questions, indicators, and adaptive-management support"
+        },
+        "latest_biennial_monitoring_evaluation_report": {
+          "source_record_id": "R1PLAN-flathead-nf-09",
+          "required_for": "currentness and adaptive-management support"
+        },
         "administrative_change": {
           "source_record_id": "R1PLAN-flathead-nf-10",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
+        "record_of_decision_cover_letter": {
+          "source_record_id": "R1PLAN-flathead-nf-11",
+          "required_for": "decision transmittal and public-notice support"
+        },
         "final_environmental_impact_statement_volume_2": {
           "source_record_id": "R1PLAN-flathead-nf-12",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
+        },
+        "final_environmental_impact_statement_volume_3": {
+          "source_record_id": "R1PLAN-flathead-nf-13",
+          "required_for": "plan-amendment and cross-plan consistency support"
+        },
+        "feis_map_appendix_part_1": {
+          "source_record_id": "R1PLAN-flathead-nf-14",
+          "required_for": "map and project-location support"
+        },
+        "feis_map_appendix_part_2": {
+          "source_record_id": "R1PLAN-flathead-nf-15",
+          "required_for": "map and project-location support"
+        },
+        "bmer_release_letter": {
+          "source_record_id": "R1PLAN-flathead-nf-17",
+          "required_for": "monitoring currentness release context"
         }
       },
       "required_readiness_source_roles": [
@@ -1429,10 +1457,185 @@
         "administrative_change",
         "final_environmental_impact_statement_volume_2"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-hungry-horse-glacier-view",
+          "category": "district",
+          "name": "Hungry Horse-Glacier View Ranger District",
+          "aliases": [
+            "Hungry Horse Glacier View Ranger District",
+            "Hungry Horse Glacier View RD",
+            "Hungry Horse Ranger District",
+            "Glacier View Ranger District"
+          ]
+        },
+        {
+          "entry_id": "district-spotted-bear",
+          "category": "district",
+          "name": "Spotted Bear Ranger District",
+          "aliases": []
+        },
+        {
+          "entry_id": "district-swan-lake",
+          "category": "district",
+          "name": "Swan Lake Ranger District",
+          "aliases": []
+        },
+        {
+          "entry_id": "district-tally-lake",
+          "category": "district",
+          "name": "Tally Lake Ranger District",
+          "aliases": []
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-hungry-horse",
+          "category": "geographic_area",
+          "name": "Hungry Horse Geographic Area",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-middle-fork-flathead",
+          "category": "geographic_area",
+          "name": "Middle Fork Flathead Geographic Area",
+          "aliases": [
+            "Middle Fork Geographic Area"
+          ]
+        },
+        {
+          "entry_id": "geo-north-fork",
+          "category": "geographic_area",
+          "name": "North Fork Geographic Area",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-salish-mountains",
+          "category": "geographic_area",
+          "name": "Salish Mountains Geographic Area",
+          "aliases": []
+        },
+        {
+          "entry_id": "geo-south-fork-flathead",
+          "category": "geographic_area",
+          "name": "South Fork Flathead Geographic Area",
+          "aliases": [
+            "South Fork Geographic Area"
+          ]
+        },
+        {
+          "entry_id": "geo-swan-valley",
+          "category": "geographic_area",
+          "name": "Swan Valley Geographic Area",
+          "aliases": []
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-jewel-basin-hiking-area",
+          "category": "management_area",
+          "name": "Jewel Basin Hiking Area",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-krause-basin",
+          "category": "management_area",
+          "name": "Krause Basin",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-lion-lake",
+          "category": "management_area",
+          "name": "Lion Lake",
+          "aliases": []
+        },
+        {
+          "entry_id": "mgmt-big-mountain",
+          "category": "management_area",
+          "name": "Big Mountain",
+          "aliases": []
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-inventoried-roadless-area",
+          "category": "overlay",
+          "name": "Inventoried Roadless Area",
+          "aliases": [
+            "Inventoried Roadless Areas"
+          ]
+        },
+        {
+          "entry_id": "overlay-recommended-wilderness",
+          "category": "overlay",
+          "name": "Recommended Wilderness",
+          "aliases": [
+            "Recommended Wilderness Area",
+            "Recommended Wilderness Areas"
+          ]
+        },
+        {
+          "entry_id": "overlay-designated-wilderness",
+          "category": "overlay",
+          "name": "Designated Wilderness",
+          "aliases": [
+            "Designated Wilderness Areas",
+            "Bob Marshall Wilderness",
+            "Great Bear Wilderness",
+            "Mission Mountains Wilderness"
+          ]
+        },
+        {
+          "entry_id": "overlay-eligible-wild-scenic-river",
+          "category": "overlay",
+          "name": "Eligible Wild and Scenic River",
+          "aliases": [
+            "Eligible Wild and Scenic Rivers"
+          ]
+        },
+        {
+          "entry_id": "overlay-designated-wild-scenic-river",
+          "category": "overlay",
+          "name": "Designated Wild and Scenic River",
+          "aliases": [
+            "Designated Wild and Scenic Rivers"
+          ]
+        },
+        {
+          "entry_id": "overlay-jewel-basin-recommended-wilderness-area",
+          "category": "overlay",
+          "name": "Jewel Basin Recommended Wilderness Area",
+          "aliases": [
+            "Jewel Basin"
+          ]
+        },
+        {
+          "entry_id": "overlay-limestone-dean-ridge-recommended-wilderness-area",
+          "category": "overlay",
+          "name": "Limestone-Dean Ridge Recommended Wilderness Area",
+          "aliases": [
+            "Limestone-Dean Recommended Wilderness Area",
+            "Limestone-Dean Ridge",
+            "Limestone-Dean"
+          ]
+        },
+        {
+          "entry_id": "overlay-swan-front-recommended-wilderness-area",
+          "category": "overlay",
+          "name": "Swan Front Recommended Wilderness Area",
+          "aliases": [
+            "Swan Front"
+          ]
+        },
+        {
+          "entry_id": "overlay-tuchuck-whale-recommended-wilderness-area",
+          "category": "overlay",
+          "name": "Tuchuck-Whale Recommended Wilderness Area",
+          "aliases": [
+            "Tuchuck-Whale"
+          ]
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",
@@ -1443,7 +1646,205 @@
         "standard",
         "suitability"
       ],
-      "supporting_record_trigger_rules": [],
+      "supporting_record_trigger_rules": [
+        {
+          "route_id": "support-feis-plan-context",
+          "category": "feis_context",
+          "name": "FEIS plan-context and designated-area support",
+          "target_source_role": "final_environmental_impact_statement_volume_1_part_1",
+          "package_terms": [
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiers to",
+            "tiered to",
+            "incorporates by reference",
+            "recommended wilderness"
+          ],
+          "source_query": "Flathead final environmental impact statement alternatives effects recommended wilderness inventoried roadless areas wild and scenic rivers",
+          "source_terms": [
+            "final environmental impact statement",
+            "recommended wilderness",
+            "inventoried roadless areas",
+            "wild and scenic rivers"
+          ],
+          "trigger_terms": [
+            "Final Environmental Impact Statement",
+            "FEIS",
+            "tiers to",
+            "tiered to",
+            "incorporates by reference"
+          ]
+        },
+        {
+          "route_id": "support-rod-decision-basis",
+          "category": "decision_basis",
+          "name": "Record of decision and selected-alternative support",
+          "target_source_role": "record_of_decision",
+          "package_terms": [
+            "Record of Decision",
+            "ROD",
+            "selected alternative",
+            "plan approval",
+            "recommended wilderness"
+          ],
+          "source_query": "Flathead record of decision selected alternative plan approval recommended wilderness",
+          "source_terms": [
+            "record of decision",
+            "selected alternative",
+            "plan approval",
+            "recommended wilderness"
+          ],
+          "trigger_terms": [
+            "Record of Decision",
+            "ROD"
+          ]
+        },
+        {
+          "route_id": "support-esa-biological-assessment",
+          "category": "esa_consultation",
+          "name": "Plan-level biological assessment support",
+          "target_source_role": "biological_assessment",
+          "package_terms": [
+            "Biological Assessment",
+            "BA",
+            "Canada lynx",
+            "critical habitat",
+            "grizzly bear"
+          ],
+          "source_query": "Flathead biological assessment Canada lynx grizzly bear critical habitat Northern Continental Divide Ecosystem",
+          "source_terms": [
+            "biological assessment",
+            "Canada lynx",
+            "critical habitat",
+            "grizzly bear",
+            "Northern Continental Divide Ecosystem"
+          ],
+          "trigger_terms": [
+            "Biological Assessment",
+            "BA"
+          ]
+        },
+        {
+          "route_id": "support-bull-trout-biological-opinion",
+          "category": "esa_consultation",
+          "name": "Bull trout biological opinion support",
+          "target_source_role": "biological_opinion_1",
+          "package_terms": [
+            "Biological Opinion",
+            "BO",
+            "bull trout",
+            "incidental take",
+            "terms and conditions"
+          ],
+          "source_query": "Flathead biological opinion bull trout incidental take terms and conditions",
+          "source_terms": [
+            "biological opinion",
+            "bull trout",
+            "incidental take",
+            "terms and conditions"
+          ],
+          "trigger_terms": [
+            "Biological Opinion",
+            "BO",
+            "bull trout"
+          ]
+        },
+        {
+          "route_id": "support-grizzly-biological-opinion",
+          "category": "esa_consultation",
+          "name": "Grizzly bear biological opinion support",
+          "target_source_role": "biological_opinion_2",
+          "package_terms": [
+            "Biological Opinion",
+            "BO",
+            "grizzly bear",
+            "NCDE",
+            "primary conservation area"
+          ],
+          "source_query": "Flathead biological opinion grizzly bear Northern Continental Divide Ecosystem primary conservation area",
+          "source_terms": [
+            "biological opinion",
+            "grizzly bear",
+            "Northern Continental Divide Ecosystem",
+            "primary conservation area"
+          ],
+          "trigger_terms": [
+            "Biological Opinion",
+            "BO",
+            "grizzly bear"
+          ]
+        },
+        {
+          "route_id": "support-monitoring-program",
+          "category": "currentness_support",
+          "name": "Forest plan monitoring-program support",
+          "target_source_role": "forest_plan_monitoring_program",
+          "package_terms": [
+            "monitoring program",
+            "monitoring questions",
+            "indicators",
+            "2012 planning rule"
+          ],
+          "source_query": "Flathead monitoring program monitoring questions indicators 2012 planning rule",
+          "source_terms": [
+            "monitoring program",
+            "monitoring questions",
+            "indicators",
+            "2012 planning rule"
+          ],
+          "trigger_terms": [
+            "monitoring program",
+            "monitoring questions"
+          ]
+        },
+        {
+          "route_id": "support-bmer-currentness",
+          "category": "currentness_support",
+          "name": "Biennial monitoring evaluation report support",
+          "target_source_role": "latest_biennial_monitoring_evaluation_report",
+          "package_terms": [
+            "Biennial Monitoring Evaluation Report",
+            "BMER",
+            "visitor use",
+            "monitoring questions"
+          ],
+          "source_query": "Flathead Biennial Monitoring Evaluation Report BMER visitor use monitoring questions",
+          "source_terms": [
+            "Biennial Monitoring Evaluation Report",
+            "BMER",
+            "visitor use",
+            "monitoring questions"
+          ],
+          "trigger_terms": [
+            "Biennial Monitoring Evaluation Report",
+            "BMER"
+          ]
+        },
+        {
+          "route_id": "support-administrative-change",
+          "category": "currentness_support",
+          "name": "Administrative change support",
+          "target_source_role": "administrative_change",
+          "package_terms": [
+            "Administrative Change",
+            "Jewel Basin",
+            "Limestone-Dean Ridge",
+            "Tuchuck-Whale",
+            "Recommended Wilderness"
+          ],
+          "source_query": "Flathead administrative change Jewel Basin Limestone-Dean Ridge Tuchuck-Whale recommended wilderness",
+          "source_terms": [
+            "Administrative Change",
+            "Jewel Basin",
+            "Limestone-Dean Ridge",
+            "Tuchuck-Whale",
+            "Recommended Wilderness"
+          ],
+          "trigger_terms": [
+            "Administrative Change"
+          ]
+        }
+      ],
       "review_topics": [
         "Resolve Flathead National Forest forest-plan scope and source-record readiness",
         "validate plan consistency against applicable plan components and supporting forest-plan records"

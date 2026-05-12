@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 import json
 import os
@@ -17,6 +18,7 @@ from usfs_r1_ea_sources.forest_plan_resolver import CUSTER_GALLATIN_REQUIRED_SOU
 from usfs_r1_ea_sources.forest_plan_resolver import SUPPORTING_PLAN_EVIDENCE_ROUTES
 
 READINESS_PATH = Path("config/region1_forest_plan_readiness_nepa_3d_v1.json")
+REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 
 
 class ForestPlanProfileTests(unittest.TestCase):
@@ -113,6 +115,137 @@ class ForestPlanProfileTests(unittest.TestCase):
             "support-lynx-biological-opinion",
             [rule.route_id for rule in profile.supporting_record_trigger_rules],
         )
+
+    def test_flathead_profile_covers_full_register_backed_support_document_contract(self) -> None:
+        profile = load_forest_plan_profile("flathead-nf")
+        register_rows = _forest_plan_register_rows("flathead-nf")
+
+        self.assertEqual(len(register_rows), 17)
+        self.assertEqual(
+            {record.source_record_id for record in profile.supporting_source_records},
+            {row["proposed_source_record_id"] for row in register_rows},
+        )
+        self.assertEqual(
+            {
+                "forest_plan_monitoring_program": "R1PLAN-flathead-nf-08",
+                "latest_biennial_monitoring_evaluation_report": "R1PLAN-flathead-nf-09",
+                "record_of_decision_cover_letter": "R1PLAN-flathead-nf-11",
+                "final_environmental_impact_statement_volume_3": "R1PLAN-flathead-nf-13",
+                "feis_map_appendix_part_1": "R1PLAN-flathead-nf-14",
+                "feis_map_appendix_part_2": "R1PLAN-flathead-nf-15",
+                "bmer_release_letter": "R1PLAN-flathead-nf-17",
+            },
+            {
+                role: profile.source_record_id_for_role(role)
+                for role in (
+                    "forest_plan_monitoring_program",
+                    "latest_biennial_monitoring_evaluation_report",
+                    "record_of_decision_cover_letter",
+                    "final_environmental_impact_statement_volume_3",
+                    "feis_map_appendix_part_1",
+                    "feis_map_appendix_part_2",
+                    "bmer_release_letter",
+                )
+            },
+        )
+        self.assertEqual(
+            set(profile.required_readiness_source_roles),
+            {
+                "planning_page",
+                "primary_land_management_plan",
+                "record_of_decision",
+                "final_environmental_impact_statement_volume_1_part_1",
+                "final_environmental_impact_statement_appendices",
+                "biological_assessment",
+                "biological_opinion_1",
+                "biological_opinion_2",
+                "administrative_change",
+                "final_environmental_impact_statement_volume_2",
+            },
+        )
+        self.assertTrue(profile.required_readiness_source_roles)
+        self.assertFalse(
+            {
+                "forest_plan_monitoring_program",
+                "latest_biennial_monitoring_evaluation_report",
+                "record_of_decision_cover_letter",
+                "final_environmental_impact_statement_volume_3",
+                "feis_map_appendix_part_1",
+                "feis_map_appendix_part_2",
+                "bmer_release_letter",
+            }
+            & set(profile.required_readiness_source_roles)
+        )
+
+    def test_flathead_profile_has_grounded_resolver_depth_and_currentness_routes(self) -> None:
+        profile = load_forest_plan_profile("flathead-nf")
+
+        self.assertTrue(profile.ranger_district_terms)
+        self.assertTrue(profile.geographic_area_terms)
+        self.assertTrue(profile.management_area_terms)
+        self.assertTrue(profile.overlay_terms)
+        self.assertTrue(profile.supporting_record_trigger_rules)
+        self.assertIn(
+            "Hungry Horse-Glacier View Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Spotted Bear Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Hungry Horse Geographic Area",
+            [entry.name for entry in profile.geographic_area_terms],
+        )
+        self.assertIn(
+            "Swan Valley Geographic Area",
+            [entry.name for entry in profile.geographic_area_terms],
+        )
+        self.assertIn(
+            "Jewel Basin Hiking Area",
+            [entry.name for entry in profile.management_area_terms],
+        )
+        self.assertIn(
+            "Krause Basin",
+            [entry.name for entry in profile.management_area_terms],
+        )
+        self.assertIn(
+            "Inventoried Roadless Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertIn(
+            "Jewel Basin Recommended Wilderness Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertEqual(
+            {
+                "support-feis-plan-context",
+                "support-rod-decision-basis",
+                "support-esa-biological-assessment",
+                "support-bull-trout-biological-opinion",
+                "support-grizzly-biological-opinion",
+                "support-monitoring-program",
+                "support-bmer-currentness",
+                "support-administrative-change",
+            },
+            {rule.route_id for rule in profile.supporting_record_trigger_rules},
+        )
+
+    def test_flathead_readiness_row_promotes_after_proving_contract_exists(self) -> None:
+        readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
+        flathead = next(
+            row for row in readiness["profile_rows"] if row["forest_unit_id"] == "flathead-nf"
+        )
+
+        self.assertEqual(flathead["profile_kind"], "active_profile_added_milestone_5")
+        self.assertEqual(flathead["graph_promotion_status"], "promoted")
+        self.assertTrue(flathead["milestone_5_added_profile"])
+        self.assertEqual(
+            flathead["applicability_eval_coverage"]["status"],
+            "fixture_contract_defined",
+        )
+        self.assertEqual(flathead["applicability_eval_coverage"]["positive_case_count"], 1)
+        self.assertEqual(flathead["applicability_eval_coverage"]["hard_negative_case_count"], 1)
 
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
@@ -356,6 +489,15 @@ def _profile_config_payload(
 
 def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _forest_plan_register_rows(forest_unit_id: str) -> list[dict[str, str]]:
+    with REGISTER_PATH.open("r", encoding="utf-8", newline="") as handle:
+        return [
+            row
+            for row in csv.DictReader(handle)
+            if row["forest_unit_id"] == forest_unit_id
+        ]
 
 
 if __name__ == "__main__":

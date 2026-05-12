@@ -346,7 +346,31 @@
     {
       "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixtures": [
+          {
+            "expected_status": "candidate_profile_scope_positive_until_component_inventory",
+            "fixture_id": "region1-flathead-profile-positive",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Flathead National Forest",
+              "Hungry Horse Geographic Area",
+              "Jewel Basin Hiking Area"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_flathead",
+            "fixture_id": "region1-flathead-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 1,
+        "positive_case_count": 1,
+        "status": "fixture_contract_defined"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -359,8 +383,8 @@
         "Flathead National Forest"
       ],
       "graph_promotion_status": "promoted",
-      "milestone_5_added_profile": false,
-      "profile_kind": "region1_tracking_only",
+      "milestone_5_added_profile": true,
+      "profile_kind": "active_profile_added_milestone_5",
       "readiness_blockers": [],
       "source_requirements": [
         {

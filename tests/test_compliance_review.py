@@ -907,6 +907,90 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             self.assertTrue(forest_plan_gate["details"]["component_reviewer_ready"])
 
+    def test_flathead_compliance_review_requires_selected_profile_component_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_flathead_compliance_source_library(output_dir, source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Flathead National Forest on the Hungry "
+                    "Horse-Glacier View Ranger District in the Hungry Horse Geographic Area and "
+                    "the Jewel Basin Hiking Area. The action is adjacent to the Jewel Basin "
+                    "Recommended Wilderness Area and an Inventoried Roadless Area. The EA tiers "
+                    "to the FEIS and references the Record of Decision. ESA consultation "
+                    "includes a Biological Assessment and Biological Opinion for Canada lynx, "
+                    "bull trout, and grizzly bear in the NCDE primary conservation area. The "
+                    "monitoring program, Biennial Monitoring Evaluation Report (BMER), and 2023 "
+                    "Administrative Change are incorporated by reference. No motorized use, "
+                    "mechanized transport, or stock use are proposed in the Jewel Basin Hiking "
+                    "Area. | FW-STD-WTR-01 | New stream diversions and associated ditches shall "
+                    "have screens placed on them to prevent capture of fish and other aquatic "
+                    "organisms. | Yes | EA section 2.2 says new stream diversions and associated "
+                    "ditches shall have screens placed on them to prevent capture of fish and "
+                    "other aquatic organisms. |"
+                ),
+            )
+            rule_pack_path = _write_flathead_rule_pack(Path(tmp))
+
+            result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id="flathead-compliance-unit",
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+                forest_unit_id="flathead-nf",
+            )
+
+            self.assertTrue(result.summary["reviewer_ready"])
+            forest_plan = result.summary["forest_plan_review"]
+            self.assertEqual(forest_plan["scope_status"], "flathead_nf")
+            self.assertTrue(forest_plan["reviewer_ready"])
+            self.assertTrue(forest_plan["component_evaluation"]["validation_passed"])
+            self.assertTrue(forest_plan["component_evaluation"]["reviewer_ready"])
+            context = json.loads(Path(forest_plan["context_path"]).read_text(encoding="utf-8"))
+            self.assertEqual(
+                [entry["name"] for entry in context["project_location_signals"]],
+                ["Hungry Horse-Glacier View Ranger District"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["geographic_areas"]],
+                ["Hungry Horse Geographic Area"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["management_areas"]],
+                ["Jewel Basin Hiking Area"],
+            )
+            overlay_names = [entry["name"] for entry in context["overlays"]]
+            self.assertIn("Inventoried Roadless Area", overlay_names)
+            self.assertIn("Jewel Basin Recommended Wilderness Area", overlay_names)
+            self.assertEqual(
+                {entry["route_id"] for entry in context["supporting_plan_evidence"]},
+                {
+                    "support-feis-plan-context",
+                    "support-rod-decision-basis",
+                    "support-esa-biological-assessment",
+                    "support-bull-trout-biological-opinion",
+                    "support-grizzly-biological-opinion",
+                    "support-monitoring-program",
+                    "support-bmer-currentness",
+                    "support-administrative-change",
+                },
+            )
+
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            forest_plan_gate = _check(validation, "forest_plan_component_gate_reviewer_ready")
+            self.assertTrue(forest_plan_gate["passed"])
+            self.assertTrue(forest_plan_gate["details"]["required"])
+            self.assertEqual(
+                forest_plan_gate["details"]["scope_status"],
+                "flathead_nf",
+            )
+            self.assertTrue(forest_plan_gate["details"]["component_reviewer_ready"])
+
     def test_custer_component_adjudication_resolves_real_ea_omission_gate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -2719,6 +2803,15 @@ _BEAVERHEAD_PLAN_COMPONENT_TEXT = (
     "shall not be allowed."
 )
 
+_FLATHEAD_PLAN_COMPONENT_TEXT = (
+    "The 2018 Flathead National Forest Land Management Plan includes the Hungry Horse Geographic "
+    "Area and the Jewel Basin Hiking Area. Jewel Basin Recommended Wilderness Area direction "
+    "and Inventoried Roadless Area direction apply where mapped. Standard FW-STD-WTR-01 New "
+    "stream diversions and associated ditches shall have screens placed on them to prevent "
+    "capture of fish and other aquatic organisms. Suitability MA1b-SUIT-07 The Jewel Basin "
+    "hiking area is not suitable for motorized use, mechanized transport, and stock use."
+)
+
 _CUSTER_SOURCES = (
     (
         "R1PLAN-custer-gallatin-nf-01",
@@ -2825,6 +2918,104 @@ _BEAVERHEAD_SOURCES = (
         "R1PLAN-beaverhead-deerlodge-nf-25",
         "Beaverhead-Deerlodge Supplemental Grizzly Bear Biological Opinion PDF",
         "The supplemental biological opinion discusses grizzly bear consultation and reinitiation.",
+    ),
+)
+
+_FLATHEAD_SOURCES = (
+    (
+        "R1PLAN-flathead-nf-01",
+        "Flathead planning page",
+        (
+            "The Flathead planning page lists the forest plan, FEIS volumes, record of decision, "
+            "monitoring program, biennial monitoring evaluation report, administrative change, "
+            "biological assessment, and biological opinions."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-02",
+        "2018 Flathead National Forest Land Management Plan PDF",
+        _FLATHEAD_PLAN_COMPONENT_TEXT,
+    ),
+    (
+        "R1PLAN-flathead-nf-03",
+        "Flathead Record of Decision PDF",
+        (
+            "The record of decision identifies the selected alternative, plan approval, Hungry "
+            "Horse-Glacier View Ranger District, and recommended wilderness areas."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-04",
+        "Flathead FEIS Volume 1 PDF",
+        (
+            "The final environmental impact statement discusses alternatives, effects, "
+            "recommended wilderness, inventoried roadless areas, and wild and scenic rivers."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-05",
+        "Flathead FEIS Appendices PDF",
+        (
+            "The final environmental impact statement appendices provide supporting analysis, "
+            "methods, and glossary context for Flathead plan interpretation."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-06",
+        "Flathead Biological Assessment PDF",
+        (
+            "The biological assessment analyzes Canada lynx critical habitat, grizzly bear, and "
+            "the Northern Continental Divide Ecosystem."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-07",
+        "Flathead Biological Opinion Bull Trout PDF",
+        (
+            "The biological opinion addresses bull trout incidental take and terms and "
+            "conditions."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-08",
+        "Flathead Monitoring Program PDF",
+        (
+            "The monitoring program includes monitoring questions and indicators under the 2012 "
+            "planning rule."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-09",
+        "Flathead Biennial Monitoring Evaluation Report PDF",
+        (
+            "The Biennial Monitoring Evaluation Report for the Flathead National Forest reviews "
+            "visitor use and monitoring questions."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-10",
+        "Flathead Administrative Change PDF",
+        (
+            "The Administrative Change updates Jewel Basin, Limestone-Dean Ridge, and "
+            "Tuchuck-Whale Recommended Wilderness Areas."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-12",
+        "Flathead FEIS Volume 2 PDF",
+        (
+            "The final environmental impact statement volume 2 discusses inventoried roadless "
+            "areas, designated wilderness, eligible wild and scenic rivers, and recommended "
+            "wilderness areas."
+        ),
+    ),
+    (
+        "R1PLAN-flathead-nf-16",
+        "Flathead Biological Opinion Grizzly Bear PDF",
+        (
+            "The biological opinion addresses grizzly bear habitat in the Northern Continental "
+            "Divide Ecosystem primary conservation area."
+        ),
     ),
 )
 
@@ -2946,6 +3137,41 @@ def _build_beaverhead_compliance_source_library(output_dir: Path, source_set_id:
     build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
     build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
     _write_beaverhead_component_inventory(output_dir, source_set_id)
+
+
+def _build_flathead_compliance_source_library(output_dir: Path, source_set_id: str) -> None:
+    source_record_ids = [source_record_id for source_record_id, _title, _text in _FLATHEAD_SOURCES]
+    _write_extraction_diagnostics(
+        output_dir,
+        source_set_id,
+        source_record_ids=source_record_ids,
+    )
+    _write_chunks(
+        output_dir,
+        source_set_id,
+        [
+            _chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                title=title,
+                document_role="forest_plan",
+                authority_level="forest_plan",
+                citation_label=f"{source_record_id} | {title} | artifact abc123",
+                text=text,
+            )
+            for source_record_id, title, text in _FLATHEAD_SOURCES
+        ],
+    )
+    _write_catalog_sqlite(
+        output_dir,
+        {
+            source_record_id: [title]
+            for source_record_id, title, _text in _FLATHEAD_SOURCES
+        },
+    )
+    build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+    build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+    _write_flathead_component_inventory(output_dir, source_set_id)
 
 
 def _write_extraction_diagnostics(
@@ -3115,6 +3341,168 @@ def _write_beaverhead_component_inventory(output_dir: Path, source_set_id: str) 
                 "source_record_id": source_record_id,
                 "chunk_id": source_chunk_ids[0],
                 "section_heading": "West Big Hole Management Area Standards",
+            }
+        ],
+        "passed": True,
+        "checks": [
+            {"name": "selected_forest_plan_chunks_present", "passed": True, "details": {}},
+            {"name": "labeled_components_detected", "passed": True, "details": {}},
+            {"name": "standard_components_detected", "passed": True, "details": {}},
+            {"name": "all_detected_components_built", "passed": True, "details": {}},
+            {"name": "all_detected_standards_built", "passed": True, "details": {}},
+            {"name": "built_component_ids_are_unique", "passed": True, "details": {}},
+            {"name": "detected_standard_labels_are_unique", "passed": True, "details": {}},
+        ],
+    }
+    coverage_path.write_text(json.dumps(coverage, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _write_flathead_component_inventory(output_dir: Path, source_set_id: str) -> None:
+    components_dir = output_dir / "derived" / source_set_id / "forest_plan_components"
+    inventory_path = components_dir / "component_inventory.json"
+    coverage_path = components_dir / "component_inventory_build_coverage.json"
+    components_dir.mkdir(parents=True, exist_ok=True)
+    source_record_id = "R1PLAN-flathead-nf-02"
+    artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
+    content_sha256 = hashlib.sha256(_FLATHEAD_PLAN_COMPONENT_TEXT.encode("utf-8")).hexdigest()
+    source_chunk_ids = [f"chunk:{source_record_id}"]
+    provenance = {
+        "entity": {
+            "type": "forest_plan_component",
+            "source_record_id": source_record_id,
+            "source_chunk_ids": source_chunk_ids,
+            "artifact_sha256": artifact_sha256,
+            "content_sha256": content_sha256,
+        },
+        "activity": {
+            "type": "component_inventory_fixture",
+            "created_at": "2026-05-11T00:00:00Z",
+        },
+        "agent": {
+            "type": "deterministic_test_fixture",
+            "name": "tests/test_compliance_review.py",
+            "version": "forest-plan-component-inventory-v0",
+        },
+    }
+    inventory = {
+        "schema_version": "forest-plan-component-inventory-v0",
+        "inventory_id": "flathead-test-components-v0",
+        "forest_unit_id": "flathead-nf",
+        "plan_version": "2018",
+        "source_set_id": source_set_id,
+        "components": [
+            {
+                "component_id": "flathead-fw-std-wtr-01",
+                "component_type": "standard",
+                "component_text": (
+                    "Standard (FW-STD-WTR) 01 New stream diversions and associated ditches "
+                    "shall have screens placed on them to prevent capture of fish and other "
+                    "aquatic organisms."
+                ),
+                "forest_unit_id": "flathead-nf",
+                "plan_version": "2018",
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "section_id": "jewel-basin-hiking-area-standard-1",
+                "section_heading": "Jewel Basin Hiking Area Standards",
+                "page": None,
+                "citation_label": "R1PLAN-flathead-nf-02 | test plan | artifact abc123",
+                "geographic_area_ids": ["geo-hungry-horse"],
+                "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
+                "overlay_ids": [],
+                "resource_topics": ["hydrology"],
+                "source_chunk_ids": source_chunk_ids,
+                "artifact_sha256": artifact_sha256,
+                "content_sha256": content_sha256,
+                "activity_tags": ["stream diversions", "screens", "aquatic organisms"],
+                "package_evidence_terms": [
+                    "new stream diversions",
+                    "screens placed on them",
+                    "aquatic organisms",
+                ],
+                "provenance": provenance,
+            },
+            {
+                "component_id": "flathead-ma1b-suit-07",
+                "component_type": "suitability",
+                "component_text": (
+                    "Suitability (MA1b-SUIT) 07 The Jewel Basin hiking area is not suitable "
+                    "for motorized use, mechanized transport, and stock use."
+                ),
+                "forest_unit_id": "flathead-nf",
+                "plan_version": "2018",
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "section_id": "jewel-basin-hiking-area-suitability-7",
+                "section_heading": "Jewel Basin Hiking Area Suitability",
+                "page": None,
+                "citation_label": "R1PLAN-flathead-nf-02 | test plan | artifact abc123",
+                "geographic_area_ids": ["geo-hungry-horse"],
+                "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
+                "overlay_ids": [],
+                "resource_topics": ["recreation access"],
+                "source_chunk_ids": source_chunk_ids,
+                "artifact_sha256": artifact_sha256,
+                "content_sha256": content_sha256,
+                "activity_tags": ["motorized use", "mechanized transport", "stock use"],
+                "package_evidence_terms": [
+                    "motorized use",
+                    "mechanized transport",
+                    "stock use",
+                ],
+                "provenance": provenance,
+            },
+        ],
+    }
+    inventory_path.write_text(json.dumps(inventory, indent=2, sort_keys=True), encoding="utf-8")
+    coverage = {
+        "schema_version": "forest-plan-component-inventory-build-coverage-v0",
+        "created_at": "2026-05-11T00:00:00Z",
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "chunks_path": str(output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"),
+        "selected_chunk_count": 1,
+        "detected_component_count": 2,
+        "detected_standard_count": 1,
+        "built_component_count": 2,
+        "built_standard_count": 1,
+        "missing_component_ids": [],
+        "missing_standard_ids": [],
+        "duplicate_component_ids": [],
+        "duplicate_standard_ids": [],
+        "validation_errors": [],
+        "detected_component_labels": [
+            {
+                "component_id": "flathead-fw-std-wtr-01",
+                "component_type": "standard",
+                "label": "Standard",
+                "code": "FW-STD-WTR",
+                "number": "01",
+                "source_record_id": source_record_id,
+                "chunk_id": source_chunk_ids[0],
+                "section_heading": "Jewel Basin Hiking Area Standards",
+            },
+            {
+                "component_id": "flathead-ma1b-suit-07",
+                "component_type": "suitability",
+                "label": "Suitability",
+                "code": "MA1b-SUIT",
+                "number": "07",
+                "source_record_id": source_record_id,
+                "chunk_id": source_chunk_ids[0],
+                "section_heading": "Jewel Basin Hiking Area Suitability",
+            },
+        ],
+        "detected_standard_labels": [
+            {
+                "component_id": "flathead-fw-std-wtr-01",
+                "component_type": "standard",
+                "label": "Standard",
+                "code": "FW-STD-WTR",
+                "number": "01",
+                "source_record_id": source_record_id,
+                "chunk_id": source_chunk_ids[0],
+                "section_heading": "Jewel Basin Hiking Area Standards",
             }
         ],
         "passed": True,
@@ -3871,6 +4259,47 @@ def _write_beaverhead_rule_pack(directory: Path) -> Path:
         ],
     }
     path = directory / "beaverhead-rule-pack.json"
+    path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_flathead_rule_pack(directory: Path) -> Path:
+    rule_pack = {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "unit-flathead-ea",
+        "version": "0.1.0",
+        "title": "Unit Flathead EA Rule Pack",
+        "description": "Unit test Flathead forest-plan rule pack.",
+        "baseline_source_record_ids": ["R1PLAN-flathead-nf-02"],
+        "rules": [
+            {
+                "id": "flathead_fw_std_wtr_2018",
+                "title": "Flathead forest-plan stream-screen standard is addressed",
+                "authority_category": "forest_plan",
+                "authority_family_id": "unit_flathead_forest_plan",
+                "authority_source_record_id": "R1PLAN-flathead-nf-02",
+                "authority_document_role": "forest_plan",
+                "applicability_mode": "baseline",
+                "question": "Does the EA package address the applicable Flathead standard?",
+                "requirement": (
+                    "Flathead EAs in the Jewel Basin Hiking Area must address the stream-"
+                    "screening standard for new diversions."
+                ),
+                "package_query": "new stream diversions screens placed on them aquatic organisms",
+                "package_terms": ["new stream diversions", "screens placed on them"],
+                "source_query": (
+                    "new stream diversions and associated ditches shall have screens placed "
+                    "on them to prevent capture of fish and other aquatic organisms"
+                ),
+                "source_filters": {
+                    "document_role": "forest_plan",
+                    "source_record_id": "R1PLAN-flathead-nf-02",
+                },
+                "severity": "high",
+            }
+        ],
+    }
+    path = directory / "flathead-rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
 
