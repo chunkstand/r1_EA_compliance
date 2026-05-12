@@ -121,6 +121,7 @@ def build_extraction(
     allow_invalid_catalog: bool = False,
     reuse_existing: bool = False,
     reuse_inventory_path: Path | None = None,
+    merge_selected_into_existing: bool = False,
 ) -> ExtractionBuildResult:
     """Build derived extracted text and chunks from the reviewer catalog."""
 
@@ -153,7 +154,13 @@ def build_extraction(
     preserve_existing_outputs = reuse_existing or reuse_inventory_records is not None
     derived_dir = output_dir / "derived"
     source_derived_dir = _source_derived_dir(derived_dir, source_set_id)
-    if source_derived_dir.exists() and not preserve_existing_outputs:
+    selected_ids = set(id_filters or set())
+    if id_filter:
+        selected_ids.add(id_filter)
+    merge_selected_into_existing = bool(
+        merge_selected_into_existing and selected_ids and source_derived_dir.exists()
+    )
+    if source_derived_dir.exists() and not preserve_existing_outputs and not merge_selected_into_existing:
         shutil.rmtree(source_derived_dir)
     extracted_text_dir = source_derived_dir / "extracted_text"
     docling_json_dir = source_derived_dir / "docling_json"
@@ -170,10 +177,6 @@ def build_extraction(
     extraction_validation_path = diagnostics_dir / "extraction_validation.json"
     summary_path = diagnostics_dir / "summary.json"
 
-    selected_ids = set(id_filters or set())
-    if id_filter:
-        selected_ids.add(id_filter)
-
     rows = _load_catalog_rows(
         sqlite_path,
         source_set_id=source_set_id,
@@ -181,9 +184,33 @@ def build_extraction(
         parser_filter=parser_filter,
         limit=limit,
     )
+    existing_manifest_records = []
+    existing_chunks = []
+    existing_summary = None
+    if merge_selected_into_existing:
+        existing_manifest_records = (
+            _read_jsonl(extraction_manifest_path) if extraction_manifest_path.exists() else []
+        )
+        existing_chunks = _read_jsonl(chunks_path) if chunks_path.exists() else []
+        existing_summary = _read_json(summary_path) if summary_path.exists() else None
+    validation_rows = rows
+    if merge_selected_into_existing:
+        existing_source_record_ids = {
+            str(record.get("source_record_id") or "") for record in existing_manifest_records
+        }
+        validation_source_record_ids = sorted(existing_source_record_ids | selected_ids)
+        if _summary_represents_full_catalog(existing_summary):
+            validation_source_record_ids = []
+        validation_rows = _load_catalog_rows(
+            sqlite_path,
+            source_set_id=source_set_id,
+            id_filters=set(validation_source_record_ids) or None,
+            parser_filter=None,
+            limit=None,
+        )
     extracted_at = _utc_now()
-    manifest_records: list[dict] = []
-    chunks: list[dict] = []
+    refreshed_manifest_records: list[dict] = []
+    refreshed_chunks: list[dict] = []
 
     for row in rows:
         record, row_chunks = _extract_row(
@@ -202,21 +229,53 @@ def build_extraction(
             reuse_inventory_enforced=reuse_inventory_records is not None,
             payload_cache_dir=payload_cache_dir,
         )
-        manifest_records.append(record)
-        chunks.extend(row_chunks)
+        refreshed_manifest_records.append(record)
+        refreshed_chunks.extend(row_chunks)
+
+    if merge_selected_into_existing:
+        manifest_records = _merge_selected_records(
+            existing_manifest_records,
+            refreshed_manifest_records,
+            replace_source_record_ids=selected_ids,
+        )
+        chunks = _merge_selected_chunks(
+            existing_chunks,
+            refreshed_chunks,
+            replace_source_record_ids=selected_ids,
+        )
+        filters = (
+            {"id": None, "ids": None, "parser": None, "limit": None}
+            if _summary_represents_full_catalog(existing_summary)
+            else dict((existing_summary or {}).get("filters") or {})
+            or {
+                "id": id_filter,
+                "ids": sorted(validation_source_record_ids) if validation_source_record_ids else None,
+                "parser": None,
+                "limit": None,
+            }
+        )
+    else:
+        manifest_records = refreshed_manifest_records
+        chunks = refreshed_chunks
+        filters = {
+            "id": id_filter,
+            "ids": sorted(selected_ids) if selected_ids else None,
+            "parser": parser_filter,
+            "limit": limit,
+        }
 
     _write_jsonl(chunks_path, chunks)
     _write_jsonl(extraction_manifest_path, manifest_records)
     validation = _validation_report(
         source_set_id=source_set_id,
-        rows=rows,
+        rows=validation_rows,
         manifest_records=manifest_records,
         chunks=chunks,
     )
     summary = _summary(
         source_set_id=source_set_id,
         source_set_manifest=source_set_manifest,
-        rows=rows,
+        rows=validation_rows,
         manifest_records=manifest_records,
         chunks=chunks,
         validation=validation,
@@ -224,12 +283,7 @@ def build_extraction(
         extraction_manifest_path=extraction_manifest_path,
         validation_path=extraction_validation_path,
         summary_path=summary_path,
-        filters={
-            "id": id_filter,
-            "ids": sorted(selected_ids) if selected_ids else None,
-            "parser": parser_filter,
-            "limit": limit,
-        },
+        filters=filters,
         extraction_options={
             "catalog_dir": str(catalog_dir),
             "chunk_max_chars": chunk_max_chars,
@@ -239,6 +293,8 @@ def build_extraction(
             "docling_timeout_seconds": docling_timeout_seconds,
             "reuse_existing": reuse_existing,
             "reuse_inventory_path": str(reuse_inventory_path) if reuse_inventory_path else None,
+            "merge_selected_into_existing": merge_selected_into_existing,
+            "refresh_source_record_ids": sorted(selected_ids) if merge_selected_into_existing else None,
         },
     )
     _write_json(extraction_validation_path, validation)
@@ -2170,6 +2226,43 @@ def _summary(
     }
 
 
+def _merge_selected_records(
+    existing_records: list[dict],
+    refreshed_records: list[dict],
+    *,
+    replace_source_record_ids: set[str],
+) -> list[dict]:
+    merged = [
+        record
+        for record in existing_records
+        if str(record.get("source_record_id") or "") not in replace_source_record_ids
+    ]
+    merged.extend(refreshed_records)
+    return sorted(merged, key=lambda record: str(record.get("source_record_id") or ""))
+
+
+def _merge_selected_chunks(
+    existing_chunks: list[dict],
+    refreshed_chunks: list[dict],
+    *,
+    replace_source_record_ids: set[str],
+) -> list[dict]:
+    merged = [
+        chunk
+        for chunk in existing_chunks
+        if str(chunk.get("source_record_id") or "") not in replace_source_record_ids
+    ]
+    merged.extend(refreshed_chunks)
+    return sorted(
+        merged,
+        key=lambda chunk: (
+            str(chunk.get("source_record_id") or ""),
+            int(chunk.get("chunk_index") or 0),
+            str(chunk.get("chunk_id") or ""),
+        ),
+    )
+
+
 def _failed_source_examples(records: list[dict], *, limit: int = 10) -> list[dict]:
     examples = []
     for record in records:
@@ -2188,6 +2281,28 @@ def _failed_source_examples(records: list[dict], *, limit: int = 10) -> list[dic
         if len(examples) >= limit:
             break
     return examples
+
+
+def _summary_represents_full_catalog(summary: dict | None) -> bool:
+    if not isinstance(summary, dict):
+        return False
+    filters = summary.get("filters") or {}
+    active_filters = [value for value in filters.values() if value not in (None, "", [])]
+    try:
+        selected_source_count = int(summary.get("selected_source_count") or 0)
+        catalog_source_count = int(summary.get("catalog_source_count") or 0)
+        extracted_count = int(summary.get("extracted_count") or 0)
+        required_extraction_source_count = int(summary.get("required_extraction_source_count") or 0)
+        failed_count = int(summary.get("failed_count") or 0)
+    except (TypeError, ValueError):
+        return False
+    return (
+        not active_filters
+        and catalog_source_count > 0
+        and selected_source_count == catalog_source_count
+        and extracted_count == required_extraction_source_count
+        and failed_count == 0
+    )
 
 
 def _source_derived_dir(derived_dir: Path, source_set_id: str) -> Path:

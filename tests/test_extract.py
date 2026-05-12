@@ -276,6 +276,76 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(second.summary["validation_passed"])
             self.assertFalse(stale.exists())
 
+    def test_build_extraction_can_merge_selected_refresh_into_existing_outputs(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run_records(
+                output_dir,
+                "unit-download",
+                [
+                    {
+                        "source_record_id": "R1EA-001",
+                        "artifact_body": _html_body(),
+                        "content_type": "text/html",
+                        "suffix": ".html",
+                    },
+                    {
+                        "source_record_id": "R1EA-002",
+                        "artifact_body": (
+                            b"<html><body><h1>Forest Plan</h1><p>Vegetation standards apply.</p></body></html>"
+                        ),
+                        "content_type": "text/html",
+                        "suffix": ".html",
+                    },
+                ],
+            )
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+
+            first = build_extraction(
+                output_dir=output_dir,
+                id_filters={"R1EA-001", "R1EA-002"},
+            )
+            first_manifest = {
+                record["source_record_id"]: record
+                for record in _read_jsonl(first.extraction_manifest_path)
+            }
+
+            second = build_extraction(
+                output_dir=output_dir,
+                id_filter="R1EA-001",
+                merge_selected_into_existing=True,
+            )
+
+            self.assertTrue(second.summary["validation_passed"])
+            self.assertEqual(second.summary["selected_source_count"], 2)
+            self.assertEqual(second.summary["extracted_count"], 2)
+            self.assertTrue(second.summary["extraction_options"]["merge_selected_into_existing"])
+            self.assertEqual(
+                second.summary["extraction_options"]["refresh_source_record_ids"],
+                ["R1EA-001"],
+            )
+            manifest = {
+                record["source_record_id"]: record
+                for record in _read_jsonl(second.extraction_manifest_path)
+            }
+            self.assertEqual(set(manifest), {"R1EA-001", "R1EA-002"})
+            self.assertEqual(
+                manifest["R1EA-002"]["text_sha256"],
+                first_manifest["R1EA-002"]["text_sha256"],
+            )
+            chunks = _read_jsonl(second.chunks_path)
+            self.assertEqual(
+                {chunk["source_record_id"] for chunk in chunks},
+                {"R1EA-001", "R1EA-002"},
+            )
+
     def test_build_extraction_accepts_archived_catalog_dir(self) -> None:
         config = load_config(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:
@@ -891,6 +961,44 @@ def _write_download_run(
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
     return artifact
+
+
+def _write_download_run_records(output_dir: Path, run_id: str, records: list[dict]) -> None:
+    run_dir = output_dir / "runs" / run_id
+    manifest_dir = output_dir / "manifests"
+    run_dir.mkdir(parents=True)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = manifest_dir / f"download_{run_id}.jsonl"
+    manifest_records = []
+    for record in records:
+        artifact = output_dir / "artifacts" / "raw" / f"{run_id}-{record['source_record_id']}{record['suffix']}"
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_bytes(record["artifact_body"])
+        manifest_records.append(
+            {
+                "run_id": run_id,
+                "source_record_id": record["source_record_id"],
+                "status": "downloaded",
+                "artifact_path": str(artifact),
+                "artifact_sha256": _artifact_sha256(record["artifact_body"]),
+                "artifact_byte_size": len(record["artifact_body"]),
+                "content_type": record["content_type"],
+                "fetch_timestamp": "2026-04-30T00:00:00Z",
+                "final_url": "https://example.test/final",
+            }
+        )
+    manifest_path.write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in manifest_records),
+        encoding="utf-8",
+    )
+    summary = {
+        "run_id": run_id,
+        "mode": "download",
+        "manifest_path": str(manifest_path),
+        "filtered_rows": len(manifest_records),
+        "status_counts": {"downloaded": len(manifest_records)},
+    }
+    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
 
 
 def _html_body() -> bytes:

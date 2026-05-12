@@ -33,7 +33,7 @@ allowed_import_layers = ["foundation", "capture", "catalog"]
 [[layers]]
 name = "extraction"
 summary = "Artifact extraction, extraction accuracy, and extraction-derived text surfaces."
-modules = ["extract", "extraction_accuracy"]
+modules = ["extract", "extraction_accuracy", "extraction_admission"]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction"]
 
 [[layers]]

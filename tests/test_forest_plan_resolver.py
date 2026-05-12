@@ -1655,6 +1655,11 @@ def _build_flathead_source_library(output_dir: Path) -> str:
             if source_record_id in source_record_ids
         },
     )
+    _write_extraction_accuracy_audit(
+        output_dir,
+        source_set_id,
+        admitted_source_record_ids=source_record_ids,
+    )
     build_retrieval_index(
         output_dir=output_dir,
         source_set_id=source_set_id,
@@ -1712,6 +1717,24 @@ def _write_extraction_diagnostics(
         json.dumps({"source_set_id": source_set_id}, sort_keys=True),
         encoding="utf-8",
     )
+
+
+def _write_extraction_accuracy_audit(
+    output_dir: Path,
+    source_set_id: str,
+    *,
+    admitted_source_record_ids: list[str],
+) -> Path:
+    path = output_dir / "derived" / source_set_id / "diagnostics" / "extraction_accuracy_audit.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "source_set_id": source_set_id,
+        "passed": True,
+        "knowledge_base_admitted_source_record_ids": admitted_source_record_ids,
+        "knowledge_base_blocked_source_record_ids": [],
+    }
+    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+    return path
 
 
 def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> Path:

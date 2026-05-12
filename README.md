@@ -66,10 +66,18 @@ Current full-corpus promotion boundary:
 - The refreshed active-source-set currentness and graph surfaces now validate locally:
   `authority_currentness` reports `35` authority families and `207` source-currentness records;
   retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`; evidence graph rebuilds with
-  `153,187` nodes and `533,938` edges; claim extraction rebuilds with `101,856` claims; rule-claim
+  `157,315` nodes and `538,066` edges; claim extraction rebuilds with `101,856` claims; rule-claim
   binding rebuilds with `211` links and `0` gaps; and the active-source-set
-  `nepa-knowledge-graph-export` replay passes `66` checks with `0` failed, `2,850` nodes, and
-  `6,086` edges.
+  `nepa-knowledge-graph-export` replay passes `66` checks with `0` failed, `2,889` nodes, and
+  `6,212` edges.
+- The Flathead direct-extraction admission gap is now closed on `2026-05-12`: all `17` tracked
+  Flathead forest-plan/support/currentness records were re-extracted directly from the active local
+  source artifacts on `source-set-5e65d845ce77e1a0`, the targeted
+  `extraction-accuracy-audit` passed with `17/17` required records admitted and `0` blocked, and
+  retrieval now records
+  `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]` with
+  `verified_extraction_admitted_source_count=17`. This closes the source-document extraction and
+  knowledge-base admission gap for Flathead without claiming a live Flathead EA package replay.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and

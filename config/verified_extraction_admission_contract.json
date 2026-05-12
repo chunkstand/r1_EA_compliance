@@ -1,0 +1,29 @@
+{
+  "schema_version": "verified-extraction-admission-contract-v0",
+  "contracts": [
+    {
+      "contract_id": "flathead-forest-plan-direct-extraction",
+      "description": "Flathead forest-plan knowledge-base admission requires direct, verified extraction from the current source artifacts for all tracked Flathead forest-plan and support/currentness records.",
+      "required_source_record_ids": [
+        "R1PLAN-flathead-nf-01",
+        "R1PLAN-flathead-nf-02",
+        "R1PLAN-flathead-nf-03",
+        "R1PLAN-flathead-nf-04",
+        "R1PLAN-flathead-nf-05",
+        "R1PLAN-flathead-nf-06",
+        "R1PLAN-flathead-nf-07",
+        "R1PLAN-flathead-nf-08",
+        "R1PLAN-flathead-nf-09",
+        "R1PLAN-flathead-nf-10",
+        "R1PLAN-flathead-nf-11",
+        "R1PLAN-flathead-nf-12",
+        "R1PLAN-flathead-nf-13",
+        "R1PLAN-flathead-nf-14",
+        "R1PLAN-flathead-nf-15",
+        "R1PLAN-flathead-nf-16",
+        "R1PLAN-flathead-nf-17"
+      ],
+      "require_direct_extraction": true
+    }
+  ]
+}

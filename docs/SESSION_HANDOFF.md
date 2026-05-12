@@ -1,9 +1,47 @@
 # Session Handoff
 
-Date: 2026-05-11
+Date: 2026-05-12
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Region 1 Flathead Direct Extraction Admission Closeout
+
+The Flathead source-document extraction gap from the last pass is now closed on the active source
+set.
+
+- outcome:
+  all `17` required `R1PLAN-flathead-nf-01..17` records were re-extracted directly from the active
+  local source artifacts into `source-set-5e65d845ce77e1a0`, the targeted accuracy audit admitted
+  all `17` required records with `0` blocked, and retrieval now records the Flathead verified
+  extraction contract before knowledge-base admission
+- proving surface:
+  this is stronger than the prior tracked-fixture-only extraction story because it uses the live
+  local source documents on `source-set-5e65d845ce77e1a0`; however, it still does not replace the
+  separate need for a live Flathead EA package replay
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_retrieval.py tests/test_cli.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --merge-selected-into-existing --id R1PLAN-flathead-nf-01 --id R1PLAN-flathead-nf-02 --id R1PLAN-flathead-nf-03 --id R1PLAN-flathead-nf-04 --id R1PLAN-flathead-nf-05 --id R1PLAN-flathead-nf-06 --id R1PLAN-flathead-nf-07 --id R1PLAN-flathead-nf-08 --id R1PLAN-flathead-nf-09 --id R1PLAN-flathead-nf-10 --id R1PLAN-flathead-nf-11 --id R1PLAN-flathead-nf-12 --id R1PLAN-flathead-nf-13 --id R1PLAN-flathead-nf-14 --id R1PLAN-flathead-nf-15 --id R1PLAN-flathead-nf-16 --id R1PLAN-flathead-nf-17`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --contract-path config/verified_extraction_admission_contract.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`,
+  and `git diff --check` all passed on 2026-05-12
+- current live state:
+  `extraction_accuracy_audit` now reports `audited_record_count=17`,
+  `knowledge_base_admitted_source_record_ids=17`, and
+  `knowledge_base_blocked_source_record_ids=[]`; retrieval reports
+  `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]`,
+  `verified_extraction_required_source_count=17`, and
+  `verified_extraction_admitted_source_count=17`
+- next step:
+  keep the Flathead source-backed extraction gate in place, then treat any future Flathead
+  promotion from here as a separate live-package proving lane rather than reopening extraction reuse
 
 ## Region 1 Flathead Profile Expansion Closeout
 

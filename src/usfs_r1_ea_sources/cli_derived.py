@@ -13,6 +13,7 @@ from .claim_extraction import run_claim_eval
 from .cli_common import print_summary
 from .evidence_graph import build_evidence_graph
 from .extract import build_extraction
+from .extraction_admission import DEFAULT_VERIFIED_EXTRACTION_ADMISSION_CONTRACT_PATH
 from .extraction_accuracy import run_extraction_accuracy_audit
 from .forest_plan_source_delta_readiness import DEFAULT_OFFICIAL_SOURCE_GAP_EVIDENCE_PATH
 from .forest_plan_source_delta_readiness import DEFAULT_R1_FOREST_PLAN_REGISTER_PATH
@@ -72,6 +73,7 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     extract.add_argument("--allow-invalid-catalog", action="store_true")
     extract.add_argument("--reuse-existing", action="store_true")
     extract.add_argument("--reuse-inventory-path", type=Path)
+    extract.add_argument("--merge-selected-into-existing", action="store_true")
 
     reuse_inventory = subparsers.add_parser(
         "reuse-inventory",
@@ -122,6 +124,11 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     extraction_accuracy.add_argument("--output-dir", default=Path("source_library"), type=Path)
     extraction_accuracy.add_argument("--source-set-id")
     extraction_accuracy.add_argument("--output-path", type=Path)
+    extraction_accuracy.add_argument(
+        "--contract-path",
+        default=DEFAULT_VERIFIED_EXTRACTION_ADMISSION_CONTRACT_PATH,
+        type=Path,
+    )
 
     authority_currentness = subparsers.add_parser(
         "authority-currentness",
@@ -302,6 +309,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             allow_invalid_catalog=args.allow_invalid_catalog,
             reuse_existing=args.reuse_existing,
             reuse_inventory_path=args.reuse_inventory_path,
+            merge_selected_into_existing=args.merge_selected_into_existing,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1
@@ -340,6 +348,7 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             output_path=args.output_path,
+            contract_path=args.contract_path,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

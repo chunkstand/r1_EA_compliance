@@ -41,7 +41,7 @@ catalog gate is archived under
 
 ## Full Canonical Corpus Promotion
 
-Latest closeout on 2026-05-11:
+Latest closeout on 2026-05-12:
 
 - Active full canonical catalog in `source_library/catalog/` is now
   `source-set-5e65d845ce77e1a0`.
@@ -69,10 +69,22 @@ Latest closeout on 2026-05-11:
 - The refreshed currentness and downstream derived surfaces on `source-set-5e65d845ce77e1a0`
   validate locally: `authority_currentness` reports `35` authority families and `207`
   source-currentness records; retrieval rebuilds with `75,745` chunks and `reviewer_ready=true`;
-  evidence graph rebuilds with `153,187` nodes and `533,938` edges; claim extraction rebuilds with
+  evidence graph rebuilds with `157,315` nodes and `538,066` edges; claim extraction rebuilds with
   `101,856` claims; rule-claim binding rebuilds with `211` links and `0` gaps; and the active
   NEPA 3D source-set export passes with `66` checks, `0` failed checks, `2,889` nodes, and
   `6,212` edges.
+- Flathead now also has an explicit source-backed extraction-admission gate on the active source
+  set. On `2026-05-12`, all `17` required `R1PLAN-flathead-nf-01..17` records were refreshed by
+  direct extraction into `source-set-5e65d845ce77e1a0`; the targeted
+  `extraction-accuracy-audit --contract-path config/verified_extraction_admission_contract.json`
+  passed `required_source_records_are_present_and_direct`,
+  `chunks_match_extracted_text_offsets`, `chunk_coverage_has_no_gaps`,
+  `extracted_text_has_no_markup_leakage`, and `pdf_text_crosscheck_against_pypdf`; and the audit
+  admitted all `17` required Flathead records with `0` blocked. Retrieval now records
+  `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]`,
+  `verified_extraction_required_source_count=17`, and
+  `verified_extraction_admitted_source_count=17`, so only verified accurate Flathead extractions
+  are allowed into the knowledge-base lane.
 - The post-V1 promotion suite still separates current-promotion truth from full-corpus truth, but
   its full-canonical contract is now aligned to the refreshed active source set. The latest
   non-strict replay reports

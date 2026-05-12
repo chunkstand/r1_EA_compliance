@@ -159,6 +159,11 @@ class RetrievalTests(unittest.TestCase):
                     "R1PLAN-flathead-nf-03": ["Forest-plan decision"],
                 },
             )
+            _write_extraction_accuracy_audit(
+                output_dir,
+                source_set_id,
+                admitted_source_record_ids=["R1PLAN-flathead-nf-02", "R1PLAN-flathead-nf-03"],
+            )
             result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
 
             query = query_retrieval_index(
@@ -353,6 +358,51 @@ class RetrievalTests(unittest.TestCase):
             self.assertTrue(diagnostic.summary["validation_passed"])
             self.assertFalse(diagnostic.summary["reviewer_ready"])
             self.assertTrue(diagnostic.sqlite_path.exists())
+
+    def test_retrieval_build_requires_verified_flathead_extraction_audit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-flathead-nf-02"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-flathead-nf-02",
+                        title="2018 Revised Land Management Plan",
+                        document_role="forest_plan",
+                        support_document_role="primary_land_management_plan",
+                        authority_level="forest",
+                        citation_label="R1PLAN-flathead-nf-02 | 2018 Revised Land Management Plan | artifact abc123",
+                        text="Flathead forest plan direction applies.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1PLAN-flathead-nf-02": ["Flathead direction"]})
+
+            failed = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertFalse(failed.summary["validation_passed"])
+            missing_audit = json.loads(failed.validation_path.read_text(encoding="utf-8"))
+            self.assertFalse(_check(missing_audit, "verified_extraction_accuracy_audit_exists")["passed"])
+
+            _write_extraction_accuracy_audit(
+                output_dir,
+                source_set_id,
+                admitted_source_record_ids=["R1PLAN-flathead-nf-02"],
+            )
+
+            passed = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(passed.summary["validation_passed"])
+            self.assertTrue(passed.summary["reviewer_ready"])
+            self.assertTrue(passed.sqlite_path.exists())
 
     def test_retrieval_build_allows_scope_excluded_rows_in_complete_extraction(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -568,6 +618,24 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
                     (source_record_id, topic_id),
                 )
         connection.commit()
+    return path
+
+
+def _write_extraction_accuracy_audit(
+    output_dir: Path,
+    source_set_id: str,
+    *,
+    admitted_source_record_ids: list[str],
+) -> Path:
+    path = output_dir / "derived" / source_set_id / "diagnostics" / "extraction_accuracy_audit.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "source_set_id": source_set_id,
+        "passed": True,
+        "knowledge_base_admitted_source_record_ids": admitted_source_record_ids,
+        "knowledge_base_blocked_source_record_ids": [],
+    }
+    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
     return path
 
 

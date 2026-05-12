@@ -184,6 +184,7 @@ def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
             "--catalog-dir",
             "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
             "--reuse-existing",
+            "--merge-selected-into-existing",
         ]
     )
 
@@ -192,6 +193,23 @@ def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
         "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
     )
     assert args.reuse_existing is True
+    assert args.merge_selected_into_existing is True
+
+
+def test_extraction_accuracy_audit_parser_accepts_contract_path() -> None:
+    args = build_parser().parse_args(
+        [
+            "extraction-accuracy-audit",
+            "--output-dir",
+            "source_library",
+            "--contract-path",
+            "config/verified_extraction_admission_contract.json",
+        ]
+    )
+
+    assert args.command == "extraction-accuracy-audit"
+    assert args.output_dir == Path("source_library")
+    assert args.contract_path == Path("config/verified_extraction_admission_contract.json")
 
 
 def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:

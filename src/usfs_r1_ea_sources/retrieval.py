@@ -10,6 +10,7 @@ import json
 import re
 import sqlite3
 
+from .extraction_admission import matched_verified_extraction_contracts
 from .extract import _source_derived_dir
 
 
@@ -106,6 +107,7 @@ def build_retrieval_index(
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_manifest_path = source_derived_dir / "diagnostics" / "extraction_manifest.jsonl"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
+    extraction_accuracy_path = source_derived_dir / "diagnostics" / "extraction_accuracy_audit.json"
     sqlite_path = index_dir / DEFAULT_INDEX_FILENAME
     manifest_path = index_dir / "retrieval_manifest.json"
     validation_path = index_dir / "retrieval_validation.json"
@@ -126,6 +128,16 @@ def build_retrieval_index(
     extraction_manifest_records = (
         _read_jsonl(extraction_manifest_path) if extraction_manifest_path.exists() else []
     )
+    verified_extraction_requirements = matched_verified_extraction_contracts(
+        [
+            str(record.get("source_record_id") or "")
+            for record in extraction_manifest_records
+            if record.get("status") == "extracted"
+        ]
+    )
+    extraction_accuracy = (
+        _read_json(extraction_accuracy_path) if extraction_accuracy_path.exists() else None
+    )
     validation = _validation_report(
         output_dir=output_dir,
         source_set_id=source_set_id,
@@ -137,6 +149,9 @@ def build_retrieval_index(
         extraction_manifest_records=extraction_manifest_records,
         extraction_summary_path=extraction_summary_path,
         extraction_summary=extraction_summary,
+        extraction_accuracy_path=extraction_accuracy_path,
+        extraction_accuracy=extraction_accuracy,
+        verified_extraction_requirements=verified_extraction_requirements,
         chunks=indexed_chunks,
         allow_failed_extraction=allow_failed_extraction,
         allow_partial_extraction=allow_partial_extraction,
@@ -194,6 +209,16 @@ def build_retrieval_index(
         "extracted_source_count": _int_from_summary(extraction_summary, "extracted_count"),
         "extraction_filters": (extraction_summary or {}).get("filters", {}),
         "extraction_complete": extraction_complete,
+        "verified_extraction_required_source_count": len(
+            verified_extraction_requirements["required_source_record_ids"]
+        ),
+        "verified_extraction_contract_ids": [
+            contract.get("contract_id")
+            for contract in verified_extraction_requirements["contracts"]
+        ],
+        "verified_extraction_admitted_source_count": len(
+            (extraction_accuracy or {}).get("knowledge_base_admitted_source_record_ids", [])
+        ),
         "document_role_counts": dict(
             Counter(chunk.get("document_role") for chunk in indexed_chunks)
         ),
@@ -793,6 +818,9 @@ def _validation_report(
     extraction_manifest_records: list[dict],
     extraction_summary_path: Path,
     extraction_summary: dict | None,
+    extraction_accuracy_path: Path,
+    extraction_accuracy: dict | None,
+    verified_extraction_requirements: dict,
     chunks: list[dict],
     allow_failed_extraction: bool,
     allow_partial_extraction: bool,
@@ -819,6 +847,16 @@ def _validation_report(
             "passed": extraction_summary_path.exists(),
             "details": {"path": str(extraction_summary_path)},
         },
+        _check_verified_extraction_audit_exists(
+            extraction_accuracy_path,
+            verified_extraction_requirements=verified_extraction_requirements,
+        ),
+        _check_verified_extraction_audit_allows_knowledge_base_admission(
+            source_set_id=source_set_id,
+            extraction_accuracy_path=extraction_accuracy_path,
+            extraction_accuracy=extraction_accuracy,
+            verified_extraction_requirements=verified_extraction_requirements,
+        ),
         _check_extraction_scope_is_complete(
             extraction_summary,
             allow_partial_extraction=allow_partial_extraction,
@@ -900,6 +938,74 @@ def _check_extraction_scope_is_complete(
             ),
             "filters": (extraction_summary or {}).get("filters", {}),
             "complete": complete,
+        },
+    }
+
+
+def _check_verified_extraction_audit_exists(
+    extraction_accuracy_path: Path,
+    *,
+    verified_extraction_requirements: dict,
+) -> dict:
+    required_source_record_ids = list(verified_extraction_requirements["required_source_record_ids"])
+    return {
+        "name": "verified_extraction_accuracy_audit_exists",
+        "passed": not required_source_record_ids or extraction_accuracy_path.exists(),
+        "details": {
+            "path": str(extraction_accuracy_path),
+            "exists": extraction_accuracy_path.exists(),
+            "required_source_record_ids": required_source_record_ids,
+            "contract_ids": [
+                contract.get("contract_id")
+                for contract in verified_extraction_requirements["contracts"]
+            ],
+        },
+    }
+
+
+def _check_verified_extraction_audit_allows_knowledge_base_admission(
+    *,
+    source_set_id: str,
+    extraction_accuracy_path: Path,
+    extraction_accuracy: dict | None,
+    verified_extraction_requirements: dict,
+) -> dict:
+    required_source_record_ids = set(verified_extraction_requirements["required_source_record_ids"])
+    if not required_source_record_ids:
+        return {
+            "name": "required_sources_are_admitted_by_verified_extraction_audit",
+            "passed": True,
+            "details": {
+                "path": str(extraction_accuracy_path),
+                "required_source_record_ids": [],
+                "admitted_source_record_ids": [],
+                "blocked_source_record_ids": [],
+            },
+        }
+    admitted_source_record_ids = set(
+        str(value)
+        for value in (extraction_accuracy or {}).get("knowledge_base_admitted_source_record_ids", [])
+        if str(value)
+    )
+    blocked_source_record_ids = sorted(required_source_record_ids - admitted_source_record_ids)
+    source_set_matches = bool(extraction_accuracy) and str(extraction_accuracy.get("source_set_id") or "") == source_set_id
+    audit_passed = bool(extraction_accuracy and extraction_accuracy.get("passed"))
+    return {
+        "name": "required_sources_are_admitted_by_verified_extraction_audit",
+        "passed": source_set_matches and audit_passed and not blocked_source_record_ids,
+        "details": {
+            "path": str(extraction_accuracy_path),
+            "exists": extraction_accuracy_path.exists(),
+            "audit_source_set_id": (extraction_accuracy or {}).get("source_set_id"),
+            "source_set_matches": source_set_matches,
+            "audit_passed": audit_passed,
+            "required_source_record_ids": sorted(required_source_record_ids),
+            "admitted_source_record_ids": sorted(admitted_source_record_ids),
+            "blocked_source_record_ids": blocked_source_record_ids,
+            "contract_ids": [
+                contract.get("contract_id")
+                for contract in verified_extraction_requirements["contracts"]
+            ],
         },
     }
 

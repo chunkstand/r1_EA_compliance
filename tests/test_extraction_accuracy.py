@@ -66,6 +66,63 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             check = _check(result.summary, "chunks_match_extracted_text_offsets")
             self.assertFalse(check["passed"])
 
+    def test_audit_blocks_reused_extraction_when_contract_requires_direct_parse(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(output_dir, artifact_body=_html_body())
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+            extraction = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+            manifest = [
+                json.loads(line)
+                for line in extraction.extraction_manifest_path.read_text(encoding="utf-8").splitlines()
+            ]
+            manifest[0]["parser_metadata"] = {"reused_existing": True}
+            extraction.extraction_manifest_path.write_text(
+                "\n".join(json.dumps(record, sort_keys=True) for record in manifest) + "\n",
+                encoding="utf-8",
+            )
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "direct-html",
+                                "required_source_record_ids": ["R1EA-001"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                [],
+            )
+            self.assertEqual(
+                result.summary["knowledge_base_blocked_source_record_ids"],
+                ["R1EA-001"],
+            )
+            check = _check(result.summary, "required_source_records_are_present_and_direct")
+            self.assertFalse(check["passed"])
+
 
 def _write_download_run(output_dir: Path, *, artifact_body: bytes) -> None:
     run_dir = output_dir / "runs" / "unit-download"

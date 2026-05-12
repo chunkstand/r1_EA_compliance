@@ -9,6 +9,7 @@ import json
 import re
 import xml.etree.ElementTree as ET
 
+from .extraction_admission import matched_verified_extraction_contracts
 from .extract import _clean_text
 from .extract import _find_xml_scope_element
 from .extract import _normalize_xml_scope_identifier
@@ -32,6 +33,7 @@ def run_extraction_accuracy_audit(
     output_dir: Path,
     source_set_id: str | None = None,
     output_path: Path | None = None,
+    contract_path: Path | None = None,
 ) -> ExtractionAccuracyAuditResult:
     """Run deterministic extraction-accuracy checks against generated extraction artifacts."""
 
@@ -47,18 +49,57 @@ def run_extraction_accuracy_audit(
     records = _read_jsonl(manifest_path)
     chunks = _read_jsonl(chunks_path)
     extraction_validation = _read_json(validation_path)
-    text_by_record = _load_extracted_text(records)
+    admission_requirements = matched_verified_extraction_contracts(
+        [str(record.get("source_record_id") or "") for record in records],
+        contract_path=contract_path,
+    )
+    audited_source_record_ids = admission_requirements["required_source_record_ids"] or [
+        str(record.get("source_record_id") or "")
+        for record in records
+        if record.get("status") == "extracted"
+    ]
+    scoped_records = [
+        record
+        for record in records
+        if str(record.get("source_record_id") or "") in set(audited_source_record_ids)
+    ]
+    scoped_chunks = [
+        chunk
+        for chunk in chunks
+        if str(chunk.get("source_record_id") or "") in set(audited_source_record_ids)
+    ]
+    text_by_record = _load_extracted_text(scoped_records)
 
     checks = [
         _check_extraction_validation_passed(extraction_validation),
-        _check_text_files_match_manifest(records, text_by_record),
-        _check_raw_artifact_hashes_match(records, output_dir),
-        _check_chunks_match_text(records, chunks, text_by_record),
-        _check_chunk_coverage(records, chunks, text_by_record),
-        _check_scoped_xml_accuracy(records, text_by_record, output_dir),
-        _check_markup_leakage(records, text_by_record),
-        _check_pdf_text_crosscheck(records, text_by_record, output_dir),
+        _check_required_source_records_present_and_direct(
+            scoped_records,
+            required_source_record_ids=admission_requirements["required_source_record_ids"],
+            require_direct_extraction=bool(admission_requirements["require_direct_extraction"]),
+        ),
+        _check_text_files_match_manifest(scoped_records, text_by_record),
+        _check_raw_artifact_hashes_match(scoped_records, output_dir),
+        _check_chunks_match_text(scoped_records, scoped_chunks, text_by_record),
+        _check_chunk_coverage(scoped_records, scoped_chunks, text_by_record),
+        _check_scoped_xml_accuracy(scoped_records, text_by_record, output_dir),
+        _check_markup_leakage(scoped_records, text_by_record),
+        _check_pdf_text_crosscheck(scoped_records, text_by_record, output_dir),
     ]
+    per_source_failures = _per_source_failure_map(
+        checks,
+        relevant_source_record_ids=audited_source_record_ids,
+    )
+    extracted_scoped_ids = {
+        str(record.get("source_record_id") or "")
+        for record in scoped_records
+        if record.get("status") == "extracted"
+    }
+    admitted_source_record_ids = sorted(
+        source_record_id
+        for source_record_id in audited_source_record_ids
+        if source_record_id in extracted_scoped_ids and source_record_id not in per_source_failures
+    )
+    blocked_source_record_ids = sorted(set(audited_source_record_ids) - set(admitted_source_record_ids))
 
     summary = {
         "source_set_id": source_set_id,
@@ -67,6 +108,20 @@ def run_extraction_accuracy_audit(
         "record_count": len(records),
         "extracted_record_count": sum(1 for record in records if record.get("status") == "extracted"),
         "chunk_count": len(chunks),
+        "audited_record_count": len(scoped_records),
+        "audited_chunk_count": len(scoped_chunks),
+        "verified_extraction_admission_contract_path": admission_requirements["contract_path"],
+        "verified_extraction_admission_contracts": admission_requirements["contracts"],
+        "audited_source_record_ids": sorted(audited_source_record_ids),
+        "required_direct_source_record_ids": sorted(audited_source_record_ids)
+        if admission_requirements["require_direct_extraction"]
+        else [],
+        "knowledge_base_admitted_source_record_ids": admitted_source_record_ids,
+        "knowledge_base_blocked_source_record_ids": blocked_source_record_ids,
+        "per_source_failures": {
+            source_record_id: reasons
+            for source_record_id, reasons in sorted(per_source_failures.items())
+        },
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
     }
@@ -99,6 +154,66 @@ def _check_extraction_validation_passed(extraction_validation: dict) -> dict:
                 for check in extraction_validation.get("checks", [])
                 if not check.get("passed")
             ],
+        },
+    }
+
+
+def _check_required_source_records_present_and_direct(
+    records: list[dict],
+    *,
+    required_source_record_ids: list[str],
+    require_direct_extraction: bool,
+) -> dict:
+    if not required_source_record_ids:
+        return {
+            "name": "required_source_records_are_present_and_direct",
+            "passed": True,
+            "details": {
+                "required_source_record_ids": [],
+                "require_direct_extraction": False,
+                "failure_count": 0,
+                "failures": [],
+            },
+        }
+    records_by_source = {
+        str(record.get("source_record_id") or ""): record
+        for record in records
+    }
+    failures = []
+    for source_record_id in required_source_record_ids:
+        record = records_by_source.get(source_record_id)
+        if record is None:
+            failures.append(
+                {
+                    "source_record_id": source_record_id,
+                    "reason": "missing_from_extraction_manifest",
+                }
+            )
+            continue
+        if record.get("status") != "extracted":
+            failures.append(
+                {
+                    "source_record_id": source_record_id,
+                    "reason": "not_extracted",
+                    "status": record.get("status"),
+                }
+            )
+            continue
+        if require_direct_extraction and (record.get("parser_metadata") or {}).get("reused_existing"):
+            failures.append(
+                {
+                    "source_record_id": source_record_id,
+                    "reason": "reused_existing_extraction_not_admissible",
+                }
+            )
+    return {
+        "name": "required_source_records_are_present_and_direct",
+        "passed": not failures,
+        "details": {
+            "required_source_record_ids": required_source_record_ids,
+            "require_direct_extraction": require_direct_extraction,
+            "failure_count": len(failures),
+            "failures": failures[:50],
         },
     }
 
@@ -508,3 +623,51 @@ def _resolve_artifact_path(output_dir: Path, value: object) -> Path | None:
     if output_relative.exists():
         return output_relative
     return path
+
+
+def _per_source_failure_map(
+    checks: list[dict],
+    *,
+    relevant_source_record_ids: list[str],
+) -> dict[str, list[str]]:
+    failures_by_source: dict[str, list[str]] = {}
+    relevant_source_record_id_set = set(relevant_source_record_ids)
+    for check in checks:
+        if check.get("passed"):
+            continue
+        failed_source_ids = _source_record_ids_from_check(check, relevant_source_record_id_set)
+        if not failed_source_ids and relevant_source_record_id_set:
+            failed_source_ids = sorted(relevant_source_record_id_set)
+        for source_record_id in failed_source_ids:
+            failures_by_source.setdefault(source_record_id, []).append(str(check.get("name") or ""))
+    return failures_by_source
+
+
+def _source_record_ids_from_check(
+    check: dict,
+    relevant_source_record_ids: set[str],
+) -> list[str]:
+    details = check.get("details") or {}
+    if not isinstance(details, dict):
+        return []
+    discovered = set()
+    for key in (
+        "source_record_ids",
+        "missing_source_record_ids",
+        "failed_source_record_ids",
+        "required_source_record_ids",
+    ):
+        values = details.get(key)
+        if isinstance(values, list):
+            discovered.update(str(value) for value in values if str(value) in relevant_source_record_ids)
+    for key in ("failures", "metrics"):
+        values = details.get(key)
+        if not isinstance(values, list):
+            continue
+        for value in values:
+            if not isinstance(value, dict):
+                continue
+            source_record_id = str(value.get("source_record_id") or "")
+            if source_record_id in relevant_source_record_ids:
+                discovered.add(source_record_id)
+    return sorted(discovered)
