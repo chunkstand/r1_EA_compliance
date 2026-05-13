@@ -129,6 +129,19 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
 
+    compliance_gold = suite_results["compliance_gold_eval"]
+    assert compliance_gold["required_for_current_promotion"] is True
+    assert compliance_gold["path"] == "reviews/compliance_gold_eval/compliance_gold_eval_results.json"
+    compliance_gold_checks = {check["name"]: check for check in compliance_gold["checks"]}
+    assert compliance_gold_checks["compliance_gold_eval_passed"]["equals"] is True
+    assert compliance_gold_checks["compliance_gold_eval_cases"]["min"] == 14
+    assert compliance_gold_checks["compliance_gold_required_coverage_tags_present"]["equals"] == []
+    assert (
+        compliance_gold_checks["compliance_gold_required_package_style_tags_present"]["equals"]
+        == []
+    )
+    assert compliance_gold_checks["compliance_gold_rule_pack_version"]["equals"] == "0.4.0"
+
     seed_gate = suite_results["applicability_eval_authority_family_coverage"]
     assert seed_gate["required_for_current_promotion"] is True
     assert seed_gate["path"] == "reviews/applicability_eval/applicability_eval_results.json"
@@ -150,11 +163,55 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     gold_checks = {check["name"]: check for check in gold_gate["checks"]}
     assert gold_checks["applicability_gold_eval_passed"]["equals"] is True
     assert gold_checks["applicability_gold_eval_promotion_ready"]["equals"] is True
-    assert gold_checks["applicability_gold_eval_case_count"]["min"] == 5
+    assert gold_checks["applicability_gold_eval_case_count"]["min"] == 12
+    assert gold_checks["applicability_gold_eval_source_chunk_count"]["min"] == 12
     assert gold_checks["applicability_gold_eval_weak_only_arbitration"]["min"] == 1
     assert gold_checks["applicability_gold_eval_unresolved_profile"]["min"] == 1
     assert gold_checks["applicability_gold_eval_adjudicated_profile"]["min"] == 1
-    assert gold_checks["authority_family_adjudicated_coverage"]["min"] == 1
+    assert gold_checks["authority_family_adjudicated_coverage"]["min"] == 7
+    assert gold_checks["applicability_gold_family_group_coverage_passed"]["equals"] is True
+    assert gold_checks["applicability_gold_required_family_group_count"]["equals"] == 7
+    assert gold_checks["applicability_gold_positive_family_group_coverage"]["equals"] == 7
+    assert gold_checks["applicability_gold_negative_family_group_coverage"]["equals"] == 7
+    assert gold_checks["applicability_gold_unresolved_family_group_coverage"]["min"] == 3
+    assert gold_checks["applicability_gold_adjudicated_family_group_coverage"]["equals"] == 7
+    assert gold_checks["applicability_gold_unmapped_high_priority_families"]["equals"] == 0
+
+    aggregate_gold = suite_results["gold_coverage_eval"]
+    assert aggregate_gold["required_for_current_promotion"] is True
+    assert aggregate_gold["path"] == "reviews/gold_coverage_eval/gold_coverage_eval_results.json"
+    aggregate_gold_checks = {check["name"]: check for check in aggregate_gold["checks"]}
+    assert aggregate_gold_checks["gold_coverage_eval_passed"]["equals"] is True
+    assert aggregate_gold_checks["gold_coverage_eval_required_theme_count"]["equals"] == 7
+    assert aggregate_gold_checks["gold_coverage_eval_passed_theme_count"]["equals"] == 7
+    assert (
+        aggregate_gold_checks["gold_coverage_eval_required_high_priority_family_count"]["equals"]
+        == 19
+    )
+    assert (
+        aggregate_gold_checks["gold_coverage_eval_unmapped_high_priority_family_count"][
+            "equals"
+        ]
+        == 0
+    )
+    assert aggregate_gold_checks["gold_coverage_eval_applicability_case_count"]["min"] == 12
+    assert aggregate_gold_checks["gold_coverage_eval_compliance_case_count"]["min"] == 14
+    assert (
+        aggregate_gold_checks["gold_coverage_eval_required_review_contract_count"]["equals"]
+        == 3
+    )
+    assert aggregate_gold_checks["gold_coverage_eval_distinct_forest_count"]["min"] == 2
+    assert aggregate_gold_checks["gold_coverage_eval_distinct_package_style_count"]["min"] == 3
+    assert aggregate_gold_checks["gold_coverage_eval_reviewer_ready_review_count"]["min"] == 2
+    assert aggregate_gold_checks["gold_coverage_eval_typed_blocked_review_count"]["min"] == 1
+    assert (
+        aggregate_gold_checks["gold_coverage_eval_missing_review_contract_count"]["equals"]
+        == 0
+    )
+    assert (
+        aggregate_gold_checks["gold_coverage_eval_missing_package_authority_count"]["equals"]
+        == 0
+    )
 
 
 def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:

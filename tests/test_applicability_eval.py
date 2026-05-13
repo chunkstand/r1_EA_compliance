@@ -234,6 +234,115 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
             self.assertTrue(mixed["non_applicable_coverage_supported"])
 
+    def test_applicability_eval_ignores_stale_generated_pack_when_case_becomes_unresolved(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            case_id = "probe-water"
+            positive_eval = root / "positive.json"
+            positive_eval.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "applicability-eval-v0",
+                        "id": "probe-positive",
+                        "version": "0.1.0",
+                        "source_set_id": "source-set-probe",
+                        "cases": [
+                            {
+                                "id": case_id,
+                                "candidate_rule_ids": [],
+                                "candidate_authority_family_rule_ids": [
+                                    "clean_water_act_wotus_permits_authority_template"
+                                ],
+                                "package_text": (
+                                    "Purpose and Need\n\n"
+                                    "The proposal may affect jurisdictional wetlands.\n\n"
+                                    "Environmental Consequences\n\n"
+                                    "A Clean Water Act Section 404 permit is required."
+                                ),
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            run_applicability_eval(
+                output_dir=output_dir,
+                eval_file=positive_eval,
+                base_rule_pack_path=RULE_PACK,
+            )
+
+            unresolved_eval = root / "unresolved.json"
+            unresolved_eval.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "applicability-eval-v0",
+                        "id": "probe-unresolved",
+                        "version": "0.1.0",
+                        "source_set_id": "source-set-probe",
+                        "cases": [
+                            {
+                                "id": case_id,
+                                "candidate_rule_ids": [],
+                                "candidate_authority_family_rule_ids": [
+                                    "clean_water_act_wotus_permits_authority_template"
+                                ],
+                                "package_text": (
+                                    "Purpose and Need\n\n"
+                                    "The Forest Service prepares an environmental assessment "
+                                    "for a small authorization.\n\n"
+                                    "Environmental Consequences\n\n"
+                                    "A Clean Water Act Section 404 permit may be required if "
+                                    "wetlands are confirmed during final design."
+                                ),
+                                "expected_validation_passed": False,
+                                "expected_generated_rule_pack_ready": False,
+                                "expected_statuses": {
+                                    "clean_water_act_wotus_permits_authority_template": (
+                                        "needs_adjudication"
+                                    )
+                                },
+                                "expected_basis_types_by_rule_id": {
+                                    "clean_water_act_wotus_permits_authority_template": (
+                                        "unresolved_evidence_conflict"
+                                    )
+                                },
+                                "expected_arbitration_statuses_by_rule_id": {
+                                    "clean_water_act_wotus_permits_authority_template": (
+                                        "weak_positive_only"
+                                    )
+                                },
+                                "expected_arbitration_decision_effects_by_rule_id": {
+                                    "clean_water_act_wotus_permits_authority_template": (
+                                        "blocked_by_weak_positive_trigger"
+                                    )
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = run_applicability_eval(
+                output_dir=output_dir,
+                eval_file=unresolved_eval,
+                base_rule_pack_path=RULE_PACK,
+            )
+
+            case = result.summary["cases"][0]
+            self.assertEqual(
+                case["actual_statuses"]["clean_water_act_wotus_permits_authority_template"],
+                "needs_adjudication",
+            )
+            self.assertEqual(case["generated_rule_ids"], [])
+            self.assertFalse(case["generated_rule_pack_ready"])
+            self.assertNotIn(
+                "generated_rule_pack_matches_applicability",
+                case["failure_reasons"],
+            )
+
     def test_applicability_eval_scores_source_role_and_section_alignment(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

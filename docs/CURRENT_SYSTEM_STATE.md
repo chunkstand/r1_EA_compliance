@@ -94,7 +94,43 @@ Latest closeout on 2026-05-13:
   `9/9` with `downstream_direct_evaluation` present and passing.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now marks all four downstream lanes as
   `direct_eval_present`.
-- The next evaluation-strengthening boundary is `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`.
+- The next evaluation-strengthening boundary is
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`.
+
+## Gold Coverage Expansion
+
+Latest closeout on 2026-05-13:
+
+- The repo now ships widened gold contracts at `config/applicability_gold_eval_v1.json`,
+  `config/compliance_gold_eval_v1.json`, `config/gold_coverage_v1.json`,
+  `config/v1_west_reservoir_real_ea_eval.json`, `config/v1_south_plateau_real_ea_eval.json`, and
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json`.
+- `applicability-gold-eval` now passes `12/12` adjudicated cases with `source_chunk_count=19`,
+  all `19` high-priority families mapped into seven named coverage groups, and
+  `promotion_ready=true`.
+- `compliance-gold-eval` now passes `14/14` adjudicated cases, records the same seven named
+  coverage tags plus the three package-style tags `clean_baseline`, `live_external_noisy`, and
+  `typed_blocked_expansion`, and fails closed when those tags drift.
+- `v1-ea-eval` now supports explicit real-review contract diversity metadata and typed blocked
+  lanes. The current shipped contracts now cover East Crazies (`reviewer_ready`), West Reservoir
+  (`reviewer_ready`), and South Plateau (`typed_blocked` with
+  `forest_plan_reviewer_resolution_open` plus
+  `forest_plan_standard_reviewer_resolution_open`).
+- `gold-coverage-eval` is now the aggregate fail-closed owner for widened gold coverage. The live
+  replay passed with `required_theme_count=7`, `passed_theme_count=7`,
+  `required_high_priority_family_id_count=19`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and
+  `typed_blocked_review_count=1`.
+- `docs/EVALUATION_COVERAGE_REGISTER.md` now carries gold and real-review rows for
+  `applicability_gold_eval`, `compliance_gold_eval`, `v1_ea_eval`, and `gold_coverage_eval`, all
+  marked `direct_eval_present`.
+- `config/promotion_suite_v1.json` now consumes the widened applicability/compliance thresholds and
+  the aggregate `gold_coverage_eval` artifact. The current promotion-suite replay still remains
+  red, but the remaining current-promotion blocker is narrowed to one stale
+  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact whose source set is
+  still `source-set-5e65d845ce77e1a0` instead of the current promotion source set
+  `source-set-ba8d0feae79501b8`. The separate full-canonical graph and South Plateau expansion
+  blockers remain unchanged.
 
 ## Full Canonical Corpus Promotion
 
@@ -2497,7 +2533,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval \
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
   --output-dir source_library \
   --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
-  --gold-file config/applicability_gold_eval_v0.json
+  --gold-file config/applicability_gold_eval_v1.json
 ```
 
 Run the adjudicated gold eval promotion gate:
@@ -2506,7 +2542,15 @@ Run the adjudicated gold eval promotion gate:
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
-  --gold-file config/compliance_gold_eval_v0.json
+  --gold-file config/compliance_gold_eval_v1.json
+```
+
+Run the aggregate gold coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval \
+  --output-dir source_library \
+  --manifest config/gold_coverage_v1.json
 ```
 
 Run phase-aligned readiness evaluation:

@@ -1852,7 +1852,17 @@
         {
           "name": "compliance_gold_eval_cases",
           "json_path": "passed_case_count",
-          "min": 10
+          "min": 14
+        },
+        {
+          "name": "compliance_gold_required_coverage_tags_present",
+          "json_path": "missing_coverage_tags",
+          "equals": []
+        },
+        {
+          "name": "compliance_gold_required_package_style_tags_present",
+          "json_path": "missing_package_style_tags",
+          "equals": []
         },
         {
           "name": "compliance_gold_rule_pack_version",
@@ -1941,7 +1951,12 @@
         {
           "name": "applicability_gold_eval_case_count",
           "json_path": "case_count",
-          "min": 5
+          "min": 12
+        },
+        {
+          "name": "applicability_gold_eval_source_chunk_count",
+          "json_path": "source_chunk_count",
+          "min": 12
         },
         {
           "name": "applicability_gold_eval_weak_only_arbitration",
@@ -1961,7 +1976,121 @@
         {
           "name": "authority_family_adjudicated_coverage",
           "json_path": "authority_family_template_coverage.adjudicated_covered_family_count",
+          "min": 7
+        },
+        {
+          "name": "applicability_gold_family_group_coverage_passed",
+          "json_path": "family_group_coverage.passed",
+          "equals": true
+        },
+        {
+          "name": "applicability_gold_required_family_group_count",
+          "json_path": "family_group_coverage.required_group_count",
+          "equals": 7
+        },
+        {
+          "name": "applicability_gold_positive_family_group_coverage",
+          "json_path": "family_group_coverage.positive_covered_family_group_count",
+          "equals": 7
+        },
+        {
+          "name": "applicability_gold_negative_family_group_coverage",
+          "json_path": "family_group_coverage.negative_covered_family_group_count",
+          "equals": 7
+        },
+        {
+          "name": "applicability_gold_unresolved_family_group_coverage",
+          "json_path": "family_group_coverage.unresolved_covered_family_group_count",
+          "min": 3
+        },
+        {
+          "name": "applicability_gold_adjudicated_family_group_coverage",
+          "json_path": "family_group_coverage.adjudicated_covered_family_group_count",
+          "equals": 7
+        },
+        {
+          "name": "applicability_gold_unmapped_high_priority_families",
+          "json_path": "family_group_coverage.unmapped_high_priority_family_count",
+          "equals": 0
+        }
+      ]
+    },
+    {
+      "id": "gold_coverage_eval",
+      "label": "Aggregate gold coverage eval",
+      "path": "reviews/gold_coverage_eval/gold_coverage_eval_results.json",
+      "required_for_current_promotion": true,
+      "failure_category": "adjudication_needed",
+      "checks": [
+        {
+          "name": "gold_coverage_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "gold_coverage_eval_required_theme_count",
+          "json_path": "required_theme_count",
+          "equals": 7
+        },
+        {
+          "name": "gold_coverage_eval_passed_theme_count",
+          "json_path": "passed_theme_count",
+          "equals": 7
+        },
+        {
+          "name": "gold_coverage_eval_required_high_priority_family_count",
+          "json_path": "required_high_priority_family_id_count",
+          "equals": 19
+        },
+        {
+          "name": "gold_coverage_eval_unmapped_high_priority_family_count",
+          "json_path": "unmapped_high_priority_family_count",
+          "equals": 0
+        },
+        {
+          "name": "gold_coverage_eval_applicability_case_count",
+          "json_path": "applicability_gold_case_count",
+          "min": 12
+        },
+        {
+          "name": "gold_coverage_eval_compliance_case_count",
+          "json_path": "compliance_gold_case_count",
+          "min": 14
+        },
+        {
+          "name": "gold_coverage_eval_required_review_contract_count",
+          "json_path": "required_review_contract_count",
+          "equals": 3
+        },
+        {
+          "name": "gold_coverage_eval_distinct_forest_count",
+          "json_path": "distinct_forest_count",
+          "min": 2
+        },
+        {
+          "name": "gold_coverage_eval_distinct_package_style_count",
+          "json_path": "distinct_package_style_count",
+          "min": 3
+        },
+        {
+          "name": "gold_coverage_eval_reviewer_ready_review_count",
+          "json_path": "reviewer_ready_review_count",
+          "min": 2
+        },
+        {
+          "name": "gold_coverage_eval_typed_blocked_review_count",
+          "json_path": "typed_blocked_review_count",
           "min": 1
+        },
+        {
+          "name": "gold_coverage_eval_missing_review_contract_count",
+          "json_path": "missing_required_review_contract_count",
+          "equals": 0
+        },
+        {
+          "name": "gold_coverage_eval_missing_package_authority_count",
+          "json_path": "missing_package_authority_count",
+          "equals": 0
         }
       ]
     }

@@ -183,7 +183,13 @@ allowed_import_layers = [
 [[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
-modules = ["applicability_eval", "promotion_suite", "upstream_evaluation", "v1_ea_eval"]
+modules = [
+  "applicability_eval",
+  "gold_coverage_eval",
+  "promotion_suite",
+  "upstream_evaluation",
+  "v1_ea_eval",
+]
 allowed_import_layers = [
   "foundation",
   "capture",
@@ -390,6 +396,7 @@ paths = [
   "source_library/evaluations/upstream/upstream_evaluation_results.json",
   "source_library/evaluations/upstream/upstream_evaluation_report.md",
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
+  "source_library/reviews/gold_coverage_eval/gold_coverage_eval_results.json",
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",
   "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
   "source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json",
@@ -487,6 +494,7 @@ name = "eval"
 commands = [
   "applicability-eval",
   "applicability-gold-eval",
+  "gold-coverage-eval",
   "upstream-eval",
   "phase-eval",
   "v1-ea-eval",

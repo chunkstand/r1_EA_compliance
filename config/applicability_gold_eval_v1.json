@@ -1,0 +1,931 @@
+{
+  "adjudication": {
+    "adjudicated_at": "2026-05-13",
+    "adjudicated_by": [
+      "codex"
+    ],
+    "method": "Expanded adjudicated applicability gold coverage for named authority families and package themes.",
+    "promotion_gate": true,
+    "status": "seed_gold"
+  },
+  "cases": [
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Expanded positive applicability gold case for the full named theme set.",
+        "status": "adjudicated"
+      },
+      "candidate_authority_family_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "land_exchange",
+        "water_wetlands",
+        "migratory_birds",
+        "cultural_tribal",
+        "roadless",
+        "forest_plan_consistency",
+        "multi_forest_plan_trigger"
+      ],
+      "expected_generated_rule_count": 19,
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_status_for_candidate_authority_family_rule_ids": "applicable",
+      "expected_validation_passed": true,
+      "id": "gold-v1-expanded-authority-positive",
+      "package_text": "Purpose and Need\n\nThe USDA Forest Service prepares an environmental assessment for a proposed land exchange. The decision notice and FONSI will document the finding of no significant impact. The exchange case includes an agreement to initiate, notice of exchange proposal, appraisal, title evidence, reservations, outstanding rights, equal value, cash equalization, public interest determination, acquisition, disposal, mineral reservation, easement, and exchange approval.\n\nAffected Environment\n\nThe project area is on National Forest System land with forest plan direction, management area standards, desired conditions, guidelines, geographic area direction, overlay requirements, species of conservation concern, and a site-specific forest plan amendment. The area includes an inventoried roadless area, recommended wilderness, a wilderness study area, a Wild and Scenic River corridor, a national trail, a special area, cave resource, and paleontological resource. A National Grassland, Bankhead-Jones lands, acquired lands, and grassland plan direction are also described.\n\nEnvironmental Consequences\n\nThe EA evaluates wetlands, waters of the United States, streams, discharge, dredge, fill, stormwater, NPDES, Section 401 water quality certification, Section 404 Corps permit needs, floodplain occupancy, base flood, flood hazard area, air quality, emissions, prescribed fire smoke, general conformity, nonattainment area, state implementation plan, and air quality permit coordination.\n\nConsultation and Resource Topics\n\nThe package identifies historic property, cultural resource, archaeological resource, SHPO and THPO consultation, NAGPRA, Native American remains, sacred sites, AIRFA, RFRA, tribal consultation, treaty rights, trust responsibility, government-to-government consultation, cultural confidentiality, listed species, threatened species, endangered species, sensitive species, lynx, biological assessment, biological opinion, Section 7 consultation, habitat, bald eagle, golden eagle, eagle nest, essential fish habitat, EFH, and NOAA Fisheries coordination.\n\nSite Conditions and Project Actions\n\nThe record addresses hazardous substance, hazardous waste, CERCLA, RCRA, recognized environmental condition, mine waste, landfill, Phase I environmental site assessment, due diligence, invasive species, noxious weeds, pesticide, herbicide, soil productivity, prime farmland, drinking water, sole source aquifer, watershed, state permit, local permit, minerals, mining, plan of operations, energy development, reclamation, roads, trails, travel management, special use, right-of-way, closure order, timber sale, range permit, grazing, vegetation management, fuels treatment, wildfire, prescribed fire, forest health, insect, disease, restoration, emergency action, and fuel break needs.",
+      "profile": "positive"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Expanded negative applicability gold case for the full named theme set.",
+        "status": "adjudicated"
+      },
+      "candidate_authority_family_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "land_exchange",
+        "water_wetlands",
+        "migratory_birds",
+        "cultural_tribal",
+        "roadless",
+        "forest_plan_consistency",
+        "multi_forest_plan_trigger"
+      ],
+      "expected_generated_rule_count": 0,
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template",
+        "clean_water_act_wotus_permits_authority_template",
+        "cultural_resource_protection_and_state_shpo_sources_authority_template",
+        "eagle_efh_and_special_wildlife_sources_authority_template",
+        "floodplain_management_eo11988_authority_template",
+        "forest_service_planning_handbook_amendments_authority_template",
+        "grassland_bankhead_jones_authorities_authority_template",
+        "hazardous_materials_site_condition_authority_template",
+        "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+        "land_exchange_fs_policy_and_project_references_authority_template",
+        "land_exchange_regulatory_requirements_authority_template",
+        "land_exchange_statutory_authorities_authority_template",
+        "minerals_energy_authorities_authority_template",
+        "region1_forest_plan_source_records_authority_template",
+        "roads_access_special_use_action_authorities_authority_template",
+        "species_supporting_sources_and_overlays_authority_template",
+        "tribal_consultation_trust_sacred_sites_authority_template",
+        "vegetation_wildfire_forest_health_authorities_authority_template",
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_status_for_candidate_authority_family_rule_ids": "not_applicable",
+      "expected_validation_passed": true,
+      "id": "gold-v1-expanded-authority-negative",
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment, but this fixture negates expanded authority-family triggers for coverage testing.\n\nEnvironmental Consequences\n\nThe record states no air quality effects, no wetlands, no waters of the United States, no discharge, no historic properties, no cultural resources, no archaeological resources, no eagle habitat, no eagle nests, no essential fish habitat, no floodplains, no forest plan amendment, not National Grassland, no Bankhead-Jones lands, no hazardous materials, no contamination, no invasive species, no pesticide use, no herbicide use, no prime farmland, no drinking water source, not a land exchange, no appraisal, no title evidence, no exchange agreement, no notice of exchange, no equalization, no acquisition, no disposal, no public interest determination, no mineral activity, no mining, outside National Forest System, no forest plan components, no management area, no road changes, no trail changes, no special use, no right-of-way, no listed species, no sensitive species, no habitat, no consultation required, no tribal consultation, no tribal interests, no sacred sites, no treaty rights, no vegetation treatment, no timber harvest, no fuels treatment, no wildfire action, no wilderness, no designated areas, outside Wild and Scenic River corridor, no national trails, and no caves.",
+      "profile": "negative"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Replayable human adjudication resolves the land-exchange trigger as applicable.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "land_exchange_fs_policy_and_project_references_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "land_exchange_fs_policy_and_project_references_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "land_exchange_fs_policy_and_project_references_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 2
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "land_exchange"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "land_exchange_fs_policy_and_project_references_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "land_exchange_fs_policy_and_project_references_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "land_exchange_fs_policy_and_project_references_authority_template"
+      ],
+      "expected_statuses": {
+        "land_exchange_fs_policy_and_project_references_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-land-exchange-adjudicated-mixed",
+      "package_text": "Purpose and Need\n\nThe proposal may require an exchange case file.\n\nEnvironmental Consequences\n\nThe review may need exchange agreement materials if the parcel configuration changes.",
+      "profile": "mixed"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Unresolved water_wetlands adjudication remains explicit in the widened gold suite.",
+        "status": "adjudicated"
+      },
+      "candidate_authority_family_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "unresolved_adjudication",
+        "water_wetlands"
+      ],
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "blocked_by_weak_positive_trigger"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "weak_positive_only"
+      },
+      "expected_basis_types_by_rule_id": {
+        "clean_water_act_wotus_permits_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "clean_water_act_wotus_permits_authority_template"
+      ],
+      "expected_statuses": {
+        "clean_water_act_wotus_permits_authority_template": "needs_adjudication"
+      },
+      "expected_validation_passed": false,
+      "id": "gold-v1-water-unresolved",
+      "package_text": "Purpose and Need\n\nThe Forest Service prepares an environmental assessment for a small authorization.\n\nEnvironmental Consequences\n\nA Clean Water Act Section 404 permit may be required if wetlands are confirmed during final design.",
+      "profile": "unresolved"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Unresolved migratory_birds adjudication remains explicit in the widened gold suite.",
+        "status": "adjudicated"
+      },
+      "candidate_authority_family_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 3
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "unresolved_adjudication",
+        "migratory_birds"
+      ],
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "blocked_by_weak_positive_trigger"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "insufficient_strong_positive_trigger"
+      },
+      "expected_basis_types_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "expected_statuses": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "needs_adjudication"
+      },
+      "expected_validation_passed": false,
+      "id": "gold-v1-migratory-birds-unresolved",
+      "package_text": "Purpose and Need\n\nThe environmental assessment covers a proposed authorization near a bald eagle nest.\n\nEnvironmental Consequences\n\nAdditional wildlife review may be required if surveys confirm the nest is active.",
+      "profile": "unresolved"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Unresolved forest_plan_consistency adjudication remains explicit in the widened gold suite.",
+        "status": "adjudicated"
+      },
+      "candidate_authority_family_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 3
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "unresolved_adjudication",
+        "forest_plan_consistency"
+      ],
+      "expected_arbitration_decision_effects_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": "blocked_by_weak_positive_trigger"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": "insufficient_strong_positive_trigger"
+      },
+      "expected_basis_types_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": "unresolved_evidence_conflict"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "expected_statuses": {
+        "region1_forest_plan_source_records_authority_template": "needs_adjudication"
+      },
+      "expected_validation_passed": false,
+      "id": "gold-v1-forest-plan-unresolved",
+      "package_text": "Purpose and Need\n\nThe proposal may implicate forest plan review.\n\nEnvironmental Consequences\n\nA management area may control if the final unit boundary overlaps the planning area.",
+      "profile": "unresolved"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Wetland disturbance and permit language make the water/wetlands trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "floodplain_management_eo11988_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "floodplain_management_eo11988_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "floodplain_management_eo11988_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 2
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "water_wetlands"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "floodplain_management_eo11988_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "floodplain_management_eo11988_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "floodplain_management_eo11988_authority_template"
+      ],
+      "expected_statuses": {
+        "floodplain_management_eo11988_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-water-adjudicated",
+      "package_text": "Purpose and Need\n\nThe proposal may affect a floodplain.\n\nEnvironmental Consequences\n\nFlood hazard review may be needed if the final route enters the low terrace.",
+      "profile": "adjudicated"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Migratory bird habitat and timing restrictions make the wildlife trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "eagle_efh_and_special_wildlife_sources_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 3
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "migratory_birds"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "eagle_efh_and_special_wildlife_sources_authority_template"
+      ],
+      "expected_statuses": {
+        "eagle_efh_and_special_wildlife_sources_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-migratory-birds-adjudicated",
+      "package_text": "Purpose and Need\n\nThe environmental assessment covers a proposed authorization near a bald eagle nest.\n\nEnvironmental Consequences\n\nAdditional wildlife review may be required if surveys confirm the nest is active.",
+      "profile": "adjudicated"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Cultural resource surveys and SHPO coordination make the cultural and tribal trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "cultural_resource_protection_and_state_shpo_sources_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "cultural_resource_protection_and_state_shpo_sources_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "cultural_resource_protection_and_state_shpo_sources_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 3
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "cultural_tribal"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "cultural_resource_protection_and_state_shpo_sources_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "cultural_resource_protection_and_state_shpo_sources_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "cultural_resource_protection_and_state_shpo_sources_authority_template"
+      ],
+      "expected_statuses": {
+        "cultural_resource_protection_and_state_shpo_sources_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-cultural-tribal-adjudicated",
+      "package_text": "Purpose and Need\n\nThe project may require cultural resource review.\n\nEnvironmental Consequences\n\nSHPO coordination may be needed if survey results identify a historic property.",
+      "profile": "adjudicated"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Inventoried roadless area activity makes the designated-area trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "wilderness_wsr_trails_designated_areas_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "wilderness_wsr_trails_designated_areas_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 4
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "roadless"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "wilderness_wsr_trails_designated_areas_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "wilderness_wsr_trails_designated_areas_authority_template"
+      ],
+      "expected_statuses": {
+        "wilderness_wsr_trails_designated_areas_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-roadless-adjudicated",
+      "package_text": "Purpose and Need\n\nThe project area may approach a recommended wilderness boundary.\n\nEnvironmental Consequences\n\nWild and Scenic River consistency may require follow-up if the final route shifts.",
+      "profile": "adjudicated"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "The package explicitly evaluates forest plan consistency, making the forest-plan trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "region1_forest_plan_source_records_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 3
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "forest_plan_consistency"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "region1_forest_plan_source_records_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "region1_forest_plan_source_records_authority_template"
+      ],
+      "expected_statuses": {
+        "region1_forest_plan_source_records_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-forest-plan-adjudicated",
+      "package_text": "Purpose and Need\n\nThe proposal may implicate forest plan review.\n\nEnvironmental Consequences\n\nA management area may control if the final unit boundary overlaps the planning area.",
+      "profile": "adjudicated"
+    },
+    {
+      "adjudication": {
+        "adjudicated_at": "2026-05-13",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "rationale": "Cross-unit planning-handbook signals make the multi-forest-plan trigger applicable after adjudication.",
+        "status": "adjudicated"
+      },
+      "applicability_adjudication": {
+        "adjudicated_at": "2026-05-13T00:00:00Z",
+        "adjudicated_by": [
+          "codex"
+        ],
+        "items_by_rule_id": {
+          "clean_air_act_conformity_air_quality_authority_template": {
+            "disposition": "human_applicable",
+            "final_status": "applicable",
+            "rationale": "Replayable adjudication resolves the scoped weak trigger as applicable.",
+            "supporting_citation_refs": [
+              "EA-PACKAGE-001"
+            ]
+          }
+        },
+        "rationale": "Gold adjudication resolves the scoped weak trigger as applicable for replay coverage.",
+        "source_type": "applicability-gold-eval"
+      },
+      "candidate_authority_family_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template"
+      ],
+      "candidate_authority_family_template_overrides_by_rule_id": {
+        "clean_air_act_conformity_air_quality_authority_template": {
+          "trigger_arbitration": {
+            "minimum_strong_trigger_groups": 2
+          }
+        }
+      },
+      "candidate_rule_ids": [],
+      "coverage_tags": [
+        "adjudicated_decision",
+        "multi_forest_plan_trigger"
+      ],
+      "expected_basis_types_by_rule_id": {
+        "clean_air_act_conformity_air_quality_authority_template": "human_adjudication"
+      },
+      "expected_generated_rule_pack_ready": false,
+      "expected_graph_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template"
+      ],
+      "expected_retrieval_rule_ids": [
+        "clean_air_act_conformity_air_quality_authority_template"
+      ],
+      "expected_statuses": {
+        "clean_air_act_conformity_air_quality_authority_template": "applicable"
+      },
+      "expected_validation_passed": true,
+      "id": "gold-v1-multi-forest-trigger-adjudicated",
+      "package_text": "Purpose and Need\n\nThe proposal may require air quality conformity review.\n\nEnvironmental Consequences\n\nEmissions analysis may be needed if the final design changes.",
+      "profile": "adjudicated"
+    }
+  ],
+  "coverage_thresholds": {
+    "adjudicated_covered_family_group_count": 7,
+    "case_count_min": 12,
+    "negative_covered_family_group_count": 7,
+    "positive_covered_family_group_count": 7,
+    "required_high_priority_family_id_count": 19,
+    "required_theme_count": 7,
+    "source_chunk_count_min": 12,
+    "unresolved_covered_family_group_count_min": 3
+  },
+  "high_priority_authority_family_ids": [
+    "clean_air_act_conformity_air_quality",
+    "clean_water_act_wotus_permits",
+    "cultural_resource_protection_and_state_shpo_sources",
+    "eagle_efh_and_special_wildlife_sources",
+    "floodplain_management_eo11988",
+    "forest_service_planning_handbook_amendments",
+    "grassland_bankhead_jones_authorities",
+    "hazardous_materials_site_condition",
+    "invasive_pesticide_soils_farmland_drinking_water",
+    "land_exchange_fs_policy_and_project_references",
+    "land_exchange_regulatory_requirements",
+    "land_exchange_statutory_authorities",
+    "minerals_energy_authorities",
+    "region1_forest_plan_source_records",
+    "roads_access_special_use_action_authorities",
+    "species_supporting_sources_and_overlays",
+    "tribal_consultation_trust_sacred_sites",
+    "vegetation_wildfire_forest_health_authorities",
+    "wilderness_wsr_trails_designated_areas"
+  ],
+  "id": "applicability-gold-v1",
+  "required_high_priority_family_group_by_id": {
+    "clean_air_act_conformity_air_quality": "multi_forest_plan_trigger",
+    "clean_water_act_wotus_permits": "water_wetlands",
+    "cultural_resource_protection_and_state_shpo_sources": "cultural_tribal",
+    "eagle_efh_and_special_wildlife_sources": "migratory_birds",
+    "floodplain_management_eo11988": "water_wetlands",
+    "forest_service_planning_handbook_amendments": "forest_plan_consistency",
+    "grassland_bankhead_jones_authorities": "multi_forest_plan_trigger",
+    "hazardous_materials_site_condition": "water_wetlands",
+    "invasive_pesticide_soils_farmland_drinking_water": "water_wetlands",
+    "land_exchange_fs_policy_and_project_references": "land_exchange",
+    "land_exchange_regulatory_requirements": "land_exchange",
+    "land_exchange_statutory_authorities": "land_exchange",
+    "minerals_energy_authorities": "multi_forest_plan_trigger",
+    "region1_forest_plan_source_records": "forest_plan_consistency",
+    "roads_access_special_use_action_authorities": "roadless",
+    "species_supporting_sources_and_overlays": "migratory_birds",
+    "tribal_consultation_trust_sacred_sites": "cultural_tribal",
+    "vegetation_wildfire_forest_health_authorities": "multi_forest_plan_trigger",
+    "wilderness_wsr_trails_designated_areas": "roadless"
+  },
+  "required_real_package_coverage_tags": [
+    "land_exchange",
+    "water_wetlands",
+    "migratory_birds",
+    "cultural_tribal",
+    "roadless",
+    "forest_plan_consistency",
+    "multi_forest_plan_trigger"
+  ],
+  "schema_version": "applicability-gold-eval-v0",
+  "source_chunks": [
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-092",
+      "text": "Clean Air Act, general conformity, smoke, and air-quality coordination Clean Air Act, 42 U.S.C. chapter 85",
+      "title": "Clean Air Act, general conformity, smoke, and air-quality coordination applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-082",
+      "text": "Clean Water Act, waters of the United States, and water permit/certification sources Clean Water Act, 33 U.S.C. chapter 26",
+      "title": "Clean Water Act, waters of the United States, and water permit/certification sources applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-072",
+      "text": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources NHPA \u00a7 110 federal agency preservation responsibilities, 54 U.S.C. chapter 3061",
+      "title": "Cultural-resource protection, ARPA/NAGPRA/AIRFA/RFRA, and state SHPO sources applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-097",
+      "text": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources Bald and Golden Eagle Protection Act, 16 U.S.C. \u00a7 668",
+      "title": "Bald and Golden Eagle Protection Act, EFH, and special wildlife sources applicability template"
+    },
+    {
+      "document_role": "executive_order",
+      "source_record_id": "R1EA-103",
+      "text": "Executive Order 11988 floodplain management Executive Order 11988 - Floodplain Management",
+      "title": "Executive Order 11988 floodplain management applicability template"
+    },
+    {
+      "document_role": "agency_policy",
+      "source_record_id": "R1EA-032",
+      "text": "Forest Service planning handbook and amendment support FSH 1909.12 - Land Management Planning Handbook",
+      "title": "Forest Service planning handbook and amendment support applicability template"
+    },
+    {
+      "document_role": "regulation",
+      "source_record_id": "R1EA-037",
+      "text": "Bankhead-Jones and National Grassland administration authorities 36 CFR part 213 - Administration under Bankhead-Jones Farm Tenant Act",
+      "title": "Bankhead-Jones and National Grassland administration authorities applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-107",
+      "text": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence Resource Conservation and Recovery Act, 42 U.S.C. chapter 82",
+      "title": "Hazardous materials, CERCLA, RCRA, NCP, and site-condition due diligence applicability template"
+    },
+    {
+      "document_role": "executive_order",
+      "source_record_id": "R1EA-112",
+      "text": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families Executive Order 13112 as amended by EO 13751 - Invasive species",
+      "title": "Invasive species, pesticides, soils, farmland, drinking-water, watershed, and state/local permit families applicability template"
+    },
+    {
+      "document_role": "agency_policy",
+      "source_record_id": "R1EA-150",
+      "text": "Forest Service exchange policy, appraisal/title guidance, and project-reference records FSM 5430 \u2014 Exchanges",
+      "title": "Forest Service exchange policy, appraisal/title guidance, and project-reference records applicability template"
+    },
+    {
+      "document_role": "regulation",
+      "source_record_id": "R1EA-124",
+      "text": "36 CFR part 254 land-exchange procedural and valuation requirements 36 CFR part 254, subpart A \u2014 Land Exchanges",
+      "title": "36 CFR part 254 land-exchange procedural and valuation requirements applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-137",
+      "text": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight 16 U.S.C. \u00a7 485 \u2014 Exchange of lands in national forests",
+      "title": "Land-exchange statutory authorities, FLPMA/FLEFA, reservations, acquisition, and congressional oversight applicability template"
+    },
+    {
+      "document_role": "regulation",
+      "source_record_id": "R1EA-041",
+      "text": "Minerals and energy-development authorities 36 CFR part 228 - Minerals",
+      "title": "Minerals and energy-development authorities applicability template"
+    },
+    {
+      "document_role": "forest_plan",
+      "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "text": "Region 1 forest-plan and overlay source records 2022 Custer Gallatin Land Management Plan PDF",
+      "title": "Region 1 forest-plan and overlay source records applicability template"
+    },
+    {
+      "document_role": "regulation",
+      "source_record_id": "R1EA-036",
+      "text": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities 36 CFR part 212 - Travel management",
+      "title": "National Forest roads/access, travel management, range, timber, minerals, special-use, and closure authorities applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-064",
+      "text": "Species source-support records, sensitive species pages, and lynx/LMP support Endangered Species Act, 16 U.S.C. chapter 35",
+      "title": "Species source-support records, sensitive species pages, and lynx/LMP support applicability template"
+    },
+    {
+      "document_role": "executive_order",
+      "source_record_id": "R1EA-081",
+      "text": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality Executive Order 13175 - Consultation and Coordination With Indian Tribal Governments",
+      "title": "Tribal consultation, trust responsibility, treaty/sacred-site coordination, and confidentiality applicability template"
+    },
+    {
+      "document_role": "law",
+      "source_record_id": "R1EA-056",
+      "text": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities Healthy Forests Restoration Act and related forest management authorities, 16 U.S.C. chapter 84",
+      "title": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities applicability template"
+    },
+    {
+      "document_role": "regulation",
+      "source_record_id": "R1EA-047",
+      "text": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas 36 CFR part 293 - Wilderness",
+      "title": "Wilderness, wilderness study, Wild and Scenic Rivers, National Trails, and other designated areas applicability template"
+    }
+  ],
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "title": "Applicability Gold Eval V1",
+  "version": "1.0.0"
+}

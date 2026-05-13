@@ -1174,15 +1174,17 @@ Run the adjudicated gold eval promotion gate:
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval \
   --output-dir source_library \
   --rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
-  --gold-file config/compliance_gold_eval_v0.json
+  --gold-file config/compliance_gold_eval_v1.json
 ```
 
 `compliance-gold-eval` reads a structured adjudication file, requires positive, mixed, and negative
 case profiles, verifies every case covers the active rule pack, then runs those cases through the
-real `compliance-review-eval` path. The current gold file contains 10 realistic adjudicated package
-profiles with expected status counts, applicable source rows, and source document classes. It emits
-`promotion_ready` only when the rule pack is a reviewer-ready generated applicability rule pack and
-adjudication checks plus the underlying compliance-review eval both pass.
+real `compliance-review-eval` path. The default v1 gold file contains `14` realistic adjudicated
+package profiles, requires the same seven named coverage tags as applicability gold plus the three
+package-style tags `clean_baseline`, `live_external_noisy`, and `typed_blocked_expansion`, and
+fails closed when those required tags are missing. It emits `promotion_ready` only when the rule
+pack is a reviewer-ready generated applicability rule pack and adjudication checks plus the
+underlying compliance-review eval both pass.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 
@@ -1203,7 +1205,10 @@ rule-to-document-role matches, conditional applicability expectations, applicabl
 source/section alignment, missing conditional expectations, conditional false positives/negatives,
 Custer Gallatin required plan records, forest-plan geographic/management area resolution, component
 coverage, applicable-standard application, citation requirements, reviewer-resolution queue size,
-and failure-category counts.
+typed blocker categories, package-style tags, forest identity, and failure-category counts. The
+current shipped contracts cover East Crazies, West Reservoir, and South Plateau; typed blocked
+reviews remain valid coverage only when the declared blocked lane and blocker categories still match
+the live review artifacts.
 
 The result summary separates the overall readiness gate from two diagnostic lanes:
 `broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and
@@ -1211,6 +1216,21 @@ review artifacts outside the forest-plan set; and `forest_plan` for Custer Galla
 scope, component coverage, applicable standards, reviewer readiness, and component adjudication.
 This allows the real V1 eval to fail overall on non-forest-plan gaps while still reporting
 `forest_plan_passed=true` when the forest-plan review lane is complete.
+
+Run the aggregate gold coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval \
+  --output-dir source_library \
+  --manifest config/gold_coverage_v1.json
+```
+
+`gold-coverage-eval` is the fail-closed aggregate owner for widened gold coverage. It replays the
+default applicability and compliance gold suites plus the tracked real-review contracts for East
+Crazies, West Reservoir, and South Plateau, then requires all seven named theme groups, all `19`
+high-priority family IDs, at least `3` review contracts across at least `2` forests and `3`
+package-style tags, at least `2` reviewer-ready reviews, at least `1` typed-blocked review, and no
+missing package-authority declarations.
 
 Run the manifest-driven promotion suite:
 
@@ -1546,7 +1566,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval \
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval \
   --output-dir source_library \
   --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json \
-  --gold-file config/applicability_gold_eval_v0.json
+  --gold-file config/applicability_gold_eval_v1.json
 ```
 
 `applicability-eval` runs deterministic seed packages through authority-universe creation,
@@ -1558,10 +1578,13 @@ includes all `19` Milestone 3 authority-family rule templates, positive/negative
 unresolved weak-signal handling, arbitration status/effect expectations, and real-package coverage
 tags. The current seed has `9` cases and explicitly covers strong-positive plus weak auxiliary
 evidence, weak-only evidence, positive/negative conflicts, no-action/background-only evidence, and
-rule-template-specific trigger sufficiency. `applicability-gold-eval` wraps adjudicated positive,
-mixed, negative, unresolved, and replay-adjudicated package profiles; it now carries
-arbitration-field expectations and emits `promotion_ready=true` only when the adjudication checks
-and applicability eval both pass.
+rule-template-specific trigger sufficiency. `applicability-gold-eval` now defaults to the widened
+`config/applicability_gold_eval_v1.json` contract: `12` adjudicated cases over `19` source chunks,
+all `19` high-priority authority families, and seven named coverage groups spanning land exchange,
+water/wetlands, migratory birds, cultural/tribal, roadless, forest-plan consistency, and
+multi-forest-plan triggers. It fails closed when nested family/group coverage drifts and emits
+`promotion_ready=true` only when the adjudication checks, coverage thresholds, and nested
+applicability eval all pass.
 
 Run rule-pack coverage:
 

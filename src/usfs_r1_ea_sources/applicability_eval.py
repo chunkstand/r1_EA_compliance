@@ -28,7 +28,7 @@ APPLICABILITY_EVAL_RESULT_SCHEMA_VERSION = "applicability-eval-results-v0"
 APPLICABILITY_GOLD_EVAL_SCHEMA_VERSION = "applicability-gold-eval-v0"
 APPLICABILITY_GOLD_EVAL_RESULT_SCHEMA_VERSION = "applicability-gold-eval-results-v0"
 DEFAULT_APPLICABILITY_EVAL_PATH = Path("config/applicability_eval_seed.json")
-DEFAULT_APPLICABILITY_GOLD_EVAL_PATH = Path("config/applicability_gold_eval_v0.json")
+DEFAULT_APPLICABILITY_GOLD_EVAL_PATH = Path("config/applicability_gold_eval_v1.json")
 REQUIRED_GOLD_PROFILES = {"positive", "mixed", "negative", "unresolved", "adjudicated"}
 SAFE_SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
@@ -233,6 +233,19 @@ def run_applicability_gold_eval(
     cases = _case_list(gold)
     profile_counts = dict(Counter(str(case.get("profile") or "") for case in cases))
     eval_passed = bool(eval_summary and eval_summary.get("passed"))
+    source_chunk_count = _gold_source_chunk_count(gold)
+    family_group_coverage = _authority_family_group_coverage(
+        gold=gold,
+        family_coverage=(eval_summary or {}).get("authority_family_template_coverage", {}),
+    )
+    checks.extend(
+        [
+            _check_gold_source_chunk_coverage(gold, source_chunk_count),
+            _check_gold_family_group_mapping(gold, family_group_coverage),
+            _check_gold_family_group_coverage(gold, family_group_coverage),
+        ]
+    )
+    nested_checks_passed = all(check["passed"] for check in checks)
     summary = {
         "schema_version": APPLICABILITY_GOLD_EVAL_RESULT_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -252,6 +265,7 @@ def run_applicability_gold_eval(
         "source_set_id": source_set_id or (eval_summary or {}).get("source_set_id"),
         "source_set_ids": (eval_summary or {}).get("source_set_ids", []),
         "case_count": len(cases),
+        "source_chunk_count": source_chunk_count,
         "adjudicated_case_count": sum(
             1 for case in cases if isinstance(case.get("adjudication"), dict)
         ),
@@ -263,8 +277,8 @@ def run_applicability_gold_eval(
         "adjudication_checks_passed": adjudication_passed,
         "applicability_eval_passed": eval_passed,
         "applicability_eval_error": eval_error,
-        "promotion_ready": adjudication_passed and eval_passed,
-        "passed": adjudication_passed and eval_passed,
+        "promotion_ready": nested_checks_passed and eval_passed,
+        "passed": nested_checks_passed and eval_passed,
         "checks": checks,
         "metrics": (eval_summary or {}).get("metrics", {}),
         "arbitration_summary": (eval_summary or {}).get("arbitration_summary", {}),
@@ -272,6 +286,7 @@ def run_applicability_gold_eval(
             "authority_family_template_coverage",
             {},
         ),
+        "family_group_coverage": family_group_coverage,
         "failure_category_counts": (eval_summary or {}).get("failure_category_counts", {}),
         "cases": (eval_summary or {}).get("cases", []),
     }
@@ -393,6 +408,11 @@ def _run_eval_case(
             generated_error = str(error)
 
     artifacts = _read_case_artifacts(applicability_dir)
+    if generated_summary is None:
+        # Reused review directories can retain old generated-pack artifacts from an earlier
+        # successful run. Ignore them unless generation completed in this invocation.
+        artifacts["generated_rule_pack"] = {}
+        artifacts["generated_validation"] = {}
     return _score_case(
         case=case,
         case_id=case_id,
@@ -2064,6 +2084,264 @@ def _authority_family_template_coverage(
         "real_package_coverage_passed": not missing_tags,
         "passed": not missing_positive and not missing_negative and not missing_tags,
     }
+
+
+def _gold_source_chunk_count(gold: dict[str, Any]) -> int:
+    source_record_ids: set[str] = set()
+    for spec in _source_chunk_specs(gold.get("source_chunks")):
+        source_record_id = str(spec.get("source_record_id") or "").strip()
+        if source_record_id:
+            source_record_ids.add(source_record_id)
+    for case in _case_list(gold):
+        if not isinstance(case, dict):
+            continue
+        for spec in _source_chunk_specs(case.get("source_chunks")):
+            source_record_id = str(spec.get("source_record_id") or "").strip()
+            if source_record_id:
+                source_record_ids.add(source_record_id)
+    return len(source_record_ids)
+
+
+def _authority_family_group_coverage(
+    *,
+    gold: dict[str, Any],
+    family_coverage: dict[str, Any],
+) -> dict[str, Any]:
+    required_groups = _strings(gold.get("required_real_package_coverage_tags"))
+    required_family_ids = _strings(gold.get("high_priority_authority_family_ids"))
+    raw_mapping = (
+        gold.get("required_high_priority_family_group_by_id")
+        if isinstance(gold.get("required_high_priority_family_group_by_id"), dict)
+        else {}
+    )
+    mapping = {
+        str(family_id): str(group_id)
+        for family_id, group_id in raw_mapping.items()
+        if str(family_id).strip() and str(group_id).strip()
+    }
+    unmapped_family_ids = sorted(
+        family_id
+        for family_id in required_family_ids
+        if mapping.get(family_id) not in required_groups
+    )
+    positive_families = set(_strings(family_coverage.get("positive_covered_family_ids")))
+    negative_families = set(_strings(family_coverage.get("negative_covered_family_ids")))
+    unresolved_families = set(_strings(family_coverage.get("unresolved_covered_family_ids")))
+    adjudicated_families = set(_strings(family_coverage.get("adjudicated_covered_family_ids")))
+    group_details: dict[str, Any] = {}
+    for group_id in required_groups:
+        group_family_ids = sorted(
+            family_id for family_id in required_family_ids if mapping.get(family_id) == group_id
+        )
+        group_details[group_id] = {
+            "family_ids": group_family_ids,
+            "positive_family_ids": sorted(positive_families.intersection(group_family_ids)),
+            "negative_family_ids": sorted(negative_families.intersection(group_family_ids)),
+            "unresolved_family_ids": sorted(unresolved_families.intersection(group_family_ids)),
+            "adjudicated_family_ids": sorted(adjudicated_families.intersection(group_family_ids)),
+        }
+    positive_groups = sorted(
+        group_id for group_id, detail in group_details.items() if detail["positive_family_ids"]
+    )
+    negative_groups = sorted(
+        group_id for group_id, detail in group_details.items() if detail["negative_family_ids"]
+    )
+    unresolved_groups = sorted(
+        group_id for group_id, detail in group_details.items() if detail["unresolved_family_ids"]
+    )
+    adjudicated_groups = sorted(
+        group_id for group_id, detail in group_details.items() if detail["adjudicated_family_ids"]
+    )
+    return {
+        "schema_version": "authority-family-group-coverage-v1",
+        "configured": bool(mapping),
+        "required_group_ids": required_groups,
+        "required_group_count": len(required_groups),
+        "required_high_priority_family_ids": required_family_ids,
+        "required_high_priority_family_id_count": len(required_family_ids),
+        "family_group_by_high_priority_family_id": {
+            family_id: mapping.get(family_id) for family_id in required_family_ids if mapping.get(family_id)
+        },
+        "unmapped_high_priority_family_ids": unmapped_family_ids,
+        "unmapped_high_priority_family_count": len(unmapped_family_ids),
+        "positive_covered_group_ids": positive_groups,
+        "positive_covered_family_group_count": len(positive_groups),
+        "negative_covered_group_ids": negative_groups,
+        "negative_covered_family_group_count": len(negative_groups),
+        "unresolved_covered_group_ids": unresolved_groups,
+        "unresolved_covered_family_group_count": len(unresolved_groups),
+        "adjudicated_covered_group_ids": adjudicated_groups,
+        "adjudicated_covered_family_group_count": len(adjudicated_groups),
+        "group_details": group_details,
+        "passed": not unmapped_family_ids,
+    }
+
+
+def _gold_thresholds(gold: dict[str, Any]) -> dict[str, int]:
+    value = gold.get("coverage_thresholds")
+    if not isinstance(value, dict):
+        return {}
+    thresholds: dict[str, int] = {}
+    for key, raw in value.items():
+        try:
+            thresholds[str(key)] = int(raw)
+        except (TypeError, ValueError):
+            continue
+    return thresholds
+
+
+def _gold_family_group_contract_configured(gold: dict[str, Any]) -> bool:
+    raw_mapping = gold.get("required_high_priority_family_group_by_id")
+    if isinstance(raw_mapping, dict) and any(
+        str(family_id).strip() and str(group_id).strip()
+        for family_id, group_id in raw_mapping.items()
+    ):
+        return True
+    thresholds = _gold_thresholds(gold)
+    return any(
+        key in thresholds
+        for key in (
+            "required_high_priority_family_id_count",
+            "positive_covered_family_group_count",
+            "negative_covered_family_group_count",
+            "adjudicated_covered_family_group_count",
+            "unresolved_covered_family_group_count_min",
+            "required_theme_count",
+        )
+    )
+
+
+def _check_gold_source_chunk_coverage(gold: dict[str, Any], source_chunk_count: int) -> dict[str, Any]:
+    thresholds = _gold_thresholds(gold)
+    minimum = thresholds.get("source_chunk_count_min")
+    if minimum is None:
+        return _check(
+            "gold_eval_source_chunk_count",
+            True,
+            {"source_chunk_count": source_chunk_count, "required_minimum": None},
+        )
+    return _check(
+        "gold_eval_source_chunk_count",
+        source_chunk_count >= minimum,
+        {"source_chunk_count": source_chunk_count, "required_minimum": minimum},
+    )
+
+
+def _check_gold_family_group_mapping(
+    gold: dict[str, Any],
+    family_group_coverage: dict[str, Any],
+) -> dict[str, Any]:
+    if not _gold_family_group_contract_configured(gold):
+        return _check(
+            "gold_eval_high_priority_family_mapping",
+            True,
+            {
+                "required_high_priority_family_id_count": family_group_coverage.get(
+                    "required_high_priority_family_id_count"
+                ),
+                "unmapped_high_priority_family_ids": [],
+                "skipped": True,
+            },
+        )
+    passed = int(family_group_coverage.get("unmapped_high_priority_family_count") or 0) == 0
+    return _check(
+        "gold_eval_high_priority_family_mapping",
+        passed,
+        {
+            "required_high_priority_family_id_count": family_group_coverage.get(
+                "required_high_priority_family_id_count"
+            ),
+            "unmapped_high_priority_family_ids": family_group_coverage.get(
+                "unmapped_high_priority_family_ids",
+                [],
+            ),
+        },
+    )
+
+
+def _check_gold_family_group_coverage(
+    gold: dict[str, Any],
+    family_group_coverage: dict[str, Any],
+) -> dict[str, Any]:
+    if not _gold_family_group_contract_configured(gold):
+        return _check(
+            "gold_eval_family_group_coverage",
+            True,
+            {
+                "required_group_ids": family_group_coverage.get("required_group_ids", []),
+                "positive_covered_group_ids": [],
+                "negative_covered_group_ids": [],
+                "unresolved_covered_group_ids": [],
+                "adjudicated_covered_group_ids": [],
+                "failures": [],
+                "skipped": True,
+            },
+        )
+    thresholds = _gold_thresholds(gold)
+    failures = []
+    for key, actual_key in (
+        ("case_count_min", "case_count"),
+        ("required_high_priority_family_id_count", "required_high_priority_family_id_count"),
+        ("positive_covered_family_group_count", "positive_covered_family_group_count"),
+        ("negative_covered_family_group_count", "negative_covered_family_group_count"),
+        ("adjudicated_covered_family_group_count", "adjudicated_covered_family_group_count"),
+    ):
+        expected = thresholds.get(key)
+        if expected is None:
+            continue
+        actual = (
+            len(_case_list(gold))
+            if actual_key == "case_count"
+            else int(family_group_coverage.get(actual_key) or 0)
+        )
+        if actual < expected:
+            failures.append({"metric": actual_key, "expected_min": expected, "actual": actual})
+    unresolved_minimum = thresholds.get("unresolved_covered_family_group_count_min")
+    if unresolved_minimum is not None:
+        actual = int(family_group_coverage.get("unresolved_covered_family_group_count") or 0)
+        if actual < unresolved_minimum:
+            failures.append(
+                {
+                    "metric": "unresolved_covered_family_group_count",
+                    "expected_min": unresolved_minimum,
+                    "actual": actual,
+                }
+            )
+    expected_theme_count = thresholds.get("required_theme_count")
+    if expected_theme_count is not None:
+        actual = int(family_group_coverage.get("required_group_count") or 0)
+        if actual != expected_theme_count:
+            failures.append(
+                {
+                    "metric": "required_group_count",
+                    "expected": expected_theme_count,
+                    "actual": actual,
+                }
+            )
+    return _check(
+        "gold_eval_family_group_coverage",
+        not failures and bool(family_group_coverage.get("passed")),
+        {
+            "required_group_ids": family_group_coverage.get("required_group_ids", []),
+            "positive_covered_group_ids": family_group_coverage.get(
+                "positive_covered_group_ids",
+                [],
+            ),
+            "negative_covered_group_ids": family_group_coverage.get(
+                "negative_covered_group_ids",
+                [],
+            ),
+            "unresolved_covered_group_ids": family_group_coverage.get(
+                "unresolved_covered_group_ids",
+                [],
+            ),
+            "adjudicated_covered_group_ids": family_group_coverage.get(
+                "adjudicated_covered_group_ids",
+                [],
+            ),
+            "failures": failures,
+        },
+    )
 
 
 def _check_gold_identity(gold: dict[str, Any]) -> dict[str, Any]:

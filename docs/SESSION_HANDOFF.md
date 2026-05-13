@@ -5,6 +5,89 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Gold Coverage Expansion Closeout
+
+The gold coverage expansion milestone is now implemented across code, tracked contracts, docs, and
+promotion/register wiring.
+
+- scope:
+  `src/usfs_r1_ea_sources/applicability_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_gold_eval.py`,
+  `src/usfs_r1_ea_sources/v1_ea_eval.py`,
+  `src/usfs_r1_ea_sources/gold_coverage_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `config/applicability_gold_eval_v1.json`,
+  `config/compliance_gold_eval_v1.json`,
+  `config/gold_coverage_v1.json`,
+  `config/v1_ecid_real_ea_eval.json`,
+  `config/v1_west_reservoir_real_ea_eval.json`,
+  `config/v1_south_plateau_real_ea_eval.json`,
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
+  `config/promotion_suite_v1.json`,
+  `docs/architecture_contract.toml`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  focused tests
+- current gold/review truth:
+  `applicability-gold-eval` now passes `12/12` adjudicated cases with `source_chunk_count=19`,
+  all `19` high-priority family IDs mapped into seven named coverage groups, and
+  `promotion_ready=true`; `compliance-gold-eval` now passes `14/14` adjudicated cases with the
+  same seven named coverage tags plus `clean_baseline`, `live_external_noisy`, and
+  `typed_blocked_expansion`; `gold-coverage-eval` passes with `required_theme_count=7`,
+  `passed_theme_count=7`, `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1`
+- real-review contract coverage:
+  `v1-ea-eval` now carries `forest_unit_id`, `package_style_tags`, expected lane states, and
+  allowed blocker categories. The shipped review set now covers East Crazies current promotion
+  (`reviewer_ready`), West Reservoir (`reviewer_ready`), and South Plateau (`typed_blocked` on
+  `forest_plan_reviewer_resolution_open` plus
+  `forest_plan_standard_reviewer_resolution_open`)
+- promotion/register wiring:
+  `docs/EVALUATION_COVERAGE_REGISTER.md` now marks `applicability_gold_eval`,
+  `compliance_gold_eval`, `v1_ea_eval`, and `gold_coverage_eval` as `direct_eval_present`.
+  `config/promotion_suite_v1.json` now consumes the widened applicability/compliance thresholds and
+  the aggregate `gold_coverage_eval` artifact
+- current blocker after closeout:
+  current-promotion `promotion-suite` is still red, but the milestone-specific gold coverage gates
+  are green. The remaining required current-promotion failure is one stale
+  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact whose source set is
+  still `source-set-5e65d845ce77e1a0` instead of the current promotion source set
+  `source-set-ba8d0feae79501b8`. Expansion and full-canonical blockers remain separate and
+  unchanged
+- affected dirty state:
+  unrelated local changes already exist in `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`,
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`, `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of the gold-coverage
+  milestone slice
+
+Verification in this closeout:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py -q`: passed `12/12`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_gold_coverage_eval.py -q`: passed `3/3`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py -q`: passed `24/24`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py -k compliance_gold_eval -q`: passed `8/8`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_cli.py -q`: passed `66/66`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json`: passed `9/9`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval --output-dir source_library --gold-file config/applicability_gold_eval_v1.json`: passed `12/12` with `promotion_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json`: passed `14/14` with required coverage and package-style tags present
+- `PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval --output-dir source_library --manifest config/gold_coverage_v1.json`: passed with `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`, `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1`
+- `python - <<'PY' ... run_promotion_suite(...) ... PY`: current-promotion replay still failed closed only on `compliance_review_eval`; separate full-canonical graph and South Plateau expansion blockers remained unchanged
+
+Residual risks:
+
+- replaying `compliance-review-eval` on `source-set-ba8d0feae79501b8` still crashes before it can
+  refresh the stale promotion-suite prerequisite because the local retrieval index is missing the
+  newer `support_document_role` column (`IndexError: No item with that key`). This is outside the
+  gold-coverage contract work and needs its own refresh or compatibility fix
+- `promotion-suite` therefore remains red at the current-promotion layer until that stale
+  `compliance_review_eval` artifact is refreshed for the current promotion source set
+- full-canonical `graph_region1_profile_gap` and South Plateau expansion
+  `forest_plan_reviewer_not_ready` signals remain separate blockers and were not reopened in this
+  milestone
+
 ## Upstream Evaluation Coverage Closeout
 
 The upstream evaluation coverage milestone is now implemented across code, tracked fixtures, docs,

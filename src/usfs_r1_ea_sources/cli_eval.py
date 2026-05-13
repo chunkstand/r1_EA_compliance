@@ -10,6 +10,8 @@ from .applicability_eval import run_applicability_eval
 from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
 from .evidence_graph import run_phase_aligned_eval
+from .gold_coverage_eval import DEFAULT_GOLD_COVERAGE_MANIFEST_PATH
+from .gold_coverage_eval import run_gold_coverage_eval
 from .promotion_suite import DEFAULT_PROMOTION_SUITE_PATH
 from .promotion_suite import run_promotion_suite
 from .rule_packs import DEFAULT_RULE_PACK_PATH
@@ -25,6 +27,7 @@ EVAL_COMMANDS = {
     "upstream-eval",
     "phase-eval",
     "v1-ea-eval",
+    "gold-coverage-eval",
     "promotion-suite",
 }
 
@@ -106,6 +109,18 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     v1_ea_eval.add_argument("--eval-file", default=DEFAULT_V1_EA_EVAL_PATH, type=Path)
     v1_ea_eval.add_argument("--output-path", type=Path)
 
+    gold_coverage_eval = subparsers.add_parser(
+        "gold-coverage-eval",
+        help="Run the aggregate gold coverage gate across adjudicated gold and real-review contracts.",
+    )
+    gold_coverage_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    gold_coverage_eval.add_argument(
+        "--manifest",
+        default=DEFAULT_GOLD_COVERAGE_MANIFEST_PATH,
+        type=Path,
+    )
+    gold_coverage_eval.add_argument("--results-dir", type=Path)
+
     promotion_suite = subparsers.add_parser(
         "promotion-suite",
         help="Check manifest-declared promotion evidence and write an aggregate readiness report.",
@@ -174,6 +189,15 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             review_dir=args.review_dir,
             eval_file=args.eval_file,
             output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "gold-coverage-eval":
+        result = run_gold_coverage_eval(
+            output_dir=args.output_dir,
+            manifest_path=args.manifest,
+            results_dir=args.results_dir,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

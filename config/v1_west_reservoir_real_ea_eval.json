@@ -1,0 +1,226 @@
+{
+  "allow_unadjudicated_conditional_expectations": true,
+  "conditional_source_expectations": [
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps clean_air_act_conformity_air_quality_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-092"
+      ],
+      "rule_id": "clean_air_act_conformity_air_quality_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps clean_water_act_wotus_permits_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-082"
+      ],
+      "rule_id": "clean_water_act_wotus_permits_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps cultural_resource_protection_and_state_shpo_sources_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-072"
+      ],
+      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps eagle_efh_and_special_wildlife_sources_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-097"
+      ],
+      "rule_id": "eagle_efh_and_special_wildlife_sources_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps esa_section_7 explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-065"
+      ],
+      "rule_id": "esa_section_7"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps floodplain_management_eo11988_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-103"
+      ],
+      "rule_id": "floodplain_management_eo11988_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps hazardous_materials_site_condition_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-107"
+      ],
+      "rule_id": "hazardous_materials_site_condition_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps invasive_pesticide_soils_farmland_drinking_water_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-112"
+      ],
+      "rule_id": "invasive_pesticide_soils_farmland_drinking_water_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps land_exchange_statutory_authorities_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-137"
+      ],
+      "rule_id": "land_exchange_statutory_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps minerals_energy_authorities_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-041"
+      ],
+      "rule_id": "minerals_energy_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps nepa_4336c_ce_adoption_screen explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-006"
+      ],
+      "rule_id": "nepa_4336c_ce_adoption_screen"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps region1_forest_plan_source_records_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "expected_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-02"
+      ],
+      "rule_id": "region1_forest_plan_source_records_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps roadless_rule_36cfr_294b explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-049"
+      ],
+      "rule_id": "roadless_rule_36cfr_294b"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps roads_access_special_use_action_authorities_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-036"
+      ],
+      "rule_id": "roads_access_special_use_action_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps species_supporting_sources_and_overlays_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-064"
+      ],
+      "rule_id": "species_supporting_sources_and_overlays_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps tribal_consultation_trust_sacred_sites_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-081"
+      ],
+      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps vegetation_wildfire_forest_health_authorities_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-056"
+      ],
+      "rule_id": "vegetation_wildfire_forest_health_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current west-reservoir-67436 reviewer-ready contract keeps wilderness_wsr_trails_designated_areas_authority_template explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "R1EA-047"
+      ],
+      "rule_id": "wilderness_wsr_trails_designated_areas_authority_template"
+    }
+  ],
+  "eval_id": "west-reservoir-real-ea-v1",
+  "expected_lane_states": {
+    "broader_ea_passed": true,
+    "forest_plan_passed": true
+  },
+  "forest_plan": {
+    "expected_scope_status": "flathead_nf",
+    "max_reviewer_resolution_items": 0,
+    "max_standard_reviewer_resolution_items": 0,
+    "require_reviewer_ready": true
+  },
+  "forest_unit_id": "flathead-nf",
+  "package_style_tags": [
+    "live_external_noisy"
+  ],
+  "review_id": "west-reservoir-67436",
+  "rule_pack_id": "nepa-ea-v0",
+  "rule_pack_version": "0.4.0",
+  "rule_review_expectations": [],
+  "schema_version": "v1-ea-real-review-eval-contract-v0",
+  "section_expectations": [],
+  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "title": "West Reservoir Real EA V1 Review Evaluation Contract"
+}

@@ -2045,7 +2045,11 @@ is true only when positive, mixed, negative, unresolved, and replay-adjudicated 
 present, every case has adjudication metadata, at least one gold case has explicit arbitration-field
 expectations, and the nested applicability eval passes. Gold evals carry forward the nested
 `authority_family_template_coverage` and `arbitration_summary` summaries so promotion checks can
-prove adjudication and arbitration coverage for expanded authority-family templates.
+prove adjudication and arbitration coverage for expanded authority-family templates. The widened v1
+gold contract also records `source_chunk_count` plus `family_group_coverage`, which names the
+required coverage groups, maps the current high-priority family IDs into those groups, and reports
+positive, negative, unresolved, and adjudicated group coverage counts. Top-level `passed` and
+`promotion_ready` now fail closed when nested family/group coverage checks fail.
 
 ## Compliance Review Outputs
 
@@ -3144,6 +3148,7 @@ fixtures or rerun `compliance-review`. The gate expects these review artifacts:
 The contract has schema version `v1-ea-real-review-eval-contract-v0` and records:
 
 - review identity: eval ID, review ID, source-set ID, rule-pack ID, and rule-pack version
+- review diversity metadata: `forest_unit_id` and `package_style_tags`
 - `section_expectations` for required real-EA section families and detection terms
 - `rule_review_expectations` for rule-to-package-section, source-record, document-role, and
   citation checks
@@ -3158,6 +3163,9 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - `forest_plan` expectations for required plan source records, resolved geographic/management
   areas, component IDs, applicable standards, reviewer readiness, total open reviewer-resolution
   items, and open standard reviewer-resolution items
+- `expected_lane_states` for the overall `broader_ea_passed` and `forest_plan_passed` contract, and
+  `allowed_blocker_categories` when a typed blocked review is an accepted coverage case rather than
+  a reviewer-ready review
 
 `v1_ea_eval_results.json` has schema version `v1-ea-real-review-eval-results-v0` and records:
 
@@ -3166,6 +3174,8 @@ The contract has schema version `v1-ea-real-review-eval-contract-v0` and records
 - `generated_at`; reruns preserve the existing timestamp when the semantic payload is unchanged so
   final QA input hashes do not churn only because the eval command was replayed
 - `broader_ea_passed`, `forest_plan_passed`, `forest_plan_component_adjudication_required`,
+  `actual_overall_passed`, `contract_status`, `contract_expectations`, `forest_unit_id`,
+  `package_style_tags`, `expected_lane_states`, and `allowed_blocker_categories`,
   `broader_ea_failure_category_counts`, `forest_plan_failure_category_counts`,
   `failed_rule_expectation_count`, `failed_rule_ids`, `failed_rule_ids_by_category`,
   `failed_rule_expectations`, and `eval_lanes`. The failed-rule summaries name rule IDs,
@@ -3202,7 +3212,47 @@ expectation match rate, conditional adjudication completion rate, accepted/missi
 conditional adjudication counts, actual-applicable conditional source and section match rates,
 missing conditional expectation count, conditional false positive and false negative counts,
 forest-plan expectation match rate, reviewer-resolution item count, and standard reviewer-resolution
-item count.
+item count. When component adjudication is present, the reviewer-resolution metrics use the
+adjudication-aware pending counts rather than the raw reviewer queue size, while the raw queue
+counts remain available as separate reviewer-resolution queue metrics.
+
+## Gold Coverage Eval Outputs
+
+Default manifest: `config/gold_coverage_v1.json`
+
+Default path:
+`source_library/reviews/gold_coverage_eval/`
+
+The `gold-coverage-eval` command writes:
+
+- `gold_coverage_eval_results.json`
+
+The aggregate manifest has schema version `gold-coverage-eval-v1` and records:
+
+- manifest identity plus an `applicability_gold` contract and `compliance_gold` contract, each of
+  which may point either to a gold config file or to an existing results file
+- `review_contracts`, each naming a review ID, a V1 real-review eval file, and a package-authority
+  declaration through either a replay-context file or a tracked intake package path
+- `required_theme_ids` for the named family/theme groups the widened gold lane must cover
+- `coverage_thresholds` for minimum gold case counts, required high-priority family count, unmapped
+  family maximum, required review-contract count, distinct forest count, distinct package-style
+  count, reviewer-ready review count, typed-blocked review count, and missing-authority maxima
+
+`gold_coverage_eval_results.json` has schema version `gold-coverage-eval-results-v1` and records:
+
+- manifest identity, output paths, top-level `passed`, and aggregate failure-category counts
+- `required_theme_ids`, `required_theme_count`, `passed_theme_count`, and `theme_failure_ids`
+- `required_high_priority_family_id_count` and `unmapped_high_priority_family_count`
+- `applicability_gold_case_count`, `compliance_gold_case_count`, `required_review_contract_count`,
+  `distinct_forest_count`, `distinct_forest_ids`, `distinct_package_style_count`, and
+  `distinct_package_style_tags`
+- `reviewer_ready_review_count`, `typed_blocked_review_count`,
+  `missing_required_review_contract_count`, `missing_package_authority_count`, and
+  `threshold_failures`
+- nested `applicability_gold` and `compliance_gold` summaries trimmed to the coverage fields that
+  matter for the aggregate gate
+- `review_contracts`, each carrying `contract_status`, forest identity, package-style tags,
+  package-authority validation, missing-contract detection, and the underlying V1 eval summary bits
 
 ## Promotion Suite Outputs
 
@@ -3331,7 +3381,7 @@ Related generated artifacts:
 The `compliance-gold-eval` command reads:
 
 - a versioned compliance rule pack
-- a gold adjudication file, defaulting to `config/compliance_gold_eval_v0.json`
+- a gold adjudication file, defaulting to `config/compliance_gold_eval_v1.json`
 - reviewer-ready source-library artifacts used by the underlying `compliance-review-eval` path
 
 The gold adjudication file has schema version `compliance-gold-eval-v0` and records:
@@ -3339,7 +3389,8 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
 - gold eval ID, version, title, rule-pack ID, and rule-pack version
 - top-level adjudication metadata and promotion-gate intent
 - at least three cases with positive, mixed, and negative profiles; the current project gold file
-  contains ten adjudicated realistic profiles
+  contains fourteen adjudicated realistic profiles
+- required named `coverage_tags` and required named `package_style_tags`
 - per-case adjudication metadata, package fixture, expected statuses for every rule, expected
   status counts, expected source record IDs, expected source document roles, unsupported finding
   IDs, and minimum finding count
@@ -3356,6 +3407,8 @@ The gold adjudication file has schema version `compliance-gold-eval-v0` and reco
   the reviewer-ready compliance-review gate
 - case count, adjudicated case count, passed/failed case counts, profile counts, and required
   profiles present
+- `coverage_tags`, `package_style_tags`, `missing_coverage_tags`, and
+  `missing_package_style_tags`
 - aggregate failure-category counts from the underlying compliance-review eval
 - `promotion_ready`, which is true only when the rule pack is reviewer-ready and adjudication checks
   plus the underlying compliance-review eval pass

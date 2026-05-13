@@ -20,7 +20,7 @@ from .rule_packs import validate_rule_pack
 
 COMPLIANCE_GOLD_EVAL_SCHEMA_VERSION = "compliance-gold-eval-v0"
 COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION = "compliance-gold-eval-results-v0"
-DEFAULT_COMPLIANCE_GOLD_EVAL_PATH = Path("config/compliance_gold_eval_v0.json")
+DEFAULT_COMPLIANCE_GOLD_EVAL_PATH = Path("config/compliance_gold_eval_v1.json")
 REQUIRED_CASE_PROFILES = {"mixed", "negative", "positive"}
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 GENERATED_CASE_MAP_FIELDS = (
@@ -135,6 +135,29 @@ def run_compliance_gold_eval(
     reviewer_ready_rule_pack = (
         rule_pack.get("schema_version") == GENERATED_RULE_PACK_SCHEMA_VERSION
     )
+    coverage_tags = _sorted_case_tags(effective_cases, "coverage_tags")
+    package_style_tags = _sorted_case_tags(effective_cases, "package_style_tags")
+    missing_coverage_tags = sorted(
+        set(_required_gold_tags(gold, "required_coverage_tags")) - set(coverage_tags)
+    )
+    missing_package_style_tags = sorted(
+        set(_required_gold_tags(gold, "required_package_style_tags")) - set(package_style_tags)
+    )
+    threshold_checks = [
+        _check_gold_case_count_threshold(gold, case_count),
+        _check_gold_required_tags(
+            name="gold_eval_required_coverage_tags_present",
+            required=_required_gold_tags(gold, "required_coverage_tags"),
+            actual=coverage_tags,
+        ),
+        _check_gold_required_tags(
+            name="gold_eval_required_package_style_tags_present",
+            required=_required_gold_tags(gold, "required_package_style_tags"),
+            actual=package_style_tags,
+        ),
+    ]
+    checks.extend(threshold_checks)
+    nested_checks_passed = all(check["passed"] for check in checks)
     summary = {
         "schema_version": COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION,
         "created_at": _utc_now(),
@@ -166,14 +189,18 @@ def run_compliance_gold_eval(
         "required_profiles_present": sorted(
             REQUIRED_CASE_PROFILES.intersection(profile_counts)
         ),
+        "coverage_tags": coverage_tags,
+        "package_style_tags": package_style_tags,
+        "missing_coverage_tags": missing_coverage_tags,
+        "missing_package_style_tags": missing_package_style_tags,
         "adjudication_checks_passed": adjudication_passed,
         "compliance_review_eval_passed": compliance_review_eval_passed,
         "compliance_review_eval_error": review_eval_error,
         "reviewer_ready_rule_pack": reviewer_ready_rule_pack,
         "promotion_ready": reviewer_ready_rule_pack
-        and adjudication_passed
+        and nested_checks_passed
         and compliance_review_eval_passed,
-        "passed": adjudication_passed and compliance_review_eval_passed,
+        "passed": nested_checks_passed and compliance_review_eval_passed,
         "checks": checks,
         "metrics": (review_eval_summary or {}).get("metrics", {}),
         "failure_category_counts": (review_eval_summary or {}).get(
@@ -666,6 +693,61 @@ def _profile_counts(cases: list[dict]) -> dict[str, int]:
         if isinstance(case, dict) and str(case.get("profile") or "") in REQUIRED_CASE_PROFILES
     )
     return {profile: counts[profile] for profile in sorted(counts)}
+
+
+def _gold_thresholds(gold: dict) -> dict[str, int]:
+    value = gold.get("coverage_thresholds")
+    if not isinstance(value, dict):
+        return {}
+    thresholds: dict[str, int] = {}
+    for key, raw in value.items():
+        try:
+            thresholds[str(key)] = int(raw)
+        except (TypeError, ValueError):
+            continue
+    return thresholds
+
+
+def _required_gold_tags(gold: dict, key: str) -> list[str]:
+    value = gold.get(key)
+    if not isinstance(value, list):
+        return []
+    return sorted(str(tag).strip() for tag in value if str(tag).strip())
+
+
+def _sorted_case_tags(cases: list[dict], key: str) -> list[str]:
+    values = {
+        str(tag).strip()
+        for case in cases
+        if isinstance(case, dict)
+        for tag in case.get(key, [])
+        if str(tag).strip()
+    }
+    return sorted(values)
+
+
+def _check_gold_case_count_threshold(gold: dict, case_count: int) -> dict:
+    minimum = _gold_thresholds(gold).get("case_count_min")
+    if minimum is None:
+        return {
+            "name": "gold_eval_case_count_threshold",
+            "passed": True,
+            "details": {"case_count": case_count, "required_minimum": None},
+        }
+    return {
+        "name": "gold_eval_case_count_threshold",
+        "passed": case_count >= minimum,
+        "details": {"case_count": case_count, "required_minimum": minimum},
+    }
+
+
+def _check_gold_required_tags(*, name: str, required: list[str], actual: list[str]) -> dict:
+    missing = sorted(set(required) - set(actual))
+    return {
+        "name": name,
+        "passed": not missing,
+        "details": {"required": required, "actual": actual, "missing": missing},
+    }
 
 
 def _adjudicated_case_count(cases: list[dict]) -> int:

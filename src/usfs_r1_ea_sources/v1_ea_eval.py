@@ -172,11 +172,32 @@ def run_v1_ea_review_eval(
         broader_ea_failure_category_counts=broader_ea_failure_category_counts,
         forest_plan_failure_category_counts=forest_plan_failure_category_counts,
     )
-    passed = all(check["passed"] for check in checks)
-
     review_identity = _review_identity(
         artifacts["compliance_review"],
         artifacts.get("generated_rule_pack"),
+    )
+    contract_expectations = _evaluate_contract_lane_expectations(
+        contract=contract,
+        eval_lanes=eval_lanes,
+    )
+    summary_checks = list(checks)
+    if contract_expectations["configured"]:
+        summary_checks.append(
+            {
+                "name": "expected_lane_states_matched",
+                "passed": contract_expectations["passed"],
+                "details": contract_expectations["details"],
+            }
+        )
+    passed = (
+        contract_expectations["passed"]
+        if contract_expectations["configured"]
+        else all(check["passed"] for check in checks)
+    )
+    contract_status = _contract_status(
+        contract_expectations=contract_expectations,
+        eval_lanes=eval_lanes,
+        passed=passed,
     )
     summary = {
         "schema_version": V1_EA_EVAL_RESULTS_SCHEMA_VERSION,
@@ -186,13 +207,22 @@ def run_v1_ea_review_eval(
         "eval_file": str(eval_file),
         "output_path": str(resolved_output_path),
         "generated_at": _utc_now(),
+        "source_set_id": review_identity.get("source_set_id") or contract.get("source_set_id"),
+        "forest_unit_id": contract.get("forest_unit_id"),
+        "package_style_tags": _string_list(contract.get("package_style_tags")),
+        "expected_lane_states": _normalized_expected_lane_states(
+            contract.get("expected_lane_states")
+        ),
+        "allowed_blocker_categories": _string_list(contract.get("allowed_blocker_categories")),
         "passed": passed,
+        "actual_overall_passed": eval_lanes["overall"]["passed"],
+        "contract_status": contract_status,
         "broader_ea_passed": eval_lanes["broader_ea"]["passed"],
         "forest_plan_passed": eval_lanes["forest_plan"]["passed"],
         "forest_plan_component_adjudication_required": eval_lanes["forest_plan"][
             "component_adjudication_required"
         ],
-        "checks": checks,
+        "checks": summary_checks,
         "metrics": metrics,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
         "broader_ea_failure_category_counts": dict(
@@ -201,6 +231,7 @@ def run_v1_ea_review_eval(
         "forest_plan_failure_category_counts": dict(
             sorted(forest_plan_failure_category_counts.items())
         ),
+        "contract_expectations": contract_expectations["details"],
         "failed_rule_expectation_count": len(failed_rule_expectations),
         "failed_rule_ids": failed_rule_ids,
         "failed_rule_ids_by_category": failed_rule_ids_by_category,
@@ -316,6 +347,11 @@ def _load_review_artifacts(review_dir: Path, require_forest_plan: bool) -> dict[
         "forest_plan_applicable_standard_coverage": (
             "forest_plan_applicable_standard_coverage.json",
             require_forest_plan,
+            "json",
+        ),
+        "forest_plan_component_adjudication_eval": (
+            "forest_plan_component_adjudication_eval.json",
+            False,
             "json",
         ),
         "forest_plan_reviewer_resolution_queue": (
@@ -844,7 +880,6 @@ def _evaluate_forest_plan(
     context = artifacts["forest_plan_context"]
     component_findings = artifacts["forest_plan_component_findings"]
     standard_coverage = artifacts["forest_plan_applicable_standard_coverage"]
-    queue = artifacts["forest_plan_reviewer_resolution_queue"]
     compliance_matrix = artifacts["compliance_matrix"]
     source_record_ids = _forest_source_record_ids(summary, context)
     geo_ids = _collect_values_by_key(context, {"geographic_area_id", "entry_id", "area_id"})
@@ -855,6 +890,10 @@ def _evaluate_forest_plan(
         {"component_id", "standard_id", "entry_id"},
     )
     applicable_standard_ids = _applicable_standard_ids(standard_coverage, component_findings)
+    pending_reviewer_resolution_count = _pending_reviewer_resolution_count(artifacts)
+    pending_standard_reviewer_resolution_count = _pending_standard_reviewer_resolution_count(
+        artifacts
+    )
     results = []
 
     def add_result(
@@ -974,7 +1013,7 @@ def _evaluate_forest_plan(
         )
     if expectations.get("max_reviewer_resolution_items") is not None:
         maximum = int(expectations["max_reviewer_resolution_items"])
-        actual_count = _reviewer_resolution_count(queue)
+        actual_count = pending_reviewer_resolution_count
         add_result(
             expectation_id="reviewer_resolution_item_count",
             expected={"max": maximum},
@@ -984,7 +1023,7 @@ def _evaluate_forest_plan(
         )
     if expectations.get("max_standard_reviewer_resolution_items") is not None:
         maximum = int(expectations["max_standard_reviewer_resolution_items"])
-        actual_count = _reviewer_resolution_count_by_component_type(queue, "standard")
+        actual_count = pending_standard_reviewer_resolution_count
         add_result(
             expectation_id="standard_reviewer_resolution_item_count",
             expected={"max": maximum},
@@ -1207,10 +1246,14 @@ def _metrics(
             sum(1 for result in forest_plan_results if result["passed"]),
             len(forest_plan_results),
         ),
-        "reviewer_resolution_item_count": _reviewer_resolution_count(
+        "reviewer_resolution_item_count": _pending_reviewer_resolution_count(artifacts),
+        "standard_reviewer_resolution_item_count": _pending_standard_reviewer_resolution_count(
+            artifacts
+        ),
+        "reviewer_resolution_queue_item_count": _reviewer_resolution_count(
             artifacts["forest_plan_reviewer_resolution_queue"]
         ),
-        "standard_reviewer_resolution_item_count": _reviewer_resolution_count_by_component_type(
+        "standard_reviewer_resolution_queue_item_count": _reviewer_resolution_count_by_component_type(
             artifacts["forest_plan_reviewer_resolution_queue"],
             "standard",
         ),
@@ -1429,13 +1472,18 @@ def _eval_lanes(
     if forest_plan_check and not forest_plan_check.get("passed"):
         forest_failed_checks.append("forest_plan_expectations_met")
 
-    reviewer_resolution_count = _reviewer_resolution_count(
+    reviewer_resolution_queue_count = _reviewer_resolution_count(
         artifacts["forest_plan_reviewer_resolution_queue"]
     )
-    standard_reviewer_resolution_count = _reviewer_resolution_count_by_component_type(
+    standard_reviewer_resolution_queue_count = _reviewer_resolution_count_by_component_type(
         artifacts["forest_plan_reviewer_resolution_queue"],
         "standard",
     )
+    pending_reviewer_resolution_count = _pending_reviewer_resolution_count(artifacts)
+    pending_standard_reviewer_resolution_count = _pending_standard_reviewer_resolution_count(
+        artifacts
+    )
+    component_adjudication_summary = _forest_plan_component_adjudication_summary(artifacts)
     overall_failed_checks = [
         str(check["name"]) for check in checks if not bool(check.get("passed"))
     ]
@@ -1469,9 +1517,15 @@ def _eval_lanes(
             "failed_expectation_count": sum(
                 1 for result in forest_plan_results if not result.get("passed")
             ),
-            "pending_component_adjudication_count": reviewer_resolution_count,
-            "pending_standard_adjudication_count": standard_reviewer_resolution_count,
-            "component_adjudication_required": reviewer_resolution_count > 0,
+            "pending_component_adjudication_count": pending_reviewer_resolution_count,
+            "pending_standard_adjudication_count": pending_standard_reviewer_resolution_count,
+            "reviewer_resolution_queue_item_count": reviewer_resolution_queue_count,
+            "standard_reviewer_resolution_queue_item_count": standard_reviewer_resolution_queue_count,
+            "component_adjudication_required": reviewer_resolution_queue_count > 0,
+            "component_adjudication_present": bool(component_adjudication_summary),
+            "component_adjudication_reviewer_ready": bool(
+                component_adjudication_summary.get("reviewer_ready")
+            ),
         },
     }
 
@@ -1489,6 +1543,129 @@ def _failed_compliance_validation_check_names(check: dict[str, Any] | None) -> l
     ]
 
 
+def _evaluate_contract_lane_expectations(
+    *,
+    contract: dict[str, Any],
+    eval_lanes: dict[str, Any],
+) -> dict[str, Any]:
+    expected_lane_states = _normalized_expected_lane_states(
+        contract.get("expected_lane_states")
+    )
+    allowed_blocker_categories = set(_string_list(contract.get("allowed_blocker_categories")))
+    if not expected_lane_states:
+        return {
+            "configured": False,
+            "passed": False,
+            "details": {
+                "configured": False,
+                "expected_lane_states": {},
+                "allowed_blocker_categories": sorted(allowed_blocker_categories),
+            },
+        }
+
+    actual_lane_states = {
+        "passed": bool(eval_lanes["overall"]["passed"]),
+        "broader_ea_passed": bool(eval_lanes["broader_ea"]["passed"]),
+        "forest_plan_passed": bool(eval_lanes["forest_plan"]["passed"]),
+    }
+    mismatches = []
+    expected_blocked_lanes = []
+    blocker_categories: set[str] = set()
+    unexpected_blocker_categories: set[str] = set()
+    for lane_name, expected in expected_lane_states.items():
+        actual = actual_lane_states[lane_name]
+        if actual != expected:
+            mismatches.append(
+                {
+                    "lane": lane_name,
+                    "expected": expected,
+                    "actual": actual,
+                }
+            )
+        if expected:
+            continue
+        expected_blocked_lanes.append(lane_name)
+        actual_categories = set(_lane_failure_categories(eval_lanes, lane_name))
+        blocker_categories.update(actual_categories)
+        unexpected_blocker_categories.update(actual_categories - allowed_blocker_categories)
+    missing_blocker_categories = bool(expected_blocked_lanes) and not blocker_categories
+    passed = not mismatches and not missing_blocker_categories and not unexpected_blocker_categories
+    return {
+        "configured": True,
+        "passed": passed,
+        "details": {
+            "configured": True,
+            "expected_lane_states": expected_lane_states,
+            "actual_lane_states": actual_lane_states,
+            "allowed_blocker_categories": sorted(allowed_blocker_categories),
+            "expected_blocked_lanes": expected_blocked_lanes,
+            "matched_blocker_categories": sorted(blocker_categories),
+            "unexpected_blocker_categories": sorted(unexpected_blocker_categories),
+            "missing_blocker_categories": missing_blocker_categories,
+            "mismatches": mismatches,
+        },
+    }
+
+
+def _contract_status(
+    *,
+    contract_expectations: dict[str, Any],
+    eval_lanes: dict[str, Any],
+    passed: bool,
+) -> str:
+    if not passed:
+        return "mismatch"
+    details = contract_expectations.get("details")
+    if not isinstance(details, dict) or not contract_expectations.get("configured"):
+        return "reviewer_ready" if eval_lanes["overall"]["passed"] else "matched"
+    if details.get("expected_blocked_lanes"):
+        return "typed_blocked"
+    return "reviewer_ready"
+
+
+def _normalized_expected_lane_states(value: Any) -> dict[str, bool]:
+    if not isinstance(value, dict):
+        return {}
+    normalized: dict[str, bool] = {}
+    key_aliases = {
+        "passed": "passed",
+        "overall_passed": "passed",
+        "broader_ea_passed": "broader_ea_passed",
+        "forest_plan_passed": "forest_plan_passed",
+    }
+    for raw_key, expected in value.items():
+        key = key_aliases.get(str(raw_key))
+        if key is None or not isinstance(expected, bool):
+            continue
+        normalized[key] = expected
+    return normalized
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _lane_failure_categories(eval_lanes: dict[str, Any], lane_name: str) -> list[str]:
+    if lane_name == "passed":
+        lane = eval_lanes["overall"]
+    elif lane_name == "broader_ea_passed":
+        lane = eval_lanes["broader_ea"]
+    elif lane_name == "forest_plan_passed":
+        lane = eval_lanes["forest_plan"]
+    else:
+        return []
+    failure_categories = lane.get("failure_category_counts")
+    if not isinstance(failure_categories, dict):
+        return []
+    return [
+        str(category)
+        for category, count in sorted(failure_categories.items())
+        if str(category).strip() and int(count or 0) > 0
+    ]
+
+
 def _validate_contract(contract: dict[str, Any]) -> None:
     if not isinstance(contract, dict):
         raise ValueError("V1 EA eval contract must be a JSON object")
@@ -1499,6 +1676,40 @@ def _validate_contract(contract: dict[str, Any]) -> None:
             raise ValueError(f"section_expectations[{index}] requires section_id")
         if not _expectation_terms(expectation):
             raise ValueError(f"section_expectations[{index}] requires expected_terms or aliases")
+    forest_unit_id = contract.get("forest_unit_id")
+    if forest_unit_id is not None and not str(forest_unit_id).strip():
+        raise ValueError("forest_unit_id must be a non-empty string when provided")
+    package_style_tags = contract.get("package_style_tags")
+    if package_style_tags is not None and (
+        not isinstance(package_style_tags, list)
+        or not all(isinstance(tag, str) and tag.strip() for tag in package_style_tags)
+    ):
+        raise ValueError("package_style_tags must contain only non-empty strings")
+    expected_lane_states = contract.get("expected_lane_states")
+    normalized_lane_states = _normalized_expected_lane_states(expected_lane_states)
+    if expected_lane_states is not None:
+        if not isinstance(expected_lane_states, dict):
+            raise ValueError("expected_lane_states must be a JSON object when provided")
+        if len(normalized_lane_states) != len(expected_lane_states):
+            raise ValueError(
+                "expected_lane_states may only contain boolean passed/overall_passed/"
+                "broader_ea_passed/forest_plan_passed fields"
+            )
+    allowed_blocker_categories = contract.get("allowed_blocker_categories")
+    if allowed_blocker_categories is not None and (
+        not isinstance(allowed_blocker_categories, list)
+        or not all(
+            isinstance(category, str) and category.strip()
+            for category in allowed_blocker_categories
+        )
+    ):
+        raise ValueError("allowed_blocker_categories must contain only non-empty strings")
+    if any(expected is False for expected in normalized_lane_states.values()):
+        if not _string_list(allowed_blocker_categories):
+            raise ValueError(
+                "allowed_blocker_categories is required when expected_lane_states includes "
+                "a false lane state"
+            )
     for name in ("rule_review_expectations", "conditional_source_expectations"):
         for index, expectation in enumerate(contract.get(name, []), start=1):
             if not expectation.get("rule_id"):
@@ -2229,6 +2440,63 @@ def _reviewer_resolution_count_by_component_type(queue: dict[str, Any], componen
 
 def _reviewer_resolution_items(queue: dict[str, Any]) -> list[dict[str, Any]]:
     items = queue.get("items") or queue.get("queue") or []
+    return [item for item in items if isinstance(item, dict)] if isinstance(items, list) else []
+
+
+def _pending_reviewer_resolution_count(artifacts: dict[str, Any]) -> int:
+    item_results = _forest_plan_component_adjudication_item_results(artifacts)
+    if item_results:
+        return sum(
+            1 for item in item_results if str(item.get("disposition") or "") == "pending"
+        )
+    component_adjudication = _forest_plan_component_adjudication_summary(artifacts)
+    pending_count = component_adjudication.get("pending_adjudication_count")
+    if pending_count is not None:
+        return int(pending_count)
+    if component_adjudication.get("reviewer_ready") is True:
+        return 0
+    return _reviewer_resolution_count(artifacts["forest_plan_reviewer_resolution_queue"])
+
+
+def _pending_standard_reviewer_resolution_count(artifacts: dict[str, Any]) -> int:
+    item_results = _forest_plan_component_adjudication_item_results(artifacts)
+    if item_results:
+        return sum(
+            1
+            for item in item_results
+            if str(item.get("disposition") or "") == "pending"
+            and str(item.get("component_type") or "") == "standard"
+        )
+    component_adjudication = _forest_plan_component_adjudication_summary(artifacts)
+    pending_count = component_adjudication.get("pending_adjudication_count")
+    if pending_count is not None and int(pending_count) == 0:
+        return 0
+    if component_adjudication.get("reviewer_ready") is True:
+        return 0
+    return _reviewer_resolution_count_by_component_type(
+        artifacts["forest_plan_reviewer_resolution_queue"],
+        "standard",
+    )
+
+
+def _forest_plan_component_adjudication_summary(artifacts: dict[str, Any]) -> dict[str, Any]:
+    summary = _nested_get(artifacts["forest_plan_context_summary"], ["component_adjudication"])
+    context_summary = summary if isinstance(summary, dict) else {}
+    report = artifacts.get("forest_plan_component_adjudication_eval")
+    if isinstance(report, dict):
+        report_summary = report.get("summary")
+        if isinstance(report_summary, dict):
+            return {**context_summary, **report_summary}
+    return context_summary
+
+
+def _forest_plan_component_adjudication_item_results(
+    artifacts: dict[str, Any],
+) -> list[dict[str, Any]]:
+    report = artifacts.get("forest_plan_component_adjudication_eval")
+    if not isinstance(report, dict):
+        return []
+    items = report.get("item_results")
     return [item for item in items if isinstance(item, dict)] if isinstance(items, list) else []
 
 
