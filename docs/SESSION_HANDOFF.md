@@ -5,6 +5,53 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Direct-Eval Gating Plan
+
+The repo now has a dedicated follow-on plan for the `phase-eval` proxy-readiness gap at
+`docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  this is a fresh standalone milestone for making `phase-eval` consume explicit per-subsystem
+  direct-eval summaries and fail closed on proxy-only or below-threshold coverage; it does not
+  recreate the upstream, downstream, or gold eval suites that produce those summaries
+- dependency:
+  do not start this plan until `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` is closed green and
+  committed; that prerequisite itself depends on
+  `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`, which depends on
+  `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, so Sequence 0 of the new phase-eval plan
+  assumes the upstream-created evaluation coverage register, the downstream direct-eval contracts,
+  and the gold-coverage aggregate gate already exist
+- problem statement:
+  current `phase-eval` is a good readiness aggregator but still mostly trusts lane
+  `validation_passed` and `reviewer_ready` bits for its critical source-set phases; the new plan
+  adds one tracked direct-eval contract, normalized summary loading, explicit direct-eval failure
+  reasons, and promotion checks that fail when critical phases are proxy-only or below their
+  declared coverage floors
+- routing:
+  once the prerequisite milestone chain is complete, execute Sequence 0 from
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`; the first deliverables are
+  `config/phase_eval_direct_eval_v1.json`, a focused direct-eval loader module, a `phase_eval`
+  row in `docs/EVALUATION_COVERAGE_REGISTER.md`, and failing contract tests for missing
+  direct-eval summaries or proxy-only critical phases
+- affected dirty state:
+  unrelated local changes already exist in `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of the phase-eval
+  planning and implementation slices
+
+Verification in this planning pass:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- this is a plan artifact only; the `phase-eval` gap remains open until the prerequisite milestone
+  chain lands and this follow-on milestone is implemented end to end
+- the plan assumes the prerequisite milestones produce machine-readable eval summaries or explicit
+  contract-owned equivalents; if they close with different artifact names or missing threshold
+  fields, Sequence 0 must refresh the routing before implementation begins
+
 ## Gold Coverage Expansion Plan
 
 The repo now has a dedicated follow-on plan for the adjudicated gold and real-package coverage gap
