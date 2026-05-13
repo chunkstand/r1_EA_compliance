@@ -179,6 +179,91 @@ class RetrievalTests(unittest.TestCase):
                 "primary_land_management_plan",
             )
 
+    def test_retrieval_query_handles_legacy_index_without_support_document_role(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            index_path = Path(tmp) / "evidence_index.sqlite"
+            with closing(sqlite3.connect(index_path)) as connection:
+                connection.executescript(
+                    """
+                    CREATE TABLE chunks (
+                      chunk_id TEXT PRIMARY KEY,
+                      source_set_id TEXT NOT NULL,
+                      source_record_id TEXT NOT NULL,
+                      chunk_index INTEGER NOT NULL,
+                      title TEXT NOT NULL,
+                      document_role TEXT NOT NULL,
+                      authority_level TEXT NOT NULL,
+                      host TEXT,
+                      expected_parser TEXT,
+                      artifact_sha256 TEXT NOT NULL,
+                      artifact_path TEXT NOT NULL,
+                      citation_label TEXT NOT NULL,
+                      original_url TEXT NOT NULL,
+                      effective_url TEXT NOT NULL,
+                      final_url TEXT,
+                      parser_name TEXT NOT NULL,
+                      parser_version TEXT NOT NULL,
+                      extracted_at TEXT NOT NULL,
+                      source_text_path TEXT,
+                      char_start INTEGER NOT NULL,
+                      char_end INTEGER NOT NULL,
+                      page INTEGER,
+                      section TEXT,
+                      heading TEXT,
+                      content_sha256 TEXT NOT NULL,
+                      review_topics_json TEXT NOT NULL,
+                      text TEXT NOT NULL
+                    );
+                    """
+                )
+                connection.execute(
+                    """
+                    INSERT INTO chunks (
+                      chunk_id, source_set_id, source_record_id, chunk_index, title, document_role,
+                      authority_level, host, expected_parser, artifact_sha256, artifact_path,
+                      citation_label, original_url, effective_url, final_url, parser_name,
+                      parser_version, extracted_at, source_text_path, char_start, char_end, page,
+                      section, heading, content_sha256, review_topics_json, text
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        "chunk:R1EA-001",
+                        "source-set-test",
+                        "R1EA-001",
+                        0,
+                        "Legacy source",
+                        "law",
+                        "federal_law",
+                        "example.test",
+                        "html",
+                        "artifact-sha",
+                        "artifacts/raw/R1EA-001.html",
+                        "R1EA-001 | Legacy source | artifact-sha",
+                        "https://example.test/original",
+                        "https://example.test/effective",
+                        "https://example.test/final",
+                        "unit_parser",
+                        "1.0",
+                        "2026-05-13T00:00:00Z",
+                        "derived/source-set-test/extracted_text/R1EA-001.txt",
+                        0,
+                        33,
+                        None,
+                        None,
+                        "Legacy source",
+                        hashlib.sha256(b"Legacy retrieval text").hexdigest(),
+                        json.dumps(["Legacy topic"]),
+                        "Legacy retrieval text",
+                    ),
+                )
+                connection.commit()
+
+            query = query_retrieval_index(index_path=index_path, query="legacy retrieval")
+
+            self.assertEqual(query["hit_count"], 1)
+            self.assertEqual(query["results"][0]["source_record_id"], "R1EA-001")
+            self.assertIsNone(query["results"][0]["support_document_role"])
+
     def test_retrieval_eval_scores_expected_sources_terms_and_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

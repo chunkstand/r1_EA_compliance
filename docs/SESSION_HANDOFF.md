@@ -5,6 +5,37 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Gold Coverage Expansion Final Closeout Refresh
+
+This refresh closes the last live current-promotion gap that remained after the earlier gold
+coverage implementation section below.
+
+- final gap closed:
+  non-strict `promotion-suite` now reports `current_promotion_ready=true`,
+  `promotion_ready=true`, `full_canonical_corpus_ready=false`, and `expansion_ready=false`. The
+  current-promotion stale-artifact blocker is gone; only the separate full-canonical
+  `graph_region1_profile_gap` and South Plateau expansion `forest_plan_reviewer_not_ready` signals
+  remain red
+- compatibility fixes required for closeout:
+  `src/usfs_r1_ea_sources/retrieval.py` now tolerates legacy retrieval indexes missing
+  `support_document_role`, and `src/usfs_r1_ea_sources/applicability.py` now falls back to
+  `source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl` when the merged
+  top-level catalog no longer carries the requested legacy `source_set_id`
+- focused regression coverage:
+  `tests/test_retrieval.py` now proves legacy retrieval-index reads still return results with
+  `support_document_role=None`, and `tests/test_applicability.py` now proves authority-universe
+  snapshots can rebuild from the archived extraction manifest when the live catalog only contains a
+  newer source set
+- refreshed verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_retrieval.py -q`
+  passed `20/20`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py -k compliance_gold_eval -q`
+  passed `8/8`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --eval-file config/compliance_review_eval_seed.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json`
+  passed `5/5` with `source_set_id=source-set-ba8d0feae79501b8`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passed with `current_promotion_ready=true` and `promotion_ready=true`
+
 ## Gold Coverage Expansion Closeout
 
 The gold coverage expansion milestone is now implemented across code, tracked contracts, docs, and

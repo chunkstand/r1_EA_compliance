@@ -2090,9 +2090,72 @@ def _load_source_catalog(path: Path, source_set_id: str) -> list[dict]:
         for record in records
         if str(record.get("source_set_id") or "") == source_set_id
     ]
+    if filtered:
+        return filtered
+    fallback_records = _catalog_records_from_extraction_manifest(path, source_set_id)
+    if fallback_records:
+        return fallback_records
+    raise ValueError(f"No source catalog records found for source set: {source_set_id}")
+
+
+def _catalog_records_from_extraction_manifest(
+    catalog_path: Path,
+    source_set_id: str,
+) -> list[dict]:
+    extraction_manifest_path = (
+        catalog_path.parent.parent
+        / "derived"
+        / source_set_id
+        / "diagnostics"
+        / "extraction_manifest.jsonl"
+    )
+    if not extraction_manifest_path.exists():
+        return []
+    records = _read_jsonl(extraction_manifest_path)
+    filtered = [
+        record
+        for record in records
+        if str(record.get("source_set_id") or "") == source_set_id
+    ]
     if not filtered:
-        raise ValueError(f"No source catalog records found for source set: {source_set_id}")
-    return filtered
+        return []
+    catalog_by_source_record_id: dict[str, dict] = {}
+    for record in filtered:
+        source_record_id = str(record.get("source_record_id") or "").strip()
+        if not source_record_id:
+            continue
+        catalog_by_source_record_id[source_record_id] = _catalog_record_from_extraction_record(
+            record
+        )
+    return list(catalog_by_source_record_id.values())
+
+
+def _catalog_record_from_extraction_record(record: dict) -> dict:
+    artifact_sha256 = str(record.get("artifact_sha256") or "").strip()
+    artifact_path = str(record.get("artifact_path") or "").strip()
+    return {
+        "source_set_id": record.get("source_set_id"),
+        "source_record_id": record.get("source_record_id"),
+        "title": record.get("title"),
+        "citation_label": record.get("citation_label"),
+        "document_role": record.get("document_role"),
+        "authority_level": record.get("authority_level"),
+        "issuer": None,
+        "scope": None,
+        "layer": None,
+        "document_type": None,
+        "unit_or_overlay": None,
+        "applies_to": None,
+        "trigger": None,
+        "review_topics": [],
+        "currentness_notes": None,
+        "source_status": record.get("source_status") or record.get("status"),
+        "artifact_sha256": artifact_sha256 or None,
+        "artifact_path": artifact_path or None,
+        "artifact_byte_size": record.get("artifact_byte_size"),
+        "content_type": record.get("content_type"),
+        "retrieved_at": record.get("retrieved_at"),
+    }
 
 
 def _source_set_id_from_manifest(path: Path, manifest: dict) -> str:

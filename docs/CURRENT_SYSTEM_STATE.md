@@ -125,12 +125,15 @@ Latest closeout on 2026-05-13:
   `applicability_gold_eval`, `compliance_gold_eval`, `v1_ea_eval`, and `gold_coverage_eval`, all
   marked `direct_eval_present`.
 - `config/promotion_suite_v1.json` now consumes the widened applicability/compliance thresholds and
-  the aggregate `gold_coverage_eval` artifact. The current promotion-suite replay still remains
-  red, but the remaining current-promotion blocker is narrowed to one stale
-  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact whose source set is
-  still `source-set-5e65d845ce77e1a0` instead of the current promotion source set
-  `source-set-ba8d0feae79501b8`. The separate full-canonical graph and South Plateau expansion
-  blockers remain unchanged.
+  the aggregate `gold_coverage_eval` artifact. The final closeout also patched legacy replay
+  compatibility so current-promotion artifacts could be refreshed on
+  `source-set-ba8d0feae79501b8`: `retrieval.py` now accepts old retrieval indexes that lack
+  `support_document_role`, and `applicability.py` now falls back to the source set's archived
+  extraction manifest when the merged top-level catalog has already moved on to a newer source set.
+- The current non-strict promotion-suite replay now reports `current_promotion_ready=true`,
+  `promotion_ready=true`, `full_canonical_corpus_ready=false`, and `expansion_ready=false`. The
+  remaining separate blockers are full-canonical `graph_region1_profile_gap` and South Plateau
+  expansion `forest_plan_reviewer_not_ready`.
 
 ## Full Canonical Corpus Promotion
 

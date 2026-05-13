@@ -2,7 +2,30 @@
 
 Date: 2026-05-13
 
-Status: Proposed
+Status: Closed (resolved) on 2026-05-13
+
+Closeout summary:
+
+- Implemented widened gold contracts in `config/applicability_gold_eval_v1.json`,
+  `config/compliance_gold_eval_v1.json`, the aggregate gate in `config/gold_coverage_v1.json`,
+  and the multi-review V1 contracts for East Crazies, West Reservoir, and South Plateau.
+- Added the aggregate `gold-coverage-eval` owner in
+  `src/usfs_r1_ea_sources/gold_coverage_eval.py`, widened promotion/register wiring, and the
+  matching README, schema, register, current-state, and handoff updates.
+- Closeout required two narrow compatibility fixes outside the original happy-path gold lane so the
+  live current-promotion artifacts could be refreshed without weakening gates:
+  `src/usfs_r1_ea_sources/retrieval.py` now tolerates legacy retrieval indexes that do not yet
+  carry `support_document_role`, and `src/usfs_r1_ea_sources/applicability.py` now falls back to a
+  source set's archived extraction manifest when the top-level merged catalog no longer carries
+  that legacy `source_set_id`.
+- Final live closeout replay passed `applicability-gold-eval` `12/12`,
+  `compliance-gold-eval` `14/14`, `gold-coverage-eval` with `7/7` required themes and all `19`
+  high-priority family IDs mapped, `compliance-review-eval` `5/5` on
+  `source-set-ba8d0feae79501b8`, and non-strict `promotion-suite` with
+  `current_promotion_ready=true` and `promotion_ready=true`.
+- Remaining red signals are outside this milestone's scoped gold-coverage issue:
+  `full_canonical_failure_category_counts={"graph_region1_profile_gap": 1}` and
+  South Plateau expansion `forest_plan_reviewer_not_ready`.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
 `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`; it starts only after that milestone

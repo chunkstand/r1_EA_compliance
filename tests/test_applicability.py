@@ -205,6 +205,43 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertTrue(result.summary["validation_passed"])
             self.assertEqual(result.summary["candidate_authority_count"], 5)
 
+    def test_snapshot_falls_back_to_extraction_manifest_for_legacy_source_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-legacy"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                output_dir,
+                "source-set-current",
+                [_catalog_record("source-set-current", "R1EA-OTHER", "law", "law")],
+            )
+            legacy_records = [
+                _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                _catalog_record(
+                    source_set_id,
+                    "R1PLAN-custer-gallatin-nf-02",
+                    "forest_plan",
+                    "forest_plan",
+                ),
+            ]
+            _write_extraction_manifest(output_dir, source_set_id, legacy_records)
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_component_inventory(output_dir, source_set_id)
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id="legacy-source-set-unit",
+                source_set_id=source_set_id,
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
+                forest_plan_component_inventory_path=component_inventory_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["candidate_authority_count"], 5)
+
     def test_snapshot_ignores_region_wide_component_inventory_without_top_level_forest_unit(
         self,
     ) -> None:
@@ -576,6 +613,32 @@ def _catalog_record(
         "content_type": "text/plain",
         "retrieved_at": "2026-05-03T00:00:00Z",
     }
+
+
+def _write_extraction_manifest(output_dir: Path, source_set_id: str, records: list[dict]) -> None:
+    manifest_path = (
+        output_dir / "derived" / source_set_id / "diagnostics" / "extraction_manifest.jsonl"
+    )
+    manifest_records = []
+    for record in records:
+        manifest_records.append(
+            {
+                "source_set_id": source_set_id,
+                "source_record_id": record["source_record_id"],
+                "title": record["title"],
+                "citation_label": record["citation_label"],
+                "document_role": record["document_role"],
+                "authority_level": record["authority_level"],
+                "source_status": record["source_status"],
+                "status": "extracted",
+                "artifact_sha256": record["artifact_sha256"],
+                "artifact_path": record["artifact_path"],
+                "artifact_byte_size": record["artifact_byte_size"],
+                "content_type": record["content_type"],
+                "retrieved_at": record["retrieved_at"],
+            }
+        )
+    _write_jsonl(manifest_path, manifest_records)
 
 
 def _write_rule_pack(directory: Path) -> Path:

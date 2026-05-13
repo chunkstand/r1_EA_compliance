@@ -796,7 +796,7 @@ def _result_from_row(
         "source_record_id": row["source_record_id"],
         "title": row["title"],
         "document_role": row["document_role"],
-        "support_document_role": row["support_document_role"],
+        "support_document_role": _row_value(row, "support_document_role"),
         "authority_level": row["authority_level"],
         "citation_label": row["citation_label"],
         "review_topics": topics,
@@ -820,6 +820,13 @@ def _result_from_row(
             "content_sha256": row["content_sha256"],
         },
     }
+
+
+def _row_value(row: sqlite3.Row, key: str, default: object | None = None) -> object | None:
+    try:
+        return row[key]
+    except (IndexError, KeyError):
+        return default
 
 
 def _evidence_span(text: str, terms: list[str], source_chunk_start: int) -> dict:
