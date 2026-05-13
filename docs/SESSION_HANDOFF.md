@@ -3931,3 +3931,157 @@ Milestone 6 alignment closeout:
 - The final V1 gate promotion passed through phase eval, V1 eval, compliance-review eval, gold eval,
   full tests, lint, compile, JSON validation, and docs promotion.
 - The next milestone is outside the V1 EA gate repair plan.
+
+## Gold Coverage Expansion Plan Refresh
+
+The gold-coverage plan at `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` is now refreshed
+against the live 2026-05-13 gold outputs rather than only the earlier abstract gap description.
+
+- refreshed problem statement:
+  the live applicability-gold result still records `case_count=5`,
+  `adjudicated_covered_family_count=1`, `negative_covered_family_count=0`, and
+  `authority_family_template_coverage.passed=false` while top-level `promotion_ready=true`; the
+  live compliance-gold result records `passed=true` but `promotion_ready=false`; and the only
+  shipped real-package contract still remains `config/v1_ecid_real_ea_eval.json`
+- tightened routing:
+  the refreshed plan now explicitly treats the remaining weakness as adjudicated gold breadth,
+  real-package contract breadth, and promotion wiring above the already-broad generic
+  `applicability_eval` lane, which already covers all current `19` high-priority authority
+  families in positive and negative direct eval
+- new contract requirement:
+  the milestone now requires `config/gold_coverage_v1.json` to own all current `19`
+  `high_priority_family_ids`, map them into required gold coverage groups, and fail when top-level
+  gold summaries mask red nested family/group coverage
+- required missing artifacts called out up front:
+  `config/gold_coverage_v1.json`,
+  `config/v1_west_reservoir_real_ea_eval.json`,
+  `config/v1_south_plateau_real_ea_eval.json`,
+  and tracked package-authority surfaces for East Crazies current promotion and South Plateau
+- next routing boundary:
+  execute Sequence 0 from the refreshed gold-coverage plan when implementation begins; do not
+  reopen `config/applicability_eval_seed.json` or the generic authority-template search lane unless
+  the gold milestone first proves the current `19`-family direct-eval surface is wrong
+
+Verification in this planning refresh:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed
+
+## Real-Package Review Coverage Plan Added
+
+The repo now has a fresh stacked follow-on plan at
+`docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`. This plan starts only after the refreshed
+gold-coverage milestone closes green and is committed.
+
+- routing boundary:
+  Milestone 0 of the new plan must re-evaluate the live repo state before implementation begins and
+  adopt any equivalent real-package artifacts already created by the gold-coverage milestone instead
+  of duplicating them under new names
+- governed gap:
+  the lane is still East-Crazies-centric because `config/v1_ecid_real_ea_eval.json` remains the
+  only shipped per-review V1 contract, `v1_ea_eval.py` still defaults to that ECID contract, and
+  the evaluation-coverage register still has no explicit real-package review coverage row
+- current live nuance preserved in the new plan:
+  West Reservoir is currently reviewer-ready, while South Plateau is still a typed blocked package
+  lane; the plan therefore requires explicit ready-versus-blocked slot semantics rather than a fake
+  all-green multi-package contract
+- expected implementation shape:
+  tracked review-slot manifest plus package-authority ownership, per-review West Reservoir and South
+  Plateau contracts, removal of implicit ECID-only defaulting, and one aggregate real-package
+  coverage gate
+
+Verification in this planning refresh:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed
+
+## Phase-Eval Direct-Eval Gating Plan Refresh
+
+`docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is now refreshed against the live
+2026-05-13 repo state and the new predecessor stack.
+
+- stacked routing:
+  the plan now starts only after `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md` closes
+  green and is committed, and Sequence 0 must adopt any equivalent review-slot or aggregate
+  real-package coverage artifacts that predecessor milestone lands
+- refreshed current evidence:
+  `config/phase_eval_direct_eval_v1.json` is still absent, `evidence_graph.py` still reduces
+  source-set readiness to `all(phase["passed"])` and `all(phase["reviewer_ready"])`, `_phase(...)`
+  still only emits `phase_validation_failed` and `phase_not_reviewer_ready`, the evaluation
+  coverage register still has no explicit `phase_eval` row, and `promotion_suite_v1.json` still
+  keys core phase readiness off phase counts rather than direct-eval counters
+- review-scope routing tightened:
+  the refreshed plan now requires review-scoped `phase-eval` to reuse the predecessor
+  real-package coverage owner for declared contract-backed reviews instead of inventing a second
+  review roster inside `phase-eval`
+- updated closeout gate:
+  the full verification stack now includes the predecessor real-package coverage gate before
+  review-scoped `phase-eval` and promotion closeout
+
+Verification in this planning refresh:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed
+
+## Cross-Forest Profile Eval Coverage Plan Added
+
+The repo now has a fresh stacked follow-on plan at
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`. This plan starts only after
+`docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` closes green and is committed.
+
+- routing boundary:
+  Milestone 0 of the new plan must re-evaluate the live Region 1 roster, adopt any equivalent
+  predecessor phase-eval/direct-eval artifacts under their implemented names, and refresh later
+  commands before implementation begins
+- governed gap:
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` currently records only `1` `covered`
+  profile, `2` `fixture_contract_defined` profiles, and `7` validated-but-`not_started` profiles,
+  so resolver and selected-profile compliance improvements outside the current proving slices are
+  still under-protected
+- plan shape:
+  the new lane is explicitly evaluation-contract scoped, not a revival of the retired
+  multi-forest reviewer-ready expansion plan; it requires a governed cross-forest profile eval
+  producer, eliminates `not_started`, raises Beaverhead and Flathead above their current `1`/`1`
+  placeholder contracts, and wires the resulting producer into the direct-eval-aware
+  phase-eval/promotion route
+- readiness semantics preserved:
+  the plan explicitly keeps eval coverage distinct from reviewer-ready and live-package proof, so
+  closing this lane does not overclaim that all Region 1 profiles are operationally proven
+
+Verification in this planning refresh:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed
+
+## Forest-Plan Component Eval Coverage Plan Added
+
+The repo now has a fresh stacked follow-on plan at
+`docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`. This plan starts only after
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md` closes green and is committed.
+
+- routing boundary:
+  Milestone 0 of the new plan must re-evaluate the live component-coverage roster, adopt any
+  equivalent predecessor profile-eval or phase-eval direct-eval artifacts under their implemented
+  names, and decide explicitly whether South Plateau belongs in this coverage boundary or remains
+  routed out
+- governed gap:
+  the current component-eval surface is still local to ECID because the default contract remains
+  `config/forest_plan_component_eval_seed.json`, `config/forest_plan_component_evals/` currently
+  contains only the ECID replay contract, there is no
+  `config/forest_plan_component_evals/west-reservoir-67436.json`, and there is still no standalone
+  component-retrieval precision/recall eval producer in live code or config
+- current live nuance preserved in the plan:
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`
+  exists and passes with `35` cases, while
+  `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json` is
+  currently missing despite West Reservoir being one of the main non-Custer proving reviews
+- expected implementation shape:
+  the new lane requires a standalone component-retrieval eval producer, a tracked multi-review
+  component-eval coverage manifest, a West Reservoir review contract, removal of hidden
+  ECID-only defaulting for tracked review IDs, and wiring of the new producers into the
+  direct-eval-aware phase-eval/promotion route
+
+Verification in this planning refresh:
+
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: passed
+- `git diff --check`: passed

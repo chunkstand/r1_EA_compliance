@@ -1,6 +1,6 @@
 # Gold Coverage Expansion Milestone Plan
 
-Date: 2026-05-12
+Date: 2026-05-13
 
 Status: Proposed
 
@@ -8,9 +8,10 @@ Owner context: This is a fresh standalone follow-on milestone plan. It does not 
 `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`; it starts only after that milestone
 is closed green and committed. Because the downstream-direct-eval plan itself depends on the
 upstream evaluation-coverage plan, this milestone also assumes the upstream-created
-`docs/EVALUATION_COVERAGE_REGISTER.md` and the direct-eval-aware readiness route already exist.
-If those prerequisite closeouts land equivalent artifacts under different names, Sequence 0 of this
-plan must refresh the routing before code changes begin.
+`docs/EVALUATION_COVERAGE_REGISTER.md` and the current upstream/downstream direct-eval-fed
+readiness route already exist. It does not assume the later `phase-eval` direct-eval gating
+milestone is already implemented. If those prerequisite closeouts land equivalent artifacts under
+different names, Sequence 0 of this plan must refresh the routing before code changes begin.
 
 ## Purpose
 
@@ -36,19 +37,36 @@ local atomic commit all land together. A verified but uncommitted slice is only 
 
 ## Current Evidence
 
-- `config/applicability_gold_eval_v0.json` currently carries `5` profile cases, but only `3`
-  `source_chunks`, a `3`-rule candidate universe for the core positive/mixed/negative coverage,
-  and one narrow expanded-family unresolved/adjudicated water example.
-- `src/usfs_r1_ea_sources/applicability_eval.py` already computes
-  `authority_family_template_coverage`, `required_real_package_coverage_tags`, and required gold
-  profile checks, but the actual adjudicated gold payload is still thin relative to the `19`
-  declared high-priority authority families.
-- `config/promotion_suite_v1.json` currently checks
+- The live applicability-gold output at
+  `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` currently
+  records `case_count=5`, `adjudicated_case_count=5`,
+  `authority_family_template_coverage.adjudicated_covered_family_count=1`,
+  `positive_covered_family_count=1`, `negative_covered_family_count=0`,
+  `unresolved_covered_family_count=1`, and
+  `authority_family_template_coverage.passed=false`, yet the same top-level result still records
+  `promotion_ready=true`.
+- The live compliance-gold output at
+  `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` currently records
+  `case_count=10`, `passed=true`, and `promotion_ready=false`, so the lane exists but still is not
+  a governing promotion truth surface.
+- The live non-gold applicability output at
+  `source_library/reviews/applicability_eval/applicability_eval_results.json` already records
+  `positive_covered_family_count=19`, `negative_covered_family_count=19`, and no missing required
+  real-package coverage tags. The remaining weakness is not raw authority-template search breadth;
+  it is adjudicated gold breadth, real-package contract breadth, and promotion wiring.
+- `config/applicability_gold_eval_v0.json` still ships only `5` cases over `3` source chunks and a
+  narrow `3`-rule core plus one expanded-family water example.
+- `config/promotion_suite_v1.json` currently checks only
   `applicability_gold_eval_case_count >= 5` and
-  `authority_family_template_coverage.adjudicated_covered_family_count >= 1`, which is too weak to
-  prove broad authority coverage.
+  `authority_family_template_coverage.adjudicated_covered_family_count >= 1`, which allows the
+  current one-family adjudicated surface to pass promotion.
+- `config/compliance_gold_eval_v0.json` is still the default shipped compliance-gold contract, and
+  `src/usfs_r1_ea_sources/compliance_gold_eval.py` still defaults to it.
 - `config/v1_ecid_real_ea_eval.json` is the only shipped real-package V1 review contract, and
-  `src/usfs_r1_ea_sources/v1_ea_eval.py` defaults to it through `DEFAULT_V1_EA_EVAL_PATH`.
+  `src/usfs_r1_ea_sources/v1_ea_eval.py` still defaults to it through
+  `DEFAULT_V1_EA_EVAL_PATH`.
+- `config/gold_coverage_v1.json`, `config/v1_west_reservoir_real_ea_eval.json`, and
+  `config/v1_south_plateau_real_ea_eval.json` do not exist yet.
 - `config/replay_contexts/` currently contains tracked replay context for
   `west-reservoir-67436` and `v1-cg-ecid-source-delta-review`, but not for the promoted
   East-Crazies current-promotion review or the South Plateau expansion review.
@@ -75,9 +93,13 @@ Completion means all of the following are true:
 
 - the repo has a tracked gold-coverage contract that names required authority families, required
   real-package review contracts, required forest diversity, and required package-style diversity;
+- the tracked gold-coverage contract maps and governs all current `19`
+  `authority_family_template_coverage.high_priority_family_ids`, not only a loose theme subset;
 - applicability gold covers the named family set for FLPMA, wetlands, MBTA, NHPA, roadless,
   tribal/cultural, and multi-forest plan triggers through adjudicated cases, not only through
   declared tags;
+- applicability gold top-level `passed` and `promotion_ready` fail closed when nested family/group
+  coverage fails;
 - compliance gold likewise carries named-family case coverage for those themes;
 - the repo has at least `3` tracked real-package review contracts spanning at least `2` forests and
   at least `3` package-style tags:
@@ -95,6 +117,9 @@ Completion means all of the following are true:
 - Do not resolve South Plateau's existing forest-plan reviewer queue in this milestone unless that
   is strictly necessary to preserve declared blocker semantics. Keep the blocker typed if it still
   exists.
+- Do not reopen `config/applicability_eval_seed.json` or broaden the generic applicability lane
+  unless this milestone proves the current `19`-family direct-eval surface is wrong. That lane is
+  already broad enough; the gap is the adjudicated gold and promotion layer above it.
 - Do not invent review-specific heuristics keyed to one package or one review ID.
 - Do not weaken existing promotion-suite, applicability, compliance, or V1 tests to get green.
   Any replacement coverage must be equivalent or broader.
@@ -105,6 +130,8 @@ Completion means all of the following are true:
 - adjudicated compliance gold coverage
 - real-package V1 review contract coverage across East Crazies, West Reservoir, and South Plateau
 - tracked replay-context or declared intake ownership for those package surfaces
+- a contract-owned mapping from the current `19` `high_priority_family_ids` to required gold
+  coverage groups
 - an aggregate gold-coverage contract and executable gate
 - promotion-suite and evaluation-coverage-register wiring for the widened gold surfaces
 
@@ -190,6 +217,24 @@ Completion means all of the following are true:
   Future-Codex misuse scenario: a later session adds more NEPA-only cases and claims broad gold
   coverage; the named-theme gate must fail.
 
+- Weak point forecast: top-level gold results stay green while nested family coverage or
+  promotion-readiness detail is red, so promotion consumes a misleading summary surface.
+  Owner surface: `src/usfs_r1_ea_sources/applicability_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_gold_eval.py`,
+  `src/usfs_r1_ea_sources/gold_coverage_eval.py`,
+  `config/promotion_suite_v1.json`,
+  `tests/test_gold_coverage_eval.py`
+  Prevention gate: top-level applicability/compliance gold results must fail when required nested
+  family/group coverage or promotion sub-checks fail, and the aggregate gold gate must reject any
+  summary where top-level green bits contradict nested coverage details.
+  Fail threshold: `promotion_ready=true` or `passed=true` while a required nested coverage object
+  reports `passed=false`, missing required families, or missing required review diversity.
+  Controlled violation: keep top-level applicability gold `promotion_ready=true` while
+  `authority_family_template_coverage.passed=false`; the aggregate gate and focused tests must
+  fail.
+  Future-Codex misuse scenario: a later session widens case count without rewiring summary bits, so
+  the same one-family surface still looks promotion-ready; the summary-consistency gate must fail.
+
 - Weak point forecast: the new real-package coverage still effectively depends on one forest or one
   package style, so multi-forest or noisy-package drift remains invisible.
   Owner surface: `config/gold_coverage_v1.json`,
@@ -270,6 +315,9 @@ Implementation tasks:
    - the existing readiness route distinguishes validation, direct eval, and gold coverage
 2. Add `config/gold_coverage_v1.json` with:
    - required widened gold input paths
+   - `required_high_priority_family_ids` snapshot covering the current `19`
+     `authority_family_template_coverage.high_priority_family_ids`
+   - required family-group mapping for every current high-priority family ID
    - required real-package review contracts
    - required named theme coverage:
      `land_exchange`, `water_wetlands`, `migratory_birds`, `cultural_tribal`, `roadless`,
@@ -287,7 +335,10 @@ Implementation tasks:
    `applicability_gold_eval`, `compliance_gold_eval`, `v1_real_review_contracts`,
    and `gold_coverage_eval`
 4. Add failing-or-baseline tests in `tests/test_gold_coverage_eval.py` that reject:
+   - top-level applicability/compliance gold summaries that stay green while required nested
+     coverage is failing
    - missing named theme coverage
+   - unmapped required high-priority family IDs
    - missing required review contracts
    - insufficient forest/style diversity
    - undeclared package authority boundaries
@@ -301,6 +352,9 @@ Acceptance signals:
 - The milestone has one explicit gold-coverage contract and one register extension, not a set of
   ad hoc widened fixtures with no aggregate owner.
 - Missing package authority boundaries or missing named themes fail before broader implementation.
+- The baseline tests capture the current live failure shape: one adjudicated family, zero
+  negative-family gold coverage, and a top-level applicability-gold summary that looks greener than
+  the nested authority-family coverage it contains.
 - The real-package target set is declared up front rather than inferred from old handoffs.
 
 Required verification:
@@ -328,23 +382,28 @@ Implementation tasks:
 
 1. Add `config/applicability_gold_eval_v1.json` and move the shipped default applicability-gold
    path to it.
-2. Expand the adjudicated gold payload to include:
+2. Add explicit `required_high_priority_family_ids` ownership to the widened applicability-gold
+   contract and map each required family ID to one named coverage group owned by the contract.
+3. Expand the adjudicated gold payload to include:
    - at least `12` cases
    - at least `12` `source_chunks`
-   - positive, negative, unresolved, and adjudicated coverage across the named themes:
+   - positive, negative, unresolved, and adjudicated coverage across the named groups for:
      FLPMA/land exchange, wetlands/water permits, MBTA/migratory birds, NHPA/cultural,
      tribal/sacred sites, roadless, and multi-forest plan triggers
-3. Require at least these exact widened gold coverage floors:
+4. Require at least these exact widened gold coverage floors:
    - `case_count >= 12`
    - `source_chunk_count >= 12`
-   - `positive_covered_family_count >= 7`
-   - `negative_covered_family_count >= 7`
-   - `unresolved_covered_family_count >= 3`
-   - `adjudicated_covered_family_count >= 3`
+   - `required_high_priority_family_id_count = 19`
+   - `unmapped_high_priority_family_count = 0`
+   - `positive_covered_family_group_count = 7`
+   - `negative_covered_family_group_count = 7`
+   - `unresolved_covered_family_group_count >= 3`
+   - `adjudicated_covered_family_group_count = 7`
    - `required_real_package_coverage_tags` must include the named theme set
-4. Extend `run_applicability_gold_eval(...)` so it fails when the widened family/theme floors are
-   missed, not only when the five profile types are missing.
-5. Update `config/promotion_suite_v1.json` so the applicability-gold gate checks the widened case
+5. Extend `run_applicability_gold_eval(...)` so it fails when the widened family/theme floors or
+   required family-group mappings are missed, and so top-level `passed` / `promotion_ready` cannot
+   remain green when nested family coverage is red.
+6. Update `config/promotion_suite_v1.json` so the applicability-gold gate checks the widened case
    count and the widened covered-family floors rather than only `case_count >= 5` and one
    adjudicated family.
 
@@ -352,7 +411,10 @@ Acceptance signals:
 
 - Applicability gold no longer proves promotion over only three source chunks and a one-family
   adjudicated expansion.
-- The widened applicability-gold contract covers the named family set through adjudicated cases.
+- The widened applicability-gold contract covers the named family groups and governs all current
+  `19` high-priority family IDs through explicit group ownership.
+- Top-level applicability-gold `passed` / `promotion_ready` fail when nested family coverage is
+  incomplete.
 - Promotion checks fail when a named family theme is removed.
 
 Required verification:
@@ -390,12 +452,15 @@ Implementation tasks:
    - clean and noisy package styles, not only all-authorities control text
 3. Extend `run_compliance_gold_eval(...)` to validate:
    - required coverage tags
+   - required family-group coverage ownership aligned to `config/gold_coverage_v1.json`
    - required named source-record families by case
    - minimum real-package-like case count
    - required generated/base rule-pack mapping expectations where used
-4. Keep `compliance_gold_eval` aligned with `compliance_review_eval` and the widened downstream
+4. Make top-level `promotion_ready` and `passed` fail when required coverage groups or package-style
+   diversity checks fail rather than only reporting those misses in nested detail.
+5. Keep `compliance_gold_eval` aligned with `compliance_review_eval` and the widened downstream
    direct-eval contracts so gold coverage does not drift onto stale lower-layer assumptions.
-5. Update promotion gating so the widened compliance-gold coverage contract is visible in the same
+6. Update promotion gating so the widened compliance-gold coverage contract is visible in the same
    readiness surfaces as other gold coverage.
 
 Acceptance signals:
@@ -404,6 +469,8 @@ Acceptance signals:
 - Removing FLPMA, wetlands, MBTA, NHPA, roadless, tribal/cultural, or multi-forest plan cases
   fails the gold gate.
 - The widened compliance-gold contract records both clean and noisy package-style coverage.
+- Compliance-gold top-level `promotion_ready` cannot remain false-positive or false-neutral when
+  required group coverage or package-style diversity fails.
 
 Required verification:
 
@@ -507,6 +574,8 @@ Implementation tasks:
 Aggregate threshold contract for `gold-coverage-eval`:
 
 - `required_theme_count = 7`
+- `required_high_priority_family_id_count = 19`
+- `unmapped_high_priority_family_count = 0`
 - `applicability_gold_case_count >= 12`
 - `compliance_gold_case_count >= 14`
 - `required_review_contract_count = 3`
@@ -522,6 +591,8 @@ Acceptance signals:
 - Gold coverage is governed by one executable aggregate gate.
 - Promotion and the evaluation coverage register both fail when named themes or review diversity
   drift.
+- Promotion and the aggregate gate fail when top-level gold summaries mask red nested family/group
+  coverage.
 - The milestone closes the coverage gap without pretending every package is green.
 
 Required verification:
@@ -592,6 +663,8 @@ the exact command in `docs/SESSION_HANDOFF.md`.
 - The repo has one explicit gold-coverage contract and one executable aggregate gold gate.
 - Applicability gold broadens from the narrow three-source-chunk core to a named family/theme set
   covering FLPMA, wetlands, MBTA, NHPA, roadless, tribal/cultural, and multi-forest plan triggers.
+- The widened gold contract owns and maps all current `19` high-priority authority families to
+  required coverage groups; no required family ID remains unmapped.
 - Compliance gold likewise covers the named family/theme set.
 - The repo has `3` required real-package review contracts:
   `v1-cg-ecid-compliance-review`,
@@ -602,6 +675,7 @@ the exact command in `docs/SESSION_HANDOFF.md`.
   tracked intake path.
 - West Reservoir and East Crazies remain reviewer-ready review contracts; South Plateau may remain
   typed-blocked only if the blocker stays explicit and matches the declared contract.
+- Top-level gold summaries cannot remain green while nested family/group coverage remains red.
 - Promotion and the evaluation coverage register consume the widened gold-coverage truth rather than
   the legacy low-value thresholds alone.
 - Replacement coverage is equivalent or broader. Do not weaken tests, drop noisy packages, or lower

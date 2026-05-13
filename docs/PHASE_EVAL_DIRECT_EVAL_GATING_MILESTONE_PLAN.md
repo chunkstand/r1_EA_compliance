@@ -1,17 +1,19 @@
 # Phase Eval Direct-Eval Gating Milestone Plan
 
-Date: 2026-05-12
+Date: 2026-05-13
 
 Status: Proposed
 
-Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
-`docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`; it starts only after that milestone is closed
-green and committed. Because the gold-coverage milestone itself depends on the downstream
-direct-eval milestone, and that milestone depends on the upstream evaluation-coverage milestone,
-this plan also assumes the prior chain has already delivered the durable evaluation coverage
-register, the strengthened downstream eval contracts, and the aggregate gold-coverage gate. If
-those prerequisite closeouts land equivalent artifacts under different names, Sequence 0 of this
-plan must refresh the routing before code changes begin.
+Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
+`docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
+`docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` closes green and is committed. Because the
+real-package coverage milestone depends on the gold-coverage milestone, and that milestone depends
+on the downstream and upstream evaluation-coverage milestones, this plan assumes the earlier chain
+has already delivered the durable evaluation coverage register, the strengthened downstream eval
+contracts, the aggregate gold-coverage gate, and the tracked real-package review coverage route for
+declared contract-owned reviews. If those prerequisite closeouts land equivalent artifacts under
+different names, Sequence 0 of this plan must refresh the routing before code changes begin rather
+than recreating the same ownership under new names.
 
 ## Purpose
 
@@ -37,6 +39,19 @@ This milestone is not complete until the direct-eval-aware `phase-eval` contract
 summary loading, focused tests, promotion wiring, docs, handoff updates, and one local atomic
 commit all land together. A verified but uncommitted slice is only ready-to-close.
 
+## Dependency And Sequence 0 Refresh Rule
+
+- Start this milestone only after `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md` is closed
+  green and committed.
+- If the real-package coverage milestone lands its tracked review-slot manifest, package-authority
+  surfaces, or aggregate coverage gate under different names, Sequence 0 must adopt those artifacts
+  and rewrite this plan's remaining commands before implementation continues.
+- If the predecessor milestone changes which reviews are treated as declared contract-owned reviews,
+  Sequence 0 must refresh the review-scoped `phase-eval` routing before code changes begin.
+- If the predecessor milestone leaves review-scoped coverage intentionally blocked or partially
+  implemented, this plan must preserve that state explicitly; it must not invent a second review
+  roster or claim broader contract-backed promotion readiness than the predecessor artifacts prove.
+
 ## Current Evidence
 
 - `src/usfs_r1_ea_sources/evidence_graph.py` `run_phase_aligned_eval(...)` currently builds the
@@ -49,8 +64,11 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
 - `_phase(...)` currently emits only `phase_validation_failed` and `phase_not_reviewer_ready`
   failure reasons, which is not enough to express `missing_required_direct_eval`,
   `proxy_only_coverage`, `direct_eval_threshold_failed`, or `eval_summary_identity_mismatch`.
+- `config/phase_eval_direct_eval_v1.json` does not exist at the current baseline.
 - `docs/OUTPUT_SCHEMAS.md` documents the current `phase_eval_results.json` phase list and blockers,
   but it does not yet define a direct-eval coverage contract for the critical subsystem phases.
+- `docs/EVALUATION_COVERAGE_REGISTER.md` currently has no explicit `phase_eval` row or equivalent
+  direct-eval coverage owner for this layer.
 - `config/promotion_suite_v1.json` currently treats the core `phase_eval` surface mostly as a
   count-based readiness artifact. The main source-set check locks `passed_phase_count` and
   `reviewer_ready_phase_count`, but it does not yet require `proxy_only_phase_count = 0`,
@@ -64,7 +82,11 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`,
   `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`, and
   `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`.
-  This milestone should consume the results of that chain, not recreate its contracts inside
+- `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md` now exists as the immediate predecessor
+  plan for declared contract-owned reviews. This milestone should consume the tracked review-slot
+  or aggregate coverage outputs from that plan rather than creating a second independent review
+  roster inside `phase-eval`.
+  This milestone should consume the results of the earlier chain, not recreate its contracts inside
   `phase-eval`.
 
 ## Goal
@@ -236,12 +258,13 @@ Completion means all of the following are true:
 
 ## Milestone Sequence
 
-### Sequence 0 - Post-Gold Preflight And Direct-Eval Contract Baseline
+### Sequence 0 - Post-Real-Package Preflight And Direct-Eval Contract Baseline
 
 Outcome label: reduced
 
-Purpose: start this lane only after the upstream, downstream, and gold milestones are truly
-complete, then lock the `phase-eval` direct-eval contract before loader changes begin.
+Purpose: start this lane only after the upstream, downstream, gold, and real-package coverage
+milestones are truly complete, then lock the `phase-eval` direct-eval contract before loader
+changes begin.
 
 Implementation tasks:
 
@@ -249,9 +272,12 @@ Implementation tasks:
    - `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md` is closed and committed
    - `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md` is closed and committed
    - `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` is closed and committed
+   - `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md` is closed and committed
    - the evaluation coverage register exists
    - the prerequisite milestones have durable machine-readable eval summaries or contract-owned
      equivalent artifacts for the lanes this milestone must consume
+   - the real-package coverage milestone has durable tracked review-slot or aggregate coverage
+     artifacts that this milestone can consume for declared contract-owned review routing
 2. Add `config/phase_eval_direct_eval_v1.json` with:
    - `schema_version`
    - `contract_id`
@@ -266,6 +292,8 @@ Implementation tasks:
      `contract_id`, `rule_pack_id`, `rule_pack_version`, and freshness markers
    - required counters such as `case_count`, `hard_negative_case_count`, and explicit metric
      threshold pass fields where the producer contract exposes them
+   - a dependency reference to the tracked review-slot or aggregate review-coverage artifact created
+     by the predecessor milestone, instead of a second hand-maintained review roster
 3. Extend `docs/EVALUATION_COVERAGE_REGISTER.md` with a `phase_eval` or equivalent readiness row
    that records the baseline weakness as `proxy_aggregation_only` until implementation lands.
 4. Add `tests/test_phase_eval_direct_eval_contracts.py` proving:
@@ -273,12 +301,16 @@ Implementation tasks:
    - proxy-only critical subsystems fail;
    - mismatched summary identities fail; and
    - ad hoc reviews are still allowed to run without contract-owned review evals.
+5. If the predecessor milestone shipped equivalent artifact names or commands, update this plan,
+   the session handoff, and the closeout verification commands before Sequence 1 begins.
 
 Acceptance signals:
 
 - The repo has one tracked `phase-eval` direct-eval contract.
 - Baseline tests prove the current proxy-only behavior is insufficient.
 - The contract names the prerequisite summary owners instead of inventing a second truth source.
+- The review-scoped contract path reuses the predecessor milestone's review-slot ownership instead
+  of duplicating review identity by hand.
 
 Required verification:
 
@@ -293,6 +325,9 @@ Stop conditions:
 - The prerequisite producer outputs do not expose enough machine-readable identity or threshold
   fields to support direct-eval-aware readiness. If that happens, stop and route the missing field
   back to the producer milestone owner instead of hard-coding inference in `phase-eval`.
+- The predecessor real-package coverage milestone did not leave a reusable tracked review-slot or
+  aggregate coverage artifact and the only fallback is to duplicate review identity locally inside
+  this milestone.
 
 ### Sequence 1 - Normalize Per-Subsystem Eval Summary Loading
 
@@ -306,6 +341,8 @@ Implementation tasks:
 1. Add `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` with helpers that:
    - load the `phase-eval` direct-eval contract;
    - resolve relevant producer summaries for a given source set or review;
+   - resolve declared contract-owned review metadata from the predecessor real-package coverage
+     artifact or its adopted equivalent;
    - verify schema, scope identity, source-set/review binding, rule-pack binding, and freshness;
    - normalize summary outcomes into consistent fields such as
      `coverage_class`,
@@ -413,8 +450,9 @@ direct-eval-aware readiness semantics end to end.
 Implementation tasks:
 
 1. Extend review-scoped `phase-eval` so declared contract-owned reviews consume the required
-   review-eval summaries, such as real-package review-contract eval output, while ad hoc reviews
-   remain runnable with explicit `contract_backed_promotion_ready=false` semantics.
+   review-eval summaries, such as real-package review-contract eval output and the predecessor
+   review-slot coverage artifact, while ad hoc reviews remain runnable with explicit
+   `contract_backed_promotion_ready=false` semantics.
 2. Update `phase_eval_results.json` for review scope to report:
    - whether the review is a declared contract-owned review;
    - which review-eval summaries were required;
@@ -437,6 +475,8 @@ Implementation tasks:
 Acceptance signals:
 
 - Review-scoped `phase-eval` distinguishes ad hoc use from contract-backed promotion use.
+- Review-scoped `phase-eval` uses the predecessor real-package coverage owner rather than a second
+  independent review roster.
 - Promotion no longer relies on phase counts alone.
 - Critical subsystem proxy coverage can no longer hide behind a green `phase-eval`.
 
@@ -502,6 +542,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval --output-dir source_libra
 PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval --output-dir source_library --manifest config/gold_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id <declared-review-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json
@@ -509,8 +550,9 @@ git diff --check
 ```
 
 If the prerequisite milestone closeouts publish machine-readable coverage summaries under different
-commands or artifact paths than this plan currently names, Sequence 0 must update the closeout
-commands in `docs/SESSION_HANDOFF.md` before implementation continues.
+commands or artifact paths than this plan currently names, including the predecessor real-package
+coverage lane, Sequence 0 must update the closeout commands in `docs/SESSION_HANDOFF.md` before
+implementation continues.
 
 ## Acceptance Criteria
 
