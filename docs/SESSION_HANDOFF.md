@@ -5,6 +5,47 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Downstream Direct Eval Strengthening Plan
+
+The repo now has a dedicated follow-on plan for the downstream direct-eval gap at
+`docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  this is a fresh standalone milestone for retrieval, claim, rule-claim, and compliance-review
+  direct-eval strengthening; it does not reopen the upstream capture/catalog/extraction plan except
+  to consume its register and readiness outputs
+- dependency:
+  do not start this plan until `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md` is closed
+  green and committed; Sequence 0 of the new plan explicitly assumes the upstream milestone already
+  created `docs/EVALUATION_COVERAGE_REGISTER.md` and the direct-eval-aware readiness route
+- problem statement:
+  current downstream evals are permissive on "some relevant hit" and too thin on shipped coverage;
+  the new plan requires contract-based default seeds, hard negatives, multi-source recall cases,
+  rank-quality metrics, false-positive/missing-required-source rates, and downstream register/gate
+  wiring
+- routing:
+  once the upstream milestone is complete, execute Sequence 0 from
+  `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`; the first deliverables are
+  `config/downstream_direct_eval_v1.json`, downstream rows in
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, and failing contract tests for missing thresholds or thin
+  coverage
+- affected dirty state:
+  unrelated local changes already exist in `config/applicability_adjudications/west-reservoir-67436.json`,
+  `tests/test_nepa_3d_viewer.py`, `viewer/nepa-3d/app.js`, and root-level East Crazies draft
+  exports; leave them out of the downstream-direct-eval slice
+
+Verification in this planning pass:
+
+- `git diff --check`: passed for the new plan and handoff updates
+
+Residual risks:
+
+- this is a plan artifact only; the downstream direct-eval gap remains open until the prerequisite
+  upstream milestone lands and this follow-on milestone is implemented end to end
+- the plan assumes the upstream milestone keeps the register/readiness artifact names described in
+  its proposal; if those names change at closeout, Sequence 0 must refresh the routing before code
+  work starts
+
 ## Region 1 Flathead Live-Package Proving Closeout Alignment
 
 This addendum closes the remaining milestone-contract gaps from the original West Reservoir
