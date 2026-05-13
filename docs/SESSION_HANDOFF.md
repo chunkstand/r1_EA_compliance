@@ -5,6 +5,54 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Gold Coverage Expansion Plan
+
+The repo now has a dedicated follow-on plan for the adjudicated gold and real-package coverage gap
+at `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  this is a fresh standalone milestone for applicability gold, compliance gold, and multi-review
+  real-package contract coverage; it does not reopen upstream capture/catalog/extraction or the
+  downstream direct-eval ranking lane except to consume their completed register/readiness outputs
+- dependency:
+  do not start this plan until `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md` is
+  closed green and committed; that prerequisite itself depends on
+  `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, so Sequence 0 of the new gold-coverage
+  plan assumes the upstream-created `docs/EVALUATION_COVERAGE_REGISTER.md` and direct-eval-aware
+  readiness route already exist
+- problem statement:
+  applicability gold and compliance gold exist, but adjudicated coverage is still narrow relative
+  to the authority universe, and the default real-package V1 review contract is still East Crazies
+  only; the new plan widens named family coverage for FLPMA, wetlands, MBTA, NHPA, roadless,
+  tribal/cultural, and multi-forest plan triggers, and requires a three-review real-package set
+- declared package surfaces:
+  East Crazies intake path under
+  `source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)`,
+  West Reservoir via `config/replay_contexts/west-reservoir-67436.json`, and South Plateau intake
+  path under `source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment`
+- routing:
+  once the downstream direct-eval milestone is complete, execute Sequence 0 from
+  `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`; the first deliverables are
+  `config/gold_coverage_v1.json`, gold rows in `docs/EVALUATION_COVERAGE_REGISTER.md`, and failing
+  contract tests for missing named-theme coverage or missing review diversity
+- affected dirty state:
+  unrelated local changes already exist in `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of the gold-coverage
+  slice
+
+Verification in this planning pass:
+
+- `git diff --check`: passed for the new plan and handoff updates
+
+Residual risks:
+
+- this is a plan artifact only; the gold-coverage gap remains open until the prerequisite
+  downstream milestone lands and this follow-on milestone is implemented end to end
+- West Reservoir remains partly dependent on an external package path, and South Plateau still has a
+  typed forest-plan blocker; Sequence 0 must confirm those package authorities before implementation
+  begins
+
 ## Downstream Direct Eval Strengthening Plan
 
 The repo now has a dedicated follow-on plan for the downstream direct-eval gap at
