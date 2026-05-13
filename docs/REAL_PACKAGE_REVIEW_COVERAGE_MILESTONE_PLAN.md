@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed
+Status: Implemented 2026-05-13
 
 Owner context: This is a fresh standalone stacked follow-on milestone plan. It starts only after
 `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` closes green and is committed. That earlier plan
@@ -10,6 +10,27 @@ may already add some of the same contract files or routing artifacts named here.
 this plan must therefore re-evaluate the live repo state before code changes begin, adopt any
 equivalent artifacts already landed by the earlier milestone, and narrow the remaining work instead
 of duplicating it under new names.
+
+## Closeout
+
+Milestone 0 adopted the equivalent real-review surfaces that the gold-coverage milestone had
+already shipped, then narrowed the remaining work to the still-open ownership gap:
+
+- `config/v1_real_package_review_coverage_v1.json` now owns the three governed review slots,
+  coverage classes, thresholds, and package-authority declarations for East Crazies current
+  promotion, West Reservoir, and South Plateau.
+- `src/usfs_r1_ea_sources/real_package_review_coverage_eval.py` plus
+  `real-package-review-coverage-eval` now provide the fail-closed aggregate coverage gate for those
+  slots.
+- `v1-ea-eval` now resolves tracked per-review contracts from that manifest when `--review-id` is
+  supplied, rather than silently defaulting to an ECID-only contract.
+- `gold-coverage-eval` now reuses the manifest-owned real-package aggregate instead of carrying a
+  second embedded review roster.
+- Live bounded verification on 2026-05-13 reran `v1-ea-eval` for East Crazies, West Reservoir, and
+  South Plateau, reran `real-package-review-coverage-eval`, and replayed `gold-coverage-eval`
+  against the current gold result artifacts plus the fresh real-package aggregate. The closeout
+  stayed green with `3/3` covered slots, `2` forests, `3` package styles, `2`
+  reviewer-ready slots, `1` typed-blocked slot, and `0` package-authority misses.
 
 ## Purpose
 
@@ -49,7 +70,7 @@ ready-to-close.
   governed; they must not omit the slot, silently downgrade it to an informational lane, or force a
   fake green result.
 
-## Current Evidence
+## Historical Baseline Evidence
 
 - `config/v1_ecid_real_ea_eval.json` is still the only shipped real-package V1 review contract.
 - `src/usfs_r1_ea_sources/v1_ea_eval.py` still defaults `DEFAULT_V1_EA_EVAL_PATH` to

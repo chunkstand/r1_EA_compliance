@@ -12,12 +12,15 @@ from .cli_common import print_summary
 from .evidence_graph import run_phase_aligned_eval
 from .gold_coverage_eval import DEFAULT_GOLD_COVERAGE_MANIFEST_PATH
 from .gold_coverage_eval import run_gold_coverage_eval
+from .real_package_review_coverage_eval import (
+    DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+)
+from .real_package_review_coverage_eval import run_real_package_review_coverage_eval
 from .promotion_suite import DEFAULT_PROMOTION_SUITE_PATH
 from .promotion_suite import run_promotion_suite
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .upstream_evaluation import DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH
 from .upstream_evaluation import run_upstream_evaluation
-from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
 from .v1_ea_eval import run_v1_ea_review_eval
 
 
@@ -27,6 +30,7 @@ EVAL_COMMANDS = {
     "upstream-eval",
     "phase-eval",
     "v1-ea-eval",
+    "real-package-review-coverage-eval",
     "gold-coverage-eval",
     "promotion-suite",
 }
@@ -106,8 +110,29 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     v1_ea_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
     v1_ea_eval.add_argument("--review-id")
     v1_ea_eval.add_argument("--review-dir", type=Path)
-    v1_ea_eval.add_argument("--eval-file", default=DEFAULT_V1_EA_EVAL_PATH, type=Path)
+    v1_ea_eval.add_argument("--eval-file", type=Path)
+    v1_ea_eval.add_argument(
+        "--manifest",
+        default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+        type=Path,
+    )
     v1_ea_eval.add_argument("--output-path", type=Path)
+
+    real_package_review_coverage_eval = subparsers.add_parser(
+        "real-package-review-coverage-eval",
+        help="Run the aggregate real-package review coverage gate across tracked review slots.",
+    )
+    real_package_review_coverage_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    real_package_review_coverage_eval.add_argument(
+        "--manifest",
+        default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+        type=Path,
+    )
+    real_package_review_coverage_eval.add_argument("--results-dir", type=Path)
 
     gold_coverage_eval = subparsers.add_parser(
         "gold-coverage-eval",
@@ -188,7 +213,17 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             review_id=args.review_id,
             review_dir=args.review_dir,
             eval_file=args.eval_file,
+            manifest_path=args.manifest,
             output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "real-package-review-coverage-eval":
+        result = run_real_package_review_coverage_eval(
+            output_dir=args.output_dir,
+            manifest_path=args.manifest,
+            results_dir=args.results_dir,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

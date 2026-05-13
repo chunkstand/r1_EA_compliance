@@ -342,6 +342,25 @@ def test_gold_coverage_eval_parser_accepts_manifest_and_results_dir() -> None:
     assert args.results_dir == Path("source_library/reviews/gold_coverage_eval")
 
 
+def test_real_package_review_coverage_eval_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "real-package-review-coverage-eval",
+            "--manifest",
+            "config/v1_real_package_review_coverage_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/reviews/real_package_review_coverage_eval",
+        ]
+    )
+
+    assert args.command == "real-package-review-coverage-eval"
+    assert args.manifest == Path("config/v1_real_package_review_coverage_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/reviews/real_package_review_coverage_eval")
+
+
 def test_rule_claim_link_parser_accepts_allow_partial_claims() -> None:
     args = build_parser().parse_args(
         [

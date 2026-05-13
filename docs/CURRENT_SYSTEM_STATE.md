@@ -111,19 +111,28 @@ Latest closeout on 2026-05-13:
 - `compliance-gold-eval` now passes `14/14` adjudicated cases, records the same seven named
   coverage tags plus the three package-style tags `clean_baseline`, `live_external_noisy`, and
   `typed_blocked_expansion`, and fails closed when those tags drift.
-- `v1-ea-eval` now supports explicit real-review contract diversity metadata and typed blocked
-  lanes. The current shipped contracts now cover East Crazies (`reviewer_ready`), West Reservoir
-  (`reviewer_ready`), and South Plateau (`typed_blocked` with
+- `v1-ea-eval` now resolves tracked per-review contracts from
+  `config/v1_real_package_review_coverage_v1.json` when `--review-id` is supplied, and still
+  supports explicit typed blocked lane semantics. The current shipped contracts cover East Crazies
+  (`reviewer_ready`), West Reservoir (`reviewer_ready`), and South Plateau (`typed_blocked` with
   `forest_plan_reviewer_resolution_open` plus
   `forest_plan_standard_reviewer_resolution_open`).
-- `gold-coverage-eval` is now the aggregate fail-closed owner for widened gold coverage. The live
-  replay passed with `required_theme_count=7`, `passed_theme_count=7`,
+- `real-package-review-coverage-eval` is now the aggregate fail-closed owner for the three tracked
+  real-package slots. The live replay on 2026-05-13 passed with
+  `required_slot_count=3`, `covered_slot_count=3`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_slot_count=2`,
+  `typed_blocked_slot_count=1`, and `missing_package_authority_count=0`.
+- `gold-coverage-eval` now reuses that manifest-owned real-package aggregate instead of owning a
+  second review roster. A bounded integration replay against the current gold result artifacts plus
+  the fresh real-package coverage output stayed green with `required_theme_count=7`,
+  `passed_theme_count=7`,
   `required_high_priority_family_id_count=19`, `distinct_forest_count=2`,
   `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and
   `typed_blocked_review_count=1`.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now carries gold and real-review rows for
-  `applicability_gold_eval`, `compliance_gold_eval`, `v1_ea_eval`, and `gold_coverage_eval`, all
-  marked `direct_eval_present`.
+  `applicability_gold_eval`, `compliance_gold_eval`, `v1_ea_eval`,
+  `real_package_review_coverage_eval`, and `gold_coverage_eval`, all marked
+  `direct_eval_present`.
 - `config/promotion_suite_v1.json` now consumes the widened applicability/compliance thresholds and
   the aggregate `gold_coverage_eval` artifact. The final closeout also patched legacy replay
   compatibility so current-promotion artifacts could be refreshed on

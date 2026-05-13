@@ -980,6 +980,43 @@ class V1EAReviewEvalTests(unittest.TestCase):
 
         self.assertEqual(args.command, "v1-ea-eval")
         self.assertEqual(args.review_id, "v1-unit")
+        self.assertIsNone(args.eval_file)
+
+    def test_v1_eval_resolves_tracked_manifest_contract_from_review_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            manifest_path = _write_real_package_manifest(
+                root,
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                manifest_path=manifest_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.eval_file, eval_file)
+
+    def test_v1_eval_requires_eval_file_or_tracked_review_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "requires --eval-file or a tracked --review-id",
+            ):
+                run_v1_ea_review_eval(
+                    output_dir=root / "source_library",
+                    review_dir=review_dir,
+                )
 
 
 def _assert_repair_baseline_failure_summary(
@@ -1588,6 +1625,49 @@ def _write_eval_contract(root: Path, *, review_id: str) -> Path:
             },
         },
     )
+    return path
+
+
+def _write_real_package_manifest(root: Path, *, review_id: str, eval_file: Path) -> Path:
+    path = root / "v1_real_package_review_coverage_v1.json"
+    _write_json(
+        path,
+        {
+            "schema_version": "real-package-review-coverage-v1",
+            "id": "unit-real-package-review-coverage",
+            "version": "0.1.0",
+            "required_coverage_class_ids": [
+                "current_promotion_reviewer_ready",
+            ],
+            "coverage_thresholds": {
+                "required_slot_count": 1,
+                "required_coverage_class_count": 1,
+                "distinct_forest_count_min": 1,
+                "distinct_package_style_count_min": 1,
+                "reviewer_ready_slot_count_min": 1,
+                "typed_blocked_slot_count_min": 0,
+                "missing_required_slot_count_max": 0,
+                "missing_package_authority_count_max": 0,
+            },
+            "slots": [
+                {
+                    "slot_id": "v1-unit-slot",
+                    "label": "V1 unit slot",
+                    "review_id": review_id,
+                    "package_label": "V1 unit package",
+                    "coverage_class_id": "current_promotion_reviewer_ready",
+                    "forest_unit_id": "custer-gallatin-nf",
+                    "eval_file": str(eval_file),
+                    "required": True,
+                    "expected_contract_status": "reviewer_ready",
+                    "package_authority": {
+                        "intake_package_path": str(root / "authority-package"),
+                    },
+                }
+            ],
+        },
+    )
+    (root / "authority-package").mkdir(parents=True, exist_ok=True)
     return path
 
 

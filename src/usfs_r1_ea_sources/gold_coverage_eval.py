@@ -10,6 +10,10 @@ from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
 from .applicability_eval import run_applicability_gold_eval
 from .compliance_gold_eval import DEFAULT_COMPLIANCE_GOLD_EVAL_PATH
 from .compliance_gold_eval import run_compliance_gold_eval
+from .real_package_review_coverage_eval import (
+    DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+)
+from .real_package_review_coverage_eval import run_real_package_review_coverage_eval
 from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
 from .v1_ea_eval import run_v1_ea_review_eval
 
@@ -52,14 +56,12 @@ def run_gold_coverage_eval(
         manifest_path=manifest_path,
         output_dir=output_dir,
     )
-    review_results = [
-        _review_contract_result(
-            spec=spec,
-            manifest_path=manifest_path,
-            output_dir=output_dir,
-        )
-        for spec in manifest.get("review_contracts", [])
-    ]
+    real_package_review_summary = _load_or_run_real_package_review_coverage_summary(
+        manifest=manifest,
+        manifest_path=manifest_path,
+        output_dir=output_dir,
+    )
+    review_results = list(real_package_review_summary.get("slots", []))
 
     thresholds = _int_dict(manifest.get("coverage_thresholds"))
     family_group_coverage = applicability_summary.get("family_group_coverage", {})
@@ -129,6 +131,7 @@ def run_gold_coverage_eval(
     passed = (
         bool(applicability_summary.get("passed"))
         and bool(compliance_summary.get("passed"))
+        and bool(real_package_review_summary.get("passed"))
         and all(result["passed"] for result in review_results)
         and not theme_failure_ids
         and not threshold_failures
@@ -183,6 +186,16 @@ def run_gold_coverage_eval(
             "coverage_tags": compliance_summary.get("coverage_tags", []),
             "package_style_tags": compliance_summary.get("package_style_tags", []),
         },
+        "real_package_review_coverage": {
+            "manifest_path": real_package_review_summary.get("manifest_path"),
+            "passed": real_package_review_summary.get("passed"),
+            "required_slot_count": real_package_review_summary.get("required_slot_count", 0),
+            "covered_slot_count": real_package_review_summary.get("covered_slot_count", 0),
+            "missing_coverage_class_ids": real_package_review_summary.get(
+                "missing_coverage_class_ids",
+                [],
+            ),
+        },
         "review_contracts": review_results,
     }
     results_output_dir.mkdir(parents=True, exist_ok=True)
@@ -231,6 +244,39 @@ def _load_or_run_compliance_summary(
         manifest_path,
     )
     return run_compliance_gold_eval(output_dir=output_dir, gold_file=gold_file).summary
+
+
+def _load_or_run_real_package_review_coverage_summary(
+    *,
+    manifest: dict[str, Any],
+    manifest_path: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    spec = manifest.get("real_package_review_coverage")
+    if isinstance(spec, dict):
+        results_path = spec.get("results_path")
+        if results_path:
+            return _load_summary(_resolve_repo_path(str(results_path), manifest_path))
+        coverage_manifest_path = _resolve_repo_path(
+            str(spec.get("manifest_path") or DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH),
+            manifest_path,
+        )
+        return run_real_package_review_coverage_eval(
+            output_dir=output_dir,
+            manifest_path=coverage_manifest_path,
+        ).summary
+    if isinstance(manifest.get("review_contracts"), list) and manifest["review_contracts"]:
+        return {
+            "slots": [
+                _review_contract_result(
+                    spec=spec,
+                    manifest_path=manifest_path,
+                    output_dir=output_dir,
+                )
+                for spec in manifest.get("review_contracts", [])
+            ]
+        }
+    raise ValueError("gold coverage manifest requires real_package_review_coverage")
 
 
 def _review_contract_result(
@@ -477,8 +523,14 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
         )
     if not str(manifest.get("id") or "").strip():
         raise ValueError("gold coverage manifest requires id")
-    if not isinstance(manifest.get("review_contracts"), list) or not manifest["review_contracts"]:
-        raise ValueError("gold coverage manifest requires review_contracts")
+    has_real_package_spec = isinstance(manifest.get("real_package_review_coverage"), dict)
+    has_review_contracts = (
+        isinstance(manifest.get("review_contracts"), list) and bool(manifest["review_contracts"])
+    )
+    if not has_real_package_spec and not has_review_contracts:
+        raise ValueError(
+            "gold coverage manifest requires real_package_review_coverage or review_contracts"
+        )
 
 
 def _load_summary(path: Path) -> dict[str, Any]:

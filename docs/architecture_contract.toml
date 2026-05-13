@@ -187,6 +187,7 @@ modules = [
   "applicability_eval",
   "gold_coverage_eval",
   "promotion_suite",
+  "real_package_review_coverage_eval",
   "upstream_evaluation",
   "v1_ea_eval",
 ]
@@ -397,6 +398,7 @@ paths = [
   "source_library/evaluations/upstream/upstream_evaluation_report.md",
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
   "source_library/reviews/gold_coverage_eval/gold_coverage_eval_results.json",
+  "source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",
   "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
   "source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json",
@@ -497,6 +499,7 @@ commands = [
   "gold-coverage-eval",
   "upstream-eval",
   "phase-eval",
+  "real-package-review-coverage-eval",
   "v1-ea-eval",
   "promotion-suite",
 ]

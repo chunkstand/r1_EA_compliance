@@ -5,6 +5,63 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Real-Package Review Coverage Closeout
+
+This closeout implements the first stacked follow-on after gold coverage and narrows the lane to
+its dedicated owner surfaces instead of reopening the earlier gold milestone.
+
+- scope:
+  `src/usfs_r1_ea_sources/real_package_review_coverage_eval.py`,
+  `src/usfs_r1_ea_sources/v1_ea_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `src/usfs_r1_ea_sources/gold_coverage_eval.py`,
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/gold_coverage_v1.json`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`,
+  focused tests
+- contract/routing truth:
+  `config/v1_real_package_review_coverage_v1.json` now owns the three governed slots:
+  East Crazies current promotion (`current_promotion_reviewer_ready`),
+  West Reservoir (`alternate_package_reviewer_ready`), and
+  South Plateau (`typed_blocked_expansion`). `v1-ea-eval` now resolves per-review contracts from
+  that manifest when `--review-id` is supplied, and fails closed without either a tracked review ID
+  or an explicit `--eval-file`
+- aggregate coverage truth:
+  `real-package-review-coverage-eval` now passes on the live tracked reviews with
+  `required_slot_count=3`, `covered_slot_count=3`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_slot_count=2`,
+  `typed_blocked_slot_count=1`, and `missing_package_authority_count=0`. South Plateau remains a
+  first-class typed-blocked slot with matched blocker categories
+- gold integration:
+  `gold-coverage-eval` now reuses the manifest-owned real-package aggregate instead of carrying a
+  second embedded review roster. A bounded integration replay against the current gold result
+  artifacts plus the fresh `real_package_review_coverage_eval_results.json` stayed green with
+  `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and
+  `typed_blocked_review_count=1`
+- next follow-on:
+  the active next evaluation-strengthening boundary is still
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`, which can now depend on the dedicated
+  manifest-owned real-package coverage lane instead of the old ECID-only default path
+- affected dirty state:
+  unrelated local changes already exist in `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of this milestone slice
+
+Verification in this closeout:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_cli.py tests/test_architecture_contract.py -q`: passed `84/84`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`: passed with `contract_status=reviewer_ready`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`: passed with `contract_status=reviewer_ready`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`: passed with `contract_status=typed_blocked` and matched blocker categories
+- `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`: passed with `3/3` covered slots and `0` authority misses
+- bounded gold integration replay from current results via `run_gold_coverage_eval(...)`: passed with `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`, `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1`
+
 ## Gold Coverage Expansion Final Closeout Refresh
 
 This refresh closes the last live current-promotion gap that remained after the earlier gold

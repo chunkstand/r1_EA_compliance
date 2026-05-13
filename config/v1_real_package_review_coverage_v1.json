@@ -1,0 +1,64 @@
+{
+  "coverage_thresholds": {
+    "distinct_forest_count_min": 2,
+    "distinct_package_style_count_min": 3,
+    "missing_package_authority_count_max": 0,
+    "missing_required_slot_count_max": 0,
+    "required_coverage_class_count": 3,
+    "required_slot_count": 3,
+    "reviewer_ready_slot_count_min": 2,
+    "typed_blocked_slot_count_min": 1
+  },
+  "id": "region1-real-package-review-coverage-v1",
+  "required_coverage_class_ids": [
+    "alternate_package_reviewer_ready",
+    "current_promotion_reviewer_ready",
+    "typed_blocked_expansion"
+  ],
+  "schema_version": "real-package-review-coverage-v1",
+  "slots": [
+    {
+      "coverage_class_id": "current_promotion_reviewer_ready",
+      "eval_file": "v1_ecid_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "custer-gallatin-nf",
+      "label": "East Crazies current promotion",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/v1-cg-ecid-compliance-review.json"
+      },
+      "package_label": "East Crazy Inspiration Divide Land Exchange",
+      "required": true,
+      "review_id": "v1-cg-ecid-compliance-review",
+      "slot_id": "east-crazies-current-promotion"
+    },
+    {
+      "coverage_class_id": "alternate_package_reviewer_ready",
+      "eval_file": "v1_west_reservoir_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "flathead-nf",
+      "label": "West Reservoir reviewer-ready proving lane",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/west-reservoir-67436.json"
+      },
+      "package_label": "West Reservoir Land Exchange",
+      "required": true,
+      "review_id": "west-reservoir-67436",
+      "slot_id": "west-reservoir-reviewer-ready"
+    },
+    {
+      "coverage_class_id": "typed_blocked_expansion",
+      "eval_file": "v1_south_plateau_real_ea_eval.json",
+      "expected_contract_status": "typed_blocked",
+      "forest_unit_id": "custer-gallatin-nf",
+      "label": "South Plateau typed blocked expansion lane",
+      "package_authority": {
+        "intake_package_path": "../source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment"
+      },
+      "package_label": "South Plateau Area Landscape Treatment Project",
+      "required": true,
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "slot_id": "south-plateau-typed-blocked"
+    }
+  ],
+  "version": "1.0.0"
+}

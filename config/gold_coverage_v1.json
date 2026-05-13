@@ -29,29 +29,9 @@
     "forest_plan_consistency",
     "multi_forest_plan_trigger"
   ],
-  "review_contracts": [
-    {
-      "eval_file": "v1_ecid_real_ea_eval.json",
-      "package_authority": {
-        "replay_context_path": "replay_contexts/v1-cg-ecid-compliance-review.json"
-      },
-      "review_id": "v1-cg-ecid-compliance-review"
-    },
-    {
-      "eval_file": "v1_west_reservoir_real_ea_eval.json",
-      "package_authority": {
-        "replay_context_path": "replay_contexts/west-reservoir-67436.json"
-      },
-      "review_id": "west-reservoir-67436"
-    },
-    {
-      "eval_file": "v1_south_plateau_real_ea_eval.json",
-      "package_authority": {
-        "intake_package_path": "../source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment"
-      },
-      "review_id": "region1-expansion-south-plateau-landscape-treatment"
-    }
-  ],
+  "real_package_review_coverage": {
+    "manifest_path": "v1_real_package_review_coverage_v1.json"
+  },
   "schema_version": "gold-coverage-eval-v1",
   "version": "1.0.0"
 }

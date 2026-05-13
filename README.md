@@ -1193,22 +1193,17 @@ Run the V1 real-EA review eval after the East Crazy Inspiration Divide complianc
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
   --output-dir source_library \
-  --review-id v1-cg-ecid-compliance-review \
-  --eval-file config/v1_ecid_real_ea_eval.json
+  --review-id v1-cg-ecid-compliance-review
 ```
 
 `v1-ea-eval` does not rerun extraction or review. It reads an existing review directory and scores
 whether the real EA review applied the correct source documents to the correct EA sections. The
-default V1 contract tracks required EA section detection, baseline authority/source alignment,
-all 26 baseline source records, rule-to-section matches, rule-to-source-record matches,
-rule-to-document-role matches, conditional applicability expectations, applicable conditional
-source/section alignment, missing conditional expectations, conditional false positives/negatives,
-Custer Gallatin required plan records, forest-plan geographic/management area resolution, component
-coverage, applicable-standard application, citation requirements, reviewer-resolution queue size,
-typed blocker categories, package-style tags, forest identity, and failure-category counts. The
-current shipped contracts cover East Crazies, West Reservoir, and South Plateau; typed blocked
-reviews remain valid coverage only when the declared blocked lane and blocker categories still match
-the live review artifacts.
+tracked review-slot manifest lives at `config/v1_real_package_review_coverage_v1.json`. When
+`--review-id` is supplied, `v1-ea-eval` resolves the matching per-review contract from that
+manifest; otherwise it fails closed unless `--eval-file` is provided explicitly. The tracked
+contracts cover East Crazies, West Reservoir, and South Plateau. Typed blocked reviews remain valid
+coverage only when the declared blocked lane and blocker categories still match the live review
+artifacts.
 
 The result summary separates the overall readiness gate from two diagnostic lanes:
 `broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and
@@ -1216,6 +1211,21 @@ review artifacts outside the forest-plan set; and `forest_plan` for Custer Galla
 scope, component coverage, applicable standards, reviewer readiness, and component adjudication.
 This allows the real V1 eval to fail overall on non-forest-plan gaps while still reporting
 `forest_plan_passed=true` when the forest-plan review lane is complete.
+
+Run the aggregate real-package review coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval \
+  --output-dir source_library \
+  --manifest config/v1_real_package_review_coverage_v1.json
+```
+
+`real-package-review-coverage-eval` is the fail-closed owner for the three governed real-package
+slots. It replays or loads the tracked East Crazies, West Reservoir, and South Plateau V1 results,
+checks package-authority ownership for each slot, requires the three coverage classes
+`current_promotion_reviewer_ready`, `alternate_package_reviewer_ready`, and
+`typed_blocked_expansion`, and reports covered review IDs, ready-versus-blocked slot counts,
+distinct forest/package-style counts, and any missing authority or slot failures.
 
 Run the aggregate gold coverage gate:
 
@@ -1226,11 +1236,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval \
 ```
 
 `gold-coverage-eval` is the fail-closed aggregate owner for widened gold coverage. It replays the
-default applicability and compliance gold suites plus the tracked real-review contracts for East
-Crazies, West Reservoir, and South Plateau, then requires all seven named theme groups, all `19`
-high-priority family IDs, at least `3` review contracts across at least `2` forests and `3`
-package-style tags, at least `2` reviewer-ready reviews, at least `1` typed-blocked review, and no
-missing package-authority declarations.
+default applicability and compliance gold suites plus the manifest-owned
+`real-package-review-coverage-eval` lane, then requires all seven named theme groups, all `19`
+high-priority family IDs, at least `3` tracked review contracts across at least `2` forests and
+`3` package-style tags, at least `2` reviewer-ready reviews, at least `1` typed-blocked review,
+and no missing package-authority declarations.
 
 Run the manifest-driven promotion suite:
 

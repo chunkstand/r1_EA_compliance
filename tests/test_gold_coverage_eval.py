@@ -75,12 +75,9 @@ def test_committed_gold_coverage_manifest_tracks_three_review_contracts() -> Non
 
     assert manifest["schema_version"] == GOLD_COVERAGE_EVAL_SCHEMA_VERSION
     assert manifest["required_theme_ids"] == THEMES
-    assert len(manifest["review_contracts"]) == 3
-    assert [item["review_id"] for item in manifest["review_contracts"]] == [
-        "v1-cg-ecid-compliance-review",
-        "west-reservoir-67436",
-        "region1-expansion-south-plateau-landscape-treatment",
-    ]
+    assert manifest["real_package_review_coverage"]["manifest_path"] == (
+        "v1_real_package_review_coverage_v1.json"
+    )
     thresholds = manifest["coverage_thresholds"]
     assert thresholds["required_theme_count"] == 7
     assert thresholds["required_high_priority_family_id_count"] == 19
@@ -100,24 +97,6 @@ def _write_manifest(
     review_package_styles: list[list[str]] | None = None,
 ) -> Path:
     results_dir = root / "results"
-    authorities_dir = root / "authorities"
-    (authorities_dir / "catalog-east").mkdir(parents=True)
-    (authorities_dir / "package-east").mkdir(parents=True)
-    (authorities_dir / "south-intake").mkdir(parents=True)
-    replay_context_path = root / "config" / "replay_contexts" / "east.json"
-    replay_context_path.parent.mkdir(parents=True, exist_ok=True)
-    replay_context_path.write_text(
-        json.dumps(
-            {
-                "review_id": "v1-cg-ecid-compliance-review",
-                "source_set_id": "source-set-east",
-                "catalog_dir": "authorities/catalog-east",
-                "package_path": "authorities/package-east",
-            },
-            sort_keys=True,
-        ),
-        encoding="utf-8",
-    )
     _write_json(
         results_dir / "applicability.json",
         {
@@ -199,6 +178,7 @@ def _write_manifest(
         path = results_dir / f"review-{index}.json"
         _write_json(path, payload)
         review_paths.append(path)
+    real_package_manifest_path = _write_real_package_manifest(root, review_paths=review_paths)
     manifest_path = root / "gold_coverage_v1.json"
     _write_json(
         manifest_path,
@@ -223,24 +203,98 @@ def _write_manifest(
             },
             "applicability_gold": {"results_path": str(results_dir / "applicability.json")},
             "compliance_gold": {"results_path": str(results_dir / "compliance.json")},
-            "review_contracts": [
+            "real_package_review_coverage": {
+                "manifest_path": str(real_package_manifest_path),
+            },
+        },
+    )
+    return manifest_path
+
+
+def _write_real_package_manifest(root: Path, *, review_paths: list[Path]) -> Path:
+    authorities_dir = root / "authorities"
+    (authorities_dir / "catalog-east").mkdir(parents=True)
+    (authorities_dir / "package-east").mkdir(parents=True)
+    (authorities_dir / "package-west").mkdir(parents=True)
+    (authorities_dir / "south-intake").mkdir(parents=True)
+    replay_context_path = root / "config" / "replay_contexts" / "east.json"
+    replay_context_path.parent.mkdir(parents=True, exist_ok=True)
+    replay_context_path.write_text(
+        json.dumps(
+            {
+                "review_id": "v1-cg-ecid-compliance-review",
+                "source_set_id": "source-set-east",
+                "catalog_dir": "authorities/catalog-east",
+                "package_path": "authorities/package-east",
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    manifest_path = root / "v1_real_package_review_coverage_v1.json"
+    _write_json(
+        manifest_path,
+        {
+            "schema_version": "real-package-review-coverage-v1",
+            "id": "unit-real-package-review-coverage",
+            "version": "0.1.0",
+            "required_coverage_class_ids": [
+                "alternate_package_reviewer_ready",
+                "current_promotion_reviewer_ready",
+                "typed_blocked_expansion",
+            ],
+            "coverage_thresholds": {
+                "required_slot_count": 3,
+                "required_coverage_class_count": 3,
+                "distinct_forest_count_min": 2,
+                "distinct_package_style_count_min": 3,
+                "reviewer_ready_slot_count_min": 2,
+                "typed_blocked_slot_count_min": 1,
+                "missing_required_slot_count_max": 0,
+                "missing_package_authority_count_max": 0,
+            },
+            "slots": [
                 {
+                    "slot_id": "east-crazies-current-promotion",
+                    "label": "East Crazies current promotion",
                     "review_id": "v1-cg-ecid-compliance-review",
+                    "package_label": "East Crazies",
+                    "coverage_class_id": "current_promotion_reviewer_ready",
+                    "forest_unit_id": "custer-gallatin-nf",
+                    "eval_file": "config/v1_ecid_real_ea_eval.json",
                     "results_path": str(review_paths[0]),
+                    "required": True,
+                    "expected_contract_status": "reviewer_ready",
                     "package_authority": {
                         "replay_context_path": str(replay_context_path),
                     },
                 },
                 {
+                    "slot_id": "west-reservoir-reviewer-ready",
+                    "label": "West Reservoir reviewer-ready proving lane",
                     "review_id": "west-reservoir-67436",
+                    "package_label": "West Reservoir",
+                    "coverage_class_id": "alternate_package_reviewer_ready",
+                    "forest_unit_id": "flathead-nf",
+                    "eval_file": "config/v1_west_reservoir_real_ea_eval.json",
                     "results_path": str(review_paths[1]),
+                    "required": True,
+                    "expected_contract_status": "reviewer_ready",
                     "package_authority": {
-                        "intake_package_path": str(authorities_dir / "package-east"),
+                        "intake_package_path": str(authorities_dir / "package-west"),
                     },
                 },
                 {
+                    "slot_id": "south-plateau-typed-blocked",
+                    "label": "South Plateau typed blocked expansion lane",
                     "review_id": "region1-expansion-south-plateau-landscape-treatment",
+                    "package_label": "South Plateau",
+                    "coverage_class_id": "typed_blocked_expansion",
+                    "forest_unit_id": "custer-gallatin-nf",
+                    "eval_file": "config/v1_south_plateau_real_ea_eval.json",
                     "results_path": str(review_paths[2]),
+                    "required": True,
+                    "expected_contract_status": "typed_blocked",
                     "package_authority": {
                         "intake_package_path": str(authorities_dir / "south-intake"),
                     },

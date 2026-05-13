@@ -3131,7 +3131,7 @@ appear as emitted findings.
 
 ## V1 Real EA Review Eval Outputs
 
-Default contract: `config/v1_ecid_real_ea_eval.json`
+Tracked review-slot manifest: `config/v1_real_package_review_coverage_v1.json`
 
 Default output:
 `source_library/reviews/<review_id>/v1_ea_eval_results.json`
@@ -3144,6 +3144,11 @@ fixtures or rerun `compliance-review`. The gate expects these review artifacts:
 - `compliance_validation.json`
 - `package/package_chunks.jsonl`
 - Custer Gallatin forest-plan artifacts when the contract has `forest_plan` expectations
+
+When `--review-id` is supplied without `--eval-file`, the command resolves the per-review contract
+from `config/v1_real_package_review_coverage_v1.json`. That tracked manifest currently governs East
+Crazies current promotion, West Reservoir, and South Plateau. If no tracked review slot matches,
+the command fails closed unless an explicit `--eval-file` is provided.
 
 The contract has schema version `v1-ea-real-review-eval-contract-v0` and records:
 
@@ -3216,6 +3221,41 @@ item count. When component adjudication is present, the reviewer-resolution metr
 adjudication-aware pending counts rather than the raw reviewer queue size, while the raw queue
 counts remain available as separate reviewer-resolution queue metrics.
 
+## Real Package Review Coverage Eval Outputs
+
+Default manifest: `config/v1_real_package_review_coverage_v1.json`
+
+Default path:
+`source_library/reviews/real_package_review_coverage_eval/`
+
+The `real-package-review-coverage-eval` command writes:
+
+- `real_package_review_coverage_eval_results.json`
+
+The manifest has schema version `real-package-review-coverage-v1` and records:
+
+- manifest identity plus `required_coverage_class_ids`
+- `coverage_thresholds` for required slot count, required coverage-class count, distinct forest and
+  package-style minima, reviewer-ready and typed-blocked minima, and missing-slot or
+  missing-authority maxima
+- `slots`, each naming a slot ID, review ID, package label, coverage-class ID, forest identity,
+  per-review V1 eval contract path, expected contract status, required flag, and exactly one
+  package-authority declaration through either a replay-context file or a tracked intake package
+  path
+
+`real_package_review_coverage_eval_results.json` has schema version
+`real-package-review-coverage-results-v1` and records:
+
+- manifest identity, output paths, top-level `passed`, and aggregate failure-category counts
+- `required_slot_count`, `covered_slot_count`, `covered_review_ids`,
+  `required_coverage_class_ids`, `covered_coverage_class_ids`, and `missing_coverage_class_ids`
+- `reviewer_ready_slot_count`, `typed_blocked_slot_count`, `distinct_forest_count`,
+  `distinct_forest_ids`, `distinct_package_style_count`, and `distinct_package_style_tags`
+- `missing_required_slot_count`, `missing_package_authority_count`, and `threshold_failures`
+- `slots`, each carrying the resolved review ID, expected and actual contract status, package-label
+  and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
+  categories, and the underlying V1 eval summary path
+
 ## Gold Coverage Eval Outputs
 
 Default manifest: `config/gold_coverage_v1.json`
@@ -3231,8 +3271,9 @@ The aggregate manifest has schema version `gold-coverage-eval-v1` and records:
 
 - manifest identity plus an `applicability_gold` contract and `compliance_gold` contract, each of
   which may point either to a gold config file or to an existing results file
-- `review_contracts`, each naming a review ID, a V1 real-review eval file, and a package-authority
-  declaration through either a replay-context file or a tracked intake package path
+- `real_package_review_coverage`, which points either to
+  `config/v1_real_package_review_coverage_v1.json` or to an existing aggregate
+  `real_package_review_coverage_eval_results.json`
 - `required_theme_ids` for the named family/theme groups the widened gold lane must cover
 - `coverage_thresholds` for minimum gold case counts, required high-priority family count, unmapped
   family maximum, required review-contract count, distinct forest count, distinct package-style
@@ -3251,6 +3292,7 @@ The aggregate manifest has schema version `gold-coverage-eval-v1` and records:
   `threshold_failures`
 - nested `applicability_gold` and `compliance_gold` summaries trimmed to the coverage fields that
   matter for the aggregate gate
+- nested `real_package_review_coverage` summary for the manifest-owned slot aggregate
 - `review_contracts`, each carrying `contract_status`, forest identity, package-style tags,
   package-authority validation, missing-contract detection, and the underlying V1 eval summary bits
 

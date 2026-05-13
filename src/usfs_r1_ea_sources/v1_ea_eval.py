@@ -8,6 +8,11 @@ import json
 import re
 from typing import Any
 
+from .real_package_review_coverage_eval import (
+    DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+)
+from .real_package_review_coverage_eval import resolve_real_package_review_eval_file
+
 
 DEFAULT_V1_EA_EVAL_PATH = Path("config/v1_ecid_real_ea_eval.json")
 V1_EA_EVAL_RESULTS_SCHEMA_VERSION = "v1-ea-real-review-eval-results-v0"
@@ -43,12 +48,19 @@ def run_v1_ea_review_eval(
     output_dir: Path = Path("source_library"),
     review_id: str | None = None,
     review_dir: Path | None = None,
-    eval_file: Path = DEFAULT_V1_EA_EVAL_PATH,
+    eval_file: Path | None = None,
+    manifest_path: Path = DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
     output_path: Path | None = None,
 ) -> V1EAReviewEvalResult:
     """Evaluate a real EA compliance review against the V1 adjudication contract."""
 
-    contract = _read_json(eval_file)
+    resolved_eval_file = _resolve_eval_file(
+        review_id=review_id,
+        review_dir=review_dir,
+        eval_file=eval_file,
+        manifest_path=manifest_path,
+    )
+    contract = _read_json(resolved_eval_file)
     _validate_contract(contract)
     resolved_review_dir = _resolve_review_dir(
         output_dir=output_dir,
@@ -204,7 +216,7 @@ def run_v1_ea_review_eval(
         "eval_id": contract.get("eval_id"),
         "review_id": review_identity.get("review_id") or resolved_review_dir.name,
         "review_dir": str(resolved_review_dir),
-        "eval_file": str(eval_file),
+        "eval_file": str(resolved_eval_file),
         "output_path": str(resolved_output_path),
         "generated_at": _utc_now(),
         "source_set_id": review_identity.get("source_set_id") or contract.get("source_set_id"),
@@ -270,10 +282,30 @@ def run_v1_ea_review_eval(
         encoding="utf-8",
     )
     return V1EAReviewEvalResult(
-        eval_file=eval_file,
+        eval_file=resolved_eval_file,
         review_dir=resolved_review_dir,
         output_path=resolved_output_path,
         summary=summary,
+    )
+
+
+def _resolve_eval_file(
+    *,
+    review_id: str | None,
+    review_dir: Path | None,
+    eval_file: Path | None,
+    manifest_path: Path,
+) -> Path:
+    if eval_file is not None:
+        return Path(eval_file)
+    if review_id:
+        return resolve_real_package_review_eval_file(
+            review_id=review_id,
+            manifest_path=manifest_path,
+        )
+    raise ValueError(
+        "v1-ea-eval requires --eval-file or a tracked --review-id in the real-package "
+        "review coverage manifest"
     )
 
 
