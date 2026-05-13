@@ -830,7 +830,6 @@ def _supporting_source_evidence(
         index_path=index_path,
         query=route.source_query,
         limit=max(limit, 5),
-        document_role="forest_plan",
         source_record_id=route.source_record_id,
     )
     filtered = [

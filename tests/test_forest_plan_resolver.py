@@ -1221,6 +1221,86 @@ class ForestPlanResolverTests(unittest.TestCase):
                 {entry["route_id"] for entry in context["supporting_plan_evidence"]},
             )
 
+    def test_flathead_supporting_routes_resolve_live_like_support_document_roles(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_flathead_source_library(
+                output_dir,
+                document_role_overrides={
+                    "R1PLAN-flathead-nf-03": "forest_plan_support",
+                    "R1PLAN-flathead-nf-04": "forest_plan_support",
+                    "R1PLAN-flathead-nf-06": "forest_plan_support",
+                    "R1PLAN-flathead-nf-07": "forest_plan_support",
+                    "R1PLAN-flathead-nf-08": "forest_plan_support",
+                    "R1PLAN-flathead-nf-16": "forest_plan_support",
+                },
+                support_document_role_overrides={
+                    "R1PLAN-flathead-nf-07": "biological_opinion",
+                    "R1PLAN-flathead-nf-16": "biological_opinion",
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Flathead National Forest.",
+                        "It is on the Hungry Horse-Glacier View Ranger District.",
+                        (
+                            "The project area is in the Hungry Horse Geographic Area and the "
+                            "Jewel Basin Hiking Area."
+                        ),
+                        (
+                            "The action is adjacent to the Jewel Basin Recommended Wilderness "
+                            "Area and an Inventoried Roadless Area."
+                        ),
+                        (
+                            "The EA tiers to the FEIS and references the Record of Decision."
+                        ),
+                        (
+                            "ESA consultation includes a Biological Assessment and Biological "
+                            "Opinion for Canada lynx, bull trout, and grizzly bear in the NCDE "
+                            "primary conservation area."
+                        ),
+                        (
+                            "The plan monitoring program, Biennial Monitoring Evaluation Report "
+                            "(BMER), and 2023 Administrative Change are incorporated by reference."
+                        ),
+                        (
+                            "No motorized use, mechanized transport, or stock use are proposed "
+                            "in the Jewel Basin Hiking Area."
+                        ),
+                        (
+                            "New stream diversions and associated ditches shall have screens "
+                            "placed on them to prevent capture of fish and other aquatic organisms."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="flathead-nf",
+                source_set_id=source_set_id,
+                review_id="flathead-live-like-support-roles",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            supporting_by_route = {
+                entry["route_id"]: entry for entry in context["supporting_plan_evidence"]
+            }
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertFalse(context["needs_reviewer_resolution"])
+            for route_id in (
+                "support-feis-plan-context",
+                "support-rod-decision-basis",
+                "support-esa-biological-assessment",
+                "support-bull-trout-biological-opinion",
+                "support-grizzly-biological-opinion",
+                "support-monitoring-program",
+            ):
+                self.assertGreater(len(supporting_by_route[route_id]["plan_source_evidence"]), 0)
+
     def test_flathead_generic_decision_labels_and_lowercase_acronyms_do_not_trigger_routes(
         self,
     ) -> None:
@@ -1621,15 +1701,25 @@ def _build_custer_source_library(
     return source_set_id
 
 
-def _build_flathead_source_library(output_dir: Path) -> str:
+def _build_flathead_source_library(
+    output_dir: Path,
+    *,
+    document_role_overrides: dict[str, str] | None = None,
+    support_document_role_overrides: dict[str, str] | None = None,
+) -> str:
     source_set_id = "source-set-flathead-test"
+    document_role_overrides = document_role_overrides or {}
+    support_document_role_overrides = support_document_role_overrides or {}
     chunks = [
         _chunk(
             source_set_id=source_set_id,
             source_record_id=source_record_id,
             title=title,
-            document_role="forest_plan",
-            support_document_role=_FLATHEAD_TEST_SUPPORT_DOCUMENT_ROLES[source_record_id],
+            document_role=document_role_overrides.get(source_record_id, "forest_plan"),
+            support_document_role=support_document_role_overrides.get(
+                source_record_id,
+                _FLATHEAD_TEST_SUPPORT_DOCUMENT_ROLES[source_record_id],
+            ),
             authority_level="forest",
             citation_label=f"{source_record_id} | {title} | artifact abc123",
             text=text,

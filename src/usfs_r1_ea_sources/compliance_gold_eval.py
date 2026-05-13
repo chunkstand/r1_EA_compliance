@@ -23,6 +23,19 @@ COMPLIANCE_GOLD_EVAL_RESULT_SCHEMA_VERSION = "compliance-gold-eval-results-v0"
 DEFAULT_COMPLIANCE_GOLD_EVAL_PATH = Path("config/compliance_gold_eval_v0.json")
 REQUIRED_CASE_PROFILES = {"mixed", "negative", "positive"}
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+GENERATED_CASE_MAP_FIELDS = (
+    ("expected_claim_types", "expected_generated_claim_types"),
+    ("expected_package_evidence", "expected_generated_package_evidence"),
+    ("expected_source_evidence", "expected_generated_source_evidence"),
+    ("expected_source_claim_links", "expected_generated_source_claim_links"),
+    ("expected_source_record_ids", "expected_generated_source_record_ids"),
+    ("expected_source_document_roles", "expected_generated_source_document_roles"),
+)
+GENERATED_CASE_SCALAR_FIELDS = (
+    ("expected_validation_passed", "expected_generated_validation_passed"),
+    ("expected_reviewer_ready", "expected_generated_reviewer_ready"),
+    ("min_findings", "expected_generated_min_findings"),
+)
 
 
 @dataclass(frozen=True)
@@ -59,6 +72,12 @@ def run_compliance_gold_eval(
     rule_pack = load_rule_pack(rule_pack_path)
     rule_pack_validation = validate_rule_pack(rule_pack)
     cases = _case_list(gold)
+    rule_pack_match_mode = _gold_rule_pack_match_mode(gold, rule_pack)
+    effective_cases = _effective_cases_for_rule_pack(
+        cases=cases,
+        rule_pack=rule_pack,
+        match_mode=rule_pack_match_mode,
+    )
     eval_output_dir = Path(results_dir) if results_dir else output_dir / "reviews" / "compliance_gold_eval"
     eval_output_dir.mkdir(parents=True, exist_ok=True)
     output_path = eval_output_dir / "compliance_gold_eval_results.json"
@@ -68,18 +87,18 @@ def run_compliance_gold_eval(
     checks = [
         _check_rule_pack_valid(rule_pack_validation, rule_pack_path),
         _check_gold_identity(gold, gold_file),
-        _check_gold_rule_pack_identity(gold, rule_pack),
-        _check_cases_present(gold, gold_file, cases),
-        _check_case_adjudication(cases),
-        _check_case_rule_coverage(cases, rule_pack),
-        _check_case_profiles(cases),
-        _check_case_status_counts(cases, rule_pack),
+        _check_gold_rule_pack_identity(gold, rule_pack, rule_pack_match_mode),
+        _check_cases_present(gold, gold_file, effective_cases),
+        _check_case_adjudication(effective_cases),
+        _check_case_rule_coverage(effective_cases, rule_pack),
+        _check_case_profiles(effective_cases),
+        _check_case_status_counts(effective_cases, rule_pack),
     ]
     adjudication_passed = all(check["passed"] for check in checks)
     review_eval_summary = None
     review_eval_error = None
     if adjudication_passed:
-        review_eval_cases = _review_eval_cases(cases, gold_file)
+        review_eval_cases = _review_eval_cases(effective_cases, gold_file)
         compliance_review_eval_file.write_text(
             json.dumps(review_eval_cases, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
@@ -106,10 +125,10 @@ def run_compliance_gold_eval(
             review_eval_error = str(error)
 
     case_results = list((review_eval_summary or {}).get("cases", []))
-    case_count = len(cases)
+    case_count = len(effective_cases)
     passed_case_count = int((review_eval_summary or {}).get("passed_count") or 0)
     source_set_ids = list((review_eval_summary or {}).get("source_set_ids") or [])
-    profile_counts = _profile_counts(cases)
+    profile_counts = _profile_counts(effective_cases)
     compliance_review_eval_passed = bool(
         review_eval_summary and review_eval_summary.get("passed")
     )
@@ -129,14 +148,17 @@ def run_compliance_gold_eval(
         "rule_pack_path": str(rule_pack_path),
         "gold_eval_id": gold.get("id"),
         "gold_eval_version": gold.get("version"),
+        "gold_rule_pack_id": gold.get("rule_pack_id"),
+        "gold_rule_pack_version": gold.get("rule_pack_version"),
         "rule_pack_id": rule_pack.get("rule_pack_id"),
         "rule_pack_version": rule_pack.get("version"),
+        "rule_pack_match_mode": rule_pack_match_mode,
         "source_set_id": source_set_id or (source_set_ids[0] if len(source_set_ids) == 1 else None),
         "source_set_ids": source_set_ids,
         "source_top_k": source_top_k,
         "package_top_k": package_top_k,
         "case_count": case_count,
-        "adjudicated_case_count": _adjudicated_case_count(cases),
+        "adjudicated_case_count": _adjudicated_case_count(effective_cases),
         "passed_case_count": passed_case_count,
         "failed_case_count": case_count - passed_case_count,
         "profile_counts": profile_counts,
@@ -158,7 +180,7 @@ def run_compliance_gold_eval(
             "failure_category_counts",
             {},
         ),
-        "cases": [_gold_case_result(case, case_results) for case in cases],
+        "cases": [_gold_case_result(case, case_results) for case in effective_cases],
     }
     _write_json(output_path, summary)
     return ComplianceGoldEvalResult(
@@ -190,6 +212,89 @@ def _review_eval_cases(cases: list[dict], gold_file: Path) -> list[dict]:
         if package_path:
             case["package_path"] = str((gold_file.parent / package_path).resolve())
     return eval_cases
+
+
+def _gold_rule_pack_match_mode(gold: dict, rule_pack: dict) -> str | None:
+    gold_pair = (gold.get("rule_pack_id"), gold.get("rule_pack_version"))
+    rule_pair = (rule_pack.get("rule_pack_id"), rule_pack.get("version"))
+    if gold_pair == rule_pair:
+        return "direct"
+    generated_base_pair = (
+        rule_pack.get("base_rule_pack_id"),
+        rule_pack.get("base_rule_pack_version"),
+    )
+    if gold_pair == generated_base_pair:
+        return "generated_base"
+    return None
+
+
+def _effective_cases_for_rule_pack(
+    *,
+    cases: list[dict],
+    rule_pack: dict,
+    match_mode: str | None,
+) -> list[dict]:
+    effective_cases = deepcopy(cases)
+    if match_mode != "generated_base":
+        return effective_cases
+    rule_ids = _rule_ids(rule_pack)
+    rules_by_id = {
+        str(rule.get("id") or ""): rule
+        for rule in rule_pack.get("rules", [])
+        if isinstance(rule, dict) and str(rule.get("id") or "").strip()
+    }
+    for case in effective_cases:
+        if not isinstance(case, dict):
+            continue
+        base_statuses = case.get("expected_statuses")
+        generated_statuses = case.get("expected_generated_statuses")
+        if isinstance(base_statuses, dict):
+            merged_statuses = {
+                str(rule_id): str(status)
+                for rule_id, status in base_statuses.items()
+                if str(rule_id) in rule_ids
+            }
+        else:
+            merged_statuses = {}
+        if isinstance(generated_statuses, dict):
+            merged_statuses.update(
+                {str(rule_id): str(status) for rule_id, status in generated_statuses.items()}
+            )
+        case["expected_statuses"] = merged_statuses
+        case["expected_finding_status_counts"] = dict(Counter(merged_statuses.values()))
+        generated_source_claim_links = (
+            deepcopy(case.get("expected_generated_source_claim_links"))
+            if isinstance(case.get("expected_generated_source_claim_links"), dict)
+            else {}
+        )
+        for rule_id, status in merged_statuses.items():
+            rule = rules_by_id.get(rule_id, {})
+            if (
+                status == "uncertain"
+                and rule.get("generated_from_applicability")
+                and rule_id not in generated_source_claim_links
+            ):
+                generated_source_claim_links[rule_id] = True
+        if generated_source_claim_links:
+            case["expected_generated_source_claim_links"] = generated_source_claim_links
+        for base_field, generated_field in GENERATED_CASE_MAP_FIELDS:
+            base_value = case.get(base_field)
+            generated_value = case.get(generated_field)
+            if not isinstance(base_value, dict) and not isinstance(generated_value, dict):
+                continue
+            merged_value = deepcopy(base_value) if isinstance(base_value, dict) else {}
+            if isinstance(generated_value, dict):
+                merged_value.update(deepcopy(generated_value))
+            merged_value = {
+                str(rule_id): value
+                for rule_id, value in merged_value.items()
+                if str(rule_id) in merged_statuses
+            }
+            case[base_field] = merged_value
+        for base_field, generated_field in GENERATED_CASE_SCALAR_FIELDS:
+            if generated_field in case:
+                case[base_field] = deepcopy(case.get(generated_field))
+    return effective_cases
 
 
 def _check_rule_pack_valid(rule_pack_validation: dict, rule_pack_path: Path) -> dict:
@@ -251,7 +356,21 @@ def _check_gold_identity(gold: dict, gold_file: Path) -> dict:
     }
 
 
-def _check_gold_rule_pack_identity(gold: dict, rule_pack: dict) -> dict:
+def _check_gold_rule_pack_identity(gold: dict, rule_pack: dict, match_mode: str | None) -> dict:
+    if match_mode:
+        return {
+            "name": "gold_eval_rule_pack_matches",
+            "passed": True,
+            "details": {
+                "match_mode": match_mode,
+                "gold_rule_pack_id": gold.get("rule_pack_id"),
+                "gold_rule_pack_version": gold.get("rule_pack_version"),
+                "rule_pack_id": rule_pack.get("rule_pack_id"),
+                "rule_pack_version": rule_pack.get("version"),
+                "generated_base_rule_pack_id": rule_pack.get("base_rule_pack_id"),
+                "generated_base_rule_pack_version": rule_pack.get("base_rule_pack_version"),
+            },
+        }
     failures = []
     for gold_field, rule_field in (
         ("rule_pack_id", "rule_pack_id"),
@@ -268,7 +387,12 @@ def _check_gold_rule_pack_identity(gold: dict, rule_pack: dict) -> dict:
     return {
         "name": "gold_eval_rule_pack_matches",
         "passed": not failures,
-        "details": {"failures": failures},
+        "details": {
+            "match_mode": None,
+            "failures": failures,
+            "generated_base_rule_pack_id": rule_pack.get("base_rule_pack_id"),
+            "generated_base_rule_pack_version": rule_pack.get("base_rule_pack_version"),
+        },
     }
 
 

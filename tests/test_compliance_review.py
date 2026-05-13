@@ -11,6 +11,8 @@ import unittest
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.compliance_review_eval import run_compliance_review_eval
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
+from usfs_r1_ea_sources.compliance_gold_eval import _effective_cases_for_rule_pack
+from usfs_r1_ea_sources.compliance_gold_eval import _gold_rule_pack_match_mode
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.ea_review import _search_package_chunks
@@ -2106,6 +2108,76 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(gold_phase["reviewer_ready"])
             self.assertEqual(gold_phase["details"]["case_count"], 3)
             self.assertIn("gold_eval_not_promotion_ready", gold_phase["details"]["failed_checks"])
+
+    def test_generated_base_gold_cases_merge_generated_status_overrides(self) -> None:
+        gold = {
+            "rule_pack_id": "unit-nepa-ea",
+            "rule_pack_version": "0.1.0",
+            "cases": [
+                {
+                    "id": "gold-generated",
+                    "profile": "mixed",
+                    "package_text": "Purpose and Need. Trail access remains under review.",
+                    "expected_statuses": {
+                        "purpose_need": "pass",
+                        "mitigation": "pass",
+                    },
+                    "expected_generated_statuses": {
+                        "purpose_need": "gap",
+                        "trail_access_authority_template": "uncertain",
+                    },
+                    "adjudication": {
+                        "status": "adjudicated_seed",
+                        "source_type": "realistic_synthetic",
+                        "adjudicated_by": ["unit-test"],
+                        "adjudicated_at": "2026-05-12",
+                        "rationale": "Generated-pack compatibility unit fixture.",
+                    },
+                }
+            ],
+        }
+        generated_rule_pack = {
+            "schema_version": "generated-compliance-rule-pack-v0",
+            "rule_pack_id": "generated-unit-nepa-ea-phase-review",
+            "version": "applicability-v0",
+            "base_rule_pack_id": "unit-nepa-ea",
+            "base_rule_pack_version": "0.1.0",
+            "rules": [
+                {"id": "purpose_need", "generated_from_applicability": True},
+                {"id": "mitigation", "generated_from_applicability": True},
+                {
+                    "id": "trail_access_authority_template",
+                    "generated_from_applicability": True,
+                },
+            ],
+        }
+
+        match_mode = _gold_rule_pack_match_mode(gold, generated_rule_pack)
+        self.assertEqual(match_mode, "generated_base")
+
+        cases = _effective_cases_for_rule_pack(
+            cases=gold["cases"],
+            rule_pack=generated_rule_pack,
+            match_mode=match_mode,
+        )
+
+        self.assertEqual(len(cases), 1)
+        self.assertEqual(
+            cases[0]["expected_statuses"],
+            {
+                "mitigation": "pass",
+                "purpose_need": "gap",
+                "trail_access_authority_template": "uncertain",
+            },
+        )
+        self.assertEqual(
+            cases[0]["expected_finding_status_counts"],
+            {"gap": 1, "pass": 1, "uncertain": 1},
+        )
+        self.assertEqual(
+            cases[0]["expected_source_claim_links"]["trail_access_authority_template"],
+            True,
+        )
 
     def test_review_phase_eval_prefers_review_scoped_compliance_gold_eval(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

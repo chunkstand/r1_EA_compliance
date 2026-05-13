@@ -91,6 +91,14 @@ Latest closeout on 2026-05-12:
   `verified_extraction_required_source_count=17`, and
   `verified_extraction_admitted_source_count=17`, so only verified accurate Flathead extractions
   are allowed into the knowledge-base lane.
+- The Flathead live-package proving lane is now closed on the active source set. Review
+  `west-reservoir-67436` on `source-set-5e65d845ce77e1a0` now passes package checklist,
+  applicability validation, generated-rule-pack validation, Flathead forest-plan context
+  validation, component adjudication, `compliance-review`, review-local `compliance-gold-eval`,
+  and review-bound `phase-eval` `17/17` with `reviewer_ready=true`. The proving lane now records
+  `44` applicable authorities, `23` non-applicable authorities, `0` unresolved decisions, a
+  reviewer-ready `44`-rule generated pack, `48` resolved component adjudications with `0` pending,
+  and gold-eval `10/10` passing cases with `promotion_ready=true`.
 - The post-V1 promotion suite still separates current-promotion truth from full-corpus truth, but
   its full-canonical contract is now aligned to the refreshed active source set. The latest
   non-strict replay reports
@@ -153,6 +161,9 @@ Latest closeout on 2026-05-12:
   original reference slice, `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is now the
   implemented second slice, and `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is
   retired to routing-note status only.
+- If continuing Flathead specifically rather than selecting a new forest, the active next step is
+  not another profile-expansion sequence. It is the package-side proving lane in
+  `docs/R1_FLATHEAD_LIVE_PACKAGE_PROVING_MILESTONE_PLAN.md`.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
   as `source-set-8a4005c8a083af1a`. That archived replay is still the all-green merged

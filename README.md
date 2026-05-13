@@ -83,6 +83,14 @@ Current full-corpus promotion boundary:
   `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]` with
   `verified_extraction_admitted_source_count=17`. This closes the source-document extraction and
   knowledge-base admission gap for Flathead without claiming a live Flathead EA package replay.
+- The Flathead live-package proving lane is now closed on the active full-canonical corpus.
+  Review `west-reservoir-67436` against the local West Reservoir package now passes review-bound
+  `phase-eval` `17/17` with `reviewer_ready=true`. The generated-pack applicability lane closes
+  with `44` applicable authorities, `23` non-applicable authorities, `0` unresolved decisions,
+  and a reviewer-ready `44`-rule generated pack; Flathead supporting-plan context validation is
+  green; the tracked component-adjudication lane resolves `48/48` queue items with
+  `reviewer_ready=true`; `compliance-review` is green in generated-pack mode; and the review-local
+  gold eval passes `10/10` cases with `promotion_ready=true`.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and

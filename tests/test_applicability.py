@@ -205,6 +205,71 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertTrue(result.summary["validation_passed"])
             self.assertEqual(result.summary["candidate_authority_count"], 5)
 
+    def test_snapshot_ignores_region_wide_component_inventory_without_top_level_forest_unit(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-test"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                output_dir,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-flathead-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_region1_component_inventory(
+                output_dir,
+                source_set_id,
+            )
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id="region1-component-unit",
+                source_set_id=source_set_id,
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
+                forest_plan_component_inventory_path=component_inventory_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["forest_plan_component_candidate_count"], 0)
+
+            snapshot = json.loads(result.snapshot_path.read_text(encoding="utf-8"))
+            component_candidates = [
+                candidate
+                for candidate in snapshot["candidate_authorities"]
+                if candidate["candidate_authority_type"] == "forest_plan_component"
+            ]
+            self.assertEqual(component_candidates, [])
+            component_check = _check(
+                snapshot["validation"],
+                "forest_plan_component_candidates_use_profile_inventory",
+            )
+            self.assertTrue(component_check["passed"])
+            self.assertEqual(
+                component_check["details"]["component_candidate_count"],
+                0,
+            )
+            self.assertFalse(component_check["details"]["component_inventory_present"])
+            self.assertIsNone(component_check["details"]["inventory_forest_unit_id"])
+
     def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -681,13 +746,55 @@ def _write_component_inventory(output_dir: Path, source_set_id: str) -> Path:
     return inventory_path
 
 
-def _component(source_set_id: str, component_type: str, component_code: str) -> dict:
-    component_id = f"R1PLAN-custer-gallatin-nf-02-{component_code}"
+def _write_region1_component_inventory(output_dir: Path, source_set_id: str) -> Path:
+    inventory_path = (
+        output_dir
+        / "derived"
+        / source_set_id
+        / "forest_plan_components"
+        / "component_inventory.json"
+    )
+    inventory = {
+        "schema_version": "forest-plan-component-inventory-v0",
+        "inventory_id": "region1-inventory",
+        "source_set_id": source_set_id,
+        "forest_unit_id": None,
+        "plan_version": None,
+        "components": [
+            _component(source_set_id, "standard", "STD-01"),
+            _component(
+                source_set_id,
+                "guideline",
+                "FW-GDL-WTR-01",
+                source_record_id="R1PLAN-flathead-nf-02",
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                management_area_ids=["mgmt-jewel-basin-hiking-area"],
+                resource_topics=["hydrology"],
+            ),
+        ],
+    }
+    _write_json(inventory_path, inventory)
+    return inventory_path
+
+
+def _component(
+    source_set_id: str,
+    component_type: str,
+    component_code: str,
+    *,
+    source_record_id: str = "R1PLAN-custer-gallatin-nf-02",
+    forest_unit_id: str = "custer-gallatin-nf",
+    plan_version: str = "2022",
+    management_area_ids: list[str] | None = None,
+    resource_topics: list[str] | None = None,
+) -> dict:
+    component_id = f"{source_record_id}-{component_code}"
     return {
         "source_set_id": source_set_id,
-        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
-        "forest_unit_id": "custer-gallatin-nf",
-        "plan_version": "2022",
+        "source_record_id": source_record_id,
+        "forest_unit_id": forest_unit_id,
+        "plan_version": plan_version,
         "component_id": component_id,
         "component_type": component_type,
         "section_id": "section",
@@ -695,10 +802,10 @@ def _component(source_set_id: str, component_type: str, component_code: str) -> 
         "artifact_sha256": hashlib.sha256(component_id.encode("utf-8")).hexdigest(),
         "source_chunk_ids": [f"chunk:{component_id}"],
         "package_evidence_terms": ["road"],
-        "resource_topics": ["access"],
+        "resource_topics": resource_topics or ["access"],
         "activity_tags": ["construction"],
         "geographic_area_ids": [],
-        "management_area_ids": ["mgmt-crazy-mountains-bca"],
+        "management_area_ids": management_area_ids or ["mgmt-crazy-mountains-bca"],
         "overlay_ids": [],
     }
 

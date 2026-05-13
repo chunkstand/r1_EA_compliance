@@ -1,9 +1,94 @@
 # Session Handoff
 
-Date: 2026-05-12
+Date: 2026-05-13
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Region 1 Flathead Live-Package Proving Closeout
+
+The West Reservoir proving lane is now closed green on the active full-canonical corpus.
+
+- proving surface:
+  local West Reservoir package at `/Users/chunkstand/Downloads/West Reservoir (67436)`,
+  review `west-reservoir-67436`,
+  source set `source-set-5e65d845ce77e1a0`
+- outcome:
+  review-bound `phase-eval` now passes `17/17` with `reviewer_ready=true`, so Flathead now has a
+  real live-package reviewer-ready proving review on the active source set
+- applicability and generated pack:
+  `applicability_validation.json` now reports `44` applicable authorities, `23`
+  non-applicable authorities, `0` unresolved, `0` `needs_adjudication`, and
+  `generated_rule_pack_ready=true`; `generated_rule_pack_validation.json` passes with `44` rules
+- forest-plan proving:
+  `forest_plan_context_validation.json` is green with `scope_status="flathead_nf"`, and
+  `forest_plan_component_adjudication_eval.json` now passes with `48` queue items,
+  `48` resolved adjudications, `0` pending, and `reviewer_ready=true`
+- review and gold:
+  `compliance_review.json` is green in generated-pack mode with
+  `finding_status_counts={"pass":26,"uncertain":15,"gap":3}`, and
+  `compliance_gold_eval_results.json` passes `10/10` cases with `promotion_ready=true`
+- generic code fixes closed in this lane:
+  Flathead supporting-plan evidence now closes against support-scoped catalog records,
+  review-local generated-pack gold eval now accepts base-gold contracts with generated overrides,
+  and the authority-universe gate no longer treats the Region 1 aggregate component inventory as a
+  profile-scoped applicability input
+- next step:
+  do not reopen the Flathead live-package lane unless a new regression appears; route future work
+  to the next selected post-V1 expansion or promotion boundary
+
+Verification in this closeout:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_architecture_contract.py`: passed `12/12`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path '/Users/chunkstand/Downloads/West Reservoir (67436)' --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --review-id west-reservoir-67436 --forest-unit-id flathead-nf --rule-pack source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json --reuse-package-cache`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --forest-unit-id flathead-nf --rule-pack source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json --gold-file config/compliance_gold_eval_v0.json --results-dir source_library/reviews/west-reservoir-67436`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id west-reservoir-67436`: passed `17/17`, `reviewer_ready=true`
+
+Residual risks:
+
+- the proving package remains outside the repo, so the replay-context contract and this handoff
+  remain part of the durability boundary
+- this closes one real Flathead proving review, not every future Flathead package; future package
+  replays still need their own evidence-backed runs
+
+## Region 1 Flathead Live-Package Proving Plan
+
+The remaining Flathead work is now formalized in
+`docs/R1_FLATHEAD_LIVE_PACKAGE_PROVING_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  the Flathead profile-expansion milestone is already closed; this new plan is only for the
+  remaining live-package proof gap
+- declared proving surface:
+  local West Reservoir package at `/Users/chunkstand/Downloads/West Reservoir (67436)`,
+  review `west-reservoir-67436`,
+  source set `source-set-5e65d845ce77e1a0`
+- current baseline truth:
+  package checklist is green, but review-bound `phase-eval` is still red at `11/16` phases passed
+- current typed blockers:
+  `3` unresolved applicability families,
+  `6` Flathead supporting-plan routes missing source-backed closure,
+  `80` component-adjudication queue items, and stale/non-reviewer-ready review-local gold alignment
+- next step:
+  execute Sequence 0 from `docs/R1_FLATHEAD_LIVE_PACKAGE_PROVING_MILESTONE_PLAN.md`, then close
+  applicability before touching component adjudication or review-local gold alignment
+
+Verification in this planning pass:
+
+- `git diff --check`: passed
+
+Residual risks:
+
+- the current proving package lives outside the repo, so the replay-context contract and handoff
+  must keep the package boundary explicit
+- this plan is narrower than the broader next-forest expansion lane; it should not be widened into
+  roster-level work
 
 ## Forest Plan Component Source-Text Accuracy Closeout
 
