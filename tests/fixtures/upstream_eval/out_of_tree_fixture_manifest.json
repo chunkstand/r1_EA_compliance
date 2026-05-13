@@ -1,0 +1,43 @@
+{
+  "schema_version": "upstream-evaluation-v1",
+  "fixture_roots": [
+    "../../../config/fixtures/upstream_eval",
+    "."
+  ],
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "passed"
+    ]
+  },
+  "required_lanes": [
+    {
+      "lane_id": "capture",
+      "required_category_ids": [
+        "challenge_page_http200"
+      ],
+      "minimum_expected_pass_cases_per_category": 1,
+      "minimum_controlled_violation_cases_per_category": 1
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "capture-challenge-pass",
+      "lane_id": "capture",
+      "category_id": "challenge_page_http200",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "../../../README.md",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-challenge-fail",
+      "lane_id": "capture",
+      "category_id": "challenge_page_http200",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "../../../README.md",
+      "scenario_id": "controlled_violation"
+    }
+  ]
+}

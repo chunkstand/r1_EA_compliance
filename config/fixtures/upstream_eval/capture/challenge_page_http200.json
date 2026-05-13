@@ -1,0 +1,39 @@
+{
+  "runner": "capture_response_classification",
+  "scenarios": {
+    "expected_pass": {
+      "response": {
+        "http_status": 200,
+        "final_url": "https://unblock.federalregister.gov/",
+        "redirect_chain": [
+          "https://unblock.federalregister.gov/"
+        ],
+        "content_type": "text/html",
+        "content_length": 4096,
+        "method": "GET",
+        "body_sample": "<html><body>Federal Register challenge page</body></html>"
+      },
+      "recorded_result": {
+        "status": "challenge_page",
+        "validation_passed": false
+      }
+    },
+    "controlled_violation": {
+      "response": {
+        "http_status": 200,
+        "final_url": "https://unblock.federalregister.gov/",
+        "redirect_chain": [
+          "https://unblock.federalregister.gov/"
+        ],
+        "content_type": "text/html",
+        "content_length": 4096,
+        "method": "GET",
+        "body_sample": "<html><body>Federal Register challenge page</body></html>"
+      },
+      "recorded_result": {
+        "status": "preflight_ok",
+        "validation_passed": true
+      }
+    }
+  }
+}

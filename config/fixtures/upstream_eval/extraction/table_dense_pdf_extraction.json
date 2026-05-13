@@ -1,0 +1,97 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-802",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-802",
+            "title": "Table Dense PDF Source",
+            "url": "https://example.test/table-dense-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-table",
+        "records": [
+          {
+            "source_record_id": "UPEXT-802",
+            "status": "downloaded",
+            "title": "Table Dense PDF Source",
+            "original_url": "https://example.test/table-dense-source.pdf",
+            "artifact_path": "artifacts/raw/upstream/table-dense-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "TABLE 1 RESOURCE ACREAGE",
+                "Riparian habitat 42",
+                "Old growth 17",
+                "Wet meadow 9"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "Riparian habitat 42",
+        "Old growth 17"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-802",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-802",
+            "title": "Table Dense PDF Source",
+            "url": "https://example.test/table-dense-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-table-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-802",
+            "status": "downloaded",
+            "title": "Table Dense PDF Source",
+            "original_url": "https://example.test/table-dense-source.pdf",
+            "artifact_path": "artifacts/raw/upstream/table-dense-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "TABLE 1 RESOURCE ACREAGE",
+                "Riparian habitat 42",
+                "Old growth 17",
+                "Wet meadow 9"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_first_chunk_text",
+          "text": "tampered table chunk"
+        }
+      ],
+      "required_markers": [
+        "Riparian habitat 42",
+        "Old growth 17"
+      ],
+      "required_check_outcomes": {
+        "chunks_match_extracted_text_offsets": false
+      }
+    }
+  }
+}

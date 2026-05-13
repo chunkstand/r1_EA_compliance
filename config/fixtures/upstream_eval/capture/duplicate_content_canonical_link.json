@@ -1,0 +1,67 @@
+{
+  "runner": "capture_validate_run",
+  "scenarios": {
+    "expected_pass": {
+      "run_id": "upstream-duplicate-content-pass",
+      "records": [
+        {
+          "source_record_id": "UPCAP-DUP-001",
+          "status": "downloaded",
+          "title": "Canonical Source",
+          "original_url": "https://example.test/canonical-source",
+          "artifact_path": "artifacts/raw/upstream/canonical-source.html",
+          "artifact": {
+            "type": "html",
+            "body": "<html><body>Canonical source content for duplicate-content linkage coverage.</body></html>"
+          },
+          "content_type": "text/html",
+          "validation_passed": true
+        },
+        {
+          "source_record_id": "UPCAP-DUP-002",
+          "status": "duplicate_content",
+          "title": "Duplicate Source",
+          "original_url": "https://example.test/duplicate-source",
+          "artifact_path": "artifacts/raw/upstream/canonical-source.html",
+          "duplicate_of": "artifacts/raw/upstream/canonical-source.html",
+          "content_type": "text/html",
+          "validation_passed": true
+        }
+      ],
+      "required_check_outcomes": {
+        "duplicate_content_links_to_canonical_artifact": true
+      }
+    },
+    "controlled_violation": {
+      "run_id": "upstream-duplicate-content-fail",
+      "records": [
+        {
+          "source_record_id": "UPCAP-DUP-001",
+          "status": "downloaded",
+          "title": "Canonical Source",
+          "original_url": "https://example.test/canonical-source",
+          "artifact_path": "artifacts/raw/upstream/canonical-source.html",
+          "artifact": {
+            "type": "html",
+            "body": "<html><body>Canonical source content for duplicate-content linkage coverage.</body></html>"
+          },
+          "content_type": "text/html",
+          "validation_passed": true
+        },
+        {
+          "source_record_id": "UPCAP-DUP-002",
+          "status": "duplicate_content",
+          "title": "Duplicate Source",
+          "original_url": "https://example.test/duplicate-source",
+          "artifact_path": "artifacts/raw/upstream/canonical-source.html",
+          "duplicate_of": "artifacts/raw/upstream/missing-source.html",
+          "content_type": "text/html",
+          "validation_passed": true
+        }
+      ],
+      "required_check_outcomes": {
+        "duplicate_content_links_to_canonical_artifact": false
+      }
+    }
+  }
+}

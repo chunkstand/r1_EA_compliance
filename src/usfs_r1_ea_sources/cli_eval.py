@@ -13,6 +13,8 @@ from .evidence_graph import run_phase_aligned_eval
 from .promotion_suite import DEFAULT_PROMOTION_SUITE_PATH
 from .promotion_suite import run_promotion_suite
 from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .upstream_evaluation import DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH
+from .upstream_evaluation import run_upstream_evaluation
 from .v1_ea_eval import DEFAULT_V1_EA_EVAL_PATH
 from .v1_ea_eval import run_v1_ea_review_eval
 
@@ -20,6 +22,7 @@ from .v1_ea_eval import run_v1_ea_review_eval
 EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
+    "upstream-eval",
     "phase-eval",
     "v1-ea-eval",
     "promotion-suite",
@@ -74,6 +77,14 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     applicability_gold_eval.add_argument("--results-dir", type=Path)
     applicability_gold_eval.add_argument("--top-k", type=int, default=5)
+
+    upstream_eval = subparsers.add_parser(
+        "upstream-eval",
+        help="Run deterministic upstream direct-eval coverage fixtures.",
+    )
+    upstream_eval.add_argument("--manifest", default=DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH, type=Path)
+    upstream_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    upstream_eval.add_argument("--results-dir", type=Path)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -132,6 +143,15 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             source_set_id=args.source_set_id,
             results_dir=args.results_dir,
             top_k=args.top_k,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "upstream-eval":
+        result = run_upstream_evaluation(
+            manifest_path=args.manifest,
+            output_dir=args.output_dir,
+            results_dir=args.results_dir,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

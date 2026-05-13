@@ -328,6 +328,9 @@ def run_phase_aligned_eval(
     catalog_validation_path = catalog_dir / "catalog_validation.json"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
+    upstream_evaluation_path = (
+        output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
+    )
     retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
     retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
@@ -478,6 +481,9 @@ def run_phase_aligned_eval(
     )
     extraction_summary = (
         _read_json(extraction_summary_path) if extraction_summary_path.exists() else None
+    )
+    upstream_evaluation = (
+        _read_json(upstream_evaluation_path) if upstream_evaluation_path.exists() else None
     )
     retrieval_validation = (
         _read_json(retrieval_validation_path) if retrieval_validation_path.exists() else None
@@ -646,6 +652,10 @@ def run_phase_aligned_eval(
                     "skipped_excluded_count",
                 ),
             },
+        ),
+        _upstream_evaluation_phase(
+            upstream_evaluation=upstream_evaluation,
+            upstream_evaluation_path=upstream_evaluation_path,
         ),
         _phase(
             "retrieval",
@@ -2517,6 +2527,31 @@ def _phase(name: str, *, passed: bool, reviewer_ready: bool, details: dict) -> d
         "failure_reasons": failure_reasons,
         "details": details,
     }
+
+
+def _upstream_evaluation_phase(
+    *,
+    upstream_evaluation: dict | None,
+    upstream_evaluation_path: Path,
+) -> dict:
+    lane_statuses = {
+        str(lane.get("lane_id") or ""): str(lane.get("status") or "")
+        for lane in (upstream_evaluation or {}).get("lane_summaries", [])
+        if isinstance(lane, dict)
+    }
+    passed = bool(upstream_evaluation and upstream_evaluation.get("passed"))
+    return _phase(
+        "upstream_evaluation",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "path": str(upstream_evaluation_path),
+            "present": upstream_evaluation is not None,
+            "schema_version": (upstream_evaluation or {}).get("schema_version"),
+            "lane_statuses": lane_statuses,
+            "failed_case_ids": (upstream_evaluation or {}).get("failed_case_ids", []),
+        },
+    )
 
 
 def _failed_check_names(validation: dict | None) -> list[str]:

@@ -1,0 +1,80 @@
+{
+  "runner": "capture_preflight",
+  "scenarios": {
+    "expected_pass": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAP-001",
+            "title": "Shared Source Row One",
+            "url": "https://example.test/shared-source"
+          },
+          {
+            "source_record_id": "UPCAP-002",
+            "title": "Shared Source Row Two",
+            "url": "https://example.test/shared-source"
+          }
+        ]
+      },
+      "fetch_results": {
+        "https://example.test/shared-source": {
+          "status": "preflight_ok",
+          "http_status": 200,
+          "final_url": "https://example.test/shared-source",
+          "content_type": "text/html",
+          "content_length": 4096,
+          "method": "HEAD",
+          "validation_passed": true
+        }
+      },
+      "assertions": {
+        "checked_url_count": 1,
+        "duplicate_url_count": 1,
+        "filtered_rows": 2,
+        "duplicate_record_count": 1
+      }
+    },
+    "controlled_violation": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAP-001",
+            "title": "Shared Source Row One",
+            "url": "https://example.test/shared-source"
+          },
+          {
+            "source_record_id": "UPCAP-002",
+            "title": "Shared Source Row Two",
+            "url": "https://example.test/unique-source"
+          }
+        ]
+      },
+      "fetch_results": {
+        "https://example.test/shared-source": {
+          "status": "preflight_ok",
+          "http_status": 200,
+          "final_url": "https://example.test/shared-source",
+          "content_type": "text/html",
+          "content_length": 4096,
+          "method": "HEAD",
+          "validation_passed": true
+        },
+        "https://example.test/unique-source": {
+          "status": "preflight_ok",
+          "http_status": 200,
+          "final_url": "https://example.test/unique-source",
+          "content_type": "text/html",
+          "content_length": 4096,
+          "method": "HEAD",
+          "validation_passed": true
+        }
+      },
+      "assertions": {
+        "checked_url_count": 1,
+        "duplicate_url_count": 1,
+        "filtered_rows": 2,
+        "duplicate_record_count": 1
+      }
+    }
+  }
+}

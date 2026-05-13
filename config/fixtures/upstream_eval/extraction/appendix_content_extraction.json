@@ -1,0 +1,95 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-803",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-803",
+            "title": "Appendix Content DOCX Source",
+            "url": "https://example.test/appendix-content-source.docx"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-appendix",
+        "records": [
+          {
+            "source_record_id": "UPEXT-803",
+            "status": "downloaded",
+            "title": "Appendix Content DOCX Source",
+            "original_url": "https://example.test/appendix-content-source.docx",
+            "artifact_path": "artifacts/raw/upstream/appendix-content-source.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "Decision Notice",
+                "Appendix A - Monitoring Commitments",
+                "Appendix content must remain present in the extraction output."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "Appendix A - Monitoring Commitments",
+        "Appendix content must remain present"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-803",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-803",
+            "title": "Appendix Content DOCX Source",
+            "url": "https://example.test/appendix-content-source.docx"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-appendix-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-803",
+            "status": "downloaded",
+            "title": "Appendix Content DOCX Source",
+            "original_url": "https://example.test/appendix-content-source.docx",
+            "artifact_path": "artifacts/raw/upstream/appendix-content-source.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "Decision Notice",
+                "Appendix A - Monitoring Commitments",
+                "Appendix content must remain present in the extraction output."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Decision Notice only."
+        }
+      ],
+      "required_markers": [
+        "Appendix A - Monitoring Commitments",
+        "Appendix content must remain present"
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

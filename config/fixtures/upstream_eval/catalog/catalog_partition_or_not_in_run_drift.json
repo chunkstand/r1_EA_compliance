@@ -1,0 +1,171 @@
+{
+  "runner": "catalog_build",
+  "scenarios": {
+    "expected_pass": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAT-101",
+            "title": "Canonical Catalog Source",
+            "url": "https://example.test/canonical-catalog-source"
+          }
+        ]
+      },
+      "supplemental_sources": [
+        {
+          "source_record_id": "R1PLAN-flathead-nf-02",
+          "title": "Flathead Forest Plan",
+          "url": "https://example.test/flathead-forest-plan.pdf",
+          "forest_unit_id": "flathead-nf"
+        }
+      ],
+      "source_delta_input": {
+        "schema": "r1-forest-plan-document-register-v0",
+        "source_delta_count": 1
+      },
+      "batch_run_ids": [
+        "upstream-canonical-batches",
+        "upstream-delta-batches"
+      ],
+      "batch_runs": [
+        {
+          "batch_run_id": "upstream-canonical-batches",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-canonical-batch-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [
+                "UPCAT-101"
+              ],
+              "records": [
+                {
+                  "source_record_id": "UPCAT-101",
+                  "status": "downloaded",
+                  "title": "Canonical Catalog Source",
+                  "original_url": "https://example.test/canonical-catalog-source",
+                  "artifact_path": "artifacts/raw/upstream/canonical-catalog-source.html",
+                  "artifact": {
+                    "type": "html",
+                    "body": "<html><body>Canonical catalog source content.</body></html>"
+                  },
+                  "content_type": "text/html",
+                  "validation_passed": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "batch_run_id": "upstream-delta-batches",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-delta-batch-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [
+                "R1PLAN-flathead-nf-02"
+              ],
+              "records": [
+                {
+                  "source_record_id": "R1PLAN-flathead-nf-02",
+                  "status": "downloaded",
+                  "title": "Flathead Forest Plan",
+                  "original_url": "https://example.test/flathead-forest-plan.pdf",
+                  "artifact_path": "artifacts/raw/upstream/flathead-forest-plan.pdf",
+                  "artifact": {
+                    "type": "pdf",
+                    "lines": [
+                      "Flathead Forest Plan primary plan text."
+                    ]
+                  },
+                  "content_type": "application/pdf",
+                  "validation_passed": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "merged_catalog_batch_runs_cover_all_catalog_records": true
+      }
+    },
+    "controlled_violation": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAT-101",
+            "title": "Canonical Catalog Source",
+            "url": "https://example.test/canonical-catalog-source"
+          }
+        ]
+      },
+      "supplemental_sources": [
+        {
+          "source_record_id": "R1PLAN-flathead-nf-02",
+          "title": "Flathead Forest Plan",
+          "url": "https://example.test/flathead-forest-plan.pdf",
+          "forest_unit_id": "flathead-nf"
+        }
+      ],
+      "source_delta_input": {
+        "schema": "r1-forest-plan-document-register-v0",
+        "source_delta_count": 1
+      },
+      "batch_run_ids": [
+        "upstream-canonical-batches-fail",
+        "upstream-delta-batches-fail"
+      ],
+      "batch_runs": [
+        {
+          "batch_run_id": "upstream-canonical-batches-fail",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-canonical-batch-fail-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [
+                "UPCAT-101"
+              ],
+              "records": [
+                {
+                  "source_record_id": "UPCAT-101",
+                  "status": "downloaded",
+                  "title": "Canonical Catalog Source",
+                  "original_url": "https://example.test/canonical-catalog-source",
+                  "artifact_path": "artifacts/raw/upstream/canonical-catalog-source.html",
+                  "artifact": {
+                    "type": "html",
+                    "body": "<html><body>Canonical catalog source content.</body></html>"
+                  },
+                  "content_type": "text/html",
+                  "validation_passed": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "batch_run_id": "upstream-delta-batches-fail",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-delta-batch-fail-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [],
+              "records": []
+            }
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "merged_catalog_batch_runs_cover_all_catalog_records": false
+      }
+    }
+  }
+}

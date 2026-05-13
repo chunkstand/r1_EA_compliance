@@ -171,15 +171,15 @@ class PreflightTests(unittest.TestCase):
                 if line.strip()
             ]
             self.assertEqual(result.summary["workbook_rows"], 190)
-            self.assertEqual(result.summary["canonical_rows"], 349)
-            self.assertEqual(result.summary["supplemental_source_count"], 159)
-            self.assertEqual(result.summary["filtered_rows"], 159)
-            self.assertEqual(result.summary["checked_url_count"], 159)
-            self.assertEqual(result.summary["preflight_ok_count"], 159)
+            self.assertEqual(result.summary["canonical_rows"], 350)
+            self.assertEqual(result.summary["supplemental_source_count"], 160)
+            self.assertEqual(result.summary["filtered_rows"], 160)
+            self.assertEqual(result.summary["checked_url_count"], 160)
+            self.assertEqual(result.summary["preflight_ok_count"], 160)
             self.assertEqual(result.summary["failed_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["source_delta_input"]["gap_count"], 2)
-            self.assertEqual(len(fetcher.calls), 159)
+            self.assertEqual(result.summary["source_delta_input"]["gap_count"], 1)
+            self.assertEqual(len(fetcher.calls), 160)
             self.assertEqual({record["source_record_id"] for record in records}, source_delta_ids)
 
     def test_preflight_classifies_document_not_found_body_as_not_found(self) -> None:

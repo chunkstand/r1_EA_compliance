@@ -1,0 +1,95 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-801",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-801",
+            "title": "OCR Heavy PDF Source",
+            "url": "https://example.test/ocr-heavy-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-ocr",
+        "records": [
+          {
+            "source_record_id": "UPEXT-801",
+            "status": "downloaded",
+            "title": "OCR Heavy PDF Source",
+            "original_url": "https://example.test/ocr-heavy-source.pdf",
+            "artifact_path": "artifacts/raw/upstream/ocr-heavy-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "SCANNED DECISION NOTICE",
+                "The proiect shall retain riparian buffers.",
+                "Mitigation monitoring appendix A remains part of the record."
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "riparian buffers",
+        "Mitigation monitoring appendix A"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-801",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-801",
+            "title": "OCR Heavy PDF Source",
+            "url": "https://example.test/ocr-heavy-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-ocr-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-801",
+            "status": "downloaded",
+            "title": "OCR Heavy PDF Source",
+            "original_url": "https://example.test/ocr-heavy-source.pdf",
+            "artifact_path": "artifacts/raw/upstream/ocr-heavy-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "SCANNED DECISION NOTICE",
+                "The proiect shall retain riparian buffers.",
+                "Mitigation monitoring appendix A remains part of the record."
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Unreadable OCR placeholder only."
+        }
+      ],
+      "required_markers": [
+        "riparian buffers",
+        "Mitigation monitoring appendix A"
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

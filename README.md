@@ -826,7 +826,7 @@ Remove `--plan-only` to execute the planned batches. Each batch runs `download`,
 Use `--resume` to skip already passed batches under the same run prefix.
 For the promoted Region 1 forest-plan source delta, add
 `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-to batch only the `159` supplemental `R1PLAN-*` rows.
+to batch only the `160` supplemental `R1PLAN-*` rows.
 
 Run or refresh the full captured library:
 
@@ -912,6 +912,19 @@ scoped XML text, markup/entity cleanup, and PDF token coverage against independe
 PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit \
   --output-dir source_library
 ```
+
+Run the tracked upstream direct-eval suite after capture, catalog, or extraction changes:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval \
+  --manifest config/upstream_evaluation_v1.json \
+  --results-dir source_library/evaluations/upstream
+```
+
+The command writes `source_library/evaluations/upstream/upstream_evaluation_results.json` and
+`source_library/evaluations/upstream/upstream_evaluation_report.md`. It replays tracked capture,
+catalog, and extraction adversarial fixtures without network access, requires all `11` named
+coverage categories across `22` total cases, and reports exact failed case IDs when red.
 
 PDF extraction uses Docling first. The default PDF path disables OCR for born-digital sources and
 runs Docling in a child process with a hard per-document timeout; when a born-digital PDF exceeds
@@ -1572,9 +1585,13 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library
 ```
 
-This reports catalog, extraction, retrieval, evidence-graph, claim-extraction, and rule-claim
-binding readiness separately so validation failures are not hidden inside a single aggregate score.
-When `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
+This reports catalog, extraction, upstream direct-eval coverage, retrieval, evidence-graph,
+claim-extraction, and rule-claim binding readiness separately so validation failures are not hidden
+inside a single aggregate score. When
+`source_library/evaluations/upstream/upstream_evaluation_results.json` exists, phase eval also adds
+an `upstream_evaluation` phase sourced from that aggregate summary and fails closed when the
+results file is missing or records `passed=false`. When
+`compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also
 reports a `compliance_gold_eval` promotion phase with explicit failed checks for stale source-set,

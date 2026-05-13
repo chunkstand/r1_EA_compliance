@@ -5,6 +5,53 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Upstream Evaluation Coverage Closeout
+
+The upstream evaluation coverage milestone is now implemented across code, tracked fixtures, docs,
+and readiness wiring.
+
+- scope:
+  `config/upstream_evaluation_v1.json`, fixture families under `config/fixtures/upstream_eval/` and
+  `tests/fixtures/upstream_eval/`, `src/usfs_r1_ea_sources/upstream_evaluation.py`, CLI
+  registration, `phase-eval` wiring, and `docs/EVALUATION_COVERAGE_REGISTER.md`
+- current direct-eval truth:
+  `upstream-eval` now requires `11` named category families and `22` total cases across capture,
+  catalog, and extraction; the current closeout replay passed `22/22` matched cases with
+  `failed_case_ids=[]`, and the promoted output family is
+  `source_library/evaluations/upstream/upstream_evaluation_results.json` plus
+  `source_library/evaluations/upstream/upstream_evaluation_report.md`
+- readiness integration:
+  source-set and review `phase-eval` now surface a separate `upstream_evaluation` phase sourced
+  from `source_library/evaluations/upstream/upstream_evaluation_results.json` and fail closed when
+  that summary is missing or records `passed=false`
+- closing commit hash:
+  self-referential same-commit hashes cannot be embedded in this section without a follow-up amend;
+  use the local milestone commit containing this section as the closeout hash
+- next routing boundary:
+  execute `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md` next for retrieval, claim,
+  rule-claim, and compliance-review direct-eval breadth
+- affected dirty state:
+  unrelated local changes already exist in `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of the upstream
+  milestone slice
+
+Verification in this closeout:
+
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_preflight.py tests/test_validate_run.py tests/test_catalog.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py tests/test_cli.py tests/test_evidence_graph.py -q`: passed `105/105`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_architecture_contract.py tests/test_cli.py -q`: passed `56/56` after the final lint-only cleanup in `evidence_graph.py`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`: passed with `matched_case_count=22`, `required_category_count=11`, and all lane summaries `direct_eval_present`
+- `git diff --check`: passed
+
+Residual risks:
+
+- downstream direct-eval breadth for retrieval, claim, rule-claim, and compliance-review remains a
+  separate follow-on milestone
+- the live upstream evaluation outputs are under ignored `source_library/`, so future sessions must
+  regenerate them locally rather than expecting them in git history
+
 ## Phase Eval Direct-Eval Gating Plan
 
 The repo now has a dedicated follow-on plan for the `phase-eval` proxy-readiness gap at

@@ -3578,6 +3578,83 @@ accuracy-oriented gate for generated extraction artifacts and checks:
 - PDF text has token coverage against independent `pypdf` extraction, with a stricter threshold for
   `pypdf_text_fallback` records
 
+## Upstream Evaluation Outputs
+
+Path: `source_library/evaluations/upstream/`
+
+The `upstream-eval` command writes:
+
+- `upstream_evaluation_results.json`
+- `upstream_evaluation_report.md`
+
+`upstream-eval` reads a tracked manifest, default
+`config/upstream_evaluation_v1.json`, and fixture cases rooted under the manifest's declared
+`fixture_roots`. The contract is deterministic and local-only: it replays capture, catalog, and
+extraction adversarial cases without network access or broad `source_library/` regeneration.
+
+`upstream_evaluation_results.json` has schema version
+`upstream-evaluation-results-v0` and includes:
+
+- `schema_version`
+- `manifest_path`
+- `results_dir`
+- `generated_at`
+- `passed`
+- `required_lane_count`
+- `required_category_count`
+- `case_count`
+- `expected_pass_case_count`
+- `controlled_violation_case_count`
+- `matched_case_count`
+- `failed_case_ids`
+- `contract_checks`
+- `lane_summaries`
+- `category_summaries`
+- `cases`
+- `output_path`
+- `report_path`
+
+Each lane summary includes:
+
+- `lane_id`
+- `register_rows`
+- `category_count`
+- `direct_eval_present_category_count`
+- `passed`
+- `status`
+- `failing_case_ids`
+
+Each category summary includes:
+
+- `lane_id`
+- `category_id`
+- `case_count`
+- `expected_pass_case_count`
+- `controlled_violation_case_count`
+- `matched_case_count`
+- `passed`
+- `failing_case_ids`
+- `status`
+
+Each case result includes:
+
+- `case_id`
+- `lane_id`
+- `category_id`
+- `case_type`
+- `fixture_path`
+- `scenario_id`
+- `expected_producer_passed`
+- `actual_producer_passed`
+- `assertion_passed`
+- `matched_expectation`
+- `details`
+- `error`
+
+`upstream_evaluation_report.md` is the operator-facing Markdown summary. It records aggregate pass
+state, lane status, category status, matched-case counts, and any failed case IDs so direct-eval
+coverage can be inspected without opening the raw JSON.
+
 ## Evidence Retrieval Outputs
 
 Path: `source_library/derived/<source_set_id>/retrieval/`
@@ -3948,9 +4025,14 @@ The `phase-eval` command writes `phase_eval_results.json` in the same directory.
 `source_library/reviews/<review_id>/phase_eval_results.json` (or the supplied review directory) with
 the same summary plus `review_id` and `review_dir`, so promotion checks can evaluate multiple
 review-specific phase results without relying on the shared source-set phase artifact. It evaluates
-catalog capture, extraction, retrieval, evidence graph, claim extraction, and rule-claim binding as
-separate phases and records phase blockers so downstream compliance review cannot hide an upstream
-failure. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
+catalog capture, extraction, upstream direct-eval coverage, retrieval, evidence graph, claim
+extraction, and rule-claim binding as separate phases and records phase blockers so downstream
+compliance review cannot hide an upstream failure. When
+`source_library/evaluations/upstream/upstream_evaluation_results.json` exists, phase eval also
+includes an `upstream_evaluation` phase sourced from that summary. The upstream phase fails closed
+when the results file is missing, when its schema or source path is unreadable, or when the summary
+records `passed=false`; its details include the upstream results path, lane statuses, and failed
+case IDs. When `compliance_coverage_results.json` exists beside the rule-claim outputs, phase eval
 also includes a `compliance_coverage` phase for matrix, source-claim, source-claim-term, and
 eval-case coverage. When NEPA 3D graph validation/summary artifacts exist, phase eval also includes
 `nepa_3d_source_set_graph` and, for review-scoped runs, `nepa_3d_review_graph` phases with

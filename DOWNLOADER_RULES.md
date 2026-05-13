@@ -330,6 +330,26 @@ Before derived text and chunks are treated as ready for reviewer-engine retrieva
 - Fail the extraction gate when hashes mismatch, parsers error, selected rows do not extract, chunk
   IDs duplicate, or chunks lack required provenance.
 
+## 18A. Upstream Direct Eval Gates
+
+Before capture, catalog, and extraction changes are treated as promotion-safe:
+
+- Structural validation alone is not upstream direct eval. Keep `validation_report.json`,
+  `acceptance_gate.json`, `catalog_validation.json`, and `extraction_validation.json` as integrity
+  truth, then run `upstream-eval` for adversarial case coverage.
+- Run `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`.
+- Require tracked deterministic fixture coverage for challenge-page `200`, not-found-body `200`,
+  duplicate URL row preservation, duplicate-content canonical linking, URL-override provenance
+  drift, batch-ledger/manifest mismatch, catalog partition drift, OCR-heavy PDFs, table-dense PDFs,
+  appendix-content retention, and section-boundary extraction.
+- Keep upstream direct-eval fixtures under `config/fixtures/upstream_eval/` or
+  `tests/fixtures/upstream_eval/`; do not satisfy the contract by reading mutable ignored
+  `source_library/` artifacts.
+- `source_library/evaluations/upstream/upstream_evaluation_results.json` must record aggregate
+  pass/fail state, lane summaries, category summaries, and failed case IDs.
+- `phase-eval` must surface a separate `upstream_evaluation` phase and fail closed when the
+  upstream aggregate results are missing or failing.
+
 ## 19. Retrieval Gates
 
 Before retrieved evidence is used in an EA compliance review:
@@ -370,9 +390,9 @@ Before the graph layer is used by a compliance reviewer:
 - Fail the graph gate when retrieval binding fails, chunk hashes do not match text, node IDs or edge
   IDs duplicate, edges dangle, chunks lack evidence spans, chunks lack artifact traces, chunks lack
   review-topic edges, or graph health metrics fail.
-- Run `phase-eval` before compliance execution so catalog, extraction, retrieval, evidence graph,
-  claim extraction, rule-claim binding, optional coverage, optional gold eval, and optional review
-  readiness are reported separately.
+- Run `phase-eval` before compliance execution so catalog, extraction, upstream direct eval,
+  retrieval, evidence graph, claim extraction, rule-claim binding, optional coverage, optional gold
+  eval, and optional review readiness are reported separately.
 
 ## 21. Source Claim Gates
 

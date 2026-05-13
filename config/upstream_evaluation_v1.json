@@ -1,0 +1,269 @@
+{
+  "schema_version": "upstream-evaluation-v1",
+  "fixture_roots": [
+    "fixtures/upstream_eval",
+    "../tests/fixtures/upstream_eval"
+  ],
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "manifest_path",
+      "results_dir",
+      "generated_at",
+      "required_lane_count",
+      "required_category_count",
+      "case_count",
+      "matched_case_count",
+      "failed_case_ids",
+      "contract_checks",
+      "lane_summaries",
+      "category_summaries",
+      "cases",
+      "passed"
+    ]
+  },
+  "required_lanes": [
+    {
+      "lane_id": "capture",
+      "register_rows": [
+        "preflight",
+        "validate_run"
+      ],
+      "required_category_ids": [
+        "challenge_page_http200",
+        "not_found_body_http200",
+        "duplicate_url_row_preservation",
+        "duplicate_content_canonical_link",
+        "url_override_provenance_drift"
+      ],
+      "minimum_expected_pass_cases_per_category": 1,
+      "minimum_controlled_violation_cases_per_category": 1
+    },
+    {
+      "lane_id": "catalog",
+      "register_rows": [
+        "catalog_validation"
+      ],
+      "required_category_ids": [
+        "batch_ledger_manifest_mismatch",
+        "catalog_partition_or_not_in_run_drift"
+      ],
+      "minimum_expected_pass_cases_per_category": 1,
+      "minimum_controlled_violation_cases_per_category": 1
+    },
+    {
+      "lane_id": "extraction",
+      "register_rows": [
+        "extraction_accuracy"
+      ],
+      "required_category_ids": [
+        "ocr_heavy_pdf_extraction",
+        "table_dense_pdf_extraction",
+        "appendix_content_extraction",
+        "section_boundary_extraction"
+      ],
+      "minimum_expected_pass_cases_per_category": 1,
+      "minimum_controlled_violation_cases_per_category": 1
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "capture-challenge-page-expected-pass",
+      "lane_id": "capture",
+      "category_id": "challenge_page_http200",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/challenge_page_http200.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-challenge-page-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "challenge_page_http200",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/challenge_page_http200.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "capture-not-found-body-expected-pass",
+      "lane_id": "capture",
+      "category_id": "not_found_body_http200",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/not_found_body_http200.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-not-found-body-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "not_found_body_http200",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/not_found_body_http200.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "capture-duplicate-url-expected-pass",
+      "lane_id": "capture",
+      "category_id": "duplicate_url_row_preservation",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/duplicate_url_row_preservation.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-duplicate-url-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "duplicate_url_row_preservation",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/duplicate_url_row_preservation.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "capture-duplicate-content-link-expected-pass",
+      "lane_id": "capture",
+      "category_id": "duplicate_content_canonical_link",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/duplicate_content_canonical_link.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-duplicate-content-link-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "duplicate_content_canonical_link",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/duplicate_content_canonical_link.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "capture-url-override-expected-pass",
+      "lane_id": "capture",
+      "category_id": "url_override_provenance_drift",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/url_override_provenance_drift.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-url-override-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "url_override_provenance_drift",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/url_override_provenance_drift.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "catalog-batch-ledger-expected-pass",
+      "lane_id": "catalog",
+      "category_id": "batch_ledger_manifest_mismatch",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/catalog/batch_ledger_manifest_mismatch.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "catalog-batch-ledger-controlled-violation",
+      "lane_id": "catalog",
+      "category_id": "batch_ledger_manifest_mismatch",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/catalog/batch_ledger_manifest_mismatch.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "catalog-partition-drift-expected-pass",
+      "lane_id": "catalog",
+      "category_id": "catalog_partition_or_not_in_run_drift",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/catalog/catalog_partition_or_not_in_run_drift.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "catalog-partition-drift-controlled-violation",
+      "lane_id": "catalog",
+      "category_id": "catalog_partition_or_not_in_run_drift",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/catalog/catalog_partition_or_not_in_run_drift.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-ocr-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "ocr_heavy_pdf_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/ocr_heavy_pdf_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-ocr-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "ocr_heavy_pdf_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/ocr_heavy_pdf_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-table-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "table_dense_pdf_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/table_dense_pdf_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-table-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "table_dense_pdf_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/table_dense_pdf_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-appendix-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "appendix_content_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/appendix_content_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-appendix-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "appendix_content_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/appendix_content_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-section-boundary-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "section_boundary_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/section_boundary_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-section-boundary-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "section_boundary_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/section_boundary_extraction.json",
+      "scenario_id": "controlled_violation"
+    }
+  ]
+}

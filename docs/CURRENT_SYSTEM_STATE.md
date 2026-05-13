@@ -39,6 +39,32 @@ catalog gate is archived under
 `source-set-411b3736b3691eed` with `159` forest-plan support rows, `158` artifacts, `159`
 `active_review_corpus` rows, and `catalog_validation.json` passing.
 
+## Upstream Evaluation Coverage
+
+Latest closeout on 2026-05-13:
+
+- The repo now ships a tracked upstream direct-eval contract at
+  `config/upstream_evaluation_v1.json`.
+- Deterministic upstream fixtures now live under `config/fixtures/upstream_eval/` and
+  `tests/fixtures/upstream_eval/`.
+- The upstream contract now requires `11` named category families across capture, catalog, and
+  extraction, with one expected-pass case plus one controlled-violation case per category for `22`
+  total aggregate cases.
+- The promoted output family is
+  `source_library/evaluations/upstream/upstream_evaluation_results.json` plus
+  `source_library/evaluations/upstream/upstream_evaluation_report.md`.
+- The closeout replay on 2026-05-13 passed `22/22` matched cases with `required_category_count=11`,
+  `failed_case_ids=[]`, and lane summaries `capture`, `catalog`, and `extraction` all marked
+  `direct_eval_present`.
+- `docs/EVALUATION_COVERAGE_REGISTER.md` now separates structural validation from direct-eval
+  coverage. The upstream rows `preflight`, `validate_run`, `catalog_validation`, and
+  `extraction_accuracy` are tracked as `direct_eval_present`; retrieval, claim, rule-claim, and
+  compliance-review remain routed as `direct_eval_strengthening_planned`.
+- `phase-eval` now includes a separate `upstream_evaluation` phase sourced from the upstream
+  aggregate summary and fails closed when that summary is missing or failing.
+- The next evaluation-strengthening boundary is
+  `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`.
+
 ## Full Canonical Corpus Promotion
 
 Latest closeout on 2026-05-12:

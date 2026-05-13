@@ -1,0 +1,55 @@
+{
+  "runner": "capture_validate_run",
+  "scenarios": {
+    "expected_pass": {
+      "run_id": "upstream-override-pass",
+      "records": [
+        {
+          "source_record_id": "UPCAP-OVR-001",
+          "status": "downloaded",
+          "title": "Override Source",
+          "original_url": "https://example.test/original-source",
+          "effective_url": "https://example.test/repaired-source",
+          "artifact_path": "artifacts/raw/upstream/override-source.html",
+          "artifact": {
+            "type": "html",
+            "body": "<html><body>Override provenance must remain traceable through acceptance gating.</body></html>"
+          },
+          "content_type": "text/html",
+          "metadata": {
+            "override_url": "https://example.test/repaired-source",
+            "override_reason": "Synthetic upstream eval repair"
+          },
+          "validation_passed": true
+        }
+      ],
+      "required_check_outcomes": {
+        "url_provenance_is_traceable": true,
+        "summary_counts_match_manifest": true
+      }
+    },
+    "controlled_violation": {
+      "run_id": "upstream-override-fail",
+      "records": [
+        {
+          "source_record_id": "UPCAP-OVR-001",
+          "status": "downloaded",
+          "title": "Override Source",
+          "original_url": "https://example.test/original-source",
+          "effective_url": "https://example.test/repaired-source",
+          "artifact_path": "artifacts/raw/upstream/override-source.html",
+          "artifact": {
+            "type": "html",
+            "body": "<html><body>Override provenance must remain traceable through acceptance gating.</body></html>"
+          },
+          "content_type": "text/html",
+          "metadata": {},
+          "validation_passed": true
+        }
+      ],
+      "required_check_outcomes": {
+        "url_provenance_is_traceable": false
+      }
+    }
+  }
+}

@@ -368,6 +368,68 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertTrue(graph_phase["passed"])
             self.assertTrue(graph_phase["reviewer_ready"])
 
+    def test_phase_eval_reports_upstream_evaluation_and_fails_closed_when_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-030"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-030",
+                        title="Upstream eval phase source",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-030 | Upstream eval phase source | artifact abc123",
+                        text="The readiness gate should expose upstream evaluation coverage separately.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-030": ["Upstream evaluation"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
+
+            missing_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            upstream_phase = _phase(missing_result.summary, "upstream_evaluation")
+            self.assertFalse(upstream_phase["passed"])
+            self.assertFalse(upstream_phase["reviewer_ready"])
+
+            upstream_results_path = (
+                output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
+            )
+            upstream_results_path.parent.mkdir(parents=True, exist_ok=True)
+            upstream_results_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "upstream-evaluation-results-v0",
+                        "passed": True,
+                        "lane_summaries": [
+                            {"lane_id": "capture", "status": "direct_eval_present"},
+                            {"lane_id": "catalog", "status": "direct_eval_present"},
+                            {"lane_id": "extraction", "status": "direct_eval_present"},
+                        ],
+                        "failed_case_ids": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            ready_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            upstream_phase = _phase(ready_result.summary, "upstream_evaluation")
+            self.assertTrue(upstream_phase["passed"])
+            self.assertTrue(upstream_phase["reviewer_ready"])
+
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

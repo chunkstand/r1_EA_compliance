@@ -1,0 +1,95 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-804",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-804",
+            "title": "Scoped XML Section Source",
+            "url": "https://www.ecfr.gov/current/title-36/section-1b.6"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-section",
+        "records": [
+          {
+            "source_record_id": "UPEXT-804",
+            "status": "downloaded",
+            "title": "Scoped XML Section Source",
+            "original_url": "https://www.ecfr.gov/current/title-36/section-1b.6",
+            "artifact_path": "artifacts/raw/upstream/scoped-section.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ECFR><DIV5 TYPE=\"SECTION\" N=\"1b.5\"><HEAD>§ 1b.5 Environmental assessments</HEAD><P>EA-only sibling content.</P></DIV5><DIV5 TYPE=\"SECTION\" N=\"1b.6\"><HEAD>§ 1b.6 Finding of no significant impact</HEAD><P>FONSI content only.</P></DIV5></ECFR>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "§ 1b.6 Finding of no significant impact",
+        "FONSI content only."
+      ],
+      "forbidden_markers": [
+        "§ 1b.5 Environmental assessments",
+        "EA-only sibling content."
+      ],
+      "required_check_outcomes": {
+        "scoped_xml_text_matches_source_scope": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-804",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-804",
+            "title": "Scoped XML Section Source",
+            "url": "https://www.ecfr.gov/current/title-36/section-1b.6"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "upstream-extraction-section-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-804",
+            "status": "downloaded",
+            "title": "Scoped XML Section Source",
+            "original_url": "https://www.ecfr.gov/current/title-36/section-1b.6",
+            "artifact_path": "artifacts/raw/upstream/scoped-section.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ECFR><DIV5 TYPE=\"SECTION\" N=\"1b.5\"><HEAD>§ 1b.5 Environmental assessments</HEAD><P>EA-only sibling content.</P></DIV5><DIV5 TYPE=\"SECTION\" N=\"1b.6\"><HEAD>§ 1b.6 Finding of no significant impact</HEAD><P>FONSI content only.</P></DIV5></ECFR>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-12T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "append_extracted_text",
+          "text": "\n§ 1b.5 Environmental assessments\nEA-only sibling content."
+        }
+      ],
+      "required_markers": [
+        "§ 1b.6 Finding of no significant impact",
+        "FONSI content only."
+      ],
+      "forbidden_markers": [
+        "§ 1b.5 Environmental assessments",
+        "EA-only sibling content."
+      ],
+      "required_check_outcomes": {
+        "scoped_xml_text_matches_source_scope": false
+      }
+    }
+  }
+}

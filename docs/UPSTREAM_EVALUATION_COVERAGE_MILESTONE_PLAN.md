@@ -2,13 +2,30 @@
 
 Date: 2026-05-12
 
-Status: Proposed
+Status: Resolved
 
 Owner context: This is a fresh standalone milestone plan for the upstream reviewer-engine lanes.
 It does not replace the broader V1, NEPA 3D, forest-plan, or final-QA plans. It exists to close
 one specific weakness: capture, catalog, and extraction are currently guarded mainly by validation
 and integrity checks, while the downstream lanes already have explicit eval commands and tracked
 fixture sets.
+
+## Implementation Closeout
+
+Completed on 2026-05-13.
+
+- Implemented `config/upstream_evaluation_v1.json` plus tracked capture, catalog, and extraction
+  fixture families under `config/fixtures/upstream_eval/` and `tests/fixtures/upstream_eval/`.
+- Added `src/usfs_r1_ea_sources/upstream_evaluation.py`, registered `upstream-eval` in
+  `src/usfs_r1_ea_sources/cli_eval.py`, and extended `phase-eval` with a fail-closed
+  `upstream_evaluation` phase.
+- Added `docs/EVALUATION_COVERAGE_REGISTER.md` so structural validation and direct-eval coverage
+  are now reported separately.
+- The closeout replay passed `22/22` matched cases across `11` required categories, and all three
+  lane summaries now report `direct_eval_present`.
+- Closed the scoped upstream gap without weakening the existing validation gates.
+- The next routing boundary is
+  `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`.
 
 ## Purpose
 

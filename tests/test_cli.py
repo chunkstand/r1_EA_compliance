@@ -304,6 +304,25 @@ def test_phase_eval_parser_accepts_archived_catalog_dir() -> None:
     )
 
 
+def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "upstream-eval",
+            "--manifest",
+            "config/upstream_evaluation_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/evaluations/upstream",
+        ]
+    )
+
+    assert args.command == "upstream-eval"
+    assert args.manifest == Path("config/upstream_evaluation_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/evaluations/upstream")
+
+
 def test_rule_claim_link_parser_accepts_allow_partial_claims() -> None:
     args = build_parser().parse_args(
         [
@@ -525,6 +544,35 @@ def test_promotion_suite_handler_propagates_manifest_and_strict_mode(monkeypatch
     assert captured["results_dir"] == Path("suite-results")
     assert captured["strict_expansion"] is True
 
+
+def test_upstream_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_upstream_evaluation(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(cli_eval, "run_upstream_evaluation", fake_run_upstream_evaluation)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "upstream-eval",
+            "--manifest",
+            "config/upstream_evaluation_v1.json",
+            "--output-dir",
+            "library",
+            "--results-dir",
+            "library/evaluations/upstream",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["manifest_path"] == Path("config/upstream_evaluation_v1.json")
+    assert captured["output_dir"] == Path("library")
+    assert captured["results_dir"] == Path("library/evaluations/upstream")
 
 def test_decision_support_handler_propagates_report_options(monkeypatch) -> None:
     captured = {}

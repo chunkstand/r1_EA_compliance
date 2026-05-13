@@ -1,0 +1,98 @@
+{
+  "runner": "catalog_build",
+  "scenarios": {
+    "expected_pass": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAT-001",
+            "title": "Catalog Batch Source",
+            "url": "https://example.test/catalog-batch-source"
+          }
+        ]
+      },
+      "batch_run_id": "upstream-catalog-batch-pass",
+      "batch_runs": [
+        {
+          "batch_run_id": "upstream-catalog-batch-pass",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-catalog-batch-pass-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [
+                "UPCAT-001"
+              ],
+              "records": [
+                {
+                  "source_record_id": "UPCAT-001",
+                  "status": "downloaded",
+                  "title": "Catalog Batch Source",
+                  "original_url": "https://example.test/catalog-batch-source",
+                  "artifact_path": "artifacts/raw/upstream/catalog-batch-source.html",
+                  "artifact": {
+                    "type": "html",
+                    "body": "<html><body>Catalog batch source content.</body></html>"
+                  },
+                  "content_type": "text/html",
+                  "validation_passed": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "batch_download_manifest_rows_match_ledger": true
+      }
+    },
+    "controlled_violation": {
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAT-001",
+            "title": "Catalog Batch Source",
+            "url": "https://example.test/catalog-batch-source"
+          }
+        ]
+      },
+      "batch_run_id": "upstream-catalog-batch-fail",
+      "batch_runs": [
+        {
+          "batch_run_id": "upstream-catalog-batch-fail",
+          "all_passed": true,
+          "batches": [
+            {
+              "batch_id": "upstream-catalog-batch-fail-001",
+              "status": "passed",
+              "gate_passed": true,
+              "source_record_ids": [
+                "UPCAT-001",
+                "UPCAT-002"
+              ],
+              "records": [
+                {
+                  "source_record_id": "UPCAT-001",
+                  "status": "downloaded",
+                  "title": "Catalog Batch Source",
+                  "original_url": "https://example.test/catalog-batch-source",
+                  "artifact_path": "artifacts/raw/upstream/catalog-batch-source.html",
+                  "artifact": {
+                    "type": "html",
+                    "body": "<html><body>Catalog batch source content.</body></html>"
+                  },
+                  "content_type": "text/html",
+                  "validation_passed": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "batch_download_manifest_rows_match_ledger": false
+      }
+    }
+  }
+}
