@@ -5,6 +5,37 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Upstream Evaluation Coverage Plan
+
+The repo now has a dedicated plan for the upstream direct-eval gap at
+`docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope alignment:
+  this is a fresh standalone milestone for capture, catalog, and extraction evaluation coverage; it
+  is not a rewrite of the broader V1, NEPA 3D, or post-V1 expansion lanes
+- problem statement:
+  current upstream truth is stronger on validation than on direct eval; the new plan requires
+  tracked adversarial coverage for challenge pages, deceptive `200` responses, duplicate
+  URL/content cases, override drift, batch/catalog mismatches, OCR-heavy PDFs, tables, appendices,
+  and section-boundary extraction
+- routing:
+  execute Sequence 0 from `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md` before adding any
+  new upstream eval command or readiness wiring; the first deliverables are the tracked eval
+  manifest and evaluation coverage register
+- affected dirty state:
+  unrelated local changes already exist in `config/applicability_adjudications/west-reservoir-67436.json`,
+  `tests/test_nepa_3d_viewer.py`, `viewer/nepa-3d/app.js`, and root-level East Crazies draft
+  exports; leave them out of the upstream-evaluation slice
+
+Verification in this planning pass:
+
+- `git diff --check`: passed for the new plan and handoff updates
+
+Residual risks:
+
+- this is a plan artifact only; the direct-eval gap remains open until the implementation milestone
+  lands and the new aggregate gate is green
+
 ## Region 1 Flathead Live-Package Proving Closeout
 
 The West Reservoir proving lane is now closed green on the active full-canonical corpus.
