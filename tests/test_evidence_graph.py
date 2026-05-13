@@ -430,6 +430,87 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertTrue(upstream_phase["passed"])
             self.assertTrue(upstream_phase["reviewer_ready"])
 
+    def test_phase_eval_reports_downstream_direct_evaluation_and_fails_closed_when_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-031"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-031",
+                        title="Downstream eval phase source",
+                        document_role="agency_policy",
+                        authority_level="federal_guidance",
+                        citation_label="R1EA-031 | Downstream eval phase source | artifact abc123",
+                        text="The readiness gate should expose downstream direct eval coverage separately.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-031": ["Downstream evaluation"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
+
+            missing_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            downstream_phase = _phase(missing_result.summary, "downstream_direct_evaluation")
+            self.assertFalse(downstream_phase["passed"])
+            self.assertFalse(downstream_phase["reviewer_ready"])
+
+            contracts = {
+                "retrieval_eval": (
+                    Path("config/retrieval_eval_seed.json"),
+                    output_dir / "derived" / source_set_id / "retrieval" / "retrieval_eval_results.json",
+                    "retrieval-direct-eval-v1",
+                ),
+                "claim_eval": (
+                    Path("config/claim_eval_seed.json"),
+                    output_dir / "derived" / source_set_id / "claims" / "claim_eval_results.json",
+                    "claim-direct-eval-v1",
+                ),
+                "rule_claim_eval": (
+                    Path("config/rule_claim_link_eval_seed.json"),
+                    output_dir / "derived" / source_set_id / "rule_claim_links" / "nepa-ea-v0" / "0.4.0" / "rule_claim_link_eval_results.json",
+                    "rule-claim-direct-eval-v1",
+                ),
+                "compliance_review_eval": (
+                    Path("config/compliance_review_eval_seed.json"),
+                    output_dir / "reviews" / "compliance_review_eval" / "compliance_review_eval_results.json",
+                    "compliance-review-direct-eval-v1",
+                ),
+            }
+            for contract_path, result_path, eval_id in contracts.values():
+                sha256 = hashlib.sha256(contract_path.read_bytes()).hexdigest()
+                result_path.parent.mkdir(parents=True, exist_ok=True)
+                result_path.write_text(
+                    json.dumps(
+                        {
+                            "schema_version": "unit-direct-eval-result",
+                            "eval_id": eval_id,
+                            "source_set_id": source_set_id,
+                            "passed": True,
+                            "contract": {"sha256": sha256},
+                            "checks": [],
+                        },
+                        sort_keys=True,
+                    ),
+                    encoding="utf-8",
+                )
+
+            ready_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            downstream_phase = _phase(ready_result.summary, "downstream_direct_evaluation")
+            self.assertTrue(downstream_phase["passed"])
+            self.assertTrue(downstream_phase["reviewer_ready"])
+
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

@@ -1,0 +1,37 @@
+{
+  "schema_version": "downstream-direct-eval-v1",
+  "required_lanes": [
+    {
+      "lane_id": "retrieval_eval",
+      "register_rows": [
+        "retrieval_eval"
+      ],
+      "eval_id": "retrieval-direct-eval-v1",
+      "contract_path": "retrieval_eval_seed.json"
+    },
+    {
+      "lane_id": "claim_eval",
+      "register_rows": [
+        "claim_eval"
+      ],
+      "eval_id": "claim-direct-eval-v1",
+      "contract_path": "claim_eval_seed.json"
+    },
+    {
+      "lane_id": "rule_claim_eval",
+      "register_rows": [
+        "rule_claim_eval"
+      ],
+      "eval_id": "rule-claim-direct-eval-v1",
+      "contract_path": "rule_claim_link_eval_seed.json"
+    },
+    {
+      "lane_id": "compliance_review_eval",
+      "register_rows": [
+        "compliance_review_eval"
+      ],
+      "eval_id": "compliance-review-direct-eval-v1",
+      "contract_path": "compliance_review_eval_seed.json"
+    }
+  ]
+}

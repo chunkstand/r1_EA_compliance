@@ -1,142 +1,218 @@
-[
-  {
-    "id": "nepa-statute-chapter-55-rule-claim-link",
-    "rule_id": "nepa_statute_chapter_55",
-    "expected_source_record_ids": ["R1EA-001"],
-    "expected_terms": ["national", "environmental", "policy", "act"],
-    "min_links": 1
+{
+  "schema_version": "rule-claim-link-eval-v1",
+  "eval_id": "rule-claim-direct-eval-v1",
+  "coverage_requirements": {
+    "case_count": 24,
+    "hard_negative_case_count": 4,
+    "multi_source_case_count": 4
   },
-  {
-    "id": "nepa-4332-environmental-information-rule-claim-link",
-    "rule_id": "nepa_4332_environmental_information",
-    "expected_source_record_ids": ["R1EA-002"],
-    "expected_terms": ["environmental", "information", "alternatives"],
-    "min_links": 1
+  "metric_thresholds": {
+    "case_count": {
+      "min": 20
+    },
+    "hard_negative_pass_rate": {
+      "min": 1.0
+    },
+    "false_positive_rate": {
+      "max": 0.0
+    },
+    "missing_required_source_rate": {
+      "max": 0.0
+    },
+    "recall_at_k": {
+      "min": 1.0
+    },
+    "mrr": {
+      "min": 0.9
+    },
+    "ndcg_at_k": {
+      "min": 0.9
+    }
   },
-  {
-    "id": "nepa-4336-level-of-review-rule-claim-link",
-    "rule_id": "nepa_4336_level_of_review",
-    "expected_source_record_ids": ["R1EA-003"],
-    "expected_terms": ["level", "review", "environmental", "assessment"],
-    "min_links": 1
-  },
-  {
-    "id": "nepa-4336a-timing-unified-review-rule-claim-link",
-    "rule_id": "nepa_4336a_timing_unified_review",
-    "expected_source_record_ids": ["R1EA-004"],
-    "expected_terms": ["timely", "unified", "environmental", "document"],
-    "min_links": 1
-  },
-  {
-    "id": "nepa-4336b-programmatic-tiering-rule-claim-link",
-    "rule_id": "nepa_4336b_programmatic_tiering",
-    "expected_source_record_ids": ["R1EA-005"],
-    "expected_terms": ["programmatic", "environmental", "documents"],
-    "min_links": 1
-  },
-  {
-    "id": "usda-nepa-ea-7cfr-1b5-rule-claim-link",
-    "rule_id": "usda_nepa_ea_7cfr_1b5",
-    "expected_source_record_ids": ["R1EA-013"],
-    "expected_terms": ["environmental", "assessments", "purpose", "need"],
-    "min_links": 1
-  },
-  {
-    "id": "usda-nepa-fonsi-7cfr-1b6-rule-claim-link",
-    "rule_id": "usda_nepa_fonsi_7cfr_1b6",
-    "expected_source_record_ids": ["R1EA-014"],
-    "expected_terms": ["finding", "significant", "impact", "mitigation"],
-    "min_links": 1
-  },
-  {
-    "id": "usda-nepa-efficient-review-7cfr-1b9-rule-claim-link",
-    "rule_id": "usda_nepa_efficient_review_7cfr_1b9",
-    "expected_source_record_ids": ["R1EA-015"],
-    "expected_terms": ["efficient", "effective", "environmental", "reviews"],
-    "min_links": 1
-  },
-  {
-    "id": "nfma-16usc-1604-plan-consistency-rule-claim-link",
-    "rule_id": "nfma_16usc_1604_plan_consistency",
-    "expected_source_record_ids": ["R1EA-022"],
-    "expected_terms": ["national", "forest", "management", "act"],
-    "min_links": 1
-  },
-  {
-    "id": "planning-rule-36cfr-21915-consistency-rule-claim-link",
-    "rule_id": "planning_rule_36cfr_21915_consistency",
-    "expected_source_record_ids": ["R1EA-024"],
-    "expected_terms": ["project", "activity", "consistency", "plan"],
-    "min_links": 1
-  },
-  {
-    "id": "custer-gallatin-lmp-2022-rule-claim-link",
-    "rule_id": "custer_gallatin_lmp_2022",
-    "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
-    "expected_terms": ["custer", "gallatin", "land", "management", "plan"],
-    "min_links": 1
-  },
-  {
-    "id": "esa-section-7-rule-claim-link",
-    "rule_id": "esa_section_7",
-    "expected_source_record_ids": ["R1EA-065"],
-    "expected_terms": ["esa", "section", "consultation", "species"],
-    "min_links": 1
-  },
-  {
-    "id": "esa-consultation-50cfr-402-rule-claim-link",
-    "rule_id": "esa_consultation_50cfr_402",
-    "expected_source_record_ids": ["R1EA-066"],
-    "expected_terms": ["interagency", "cooperation", "species", "consultation"],
-    "min_links": 1
-  },
-  {
-    "id": "nhpa-section-106-rule-claim-link",
-    "rule_id": "nhpa_section_106",
-    "expected_source_record_ids": ["R1EA-070"],
-    "expected_terms": ["nhpa", "historic", "consultation"],
-    "min_links": 1
-  },
-  {
-    "id": "nhpa-36cfr-800-rule-claim-link",
-    "rule_id": "nhpa_36cfr_800",
-    "expected_source_record_ids": ["R1EA-071"],
-    "expected_terms": ["historic", "properties", "adverse", "effect"],
-    "min_links": 1
-  },
-  {
-    "id": "montana-shpo-review-rule-claim-link",
-    "rule_id": "montana_shpo_review",
-    "expected_source_record_ids": ["R1EA-119"],
-    "expected_terms": ["montana", "shpo", "project", "review"],
-    "min_links": 1
-  },
-  {
-    "id": "roadless-rule-36cfr-294b-rule-claim-link",
-    "rule_id": "roadless_rule_36cfr_294b",
-    "expected_source_record_ids": ["R1EA-049"],
-    "expected_terms": ["roadless", "rule", "inventoried"],
-    "min_links": 1
-  },
-  {
-    "id": "eo-11990-wetlands-rule-claim-link",
-    "rule_id": "eo_11990_wetlands",
-    "expected_source_record_ids": ["R1EA-104"],
-    "expected_terms": ["executive", "order", "11990", "wetlands"],
-    "min_links": 1
-  },
-  {
-    "id": "mbta-migratory-birds-rule-claim-link",
-    "rule_id": "mbta_migratory_birds",
-    "expected_source_record_ids": ["R1EA-094"],
-    "expected_terms": ["migratory", "bird", "treaty", "act"],
-    "min_links": 1
-  },
-  {
-    "id": "eo-13186-migratory-birds-rule-claim-link",
-    "rule_id": "eo_13186_migratory_birds",
-    "expected_source_record_ids": ["R1EA-096"],
-    "expected_terms": ["executive", "order", "13186", "migratory"],
-    "min_links": 1
-  }
-]
+  "cases": [
+    {
+      "id": "nepa-statute-chapter-55-rule-claim-link",
+      "rule_id": "nepa_statute_chapter_55",
+      "expected_source_record_ids": ["R1EA-001"],
+      "expected_terms": ["national", "environmental", "policy", "act"],
+      "min_links": 3,
+      "multi_source": true
+    },
+    {
+      "id": "nepa-4332-environmental-information-rule-claim-link",
+      "rule_id": "nepa_4332_environmental_information",
+      "expected_source_record_ids": ["R1EA-002"],
+      "expected_terms": ["environmental", "information", "alternatives"],
+      "min_links": 1
+    },
+    {
+      "id": "nepa-4336-level-of-review-rule-claim-link",
+      "rule_id": "nepa_4336_level_of_review",
+      "expected_source_record_ids": ["R1EA-003"],
+      "expected_terms": ["level", "review", "environmental", "assessment"],
+      "min_links": 1
+    },
+    {
+      "id": "nepa-4336a-timing-unified-review-rule-claim-link",
+      "rule_id": "nepa_4336a_timing_unified_review",
+      "expected_source_record_ids": ["R1EA-004"],
+      "expected_terms": ["timely", "unified", "environmental", "document"],
+      "min_links": 1
+    },
+    {
+      "id": "nepa-4336b-programmatic-tiering-rule-claim-link",
+      "rule_id": "nepa_4336b_programmatic_tiering",
+      "expected_source_record_ids": ["R1EA-005"],
+      "expected_terms": ["programmatic", "environmental", "documents"],
+      "min_links": 1
+    },
+    {
+      "id": "usda-nepa-ea-7cfr-1b5-rule-claim-link",
+      "rule_id": "usda_nepa_ea_7cfr_1b5",
+      "expected_source_record_ids": ["R1EA-013"],
+      "expected_terms": ["environmental", "assessments", "purpose", "need"],
+      "min_links": 3,
+      "multi_source": true
+    },
+    {
+      "id": "usda-nepa-fonsi-7cfr-1b6-rule-claim-link",
+      "rule_id": "usda_nepa_fonsi_7cfr_1b6",
+      "expected_source_record_ids": ["R1EA-014"],
+      "expected_terms": ["finding", "significant", "impact", "mitigation"],
+      "min_links": 1
+    },
+    {
+      "id": "usda-nepa-efficient-review-7cfr-1b9-rule-claim-link",
+      "rule_id": "usda_nepa_efficient_review_7cfr_1b9",
+      "expected_source_record_ids": ["R1EA-015"],
+      "expected_terms": ["efficient", "effective", "environmental", "reviews"],
+      "min_links": 3,
+      "multi_source": true
+    },
+    {
+      "id": "nfma-16usc-1604-plan-consistency-rule-claim-link",
+      "rule_id": "nfma_16usc_1604_plan_consistency",
+      "expected_source_record_ids": ["R1EA-022"],
+      "expected_terms": ["national", "forest", "management", "act"],
+      "min_links": 1
+    },
+    {
+      "id": "planning-rule-36cfr-21915-consistency-rule-claim-link",
+      "rule_id": "planning_rule_36cfr_21915_consistency",
+      "expected_source_record_ids": ["R1EA-024"],
+      "expected_terms": ["project", "activity", "consistency", "plan"],
+      "min_links": 1
+    },
+    {
+      "id": "custer-gallatin-lmp-2022-rule-claim-link",
+      "rule_id": "custer_gallatin_lmp_2022",
+      "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
+      "expected_terms": ["custer", "gallatin", "land", "management", "plan"],
+      "min_links": 1
+    },
+    {
+      "id": "esa-section-7-rule-claim-link",
+      "rule_id": "esa_section_7",
+      "expected_source_record_ids": ["R1EA-065"],
+      "expected_terms": ["esa", "section", "consultation", "species"],
+      "min_links": 3,
+      "multi_source": true
+    },
+    {
+      "id": "esa-consultation-50cfr-402-rule-claim-link",
+      "rule_id": "esa_consultation_50cfr_402",
+      "expected_source_record_ids": ["R1EA-066"],
+      "expected_terms": ["interagency", "cooperation", "species", "consultation"],
+      "min_links": 1
+    },
+    {
+      "id": "nhpa-section-106-rule-claim-link",
+      "rule_id": "nhpa_section_106",
+      "expected_source_record_ids": ["R1EA-070"],
+      "expected_terms": ["nhpa", "historic", "consultation"],
+      "min_links": 1
+    },
+    {
+      "id": "nhpa-36cfr-800-rule-claim-link",
+      "rule_id": "nhpa_36cfr_800",
+      "expected_source_record_ids": ["R1EA-071"],
+      "expected_terms": ["historic", "properties", "adverse", "effect"],
+      "min_links": 1
+    },
+    {
+      "id": "montana-shpo-review-rule-claim-link",
+      "rule_id": "montana_shpo_review",
+      "expected_source_record_ids": ["R1EA-119"],
+      "expected_terms": ["montana", "shpo", "project", "review"],
+      "min_links": 1
+    },
+    {
+      "id": "roadless-rule-36cfr-294b-rule-claim-link",
+      "rule_id": "roadless_rule_36cfr_294b",
+      "expected_source_record_ids": ["R1EA-049"],
+      "expected_terms": ["roadless", "rule", "inventoried"],
+      "min_links": 1
+    },
+    {
+      "id": "eo-11990-wetlands-rule-claim-link",
+      "rule_id": "eo_11990_wetlands",
+      "expected_source_record_ids": ["R1EA-104"],
+      "expected_terms": ["executive", "order", "11990", "wetlands"],
+      "min_links": 1
+    },
+    {
+      "id": "mbta-migratory-birds-rule-claim-link",
+      "rule_id": "mbta_migratory_birds",
+      "expected_source_record_ids": ["R1EA-094"],
+      "expected_terms": ["migratory", "bird", "treaty", "act"],
+      "min_links": 1
+    },
+    {
+      "id": "eo-13186-migratory-birds-rule-claim-link",
+      "rule_id": "eo_13186_migratory_birds",
+      "expected_source_record_ids": ["R1EA-096"],
+      "expected_terms": ["executive", "order", "13186", "migratory"],
+      "min_links": 1
+    },
+    {
+      "id": "rule-claim-hard-negative-nepa",
+      "rule_id": "nepa_statute_chapter_55",
+      "query": "missing rule claim negative",
+      "filters": {
+        "source_record_id": "R1EA-997"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    },
+    {
+      "id": "rule-claim-hard-negative-usda",
+      "rule_id": "usda_nepa_ea_7cfr_1b5",
+      "query": "missing rule claim negative",
+      "filters": {
+        "source_record_id": "R1EA-998"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    },
+    {
+      "id": "rule-claim-hard-negative-esa",
+      "rule_id": "esa_section_7",
+      "query": "missing rule claim negative",
+      "filters": {
+        "source_record_id": "R1EA-999"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    },
+    {
+      "id": "rule-claim-hard-negative-nhpa",
+      "rule_id": "nhpa_36cfr_800",
+      "query": "missing rule claim negative",
+      "filters": {
+        "source_record_id": "R1EA-996"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    }
+  ]
+}

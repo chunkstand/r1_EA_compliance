@@ -1,787 +1,1332 @@
-[
-  {
-    "id": "all-authorities-pass",
-    "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. This fixture intentionally includes every baseline and conditional authority trigger used by the v0.4 rule pack. National Environmental Policy Act applies: National Environmental Policy Act; NEPA; environmental assessment. NEPA section 4332 environmental information is addressed: environmental effects; alternatives; consultation; public comment. NEPA level of review is supported: environmental assessment; finding of no significant impact; significant effects. NEPA timing and unified-review duties are addressed: schedule; page limit; unified review; objection period; publicly circulated. 7 CFR part 1b - National Environment Policy Act is reviewed: 7 CFR part 1b; NEPA procedures; environmental assessment. 7 CFR \u00a7 1b.1 - Purpose is reviewed: decision-making; coordinated; predictable; timely review. 7 CFR \u00a7 1b.2 - Policy is reviewed: major Federal action; discretion; significance; project at hand. USDA EA requirements are met: purpose and need; alternatives; affected environment; environmental effects; environmental consequences. USDA FONSI support is traceable: finding of no significant impact; FONSI; decision notice; mitigation. Efficient and integrated environmental review is documented: consultation; coordination; environmental review; integrated. 7 CFR \u00a7 1b.11 - Definitions and acronyms is reviewed: definitions; acronyms; terminology; NEPA. USDA final rule: National Environmental Policy Act, 91 FR 17092, Apr. 3, 2026 is reviewed: 7 CFR part 1b; effective date; USDA final rule; NEPA. Forest Service Environmental Planning / NEPA page is reviewed: Forest Service; NEPA; USDA NEPA rule; 36 CFR part 220. Seven County Infrastructure Coalition v. Eagle County, Supreme Court opinion is reviewed: reasonably foreseeable effects; project at hand; agency discretion; NEPA. Administrative Procedure Act final agency action, 5 U.S.C. \u00a7 704 is reviewed: final agency action; decision notice; FONSI; authorization. NFMA forest-plan consistency is addressed: National Forest Management Act; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 219 - Planning is reviewed: 36 CFR part 219; planning; plan components; project consistency. 36 CFR 219.15 project consistency is addressed: 36 CFR 219.15; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 218 - Project-level predecisional administrative review is reviewed: 36 CFR part 218; objection; legal notice; decision notice. Forest Service National Directives portal is reviewed: Forest Service directives; manual; handbook; current directives. Forest Service Region 1 field directives index is reviewed: Region 1 directives; regional supplement; field directives; current directives. FSM 2670 - Threatened, Endangered and Sensitive Plants and Animals is reviewed: FSM 2670; threatened; endangered; sensitive species; biological evaluation. Multiple-Use Sustained-Yield Act, 16 U.S.C. \u00a7\u00a7 528-531 is reviewed: multiple use; sustained yield; outdoor recreation; watershed; wildlife. Organic Administration Act, 16 U.S.C. \u00a7 475 is reviewed: watershed; timber; national forest purposes. Organic Administration Act, 16 U.S.C. \u00a7 551 is reviewed: occupancy; use; protection; national forests. FLPMA Section 206 land-exchange requirements are addressed: Federal Land Policy and Management Act; FLPMA; 43 U.S.C. 1716; Section 206; land exchange; public interest; equal value; cash equalization. Northern Region species of conservation concern page is reviewed: species of conservation concern; Regional Forester; sensitive species; forest plan. 42 U.S.C. \u00a7 4336b - Programmatic environmental documents is reviewed: tiers to; incorporates by reference; programmatic; final environmental impact statement. 42 U.S.C. \u00a7 4336c - Adoption of categorical exclusions is reviewed: categorical exclusion; adopted CE; categorical exclusion path. 42 U.S.C. \u00a7 4336f - Sponsor-prepared environmental documents is reviewed: sponsor; applicant; financial interest; agency responsibility. 7 CFR \u00a7 1b.3 - Categorical exclusions and FANEC is reviewed: CE/FANEC screen; categorical exclusion path; extraordinary circumstances review; FANEC. 7 CFR \u00a7 1b.4 - USDA subcomponent categorical exclusions is reviewed: subcomponent categorical exclusion; USDA CE screening; extraordinary circumstances review; USDA CE. 7 CFR \u00a7 1b.10 - Documentation prepared by applicant or third party is reviewed: applicant; third party; independent evaluation; financial disclosure. 36 CFR part 214 - Postdecisional administrative review for written instruments is reviewed: 36 CFR part 214; appeal; written authorization; effective date. 36 CFR part 216 - Notice and comment for Forest Service directives is reviewed: 36 CFR part 216; directives; notice and comment; standards; directive. 2022 Custer Gallatin Land Management Plan is applied: Custer Gallatin; 2022 Land Management Plan; Custer Gallatin National Forest Land Management Plan; Land Management Plan. Endangered Species Act section 7 consultation is addressed: Endangered Species Act; Section 7; threatened; endangered; biological assessment. ESA consultation regulations are addressed: Endangered Species Act; Section 7; biological assessment; Fish and Wildlife Service; U.S. Fish and Wildlife Service. NHPA section 106 compliance is addressed: National Historic Preservation Act; Section 106; SHPO; cultural resources; historic properties. 36 CFR part 800 consultation process is addressed: 36 CFR part 800; Section 106; SHPO; adverse effect; historic properties. Montana SHPO review is addressed: Montana SHPO; State Historic Preservation Officer; SHPO; cultural resources; cultural resource. Roadless Rule compliance is addressed: Roadless Rule; inventoried roadless; roadless area; roadless characteristics; Inventoried Roadless Area. Executive Order 11990 wetlands protection is addressed: Executive Order 11990; wetlands; wetland; mitigation; floodplains. Migratory Bird Treaty Act compliance is addressed: Migratory Bird Treaty Act; migratory bird; birds; conservation measures; Executive Order 13186. Executive Order 13186 migratory-bird responsibilities are addressed: Executive Order 13186; migratory bird; Migratory Bird Treaty Act. Land-exchange statutory authorities are addressed: land exchange; exchange of lands; FLPMA; FLEFA; public interest determination; equal value; cash equalization; reservation; mineral reservation; easement; acquisition; disposal; congressional report. 36 CFR part 254 land-exchange requirements are addressed: land exchange; 36 CFR part 254; 36 CFR 254; agreement to initiate; notice of exchange proposal; appraisal; equal value; cash equalization; segregation; exchange approval; title approval; case closing. Forest Service land-exchange policy and project-reference records are addressed: land exchange; exchange case; appraisal; title evidence; reservations; outstanding rights; exchange agreement; feasibility analysis; notice of exchange; closing; FSM 5430; FSH 5409.13.\n",
-    "expected_validation_passed": false,
-    "expected_reviewer_ready": false,
-    "expected_statuses": {
-      "nepa_statute_chapter_55": "pass",
-      "nepa_4332_environmental_information": "pass",
-      "nepa_4336_level_of_review": "pass",
-      "nepa_4336a_timing_unified_review": "pass",
-      "usda_nepa_7cfr_part_1b": "pass",
-      "usda_nepa_purpose_7cfr_1b1": "pass",
-      "usda_nepa_policy_7cfr_1b2": "pass",
-      "usda_nepa_ea_7cfr_1b5": "pass",
-      "usda_nepa_fonsi_7cfr_1b6": "pass",
-      "usda_nepa_efficient_review_7cfr_1b9": "pass",
-      "usda_nepa_definitions_7cfr_1b11": "pass",
-      "usda_nepa_final_rule_91fr17092": "pass",
-      "forest_service_nepa_policy_page": "pass",
-      "seven_county_nepa_scope": "pass",
-      "apa_final_agency_action": "pass",
-      "nfma_16usc_1604_plan_consistency": "pass",
-      "planning_rule_36cfr_219": "pass",
-      "planning_rule_36cfr_21915_consistency": "pass",
-      "predecisional_review_36cfr_218": "pass",
-      "forest_service_directives_portal": "pass",
-      "region1_directives_index": "pass",
-      "fsm_2670_species_policy": "pass",
-      "musuya_multiple_use_sustained_yield": "pass",
-      "organic_act_16usc_475": "pass",
-      "organic_act_16usc_551": "pass",
-      "flpma_section_206_land_exchange": "pass",
-      "region1_species_of_conservation_concern": "pass",
-      "nepa_4336b_programmatic_tiering": "pass",
-      "nepa_4336c_ce_adoption_screen": "pass",
-      "nepa_4336f_sponsor_prepared_documents": "pass",
-      "usda_nepa_ce_fanec_7cfr_1b3": "pass",
-      "usda_nepa_subcomponent_ce_7cfr_1b4": "pass",
-      "usda_nepa_applicant_docs_7cfr_1b10": "pass",
-      "postdecisional_review_36cfr_214": "pass",
-      "directives_notice_comment_36cfr_216": "pass",
-      "custer_gallatin_lmp_2022": "pass",
-      "esa_section_7": "pass",
-      "esa_consultation_50cfr_402": "pass",
-      "nhpa_section_106": "pass",
-      "nhpa_36cfr_800": "pass",
-      "montana_shpo_review": "pass",
-      "roadless_rule_36cfr_294b": "pass",
-      "eo_11990_wetlands": "pass",
-      "mbta_migratory_birds": "pass",
-      "eo_13186_migratory_birds": "pass",
-      "land_exchange_statutory_authorities": "pass",
-      "land_exchange_regulatory_requirements": "pass",
-      "land_exchange_fs_policy_and_project_references": "pass"
+{
+  "cases": [
+    {
+      "all_authorities_control": true,
+      "conditional_subset": false,
+      "expected_finding_status_counts": {
+        "pass": 48,
+        "uncertain": 11
+      },
+      "expected_reviewer_ready": true,
+      "expected_source_document_roles": {
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "forest_plan"
+        ],
+        "directives_notice_comment_36cfr_216": [
+          "regulation"
+        ],
+        "eo_11990_wetlands": [
+          "executive_order"
+        ],
+        "eo_13186_migratory_birds": [
+          "executive_order"
+        ],
+        "esa_consultation_50cfr_402": [
+          "regulation"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "flpma_section_206_land_exchange": [
+          "law"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "mbta_migratory_birds": [
+          "law"
+        ],
+        "montana_shpo_review": [
+          "state_requirement"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "law"
+        ],
+        "nepa_4336c_ce_adoption_screen": [
+          "law"
+        ],
+        "nepa_4336f_sponsor_prepared_documents": [
+          "law"
+        ],
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "nhpa_36cfr_800": [
+          "regulation"
+        ],
+        "nhpa_section_106": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "postdecisional_review_36cfr_214": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "regulation"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_applicant_docs_7cfr_1b10": [
+          "regulation"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ],
+        "usda_nepa_subcomponent_ce_7cfr_1b4": [
+          "regulation"
+        ]
+      },
+      "expected_source_record_ids": {
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "custer_gallatin_lmp_2022": [
+          "R1PLAN-custer-gallatin-nf-02"
+        ],
+        "directives_notice_comment_36cfr_216": [
+          "R1EA-027"
+        ],
+        "eo_11990_wetlands": [
+          "R1EA-104"
+        ],
+        "eo_13186_migratory_birds": [
+          "R1EA-096"
+        ],
+        "esa_consultation_50cfr_402": [
+          "R1EA-066"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "flpma_section_206_land_exchange": [
+          "R1EA-146"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "land_exchange_fs_policy_and_project_references": [
+          "R1EA-150"
+        ],
+        "land_exchange_regulatory_requirements": [
+          "R1EA-124"
+        ],
+        "land_exchange_statutory_authorities": [
+          "R1EA-137"
+        ],
+        "mbta_migratory_birds": [
+          "R1EA-094"
+        ],
+        "montana_shpo_review": [
+          "R1EA-119"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_4336b_programmatic_tiering": [
+          "R1EA-005"
+        ],
+        "nepa_4336c_ce_adoption_screen": [
+          "R1EA-006"
+        ],
+        "nepa_4336f_sponsor_prepared_documents": [
+          "R1EA-007"
+        ],
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "nhpa_36cfr_800": [
+          "R1EA-071"
+        ],
+        "nhpa_section_106": [
+          "R1EA-070"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "postdecisional_review_36cfr_214": [
+          "R1EA-026"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "roadless_rule_36cfr_294b": [
+          "R1EA-049"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_applicant_docs_7cfr_1b10": [
+          "R1EA-016"
+        ],
+        "usda_nepa_ce_fanec_7cfr_1b3": [
+          "R1EA-011"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ],
+        "usda_nepa_subcomponent_ce_7cfr_1b4": [
+          "R1EA-012"
+        ]
+      },
+      "expected_statuses": {
+        "apa_final_agency_action": "pass",
+        "custer_gallatin_lmp_2022": "pass",
+        "directives_notice_comment_36cfr_216": "pass",
+        "eo_11990_wetlands": "pass",
+        "eo_13186_migratory_birds": "pass",
+        "esa_consultation_50cfr_402": "pass",
+        "esa_section_7": "pass",
+        "flpma_section_206_land_exchange": "pass",
+        "forest_service_directives_portal": "pass",
+        "forest_service_nepa_policy_page": "pass",
+        "fsm_2670_species_policy": "pass",
+        "land_exchange_fs_policy_and_project_references": "pass",
+        "land_exchange_regulatory_requirements": "pass",
+        "land_exchange_statutory_authorities": "pass",
+        "mbta_migratory_birds": "pass",
+        "montana_shpo_review": "pass",
+        "musuya_multiple_use_sustained_yield": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "pass",
+        "nepa_4336c_ce_adoption_screen": "pass",
+        "nepa_4336f_sponsor_prepared_documents": "pass",
+        "nepa_statute_chapter_55": "pass",
+        "nfma_16usc_1604_plan_consistency": "pass",
+        "nhpa_36cfr_800": "pass",
+        "nhpa_section_106": "pass",
+        "organic_act_16usc_475": "pass",
+        "organic_act_16usc_551": "pass",
+        "planning_rule_36cfr_219": "pass",
+        "planning_rule_36cfr_21915_consistency": "pass",
+        "postdecisional_review_36cfr_214": "pass",
+        "predecisional_review_36cfr_218": "pass",
+        "region1_directives_index": "pass",
+        "region1_species_of_conservation_concern": "pass",
+        "roadless_rule_36cfr_294b": "pass",
+        "seven_county_nepa_scope": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_applicant_docs_7cfr_1b10": "pass",
+        "usda_nepa_ce_fanec_7cfr_1b3": "pass",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "pass",
+        "usda_nepa_policy_7cfr_1b2": "pass",
+        "usda_nepa_purpose_7cfr_1b1": "pass",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "pass"
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_validation_passed": true,
+      "hard_negative_package": false,
+      "id": "all-authorities-pass",
+      "min_findings": 59,
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. This fixture intentionally includes every baseline and conditional authority trigger used by the v0.4 rule pack. National Environmental Policy Act applies: National Environmental Policy Act; NEPA; environmental assessment. NEPA section 4332 environmental information is addressed: environmental effects; alternatives; consultation; public comment. NEPA level of review is supported: environmental assessment; finding of no significant impact; significant effects. NEPA timing and unified-review duties are addressed: schedule; page limit; unified review; objection period; publicly circulated. 7 CFR part 1b - National Environment Policy Act is reviewed: 7 CFR part 1b; NEPA procedures; environmental assessment. 7 CFR \u00a7 1b.1 - Purpose is reviewed: decision-making; coordinated; predictable; timely review. 7 CFR \u00a7 1b.2 - Policy is reviewed: major Federal action; discretion; significance; project at hand. USDA EA requirements are met: purpose and need; alternatives; affected environment; environmental effects; environmental consequences. USDA FONSI support is traceable: finding of no significant impact; FONSI; decision notice; mitigation. Efficient and integrated environmental review is documented: consultation; coordination; environmental review; integrated. 7 CFR \u00a7 1b.11 - Definitions and acronyms is reviewed: definitions; acronyms; terminology; NEPA. USDA final rule: National Environmental Policy Act, 91 FR 17092, Apr. 3, 2026 is reviewed: 7 CFR part 1b; effective date; USDA final rule; NEPA. Forest Service Environmental Planning / NEPA page is reviewed: Forest Service; NEPA; USDA NEPA rule; 36 CFR part 220. Seven County Infrastructure Coalition v. Eagle County, Supreme Court opinion is reviewed: reasonably foreseeable effects; project at hand; agency discretion; NEPA. Administrative Procedure Act final agency action, 5 U.S.C. \u00a7 704 is reviewed: final agency action; decision notice; FONSI; authorization. NFMA forest-plan consistency is addressed: National Forest Management Act; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 219 - Planning is reviewed: 36 CFR part 219; planning; plan components; project consistency. 36 CFR 219.15 project consistency is addressed: 36 CFR 219.15; Land Management Plan; Forest Plan; plan consistency. 36 CFR part 218 - Project-level predecisional administrative review is reviewed: 36 CFR part 218; objection; legal notice; decision notice. Forest Service National Directives portal is reviewed: Forest Service directives; manual; handbook; current directives. Forest Service Region 1 field directives index is reviewed: Region 1 directives; regional supplement; field directives; current directives. FSM 2670 - Threatened, Endangered and Sensitive Plants and Animals is reviewed: FSM 2670; threatened; endangered; sensitive species; biological evaluation. Multiple-Use Sustained-Yield Act, 16 U.S.C. \u00a7\u00a7 528-531 is reviewed: multiple use; sustained yield; outdoor recreation; watershed; wildlife. Organic Administration Act, 16 U.S.C. \u00a7 475 is reviewed: watershed; timber; national forest purposes. Organic Administration Act, 16 U.S.C. \u00a7 551 is reviewed: occupancy; use; protection; national forests. FLPMA Section 206 land-exchange requirements are addressed: Federal Land Policy and Management Act; FLPMA; 43 U.S.C. 1716; Section 206; land exchange; public interest; equal value; cash equalization. Northern Region species of conservation concern page is reviewed: species of conservation concern; Regional Forester; sensitive species; forest plan. 42 U.S.C. \u00a7 4336b - Programmatic environmental documents is reviewed: tiers to; incorporates by reference; programmatic; final environmental impact statement. 42 U.S.C. \u00a7 4336c - Adoption of categorical exclusions is reviewed: categorical exclusion; adopted CE; categorical exclusion path. 42 U.S.C. \u00a7 4336f - Sponsor-prepared environmental documents is reviewed: sponsor; applicant; financial interest; agency responsibility. 7 CFR \u00a7 1b.3 - Categorical exclusions and FANEC is reviewed: CE/FANEC screen; categorical exclusion path; extraordinary circumstances review; FANEC. 7 CFR \u00a7 1b.4 - USDA subcomponent categorical exclusions is reviewed: subcomponent categorical exclusion; USDA CE screening; extraordinary circumstances review; USDA CE. 7 CFR \u00a7 1b.10 - Documentation prepared by applicant or third party is reviewed: applicant; third party; independent evaluation; financial disclosure. 36 CFR part 214 - Postdecisional administrative review for written instruments is reviewed: 36 CFR part 214; appeal; written authorization; effective date. 36 CFR part 216 - Notice and comment for Forest Service directives is reviewed: 36 CFR part 216; directives; notice and comment; standards; directive. 2022 Custer Gallatin Land Management Plan is applied: Custer Gallatin; 2022 Land Management Plan; Custer Gallatin National Forest Land Management Plan; Land Management Plan. Endangered Species Act section 7 consultation is addressed: Endangered Species Act; Section 7; threatened; endangered; biological assessment. ESA consultation regulations are addressed: Endangered Species Act; Section 7; biological assessment; Fish and Wildlife Service; U.S. Fish and Wildlife Service. NHPA section 106 compliance is addressed: National Historic Preservation Act; Section 106; SHPO; cultural resources; historic properties. 36 CFR part 800 consultation process is addressed: 36 CFR part 800; Section 106; SHPO; adverse effect; historic properties. Montana SHPO review is addressed: Montana SHPO; State Historic Preservation Officer; SHPO; cultural resources; cultural resource. Roadless Rule compliance is addressed: Roadless Rule; inventoried roadless; roadless area; roadless characteristics; Inventoried Roadless Area. Executive Order 11990 wetlands protection is addressed: Executive Order 11990; wetlands; wetland; mitigation; floodplains. Migratory Bird Treaty Act compliance is addressed: Migratory Bird Treaty Act; migratory bird; birds; conservation measures; Executive Order 13186. Executive Order 13186 migratory-bird responsibilities are addressed: Executive Order 13186; migratory bird; Migratory Bird Treaty Act. Land-exchange statutory authorities are addressed: land exchange; exchange of lands; FLPMA; FLEFA; public interest determination; equal value; cash equalization; reservation; mineral reservation; easement; acquisition; disposal; congressional report. 36 CFR part 254 land-exchange requirements are addressed: land exchange; 36 CFR part 254; 36 CFR 254; agreement to initiate; notice of exchange proposal; appraisal; equal value; cash equalization; segregation; exchange approval; title approval; case closing. Forest Service land-exchange policy and project-reference records are addressed: land exchange; exchange case; appraisal; title evidence; reservations; outstanding rights; exchange agreement; feasibility analysis; notice of exchange; closing; FSM 5430; FSH 5409.13.\n"
     },
-    "expected_finding_status_counts": {
-      "pass": 48
+    {
+      "all_authorities_control": false,
+      "conditional_subset": false,
+      "expected_finding_status_counts": {
+        "gap": 14,
+        "pass": 12
+      },
+      "expected_reviewer_ready": true,
+      "expected_source_document_roles": {
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ]
+      },
+      "expected_source_record_ids": {
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ]
+      },
+      "expected_statuses": {
+        "apa_final_agency_action": "gap",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "forest_service_directives_portal": "gap",
+        "forest_service_nepa_policy_page": "pass",
+        "fsm_2670_species_policy": "gap",
+        "land_exchange_fs_policy_and_project_references": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "nepa_statute_chapter_55": "pass",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "nhpa_36cfr_800": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "predecisional_review_36cfr_218": "pass",
+        "region1_directives_index": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "seven_county_nepa_scope": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable"
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_validation_passed": true,
+      "hard_negative_package": true,
+      "id": "baseline-nepa-only",
+      "min_findings": 26,
+      "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review.\n"
     },
-    "expected_unsupported_finding_ids": [],
-    "expected_source_record_ids": {
-      "nepa_statute_chapter_55": [
-        "R1EA-001"
-      ],
-      "nepa_4332_environmental_information": [
-        "R1EA-002"
-      ],
-      "nepa_4336_level_of_review": [
-        "R1EA-003"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "R1EA-004"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "R1EA-008"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "R1EA-009"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "R1EA-010"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "R1EA-013"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "R1EA-014"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "R1EA-015"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "R1EA-017"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "R1EA-018"
-      ],
-      "forest_service_nepa_policy_page": [
-        "R1EA-019"
-      ],
-      "seven_county_nepa_scope": [
-        "R1EA-020"
-      ],
-      "apa_final_agency_action": [
-        "R1EA-021"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "R1EA-022"
-      ],
-      "planning_rule_36cfr_219": [
-        "R1EA-023"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "R1EA-024"
-      ],
-      "predecisional_review_36cfr_218": [
-        "R1EA-025"
-      ],
-      "forest_service_directives_portal": [
-        "R1EA-028"
-      ],
-      "region1_directives_index": [
-        "R1EA-029"
-      ],
-      "fsm_2670_species_policy": [
-        "R1EA-031"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "R1EA-033"
-      ],
-      "organic_act_16usc_475": [
-        "R1EA-034"
-      ],
-      "organic_act_16usc_551": [
-        "R1EA-035"
-      ],
-      "flpma_section_206_land_exchange": [
-        "R1EA-146"
-      ],
-      "region1_species_of_conservation_concern": [
-        "R1EA-067"
-      ],
-      "nepa_4336b_programmatic_tiering": [
-        "R1EA-005"
-      ],
-      "nepa_4336c_ce_adoption_screen": [
-        "R1EA-006"
-      ],
-      "nepa_4336f_sponsor_prepared_documents": [
-        "R1EA-007"
-      ],
-      "usda_nepa_ce_fanec_7cfr_1b3": [
-        "R1EA-011"
-      ],
-      "usda_nepa_subcomponent_ce_7cfr_1b4": [
-        "R1EA-012"
-      ],
-      "usda_nepa_applicant_docs_7cfr_1b10": [
-        "R1EA-016"
-      ],
-      "postdecisional_review_36cfr_214": [
-        "R1EA-026"
-      ],
-      "directives_notice_comment_36cfr_216": [
-        "R1EA-027"
-      ],
-      "custer_gallatin_lmp_2022": [
-        "R1PLAN-custer-gallatin-nf-02"
-      ],
-      "esa_section_7": [
-        "R1EA-065"
-      ],
-      "esa_consultation_50cfr_402": [
-        "R1EA-066"
-      ],
-      "nhpa_section_106": [
-        "R1EA-070"
-      ],
-      "nhpa_36cfr_800": [
-        "R1EA-071"
-      ],
-      "montana_shpo_review": [
-        "R1EA-119"
-      ],
-      "roadless_rule_36cfr_294b": [
-        "R1EA-049"
-      ],
-      "eo_11990_wetlands": [
-        "R1EA-104"
-      ],
-      "mbta_migratory_birds": [
-        "R1EA-094"
-      ],
-      "eo_13186_migratory_birds": [
-        "R1EA-096"
-      ],
-      "land_exchange_statutory_authorities": [
-        "R1EA-137"
-      ],
-      "land_exchange_regulatory_requirements": [
-        "R1EA-124"
-      ],
-      "land_exchange_fs_policy_and_project_references": [
-        "R1EA-150"
-      ]
+    {
+      "all_authorities_control": false,
+      "conditional_subset": false,
+      "expected_finding_status_counts": {
+        "gap": 26
+      },
+      "expected_reviewer_ready": true,
+      "expected_source_document_roles": {
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ]
+      },
+      "expected_source_record_ids": {
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ]
+      },
+      "expected_statuses": {
+        "apa_final_agency_action": "gap",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "forest_service_directives_portal": "gap",
+        "forest_service_nepa_policy_page": "gap",
+        "fsm_2670_species_policy": "gap",
+        "land_exchange_fs_policy_and_project_references": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "nepa_4332_environmental_information": "gap",
+        "nepa_4336_level_of_review": "gap",
+        "nepa_4336a_timing_unified_review": "gap",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "nepa_statute_chapter_55": "gap",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "nhpa_36cfr_800": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "predecisional_review_36cfr_218": "gap",
+        "region1_directives_index": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "seven_county_nepa_scope": "gap",
+        "usda_nepa_7cfr_part_1b": "gap",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "gap",
+        "usda_nepa_ea_7cfr_1b5": "gap",
+        "usda_nepa_efficient_review_7cfr_1b9": "gap",
+        "usda_nepa_final_rule_91fr17092": "gap",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable"
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_validation_passed": true,
+      "hard_negative_package": true,
+      "id": "unrelated-package-produces-baseline-gaps",
+      "min_findings": 26,
+      "package_text": "Administrative Transmittal. Routing slip. Staff contacts. Meeting date. Document control log.\n"
     },
-    "expected_source_document_roles": {
-      "nepa_statute_chapter_55": [
-        "law"
-      ],
-      "nepa_4332_environmental_information": [
-        "law"
-      ],
-      "nepa_4336_level_of_review": [
-        "law"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "law"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "regulation"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "regulation"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "regulation"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "regulation"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "regulation"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "regulation"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "regulation"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "regulation"
-      ],
-      "forest_service_nepa_policy_page": [
-        "agency_policy"
-      ],
-      "seven_county_nepa_scope": [
-        "case_law"
-      ],
-      "apa_final_agency_action": [
-        "law"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "law"
-      ],
-      "planning_rule_36cfr_219": [
-        "regulation"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "regulation"
-      ],
-      "predecisional_review_36cfr_218": [
-        "regulation"
-      ],
-      "forest_service_directives_portal": [
-        "agency_policy"
-      ],
-      "region1_directives_index": [
-        "agency_policy"
-      ],
-      "fsm_2670_species_policy": [
-        "agency_policy"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "law"
-      ],
-      "organic_act_16usc_475": [
-        "law"
-      ],
-      "organic_act_16usc_551": [
-        "law"
-      ],
-      "flpma_section_206_land_exchange": [
-        "law"
-      ],
-      "region1_species_of_conservation_concern": [
-        "agency_policy"
-      ],
-      "nepa_4336b_programmatic_tiering": [
-        "law"
-      ],
-      "nepa_4336c_ce_adoption_screen": [
-        "law"
-      ],
-      "nepa_4336f_sponsor_prepared_documents": [
-        "law"
-      ],
-      "usda_nepa_ce_fanec_7cfr_1b3": [
-        "regulation"
-      ],
-      "usda_nepa_subcomponent_ce_7cfr_1b4": [
-        "regulation"
-      ],
-      "usda_nepa_applicant_docs_7cfr_1b10": [
-        "regulation"
-      ],
-      "postdecisional_review_36cfr_214": [
-        "regulation"
-      ],
-      "directives_notice_comment_36cfr_216": [
-        "regulation"
-      ],
-      "custer_gallatin_lmp_2022": [
-        "forest_plan"
-      ],
-      "esa_section_7": [
-        "law"
-      ],
-      "esa_consultation_50cfr_402": [
-        "regulation"
-      ],
-      "nhpa_section_106": [
-        "law"
-      ],
-      "nhpa_36cfr_800": [
-        "regulation"
-      ],
-      "montana_shpo_review": [
-        "state_requirement"
-      ],
-      "roadless_rule_36cfr_294b": [
-        "regulation"
-      ],
-      "eo_11990_wetlands": [
-        "executive_order"
-      ],
-      "mbta_migratory_birds": [
-        "law"
-      ],
-      "eo_13186_migratory_birds": [
-        "executive_order"
-      ]
+    {
+      "all_authorities_control": false,
+      "conditional_subset": true,
+      "expected_finding_status_counts": {
+        "gap": 14,
+        "pass": 16,
+        "uncertain": 4
+      },
+      "expected_reviewer_ready": true,
+      "expected_source_document_roles": {
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "flpma_section_206_land_exchange": [
+          "law"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ]
+      },
+      "expected_source_record_ids": {
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "flpma_section_206_land_exchange": [
+          "R1EA-146"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "land_exchange_fs_policy_and_project_references": [
+          "R1EA-150"
+        ],
+        "land_exchange_regulatory_requirements": [
+          "R1EA-124"
+        ],
+        "land_exchange_statutory_authorities": [
+          "R1EA-137"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ]
+      },
+      "expected_statuses": {
+        "apa_final_agency_action": "gap",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable",
+        "esa_consultation_50cfr_402": "not_applicable",
+        "esa_section_7": "not_applicable",
+        "flpma_section_206_land_exchange": "pass",
+        "forest_service_directives_portal": "gap",
+        "forest_service_nepa_policy_page": "pass",
+        "fsm_2670_species_policy": "gap",
+        "land_exchange_fs_policy_and_project_references": "pass",
+        "land_exchange_regulatory_requirements": "pass",
+        "land_exchange_statutory_authorities": "pass",
+        "mbta_migratory_birds": "not_applicable",
+        "montana_shpo_review": "not_applicable",
+        "musuya_multiple_use_sustained_yield": "gap",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "nepa_statute_chapter_55": "pass",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "nhpa_36cfr_800": "not_applicable",
+        "nhpa_section_106": "not_applicable",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "predecisional_review_36cfr_218": "pass",
+        "region1_directives_index": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "seven_county_nepa_scope": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable"
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_validation_passed": true,
+      "hard_negative_package": false,
+      "id": "land-exchange-conditional-subset",
+      "min_findings": 34,
+      "package_path": "../config/fixtures/downstream_eval/compliance/land_exchange_conditional_subset.txt"
     },
-    "min_findings": 45
+    {
+      "all_authorities_control": false,
+      "conditional_subset": true,
+      "expected_finding_status_counts": {
+        "gap": 12,
+        "pass": 19,
+        "uncertain": 3
+      },
+      "expected_reviewer_ready": true,
+      "expected_source_document_roles": {
+        "apa_final_agency_action": [
+          "law"
+        ],
+        "esa_consultation_50cfr_402": [
+          "regulation"
+        ],
+        "esa_section_7": [
+          "law"
+        ],
+        "forest_service_directives_portal": [
+          "agency_policy"
+        ],
+        "forest_service_nepa_policy_page": [
+          "agency_policy"
+        ],
+        "fsm_2670_species_policy": [
+          "agency_policy"
+        ],
+        "montana_shpo_review": [
+          "state_requirement"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "law"
+        ],
+        "nepa_4332_environmental_information": [
+          "law"
+        ],
+        "nepa_4336_level_of_review": [
+          "law"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "law"
+        ],
+        "nepa_statute_chapter_55": [
+          "law"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "law"
+        ],
+        "nhpa_36cfr_800": [
+          "regulation"
+        ],
+        "nhpa_section_106": [
+          "law"
+        ],
+        "organic_act_16usc_475": [
+          "law"
+        ],
+        "organic_act_16usc_551": [
+          "law"
+        ],
+        "planning_rule_36cfr_219": [
+          "regulation"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "regulation"
+        ],
+        "predecisional_review_36cfr_218": [
+          "regulation"
+        ],
+        "region1_directives_index": [
+          "agency_policy"
+        ],
+        "region1_species_of_conservation_concern": [
+          "agency_policy"
+        ],
+        "seven_county_nepa_scope": [
+          "case_law"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "regulation"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "regulation"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "regulation"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "regulation"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "regulation"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "regulation"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "regulation"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "regulation"
+        ]
+      },
+      "expected_source_record_ids": {
+        "apa_final_agency_action": [
+          "R1EA-021"
+        ],
+        "esa_consultation_50cfr_402": [
+          "R1EA-066"
+        ],
+        "esa_section_7": [
+          "R1EA-065"
+        ],
+        "forest_service_directives_portal": [
+          "R1EA-028"
+        ],
+        "forest_service_nepa_policy_page": [
+          "R1EA-019"
+        ],
+        "fsm_2670_species_policy": [
+          "R1EA-031"
+        ],
+        "montana_shpo_review": [
+          "R1EA-119"
+        ],
+        "musuya_multiple_use_sustained_yield": [
+          "R1EA-033"
+        ],
+        "nepa_4332_environmental_information": [
+          "R1EA-002"
+        ],
+        "nepa_4336_level_of_review": [
+          "R1EA-003"
+        ],
+        "nepa_4336a_timing_unified_review": [
+          "R1EA-004"
+        ],
+        "nepa_statute_chapter_55": [
+          "R1EA-001"
+        ],
+        "nfma_16usc_1604_plan_consistency": [
+          "R1EA-022"
+        ],
+        "nhpa_36cfr_800": [
+          "R1EA-071"
+        ],
+        "nhpa_section_106": [
+          "R1EA-070"
+        ],
+        "organic_act_16usc_475": [
+          "R1EA-034"
+        ],
+        "organic_act_16usc_551": [
+          "R1EA-035"
+        ],
+        "planning_rule_36cfr_219": [
+          "R1EA-023"
+        ],
+        "planning_rule_36cfr_21915_consistency": [
+          "R1EA-024"
+        ],
+        "predecisional_review_36cfr_218": [
+          "R1EA-025"
+        ],
+        "region1_directives_index": [
+          "R1EA-029"
+        ],
+        "region1_species_of_conservation_concern": [
+          "R1EA-067"
+        ],
+        "seven_county_nepa_scope": [
+          "R1EA-020"
+        ],
+        "usda_nepa_7cfr_part_1b": [
+          "R1EA-008"
+        ],
+        "usda_nepa_definitions_7cfr_1b11": [
+          "R1EA-017"
+        ],
+        "usda_nepa_ea_7cfr_1b5": [
+          "R1EA-013"
+        ],
+        "usda_nepa_efficient_review_7cfr_1b9": [
+          "R1EA-015"
+        ],
+        "usda_nepa_final_rule_91fr17092": [
+          "R1EA-018"
+        ],
+        "usda_nepa_fonsi_7cfr_1b6": [
+          "R1EA-014"
+        ],
+        "usda_nepa_policy_7cfr_1b2": [
+          "R1EA-010"
+        ],
+        "usda_nepa_purpose_7cfr_1b1": [
+          "R1EA-009"
+        ]
+      },
+      "expected_statuses": {
+        "apa_final_agency_action": "gap",
+        "custer_gallatin_lmp_2022": "not_applicable",
+        "directives_notice_comment_36cfr_216": "not_applicable",
+        "eo_11990_wetlands": "not_applicable",
+        "eo_13186_migratory_birds": "not_applicable",
+        "esa_consultation_50cfr_402": "pass",
+        "esa_section_7": "pass",
+        "flpma_section_206_land_exchange": "not_applicable",
+        "forest_service_directives_portal": "gap",
+        "forest_service_nepa_policy_page": "pass",
+        "fsm_2670_species_policy": "pass",
+        "land_exchange_fs_policy_and_project_references": "not_applicable",
+        "land_exchange_regulatory_requirements": "not_applicable",
+        "land_exchange_statutory_authorities": "not_applicable",
+        "mbta_migratory_birds": "not_applicable",
+        "montana_shpo_review": "pass",
+        "musuya_multiple_use_sustained_yield": "pass",
+        "nepa_4332_environmental_information": "pass",
+        "nepa_4336_level_of_review": "pass",
+        "nepa_4336a_timing_unified_review": "pass",
+        "nepa_4336b_programmatic_tiering": "not_applicable",
+        "nepa_4336c_ce_adoption_screen": "not_applicable",
+        "nepa_4336f_sponsor_prepared_documents": "not_applicable",
+        "nepa_statute_chapter_55": "pass",
+        "nfma_16usc_1604_plan_consistency": "gap",
+        "nhpa_36cfr_800": "pass",
+        "nhpa_section_106": "pass",
+        "organic_act_16usc_475": "gap",
+        "organic_act_16usc_551": "gap",
+        "planning_rule_36cfr_219": "gap",
+        "planning_rule_36cfr_21915_consistency": "gap",
+        "postdecisional_review_36cfr_214": "not_applicable",
+        "predecisional_review_36cfr_218": "pass",
+        "region1_directives_index": "gap",
+        "region1_species_of_conservation_concern": "gap",
+        "roadless_rule_36cfr_294b": "not_applicable",
+        "seven_county_nepa_scope": "pass",
+        "usda_nepa_7cfr_part_1b": "pass",
+        "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
+        "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
+        "usda_nepa_definitions_7cfr_1b11": "pass",
+        "usda_nepa_ea_7cfr_1b5": "pass",
+        "usda_nepa_efficient_review_7cfr_1b9": "pass",
+        "usda_nepa_final_rule_91fr17092": "pass",
+        "usda_nepa_fonsi_7cfr_1b6": "gap",
+        "usda_nepa_policy_7cfr_1b2": "gap",
+        "usda_nepa_purpose_7cfr_1b1": "gap",
+        "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable"
+      },
+      "expected_unsupported_finding_ids": [],
+      "expected_validation_passed": true,
+      "hard_negative_package": false,
+      "id": "consultation-conditional-subset",
+      "min_findings": 34,
+      "package_path": "../config/fixtures/downstream_eval/compliance/consultation_conditional_subset.txt"
+    }
+  ],
+  "coverage_requirements": {
+    "all_authorities_control_case_count": 1,
+    "case_count": 5,
+    "conditional_subset_case_count": 2,
+    "hard_negative_package_case_count": 2
   },
-  {
-    "id": "baseline-nepa-only",
-    "package_text": "Environmental Assessment under the National Environmental Policy Act and NEPA. The EA describes environmental effects, alternatives, consultation, public comment, significant effects, purpose and need, affected environment, environmental consequences, coordination, environmental review, schedule, objection period, and a publicly circulated review.\n",
-    "expected_statuses": {
-      "nepa_statute_chapter_55": "pass",
-      "nepa_4332_environmental_information": "pass",
-      "nepa_4336_level_of_review": "pass",
-      "nepa_4336a_timing_unified_review": "pass",
-      "usda_nepa_7cfr_part_1b": "pass",
-      "usda_nepa_purpose_7cfr_1b1": "gap",
-      "usda_nepa_policy_7cfr_1b2": "gap",
-      "usda_nepa_ea_7cfr_1b5": "pass",
-      "usda_nepa_fonsi_7cfr_1b6": "gap",
-      "usda_nepa_efficient_review_7cfr_1b9": "pass",
-      "usda_nepa_definitions_7cfr_1b11": "pass",
-      "usda_nepa_final_rule_91fr17092": "pass",
-      "forest_service_nepa_policy_page": "pass",
-      "seven_county_nepa_scope": "pass",
-      "apa_final_agency_action": "gap",
-      "nfma_16usc_1604_plan_consistency": "gap",
-      "planning_rule_36cfr_219": "gap",
-      "planning_rule_36cfr_21915_consistency": "gap",
-      "predecisional_review_36cfr_218": "pass",
-      "forest_service_directives_portal": "gap",
-      "region1_directives_index": "gap",
-      "fsm_2670_species_policy": "gap",
-      "musuya_multiple_use_sustained_yield": "gap",
-      "organic_act_16usc_475": "gap",
-      "organic_act_16usc_551": "gap",
-      "region1_species_of_conservation_concern": "gap",
-      "flpma_section_206_land_exchange": "not_applicable",
-      "nepa_4336b_programmatic_tiering": "not_applicable",
-      "nepa_4336c_ce_adoption_screen": "not_applicable",
-      "nepa_4336f_sponsor_prepared_documents": "not_applicable",
-      "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
-      "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
-      "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
-      "postdecisional_review_36cfr_214": "not_applicable",
-      "directives_notice_comment_36cfr_216": "not_applicable",
-      "custer_gallatin_lmp_2022": "not_applicable",
-      "esa_section_7": "not_applicable",
-      "esa_consultation_50cfr_402": "not_applicable",
-      "nhpa_section_106": "not_applicable",
-      "nhpa_36cfr_800": "not_applicable",
-      "montana_shpo_review": "not_applicable",
-      "roadless_rule_36cfr_294b": "not_applicable",
-      "eo_11990_wetlands": "not_applicable",
-      "mbta_migratory_birds": "not_applicable",
-      "eo_13186_migratory_birds": "not_applicable",
-      "land_exchange_statutory_authorities": "not_applicable",
-      "land_exchange_regulatory_requirements": "not_applicable",
-      "land_exchange_fs_policy_and_project_references": "not_applicable"
+  "eval_id": "compliance-review-direct-eval-v1",
+  "metric_thresholds": {
+    "case_count": {
+      "min": 5
     },
-    "expected_finding_status_counts": {
-      "gap": 14,
-      "not_applicable": 22,
-      "pass": 12
+    "citation_coverage_rate": {
+      "min": 1.0
     },
-    "expected_unsupported_finding_ids": [],
-    "expected_source_record_ids": {
-      "nepa_statute_chapter_55": [
-        "R1EA-001"
-      ],
-      "nepa_4332_environmental_information": [
-        "R1EA-002"
-      ],
-      "nepa_4336_level_of_review": [
-        "R1EA-003"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "R1EA-004"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "R1EA-008"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "R1EA-009"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "R1EA-010"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "R1EA-013"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "R1EA-014"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "R1EA-015"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "R1EA-017"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "R1EA-018"
-      ],
-      "forest_service_nepa_policy_page": [
-        "R1EA-019"
-      ],
-      "seven_county_nepa_scope": [
-        "R1EA-020"
-      ],
-      "apa_final_agency_action": [
-        "R1EA-021"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "R1EA-022"
-      ],
-      "planning_rule_36cfr_219": [
-        "R1EA-023"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "R1EA-024"
-      ],
-      "predecisional_review_36cfr_218": [
-        "R1EA-025"
-      ],
-      "forest_service_directives_portal": [
-        "R1EA-028"
-      ],
-      "region1_directives_index": [
-        "R1EA-029"
-      ],
-      "fsm_2670_species_policy": [
-        "R1EA-031"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "R1EA-033"
-      ],
-      "organic_act_16usc_475": [
-        "R1EA-034"
-      ],
-      "organic_act_16usc_551": [
-        "R1EA-035"
-      ],
-      "region1_species_of_conservation_concern": [
-        "R1EA-067"
-      ]
+    "graph_coverage_rate": {
+      "min": 1.0
     },
-    "expected_source_document_roles": {
-      "nepa_statute_chapter_55": [
-        "law"
-      ],
-      "nepa_4332_environmental_information": [
-        "law"
-      ],
-      "nepa_4336_level_of_review": [
-        "law"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "law"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "regulation"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "regulation"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "regulation"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "regulation"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "regulation"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "regulation"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "regulation"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "regulation"
-      ],
-      "forest_service_nepa_policy_page": [
-        "agency_policy"
-      ],
-      "seven_county_nepa_scope": [
-        "case_law"
-      ],
-      "apa_final_agency_action": [
-        "law"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "law"
-      ],
-      "planning_rule_36cfr_219": [
-        "regulation"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "regulation"
-      ],
-      "predecisional_review_36cfr_218": [
-        "regulation"
-      ],
-      "forest_service_directives_portal": [
-        "agency_policy"
-      ],
-      "region1_directives_index": [
-        "agency_policy"
-      ],
-      "fsm_2670_species_policy": [
-        "agency_policy"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "law"
-      ],
-      "organic_act_16usc_475": [
-        "law"
-      ],
-      "organic_act_16usc_551": [
-        "law"
-      ],
-      "region1_species_of_conservation_concern": [
-        "agency_policy"
-      ]
+    "missing_required_source_rule_rate": {
+      "max": 0.0
     },
-    "min_findings": 45
+    "source_document_role_match_rate": {
+      "min": 1.0
+    },
+    "source_record_match_rate": {
+      "min": 1.0
+    },
+    "status_match_rate": {
+      "min": 1.0
+    },
+    "unexpected_positive_finding_rate": {
+      "max": 0.0
+    }
   },
-  {
-    "id": "unrelated-package-produces-baseline-gaps",
-    "package_text": "Administrative Transmittal. Routing slip. Staff contacts. Meeting date. Document control log.\n",
-    "expected_statuses": {
-      "nepa_statute_chapter_55": "gap",
-      "nepa_4332_environmental_information": "gap",
-      "nepa_4336_level_of_review": "gap",
-      "nepa_4336a_timing_unified_review": "gap",
-      "usda_nepa_7cfr_part_1b": "gap",
-      "usda_nepa_purpose_7cfr_1b1": "gap",
-      "usda_nepa_policy_7cfr_1b2": "gap",
-      "usda_nepa_ea_7cfr_1b5": "gap",
-      "usda_nepa_fonsi_7cfr_1b6": "gap",
-      "usda_nepa_efficient_review_7cfr_1b9": "gap",
-      "usda_nepa_definitions_7cfr_1b11": "gap",
-      "usda_nepa_final_rule_91fr17092": "gap",
-      "forest_service_nepa_policy_page": "gap",
-      "seven_county_nepa_scope": "gap",
-      "apa_final_agency_action": "gap",
-      "nfma_16usc_1604_plan_consistency": "gap",
-      "planning_rule_36cfr_219": "gap",
-      "planning_rule_36cfr_21915_consistency": "gap",
-      "predecisional_review_36cfr_218": "gap",
-      "forest_service_directives_portal": "gap",
-      "region1_directives_index": "gap",
-      "fsm_2670_species_policy": "gap",
-      "musuya_multiple_use_sustained_yield": "gap",
-      "organic_act_16usc_475": "gap",
-      "organic_act_16usc_551": "gap",
-      "region1_species_of_conservation_concern": "gap",
-      "flpma_section_206_land_exchange": "not_applicable",
-      "nepa_4336b_programmatic_tiering": "not_applicable",
-      "nepa_4336c_ce_adoption_screen": "not_applicable",
-      "nepa_4336f_sponsor_prepared_documents": "not_applicable",
-      "usda_nepa_ce_fanec_7cfr_1b3": "not_applicable",
-      "usda_nepa_subcomponent_ce_7cfr_1b4": "not_applicable",
-      "usda_nepa_applicant_docs_7cfr_1b10": "not_applicable",
-      "postdecisional_review_36cfr_214": "not_applicable",
-      "directives_notice_comment_36cfr_216": "not_applicable",
-      "custer_gallatin_lmp_2022": "not_applicable",
-      "esa_section_7": "not_applicable",
-      "esa_consultation_50cfr_402": "not_applicable",
-      "nhpa_section_106": "not_applicable",
-      "nhpa_36cfr_800": "not_applicable",
-      "montana_shpo_review": "not_applicable",
-      "roadless_rule_36cfr_294b": "not_applicable",
-      "eo_11990_wetlands": "not_applicable",
-      "mbta_migratory_birds": "not_applicable",
-      "eo_13186_migratory_birds": "not_applicable",
-      "land_exchange_statutory_authorities": "not_applicable",
-      "land_exchange_regulatory_requirements": "not_applicable",
-      "land_exchange_fs_policy_and_project_references": "not_applicable"
-    },
-    "expected_finding_status_counts": {
-      "gap": 26,
-      "not_applicable": 22
-    },
-    "expected_unsupported_finding_ids": [],
-    "expected_source_record_ids": {
-      "nepa_statute_chapter_55": [
-        "R1EA-001"
-      ],
-      "nepa_4332_environmental_information": [
-        "R1EA-002"
-      ],
-      "nepa_4336_level_of_review": [
-        "R1EA-003"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "R1EA-004"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "R1EA-008"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "R1EA-009"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "R1EA-010"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "R1EA-013"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "R1EA-014"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "R1EA-015"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "R1EA-017"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "R1EA-018"
-      ],
-      "forest_service_nepa_policy_page": [
-        "R1EA-019"
-      ],
-      "seven_county_nepa_scope": [
-        "R1EA-020"
-      ],
-      "apa_final_agency_action": [
-        "R1EA-021"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "R1EA-022"
-      ],
-      "planning_rule_36cfr_219": [
-        "R1EA-023"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "R1EA-024"
-      ],
-      "predecisional_review_36cfr_218": [
-        "R1EA-025"
-      ],
-      "forest_service_directives_portal": [
-        "R1EA-028"
-      ],
-      "region1_directives_index": [
-        "R1EA-029"
-      ],
-      "fsm_2670_species_policy": [
-        "R1EA-031"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "R1EA-033"
-      ],
-      "organic_act_16usc_475": [
-        "R1EA-034"
-      ],
-      "organic_act_16usc_551": [
-        "R1EA-035"
-      ],
-      "region1_species_of_conservation_concern": [
-        "R1EA-067"
-      ]
-    },
-    "expected_source_document_roles": {
-      "nepa_statute_chapter_55": [
-        "law"
-      ],
-      "nepa_4332_environmental_information": [
-        "law"
-      ],
-      "nepa_4336_level_of_review": [
-        "law"
-      ],
-      "nepa_4336a_timing_unified_review": [
-        "law"
-      ],
-      "usda_nepa_7cfr_part_1b": [
-        "regulation"
-      ],
-      "usda_nepa_purpose_7cfr_1b1": [
-        "regulation"
-      ],
-      "usda_nepa_policy_7cfr_1b2": [
-        "regulation"
-      ],
-      "usda_nepa_ea_7cfr_1b5": [
-        "regulation"
-      ],
-      "usda_nepa_fonsi_7cfr_1b6": [
-        "regulation"
-      ],
-      "usda_nepa_efficient_review_7cfr_1b9": [
-        "regulation"
-      ],
-      "usda_nepa_definitions_7cfr_1b11": [
-        "regulation"
-      ],
-      "usda_nepa_final_rule_91fr17092": [
-        "regulation"
-      ],
-      "forest_service_nepa_policy_page": [
-        "agency_policy"
-      ],
-      "seven_county_nepa_scope": [
-        "case_law"
-      ],
-      "apa_final_agency_action": [
-        "law"
-      ],
-      "nfma_16usc_1604_plan_consistency": [
-        "law"
-      ],
-      "planning_rule_36cfr_219": [
-        "regulation"
-      ],
-      "planning_rule_36cfr_21915_consistency": [
-        "regulation"
-      ],
-      "predecisional_review_36cfr_218": [
-        "regulation"
-      ],
-      "forest_service_directives_portal": [
-        "agency_policy"
-      ],
-      "region1_directives_index": [
-        "agency_policy"
-      ],
-      "fsm_2670_species_policy": [
-        "agency_policy"
-      ],
-      "musuya_multiple_use_sustained_yield": [
-        "law"
-      ],
-      "organic_act_16usc_475": [
-        "law"
-      ],
-      "organic_act_16usc_551": [
-        "law"
-      ],
-      "region1_species_of_conservation_concern": [
-        "agency_policy"
-      ]
-    },
-    "min_findings": 45
-  }
-]
+  "schema_version": "compliance-review-eval-v1"
+}

@@ -9,7 +9,12 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
+from usfs_r1_ea_sources.compliance_review_eval import _normalized_eval_findings_by_rule
+from usfs_r1_ea_sources.compliance_review_eval import (
+    _validate_compliance_review_eval_cases_against_rule_pack,
+)
 from usfs_r1_ea_sources.compliance_review_eval import run_compliance_review_eval
+from usfs_r1_ea_sources.compliance_coverage import _load_eval_cases
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import _effective_cases_for_rule_pack
 from usfs_r1_ea_sources.compliance_gold_eval import _gold_rule_pack_match_mode
@@ -22,6 +27,7 @@ from usfs_r1_ea_sources.forest_plan_components import build_forest_plan_componen
 from usfs_r1_ea_sources.records import sha256_file
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
+from usfs_r1_ea_sources.rule_claim_binding import default_rule_claim_links_dir
 from usfs_r1_ea_sources.rule_packs import validate_rule_pack
 
 
@@ -35,14 +41,12 @@ class ComplianceReviewTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        eval_cases = {
-            case["id"]: case
-            for case in json.loads(
-                Path("config/compliance_review_eval_seed.json").read_text(
-                    encoding="utf-8"
-                )
+        eval_contract = json.loads(
+            Path("config/compliance_review_eval_seed.json").read_text(
+                encoding="utf-8"
             )
-        }
+        )
+        eval_cases = {case["id"]: case for case in eval_contract["cases"]}
         v1_contract = json.loads(
             Path("config/v1_ecid_real_ea_eval.json").read_text(encoding="utf-8")
         )
@@ -1689,6 +1693,56 @@ class ComplianceReviewTests(unittest.TestCase):
                     eval_file=eval_path,
                 )
 
+    def test_compliance_review_eval_normalizes_missing_generated_rules_as_not_applicable(
+        self,
+    ) -> None:
+        findings_by_rule = {
+            "purpose_need": {
+                "rule_id": "purpose_need",
+                "status": "pass",
+                "claim_type": "supported_compliance_finding",
+            }
+        }
+        expected_statuses = {
+            "purpose_need": "pass",
+            "mitigation": "not_applicable",
+        }
+
+        normalized = _normalized_eval_findings_by_rule(
+            findings_by_rule=findings_by_rule,
+            expected_statuses=expected_statuses,
+            generated_rule_pack_case=True,
+        )
+
+        self.assertEqual(normalized["purpose_need"]["status"], "pass")
+        self.assertEqual(normalized["mitigation"]["status"], "not_applicable")
+        self.assertEqual(normalized["mitigation"]["claim_type"], "no_compliance_claim")
+        self.assertEqual(normalized["mitigation"]["source_claim_link_count"], 0)
+
+        unchanged = _normalized_eval_findings_by_rule(
+            findings_by_rule=findings_by_rule,
+            expected_statuses=expected_statuses,
+            generated_rule_pack_case=False,
+        )
+        self.assertNotIn("mitigation", unchanged)
+
+    def test_compliance_review_eval_allows_generated_rule_pack_status_counts(self) -> None:
+        case = {
+            "id": "generated-case",
+            "package_text": "Purpose and Need",
+            "hard_negative_package": True,
+            "min_findings": 1,
+            "expected_statuses": {
+                "purpose_need": "gap",
+                "mitigation": "not_applicable",
+            },
+            "expected_finding_status_counts": {
+                "gap": 1,
+            },
+        }
+
+        _validate_compliance_review_eval_cases_against_rule_pack([case], _rule_pack())
+
     def test_compliance_review_eval_rejects_status_count_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             rule_pack_path = _write_rule_pack(Path(tmp))
@@ -1876,6 +1930,38 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(result.summary["rules_without_eval_cases"], [])
             self.assertEqual(result.summary["rules_without_source_claim_links"], [])
             self.assertEqual(result.summary["source_claim_term_mismatch_rule_ids"], [])
+
+    def test_compliance_coverage_loads_contract_object_cases(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            eval_path = Path(tmp) / "compliance-eval.json"
+            eval_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "compliance-review-eval-v1",
+                        "eval_id": "coverage-contract-unit",
+                        "coverage_requirements": {},
+                        "metric_thresholds": {},
+                        "cases": [
+                            {
+                                "id": "coverage-case",
+                                "package_text": "Purpose and Need",
+                                "expected_statuses": {
+                                    "purpose_need": "pass",
+                                    "mitigation": "gap",
+                                },
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            cases = _load_eval_cases(eval_path)
+
+            self.assertEqual(len(cases), 1)
+            self.assertEqual(cases[0]["id"], "coverage-case")
+            self.assertEqual(cases[0]["expected_statuses"]["purpose_need"], "pass")
 
     def test_compliance_coverage_reports_missing_rule_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -2403,6 +2489,7 @@ class ComplianceReviewTests(unittest.TestCase):
                 rule_pack_path=rule_pack_path,
                 gold_file=gold_path,
             )
+            _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
             gold_summary = json.loads(result.output_path.read_text(encoding="utf-8"))
             gold_summary["source_set_id"] = "source-set-other"
             result.output_path.write_text(
@@ -2442,7 +2529,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 14)
+            self.assertEqual(result.summary["phase_count"], 16)
             self.assertEqual(result.summary["review_id"], "phase-review")
             self.assertEqual(
                 result.review_output_path,
@@ -2497,7 +2584,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 15)
+            self.assertEqual(result.summary["phase_count"], 17)
             final_qa_phase = _phase(result.summary, "final_qa_certification_report")
             self.assertTrue(final_qa_phase["passed"])
             self.assertTrue(final_qa_phase["reviewer_ready"])
@@ -2576,7 +2663,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 15)
+            self.assertEqual(result.summary["phase_count"], 17)
             adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
             self.assertTrue(adjudication_phase["passed"])
             self.assertTrue(adjudication_phase["reviewer_ready"])
@@ -2673,7 +2760,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 15)
+            self.assertEqual(result.summary["phase_count"], 17)
             component_eval_phase = _phase(result.summary, "forest_plan_component_eval")
             self.assertTrue(component_eval_phase["passed"])
             self.assertTrue(component_eval_phase["reviewer_ready"])
@@ -3663,6 +3750,82 @@ def _write_graph_phase_outputs(output_dir: Path, source_set_id: str) -> None:
         ),
         encoding="utf-8",
     )
+    _write_upstream_evaluation_phase_outputs(output_dir)
+    _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
+
+
+def _write_upstream_evaluation_phase_outputs(output_dir: Path) -> None:
+    path = output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "upstream-evaluation-results-v0",
+                "passed": True,
+                "lane_summaries": [
+                    {"lane_id": "capture", "status": "direct_eval_present"},
+                    {"lane_id": "catalog", "status": "direct_eval_present"},
+                    {"lane_id": "extraction", "status": "direct_eval_present"},
+                ],
+                "failed_case_ids": [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_downstream_direct_eval_phase_outputs(output_dir: Path, source_set_id: str) -> None:
+    contracts = {
+        output_dir / "derived" / source_set_id / "retrieval" / "retrieval_eval_results.json": (
+            Path("config/retrieval_eval_seed.json"),
+            "retrieval-direct-eval-v1",
+        ),
+        output_dir / "derived" / source_set_id / "claims" / "claim_eval_results.json": (
+            Path("config/claim_eval_seed.json"),
+            "claim-direct-eval-v1",
+        ),
+        output_dir / "reviews" / "compliance_review_eval" / "compliance_review_eval_results.json": (
+            Path("config/compliance_review_eval_seed.json"),
+            "compliance-review-direct-eval-v1",
+        ),
+    }
+    rule_claim_root = output_dir / "derived" / source_set_id / "rule_claim_links"
+    candidates = sorted(rule_claim_root.glob("*/*/summary.json"))
+    rule_claim_result_paths = {
+        candidate.parent / "rule_claim_link_eval_results.json" for candidate in candidates
+    }
+    if not rule_claim_result_paths:
+        rule_claim_result_paths.add(
+            default_rule_claim_links_dir(
+                output_dir,
+                source_set_id=source_set_id,
+            )
+            / "rule_claim_link_eval_results.json"
+        )
+    for rule_claim_result_path in rule_claim_result_paths:
+        contracts[rule_claim_result_path] = (
+            Path("config/rule_claim_link_eval_seed.json"),
+            "rule-claim-direct-eval-v1",
+        )
+    for result_path, (contract_path, eval_id) in contracts.items():
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "unit-direct-eval-result",
+                    "eval_id": eval_id,
+                    "source_set_id": source_set_id,
+                    "passed": True,
+                    "contract": {
+                        "sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()
+                    },
+                    "checks": [],
+                },
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
 
 
 def _write_final_qa_phase_outputs(
@@ -4213,7 +4376,7 @@ def _run_generated_compliance_review(
         base_rule_pack_path=base_rule_pack_path,
         include_non_applicable=include_non_applicable,
     )
-    return run_compliance_review(
+    result = run_compliance_review(
         package_path=package_path,
         output_dir=output_dir,
         source_set_id=source_set_id,
@@ -4222,6 +4385,8 @@ def _run_generated_compliance_review(
         review_id=review_id,
         reuse_package_cache=True,
     )
+    _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
+    return result
 
 
 def _write_json(path: Path, payload: dict) -> None:

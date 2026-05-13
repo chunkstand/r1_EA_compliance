@@ -136,8 +136,12 @@ def _load_eval_cases(path: Path) -> list[dict]:
     if not path.exists():
         raise FileNotFoundError(f"Missing compliance review eval file: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(value, dict):
+        value = value.get("cases")
     if not isinstance(value, list) or not value:
-        raise ValueError("Compliance review eval file must contain a non-empty JSON list.")
+        raise ValueError(
+            "Compliance review eval file must contain a non-empty JSON list or contract cases array."
+        )
     for index, case in enumerate(value):
         if not isinstance(case, dict):
             raise ValueError(f"Compliance review eval case {index} must be an object.")

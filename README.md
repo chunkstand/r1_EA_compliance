@@ -1158,9 +1158,15 @@ statuses for every rule in the rule pack, claim types, package evidence, source-
 source-claim links, expected source record IDs, expected source document roles, finding status
 counts, unsupported finding IDs, citation coverage, failure taxonomy, and finding-graph coverage.
 Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched status counts fail
-fast so typoed or incomplete fixtures cannot silently broaden scoring. When this eval is run against
-the base rule pack during the applicability-first transition, those case outputs are diagnostic:
-they can score finding quality, but they are not reviewer-ready promotion artifacts.
+fast so typoed or incomplete fixtures cannot silently broaden scoring. The shipped default file
+`config/compliance_review_eval_seed.json` is a `compliance-review-eval-v1` contract with explicit
+coverage floors for all-authorities control, unrelated-package hard negatives, and conditional
+subset cases plus locked thresholds for zero unexpected positives and zero missing required-source
+rule drift. Generated-rule-pack cases are supported alongside base-pack cases; rules omitted from a
+generated pack are normalized as `not_applicable` for contract matching rather than silently
+ignored. When this eval is run against the base rule pack during the applicability-first
+transition, those case outputs are diagnostic: they can score finding quality, but they are not
+reviewer-ready promotion artifacts.
 
 Run the adjudicated gold eval promotion gate:
 
@@ -1279,9 +1285,13 @@ PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval \
 ```
 
 The eval checks whether expected compliance-review evidence can be retrieved with citation-bearing
-provenance. It reports hit rate, expected-term coverage, citation coverage, unsupported-answer rate,
-and zero-result rate. Eval cases may also declare `expect_no_hits: true` for deterministic negative
-cases such as official-source gaps. The Region 1 forest-plan source-delta suite lives at
+provenance. The shipped default file `config/retrieval_eval_seed.json` is now a
+`retrieval-eval-v1` contract with `coverage_requirements`, `metric_thresholds`, and tracked cases.
+It reports hard-negative and multi-source coverage, `recall@k`, `mrr`, `nDCG@k`,
+`false_positive_rate`, `missing_required_source_rate`, and the older hit/citation rates. Eval
+cases may also declare `expect_no_hits: true` for deterministic negative cases such as
+official-source gaps. Legacy bare JSON case lists are still accepted for ad hoc local evals, but
+the shipped gate is contract-based. The Region 1 forest-plan source-delta suite lives at
 `config/r1_forest_plan_source_delta_retrieval_eval.json`.
 
 Build the document evidence graph:
@@ -1321,7 +1331,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval \
 
 `claim-eval` revalidates the current claim artifacts before scoring cases. It refuses missing,
 tampered, or non-reviewer-ready claim outputs, and eval case filters fail fast on unknown or empty
-keys so typoed filters cannot silently broaden the eval.
+keys so typoed filters cannot silently broaden the eval. The shipped default file
+`config/claim_eval_seed.json` is a `claim-eval-v1` contract with hard negatives, multi-source or
+type-confusion cases, coverage floors, and locked thresholds for `recall@k`, `mrr`, `nDCG@k`,
+`false_positive_rate`, and `missing_required_source_rate`.
 
 Build deterministic rule-to-source-claim links:
 
@@ -1353,7 +1366,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval \
 ```
 
 `rule-claim-eval` revalidates current link artifacts before scoring cases and refuses stale,
-tampered, or non-reviewer-ready bindings.
+tampered, or non-reviewer-ready bindings. The shipped default file
+`config/rule_claim_link_eval_seed.json` is a `rule-claim-link-eval-v1` contract with hard
+negatives, multi-source link checks, coverage floors, and locked thresholds for `recall@k`, `mrr`,
+`nDCG@k`, `false_positive_rate`, and `missing_required_source_rate`.
 
 Build the applicability-first authority universe snapshot:
 
@@ -1560,7 +1576,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage \
 `compliance-coverage` validates that every rule has a coverage-matrix row, current source-claim
 links, source-claim term support, and compliance-review eval coverage. It reports uncovered rules,
 rules without eval cases, rules without source-claim links, source-record mismatches, and
-source-claim terms that do not match current rule-claim bindings.
+source-claim terms that do not match current rule-claim bindings. It accepts either the shipped
+contract-object compliance-review eval file or an explicit legacy case list.
 
 Run forest-plan component eval against an existing review:
 

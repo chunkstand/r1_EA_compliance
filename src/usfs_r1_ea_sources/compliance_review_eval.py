@@ -6,6 +6,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 import json
 
+from .applicability import build_authority_universe_snapshot
+from .applicability_decisions import build_applicability_decisions
+from .applicability_retrieval import build_applicability_retrieval_traces
+from .applicability_rule_pack import generate_applicability_rule_pack
+from .applicability_validation import validate_applicability_run
+from .eval_metrics import contract_snapshot, metric_threshold_check, read_json_payload
 from .compliance_findings import claim_type
 from .compliance_outputs import finding_source_document_roles
 from .compliance_outputs import finding_source_record_ids
@@ -19,15 +25,18 @@ from .compliance_validation import (
 )
 from .compliance_validation import failed_check_names
 from .compliance_validation import validation_checks_passed
+from .ea_review import run_ea_review
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
+from .package_fact_graph import build_package_fact_graph
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import SAFE_ID_RE
 from .rule_packs import load_rule_pack
 from .rule_packs import validate_rule_pack
 
 
-COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v0"
+COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v1"
+COMPLIANCE_REVIEW_EVAL_RESULTS_SCHEMA_VERSION = "compliance-review-eval-results-v1"
 DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH = Path("config/compliance_review_eval_seed.json")
 SUPPORTED_COMPLIANCE_REVIEW_EVAL_FILTERS = {"claim_type", "rule_id", "status"}
 
@@ -75,7 +84,7 @@ def run_compliance_review_eval(
             check["name"] for check in rule_pack_validation["checks"] if not check["passed"]
         )
         raise ValueError(f"Compliance rule pack is invalid. Failed checks: {failed}")
-    cases = _load_compliance_review_eval_cases(eval_file)
+    contract, cases, legacy_format = _load_compliance_review_eval_contract(eval_file)
     _validate_compliance_review_eval_cases_against_rule_pack(cases, rule_pack)
 
     eval_output_dir = (
@@ -101,11 +110,34 @@ def run_compliance_review_eval(
         )
         review_id = str(case.get("review_id") or f"compliance-eval-{case_id}")
         _validate_safe_id(review_id, "review_id")
-        review_dir = review_root / case_id
+        requires_generated_rule_pack = _case_requires_generated_rule_pack(case)
+        review_dir = (
+            output_dir / "reviews" / review_id
+            if requires_generated_rule_pack
+            else review_root / case_id
+        )
+        effective_rule_pack_path = (
+            _generated_rule_pack_for_eval_case(
+                output_dir=output_dir,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+                source_set_id=source_set_id,
+                index_path=index_path,
+                review_id=review_id,
+                source_top_k=case_source_top_k,
+                package_top_k=case_package_top_k,
+                chunk_max_chars=chunk_max_chars,
+                chunk_overlap_chars=chunk_overlap_chars,
+                docling_ocr=docling_ocr,
+                docling_timeout_seconds=docling_timeout_seconds,
+            )
+            if requires_generated_rule_pack
+            else rule_pack_path
+        )
         result = run_compliance_review(
             package_path=package_path,
             output_dir=output_dir,
-            rule_pack_path=rule_pack_path,
+            rule_pack_path=effective_rule_pack_path,
             source_set_id=source_set_id,
             index_path=index_path,
             forest_unit_id=forest_unit_id,
@@ -118,7 +150,8 @@ def run_compliance_review_eval(
             chunk_overlap_chars=chunk_overlap_chars,
             docling_ocr=docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
-            allow_base_rule_pack_review=True,
+            reuse_package_cache=requires_generated_rule_pack,
+            allow_base_rule_pack_review=not requires_generated_rule_pack,
         )
         report = _read_json(result.compliance_review_path)
         validation = _read_json(result.compliance_validation_path)
@@ -136,6 +169,7 @@ def run_compliance_review_eval(
 
     case_count = len(case_results)
     passed_count = sum(1 for case in case_results if case["passed"])
+    failed_count = case_count - passed_count
     source_set_ids = sorted(
         {
             str(case["source_set_id"])
@@ -143,8 +177,78 @@ def run_compliance_review_eval(
             if case.get("source_set_id")
         }
     )
+    hard_negative_cases = [case for case in case_results if case["hard_negative_package"]]
+    conditional_subset_cases = [case for case in case_results if case["conditional_subset"]]
+    all_authorities_control_cases = [
+        case for case in case_results if case["all_authorities_control"]
+    ]
+    metrics = {
+        "case_count": case_count,
+        "pass_rate": _rate(passed_count, case_count),
+        "validation_match_rate": _case_rate(case_results, "validation_passed_matches"),
+        "reviewer_ready_match_rate": _case_rate(case_results, "reviewer_ready_matches"),
+        "status_match_rate": _case_rate(case_results, "expected_statuses_match"),
+        "claim_type_match_rate": _case_rate(case_results, "expected_claim_types_match"),
+        "package_evidence_match_rate": _case_rate(
+            case_results,
+            "expected_package_evidence_match",
+        ),
+        "source_evidence_match_rate": _case_rate(
+            case_results,
+            "expected_source_evidence_match",
+        ),
+        "source_claim_link_match_rate": _case_rate(
+            case_results,
+            "expected_source_claim_links_match",
+        ),
+        "source_record_match_rate": _case_rate(
+            case_results,
+            "expected_source_record_ids_match",
+        ),
+        "source_document_role_match_rate": _case_rate(
+            case_results,
+            "expected_source_document_roles_match",
+        ),
+        "citation_coverage_rate": _case_rate(case_results, "citation_coverage_supported"),
+        "graph_coverage_rate": _case_rate(case_results, "graph_coverage_supported"),
+        "unsupported_finding_match_rate": _case_rate(
+            case_results,
+            "unsupported_finding_ids_match",
+        ),
+        "unexpected_positive_finding_rate": _case_rate(
+            case_results,
+            "unexpected_positive_rules_absent",
+            invert=True,
+        ),
+        "missing_required_source_rule_rate": _case_rate(
+            case_results,
+            "missing_required_source_rules_absent",
+            invert=True,
+        ),
+        "zero_finding_rate": _rate(
+            sum(1 for case in case_results if case["finding_count"] == 0),
+            case_count,
+        ),
+    }
+    checks = [
+        {
+            "name": "eval_cases_pass",
+            "passed": failed_count == 0,
+            "details": {
+                "case_count": case_count,
+                "failed_case_ids": [case["id"] for case in case_results if not case["passed"]],
+            },
+        },
+        _compliance_review_eval_coverage_check(
+            contract,
+            case_results,
+            legacy_format=legacy_format,
+        ),
+        metric_threshold_check(contract.get("metric_thresholds", {}), metrics),
+    ]
     summary = {
-        "schema_version": COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION,
+        "schema_version": COMPLIANCE_REVIEW_EVAL_RESULTS_SCHEMA_VERSION,
+        "eval_id": contract.get("eval_id"),
         "eval_file": str(eval_file),
         "output_dir": str(eval_output_dir),
         "output_path": str(output_path),
@@ -156,48 +260,21 @@ def run_compliance_review_eval(
         "package_top_k": package_top_k,
         "case_count": case_count,
         "passed_count": passed_count,
-        "failed_count": case_count - passed_count,
-        "passed": passed_count == case_count,
-        "metrics": {
-            "pass_rate": _rate(passed_count, case_count),
-            "validation_match_rate": _case_rate(case_results, "validation_passed_matches"),
-            "reviewer_ready_match_rate": _case_rate(case_results, "reviewer_ready_matches"),
-            "status_match_rate": _case_rate(case_results, "expected_statuses_match"),
-            "claim_type_match_rate": _case_rate(case_results, "expected_claim_types_match"),
-            "package_evidence_match_rate": _case_rate(
-                case_results,
-                "expected_package_evidence_match",
-            ),
-            "source_evidence_match_rate": _case_rate(
-                case_results,
-                "expected_source_evidence_match",
-            ),
-            "source_claim_link_match_rate": _case_rate(
-                case_results,
-                "expected_source_claim_links_match",
-            ),
-            "source_record_match_rate": _case_rate(
-                case_results,
-                "expected_source_record_ids_match",
-            ),
-            "source_document_role_match_rate": _case_rate(
-                case_results,
-                "expected_source_document_roles_match",
-            ),
-            "citation_coverage_rate": _case_rate(case_results, "citation_coverage_supported"),
-            "graph_coverage_rate": _case_rate(case_results, "graph_coverage_supported"),
-            "unsupported_finding_match_rate": _case_rate(
-                case_results,
-                "unsupported_finding_ids_match",
-            ),
-            "zero_finding_rate": _rate(
-                sum(1 for case in case_results if case["finding_count"] == 0),
-                case_count,
-            ),
-        },
+        "failed_count": failed_count,
+        "hard_negative_package_case_count": len(hard_negative_cases),
+        "conditional_subset_case_count": len(conditional_subset_cases),
+        "all_authorities_control_case_count": len(all_authorities_control_cases),
+        "checks": checks,
+        "metrics": metrics,
+        "contract": contract_snapshot(
+            contract_path=eval_file,
+            contract=contract,
+            case_count=len(cases),
+        ),
         "failure_category_counts": _failure_category_counts(case_results),
         "cases": case_results,
     }
+    summary["passed"] = all(check["passed"] for check in checks)
     _write_json(output_path, summary)
     return ComplianceReviewEvalResult(
         eval_file=eval_file,
@@ -207,13 +284,138 @@ def run_compliance_review_eval(
     )
 
 
-def _load_compliance_review_eval_cases(path: Path) -> list[dict]:
-    if not path.exists():
-        raise FileNotFoundError(f"Missing compliance review eval file: {path}")
-    cases = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(cases, list) or not cases:
-        raise ValueError("Compliance review eval file must contain a non-empty JSON list.")
-    for index, case in enumerate(cases):
+def _load_compliance_review_eval_contract(path: Path) -> tuple[dict, list[dict], bool]:
+    payload = read_json_payload(path, label="compliance review eval file")
+    if isinstance(payload, list):
+        cases = _validated_compliance_review_eval_cases(payload, legacy_format=True)
+        return (
+            {
+                "schema_version": "legacy-compliance-review-eval-list-v0",
+                "eval_id": f"legacy-{path.stem}",
+                "coverage_requirements": {},
+                "metric_thresholds": {},
+                "cases": cases,
+            },
+            cases,
+            True,
+        )
+    if payload.get("schema_version") != COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION:
+        raise ValueError(
+            "Unsupported compliance review eval schema_version: "
+            f"{payload.get('schema_version')!r}"
+        )
+    if not str(payload.get("eval_id") or "").strip():
+        raise ValueError("Compliance review eval contract missing 'eval_id'.")
+    if not isinstance(payload.get("coverage_requirements"), dict):
+        raise ValueError("Compliance review eval contract missing 'coverage_requirements'.")
+    if not isinstance(payload.get("metric_thresholds"), dict):
+        raise ValueError("Compliance review eval contract missing 'metric_thresholds'.")
+    _validate_compliance_review_coverage_requirements(payload["coverage_requirements"])
+    cases = _validated_compliance_review_eval_cases(payload.get("cases"), legacy_format=False)
+    return payload, cases, False
+
+
+def _case_requires_generated_rule_pack(case: dict) -> bool:
+    return any(
+        bool(case.get(field))
+        for field in (
+            "all_authorities_control",
+            "conditional_subset",
+            "hard_negative_package",
+        )
+    )
+
+
+def _generated_rule_pack_for_eval_case(
+    *,
+    output_dir: Path,
+    package_path: Path,
+    base_rule_pack_path: Path,
+    source_set_id: str | None,
+    index_path: Path | None,
+    review_id: str,
+    source_top_k: int,
+    package_top_k: int,
+    chunk_max_chars: int,
+    chunk_overlap_chars: int,
+    docling_ocr: bool,
+    docling_timeout_seconds: float | None,
+) -> Path:
+    run_ea_review(
+        package_path=package_path,
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        index_path=index_path,
+        checklist_path=base_rule_pack_path,
+        review_id=review_id,
+        source_top_k=source_top_k,
+        package_top_k=package_top_k,
+        chunk_max_chars=chunk_max_chars,
+        chunk_overlap_chars=chunk_overlap_chars,
+        docling_ocr=docling_ocr,
+        docling_timeout_seconds=docling_timeout_seconds,
+    )
+    build_authority_universe_snapshot(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        base_rule_pack_path=base_rule_pack_path,
+    )
+    build_package_fact_graph(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        package_path=package_path,
+    )
+    build_applicability_retrieval_traces(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        top_k=source_top_k,
+    )
+    build_applicability_decisions(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+    )
+    validation_result = validate_applicability_run(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+    )
+    if not validation_result.summary.get("passed"):
+        failed_checks = [
+            str(check.get("name") or "")
+            for check in validation_result.summary.get("checks", [])
+            if not check.get("passed")
+        ]
+        failed_text = ", ".join(item for item in failed_checks if item) or "unknown"
+        raise ValueError(
+            "Applicability validation did not pass for compliance-review eval case "
+            f"{review_id}: {failed_text}"
+        )
+    generated_result = generate_applicability_rule_pack(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=source_set_id,
+        base_rule_pack_path=base_rule_pack_path,
+    )
+    return generated_result.generated_rule_pack_path
+
+
+def _validated_compliance_review_eval_cases(
+    payload: object,
+    *,
+    legacy_format: bool,
+) -> list[dict]:
+    if not isinstance(payload, list) or not payload:
+        raise ValueError(
+            "Compliance review eval file must contain a non-empty JSON list."
+            if legacy_format
+            else "Compliance review eval contract must contain non-empty cases."
+        )
+    case_ids = []
+    for index, case in enumerate(payload):
         if not isinstance(case, dict):
             raise ValueError(f"Compliance review eval case {index} must be an object.")
         case_id = str(case.get("id") or "").strip()
@@ -223,6 +425,7 @@ def _load_compliance_review_eval_cases(path: Path) -> list[dict]:
             raise ValueError(
                 f"Compliance review eval case {index} id must contain only safe path characters."
             )
+        case_ids.append(case_id)
         _validate_eval_package_fixture(index, case)
         _validate_eval_filters(index, case)
         _validate_eval_expected_statuses(index, case)
@@ -237,10 +440,31 @@ def _load_compliance_review_eval_cases(path: Path) -> list[dict]:
         _validate_optional_bool(index, case, "expected_validation_passed")
         _validate_optional_bool(index, case, "expected_reviewer_ready")
         _validate_optional_bool(index, case, "require_graph_coverage")
+        _validate_optional_bool(index, case, "hard_negative_package")
+        _validate_optional_bool(index, case, "conditional_subset")
+        _validate_optional_bool(index, case, "all_authorities_control")
         _validate_positive_eval_int(index, case, "min_findings")
         _validate_positive_eval_int(index, case, "source_top_k")
         _validate_positive_eval_int(index, case, "package_top_k")
-    return cases
+    duplicates = sorted(case_id for case_id in set(case_ids) if case_ids.count(case_id) > 1)
+    if duplicates:
+        raise ValueError(f"Duplicate compliance review eval case IDs: {duplicates}")
+    return payload
+
+
+def _validate_compliance_review_coverage_requirements(requirements: dict) -> None:
+    for key in (
+        "case_count",
+        "hard_negative_package_case_count",
+        "conditional_subset_case_count",
+        "all_authorities_control_case_count",
+    ):
+        value = requirements.get(key)
+        if not isinstance(value, int) or value < 0:
+            raise ValueError(
+                "Compliance review eval coverage_requirements."
+                f"{key} must be a non-negative integer."
+            )
 
 
 def _validate_eval_package_fixture(index: int, case: dict) -> None:
@@ -299,15 +523,28 @@ def _validate_compliance_review_eval_cases_against_rule_pack(
             for status, count in (case.get("expected_finding_status_counts") or {}).items()
         }
         if expected_counts:
-            counts_from_statuses = dict(Counter(str(status) for status in case["expected_statuses"].values()))
-            normalized_expected_counts = {
-                status: count for status, count in expected_counts.items() if count
-            }
-            if sum(expected_counts.values()) != rule_count or normalized_expected_counts != counts_from_statuses:
-                raise ValueError(
-                    f"Compliance review eval case {index} ({case_id}) expected_finding_status_counts "
-                    "must match expected_statuses and sum to the rule count."
+            if _case_requires_generated_rule_pack(case):
+                min_findings = int(case.get("min_findings") or 1)
+                if sum(expected_counts.values()) < min_findings:
+                    raise ValueError(
+                        f"Compliance review eval case {index} ({case_id}) expected_finding_status_counts "
+                        "must cover at least min_findings for generated-rule-pack cases."
+                    )
+            else:
+                counts_from_statuses = dict(
+                    Counter(str(status) for status in case["expected_statuses"].values())
                 )
+                normalized_expected_counts = {
+                    status: count for status, count in expected_counts.items() if count
+                }
+                if (
+                    sum(expected_counts.values()) != rule_count
+                    or normalized_expected_counts != counts_from_statuses
+                ):
+                    raise ValueError(
+                        f"Compliance review eval case {index} ({case_id}) expected_finding_status_counts "
+                        "must match expected_statuses and sum to the rule count."
+                    )
 
 
 def _validate_eval_rule_map_keys(
@@ -516,24 +753,33 @@ def _compliance_review_eval_case_result(
         expected_statuses,
         lambda status: status in CLAIM_STATUSES,
     )
-    status_mismatches = _value_mismatches(findings_by_rule, expected_statuses, "status")
+    normalized_findings_by_rule = _normalized_eval_findings_by_rule(
+        findings_by_rule=findings_by_rule,
+        expected_statuses=expected_statuses,
+        generated_rule_pack_case=_case_requires_generated_rule_pack(case),
+    )
+    status_mismatches = _value_mismatches(
+        normalized_findings_by_rule,
+        expected_statuses,
+        "status",
+    )
     claim_type_mismatches = _value_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_claim_types,
         "claim_type",
     )
     package_evidence_mismatches = _presence_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_package_evidence,
         _finding_has_package_evidence,
     )
     source_evidence_mismatches = _presence_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_source_evidence,
         _finding_has_source_evidence,
     )
     source_claim_link_mismatches = _presence_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_source_claim_links,
         _finding_has_source_claim_links,
     )
@@ -543,12 +789,12 @@ def _compliance_review_eval_case_result(
         "expected_source_document_roles",
     )
     source_record_mismatches = _expected_subset_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_source_record_ids,
         finding_source_record_ids,
     )
     source_document_role_mismatches = _expected_subset_mismatches(
-        findings_by_rule,
+        normalized_findings_by_rule,
         expected_source_document_roles,
         finding_source_document_roles,
     )
@@ -595,6 +841,18 @@ def _compliance_review_eval_case_result(
     citation_coverage_supported = bool(selected_findings) and all(
         _finding_has_required_eval_citations(finding) for finding in selected_findings
     )
+    unexpected_positive_rule_ids = sorted(
+        rule_id
+        for rule_id, actual_status in (
+            (rule_id, finding.get("status")) for rule_id, finding in findings_by_rule.items()
+        )
+        if str(actual_status) == "pass" and expected_statuses.get(rule_id) != "pass"
+    )
+    missing_required_source_rule_ids = sorted(
+        mismatch["rule_id"]
+        for mismatch in source_record_mismatches
+        if expected_statuses.get(str(mismatch.get("rule_id") or "")) == "pass"
+    )
 
     result_flags = {
         "validation_passed_matches": validation_passed_matches,
@@ -611,6 +869,8 @@ def _compliance_review_eval_case_result(
         "unsupported_finding_ids_match": unsupported_finding_ids_match,
         "citation_coverage_supported": citation_coverage_supported,
         "graph_coverage_supported": graph_coverage_supported,
+        "unexpected_positive_rules_absent": not unexpected_positive_rule_ids,
+        "missing_required_source_rules_absent": not missing_required_source_rule_ids,
     }
     failure_reasons = [
         name
@@ -668,6 +928,8 @@ def _compliance_review_eval_case_result(
         "source_record_mismatches": source_record_mismatches,
         "expected_source_document_roles": expected_source_document_roles,
         "source_document_role_mismatches": source_document_role_mismatches,
+        "unexpected_positive_rule_ids": unexpected_positive_rule_ids,
+        "missing_required_source_rule_ids": missing_required_source_rule_ids,
         "expected_finding_status_counts": expected_status_counts,
         "expected_unsupported_finding_ids": expected_unsupported,
         "actual_unsupported_finding_ids": actual_unsupported,
@@ -678,6 +940,9 @@ def _compliance_review_eval_case_result(
         "require_graph_coverage": require_graph_coverage,
         "validation_failed_checks": failed_check_names(validation),
         "finding_results": [_eval_finding_summary(finding) for finding in selected_findings],
+        "hard_negative_package": bool(case.get("hard_negative_package")),
+        "conditional_subset": bool(case.get("conditional_subset")),
+        "all_authorities_control": bool(case.get("all_authorities_control")),
         **result_flags,
         "failure_reasons": failure_reasons,
         "failure_taxonomy": failure_taxonomy,
@@ -754,6 +1019,32 @@ def _expected_subset_mismatches(
                 }
             )
     return failures
+
+
+def _normalized_eval_findings_by_rule(
+    *,
+    findings_by_rule: dict[str, dict],
+    expected_statuses: dict[str, str],
+    generated_rule_pack_case: bool,
+) -> dict[str, dict]:
+    if not generated_rule_pack_case:
+        return findings_by_rule
+    normalized = dict(findings_by_rule)
+    for rule_id, expected_status in expected_statuses.items():
+        if expected_status != "not_applicable" or rule_id in normalized:
+            continue
+        normalized[rule_id] = {
+            "rule_id": rule_id,
+            "status": "not_applicable",
+            "claim_type": claim_type("not_applicable"),
+            "package_evidence": [],
+            "package_evidence_citation": None,
+            "source_library_evidence": [],
+            "source_library_evidence_citation": None,
+            "source_claim_links": [],
+            "source_claim_link_count": 0,
+        }
+    return normalized
 
 
 def _value_mismatches(
@@ -930,7 +1221,9 @@ def _case_reproduction(result: ComplianceReviewResult, package_path: Path) -> di
     }
 
 
-def _case_rate(cases: list[dict], key: str) -> float:
+def _case_rate(cases: list[dict], key: str, *, invert: bool = False) -> float:
+    if invert:
+        return _rate(sum(1 for case in cases if not case.get(key)), len(cases))
     return _rate(sum(1 for case in cases if case.get(key)), len(cases))
 
 
@@ -958,3 +1251,49 @@ def _read_json(path: Path) -> dict:
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _compliance_review_eval_coverage_check(
+    contract: dict,
+    case_results: list[dict],
+    *,
+    legacy_format: bool,
+) -> dict:
+    if legacy_format:
+        return {
+            "name": "coverage_requirements_met",
+            "passed": True,
+            "details": {"enabled": False, "legacy_format": True},
+        }
+    requirements = contract.get("coverage_requirements", {})
+    actuals = {
+        "case_count": len(case_results),
+        "hard_negative_package_case_count": sum(
+            1 for case in case_results if case["hard_negative_package"]
+        ),
+        "conditional_subset_case_count": sum(
+            1 for case in case_results if case["conditional_subset"]
+        ),
+        "all_authorities_control_case_count": sum(
+            1 for case in case_results if case["all_authorities_control"]
+        ),
+    }
+    failures = [
+        {
+            "requirement": key,
+            "min": int(requirements.get(key) or 0),
+            "actual": actuals[key],
+        }
+        for key in actuals
+        if actuals[key] < int(requirements.get(key) or 0)
+    ]
+    return {
+        "name": "coverage_requirements_met",
+        "passed": not failures,
+        "details": {
+            "enabled": True,
+            "requirements": requirements,
+            "actuals": actuals,
+            "failures": failures,
+        },
+    }

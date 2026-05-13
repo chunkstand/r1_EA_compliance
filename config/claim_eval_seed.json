@@ -1,20 +1,175 @@
-[
-  {
-    "id": "level-of-review-ea-threshold",
-    "query": "prepare environmental assessment significance unknown",
-    "expected_source_record_ids": ["R1EA-003"],
-    "expected_claim_type": "condition",
-    "expected_terms": ["environmental assessment", "significance"],
-    "filters": {"source_record_id": "R1EA-003"},
-    "min_claims": 1
+{
+  "schema_version": "claim-eval-v1",
+  "eval_id": "claim-direct-eval-v1",
+  "coverage_requirements": {
+    "case_count": 10,
+    "hard_negative_case_count": 3,
+    "multi_source_or_type_confusion_case_count": 3
   },
-  {
-    "id": "fonsi-public-availability",
-    "query": "FONSI available to the public",
-    "expected_source_record_ids": ["R1EA-014"],
-    "expected_claim_type": "obligation",
-    "expected_terms": ["FONSI", "public"],
-    "filters": {"source_record_id": "R1EA-014"},
-    "min_claims": 1
-  }
-]
+  "metric_thresholds": {
+    "case_count": {
+      "min": 10
+    },
+    "hard_negative_pass_rate": {
+      "min": 1.0
+    },
+    "false_positive_rate": {
+      "max": 0.0
+    },
+    "missing_required_source_rate": {
+      "max": 0.0
+    },
+    "recall_at_k": {
+      "min": 1.0
+    },
+    "mrr": {
+      "min": 0.9
+    },
+    "ndcg_at_k": {
+      "min": 0.9
+    }
+  },
+  "cases": [
+    {
+      "id": "level-of-review-ea-threshold",
+      "query": "prepare environmental assessment significance unknown",
+      "expected_source_record_ids": [
+        "R1EA-003"
+      ],
+      "expected_claim_type": "condition",
+      "expected_terms": [
+        "environmental assessment",
+        "significance"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-003"
+      },
+      "min_claims": 1,
+      "multi_source_or_type_confusion": true
+    },
+    {
+      "id": "fonsi-notification-channel",
+      "query": "notification shall be in the manner of communication used to consult",
+      "expected_source_record_ids": [
+        "R1EA-014"
+      ],
+      "expected_claim_type": "obligation",
+      "expected_terms": [
+        "notification",
+        "communication used to consult"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-014"
+      },
+      "min_claims": 1,
+      "multi_source_or_type_confusion": true
+    },
+    {
+      "id": "usda-ea-purpose-need-guidance",
+      "query": "purpose and need should generally be based on statutory authority",
+      "expected_source_record_ids": [
+        "R1EA-013"
+      ],
+      "expected_claim_type": "guidance",
+      "expected_terms": [
+        "purpose and need",
+        "statutory authority"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-013"
+      },
+      "min_claims": 1
+    },
+    {
+      "id": "usda-efficient-review-public-disclosure",
+      "query": "shall make documents associated with the NEPA review publicly available",
+      "expected_source_record_ids": [
+        "R1EA-015"
+      ],
+      "expected_claim_type": "obligation",
+      "expected_terms": [
+        "documents associated with the NEPA review",
+        "public"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-015"
+      },
+      "min_claims": 1,
+      "multi_source_or_type_confusion": true
+    },
+    {
+      "id": "nfma-public-participation",
+      "query": "the Secretary shall provide for public participation in the development review and revision of land management plans",
+      "expected_source_record_ids": [
+        "R1EA-022"
+      ],
+      "expected_claim_type": "obligation",
+      "expected_terms": [
+        "public participation",
+        "development"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-022"
+      },
+      "min_claims": 1
+    },
+    {
+      "id": "project-consistency-approval-document",
+      "query": "project activity approval document must describe how the project or activity is consistent with applicable plan components",
+      "expected_source_record_ids": [
+        "R1EA-024"
+      ],
+      "expected_claim_type": "obligation",
+      "expected_terms": [
+        "approval document",
+        "consistent with applicable plan components"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-024"
+      },
+      "min_claims": 1
+    },
+    {
+      "id": "esa-best-scientific-data",
+      "query": "each agency shall use the best scientific and commercial data available",
+      "expected_source_record_ids": [
+        "R1EA-065"
+      ],
+      "expected_claim_type": "obligation",
+      "expected_terms": [
+        "best scientific and commercial data available"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-065"
+      },
+      "min_claims": 1
+    },
+    {
+      "id": "missing-source-gap-one",
+      "query": "missing biological assessment",
+      "filters": {
+        "source_record_id": "R1EA-997"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    },
+    {
+      "id": "missing-source-gap-two",
+      "query": "cash equalization closing title evidence",
+      "filters": {
+        "source_record_id": "R1EA-998"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    },
+    {
+      "id": "missing-source-gap-three",
+      "query": "reasonable opportunity to comment historic property",
+      "filters": {
+        "source_record_id": "R1EA-999"
+      },
+      "expect_no_hits": true,
+      "hard_negative": true
+    }
+  ]
+}

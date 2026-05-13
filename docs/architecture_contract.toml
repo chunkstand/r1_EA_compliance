@@ -10,6 +10,7 @@ modules = [
   "__init__",
   "adapters",
   "config",
+  "eval_metrics",
   "evidence_strength",
   "overrides",
   "records",

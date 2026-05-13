@@ -58,15 +58,43 @@ Latest closeout on 2026-05-13:
   `direct_eval_present`.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now separates structural validation from direct-eval
   coverage. The upstream rows `preflight`, `validate_run`, `catalog_validation`, and
-  `extraction_accuracy` are tracked as `direct_eval_present`; retrieval, claim, rule-claim, and
-  compliance-review remain routed as `direct_eval_strengthening_planned`.
+  `extraction_accuracy` remain tracked as `direct_eval_present`; the downstream retrieval, claim,
+  rule-claim, and compliance-review rows are now also promoted as `direct_eval_present` under the
+  downstream contract described below.
 - `phase-eval` now includes a separate `upstream_evaluation` phase sourced from the upstream
   aggregate summary and fails closed when that summary is missing or failing.
-- The active source-set readiness replay now passes `8/8` phases on
+- The current active source-set readiness replay now passes `9/9` phases on
   `source-set-5e65d845ce77e1a0`, with `upstream_evaluation` present and passing alongside catalog,
-  extraction, retrieval, evidence graph, claims, rule-claim binding, and NEPA 3D graph phases.
-- The next evaluation-strengthening boundary is
-  `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`.
+  extraction, retrieval, evidence graph, claims, rule-claim binding, compliance coverage, NEPA 3D
+  graph, and downstream direct evaluation phases.
+
+## Downstream Direct Eval Strengthening
+
+Latest closeout on 2026-05-13:
+
+- The repo now ships a tracked downstream direct-eval manifest at
+  `config/downstream_direct_eval_v1.json`.
+- The default shipped downstream eval files are now contract objects:
+  `config/retrieval_eval_seed.json`, `config/claim_eval_seed.json`,
+  `config/rule_claim_link_eval_seed.json`, and `config/compliance_review_eval_seed.json`.
+- Retrieval, claim, and rule-claim eval outputs now record locked coverage/threshold checks plus
+  `recall@k`, `mrr`, `nDCG@k`, `false_positive_rate`, and
+  `missing_required_source_rate`; hard negatives and multi-source cases are first-class shipped
+  coverage rather than unit-test-only behavior.
+- Compliance review direct eval now ships `5` governed cases covering `1` all-authorities control,
+  `2` unrelated-package hard negatives, and `2` conditional subsets. Base-pack and
+  generated-rule-pack cases are both supported, and generated-pack omissions are normalized as
+  `not_applicable` for contract comparison.
+- `compliance-coverage` now accepts the contract-object compliance eval format, so rule-pack
+  coverage, eval-case coverage, and rule-claim link coverage fail closed against the same shipped
+  downstream contract.
+- The current live downstream replays on `source-set-5e65d845ce77e1a0` passed:
+  retrieval `12/12`, claims `10/10`, rule-claim `24/24`, compliance review `5/5`,
+  `compliance-coverage` with all rule-pack coverage checks green, and source-set `phase-eval`
+  `9/9` with `downstream_direct_evaluation` present and passing.
+- `docs/EVALUATION_COVERAGE_REGISTER.md` now marks all four downstream lanes as
+  `direct_eval_present`.
+- The next evaluation-strengthening boundary is `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md`.
 
 ## Full Canonical Corpus Promotion
 

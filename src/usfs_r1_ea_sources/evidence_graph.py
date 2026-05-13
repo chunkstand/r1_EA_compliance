@@ -39,6 +39,11 @@ from .replay_context import tracked_replay_context_path
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
+DOWNSTREAM_DIRECT_EVAL_MANIFEST_PATH = (
+    Path(__file__).resolve().parents[2] / "config" / "downstream_direct_eval_v1.json"
+)
+
+
 GRAPH_SCHEMA_VERSION = "document-evidence-graph-v1"
 COMPLIANCE_MATRIX_SCHEMA_VERSION = "compliance-matrix-v0"
 DEFAULT_SQLITE_FILENAME = "evidence_graph.sqlite"
@@ -331,6 +336,8 @@ def run_phase_aligned_eval(
     upstream_evaluation_path = (
         output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
     )
+    downstream_direct_eval_manifest_path = DOWNSTREAM_DIRECT_EVAL_MANIFEST_PATH
+    retrieval_eval_path = source_derived_dir / "retrieval" / "retrieval_eval_results.json"
     retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
     retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
@@ -343,6 +350,7 @@ def run_phase_aligned_eval(
         knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_summary.json"
     )
     claim_dir = source_derived_dir / "claims"
+    claim_eval_path = claim_dir / "claim_eval_results.json"
     claim_validation_path = claim_dir / "claim_validation.json"
     claim_summary_path = claim_dir / "summary.json"
     try:
@@ -354,11 +362,13 @@ def run_phase_aligned_eval(
         rule_claim_dir = source_derived_dir / "rule_claim_links"
     rule_claim_validation_path = rule_claim_dir / "rule_claim_link_validation.json"
     rule_claim_summary_path = rule_claim_dir / "summary.json"
+    rule_claim_eval_path = rule_claim_dir / "rule_claim_link_eval_results.json"
     if not rule_claim_summary_path.exists():
         candidates = sorted((source_derived_dir / "rule_claim_links").glob("*/*/summary.json"))
         if candidates:
             rule_claim_summary_path = candidates[0]
             rule_claim_validation_path = rule_claim_summary_path.parent / "rule_claim_link_validation.json"
+            rule_claim_eval_path = rule_claim_summary_path.parent / "rule_claim_link_eval_results.json"
     review_phase_output_path = (
         review_dir / "phase_eval_results.json" if review_dir is not None else None
     )
@@ -571,6 +581,20 @@ def run_phase_aligned_eval(
     compliance_coverage = (
         _read_json(compliance_coverage_path) if compliance_coverage_path.exists() else None
     )
+    downstream_direct_eval_manifest = (
+        _read_json(downstream_direct_eval_manifest_path)
+        if downstream_direct_eval_manifest_path.exists()
+        else None
+    )
+    retrieval_eval = _read_json(retrieval_eval_path) if retrieval_eval_path.exists() else None
+    claim_eval = _read_json(claim_eval_path) if claim_eval_path.exists() else None
+    rule_claim_eval = _read_json(rule_claim_eval_path) if rule_claim_eval_path.exists() else None
+    compliance_review_eval_path = (
+        output_dir / "reviews" / "compliance_review_eval" / "compliance_review_eval_results.json"
+    )
+    compliance_review_eval = (
+        _read_json(compliance_review_eval_path) if compliance_review_eval_path.exists() else None
+    )
     review_scoped_compliance_gold_eval_path = (
         review_dir / "compliance_gold_eval_results.json" if review_dir is not None else None
     )
@@ -743,6 +767,30 @@ def run_phase_aligned_eval(
                     "rules_without_links",
                     [],
                 ),
+            },
+        ),
+        _downstream_direct_evaluation_phase(
+            manifest=downstream_direct_eval_manifest,
+            manifest_path=downstream_direct_eval_manifest_path,
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            lane_results={
+                "retrieval_eval": {
+                    "result": retrieval_eval,
+                    "result_path": retrieval_eval_path,
+                },
+                "claim_eval": {
+                    "result": claim_eval,
+                    "result_path": claim_eval_path,
+                },
+                "rule_claim_eval": {
+                    "result": rule_claim_eval,
+                    "result_path": rule_claim_eval_path,
+                },
+                "compliance_review_eval": {
+                    "result": compliance_review_eval,
+                    "result_path": compliance_review_eval_path,
+                },
             },
         ),
     ]
@@ -2527,6 +2575,113 @@ def _phase(name: str, *, passed: bool, reviewer_ready: bool, details: dict) -> d
         "failure_reasons": failure_reasons,
         "details": details,
     }
+
+
+def _downstream_direct_evaluation_phase(
+    *,
+    manifest: dict | None,
+    manifest_path: Path,
+    output_dir: Path,
+    source_set_id: str,
+    lane_results: dict[str, dict[str, object]],
+) -> dict:
+    required_lanes = manifest.get("required_lanes", []) if isinstance(manifest, dict) else []
+    manifest_ok = (
+        isinstance(manifest, dict)
+        and manifest.get("schema_version") == "downstream-direct-eval-v1"
+        and isinstance(required_lanes, list)
+        and bool(required_lanes)
+    )
+    lane_summaries = [
+        _downstream_lane_summary(
+            lane=lane,
+            manifest_path=manifest_path,
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            lane_result=lane_results.get(str(lane.get("lane_id") or ""), {}),
+        )
+        for lane in required_lanes
+        if isinstance(lane, dict)
+    ]
+    passed = manifest_ok and all(
+        summary.get("status") == "direct_eval_present" for summary in lane_summaries
+    )
+    return _phase(
+        "downstream_direct_evaluation",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "manifest_path": str(manifest_path),
+            "manifest_present": manifest is not None,
+            "manifest_schema_version": (manifest or {}).get("schema_version"),
+            "lane_statuses": {
+                str(summary.get("lane_id") or ""): str(summary.get("status") or "")
+                for summary in lane_summaries
+            },
+            "failed_lane_ids": [
+                str(summary.get("lane_id") or "")
+                for summary in lane_summaries
+                if summary.get("status") != "direct_eval_present"
+            ],
+            "lane_summaries": lane_summaries,
+        },
+    )
+
+
+def _downstream_lane_summary(
+    *,
+    lane: dict,
+    manifest_path: Path,
+    output_dir: Path,
+    source_set_id: str,
+    lane_result: dict[str, object],
+) -> dict:
+    lane_id = str(lane.get("lane_id") or "")
+    contract_path = _resolve_manifest_contract_path(manifest_path, lane.get("contract_path"))
+    result = lane_result.get("result")
+    result_path = Path(str(lane_result.get("result_path"))) if lane_result.get("result_path") else None
+    present = isinstance(result, dict)
+    expected_contract_sha = _sha256_file(contract_path) if contract_path.exists() else None
+    actual_contract_sha = ((result or {}).get("contract") or {}).get("sha256") if present else None
+    source_set_matches = (
+        present and str((result or {}).get("source_set_id") or "") == source_set_id
+    )
+    eval_id_matches = present and str((result or {}).get("eval_id") or "") == str(lane.get("eval_id") or "")
+    contract_sha_matches = present and expected_contract_sha == actual_contract_sha
+    result_passed = bool(present and (result or {}).get("passed"))
+    if not present:
+        status = "direct_eval_missing"
+    elif not source_set_matches or not eval_id_matches or not contract_sha_matches:
+        status = "direct_eval_stale"
+    elif not result_passed:
+        status = "direct_eval_failed"
+    else:
+        status = "direct_eval_present"
+    return {
+        "lane_id": lane_id,
+        "register_rows": lane.get("register_rows", []),
+        "status": status,
+        "result_path": str(result_path) if result_path is not None else None,
+        "present": present,
+        "result_passed": result_passed,
+        "expected_eval_id": lane.get("eval_id"),
+        "actual_eval_id": (result or {}).get("eval_id") if present else None,
+        "expected_source_set_id": source_set_id,
+        "actual_source_set_id": (result or {}).get("source_set_id") if present else None,
+        "source_set_matches": bool(source_set_matches),
+        "contract_path": str(contract_path),
+        "expected_contract_sha256": expected_contract_sha,
+        "actual_contract_sha256": actual_contract_sha,
+        "contract_sha_matches": bool(contract_sha_matches),
+        "checks": (result or {}).get("checks", []) if present else [],
+    }
+
+
+def _resolve_manifest_contract_path(manifest_path: Path, value: object | None) -> Path:
+    if not value:
+        return manifest_path
+    path = Path(str(value))
+    return path if path.is_absolute() else manifest_path.parent / path
 
 
 def _upstream_evaluation_phase(

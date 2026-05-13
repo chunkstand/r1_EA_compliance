@@ -2,7 +2,25 @@
 
 Date: 2026-05-12
 
-Status: Proposed
+Status: Closed (resolved) on 2026-05-13
+
+Closeout summary:
+
+- Implemented tracked downstream direct-eval governance in `config/downstream_direct_eval_v1.json`
+  plus contract-object shipped seed files for retrieval, claims, rule-claim links, and
+  compliance review.
+- Added shared threshold/contract helpers in `src/usfs_r1_ea_sources/eval_metrics.py`, fail-closed
+  downstream readiness routing in `src/usfs_r1_ea_sources/evidence_graph.py`, and focused contract
+  tests.
+- Expanded the shipped downstream suites to live coverage floors of retrieval `12` cases, claims
+  `10`, rule-claim links `24`, and compliance review `5`, including hard negatives, multi-source
+  cases, and conditional base-vs-generated review coverage.
+- Closeout replay on `source-set-5e65d845ce77e1a0` passed retrieval `12/12`, claims `10/10`,
+  rule-claim `24/24`, compliance review `5/5`, `compliance-coverage`, and source-set
+  `phase-eval` `9/9` with `downstream_direct_evaluation` present and passing.
+- Architecture guardrail check from
+  `/Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py`
+  completed without introducing a new hotspot class or module cycle in this milestone slice.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`; it starts only after that milestone is

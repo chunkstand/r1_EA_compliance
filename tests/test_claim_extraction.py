@@ -359,6 +359,8 @@ class ClaimExtractionTests(unittest.TestCase):
                 source_set_id=source_set_id,
                 rule_pack_path=rule_pack_path,
             )
+            _write_upstream_evaluation_phase_outputs(output_dir)
+            _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
 
             result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
 
@@ -506,6 +508,73 @@ def _write_claim_eval_file(output_dir: Path) -> Path:
         encoding="utf-8",
     )
     return eval_file
+
+
+def _write_upstream_evaluation_phase_outputs(output_dir: Path) -> None:
+    path = output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "upstream-evaluation-results-v0",
+                "passed": True,
+                "lane_summaries": [
+                    {"lane_id": "capture", "status": "direct_eval_present"},
+                    {"lane_id": "catalog", "status": "direct_eval_present"},
+                    {"lane_id": "extraction", "status": "direct_eval_present"},
+                ],
+                "failed_case_ids": [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_downstream_direct_eval_phase_outputs(output_dir: Path, source_set_id: str) -> None:
+    contracts = {
+        output_dir / "derived" / source_set_id / "retrieval" / "retrieval_eval_results.json": (
+            Path("config/retrieval_eval_seed.json"),
+            "retrieval-direct-eval-v1",
+        ),
+        output_dir / "derived" / source_set_id / "claims" / "claim_eval_results.json": (
+            Path("config/claim_eval_seed.json"),
+            "claim-direct-eval-v1",
+        ),
+        output_dir / "reviews" / "compliance_review_eval" / "compliance_review_eval_results.json": (
+            Path("config/compliance_review_eval_seed.json"),
+            "compliance-review-direct-eval-v1",
+        ),
+    }
+    rule_claim_dir = output_dir / "derived" / source_set_id / "rule_claim_links"
+    candidates = sorted(rule_claim_dir.glob("*/*/summary.json"))
+    rule_claim_result_path = (
+        candidates[0].parent / "rule_claim_link_eval_results.json"
+        if candidates
+        else rule_claim_dir / "rule_claim_link_eval_results.json"
+    )
+    contracts[rule_claim_result_path] = (
+        Path("config/rule_claim_link_eval_seed.json"),
+        "rule-claim-direct-eval-v1",
+    )
+    for result_path, (contract_path, eval_id) in contracts.items():
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "unit-direct-eval-result",
+                    "eval_id": eval_id,
+                    "source_set_id": source_set_id,
+                    "passed": True,
+                    "contract": {
+                        "sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()
+                    },
+                    "checks": [],
+                },
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
 
 
 def _write_rule_pack(directory: Path, *, document_role: str) -> Path:

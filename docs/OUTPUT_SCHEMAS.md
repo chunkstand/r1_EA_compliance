@@ -3075,6 +3075,19 @@ The `compliance-review-eval` command writes:
 
 The default eval file is `config/compliance_review_eval_seed.json`.
 
+That file is now a `compliance-review-eval-v1` contract with:
+
+- `schema_version`
+- `eval_id`
+- `coverage_requirements`, including floors for all-authorities control, unrelated-package hard
+  negatives, and conditional-subset cases
+- `metric_thresholds`, including locked zero-drift thresholds for unexpected positives and missing
+  required-source rules
+- `cases`
+
+Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
+`legacy-compliance-review-eval-list-v0` contract at runtime.
+
 Each eval case includes:
 
 - stable `id`
@@ -3088,17 +3101,25 @@ Each eval case includes:
 
 Unknown filters, empty filters, unsupported statuses, unsupported claim types, unsafe case IDs, and
 invalid package fixture definitions fail before reviews run. Rule-scoped expectations must refer to
-current rule-pack rule IDs, and expected status counts must match `expected_statuses` and sum to the
-rule count.
+current rule-pack rule IDs. For base-pack cases, expected status counts must match
+`expected_statuses` and sum to the active rule count. For generated-rule-pack cases, rules omitted
+from the generated pack are normalized as `not_applicable` for eval comparison, so status-count
+coverage must still satisfy the declared minimum-finding contract without forcing omitted rules to
+appear as emitted findings.
 
 `compliance_review_eval_results.json` has schema version `compliance-review-eval-v0` and records:
 
 - eval file, output path, rule pack, source set, top-k values, and creation timestamp
-- case count, passed count, failed count, and aggregate pass status
+- eval ID, case count, passed count, failed count, hard-negative package case count,
+  conditional-subset case count, all-authorities control case count, and aggregate pass status
+- contract snapshot with schema version, case count, coverage requirements, metric thresholds, and
+  contract SHA256
+- gate checks for case pass/fail, coverage requirements, and metric thresholds
 - metrics for validation matching, reviewer-ready matching, status matching, claim-type matching,
   package evidence matching, source evidence matching, source-claim link matching, source-record
   matching, source-document-role matching, citation coverage, graph coverage, unsupported finding
-  matching, and zero-finding rate
+  matching, unexpected-positive-finding rate, missing-required-source-rule rate, and zero-finding
+  rate
 - per-case generated review paths, expected and actual statuses, expected and actual claim types,
   evidence mismatches, source-record mismatches, source-document-role mismatches, unsupported
   finding IDs, validation failed checks, compact finding summaries, failure reasons, failure
@@ -3268,6 +3289,9 @@ The `compliance-coverage` command reads:
 - a coverage matrix, defaulting to `config/compliance_rule_pack_coverage_nepa_ea_v0.json`
 - compliance-review eval cases, defaulting to `config/compliance_review_eval_seed.json`
 - reviewer-ready rule-claim links for the same source set and rule pack
+
+The compliance-review eval input may be either the shipped contract object or an explicit legacy
+JSON case list. `compliance-coverage` reads the active case array from either format.
 
 The coverage matrix has schema version `compliance-rule-pack-coverage-v0` and contains one
 `coverage_items` row per rule. Each row includes rule ID, obligation area, expected package
@@ -3732,18 +3756,27 @@ offsets. `provenance` includes source-set ID, artifact SHA256/path, original/eff
 parser name/version, extraction timestamp, source text path, page/section/heading when available,
 and chunk content hash.
 
+The default eval file `config/retrieval_eval_seed.json` is a `retrieval-eval-v1` contract with:
+
+- `schema_version`
+- `eval_id`
+- `coverage_requirements`, including case-count, hard-negative, and multi-source floors
+- `metric_thresholds`, including locked rank-quality and false-positive thresholds
+- `cases`
+
+Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
+`legacy-retrieval-eval-list-v0` contract at runtime.
+
 `retrieval-eval` writes `retrieval_eval_results.json` by default beside the index. It records:
 
-- eval file path
-- top-k setting
-- per-case `expect_no_hits` state when declared
-- query count, passed count, failed count
-- pass rate
-- source hit rate
-- expected-term hit rate
-- citation coverage rate
-- unsupported-answer rate
-- zero-result rate
+- eval identity and paths, including `eval_id`, eval file path, output path, and top-k
+- query count, passed count, failed count, hard-negative case count, and multi-source case count
+- contract snapshot with schema version, case count, coverage requirements, metric thresholds, and
+  contract SHA256
+- gate checks for case pass/fail, coverage requirements, and metric thresholds
+- metrics including pass rate, source hit rate, expected-term hit rate, citation coverage rate,
+  unsupported-answer rate, zero-result rate, hard-negative pass rate, `false_positive_rate`,
+  `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
 - per-case query, filters, expectations, failure reasons, missing expected source IDs, missing
   expected terms, top source IDs, and top evidence results
 
@@ -3862,9 +3895,30 @@ Unknown filter keys and empty filter values fail eval-file validation so typoed 
 silently broaden the eval. Supported expected claim types are the same claim types emitted by
 `claim-extract`.
 
-`claim-eval` writes `claim_eval_results.json` by default beside the claims file. It records eval
-case count, pass rate, source hit rate, claim-type hit rate, expected-term hit rate, citation
-coverage rate, zero-result rate, and per-case top claim results with provenance.
+The default eval file `config/claim_eval_seed.json` is a `claim-eval-v1` contract with:
+
+- `schema_version`
+- `eval_id`
+- `coverage_requirements`, including case-count, hard-negative, and multi-source-or-type-confusion
+  floors
+- `metric_thresholds`, including locked rank-quality and false-positive thresholds
+- `cases`
+
+Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
+`legacy-claim-eval-list-v0` contract at runtime.
+
+`claim-eval` writes `claim_eval_results.json` by default beside the claims file. It records:
+
+- eval identity and paths, including `eval_id`, eval file path, output path, and top-k
+- case count, passed count, failed count, hard-negative case count, and
+  `multi_source_or_type_confusion_case_count`
+- contract snapshot with schema version, case count, coverage requirements, metric thresholds, and
+  contract SHA256
+- gate checks for case pass/fail, coverage requirements, and metric thresholds
+- metrics including pass rate, source hit rate, claim-type hit rate, expected-term hit rate,
+  citation coverage rate, zero-result rate, hard-negative pass rate, `false_positive_rate`,
+  `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
+- per-case top claim results with provenance and failure details
 
 ## Rule-Claim Binding Outputs
 
@@ -3933,10 +3987,30 @@ claim match. A rule is covered only when it has at least one validated link or o
 count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
 source-record count, validation status, and `reviewer_ready`.
 
+The default eval file `config/rule_claim_link_eval_seed.json` is a `rule-claim-link-eval-v1`
+contract with:
+
+- `schema_version`
+- `eval_id`
+- `coverage_requirements`, including case-count, hard-negative, and multi-source floors
+- `metric_thresholds`, including locked rank-quality and false-positive thresholds
+- `cases`
+
+Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
+`legacy-rule-claim-link-eval-list-v0` contract at runtime.
+
 `rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. It writes
-`rule_claim_link_eval_results.json` by default beside the link file and records pass rate, min-link
-rate, claim-type hit rate, source hit rate, expected-term hit rate, citation coverage rate,
-zero-result rate, and per-case top link results with provenance.
+`rule_claim_link_eval_results.json` by default beside the link file and records:
+
+- eval identity and paths, including `eval_id`, eval file path, output path, and top-k
+- case count, passed count, failed count, hard-negative case count, and multi-source case count
+- contract snapshot with schema version, case count, coverage requirements, metric thresholds, and
+  contract SHA256
+- gate checks for case pass/fail, coverage requirements, and metric thresholds
+- metrics including min-link rate, claim-type hit rate, source hit rate, expected-term hit rate,
+  citation coverage rate, zero-result rate, hard-negative pass rate, `false_positive_rate`,
+  `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
+- per-case top link results with provenance and failure details
 
 ## Document Evidence Graph Outputs
 

@@ -53,6 +53,63 @@ Residual risks:
 - the live upstream evaluation outputs are under ignored `source_library/`, so future sessions must
   regenerate them locally rather than expecting them in git history
 
+## Downstream Direct Eval Strengthening Closeout
+
+The downstream direct-eval strengthening milestone is now implemented across code, tracked
+contracts, readiness wiring, and closeout docs.
+
+- scope:
+  `config/downstream_direct_eval_v1.json`, shipped contract-object seed files for retrieval,
+  claims, rule-claim links, and compliance review, `src/usfs_r1_ea_sources/eval_metrics.py`,
+  downstream lane owners, `src/usfs_r1_ea_sources/compliance_coverage.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`, focused tests, and the downstream register/state
+  docs
+- current direct-eval truth:
+  the shipped downstream suites now require retrieval `12` cases with `3` hard negatives and `3`
+  multi-source cases, claims `10` cases with `3` hard negatives and `3`
+  multi-source-or-type-confusion cases, rule-claim links `24` cases with `4` hard negatives and
+  `4` multi-source cases, and compliance review `5` cases with `1` all-authorities control, `2`
+  unrelated-package hard negatives, and `2` conditional subsets
+- live closeout replay:
+  on `source-set-5e65d845ce77e1a0`, `retrieval-eval` passed `12/12`, `claim-eval` passed `10/10`,
+  `rule-claim-eval` passed `24/24`, `compliance-review-eval` passed `5/5`,
+  `compliance-coverage` passed with complete rule-pack/eval/link alignment, and source-set
+  `phase-eval` passed `9/9` with `downstream_direct_evaluation` present and passing
+- readiness integration:
+  `phase-eval` now loads `config/downstream_direct_eval_v1.json`, verifies each required lane's
+  eval ID, source set, contract hash, and pass status, and fails closed when a downstream result is
+  missing, stale, or failing
+- next routing boundary:
+  execute `docs/GOLD_COVERAGE_EXPANSION_MILESTONE_PLAN.md` next for adjudicated gold and
+  multi-review real-package coverage
+- affected dirty state:
+  unrelated local changes already exist in `tests/test_nepa_3d_viewer.py`,
+  `viewer/nepa-3d/app.js`, root-level East Crazies draft exports, and
+  `docs/capabilities/Draft_nepa_3d_capabilities_brief.pdf`; leave them out of the downstream
+  milestone slice
+
+Verification in this closeout:
+
+- `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`: passed with no Python/JS cycles and no new hotspot class introduced by the downstream milestone slice
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`: passed
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_claim_extraction.py tests/test_rule_claim_binding.py tests/test_compliance_review.py tests/test_downstream_direct_eval_contracts.py tests/test_architecture_contract.py`: passed `102/102`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed `12/12`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed `10/10`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed `24/24`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed `5/5`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-coverage --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`: passed
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library`: passed `9/9` with `reviewer_ready=true`
+- `git diff --check`: passed
+
+Residual risks:
+
+- this milestone resolves shipped downstream direct-eval coverage and fail-closed readiness
+  routing, but it does not itself widen adjudicated gold or multi-review real-package truth
+- the live eval outputs remain under ignored `source_library/`, so future sessions must rerun the
+  commands locally rather than expecting the result JSON files in git history
+
 ## Phase Eval Direct-Eval Gating Plan
 
 The repo now has a dedicated follow-on plan for the `phase-eval` proxy-readiness gap at

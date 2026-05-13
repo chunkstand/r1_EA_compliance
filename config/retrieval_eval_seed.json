@@ -1,29 +1,186 @@
-[
-  {
-    "id": "nepa-alternatives-environmental-effects",
-    "query": "NEPA alternatives environmental effects",
-    "expected_terms": [
-      "alternatives",
-      "environmental"
-    ],
-    "filters": {}
+{
+  "schema_version": "retrieval-eval-v1",
+  "eval_id": "retrieval-direct-eval-v1",
+  "coverage_requirements": {
+    "case_count": 12,
+    "hard_negative_case_count": 3,
+    "multi_source_case_count": 3
   },
-  {
-    "id": "scoping-public-comment",
-    "query": "scoping public comment environmental concerns",
-    "expected_terms": [
-      "scoping",
-      "public"
-    ],
-    "filters": {}
+  "metric_thresholds": {
+    "case_count": {
+      "min": 12
+    },
+    "hard_negative_pass_rate": {
+      "min": 1.0
+    },
+    "false_positive_rate": {
+      "max": 0.0
+    },
+    "missing_required_source_rate": {
+      "max": 0.0
+    },
+    "recall_at_k": {
+      "min": 1.0
+    },
+    "mrr": {
+      "min": 0.9
+    },
+    "ndcg_at_k": {
+      "min": 0.9
+    }
   },
-  {
-    "id": "decision-notice-mitigation",
-    "query": "decision notice mitigation measures",
-    "expected_terms": [
-      "decision",
-      "mitigation"
-    ],
-    "filters": {}
-  }
-]
+  "cases": [
+    {
+      "id": "nepa-alternatives-environmental-effects",
+      "query": "NEPA alternatives environmental effects",
+      "expected_source_record_ids": [
+        "R1EA-008"
+      ],
+      "expected_terms": [
+        "alternatives",
+        "environmental"
+      ],
+      "filters": {}
+    },
+    {
+      "id": "applicant-third-party-docs",
+      "query": "documentation prepared by applicant or third party independent evaluation",
+      "expected_source_record_ids": [
+        "R1EA-016"
+      ],
+      "expected_terms": [
+        "applicant",
+        "third party",
+        "independent evaluation"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-016"
+      }
+    },
+    {
+      "id": "project-consistency-approval-document",
+      "query": "project activity approval document consistent with applicable plan components",
+      "expected_source_record_ids": [
+        "R1EA-024"
+      ],
+      "expected_terms": [
+        "approval document",
+        "applicable plan components"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-024"
+      }
+    },
+    {
+      "id": "esa-best-scientific-data",
+      "query": "best scientific and commercial data available",
+      "expected_source_record_ids": [
+        "R1EA-065"
+      ],
+      "expected_terms": [
+        "best scientific and commercial data available"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-065"
+      }
+    },
+    {
+      "id": "nhpa-effect-undertaking-historic-property",
+      "query": "effect of undertaking on historic property",
+      "expected_source_record_ids": [
+        "R1EA-070"
+      ],
+      "expected_terms": [
+        "effect of undertaking on historic property"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-070"
+      }
+    },
+    {
+      "id": "roadless-inventoried-area",
+      "query": "inventoried roadless area roadless characteristics",
+      "expected_source_record_ids": [
+        "R1EA-049"
+      ],
+      "expected_terms": [
+        "inventoried roadless area",
+        "roadless"
+      ],
+      "filters": {
+        "source_record_id": "R1EA-049"
+      }
+    },
+    {
+      "id": "scoping-public-comment",
+      "query": "scoping public comment environmental concerns",
+      "expected_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-11",
+        "R1PLAN-custer-gallatin-nf-04"
+      ],
+      "expected_terms": [
+        "scoping",
+        "public"
+      ],
+      "filters": {},
+      "multi_source": true
+    },
+    {
+      "id": "decision-notice-mitigation",
+      "query": "decision notice mitigation measures",
+      "expected_source_record_ids": [
+        "R1PLAN-bitterroot-nf-06",
+        "R1PLAN-dakota-prairie-grasslands-15"
+      ],
+      "expected_terms": [
+        "decision",
+        "mitigation"
+      ],
+      "filters": {},
+      "multi_source": true
+    },
+    {
+      "id": "forest-plan-consistency-applicable-components",
+      "query": "project and activity consistent with applicable plan components",
+      "expected_source_record_ids": [
+        "R1EA-024",
+        "R1EA-023"
+      ],
+      "expected_terms": [
+        "applicable plan components",
+        "project or activity"
+      ],
+      "filters": {
+        "authority_level": "federal"
+      },
+      "multi_source": true
+    },
+    {
+      "id": "missing-citation-gap",
+      "query": "missing biological assessment",
+      "expect_no_hits": true,
+      "hard_negative": true,
+      "filters": {
+        "citation": "R1EA-MISSING-001"
+      }
+    },
+    {
+      "id": "missing-host-gap",
+      "query": "missing wetland mitigation",
+      "expect_no_hits": true,
+      "hard_negative": true,
+      "filters": {
+        "host": "missing.example.invalid"
+      }
+    },
+    {
+      "id": "missing-source-gap",
+      "query": "missing categorical exclusion",
+      "expect_no_hits": true,
+      "hard_negative": true,
+      "filters": {
+        "source_record_id": "R1EA-999"
+      }
+    }
+  ]
+}
