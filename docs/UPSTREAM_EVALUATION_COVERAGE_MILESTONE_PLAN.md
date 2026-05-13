@@ -435,6 +435,9 @@ Stop conditions:
   and overall `passed`.
 - `phase-eval` exposes `upstream_evaluation` separately from structural validation.
 - No existing validation gate is weakened or deleted to make the new direct-eval lane pass.
+- Do not weaken, delete, loosen, or narrow existing tests, fixtures, validation gates, or
+  extraction-accuracy checks just to produce a green upstream-eval result; any replacement coverage
+  must be equivalent or stronger.
 - The closeout commit includes implementation, fixtures, tests, docs, and handoff updates for this
   milestone only.
 
@@ -457,8 +460,8 @@ Stop conditions:
 - Include code, fixtures, tests, docs, the coverage register, and handoff updates in the same local
   atomic commit.
 - Record the commit hash in `docs/SESSION_HANDOFF.md`.
-- Treat the milestone as incomplete until the local commit exists and the required verification
-  commands are green.
+- Treat the milestone as not complete until the local commit exists and the required verification
+  commands are green; a verified but uncommitted slice is only ready-to-close.
 
 ## Residual Risks And Next Milestone Routing
 

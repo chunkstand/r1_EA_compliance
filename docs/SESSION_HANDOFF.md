@@ -25,8 +25,7 @@ and readiness wiring.
   from `source_library/evaluations/upstream/upstream_evaluation_results.json` and fail closed when
   that summary is missing or records `passed=false`
 - closing commit hash:
-  self-referential same-commit hashes cannot be embedded in this section without a follow-up amend;
-  use the local milestone commit containing this section as the closeout hash
+  `d7c1f79` (`Implement upstream evaluation coverage milestone`)
 - next routing boundary:
   execute `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md` next for retrieval, claim,
   rule-claim, and compliance-review direct-eval breadth
@@ -40,9 +39,11 @@ Verification in this closeout:
 
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_preflight.py tests/test_validate_run.py tests/test_catalog.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py tests/test_cli.py tests/test_evidence_graph.py -q`: passed `105/105`
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_architecture_contract.py tests/test_cli.py -q`: passed `56/56` after the final lint-only cleanup in `evidence_graph.py`
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`: passed in the alignment follow-up
 - `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
 - `PYTHONPATH=src python -m compileall src`: passed
 - `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`: passed with `matched_case_count=22`, `required_category_count=11`, and all lane summaries `direct_eval_present`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library`: passed `8/8` with source set `source-set-5e65d845ce77e1a0`; `upstream_evaluation` was present and passing
 - `git diff --check`: passed
 
 Residual risks:

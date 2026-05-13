@@ -62,6 +62,9 @@ Latest closeout on 2026-05-13:
   compliance-review remain routed as `direct_eval_strengthening_planned`.
 - `phase-eval` now includes a separate `upstream_evaluation` phase sourced from the upstream
   aggregate summary and fails closed when that summary is missing or failing.
+- The active source-set readiness replay now passes `8/8` phases on
+  `source-set-5e65d845ce77e1a0`, with `upstream_evaluation` present and passing alongside catalog,
+  extraction, retrieval, evidence graph, claims, rule-claim binding, and NEPA 3D graph phases.
 - The next evaluation-strengthening boundary is
   `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`.
 
