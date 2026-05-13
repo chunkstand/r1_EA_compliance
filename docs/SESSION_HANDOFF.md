@@ -5,6 +5,60 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Region 1 Flathead Live-Package Proving Closeout Alignment
+
+This addendum closes the remaining milestone-contract gaps from the original West Reservoir
+closeout.
+
+- proving surface:
+  local West Reservoir package at `/Users/chunkstand/Downloads/West Reservoir (67436)`,
+  review `west-reservoir-67436`,
+  source set `source-set-5e65d845ce77e1a0`
+- closing commit hash:
+  the original Flathead live-package closeout landed in `1163a5e`
+- tracked adjudication contracts:
+  no new tracked adjudication file was added; existing
+  `config/applicability_adjudications/west-reservoir-67436.json` was refreshed back to the current
+  three-item replay contract after clean `applicability-determine` and
+  `applicability-adjudication-template` reruns
+- current reviewer-ready state:
+  `applicability_validation.json` is green at `44` applicable and `23` non-applicable authorities
+  with `0` unresolved and `0` `needs_adjudication`; the generated pack validates at `44` rules,
+  `forest_plan_component_adjudication_eval.json` is green with `48` queue items, `48` resolved,
+  and `0` pending, `compliance_gold_eval_results.json` passes `10/10` with
+  `promotion_ready=true`, and review-bound `phase-eval` passes `17/17` with
+  `reviewer_ready=true`
+- next routing boundary:
+  do not reopen West Reservoir unless a new regression appears; route future work to the next
+  selected post-V1 expansion or promotion boundary
+
+Verification in this alignment addendum:
+
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template --output-dir source_library --review-id west-reservoir-67436`: passed with `pending_item_count=48` and `queue_item_count=48`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id west-reservoir-67436 --adjudication-file config/forest_plan_component_adjudications/west-reservoir-67436.json`: passed with `48` resolved adjudications, `0` pending, and `reviewer_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed with `41` applicable, `23` non-applicable, and `3` `needs_adjudication` decisions before replaying tracked adjudications
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-template --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed with `adjudication_item_count=3`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0 --adjudication-file config/applicability_adjudications/west-reservoir-67436.json`: passed with `3` resolved adjudications and `0` pending
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0 --adjudication-file config/applicability_adjudications/west-reservoir-67436.json`: passed with `applied_item_count=3` and `remaining_unresolved_authority_count=0`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed with `44` applicable, `23` non-applicable, `0` unresolved, `generated_rule_pack_ready=true`, and `reviewer_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-5e65d845ce77e1a0`: passed with `generated_rule_count=44` and `generated_rule_pack_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path '/Users/chunkstand/Downloads/West Reservoir (67436)' --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --review-id west-reservoir-67436 --forest-unit-id flathead-nf --rule-pack source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json --reuse-package-cache`: passed with `validation_passed=true`, `reviewer_ready=true`, and `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --forest-unit-id flathead-nf --rule-pack source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json --gold-file config/compliance_gold_eval_v0.json --results-dir source_library/reviews/west-reservoir-67436`: passed `10/10` with `promotion_ready=true`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id west-reservoir-67436`: passed `17/17` with `reviewer_ready=true`
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_forest_plan_resolver.py tests/test_forest_plan_component_adjudication.py tests/test_compliance_review.py tests/test_replay_context.py tests/test_cli.py tests/test_architecture_contract.py`: passed `172/172`
+- `PYTHONPATH=src uv run --extra dev ruff check src tests`: passed
+- `PYTHONPATH=src python -m compileall src`: passed
+- `git diff --check`: passed
+
+Residual risks:
+
+- the proving package remains outside the repo, so the replay-context contract and handoff still
+  carry part of the durability boundary
+- the refreshed applicability adjudication file is intentionally a pre-apply three-item contract;
+  replay still depends on rerunning `applicability-adjudication-apply` before
+  `applicability-validate`
+- this still proves one real Flathead package, not every future Flathead EA package
+
 ## Upstream Evaluation Coverage Plan
 
 The repo now has a dedicated plan for the upstream direct-eval gap at
