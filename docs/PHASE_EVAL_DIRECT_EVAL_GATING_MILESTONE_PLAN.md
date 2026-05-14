@@ -1,9 +1,9 @@
 # Phase Eval Direct-Eval Gating Milestone Plan
 
-Date: 2026-05-13
+Date: 2026-05-14
 
 Status: Active 2026-05-14 (Sequences 0A-0B plus retrieval-owner structural recovery are now
-implemented locally; live closeout is blocked only on ba8d retrieval direct eval)
+implemented and committed; live closeout is blocked only on ba8d retrieval direct eval)
 
 Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
 `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
@@ -16,22 +16,24 @@ declared contract-owned reviews. If those prerequisite closeouts land equivalent
 different names, Sequence 0 of this plan must refresh the routing before code changes begin rather
 than recreating the same ownership under new names.
 
-Gap-close context on 2026-05-13:
+Gap-close context on 2026-05-14:
 
-- The direct-eval seam itself is now implemented in the worktree:
+- The direct-eval seam itself is now committed in `1cfce74`:
   `config/phase_eval_direct_eval_v1.json`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
   focused `evidence_graph.py` wiring,
   promotion-suite counter checks,
   architecture-contract updates,
-  and focused direct-eval tests all exist locally and pass their code-level gates.
-- The milestone is still not closable because the live current-promotion replay now proves two
-  prerequisite-owner blockers outside the seam:
-  `source-set-ba8d0feae79501b8` retrieval direct eval fails after a fresh replay, and the tracked
-  ECID replay context still points `catalog_dir` at a non-catalog surface.
-- This refresh narrows the remaining work so future sessions repair replay-context and retrieval
-  owner truth surfaces explicitly, instead of broadening `phase-eval`, weakening direct-eval
-  thresholds, or inventing review-local replacement truth sources.
+  and focused direct-eval tests all exist in the committed lane and pass their code-level gates.
+- The milestone is still not closable because the live current-promotion replay proves one
+  remaining prerequisite-owner blocker outside the seam:
+  `source-set-ba8d0feae79501b8` retrieval direct eval still fails after fresh source-set and
+  review-scoped replays even though replay-context and structural retrieval routing are now
+  repaired.
+- This refresh narrows the remaining work so future sessions preserve the repaired replay-context
+  and retrieval-owner truth surfaces while fixing the actual retrieval ranking and coverage
+  regression, instead of broadening `phase-eval`, weakening direct-eval thresholds, or inventing
+  review-local replacement truth sources.
 
 ## Purpose
 
@@ -72,7 +74,7 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
 
 ## Current Evidence
 
-- Worktree implementation now exists for the core seam:
+- Committed implementation now exists for the core seam from `1cfce74`:
   `config/phase_eval_direct_eval_v1.json`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
   focused `src/usfs_r1_ea_sources/evidence_graph.py` wiring,
@@ -363,9 +365,10 @@ Outcome label: reduced
 Purpose: prevent the milestone from solving live replay drift or review-generated artifact drift by
 silently expanding the `phase-eval` seam.
 
-Status on 2026-05-14: implemented in the working tree. The tracked ECID replay context now resolves
-to `source_library/catalog`, and the required `catalog_validation.json` plus
-`review_sources.sqlite` preflight files are present on that surface.
+Status on 2026-05-14: implemented and committed. The tracked ECID replay context now resolves to
+`source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`, and the required
+`catalog_validation.json` plus `review_sources.sqlite` preflight files are present on that
+surface.
 
 Implementation tasks:
 
@@ -417,12 +420,11 @@ Outcome label: reduced
 Purpose: separate a true `phase-eval` seam problem from stale or incompatible structural owner
 artifacts before live closeout is attempted again.
 
-Status on 2026-05-14: implemented in the working tree. Fresh ba8d replays now show replay-context
-drift is no longer part of the failure. The first red owner surface is `retrieval-build`, which
-still fails two structural checks before a fresh retrieval eval can run:
-`required_sources_are_admitted_by_verified_extraction_audit` for reused-existing
-`R1PLAN-flathead-nf-01`, and `chunks_have_retrieval_provenance` because ba8d chunks still omit
-`support_document_role`.
+Status on 2026-05-14: implemented and committed as a historical baseline separator. Fresh ba8d
+replays first proved replay-context drift was no longer part of the failure and that
+`retrieval-build` was the first red owner surface. That prerequisite repair has since landed, so
+fresh `retrieval-build` now passes and the remaining live red is the ba8d retrieval direct-eval
+threshold failure at `retrieval-eval` and `phase-eval`.
 
 Implementation tasks:
 

@@ -41,7 +41,7 @@ catalog gate is archived under
 
 ## Upstream Evaluation Coverage
 
-Latest closeout on 2026-05-13:
+Latest closeout on 2026-05-14:
 
 - The repo now ships a tracked upstream direct-eval contract at
   `config/upstream_evaluation_v1.json`.
@@ -109,7 +109,8 @@ Latest closeout on 2026-05-13:
   blocker is a fresh ba8d `retrieval-eval` failure at `10/12` passing cases
   (`scoping-public-comment`, `decision-notice-mitigation`) with threshold misses on
   `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
-- The broader operational blocker-recovery packet that now consumes this dirty lane plus the
+- The broader operational blocker-recovery packet now consumes the committed direct-eval lane plus
+  the
   manifest-owned full-canonical and expansion gates is
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
 

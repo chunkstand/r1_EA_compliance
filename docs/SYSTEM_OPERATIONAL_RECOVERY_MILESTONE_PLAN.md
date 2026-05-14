@@ -2,13 +2,13 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-14 (Milestone 0 and Milestone 1 are now resolved locally; the active
+Status: Active 2026-05-14 (Milestone 0 and Milestone 1 are now resolved and committed locally; the active
 remaining blocker is Milestone 2 ba8d retrieval direct eval on the compatible archived
 current-promotion catalog surface)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
 `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as if that lane were still a self-contained
-seam fix; instead it consumes that dirty lane plus its Sequence `0A` / `0B` blocker evidence as an
+seam fix; instead it consumes that now-committed lane plus its Sequence `0A` / `0B` blocker evidence as an
 input packet. It also reuses the already-landed operational contracts and historical lanes under
 `docs/FULL_CANONICAL_CORPUS_PROMOTION_MILESTONE_PLAN.md`,
 `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`, and
@@ -38,19 +38,18 @@ This plan treats the operational target as all of the following on fresh replay:
 - non-strict `promotion_ready=true`
 - strict expansion no longer failing on typed blocker categories
 
-The repo is not operational for this milestone while any of those remain red, while the current
-dirty `phase-eval` lane is uncommitted, or while the first red owner surface is still being
-misclassified as a `phase-eval` bug instead of a retrieval, full-canonical, or South Plateau owner
-issue.
+The repo is not operational for this milestone while any of those remain red or while the first red
+owner surface is still being misclassified as a `phase-eval` bug instead of a retrieval,
+full-canonical, or South Plateau owner issue.
 
 ## Current Evidence
 
-- The worktree already contains the implemented direct-eval seam:
+- The repo now contains the committed direct-eval seam from `1cfce74`:
   `config/phase_eval_direct_eval_v1.json`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
   focused `src/usfs_r1_ea_sources/evidence_graph.py` wiring,
   `config/promotion_suite_v1.json`,
-  `docs/architecture_contract.toml`, and focused tests. That slice is still dirty and uncommitted.
+  `docs/architecture_contract.toml`, and focused tests.
 - The code-level direct-eval seam gates are already green according to the active packet:
   `tests/test_phase_eval_direct_eval_contracts.py`,
   `tests/test_evidence_graph.py`,
@@ -60,10 +59,11 @@ issue.
   `tests/test_promotion_suite.py`,
   and `tests/test_architecture_contract.py`.
 - Sequence `0A` repaired the ECID replay context. `config/replay_contexts/v1-cg-ecid-compliance-review.json`
-  now points at `source_library/catalog`, and review-scoped `phase-eval` no longer carries a fake
-  `catalog_capture` blocker.
-- Sequence `0B` proved the first red owner surface is now ba8d retrieval-owner, not replay-context
-  drift:
+  now points at
+  `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate/`, and review-
+  scoped `phase-eval` no longer carries a fake `catalog_capture` blocker.
+- Sequence `0B` historical baseline proved the first red owner surface was ba8d retrieval-owner,
+  not replay-context drift:
   - `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --contract-path config/verified_extraction_admission_contract.json`
     fails because `R1PLAN-flathead-nf-01` is still
     `reused_existing_extraction_not_admissible`.
@@ -72,11 +72,12 @@ issue.
     `chunks_have_retrieval_provenance`.
   - The provenance failure currently affects all `18,822` ba8d chunks because they omit
     `support_document_role`.
-  - Because retrieval build fails, a fresh ba8d `retrieval-eval` cannot run; the prior saved eval
+  - At that baseline, retrieval build failed, so a fresh ba8d `retrieval-eval` could not run; the
+    prior saved eval
     artifact remains the live direct-eval signal and still fails `2/12` cases
     (`scoping-public-comment`, `decision-notice-mitigation`) with threshold misses on
     `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
-- Milestone `1` retrieval-owner recovery is now resolved locally on 2026-05-14:
+- Milestone `1` retrieval-owner recovery is now resolved and committed on 2026-05-14:
   `catalog_surface.py`, `retrieval.py`, and `evidence_graph.py` now resolve compatible archived
   current-promotion catalog gates by exact `sources`-table equivalence to the ba8d extraction
   manifest rather than by exact `source_set_id` alone, and the tracked ECID replay context now
@@ -90,7 +91,8 @@ issue.
 - `docs/CURRENT_SYSTEM_STATE.md` now records the ba8d retrieval structural blockers explicitly and
   routes the active operational recovery through this broader
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` packet while preserving
-  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed dirty input lane.
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the
+  remaining retrieval direct-eval work.
 - `config/promotion_suite_v1.json` remains the operational truth owner and still encodes three
   separate surfaces:
   - current promotion on `source-set-ba8d0feae79501b8`
@@ -118,8 +120,8 @@ Completion means all of the following are true:
   surfaces;
 - if South Plateau transitions from `typed_blocked` to `reviewer_ready`, the real-package and gold
   coverage contracts are updated to keep those evaluation lanes truthful; and
-- the current dirty `phase-eval` slice plus matching docs and tests are committed as atomic
-  milestone closeouts instead of being left half-landed in the worktree.
+- the remaining recovery slices plus matching docs and tests are committed as atomic milestone
+  closeouts instead of being left half-landed in the worktree.
 
 This recovery packet is not complete until the resolved milestone slices are committed. A verified
 but uncommitted slice is only ready-to-close.
@@ -143,7 +145,7 @@ but uncommitted slice is only ready-to-close.
 
 ## Scope
 
-- the dirty `phase-eval` direct-eval lane already in the worktree
+- the committed `phase-eval` direct-eval lane plus the remaining current-promotion recovery work
 - ba8d extraction-admission, retrieval-build, retrieval provenance, and retrieval direct-eval
   blockers
 - source-set and review-scoped `phase-eval` replays required to close current promotion
@@ -172,7 +174,7 @@ but uncommitted slice is only ready-to-close.
   `tests/test_extraction_accuracy.py`,
   `tests/test_retrieval.py`,
   `tests/test_claim_extraction.py`
-- current dirty `phase-eval` lane:
+- current-promotion `phase-eval` lane:
   `src/usfs_r1_ea_sources/evidence_graph.py`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
   `config/phase_eval_direct_eval_v1.json`,
@@ -229,7 +231,7 @@ but uncommitted slice is only ready-to-close.
 - Fix ba8d `support_document_role` provenance at the extraction/chunk/retrieval owner boundary.
   Do not make retrieval validation silently accept missing provenance fields without equivalent or
   broader proof.
-- Keep the current dirty `phase-eval` seam in `evidence_graph.py` and
+- Keep the current committed `phase-eval` seam in `evidence_graph.py` and
   `phase_eval_direct_eval.py` until this recovery plan is green. Do not start the
   `phase_eval.py` owner split inside the same packet.
 - Use `config/promotion_suite_v1.json` as the operational truth owner. If full-canonical or
@@ -354,7 +356,8 @@ but uncommitted slice is only ready-to-close.
 
 Outcome label: reduced
 
-Purpose: refresh the live operational blocker matrix from the current dirty worktree and lock the
+Purpose: refresh the live operational blocker matrix from the committed recovery packet and live
+artifact state, and lock the
 implementation slice before broader repairs begin.
 
 Implementation tasks:
@@ -555,7 +558,7 @@ Stop conditions:
 
 Outcome label: resolved
 
-Purpose: finish the current dirty `phase-eval` lane and restore fresh current-promotion truth.
+Purpose: finish the current-promotion `phase-eval` lane and restore fresh current-promotion truth.
 
 Implementation tasks:
 
@@ -571,7 +574,7 @@ Acceptance signals:
 - Current-promotion `phase-eval` no longer reports `threshold_failed_phase_count`.
 - Review-scoped `phase-eval` stays contract-backed and reviewer-ready for ECID.
 - Non-strict `promotion-suite` reports `current_promotion_ready=true`.
-- The dirty `phase-eval` slice is ready for its own milestone commit.
+- The remaining current-promotion recovery slice is ready for its own milestone commit.
 
 Required verification:
 
@@ -828,7 +831,8 @@ Stop conditions:
   `src/usfs_r1_ea_sources/extraction_accuracy.py`,
   `src/usfs_r1_ea_sources/extract.py`,
   `src/usfs_r1_ea_sources/retrieval.py`
-- the current dirty `phase-eval` direct-eval implementation slice:
+- the committed `phase-eval` direct-eval implementation slice plus any remaining Milestone 2/3
+  closeout edits:
   `config/phase_eval_direct_eval_v1.json`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
   focused `src/usfs_r1_ea_sources/evidence_graph.py` and `config/promotion_suite_v1.json`
@@ -857,7 +861,7 @@ Stop conditions:
 - `docs/POST_V1_PROMOTION_SUITE.md`
   if promotion-suite blocker categories or slot truth changes
 - `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`
-  close out or reduce the dirty direct-eval lane in place
+  close out or reduce the direct-eval lane in place
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`
   if South Plateau status or blocker counts change
 - `docs/SESSION_HANDOFF.md`
@@ -971,7 +975,7 @@ git diff --check
 
 - A blocker can only be cleared by weakening a shipped contract, threshold, or provenance gate.
 - A fresh replay reveals a new first red owner surface outside retrieval, full-canonical, South
-  Plateau, or the current dirty `phase-eval` lane.
+  Plateau, or the current-promotion `phase-eval` lane.
 - Closing South Plateau requires a review-ID-specific forest-plan or compliance exception.
 - This packet starts absorbing queued coverage or architecture follow-ons that are not fresh
   operational blockers.

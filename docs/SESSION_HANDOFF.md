@@ -1,9 +1,37 @@
 # Session Handoff
 
-Date: 2026-05-13
+Date: 2026-05-14
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## System Operational Recovery Alignment Closeout
+
+This alignment update supersedes the earlier recovery-routing sections below where they still talk
+about a dirty worktree lane, `catalog_dir=source_library/catalog`, or Milestone `0` as the next
+step.
+
+- committed routing truth:
+  the recovery packet is already committed as `1cfce74` (`Recover ba8d replay catalog routing`).
+  Milestone `0` and Milestone `1` are resolved and committed; the active next step is Milestone
+  `2` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
+- current replay-context truth:
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json` now points at
+  `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`, not
+  `source_library/catalog`. Older handoff entries that still name `source_library/catalog` are now
+  historical only.
+- active blocker truth:
+  ba8d retrieval structural repair is closed. Fresh source-set and review-scoped replays now fail
+  only on the real ba8d retrieval direct-eval regression:
+  `scoping-public-comment` and `decision-notice-mitigation`, plus threshold misses on
+  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
+- plan alignment:
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`,
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and this handoff now route the same next step: Milestone `2`
+  retrieval direct-eval recovery, not another replay-context or retrieval-structural pass.
+- verification in this alignment pass:
+  `git diff --check` passed after the doc updates; no behavioral code changed in this pass.
 
 ## System Operational Recovery Milestone 1 Closeout
 
