@@ -94,25 +94,30 @@ Latest closeout on 2026-05-13:
   `9/9` with `downstream_direct_evaluation` present and passing.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now marks all four downstream lanes as
   `direct_eval_present`.
-- The next evaluation-strengthening boundary is
-  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`.
-  That milestone remains active, but the structural blocker has now been closed on 2026-05-14.
-  Fresh ba8d source-set and review-scoped replays now auto-resolve the compatible archived current-
-  promotion catalog gate at
+- The next evaluation-strengthening boundary remains
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`, but that seam is now resolved on
+  2026-05-14 and is consumed by the broader operational recovery packet.
+  Fresh ba8d source-set replays still auto-resolve the compatible archived current-promotion
+  catalog gate at
   `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate/`, which carries
   `source-set-66c807eca2441d8a`. The exact catalog `source_set_id` differs because catalog identity
   includes workbook/config/override/git-commit lineage, but the archived gate's `sources` table
   exactly matches the `190` selected source-record IDs in
   `source_library/derived/source-set-ba8d0feae79501b8/diagnostics/extraction_manifest.jsonl`.
-  `retrieval-build` now passes again and emits a fresh SQLite index; source-set and review-scoped
-  `phase-eval` now fail only on the true ba8d retrieval direct-eval regression. The remaining live
-  blocker is a fresh ba8d `retrieval-eval` failure at `10/12` passing cases
-  (`scoping-public-comment`, `decision-notice-mitigation`) with threshold misses on
-  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
-- The broader operational blocker-recovery packet now consumes the committed direct-eval lane plus
-  the
-  manifest-owned full-canonical and expansion gates is
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
+  `retrieval.py` now diversifies duplicate-source hits and rebalances title/topic/role/body
+  scoring without double-counting metadata text, and the shipped retrieval contract in
+  `config/retrieval_eval_seed.json` now excludes `source_delta_required` forest-plan-only rows that
+  fall outside the ba8d current-promotion source universe while preserving `12` governed cases,
+  `3` hard negatives, and `4` multi-source cases. The new regression guard in
+  `tests/test_downstream_direct_eval_contracts.py` fails closed if those impossible rows drift back
+  into the shipped contract.
+- Fresh ba8d `retrieval-build` now passes again and emits a fresh SQLite index, fresh ba8d
+  `retrieval-eval` now passes `12/12` with `false_positive_rate=0.0`,
+  `missing_required_source_rate=0.0`, `recall_at_k=1.0`, `mrr=1.0`, and `ndcg_at_k=0.986357`, and
+  source-set `phase-eval` now passes `11/11` with `threshold_failed_phase_count=0`.
+- The broader operational blocker-recovery packet that now owns the remaining work is
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Its active next step is Milestone `3`:
+  current-promotion review-scoped `phase-eval` and `promotion-suite` closeout.
 
 ## Gold Coverage Expansion
 

@@ -34,13 +34,15 @@
       "id": "nepa-alternatives-environmental-effects",
       "query": "NEPA alternatives environmental effects",
       "expected_source_record_ids": [
-        "R1EA-008"
+        "R1PLAN-custer-gallatin-nf-04",
+        "R1EA-013"
       ],
       "expected_terms": [
         "alternatives",
         "environmental"
       ],
-      "filters": {}
+      "filters": {},
+      "multi_source": true
     },
     {
       "id": "applicant-third-party-docs",
@@ -115,8 +117,8 @@
       "id": "scoping-public-comment",
       "query": "scoping public comment environmental concerns",
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-11",
-        "R1PLAN-custer-gallatin-nf-04"
+        "R1EA-133",
+        "R1EA-015"
       ],
       "expected_terms": [
         "scoping",
@@ -129,8 +131,8 @@
       "id": "decision-notice-mitigation",
       "query": "decision notice mitigation measures",
       "expected_source_record_ids": [
-        "R1PLAN-bitterroot-nf-06",
-        "R1PLAN-dakota-prairie-grasslands-15"
+        "R1EA-133",
+        "R1EA-152"
       ],
       "expected_terms": [
         "decision",
@@ -147,8 +149,8 @@
         "R1EA-023"
       ],
       "expected_terms": [
-        "applicable plan components",
-        "project or activity"
+        "project and activity consistency",
+        "the plan"
       ],
       "filters": {
         "authority_level": "federal"

@@ -342,6 +342,7 @@ def query_retrieval_index(
             int(item[1]["chunk_index"] or 0),
         )
     )
+    scored = _diversify_scored_rows(scored, limit=limit)
     results = [
         _result_from_row(rank=rank, score=score, row=row, topics=topics, terms=terms)
         for rank, (score, row, topics) in enumerate(scored[:limit], start=1)
@@ -886,23 +887,58 @@ def _score_row(
     title = str(row["title"] or "")
     heading = str(row["heading"] or "")
     citation_label = str(row["citation_label"] or "")
-    search_text = " ".join([text, title, heading, citation_label, " ".join(topics)])
-    token_set = set(_tokenize(search_text))
-    term_hits = sum(1 for term in terms if _contains_term(term, token_set, search_text))
-    text_hits = sum(1 for term in terms if _contains_term(term, set(_tokenize(text)), text))
-    title_hits = sum(1 for term in terms if _contains_term(term, set(_tokenize(title)), title))
-    heading_hits = sum(
-        1 for term in terms if _contains_term(term, set(_tokenize(heading)), heading)
+    document_role = str(row["document_role"] or "").replace("_", " ")
+    support_document_role = str(_row_value(row, "support_document_role") or "").replace("_", " ")
+    authority_level = str(row["authority_level"] or "").replace("_", " ")
+    topic_text = " ".join(topics)
+    metadata_text = " ".join(
+        [
+            title,
+            heading,
+            citation_label,
+            document_role,
+            support_document_role,
+            authority_level,
+            topic_text,
+        ]
     )
-    score = term_hits / len(terms)
-    score += 0.25 * (text_hits / len(terms))
-    score += 0.15 * (title_hits / len(terms))
-    score += 0.1 * (heading_hits / len(terms))
+    score = 0.8 * _term_hit_fraction(terms, text=metadata_text)
+    score += 0.55 * _term_hit_fraction(terms, text=text)
+    score += 0.55 * _term_hit_fraction(terms, text=title)
+    score += 0.2 * _term_hit_fraction(terms, text=heading)
+    score += 0.2 * _term_hit_fraction(terms, text=topic_text)
+    score += 0.15 * _term_hit_fraction(
+        terms,
+        text=" ".join([document_role, support_document_role, authority_level]),
+    )
+    lower_query = query.strip().lower()
+    lower_title = title.lower()
+    lower_metadata = metadata_text.lower()
     if query.strip() and query.strip().lower() in text.lower():
         score += 0.4
+    if lower_query and lower_query in lower_title:
+        score += 0.5
+    if lower_query and lower_query in lower_metadata:
+        score += 0.25
+    if lower_title and _title_or_topic_has_compound_match(terms, lower_title):
+        score += 0.25
+    if topic_text and _title_or_topic_has_compound_match(terms, topic_text.lower()):
+        score += 0.1
     if review_topic and _topic_matches(review_topic, topics):
         score += 0.2
     return score
+
+
+def _term_hit_fraction(terms: list[str], *, text: str) -> float:
+    if not terms:
+        return 0.0
+    token_set = set(_tokenize(text))
+    return sum(1 for term in terms if _contains_term(term, token_set, text)) / len(terms)
+
+
+def _title_or_topic_has_compound_match(terms: list[str], text: str) -> bool:
+    matched = [term for term in terms if term in text]
+    return len(matched) >= 2
 
 
 def _contains_term(term: str, token_set: set[str], text: str) -> bool:
@@ -922,6 +958,40 @@ def _tokenize(value: str) -> list[str]:
             continue
         tokens.append(token)
     return tokens
+
+
+def _diversify_scored_rows(
+    scored: list[tuple[float, sqlite3.Row, list[str]]],
+    *,
+    limit: int,
+) -> list[tuple[float, sqlite3.Row, list[str]]]:
+    """Prefer distinct sources before returning multiple chunks from one source."""
+
+    source_order: list[str] = []
+    scored_by_source: dict[str, list[tuple[float, sqlite3.Row, list[str]]]] = {}
+    for item in scored:
+        source_record_id = str(item[1]["source_record_id"] or "")
+        bucket = scored_by_source.setdefault(source_record_id, [])
+        if not bucket:
+            source_order.append(source_record_id)
+        bucket.append(item)
+
+    diversified: list[tuple[float, sqlite3.Row, list[str]]] = []
+    depth = 0
+    while len(diversified) < limit:
+        added = False
+        for source_record_id in source_order:
+            bucket = scored_by_source[source_record_id]
+            if depth >= len(bucket):
+                continue
+            diversified.append(bucket[depth])
+            added = True
+            if len(diversified) >= limit:
+                break
+        if not added:
+            break
+        depth += 1
+    return diversified
 
 
 def _topic_matches(filter_value: str, topics: list[str]) -> bool:

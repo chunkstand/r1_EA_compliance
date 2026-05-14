@@ -179,6 +179,139 @@ class RetrievalTests(unittest.TestCase):
                 "primary_land_management_plan",
             )
 
+    def test_retrieval_query_diversifies_duplicate_source_hits(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-001", "R1EA-002"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="Generic authority",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | Generic authority | artifact abc123",
+                        text="Decision notice mitigation measures are discussed in this generic source.",
+                    ),
+                    {
+                        **_chunk(
+                            source_set_id=source_set_id,
+                            source_record_id="R1EA-001",
+                            title="Generic authority",
+                            document_role="law",
+                            authority_level="federal",
+                            citation_label="R1EA-001 | Generic authority | artifact abc123",
+                            text="Decision notice mitigation measures are discussed again in the same source.",
+                        ),
+                        "chunk_id": "chunk:R1EA-001:1",
+                        "chunk_index": 1,
+                    },
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-002",
+                        title="Second source",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-002 | Second source | artifact def456",
+                        text="Decision notice mitigation measures are addressed in a second source.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-001": ["Mitigation"],
+                    "R1EA-002": ["Decision notice"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="decision notice mitigation measures",
+                limit=3,
+            )
+
+            self.assertEqual(
+                {query["results"][0]["source_record_id"], query["results"][1]["source_record_id"]},
+                {"R1EA-001", "R1EA-002"},
+            )
+            self.assertEqual(query["results"][0]["source_record_id"], "R1EA-002")
+            self.assertEqual(query["results"][2]["source_record_id"], "R1EA-001")
+
+    def test_retrieval_query_boosts_title_topic_and_role_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-010", "R1EA-011", "R1EA-012"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-010",
+                        title="National Environmental Policy Act",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="R1EA-010 | National Environmental Policy Act | artifact abc123",
+                        text="This generic legal source mentions decision notice mitigation measures repeatedly.",
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-011",
+                        title="Notice of Decision",
+                        document_role="project_record",
+                        support_document_role="record_of_decision",
+                        authority_level="forest",
+                        citation_label="R1EA-011 | Notice of Decision | artifact def456",
+                        text="The selected alternative is described in the notice of decision.",
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-012",
+                        title="Definitions",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-012 | Definitions | artifact ghi789",
+                        text="Mitigation measures avoid, minimize, rectify, reduce, or compensate for impacts.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-010": ["Generic NEPA authority"],
+                    "R1EA-011": ["Decision notice mitigation measures"],
+                    "R1EA-012": ["Mitigation measures"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="decision notice mitigation measures",
+                limit=3,
+            )
+
+            self.assertEqual(query["results"][0]["source_record_id"], "R1EA-011")
+            self.assertEqual(
+                {hit["source_record_id"] for hit in query["results"][:3]},
+                {"R1EA-010", "R1EA-011", "R1EA-012"},
+            )
+
     def test_retrieval_query_handles_legacy_index_without_support_document_role(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             index_path = Path(tmp) / "evidence_index.sqlite"

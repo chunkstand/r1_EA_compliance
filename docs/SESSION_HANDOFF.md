@@ -5,6 +5,42 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 2 Closeout
+
+This update supersedes the earlier recovery-routing sections below where they still say the live
+ba8d blocker is retrieval direct eval.
+
+- committed routing truth:
+  the next milestone in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now Milestone `3`,
+  not Milestone `2`. Milestones `0-2` are resolved in the current worktree and are being closed in
+  the same atomic milestone commit.
+- implemented retrieval recovery:
+  `src/usfs_r1_ea_sources/retrieval.py` now diversifies duplicate-source hits before truncation and
+  rebalances title/topic/role/body precision without double-counting metadata text.
+  `config/retrieval_eval_seed.json` now keeps the shipped ba8d retrieval contract aligned to the
+  current-promotion source universe instead of impossible `source_delta_required` forest-plan-only
+  rows, and `tests/test_downstream_direct_eval_contracts.py` now fails closed if those rows drift
+  back into the contract. `tests/test_retrieval.py` now locks both the diversification and
+  precision-scoring behavior.
+- live replay after the repair:
+  `retrieval-build --source-set-id source-set-ba8d0feae79501b8` passed on the compatible archived
+  current-promotion catalog gate;
+  `retrieval-eval --source-set-id source-set-ba8d0feae79501b8` passed `12/12` with
+  `false_positive_rate=0.0`, `missing_required_source_rate=0.0`, `recall_at_k=1.0`, `mrr=1.0`,
+  and `ndcg_at_k=0.986357`;
+  source-set `phase-eval --source-set-id source-set-ba8d0feae79501b8` passed `11/11` with
+  `threshold_failed_phase_count=0` and `retrieval` marked `direct_eval_present`.
+- remaining blocker:
+  the active next step is Milestone `3`: rerun review-scoped
+  `phase-eval --review-id v1-cg-ecid-compliance-review`, refresh non-strict `promotion-suite`, and
+  close the remaining current-promotion docs/routing packet.
+- verification in this step:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_downstream_direct_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q` passed `63/63`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/retrieval.py tests/test_retrieval.py tests/test_downstream_direct_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_architecture_contract.py` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` passed `12/12`; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` passed `11/11`.
+
 ## System Operational Recovery Alignment Closeout
 
 This alignment update supersedes the earlier recovery-routing sections below where they still talk

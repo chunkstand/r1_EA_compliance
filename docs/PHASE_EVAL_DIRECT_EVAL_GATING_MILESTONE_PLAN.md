@@ -2,8 +2,9 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-14 (Sequences 0A-0B plus retrieval-owner structural recovery are now
-implemented and committed; live closeout is blocked only on ba8d retrieval direct eval)
+Status: Resolved 2026-05-14 (the direct-eval seam is committed, the live ba8d retrieval direct-
+eval blocker is recovered, and any remaining current-promotion replay closeout is routed through
+`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3)
 
 Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
 `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
@@ -25,15 +26,14 @@ Gap-close context on 2026-05-14:
   promotion-suite counter checks,
   architecture-contract updates,
   and focused direct-eval tests all exist in the committed lane and pass their code-level gates.
-- The milestone is still not closable because the live current-promotion replay proves one
-  remaining prerequisite-owner blocker outside the seam:
-  `source-set-ba8d0feae79501b8` retrieval direct eval still fails after fresh source-set and
-  review-scoped replays even though replay-context and structural retrieval routing are now
-  repaired.
-- This refresh narrows the remaining work so future sessions preserve the repaired replay-context
-  and retrieval-owner truth surfaces while fixing the actual retrieval ranking and coverage
-  regression, instead of broadening `phase-eval`, weakening direct-eval thresholds, or inventing
-  review-local replacement truth sources.
+- The live blocker that kept this seam from being closable is now resolved:
+  `source-set-ba8d0feae79501b8` retrieval direct eval now passes after fresh source-set replay,
+  and source-set `phase-eval` now reports `retrieval` as `direct_eval_present` rather than
+  `direct_eval_failed`.
+- This plan is now a consumed input lane. Future sessions should preserve the repaired replay-
+  context and retrieval-owner truth surfaces and continue from
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3 rather than reopening this seam
+  for current-promotion promotion closeout.
 
 ## Purpose
 
@@ -87,15 +87,16 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   `PYTHONPATH=src uv run --extra dev ruff check src tests` passed,
   `PYTHONPATH=src python -m compileall src` passed,
   and `git diff --check` passed.
-- Live source-set replay on `source-set-ba8d0feae79501b8` now proves the seam fails closed rather
-  than proxy-aggregating:
-  `claim-eval` passes,
-  canonical base `rule-claim-eval` passes,
-  but `retrieval-eval` fails `2/12` cases and source-set `phase-eval` reports
-  `threshold_failed_phase_count=1` with `retrieval` marked `direct_eval_failed`.
-- The current-promotion `promotion-suite` replay now reports `current_promotion_ready=false`. The
-  failing current-promotion suite check is `phase_eval_threshold_failed_phase_count`, so the red
-  gate is now an explicit governed direct-eval failure rather than a hidden count-only drift.
+- Live source-set replay on `source-set-ba8d0feae79501b8` now proves the seam is both fail-closed
+  and recoverable on the real current-promotion lane:
+  fresh ba8d `retrieval-eval` passes `12/12` with all shipped thresholds met, and source-set
+  `phase-eval` now passes `11/11` with `threshold_failed_phase_count=0` and `retrieval` marked
+  `direct_eval_present`.
+- The remaining current-promotion closeout is no longer a direct-eval seam gap. The next work is
+  the separate operational replay packet in
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3:
+  rerun review-scoped `phase-eval`, refresh `promotion-suite`, and update the durable docs/handoff
+  for the current-promotion lane.
 - Sequence 0A replay-context repair has now been refreshed again for the recovered current-promotion
   catalog surface. The tracked replay context at
   `config/replay_contexts/v1-cg-ecid-compliance-review.json` now declares
@@ -110,10 +111,11 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   `evidence_index.sqlite` again by auto-resolving the compatible archived catalog gate whose
   `sources` table exactly matches the ba8d extraction manifest even though its catalog
   `source_set_id` is `source-set-66c807eca2441d8a`.
-- Fresh `retrieval-eval` replay is no longer blocked structurally. It now reruns on ba8d and still
-  records the same real direct-eval regression at `2/12` failed cases
-  (`scoping-public-comment`, `decision-notice-mitigation`) plus threshold misses on
-  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
+- Fresh `retrieval-eval` replay is no longer blocked structurally and is now green on ba8d.
+  The retrieval scorer now diversifies duplicate-source hits and rebalances title/topic/role/body
+  precision, while the shipped retrieval contract remains locked at `12` cases with `3` hard
+  negatives and `4` multi-source cases and now excludes `source_delta_required` forest-plan-only
+  rows that are outside the ba8d current-promotion source universe.
 - The canonical direct-eval owner for source-set `rule_claim_binding` remains the base downstream
   lane under
   `source_library/derived/<source_set_id>/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_link_eval_results.json`.

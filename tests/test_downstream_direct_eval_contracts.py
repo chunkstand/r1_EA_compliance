@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 import json
 
@@ -77,6 +78,26 @@ def test_retrieval_claim_and_rule_contracts_have_required_case_mix() -> None:
         assert sum(1 for case in cases if case.get("hard_negative") or case.get("expect_no_hits")) >= requirements[hard_negative_key]
         assert sum(1 for case in cases if case.get(complex_flag)) >= requirements[complex_key]
         assert required_metric_keys <= set(thresholds)
+
+
+def test_retrieval_contract_avoids_source_delta_only_forest_plan_rows() -> None:
+    contract = _read_json(CONFIG_DIR / "retrieval_eval_seed.json")
+    delta_register = CONFIG_DIR / "r1_forest_plan_document_register_draft.csv"
+    with delta_register.open(encoding="utf-8", newline="") as handle:
+        delta_only_source_ids = {
+            row["proposed_source_record_id"]
+            for row in csv.DictReader(handle)
+            if row["draft_status"] == "source_delta_required"
+        }
+
+    expected_source_ids = {
+        str(source_record_id)
+        for case in contract["cases"]
+        for source_record_id in case.get("expected_source_record_ids", [])
+        if str(source_record_id)
+    }
+
+    assert expected_source_ids.isdisjoint(delta_only_source_ids)
 
 
 def test_compliance_review_contract_has_required_case_mix_and_fixture_paths() -> None:
