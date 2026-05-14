@@ -9,6 +9,7 @@ summary = "Workbook, config, overrides, adapters, and source-row records."
 modules = [
   "__init__",
   "adapters",
+  "catalog_surface",
   "config",
   "eval_metrics",
   "evidence_strength",
@@ -78,7 +79,7 @@ allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "revi
 [[layers]]
 name = "evidence_graph"
 summary = "Document evidence graph build and validation."
-modules = ["evidence_graph", "replay_context"]
+modules = ["evidence_graph", "phase_eval_direct_eval", "replay_context"]
 allowed_import_layers = [
   "foundation",
   "extraction",

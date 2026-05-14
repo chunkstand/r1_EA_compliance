@@ -11,6 +11,7 @@ import json
 import re
 import sqlite3
 
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .extract import _source_derived_dir
 from .forest_plan_component_eval import FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUPPORT_CONFIG_PATH
@@ -33,6 +34,9 @@ from .review_packet_index import ROW_INVENTORY_FILENAME as REVIEW_PACKET_ROW_INV
 from .review_packet_index import ROW_INVENTORY_SCHEMA_VERSION as REVIEW_PACKET_ROW_SCHEMA_VERSION
 from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION_FILENAME
 from .review_packet_index import VALIDATION_SCHEMA_VERSION as REVIEW_PACKET_VALIDATION_SCHEMA_VERSION
+from .phase_eval_direct_eval import apply_source_set_phase_direct_eval_gate
+from .phase_eval_direct_eval import build_evaluation_coverage_phase
+from .phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 from .replay_context import ReplayContextMismatchError
 from .replay_context import load_replay_context
 from .replay_context import tracked_replay_context_path
@@ -125,7 +129,11 @@ def build_evidence_graph(
     source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
     graph_dir = source_derived_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
-    catalog_dir = Path(catalog_dir) if catalog_dir is not None else output_dir / "catalog"
+    catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_dir=catalog_dir,
+    )
 
     chunks_path = source_derived_dir / "chunks" / "chunks.jsonl"
     catalog_sqlite_path = catalog_dir / "review_sources.sqlite"
@@ -328,7 +336,11 @@ def run_phase_aligned_eval(
     graph_dir = source_derived_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
     output_path = graph_dir / "phase_eval_results.json"
-    catalog_dir = Path(catalog_dir) if catalog_dir is not None else output_dir / "catalog"
+    catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_dir=catalog_dir,
+    )
 
     catalog_validation_path = catalog_dir / "catalog_validation.json"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
@@ -601,11 +613,12 @@ def run_phase_aligned_eval(
     default_compliance_gold_eval_path = (
         output_dir / "reviews" / "compliance_gold_eval" / "compliance_gold_eval_results.json"
     )
-    compliance_gold_eval_path = default_compliance_gold_eval_path
-    if (
+    has_review_scoped_compliance_gold_eval = (
         review_scoped_compliance_gold_eval_path is not None
         and review_scoped_compliance_gold_eval_path.exists()
-    ):
+    )
+    compliance_gold_eval_path = default_compliance_gold_eval_path
+    if has_review_scoped_compliance_gold_eval:
         compliance_gold_eval_path = review_scoped_compliance_gold_eval_path
     compliance_gold_eval = (
         _read_json(compliance_gold_eval_path) if compliance_gold_eval_path.exists() else None
@@ -613,6 +626,14 @@ def run_phase_aligned_eval(
     if compliance_gold_eval is not None and review_id is None:
         gold_source_set_id = str(compliance_gold_eval.get("source_set_id") or "")
         if gold_source_set_id and gold_source_set_id != source_set_id:
+            compliance_gold_eval = None
+    if compliance_gold_eval is not None and review_id is not None:
+        gold_source_set_id = str(compliance_gold_eval.get("source_set_id") or "")
+        if (
+            not has_review_scoped_compliance_gold_eval
+            and gold_source_set_id
+            and gold_source_set_id != source_set_id
+        ):
             compliance_gold_eval = None
     applicability_artifacts = _read_applicability_phase_artifacts(
         authority_universe_path=authority_universe_path,
@@ -631,6 +652,12 @@ def run_phase_aligned_eval(
     )
     applicability_arbitration_summary = _applicability_arbitration_summary(
         applicability_artifacts.get("decisions") or []
+    )
+    direct_eval_coverage = resolve_phase_eval_direct_eval_coverage(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        review_id=resolved_review_id,
+        review_dir=review_dir,
     )
 
     phases = [
@@ -1334,6 +1361,23 @@ def run_phase_aligned_eval(
                 final_qa_dir=final_qa_dir,
             )
         )
+    phases = [
+        apply_source_set_phase_direct_eval_gate(
+            phase,
+            direct_eval_status=direct_eval_coverage["source_set_phase_statuses"].get(
+                phase["name"]
+            ),
+        )
+        for phase in phases
+    ]
+    evaluation_coverage_phase, evaluation_coverage_summary = build_evaluation_coverage_phase(
+        phases=phases,
+        contract_id=direct_eval_coverage["contract_id"],
+        contract_version=direct_eval_coverage["contract_version"],
+        contract_path=direct_eval_coverage["contract_path"],
+        review_scope=direct_eval_coverage.get("review_scope"),
+    )
+    phases.append(evaluation_coverage_phase)
     blockers = [
         {"phase": phase["name"], "reason": reason}
         for phase in phases
@@ -1355,6 +1399,7 @@ def run_phase_aligned_eval(
         else {},
         "blockers": blockers,
         "phases": phases,
+        **evaluation_coverage_summary,
     }
     _write_json(output_path, summary)
     if review_phase_output_path is not None:

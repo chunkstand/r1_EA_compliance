@@ -2314,6 +2314,48 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(gold_phase["details"]["source_set_matches"])
             self.assertEqual(gold_phase["details"]["case_count"], 3)
 
+    def test_review_phase_eval_ignores_unrelated_global_gold_without_review_scoped_gold(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "review-test"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+            global_gold_dir = output_dir / "reviews" / "compliance_gold_eval"
+            global_gold_dir.mkdir(parents=True, exist_ok=True)
+            (global_gold_dir / "compliance_gold_eval_results.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": "source-set-other",
+                        "passed": True,
+                        "promotion_ready": True,
+                        "rule_pack_id": "unit-nepa-ea",
+                        "rule_pack_version": "0.4.0",
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+
+            phase_names = {phase["name"] for phase in phase_result.summary["phases"]}
+            self.assertNotIn("compliance_gold_eval", phase_names)
+            self.assertTrue(phase_result.summary["reviewer_ready"])
+
     def test_compliance_gold_eval_fails_missing_required_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -2529,8 +2571,10 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 16)
+            self.assertEqual(result.summary["phase_count"], 17)
             self.assertEqual(result.summary["review_id"], "phase-review")
+            self.assertFalse(result.summary["declared_review_contract"])
+            self.assertFalse(result.summary["contract_backed_promotion_ready"])
             self.assertEqual(
                 result.review_output_path,
                 output_dir / "reviews" / "phase-review" / "phase_eval_results.json",
@@ -2539,6 +2583,12 @@ class ComplianceReviewTests(unittest.TestCase):
             review_phase_summary = json.loads(result.review_output_path.read_text(encoding="utf-8"))
             self.assertEqual(review_phase_summary["review_id"], "phase-review")
             self.assertTrue(review_phase_summary["reviewer_ready"])
+            evaluation_coverage_phase = _phase(result.summary, "evaluation_coverage")
+            self.assertTrue(evaluation_coverage_phase["passed"])
+            self.assertEqual(
+                evaluation_coverage_phase["details"]["review_direct_eval_status"],
+                "not_required_for_ad_hoc_review",
+            )
             claim_phase = _phase(result.summary, "claim_extraction")
             self.assertTrue(claim_phase["passed"])
             self.assertTrue(claim_phase["reviewer_ready"])
@@ -2554,6 +2604,77 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertTrue(compliance_phase["details"]["matrix_pdf_header_valid"])
             self.assertTrue(compliance_phase["details"]["matrix_schema_matches"])
             self.assertTrue(compliance_phase["details"]["matrix_row_count_matches"])
+
+    def test_review_phase_eval_uses_canonical_rule_claim_direct_eval_result(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "phase-review"
+            _build_source_library(output_dir, source_set_id)
+            _write_graph_phase_outputs(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            review_result = _run_generated_compliance_review(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=rule_pack_path,
+            )
+
+            base_rule_claim_eval_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "rule_claim_links"
+                / "nepa-ea-v0"
+                / "0.4.0"
+                / "rule_claim_link_eval_results.json"
+            )
+            base_rule_claim_eval_path.write_text(
+                json.dumps(
+                    _direct_eval_result_payload(
+                        contract_path=Path("config/rule_claim_link_eval_seed.json"),
+                        eval_id="rule-claim-direct-eval-v1",
+                        source_set_id=source_set_id,
+                    ),
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            selected_rule_claim_eval_path = (
+                Path(review_result.summary["rule_claim_summary_path"]).parent
+                / "rule_claim_link_eval_results.json"
+            )
+            selected_rule_claim_eval_path.write_text(
+                json.dumps(
+                    _direct_eval_result_payload(
+                        contract_path=Path("config/rule_claim_link_eval_seed.json"),
+                        eval_id="rule-claim-direct-eval-v1",
+                        source_set_id="source-set-other",
+                    ),
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            phase_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+            )
+
+            rule_claim_phase = _phase(phase_result.summary, "rule_claim_binding")
+            self.assertTrue(rule_claim_phase["passed"])
+            self.assertTrue(rule_claim_phase["reviewer_ready"])
+            self.assertEqual(
+                Path(rule_claim_phase["details"]["direct_eval_summary_path"]).resolve(),
+                base_rule_claim_eval_path.resolve(),
+            )
+            self.assertEqual(
+                rule_claim_phase["details"]["direct_eval_status"],
+                "direct_eval_present",
+            )
 
     def test_phase_eval_can_include_final_qa_certification_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -2584,7 +2705,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 17)
+            self.assertEqual(result.summary["phase_count"], 18)
             final_qa_phase = _phase(result.summary, "final_qa_certification_report")
             self.assertTrue(final_qa_phase["passed"])
             self.assertTrue(final_qa_phase["reviewer_ready"])
@@ -2663,7 +2784,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 17)
+            self.assertEqual(result.summary["phase_count"], 18)
             adjudication_phase = _phase(result.summary, "forest_plan_component_adjudication")
             self.assertTrue(adjudication_phase["passed"])
             self.assertTrue(adjudication_phase["reviewer_ready"])
@@ -2760,7 +2881,7 @@ class ComplianceReviewTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 17)
+            self.assertEqual(result.summary["phase_count"], 18)
             component_eval_phase = _phase(result.summary, "forest_plan_component_eval")
             self.assertTrue(component_eval_phase["passed"])
             self.assertTrue(component_eval_phase["reviewer_ready"])
@@ -3812,16 +3933,11 @@ def _write_downstream_direct_eval_phase_outputs(output_dir: Path, source_set_id:
         result_path.parent.mkdir(parents=True, exist_ok=True)
         result_path.write_text(
             json.dumps(
-                {
-                    "schema_version": "unit-direct-eval-result",
-                    "eval_id": eval_id,
-                    "source_set_id": source_set_id,
-                    "passed": True,
-                    "contract": {
-                        "sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()
-                    },
-                    "checks": [],
-                },
+                _direct_eval_result_payload(
+                    contract_path=contract_path,
+                    eval_id=eval_id,
+                    source_set_id=source_set_id,
+                ),
                 sort_keys=True,
             ),
             encoding="utf-8",
@@ -4022,6 +4138,59 @@ def _chunk(
         "content_sha256": content_sha256,
         "text": text,
     }
+
+
+def _direct_eval_result_payload(
+    *,
+    contract_path: Path,
+    eval_id: str,
+    source_set_id: str,
+) -> dict:
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    coverage_requirements = contract.get("coverage_requirements", {})
+    case_count = int(
+        coverage_requirements.get("case_count")
+        or ((contract.get("metric_thresholds") or {}).get("case_count") or {}).get("min")
+        or 1
+    )
+    metrics = {}
+    for metric_name, threshold in (contract.get("metric_thresholds") or {}).items():
+        if not isinstance(threshold, dict):
+            continue
+        if "min" in threshold:
+            metrics[metric_name] = threshold["min"]
+        elif "max" in threshold:
+            metrics[metric_name] = threshold["max"]
+    payload = {
+        "schema_version": "unit-direct-eval-result",
+        "eval_id": eval_id,
+        "source_set_id": source_set_id,
+        "passed": True,
+        "checks": [
+            {
+                "name": "eval_cases_pass",
+                "passed": True,
+                "details": {"case_count": case_count, "failed_case_ids": []},
+            },
+            {
+                "name": "metric_thresholds_met",
+                "passed": True,
+                "details": {"failures": []},
+            },
+        ],
+        "contract": {"sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()},
+        "metrics": metrics,
+    }
+    for key, value in coverage_requirements.items():
+        payload[key] = value
+    payload.setdefault("case_count", case_count)
+    payload.setdefault(
+        "hard_negative_case_count",
+        coverage_requirements.get("hard_negative_case_count", 0),
+    )
+    if eval_id == "retrieval-direct-eval-v1":
+        payload["query_count"] = case_count
+    return payload
 
 
 def _write_package(directory: Path, text: str) -> Path:

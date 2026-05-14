@@ -368,6 +368,61 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertTrue(graph_phase["passed"])
             self.assertTrue(graph_phase["reviewer_ready"])
 
+    def test_source_set_replay_auto_resolves_compatible_archived_catalog_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            archived_catalog_dir = output_dir / "runs" / "2026-05-14-replay" / "catalog_gate"
+            _write_catalog_validation(output_dir, passed=False)
+            _write_catalog_source_set_manifest(output_dir, "source-set-other")
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-023"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-023",
+                        title="Archived catalog source",
+                        document_role="regulation",
+                        authority_level="federal_regulation",
+                        citation_label="R1EA-023 | Archived catalog source | artifact abc123",
+                        text="Source-set replay should find the matching archived catalog gate.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-023": ["Replay"],
+                    "R1EA-024": ["Extra row"],
+                },
+            )
+            _write_catalog_validation_for_dir(archived_catalog_dir, passed=True)
+            _write_catalog_source_set_manifest_for_dir(
+                archived_catalog_dir,
+                "source-set-compatible-archived",
+            )
+            _write_catalog_sqlite_for_dir(
+                archived_catalog_dir,
+                {"R1EA-023": ["Replay"]},
+            )
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            result = build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
+            phase_eval = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["catalog_dir"], str(archived_catalog_dir))
+            self.assertEqual(phase_eval.summary["catalog_dir"], str(archived_catalog_dir))
+            graph_phase = _phase(phase_eval.summary, "evidence_graph")
+            self.assertTrue(graph_phase["passed"])
+            self.assertTrue(graph_phase["reviewer_ready"])
+
     def test_phase_eval_reports_upstream_evaluation_and_fails_closed_when_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -402,6 +457,15 @@ class EvidenceGraphTests(unittest.TestCase):
             upstream_phase = _phase(missing_result.summary, "upstream_evaluation")
             self.assertFalse(upstream_phase["passed"])
             self.assertFalse(upstream_phase["reviewer_ready"])
+            extraction_phase = _phase(missing_result.summary, "extraction")
+            self.assertIn("missing_required_direct_eval", extraction_phase["failure_reasons"])
+            self.assertIn("proxy_only_coverage", extraction_phase["failure_reasons"])
+            coverage_phase = _phase(missing_result.summary, "evaluation_coverage")
+            self.assertFalse(coverage_phase["passed"])
+            self.assertGreater(
+                coverage_phase["details"]["missing_direct_eval_phase_count"],
+                0,
+            )
 
             upstream_results_path = (
                 output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
@@ -429,6 +493,8 @@ class EvidenceGraphTests(unittest.TestCase):
             upstream_phase = _phase(ready_result.summary, "upstream_evaluation")
             self.assertTrue(upstream_phase["passed"])
             self.assertTrue(upstream_phase["reviewer_ready"])
+            extraction_phase = _phase(ready_result.summary, "extraction")
+            self.assertTrue(extraction_phase["details"]["direct_eval_present"])
 
     def test_phase_eval_reports_downstream_direct_evaluation_and_fails_closed_when_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -464,6 +530,15 @@ class EvidenceGraphTests(unittest.TestCase):
             downstream_phase = _phase(missing_result.summary, "downstream_direct_evaluation")
             self.assertFalse(downstream_phase["passed"])
             self.assertFalse(downstream_phase["reviewer_ready"])
+            retrieval_phase = _phase(missing_result.summary, "retrieval")
+            self.assertIn("missing_required_direct_eval", retrieval_phase["failure_reasons"])
+            self.assertIn("proxy_only_coverage", retrieval_phase["failure_reasons"])
+            coverage_phase = _phase(missing_result.summary, "evaluation_coverage")
+            self.assertFalse(coverage_phase["passed"])
+            self.assertGreater(
+                coverage_phase["details"]["proxy_only_phase_count"],
+                0,
+            )
 
             contracts = {
                 "retrieval_eval": (
@@ -488,18 +563,14 @@ class EvidenceGraphTests(unittest.TestCase):
                 ),
             }
             for contract_path, result_path, eval_id in contracts.values():
-                sha256 = hashlib.sha256(contract_path.read_bytes()).hexdigest()
                 result_path.parent.mkdir(parents=True, exist_ok=True)
                 result_path.write_text(
                     json.dumps(
-                        {
-                            "schema_version": "unit-direct-eval-result",
-                            "eval_id": eval_id,
-                            "source_set_id": source_set_id,
-                            "passed": True,
-                            "contract": {"sha256": sha256},
-                            "checks": [],
-                        },
+                        _direct_eval_result_payload(
+                            contract_path=contract_path,
+                            eval_id=eval_id,
+                            source_set_id=source_set_id,
+                        ),
                         sort_keys=True,
                     ),
                     encoding="utf-8",
@@ -510,6 +581,12 @@ class EvidenceGraphTests(unittest.TestCase):
             downstream_phase = _phase(ready_result.summary, "downstream_direct_evaluation")
             self.assertTrue(downstream_phase["passed"])
             self.assertTrue(downstream_phase["reviewer_ready"])
+            retrieval_phase = _phase(ready_result.summary, "retrieval")
+            self.assertTrue(retrieval_phase["details"]["direct_eval_present"])
+            self.assertEqual(
+                ready_result.summary["phase_eval_contract_id"],
+                "phase-eval-direct-eval-v1",
+            )
 
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -557,6 +634,26 @@ class EvidenceGraphTests(unittest.TestCase):
                 output_dir=output_dir,
                 source_set_id=source_set_id,
                 catalog_dir=archived_catalog_dir,
+            )
+            upstream_results_path = (
+                output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
+            )
+            upstream_results_path.parent.mkdir(parents=True, exist_ok=True)
+            upstream_results_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "upstream-evaluation-results-v0",
+                        "passed": True,
+                        "lane_summaries": [
+                            {"lane_id": "capture", "status": "direct_eval_present"},
+                            {"lane_id": "catalog", "status": "direct_eval_present"},
+                            {"lane_id": "extraction", "status": "direct_eval_present"},
+                        ],
+                        "failed_case_ids": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
             )
 
             phase_eval = run_phase_aligned_eval(
@@ -643,7 +740,11 @@ class EvidenceGraphTests(unittest.TestCase):
 
 
 def _write_catalog_validation(output_dir: Path, *, passed: bool) -> None:
-    path = output_dir / "catalog" / "catalog_validation.json"
+    _write_catalog_validation_for_dir(output_dir / "catalog", passed=passed)
+
+
+def _write_catalog_validation_for_dir(catalog_dir: Path, *, passed: bool) -> None:
+    path = catalog_dir / "catalog_validation.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"passed": passed}, sort_keys=True), encoding="utf-8")
 
@@ -722,8 +823,65 @@ def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> P
     return path
 
 
+def _direct_eval_result_payload(
+    *,
+    contract_path: Path,
+    eval_id: str,
+    source_set_id: str,
+) -> dict:
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    coverage_requirements = contract.get("coverage_requirements", {})
+    case_count = int(
+        coverage_requirements.get("case_count")
+        or ((contract.get("metric_thresholds") or {}).get("case_count") or {}).get("min")
+        or 1
+    )
+    metrics = {}
+    for metric_name, threshold in (contract.get("metric_thresholds") or {}).items():
+        if not isinstance(threshold, dict):
+            continue
+        if "min" in threshold:
+            metrics[metric_name] = threshold["min"]
+        elif "max" in threshold:
+            metrics[metric_name] = threshold["max"]
+    payload = {
+        "schema_version": "unit-direct-eval-result",
+        "eval_id": eval_id,
+        "source_set_id": source_set_id,
+        "passed": True,
+        "checks": [
+            {
+                "name": "eval_cases_pass",
+                "passed": True,
+                "details": {"case_count": case_count, "failed_case_ids": []},
+            },
+            {
+                "name": "metric_thresholds_met",
+                "passed": True,
+                "details": {"failures": []},
+            },
+        ],
+        "contract": {"sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()},
+        "metrics": metrics,
+    }
+    for key, value in coverage_requirements.items():
+        payload[key] = value
+    payload.setdefault("case_count", case_count)
+    payload.setdefault("hard_negative_case_count", coverage_requirements.get("hard_negative_case_count", 0))
+    if eval_id == "retrieval-direct-eval-v1":
+        payload["query_count"] = case_count
+    return payload
+
+
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:
-    path = output_dir / "catalog" / "review_sources.sqlite"
+    return _write_catalog_sqlite_for_dir(output_dir / "catalog", topics_by_source)
+
+
+def _write_catalog_sqlite_for_dir(
+    catalog_dir: Path,
+    topics_by_source: dict[str, list[str]],
+) -> Path:
+    path = catalog_dir / "review_sources.sqlite"
     path.parent.mkdir(parents=True, exist_ok=True)
     with closing(sqlite3.connect(path)) as connection:
         connection.executescript(
@@ -768,6 +926,19 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
                 )
         connection.commit()
     return path
+
+
+def _write_catalog_source_set_manifest(output_dir: Path, source_set_id: str) -> None:
+    _write_catalog_source_set_manifest_for_dir(output_dir / "catalog", source_set_id)
+
+
+def _write_catalog_source_set_manifest_for_dir(catalog_dir: Path, source_set_id: str) -> None:
+    path = catalog_dir / "source_set_manifest.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"source_set_id": source_set_id}, sort_keys=True),
+        encoding="utf-8",
+    )
 
 
 def _write_replay_context(

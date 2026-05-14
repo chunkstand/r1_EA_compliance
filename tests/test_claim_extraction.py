@@ -561,16 +561,11 @@ def _write_downstream_direct_eval_phase_outputs(output_dir: Path, source_set_id:
         result_path.parent.mkdir(parents=True, exist_ok=True)
         result_path.write_text(
             json.dumps(
-                {
-                    "schema_version": "unit-direct-eval-result",
-                    "eval_id": eval_id,
-                    "source_set_id": source_set_id,
-                    "passed": True,
-                    "contract": {
-                        "sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()
-                    },
-                    "checks": [],
-                },
+                _direct_eval_result_payload(
+                    contract_path=contract_path,
+                    eval_id=eval_id,
+                    source_set_id=source_set_id,
+                ),
                 sort_keys=True,
             ),
             encoding="utf-8",
@@ -605,6 +600,59 @@ def _write_rule_pack(directory: Path, *, document_role: str) -> Path:
     path = directory / "rule-pack.json"
     path.write_text(json.dumps(rule_pack, sort_keys=True), encoding="utf-8")
     return path
+
+
+def _direct_eval_result_payload(
+    *,
+    contract_path: Path,
+    eval_id: str,
+    source_set_id: str,
+) -> dict:
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    coverage_requirements = contract.get("coverage_requirements", {})
+    case_count = int(
+        coverage_requirements.get("case_count")
+        or ((contract.get("metric_thresholds") or {}).get("case_count") or {}).get("min")
+        or 1
+    )
+    metrics = {}
+    for metric_name, threshold in (contract.get("metric_thresholds") or {}).items():
+        if not isinstance(threshold, dict):
+            continue
+        if "min" in threshold:
+            metrics[metric_name] = threshold["min"]
+        elif "max" in threshold:
+            metrics[metric_name] = threshold["max"]
+    payload = {
+        "schema_version": "unit-direct-eval-result",
+        "eval_id": eval_id,
+        "source_set_id": source_set_id,
+        "passed": True,
+        "checks": [
+            {
+                "name": "eval_cases_pass",
+                "passed": True,
+                "details": {"case_count": case_count, "failed_case_ids": []},
+            },
+            {
+                "name": "metric_thresholds_met",
+                "passed": True,
+                "details": {"failures": []},
+            },
+        ],
+        "contract": {"sha256": hashlib.sha256(contract_path.read_bytes()).hexdigest()},
+        "metrics": metrics,
+    }
+    for key, value in coverage_requirements.items():
+        payload[key] = value
+    payload.setdefault("case_count", case_count)
+    payload.setdefault(
+        "hard_negative_case_count",
+        coverage_requirements.get("hard_negative_case_count", 0),
+    )
+    if eval_id == "retrieval-direct-eval-v1":
+        payload["query_count"] = case_count
+    return payload
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:

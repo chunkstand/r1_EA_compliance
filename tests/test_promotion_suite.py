@@ -224,6 +224,11 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     phase_checks = {check["name"]: check for check in phase["checks"]}
     assert phase_checks["core_passed_phase_count"]["min"] == 19
     assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 19
+    assert phase_checks["phase_eval_contract_id"]["equals"] == "phase-eval-direct-eval-v1"
+    assert phase_checks["phase_eval_proxy_only_phase_count"]["equals"] == 0
+    assert phase_checks["phase_eval_missing_direct_eval_phase_count"]["equals"] == 0
+    assert phase_checks["phase_eval_threshold_failed_phase_count"]["equals"] == 0
+    assert phase_checks["phase_eval_contract_backed_promotion_ready"]["equals"] is True
     assert phase_checks["phase_eval_arbitration_summary_schema"]["equals"] == (
         "applicability-arbitration-summary-v0"
     )
@@ -814,7 +819,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     }
     assert south_plateau_phase_checks["phase_eval_passed"]["equals"] is True
     assert south_plateau_phase_checks["phase_eval_reviewer_ready"]["equals"] is True
-    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 15
+    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 16
+    assert south_plateau_phase_checks["phase_eval_declared_review_contract"]["equals"] is True
+    assert south_plateau_phase_checks["phase_eval_contract_backed_promotion_ready"]["equals"] is False
 
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
@@ -896,8 +903,8 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert third_slot["last_local_signal"]["forest_plan_component_adjudication_system_miss_count"] == 0
     assert third_slot["last_local_signal"]["phase_eval_passed"] is False
     assert third_slot["last_local_signal"]["phase_eval_reviewer_ready"] is False
-    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 15
-    assert third_slot["last_local_signal"]["phase_eval_phase_count"] == 17
+    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 16
+    assert third_slot["last_local_signal"]["phase_eval_phase_count"] == 18
     assert third_slot["last_local_signal"]["adjudication_eval_passed"] is True
     assert third_slot["last_local_signal"]["adjudication_resolved_count"] == 6
     assert third_slot["last_local_signal"]["adjudication_apply_passed"] is True

@@ -444,14 +444,57 @@ class RetrievalTests(unittest.TestCase):
             self.assertFalse(diagnostic.summary["reviewer_ready"])
             self.assertTrue(diagnostic.sqlite_path.exists())
 
-    def test_retrieval_build_requires_verified_flathead_extraction_audit(self) -> None:
+    def test_retrieval_build_backfills_missing_support_document_role_from_catalog(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             source_set_id = "source-set-test"
             _write_extraction_diagnostics(
                 output_dir,
                 source_set_id,
-                source_record_ids=["R1PLAN-flathead-nf-02"],
+                source_record_ids=["R1EA-009"],
+            )
+            chunk = _chunk(
+                source_set_id=source_set_id,
+                source_record_id="R1EA-009",
+                title="Decision notice",
+                document_role="project_record",
+                authority_level="project_record",
+                citation_label="R1EA-009 | Decision notice | artifact abc123",
+                text="The decision notice contains enforceable mitigation measures.",
+            )
+            chunk["support_document_role"] = None
+            _write_chunks(output_dir, source_set_id, [chunk])
+            _write_catalog_sqlite(
+                output_dir,
+                {"R1EA-009": ["Mitigation"]},
+                source_rows_by_source={
+                    "R1EA-009": {
+                        "document_role": "project_record",
+                        "metadata_json": {"document_role": "record_of_decision"},
+                        "title": "Decision notice",
+                    }
+                },
+            )
+
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["support_document_role_counts"], {"record_of_decision": 1})
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="",
+                source_record_id="R1EA-009",
+            )
+            self.assertEqual(query["results"][0]["support_document_role"], "record_of_decision")
+
+    def test_retrieval_build_rejects_catalog_with_incompatible_source_record_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-009"],
             )
             _write_chunks(
                 output_dir,
@@ -459,6 +502,129 @@ class RetrievalTests(unittest.TestCase):
                 [
                     _chunk(
                         source_set_id=source_set_id,
+                        source_record_id="R1EA-009",
+                        title="Decision notice",
+                        document_role="project_record",
+                        authority_level="project_record",
+                        citation_label="R1EA-009 | Decision notice | artifact abc123",
+                        text="The decision notice contains enforceable mitigation measures.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-009": ["Mitigation"],
+                    "R1EA-010": ["Extra row"],
+                },
+            )
+            _write_catalog_source_set_manifest(output_dir, "source-set-other")
+
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertFalse(result.summary["validation_passed"])
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            catalog_check = _check(
+                validation,
+                "catalog_source_set_matches_requested_source_set",
+            )
+            self.assertFalse(catalog_check["passed"])
+            self.assertEqual(
+                catalog_check["details"]["requested_source_set_id"],
+                source_set_id,
+            )
+            self.assertEqual(
+                catalog_check["details"]["catalog_source_set_id"],
+                "source-set-other",
+            )
+            self.assertEqual(
+                catalog_check["details"]["match_mode"],
+                "mismatch",
+            )
+            self.assertEqual(
+                catalog_check["details"]["unexpected_source_record_ids"],
+                ["R1EA-010"],
+            )
+
+    def test_retrieval_build_auto_resolves_compatible_archived_catalog_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            archived_catalog_dir = output_dir / "runs" / "2026-05-14-replay" / "catalog_gate"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-009"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-009",
+                        title="Decision notice",
+                        document_role="project_record",
+                        authority_level="project_record",
+                        citation_label="R1EA-009 | Decision notice | artifact abc123",
+                        text="The decision notice contains enforceable mitigation measures.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-009": ["Mitigation"],
+                    "R1EA-010": ["Extra row"],
+                },
+            )
+            _write_catalog_source_set_manifest(output_dir, "source-set-other")
+            archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+            _write_catalog_source_set_manifest_for_dir(
+                archived_catalog_dir,
+                "source-set-compatible-archived",
+            )
+            _write_catalog_sqlite_for_dir(
+                archived_catalog_dir,
+                {"R1EA-009": ["Mitigation"]},
+            )
+
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(
+                result.summary["catalog_source_set_id"],
+                "source-set-compatible-archived",
+            )
+            self.assertEqual(result.summary["catalog_dir"], str(archived_catalog_dir))
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            catalog_check = _check(
+                validation,
+                "catalog_source_set_matches_requested_source_set",
+            )
+            self.assertEqual(
+                catalog_check["details"]["match_mode"],
+                "selected_source_record_set",
+            )
+
+    def test_retrieval_build_requires_verified_flathead_extraction_audit_only_for_full_contract_match(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+
+            partial_source_set_id = "source-set-flathead-partial"
+            _write_extraction_diagnostics(
+                output_dir,
+                partial_source_set_id,
+                source_record_ids=["R1PLAN-flathead-nf-02"],
+            )
+            _write_chunks(
+                output_dir,
+                partial_source_set_id,
+                [
+                    _chunk(
+                        source_set_id=partial_source_set_id,
                         source_record_id="R1PLAN-flathead-nf-02",
                         title="2018 Revised Land Management Plan",
                         document_role="forest_plan",
@@ -469,21 +635,68 @@ class RetrievalTests(unittest.TestCase):
                     )
                 ],
             )
-            _write_catalog_sqlite(output_dir, {"R1PLAN-flathead-nf-02": ["Flathead direction"]})
+            _write_catalog_sqlite(
+                output_dir,
+                {"R1PLAN-flathead-nf-02": ["Flathead direction"]},
+            )
 
-            failed = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            partial = build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=partial_source_set_id,
+            )
+
+            self.assertTrue(partial.summary["validation_passed"])
+            self.assertEqual(partial.summary["verified_extraction_required_source_count"], 0)
+            self.assertEqual(partial.summary["verified_extraction_contract_ids"], [])
+
+            full_source_set_id = "source-set-flathead-full"
+            full_source_record_ids = [f"R1PLAN-flathead-nf-{index:02d}" for index in range(1, 18)]
+            _write_extraction_diagnostics(
+                output_dir,
+                full_source_set_id,
+                source_record_ids=full_source_record_ids,
+            )
+            _write_chunks(
+                output_dir,
+                full_source_set_id,
+                [
+                    _chunk(
+                        source_set_id=full_source_set_id,
+                        source_record_id=source_record_id,
+                        title=f"Flathead source {source_record_id}",
+                        document_role="forest_plan",
+                        support_document_role="forest_plan",
+                        authority_level="forest",
+                        citation_label=f"{source_record_id} | Flathead source | artifact abc123",
+                        text=f"Flathead source text for {source_record_id}.",
+                    )
+                    for source_record_id in full_source_record_ids
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    source_record_id: ["Flathead direction"]
+                    for source_record_id in full_source_record_ids
+                },
+            )
+
+            failed = build_retrieval_index(output_dir=output_dir, source_set_id=full_source_set_id)
 
             self.assertFalse(failed.summary["validation_passed"])
+            self.assertEqual(failed.summary["verified_extraction_required_source_count"], 17)
             missing_audit = json.loads(failed.validation_path.read_text(encoding="utf-8"))
-            self.assertFalse(_check(missing_audit, "verified_extraction_accuracy_audit_exists")["passed"])
+            self.assertFalse(
+                _check(missing_audit, "verified_extraction_accuracy_audit_exists")["passed"]
+            )
 
             _write_extraction_accuracy_audit(
                 output_dir,
-                source_set_id,
-                admitted_source_record_ids=["R1PLAN-flathead-nf-02"],
+                full_source_set_id,
+                admitted_source_record_ids=full_source_record_ids,
             )
 
-            passed = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            passed = build_retrieval_index(output_dir=output_dir, source_set_id=full_source_set_id)
 
             self.assertTrue(passed.summary["validation_passed"])
             self.assertTrue(passed.summary["reviewer_ready"])
@@ -677,12 +890,39 @@ def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> P
     return path
 
 
-def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:
-    path = output_dir / "catalog" / "review_sources.sqlite"
+def _write_catalog_sqlite(
+    output_dir: Path,
+    topics_by_source: dict[str, list[str]],
+    *,
+    source_rows_by_source: dict[str, dict] | None = None,
+) -> Path:
+    return _write_catalog_sqlite_for_dir(
+        output_dir / "catalog",
+        topics_by_source,
+        source_rows_by_source=source_rows_by_source,
+    )
+
+
+def _write_catalog_sqlite_for_dir(
+    catalog_dir: Path,
+    topics_by_source: dict[str, list[str]],
+    *,
+    source_rows_by_source: dict[str, dict] | None = None,
+) -> Path:
+    path = catalog_dir / "review_sources.sqlite"
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        path.unlink()
+    source_rows_by_source = source_rows_by_source or {}
     with closing(sqlite3.connect(path)) as connection:
         connection.executescript(
             """
+            CREATE TABLE sources (
+              source_record_id TEXT PRIMARY KEY,
+              title TEXT NOT NULL,
+              document_role TEXT NOT NULL,
+              metadata_json TEXT NOT NULL
+            );
             CREATE TABLE review_topics (
               topic_id TEXT PRIMARY KEY,
               label TEXT NOT NULL
@@ -694,6 +934,20 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
             );
             """
         )
+        for source_record_id in sorted(set(topics_by_source) | set(source_rows_by_source)):
+            row = source_rows_by_source.get(source_record_id, {})
+            metadata_json = row.get("metadata_json", {})
+            if not isinstance(metadata_json, str):
+                metadata_json = json.dumps(metadata_json, sort_keys=True)
+            connection.execute(
+                "INSERT INTO sources VALUES (?, ?, ?, ?)",
+                (
+                    source_record_id,
+                    row.get("title", source_record_id),
+                    row.get("document_role", "law"),
+                    metadata_json,
+                ),
+            )
         for source_record_id, topics in topics_by_source.items():
             for index, topic in enumerate(topics):
                 topic_id = f"topic:{source_record_id}:{index}"
@@ -704,6 +958,29 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
                 )
         connection.commit()
     return path
+
+
+def _write_catalog_source_set_manifest(output_dir: Path, source_set_id: str) -> Path:
+    return _write_catalog_source_set_manifest_for_dir(output_dir / "catalog", source_set_id)
+
+
+def _write_catalog_source_set_manifest_for_dir(catalog_dir: Path, source_set_id: str) -> Path:
+    path = catalog_dir / "source_set_manifest.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"source_set_id": source_set_id}, sort_keys=True),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _copy_catalog_sqlite_to_dir(sqlite_path: Path, catalog_dir: Path) -> Path:
+    destination = catalog_dir / "review_sources.sqlite"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        destination.unlink()
+    destination.write_bytes(sqlite_path.read_bytes())
+    return destination
 
 
 def _write_extraction_accuracy_audit(

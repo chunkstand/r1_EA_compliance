@@ -83,9 +83,9 @@ def matched_verified_extraction_contracts(
     require_direct_extraction = False
     for contract in payload.get("contracts", []):
         contract_required_ids = set(contract.get("required_source_record_ids", []))
-        present_ids = sorted(source_record_id_set & contract_required_ids)
-        if not present_ids:
+        if not contract_required_ids or not contract_required_ids.issubset(source_record_id_set):
             continue
+        present_ids = sorted(contract_required_ids)
         matched_contracts.append(
             {
                 "contract_id": contract.get("contract_id"),

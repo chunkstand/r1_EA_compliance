@@ -11,6 +11,18 @@ from usfs_r1_ea_sources.replay_context import tracked_replay_context_path
 
 
 class ReplayContextTests(unittest.TestCase):
+    def test_tracked_ecid_replay_context_uses_archived_current_promotion_catalog_surface(self) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+
+        context = load_replay_context(
+            repo_root / "config" / "replay_contexts" / "v1-cg-ecid-compliance-review.json"
+        )
+
+        self.assertEqual(
+            context.catalog_dir,
+            Path("source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate"),
+        )
+
     def test_load_replay_context_derives_child_catalog_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

@@ -123,6 +123,50 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             check = _check(result.summary, "required_source_records_are_present_and_direct")
             self.assertFalse(check["passed"])
 
+    def test_audit_ignores_partial_overlap_with_direct_extraction_contract(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(output_dir, artifact_body=_html_body())
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+            build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "full-set-only",
+                                "required_source_record_ids": ["R1EA-001", "R1EA-999"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["verified_extraction_admission_contracts"], [])
+            self.assertEqual(result.summary["required_direct_source_record_ids"], [])
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["R1EA-001"],
+            )
+
 
 def _write_download_run(output_dir: Path, *, artifact_body: bytes) -> None:
     run_dir = output_dir / "runs" / "unit-download"

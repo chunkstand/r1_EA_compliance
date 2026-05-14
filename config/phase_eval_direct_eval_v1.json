@@ -1,0 +1,51 @@
+{
+  "contract_id": "phase-eval-direct-eval-v1",
+  "declared_review_eval_path": "v1_ea_eval_results.json",
+  "downstream_manifest_path": "downstream_direct_eval_v1.json",
+  "review_contract_manifest_path": "v1_real_package_review_coverage_v1.json",
+  "review_contract_results_path": "reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
+  "review_scope": {
+    "ad_hoc_review_coverage_class": "not_required_for_ad_hoc_review",
+    "declared_review_coverage_class": "required_for_declared_review_contract"
+  },
+  "schema_version": "phase-eval-direct-eval-v1",
+  "source_set_phases": [
+    {
+      "coverage_class": "direct_eval_required",
+      "lane_id": "catalog",
+      "phase_name": "catalog_capture",
+      "producer": "upstream_evaluation"
+    },
+    {
+      "coverage_class": "direct_eval_required",
+      "lane_id": "extraction",
+      "phase_name": "extraction",
+      "producer": "upstream_evaluation"
+    },
+    {
+      "coverage_class": "direct_eval_required",
+      "lane_id": "retrieval_eval",
+      "phase_name": "retrieval",
+      "producer": "downstream_direct_evaluation"
+    },
+    {
+      "coverage_class": "validation_only_allowed",
+      "phase_name": "evidence_graph",
+      "producer": "phase_eval"
+    },
+    {
+      "coverage_class": "direct_eval_required",
+      "lane_id": "claim_eval",
+      "phase_name": "claim_extraction",
+      "producer": "downstream_direct_evaluation"
+    },
+    {
+      "coverage_class": "direct_eval_required",
+      "lane_id": "rule_claim_eval",
+      "phase_name": "rule_claim_binding",
+      "producer": "downstream_direct_evaluation"
+    }
+  ],
+  "upstream_results_path": "evaluations/upstream/upstream_evaluation_results.json",
+  "version": "1.0.0"
+}

@@ -10,6 +10,9 @@ import json
 import re
 import sqlite3
 
+from .catalog_surface import catalog_source_set_id as read_catalog_source_set_id
+from .catalog_surface import catalog_source_record_ids as read_catalog_source_record_ids
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .eval_metrics import (
     average,
     contract_snapshot,
@@ -20,6 +23,8 @@ from .eval_metrics import (
     reciprocal_rank,
 )
 from .extraction_admission import matched_verified_extraction_contracts
+from .extract import _load_support_document_role_overrides
+from .extract import _resolve_support_document_role
 from .extract import _source_derived_dir
 
 
@@ -114,7 +119,13 @@ def build_retrieval_index(
     index_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_path or source_derived_dir / "chunks" / "chunks.jsonl"
-    catalog_sqlite_path = catalog_sqlite_path or output_dir / "catalog" / "review_sources.sqlite"
+    resolved_catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
+    catalog_sqlite_path = catalog_sqlite_path or resolved_catalog_dir / "review_sources.sqlite"
+    catalog_source_set_value = read_catalog_source_set_id(catalog_sqlite_path.parent)
+    catalog_source_record_ids = read_catalog_source_record_ids(catalog_sqlite_path.parent)
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_manifest_path = source_derived_dir / "diagnostics" / "extraction_manifest.jsonl"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
@@ -126,10 +137,17 @@ def build_retrieval_index(
 
     chunks = _read_jsonl(chunks_path) if chunks_path.exists() else []
     review_topics_by_source = _load_review_topics(catalog_sqlite_path)
+    support_document_roles_by_source = _load_catalog_support_document_roles(catalog_sqlite_path)
     indexed_chunks = []
     for chunk in chunks:
         source_topics = review_topics_by_source.get(chunk.get("source_record_id"), [])
-        indexed_chunks.append(_chunk_with_review_topics(chunk, source_topics))
+        indexed_chunks.append(
+            _chunk_with_catalog_context(
+                chunk,
+                source_topics,
+                support_document_roles_by_source=support_document_roles_by_source,
+            )
+        )
     extraction_validation = (
         _read_json(extraction_validation_path) if extraction_validation_path.exists() else None
     )
@@ -154,6 +172,8 @@ def build_retrieval_index(
         source_set_id=source_set_id,
         chunks_path=chunks_path,
         catalog_sqlite_path=catalog_sqlite_path,
+        catalog_source_set_id=catalog_source_set_value,
+        catalog_source_record_ids=catalog_source_record_ids,
         extraction_validation_path=extraction_validation_path,
         extraction_validation=extraction_validation,
         extraction_manifest_path=extraction_manifest_path,
@@ -196,7 +216,9 @@ def build_retrieval_index(
         "source_set_id": source_set_id,
         "created_at": _utc_now(),
         "chunks_path": str(chunks_path),
+        "catalog_dir": str(catalog_sqlite_path.parent),
         "catalog_sqlite_path": str(catalog_sqlite_path),
+        "catalog_source_set_id": catalog_source_set_value,
         "extraction_validation_path": str(extraction_validation_path),
         "extraction_manifest_path": str(extraction_manifest_path),
         "extraction_summary_path": str(extraction_summary_path),
@@ -935,9 +957,60 @@ def _load_review_topics(catalog_sqlite_path: Path) -> dict[str, list[str]]:
     return topics
 
 
-def _chunk_with_review_topics(chunk: dict, review_topics: list[str]) -> dict:
+def _load_catalog_support_document_roles(catalog_sqlite_path: Path) -> dict[str, str]:
+    if not catalog_sqlite_path.exists():
+        return {}
+    query = """
+        SELECT source_record_id, document_role, metadata_json
+        FROM sources
+        ORDER BY source_record_id
+    """
+    support_document_role_overrides = _load_support_document_role_overrides()
+    roles: dict[str, str] = {}
+    try:
+        with closing(sqlite3.connect(catalog_sqlite_path)) as connection:
+            connection.row_factory = sqlite3.Row
+            for row in connection.execute(query):
+                source_record_id = str(row["source_record_id"] or "").strip()
+                if not source_record_id:
+                    continue
+                metadata = {}
+                metadata_json = row["metadata_json"]
+                if isinstance(metadata_json, str) and metadata_json.strip():
+                    try:
+                        payload = json.loads(metadata_json)
+                    except json.JSONDecodeError:
+                        payload = {}
+                    if isinstance(payload, dict):
+                        metadata = payload
+                role = _resolve_support_document_role(
+                    {
+                        "source_record_id": source_record_id,
+                        "document_role": row["document_role"],
+                        "metadata": metadata,
+                    },
+                    support_document_role_overrides=support_document_role_overrides,
+                )
+                if role:
+                    roles[source_record_id] = role
+    except sqlite3.Error:
+        return {}
+    return roles
+
+
+def _chunk_with_catalog_context(
+    chunk: dict,
+    review_topics: list[str],
+    *,
+    support_document_roles_by_source: dict[str, str],
+) -> dict:
     merged = dict(chunk)
     merged["review_topics"] = sorted(set(str(topic) for topic in review_topics if str(topic)))
+    if not merged.get("support_document_role"):
+        merged["support_document_role"] = (
+            support_document_roles_by_source.get(str(merged.get("source_record_id") or ""))
+            or merged.get("document_role")
+        )
     return merged
 
 
@@ -947,6 +1020,8 @@ def _validation_report(
     source_set_id: str,
     chunks_path: Path,
     catalog_sqlite_path: Path,
+    catalog_source_set_id: str | None,
+    catalog_source_record_ids: set[str] | None,
     extraction_validation_path: Path,
     extraction_validation: dict | None,
     extraction_manifest_path: Path,
@@ -1006,6 +1081,13 @@ def _validation_report(
             "passed": catalog_sqlite_path.exists(),
             "details": {"path": str(catalog_sqlite_path)},
         },
+        _check_catalog_source_set_matches_requested_source_set(
+            requested_source_set_id=source_set_id,
+            catalog_sqlite_path=catalog_sqlite_path,
+            catalog_source_set_id=catalog_source_set_id,
+            catalog_source_record_ids=catalog_source_record_ids,
+            extraction_manifest_records=extraction_manifest_records,
+        ),
         _check_chunks_loaded(chunks),
         _check_source_set_ids_match(source_set_id, chunks),
         _check_chunk_ids_unique(chunks),
@@ -1028,6 +1110,61 @@ def _check_chunks_loaded(chunks: list[dict]) -> dict:
         "name": "chunks_loaded",
         "passed": bool(chunks),
         "details": {"chunk_count": len(chunks)},
+    }
+
+
+def _check_catalog_source_set_matches_requested_source_set(
+    *,
+    requested_source_set_id: str,
+    catalog_sqlite_path: Path,
+    catalog_source_set_id: str | None,
+    catalog_source_record_ids: set[str] | None,
+    extraction_manifest_records: list[dict],
+) -> dict:
+    manifest_path = catalog_sqlite_path.parent / "source_set_manifest.json"
+    selected_source_record_ids = {
+        str(record.get("source_record_id"))
+        for record in extraction_manifest_records
+        if record.get("source_record_id")
+    }
+    missing_source_record_ids = sorted(
+        selected_source_record_ids - (catalog_source_record_ids or set())
+    )
+    unexpected_source_record_ids = sorted(
+        (catalog_source_record_ids or set()) - selected_source_record_ids
+    )
+    source_record_sets_match = (
+        bool(selected_source_record_ids)
+        and catalog_source_record_ids is not None
+        and not missing_source_record_ids
+        and not unexpected_source_record_ids
+    )
+    exact_source_set_match = (
+        not catalog_source_set_id or catalog_source_set_id == requested_source_set_id
+    )
+    if exact_source_set_match:
+        match_mode = "exact_source_set_id"
+    elif source_record_sets_match:
+        match_mode = "selected_source_record_set"
+    else:
+        match_mode = "mismatch"
+    return {
+        "name": "catalog_source_set_matches_requested_source_set",
+        "passed": exact_source_set_match or source_record_sets_match,
+        "details": {
+            "path": str(catalog_sqlite_path),
+            "source_set_manifest_path": str(manifest_path),
+            "source_set_manifest_exists": manifest_path.exists(),
+            "requested_source_set_id": requested_source_set_id,
+            "catalog_source_set_id": catalog_source_set_id,
+            "match_mode": match_mode,
+            "selected_source_record_count": len(selected_source_record_ids),
+            "catalog_source_record_count": (
+                len(catalog_source_record_ids) if catalog_source_record_ids is not None else None
+            ),
+            "missing_source_record_ids": missing_source_record_ids[:50],
+            "unexpected_source_record_ids": unexpected_source_record_ids[:50],
+        },
     }
 
 

@@ -96,6 +96,22 @@ Latest closeout on 2026-05-13:
   `direct_eval_present`.
 - The next evaluation-strengthening boundary is
   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`.
+  That milestone remains active, but the structural blocker has now been closed on 2026-05-14.
+  Fresh ba8d source-set and review-scoped replays now auto-resolve the compatible archived current-
+  promotion catalog gate at
+  `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate/`, which carries
+  `source-set-66c807eca2441d8a`. The exact catalog `source_set_id` differs because catalog identity
+  includes workbook/config/override/git-commit lineage, but the archived gate's `sources` table
+  exactly matches the `190` selected source-record IDs in
+  `source_library/derived/source-set-ba8d0feae79501b8/diagnostics/extraction_manifest.jsonl`.
+  `retrieval-build` now passes again and emits a fresh SQLite index; source-set and review-scoped
+  `phase-eval` now fail only on the true ba8d retrieval direct-eval regression. The remaining live
+  blocker is a fresh ba8d `retrieval-eval` failure at `10/12` passing cases
+  (`scoping-public-comment`, `decision-notice-mitigation`) with threshold misses on
+  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
+- The broader operational blocker-recovery packet that now consumes this dirty lane plus the
+  manifest-owned full-canonical and expansion gates is
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
 
 ## Gold Coverage Expansion
 

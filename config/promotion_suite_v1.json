@@ -1113,6 +1113,11 @@
               "name": "phase_eval_reviewer_ready",
               "json_path": "reviewer_ready",
               "equals": true
+            },
+            {
+              "name": "phase_eval_declared_review_contract",
+              "json_path": "declared_review_contract",
+              "equals": false
             }
           ]
         }
@@ -1503,7 +1508,17 @@
             {
               "name": "phase_eval_passed_phase_count",
               "json_path": "passed_phase_count",
-              "equals": 15
+              "equals": 16
+            },
+            {
+              "name": "phase_eval_declared_review_contract",
+              "json_path": "declared_review_contract",
+              "equals": true
+            },
+            {
+              "name": "phase_eval_contract_backed_promotion_ready",
+              "json_path": "contract_backed_promotion_ready",
+              "equals": false
             }
           ]
         }
@@ -1716,6 +1731,32 @@
           "name": "core_reviewer_ready_phase_count",
           "json_path": "reviewer_ready_phase_count",
           "min": 19
+        },
+        {
+          "name": "phase_eval_contract_id",
+          "json_path": "phase_eval_contract_id",
+          "equals": "phase-eval-direct-eval-v1"
+        },
+        {
+          "name": "phase_eval_proxy_only_phase_count",
+          "json_path": "proxy_only_phase_count",
+          "equals": 0
+        },
+        {
+          "name": "phase_eval_missing_direct_eval_phase_count",
+          "json_path": "missing_direct_eval_phase_count",
+          "equals": 0
+        },
+        {
+          "name": "phase_eval_threshold_failed_phase_count",
+          "json_path": "threshold_failed_phase_count",
+          "equals": 0
+        },
+        {
+          "name": "phase_eval_contract_backed_promotion_ready",
+          "json_path": "contract_backed_promotion_ready",
+          "equals": true,
+          "failure_category": "unsupported_package_evidence"
         },
         {
           "name": "phase_eval_arbitration_summary_schema",
@@ -2380,8 +2421,8 @@
         "authority_reviewer_resolution_report_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_reviewer_resolution_report.json",
         "litigation_risk_summary_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/litigation_risk_summary.json",
         "phase_eval_reviewer_ready": false,
-        "phase_eval_passed_phase_count": 15,
-        "phase_eval_phase_count": 17,
+        "phase_eval_passed_phase_count": 16,
+        "phase_eval_phase_count": 18,
         "phase_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json",
         "forest_plan_scope_status": "custer_gallatin",
         "forest_plan_component_gate_required": true

@@ -2,7 +2,8 @@
 
 Date: 2026-05-13
 
-Status: Proposed
+Status: Active 2026-05-14 (Sequences 0A-0B plus retrieval-owner structural recovery are now
+implemented locally; live closeout is blocked only on ba8d retrieval direct eval)
 
 Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
 `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
@@ -14,6 +15,23 @@ contracts, the aggregate gold-coverage gate, and the tracked real-package review
 declared contract-owned reviews. If those prerequisite closeouts land equivalent artifacts under
 different names, Sequence 0 of this plan must refresh the routing before code changes begin rather
 than recreating the same ownership under new names.
+
+Gap-close context on 2026-05-13:
+
+- The direct-eval seam itself is now implemented in the worktree:
+  `config/phase_eval_direct_eval_v1.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  focused `evidence_graph.py` wiring,
+  promotion-suite counter checks,
+  architecture-contract updates,
+  and focused direct-eval tests all exist locally and pass their code-level gates.
+- The milestone is still not closable because the live current-promotion replay now proves two
+  prerequisite-owner blockers outside the seam:
+  `source-set-ba8d0feae79501b8` retrieval direct eval fails after a fresh replay, and the tracked
+  ECID replay context still points `catalog_dir` at a non-catalog surface.
+- This refresh narrows the remaining work so future sessions repair replay-context and retrieval
+  owner truth surfaces explicitly, instead of broadening `phase-eval`, weakening direct-eval
+  thresholds, or inventing review-local replacement truth sources.
 
 ## Purpose
 
@@ -54,30 +72,51 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
 
 ## Current Evidence
 
-- `src/usfs_r1_ea_sources/evidence_graph.py` `run_phase_aligned_eval(...)` currently builds the
-  core `catalog_capture`, `extraction`, `retrieval`, `evidence_graph`, `claim_extraction`, and
-  `rule_claim_binding` phases mostly from existing lane `passed` and `reviewer_ready` fields.
-- The phase summary still resolves overall readiness through
-  `all(phase["passed"] for phase in phases)` and
-  `all(phase["reviewer_ready"] for phase in phases)`, so the governing summary does not yet
-  distinguish direct-eval-backed readiness from proxy-backed readiness.
-- `_phase(...)` currently emits only `phase_validation_failed` and `phase_not_reviewer_ready`
-  failure reasons, which is not enough to express `missing_required_direct_eval`,
-  `proxy_only_coverage`, `direct_eval_threshold_failed`, or `eval_summary_identity_mismatch`.
-- `config/phase_eval_direct_eval_v1.json` does not exist at the current baseline.
-- `docs/OUTPUT_SCHEMAS.md` documents the current `phase_eval_results.json` phase list and blockers,
-  but it does not yet define a direct-eval coverage contract for the critical subsystem phases.
-- `docs/EVALUATION_COVERAGE_REGISTER.md` currently has no explicit `phase_eval` row or equivalent
-  direct-eval coverage owner for this layer.
-- `config/promotion_suite_v1.json` currently treats the core `phase_eval` surface mostly as a
-  count-based readiness artifact. The main source-set check locks `passed_phase_count` and
-  `reviewer_ready_phase_count`, but it does not yet require `proxy_only_phase_count = 0`,
-  `missing_direct_eval_phase_count = 0`, or threshold-backed direct-eval status.
-- `phase-eval` already contains two useful patterns the repo can generalize:
-  it consumes `compliance_coverage_results.json` with source-set and rule-pack identity checks, and
-  it consumes `compliance_gold_eval_results.json` with source-set, rule-pack, and review-scope
-  checks. That proves the repo already has a precedent for explicit eval-summary consumption; the
-  gap is that this pattern is not yet generalized to the other critical subsystem phases.
+- Worktree implementation now exists for the core seam:
+  `config/phase_eval_direct_eval_v1.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  focused `src/usfs_r1_ea_sources/evidence_graph.py` wiring,
+  direct-eval-aware promotion checks in `config/promotion_suite_v1.json`,
+  architecture placement coverage in `docs/architecture_contract.toml`,
+  and focused contract/regression tests.
+- The code-level verification stack for that seam is green:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_compliance_review.py tests/test_applicability_eval.py tests/test_v1_ea_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py`
+  passed `147/147`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed,
+  `PYTHONPATH=src python -m compileall src` passed,
+  and `git diff --check` passed.
+- Live source-set replay on `source-set-ba8d0feae79501b8` now proves the seam fails closed rather
+  than proxy-aggregating:
+  `claim-eval` passes,
+  canonical base `rule-claim-eval` passes,
+  but `retrieval-eval` fails `2/12` cases and source-set `phase-eval` reports
+  `threshold_failed_phase_count=1` with `retrieval` marked `direct_eval_failed`.
+- The current-promotion `promotion-suite` replay now reports `current_promotion_ready=false`. The
+  failing current-promotion suite check is `phase_eval_threshold_failed_phase_count`, so the red
+  gate is now an explicit governed direct-eval failure rather than a hidden count-only drift.
+- Sequence 0A replay-context repair has now been refreshed again for the recovered current-promotion
+  catalog surface. The tracked replay context at
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json` now declares
+  `catalog_dir=source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`, and
+  the required catalog preflight files exist on that archived surface.
+- Review-scoped `phase-eval --review-id v1-cg-ecid-compliance-review` now resolves that archived
+  current-promotion catalog gate, so the stale replay-context red remains gone. The remaining live
+  review-scope blockers are the real ba8d retrieval direct-eval failures: `retrieval` remains
+  `direct_eval_failed` and `evaluation_coverage` still reports `threshold_failed_phase_count=1`.
+- The retrieval-owner structural prerequisites are now repaired outside this milestone. Fresh
+  `retrieval-build --source-set-id source-set-ba8d0feae79501b8` now passes and emits
+  `evidence_index.sqlite` again by auto-resolving the compatible archived catalog gate whose
+  `sources` table exactly matches the ba8d extraction manifest even though its catalog
+  `source_set_id` is `source-set-66c807eca2441d8a`.
+- Fresh `retrieval-eval` replay is no longer blocked structurally. It now reruns on ba8d and still
+  records the same real direct-eval regression at `2/12` failed cases
+  (`scoping-public-comment`, `decision-notice-mitigation`) plus threshold misses on
+  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
+- The canonical direct-eval owner for source-set `rule_claim_binding` remains the base downstream
+  lane under
+  `source_library/derived/<source_set_id>/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_link_eval_results.json`.
+  Review-generated rule-pack eval outputs can differ, but they are not a second source-set
+  direct-eval truth owner for this milestone.
 - The prerequisite milestone chain is already routed in docs:
   `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`,
   `docs/DOWNSTREAM_DIRECT_EVAL_STRENGTHENING_MILESTONE_PLAN.md`, and
@@ -174,9 +213,18 @@ Completion means all of the following are true:
   explicit artifact path resolution, scope identity checks, schema checks, and structured failure
   details. Extend that pattern to upstream and downstream direct-eval summaries instead of adding
   a different style of ad hoc boolean gate.
+- Keep canonical direct-eval owner paths stable. Source-set `retrieval`, `claim_extraction`, and
+  `rule_claim_binding` phases must continue to consume the canonical downstream contract result
+  paths governed by `config/downstream_direct_eval_v1.json`; do not repoint those source-set lanes
+  at review-local generated rule-pack eval outputs just because a review-scoped phase selected a
+  different summary artifact.
 - Keep ad hoc review usability intact. If a review is not one of the declared contract-owned
   real-package reviews, `phase-eval` may still run, but it must not report contract-backed
   promotion readiness for that review unless the required review-eval artifact exists and matches.
+- Keep replay-context ownership separate from direct-eval ownership. If
+  `config/replay_contexts/<review_id>.json` resolves `catalog_dir` to a stale or non-catalog
+  surface, repair that tracked replay context or its owning source artifact rather than adding
+  fallback heuristics inside `phase_eval_direct_eval.py`.
 - If prerequisite milestone closeouts leave only a human-readable register, add a focused
   machine-readable sidecar under `config/` or `source_library/derived/` and make it the authoritative
   input for `phase-eval`. Do not scrape `docs/EVALUATION_COVERAGE_REGISTER.md`.
@@ -256,7 +304,161 @@ Completion means all of the following are true:
   Future-Codex misuse scenario: a later session updates `phase-eval` but not promotion; the
   promotion-suite test must fail before commit.
 
+- Weak point forecast: a later session reuses a review-generated rule-pack eval output as the
+  source-set `rule_claim_binding` direct-eval owner, creating a second hidden truth surface and
+  coupling review-specific artifacts into the source-set contract.
+  Owner surface: `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `tests/test_compliance_review.py`
+  Prevention gate: source-set direct-eval path resolution must stay on the canonical downstream
+  base lane declared by `config/downstream_direct_eval_v1.json`, and the focused review test must
+  prove that a stale generated review-local eval file does not replace the canonical base result.
+  Fail threshold: review-scoped `phase-eval` changes which source-set direct-eval artifact counts
+  as the governed `rule_claim_binding` summary.
+  Controlled violation: write mismatched source-set IDs into a review-generated rule-claim eval
+  file while leaving the canonical base eval green; `phase-eval` must still read the canonical base
+  result.
+  Future-Codex misuse scenario: a later session tries to make a red review replay pass by pointing
+  source-set direct-eval at a generated review folder; the canonical-owner test must fail.
+
+- Weak point forecast: replay contexts drift to non-catalog directories and future sessions mistake
+  the resulting `catalog_capture` red for a `phase-eval` seam bug.
+  Owner surface: `config/replay_contexts/*.json`,
+  `src/usfs_r1_ea_sources/replay_context.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `docs/SESSION_HANDOFF.md`
+  Prevention gate: before review-scoped closeout, the tracked replay context must resolve to a
+  surface that actually contains `catalog_validation.json` and `review_sources.sqlite`, or the
+  milestone must stop and route a replay-context repair.
+  Fail threshold: review-scoped `phase-eval` runs against a replay context whose `catalog_dir` is
+  not a catalog surface and the milestone proceeds as if only direct-eval coverage were red.
+  Controlled violation: point `catalog_dir` at a derived source-set folder without catalog
+  artifacts; the replay-context preflight must fail before closeout.
+  Future-Codex misuse scenario: a later session adds more path fallback logic to hide replay drift;
+  the preflight and stop rule must block that shortcut.
+
+- Weak point forecast: closeout freshness replays accidentally rebuild downstream artifacts under
+  incompatible structural prerequisites, then future sessions treat those prerequisite failures as
+  `phase-eval` logic regressions.
+  Owner surface: `src/usfs_r1_ea_sources/retrieval.py`,
+  `config/verified_extraction_admission_contract.json`,
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+  Prevention gate: if a direct-eval summary is stale and must be rerun, first verify the owning
+  structural build for that source set is still valid; if the structural owner build is red, stop
+  and route the prerequisite repair instead of patching `phase-eval`.
+  Fail threshold: a milestone session mutates `phase-eval` because a structural owner build such as
+  `retrieval-build` failed on unrelated extraction-admission requirements.
+  Controlled violation: rerun `retrieval-build` for a source set whose verified-extraction
+  contract is currently unmet; the milestone must stop and route the structural repair.
+  Future-Codex misuse scenario: a later session interprets stale-or-red retrieval owner state as a
+  reason to loosen direct-eval gates; the preflight and stop rule must prevent that.
+
 ## Milestone Sequence
+
+### Sequence 0A - Replay-Context And Canonical Owner Rebaseline
+
+Outcome label: reduced
+
+Purpose: prevent the milestone from solving live replay drift or review-generated artifact drift by
+silently expanding the `phase-eval` seam.
+
+Status on 2026-05-14: implemented in the working tree. The tracked ECID replay context now resolves
+to `source_library/catalog`, and the required `catalog_validation.json` plus
+`review_sources.sqlite` preflight files are present on that surface.
+
+Implementation tasks:
+
+1. Verify that every declared contract-owned review replay context resolves to a true catalog
+   surface before review-scoped closeout:
+   `catalog_validation.json`,
+   `review_sources.sqlite`,
+   and the expected catalog manifest files must exist under the resolved `catalog_dir`.
+2. Lock the canonical owner map for source-set direct-eval phases:
+   - `retrieval` stays owned by the canonical retrieval lane
+   - `claim_extraction` stays owned by the canonical claim lane
+   - `rule_claim_binding` stays owned by the canonical base rule-claim lane declared by
+     `config/downstream_direct_eval_v1.json`
+   Review-generated rule-pack eval outputs may exist, but they are not second source-set direct-eval
+   owners.
+3. If a replay context is stale or a canonical owner path is ambiguous, update this plan, the
+   session handoff, and the remaining verification routing before further implementation or
+   closeout work continues.
+
+Acceptance signals:
+
+- Review-scoped `phase-eval` no longer relies on a stale replay-context catalog path.
+- The plan explicitly prevents review-local generated rule-pack eval files from becoming a second
+  source-set direct-eval truth source.
+- Future sessions can tell whether a red review replay is a replay-context issue, a structural
+  owner issue, or a direct-eval threshold issue.
+
+Required verification:
+
+```bash
+test -f "$(jq -r '.catalog_dir' config/replay_contexts/v1-cg-ecid-compliance-review.json)/catalog_validation.json"
+test -f "$(jq -r '.catalog_dir' config/replay_contexts/v1-cg-ecid-compliance-review.json)/review_sources.sqlite"
+PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_evidence_graph.py tests/test_architecture_contract.py
+git diff --check
+```
+
+Stop conditions:
+
+- The tracked replay context resolves to a non-catalog surface.
+- The only proposed way to keep the review replay green is to add fallback heuristics inside
+  `phase-eval` instead of repairing tracked replay ownership.
+- The source-set direct-eval owner can only be made green by switching from canonical downstream
+  lanes to review-generated eval outputs.
+
+### Sequence 0B - Live Structural Prerequisite Rebaseline
+
+Outcome label: reduced
+
+Purpose: separate a true `phase-eval` seam problem from stale or incompatible structural owner
+artifacts before live closeout is attempted again.
+
+Status on 2026-05-14: implemented in the working tree. Fresh ba8d replays now show replay-context
+drift is no longer part of the failure. The first red owner surface is `retrieval-build`, which
+still fails two structural checks before a fresh retrieval eval can run:
+`required_sources_are_admitted_by_verified_extraction_audit` for reused-existing
+`R1PLAN-flathead-nf-01`, and `chunks_have_retrieval_provenance` because ba8d chunks still omit
+`support_document_role`.
+
+Implementation tasks:
+
+1. Freshness-check the target source set's structural owners before rerunning downstream evals:
+   retrieval summary, retrieval validation, and any structural contracts that gate a fresh
+   `retrieval-build`.
+2. If the downstream direct-eval result is stale and a rerun is required, rerun the owning build
+   command first. If that structural owner build is red, stop this milestone and route the
+   prerequisite repair to the structural owner surface rather than mutating `phase-eval`.
+3. Record explicitly whether the remaining live red is:
+   - structural owner red,
+   - direct-eval threshold red, or
+   - replay-context red.
+   Do not collapse those categories into one generic `phase-eval` blocker.
+
+Acceptance signals:
+
+- Live closeout commands no longer confuse stale structural owners with `phase-eval` seam logic.
+- The handoff names the first red owner surface before the next session starts editing code.
+- The milestone preserves fail-closed direct-eval behavior instead of loosening thresholds to get
+  a green replay.
+
+Required verification:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id <active-source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id <active-source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id <active-source-set-id>
+git diff --check
+```
+
+Stop conditions:
+
+- `retrieval-build` is red on a structural prerequisite that is owned outside this milestone.
+- The downstream direct-eval threshold failure persists after a fresh structural replay and the only
+  remaining proposal is to lower thresholds or weaken promotion checks.
 
 ### Sequence 0 - Post-Real-Package Preflight And Direct-Eval Contract Baseline
 
@@ -536,7 +738,10 @@ Minimum closeout gates for the full milestone:
 PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_compliance_review.py tests/test_applicability_eval.py tests/test_v1_ea_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
+test -f "$(jq -r '.catalog_dir' config/replay_contexts/<declared-review-id>.json)/catalog_validation.json"
+test -f "$(jq -r '.catalog_dir' config/replay_contexts/<declared-review-id>.json)/review_sources.sqlite"
 PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources claim-eval --output-dir source_library --source-set-id <active-source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-eval --output-dir source_library --source-set-id <active-source-set-id>
@@ -548,6 +753,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_libra
 PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json
 git diff --check
 ```
+
+Interpretation rule for the closeout stack:
+
+- `retrieval-build` is a prerequisite-owner freshness gate, not a `phase-eval` seam gate. If it
+  fails on structural requirements owned outside this milestone, stop and route that red owner
+  explicitly instead of changing `phase-eval`.
+- Review-scoped closeout must fail early when the tracked replay-context `catalog_dir` is not a
+  real catalog surface. Do not let that stale replay-context red masquerade as a direct-eval seam
+  bug.
 
 If the prerequisite milestone closeouts publish machine-readable coverage summaries under different
 commands or artifact paths than this plan currently names, including the predecessor real-package
@@ -577,6 +791,10 @@ implementation continues.
   the only proposed fallback is heuristic inference inside `phase-eval`.
 - The implementation starts scraping Markdown for readiness truth instead of consuming explicit
   machine-readable artifacts.
+- The tracked replay context for a declared review resolves to a non-catalog surface and the only
+  proposed response is to add more fallback logic inside `phase-eval`.
+- A structural owner build such as `retrieval-build` is red on prerequisites owned outside this
+  milestone and the proposed response is to loosen direct-eval or promotion gates.
 - The only path to green is to reclassify critical subsystems as validation-only, lower producer
   thresholds, or remove contract-backed review requirements.
 - The implementation starts creating a second detached readiness or promotion path outside the

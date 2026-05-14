@@ -5,6 +5,196 @@ Date: 2026-05-13
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 1 Closeout
+
+This update closes the retrieval-owner structural recovery slice and activates Milestone `2` in
+`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
+
+- compatibility catalog truth:
+  there is no archived `source_set_manifest.json` in `source_library/runs/` with
+  `source_set_id=source-set-ba8d0feae79501b8`. Rebuilding the documented current-promotion base
+  batch as a catalog gate under
+  `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate/` produced
+  `source-set-66c807eca2441d8a`, not `ba8d`. That is expected because catalog `source_set_id`
+  includes workbook/config/overrides/git-commit lineage, not only selected source rows.
+- implemented owner repair:
+  `src/usfs_r1_ea_sources/catalog_surface.py` now resolves compatible archived catalog gates by
+  exact `sources`-table equivalence to the derived lane's selected extraction-manifest
+  source-record set, and `src/usfs_r1_ea_sources/retrieval.py` now accepts a rebuilt catalog when
+  that exact row-set proof holds while still failing closed on incompatible catalog universes.
+  `src/usfs_r1_ea_sources/evidence_graph.py` uses the same resolver for source-set `evidence-graph`
+  and `phase-eval` replays, `config/replay_contexts/v1-cg-ecid-compliance-review.json` now points
+  at the archived current-promotion catalog gate, and focused retrieval/evidence-graph/replay-
+  context tests cover both the compatible and incompatible paths.
+- live replay after the repair:
+  `retrieval-build --source-set-id source-set-ba8d0feae79501b8` now auto-resolves
+  `source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`,
+  records `catalog_source_set_id=source-set-66c807eca2441d8a`, and passes with a fresh
+  `evidence_index.sqlite`. Source-set and review-scoped `phase-eval` now land on the same catalog
+  surface and fail only on the ba8d retrieval direct-eval regression rather than on catalog drift,
+  verified-extraction gating, or missing provenance.
+- remaining blocker:
+  fresh `retrieval-eval --source-set-id source-set-ba8d0feae79501b8` still fails `2/12` cases
+  (`scoping-public-comment`, `decision-notice-mitigation`) with threshold misses on
+  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`.
+  This is now the true active blocker for Milestone `2`.
+- verification in this step:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_evidence_graph.py tests/test_extraction_accuracy.py tests/test_replay_context.py tests/test_architecture_contract.py -q` passed `41/41`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/catalog_surface.py src/usfs_r1_ea_sources/retrieval.py src/usfs_r1_ea_sources/evidence_graph.py tests/test_retrieval.py tests/test_evidence_graph.py tests/test_replay_context.py` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` passed with `validation_passed=true` and `catalog_dir=source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` failed `2/12`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8` failed only on retrieval direct-eval thresholds; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` now resolves the archived current-promotion catalog gate and fails only on the same retrieval direct-eval thresholds.
+- next step:
+  execute Milestone `2` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`: repair ba8d
+  retrieval ranking/coverage for `scoping-public-comment` and `decision-notice-mitigation`
+  without weakening the shipped eval contract.
+
+## System Operational Recovery Plan Added
+
+The repo now has a fresh standalone recovery packet at
+`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`.
+
+- routing truth:
+  this new plan consumes the current dirty `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`
+  slice plus the fresh Sequence `0A` / `0B` blocker classification instead of treating the remaining
+  work as phase-eval-only
+- operational contract:
+  the plan defines "system operational" as fresh non-strict plus strict `promotion-suite` green
+  replays with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, and
+  `expansion_ready=true`
+- blocker stack captured:
+  Milestone `0` replays the live blocker matrix, Milestone `1` repairs ba8d retrieval-owner
+  structural blockers, Milestone `2` closes the ba8d retrieval direct-eval regression, Milestone
+  `3` closes the dirty current-promotion `phase-eval` lane, Milestone `4` clears any remaining
+  full-canonical blockers, and Milestone `5` resolves South Plateau expansion plus any needed
+  real-package/gold-contract updates before final operational closeout
+- queued follow-ons preserved:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`, and
+  `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md` remain out of scope unless a fresh
+  replay proves one of them is a direct operational blocker
+- next step:
+  execute Milestone `0` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` and refresh the
+  fresh blocker matrix before any new code changes begin
+
+## Phase-Eval Direct-Eval Sequence 0A Replay-Context Repair
+
+This update resolves the stale ECID replay-context catalog ownership so the active phase-eval lane
+can resume from Sequence 0B without carrying a fake `catalog_capture` red.
+
+- repaired replay context:
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json` now points `catalog_dir` at
+  `source_library/catalog`, which is the canonical catalog surface and contains both
+  `catalog_validation.json` and `review_sources.sqlite`
+- focused regression guard:
+  `tests/test_replay_context.py` now locks the tracked ECID replay context to the canonical catalog
+  surface so future sessions cannot silently repoint it at a derived source-set folder
+- remaining live blocker after this repair:
+  the active lane is still red on the ba8d retrieval owner path, not on replay-context drift;
+  `retrieval-build` still fails the separate verified-extraction prerequisite and
+  `retrieval-eval` remains the live `2/12` direct-eval failure
+- verification in this step:
+  `test -f "$(jq -r '.catalog_dir' config/replay_contexts/v1-cg-ecid-compliance-review.json)/catalog_validation.json"` and
+  `test -f "$(jq -r '.catalog_dir' config/replay_contexts/v1-cg-ecid-compliance-review.json)/review_sources.sqlite"` now pass;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_compliance_review.py tests/test_evidence_graph.py tests/test_architecture_contract.py -q` passed `89/89` with `3` subtests; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  now resolves `catalog_dir` to `source_library/catalog` and fails only on the real retrieval and
+  evaluation-coverage direct-eval blockers
+- next step:
+  execute Sequence 0B in `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` to determine
+  whether the remaining ba8d retrieval red is a prerequisite-owner repair or a true retrieval
+  direct-eval regression
+
+## Phase-Eval Direct-Eval Sequence 0B Structural Rebaseline
+
+This update finishes the active milestone's Sequence `0B` classification work. The remaining red is
+not replay-context drift anymore; it is a retrieval-owner blocker plus a still-red retrieval direct
+eval artifact.
+
+- fresh structural owner replay:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --contract-path config/verified_extraction_admission_contract.json`
+  now proves ba8d still blocks `R1PLAN-flathead-nf-01` because its manifest record is
+  `reused_existing_extraction_not_admissible`
+- fresh retrieval owner replay:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8`
+  still fails before a usable index is emitted. The failed retrieval validation checks are
+  `required_sources_are_admitted_by_verified_extraction_audit` and
+  `chunks_have_retrieval_provenance`; the second failure currently hits all `18,822` ba8d chunks
+  because they omit `support_document_role`
+- direct-eval classification after the structural replay:
+  the stale replay-context red is gone, but fresh
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8`
+  cannot run because the failed retrieval build leaves no `evidence_index.sqlite`.
+  The existing ba8d retrieval eval artifact remains the live direct-eval red with `2/12` failed
+  cases (`scoping-public-comment`, `decision-notice-mitigation`) and threshold misses on
+  `false_positive_rate`, `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
+- source-set phase-eval replay:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8`
+  still fails on `retrieval`, `downstream_direct_evaluation`, and `evaluation_coverage`; the
+  aggregate remains `threshold_failed_phase_count=1`, but the first red owner surface is now
+  explicitly recorded as retrieval-owner, not replay-context
+- next step:
+  do not resume `phase-eval` edits yet. The next safe implementation slice is a dedicated
+  retrieval-owner repair covering ba8d verified-extraction admission for `R1PLAN-flathead-nf-01`
+  and the legacy-chunk `support_document_role` provenance gap, followed by a fresh ba8d
+  `retrieval-build`, `retrieval-eval`, and `phase-eval` replay before this milestone continues
+
+## Compliance Review Test Boundary Plan
+
+This planning-only update adds a fresh standalone hotspot follow-on for the P2 finding that
+`tests/test_compliance_review.py` has become the repo's hottest mixed-owner verification surface.
+
+- scope:
+  `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md`
+- routing truth:
+  the new plan does not reopen the production compliance owner splits. It starts only after
+  overlapping dirty work in `tests/test_compliance_review.py` is committed or explicitly parked,
+  and it refreshes the landed `phase-eval` owner path in Sequence 0 before moving tests.
+- planned outcome:
+  keep `tests/test_compliance_review.py` as a narrow core orchestration suite, move eval, coverage,
+  gold-eval, and compliance-derived `phase-eval` cases into dedicated suites, extract the synthetic
+  source-library builders into `tests/support`, and add a boundary gate so the catch-all suite
+  cannot regrow silently.
+- current evidence captured in the plan:
+  `tests/test_compliance_review.py` is currently `4937` lines and the fresh architecture probe
+  ranks it as the repo's top hotspot (`48` revisions, hotspot score `236976`), while
+  `src/usfs_r1_ea_sources/compliance_review.py` is only `424` lines and the other production
+  compliance owners are already separated.
+- affected dirty state:
+  this follow-on overlaps the currently dirty `tests/test_compliance_review.py` file and active
+  docs that still point at it, including `docs/SESSION_HANDOFF.md`; do not start implementation
+  until the overlap is either committed or explicitly parked and refreshed in Sequence 0.
+
+## Phase Eval Orchestration Boundary Plan
+
+This planning-only update adds a fresh standalone architecture follow-on for the P1 finding that
+`evidence_graph.py` currently owns `phase-eval` orchestration in addition to graph build and
+validation.
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- routing truth:
+  the new plan stacks after the current dirty
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` lane closes and is committed or is
+  explicitly parked and rebased in the plan's Sequence 0. It does not reopen that lane inside the
+  same milestone.
+- planned outcome:
+  move `run_phase_aligned_eval(...)` and its readiness helper tree into a dedicated canonical owner
+  (`src/usfs_r1_ea_sources/phase_eval.py`), tighten the architecture contract so the
+  `evidence_graph` layer becomes graph-only again, and split `phase-eval` tests away from
+  `tests/test_evidence_graph.py`
+- current evidence captured in the plan:
+  `src/usfs_r1_ea_sources/evidence_graph.py` is currently `3535` lines, the worktree already has a
+  dirty `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`, and the architecture probe plus
+  architecture review both point to the same collapsed owner boundary
+- affected dirty state:
+  this follow-on overlaps currently dirty files in `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `docs/architecture_contract.toml`, `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`, and
+  `docs/SESSION_HANDOFF.md`; do not start implementation until that overlap is either committed or
+  explicitly parked and refreshed in Sequence 0
+
 ## Real-Package Review Coverage Closeout
 
 This closeout implements the first stacked follow-on after gold coverage and narrows the lane to
@@ -4193,6 +4383,63 @@ Verification in this planning refresh:
 
 - `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`: passed
 - `git diff --check`: passed
+
+## Phase-Eval Direct-Eval Gating Gap-Close Refresh
+
+The phase-eval direct-eval milestone now has an explicit architecture-safe remainder route. The
+direct-eval seam itself is implemented locally, but closeout is still blocked on live prerequisite
+owners.
+
+- implemented seam in worktree:
+  `config/phase_eval_direct_eval_v1.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  focused `src/usfs_r1_ea_sources/evidence_graph.py`,
+  updated `config/promotion_suite_v1.json`,
+  `docs/architecture_contract.toml`,
+  and focused tests under
+  `tests/test_phase_eval_direct_eval_contracts.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_claim_extraction.py`,
+  and `tests/test_promotion_suite.py`
+- code-level verification now passes:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_compliance_review.py tests/test_applicability_eval.py tests/test_v1_ea_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py` `147/147`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+- live blocker 1:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-ba8d0feae79501b8`
+  now fails `validation_passed` and `reviewer_ready` because the refreshed retrieval summary
+  carries the separate verified-extraction prerequisite
+  `flathead-forest-plan-direct-extraction` with
+  `verified_extraction_admitted_source_count=0` and
+  `verified_extraction_required_source_count=1`
+- live blocker 2:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8`
+  fails `2/12` cases (`scoping-public-comment`, `decision-notice-mitigation`), so
+  source-set `phase-eval` now fails closed with `threshold_failed_phase_count=1` and
+  `retrieval` marked `direct_eval_failed`
+- live blocker 3:
+  `config/replay_contexts/v1-cg-ecid-compliance-review.json` currently sets
+  `catalog_dir=source_library/derived/source-set-ba8d0feae79501b8`, and that path is not a real
+  catalog surface. Review-scoped `phase-eval --review-id v1-cg-ecid-compliance-review` therefore
+  mixes the real retrieval red with a stale replay-context `catalog_capture` red
+- promotion consequence:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  now reports `current_promotion_ready=false`; the failing current-promotion suite check is
+  `phase_eval_threshold_failed_phase_count`
+- architecture guard preserved:
+  source-set `rule_claim_binding` direct eval remains owned by the canonical base lane under
+  `source_library/derived/<source_set_id>/rule_claim_links/nepa-ea-v0/0.4.0/`.
+  Do not repoint it at review-generated rule-pack eval outputs just because a review-scoped phase
+  selected a different rule-claim summary artifact
+
+Next step if this lane is resumed:
+
+1. Execute the new Sequence 0A and Sequence 0B in
+   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` before further phase-eval edits:
+   repair the tracked ECID replay-context catalog ownership, then determine whether ba8d retrieval
+   red is a prerequisite-owner repair or a true retrieval direct-eval regression.
 
 ## Cross-Forest Profile Eval Coverage Plan Added
 
