@@ -115,9 +115,22 @@ Latest closeout on 2026-05-13:
   `retrieval-eval` now passes `12/12` with `false_positive_rate=0.0`,
   `missing_required_source_rate=0.0`, `recall_at_k=1.0`, `mrr=1.0`, and `ndcg_at_k=0.986357`, and
   source-set `phase-eval` now passes `11/11` with `threshold_failed_phase_count=0`.
+- Fresh review-scoped current-promotion replay on 2026-05-14 is also green:
+  `phase-eval --review-id v1-cg-ecid-compliance-review` now passes `23/23` with
+  `contract_backed_promotion_ready=true`, `threshold_failed_phase_count=0`, and
+  `review_direct_eval_status=direct_eval_present`.
+- The active remaining current-promotion blocker is now narrower than "phase-eval still red."
+  Fresh non-strict and strict `promotion-suite` replays both report `current_promotion_ready=false`
+  because `phase_eval_core` still consumes the ad hoc source-set artifact at
+  `source_library/derived/source-set-ba8d0feae79501b8/evidence_graph/phase_eval_results.json` and
+  expects review-contract-backed promotion fields that are absent there:
+  `core_passed_phase_count=11<19`, `core_reviewer_ready_phase_count=11<19`,
+  `phase_eval_contract_backed_promotion_ready=false`,
+  `phase_eval_arbitration_summary_schema=null`, and
+  `phase_eval_arbitration_decision_count=null`.
 - The broader operational blocker-recovery packet that now owns the remaining work is
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Its active next step is Milestone `3`:
-  current-promotion review-scoped `phase-eval` and `promotion-suite` closeout.
+  current-promotion promotion-suite alignment against the correct phase-eval truth surface.
 
 ## Gold Coverage Expansion
 

@@ -92,11 +92,12 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   fresh ba8d `retrieval-eval` passes `12/12` with all shipped thresholds met, and source-set
   `phase-eval` now passes `11/11` with `threshold_failed_phase_count=0` and `retrieval` marked
   `direct_eval_present`.
-- The remaining current-promotion closeout is no longer a direct-eval seam gap. The next work is
-  the separate operational replay packet in
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3:
-  rerun review-scoped `phase-eval`, refresh `promotion-suite`, and update the durable docs/handoff
-  for the current-promotion lane.
+- The remaining current-promotion closeout is no longer a direct-eval seam gap. Fresh
+  `phase-eval --review-id v1-cg-ecid-compliance-review` now passes `23/23` with
+  `contract_backed_promotion_ready=true`. The next work is the separate operational replay packet
+  in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3:
+  align `promotion-suite` with the correct current-promotion phase-eval truth surface and update
+  the durable docs/handoff for that lane.
 - Sequence 0A replay-context repair has now been refreshed again for the recovered current-promotion
   catalog surface. The tracked replay context at
   `config/replay_contexts/v1-cg-ecid-compliance-review.json` now declares

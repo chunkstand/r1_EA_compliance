@@ -3,8 +3,8 @@
 Date: 2026-05-14
 
 Status: Active 2026-05-14 (Milestones 0-2 are now resolved and committed locally; the active
-remaining blocker is Milestone 3 current-promotion phase-eval and promotion closeout on the
-compatible archived current-promotion catalog surface)
+remaining blocker is Milestone 3 current-promotion promotion-suite closeout on the compatible
+archived current-promotion catalog surface)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
 `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as if that lane were still a self-contained
@@ -99,11 +99,27 @@ full-canonical, or South Plateau owner issue.
   `missing_required_source_rate=0.0`, `recall_at_k=1.0`, `mrr=1.0`, and `ndcg_at_k=0.986357`;
   fresh ba8d source-set `phase-eval` now passes `11/11` with `retrieval` marked
   `direct_eval_present`.
+- Fresh review-scoped current-promotion replay on 2026-05-14 proves the next blocker is narrower
+  than "phase-eval still red":
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  now passes `23/23` with `contract_backed_promotion_ready=true`,
+  `threshold_failed_phase_count=0`, and `review_direct_eval_status=direct_eval_present`.
+- Fresh non-strict and strict `promotion-suite` replays on 2026-05-14 are still red for current
+  promotion, but not because review-scoped current-promotion evidence is missing anymore. Both now
+  report `current_promotion_ready=false` because `phase_eval_core` still reads the ad hoc source-
+  set artifact at
+  `source_library/derived/source-set-ba8d0feae79501b8/evidence_graph/phase_eval_results.json` and
+  expects review-contract-backed promotion fields that are absent there:
+  `core_passed_phase_count=11<19`,
+  `core_reviewer_ready_phase_count=11<19`,
+  `phase_eval_contract_backed_promotion_ready=false`,
+  `phase_eval_arbitration_summary_schema=null`, and
+  `phase_eval_arbitration_decision_count=null`.
 - `docs/CURRENT_SYSTEM_STATE.md` now records the ba8d retrieval structural blockers explicitly and
   routes the active operational recovery through this broader
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` packet while preserving
   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the
-  remaining current-promotion phase-eval and promotion closeout work.
+  remaining current-promotion promotion-suite closeout work.
 - `config/promotion_suite_v1.json` remains the operational truth owner and still encodes three
   separate surfaces:
   - current promotion on `source-set-ba8d0feae79501b8`
@@ -159,7 +175,8 @@ but uncommitted slice is only ready-to-close.
 - the committed `phase-eval` direct-eval lane plus the remaining current-promotion recovery work
 - ba8d extraction-admission, retrieval-build, retrieval provenance, and retrieval direct-eval
   blockers
-- source-set and review-scoped `phase-eval` replays required to close current promotion
+- source-set and review-scoped `phase-eval` promotion-surface alignment required to close current
+  promotion
 - promotion-suite manifest-owned current-promotion, full-canonical, and expansion blocker recovery
 - South Plateau reviewer-ready conversion if expansion is still the only remaining red lane on
   fresh replay
@@ -589,29 +606,40 @@ Closeout note on 2026-05-14:
 - Fresh live verification on `source-set-ba8d0feae79501b8` passed:
   `retrieval-build`, `retrieval-eval` (`12/12`), and source-set `phase-eval` (`11/11` with
   `threshold_failed_phase_count=0`).
-- The next active milestone is Milestone `3`: rerun review-scoped current-promotion
-  `phase-eval`, refresh `promotion-suite`, and close the remaining current-promotion docs/routing
-  packet.
+- The next active milestone is Milestone `3`: preserve the now-green review-scoped
+  current-promotion `phase-eval`, align `promotion-suite` with the correct current-promotion
+  phase-eval truth surface, and close the remaining docs/routing packet.
 
 ### Milestone 3 - Current-Promotion Phase-Eval And Promotion Closeout
 
 Outcome label: resolved
 
-Purpose: finish the current-promotion `phase-eval` lane and restore fresh current-promotion truth.
+Purpose: finish current-promotion promotion-suite closeout now that the review-scoped current-
+promotion `phase-eval` contract is already green.
 
 Implementation tasks:
 
-1. Rerun source-set and review-scoped `phase-eval` for:
-   - `source-set-ba8d0feae79501b8`
-   - `v1-cg-ecid-compliance-review`
-2. Rerun non-strict `promotion-suite` and clear any remaining current-promotion blockers.
-3. Update the active `phase-eval` milestone doc, current-state docs, coverage register, handoff,
+1. Preserve the now-green review-scoped current-promotion truth:
+   - `phase-eval --review-id v1-cg-ecid-compliance-review` must stay at `23/23` with
+     `contract_backed_promotion_ready=true`.
+2. Repair current-promotion `promotion-suite` alignment so `phase_eval_core` no longer treats the
+   ad hoc source-set `phase_eval_results.json` as if it were the review-contract-backed promotion
+   artifact. Clear the live blocker checks:
+   - `core_passed_phase_count`
+   - `core_reviewer_ready_phase_count`
+   - `phase_eval_contract_backed_promotion_ready`
+   - `phase_eval_arbitration_summary_schema`
+   - `phase_eval_arbitration_decision_count`
+3. Rerun non-strict `promotion-suite` and confirm current promotion is green without changing the
+   full-canonical or expansion failure stories.
+4. Update the active `phase-eval` milestone doc, current-state docs, coverage register, handoff,
    and any touched schema/readme docs so the lane can be committed atomically.
 
 Acceptance signals:
 
-- Current-promotion `phase-eval` no longer reports `threshold_failed_phase_count`.
 - Review-scoped `phase-eval` stays contract-backed and reviewer-ready for ECID.
+- Current-promotion `promotion-suite` no longer reports `phase_eval_core` failure categories
+  `stale_artifact`, `unsupported_package_evidence`, or `applicability_miss`.
 - Non-strict `promotion-suite` reports `current_promotion_ready=true`.
 - The remaining current-promotion recovery slice is ready for its own milestone commit.
 

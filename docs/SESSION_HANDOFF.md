@@ -5,6 +5,40 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 2 Alignment Pass
+
+This alignment update supersedes the earlier top recovery note where it still said Milestone `3`
+begins by rerunning review-scoped `phase-eval`.
+
+- live current-promotion review truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  now passes `23/23` with `contract_backed_promotion_ready=true`,
+  `threshold_failed_phase_count=0`, and `review_direct_eval_status=direct_eval_present`.
+- live current-promotion blocker truth:
+  non-strict and strict `promotion-suite` still report `current_promotion_ready=false`, but the red
+  is now narrower than "phase-eval still failing." The failing suite surface is
+  `phase_eval_core` at
+  `source_library/derived/source-set-ba8d0feae79501b8/evidence_graph/phase_eval_results.json`,
+  where promotion still expects review-contract-backed fields from the ad hoc source-set artifact:
+  `core_passed_phase_count=11<19`, `core_reviewer_ready_phase_count=11<19`,
+  `phase_eval_contract_backed_promotion_ready=false`,
+  `phase_eval_arbitration_summary_schema=null`, and
+  `phase_eval_arbitration_decision_count=null`.
+- routing truth:
+  the active next step is still Milestone `3` in
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`, but its real implementation target is now
+  current-promotion promotion-suite alignment against the correct phase-eval truth surface, not
+  another review-scoped `phase-eval` replay.
+- broader operational truth:
+  non-strict `promotion-suite` currently fails with
+  `failure_category_counts={"applicability_miss":1,"stale_artifact":1,"unsupported_package_evidence":1}`,
+  `full_canonical_corpus_ready=false` with `graph_region1_profile_gap`, and
+  `expansion_ready=false` with South Plateau `forest_plan_reviewer_not_ready`.
+- verification in this alignment pass:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` passed `23/23`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json` failed with the `phase_eval_core` blocker set above; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --strict-expansion` failed with the same current-promotion blocker set plus the known South Plateau expansion blockers.
+
 ## System Operational Recovery Milestone 2 Closeout
 
 This update supersedes the earlier recovery-routing sections below where they still say the live
