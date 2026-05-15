@@ -103,10 +103,16 @@ Current full-corpus promotion boundary:
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
   `2,889` nodes, `6,212` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
   `region1_forest_plan_blocked_profile_count=0`.
-- The non-strict post-V1 promotion suite now reports `current_promotion_ready=true`,
-  `full_canonical_corpus_ready=true`, `promotion_ready=true`, `expansion_ready=false`, and
-  `full_canonical_failure_category_counts={}`. Remaining work is no longer active full-canonical
-  parser recovery; it is the separate post-V1 expansion lane.
+- The current-promotion promotion-suite lane is now repaired on `2026-05-14`:
+  `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
+  `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and fresh non-strict
+  `promotion-suite` replay reports `current_promotion_ready=true` and `promotion_ready=true`.
+- The same fresh non-strict replay still reports `full_canonical_corpus_ready=false`,
+  `expansion_ready=false`, and
+  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`.
+- The active remaining operational blocker is now the full-canonical NEPA 3D graph/profile lane on
+  `source-set-5e65d845ce77e1a0`; the later strict-expansion blocker remains South Plateau
+  `forest_plan_reviewer_not_ready`.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the

@@ -221,6 +221,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     results = {result["id"]: result for result in review_case["results"]}
 
     phase = suite_results["phase_eval_core"]
+    assert phase["path"] == "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json"
     phase_checks = {check["name"]: check for check in phase["checks"]}
     assert phase_checks["core_passed_phase_count"]["min"] == 19
     assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 19

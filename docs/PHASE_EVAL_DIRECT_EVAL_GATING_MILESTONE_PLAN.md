@@ -3,8 +3,9 @@
 Date: 2026-05-14
 
 Status: Resolved 2026-05-14 (the direct-eval seam is committed, the live ba8d retrieval direct-
-eval blocker is recovered, and any remaining current-promotion replay closeout is routed through
-`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3)
+eval blocker is recovered, current-promotion promotion-suite alignment is also closed, and any
+remaining operational replay work is now routed through
+`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4)
 
 Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
 `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
@@ -31,9 +32,9 @@ Gap-close context on 2026-05-14:
   and source-set `phase-eval` now reports `retrieval` as `direct_eval_present` rather than
   `direct_eval_failed`.
 - This plan is now a consumed input lane. Future sessions should preserve the repaired replay-
-  context and retrieval-owner truth surfaces and continue from
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3 rather than reopening this seam
-  for current-promotion promotion closeout.
+  context, retrieval-owner, and current-promotion promotion truth surfaces and continue from
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4 rather than reopening this seam
+  or the now-closed current-promotion promotion closeout.
 
 ## Purpose
 
@@ -92,21 +93,21 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   fresh ba8d `retrieval-eval` passes `12/12` with all shipped thresholds met, and source-set
   `phase-eval` now passes `11/11` with `threshold_failed_phase_count=0` and `retrieval` marked
   `direct_eval_present`.
-- The remaining current-promotion closeout is no longer a direct-eval seam gap. Fresh
-  `phase-eval --review-id v1-cg-ecid-compliance-review` now passes `23/23` with
-  `contract_backed_promotion_ready=true`. The next work is the separate operational replay packet
-  in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 3:
-  align `promotion-suite` with the correct current-promotion phase-eval truth surface and update
-  the durable docs/handoff for that lane.
+- The remaining current-promotion closeout is now also resolved. Fresh
+  `phase-eval --review-id v1-cg-ecid-compliance-review` passes `23/23` with
+  `contract_backed_promotion_ready=true`, `config/promotion_suite_v1.json` now points
+  `phase_eval_core` at that review-owned artifact, and fresh non-strict `promotion-suite` now
+  reports `current_promotion_ready=true`. The next work is the separate operational replay packet
+  in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4: clear the remaining full-
+  canonical `graph_region1_profile_gap`.
 - Sequence 0A replay-context repair has now been refreshed again for the recovered current-promotion
   catalog surface. The tracked replay context at
   `config/replay_contexts/v1-cg-ecid-compliance-review.json` now declares
   `catalog_dir=source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate`, and
   the required catalog preflight files exist on that archived surface.
 - Review-scoped `phase-eval --review-id v1-cg-ecid-compliance-review` now resolves that archived
-  current-promotion catalog gate, so the stale replay-context red remains gone. The remaining live
-  review-scope blockers are the real ba8d retrieval direct-eval failures: `retrieval` remains
-  `direct_eval_failed` and `evaluation_coverage` still reports `threshold_failed_phase_count=1`.
+  current-promotion catalog gate, so the stale replay-context red remains gone and the review-
+  scoped lane stays green with `review_direct_eval_status=direct_eval_present`.
 - The retrieval-owner structural prerequisites are now repaired outside this milestone. Fresh
   `retrieval-build --source-set-id source-set-ba8d0feae79501b8` now passes and emits
   `evidence_index.sqlite` again by auto-resolving the compatible archived catalog gate whose

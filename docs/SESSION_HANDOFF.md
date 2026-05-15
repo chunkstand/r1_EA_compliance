@@ -5,6 +5,44 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 3 Closeout
+
+This update supersedes the earlier top recovery notes where they still said current promotion was
+blocked inside `promotion-suite`.
+
+- committed current-promotion routing truth:
+  `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
+  `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json` instead of the ad hoc ba8d
+  source-set artifact, and `tests/test_promotion_suite.py` now fails closed if that manifest path
+  drifts.
+- live current-promotion replay truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  stays green at `23/23` with `contract_backed_promotion_ready=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  now passes with `current_promotion_ready=true`, `promotion_ready=true`,
+  `full_canonical_corpus_ready=false`, `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`,
+  and `expansion_ready=false`.
+- live remaining blocker truth:
+  the only required non-strict suite failure is now
+  `full_canonical_nepa_3d_source_set_graph_summary` at
+  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
+  where `region1_forest_plan_blocked_profile_count=0` misses the current promotion-suite
+  expectation `>=1` and yields `graph_region1_profile_gap`.
+- strict-expansion truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --strict-expansion`
+  fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
+- output-path truth:
+  default `promotion-suite` writes both non-strict and strict-expansion replays under
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/` because the output
+  directory keys off manifest id, not the `--strict-expansion` flag. The older
+  `.../post-v1-region1-ea-promotion-suite-strict-expansion/` folder is historical only unless a
+  future replay passes `--results-dir` explicitly.
+- routing truth:
+  Milestones `0-3` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` are now resolved. The
+  active next step is Milestone `4`: full-canonical NEPA 3D graph/profile alignment on the active
+  `5e65...` source set, followed later by Milestone `5` South Plateau strict expansion.
+
 ## System Operational Recovery Milestone 2 Alignment Pass
 
 This alignment update supersedes the earlier top recovery note where it still said Milestone `3`

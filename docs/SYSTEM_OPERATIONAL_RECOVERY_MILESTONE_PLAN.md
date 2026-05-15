@@ -2,9 +2,9 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-14 (Milestones 0-2 are now resolved and committed locally; the active
-remaining blocker is Milestone 3 current-promotion promotion-suite closeout on the compatible
-archived current-promotion catalog surface)
+Status: Active 2026-05-14 (Milestones 0-3 are now resolved and committed locally; the active
+remaining blocker is Milestone 4 full-canonical promotion repair on
+`full_canonical_nepa_3d_source_set_graph_summary` for `source-set-5e65d845ce77e1a0`)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
 `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as if that lane were still a self-contained
@@ -104,22 +104,28 @@ full-canonical, or South Plateau owner issue.
   `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
   now passes `23/23` with `contract_backed_promotion_ready=true`,
   `threshold_failed_phase_count=0`, and `review_direct_eval_status=direct_eval_present`.
-- Fresh non-strict and strict `promotion-suite` replays on 2026-05-14 are still red for current
-  promotion, but not because review-scoped current-promotion evidence is missing anymore. Both now
-  report `current_promotion_ready=false` because `phase_eval_core` still reads the ad hoc source-
-  set artifact at
-  `source_library/derived/source-set-ba8d0feae79501b8/evidence_graph/phase_eval_results.json` and
-  expects review-contract-backed promotion fields that are absent there:
-  `core_passed_phase_count=11<19`,
-  `core_reviewer_ready_phase_count=11<19`,
-  `phase_eval_contract_backed_promotion_ready=false`,
-  `phase_eval_arbitration_summary_schema=null`, and
-  `phase_eval_arbitration_decision_count=null`.
-- `docs/CURRENT_SYSTEM_STATE.md` now records the ba8d retrieval structural blockers explicitly and
-  routes the active operational recovery through this broader
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` packet while preserving
-  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the
-  remaining current-promotion promotion-suite closeout work.
+- Milestone `3` current-promotion promotion-suite alignment is now resolved in this worktree:
+  `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
+  `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
+  `tests/test_promotion_suite.py` now fails closed if that manifest path drifts back to the ad hoc
+  ba8d source-set artifact.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
+  `expansion_ready=false`.
+- The only required non-strict suite failure is now
+  `full_canonical_nepa_3d_source_set_graph_summary` at
+  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
+  where `region1_forest_plan_blocked_profile_count=0` currently misses the manifest expectation
+  `>=1` and yields `graph_region1_profile_gap`.
+- Fresh strict `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion`
+  fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
+- `docs/CURRENT_SYSTEM_STATE.md` now records current-promotion promotion as green and routes the
+  active operational recovery through Milestone `4` full-canonical repair while preserving
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the now-
+  resolved direct-eval and current-promotion recovery work.
 - `config/promotion_suite_v1.json` remains the operational truth owner and still encodes three
   separate surfaces:
   - current promotion on `source-set-ba8d0feae79501b8`
@@ -606,9 +612,9 @@ Closeout note on 2026-05-14:
 - Fresh live verification on `source-set-ba8d0feae79501b8` passed:
   `retrieval-build`, `retrieval-eval` (`12/12`), and source-set `phase-eval` (`11/11` with
   `threshold_failed_phase_count=0`).
-- The next active milestone is Milestone `3`: preserve the now-green review-scoped
-  current-promotion `phase-eval`, align `promotion-suite` with the correct current-promotion
-  phase-eval truth surface, and close the remaining docs/routing packet.
+- Milestone `3` is now resolved in this packet. The next active milestone is Milestone `4`:
+  clear the remaining full-canonical `graph_region1_profile_gap` without regressing the now-green
+  current-promotion lane.
 
 ### Milestone 3 - Current-Promotion Phase-Eval And Promotion Closeout
 
@@ -616,6 +622,16 @@ Outcome label: resolved
 
 Purpose: finish current-promotion promotion-suite closeout now that the review-scoped current-
 promotion `phase-eval` contract is already green.
+
+Closeout evidence on `2026-05-14`:
+
+- `config/promotion_suite_v1.json` now points `phase_eval_core` at
+  `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`.
+- `tests/test_promotion_suite.py` now locks that review-owned path.
+- Fresh non-strict `promotion-suite` now reports `current_promotion_ready=true` and
+  `promotion_ready=true`.
+- Fresh strict `promotion-suite --strict-expansion` keeps current promotion green and fails only on
+  the separate South Plateau expansion lane.
 
 Implementation tasks:
 
@@ -680,17 +696,20 @@ Stop conditions:
 
 Outcome label: resolved
 
-Purpose: close the full-canonical operational lane or capture fresh proof that it is already green.
+Purpose: close the remaining full-canonical operational lane now that Milestone `3` is green.
 
 Implementation tasks:
 
-1. Use the fresh promotion-suite replay to confirm whether `full_canonical_corpus_ready` is already
-   green.
-2. If it is still red, repair the named full-canonical owner surfaces only:
+1. Start from the fresh non-strict `promotion-suite` replay on `2026-05-14`: the only required
+   non-strict suite failure is `full_canonical_nepa_3d_source_set_graph_summary` at
+   `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
+   where `region1_forest_plan_blocked_profile_count=0` misses the current manifest expectation
+   `>=1` and yields `graph_region1_profile_gap`.
+2. Repair the named full-canonical owner surfaces only:
    - `forest-plan-components-build`
    - `nepa-knowledge-graph-export`
-   - readiness/config truth that feeds `graph_region1_profile_gap` or any other fresh full-canonical
-     blocker
+   - readiness/config truth that feeds `graph_region1_profile_gap` or proves that this remaining
+     manifest-owned check is stale and should be updated without weakening the operational contract
 3. Rerun full-canonical owner commands and promotion-suite until the full-canonical lane is green.
 
 Acceptance signals:

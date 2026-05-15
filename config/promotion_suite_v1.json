@@ -1712,8 +1712,8 @@
     },
     {
       "id": "phase_eval_core",
-      "label": "Core phase eval readiness",
-      "path": "derived/{source_set_id}/evidence_graph/phase_eval_results.json",
+      "label": "Current-promotion review phase eval readiness",
+      "path": "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",
       "required_for_current_promotion": true,
       "failure_category": "stale_artifact",
       "checks": [

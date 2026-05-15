@@ -119,18 +119,26 @@ Latest closeout on 2026-05-13:
   `phase-eval --review-id v1-cg-ecid-compliance-review` now passes `23/23` with
   `contract_backed_promotion_ready=true`, `threshold_failed_phase_count=0`, and
   `review_direct_eval_status=direct_eval_present`.
-- The active remaining current-promotion blocker is now narrower than "phase-eval still red."
-  Fresh non-strict and strict `promotion-suite` replays both report `current_promotion_ready=false`
-  because `phase_eval_core` still consumes the ad hoc source-set artifact at
-  `source_library/derived/source-set-ba8d0feae79501b8/evidence_graph/phase_eval_results.json` and
-  expects review-contract-backed promotion fields that are absent there:
-  `core_passed_phase_count=11<19`, `core_reviewer_ready_phase_count=11<19`,
-  `phase_eval_contract_backed_promotion_ready=false`,
-  `phase_eval_arbitration_summary_schema=null`, and
-  `phase_eval_arbitration_decision_count=null`.
+- Current-promotion promotion-suite alignment is now repaired on `2026-05-14`:
+  `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
+  `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
+  `tests/test_promotion_suite.py` now fails closed if the committed manifest drifts back to the ad
+  hoc source-set artifact.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
+  `expansion_ready=false`.
+- Fresh strict `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion` now
+  fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
 - The broader operational blocker-recovery packet that now owns the remaining work is
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Its active next step is Milestone `3`:
-  current-promotion promotion-suite alignment against the correct phase-eval truth surface.
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Milestone `3` is resolved; the active next
+  step is Milestone `4`: clear
+  `full_canonical_nepa_3d_source_set_graph_summary` at
+  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
+  where `region1_forest_plan_blocked_profile_count=0` currently misses the promotion-suite
+  expectation `>=1` and yields `graph_region1_profile_gap`.
 
 ## Gold Coverage Expansion
 
