@@ -938,6 +938,24 @@ The command writes `source_library/evaluations/upstream/upstream_evaluation_resu
 catalog, and extraction adversarial fixtures without network access, requires all `11` named
 coverage categories across `22` total cases, and reports exact failed case IDs when red.
 
+Run the aggregate Region 1 cross-forest profile coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval \
+  --output-dir source_library \
+  --manifest config/region1_forest_plan_profile_eval_coverage_v1.json
+```
+
+The command writes
+`source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` and
+`source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md`. It reads the
+tracked readiness roster from `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the
+runtime profile roster from `config/forest_plan_profiles.json`, binds the aggregate gate to active
+source set `source-set-5e65d845ce77e1a0`, and fails closed until every validated Region 1 profile
+is `covered`. The current live replay is intentionally red at `covered=1`,
+`fixture_contract_defined=2`, and `not_started=7`, so this command is the governed owner for the
+next Beaverhead/Flathead and tracking-only profile coverage milestones rather than a green proxy.
+
 PDF extraction uses Docling first. The default PDF path disables OCR for born-digital sources and
 runs Docling in a child process with a hard per-document timeout; when a born-digital PDF exceeds
 that timeout, extraction falls back to `pypdf_text_fallback` and records that parser in the

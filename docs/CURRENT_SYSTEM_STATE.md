@@ -198,9 +198,39 @@ Latest closeout on 2026-05-13:
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
-  eval coverage Milestone `0` is also reduced and committed. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `1` in
+  eval coverage Milestone `1` is now also resolved and committed. If the queued follow-on stack is
+  resumed, the next active packet is Milestone `2` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+## Cross-Forest Profile Eval Coverage
+
+Latest closeout on 2026-05-15:
+
+- The repo now ships a tracked aggregate cross-forest profile-eval contract at
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`.
+- The new owner command is `forest-plan-profile-eval`, implemented in
+  `src/usfs_r1_ea_sources/forest_plan_profile_eval.py` and registered through
+  `src/usfs_r1_ea_sources/cli_eval.py`.
+- The aggregate lane writes
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` and
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md`.
+- The producer reads the live readiness roster from
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the runtime profile roster from
+  `config/forest_plan_profiles.json`; it does not keep a second hand-maintained forest list.
+- The current live replay on `source-set-5e65d845ce77e1a0` is intentionally red and fail-closed:
+  `covered_profile_count=1`,
+  `fixture_contract_defined_profile_count=2`,
+  `not_started_profile_count=7`,
+  `validated_not_started_profile_count=7`,
+  and `profile_failure_count=9`.
+- Custer Gallatin is the only passing profile under the new gate. Beaverhead-Deerlodge and
+  Flathead now fail only on status floor (`fixture_contract_defined` instead of `covered`), while
+  the seven tracking-only forests fail on status, positive-count, hard-negative-count, and missing
+  fixture-family floors.
+- `docs/EVALUATION_COVERAGE_REGISTER.md` now tracks this lane as
+  `direct_eval_strengthening_planned`: the aggregate owner exists and is governed, but the live
+  coverage remains intentionally incomplete until the later Milestone `2` and Milestone `3`
+  fixture-expansion slices close.
 
 ## Gold Coverage Expansion
 
@@ -363,8 +393,8 @@ Latest closeout on 2026-05-12:
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
-  Plateau package set. Cross-forest profile eval coverage Milestone `0` is now reduced and
-  committed, so if this broader follow-on stack is resumed, the next step is Milestone `1` in
+  Plateau package set. Cross-forest profile eval coverage Milestone `1` is now resolved and
+  committed, so if this broader follow-on stack is resumed, the next step is Milestone `2` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,

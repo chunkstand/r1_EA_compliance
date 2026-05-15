@@ -65,6 +65,9 @@
     {
       "active_plan_source_record_id": "R1PLAN-custer-gallatin-nf-02",
       "applicability_eval_coverage": {
+        "fixture_family_ids": [
+          "selected_profile_component_eval_seed"
+        ],
         "fixture_ids": [
           "config/forest_plan_component_eval_seed.json"
         ],
@@ -129,6 +132,10 @@
     {
       "active_plan_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
       "applicability_eval_coverage": {
+        "fixture_family_ids": [
+          "scope_positive",
+          "custer_hard_negative"
+        ],
         "fixtures": [
           {
             "expected_status": "candidate_profile_scope_positive_until_component_inventory",
@@ -346,6 +353,10 @@
     {
       "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
       "applicability_eval_coverage": {
+        "fixture_family_ids": [
+          "scope_positive",
+          "custer_hard_negative"
+        ],
         "fixtures": [
           {
             "expected_status": "candidate_profile_scope_positive_until_component_inventory",

@@ -5,6 +5,57 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 1 Closeout
+
+This update resolves Milestone `1` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `src/usfs_r1_ea_sources/forest_plan_profile_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_cli.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  the repo now has a first-class aggregate cross-forest profile-eval lane. The command
+  `forest-plan-profile-eval` writes
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` and
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md`, reads the
+  live readiness roster plus the runtime forest-plan profile roster, and fail-closes on roster
+  identity drift, active-source-set drift, missing fixture-family metadata, and aggregate coverage
+  thresholds.
+- current live replay:
+  the first governed replay is intentionally red on `source-set-5e65d845ce77e1a0` with
+  `covered=1`,
+  `fixture_contract_defined=2`,
+  `not_started=7`,
+  `validated_not_started=7`,
+  and `profile_failure_count=9`.
+  Custer Gallatin is the only passing profile; Beaverhead-Deerlodge and Flathead now fail only on
+  status floor, while the seven tracking-only forests fail on status, count, and missing-family
+  floors.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profile_eval_contracts.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed `54/54`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_profile_eval.py src/usfs_r1_ea_sources/cli_eval.py tests/test_forest_plan_profile_eval_contracts.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src` passed; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
+  exited `1` as expected while writing the new governed red aggregate summary for the current live
+  incomplete roster.
+- next routing:
+  Milestone `1` is resolved and committed. The next executable slice in this packet is Milestone
+  `2` in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`: promote
+  Beaverhead-Deerlodge and Flathead from thin fixture contracts to real `covered` status.
+
 ## Cross-Forest Profile Eval Coverage Milestone 0 Alignment Pass
 
 This docs-only alignment pass closes the remaining routing drift after commit `e1cec6c`

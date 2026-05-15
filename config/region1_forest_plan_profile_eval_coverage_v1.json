@@ -1,0 +1,157 @@
+{
+  "schema_version": "region1-forest-plan-profile-eval-coverage-v1",
+  "contract_id": "region1-forest-plan-profile-eval-coverage",
+  "version": "1.0.0",
+  "readiness_path": "region1_forest_plan_readiness_nepa_3d_v1.json",
+  "forest_plan_profiles_path": "forest_plan_profiles.json",
+  "expected_active_source_set_ids": [
+    "source-set-5e65d845ce77e1a0"
+  ],
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "manifest_path",
+      "results_dir",
+      "output_path",
+      "report_path",
+      "contract_id",
+      "contract_version",
+      "readiness_path",
+      "forest_plan_profiles_path",
+      "active_source_set_ids",
+      "covered_profile_count",
+      "fixture_contract_defined_profile_count",
+      "not_started_profile_count",
+      "threshold_failures",
+      "contract_checks",
+      "profiles",
+      "passed"
+    ]
+  },
+  "coverage_thresholds": {
+    "covered_profile_count_min": 10,
+    "fixture_contract_defined_profile_count_max": 0,
+    "not_started_profile_count_max": 0
+  },
+  "profiles": [
+    {
+      "forest_unit_id": "custer-gallatin-nf",
+      "profile_kind": "active_profile",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "selected_profile_component_eval_seed"
+      ]
+    },
+    {
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "profile_kind": "active_profile_added_milestone_5",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "custer_hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "bitterroot-nf",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "flathead-nf",
+      "profile_kind": "active_profile_added_milestone_5",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "custer_hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "kootenai-nf",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "lolo-nf",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    },
+    {
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "profile_kind": "region1_tracking_only",
+      "required_coverage_status": "covered",
+      "minimum_positive_case_count": 1,
+      "minimum_hard_negative_case_count": 1,
+      "minimum_selected_profile_compliance_case_count": 0,
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "hard_negative"
+      ]
+    }
+  ]
+}

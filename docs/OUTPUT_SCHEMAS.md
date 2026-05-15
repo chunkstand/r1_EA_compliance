@@ -3774,6 +3774,48 @@ Each case result includes:
 state, lane status, category status, matched-case counts, and any failed case IDs so direct-eval
 coverage can be inspected without opening the raw JSON.
 
+## Cross-Forest Forest-Plan Profile Eval Outputs
+
+Default manifest: `config/region1_forest_plan_profile_eval_coverage_v1.json`
+
+Path: `source_library/evaluations/forest_plan_profile/`
+
+The `forest-plan-profile-eval` command writes:
+
+- `forest_plan_profile_eval_results.json`
+- `forest_plan_profile_eval_report.md`
+
+The aggregate manifest has schema version `region1-forest-plan-profile-eval-coverage-v1` and
+records:
+
+- manifest identity plus the tracked readiness roster path and tracked forest-plan profile config
+  path
+- expected active-source-set binding for the roster-wide gate
+- `coverage_thresholds` for minimum `covered` count and maximum
+  `fixture_contract_defined` / `not_started` counts
+- `profiles`, each naming one `forest_unit_id`, the expected `profile_kind`, the required coverage
+  status, minimum positive and hard-negative counts, minimum selected-profile compliance count, and
+  required fixture-family tags
+
+`forest_plan_profile_eval_results.json` has schema version
+`region1-forest-plan-profile-eval-results-v1` and records:
+
+- manifest identity, output paths, readiness/profile config paths, and the resolved active
+  source-set IDs
+- top-level `passed`, required/configured/readiness profile counts, and status/profile-kind counts
+- `covered_profile_count`, `fixture_contract_defined_profile_count`, `not_started_profile_count`,
+  and the validated-but-`not_started` forest list
+- `threshold_failures` for aggregate roster floors plus `failure_category_counts`
+- `contract_checks` for manifest shape, roster identity alignment, source-set binding, and output
+  schema completeness
+- `profiles`, each carrying expected versus actual profile kind and coverage status, positive and
+  hard-negative case floors, selected-profile compliance floor, actual versus required fixture
+  family tags, component inventory status, graph promotion status, and explicit failure reasons
+
+`forest_plan_profile_eval_report.md` is the operator-facing Markdown summary. It records the
+aggregate covered/fixture-contract-defined/not-started counts, the threshold failures that keep the
+lane red, and the per-profile floor failures without requiring the raw JSON summary to be opened.
+
 ## Evidence Retrieval Outputs
 
 Path: `source_library/derived/<source_set_id>/retrieval/`

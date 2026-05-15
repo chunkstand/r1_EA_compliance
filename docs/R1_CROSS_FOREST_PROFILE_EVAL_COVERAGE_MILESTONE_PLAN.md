@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestones 1-4 remain open)
+Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestone 1 resolved and committed; Milestones 2-4 remain open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -37,6 +37,28 @@ Milestone 0 closeout summary on 2026-05-15:
   `bitterroot-nf`,
   `lolo-nf`.
   This is eval-contract ordering only. It is not a reviewer-ready or live-package readiness claim.
+
+Milestone 1 closeout summary on 2026-05-15:
+
+- The repo now ships the first governed cross-forest profile-eval lane:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `src/usfs_r1_ea_sources/forest_plan_profile_eval.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`, and the public CLI command
+  `forest-plan-profile-eval`.
+- The aggregate producer reads the live roster from
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus
+  `config/forest_plan_profiles.json`. It does not keep a second hand-maintained forest list.
+- The new readiness normalization is deliberately narrow: only the already-covered or
+  fixture-defined rows now carry explicit `fixture_family_ids`, so the aggregate lane can measure
+  live roster metadata instead of silently inferring families in code.
+- The first live replay is intentionally red and fail-closed on the active full-canonical source
+  set `source-set-5e65d845ce77e1a0`: `covered=1`, `fixture_contract_defined=2`, `not_started=7`,
+  and `profile_failure_count=9`.
+- Custer Gallatin is the only passing profile under the new gate. Beaverhead-Deerlodge and
+  Flathead now fail only on coverage status, while the seven tracking-only forests fail on status,
+  positive-count, hard-negative-count, and missing-fixture-family floors.
+- Milestone 2 is now the next executable slice in this packet: promote Beaverhead and Flathead
+  from thin fixture contracts to real `covered` status under this aggregate gate.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not reopen
 `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`, which remains retired as a routing
@@ -132,9 +154,10 @@ ready-to-close.
 - Beaverhead and Flathead do already have deeper selected-profile resolver and compliance unit-test
   slices in `tests/test_forest_plan_resolver.py` and `tests/test_compliance_review.py`, but those
   deeper slices are not yet normalized into one governed cross-forest eval contract.
-- Repo search still shows no live `forest_plan_profile_eval` producer, no
-  `config/region1_forest_plan_profile_eval_coverage_v1.json`, and no
-  `docs/EVALUATION_COVERAGE_REGISTER.md` row under an equivalent alternate name.
+- Milestone 1 now implements the first live `forest_plan_profile_eval` producer,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`, and the matching
+  `docs/EVALUATION_COVERAGE_REGISTER.md` row. The lane is intentionally red until the later
+  coverage-expansion milestones land.
 - `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is retired and explicitly says future
   forest work should not widen back into a roster-wide implementation ask. This plan must stay
   evaluation-contract scoped rather than reviving that retired expansion mode.

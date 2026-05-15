@@ -1,6 +1,6 @@
 # Evaluation Coverage Register
 
-Updated: 2026-05-13
+Updated: 2026-05-15
 
 This register separates structural validation from direct-eval coverage.
 
@@ -27,6 +27,12 @@ Status meanings:
 | `claim_eval` | `src/usfs_r1_ea_sources/claim_extraction.py`; `config/claim_eval_seed.json` | `claim_validation.json` | `direct_eval_present` | `claim-eval` | `hard_negative`; `multi_source_or_type_confusion`; `rank_quality_thresholds`; `false_positive_guard`; `missing_required_source_guard` | Governed by `config/downstream_direct_eval_v1.json`; the shipped contract floor is `10` cases with `3` hard negatives and `3` multi-source-or-type-confusion cases plus locked `recall@k`, `mrr`, `nDCG@k`, false-positive, and missing-required-source thresholds. |
 | `rule_claim_eval` | `src/usfs_r1_ea_sources/rule_claim_binding.py`; `config/rule_claim_link_eval_seed.json` | `rule_claim_link_validation.json` | `direct_eval_present` | `rule-claim-eval` | `hard_negative`; `multi_source`; `rank_quality_thresholds`; `false_positive_guard`; `missing_required_source_guard` | Governed by `config/downstream_direct_eval_v1.json`; the shipped contract floor is `20` cases with `4` hard negatives and `4` multi-source cases plus locked `recall@k`, `mrr`, `nDCG@k`, false-positive, and missing-required-source thresholds. |
 | `compliance_review_eval` | `src/usfs_r1_ea_sources/compliance_review.py`; `config/compliance_review_eval_seed.json`; `config/compliance_rule_pack_coverage_nepa_ea_v0.json` | `compliance_validation.json`; `compliance_matrix.json`; `compliance_matrix.pdf`; `compliance_coverage_results.json` | `direct_eval_present` | `compliance-review-eval` | `all_authorities_control`; `unrelated_package_hard_negative`; `conditional_subset`; `unexpected_positive_guard`; `missing_required_source_rule_guard` | Governed by `config/downstream_direct_eval_v1.json`; the shipped contract floor is `5` cases with `1` all-authorities control, `2` unrelated-package hard negatives, and `2` conditional-subset cases. `compliance-coverage` is the supporting fail-closed rule-pack/seed/link alignment gate for this lane. |
+
+## Cross-Forest Forest-Plan Profile Lane
+
+| Subsystem | Owner Surfaces | Structural Validation | Direct Eval Status | Current Command | Coverage Categories | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| `forest_plan_profile_eval` | `src/usfs_r1_ea_sources/forest_plan_profile_eval.py`; `config/region1_forest_plan_profile_eval_coverage_v1.json`; `config/region1_forest_plan_readiness_nepa_3d_v1.json`; `config/forest_plan_profiles.json` | `region1_forest_plan_readiness_nepa_3d_v1.json`; `forest_plan_profiles.json` | `direct_eval_strengthening_planned` | `forest-plan-profile-eval --manifest config/region1_forest_plan_profile_eval_coverage_v1.json --output-dir source_library` | `roster_identity`; `active_source_set_binding`; `covered_status_floor`; `fixture_family_floor`; `positive_and_hard_negative_case_floor` | This is the fail-closed aggregate owner for Region 1 cross-forest forest-plan profile coverage. The lane is now implemented, but the live replay is intentionally red until Beaverhead/Flathead move beyond `fixture_contract_defined` and the seven validated tracking-only profiles leave `not_started`, so the status remains `direct_eval_strengthening_planned` until Milestones `2-3` close. |
 
 ## Gold And Review-Contract Lanes
 

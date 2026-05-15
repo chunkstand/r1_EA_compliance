@@ -323,6 +323,25 @@ def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     assert args.results_dir == Path("source_library/evaluations/upstream")
 
 
+def test_forest_plan_profile_eval_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-plan-profile-eval",
+            "--manifest",
+            "config/region1_forest_plan_profile_eval_coverage_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/evaluations/forest_plan_profile",
+        ]
+    )
+
+    assert args.command == "forest-plan-profile-eval"
+    assert args.manifest == Path("config/region1_forest_plan_profile_eval_coverage_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/evaluations/forest_plan_profile")
+
+
 def test_gold_coverage_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -611,6 +630,42 @@ def test_upstream_eval_handler_propagates_manifest_and_results_dir(monkeypatch) 
     assert captured["manifest_path"] == Path("config/upstream_evaluation_v1.json")
     assert captured["output_dir"] == Path("library")
     assert captured["results_dir"] == Path("library/evaluations/upstream")
+
+
+def test_forest_plan_profile_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_forest_plan_profile_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": False})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_forest_plan_profile_eval",
+        fake_run_forest_plan_profile_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "forest-plan-profile-eval",
+            "--manifest",
+            "config/region1_forest_plan_profile_eval_coverage_v1.json",
+            "--output-dir",
+            "library",
+            "--results-dir",
+            "library/evaluations/forest_plan_profile",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 1
+    assert captured["manifest_path"] == Path(
+        "config/region1_forest_plan_profile_eval_coverage_v1.json"
+    )
+    assert captured["output_dir"] == Path("library")
+    assert captured["results_dir"] == Path("library/evaluations/forest_plan_profile")
 
 
 def test_gold_coverage_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:

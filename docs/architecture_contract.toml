@@ -186,6 +186,7 @@ name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = [
   "applicability_eval",
+  "forest_plan_profile_eval",
   "gold_coverage_eval",
   "promotion_suite",
   "real_package_review_coverage_eval",
@@ -395,6 +396,8 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
+  "source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json",
+  "source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md",
   "source_library/evaluations/upstream/upstream_evaluation_results.json",
   "source_library/evaluations/upstream/upstream_evaluation_report.md",
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
@@ -497,6 +500,7 @@ name = "eval"
 commands = [
   "applicability-eval",
   "applicability-gold-eval",
+  "forest-plan-profile-eval",
   "gold-coverage-eval",
   "upstream-eval",
   "phase-eval",
