@@ -206,6 +206,7 @@ Latest closeout on 2026-05-13:
 
 Latest closeout on 2026-05-15:
 
+- Milestone `1` closeout commit is `46a2d49` (`eval: add cross-forest profile coverage gate`).
 - The repo now ships a tracked aggregate cross-forest profile-eval contract at
   `config/region1_forest_plan_profile_eval_coverage_v1.json`.
 - The new owner command is `forest-plan-profile-eval`, implemented in

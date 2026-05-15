@@ -5,6 +5,33 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 1 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `46a2d49`
+(`eval: add cross-forest profile coverage gate`).
+
+- scope:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the current-state closeout section, and the newest handoff note now all pin
+  the same Milestone `1` checkpoint commit `46a2d49` and the same next routed slice: Milestone
+  `2` in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower handoff sections that still route the broader repo queue to Milestone `0` or
+  Milestone `1` are historical only for this lane. The live routing truth is this section plus the
+  Milestone `1` closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note all
+  point to commit `46a2d49` and route the next executable slice as Milestone `2`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  remains Milestone `2`: promote Beaverhead-Deerlodge and Flathead from thin fixture contracts to
+  real `covered` status.
+
 ## Cross-Forest Profile Eval Coverage Milestone 1 Closeout
 
 This update resolves Milestone `1` in
@@ -32,6 +59,8 @@ This update resolves Milestone `1` in
   live readiness roster plus the runtime forest-plan profile roster, and fail-closes on roster
   identity drift, active-source-set drift, missing fixture-family metadata, and aggregate coverage
   thresholds.
+- committed checkpoint:
+  Milestone `1` is committed locally as `46a2d49` (`eval: add cross-forest profile coverage gate`).
 - current live replay:
   the first governed replay is intentionally red on `source-set-5e65d845ce77e1a0` with
   `covered=1`,

@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestone 1 resolved and committed; Milestones 2-4 remain open)
+Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestone 1 resolved and committed in `46a2d49`; Milestones 2-4 remain open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -45,6 +45,8 @@ Milestone 1 closeout summary on 2026-05-15:
   `src/usfs_r1_ea_sources/forest_plan_profile_eval.py`,
   `tests/test_forest_plan_profile_eval_contracts.py`, and the public CLI command
   `forest-plan-profile-eval`.
+- The Milestone 1 closeout checkpoint is local commit `46a2d49`
+  (`eval: add cross-forest profile coverage gate`).
 - The aggregate producer reads the live roster from
   `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus
   `config/forest_plan_profiles.json`. It does not keep a second hand-maintained forest list.
