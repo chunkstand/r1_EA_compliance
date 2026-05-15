@@ -10,8 +10,8 @@ rule-claim binding, and deterministic EA package review commands.
 
 Routing note: the newest operational-recovery and gold-coverage sections below supersede older
 historical lane notes when they disagree. In particular, older references to South Plateau as
-typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-14
-Milestone 5 closeout.
+typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
+Milestone 5 closeout commit `94c8915`.
 
 ## Current Workbook Contract
 
@@ -140,21 +140,21 @@ Latest closeout on 2026-05-13:
   `full_canonical_corpus_ready=true`,
   `full_canonical_failure_category_counts={}`, and
   `expansion_ready=true`.
-- Milestone `5` South Plateau strict-expansion recovery is now also resolved on `2026-05-14`:
+- Milestone `5` South Plateau strict-expansion recovery is now also resolved on `2026-05-15`:
   `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json` now pins the
   South Plateau review to the archived ba8d-compatible catalog surface,
   `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`
   tracks the closed `31`-item component queue as `applicability_false_positive` system misses, and
   the shipped real-package/gold/promotion manifests now treat South Plateau as
   `reviewer_ready_expansion` rather than a typed blocked lane.
-- Fresh South Plateau closeout replay on 2026-05-14 is green end to end:
+- Fresh South Plateau closeout replay on 2026-05-15 is green end to end:
   `forest-plan-component-adjudication-eval` passes with `resolved_adjudication_count=31`,
   `pending_adjudication_count=0`, and `system_miss_count=31`; `compliance-review` returns
   `reviewer_ready=true`; `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
   passes with `contract_status="reviewer_ready"`; and review-scoped
   `phase-eval --review-id region1-expansion-south-plateau-landscape-treatment` passes `19/19` with
   `contract_backed_promotion_ready=true`.
-- Fresh ECID expansion replay on 2026-05-14 also refreshed the ad hoc expansion artifact to the
+- Fresh ECID expansion replay on 2026-05-15 also refreshed the ad hoc expansion artifact to the
   correct ba8d current-promotion source set:
   `phase-eval --source-set-id source-set-ba8d0feae79501b8 --review-id region1-expansion-ecid-preliminary-ea`
   now passes `19/19` with `declared_review_contract=false` and no identity-mismatch blockers.
@@ -187,7 +187,7 @@ Latest closeout on 2026-05-13:
   (`reviewer_ready`), West Reservoir (`reviewer_ready`), and South Plateau
   (`reviewer_ready_expansion`).
 - `real-package-review-coverage-eval` is now the aggregate fail-closed owner for the three tracked
-  real-package slots. The live replay on 2026-05-14 passed with
+  real-package slots. The live replay on 2026-05-15 passed with
   `required_slot_count=3`, `covered_slot_count=3`, `distinct_forest_count=2`,
   `distinct_package_style_count=3`, `reviewer_ready_slot_count=3`,
   `typed_blocked_slot_count=0`, and `missing_package_authority_count=0`.
@@ -890,7 +890,7 @@ manifest without hashing downstream packet artifacts into the decision-support m
 does hash and gate the packet artifacts, exposes a `review_packet_index_qa` section, and validates
 the refreshed packet at `196/196` checks. The current promotion suite requires the packet index
 family plus final QA and passes current promotion with `31/31` required current results; South
-Plateau no longer blocks expansion after the 2026-05-14 reviewer-ready closeout.
+Plateau no longer blocks expansion after the 2026-05-15 reviewer-ready closeout.
 
 `config/promotion_suite_v1.json` now requires the source-set graph validation/summary artifacts and
 the V1 review graph validation/summary artifacts before current promotion passes. The current live

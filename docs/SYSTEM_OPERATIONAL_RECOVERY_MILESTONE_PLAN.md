@@ -1,8 +1,8 @@
 # System Operational Recovery Milestone Plan
 
-Date: 2026-05-14
+Date: 2026-05-15
 
-Status: Resolved 2026-05-14 (Milestones 0-5 are now resolved and committed locally; fresh
+Status: Resolved 2026-05-15 (Milestones 0-5 are now resolved and committed locally; fresh
 non-strict and strict `promotion-suite` replays are both green)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
@@ -116,14 +116,14 @@ full-canonical, or South Plateau owner issue.
   (`region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that at least
   one promoted Region 1 profile must still be blocked.
-- Milestone `5` South Plateau strict-expansion recovery is now also resolved on `2026-05-14`:
+- Milestone `5` South Plateau strict-expansion recovery is now also resolved on `2026-05-15`:
   `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json` now pins the
   South Plateau review to the archived ba8d-compatible catalog surface,
   `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`
   closes the `31`-item component queue as `applicability_false_positive` system misses, and the
   shipped real-package/gold/promotion manifests now treat South Plateau as
   `reviewer_ready_expansion` rather than a typed blocked lane.
-- Fresh closeout replay on 2026-05-14 is green across the remaining expansion owner surfaces:
+- Fresh closeout replay on 2026-05-15 is green across the remaining expansion owner surfaces:
   `forest-plan-component-adjudication-eval` passes with `resolved_adjudication_count=31`,
   `pending_adjudication_count=0`, and `system_miss_count=31`; `compliance-review` returns
   `reviewer_ready=true`; `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`

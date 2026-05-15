@@ -114,7 +114,7 @@ Current full-corpus promotion boundary:
   promoted profiles must remain blocked.
 - The same fresh non-strict replay now reports `full_canonical_corpus_ready=true`,
   `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=true`.
-- Milestone `5` South Plateau strict-expansion recovery is now also closed on `2026-05-14`:
+- Milestone `5` South Plateau strict-expansion recovery is now also closed on `2026-05-15`:
   tracked South Plateau replay-context and component-adjudication contracts plus a refreshed
   ba8d-scoped ECID expansion `phase-eval` replay now leave both non-strict and strict
   `promotion-suite` replays green with `expansion_failure_category_counts={}`.

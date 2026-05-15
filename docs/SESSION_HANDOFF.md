@@ -1,9 +1,28 @@
 # Session Handoff
 
-Date: 2026-05-14
+Date: 2026-05-15
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## System Operational Recovery Milestone 5 Alignment Pass
+
+This update supersedes the earlier top recovery note only on Milestone `5` closeout dating, not on
+live blocker ownership or promotion truth.
+
+- operator-facing date truth:
+  Milestone `5` closeout commit `94c8915` (`Recover strict expansion operational gate`) is dated
+  `2026-05-15`, so the top recovery plan, `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` now use `2026-05-15` for that closeout
+  instead of the earlier `2026-05-14` wording.
+- live promotion truth unchanged:
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  still records `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, `promotion_ready=true`, and `expansion_failure_category_counts={}` with
+  `created_at="2026-05-15T13:05:57.481848Z"`.
+- routing truth unchanged:
+  the broader operational recovery packet remains fully resolved, and the next queued follow-on
+  packet is still Milestone `0` in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## System Operational Recovery Milestone 5 Closeout
 

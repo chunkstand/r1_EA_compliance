@@ -1,7 +1,7 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: Resolved 2026-05-14 (complete through Sequence 7 plus South Plateau adjudication/replay
+Status: Resolved 2026-05-15 (complete through Sequence 7 plus South Plateau adjudication/replay
 closeout; the declared ECID preliminary-EA and South Plateau expansion set is now green on fresh
 non-strict and strict `promotion-suite` replay)
 
