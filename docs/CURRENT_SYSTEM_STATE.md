@@ -127,10 +127,18 @@ Latest closeout on 2026-05-13:
 - `compliance-coverage` now accepts the contract-object compliance eval format, so rule-pack
   coverage, eval-case coverage, and rule-claim link coverage fail closed against the same shipped
   downstream contract.
-- The current live downstream replays on `source-set-5e65d845ce77e1a0` passed:
-  retrieval `12/12`, claims `10/10`, rule-claim `24/24`, compliance review `5/5`,
-  `compliance-coverage` with all rule-pack coverage checks green, and source-set `phase-eval`
-  `9/9` with `downstream_direct_evaluation` present and passing.
+- The historical full-canonical downstream closeout on `2026-05-14` for
+  `source-set-5e65d845ce77e1a0` passed retrieval `12/12`, claims `10/10`, rule-claim `24/24`,
+  compliance review `5/5`, `compliance-coverage` with all rule-pack coverage checks green, and
+  source-set `phase-eval` `9/9` with `downstream_direct_evaluation` present and passing.
+- The latest bounded replay on `2026-05-15` for active source set `source-set-5e65d845ce77e1a0`
+  is no longer fully green: `retrieval-eval` now fails `2/12` cases
+  (`nepa-alternatives-environmental-effects`, `scoping-public-comment`) with
+  `false_positive_rate=0.166667`, `missing_required_source_rate=0.076923`,
+  `recall_at_k=0.923077`, `mrr=0.87037`, and `ndcg_at_k=0.867538`; source-set `phase-eval`
+  therefore remains red, and the shared
+  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact is also stale for
+  this source set.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now marks all four downstream lanes as
   `direct_eval_present`.
 - The next evaluation-strengthening boundary remains
@@ -198,9 +206,9 @@ Latest closeout on 2026-05-13:
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
-  eval coverage Milestones `1-3` are now resolved through closeout commit `1999277`. If the
-  queued follow-on stack is resumed, the next active packet is Milestone `4` in
-  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+  eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
+  resumed, the next active packet is Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
 
@@ -253,9 +261,32 @@ Latest closeout on 2026-05-15:
   unless they meet the governed eval-fixture floor. The live source-set graph now reports
   `region1_forest_plan_promoted_profiles_with_eval_fixture_count=10` with `0` validation
   failures.
+- `config/phase_eval_direct_eval_v1.json` now makes that same aggregate summary a required
+  direct-eval input for the source-set `nepa_3d_source_set_graph` phase. Missing, stale,
+  source-set-mismatched, or below-floor profile summaries now fail `phase-eval` instead of letting
+  the full-canonical roster claim rely only on proxy graph counts.
+- `config/promotion_suite_v1.json` now includes `full_canonical_forest_plan_profile_eval`, which
+  fails the full-canonical promotion claim when the aggregate profile-eval summary is missing,
+  stale, source-set-mismatched, or below the declared floor
+  (`covered_profile_count=10`, `fixture_contract_defined_profile_count=0`,
+  `not_started_profile_count=0`, `profile_failure_count=0`).
+- The latest bounded source-set `phase-eval` replay on `2026-05-15` is still red overall, but the
+  new `nepa_3d_source_set_graph` phase itself is green with
+  `direct_eval_status=direct_eval_present`,
+  `covered_profile_count=10`,
+  `fixture_contract_defined_profile_count=0`,
+  `not_started_profile_count=0`,
+  and `profile_failure_count=0`. The remaining live blockers are outside this packet:
+  `retrieval-eval` is red on `2/12` cases, and the shared
+  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact is stale for this
+  source set.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now tracks this lane as
-  `direct_eval_present`: the aggregate owner exists, the live roster is green, and the remaining
-  routed work is downstream wiring rather than missing direct-eval coverage.
+  `direct_eval_present`: the aggregate owner exists, the live roster is green, and the lane now
+  feeds source-set `phase-eval` plus the full-canonical promotion suite without turning profile
+  coverage into a reviewer-ready or live-package proof claim.
+- The next routed follow-on after this packet is Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`, which must refresh the now-closed
+  cross-forest predecessor state before widening multi-review component-eval coverage.
 
 ## Gold Coverage Expansion
 
@@ -418,10 +449,9 @@ Latest closeout on 2026-05-12:
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
-  Plateau package set. Cross-forest profile eval coverage Milestones `1-3` are now resolved
-  through closeout commit `1999277`, so if this broader follow-on stack is resumed, the next step
-  is Milestone `4` in
-  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+  Plateau package set. Cross-forest profile eval coverage Milestones `1-4` are now resolved in
+  code/docs, so if this broader follow-on stack is resumed, the next step is Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,
   `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the implemented second slice, and

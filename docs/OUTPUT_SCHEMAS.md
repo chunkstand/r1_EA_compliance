@@ -3816,7 +3816,9 @@ records:
 aggregate covered/fixture-contract-defined/not-started counts, any threshold failures that keep the
 lane red, and the per-profile floor failures without requiring the raw JSON summary to be opened.
 The current live replay on `2026-05-15` is green at `covered=10`,
-`fixture_contract_defined=0`, and `not_started=0`.
+`fixture_contract_defined=0`, and `not_started=0`. This producer now feeds source-set
+`phase-eval` and full-canonical `promotion-suite` gating, but it still proves profile-eval
+coverage only rather than reviewer-ready or live-package proof.
 
 ## Evidence Retrieval Outputs
 
@@ -4250,7 +4252,17 @@ also includes a `compliance_coverage` phase for matrix, source-claim, source-cla
 eval-case coverage. When NEPA 3D graph validation/summary artifacts exist, phase eval also includes
 `nepa_3d_source_set_graph` and, for review-scoped runs, `nepa_3d_review_graph` phases with
 source-set/review identity checks, validation check counts, failed check names, graph paths,
-readiness blocker counts, and graph failure-category counts. When `compliance_gold_eval_results.json` exists under
+readiness blocker counts, and graph failure-category counts. When the committed
+`phase-eval-direct-eval-v1` contract names
+`source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` as the
+direct-eval owner for `nepa_3d_source_set_graph`, that source-set graph phase also records the
+profile-eval contract ID, expected versus actual active source-set binding, covered/fixture/not-
+started counts, profile failure count, failure-category counts, and any profiles below floor.
+Missing, stale, source-set-mismatched, schema-invalid, or below-floor cross-forest profile
+summaries now fail `nepa_3d_source_set_graph` and the aggregate `evaluation_coverage` phase rather
+than allowing the full-canonical roster claim to rely only on structural graph validation. This
+source-set graph direct-eval consumer still proves eval coverage only; it does not turn the roster
+green into reviewer-ready or live-package proof. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
 not-promotion-ready artifacts. For review-bound runs, phase eval prefers

@@ -20,10 +20,19 @@ REAL_PACKAGE_REVIEW_COVERAGE_RESULTS_SCHEMA_VERSION = (
     "real-package-review-coverage-results-v1"
 )
 V1_EA_EVAL_RESULTS_SCHEMA_VERSION = "v1-ea-real-review-eval-results-v0"
+FOREST_PLAN_PROFILE_EVAL_RESULTS_SCHEMA_VERSION = (
+    "region1-forest-plan-profile-eval-results-v1"
+)
 SOURCE_SET_COVERAGE_CLASSES = {"direct_eval_required", "validation_only_allowed"}
 REVIEW_COVERAGE_CLASSES = {
     "required_for_declared_review_contract",
     "not_required_for_ad_hoc_review",
+}
+SOURCE_SET_PHASE_PRODUCERS = {
+    "downstream_direct_evaluation",
+    "forest_plan_profile_evaluation",
+    "phase_eval",
+    "upstream_evaluation",
 }
 
 
@@ -330,6 +339,16 @@ def _source_set_phase_status(
             output_dir=output_dir,
             downstream_manifest_path=downstream_manifest_path,
             downstream_manifest=downstream_manifest,
+        )
+    if producer == "forest_plan_profile_evaluation":
+        return _forest_plan_profile_phase_status(
+            phase_name=phase_name,
+            coverage_class=coverage_class,
+            lane_id=str(spec["lane_id"]),
+            source_set_id=source_set_id,
+            output_dir=output_dir,
+            results_path_value=spec.get("results_path"),
+            expected_contract_id=str(spec.get("expected_contract_id") or ""),
         )
     raise ValueError(f"Unsupported phase-eval direct-eval producer: {producer}")
 
@@ -821,6 +840,145 @@ def _review_coverage_summary(
     return summary
 
 
+def _forest_plan_profile_phase_status(
+    *,
+    phase_name: str,
+    coverage_class: str,
+    lane_id: str,
+    source_set_id: str,
+    output_dir: Path,
+    results_path_value: object,
+    expected_contract_id: str,
+) -> dict[str, Any]:
+    if not str(results_path_value or "").strip():
+        return {
+            "phase_name": phase_name,
+            "producer": "forest_plan_profile_evaluation",
+            "coverage_class": coverage_class,
+            "status": "direct_eval_schema_invalid",
+            "summary_present": False,
+            "summary_path": None,
+            "direct_eval_present": False,
+            "direct_eval_passed": False,
+            "case_count": None,
+            "hard_negative_case_count": None,
+            "threshold_failures": [],
+            "failure_reasons": ["direct_eval_schema_invalid"],
+            "contract_id": expected_contract_id or lane_id,
+            "details": {"lane_id": lane_id},
+        }
+
+    results_path = output_dir / str(results_path_value)
+    result = _read_json_if_exists(results_path)
+    base = {
+        "phase_name": phase_name,
+        "producer": "forest_plan_profile_evaluation",
+        "coverage_class": coverage_class,
+        "summary_present": isinstance(result, dict),
+        "summary_path": str(results_path),
+        "direct_eval_present": False,
+        "direct_eval_passed": False,
+        "case_count": None,
+        "hard_negative_case_count": None,
+        "threshold_failures": [],
+        "failure_reasons": [],
+        "contract_id": expected_contract_id or lane_id,
+        "details": {
+            "lane_id": lane_id,
+            "expected_contract_id": expected_contract_id or lane_id,
+        },
+    }
+    if not isinstance(result, dict):
+        base["status"] = "direct_eval_missing"
+        base["failure_reasons"] = ["missing_required_direct_eval"]
+        return base
+    required_keys = (
+        "schema_version",
+        "contract_id",
+        "passed",
+        "active_source_set_ids",
+        "covered_profile_count",
+        "fixture_contract_defined_profile_count",
+        "not_started_profile_count",
+        "profile_failure_count",
+        "profiles_below_floor_ids",
+    )
+    if any(key not in result for key in required_keys):
+        base["status"] = "direct_eval_schema_invalid"
+        base["failure_reasons"] = ["direct_eval_schema_invalid"]
+        base["details"]["missing_keys"] = [
+            key for key in required_keys if key not in result
+        ]
+        return base
+
+    active_source_set_ids = _string_list(result.get("active_source_set_ids"))
+    expected_active_source_set_ids = [source_set_id]
+    base["case_count"] = _first_numeric(
+        result.get("required_profile_count"),
+        result.get("configured_profile_count"),
+        result.get("covered_profile_count"),
+    )
+    base["hard_negative_case_count"] = _profile_metric_sum(
+        result.get("profiles"),
+        "hard_negative_case_count",
+    )
+    base["details"].update(
+        {
+            "schema_version": result.get("schema_version"),
+            "actual_contract_id": result.get("contract_id"),
+            "actual_contract_version": result.get("contract_version"),
+            "active_source_set_ids": active_source_set_ids,
+            "expected_active_source_set_ids": expected_active_source_set_ids,
+            "covered_profile_count": result.get("covered_profile_count"),
+            "fixture_contract_defined_profile_count": result.get(
+                "fixture_contract_defined_profile_count"
+            ),
+            "not_started_profile_count": result.get("not_started_profile_count"),
+            "validated_not_started_profile_count": result.get(
+                "validated_not_started_profile_count"
+            ),
+            "profile_failure_count": result.get("profile_failure_count"),
+            "profiles_below_floor_ids": result.get("profiles_below_floor_ids", []),
+            "failure_category_counts": result.get("failure_category_counts", {}),
+            "threshold_failures": result.get("threshold_failures", []),
+            "failed_contract_checks": _failed_contract_check_names(result),
+        }
+    )
+    if (
+        result.get("schema_version") != FOREST_PLAN_PROFILE_EVAL_RESULTS_SCHEMA_VERSION
+    ):
+        base["status"] = "direct_eval_schema_invalid"
+        base["failure_reasons"] = ["direct_eval_schema_invalid"]
+        return base
+    if expected_contract_id and str(result.get("contract_id") or "") != expected_contract_id:
+        base["status"] = "direct_eval_identity_mismatch"
+        base["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return base
+    if active_source_set_ids != expected_active_source_set_ids:
+        base["status"] = "direct_eval_identity_mismatch"
+        base["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return base
+
+    threshold_failures = _forest_plan_profile_threshold_failures(result)
+    if not bool(result.get("passed")) or threshold_failures:
+        base["status"] = "direct_eval_failed"
+        base["direct_eval_present"] = True
+        base["failure_reasons"] = ["direct_eval_threshold_failed"]
+        base["threshold_failures"] = threshold_failures or [
+            {
+                "metric": "producer_passed",
+                "reason": "producer_failed",
+                "actual": result.get("passed"),
+            }
+        ]
+        return base
+
+    base["status"] = "direct_eval_present"
+    base["direct_eval_present"] = True
+    base["direct_eval_passed"] = True
+    return base
+
+
 def _downstream_threshold_failures(*, result: dict[str, Any], contract: dict[str, Any]) -> list[dict]:
     failures: list[dict] = []
     coverage_requirements = contract.get("coverage_requirements", {})
@@ -957,6 +1115,16 @@ def _validate_contract(payload: dict[str, Any]) -> None:
             raise ValueError(f"direct-eval-required phase {phase_name!r} requires lane_id")
         if not producer:
             raise ValueError(f"phase-eval direct-eval phase {phase_name!r} requires producer")
+        if producer not in SOURCE_SET_PHASE_PRODUCERS:
+            raise ValueError(
+                f"unsupported phase-eval direct-eval producer {producer!r}"
+            )
+        if producer == "forest_plan_profile_evaluation" and not str(
+            spec.get("results_path") or ""
+        ).strip():
+            raise ValueError(
+                f"forest-plan-profile direct-eval phase {phase_name!r} requires results_path"
+            )
     for key in (
         "upstream_results_path",
         "downstream_manifest_path",
@@ -1022,6 +1190,71 @@ def _first_numeric(*values: Any) -> int | None:
         if numeric is not None:
             return int(numeric)
     return None
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item).strip()]
+
+
+def _profile_metric_sum(profiles: Any, key: str) -> int | None:
+    if not isinstance(profiles, list):
+        return None
+    total = 0
+    saw_value = False
+    for profile in profiles:
+        if not isinstance(profile, dict):
+            continue
+        numeric = _numeric(profile.get(key))
+        if numeric is None:
+            continue
+        total += int(numeric)
+        saw_value = True
+    return total if saw_value else None
+
+
+def _failed_contract_check_names(result: dict[str, Any]) -> list[str]:
+    checks = result.get("contract_checks")
+    if not isinstance(checks, list):
+        return []
+    return [
+        str(check.get("name") or "")
+        for check in checks
+        if isinstance(check, dict) and not bool(check.get("passed"))
+    ]
+
+
+def _forest_plan_profile_threshold_failures(result: dict[str, Any]) -> list[dict[str, Any]]:
+    failures: list[dict[str, Any]] = []
+    threshold_failures = result.get("threshold_failures")
+    if isinstance(threshold_failures, list):
+        failures.extend(
+            failure for failure in threshold_failures if isinstance(failure, dict)
+        )
+    failed_contract_checks = _failed_contract_check_names(result)
+    if failed_contract_checks:
+        failures.append(
+            {
+                "metric": "contract_checks",
+                "reason": "contract_checks_failed",
+                "failed_checks": failed_contract_checks,
+            }
+        )
+    profile_failure_count = _first_numeric(result.get("profile_failure_count"))
+    if profile_failure_count and profile_failure_count > 0:
+        failures.append(
+            {
+                "metric": "profile_failure_count",
+                "reason": "profiles_below_floor",
+                "actual": profile_failure_count,
+                "expected_maximum": 0,
+                "profiles_below_floor_ids": _string_list(
+                    result.get("profiles_below_floor_ids")
+                ),
+            }
+        )
+    return failures
 
 
 def _dedupe_strings(values: list[str]) -> list[str]:

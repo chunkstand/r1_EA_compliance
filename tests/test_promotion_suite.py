@@ -136,6 +136,59 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         == 0
     )
 
+    full_canonical_profile_eval = suite_results["full_canonical_forest_plan_profile_eval"]
+    assert full_canonical_profile_eval["required_for_current_promotion"] is False
+    assert full_canonical_profile_eval["required_for_full_canonical_corpus"] is True
+    assert (
+        full_canonical_profile_eval["path"]
+        == "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
+    )
+    full_profile_eval_checks = {
+        check["name"]: check for check in full_canonical_profile_eval["checks"]
+    }
+    assert (
+        full_profile_eval_checks["full_canonical_forest_plan_profile_eval_passed"][
+            "equals"
+        ]
+        is True
+    )
+    assert (
+        full_profile_eval_checks["full_canonical_forest_plan_profile_eval_contract_id"][
+            "equals"
+        ]
+        == "region1-forest-plan-profile-eval-coverage"
+    )
+    assert (
+        full_profile_eval_checks[
+            "full_canonical_forest_plan_profile_eval_source_set_matches"
+        ]["equals"]
+        == ["source-set-5e65d845ce77e1a0"]
+    )
+    assert (
+        full_profile_eval_checks["full_canonical_forest_plan_profile_eval_covered_count"][
+            "min"
+        ]
+        == 10
+    )
+    assert (
+        full_profile_eval_checks[
+            "full_canonical_forest_plan_profile_eval_fixture_contract_defined_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_profile_eval_checks["full_canonical_forest_plan_profile_eval_not_started_count"][
+            "equals"
+        ]
+        == 0
+    )
+    assert (
+        full_profile_eval_checks[
+            "full_canonical_forest_plan_profile_eval_profile_failure_count"
+        ]["equals"]
+        == 0
+    )
+
 
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
@@ -616,6 +669,23 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
         ),
         encoding="utf-8",
     )
+    profile_eval_dir = output_dir / "evaluations" / "forest_plan_profile"
+    profile_eval_dir.mkdir(parents=True)
+    (profile_eval_dir / "forest_plan_profile_eval_results.json").write_text(
+        json.dumps(
+            {
+                "contract_id": "region1-forest-plan-profile-eval-coverage",
+                "active_source_set_ids": [full_source_set_id],
+                "covered_profile_count": 10,
+                "fixture_contract_defined_profile_count": 0,
+                "not_started_profile_count": 0,
+                "passed": True,
+                "profile_failure_count": 0,
+                "profiles_below_floor_ids": [],
+            }
+        ),
+        encoding="utf-8",
+    )
 
     manifest_path = tmp_path / "config" / "promotion_suite.json"
     manifest_path.write_text(
@@ -707,6 +777,24 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
                             },
                         ],
                     },
+                    {
+                        "id": "full_canonical_forest_plan_profile_eval",
+                        "path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_forest_plan_profile_eval_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            },
+                            {
+                                "name": "full_canonical_forest_plan_profile_eval_source_set_matches",
+                                "json_path": "active_source_set_ids",
+                                "equals": [full_source_set_id],
+                            },
+                        ],
+                    },
                 ],
                 "expansion_slots": [],
             }
@@ -717,8 +805,8 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
     result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
     assert result.summary["full_canonical_corpus_ready"] is True
-    assert result.summary["required_full_canonical_result_count"] == 5
-    assert result.summary["passed_required_full_canonical_result_count"] == 5
+    assert result.summary["required_full_canonical_result_count"] == 6
+    assert result.summary["passed_required_full_canonical_result_count"] == 6
     suite_results = {item["id"]: item for item in result.summary["suite_results"]}
     assert suite_results["full_canonical_authority_currentness"]["path"].endswith(
         f"derived/{full_source_set_id}/authority_currentness/authority_currentness_report.json"
@@ -727,6 +815,9 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
         "path"
     ].endswith(
         f"derived/{full_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json"
+    )
+    assert suite_results["full_canonical_forest_plan_profile_eval"]["path"].endswith(
+        "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
     )
 
 

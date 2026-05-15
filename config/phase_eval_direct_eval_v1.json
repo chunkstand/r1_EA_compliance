@@ -35,6 +35,14 @@
     },
     {
       "coverage_class": "direct_eval_required",
+      "expected_contract_id": "region1-forest-plan-profile-eval-coverage",
+      "lane_id": "forest_plan_profile_eval",
+      "phase_name": "nepa_3d_source_set_graph",
+      "producer": "forest_plan_profile_evaluation",
+      "results_path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
+    },
+    {
+      "coverage_class": "direct_eval_required",
       "lane_id": "claim_eval",
       "phase_name": "claim_extraction",
       "producer": "downstream_direct_evaluation"

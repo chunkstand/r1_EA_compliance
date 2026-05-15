@@ -1717,6 +1717,60 @@
       ]
     },
     {
+      "id": "full_canonical_forest_plan_profile_eval",
+      "label": "Full canonical cross-forest profile eval coverage",
+      "path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "graph_region1_profile_gap",
+      "checks": [
+        {
+          "name": "full_canonical_forest_plan_profile_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_contract_id",
+          "json_path": "contract_id",
+          "equals": "region1-forest-plan-profile-eval-coverage",
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_source_set_matches",
+          "json_path": "active_source_set_ids",
+          "equals": [
+            "source-set-5e65d845ce77e1a0"
+          ],
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_covered_count",
+          "json_path": "covered_profile_count",
+          "min": 10
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_fixture_contract_defined_count",
+          "json_path": "fixture_contract_defined_profile_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_not_started_count",
+          "json_path": "not_started_profile_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_profile_failure_count",
+          "json_path": "profile_failure_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_profile_eval_profiles_below_floor_ids",
+          "json_path": "profiles_below_floor_ids",
+          "equals": []
+        }
+      ]
+    },
+    {
       "id": "phase_eval_core",
       "label": "Current-promotion review phase eval readiness",
       "path": "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",

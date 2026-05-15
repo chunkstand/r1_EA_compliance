@@ -588,6 +588,91 @@ class EvidenceGraphTests(unittest.TestCase):
                 "phase-eval-direct-eval-v1",
             )
 
+    def test_phase_eval_requires_cross_forest_profile_eval_for_source_set_graph(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-032"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-032",
+                        title="Cross-forest profile eval phase source",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1EA-032 | Cross-forest profile eval phase source | artifact abc123",
+                        text="The full-canonical source-set graph should require cross-forest profile eval coverage.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-032": ["Cross-forest profile eval"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            graph_dir = output_dir / "derived" / source_set_id / "knowledge_graph"
+            graph_dir.mkdir(parents=True, exist_ok=True)
+            (graph_dir / "nepa_3d_graph_validation.json").write_text(
+                json.dumps(
+                    {
+                        "passed": True,
+                        "checks": [],
+                        "failure_category_counts": {},
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            (graph_dir / "nepa_3d_graph_summary.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "validation_passed": True,
+                        "validation_check_count": 66,
+                        "failed_validation_check_count": 0,
+                        "node_count": 10,
+                        "edge_count": 12,
+                        "readiness_blocker_counts": {},
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            missing_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            graph_phase = _phase(missing_result.summary, "nepa_3d_source_set_graph")
+            self.assertFalse(graph_phase["passed"])
+            self.assertFalse(graph_phase["reviewer_ready"])
+            self.assertEqual(graph_phase["details"]["direct_eval_status"], "direct_eval_missing")
+            self.assertIn("missing_required_direct_eval", graph_phase["failure_reasons"])
+            self.assertIn("proxy_only_coverage", graph_phase["failure_reasons"])
+
+            _write_forest_plan_profile_eval_results(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+            )
+
+            ready_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            graph_phase = _phase(ready_result.summary, "nepa_3d_source_set_graph")
+            self.assertTrue(graph_phase["passed"])
+            self.assertTrue(graph_phase["reviewer_ready"])
+            self.assertEqual(graph_phase["details"]["direct_eval_status"], "direct_eval_present")
+            self.assertEqual(
+                graph_phase["details"]["direct_eval_details"]["covered_profile_count"],
+                10,
+            )
+            self.assertEqual(
+                graph_phase["details"]["direct_eval_details"]["profile_failure_count"],
+                0,
+            )
+
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)
@@ -871,6 +956,56 @@ def _direct_eval_result_payload(
     if eval_id == "retrieval-direct-eval-v1":
         payload["query_count"] = case_count
     return payload
+
+
+def _write_forest_plan_profile_eval_results(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    passed: bool = True,
+    profile_failure_count: int = 0,
+    profiles_below_floor_ids: list[str] | None = None,
+) -> None:
+    path = (
+        output_dir
+        / "evaluations"
+        / "forest_plan_profile"
+        / "forest_plan_profile_eval_results.json"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "region1-forest-plan-profile-eval-results-v1",
+                "contract_id": "region1-forest-plan-profile-eval-coverage",
+                "contract_version": "1.0.0",
+                "passed": passed,
+                "active_source_set_ids": [source_set_id],
+                "expected_active_source_set_ids": [source_set_id],
+                "required_profile_count": 10,
+                "covered_profile_count": 10,
+                "fixture_contract_defined_profile_count": 0,
+                "not_started_profile_count": 0,
+                "profile_failure_count": profile_failure_count,
+                "profiles_below_floor_ids": profiles_below_floor_ids or [],
+                "threshold_failures": [],
+                "contract_checks": [
+                    {
+                        "name": "active_source_set_binding_matches_manifest",
+                        "passed": True,
+                    }
+                ],
+                "profiles": [
+                    {
+                        "forest_unit_id": "custer-gallatin-nf",
+                        "hard_negative_case_count": 2,
+                    }
+                ],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:

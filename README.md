@@ -959,7 +959,11 @@ is `covered`. The current live replay is green at `covered=10`,
 `fixture_contract_defined=0`, and `not_started=0`. Beaverhead-Deerlodge and Flathead still carry
 the richer reviewer-ready-profile floor, while the seven tracking-only profiles now clear the lane
 through governed scope-positive and hard-negative fixture coverage without overclaiming
-reviewer-ready depth.
+reviewer-ready depth. That green summary proves cross-forest profile-eval coverage only; it does
+not by itself prove reviewer-ready component/compliance depth or live-package proof. Source-set
+`phase-eval` now consumes the same summary as the required direct-eval input for
+`nepa_3d_source_set_graph`, and `promotion-suite` now requires the same green aggregate summary
+for the full-canonical Region 1 roster claim.
 
 PDF extraction uses Docling first. The default PDF path disables OCR for born-digital sources and
 runs Docling in a child process with a hard per-document timeout; when a born-digital PDF exceeds
@@ -1678,6 +1682,13 @@ inside a single aggregate score. When
 `source_library/evaluations/upstream/upstream_evaluation_results.json` exists, phase eval also adds
 an `upstream_evaluation` phase sourced from that aggregate summary and fails closed when the
 results file is missing or records `passed=false`. When
+`source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` exists and
+the committed direct-eval contract names it, phase eval also treats
+`nepa_3d_source_set_graph` as a direct-eval-required phase and records the profile-eval contract
+ID, active-source-set binding, covered/fixture/not-started counts, profile failure count, and any
+profiles below floor. Missing, stale, source-set-mismatched, or below-floor cross-forest profile
+summaries now fail that graph phase instead of letting the full-canonical roster claim depend only
+on structural graph counts. When
 `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also

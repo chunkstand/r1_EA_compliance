@@ -2,7 +2,33 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestones 0-3 resolved through local commit `1999277`; Milestone 4 remains open)
+Status: Resolved 2026-05-15 (Milestones 0-4 resolved; post-closeout alignment may still pin the implementation checkpoint explicitly)
+
+Milestone 4 closeout summary on 2026-05-15:
+
+- `config/phase_eval_direct_eval_v1.json` now routes
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` into
+  source-set `phase-eval` as the required direct-eval producer for `nepa_3d_source_set_graph`.
+- `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` now records the profile-eval contract ID,
+  active-source-set binding, covered/fixture/not-started counts, profile failure count, and any
+  profiles below floor; missing, stale, source-set-mismatched, or below-floor profile summaries
+  now fail the source-set graph phase.
+- `config/promotion_suite_v1.json` now adds `full_canonical_forest_plan_profile_eval`, so the
+  full-canonical promotion claim fails when the aggregate cross-forest profile summary is missing,
+  stale, source-set-mismatched, or below its declared roster floor.
+- Focused verification is green: the Milestone 4 bundle passed `57` tests, the full required
+  closeout bundle passed `145` tests with `3` subtests, `ruff check src tests` passed,
+  `python -m compileall src` passed, `forest-plan-components-build` passed, the live
+  `forest-plan-profile-eval` replay stayed green at `covered=10`, the live
+  `nepa-knowledge-graph-export` replay stayed green with `66` checks and `0` failures, and the
+  live `promotion-suite` replay stayed green.
+- The bounded active-source-set `phase-eval` replay still exits red on `2026-05-15`, but the new
+  `nepa_3d_source_set_graph` phase itself is green with `direct_eval_status=direct_eval_present`,
+  `covered_profile_count=10`, and `profile_failure_count=0`; the remaining live blockers are
+  outside this milestone (`retrieval-eval` failed `2/12`, and the shared
+  `compliance_review_eval` artifact is stale for this source set).
+- With the cross-forest lane now wired into phase-eval and promotion, the next routed packet is
+  Milestone `0` of `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 Milestone 0 closeout summary on 2026-05-15:
 

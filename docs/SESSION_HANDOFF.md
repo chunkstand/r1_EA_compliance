@@ -5,6 +5,68 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 4 Closeout
+
+This update resolves Milestone `4` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_promotion_suite.py`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  source-set `phase-eval` can no longer treat the full-canonical Region 1 roster claim as
+  structural-only. `nepa_3d_source_set_graph` now consumes
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` as a
+  required direct-eval input, and `promotion-suite` now carries
+  `full_canonical_forest_plan_profile_eval` so the same roster claim fails when the aggregate
+  cross-forest profile summary is missing, stale, source-set-mismatched, or below floor.
+- live signal:
+  `forest-plan-profile-eval` remains green on `source-set-5e65d845ce77e1a0` at
+  `covered=10`,
+  `fixture_contract_defined=0`,
+  `not_started=0`,
+  and `profile_failure_count=0`;
+  `nepa-knowledge-graph-export` remains green with `66` checks and `0` failures;
+  `promotion-suite` remains green;
+  and source-set `phase-eval` now records `nepa_3d_source_set_graph` as
+  `direct_eval_present` with the same green profile counts. The bounded source-set replay is still
+  red overall because `retrieval-eval` currently fails `2/12` cases and the shared
+  `reviews/compliance_review_eval/compliance_review_eval_results.json` artifact is stale for this
+  source set.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_forest_plan_profile_eval_contracts.py`
+  passed `46` tests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`
+  passed `57` tests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_compliance_review.py tests/test_nepa_knowledge_graph_export.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_architecture_contract.py`
+  passed `145` tests with `3` subtests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `component_count=1416` and `coverage_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`
+  passed with `validation_check_count=66` and `failed_validation_check_count=0`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`
+  exits red while now showing the new `nepa_3d_source_set_graph` phase green and enforced;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passed with `full_canonical_corpus_ready=true`.
+- next routing:
+  this packet is now resolved. The next executable slice in the stacked debt queue is Milestone
+  `0` of `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`, which must refresh the
+  predecessor state before widening multi-review component-eval coverage.
+
 ## Cross-Forest Profile Eval Coverage Milestone 3 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
