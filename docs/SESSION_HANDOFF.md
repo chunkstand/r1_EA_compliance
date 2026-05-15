@@ -5,6 +5,38 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 0 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`8fdcf25` (`docs: close component eval coverage milestone 0`).
+
+- scope:
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `0` closeout summary, the current-state routing note, and
+  this top handoff note now all pin the same Milestone `0` checkpoint commit `8fdcf25` and the
+  same next routed slice: Milestone `1` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the current-state routing layer now records the component-coverage Milestone `0` checkpoint
+  explicitly instead of only naming the next packet boundary.
+- supersession truth:
+  older lower handoff sections that still describe this packet only as a future added plan or as an
+  unclosed Milestone `0` preflight are historical only. The live routing truth for this lane is
+  this section plus the Milestone `0` closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `8fdcf25` and route the next executable slice as Milestone `1` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice after the closed component-coverage rebaseline is Milestone `1` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: add the standalone
+  component-retrieval eval producer.
+
 ## Forest Plan Component Eval Coverage Milestone 0 Closeout
 
 This update reduces Milestone `0` in
@@ -14,6 +46,9 @@ This update reduces Milestone `0` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `0` is committed locally as `8fdcf25`
+  (`docs: close component eval coverage milestone 0`).
 - committed baseline truth:
   the predecessor cross-forest packet is closed through local implementation commit `a958dc8` and
   alignment pass `59875ec`; the live direct-eval-aware source-set `phase-eval` seam exists under

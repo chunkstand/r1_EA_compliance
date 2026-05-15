@@ -2,10 +2,12 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestone 0 resolved; Milestone 1 next)
+Status: Proposed 2026-05-15 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 next)
 
 Milestone 0 closeout summary on 2026-05-15:
 
+- The Milestone 0 closeout checkpoint is local commit `8fdcf25`
+  (`docs: close component eval coverage milestone 0`).
 - The predecessor chain is now confirmed under its live names. The cross-forest predecessor packet
   is resolved through local commits `a958dc8` and alignment pass `59875ec`, the direct-eval-aware
   source-set `phase-eval` seam exists under `config/phase_eval_direct_eval_v1.json`, and the

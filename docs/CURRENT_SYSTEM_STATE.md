@@ -209,6 +209,10 @@ Latest closeout on 2026-05-13:
   eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
   resumed, the next active packet is Milestone `1` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
+  `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
+  West Reservoir in-scope decision, South Plateau routed-out decision, and ECID-only defaulting
+  baseline are all pinned before Milestone `1` begins.
 
 ## Cross-Forest Profile Eval Coverage
 
