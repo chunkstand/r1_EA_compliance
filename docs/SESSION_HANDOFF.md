@@ -5,6 +5,39 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 3 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`1999277` (`eval: cover remaining region1 tracking profiles`).
+
+- scope:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `3` closeout summary, the current-state closeout section,
+  and this top handoff note now all pin the same Milestone `3` checkpoint commit `1999277` and
+  the same next routed slice: Milestone `4` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the two current-state summary references that previously described Milestones `1-3` as resolved
+  only in a verified local worktree now identify the actual Milestone `3` closeout commit, which
+  matches the live cross-forest packet state after that milestone closed.
+- supersession truth:
+  older lower handoff sections that still route this lane to Milestone `0`, `1`, `2`, or the
+  pre-alignment Milestone `3` closeout note without the committed checkpoint are historical only.
+  The live routing truth for this lane is this section plus the Milestone `3` closeout section
+  immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `1999277` and route the next executable slice as Milestone `4`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  remains Milestone `4`: wire the now-green cross-forest profile-eval lane into phase-eval,
+  promotion, and the evaluation-coverage routing surfaces.
+
 ## Cross-Forest Profile Eval Coverage Milestone 3 Closeout
 
 This update resolves Milestone `3` in
@@ -24,6 +57,9 @@ This update resolves Milestone `3` in
   `docs/OUTPUT_SCHEMAS.md`,
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `3` is committed locally as `1999277`
+  (`eval: cover remaining region1 tracking profiles`).
 - closeout truth:
   the seven validated tracking-only Region 1 profiles are no longer `not_started`. Each now
   records governed scope-only coverage with

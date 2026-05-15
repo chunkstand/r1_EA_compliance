@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestones 0-3 resolved in the local verified worktree; Milestone 4 remains open)
+Status: Proposed 2026-05-15 (Milestones 0-3 resolved through local commit `1999277`; Milestone 4 remains open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -103,6 +103,8 @@ Milestone 3 closeout summary on 2026-05-15:
   `scope_positive_with_ambiguous_context`,
   `custer_hard_negative`, and
   `non_selected_non_custer_hard_negative`.
+- The Milestone 3 closeout checkpoint is local commit `1999277`
+  (`eval: cover remaining region1 tracking profiles`).
 - The new resolver-fixture lane is evaluation-scoped rather than reviewer-ready scoped. Tracking
   profiles now have explicit selected-scope and sibling-isolation tests without claiming district,
   management-area, overlay, currentness, or selected-profile compliance proof that belongs in later
