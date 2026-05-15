@@ -5,6 +5,39 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 4 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`a958dc8` (`eval: wire cross-forest profile coverage gates`).
+
+- scope:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `4` closeout summary, the current-state closeout section,
+  and this top handoff note now all pin the same Milestone `4` checkpoint commit `a958dc8` and
+  the same next routed slice: Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the current-state cross-forest closeout section now lists the Milestone `4` checkpoint
+  explicitly, so the broader repo routing no longer stops at the Milestone `3` commit while the
+  plan and top handoff have already advanced.
+- supersession truth:
+  older lower handoff sections that still route this lane to Milestone `4` or pin only the
+  Milestone `3` checkpoint are historical only. The live routing truth for this lane is this
+  section plus the Milestone `4` closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `a958dc8` and route the next executable slice as Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice after the resolved cross-forest packet is Milestone `0` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: refresh predecessor state and
+  live review/source-set truth before widening multi-review component-eval coverage.
+
 ## Cross-Forest Profile Eval Coverage Milestone 4 Closeout
 
 This update resolves Milestone `4` in
@@ -23,6 +56,9 @@ This update resolves Milestone `4` in
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `4` is committed locally as `a958dc8`
+  (`eval: wire cross-forest profile coverage gates`).
 - closeout truth:
   source-set `phase-eval` can no longer treat the full-canonical Region 1 roster claim as
   structural-only. `nepa_3d_source_set_graph` now consumes

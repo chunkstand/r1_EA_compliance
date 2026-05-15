@@ -219,6 +219,8 @@ Latest closeout on 2026-05-15:
   (`eval: promote beaverhead and flathead profile coverage`).
 - Milestone `3` closeout commit is `1999277`
   (`eval: cover remaining region1 tracking profiles`).
+- Milestone `4` closeout commit is `a958dc8`
+  (`eval: wire cross-forest profile coverage gates`).
 - Milestone `2` promotes Beaverhead-Deerlodge and Flathead from thin fixture contracts to
   governed `covered` status under the aggregate lane. Both rows record
   `positive_case_count>=4`,

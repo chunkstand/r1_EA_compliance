@@ -2,10 +2,12 @@
 
 Date: 2026-05-13
 
-Status: Resolved 2026-05-15 (Milestones 0-4 resolved; post-closeout alignment may still pin the implementation checkpoint explicitly)
+Status: Resolved 2026-05-15 (Milestones 0-4 resolved through local commit `a958dc8`)
 
 Milestone 4 closeout summary on 2026-05-15:
 
+- The Milestone 4 closeout checkpoint is local commit `a958dc8`
+  (`eval: wire cross-forest profile coverage gates`).
 - `config/phase_eval_direct_eval_v1.json` now routes
   `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` into
   source-set `phase-eval` as the required direct-eval producer for `nepa_3d_source_set_graph`.
