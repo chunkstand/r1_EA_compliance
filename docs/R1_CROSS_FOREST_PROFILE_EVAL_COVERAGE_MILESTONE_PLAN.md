@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestones 0-1 resolved and committed; Milestone 2 resolved and committed in `5aaa5d4`; Milestones 3-4 remain open)
+Status: Proposed 2026-05-15 (Milestones 0-3 resolved in the local verified worktree; Milestone 4 remains open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -90,6 +90,35 @@ Milestone 2 closeout summary on 2026-05-15:
 - Milestone 3 is now the next executable slice in this packet: eliminate `not_started` across the
   seven validated tracking-only profiles without widening this lane into a reviewer-ready or
   live-package expansion claim.
+
+Milestone 3 closeout summary on 2026-05-15:
+
+- The seven validated tracking-only profiles now satisfy the governed Milestone 3 floor in both
+  the live readiness roster and the aggregate manifest:
+  `minimum_positive_case_count >= 2`,
+  `minimum_hard_negative_case_count >= 2`,
+  `selected_profile_compliance_case_count = 0`,
+  and explicit fixture-family coverage for
+  `scope_positive`,
+  `scope_positive_with_ambiguous_context`,
+  `custer_hard_negative`, and
+  `non_selected_non_custer_hard_negative`.
+- The new resolver-fixture lane is evaluation-scoped rather than reviewer-ready scoped. Tracking
+  profiles now have explicit selected-scope and sibling-isolation tests without claiming district,
+  management-area, overlay, currentness, or selected-profile compliance proof that belongs in later
+  forest-specific packets.
+- The live aggregate replay on `source-set-5e65d845ce77e1a0` is now green:
+  `covered=10`,
+  `fixture_contract_defined=0`,
+  `not_started=0`,
+  `validated_not_started=0`,
+  and `profile_failure_count=0`.
+- The NEPA 3D source-set graph now refuses to treat promoted Region 1 profiles as sufficiently
+  covered unless they meet the governed eval-fixture floor. The live graph export now reports
+  `region1_forest_plan_promoted_profiles_with_eval_fixture_count=10` with `0` validation
+  failures.
+- Milestone 4 is now the next executable slice in this packet: wire the now-green cross-forest
+  profile-eval lane into phase-eval, promotion, and the evaluation coverage routing surfaces.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not reopen
 `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`, which remains retired as a routing

@@ -279,6 +279,46 @@ class ForestPlanProfileTests(unittest.TestCase):
                 )
             )
 
+    def test_milestone_3_tracking_only_profiles_are_promoted_to_covered_eval_contracts(self) -> None:
+        readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
+        tracking_only_ids = {
+            "bitterroot-nf",
+            "dakota-prairie-grasslands",
+            "helena-lewis-and-clark-nf",
+            "idaho-panhandle-nfs",
+            "kootenai-nf",
+            "lolo-nf",
+            "nez-perce-clearwater-nfs",
+        }
+        rows = {
+            row["forest_unit_id"]: row
+            for row in readiness["profile_rows"]
+            if row["forest_unit_id"] in tracking_only_ids
+        }
+
+        self.assertEqual(set(rows), tracking_only_ids)
+        expected_fixture_families = {
+            "scope_positive",
+            "scope_positive_with_ambiguous_context",
+            "custer_hard_negative",
+            "non_selected_non_custer_hard_negative",
+        }
+
+        for forest_unit_id, row in rows.items():
+            coverage = row["applicability_eval_coverage"]
+            self.assertEqual(row["profile_kind"], "region1_tracking_only")
+            self.assertEqual(row["graph_promotion_status"], "promoted")
+            self.assertEqual(coverage["status"], "covered")
+            self.assertGreaterEqual(coverage["positive_case_count"], 2)
+            self.assertGreaterEqual(coverage["hard_negative_case_count"], 2)
+            self.assertEqual(coverage["selected_profile_compliance_case_count"], 0)
+            self.assertEqual(
+                set(coverage["fixture_family_ids"]),
+                expected_fixture_families,
+                forest_unit_id,
+            )
+            self.assertEqual(len(coverage["fixtures"]), 4, forest_unit_id)
+
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))

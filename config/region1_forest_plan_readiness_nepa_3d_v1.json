@@ -291,7 +291,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-bitterroot-nf-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-bitterroot-nf-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Bitterroot National Forest"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-bitterroot-nf-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Bitterroot National Forest",
+              "Bitterroot"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_bitterroot_nf",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-bitterroot-nf-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_bitterroot_nf",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-bitterroot-nf-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -353,7 +405,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-dakota-prairie-grasslands-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Dakota Prairie Grasslands"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-dakota-prairie-grasslands-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Dakota Prairie Grasslands",
+              "Dakota Prairie"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_dakota_prairie_grasslands",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-dakota-prairie-grasslands-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_dakota_prairie_grasslands",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-dakota-prairie-grasslands-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -593,7 +697,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-helena-lewis-and-clark-nf-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Helena-Lewis and Clark National Forest"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-helena-lewis-and-clark-nf-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Helena-Lewis and Clark National Forest",
+              "Helena Lewis and Clark"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_helena_lewis_and_clark_nf",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-helena-lewis-and-clark-nf-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_helena_lewis_and_clark_nf",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-helena-lewis-and-clark-nf-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -651,7 +807,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-idaho-panhandle-nfs-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Idaho Panhandle National Forests"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-idaho-panhandle-nfs-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Idaho Panhandle National Forests",
+              "Idaho Panhandle"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_idaho_panhandle_nfs",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-idaho-panhandle-nfs-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_idaho_panhandle_nfs",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-idaho-panhandle-nfs-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -725,7 +933,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-kootenai-nf-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-kootenai-nf-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Kootenai National Forest"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-kootenai-nf-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Kootenai National Forest",
+              "Kootenai"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_kootenai_nf",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-kootenai-nf-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_kootenai_nf",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-kootenai-nf-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -787,7 +1047,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-lolo-nf-02",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-lolo-nf-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Lolo National Forest"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-lolo-nf-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Lolo National Forest",
+              "Lolo"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_lolo_nf",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-lolo-nf-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_lolo_nf",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-lolo-nf-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -849,7 +1161,59 @@
     {
       "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
       "applicability_eval_coverage": {
-        "status": "not_started"
+        "fixture_family_ids": [
+          "scope_positive",
+          "scope_positive_with_ambiguous_context",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative"
+        ],
+        "fixtures": [
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-nez-perce-clearwater-nfs-profile-positive-scope",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Nez Perce-Clearwater National Forests"
+            ]
+          },
+          {
+            "expected_status": "selected_profile_scope_only",
+            "fixture_family_id": "scope_positive_with_ambiguous_context",
+            "fixture_id": "region1-nez-perce-clearwater-nfs-profile-positive-ambiguous-context",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Nez Perce-Clearwater National Forests",
+              "Nez Perce-Clearwater"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_nez_perce_clearwater_nfs",
+            "fixture_family_id": "custer_hard_negative",
+            "fixture_id": "region1-nez-perce-clearwater-nfs-profile-hard-negative-custer-gallatin",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Custer Gallatin National Forest",
+              "Crazy Mountains Backcountry Area",
+              "2022 Land Management Plan"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_nez_perce_clearwater_nfs",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-nez-perce-clearwater-nfs-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          }
+        ],
+        "hard_negative_case_count": 2,
+        "positive_case_count": 2,
+        "selected_profile_compliance_case_count": 0,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",

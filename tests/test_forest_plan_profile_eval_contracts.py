@@ -13,27 +13,23 @@ READINESS = ROOT / "config" / "region1_forest_plan_readiness_nepa_3d_v1.json"
 PROFILES = ROOT / "config" / "forest_plan_profiles.json"
 
 
-def test_profile_eval_writes_outputs_and_fails_closed_on_live_incomplete_roster() -> None:
+def test_profile_eval_writes_outputs_and_passes_on_live_covered_roster() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         result = run_forest_plan_profile_eval(
             output_dir=Path(tmp),
             manifest_path=MANIFEST,
         )
 
-        assert result.summary["passed"] is False
+        assert result.summary["passed"] is True
         assert result.output_path.exists()
         assert result.report_path.exists()
-        assert result.summary["covered_profile_count"] == 3
+        assert result.summary["covered_profile_count"] == 10
         assert result.summary["fixture_contract_defined_profile_count"] == 0
-        assert result.summary["not_started_profile_count"] == 7
-        assert result.summary["profile_failure_count"] == 7
+        assert result.summary["not_started_profile_count"] == 0
+        assert result.summary["profile_failure_count"] == 0
         assert result.summary["active_source_set_ids"] == ["source-set-5e65d845ce77e1a0"]
-        assert _threshold_failure_names(result.summary) == {
-            "covered_profile_count_below_minimum",
-            "not_started_profile_count_above_maximum",
-        }
-        assert "beaverhead-deerlodge-nf" not in result.summary["profiles_below_floor_ids"]
-        assert "flathead-nf" not in result.summary["profiles_below_floor_ids"]
+        assert _threshold_failure_names(result.summary) == set()
+        assert result.summary["profiles_below_floor_ids"] == []
 
 
 def test_profile_eval_rejects_missing_profile_floors() -> None:
@@ -142,6 +138,47 @@ def test_profile_eval_rejects_milestone_2_profile_that_slips_back_to_placeholder
             "positive_case_floor_not_met",
             "hard_negative_case_floor_not_met",
             "selected_profile_compliance_floor_not_met",
+            "required_fixture_families_missing",
+        }
+
+
+def test_profile_eval_rejects_tracking_only_profile_that_slips_back_to_thin_placeholder_floor() -> None:
+    readiness = _read_json(READINESS)
+    lolo = next(row for row in readiness["profile_rows"] if row["forest_unit_id"] == "lolo-nf")
+    lolo["applicability_eval_coverage"] = {
+        "status": "covered",
+        "positive_case_count": 1,
+        "hard_negative_case_count": 1,
+        "selected_profile_compliance_case_count": 0,
+        "fixture_family_ids": [
+            "scope_positive",
+            "custer_hard_negative",
+        ],
+    }
+
+    with tempfile.TemporaryDirectory() as tmp:
+        readiness_path = Path(tmp) / "readiness.json"
+        manifest_path = Path(tmp) / "manifest.json"
+        _write_json(readiness_path, readiness)
+
+        manifest = _read_json(MANIFEST)
+        manifest["readiness_path"] = str(readiness_path)
+        manifest["forest_plan_profiles_path"] = str(PROFILES)
+        _write_json(manifest_path, manifest)
+
+        result = run_forest_plan_profile_eval(
+            output_dir=Path(tmp),
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is False
+        lolo_result = next(
+            profile for profile in result.summary["profiles"] if profile["forest_unit_id"] == "lolo-nf"
+        )
+        assert lolo_result["passed"] is False
+        assert set(lolo_result["failure_reasons"]) == {
+            "positive_case_floor_not_met",
+            "hard_negative_case_floor_not_met",
             "required_fixture_families_missing",
         }
 

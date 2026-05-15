@@ -5,6 +5,60 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 3 Closeout
+
+This update resolves Milestone `3` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  `tests/test_forest_plan_tracking_profile_eval_fixtures.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_forest_plan_profiles.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  the seven validated tracking-only Region 1 profiles are no longer `not_started`. Each now
+  records governed scope-only coverage with
+  `positive_case_count>=2`,
+  `hard_negative_case_count>=2`,
+  `selected_profile_compliance_case_count=0`,
+  and explicit fixture-family coverage for
+  `scope_positive`,
+  `scope_positive_with_ambiguous_context`,
+  `custer_hard_negative`, and
+  `non_selected_non_custer_hard_negative`.
+- aggregate state:
+  `forest-plan-profile-eval` is now green on `source-set-5e65d845ce77e1a0` at
+  `covered=10`,
+  `fixture_contract_defined=0`,
+  `not_started=0`,
+  `validated_not_started=0`,
+  and `profile_failure_count=0`.
+- graph gate:
+  the NEPA 3D source-set graph now fail-closes when a promoted Region 1 profile falls below the
+  governed eval-fixture floor. The live graph export now reports
+  `region1_forest_plan_promoted_profiles_with_eval_fixture_count=10` with `0` validation failures.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_tracking_profile_eval_fixtures.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_nepa_knowledge_graph_export.py tests/test_architecture_contract.py`
+  passed `79` tests with `28` subtests;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
+  passed and wrote the governed green aggregate summary;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`
+  passed with `validation_check_count=66` and `failed_validation_check_count=0`.
+- next routing:
+  Milestone `3` is resolved. The next executable slice in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md` is Milestone `4`: wire the now
+  green cross-forest profile-eval lane into phase-eval, promotion, and the evaluation-coverage
+  routing surfaces.
+
 ## Cross-Forest Profile Eval Coverage Milestone 2 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

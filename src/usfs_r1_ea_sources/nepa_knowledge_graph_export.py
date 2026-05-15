@@ -69,6 +69,9 @@ GRAPH_FAILURE_CATEGORY_BY_CHECK_NAME = {
     "nepa_3d_graph_region1_readiness_tracks_known_region1_units": (
         "graph_region1_profile_gap"
     ),
+    "nepa_3d_graph_region1_promoted_profiles_have_eval_fixtures": (
+        "graph_region1_profile_gap"
+    ),
     "nepa_3d_review_graph_exports_all_candidate_authorities": (
         "graph_missing_candidate_authority"
     ),
@@ -2360,7 +2363,10 @@ def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
         "region1_forest_plan_blocked_profile_count": len(blocked_rows),
         "region1_forest_plan_added_profile_count": len(added_rows),
         "region1_forest_plan_added_profiles_with_eval_fixture_count": sum(
-            1 for row in added_rows if _region1_profile_has_positive_and_negative_fixtures(row)
+            1 for row in added_rows if _region1_profile_meets_eval_fixture_floor(row)
+        ),
+        "region1_forest_plan_promoted_profiles_with_eval_fixture_count": sum(
+            1 for row in promoted_rows if _region1_profile_meets_eval_fixture_floor(row)
         ),
         "region1_forest_plan_completeness_claim": bool(
             readiness.get("region1_completeness_claim")
@@ -2405,16 +2411,42 @@ def _region1_readiness_summary(readiness: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _region1_profile_has_positive_and_negative_fixtures(row: dict[str, Any]) -> bool:
+def _region1_profile_meets_eval_fixture_floor(row: dict[str, Any]) -> bool:
     coverage = _dict(row.get("applicability_eval_coverage"))
-    fixtures = _dict_list(coverage.get("fixtures"))
-    fixture_types = {str(fixture.get("fixture_type") or "") for fixture in fixtures}
-    return (
-        "positive" in fixture_types
-        and "hard_negative" in fixture_types
-        and int(coverage.get("positive_case_count") or 0) >= 1
-        and int(coverage.get("hard_negative_case_count") or 0) >= 1
-    )
+    fixture_family_ids = {str(value) for value in _strings(coverage.get("fixture_family_ids"))}
+    if str(coverage.get("status") or "") != "covered":
+        return False
+    if int(coverage.get("positive_case_count") or 0) < 1:
+        return False
+    if int(coverage.get("hard_negative_case_count") or 0) < 1:
+        return False
+
+    profile_kind = str(row.get("profile_kind") or "")
+    if profile_kind == "active_profile":
+        return "selected_profile_component_eval_seed" in fixture_family_ids
+    if row.get("milestone_5_added_profile"):
+        return (
+            int(coverage.get("selected_profile_compliance_case_count") or 0) >= 1
+            and {
+                "scope_positive",
+                "custer_hard_negative",
+                "non_selected_non_custer_hard_negative",
+            }
+            <= fixture_family_ids
+        )
+    if profile_kind == "region1_tracking_only":
+        return (
+            int(coverage.get("positive_case_count") or 0) >= 2
+            and int(coverage.get("hard_negative_case_count") or 0) >= 2
+            and {
+                "scope_positive",
+                "scope_positive_with_ambiguous_context",
+                "custer_hard_negative",
+                "non_selected_non_custer_hard_negative",
+            }
+            <= fixture_family_ids
+        )
+    return True
 
 
 def _source_display_status(
@@ -2719,7 +2751,6 @@ def _milestone_validation_checks(
     readiness_ids = {
         str(row.get("forest_unit_id") or "") for row in readiness_rows if row.get("forest_unit_id")
     }
-    added_profile_rows = [row for row in readiness_rows if row.get("milestone_5_added_profile")]
     blocked_profile_ids_without_blockers = sorted(
         str(row.get("forest_unit_id") or "")
         for row in readiness_rows
@@ -2934,13 +2965,13 @@ def _milestone_validation_checks(
             sorted(readiness_ids - exported_forest_unit_ids),
         ),
         _check(
-            "nepa_3d_graph_region1_added_profiles_have_eval_fixtures",
-            bool(added_profile_rows)
-            and all(_region1_profile_has_positive_and_negative_fixtures(row) for row in added_profile_rows),
-            "positive and hard-negative fixture contract for each Milestone 5 added profile",
+            "nepa_3d_graph_region1_promoted_profiles_have_eval_fixtures",
+            bool(promoted_rows)
+            and all(_region1_profile_meets_eval_fixture_floor(row) for row in promoted_rows),
+            "governed eval fixture floor for each promoted Region 1 profile",
             {
-                str(row.get("forest_unit_id") or ""): _region1_profile_has_positive_and_negative_fixtures(row)
-                for row in added_profile_rows
+                str(row.get("forest_unit_id") or ""): _region1_profile_meets_eval_fixture_floor(row)
+                for row in promoted_rows
             },
         ),
         _check(

@@ -65,24 +65,28 @@
       "forest_unit_id": "bitterroot-nf",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
       "forest_unit_id": "dakota-prairie-grasslands",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
@@ -106,60 +110,70 @@
       "forest_unit_id": "helena-lewis-and-clark-nf",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
       "forest_unit_id": "idaho-panhandle-nfs",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
       "forest_unit_id": "kootenai-nf",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
       "forest_unit_id": "lolo-nf",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     },
     {
       "forest_unit_id": "nez-perce-clearwater-nfs",
       "profile_kind": "region1_tracking_only",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
+      "minimum_positive_case_count": 2,
+      "minimum_hard_negative_case_count": 2,
       "minimum_selected_profile_compliance_case_count": 0,
       "required_fixture_family_ids": [
         "scope_positive",
-        "hard_negative"
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
       ]
     }
   ]

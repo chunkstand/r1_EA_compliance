@@ -3813,11 +3813,10 @@ records:
   family tags, component inventory status, graph promotion status, and explicit failure reasons
 
 `forest_plan_profile_eval_report.md` is the operator-facing Markdown summary. It records the
-aggregate covered/fixture-contract-defined/not-started counts, the threshold failures that keep the
+aggregate covered/fixture-contract-defined/not-started counts, any threshold failures that keep the
 lane red, and the per-profile floor failures without requiring the raw JSON summary to be opened.
-The current live replay remains intentionally red at `covered=3`,
-`fixture_contract_defined=0`, and `not_started=7` while the seven tracking-only profiles wait for
-Milestone `3`.
+The current live replay on `2026-05-15` is green at `covered=10`,
+`fixture_contract_defined=0`, and `not_started=0`.
 
 ## Evidence Retrieval Outputs
 

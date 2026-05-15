@@ -198,8 +198,8 @@ Latest closeout on 2026-05-13:
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
-  eval coverage Milestones `1-2` are now resolved and committed. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `3` in
+  eval coverage Milestones `1-3` are now resolved in the verified local worktree. If the queued
+  follow-on stack is resumed, the next active packet is Milestone `4` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
@@ -209,13 +209,24 @@ Latest closeout on 2026-05-15:
 - Milestone `1` closeout commit is `46a2d49` (`eval: add cross-forest profile coverage gate`).
 - Milestone `2` closeout commit is `5aaa5d4`
   (`eval: promote beaverhead and flathead profile coverage`).
-- Milestone `2` now promotes Beaverhead-Deerlodge and Flathead from thin fixture contracts to
-  governed `covered` status under the aggregate lane. Both rows now record
+- Milestone `2` promotes Beaverhead-Deerlodge and Flathead from thin fixture contracts to
+  governed `covered` status under the aggregate lane. Both rows record
   `positive_case_count>=4`,
   `hard_negative_case_count>=3`,
   `selected_profile_compliance_case_count>=1`,
   and explicit richer `fixture_family_ids` instead of the older `1` / `1`
   placeholder contract.
+- Milestone `3` now promotes the seven tracking-only Region 1 profiles from
+  validated-but-`not_started` placeholders to governed scope-only covered status under the same
+  aggregate lane. Each row now records
+  `positive_case_count>=2`,
+  `hard_negative_case_count>=2`,
+  `selected_profile_compliance_case_count=0`,
+  and explicit fixture-family coverage for
+  `scope_positive`,
+  `scope_positive_with_ambiguous_context`,
+  `custer_hard_negative`, and
+  `non_selected_non_custer_hard_negative`.
 - The repo now ships a tracked aggregate cross-forest profile-eval contract at
   `config/region1_forest_plan_profile_eval_coverage_v1.json`.
 - The new owner command is `forest-plan-profile-eval`, implemented in
@@ -227,19 +238,22 @@ Latest closeout on 2026-05-15:
 - The producer reads the live readiness roster from
   `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the runtime profile roster from
   `config/forest_plan_profiles.json`; it does not keep a second hand-maintained forest list.
-- The current live replay on `source-set-5e65d845ce77e1a0` is intentionally red and fail-closed:
-  `covered_profile_count=3`,
+- The current live replay on `source-set-5e65d845ce77e1a0` is green and fail-closed:
+  `covered_profile_count=10`,
   `fixture_contract_defined_profile_count=0`,
-  `not_started_profile_count=7`,
-  `validated_not_started_profile_count=7`,
-  and `profile_failure_count=7`.
-- Custer Gallatin, Beaverhead-Deerlodge, and Flathead now pass the governed aggregate lane. The
-  remaining red surface is the seven tracking-only forests, which still fail on status,
-  positive-count, hard-negative-count, and missing fixture-family floors until Milestone `3`.
+  `not_started_profile_count=0`,
+  `validated_not_started_profile_count=0`,
+  and `profile_failure_count=0`.
+- All `10` Region 1 rows now pass the governed aggregate lane. The tracking-only profiles are still
+  evaluation-scoped rather than reviewer-ready scoped, but they no longer rely on `not_started` or
+  thin `1` / `1` placeholder coverage.
+- The NEPA 3D graph gate now refuses to treat promoted Region 1 profiles as sufficiently covered
+  unless they meet the governed eval-fixture floor. The live source-set graph now reports
+  `region1_forest_plan_promoted_profiles_with_eval_fixture_count=10` with `0` validation
+  failures.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now tracks this lane as
-  `direct_eval_strengthening_planned`: the aggregate owner exists and is governed, but the live
-  coverage remains intentionally incomplete until the later Milestone `3` tracking-profile
-  fixture-expansion slice closes.
+  `direct_eval_present`: the aggregate owner exists, the live roster is green, and the remaining
+  routed work is downstream wiring rather than missing direct-eval coverage.
 
 ## Gold Coverage Expansion
 
@@ -402,8 +416,9 @@ Latest closeout on 2026-05-12:
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
-  Plateau package set. Cross-forest profile eval coverage Milestones `1-2` are now resolved and
-  committed, so if this broader follow-on stack is resumed, the next step is Milestone `3` in
+  Plateau package set. Cross-forest profile eval coverage Milestones `1-3` are now resolved in the
+  verified local worktree, so if this broader follow-on stack is resumed, the next step is
+  Milestone `4` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,

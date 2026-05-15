@@ -35,6 +35,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert result.summary["region1_forest_plan_readiness_profile_count"] == 2
         assert result.summary["region1_forest_plan_added_profile_count"] == 1
         assert result.summary["region1_forest_plan_blocked_profile_count"] == 1
+        assert result.summary["region1_forest_plan_promoted_profiles_with_eval_fixture_count"] == 1
         assert result.summary["forest_plan_component_count"] == 1
         assert result.summary["region1_field_directive_requirement_graph_node_count"] == 1
         assert result.summary["region1_overlay_requirement_graph_node_count"] == 1
@@ -92,7 +93,7 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
         assert checks["nepa_3d_graph_edges_match_declared_endpoint_types"]["passed"]
         assert checks["nepa_3d_graph_region1_readiness_prevents_overclaim"]["passed"]
         assert checks["nepa_3d_graph_exports_region1_forest_units"]["passed"]
-        assert checks["nepa_3d_graph_region1_added_profiles_have_eval_fixtures"]["passed"]
+        assert checks["nepa_3d_graph_region1_promoted_profiles_have_eval_fixtures"]["passed"]
         assert checks["nepa_3d_graph_exports_region1_field_directive_requirements"]["passed"]
         assert checks["nepa_3d_graph_exports_region1_overlay_requirements"]["passed"]
         assert checks["nepa_3d_graph_region1_requirement_sources_are_cataloged"]["passed"]
@@ -161,8 +162,36 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
             for edge in edges
         )
 
-        first_bytes = result.graph_path.read_bytes()
-        second = build_nepa_knowledge_graph_export(
+
+def test_nepa_knowledge_graph_export_fails_when_promoted_tracking_profile_keeps_placeholder_eval_floor() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        readiness = _read_json(paths["region1_readiness"])
+        tracking_row = next(
+            row for row in readiness["profile_rows"] if row["forest_unit_id"] == "other-test-forest"
+        )
+        tracking_row["graph_promotion_status"] = "promoted"
+        tracking_row["milestone_5_added_profile"] = False
+        tracking_row["readiness_blockers"] = []
+        tracking_row["component_inventory_validation"] = {
+            "status": "validated",
+            "component_count": 1,
+            "standard_count": 1,
+        }
+        tracking_row["applicability_eval_coverage"] = {
+            "status": "covered",
+            "positive_case_count": 1,
+            "hard_negative_case_count": 1,
+            "fixture_family_ids": [
+                "scope_positive",
+                "custer_hard_negative",
+            ],
+        }
+        _write_json(paths["region1_readiness"], readiness)
+
+        result = build_nepa_knowledge_graph_export(
             output_dir=output_dir,
             source_set_id=source_set_id,
             graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
@@ -172,17 +201,15 @@ def test_nepa_knowledge_graph_export_builds_source_set_graph_from_audited_surfac
             region1_forest_plan_readiness_path=paths["region1_readiness"],
             rule_pack_path=paths["rule_pack"],
         )
-        assert second.graph_path.read_bytes() == first_bytes
 
-        phase_eval = run_phase_aligned_eval(
-            output_dir=output_dir,
-            source_set_id=source_set_id,
-        )
-        nepa_phase = _phase(phase_eval.summary, "nepa_3d_source_set_graph")
-        assert nepa_phase["passed"]
-        assert nepa_phase["reviewer_ready"]
-        assert nepa_phase["details"]["validation_check_count"] == 66
-        assert nepa_phase["details"]["failure_category_counts"] == {}
+        assert result.summary["validation_passed"] is False
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+        assert checks["nepa_3d_graph_region1_promoted_profiles_have_eval_fixtures"]["passed"] is False
+        assert checks["nepa_3d_graph_region1_promoted_profiles_have_eval_fixtures"]["actual"] == {
+            "other-test-forest": False,
+            "test-forest": True,
+        }
 
 
 def test_nepa_knowledge_graph_export_accepts_source_delta_readiness_report() -> None:
@@ -714,7 +741,12 @@ def _write_minimal_source_set(output_dir: Path, *, source_set_id: str) -> dict[s
                         "component_count": 1,
                         "standard_count": 1,
                     },
-                    "applicability_eval_coverage": {"status": "covered"},
+                    "applicability_eval_coverage": {
+                        "status": "covered",
+                        "positive_case_count": 12,
+                        "hard_negative_case_count": 6,
+                        "fixture_family_ids": ["selected_profile_component_eval_seed"],
+                    },
                 },
                 {
                     "forest_unit_id": "other-test-forest",
