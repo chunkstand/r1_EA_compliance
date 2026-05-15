@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestones 0-1 resolved and committed; Milestone 2 resolved; Milestones 3-4 remain open)
+Status: Proposed 2026-05-15 (Milestones 0-1 resolved and committed; Milestone 2 resolved and committed in `5aaa5d4`; Milestones 3-4 remain open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -69,6 +69,8 @@ Milestone 2 closeout summary on 2026-05-15:
   `minimum_positive_case_count >= 4`,
   `minimum_hard_negative_case_count >= 3`,
   and `minimum_selected_profile_compliance_case_count >= 1`.
+- The Milestone 2 closeout checkpoint is local commit `5aaa5d4`
+  (`eval: promote beaverhead and flathead profile coverage`).
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json` now marks both added active profiles as
   `covered` rather than `fixture_contract_defined`, and each row now carries explicit richer
   `fixture_family_ids` for scope, management-area or overlay, supporting-route or currentness,

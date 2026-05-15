@@ -198,8 +198,8 @@ Latest closeout on 2026-05-13:
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
-  eval coverage Milestone `1` is now also resolved and committed. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `2` in
+  eval coverage Milestones `1-2` are now resolved and committed. If the queued follow-on stack is
+  resumed, the next active packet is Milestone `3` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
@@ -207,6 +207,8 @@ Latest closeout on 2026-05-13:
 Latest closeout on 2026-05-15:
 
 - Milestone `1` closeout commit is `46a2d49` (`eval: add cross-forest profile coverage gate`).
+- Milestone `2` closeout commit is `5aaa5d4`
+  (`eval: promote beaverhead and flathead profile coverage`).
 - Milestone `2` now promotes Beaverhead-Deerlodge and Flathead from thin fixture contracts to
   governed `covered` status under the aggregate lane. Both rows now record
   `positive_case_count>=4`,
@@ -400,8 +402,8 @@ Latest closeout on 2026-05-12:
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
-  Plateau package set. Cross-forest profile eval coverage Milestone `1` is now resolved and
-  committed, so if this broader follow-on stack is resumed, the next step is Milestone `2` in
+  Plateau package set. Cross-forest profile eval coverage Milestones `1-2` are now resolved and
+  committed, so if this broader follow-on stack is resumed, the next step is Milestone `3` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,

@@ -5,6 +5,38 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 2 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`5aaa5d4` (`eval: promote beaverhead and flathead profile coverage`).
+
+- scope:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `2` closeout summary, the current-state closeout section,
+  and the top handoff note now all pin the same Milestone `2` checkpoint commit `5aaa5d4` and the
+  same next routed slice: Milestone `3` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the two top-level current-state references that still queued Milestone `2` from the broader
+  operational recovery and post-V1 expansion summaries now point to Milestone `3`, which matches
+  the live cross-forest packet state after Milestone `2` closed.
+- supersession truth:
+  older lower handoff sections that still route this lane to Milestone `0`, `1`, or `2` are
+  historical only. The live routing truth for this lane is this section plus the Milestone `2`
+  closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note now
+  pin commit `5aaa5d4` and route the next executable slice as Milestone `3`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  remains Milestone `3`: eliminate `not_started` across the seven validated tracking-only profiles
+  without widening this lane into a reviewer-ready or live-package expansion claim.
+
 ## Cross-Forest Profile Eval Coverage Milestone 2 Closeout
 
 This update resolves Milestone `2` in
@@ -31,6 +63,9 @@ This update resolves Milestone `2` in
   `selected_profile_compliance_case_count>=1`,
   and both carry explicit richer fixture-family metadata instead of the former `1` / `1`
   placeholder contract.
+- committed checkpoint:
+  Milestone `2` is committed locally as `5aaa5d4`
+  (`eval: promote beaverhead and flathead profile coverage`).
 - live replay:
   `forest-plan-profile-eval` remains intentionally red on `source-set-5e65d845ce77e1a0`, but it
   now reports the Milestone `2` expected state:
