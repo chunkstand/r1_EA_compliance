@@ -124,7 +124,7 @@ Latest closeout on 2026-05-13:
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
   `tests/test_promotion_suite.py` now fails closed if the committed manifest drifts back to the ad
   hoc source-set artifact.
-- Milestone `4` full-canonical promotion repair is now also resolved on `2026-05-15`:
+- Milestone `4` full-canonical promotion repair is now also resolved on `2026-05-14`:
   `config/promotion_suite_v1.json` now requires the actual active-source-set graph completeness
   signal for `full_canonical_nepa_3d_source_set_graph_summary`
   (`region1_forest_plan_graph_ready_profile_count>=10` and

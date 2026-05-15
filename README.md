@@ -107,7 +107,7 @@ Current full-corpus promotion boundary:
   `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and fresh non-strict
   `promotion-suite` replay reports `current_promotion_ready=true` and `promotion_ready=true`.
-- Milestone `4` full-canonical promotion repair is now also closed on `2026-05-15`:
+- Milestone `4` full-canonical promotion repair is now also closed on `2026-05-14`:
   `config/promotion_suite_v1.json` now requires the real active-source-set graph signal
   (`region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that some

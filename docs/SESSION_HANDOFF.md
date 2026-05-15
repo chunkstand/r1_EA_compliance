@@ -5,6 +5,23 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 4 Alignment Pass
+
+This update supersedes the earlier top recovery note only on date stamping, not on blocker
+ownership or live promotion truth.
+
+- operator-facing date truth:
+  Milestone `4` closeout commit `eaf4acc` (`Recover full-canonical promotion suite`) is dated
+  `2026-05-14`, so the top recovery plan, `README.md`, and `docs/CURRENT_SYSTEM_STATE.md` now all
+  use `2026-05-14` for that closeout instead of the impossible `2026-05-15` future date.
+- live routing truth unchanged:
+  non-strict `promotion-suite` still reports `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`, and `promotion_ready=true`, while strict expansion still
+  fails only on `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
+- routing truth:
+  Milestones `0-4` remain resolved. The active next step is still Milestone `5`: South Plateau
+  strict expansion reviewer-ready conversion.
+
 ## System Operational Recovery Milestone 4 Closeout
 
 This update supersedes the earlier top recovery note where it still said the active blocker was the

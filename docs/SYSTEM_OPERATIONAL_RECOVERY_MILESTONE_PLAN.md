@@ -2,7 +2,7 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-15 (Milestones 0-4 are now resolved and committed locally; the active
+Status: Active 2026-05-14 (Milestones 0-4 are now resolved and committed locally; the active
 remaining blocker is Milestone 5 South Plateau strict expansion reviewer-ready conversion)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
@@ -699,7 +699,7 @@ Outcome label: resolved
 
 Purpose: close the remaining full-canonical operational lane now that Milestone `3` is green.
 
-Closeout evidence on `2026-05-15`:
+Closeout evidence on `2026-05-14`:
 
 - `config/promotion_suite_v1.json` now requires
   `region1_forest_plan_graph_ready_profile_count>=10` and
