@@ -51,6 +51,24 @@ artifacts when the answer depends on live state.
 - Never stage pre-existing unrelated worktree changes. If unrelated dirty files are present, leave
   them untouched and call them out when relevant.
 
+## Debt Prevention
+
+- Treat temporary shortcuts as tracked debt, not tribal knowledge. `TODO`, `FIXME`, `HACK`, `XXX`,
+  `pragma: no cover`, `pytest.mark.skip`, `pytest.mark.xfail`, `pytest.skip`, `pytest.xfail`, and
+  similar escape hatches are allowed only when they are recorded in
+  `docs/TECH_DEBT_REGISTER.md` with an owner, reason, and removal condition.
+- Do not weaken tests or gates just to get green. New skips, xfails, coverage pragmas, relaxed
+  assertions, or temporary architecture exceptions need explicit user approval when they reduce the
+  protection level, and the same milestone must record the debt and the follow-up gate.
+- When a milestone touches a hotspot or orchestration file, prefer extracting a smaller owned
+  helper or module in the same milestone over adding another branch to the monolith.
+- If a change adds or changes public CLI behavior, generated artifact fields, or reviewer-facing
+  output, update the matching durable docs and contract tests in the same implementation slice.
+- New modules, command groups, and dependency-boundary exceptions must land with matching updates to
+  `docs/architecture_contract.toml` and the focused contract tests that enforce the boundary.
+- New lint suppressions should be rare, rule-specific, and locally justified. Do not add broad
+  file-level suppressions when a narrow fix or helper extraction would keep the code reviewable.
+
 ## Important Paths
 
 - Active workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
