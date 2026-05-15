@@ -5,6 +5,50 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Plan
+
+This planning-only update adds a fresh standalone full-phase refoundation packet
+for replacing the repo's old workbook source contract with the new canonical
+workbook `usfs_region1_ea_source_register_validated_codex_2026.xlsx`.
+
+- scope:
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+- routing truth:
+  the new workbook is treated as the intended future source of truth, not as a
+  supplemental forest-plan register and not as a chat-only idea. The current
+  repo remains the delivery vehicle, but the foundation layer must be refit so
+  `Document_Register_Master` becomes the only load table and the queue/audit
+  tabs remain non-load governance surfaces.
+- planned outcome:
+  a register-first, fail-closed NEPA system with canonical-source ingestion,
+  validated document capture, extraction-fidelity evals, graph-accuracy evals,
+  legally accurate review artifacts, and legally defensible draft-generation
+  artifacts backed by traceability and aggregate phase gates. The plan's second
+  pass made Bitter Lesson alignment explicit, and the latest pass now also
+  aligns the refoundation against Figay-style ontology standards and Yu-style
+  GraphRAG operating standards: domain knowledge must live in data and evals,
+  the graph must become agent-legible for authority reasoning, and the system
+  must ship explicit ontology/relationship/alias/graph-health artifacts plus a
+  repo-facing Figay/Yu acceptance rubric with executable eval requirements.
+  The latest tightening also pulls two early ingest-governance contracts into
+  the pre-implementation boundary: explicit direct-file readiness and
+  parser-routing/extraction-admission contracts must be frozen before bulk
+  ingestion begins.
+- current workbook evidence captured in the plan:
+  the inspected workbook has `11` sheets, `440` load-ready master rows, `39`
+  deferred direct-file queue rows, `157` removed/deduped audit rows, `30`
+  patched URL rows, and `17` added direct-source rows; its own load index says
+  `Document_Register_Master` is the only source-row load table.
+- next routing:
+  start with Phase `0` in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`. Do not begin
+  loader or capture rewrites until the workbook sheet contract, schema, and
+  migration baseline are written and committed. After the foundation refactor,
+  do not begin full-register document ingestion until the new Phase `1.5`
+  pre-ingestion contract-proving slice passes on a representative mixed source
+  set and closes any identity, alias, currentness, relationship, or
+  direct-file-readiness drift it exposes.
+
 ## System Operational Recovery Milestone 5 Alignment Pass
 
 This update supersedes the earlier top recovery note only on Milestone `5` closeout dating, not on
