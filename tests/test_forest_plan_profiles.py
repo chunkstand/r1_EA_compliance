@@ -231,21 +231,53 @@ class ForestPlanProfileTests(unittest.TestCase):
             {rule.route_id for rule in profile.supporting_record_trigger_rules},
         )
 
-    def test_flathead_readiness_row_promotes_after_proving_contract_exists(self) -> None:
+    def test_milestone_2_added_active_profiles_are_covered_by_richer_eval_contracts(self) -> None:
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
-        flathead = next(
-            row for row in readiness["profile_rows"] if row["forest_unit_id"] == "flathead-nf"
-        )
+        rows = {
+            row["forest_unit_id"]: row
+            for row in readiness["profile_rows"]
+            if row["forest_unit_id"] in {"beaverhead-deerlodge-nf", "flathead-nf"}
+        }
 
-        self.assertEqual(flathead["profile_kind"], "active_profile_added_milestone_5")
-        self.assertEqual(flathead["graph_promotion_status"], "promoted")
-        self.assertTrue(flathead["milestone_5_added_profile"])
-        self.assertEqual(
-            flathead["applicability_eval_coverage"]["status"],
-            "fixture_contract_defined",
-        )
-        self.assertEqual(flathead["applicability_eval_coverage"]["positive_case_count"], 1)
-        self.assertEqual(flathead["applicability_eval_coverage"]["hard_negative_case_count"], 1)
+        self.assertEqual(set(rows), {"beaverhead-deerlodge-nf", "flathead-nf"})
+
+        expected_fixture_families = {
+            "beaverhead-deerlodge-nf": {
+                "scope_positive",
+                "management_area_positive",
+                "supporting_route_positive",
+                "custer_hard_negative",
+                "non_selected_non_custer_hard_negative",
+                "selected_profile_compliance",
+            },
+            "flathead-nf": {
+                "scope_positive",
+                "management_area_positive",
+                "supporting_route_positive",
+                "currentness_positive",
+                "custer_hard_negative",
+                "non_selected_non_custer_hard_negative",
+                "selected_profile_compliance",
+            },
+        }
+
+        for forest_unit_id, row in rows.items():
+            coverage = row["applicability_eval_coverage"]
+            self.assertEqual(row["profile_kind"], "active_profile_added_milestone_5")
+            self.assertEqual(row["graph_promotion_status"], "promoted")
+            self.assertTrue(row["milestone_5_added_profile"])
+            self.assertEqual(coverage["status"], "covered")
+            self.assertGreaterEqual(coverage["positive_case_count"], 4)
+            self.assertGreaterEqual(coverage["hard_negative_case_count"], 3)
+            self.assertGreaterEqual(
+                coverage["selected_profile_compliance_case_count"],
+                1,
+            )
+            self.assertTrue(
+                expected_fixture_families[forest_unit_id].issubset(
+                    set(coverage["fixture_family_ids"])
+                )
+            )
 
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()

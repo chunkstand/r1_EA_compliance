@@ -8,6 +8,9 @@ import sqlite3
 import tempfile
 import unittest
 
+from tests.support.compliance_component_fixtures import (
+    _build_beaverhead_compliance_source_library,
+)
 from usfs_r1_ea_sources.forest_plan_resolver import run_forest_plan_resolver
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
@@ -1137,6 +1140,248 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertEqual(context["source_records"], [])
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_beaverhead_profile_resolves_project_context_and_supporting_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Beaverhead-Deerlodge National Forest.",
+                        "It is on the Dillon Ranger District.",
+                        "The project area is in the Big Hole Landscape and the West Big Hole Management Area.",
+                        "The action overlaps an Inventoried Roadless Area.",
+                        (
+                            "The EA tiers to the FEIS and references the travel management "
+                            "Record of Decision."
+                        ),
+                        (
+                            "ESA consultation includes Biological Assessments and Biological "
+                            "Opinions for Canada lynx and grizzly bear."
+                        ),
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "| BD-STD-WBH-01 | New permanent or temporary roads shall not be "
+                            "allowed. | Yes | EA section 2.2 says no new permanent or temporary "
+                            "roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-positive",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "beaverhead_deerlodge_nf")
+            self.assertFalse(context["needs_reviewer_resolution"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertTrue(result.summary["component_evaluation"]["validation_passed"])
+            self.assertEqual(_names(context["project_location_signals"]), ["Dillon Ranger District"])
+            self.assertEqual(_names(context["geographic_areas"]), ["Big Hole Landscape"])
+            self.assertEqual(_names(context["management_areas"]), ["West Big Hole Management Area"])
+            self.assertEqual(_names(context["overlays"]), ["Inventoried Roadless Area"])
+            self.assertEqual(
+                {
+                    "support-feis-plan-context",
+                    "support-rod-travel-management",
+                    "support-lynx-biological-assessment",
+                    "support-lynx-biological-opinion",
+                    "support-grizzly-biological-assessment",
+                    "support-grizzly-biological-opinion",
+                },
+                {entry["route_id"] for entry in context["supporting_plan_evidence"]},
+            )
+
+    def test_beaverhead_management_area_and_overlay_resolve_without_supporting_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Beaverhead-Deerlodge National Forest.",
+                        "It is on the Dillon Ranger District.",
+                        "The project area is in the Big Hole Landscape and the West Big Hole Management Area.",
+                        "The action overlaps an Inventoried Roadless Area.",
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "| BD-STD-WBH-01 | New permanent or temporary roads shall not be "
+                            "allowed. | Yes | EA section 2.2 says no new permanent or temporary "
+                            "roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-management-area-positive",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(context["scope_status"], "beaverhead_deerlodge_nf")
+            self.assertEqual(_names(context["geographic_areas"]), ["Big Hole Landscape"])
+            self.assertEqual(_names(context["management_areas"]), ["West Big Hole Management Area"])
+            self.assertEqual(_names(context["overlays"]), ["Inventoried Roadless Area"])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+
+    def test_beaverhead_supporting_routes_resolve_from_explicit_consultation_cues(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Beaverhead-Deerlodge National Forest.",
+                        "It is on the Dillon Ranger District in the Big Hole Landscape.",
+                        (
+                            "The EA tiers to the FEIS and references the travel management "
+                            "Record of Decision."
+                        ),
+                        (
+                            "ESA consultation includes Biological Assessments and Biological "
+                            "Opinions for Canada lynx and grizzly bear."
+                        ),
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "| BD-STD-WBH-01 | New permanent or temporary roads shall not be "
+                            "allowed. | Yes | EA section 2.2 says no new permanent or temporary "
+                            "roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-supporting-routes-positive",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(
+                {
+                    "support-feis-plan-context",
+                    "support-rod-travel-management",
+                    "support-lynx-biological-assessment",
+                    "support-lynx-biological-opinion",
+                    "support-grizzly-biological-assessment",
+                    "support-grizzly-biological-opinion",
+                },
+                {entry["route_id"] for entry in context["supporting_plan_evidence"]},
+            )
+
+    def test_beaverhead_custer_package_does_not_match_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-custer-hard-negative",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "not_selected_forest_unit")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertEqual(context["source_records"], [])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_beaverhead_flathead_package_does_not_match_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Flathead National Forest in the Hungry Horse "
+                    "Geographic Area and the Jewel Basin Hiking Area."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-flathead-hard-negative",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "not_selected_forest_unit")
+            self.assertEqual(context["forest_unit"]["name"], "Flathead National Forest")
+            self.assertEqual(context["source_records"], [])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_beaverhead_generic_decision_labels_and_lowercase_acronyms_do_not_trigger_routes(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Beaverhead-Deerlodge National Forest.",
+                        "It is on the Dillon Ranger District.",
+                        "The project area is in the Big Hole Landscape and the West Big Hole Management Area.",
+                        "The action overlaps an Inventoried Roadless Area.",
+                        (
+                            "The plan consistency table discusses the selected alternative and "
+                            "decision basis for the project decision."
+                        ),
+                        "Field notes say ba and bo are shorthand tags, and travel management continues.",
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "| BD-STD-WBH-01 | New permanent or temporary roads shall not be "
+                            "allowed. | Yes | EA section 2.2 says no new permanent or temporary "
+                            "roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-no-broad-trigger",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+
     def test_flathead_profile_resolves_project_context_and_currentness_routes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -1344,6 +1589,52 @@ class ForestPlanResolverTests(unittest.TestCase):
             self.assertTrue(result.summary["reviewer_ready"])
             self.assertEqual(context["supporting_plan_evidence"], [])
 
+    def test_flathead_currentness_routes_resolve_from_explicit_monitoring_cues(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_flathead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Flathead National Forest.",
+                        "It is on the Hungry Horse-Glacier View Ranger District.",
+                        "The project area is in the Hungry Horse Geographic Area and the Jewel Basin Hiking Area.",
+                        (
+                            "The monitoring program, Biennial Monitoring Evaluation Report "
+                            "(BMER), and 2023 Administrative Change are incorporated by reference."
+                        ),
+                        (
+                            "No motorized use, mechanized transport, or stock use are proposed "
+                            "in the Jewel Basin Hiking Area."
+                        ),
+                        (
+                            "New stream diversions and associated ditches shall have screens "
+                            "placed on them to prevent capture of fish and other aquatic organisms."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="flathead-nf",
+                source_set_id=source_set_id,
+                review_id="flathead-currentness-positive",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(
+                {
+                    "support-monitoring-program",
+                    "support-bmer-currentness",
+                    "support-administrative-change",
+                },
+                {entry["route_id"] for entry in context["supporting_plan_evidence"]},
+            )
+
     def test_flathead_generic_monitoring_text_does_not_trigger_currentness_routes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -1397,6 +1688,63 @@ class ForestPlanResolverTests(unittest.TestCase):
                 },
                 {entry["route_id"] for entry in context["supporting_plan_evidence"]},
             )
+
+    def test_flathead_custer_package_does_not_match_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_flathead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Custer Gallatin National Forest in the "
+                    "Crazy Mountains Backcountry Area."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="flathead-nf",
+                source_set_id=source_set_id,
+                review_id="flathead-custer-hard-negative",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "not_selected_forest_unit")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertEqual(context["source_records"], [])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+            self.assertTrue(result.summary["reviewer_ready"])
+
+    def test_flathead_beaverhead_package_does_not_match_selected_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_flathead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "The proposed action is on the Beaverhead-Deerlodge National Forest in the "
+                    "Big Hole Landscape and the West Big Hole Management Area."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="flathead-nf",
+                source_set_id=source_set_id,
+                review_id="flathead-beaverhead-hard-negative",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "not_selected_forest_unit")
+            self.assertEqual(
+                context["forest_unit"]["name"],
+                "Beaverhead-Deerlodge National Forest",
+            )
+            self.assertEqual(context["source_records"], [])
+            self.assertEqual(context["supporting_plan_evidence"], [])
+            self.assertTrue(result.summary["reviewer_ready"])
 
 
 _CUSTER_PLAN_TEXT = (
@@ -1758,6 +2106,12 @@ def _build_flathead_source_library(
         output_dir / "derived" / source_set_id / "forest_plan_components",
         source_set_id=source_set_id,
     )
+    return source_set_id
+
+
+def _build_beaverhead_source_library(output_dir: Path) -> str:
+    source_set_id = "source-set-beaverhead-test"
+    _build_beaverhead_compliance_source_library(output_dir, source_set_id)
     return source_set_id
 
 

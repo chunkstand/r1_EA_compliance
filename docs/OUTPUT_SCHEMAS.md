@@ -3815,6 +3815,9 @@ records:
 `forest_plan_profile_eval_report.md` is the operator-facing Markdown summary. It records the
 aggregate covered/fixture-contract-defined/not-started counts, the threshold failures that keep the
 lane red, and the per-profile floor failures without requiring the raw JSON summary to be opened.
+The current live replay remains intentionally red at `covered=3`,
+`fixture_contract_defined=0`, and `not_started=7` while the seven tracking-only profiles wait for
+Milestone `3`.
 
 ## Evidence Retrieval Outputs
 

@@ -312,8 +312,8 @@ that review artifact, search-coverage, retrieval-trace, and graph-trace referenc
 Milestone 5 now adds the Region 1 forest-plan readiness matrix and active profile contracts: the
 source-set graph tracks `10` Region 1 forest/grassland profiles, keeps
 `region1_completeness_claim=false`, carries `2` Milestone 5 added active profile contracts
-(Beaverhead-Deerlodge and Flathead) with positive and hard-negative applicability fixture
-contracts, renders `3` field-directive requirements and `5` overlay requirement groups as
+(Beaverhead-Deerlodge and Flathead) with governed covered applicability contracts, renders `3`
+field-directive requirements and `5` overlay requirement groups as
 graph-visible nodes with source links, and now validates the active full-canonical roster with
 `region1_forest_plan_graph_ready_profile_count=10` and
 `region1_forest_plan_blocked_profile_count=0`. NEPA 3D Milestone 6 now adds the
@@ -952,9 +952,10 @@ The command writes
 tracked readiness roster from `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the
 runtime profile roster from `config/forest_plan_profiles.json`, binds the aggregate gate to active
 source set `source-set-5e65d845ce77e1a0`, and fails closed until every validated Region 1 profile
-is `covered`. The current live replay is intentionally red at `covered=1`,
-`fixture_contract_defined=2`, and `not_started=7`, so this command is the governed owner for the
-next Beaverhead/Flathead and tracking-only profile coverage milestones rather than a green proxy.
+is `covered`. The current live replay is intentionally red at `covered=3`,
+`fixture_contract_defined=0`, and `not_started=7`, so Beaverhead-Deerlodge and Flathead now pass
+the governed aggregate lane while the seven tracking-only profiles remain the only red surface for
+the next Milestone 3 coverage packet rather than a green proxy.
 
 PDF extraction uses Docling first. The default PDF path disables OCR for born-digital sources and
 runs Docling in a child process with a hard per-document timeout; when a born-digital PDF exceeds

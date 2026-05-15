@@ -207,6 +207,13 @@ Latest closeout on 2026-05-13:
 Latest closeout on 2026-05-15:
 
 - Milestone `1` closeout commit is `46a2d49` (`eval: add cross-forest profile coverage gate`).
+- Milestone `2` now promotes Beaverhead-Deerlodge and Flathead from thin fixture contracts to
+  governed `covered` status under the aggregate lane. Both rows now record
+  `positive_case_count>=4`,
+  `hard_negative_case_count>=3`,
+  `selected_profile_compliance_case_count>=1`,
+  and explicit richer `fixture_family_ids` instead of the older `1` / `1`
+  placeholder contract.
 - The repo now ships a tracked aggregate cross-forest profile-eval contract at
   `config/region1_forest_plan_profile_eval_coverage_v1.json`.
 - The new owner command is `forest-plan-profile-eval`, implemented in
@@ -219,19 +226,18 @@ Latest closeout on 2026-05-15:
   `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the runtime profile roster from
   `config/forest_plan_profiles.json`; it does not keep a second hand-maintained forest list.
 - The current live replay on `source-set-5e65d845ce77e1a0` is intentionally red and fail-closed:
-  `covered_profile_count=1`,
-  `fixture_contract_defined_profile_count=2`,
+  `covered_profile_count=3`,
+  `fixture_contract_defined_profile_count=0`,
   `not_started_profile_count=7`,
   `validated_not_started_profile_count=7`,
-  and `profile_failure_count=9`.
-- Custer Gallatin is the only passing profile under the new gate. Beaverhead-Deerlodge and
-  Flathead now fail only on status floor (`fixture_contract_defined` instead of `covered`), while
-  the seven tracking-only forests fail on status, positive-count, hard-negative-count, and missing
-  fixture-family floors.
+  and `profile_failure_count=7`.
+- Custer Gallatin, Beaverhead-Deerlodge, and Flathead now pass the governed aggregate lane. The
+  remaining red surface is the seven tracking-only forests, which still fail on status,
+  positive-count, hard-negative-count, and missing fixture-family floors until Milestone `3`.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now tracks this lane as
   `direct_eval_strengthening_planned`: the aggregate owner exists and is governed, but the live
-  coverage remains intentionally incomplete until the later Milestone `2` and Milestone `3`
-  fixture-expansion slices close.
+  coverage remains intentionally incomplete until the later Milestone `3` tracking-profile
+  fixture-expansion slice closes.
 
 ## Gold Coverage Expansion
 

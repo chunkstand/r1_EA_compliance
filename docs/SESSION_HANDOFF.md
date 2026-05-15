@@ -5,6 +5,56 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 2 Closeout
+
+This update resolves Milestone `2` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `tests/test_forest_plan_profiles.py`,
+  `tests/test_forest_plan_resolver.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `README.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  Beaverhead-Deerlodge and Flathead now satisfy the governed richer cross-forest fixture floor.
+  Both added active-profile rows are `covered`, both now record
+  `positive_case_count>=4`,
+  `hard_negative_case_count>=3`,
+  `selected_profile_compliance_case_count>=1`,
+  and both carry explicit richer fixture-family metadata instead of the former `1` / `1`
+  placeholder contract.
+- live replay:
+  `forest-plan-profile-eval` remains intentionally red on `source-set-5e65d845ce77e1a0`, but it
+  now reports the Milestone `2` expected state:
+  `covered=3`,
+  `fixture_contract_defined=0`,
+  `not_started=7`,
+  `validated_not_started=7`,
+  and `profile_failure_count=7`.
+  Custer Gallatin, Beaverhead-Deerlodge, and Flathead pass; only the seven tracking-only profiles
+  remain below floor.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver.py tests/test_compliance_review.py tests/test_forest_plan_profile_eval_contracts.py tests/test_architecture_contract.py`
+  passed `97` tests with `3` subtests;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
+  exits `1` as expected while writing the governed red summary for the remaining seven tracking-only
+  profiles;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed; and
+  `git diff --check` passed.
+- next routing:
+  Milestone `2` is resolved. The next executable slice in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md` is Milestone `3`: eliminate
+  `not_started` across the seven validated tracking-only profiles without turning this packet into
+  a reviewer-ready or live-package expansion lane.
+
 ## Cross-Forest Profile Eval Coverage Milestone 1 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint drift after commit `46a2d49`

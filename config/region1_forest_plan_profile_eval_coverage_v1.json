@@ -49,12 +49,16 @@
       "forest_unit_id": "beaverhead-deerlodge-nf",
       "profile_kind": "active_profile_added_milestone_5",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
-      "minimum_selected_profile_compliance_case_count": 0,
+      "minimum_positive_case_count": 4,
+      "minimum_hard_negative_case_count": 3,
+      "minimum_selected_profile_compliance_case_count": 1,
       "required_fixture_family_ids": [
         "scope_positive",
-        "custer_hard_negative"
+        "management_area_positive",
+        "supporting_route_positive",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative",
+        "selected_profile_compliance"
       ]
     },
     {
@@ -85,12 +89,17 @@
       "forest_unit_id": "flathead-nf",
       "profile_kind": "active_profile_added_milestone_5",
       "required_coverage_status": "covered",
-      "minimum_positive_case_count": 1,
-      "minimum_hard_negative_case_count": 1,
-      "minimum_selected_profile_compliance_case_count": 0,
+      "minimum_positive_case_count": 4,
+      "minimum_hard_negative_case_count": 3,
+      "minimum_selected_profile_compliance_case_count": 1,
       "required_fixture_family_ids": [
         "scope_positive",
-        "custer_hard_negative"
+        "management_area_positive",
+        "supporting_route_positive",
+        "currentness_positive",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative",
+        "selected_profile_compliance"
       ]
     },
     {

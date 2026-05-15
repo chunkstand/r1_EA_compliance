@@ -2,7 +2,7 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestone 1 resolved and committed in `46a2d49`; Milestones 2-4 remain open)
+Status: Proposed 2026-05-15 (Milestones 0-1 resolved and committed; Milestone 2 resolved; Milestones 3-4 remain open)
 
 Milestone 0 closeout summary on 2026-05-15:
 
@@ -61,6 +61,33 @@ Milestone 1 closeout summary on 2026-05-15:
   positive-count, hard-negative-count, and missing-fixture-family floors.
 - Milestone 2 is now the next executable slice in this packet: promote Beaverhead and Flathead
   from thin fixture contracts to real `covered` status under this aggregate gate.
+
+Milestone 2 closeout summary on 2026-05-15:
+
+- Beaverhead-Deerlodge and Flathead now satisfy the Milestone 2 richer floor in both the live
+  readiness roster and the governed aggregate manifest:
+  `minimum_positive_case_count >= 4`,
+  `minimum_hard_negative_case_count >= 3`,
+  and `minimum_selected_profile_compliance_case_count >= 1`.
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json` now marks both added active profiles as
+  `covered` rather than `fixture_contract_defined`, and each row now carries explicit richer
+  `fixture_family_ids` for scope, management-area or overlay, supporting-route or currentness,
+  Custer hard negative, non-selected non-Custer hard negative, and selected-profile compliance.
+- Focused selected-profile resolver coverage now exists for Beaverhead-Deerlodge and Flathead
+  across positive scope/context cases, explicit supporting-route or currentness-positive cases,
+  Custer hard negatives, sibling non-Custer hard negatives, and broad-trigger hard negatives, while
+  the selected-profile compliance proofs remain green in `tests/test_compliance_review.py`.
+- The live aggregate replay stays intentionally red on `source-set-5e65d845ce77e1a0`, but it has
+  moved to the Milestone 2 expected state:
+  `covered=3`,
+  `fixture_contract_defined=0`,
+  `not_started=7`,
+  and `profile_failure_count=7`.
+  Custer Gallatin, Beaverhead-Deerlodge, and Flathead now pass the governed lane; only the seven
+  tracking-only profiles remain below floor.
+- Milestone 3 is now the next executable slice in this packet: eliminate `not_started` across the
+  seven validated tracking-only profiles without widening this lane into a reviewer-ready or
+  live-package expansion claim.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not reopen
 `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`, which remains retired as a routing

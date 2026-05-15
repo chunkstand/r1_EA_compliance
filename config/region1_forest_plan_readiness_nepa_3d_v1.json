@@ -134,21 +134,63 @@
       "applicability_eval_coverage": {
         "fixture_family_ids": [
           "scope_positive",
-          "custer_hard_negative"
+          "management_area_positive",
+          "supporting_route_positive",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative",
+          "generic_route_hard_negative",
+          "selected_profile_compliance"
         ],
         "fixtures": [
           {
-            "expected_status": "candidate_profile_scope_positive_until_component_inventory",
-            "fixture_id": "region1-bdnf-profile-positive",
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-bdnf-profile-positive-scope-and-support",
             "fixture_type": "positive",
             "package_terms": [
               "Beaverhead-Deerlodge National Forest",
-              "forest plan consistency",
-              "Pioneer Mountains"
+              "Dillon Ranger District",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          },
+          {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "management_area_positive",
+            "fixture_id": "region1-bdnf-profile-positive-management-area-overlay",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area",
+              "Inventoried Roadless Area"
+            ]
+          },
+          {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "supporting_route_positive",
+            "fixture_id": "region1-bdnf-profile-positive-supporting-routes",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "travel management Record of Decision",
+              "Biological Assessments and Biological Opinions for Canada lynx and grizzly bear"
+            ]
+          },
+          {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "selected_profile_compliance",
+            "fixture_id": "region1-bdnf-profile-selected-compliance",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "West Big Hole Management Area",
+              "BD-STD-WBH-01"
             ]
           },
           {
             "expected_status": "not_applicable_to_beaverhead_deerlodge",
+            "fixture_family_id": "custer_hard_negative",
             "fixture_id": "region1-bdnf-profile-hard-negative-custer-gallatin",
             "fixture_type": "hard_negative",
             "package_terms": [
@@ -156,11 +198,35 @@
               "Crazy Mountains Backcountry Area",
               "2022 Land Management Plan"
             ]
+          },
+          {
+            "expected_status": "not_applicable_to_beaverhead_deerlodge",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-bdnf-profile-hard-negative-flathead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Flathead National Forest",
+              "Hungry Horse Geographic Area",
+              "Jewel Basin Hiking Area"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_beaverhead_deerlodge_support_routes",
+            "fixture_family_id": "generic_route_hard_negative",
+            "fixture_id": "region1-bdnf-profile-hard-negative-generic-route-text",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "selected alternative",
+              "decision basis",
+              "ba",
+              "bo"
+            ]
           }
         ],
-        "hard_negative_case_count": 1,
-        "positive_case_count": 1,
-        "status": "fixture_contract_defined"
+        "hard_negative_case_count": 3,
+        "positive_case_count": 4,
+        "selected_profile_compliance_case_count": 1,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
@@ -355,12 +421,19 @@
       "applicability_eval_coverage": {
         "fixture_family_ids": [
           "scope_positive",
-          "custer_hard_negative"
+          "management_area_positive",
+          "supporting_route_positive",
+          "currentness_positive",
+          "custer_hard_negative",
+          "non_selected_non_custer_hard_negative",
+          "generic_route_hard_negative",
+          "selected_profile_compliance"
         ],
         "fixtures": [
           {
-            "expected_status": "candidate_profile_scope_positive_until_component_inventory",
-            "fixture_id": "region1-flathead-profile-positive",
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "scope_positive",
+            "fixture_id": "region1-flathead-profile-positive-scope-and-support",
             "fixture_type": "positive",
             "package_terms": [
               "Flathead National Forest",
@@ -369,7 +442,42 @@
             ]
           },
           {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "management_area_positive",
+            "fixture_id": "region1-flathead-profile-positive-support-document-roles",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Flathead National Forest",
+              "Jewel Basin Recommended Wilderness Area",
+              "Inventoried Roadless Area"
+            ]
+          },
+          {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "currentness_positive",
+            "fixture_id": "region1-flathead-profile-positive-currentness-routes",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Flathead National Forest",
+              "monitoring program",
+              "Biennial Monitoring Evaluation Report",
+              "2023 Administrative Change"
+            ]
+          },
+          {
+            "expected_status": "reviewer_ready_selected_profile",
+            "fixture_family_id": "selected_profile_compliance",
+            "fixture_id": "region1-flathead-profile-selected-compliance",
+            "fixture_type": "positive",
+            "package_terms": [
+              "Flathead National Forest",
+              "Jewel Basin Hiking Area",
+              "FW-STD-WTR-01"
+            ]
+          },
+          {
             "expected_status": "not_applicable_to_flathead",
+            "fixture_family_id": "custer_hard_negative",
             "fixture_id": "region1-flathead-profile-hard-negative-custer-gallatin",
             "fixture_type": "hard_negative",
             "package_terms": [
@@ -377,11 +485,45 @@
               "Crazy Mountains Backcountry Area",
               "2022 Land Management Plan"
             ]
+          },
+          {
+            "expected_status": "not_applicable_to_flathead",
+            "fixture_family_id": "non_selected_non_custer_hard_negative",
+            "fixture_id": "region1-flathead-profile-hard-negative-beaverhead",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "Beaverhead-Deerlodge National Forest",
+              "Big Hole Landscape",
+              "West Big Hole Management Area"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_flathead_support_routes",
+            "fixture_family_id": "generic_route_hard_negative",
+            "fixture_id": "region1-flathead-profile-hard-negative-generic-route-text",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "selected alternative",
+              "decision basis",
+              "ba",
+              "bo"
+            ]
+          },
+          {
+            "expected_status": "not_applicable_to_flathead_currentness_routes",
+            "fixture_family_id": "generic_route_hard_negative",
+            "fixture_id": "region1-flathead-profile-hard-negative-generic-currentness-text",
+            "fixture_type": "hard_negative",
+            "package_terms": [
+              "monitoring section discusses seasonal data",
+              "visitor monitoring"
+            ]
           }
         ],
-        "hard_negative_case_count": 1,
-        "positive_case_count": 1,
-        "status": "fixture_contract_defined"
+        "hard_negative_case_count": 4,
+        "positive_case_count": 4,
+        "selected_profile_compliance_case_count": 1,
+        "status": "covered"
       },
       "component_inventory_validation": {
         "artifact_path": "source_library/derived/source-set-5e65d845ce77e1a0/forest_plan_components/component_inventory_build_coverage.json",
