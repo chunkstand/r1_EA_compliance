@@ -48,7 +48,7 @@ slice is only ready-to-close.
   `phase-eval` orchestration coverage.
 - Several other test modules still import `run_phase_aligned_eval` from `evidence_graph.py`,
   including `tests/test_claim_extraction.py`, `tests/test_applicability_eval.py`,
-  `tests/test_nepa_knowledge_graph_export.py`, and `tests/test_compliance_review.py`.
+  `tests/test_nepa_knowledge_graph_export.py`, and `tests/test_compliance_phase_eval.py`.
 - The fresh architecture probe on 2026-05-13 reported:
   - `evidence_graph.py`: `3535` lines, `30` revisions, hotspot score `106050`
   - `47` code files above `800` lines
@@ -80,7 +80,7 @@ Completion means all of the following are true:
   moving code.
 - Do not change public CLI command names, key options, or output artifact locations unless a
   migration is explicitly required and documented.
-- Do not solve the unrelated `tests/test_compliance_review.py` hotspot in the same commit unless a
+- Do not reopen the resolved compliance-review test-boundary lane in the same commit unless a
   narrowly scoped import or owner-surface adjustment is required for this split.
 - Do not reopen the current direct-eval lane by inventing a second threshold contract or a second
   `phase-eval` manifest.
@@ -126,7 +126,7 @@ Completion means all of the following are true:
   `tests/test_claim_extraction.py`,
   `tests/test_applicability_eval.py`,
   `tests/test_nepa_knowledge_graph_export.py`,
-  `tests/test_compliance_review.py`,
+  `tests/test_compliance_phase_eval.py`,
   `tests/test_architecture_contract.py`
 - durable docs and routing artifacts:
   `docs/ARCHITECTURE.md`,
@@ -198,7 +198,7 @@ Completion means all of the following are true:
   of relocating them.
   Owner surface: `tests/test_phase_eval.py`,
   `tests/test_evidence_graph.py`,
-  `tests/test_compliance_review.py`
+  `tests/test_compliance_phase_eval.py`
   Prevention gate: every source-set and review-scoped phase-eval behavior currently covered in
   `tests/test_evidence_graph.py` must have an equivalent or broader assertion in the new
   `tests/test_phase_eval.py`, and existing cross-lane consumers must stay green.
@@ -417,7 +417,7 @@ Implementation tasks:
    - `tests/test_claim_extraction.py`
    - `tests/test_applicability_eval.py`
    - `tests/test_nepa_knowledge_graph_export.py`
-   - `tests/test_compliance_review.py`
+   - `tests/test_compliance_phase_eval.py`
    - any other repo-local callers found in Sequence 0
 4. Keep cross-lane assertions where they belong, but do not leave phase-eval ownership hidden
    inside `tests/test_evidence_graph.py`.
@@ -437,7 +437,7 @@ Acceptance signals:
 Required verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_review.py tests/test_cli.py tests/test_architecture_contract.py -q
+PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_phase_eval.py tests/test_cli.py tests/test_architecture_contract.py -q
 git diff --check
 ```
 
@@ -481,7 +481,7 @@ Acceptance signals:
 Required verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_review.py tests/test_cli.py tests/test_architecture_contract.py -q
+PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_phase_eval.py tests/test_cli.py tests/test_architecture_contract.py -q
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown
@@ -572,9 +572,9 @@ Stop conditions:
 
 - If `phase_eval.py` exceeds the line budget even after the extraction, write a follow-on milestone
   to split optional phase families by owner rather than accepting a renamed hotspot.
-- If `tests/test_compliance_review.py` remains the dominant active hotspot and still carries phase
-  orchestration setup that is no longer needed after this split, route the next architecture plan to
-  the compliance-review test boundary rather than reopening the graph owner.
+- If `tests/test_compliance_phase_eval.py` becomes the dominant active hotspot after the owner move,
+  route the next architecture plan to a focused phase-eval test-boundary packet rather than
+  reopening the graph owner.
 - If the direct-eval predecessor lane lands a different helper or replay-context owner shape than
   this plan assumes, refresh this plan in Sequence 0 rather than forcing the old naming onto the
   repo.

@@ -6,6 +6,26 @@ This report ranked the next refactoring target using size, recent churn, documen
 and reviewer risk. The first bounded split has now moved compliance matrix and PDF rendering into
 `src/usfs_r1_ea_sources/compliance_outputs.py` without changing output artifact contracts.
 
+## 2026-05-15 Compliance Test Boundary Closeout
+
+- `tests/test_compliance_review.py` has now been reduced from `4937` lines to a `1388`-line core
+  owner suite for `run_compliance_review(...)`, rule-pack gates, component gates, and package
+  search behavior.
+- The mixed-owner catch-all coverage moved into owner-aligned suites:
+  `tests/test_compliance_review_eval.py`,
+  `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`, and
+  `tests/test_compliance_phase_eval.py`.
+- Shared synthetic builders now live under `tests/support/`, and
+  `tests/test_compliance_review_test_boundary.py` fail-closes on forbidden core imports, helper
+  regressions, sentinel ownership drift, and suite budget overruns.
+- The 2026-05-15 architecture probe no longer ranks `tests/test_compliance_review.py` as the
+  repo's top hotspot. The active hotspot order now starts with
+  `src/usfs_r1_ea_sources/evidence_graph.py`, while the narrowed compliance core suite remains a
+  smaller follow-on hotspot.
+- Future focused verification should no longer use `tests/test_compliance_review.py` as the
+  default command for compliance eval, gold-eval, or compliance-derived `phase-eval` behavior.
+
 ## Evidence Commands
 
 ```bash

@@ -5,6 +5,87 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Compliance Review Test Boundary Closeout
+
+This update resolves `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `tests/__init__.py`,
+  `tests/support/__init__.py`,
+  `tests/support/compliance_review_fixtures.py`,
+  `tests/support/compliance_component_fixtures.py`,
+  `tests/support/compliance_phase_eval_fixtures.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_compliance_review_eval.py`,
+  `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`,
+  `tests/test_compliance_review_test_boundary.py`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/HOTSPOT_REPORT_2026_05_04.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  `tests/test_compliance_review.py` is now a `1388`-line core suite. Eval, coverage, gold, and
+  compliance-derived `phase-eval` cases moved into owner-aligned suites at
+  `tests/test_compliance_review_eval.py` (`356` lines),
+  `tests/test_compliance_coverage.py` (`242` lines),
+  `tests/test_compliance_gold_eval.py` (`293` lines), and
+  `tests/test_compliance_phase_eval.py` (`728` lines).
+- boundary enforcement:
+  `tests/test_compliance_review_test_boundary.py` now locks suite budgets, forbidden core imports,
+  builder-helper removal, and sentinel ownership for generated review gate, eval, coverage, gold,
+  and phase behavior.
+- shared support:
+  synthetic source-library builders now live in
+  `tests/support/compliance_review_fixtures.py` (`1096` lines),
+  `tests/support/compliance_component_fixtures.py` (`872` lines), and
+  `tests/support/compliance_phase_eval_fixtures.py` (`100` lines); `tests/__init__.py` and
+  `tests/support/__init__.py` make those shared modules importable under pytest.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review_test_boundary.py -q`
+  passed `4/4`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_coverage.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py -q`
+  passed `68` tests with `3` subtests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review_test_boundary.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_coverage.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed `151` tests with `3` subtests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed; and
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
+  now ranks `src/usfs_r1_ea_sources/evidence_graph.py` as the top hotspot while
+  `tests/test_compliance_review.py` drops to `1388` lines and hotspot score `68012`.
+- next routing:
+  the compliance test-boundary lane is resolved. For architecture follow-ons, the next explicit
+  hotspot packet remains `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`; for the
+  broader repo queue, the next routed packet remains Milestone `0` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+## Compliance Review Test Boundary Plan Refresh
+
+This planning-only update refreshes
+`docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md` against the current clean checkout and the
+latest hotspot measurements.
+
+- scope:
+  `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md`
+- routing truth:
+  this remains a standalone explicit hotspot follow-on, not the repo's default queued next packet.
+  The refreshed plan no longer assumes `tests/test_compliance_review.py` is already dirty, but
+  Sequence `0` still fail-closes if new overlapping dirty work appears or if the `phase-eval`
+  owner path cannot be refreshed to one current truth before suite motion begins.
+- current evidence captured in the plan:
+  `git status -sb` is currently clean;
+  `tests/test_compliance_review.py` remains `4937` lines; the 2026-05-15 architecture probe still
+  ranks it as the repo's top hotspot (`49` revisions, hotspot score `241913`); and the adjacent
+  production owners remain smaller at `424` lines for `compliance_review.py`, `1299` for
+  `compliance_review_eval.py`, `506` for `compliance_coverage.py`, and `781` for
+  `compliance_gold_eval.py`.
+- next routing:
+  if this hotspot becomes the chosen implementation lane, start with Sequence `0` in the refreshed
+  plan. Otherwise preserve the repo's broader queued follow-on order and treat this as a
+  ready-to-execute sidecar plan.
+
 ## Canonical Source Register Graph Retrieval Starter
 
 This update lands the repo-specific Phase `0` graph retrieval starter without

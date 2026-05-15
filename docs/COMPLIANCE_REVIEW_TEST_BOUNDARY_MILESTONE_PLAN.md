@@ -1,9 +1,35 @@
 # Compliance Review Test Boundary Milestone Plan
 
-Date: 2026-05-13
+Date: 2026-05-15
 
-Status: Proposed 2026-05-13 (standalone hotspot follow-on; starts only after overlapping dirty
-`tests/test_compliance_review.py` work is committed or explicitly parked)
+Status: Closed (resolved) on 2026-05-15
+
+Closeout summary:
+
+- `tests/test_compliance_review.py` is now a `1388`-line core suite that owns only core
+  `run_compliance_review(...)`, rule-pack gate, component gate, and package-search behavior.
+- Eval, coverage, gold-eval, and compliance-derived `phase-eval` cases now live in dedicated
+  owner suites:
+  `tests/test_compliance_review_eval.py`,
+  `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`, and
+  `tests/test_compliance_phase_eval.py`.
+- Shared synthetic source-library and artifact builders now live in
+  `tests/support/compliance_review_fixtures.py`,
+  `tests/support/compliance_component_fixtures.py`,
+  and `tests/support/compliance_phase_eval_fixtures.py`.
+- `tests/test_compliance_review_test_boundary.py` now fail-closes on suite budgets, forbidden core
+  imports, builder-helper regressions, and sentinel ownership drift.
+- Closeout verification passed:
+  `tests/test_compliance_review_test_boundary.py` `4/4`,
+  the five focused compliance suites `68` tests with `3` subtests,
+  the full closeout bundle `151` tests with `3` subtests,
+  `ruff check src tests`,
+  `python -m compileall src`,
+  and the 2026-05-15 architecture probe.
+- The fresh architecture probe no longer ranks `tests/test_compliance_review.py` as the repo's top
+  hotspot; it now measures `49` revisions, `1388` lines, and hotspot score `68012`, while
+  `src/usfs_r1_ea_sources/evidence_graph.py` is the current top hotspot.
 
 Owner context: This is a fresh standalone milestone plan for the P2 architecture finding that
 compliance verification is concentrated in one oversized test file instead of boundary-sized suites.
@@ -34,11 +60,15 @@ uncommitted slice is only ready-to-close.
 ## Current Evidence
 
 - `tests/test_compliance_review.py` is currently `4937` lines.
-- The fresh architecture probe on 2026-05-13 reports `tests/test_compliance_review.py` as the top
-  hotspot in the repo: `48` revisions, `4937` lines, hotspot score `236976`.
+- The fresh architecture probe on 2026-05-15 still reports `tests/test_compliance_review.py` as
+  the top hotspot in the repo: `49` revisions, `4937` lines, hotspot score `241913`.
 - `src/usfs_r1_ea_sources/compliance_review.py` is currently only `424` lines, which means the
   production compliance owner has already been split more aggressively than the tests that claim to
   verify it.
+- Adjacent compliance production owners are already narrower than the test surface they support:
+  `src/usfs_r1_ea_sources/compliance_review_eval.py` is `1299` lines,
+  `src/usfs_r1_ea_sources/compliance_coverage.py` is `506` lines, and
+  `src/usfs_r1_ea_sources/compliance_gold_eval.py` is `781` lines.
 - The current test file imports production surfaces from multiple owners at once:
   `compliance_review`, `compliance_review_eval`, `compliance_coverage`,
   `compliance_gold_eval`, `evidence_graph`, `claim_extraction`, `retrieval`,
@@ -63,9 +93,10 @@ uncommitted slice is only ready-to-close.
   verification surface for gold, downstream direct-eval, Flathead/Beaverhead profile, and
   phase-eval work. If this file is split without doc routing updates, future sessions will use the
   wrong focused commands.
-- The current worktree already has overlapping dirty changes in `tests/test_compliance_review.py`
-  and new planning work that still references that file, including
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- The current checkout is clean, so overlapping-file risk is now a preflight gate rather than a
+  live blocker. Sequence 0 must still stop if new dirty work lands in
+  `tests/test_compliance_review.py` or if the `phase-eval` owner move is mid-flight when
+  implementation starts.
 
 ## Goal
 
@@ -226,19 +257,22 @@ Completion means all of the following are true:
   Future-Codex misuse scenario: a later session reduces the hotspot by deleting hard tests and
   keeping only happy-path smoke cases; the sentinel ownership gate must fail.
 
-- Weak point forecast: the split lands while the current dirty direct-eval or phase-eval planning
-  lanes still overlap the same file, producing unstable imports and stale routing.
+- Weak point forecast: the split lands while a new overlapping `phase-eval` owner move or dirty
+  test-file change touches the same surface, producing unstable imports and stale routing.
   Owner surface: `tests/test_compliance_review.py`,
   `docs/SESSION_HANDOFF.md`,
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
   Prevention gate: Sequence 0 must rebaseline the landed or parked `phase-eval` owner and stop if
   overlapping dirty work in `tests/test_compliance_review.py` cannot be separated safely.
-  Fail threshold: implementation starts while the same file still has unresolved overlapping dirty
-  work from another milestone.
-  Controlled violation: begin the split before the active dirty `tests/test_compliance_review.py`
-  changes are committed or parked; the preflight must fail.
-  Future-Codex misuse scenario: a later session assumes a planned owner move already landed and
-  patches tests against the wrong import path; the rebaseline step prevents that.
+  Fail threshold: implementation starts while the same file has unresolved overlapping dirty work
+  from another milestone, or while the `phase-eval` owner path cannot be refreshed to one current
+  truth.
+  Controlled violation: begin the split after a new local edit lands in
+  `tests/test_compliance_review.py` or while the `phase-eval` owner move is only partially landed;
+  the preflight must fail.
+  Future-Codex misuse scenario: a later session assumes a planned owner move already landed, or
+  ignores new overlapping edits in the core suite, and patches tests against the wrong import path;
+  the rebaseline step prevents that.
 
 - Weak point forecast: active docs and handoff commands keep pointing at the old catch-all suite, so
   future sessions keep running the wrong focused verification.
@@ -277,8 +311,8 @@ Implementation tasks:
    - `wc -l src/usfs_r1_ea_sources/compliance_gold_eval.py`
    - `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
 3. Run a freshness check on the hotspot measurements and active doc-routing references before any
-   suite motion begins. If line counts, owner names, or active plan references have changed during
-   the current dirty work, rewrite the implementation packet to the fresh values before continuing.
+   suite motion begins. If line counts, owner names, or active plan references have drifted since
+   this plan refresh, rewrite the implementation packet to the fresh values before continuing.
 4. Re-read the current `phase-eval` routing truth:
    - if the `phase-eval` owner still lives in `evidence_graph.py`, use that owner for the current
      split
@@ -551,9 +585,9 @@ Historical closed plans may remain unchanged unless they are still used as activ
 ## Local Commit Closeout Policy
 
 - Stage only the verified milestone slice.
-- Leave unrelated dirty and untracked files alone, including the viewer work, root-level East
-  Crazies draft exports, and unrelated phase-eval/direct-eval work unless the user explicitly
-  broadens scope.
+- Leave unrelated dirty and untracked files alone, including any unrelated viewer or
+  phase-eval/direct-eval work that may be present when implementation starts, unless the user
+  explicitly broadens scope.
 - Include the suite split, boundary gate, docs updates, and handoff update in the same commit.
 - Record the commit hash in `docs/SESSION_HANDOFF.md`.
 - Treat the milestone as incomplete until the local atomic commit exists.

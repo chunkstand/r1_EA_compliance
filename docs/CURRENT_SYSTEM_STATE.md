@@ -13,6 +13,40 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Compliance Review Test Boundary
+
+Latest closeout on 2026-05-15:
+
+- `tests/test_compliance_review.py` is now a `1388`-line core orchestration suite for
+  `run_compliance_review(...)`, rule-pack gates, component gates, and package-search behavior
+  only.
+- Mixed-owner eval, coverage, gold-eval, and compliance-derived `phase-eval` coverage now lives in
+  dedicated owner suites:
+  `tests/test_compliance_review_eval.py` (`356` lines),
+  `tests/test_compliance_coverage.py` (`242` lines),
+  `tests/test_compliance_gold_eval.py` (`293` lines), and
+  `tests/test_compliance_phase_eval.py` (`728` lines).
+- Shared synthetic source-library and artifact builders now live under `tests/support/` in
+  `compliance_review_fixtures.py` (`1096` lines),
+  `compliance_component_fixtures.py` (`872` lines), and
+  `compliance_phase_eval_fixtures.py` (`100` lines). `tests/__init__.py` and
+  `tests/support/__init__.py` now make those shared helpers importable under pytest.
+- `tests/test_compliance_review_test_boundary.py` now fails closed on core-suite forbidden imports,
+  builder-helper regressions, sentinel ownership drift, and suite line-budget regressions.
+- Focused compliance verification should now route by owner surface rather than treating
+  `tests/test_compliance_review.py` as the catch-all command for eval, gold-eval, or
+  `phase-eval` behavior.
+- Closeout verification passed:
+  `tests/test_compliance_review_test_boundary.py` `4/4`,
+  the five focused compliance suites `68` tests with `3` subtests,
+  the full closeout bundle `151` tests with `3` subtests,
+  `ruff check src tests`,
+  `python -m compileall src`,
+  and the 2026-05-15 architecture probe.
+- The fresh architecture probe no longer ranks `tests/test_compliance_review.py` as the repo's top
+  hotspot. It remains active at `49` revisions and hotspot score `68012`, but
+  `src/usfs_r1_ea_sources/evidence_graph.py` is now the top hotspot.
+
 ## Current Workbook Contract
 
 The uploaded workbook now defines the active source contract:
