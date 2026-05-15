@@ -2,10 +2,10 @@
 
 Date: 2026-05-14
 
-Status: Resolved 2026-05-14 (the direct-eval seam is committed, the live ba8d retrieval direct-
-eval blocker is recovered, current-promotion promotion-suite alignment is also closed, and any
-remaining operational replay work is now routed through
-`docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4)
+Status: Resolved 2026-05-15 (the direct-eval seam is committed, the live ba8d retrieval direct-
+eval blocker is recovered, current-promotion promotion-suite alignment is closed, full-canonical
+promotion replay is also green again, and any remaining operational replay work is now routed
+through `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 5)
 
 Owner context: This is a refreshed standalone follow-on milestone plan. It now stacks after
 `docs/REAL_PACKAGE_REVIEW_COVERAGE_MILESTONE_PLAN.md`, which itself starts only after
@@ -32,9 +32,10 @@ Gap-close context on 2026-05-14:
   and source-set `phase-eval` now reports `retrieval` as `direct_eval_present` rather than
   `direct_eval_failed`.
 - This plan is now a consumed input lane. Future sessions should preserve the repaired replay-
-  context, retrieval-owner, and current-promotion promotion truth surfaces and continue from
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4 rather than reopening this seam
-  or the now-closed current-promotion promotion closeout.
+  context, retrieval-owner, current-promotion promotion, and full-canonical promotion truth
+  surfaces and continue from `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 5
+  rather than reopening this seam or the now-closed current-promotion or full-canonical promotion
+  closeouts.
 
 ## Purpose
 
@@ -97,9 +98,12 @@ commit all land together. A verified but uncommitted slice is only ready-to-clos
   `phase-eval --review-id v1-cg-ecid-compliance-review` passes `23/23` with
   `contract_backed_promotion_ready=true`, `config/promotion_suite_v1.json` now points
   `phase_eval_core` at that review-owned artifact, and fresh non-strict `promotion-suite` now
-  reports `current_promotion_ready=true`. The next work is the separate operational replay packet
-  in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 4: clear the remaining full-
-  canonical `graph_region1_profile_gap`.
+  reports `current_promotion_ready=true`. That full-canonical follow-on is now also closed:
+  `config/promotion_suite_v1.json` no longer requires blocked promoted profiles on the active
+  `5e65...` source-set graph, and fresh non-strict `promotion-suite` now reports
+  `full_canonical_corpus_ready=true`. The next work is the separate operational replay packet in
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` Milestone 5: clear the remaining South
+  Plateau strict-expansion blocker.
 - Sequence 0A replay-context repair has now been refreshed again for the recovered current-promotion
   catalog surface. The tracked replay context at
   `config/replay_contexts/v1-cg-ecid-compliance-review.json` now declares

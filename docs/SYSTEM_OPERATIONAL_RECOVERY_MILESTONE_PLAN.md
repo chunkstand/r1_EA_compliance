@@ -2,9 +2,8 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-14 (Milestones 0-3 are now resolved and committed locally; the active
-remaining blocker is Milestone 4 full-canonical promotion repair on
-`full_canonical_nepa_3d_source_set_graph_summary` for `source-set-5e65d845ce77e1a0`)
+Status: Active 2026-05-15 (Milestones 0-4 are now resolved and committed locally; the active
+remaining blocker is Milestone 5 South Plateau strict expansion reviewer-ready conversion)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
 `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as if that lane were still a self-contained
@@ -110,23 +109,24 @@ full-canonical, or South Plateau owner issue.
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
   `tests/test_promotion_suite.py` now fails closed if that manifest path drifts back to the ad hoc
   ba8d source-set artifact.
+- Milestone `4` full-canonical promotion repair is now resolved in this worktree:
+  `config/promotion_suite_v1.json` now requires the actual active-source-set graph completeness
+  signal for `full_canonical_nepa_3d_source_set_graph_summary`
+  (`region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that at least
+  one promoted Region 1 profile must still be blocked.
 - Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` now reports
   `current_promotion_ready=true`, `promotion_ready=true`,
-  `full_canonical_corpus_ready=false`,
-  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
+  `full_canonical_corpus_ready=true`,
+  `full_canonical_failure_category_counts={}`, and
   `expansion_ready=false`.
-- The only required non-strict suite failure is now
-  `full_canonical_nepa_3d_source_set_graph_summary` at
-  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
-  where `region1_forest_plan_blocked_profile_count=0` currently misses the manifest expectation
-  `>=1` and yields `graph_region1_profile_gap`.
 - Fresh strict `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion`
   fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
 - `docs/CURRENT_SYSTEM_STATE.md` now records current-promotion promotion as green and routes the
-  active operational recovery through Milestone `4` full-canonical repair while preserving
+  active operational recovery through Milestone `5` strict expansion while preserving
   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the now-
-  resolved direct-eval and current-promotion recovery work.
+  resolved direct-eval, current-promotion, and full-canonical recovery work.
 - `config/promotion_suite_v1.json` remains the operational truth owner and still encodes three
   separate surfaces:
   - current promotion on `source-set-ba8d0feae79501b8`
@@ -613,9 +613,9 @@ Closeout note on 2026-05-14:
 - Fresh live verification on `source-set-ba8d0feae79501b8` passed:
   `retrieval-build`, `retrieval-eval` (`12/12`), and source-set `phase-eval` (`11/11` with
   `threshold_failed_phase_count=0`).
-- Milestone `3` is now resolved in this packet. The next active milestone is Milestone `4`:
-  clear the remaining full-canonical `graph_region1_profile_gap` without regressing the now-green
-  current-promotion lane.
+- Milestones `3-4` are now resolved in this packet. The next active milestone is Milestone `5`:
+  close the remaining South Plateau strict expansion blocker without regressing the now-green
+  current-promotion and full-canonical lanes.
 
 ### Milestone 3 - Current-Promotion Phase-Eval And Promotion Closeout
 
@@ -698,6 +698,22 @@ Stop conditions:
 Outcome label: resolved
 
 Purpose: close the remaining full-canonical operational lane now that Milestone `3` is green.
+
+Closeout evidence on `2026-05-15`:
+
+- `config/promotion_suite_v1.json` now requires
+  `region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0` for
+  `full_canonical_nepa_3d_source_set_graph_summary`.
+- `tests/test_promotion_suite.py` now locks the stronger full-canonical graph contract and the
+  success case with all promoted profiles ready.
+- Fresh `forest-plan-components-build` still passes with `1416` components, `397` standards, and
+  `component_source_accuracy_passed=true`.
+- Fresh `nepa-knowledge-graph-export --source-set-id source-set-5e65d845ce77e1a0` still passes
+  with `66` checks, `0` failed, `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`.
+- Fresh non-strict `promotion-suite` now reports `full_canonical_corpus_ready=true` and
+  `full_canonical_failure_category_counts={}`.
 
 Implementation tasks:
 

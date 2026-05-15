@@ -107,11 +107,14 @@ Current full-corpus promotion boundary:
   `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and fresh non-strict
   `promotion-suite` replay reports `current_promotion_ready=true` and `promotion_ready=true`.
-- The same fresh non-strict replay still reports `full_canonical_corpus_ready=false`,
-  `expansion_ready=false`, and
-  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`.
-- The active remaining operational blocker is now the full-canonical NEPA 3D graph/profile lane on
-  `source-set-5e65d845ce77e1a0`; the later strict-expansion blocker remains South Plateau
+- Milestone `4` full-canonical promotion repair is now also closed on `2026-05-15`:
+  `config/promotion_suite_v1.json` now requires the real active-source-set graph signal
+  (`region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that some
+  promoted profiles must remain blocked.
+- The same fresh non-strict replay now reports `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=false`.
+- The active remaining operational blocker is now Milestone `5`: South Plateau strict expansion
   `forest_plan_reviewer_not_ready`.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still

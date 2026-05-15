@@ -1703,9 +1703,15 @@
           "equals": 0
         },
         {
-          "name": "full_canonical_source_set_graph_region1_blocked_profiles_visible",
+          "name": "full_canonical_source_set_graph_region1_ready_profiles_visible",
+          "json_path": "region1_forest_plan_graph_ready_profile_count",
+          "min": 10,
+          "failure_category": "graph_region1_profile_gap"
+        },
+        {
+          "name": "full_canonical_source_set_graph_region1_blocked_profiles_cleared",
           "json_path": "region1_forest_plan_blocked_profile_count",
-          "min": 1,
+          "equals": 0,
           "failure_category": "graph_region1_profile_gap"
         }
       ]

@@ -123,6 +123,18 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         ]
         == 65
     )
+    assert (
+        full_graph_summary_checks[
+            "full_canonical_source_set_graph_region1_ready_profiles_visible"
+        ]["min"]
+        == 10
+    )
+    assert (
+        full_graph_summary_checks[
+            "full_canonical_source_set_graph_region1_blocked_profiles_cleared"
+        ]["equals"]
+        == 0
+    )
 
 
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
@@ -598,7 +610,8 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
                 "edge_count": 12,
                 "validation_check_count": 65,
                 "failed_validation_check_count": 0,
-                "region1_forest_plan_blocked_profile_count": 1,
+                "region1_forest_plan_graph_ready_profile_count": 10,
+                "region1_forest_plan_blocked_profile_count": 0,
             }
         ),
         encoding="utf-8",
@@ -681,7 +694,17 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
                                 "name": "full_canonical_source_set_graph_validation_passed",
                                 "json_path": "validation_passed",
                                 "equals": True,
-                            }
+                            },
+                            {
+                                "name": "full_canonical_source_set_graph_region1_ready_profiles_visible",
+                                "json_path": "region1_forest_plan_graph_ready_profile_count",
+                                "min": 10,
+                            },
+                            {
+                                "name": "full_canonical_source_set_graph_region1_blocked_profiles_cleared",
+                                "json_path": "region1_forest_plan_blocked_profile_count",
+                                "equals": 0,
+                            },
                         ],
                     },
                 ],

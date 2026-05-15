@@ -124,21 +124,23 @@ Latest closeout on 2026-05-13:
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
   `tests/test_promotion_suite.py` now fails closed if the committed manifest drifts back to the ad
   hoc source-set artifact.
+- Milestone `4` full-canonical promotion repair is now also resolved on `2026-05-15`:
+  `config/promotion_suite_v1.json` now requires the actual active-source-set graph completeness
+  signal for `full_canonical_nepa_3d_source_set_graph_summary`
+  (`region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that at least
+  one promoted Region 1 profile must still be blocked.
 - Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` now reports
   `current_promotion_ready=true`, `promotion_ready=true`,
-  `full_canonical_corpus_ready=false`,
-  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
+  `full_canonical_corpus_ready=true`,
+  `full_canonical_failure_category_counts={}`, and
   `expansion_ready=false`.
 - Fresh strict `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion` now
   fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
 - The broader operational blocker-recovery packet that now owns the remaining work is
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Milestone `3` is resolved; the active next
-  step is Milestone `4`: clear
-  `full_canonical_nepa_3d_source_set_graph_summary` at
-  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
-  where `region1_forest_plan_blocked_profile_count=0` currently misses the promotion-suite
-  expectation `>=1` and yields `graph_region1_profile_gap`.
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`. Milestones `3-4` are resolved; the active
+  next step is Milestone `5`: South Plateau strict expansion reviewer-ready conversion.
 
 ## Gold Coverage Expansion
 
@@ -183,9 +185,8 @@ Latest closeout on 2026-05-13:
   `support_document_role`, and `applicability.py` now falls back to the source set's archived
   extraction manifest when the merged top-level catalog has already moved on to a newer source set.
 - The current non-strict promotion-suite replay now reports `current_promotion_ready=true`,
-  `promotion_ready=true`, `full_canonical_corpus_ready=false`, and `expansion_ready=false`. The
-  remaining separate blockers are full-canonical `graph_region1_profile_gap` and South Plateau
-  expansion `forest_plan_reviewer_not_ready`.
+  `promotion_ready=true`, `full_canonical_corpus_ready=true`, and `expansion_ready=false`. The
+  remaining separate blocker is South Plateau expansion `forest_plan_reviewer_not_ready`.
 
 ## Full Canonical Corpus Promotion
 
@@ -252,8 +253,8 @@ Latest closeout on 2026-05-12:
   non-strict replay reports
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
   `current_promotion_ready=true`, `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`,
-  `full_canonical_corpus_ready=false`,
-  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
+  `full_canonical_corpus_ready=true`,
+  `full_canonical_failure_category_counts={}`, and
   `expansion_ready=false`.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
   contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
@@ -302,15 +303,10 @@ Latest closeout on 2026-05-12:
   `scope_status="custer_gallatin"`. Any explicitly selected in-scope forest-plan profile now has
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
-- The next required implementation boundary is no longer parser/component recovery, but it is also
-  not expansion first. The active next step is Milestone `4` in
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`: clear the remaining full-canonical
-  promotion-suite blocker on
-  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
-  where `region1_forest_plan_blocked_profile_count=0` currently misses the manifest expectation
-  `>=1` and yields `graph_region1_profile_gap`.
-- The separate post-V1 expansion lane remains queued behind that full-canonical repair. Once the
-  full-canonical lane is green again, expansion planning still proceeds one forest at a time:
+- The next required implementation boundary is now the separate post-V1 expansion lane. The active
+  next step is Milestone `5` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`: South
+  Plateau strict expansion reviewer-ready conversion.
+- Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,
   `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the implemented second slice, and
   `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is retired to routing-note status

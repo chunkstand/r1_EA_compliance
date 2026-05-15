@@ -5,6 +5,35 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 4 Closeout
+
+This update supersedes the earlier top recovery note where it still said the active blocker was the
+full-canonical graph/profile lane.
+
+- committed full-canonical routing truth:
+  `config/promotion_suite_v1.json` now requires the real active-source-set graph completeness
+  signal for `full_canonical_nepa_3d_source_set_graph_summary`
+  (`region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that some
+  promoted Region 1 profiles must remain blocked.
+- live full-canonical replay truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `1416` components, `397` standards, and `component_source_accuracy_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-5e65d845ce77e1a0`
+  passed with `66` checks, `0` failed, `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`.
+- live promotion truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  now passes with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=false`.
+- live remaining blocker truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --strict-expansion`
+  still fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
+  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
+- routing truth:
+  Milestones `0-4` in `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` are now resolved. The
+  active next step is Milestone `5`: South Plateau strict expansion reviewer-ready conversion.
+
 ## System Operational Recovery Milestone 3 Closeout
 
 This update supersedes the earlier top recovery notes where they still said current promotion was
