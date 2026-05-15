@@ -2,7 +2,46 @@
 
 Date: 2026-05-13
 
-Status: Proposed
+Status: Proposed 2026-05-15 (Milestone 0 resolved; Milestone 1 next)
+
+Milestone 0 closeout summary on 2026-05-15:
+
+- The predecessor chain is now confirmed under its live names. The cross-forest predecessor packet
+  is resolved through local commits `a958dc8` and alignment pass `59875ec`, the direct-eval-aware
+  source-set `phase-eval` seam exists under `config/phase_eval_direct_eval_v1.json`, and the
+  predecessor aggregate profile-eval route exists under
+  `config/region1_forest_plan_profile_eval_coverage_v1.json` plus
+  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`.
+- The current component-eval contract roster is exact and still ECID-only:
+  `config/forest_plan_component_eval_seed.json`
+  (`review_id="v1-cg-ecid-compliance-review"`,
+  `source_set_id="source-set-ba8d0feae79501b8"`) and
+  `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`
+  (`review_id="v1-cg-ecid-source-delta-review"`,
+  `source_set_id="source-set-8a4005c8a083af1a"`).
+- The current component-eval result roster is exact:
+  `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`
+  exists and passes with `35` cases on `source-set-ba8d0feae79501b8`;
+  `source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_component_eval_results.json`
+  exists and passes with `36` cases on `source-set-8a4005c8a083af1a`;
+  `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json` is absent.
+- West Reservoir is confirmed in-scope for later milestones in this packet because it is one of
+  the current non-Custer proving reviews on active full-canonical source set
+  `source-set-5e65d845ce77e1a0`, but it still lacks both a tracked component-eval contract and a
+  component-eval result artifact.
+- South Plateau is explicitly routed out of this coverage boundary for now. Its live review on
+  `source-set-ba8d0feae79501b8` carries `forest_plan_component_adjudication_eval.json`,
+  `compliance_review.json`, and green review-scoped `phase-eval`, but it does not carry a tracked
+  component-eval contract or `forest_plan_component_eval_results.json`. Milestones 1-2 in this
+  packet therefore keep the minimum governed review set at ECID current promotion, ECID replay,
+  and West Reservoir unless a later milestone adds South Plateau as an explicit typed slot.
+- The missing-surface baseline is now locked: there is still no standalone component-retrieval
+  eval producer under live code or config, there is still no
+  `config/forest_plan_component_evals/west-reservoir-67436.json`, and
+  `src/usfs_r1_ea_sources/forest_plan_component_eval.py` still defaults to
+  `config/forest_plan_component_eval_seed.json` when `--eval-file` is not supplied.
+- With the live baseline now pinned, the next executable slice in this packet is Milestone 1: add
+  the standalone component-retrieval eval producer.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
 `docs/FOREST_PLAN_COMPONENT_EVALUATION_MILESTONE_PLAN.md`, which remains the earlier broad NFMA
@@ -73,15 +112,23 @@ land together. A verified but uncommitted slice is only ready-to-close.
   `source_set_id="source-set-ba8d0feae79501b8"`.
 - `config/forest_plan_component_evals/` currently contains only
   `v1-cg-ecid-source-delta-review.json`.
+- `src/usfs_r1_ea_sources/forest_plan_component_eval.py` still defaults tracked runs to
+  `config/forest_plan_component_eval_seed.json` unless `--eval-file` is supplied explicitly.
 - `config/forest_plan_component_evals/west-reservoir-67436.json` does not exist at the current
   baseline.
 - `source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_eval_results.json`
   exists and records the ECID current-promotion component eval as passing with `35` cases.
+- `source_library/reviews/v1-cg-ecid-source-delta-review/forest_plan_component_eval_results.json`
+  exists and records the ECID replay component eval as passing with `36` cases.
 - `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json` is missing
   at the current baseline even though `docs/CURRENT_SYSTEM_STATE.md` says the West Reservoir review
   now passes package checklist, applicability validation, generated-rule-pack validation,
   forest-plan context validation, component adjudication, review-local compliance gold, and
   review-bound `phase-eval`.
+- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/` currently has
+  component adjudication and green review-scoped `phase-eval`, but it still lacks both
+  `forest_plan_component_eval_results.json` and a tracked review contract. Milestone 0 therefore
+  routes South Plateau out of the minimum governed review set for this packet.
 - Repo search confirms there is no standalone component-retrieval eval producer or config artifact:
   searches for `component_retrieval_eval`, `forest-plan-component-retrieval`, and
   `component retrieval eval` only hit the older milestone prose rather than live code or config.
@@ -92,7 +139,8 @@ land together. A verified but uncommitted slice is only ready-to-close.
   standalone component retrieval precision/recall eval artifact and that future forests still need
   their own generated inventories and coverage.
 - `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md` now exists as the immediate
-  predecessor eval-coverage lane. This component milestone should reuse that roster and its covered
+  predecessor eval-coverage lane and is now resolved through local commit `a958dc8` plus
+  alignment pass `59875ec`. This component milestone should reuse that roster and its covered
   profile set instead of inventing a second forest roster.
 
 ## Scope

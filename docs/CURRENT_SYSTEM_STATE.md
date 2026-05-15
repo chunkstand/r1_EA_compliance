@@ -207,7 +207,7 @@ Latest closeout on 2026-05-13:
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
   eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `0` in
+  resumed, the next active packet is Milestone `1` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
@@ -452,7 +452,8 @@ Latest closeout on 2026-05-12:
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
   Plateau package set. Cross-forest profile eval coverage Milestones `1-4` are now resolved in
-  code/docs, so if this broader follow-on stack is resumed, the next step is Milestone `0` in
+  code/docs, and component-eval coverage Milestone `0` is now closed as the live baseline
+  rebaseline, so if this broader follow-on stack is resumed, the next step is Milestone `1` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,
