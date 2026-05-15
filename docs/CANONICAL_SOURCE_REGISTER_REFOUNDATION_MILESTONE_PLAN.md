@@ -129,6 +129,8 @@ inspect.
   scratch.
 - Do not treat deferred queue rows, listing pages, project pages, folder URLs,
   or unresolved placeholders as corpus-ready source documents.
+- Do not begin bulk canonical-register ingestion before Phase `1.5`
+  pre-ingestion contract proving passes.
 - Do not weaken tests, evals, phase gates, or promotion gates just to achieve a
   green result.
 - Do not count extraction success, graph build success, or draft generation as
@@ -1453,6 +1455,8 @@ Stop and reroute before continuing if any of the following occurs:
 - the canonical workbook cannot be versioned or checksummed reproducibly;
 - the pre-ingestion contract-proving slice exposes unresolved contract drift
   that would force bulk-ingest refactors;
+- the old workbook still functions as required operational truth because the
+  explicit canonical cutover boundary has not yet been reached;
 - queue-row promotion requires undocumented manual intervention;
 - currentness or supersession cannot be represented cleanly from the canonical
   register;
