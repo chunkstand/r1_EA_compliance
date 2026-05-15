@@ -104,7 +104,8 @@ full-canonical, or South Plateau owner issue.
   `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
   now passes `23/23` with `contract_backed_promotion_ready=true`,
   `threshold_failed_phase_count=0`, and `review_direct_eval_status=direct_eval_present`.
-- Milestone `3` current-promotion promotion-suite alignment is now resolved in this worktree:
+- Milestone `3` current-promotion promotion-suite alignment is now resolved and committed locally
+  as `8957413` (`Recover current-promotion promotion suite`):
   `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json`, and
   `tests/test_promotion_suite.py` now fails closed if that manifest path drifts back to the ad hoc

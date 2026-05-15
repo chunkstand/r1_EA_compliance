@@ -252,7 +252,8 @@ Latest closeout on 2026-05-12:
   non-strict replay reports
   `current_promotion_source_set_id=source-set-ba8d0feae79501b8`,
   `current_promotion_ready=true`, `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`,
-  `full_canonical_corpus_ready=true`, `full_canonical_failure_category_counts={}`, and
+  `full_canonical_corpus_ready=false`,
+  `full_canonical_failure_category_counts={"graph_region1_profile_gap":1}`, and
   `expansion_ready=false`.
 - Sequence 1 of the Region 1 forest-plan inventory promotion plan is now closed as a config-owned
   contract. `config/r1_forest_plan_component_inventory_build_manifest.json` now covers all `10`
@@ -301,16 +302,21 @@ Latest closeout on 2026-05-12:
   `scope_status="custer_gallatin"`. Any explicitly selected in-scope forest-plan profile now has
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
-- The next required implementation boundary is no longer stale-surface alignment or active
-  parser/component recovery. It is the separate post-V1 expansion lane for the next selected
-  remaining non-Custer forest unit, using Beaverhead and Flathead as the verified reference
-  slices, then proving that next profile against a real package review. Expansion planning now
-  proceeds one forest at a time: `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the
-  original reference slice, `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is now the
-  implemented second slice, and `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is
-  retired to routing-note status only.
-- If continuing Flathead specifically rather than selecting a new forest, the active next step is
-  not another profile-expansion sequence. It is the package-side proving lane in
+- The next required implementation boundary is no longer parser/component recovery, but it is also
+  not expansion first. The active next step is Milestone `4` in
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`: clear the remaining full-canonical
+  promotion-suite blocker on
+  `source_library/derived/source-set-5e65d845ce77e1a0/knowledge_graph/nepa_3d_graph_summary.json`,
+  where `region1_forest_plan_blocked_profile_count=0` currently misses the manifest expectation
+  `>=1` and yields `graph_region1_profile_gap`.
+- The separate post-V1 expansion lane remains queued behind that full-canonical repair. Once the
+  full-canonical lane is green again, expansion planning still proceeds one forest at a time:
+  `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,
+  `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the implemented second slice, and
+  `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is retired to routing-note status
+  only.
+- If the older Flathead-specific expansion sub-lane is resumed later, its next step is not another
+  profile-expansion sequence. It is the package-side proving lane in
   `docs/R1_FLATHEAD_LIVE_PACKAGE_PROVING_MILESTONE_PLAN.md`.
 - The freshest fully replayed merged source-set evidence surface remains archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`

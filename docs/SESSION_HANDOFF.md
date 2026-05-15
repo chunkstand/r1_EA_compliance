@@ -11,6 +11,7 @@ This update supersedes the earlier top recovery notes where they still said curr
 blocked inside `promotion-suite`.
 
 - committed current-promotion routing truth:
+  Milestone `3` is committed locally as `8957413` (`Recover current-promotion promotion suite`).
   `config/promotion_suite_v1.json` now resolves `phase_eval_core` from
   `reviews/v1-cg-ecid-compliance-review/phase_eval_results.json` instead of the ad hoc ba8d
   source-set artifact, and `tests/test_promotion_suite.py` now fails closed if that manifest path
