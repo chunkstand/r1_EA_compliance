@@ -5,6 +5,30 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 0 Alignment Pass
+
+This docs-only alignment pass closes the remaining routing drift after commit `e1cec6c`
+(`docs: close cross-forest profile eval milestone 0`).
+
+- scope:
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  `docs/CURRENT_SYSTEM_STATE.md` no longer routes the next packet as Milestone `0`. It now aligns
+  with the Milestone `0` closeout note and routes the next executable slice as Milestone `1` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- handoff alignment:
+  this section is now the newest routing note for the cross-forest profile-eval lane. Older lower
+  sections that still mention Milestone `0` as the broader queued packet are historical and are
+  superseded by this section plus the Milestone `0` closeout section immediately below.
+- verification:
+  targeted `sed` checks confirmed both current-state routing references now point to Milestone `1`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  remains Milestone `1`: add the cross-forest profile eval contract and aggregate producer lane.
+
 ## Cross-Forest Profile Eval Coverage Milestone 0 Closeout
 
 This docs-only update reduces Milestone `0` in

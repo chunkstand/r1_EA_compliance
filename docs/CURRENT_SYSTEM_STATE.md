@@ -197,8 +197,9 @@ Latest closeout on 2026-05-13:
   with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `expansion_ready=true`,
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
-  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. If the queued
-  follow-on stack is resumed, the next active packet is Milestone `0` in
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
+  eval coverage Milestone `0` is also reduced and committed. If the queued follow-on stack is
+  resumed, the next active packet is Milestone `1` in
   `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Gold Coverage Expansion
@@ -362,8 +363,9 @@ Latest closeout on 2026-05-12:
   to pass the same reviewer-ready component/adjudication gate, while ambiguous or out-of-scope
   packages still remain non-required.
 - The separate post-V1 expansion lane is now closed for the declared ECID preliminary-EA and South
-  Plateau package set. If this broader follow-on stack is resumed, the next step is Milestone `0`
-  in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+  Plateau package set. Cross-forest profile eval coverage Milestone `0` is now reduced and
+  committed, so if this broader follow-on stack is resumed, the next step is Milestone `1` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Expansion planning still proceeds one forest at a time:
   `docs/R1_BEAVERHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the original reference slice,
   `docs/R1_FLATHEAD_PROFILE_EXPANSION_MILESTONE_PLAN.md` is the implemented second slice, and
