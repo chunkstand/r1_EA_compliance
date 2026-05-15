@@ -5,6 +5,59 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Cross-Forest Profile Eval Coverage Milestone 0 Closeout
+
+This docs-only update reduces Milestone `0` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- predecessor truth:
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is now resolved on `2026-05-15`, so this
+  packet no longer waits on a future direct-eval seam. No equivalent cross-forest profile-eval
+  producer, contract file, or evaluation-register row already exists under a different live name.
+- live roster truth:
+  the active full-canonical source set for this lane remains `source-set-5e65d845ce77e1a0`.
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` still records
+  `covered=1`,
+  `fixture_contract_defined=2`,
+  and `not_started=7`, with validated-but-`not_started` forests:
+  `bitterroot-nf`,
+  `dakota-prairie-grasslands`,
+  `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`,
+  `kootenai-nf`,
+  `lolo-nf`,
+  and `nez-perce-clearwater-nfs`.
+- drift fixed:
+  the plan now records that the readiness JSON does not expose a top-level `active_source_set_id`,
+  so later milestones must resolve active source-set truth from the current-state docs and the
+  source-set-specific readiness artifact paths instead of assuming that field exists.
+- execution ordering:
+  Milestone `3` tracking-only forest order is now
+  `dakota-prairie-grasslands`,
+  `helena-lewis-and-clark-nf`,
+  `nez-perce-clearwater-nfs`,
+  `idaho-panhandle-nfs`,
+  `kootenai-nf`,
+  `bitterroot-nf`,
+  `lolo-nf`.
+  This is eval-contract ordering only and does not upgrade any forest to reviewer-ready or
+  live-package-proven status.
+- verification:
+  `git status -sb` confirmed a clean implementation starting point;
+  the Milestone `0` roster-baseline Python replay confirmed `covered=1`,
+  `fixture_contract_defined=2`, `not_started=7`, profile-kind counts
+  `active_profile=1`, `active_profile_added_milestone_5=2`, `region1_tracking_only=7`, and
+  readiness artifact paths rooted in `source-set-5e65d845ce77e1a0`;
+  repo search confirmed the predecessor phase-eval direct-eval packet is resolved and that no
+  alternate live `forest_plan_profile_eval` lane already exists under another name.
+- next routing:
+  Milestone `0` is reduced and committed. The next executable slice in this packet is Milestone `1`
+  in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`: add the cross-forest profile
+  eval contract and aggregate producer lane.
+
 ## Compliance Review Test Boundary Closeout
 
 This update resolves `docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md`.

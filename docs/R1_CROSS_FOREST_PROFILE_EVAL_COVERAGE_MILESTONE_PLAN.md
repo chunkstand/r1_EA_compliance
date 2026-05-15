@@ -2,12 +2,48 @@
 
 Date: 2026-05-13
 
-Status: Proposed
+Status: Proposed 2026-05-15 (Milestone 0 reduced and committed; Milestones 1-4 remain open)
+
+Milestone 0 closeout summary on 2026-05-15:
+
+- The predecessor seam is no longer a future dependency. `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`
+  is now resolved on `2026-05-15`, and the live repo already carries the committed
+  `phase-eval` direct-eval seam plus the upstream, downstream, gold, and real-package coverage
+  consumers this plan expected.
+- No equivalent cross-forest profile-eval producer, contract file, coverage-register row, or
+  schema surface exists under a different live name. This plan is still the first owner of that
+  lane.
+- The active full-canonical source set for this lane remains `source-set-5e65d845ce77e1a0`.
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` does not expose a top-level
+  `active_source_set_id`, so later verification must resolve active source-set truth from the
+  current-state docs and source-set-specific readiness artifact paths instead of assuming that
+  field exists.
+- The live Region 1 roster still stands at `1` `covered`, `2` `fixture_contract_defined`, and `7`
+  validated `not_started` profiles. The validated-but-`not_started` forest list is:
+  `bitterroot-nf`,
+  `dakota-prairie-grasslands`,
+  `helena-lewis-and-clark-nf`,
+  `idaho-panhandle-nfs`,
+  `kootenai-nf`,
+  `lolo-nf`, and
+  `nez-perce-clearwater-nfs`.
+- Milestone 3 execution order for the `7` tracking-only forests is now explicitly set from live
+  inventory breadth and current-state evidence:
+  `dakota-prairie-grasslands`,
+  `helena-lewis-and-clark-nf`,
+  `nez-perce-clearwater-nfs`,
+  `idaho-panhandle-nfs`,
+  `kootenai-nf`,
+  `bitterroot-nf`,
+  `lolo-nf`.
+  This is eval-contract ordering only. It is not a reviewer-ready or live-package readiness claim.
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not reopen
 `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md`, which remains retired as a routing
-note. It starts only after `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` closes green and
-is committed. Because that phase-eval milestone itself depends on the real-package coverage,
+note. Its predecessor `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is now resolved and
+committed, so later milestones in this plan may proceed from the refreshed Milestone 0 baseline
+rather than waiting on that seam. Because that phase-eval milestone itself depends on the
+real-package coverage,
 gold-coverage, downstream direct-eval, and upstream evaluation-coverage milestones, this plan
 assumes the earlier chain already delivered the evaluation coverage register, the real-package
 coverage route for declared review contracts, and the direct-eval-aware `phase-eval` seam. If
@@ -50,8 +86,8 @@ ready-to-close.
 
 ## Dependency And Milestone 0 Refresh Rule
 
-- Start this milestone only after `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is closed
-  green and committed.
+- Predecessor condition satisfied on `2026-05-15`:
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is resolved and committed.
 - If the phase-eval milestone lands its direct-eval manifest, coverage helper, or promotion wiring
   under different names, Milestone 0 must adopt those artifacts and rewrite this plan's later
   commands before implementation continues.
@@ -65,6 +101,11 @@ ready-to-close.
 
 ## Current Evidence
 
+- `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is now resolved on `2026-05-15`, and its
+  closeout note says the next follow-on packet is this plan's Milestone 0 rather than a reopened
+  direct-eval seam.
+- The active full-canonical source set in `README.md` and `docs/CURRENT_SYSTEM_STATE.md` remains
+  `source-set-5e65d845ce77e1a0`.
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json` currently records:
   - `custer-gallatin-nf` as `applicability_eval_coverage.status="covered"` with
     `positive_case_count=23` and `hard_negative_case_count=12`;
@@ -91,6 +132,9 @@ ready-to-close.
 - Beaverhead and Flathead do already have deeper selected-profile resolver and compliance unit-test
   slices in `tests/test_forest_plan_resolver.py` and `tests/test_compliance_review.py`, but those
   deeper slices are not yet normalized into one governed cross-forest eval contract.
+- Repo search still shows no live `forest_plan_profile_eval` producer, no
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`, and no
+  `docs/EVALUATION_COVERAGE_REGISTER.md` row under an equivalent alternate name.
 - `docs/R1_MULTI_FOREST_PROFILE_EXPANSION_MILESTONE_PLAN.md` is retired and explicitly says future
   forest work should not widen back into a roster-wide implementation ask. This plan must stay
   evaluation-contract scoped rather than reviving that retired expansion mode.
@@ -315,22 +359,35 @@ Verification:
 
 ```bash
 git status -sb
+rg -n "Status: Resolved|next follow-on packet|Milestone 0" docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md
 python - <<'PY'
 import json
+import re
 from pathlib import Path
 obj = json.loads(Path('config/region1_forest_plan_readiness_nepa_3d_v1.json').read_text())
 rows = obj['profile_rows']
 status_counts = {}
+profile_kind_counts = {}
+active_source_sets = set()
 validated_not_started = []
 for row in rows:
     status = row.get('applicability_eval_coverage', {}).get('status', 'missing')
+    profile_kind = row.get('profile_kind', 'missing')
     status_counts[status] = status_counts.get(status, 0) + 1
+    profile_kind_counts[profile_kind] = profile_kind_counts.get(profile_kind, 0) + 1
     if status == 'not_started' and row.get('component_inventory_validation', {}).get('status') == 'validated':
         validated_not_started.append(row['forest_unit_id'])
+    artifact_path = row.get('component_inventory_validation', {}).get('artifact_path', '')
+    match = re.search(r'(source-set-[^/]+)', artifact_path)
+    if match:
+        active_source_sets.add(match.group(1))
 print(status_counts)
+print(profile_kind_counts)
 print(validated_not_started)
+print(sorted(active_source_sets))
 PY
 rg -n "phase-eval|direct-eval|profile eval|forest-plan profile" README.md docs/CURRENT_SYSTEM_STATE.md docs/EVALUATION_COVERAGE_REGISTER.md docs/OUTPUT_SCHEMAS.md
+rg -n "forest_plan_profile_eval|region1_forest_plan_profile_eval_coverage_v1|cross-forest profile eval" README.md docs/CURRENT_SYSTEM_STATE.md docs/EVALUATION_COVERAGE_REGISTER.md docs/OUTPUT_SCHEMAS.md src tests config
 ```
 
 Docs and handoff updates required before closeout:
