@@ -1,0 +1,106 @@
+{
+  "schema_version": "jurisdiction-scope-register-v1",
+  "contract_id": "jurisdiction-scope-register-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "scope_classes": [
+    {
+      "scope_class_id": "legal_jurisdiction_scope",
+      "label": "Legal jurisdiction scope",
+      "description": "A legal jurisdiction such as federal or agency-wide scope."
+    },
+    {
+      "scope_class_id": "administrative_scope",
+      "label": "Administrative scope",
+      "description": "An administrative scope such as USDA, USFS, or Region 1."
+    },
+    {
+      "scope_class_id": "forest_unit_scope",
+      "label": "Forest unit scope",
+      "description": "A forest or grassland unit scope."
+    },
+    {
+      "scope_class_id": "project_scope",
+      "label": "Project scope",
+      "description": "A package-specific project review scope."
+    },
+    {
+      "scope_class_id": "resource_topic_scope",
+      "label": "Resource topic scope",
+      "description": "A scoped resource topic used by applicability and review."
+    }
+  ],
+  "scope_relationship_types": [
+    "PARENT_SCOPE_OF",
+    "APPLIES_TO_FOREST_UNIT",
+    "APPLIES_TO_PROJECT_TYPE",
+    "APPLIES_TO_RESOURCE_TOPIC"
+  ],
+  "scopes": [
+    {
+      "scope_id": "scope:federal-us",
+      "scope_class_id": "legal_jurisdiction_scope",
+      "label": "United States federal",
+      "status": "starter_seed"
+    },
+    {
+      "scope_id": "scope:usda",
+      "scope_class_id": "administrative_scope",
+      "label": "USDA",
+      "status": "starter_seed",
+      "parent_scope_id": "scope:federal-us"
+    },
+    {
+      "scope_id": "scope:usfs-national",
+      "scope_class_id": "administrative_scope",
+      "label": "US Forest Service national",
+      "status": "starter_seed",
+      "parent_scope_id": "scope:usda"
+    },
+    {
+      "scope_id": "scope:usfs-region-1",
+      "scope_class_id": "administrative_scope",
+      "label": "US Forest Service Region 1",
+      "status": "starter_seed",
+      "parent_scope_id": "scope:usfs-national"
+    },
+    {
+      "scope_id": "scope:region1-forest-unit",
+      "scope_class_id": "forest_unit_scope",
+      "label": "Region 1 forest or grassland unit",
+      "status": "starter_seed",
+      "parent_scope_id": "scope:usfs-region-1"
+    },
+    {
+      "scope_id": "scope:ea-project-review",
+      "scope_class_id": "project_scope",
+      "label": "EA project review",
+      "status": "starter_seed"
+    },
+    {
+      "scope_id": "scope:resource-topic-air",
+      "scope_class_id": "resource_topic_scope",
+      "label": "Air quality",
+      "status": "starter_seed"
+    },
+    {
+      "scope_id": "scope:resource-topic-water",
+      "scope_class_id": "resource_topic_scope",
+      "label": "Water resources",
+      "status": "starter_seed"
+    },
+    {
+      "scope_id": "scope:resource-topic-wildlife",
+      "scope_class_id": "resource_topic_scope",
+      "label": "Wildlife and species",
+      "status": "starter_seed"
+    }
+  ],
+  "projection_rules": [
+    "Statutes and government-wide regulations usually bind at federal-us scope unless narrower scope is curated.",
+    "USDA and USFS directives usually bind at administrative scope and may also bind at region scope when the issuing surface is region-specific.",
+    "Forest plans bind at forest_unit_scope and must also carry governed forest-unit identity.",
+    "Forest-plan supporting documents inherit the forest-unit scope unless an explicit override is curated.",
+    "Review reasoning objects carry project_scope in addition to any higher-level authority scope."
+  ]
+}

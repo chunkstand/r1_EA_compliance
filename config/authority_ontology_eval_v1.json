@@ -1,0 +1,137 @@
+{
+  "schema_version": "authority-ontology-eval-v1",
+  "contract_id": "authority-ontology-eval-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "required_class_ids": [
+    "authority_family",
+    "authority_document",
+    "authority_expression",
+    "authority_fragment",
+    "authority_section",
+    "forest_unit",
+    "jurisdiction_scope",
+    "source_record",
+    "source_artifact",
+    "evidence_span",
+    "forest_plan",
+    "forest_plan_component",
+    "review",
+    "applicability_decision",
+    "generated_rule",
+    "compliance_finding",
+    "authority_path",
+    "justification_path"
+  ],
+  "required_object_property_ids": [
+    "belongsToFamily",
+    "issuedBy",
+    "hasExpression",
+    "isExpressionOf",
+    "hasFragment",
+    "isFragmentOf",
+    "hasComponent",
+    "appliesWithinScope",
+    "governsForestUnit",
+    "capturedBySourceRecord",
+    "hasArtifact",
+    "hasSourceRecord",
+    "hasEvidenceSpan",
+    "hasSourceArtifact",
+    "hasReview",
+    "hasAuthorityPath",
+    "hasJustificationPath",
+    "supportsFinding"
+  ],
+  "required_disjoint_set_ids": [
+    "semantic-vs-provenance",
+    "semantic-vs-reasoning",
+    "document-expression-fragment"
+  ],
+  "competency_question_coverage": [
+    {
+      "question_id": "cq-authority-control",
+      "required_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "compliance_finding"
+      ],
+      "required_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "REQUIRES_CONSISTENCY_WITH"
+      ]
+    },
+    {
+      "question_id": "cq-currentness",
+      "required_class_ids": [
+        "authority_expression"
+      ],
+      "required_relationship_types": [
+        "AMENDS",
+        "SUPERSEDES",
+        "RESCINDS"
+      ]
+    },
+    {
+      "question_id": "cq-forest-plan-component",
+      "required_class_ids": [
+        "forest_plan",
+        "forest_plan_component",
+        "forest_unit"
+      ],
+      "required_relationship_types": [
+        "REQUIRES_CONSISTENCY_WITH",
+        "SUPPORTS_FOREST_PLAN_COMPONENT",
+        "GOVERNS_FOREST_UNIT"
+      ]
+    },
+    {
+      "question_id": "cq-provenance",
+      "required_class_ids": [
+        "source_record",
+        "source_artifact",
+        "evidence_span"
+      ],
+      "required_relationship_types": []
+    },
+    {
+      "question_id": "cq-justification-path",
+      "required_class_ids": [
+        "authority_path",
+        "justification_path",
+        "generated_rule",
+        "compliance_finding"
+      ],
+      "required_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "SUPPORTS_FOREST_PLAN_COMPONENT"
+      ]
+    }
+  ],
+  "negative_fixtures": [
+    {
+      "fixture_id": "source-record-collapsed-into-authority-document",
+      "expected_failures": [
+        "semantic-vs-provenance",
+        "missing_authority_identity_separation"
+      ]
+    },
+    {
+      "fixture_id": "authority-document-collapsed-into-review-finding",
+      "expected_failures": [
+        "semantic-vs-reasoning",
+        "missing_justification_path_boundary"
+      ]
+    },
+    {
+      "fixture_id": "no-authority-expression-layer",
+      "expected_failures": [
+        "document-expression-fragment",
+        "missing_currentness_version_layer"
+      ]
+    }
+  ]
+}

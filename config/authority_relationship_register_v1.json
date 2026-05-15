@@ -1,0 +1,117 @@
+{
+  "schema_version": "authority-relationship-register-v1",
+  "contract_id": "authority-relationship-register-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_seed_examples_only",
+  "activation_rule": "Only rows listed under rows are canonical runtime inputs. starter_rows are non-runtime examples until explicitly curated and promoted.",
+  "required_row_fields": [
+    "relationship_id",
+    "source_id",
+    "source_class_id",
+    "relationship_type",
+    "target_id",
+    "target_class_id",
+    "status",
+    "evidence_basis_type",
+    "relationship_basis"
+  ],
+  "optional_row_fields": [
+    "supporting_source_record_ids",
+    "effective_date",
+    "end_date",
+    "notes",
+    "review_visibility"
+  ],
+  "rows": [],
+  "starter_rows": [
+    {
+      "relationship_id": "starter-nepa-regs-implement-nepa",
+      "source_id": "authority_document:ceq-nepa-regulations",
+      "source_class_id": "authority_document",
+      "relationship_type": "IMPLEMENTS",
+      "target_id": "authority_document:nepa-act",
+      "target_class_id": "authority_document",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a statute-to-regulation implementation path as a required ontology proving case.",
+      "notes": "Not yet bound to canonical source_record rows."
+    },
+    {
+      "relationship_id": "starter-usfs-nepa-guidance-interprets-ceq",
+      "source_id": "authority_document:usfs-nepa-guidance",
+      "source_class_id": "authority_document",
+      "relationship_type": "INTERPRETS",
+      "target_id": "authority_document:ceq-nepa-regulations",
+      "target_class_id": "authority_document",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use an agency-guidance interpretation path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-planning-rule-implements-nfma",
+      "source_id": "authority_document:usfs-planning-rule",
+      "source_class_id": "authority_document",
+      "relationship_type": "IMPLEMENTS",
+      "target_id": "authority_document:nfma",
+      "target_class_id": "authority_document",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a statute-to-planning-rule implementation path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-forest-plan-consistency",
+      "source_id": "authority_document:region1-forest-plan",
+      "source_class_id": "forest_plan",
+      "relationship_type": "REQUIRES_CONSISTENCY_WITH",
+      "target_id": "authority_document:usfs-planning-rule",
+      "target_class_id": "authority_document",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a forest-plan consistency path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-plan-support-document",
+      "source_id": "authority_document:region1-forest-plan-feis",
+      "source_class_id": "authority_document",
+      "relationship_type": "IS_SUPPORTING_DOCUMENT_FOR",
+      "target_id": "authority_document:region1-forest-plan",
+      "target_class_id": "forest_plan",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a forest-plan supporting-document path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-component-support",
+      "source_id": "authority_document:region1-forest-plan-appendix",
+      "source_class_id": "authority_document",
+      "relationship_type": "SUPPORTS_FOREST_PLAN_COMPONENT",
+      "target_id": "forest_plan_component:region1-standard-example",
+      "target_class_id": "forest_plan_component",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a supporting-document-to-component path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-supersession-lineage",
+      "source_id": "authority_expression:usfs-directive-current",
+      "source_class_id": "authority_expression",
+      "relationship_type": "SUPERSEDES",
+      "target_id": "authority_expression:usfs-directive-prior",
+      "target_class_id": "authority_expression",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a supersession path as a required ontology proving case."
+    },
+    {
+      "relationship_id": "starter-scope-binding",
+      "source_id": "authority_document:region1-forest-plan",
+      "source_class_id": "forest_plan",
+      "relationship_type": "GOVERNS_FOREST_UNIT",
+      "target_id": "forest_unit:region1-example",
+      "target_class_id": "forest_unit",
+      "status": "starter_example",
+      "evidence_basis_type": "starter_seed",
+      "relationship_basis": "Use a forest-unit scope path as a required ontology proving case."
+    }
+  ]
+}

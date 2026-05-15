@@ -1,0 +1,56 @@
+{
+  "schema_version": "authority-relationship-eval-v1",
+  "contract_id": "authority-relationship-eval-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "required_relationship_types": [
+    "IMPLEMENTS",
+    "INTERPRETS",
+    "AMENDS",
+    "SUPERSEDES",
+    "RESCINDS",
+    "INCORPORATES_BY_REFERENCE",
+    "DELEGATES_AUTHORITY_TO",
+    "REQUIRES_CONSISTENCY_WITH",
+    "PROVIDES_GUIDANCE_FOR",
+    "IS_SUPPORTING_DOCUMENT_FOR",
+    "SUPPORTS_FOREST_PLAN_COMPONENT",
+    "APPLIES_WITHIN_SCOPE",
+    "GOVERNS_FOREST_UNIT"
+  ],
+  "required_provenance_fields": [
+    "relationship_basis",
+    "evidence_basis_type"
+  ],
+  "required_path_patterns": [
+    "higher-authority-to-component",
+    "currentness-lineage",
+    "scope-and-unit-binding"
+  ],
+  "negative_fixtures": [
+    {
+      "fixture_id": "wrong-edge-direction",
+      "expected_failures": [
+        "relationship_directionality"
+      ]
+    },
+    {
+      "fixture_id": "unsupported-endpoint-type",
+      "expected_failures": [
+        "endpoint_class_validation"
+      ]
+    },
+    {
+      "fixture_id": "missing-supporting-source-record",
+      "expected_failures": [
+        "missing_relationship_provenance"
+      ]
+    },
+    {
+      "fixture_id": "broken-supersession-lineage",
+      "expected_failures": [
+        "currentness_lineage_gap"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,584 @@
+{
+  "schema_version": "authority-document-ontology-v1",
+  "contract_id": "authority-document-ontology-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "base_iri": "https://usfs-r1-ea.local/ontology/authority/v1#",
+  "design_principles": [
+    "Separate authority identity from source-record provenance.",
+    "Model versions and dated expressions explicitly.",
+    "Treat sections and forest-plan components as first-class semantic objects.",
+    "Keep jurisdiction and scope as explicit nodes, not title heuristics.",
+    "Keep legal relationships in governed contracts with provenance."
+  ],
+  "competency_questions": [
+    {
+      "question_id": "cq-authority-control",
+      "question": "Which authority document, expression, or section controls a review finding?"
+    },
+    {
+      "question_id": "cq-implementation-lineage",
+      "question": "What lower-level authority implements or interprets a higher-level authority?"
+    },
+    {
+      "question_id": "cq-currentness",
+      "question": "Which authority expression was current on the review date?"
+    },
+    {
+      "question_id": "cq-forest-plan-component",
+      "question": "Which forest plan component operationalizes a higher-level authority for a specific forest unit?"
+    },
+    {
+      "question_id": "cq-supporting-document",
+      "question": "Which supporting document provides evidence for a forest-plan component or amendment?"
+    },
+    {
+      "question_id": "cq-provenance",
+      "question": "Which source record, artifact, and evidence span prove a semantic relationship or finding?"
+    },
+    {
+      "question_id": "cq-alias-resolution",
+      "question": "Which aliases resolve to the same authority identity, and which stay unresolved without more context?"
+    },
+    {
+      "question_id": "cq-jurisdiction-scope",
+      "question": "Within what jurisdiction, forest unit, project scope, or resource topic does an authority apply?"
+    },
+    {
+      "question_id": "cq-historical-only",
+      "question": "Which sources are historical or currentness-only and must not be treated as controlling review authority?"
+    },
+    {
+      "question_id": "cq-justification-path",
+      "question": "What authority path and justification path support a generated rule or compliance finding?"
+    }
+  ],
+  "classes": [
+    {
+      "class_id": "authority_semantic_object",
+      "label": "Authority semantic object",
+      "description": "Root semantic class for legal, policy, plan, and component objects."
+    },
+    {
+      "class_id": "authority_family",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Authority family",
+      "description": "Normalized authority family aligned to the authority-universe inventory."
+    },
+    {
+      "class_id": "issuer",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Issuer",
+      "description": "The issuing body for an authority document or expression."
+    },
+    {
+      "class_id": "authority_document",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Authority document",
+      "description": "A stable legal or policy resource such as a statute, regulation, directive, handbook, or forest plan."
+    },
+    {
+      "class_id": "authority_expression",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Authority expression",
+      "description": "A dated or versioned expression of an authority document."
+    },
+    {
+      "class_id": "authority_fragment",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Authority fragment",
+      "description": "A fragment, appendix, chapter, attachment, or otherwise cited fragment of an authority expression."
+    },
+    {
+      "class_id": "authority_section",
+      "parent_class_id": "authority_fragment",
+      "label": "Authority section",
+      "description": "A structured section-level fragment such as a CFR section, FSM chapter, or handbook section."
+    },
+    {
+      "class_id": "forest_unit",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Forest unit",
+      "description": "A Region 1 forest or grassland unit used for plan and applicability scope."
+    },
+    {
+      "class_id": "forest_plan",
+      "parent_class_id": "authority_document",
+      "label": "Forest plan",
+      "description": "A forest-plan authority document."
+    },
+    {
+      "class_id": "forest_plan_component",
+      "parent_class_id": "authority_fragment",
+      "label": "Forest plan component",
+      "description": "A standard, guideline, suitability statement, desired condition, or similar component anchored in a forest plan."
+    },
+    {
+      "class_id": "jurisdiction_scope",
+      "parent_class_id": "authority_semantic_object",
+      "label": "Jurisdiction scope",
+      "description": "A jurisdiction, forest-unit, project, or resource-topic scope within which an authority applies."
+    },
+    {
+      "class_id": "provenance_object",
+      "label": "Provenance object",
+      "description": "Root class for captured and derived provenance artifacts."
+    },
+    {
+      "class_id": "source_record",
+      "parent_class_id": "provenance_object",
+      "label": "Source record",
+      "description": "A canonical workbook or catalog source row."
+    },
+    {
+      "class_id": "source_artifact",
+      "parent_class_id": "provenance_object",
+      "label": "Source artifact",
+      "description": "A captured file or page with hash-backed provenance."
+    },
+    {
+      "class_id": "evidence_span",
+      "parent_class_id": "provenance_object",
+      "label": "Evidence span",
+      "description": "A deterministic extracted chunk or span used for retrieval and review."
+    },
+    {
+      "class_id": "reasoning_object",
+      "label": "Reasoning object",
+      "description": "Root class for review reasoning and decision surfaces."
+    },
+    {
+      "class_id": "review",
+      "parent_class_id": "reasoning_object",
+      "label": "Review",
+      "description": "A package-specific review overlay."
+    },
+    {
+      "class_id": "applicability_decision",
+      "parent_class_id": "reasoning_object",
+      "label": "Applicability decision",
+      "description": "A package-specific applicability outcome for an authority family or authority object."
+    },
+    {
+      "class_id": "generated_rule",
+      "parent_class_id": "reasoning_object",
+      "label": "Generated rule",
+      "description": "A package-specific rule derived from applicable authorities."
+    },
+    {
+      "class_id": "compliance_finding",
+      "parent_class_id": "reasoning_object",
+      "label": "Compliance finding",
+      "description": "A citation-bearing finding emitted by the review system."
+    },
+    {
+      "class_id": "authority_path",
+      "parent_class_id": "reasoning_object",
+      "label": "Authority path",
+      "description": "A reviewer-visible path from higher authority to lower authority or component."
+    },
+    {
+      "class_id": "justification_path",
+      "parent_class_id": "reasoning_object",
+      "label": "Justification path",
+      "description": "A reviewer-visible path from authority to evidence to review output."
+    }
+  ],
+  "object_properties": [
+    {
+      "property_id": "belongsToFamily",
+      "domain_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan_component"
+      ],
+      "range_class_ids": [
+        "authority_family"
+      ]
+    },
+    {
+      "property_id": "issuedBy",
+      "domain_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "range_class_ids": [
+        "issuer"
+      ]
+    },
+    {
+      "property_id": "hasExpression",
+      "domain_class_ids": [
+        "authority_document"
+      ],
+      "range_class_ids": [
+        "authority_expression"
+      ],
+      "inverse_property_id": "isExpressionOf"
+    },
+    {
+      "property_id": "isExpressionOf",
+      "domain_class_ids": [
+        "authority_expression"
+      ],
+      "range_class_ids": [
+        "authority_document"
+      ],
+      "inverse_property_id": "hasExpression"
+    },
+    {
+      "property_id": "hasFragment",
+      "domain_class_ids": [
+        "authority_expression"
+      ],
+      "range_class_ids": [
+        "authority_fragment",
+        "authority_section",
+        "forest_plan_component"
+      ],
+      "inverse_property_id": "isFragmentOf"
+    },
+    {
+      "property_id": "isFragmentOf",
+      "domain_class_ids": [
+        "authority_fragment",
+        "authority_section",
+        "forest_plan_component"
+      ],
+      "range_class_ids": [
+        "authority_expression"
+      ],
+      "inverse_property_id": "hasFragment"
+    },
+    {
+      "property_id": "hasComponent",
+      "domain_class_ids": [
+        "forest_plan"
+      ],
+      "range_class_ids": [
+        "forest_plan_component"
+      ]
+    },
+    {
+      "property_id": "appliesWithinScope",
+      "domain_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan_component"
+      ],
+      "range_class_ids": [
+        "jurisdiction_scope"
+      ]
+    },
+    {
+      "property_id": "governsForestUnit",
+      "domain_class_ids": [
+        "forest_plan",
+        "forest_plan_component",
+        "authority_document",
+        "authority_expression"
+      ],
+      "range_class_ids": [
+        "forest_unit"
+      ]
+    },
+    {
+      "property_id": "capturedBySourceRecord",
+      "domain_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan_component"
+      ],
+      "range_class_ids": [
+        "source_record"
+      ]
+    },
+    {
+      "property_id": "hasArtifact",
+      "domain_class_ids": [
+        "source_record"
+      ],
+      "range_class_ids": [
+        "source_artifact"
+      ],
+      "inverse_property_id": "hasSourceRecord"
+    },
+    {
+      "property_id": "hasSourceRecord",
+      "domain_class_ids": [
+        "source_artifact"
+      ],
+      "range_class_ids": [
+        "source_record"
+      ]
+    },
+    {
+      "property_id": "hasEvidenceSpan",
+      "domain_class_ids": [
+        "source_artifact"
+      ],
+      "range_class_ids": [
+        "evidence_span"
+      ],
+      "inverse_property_id": "hasSourceArtifact"
+    },
+    {
+      "property_id": "hasSourceArtifact",
+      "domain_class_ids": [
+        "evidence_span"
+      ],
+      "range_class_ids": [
+        "source_artifact"
+      ]
+    },
+    {
+      "property_id": "hasReview",
+      "domain_class_ids": [
+        "applicability_decision",
+        "generated_rule",
+        "compliance_finding",
+        "authority_path",
+        "justification_path"
+      ],
+      "range_class_ids": [
+        "review"
+      ]
+    },
+    {
+      "property_id": "hasAuthorityPath",
+      "domain_class_ids": [
+        "applicability_decision",
+        "generated_rule",
+        "compliance_finding",
+        "justification_path"
+      ],
+      "range_class_ids": [
+        "authority_path"
+      ]
+    },
+    {
+      "property_id": "hasJustificationPath",
+      "domain_class_ids": [
+        "generated_rule",
+        "compliance_finding"
+      ],
+      "range_class_ids": [
+        "justification_path"
+      ]
+    },
+    {
+      "property_id": "supportsFinding",
+      "domain_class_ids": [
+        "evidence_span",
+        "authority_fragment",
+        "forest_plan_component",
+        "justification_path"
+      ],
+      "range_class_ids": [
+        "compliance_finding"
+      ]
+    }
+  ],
+  "data_properties": [
+    {
+      "property_id": "authorityFamilyId",
+      "domain_class_ids": [
+        "authority_family"
+      ]
+    },
+    {
+      "property_id": "authorityDocumentId",
+      "domain_class_ids": [
+        "authority_document",
+        "forest_plan"
+      ]
+    },
+    {
+      "property_id": "authorityExpressionId",
+      "domain_class_ids": [
+        "authority_expression"
+      ]
+    },
+    {
+      "property_id": "authorityFragmentId",
+      "domain_class_ids": [
+        "authority_fragment",
+        "authority_section"
+      ]
+    },
+    {
+      "property_id": "forestPlanComponentId",
+      "domain_class_ids": [
+        "forest_plan_component"
+      ]
+    },
+    {
+      "property_id": "jurisdictionScopeId",
+      "domain_class_ids": [
+        "jurisdiction_scope"
+      ]
+    },
+    {
+      "property_id": "issuerId",
+      "domain_class_ids": [
+        "issuer"
+      ]
+    },
+    {
+      "property_id": "sourceRecordId",
+      "domain_class_ids": [
+        "source_record"
+      ]
+    },
+    {
+      "property_id": "artifactSha256",
+      "domain_class_ids": [
+        "source_artifact"
+      ]
+    },
+    {
+      "property_id": "citationLabel",
+      "domain_class_ids": [
+        "source_record",
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ]
+    },
+    {
+      "property_id": "effectiveDate",
+      "domain_class_ids": [
+        "authority_expression"
+      ]
+    },
+    {
+      "property_id": "endDate",
+      "domain_class_ids": [
+        "authority_expression"
+      ]
+    },
+    {
+      "property_id": "reviewStatus",
+      "domain_class_ids": [
+        "authority_expression",
+        "source_record",
+        "applicability_decision",
+        "compliance_finding"
+      ]
+    },
+    {
+      "property_id": "preferredLabel",
+      "domain_class_ids": [
+        "authority_family",
+        "issuer",
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "jurisdiction_scope",
+        "forest_unit"
+      ]
+    }
+  ],
+  "disjoint_class_sets": [
+    {
+      "set_id": "semantic-vs-provenance",
+      "class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "authority_section",
+        "forest_plan",
+        "forest_plan_component",
+        "source_record",
+        "source_artifact",
+        "evidence_span"
+      ]
+    },
+    {
+      "set_id": "semantic-vs-reasoning",
+      "class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "authority_section",
+        "forest_plan",
+        "forest_plan_component",
+        "review",
+        "applicability_decision",
+        "generated_rule",
+        "compliance_finding",
+        "authority_path",
+        "justification_path"
+      ]
+    },
+    {
+      "set_id": "document-expression-fragment",
+      "class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "authority_section"
+      ]
+    }
+  ],
+  "starter_axioms_manchester": [
+    "AuthorityExpression SubClassOf isExpressionOf exactly 1 AuthorityDocument",
+    "AuthoritySection SubClassOf AuthorityFragment",
+    "ForestPlan SubClassOf AuthorityDocument",
+    "ForestPlanComponent SubClassOf AuthorityFragment",
+    "SourceArtifact SubClassOf hasSourceRecord exactly 1 SourceRecord",
+    "EvidenceSpan SubClassOf hasSourceArtifact exactly 1 SourceArtifact",
+    "ApplicabilityDecision SubClassOf hasReview exactly 1 Review",
+    "GeneratedRule SubClassOf hasReview exactly 1 Review",
+    "ComplianceFinding SubClassOf hasReview exactly 1 Review",
+    "AuthorityDocument DisjointWith SourceRecord",
+    "AuthorityExpression DisjointWith SourceArtifact",
+    "AuthorityFragment DisjointWith EvidenceSpan",
+    "Review DisjointWith AuthorityDocument"
+  ],
+  "graph_projection_expectations": {
+    "existing_graph_node_type_to_class_id": {
+      "authority_family": "authority_family",
+      "source_record": "source_record",
+      "artifact": "source_artifact",
+      "evidence_span": "evidence_span",
+      "review": "review",
+      "applicability_decision": "applicability_decision",
+      "generated_rule": "generated_rule",
+      "compliance_finding": "compliance_finding",
+      "forest_unit": "forest_unit",
+      "forest_plan": "forest_plan",
+      "forest_plan_component": "forest_plan_component"
+    },
+    "future_required_graph_classes": [
+      "authority_document",
+      "authority_expression",
+      "authority_fragment",
+      "authority_section",
+      "jurisdiction_scope",
+      "authority_path",
+      "justification_path"
+    ]
+  },
+  "register_projection_expectations": {
+    "always_create_classes": [
+      "source_record"
+    ],
+    "curated_identity_fields_required_for_authority_objects": [
+      "authority_family_id",
+      "authority_document_id",
+      "authority_expression_id"
+    ],
+    "optional_fragment_fields_for_section_or_component_projection": [
+      "authority_fragment_id",
+      "forest_plan_component_id"
+    ],
+    "scope_binding_fields": [
+      "jurisdiction_scope_id",
+      "forest_unit_id"
+    ]
+  }
+}

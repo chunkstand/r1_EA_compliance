@@ -1,0 +1,295 @@
+{
+  "schema_version": "authority-relationship-types-v1",
+  "contract_id": "authority-relationship-types-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "evidence_basis_types": [
+    "workbook_curated",
+    "source_text_cited",
+    "currentness_adjudicated",
+    "review_adjudicated",
+    "starter_seed"
+  ],
+  "relationship_types": [
+    {
+      "relationship_type": "IMPLEMENTS",
+      "description": "A lower-level authority operationalizes a higher-level authority.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "directionality": "source_implements_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "INTERPRETS",
+      "description": "A lower-level authority or fragment interprets a higher-level authority.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "directionality": "source_interprets_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "AMENDS",
+      "description": "A later authority expression amends an earlier authority expression or document.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "directionality": "source_amends_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "effective_date",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "SUPERSEDES",
+      "description": "A later authority expression supersedes an earlier expression or document for current review use.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "forest_plan"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "forest_plan"
+      ],
+      "directionality": "source_supersedes_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "effective_date",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "RESCINDS",
+      "description": "A later authority expression rescinds a prior expression or document.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "directionality": "source_rescinds_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "effective_date",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "INCORPORATES_BY_REFERENCE",
+      "description": "An authority document or expression incorporates another authority by reference.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan_component"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "directionality": "source_incorporates_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "DELEGATES_AUTHORITY_TO",
+      "description": "A higher-level authority delegates implementation or decision authority to a lower-level authority surface.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "forest_plan"
+      ],
+      "directionality": "source_delegates_to_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "REQUIRES_CONSISTENCY_WITH",
+      "description": "A lower-level planning or review object must remain consistent with a higher-level authority.",
+      "source_class_ids": [
+        "forest_plan",
+        "forest_plan_component",
+        "generated_rule",
+        "compliance_finding"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "directionality": "source_requires_consistency_with_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "PROVIDES_GUIDANCE_FOR",
+      "description": "A policy, directive, handbook, or similar source provides guidance for another authority or component.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "forest_plan_component",
+        "generated_rule"
+      ],
+      "directionality": "source_provides_guidance_for_target",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "IS_SUPPORTING_DOCUMENT_FOR",
+      "description": "A supporting document belongs to the governed support set for a plan or other authority document.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "target_class_ids": [
+        "authority_document",
+        "forest_plan"
+      ],
+      "directionality": "source_supports_target_document",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "SUPPORTS_FOREST_PLAN_COMPONENT",
+      "description": "A supporting document or fragment provides evidence for a forest plan component.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment"
+      ],
+      "target_class_ids": [
+        "forest_plan_component"
+      ],
+      "directionality": "source_supports_target_component",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type",
+        "supporting_source_record_ids"
+      ]
+    },
+    {
+      "relationship_type": "APPLIES_WITHIN_SCOPE",
+      "description": "An authority or component applies within a defined jurisdiction or scope.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "authority_fragment",
+        "forest_plan_component"
+      ],
+      "target_class_ids": [
+        "jurisdiction_scope"
+      ],
+      "directionality": "source_applies_within_target_scope",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type"
+      ]
+    },
+    {
+      "relationship_type": "GOVERNS_FOREST_UNIT",
+      "description": "An authority or component governs a specific forest or grassland unit.",
+      "source_class_ids": [
+        "authority_document",
+        "authority_expression",
+        "forest_plan",
+        "forest_plan_component"
+      ],
+      "target_class_ids": [
+        "forest_unit"
+      ],
+      "directionality": "source_governs_target_forest_unit",
+      "required_provenance_fields": [
+        "relationship_basis",
+        "evidence_basis_type"
+      ]
+    }
+  ],
+  "starter_path_patterns": [
+    {
+      "path_pattern_id": "higher-authority-to-component",
+      "relationship_types": [
+        "IMPLEMENTS",
+        "REQUIRES_CONSISTENCY_WITH",
+        "SUPPORTS_FOREST_PLAN_COMPONENT"
+      ]
+    },
+    {
+      "path_pattern_id": "currentness-lineage",
+      "relationship_types": [
+        "AMENDS",
+        "SUPERSEDES",
+        "RESCINDS"
+      ]
+    },
+    {
+      "path_pattern_id": "scope-and-unit-binding",
+      "relationship_types": [
+        "APPLIES_WITHIN_SCOPE",
+        "GOVERNS_FOREST_UNIT"
+      ]
+    }
+  ]
+}

@@ -5,6 +5,40 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Ontology Starter
+
+This update lands the repo-specific Phase `0` authority ontology starter
+without claiming runtime integration is complete.
+
+- scope:
+  `docs/AUTHORITY_ONTOLOGY_STARTER.md`,
+  `config/authority_document_ontology_v1.json`,
+  `config/authority_relationship_types_v1.json`,
+  `config/authority_relationship_register_v1.json`,
+  `config/citation_alias_register_v1.json`,
+  `config/jurisdiction_scope_register_v1.json`,
+  `config/authority_ontology_eval_v1.json`,
+  `config/authority_relationship_eval_v1.json`,
+  `tests/test_authority_ontology_starter.py`
+- routing truth:
+  the repo now has a tracked semantic baseline that separates `source_record`
+  provenance from `authority_document`, `authority_expression`,
+  `authority_fragment`, `jurisdiction_scope`, `forest_plan_component`, and
+  review reasoning objects. Legal relationship vocabulary, alias ambiguity, and
+  scope semantics are now versioned config artifacts rather than chat-only
+  intent.
+- important boundary:
+  `config/authority_relationship_register_v1.json` is intentionally not a live
+  curated relationship corpus yet. Canonical runtime rows remain empty under
+  `rows`, while starter proving examples live under `starter_rows` and must not
+  be treated as production graph facts until they are curated and promoted.
+- next routing:
+  use these starter contracts as the design baseline for the canonical
+  source-register schema, identity strategy, and Phase `1.5` proving slice. The
+  next implementation step is loader and validation work that can bind real
+  workbook rows to `authority_document_id`, `authority_expression_id`, scope,
+  alias, and relationship rows without collapsing the semantic layers.
+
 ## Canonical Source Register Refoundation Plan
 
 This planning-only update adds a fresh standalone full-phase refoundation packet

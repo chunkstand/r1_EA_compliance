@@ -1,0 +1,140 @@
+{
+  "schema_version": "citation-alias-register-v1",
+  "contract_id": "citation-alias-register-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_seed_examples_only",
+  "alias_types": [
+    "preferred_label",
+    "short_title",
+    "citation_string",
+    "workbook_label",
+    "legacy_reference",
+    "hidden_match"
+  ],
+  "normalization_rules": [
+    "Lowercase for matching after preserving the original label.",
+    "Collapse repeated whitespace and normalize punctuation spacing.",
+    "Preserve structured citation tokens such as usc, cfr, fsm, and fsh.",
+    "Do not auto-resolve aliases that are ambiguous across versions, issuers, or forest units."
+  ],
+  "ambiguity_policy": {
+    "blocked_without_context": [
+      "forest plan",
+      "planning rule",
+      "handbook",
+      "manual"
+    ],
+    "required_context_fields": [
+      "issuer_id",
+      "authority_expression_id",
+      "forest_unit_id",
+      "effective_date"
+    ]
+  },
+  "canonical_id_types": [
+    "authority_document_id",
+    "authority_expression_id",
+    "authority_fragment_id",
+    "forest_plan_component_id",
+    "issuer_id"
+  ],
+  "alias_rows": [],
+  "starter_alias_groups": [
+    {
+      "alias_group_id": "starter-nepa-act",
+      "canonical_id": "authority_document:nepa-act",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "National Environmental Policy Act",
+      "aliases": [
+        {
+          "alias_text": "National Environmental Policy Act",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "NEPA",
+          "alias_type": "short_title"
+        }
+      ]
+    },
+    {
+      "alias_group_id": "starter-ceq-nepa-regulations",
+      "canonical_id": "authority_document:ceq-nepa-regulations",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "CEQ NEPA regulations",
+      "aliases": [
+        {
+          "alias_text": "CEQ NEPA regulations",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "Council on Environmental Quality NEPA regulations",
+          "alias_type": "legacy_reference"
+        }
+      ]
+    },
+    {
+      "alias_group_id": "starter-nfma",
+      "canonical_id": "authority_document:nfma",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "National Forest Management Act",
+      "aliases": [
+        {
+          "alias_text": "National Forest Management Act",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "NFMA",
+          "alias_type": "short_title"
+        }
+      ]
+    },
+    {
+      "alias_group_id": "starter-usfs-planning-rule",
+      "canonical_id": "authority_document:usfs-planning-rule",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "Forest Service planning rule",
+      "aliases": [
+        {
+          "alias_text": "Forest Service planning rule",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "planning rule",
+          "alias_type": "hidden_match"
+        }
+      ]
+    },
+    {
+      "alias_group_id": "starter-fsm-1900",
+      "canonical_id": "authority_document:fsm-1900",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "Forest Service Manual 1900 series",
+      "aliases": [
+        {
+          "alias_text": "Forest Service Manual 1900 series",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "FSM 1900",
+          "alias_type": "short_title"
+        }
+      ]
+    },
+    {
+      "alias_group_id": "starter-fsh-1909-15",
+      "canonical_id": "authority_document:fsh-1909-15",
+      "canonical_class_id": "authority_document",
+      "canonical_label": "Forest Service Handbook 1909.15",
+      "aliases": [
+        {
+          "alias_text": "Forest Service Handbook 1909.15",
+          "alias_type": "preferred_label"
+        },
+        {
+          "alias_text": "FSH 1909.15",
+          "alias_type": "short_title"
+        }
+      ]
+    }
+  ]
+}
