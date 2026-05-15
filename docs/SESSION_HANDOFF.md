@@ -5,6 +5,51 @@ Date: 2026-05-14
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## System Operational Recovery Milestone 5 Closeout
+
+This update supersedes the earlier top recovery notes where they still routed the repo through
+South Plateau strict-expansion blocker recovery.
+
+- committed recovery truth:
+  Milestone `5` is now implemented in tracked config/tests/docs. South Plateau is governed by
+  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`,
+  `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  the reviewer-ready `config/v1_south_plateau_real_ea_eval.json` contract,
+  `config/v1_real_package_review_coverage_v1.json`, `config/gold_coverage_v1.json`, and the
+  refreshed South Plateau expansion slot in `config/promotion_suite_v1.json`.
+- live South Plateau closeout truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --adjudication-file config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`
+  passed with `resolved_adjudication_count=31`, `pending_adjudication_count=0`, and
+  `system_miss_count=31`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment --output-dir source_library --rule-pack source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack.json --source-set-id source-set-ba8d0feae79501b8 --review-id region1-expansion-south-plateau-landscape-treatment --reuse-package-cache`
+  returned `reviewer_ready=true`;
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment` passed with
+  `contract_status="reviewer_ready"` and `package_style_tags=["reviewer_ready_expansion"]`; and
+  South Plateau review-scoped `phase-eval` now passes `19/19` with
+  `contract_backed_promotion_ready=true`.
+- live ECID expansion replay truth:
+  the ad hoc ECID expansion artifact must be replayed on the ba8d source set rather than the
+  active `5e65...` source set. The correct closeout command is
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --review-id region1-expansion-ecid-preliminary-ea`,
+  which now passes `19/19` with `declared_review_contract=false`,
+  `contract_backed_promotion_ready=false`, and no identity-mismatch blockers.
+- aggregate coverage truth:
+  `real-package-review-coverage-eval --manifest config/v1_real_package_review_coverage_v1.json`
+  now passes with `reviewer_ready_slot_count=3` and `typed_blocked_slot_count=0`. The
+  `gold_coverage_eval_results.json` artifact is green with `reviewer_ready_review_count=3` and
+  `typed_blocked_review_count=0`; the shell command still has an intermittent non-returning
+  session behavior, but the artifact stayed green and fresh promotion-suite replays consumed it
+  successfully.
+- live operational truth:
+  fresh non-strict and strict
+  `promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json` replays
+  now both pass with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, `promotion_ready=true`, and `expansion_failure_category_counts={}`.
+- routing truth:
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. If the queued
+  follow-on stack resumes, start with Milestone `0` in
+  `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
 ## System Operational Recovery Milestone 4 Alignment Pass
 
 This update supersedes the earlier top recovery note only on date stamping, not on blocker

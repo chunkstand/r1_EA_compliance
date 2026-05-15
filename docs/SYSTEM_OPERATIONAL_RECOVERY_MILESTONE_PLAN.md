@@ -2,8 +2,8 @@
 
 Date: 2026-05-14
 
-Status: Active 2026-05-14 (Milestones 0-4 are now resolved and committed locally; the active
-remaining blocker is Milestone 5 South Plateau strict expansion reviewer-ready conversion)
+Status: Resolved 2026-05-14 (Milestones 0-5 are now resolved and committed locally; fresh
+non-strict and strict `promotion-suite` replays are both green)
 
 Owner context: This is a fresh standalone recovery plan. It does not append more implementation to
 `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as if that lane were still a self-contained
@@ -16,8 +16,9 @@ history. The queued follow-ons
 `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`,
 `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
 `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`, and
-`docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md` stay blocked until this recovery plan is
-closed green and committed or is explicitly reduced and rerouted.
+`docs/COMPLIANCE_REVIEW_TEST_BOUNDARY_MILESTONE_PLAN.md` were blocked until this recovery plan
+closed green and committed. That closeout is now complete; if the queued follow-on stack resumes,
+start with Milestone `0` in `docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 
 ## Purpose
 
@@ -115,27 +116,38 @@ full-canonical, or South Plateau owner issue.
   (`region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that at least
   one promoted Region 1 profile must still be blocked.
-- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+- Milestone `5` South Plateau strict-expansion recovery is now also resolved on `2026-05-14`:
+  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json` now pins the
+  South Plateau review to the archived ba8d-compatible catalog surface,
+  `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`
+  closes the `31`-item component queue as `applicability_false_positive` system misses, and the
+  shipped real-package/gold/promotion manifests now treat South Plateau as
+  `reviewer_ready_expansion` rather than a typed blocked lane.
+- Fresh closeout replay on 2026-05-14 is green across the remaining expansion owner surfaces:
+  `forest-plan-component-adjudication-eval` passes with `resolved_adjudication_count=31`,
+  `pending_adjudication_count=0`, and `system_miss_count=31`; `compliance-review` returns
+  `reviewer_ready=true`; `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  passes with `contract_status="reviewer_ready"`; South Plateau review-scoped `phase-eval`
+  passes `19/19` with `contract_backed_promotion_ready=true`; and the ad hoc ECID expansion replay
+  is refreshed on the correct ba8d source set via
+  `phase-eval --source-set-id source-set-ba8d0feae79501b8 --review-id region1-expansion-ecid-preliminary-ea`,
+  which now passes `19/19` with `declared_review_contract=false`.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json` and strict
+  `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion` now both report
   `current_promotion_ready=true`, `promotion_ready=true`,
-  `full_canonical_corpus_ready=true`,
-  `full_canonical_failure_category_counts={}`, and
-  `expansion_ready=false`.
-- Fresh strict `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion`
-  fails as expected with `current_promotion_ready=true`, `promotion_ready=false`, and
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":7}`.
-- `docs/CURRENT_SYSTEM_STATE.md` now records current-promotion promotion as green and routes the
-  active operational recovery through Milestone `5` strict expansion while preserving
+  `full_canonical_corpus_ready=true`, `expansion_ready=true`,
+  `full_canonical_failure_category_counts={}`, and `expansion_failure_category_counts={}`.
+- `docs/CURRENT_SYSTEM_STATE.md` now records the full operational-recovery closeout and routes any
+  next follow-on work outside this packet while preserving
   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` as the consumed input lane for the now-
-  resolved direct-eval, current-promotion, and full-canonical recovery work.
+  resolved direct-eval, current-promotion, full-canonical, and expansion recovery work.
 - `config/promotion_suite_v1.json` remains the operational truth owner and still encodes three
   separate surfaces:
   - current promotion on `source-set-ba8d0feae79501b8`
   - full canonical promotion on `source-set-5e65d845ce77e1a0`
   - expansion readiness including the South Plateau slot
-- `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` already narrows the remaining strict
-  expansion blocker to the South Plateau forest-plan component adjudication lane. That slot still
-  carries `forest_plan_reviewer_not_ready` as the named failure category until the worklist is
-  actually closed and the operational contracts are refreshed from typed-blocked to reviewer-ready.
+- `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` now records the South Plateau closeout
+  as historical sequence evidence rather than as an active blocker lane.
 - The unrelated viewer/demo draft artifacts are already parked in stash and must remain out of
   scope for this plan.
 

@@ -15,8 +15,8 @@
     "required_high_priority_family_id_count": 19,
     "required_review_contract_count": 3,
     "required_theme_count": 7,
-    "reviewer_ready_review_count_min": 2,
-    "typed_blocked_review_count_min": 1,
+    "reviewer_ready_review_count_min": 3,
+    "typed_blocked_review_count_min": 0,
     "unmapped_high_priority_family_count_max": 0
   },
   "id": "region1-gold-coverage-v1",

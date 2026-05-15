@@ -14,6 +14,15 @@ from usfs_r1_ea_sources.forest_plan_component_adjudication import (
 )
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_ADJUDICATION = (
+    REPO_ROOT
+    / "config"
+    / "forest_plan_component_adjudications"
+    / "region1-expansion-south-plateau-landscape-treatment.json"
+)
+
+
 class ForestPlanComponentAdjudicationTests(unittest.TestCase):
     def test_template_exports_open_component_queue_items(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -223,6 +232,29 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
 
         self.assertEqual(template_args.command, "forest-plan-component-adjudication-template")
         self.assertEqual(eval_args.command, "forest-plan-component-adjudication-eval")
+
+    def test_committed_south_plateau_adjudication_tracks_resolved_queue(self) -> None:
+        adjudication = _read_json(COMMITTED_ADJUDICATION)
+
+        self.assertEqual(adjudication["schema_version"], "forest-plan-component-adjudication-v0")
+        self.assertEqual(
+            adjudication["review_id"],
+            "region1-expansion-south-plateau-landscape-treatment",
+        )
+        self.assertEqual(
+            adjudication["source_set_id"],
+            "source-set-ba8d0feae79501b8",
+        )
+        self.assertEqual(
+            adjudication["adjudication_id"],
+            "region1-expansion-south-plateau-landscape-treatment-component-adjudication",
+        )
+        self.assertEqual(adjudication["adjudication"]["status"], "completed")
+        self.assertEqual(adjudication["adjudication"]["method"], "tracked_replay_artifact_review")
+        items = adjudication["items"]
+        self.assertEqual(len(items), 31)
+        self.assertTrue(all(item["disposition"] == "applicability_false_positive" for item in items))
+        self.assertTrue(all(item["source_type"] == "package_scope_review" for item in items))
 
 
 def _write_review_artifacts(root: Path) -> Path:

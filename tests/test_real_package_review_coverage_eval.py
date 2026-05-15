@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_MANIFEST = REPO_ROOT / "config" / "v1_real_package_review_coverage_v1.json"
 
 
-def test_real_package_review_coverage_eval_accepts_declared_ready_and_blocked_slots() -> None:
+def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_slots() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         output_dir = root / "source_library"
@@ -31,8 +31,8 @@ def test_real_package_review_coverage_eval_accepts_declared_ready_and_blocked_sl
 
         assert result.summary["passed"] is True
         assert result.summary["covered_slot_count"] == 3
-        assert result.summary["reviewer_ready_slot_count"] == 2
-        assert result.summary["typed_blocked_slot_count"] == 1
+        assert result.summary["reviewer_ready_slot_count"] == 3
+        assert result.summary["typed_blocked_slot_count"] == 0
         assert result.summary["distinct_forest_count"] == 2
         assert result.summary["distinct_package_style_count"] == 3
         assert result.summary["missing_package_authority_count"] == 0
@@ -64,7 +64,7 @@ def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> No
         output_dir = root / "source_library"
         manifest_path = _write_manifest(
             root,
-            include_blocked_slot=False,
+            include_expansion_slot=False,
         )
 
         with pytest.raises(
@@ -84,7 +84,7 @@ def test_committed_real_package_review_coverage_manifest_tracks_three_slots() ->
     assert manifest["required_coverage_class_ids"] == [
         "alternate_package_reviewer_ready",
         "current_promotion_reviewer_ready",
-        "typed_blocked_expansion",
+        "expansion_reviewer_ready",
     ]
     assert [item["review_id"] for item in manifest["slots"]] == [
         "v1-cg-ecid-compliance-review",
@@ -96,23 +96,30 @@ def test_committed_real_package_review_coverage_manifest_tracks_three_slots() ->
     assert thresholds["required_coverage_class_count"] == 3
     assert thresholds["distinct_forest_count_min"] == 2
     assert thresholds["distinct_package_style_count_min"] == 3
-    assert thresholds["reviewer_ready_slot_count_min"] == 2
-    assert thresholds["typed_blocked_slot_count_min"] == 1
+    assert thresholds["reviewer_ready_slot_count_min"] == 3
+    assert thresholds["typed_blocked_slot_count_min"] == 0
 
 
 def _write_manifest(
     root: Path,
     *,
-    include_blocked_slot: bool = True,
+    include_expansion_slot: bool = True,
     missing_ready_authority: bool = False,
 ) -> Path:
     results_dir = root / "results"
     authorities_dir = root / "authorities"
     (authorities_dir / "catalog-east").mkdir(parents=True)
+    (authorities_dir / "catalog-south").mkdir(parents=True)
     (authorities_dir / "package-east").mkdir(parents=True)
     (authorities_dir / "package-west").mkdir(parents=True)
     (authorities_dir / "south-intake").mkdir(parents=True)
     replay_context_path = root / "config" / "replay_contexts" / "east.json"
+    south_replay_context_path = (
+        root
+        / "config"
+        / "replay_contexts"
+        / "region1-expansion-south-plateau-landscape-treatment.json"
+    )
     replay_context_path.parent.mkdir(parents=True, exist_ok=True)
     replay_context_path.write_text(
         json.dumps(
@@ -121,6 +128,18 @@ def _write_manifest(
                 "source_set_id": "source-set-east",
                 "catalog_dir": "authorities/catalog-east",
                 "package_path": "authorities/package-east",
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    south_replay_context_path.write_text(
+        json.dumps(
+            {
+                "review_id": "region1-expansion-south-plateau-landscape-treatment",
+                "source_set_id": "source-set-south",
+                "catalog_dir": "authorities/catalog-south",
+                "package_path": "authorities/south-intake",
             },
             sort_keys=True,
         ),
@@ -152,32 +171,19 @@ def _write_manifest(
             "forest_plan_failure_category_counts": {},
         },
     ]
-    if include_blocked_slot:
+    if include_expansion_slot:
         review_payloads.append(
             {
                 "review_id": "region1-expansion-south-plateau-landscape-treatment",
                 "passed": True,
-                "contract_status": "typed_blocked",
+                "contract_status": "reviewer_ready",
                 "forest_unit_id": "custer-gallatin-nf",
-                "package_style_tags": ["typed_blocked_expansion"],
-                "actual_overall_passed": False,
+                "package_style_tags": ["reviewer_ready_expansion"],
+                "actual_overall_passed": True,
                 "broader_ea_passed": True,
-                "forest_plan_passed": False,
-                "failure_category_counts": {
-                    "forest_plan_reviewer_resolution_open": 1,
-                },
-                "forest_plan_failure_category_counts": {
-                    "forest_plan_reviewer_resolution_open": 1,
-                },
-                "contract_expectations": {
-                    "allowed_blocker_categories": [
-                        "forest_plan_reviewer_resolution_open",
-                    ],
-                    "matched_blocker_categories": [
-                        "forest_plan_reviewer_resolution_open",
-                    ],
-                    "unexpected_blocker_categories": [],
-                },
+                "forest_plan_passed": True,
+                "failure_category_counts": {},
+                "forest_plan_failure_category_counts": {},
             }
         )
     review_paths = []
@@ -219,21 +225,21 @@ def _write_manifest(
             },
         },
     ]
-    if include_blocked_slot:
+    if include_expansion_slot:
         slots.append(
             {
-                "slot_id": "south-plateau-typed-blocked",
-                "label": "South Plateau typed blocked expansion lane",
+                "slot_id": "south-plateau-reviewer-ready",
+                "label": "South Plateau reviewer-ready expansion lane",
                 "review_id": "region1-expansion-south-plateau-landscape-treatment",
                 "package_label": "South Plateau",
-                "coverage_class_id": "typed_blocked_expansion",
+                "coverage_class_id": "expansion_reviewer_ready",
                 "forest_unit_id": "custer-gallatin-nf",
                 "eval_file": "config/v1_south_plateau_real_ea_eval.json",
                 "results_path": str(review_paths[2]),
                 "required": True,
-                "expected_contract_status": "typed_blocked",
+                "expected_contract_status": "reviewer_ready",
                 "package_authority": {
-                    "intake_package_path": str(authorities_dir / "south-intake"),
+                    "replay_context_path": str(south_replay_context_path),
                 },
             }
         )
@@ -247,15 +253,15 @@ def _write_manifest(
             "required_coverage_class_ids": [
                 "alternate_package_reviewer_ready",
                 "current_promotion_reviewer_ready",
-                "typed_blocked_expansion",
+                "expansion_reviewer_ready",
             ],
             "coverage_thresholds": {
                 "required_slot_count": 3,
                 "required_coverage_class_count": 3,
                 "distinct_forest_count_min": 2,
                 "distinct_package_style_count_min": 3,
-                "reviewer_ready_slot_count_min": 2,
-                "typed_blocked_slot_count_min": 1,
+                "reviewer_ready_slot_count_min": 3,
+                "typed_blocked_slot_count_min": 0,
                 "missing_required_slot_count_max": 0,
                 "missing_package_authority_count_max": 0,
             },

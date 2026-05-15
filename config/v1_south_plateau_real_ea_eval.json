@@ -1,9 +1,5 @@
 {
   "allow_unadjudicated_conditional_expectations": true,
-  "allowed_blocker_categories": [
-    "forest_plan_reviewer_resolution_open",
-    "forest_plan_standard_reviewer_resolution_open"
-  ],
   "conditional_source_expectations": [
     {
       "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps clean_air_act_conformity_air_quality_authority_template explicitly applicable.",
@@ -394,7 +390,7 @@
   "eval_id": "south-plateau-real-ea-v1",
   "expected_lane_states": {
     "broader_ea_passed": true,
-    "forest_plan_passed": false
+    "forest_plan_passed": true
   },
   "forest_plan": {
     "expected_scope_status": "custer_gallatin",
@@ -403,7 +399,7 @@
   },
   "forest_unit_id": "custer-gallatin-nf",
   "package_style_tags": [
-    "typed_blocked_expansion"
+    "reviewer_ready_expansion"
   ],
   "review_id": "region1-expansion-south-plateau-landscape-treatment",
   "rule_pack_id": "nepa-ea-v0",

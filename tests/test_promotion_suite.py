@@ -214,8 +214,8 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     )
     assert aggregate_gold_checks["gold_coverage_eval_distinct_forest_count"]["min"] == 2
     assert aggregate_gold_checks["gold_coverage_eval_distinct_package_style_count"]["min"] == 3
-    assert aggregate_gold_checks["gold_coverage_eval_reviewer_ready_review_count"]["min"] == 2
-    assert aggregate_gold_checks["gold_coverage_eval_typed_blocked_review_count"]["min"] == 1
+    assert aggregate_gold_checks["gold_coverage_eval_reviewer_ready_review_count"]["min"] == 3
+    assert aggregate_gold_checks["gold_coverage_eval_typed_blocked_review_count"]["min"] == 0
     assert (
         aggregate_gold_checks["gold_coverage_eval_missing_review_contract_count"]["equals"]
         == 0
@@ -843,9 +843,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     }
     assert south_plateau_phase_checks["phase_eval_passed"]["equals"] is True
     assert south_plateau_phase_checks["phase_eval_reviewer_ready"]["equals"] is True
-    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 16
+    assert south_plateau_phase_checks["phase_eval_passed_phase_count"]["equals"] == 19
     assert south_plateau_phase_checks["phase_eval_declared_review_contract"]["equals"] is True
-    assert south_plateau_phase_checks["phase_eval_contract_backed_promotion_ready"]["equals"] is False
+    assert south_plateau_phase_checks["phase_eval_contract_backed_promotion_ready"]["equals"] is True
 
     slots = {slot["id"]: slot for slot in manifest["expansion_slots"]}
     slot = slots["region1-real-ea-slot-1"]
@@ -880,9 +880,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     third_slot = slots["region1-real-ea-slot-2"]
     gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}
 
-    assert third_slot["status"] == "blocked_forest_plan_review"
-    assert third_slot["ready"] is False
-    assert third_slot["failure_category"] == "forest_plan_reviewer_not_ready"
+    assert third_slot["status"] == "ready"
+    assert third_slot["ready"] is True
+    assert "failure_category" not in third_slot
     assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
     assert third_slot["source_set_id"] == "source-set-ba8d0feae79501b8"
     assert third_slot["forest_plan_profile"] == "custer_gallatin"
@@ -907,28 +907,28 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert third_slot["last_local_signal"]["generated_rule_pack_ready"] is True
     assert third_slot["last_local_signal"]["generated_rule_pack_validation_passed"] is True
     assert third_slot["last_local_signal"]["generated_rule_count"] == 61
-    assert third_slot["last_local_signal"]["compliance_validation_passed"] is False
-    assert third_slot["last_local_signal"]["compliance_review_reviewer_ready"] is False
+    assert third_slot["last_local_signal"]["compliance_validation_passed"] is True
+    assert third_slot["last_local_signal"]["compliance_review_reviewer_ready"] is True
     assert third_slot["last_local_signal"]["compliance_finding_count"] == 61
     assert third_slot["last_local_signal"]["rule_claim_link_count"] == 280
     assert third_slot["last_local_signal"]["rule_claim_gap_count"] == 0
     assert third_slot["last_local_signal"]["forest_plan_scope_status"] == "custer_gallatin"
     assert third_slot["last_local_signal"]["forest_plan_context_validation_passed"] is True
-    assert third_slot["last_local_signal"]["forest_plan_context_reviewer_ready"] is False
+    assert third_slot["last_local_signal"]["forest_plan_context_reviewer_ready"] is True
     assert third_slot["last_local_signal"]["forest_plan_component_gate_required"] is True
     assert third_slot["last_local_signal"]["forest_plan_component_count"] == 329
     assert third_slot["last_local_signal"]["forest_plan_component_applicable_count"] == 152
     assert third_slot["last_local_signal"]["forest_plan_component_applicable_standard_count"] == 24
     assert third_slot["last_local_signal"]["forest_plan_component_applied_standard_count"] == 21
     assert third_slot["last_local_signal"]["forest_plan_component_reviewer_resolution_count"] == 31
-    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_eval_passed"] is False
-    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_pending_count"] == 31
-    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_resolved_count"] == 0
-    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_system_miss_count"] == 0
-    assert third_slot["last_local_signal"]["phase_eval_passed"] is False
-    assert third_slot["last_local_signal"]["phase_eval_reviewer_ready"] is False
-    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 16
-    assert third_slot["last_local_signal"]["phase_eval_phase_count"] == 18
+    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_eval_passed"] is True
+    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_pending_count"] == 0
+    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_resolved_count"] == 31
+    assert third_slot["last_local_signal"]["forest_plan_component_adjudication_system_miss_count"] == 31
+    assert third_slot["last_local_signal"]["phase_eval_passed"] is True
+    assert third_slot["last_local_signal"]["phase_eval_reviewer_ready"] is True
+    assert third_slot["last_local_signal"]["phase_eval_passed_phase_count"] == 19
+    assert third_slot["last_local_signal"]["phase_eval_phase_count"] == 19
     assert third_slot["last_local_signal"]["adjudication_eval_passed"] is True
     assert third_slot["last_local_signal"]["adjudication_resolved_count"] == 6
     assert third_slot["last_local_signal"]["adjudication_apply_passed"] is True

@@ -21,7 +21,7 @@ THEMES = [
 ]
 
 
-def test_gold_coverage_eval_accepts_declared_reviewer_ready_and_typed_blocked_mix() -> None:
+def test_gold_coverage_eval_accepts_declared_reviewer_ready_mix() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         output_dir = root / "source_library"
@@ -36,8 +36,8 @@ def test_gold_coverage_eval_accepts_declared_reviewer_ready_and_typed_blocked_mi
         assert result.summary["passed_theme_count"] == 7
         assert result.summary["distinct_forest_count"] == 2
         assert result.summary["distinct_package_style_count"] == 3
-        assert result.summary["reviewer_ready_review_count"] == 2
-        assert result.summary["typed_blocked_review_count"] == 1
+        assert result.summary["reviewer_ready_review_count"] == 3
+        assert result.summary["typed_blocked_review_count"] == 0
         assert result.summary["missing_package_authority_count"] == 0
         assert result.summary["threshold_failures"] == []
 
@@ -52,7 +52,7 @@ def test_gold_coverage_eval_fails_missing_theme_and_package_diversity() -> None:
             review_package_styles=[
                 ["clean_baseline"],
                 ["clean_baseline"],
-                ["typed_blocked_expansion"],
+                ["reviewer_ready_expansion"],
             ],
         )
 
@@ -86,8 +86,8 @@ def test_committed_gold_coverage_manifest_tracks_three_review_contracts() -> Non
     assert thresholds["required_review_contract_count"] == 3
     assert thresholds["distinct_forest_count_min"] == 2
     assert thresholds["distinct_package_style_count_min"] == 3
-    assert thresholds["reviewer_ready_review_count_min"] == 2
-    assert thresholds["typed_blocked_review_count_min"] == 1
+    assert thresholds["reviewer_ready_review_count_min"] == 3
+    assert thresholds["typed_blocked_review_count_min"] == 0
 
 
 def _write_manifest(
@@ -124,14 +124,14 @@ def _write_manifest(
             "package_style_tags": [
                 "clean_baseline",
                 "live_external_noisy",
-                "typed_blocked_expansion",
+                "reviewer_ready_expansion",
             ],
         },
     )
     review_package_styles = review_package_styles or [
         ["clean_baseline"],
         ["live_external_noisy"],
-        ["typed_blocked_expansion"],
+        ["reviewer_ready_expansion"],
     ]
     review_payloads = [
         {
@@ -161,16 +161,14 @@ def _write_manifest(
         {
             "review_id": "region1-expansion-south-plateau-landscape-treatment",
             "passed": True,
-            "contract_status": "typed_blocked",
+            "contract_status": "reviewer_ready",
             "forest_unit_id": "custer-gallatin-nf",
             "package_style_tags": review_package_styles[2],
-            "actual_overall_passed": False,
+            "actual_overall_passed": True,
             "broader_ea_passed": True,
-            "forest_plan_passed": False,
-            "failure_category_counts": {"forest_plan_reviewer_resolution_open": 1},
-            "forest_plan_failure_category_counts": {
-                "forest_plan_reviewer_resolution_open": 1
-            },
+            "forest_plan_passed": True,
+            "failure_category_counts": {},
+            "forest_plan_failure_category_counts": {},
         },
     ]
     review_paths = []
@@ -196,8 +194,8 @@ def _write_manifest(
                 "required_review_contract_count": 3,
                 "distinct_forest_count_min": 2,
                 "distinct_package_style_count_min": 3,
-                "reviewer_ready_review_count_min": 2,
-                "typed_blocked_review_count_min": 1,
+                "reviewer_ready_review_count_min": 3,
+                "typed_blocked_review_count_min": 0,
                 "missing_required_review_contract_count_max": 0,
                 "missing_package_authority_count_max": 0,
             },
@@ -241,15 +239,15 @@ def _write_real_package_manifest(root: Path, *, review_paths: list[Path]) -> Pat
             "required_coverage_class_ids": [
                 "alternate_package_reviewer_ready",
                 "current_promotion_reviewer_ready",
-                "typed_blocked_expansion",
+                "expansion_reviewer_ready",
             ],
             "coverage_thresholds": {
                 "required_slot_count": 3,
                 "required_coverage_class_count": 3,
                 "distinct_forest_count_min": 2,
                 "distinct_package_style_count_min": 3,
-                "reviewer_ready_slot_count_min": 2,
-                "typed_blocked_slot_count_min": 1,
+                "reviewer_ready_slot_count_min": 3,
+                "typed_blocked_slot_count_min": 0,
                 "missing_required_slot_count_max": 0,
                 "missing_package_authority_count_max": 0,
             },
@@ -285,16 +283,16 @@ def _write_real_package_manifest(root: Path, *, review_paths: list[Path]) -> Pat
                     },
                 },
                 {
-                    "slot_id": "south-plateau-typed-blocked",
-                    "label": "South Plateau typed blocked expansion lane",
+                    "slot_id": "south-plateau-reviewer-ready",
+                    "label": "South Plateau reviewer-ready expansion lane",
                     "review_id": "region1-expansion-south-plateau-landscape-treatment",
                     "package_label": "South Plateau",
-                    "coverage_class_id": "typed_blocked_expansion",
+                    "coverage_class_id": "expansion_reviewer_ready",
                     "forest_unit_id": "custer-gallatin-nf",
                     "eval_file": "config/v1_south_plateau_real_ea_eval.json",
                     "results_path": str(review_paths[2]),
                     "required": True,
-                    "expected_contract_status": "typed_blocked",
+                    "expected_contract_status": "reviewer_ready",
                     "package_authority": {
                         "intake_package_path": str(authorities_dir / "south-intake"),
                     },

@@ -1,0 +1,823 @@
+{
+  "adjudication": {
+    "adjudicated_at": "2026-05-14T23:59:00Z",
+    "adjudicated_by": [
+      "codex"
+    ],
+    "method": "tracked_replay_artifact_review",
+    "notes": "South Plateau reviewer-ready queue closure for strict expansion promotion.",
+    "status": "completed"
+  },
+  "adjudication_id": "region1-expansion-south-plateau-landscape-treatment-component-adjudication",
+  "items": [
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-REC-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-REC-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-REC-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-REC-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-REC-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-REC-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDEV-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDEV-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDEV-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECDEV-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECDEV-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECDEV-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECDEV-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECDEV-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECDEV-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDISP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDISP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECDISP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECSUP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECSUP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECSUP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECSUP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECSUP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECSUP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECSUP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECSUP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECSUP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECOG-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECOG-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECOG-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECOG-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECOG-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECOG-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECOG-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Pack-goat special-use standard overmatches this package.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECRES-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECRES-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECRES-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECRES-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECRES-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECRES-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECSKI-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECSKI-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECSKI-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECEVENT-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECEVENT-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECEVENT-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECEVENT-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECEVENT-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECEVENT-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECORGCAMP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECORGCAMP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECORGCAMP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECORGCAMP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECORGCAMP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-RECORGCAMP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECGROUP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECGROUP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECGROUP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECGROUP-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECGROUP-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-RECGROUP-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECED-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECED-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECED-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECED-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECED-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECED-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECTECH-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECTECH-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-RECTECH-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECTECH-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECTECH-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-RECTECH-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Forestwide recreation-program component overmatches South Plateau project scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-SX-DC-TRIBAL-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-SX-DC-TRIBAL-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-SX-DC-TRIBAL-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Named tribal-landscape component falls outside South Plateau project geography.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-SX-GO-TRIBAL-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-SX-GO-TRIBAL-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-SX-GO-TRIBAL-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Named tribal-landscape component falls outside South Plateau project geography.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-SX-GDL-TRIBAL-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-SX-GDL-TRIBAL-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-SX-GDL-TRIBAL-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Named tribal-landscape component falls outside South Plateau project geography.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RCREA-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RCREA-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RCREA-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Trail-construction standard does not govern the package road-access scope.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-DC-TRIBAL-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-BC-DC-TRIBAL-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-BC-DC-TRIBAL-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Named tribal-landscape component falls outside South Plateau project geography.",
+      "source_type": "package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-14T23:59:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-GO-TRIBAL-01",
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+      },
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "R1PLAN-custer-gallatin-nf-02-BC-GO-TRIBAL-01-finding",
+      "item_id": "R1PLAN-custer-gallatin-nf-02-BC-GO-TRIBAL-01-missing_package_evidence",
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-custer-gallatin-nf-02"
+        }
+      ],
+      "rationale": "Named tribal-landscape component falls outside South Plateau project geography.",
+      "source_type": "package_scope_review"
+    }
+  ],
+  "review_id": "region1-expansion-south-plateau-landscape-treatment",
+  "schema_version": "forest-plan-component-adjudication-v0",
+  "source_set_id": "source-set-ba8d0feae79501b8"
+}

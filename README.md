@@ -113,9 +113,11 @@ Current full-corpus promotion boundary:
   `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that some
   promoted profiles must remain blocked.
 - The same fresh non-strict replay now reports `full_canonical_corpus_ready=true`,
-  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=false`.
-- The active remaining operational blocker is now Milestone `5`: South Plateau strict expansion
-  `forest_plan_reviewer_not_ready`.
+  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=true`.
+- Milestone `5` South Plateau strict-expansion recovery is now also closed on `2026-05-14`:
+  tracked South Plateau replay-context and component-adjudication contracts plus a refreshed
+  ba8d-scoped ECID expansion `phase-eval` replay now leave both non-strict and strict
+  `promotion-suite` replays green with `expansion_failure_category_counts={}`.
 
 The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
@@ -673,11 +675,12 @@ adjudication eval resolves the current `158`-row queue as true EA package-eviden
 `0` system misses. ECID compliance review and review-scoped phase eval are reviewer-ready. The
 South Plateau expansion package has replayed and validated its six applicability adjudications,
 generated and validated `61` rules, resolved to Custer Gallatin forest-plan context with
-`validation_passed=true`, and now exposes the actual remaining component gate: `329` forest-plan
-components, `152` applicable components, `24` applicable standards, `21` applied standards, and
-`31` pending component-adjudication items. Non-strict promotion remains green, while strict
-expansion is blocked only by `forest_plan_reviewer_not_ready` until that adjudication worklist is
-completed without pending/system-miss items.
+`validation_passed=true`, closed the tracked `31`-item component-adjudication queue as
+`applicability_false_positive` system misses, and now passes compliance review, `v1-ea-eval`, and
+review-scoped `phase-eval` `19/19` with `reviewer_ready=true`. Real-package review coverage is now
+`3/3` reviewer-ready slots, aggregate gold coverage records `reviewer_ready_review_count=3` and
+`typed_blocked_review_count=0`, and both non-strict and strict `promotion-suite` replays now pass
+with `expansion_ready=true`.
 
 ## Reviewer Engine Entry Points
 
@@ -1211,8 +1214,9 @@ tracked review-slot manifest lives at `config/v1_real_package_review_coverage_v1
 `--review-id` is supplied, `v1-ea-eval` resolves the matching per-review contract from that
 manifest; otherwise it fails closed unless `--eval-file` is provided explicitly. The tracked
 contracts cover East Crazies, West Reservoir, and South Plateau. Typed blocked reviews remain valid
-coverage only when the declared blocked lane and blocker categories still match the live review
-artifacts.
+coverage only when a declared blocked lane and blocker categories still match the live review
+artifacts, but the current shipped three-review contract set is now fully reviewer-ready with
+South Plateau carrying `package_style_tags=["reviewer_ready_expansion"]`.
 
 The result summary separates the overall readiness gate from two diagnostic lanes:
 `broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and
@@ -1233,7 +1237,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval \
 slots. It replays or loads the tracked East Crazies, West Reservoir, and South Plateau V1 results,
 checks package-authority ownership for each slot, requires the three coverage classes
 `current_promotion_reviewer_ready`, `alternate_package_reviewer_ready`, and
-`typed_blocked_expansion`, and reports covered review IDs, ready-versus-blocked slot counts,
+`expansion_reviewer_ready`, and reports covered review IDs, ready-versus-blocked slot counts,
 distinct forest/package-style counts, and any missing authority or slot failures.
 
 Run the aggregate gold coverage gate:
@@ -1248,8 +1252,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval \
 default applicability and compliance gold suites plus the manifest-owned
 `real-package-review-coverage-eval` lane, then requires all seven named theme groups, all `19`
 high-priority family IDs, at least `3` tracked review contracts across at least `2` forests and
-`3` package-style tags, at least `2` reviewer-ready reviews, at least `1` typed-blocked review,
-and no missing package-authority declarations.
+`3` package-style tags, all `3` tracked reviews in reviewer-ready status, and no missing
+package-authority declarations.
 
 Run the manifest-driven promotion suite:
 
@@ -1310,10 +1314,11 @@ decisions, and `generated_rule_pack_ready=true`. Compliance review reports `revi
 `61` findings, `41` pass, `19` uncertain, `1` gap, `280` rule-claim links, and `0` rule-claim
 gaps. The South Plateau forest-plan context now resolves to `scope_status="custer_gallatin"` with
 `validation_passed=true`, `2` geographic areas, `9` management areas, `4` overlays, and `5`
-supporting-plan routes. Compliance validation and South Plateau review-scoped phase eval now fail
-only because the forest-plan component gate is pending: `31` component adjudications remain open
-from the generated worklist. Non-strict current promotion remains green; strict expansion fails
-only on `forest_plan_reviewer_not_ready` until the component adjudication eval passes.
+supporting-plan routes. The tracked `31`-item forest-plan component adjudication queue is now
+closed as `applicability_false_positive` system misses, South Plateau `v1-ea-eval` is
+`contract_status="reviewer_ready"`, review-scoped `phase-eval` now passes `19/19` with
+`contract_backed_promotion_ready=true`, and both non-strict and strict `promotion-suite` replays
+now pass with `expansion_ready=true`.
 
 Run the seed retrieval eval gate:
 

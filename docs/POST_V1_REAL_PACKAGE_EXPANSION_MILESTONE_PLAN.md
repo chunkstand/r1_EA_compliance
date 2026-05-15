@@ -1,14 +1,61 @@
 # Post-V1 Real-Package Expansion Milestone Plan
 
 Date: 2026-05-06
-Status: complete through Sequence 7 for the declared ECID preliminary-EA and South Plateau
-real-package expansion set. A 2026-05-07 South Plateau context pass has now resolved the declared
-Custer Gallatin context and narrowed the remaining strict-expansion blocker to pending forest-plan
-component adjudication.
+Status: Resolved 2026-05-14 (complete through Sequence 7 plus South Plateau adjudication/replay
+closeout; the declared ECID preliminary-EA and South Plateau expansion set is now green on fresh
+non-strict and strict `promotion-suite` replay)
 
-Follow-up resolution target: complete the `31`-item South Plateau forest-plan component
-adjudication worklist, rerun adjudication eval, compliance review, phase eval, and strict/non-strict
-promotion.
+Closeout note: the tracked `31`-item South Plateau forest-plan component adjudication queue is now
+closed as `applicability_false_positive` system misses, South Plateau review-scoped `phase-eval`
+now passes `19/19` with `contract_backed_promotion_ready=true`, the ad hoc ECID expansion
+`phase-eval` replay is refreshed on `source-set-ba8d0feae79501b8` with
+`declared_review_contract=false`, and fresh promotion-suite replays now report
+`current_promotion_ready=true`, `expansion_ready=true`, and `promotion_ready=true`. The next
+follow-on packet is outside this plan; if the queued stack resumes, start with Milestone `0` in
+`docs/R1_CROSS_FOREST_PROFILE_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+## Owner Surfaces
+
+- promotion manifest owner:
+  `config/promotion_suite_v1.json`
+- review-contract owners:
+  `config/v1_south_plateau_real_ea_eval.json`,
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/gold_coverage_v1.json`,
+  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`, and
+  `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`
+- generated review/artifact owners:
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/` and
+  `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/`
+- durable routing owners:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md`, and
+  `docs/SESSION_HANDOFF.md`
+
+## Weak-Point Prevention Contract
+
+- Weak point forecast: a future session may treat the South Plateau reviewer-ready conversion as a
+  docs-only manifest edit, skip the ECID ba8d replay refresh, or weaken gold/coverage thresholds
+  until strict expansion turns green without truthful review artifacts.
+- Owner surface: the expansion truth owner remains
+  `config/promotion_suite_v1.json` plus the tracked South Plateau and real-package coverage
+  contracts listed above; the closeout must continue to fail closed there.
+- Controlled violation: if South Plateau drifts back to pending adjudications, stale replay
+  surfaces, or typed blocker semantics, the promotion manifest and its focused tests must fail
+  rather than silently preserving green status.
+- Future-Codex misuse scenario: a later agent may try to remove `phase_eval_declared_review_contract`
+  or reviewer-ready slot checks to avoid refreshing old ECID/South Plateau artifacts. This plan
+  prevents that by requiring live replay-backed closeout, not manifest-only edits.
+- Anti-test-weakening rule: do not lower thresholds, delete blocker categories, or remove
+  reviewer-ready gates just to force expansion green. Do not weaken tests, contract checks, or
+  eval thresholds to manufacture a pass. Coverage changes must stay truthful to the live package
+  set.
+- Complete-after-commit rule: a sequence or milestone is not complete until the required runtime
+  replay, focused verification, durable docs/handoff updates, and one local commit all land
+  together.
+- Atomic commit rule: stage only the verified expansion slice for that milestone; do not fold in
+  unrelated viewer/demo, downloader, or adjacent forest work.
 
 ## Weakness
 
