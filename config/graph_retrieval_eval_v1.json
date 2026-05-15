@@ -1,0 +1,132 @@
+{
+  "schema_version": "graph-retrieval-eval-v1",
+  "eval_id": "graph-retrieval-starter-eval-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "required_query_modes": [
+    "citation_exact_search",
+    "authority_local_hybrid_search",
+    "forest_component_support_search",
+    "package_applicability_search",
+    "global_coverage_search",
+    "drift_reasoning_search"
+  ],
+  "required_signal_coverage": [
+    "citation",
+    "full_text_bm25",
+    "metadata_filter",
+    "currentness_filter",
+    "scope_filter",
+    "semantic_vector",
+    "authority_graph_expansion",
+    "package_fact_graph_expansion",
+    "community_summary"
+  ],
+  "required_contract_checks": [
+    "mode_routing_explicit",
+    "hybrid_fusion_configured",
+    "graph_expansion_bounded",
+    "trace_fields_complete",
+    "community_summary_not_final_evidence"
+  ],
+  "starter_positive_cases": [
+    {
+      "case_id": "exact-citation-beats-semantic-distractor",
+      "mode_id": "citation_exact_search",
+      "focus": [
+        "citation exactness",
+        "metadata confirmation"
+      ]
+    },
+    {
+      "case_id": "current-source-beats-superseded-source",
+      "mode_id": "authority_local_hybrid_search",
+      "focus": [
+        "currentness selection",
+        "temporal filtering"
+      ]
+    },
+    {
+      "case_id": "forest-plan-component-support-path",
+      "mode_id": "forest_component_support_search",
+      "focus": [
+        "component retrieval",
+        "support-document retrieval",
+        "forest-unit scope"
+      ]
+    },
+    {
+      "case_id": "package-applicability-trace-reconstructable",
+      "mode_id": "package_applicability_search",
+      "focus": [
+        "retrieval trace completeness",
+        "bounded graph trace completeness",
+        "search coverage"
+      ]
+    },
+    {
+      "case_id": "broad-coverage-reduces-to-local-evidence",
+      "mode_id": "global_coverage_search",
+      "focus": [
+        "community-summary priming",
+        "local evidence reduction"
+      ]
+    },
+    {
+      "case_id": "multi-hop-drift-refinement",
+      "mode_id": "drift_reasoning_search",
+      "focus": [
+        "broad-to-narrow reasoning",
+        "final path completeness"
+      ]
+    }
+  ],
+  "starter_negative_fixtures": [
+    {
+      "fixture_id": "semantic-only-citation-miss",
+      "expected_failures": [
+        "citation_exactness"
+      ]
+    },
+    {
+      "fixture_id": "superseded-source-selected-for-current-query",
+      "expected_failures": [
+        "currentness_selection"
+      ]
+    },
+    {
+      "fixture_id": "scope-mismatch-passed-through",
+      "expected_failures": [
+        "scope_filtering"
+      ]
+    },
+    {
+      "fixture_id": "community-summary-used-as-final-finding",
+      "expected_failures": [
+        "final_evidence_boundary"
+      ]
+    },
+    {
+      "fixture_id": "unbounded-graph-expansion",
+      "expected_failures": [
+        "graph_expansion_boundary"
+      ]
+    },
+    {
+      "fixture_id": "alias-collision-forced-to-single-identity",
+      "expected_failures": [
+        "alias_disambiguation"
+      ]
+    }
+  ],
+  "starter_metrics": [
+    "query_mode_coverage",
+    "citation_exact_hit_rate",
+    "currentness_selection_accuracy",
+    "scope_filter_precision",
+    "path_completeness_rate",
+    "trace_completeness_rate",
+    "evidence_span_grounding_rate",
+    "unsupported_final_finding_rate"
+  ]
+}

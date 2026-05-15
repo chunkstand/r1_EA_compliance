@@ -5,6 +5,36 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Graph Retrieval Starter
+
+This update lands the repo-specific Phase `0` graph retrieval starter without
+claiming runtime routing, fusion, or graph-expansion enforcement is complete.
+
+- scope:
+  `docs/GRAPH_RETRIEVAL_STARTER.md`,
+  `config/graph_retrieval_contract_v1.json`,
+  `config/graph_retrieval_eval_v1.json`,
+  `tests/test_graph_retrieval_starter.py`
+- routing truth:
+  the repo now has a tracked retrieval baseline that makes hybrid retrieval,
+  typed routing, bounded graph expansion, currentness-aware filtering,
+  scope-aware filtering, and trace completeness explicit. The starter keeps the
+  graph in the right role: it steers, filters, expands, reranks, and explains
+  retrieval, but it does not replace lexical evidence retrieval or exact
+  citation lookup.
+- important boundary:
+  `community_summary` is explicitly a coverage and discovery surface, not a
+  sufficient final evidence surface for controlling legal findings. Final
+  findings still have to reduce to local citation-bearing evidence spans and
+  reviewer-visible authority or justification paths.
+- next routing:
+  use these starter contracts as the design baseline for canonical retrieval
+  policy implementation, query-mode routing, bounded graph expansion, and the
+  Phase `1.5` proving-slice retrieval cases. The next implementation step is to
+  bind the existing `retrieval.py` and `applicability_retrieval.py` seams to
+  governed query modes, signal fusion, and trace requirements instead of adding
+  another separate GraphRAG subsystem.
+
 ## Canonical Source Register Ontology Starter
 
 This update lands the repo-specific Phase `0` authority ontology starter

@@ -1,0 +1,494 @@
+{
+  "schema_version": "graph-retrieval-contract-v1",
+  "contract_id": "graph-retrieval-contract-v1",
+  "as_of_date": "2026-05-15",
+  "status": "starter_baseline",
+  "design_principles": [
+    "Graph retrieval is hybrid, not graph-only.",
+    "The graph routes, filters, expands, reranks, and explains retrieval.",
+    "Currentness and scope are part of retrieval, not only post-processing.",
+    "Exact citation and metadata filters are first-class legal retrieval signals.",
+    "Final findings must reduce to cited evidence spans and reviewer-visible paths."
+  ],
+  "retrieval_units": [
+    {
+      "unit_id": "source_record",
+      "final_finding_eligible": false,
+      "description": "Register and catalog provenance unit used for identity, role, currentness, and filter logic."
+    },
+    {
+      "unit_id": "evidence_span",
+      "final_finding_eligible": true,
+      "description": "Default citation-bearing evidence unit for review findings.",
+      "required_provenance_fields": [
+        "source_record_id",
+        "artifact_sha256",
+        "content_sha256",
+        "char_start",
+        "char_end"
+      ]
+    },
+    {
+      "unit_id": "source_claim",
+      "final_finding_eligible": true,
+      "description": "Optional higher-level lexical unit when claim extraction quality is validated."
+    },
+    {
+      "unit_id": "authority_fragment",
+      "final_finding_eligible": false,
+      "description": "Section-aware authority object for statutes, CFR sections, directives, and appendices."
+    },
+    {
+      "unit_id": "forest_plan_component",
+      "final_finding_eligible": false,
+      "description": "Semantic plan-component object used for consistency and support retrieval."
+    },
+    {
+      "unit_id": "authority_path",
+      "final_finding_eligible": false,
+      "description": "Reviewer-visible lineage path from higher authority to lower authority or component."
+    },
+    {
+      "unit_id": "justification_path",
+      "final_finding_eligible": false,
+      "description": "Reviewer-visible path from authority to evidence to review output."
+    },
+    {
+      "unit_id": "community_summary",
+      "final_finding_eligible": false,
+      "description": "Corpus-wide discovery unit used for broad coverage and theme search only."
+    }
+  ],
+  "search_signals": [
+    {
+      "signal_id": "citation",
+      "signal_class": "lexical",
+      "description": "Exact citation and structured label matching."
+    },
+    {
+      "signal_id": "full_text_bm25",
+      "signal_class": "lexical",
+      "description": "Full-text lexical retrieval for terms, phrases, and exact legal language."
+    },
+    {
+      "signal_id": "metadata_filter",
+      "signal_class": "metadata",
+      "description": "Deterministic filtering by source-record metadata such as authority level, issuer, or source ID."
+    },
+    {
+      "signal_id": "source_role_filter",
+      "signal_class": "metadata",
+      "description": "Filtering by document role or support-document role."
+    },
+    {
+      "signal_id": "currentness_filter",
+      "signal_class": "temporal",
+      "description": "Filtering by effective-date interval and controlling versus historical status."
+    },
+    {
+      "signal_id": "scope_filter",
+      "signal_class": "scope",
+      "description": "Filtering by jurisdiction, forest unit, resource topic, or package scope."
+    },
+    {
+      "signal_id": "semantic_vector",
+      "signal_class": "semantic",
+      "description": "Embedding-based semantic similarity over chunks, fragments, or claims."
+    },
+    {
+      "signal_id": "structural_similarity",
+      "signal_class": "structural",
+      "description": "Graph-topology or graph-derived structural similarity."
+    },
+    {
+      "signal_id": "authority_graph_expansion",
+      "signal_class": "graph",
+      "description": "Bounded traversal over authority and support-document relationships."
+    },
+    {
+      "signal_id": "package_fact_graph_expansion",
+      "signal_class": "graph",
+      "description": "Bounded traversal from package facts into candidate authority evidence."
+    },
+    {
+      "signal_id": "community_summary",
+      "signal_class": "global",
+      "description": "Community or cluster summaries used for broad coverage and DRIFT-style priming."
+    }
+  ],
+  "query_modes": [
+    {
+      "mode_id": "citation_exact_search",
+      "required_signals": [
+        "citation",
+        "full_text_bm25",
+        "metadata_filter"
+      ],
+      "optional_signals": [
+        "semantic_vector"
+      ],
+      "required_filters": [
+        "currentness_filter",
+        "scope_filter"
+      ],
+      "allowed_result_unit_ids": [
+        "source_record",
+        "evidence_span",
+        "authority_fragment"
+      ],
+      "graph_expansion_policy_id": "no_or_minimal_expansion",
+      "intended_questions": [
+        "direct citations",
+        "section labels",
+        "known source-record IDs",
+        "known component IDs"
+      ]
+    },
+    {
+      "mode_id": "authority_local_hybrid_search",
+      "required_signals": [
+        "full_text_bm25",
+        "metadata_filter",
+        "semantic_vector"
+      ],
+      "optional_signals": [
+        "authority_graph_expansion",
+        "structural_similarity"
+      ],
+      "required_filters": [
+        "currentness_filter",
+        "scope_filter",
+        "source_role_filter"
+      ],
+      "allowed_result_unit_ids": [
+        "source_record",
+        "evidence_span",
+        "source_claim",
+        "authority_fragment"
+      ],
+      "graph_expansion_policy_id": "authority_local_expansion",
+      "intended_questions": [
+        "authority-topic questions",
+        "single-document legal support questions"
+      ]
+    },
+    {
+      "mode_id": "forest_component_support_search",
+      "required_signals": [
+        "full_text_bm25",
+        "metadata_filter",
+        "source_role_filter"
+      ],
+      "optional_signals": [
+        "semantic_vector",
+        "authority_graph_expansion",
+        "structural_similarity"
+      ],
+      "required_filters": [
+        "currentness_filter",
+        "scope_filter",
+        "source_role_filter"
+      ],
+      "allowed_result_unit_ids": [
+        "forest_plan_component",
+        "authority_fragment",
+        "evidence_span",
+        "source_record"
+      ],
+      "graph_expansion_policy_id": "forest_component_expansion",
+      "intended_questions": [
+        "forest-plan consistency",
+        "supporting-plan evidence",
+        "amendments, appendices, records of decision"
+      ]
+    },
+    {
+      "mode_id": "package_applicability_search",
+      "required_signals": [
+        "metadata_filter",
+        "full_text_bm25",
+        "package_fact_graph_expansion"
+      ],
+      "optional_signals": [
+        "semantic_vector",
+        "authority_graph_expansion"
+      ],
+      "required_filters": [
+        "currentness_filter",
+        "scope_filter",
+        "source_role_filter"
+      ],
+      "allowed_result_unit_ids": [
+        "source_record",
+        "evidence_span",
+        "source_claim",
+        "authority_path",
+        "justification_path"
+      ],
+      "graph_expansion_policy_id": "package_applicability_expansion",
+      "intended_questions": [
+        "candidate authority evidence discovery",
+        "package-specific applicability discovery"
+      ]
+    },
+    {
+      "mode_id": "global_coverage_search",
+      "required_signals": [
+        "community_summary",
+        "structural_similarity"
+      ],
+      "optional_signals": [
+        "semantic_vector"
+      ],
+      "required_filters": [],
+      "allowed_result_unit_ids": [
+        "community_summary",
+        "authority_path"
+      ],
+      "graph_expansion_policy_id": "global_summary_expansion",
+      "intended_questions": [
+        "corpus-wide themes",
+        "coverage gaps",
+        "broad summary questions"
+      ],
+      "final_finding_boundary": "Must reduce to local citation-bearing evidence before promotion."
+    },
+    {
+      "mode_id": "drift_reasoning_search",
+      "required_signals": [
+        "community_summary",
+        "semantic_vector",
+        "authority_graph_expansion"
+      ],
+      "optional_signals": [
+        "full_text_bm25",
+        "metadata_filter"
+      ],
+      "required_filters": [
+        "currentness_filter",
+        "scope_filter"
+      ],
+      "allowed_result_unit_ids": [
+        "community_summary",
+        "authority_fragment",
+        "evidence_span",
+        "authority_path",
+        "justification_path"
+      ],
+      "graph_expansion_policy_id": "drift_iterative_expansion",
+      "intended_questions": [
+        "ambiguous multi-hop legal questions",
+        "broad-to-narrow exploratory retrieval"
+      ]
+    }
+  ],
+  "routing_rules": [
+    {
+      "rule_id": "citation-markers",
+      "route_to_mode_id": "citation_exact_search",
+      "query_markers": [
+        "u.s.c.",
+        "cfr",
+        "fsm",
+        "fsh",
+        "source_record_id",
+        "component_id"
+      ]
+    },
+    {
+      "rule_id": "forest-plan-component-language",
+      "route_to_mode_id": "forest_component_support_search",
+      "query_markers": [
+        "forest plan",
+        "plan component",
+        "guideline",
+        "standard",
+        "record of decision",
+        "appendix"
+      ]
+    },
+    {
+      "rule_id": "package-specific-applicability",
+      "route_to_mode_id": "package_applicability_search",
+      "query_markers": [
+        "applies",
+        "applicable",
+        "review package",
+        "project facts",
+        "candidate authority"
+      ]
+    },
+    {
+      "rule_id": "broad-theme-language",
+      "route_to_mode_id": "global_coverage_search",
+      "query_markers": [
+        "main themes",
+        "overall coverage",
+        "biggest gaps",
+        "across the corpus"
+      ]
+    },
+    {
+      "rule_id": "fallback-multi-hop",
+      "route_to_mode_id": "drift_reasoning_search",
+      "query_markers": [
+        "how does",
+        "what path",
+        "trace",
+        "relate"
+      ]
+    }
+  ],
+  "fusion_policy": {
+    "strategy": "weighted_reciprocal_rank_fusion",
+    "source_k_must_exceed_final_k": true,
+    "deterministic_tie_breaker_field": "stable_result_id",
+    "rerank_features": [
+      "citation_exactness",
+      "currentness_fit",
+      "scope_fit",
+      "source_role_fit",
+      "authority_hierarchy_fit",
+      "forest_unit_fit",
+      "support_document_role_fit",
+      "path_completeness",
+      "provenance_completeness"
+    ],
+    "fallback_rules": [
+      "A result that matches exact citation and metadata may outrank a semantically stronger but structurally mismatched result.",
+      "Community-summary evidence may seed exploration but cannot stand as final controlling evidence.",
+      "When currentness and semantic similarity conflict, currentness wins unless the query explicitly requests historical lineage."
+    ]
+  },
+  "graph_expansion_policies": [
+    {
+      "policy_id": "no_or_minimal_expansion",
+      "max_hops": 1,
+      "allowed_relationship_types": [],
+      "require_currentness_match": true,
+      "require_scope_match": true,
+      "require_provenance": true
+    },
+    {
+      "policy_id": "authority_local_expansion",
+      "max_hops": 2,
+      "allowed_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "AMENDS",
+        "SUPERSEDES",
+        "REQUIRES_CONSISTENCY_WITH",
+        "PROVIDES_GUIDANCE_FOR"
+      ],
+      "require_currentness_match": true,
+      "require_scope_match": true,
+      "require_provenance": true
+    },
+    {
+      "policy_id": "forest_component_expansion",
+      "max_hops": 2,
+      "allowed_relationship_types": [
+        "REQUIRES_CONSISTENCY_WITH",
+        "IS_SUPPORTING_DOCUMENT_FOR",
+        "SUPPORTS_FOREST_PLAN_COMPONENT",
+        "GOVERNS_FOREST_UNIT"
+      ],
+      "require_currentness_match": true,
+      "require_scope_match": true,
+      "require_provenance": true
+    },
+    {
+      "policy_id": "package_applicability_expansion",
+      "max_hops": 3,
+      "allowed_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "REQUIRES_CONSISTENCY_WITH",
+        "PROVIDES_GUIDANCE_FOR",
+        "SUPPORTS_FOREST_PLAN_COMPONENT",
+        "APPLIES_WITHIN_SCOPE",
+        "GOVERNS_FOREST_UNIT"
+      ],
+      "require_currentness_match": true,
+      "require_scope_match": true,
+      "require_provenance": true
+    },
+    {
+      "policy_id": "global_summary_expansion",
+      "max_hops": 2,
+      "allowed_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "REQUIRES_CONSISTENCY_WITH"
+      ],
+      "require_currentness_match": false,
+      "require_scope_match": false,
+      "require_provenance": true
+    },
+    {
+      "policy_id": "drift_iterative_expansion",
+      "max_hops": 3,
+      "allowed_relationship_types": [
+        "IMPLEMENTS",
+        "INTERPRETS",
+        "AMENDS",
+        "SUPERSEDES",
+        "REQUIRES_CONSISTENCY_WITH",
+        "PROVIDES_GUIDANCE_FOR",
+        "IS_SUPPORTING_DOCUMENT_FOR",
+        "SUPPORTS_FOREST_PLAN_COMPONENT",
+        "APPLIES_WITHIN_SCOPE",
+        "GOVERNS_FOREST_UNIT"
+      ],
+      "require_currentness_match": true,
+      "require_scope_match": true,
+      "require_provenance": true
+    }
+  ],
+  "trace_requirements": {
+    "required_top_level_fields": [
+      "query_text",
+      "query_mode",
+      "source_set_id",
+      "review_id",
+      "signals_used",
+      "filters_applied",
+      "selected_results",
+      "rejected_results",
+      "search_coverage",
+      "created_at"
+    ],
+    "required_selected_result_fields": [
+      "stable_result_id",
+      "result_unit_id",
+      "source_record_id",
+      "signal_ranks",
+      "fusion_contributions",
+      "currentness_decision",
+      "scope_decision",
+      "selected_reason"
+    ],
+    "required_rejected_result_fields": [
+      "stable_result_id",
+      "rejection_reason"
+    ],
+    "required_path_fields": [
+      "path_id",
+      "path_type",
+      "relationship_types",
+      "provenance_source_record_ids"
+    ],
+    "required_search_coverage_fields": [
+      "coverage_status",
+      "coverage_reason",
+      "query_plan_id"
+    ]
+  },
+  "guardrails": [
+    "Community summaries may not be used as final controlling evidence without reduction to local evidence spans.",
+    "Superseded or rescinded sources may not outrank current controlling sources for present-tense review queries.",
+    "Graph expansion may not cross scope or forest-unit boundaries unless the query explicitly requests such comparison.",
+    "Starter routing rules must remain visible in traces and test fixtures.",
+    "Legal retrieval quality problems should first drive better data, filters, traces, and evals before bespoke heuristics."
+  ]
+}
