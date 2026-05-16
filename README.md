@@ -494,8 +494,10 @@ heuristics.
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/forest_plan_profiles.json`
 - `config/forest_plan_component_inventory_seed.json`
+- `config/forest_plan_component_eval_coverage_v1.json`
 - `config/forest_plan_component_eval_seed.json`
 - `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`
+- `config/forest_plan_component_evals/west-reservoir-67436.json`
 - `config/forest_plan_component_adjudications/v1-cg-ecid-source-delta-review.json`
 - `config/v1_ecid_real_ea_eval.json`
 - `config/promotion_suite_v1.json`
@@ -759,15 +761,17 @@ nonmotorized/no-motorized use, so standards written as prohibitions do not requi
 the plan's exact phrasing.
 
 `forest-plan-component-eval` scores the current forest-plan review against adjudicated
-component-level cases in `config/forest_plan_component_eval_seed.json`. The eval measures component
+component-level cases in a tracked per-review contract. East Crazies current promotion still uses
+`config/forest_plan_component_eval_seed.json`, while the broader tracked-review path is now routed
+through `config/forest_plan_component_eval_coverage_v1.json`. The eval measures component
 applicability precision/recall, applicable-standard recall, false-applicable component rate,
 package-section match rate, plan-source citation correctness, package-evidence citation
 correctness, resolved compliance-status rate, and reviewer-resolution closure rate. This is the
-feedback loop for improving forest-plan accuracy across runs; it fails closed when package evidence,
-plan citations, section bindings, applicability, compliance status, reviewer-resolution state, or
-the identity of any consumed review artifact drifts from the adjudicated contract. The current seed
-also carries coverage requirements so it fails if the cases no longer cover every applicable
-standard, representative non-standard component types, hard negatives, and section-bound package
+feedback loop for improving forest-plan accuracy across runs; it fails closed when package
+evidence, plan citations, section bindings, applicability, compliance status, reviewer-resolution
+state, or the identity of any consumed review artifact drifts from the adjudicated contract. The
+current contracts also carry coverage requirements so they fail if the cases no longer cover every
+applicable standard, representative non-standard component types, hard negatives, and section-bound package
 evidence. Citation correctness is exact: extra or missing plan/package citations both fail the case.
 
 ## Common Commands
@@ -1668,16 +1672,21 @@ Run forest-plan component eval against an existing review:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
   --output-dir source_library \
-  --review-id v1-cg-ecid-compliance-review \
-  --eval-file config/forest_plan_component_eval_seed.json
+  --review-id west-reservoir-67436
 ```
 
 `forest-plan-component-eval` reads the review's component findings, applicable-standard coverage,
 and reviewer-resolution queue, then writes `forest_plan_component_eval_results.json` beside the
 review artifacts. Use this after `forest-plan-resolve` or `compliance-review` when changing
 component applicability, source binding, package evidence extraction, or reviewer-resolution logic.
-Replay-scoped component contracts can live outside `source_library`; the current East Crazies replay
-uses `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`.
+When `--review-id` is supplied without `--eval-file`, the command resolves the contract from the
+tracked review coverage manifest `config/forest_plan_component_eval_coverage_v1.json`. That
+manifest currently governs East Crazies current promotion, East Crazies source-delta replay, and
+West Reservoir. If the review is not tracked, the command fails closed unless `--eval-file` is
+provided explicitly. Replay-scoped component contracts can still live outside `source_library`; the
+current replay slots are `config/forest_plan_component_eval_seed.json`,
+`config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`, and
+`config/forest_plan_component_evals/west-reservoir-67436.json`.
 
 Run the standalone component-retrieval eval against the active source-set inventory:
 

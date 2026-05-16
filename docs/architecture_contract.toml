@@ -63,6 +63,7 @@ modules = [
   "ea_review",
   "forest_plan_component_adjudication",
   "forest_plan_component_eval",
+  "forest_plan_component_eval_coverage",
   "forest_plan_components",
   "forest_plan_inventory_build_manifest",
   "forest_plan_profiles",

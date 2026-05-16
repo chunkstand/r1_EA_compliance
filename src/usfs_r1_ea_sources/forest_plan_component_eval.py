@@ -8,6 +8,11 @@ from typing import Any
 import json
 import re
 
+from .forest_plan_component_eval_coverage import (
+    DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+)
+from .forest_plan_component_eval_coverage import resolve_forest_plan_component_eval_file
+
 
 DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH = Path("config/forest_plan_component_eval_seed.json")
 FOREST_PLAN_COMPONENT_EVAL_SCHEMA_VERSION = "forest-plan-component-eval-v0"
@@ -33,12 +38,19 @@ def run_forest_plan_component_eval(
     output_dir: Path = Path("source_library"),
     review_id: str | None = None,
     review_dir: Path | None = None,
-    eval_file: Path = DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH,
+    eval_file: Path | None = None,
+    manifest_path: Path = DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
     output_path: Path | None = None,
 ) -> ForestPlanComponentEvalResult:
     """Evaluate forest-plan component findings against adjudicated component cases."""
 
-    contract = _read_json(Path(eval_file))
+    resolved_eval_file = _resolve_eval_file(
+        review_id=review_id,
+        review_dir=review_dir,
+        eval_file=eval_file,
+        manifest_path=manifest_path,
+    )
+    contract = _read_json(resolved_eval_file)
     _validate_contract(contract)
     resolved_review_dir = _resolve_review_dir(
         output_dir=Path(output_dir),
@@ -66,7 +78,7 @@ def run_forest_plan_component_eval(
         "eval_id": contract.get("eval_id"),
         "review_id": _review_id(artifacts) or contract.get("review_id"),
         "source_set_id": _source_set_id(artifacts) or contract.get("source_set_id"),
-        "eval_file": str(eval_file),
+        "eval_file": str(resolved_eval_file),
         "review_dir": str(resolved_review_dir),
         "output_path": str(resolved_output_path),
         "case_count": len(case_results),
@@ -99,10 +111,30 @@ def run_forest_plan_component_eval(
     }
     _write_json(resolved_output_path, payload)
     return ForestPlanComponentEvalResult(
-        eval_file=Path(eval_file),
+        eval_file=resolved_eval_file,
         review_dir=resolved_review_dir,
         output_path=resolved_output_path,
         summary=summary,
+    )
+
+
+def _resolve_eval_file(
+    *,
+    review_id: str | None,
+    review_dir: Path | None,
+    eval_file: Path | None,
+    manifest_path: Path,
+) -> Path:
+    if eval_file is not None:
+        return Path(eval_file)
+    if review_id:
+        return resolve_forest_plan_component_eval_file(
+            review_id=review_id,
+            manifest_path=manifest_path,
+        )
+    raise ValueError(
+        "forest-plan-component-eval requires --eval-file or a tracked --review-id in the "
+        "forest-plan component coverage manifest"
     )
 
 

@@ -5,6 +5,64 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 2 Closeout
+
+This update resolves Milestone `2` in
+`docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/forest_plan_component_eval_coverage_v1.json`,
+  `config/forest_plan_component_evals/west-reservoir-67436.json`,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval.py`,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py`,
+  `src/usfs_r1_ea_sources/cli_review.py`,
+  `tests/test_forest_plan_component_eval.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`,
+  `tests/test_cli.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_architecture_contract.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  the repo now has a tracked review-scoped component coverage manifest and a dedicated West
+  Reservoir review contract. `forest-plan-component-eval` no longer silently defaults tracked
+  review IDs to the ECID seed contract; when `--review-id` is supplied without `--eval-file`, the
+  command resolves the contract from
+  `config/forest_plan_component_eval_coverage_v1.json` and fails closed for untracked reviews.
+- live signal:
+  `forest-plan-component-eval --review-id v1-cg-ecid-compliance-review` passes with `35` cases on
+  `source-set-ba8d0feae79501b8`; `forest-plan-component-eval --review-id west-reservoir-67436`
+  passes with `27` cases on `source-set-5e65d845ce77e1a0`; and the tracked coverage helper now
+  reports `required_review_count=3`, `covered_review_count=3`, `distinct_forest_count=2`,
+  `missing_contract_count=0`, `missing_result_count=0`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`.
+- boundary truth:
+  this milestone broadens governed review-scoped component coverage beyond the ECID-only default,
+  but it does not yet emit the aggregate component-coverage artifact or wire that aggregate
+  summary into phase-eval/promotion. South Plateau remains explicitly out of this packet’s minimum
+  governed review set.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_compliance_review.py tests/test_architecture_contract.py tests/test_cli.py`
+  passed `96` tests and `3` subtests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed `66` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed with `35` cases;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id west-reservoir-67436`
+  passed with `27` cases;
+  the direct Python replay of `evaluate_forest_plan_component_eval_coverage(output_dir="source_library")`
+  passed with the green aggregate counts above; and
+  `git diff --check` passed before commit.
+- next routing:
+  the next executable slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is
+  Milestone `3`: add the aggregate component-coverage gate and future-forest routing.
+
 ## Forest Plan Component Eval Coverage Milestone 1 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

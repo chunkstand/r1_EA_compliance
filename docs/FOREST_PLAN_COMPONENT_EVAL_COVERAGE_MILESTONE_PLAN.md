@@ -2,7 +2,42 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved; Milestone 3 next)
+
+Milestone 2 closeout summary on 2026-05-16:
+
+- Milestone 2 now resolves the review-scoped component-eval breadth gap beyond the ECID-only
+  default path.
+- The repo now ships the tracked review coverage manifest at
+  `config/forest_plan_component_eval_coverage_v1.json`.
+- West Reservoir now has its own governed review contract at
+  `config/forest_plan_component_evals/west-reservoir-67436.json`.
+- `src/usfs_r1_ea_sources/forest_plan_component_eval.py` no longer silently defaults tracked review
+  IDs to the East Crazies seed contract. When `--review-id` is supplied without `--eval-file`, the
+  command resolves the contract from `config/forest_plan_component_eval_coverage_v1.json`; if the
+  review is not tracked, it fails closed.
+- The shipped manifest currently governs three required review slots across two forests:
+  `v1-cg-ecid-compliance-review`,
+  `v1-cg-ecid-source-delta-review`,
+  and `west-reservoir-67436`.
+- The latest live replays are green and fail-closed:
+  `forest-plan-component-eval --review-id v1-cg-ecid-compliance-review` passes with `35` cases on
+  `source-set-ba8d0feae79501b8`,
+  `forest-plan-component-eval --review-id west-reservoir-67436` passes with `27` cases on
+  `source-set-5e65d845ce77e1a0`,
+  and the tracked coverage helper currently reports
+  `required_review_count=3`,
+  `covered_review_count=3`,
+  `distinct_forest_count=2`,
+  `missing_contract_count=0`,
+  `missing_result_count=0`,
+  `stale_identity_count=0`,
+  and `unresolved_review_count=0`.
+- South Plateau remains explicitly out of this packet’s minimum governed review set. Milestone 2
+  broadens tracked review-scoped component coverage, but it does not yet create the aggregate
+  component-coverage artifact/gate or wire that summary into phase-eval/promotion.
+- The next executable slice in this packet is Milestone 3: add the aggregate component-coverage
+  gate and future-forest routing.
 
 Milestone 1 closeout summary on 2026-05-16:
 

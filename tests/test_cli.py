@@ -11,6 +11,7 @@ from usfs_r1_ea_sources import cli_derived
 from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources import cli_final_qa
 from usfs_r1_ea_sources import cli_project_planning
+from usfs_r1_ea_sources import cli_review
 from usfs_r1_ea_sources import cli_review_packet
 from usfs_r1_ea_sources.cli import build_parser
 
@@ -359,6 +360,25 @@ def test_forest_plan_component_retrieval_eval_parser_accepts_manifest_and_result
     assert args.manifest == Path("config/forest_plan_component_retrieval_eval_v1.json")
     assert args.output_dir == Path("source_library")
     assert args.results_dir == Path("source_library/evaluations/forest_plan_component_retrieval")
+
+
+def test_forest_plan_component_eval_parser_accepts_manifest_without_eval_file() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-plan-component-eval",
+            "--output-dir",
+            "source_library",
+            "--review-id",
+            "west-reservoir-67436",
+            "--manifest",
+            "config/forest_plan_component_eval_coverage_v1.json",
+        ]
+    )
+
+    assert args.command == "forest-plan-component-eval"
+    assert args.review_id == "west-reservoir-67436"
+    assert args.eval_file is None
+    assert args.manifest == Path("config/forest_plan_component_eval_coverage_v1.json")
 
 
 def test_gold_coverage_eval_parser_accepts_manifest_and_results_dir() -> None:
@@ -723,6 +743,41 @@ def test_forest_plan_component_retrieval_eval_handler_propagates_manifest_and_re
     assert captured["results_dir"] == Path(
         "library/evaluations/forest_plan_component_retrieval"
     )
+
+
+def test_forest_plan_component_eval_handler_propagates_manifest(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_forest_plan_component_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_review,
+        "run_forest_plan_component_eval",
+        fake_run_forest_plan_component_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "forest-plan-component-eval",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "west-reservoir-67436",
+            "--manifest",
+            "config/forest_plan_component_eval_coverage_v1.json",
+        ]
+    )
+
+    result = cli_review.handle_review_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "west-reservoir-67436"
+    assert captured["eval_file"] is None
+    assert captured["manifest_path"] == Path("config/forest_plan_component_eval_coverage_v1.json")
 
 
 def test_gold_coverage_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:

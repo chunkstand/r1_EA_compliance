@@ -8,6 +8,9 @@ import unittest
 from usfs_r1_ea_sources.forest_plan_component_eval import (
     run_forest_plan_component_eval,
 )
+from usfs_r1_ea_sources.forest_plan_component_eval_coverage import (
+    DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+)
 
 
 class ForestPlanComponentEvalTests(unittest.TestCase):
@@ -204,6 +207,66 @@ class ForestPlanComponentEvalTests(unittest.TestCase):
                 },
                 failures,
             )
+
+    def test_component_eval_resolves_tracked_manifest_contract_from_review_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "component-eval"
+            _write_review_artifacts(review_dir)
+            tracked_eval = root / "tracked_component_eval.json"
+            _write_eval_contract(tracked_eval)
+            _write_component_eval_manifest(
+                root,
+                review_id="component-eval",
+                eval_file=tracked_eval,
+            )
+
+            result = run_forest_plan_component_eval(
+                output_dir=root / "source_library",
+                review_id="component-eval",
+                manifest_path=root / DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.eval_file, tracked_eval)
+
+    def test_component_eval_requires_eval_file_or_tracked_review_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "component-eval"
+            _write_review_artifacts(review_dir)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "requires --eval-file or a tracked --review-id",
+            ):
+                run_forest_plan_component_eval(
+                    output_dir=root / "source_library",
+                    review_dir=review_dir,
+                )
+
+    def test_component_eval_rejects_untracked_review_id_without_explicit_eval_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "component-eval"
+            _write_review_artifacts(review_dir)
+            tracked_eval = root / "tracked_component_eval.json"
+            _write_eval_contract(tracked_eval)
+            _write_component_eval_manifest(
+                root,
+                review_id="tracked-review",
+                eval_file=tracked_eval,
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "review_id is not tracked by the forest-plan component eval coverage manifest",
+            ):
+                run_forest_plan_component_eval(
+                    output_dir=root / "source_library",
+                    review_id="component-eval",
+                    manifest_path=root / DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+                )
 
 
 def _write_review_artifacts(review_dir: Path) -> None:
@@ -403,6 +466,37 @@ def _finding(
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _write_component_eval_manifest(root: Path, *, review_id: str, eval_file: Path) -> None:
+    _write_json(
+        root / DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+        {
+            "schema_version": "forest-plan-component-eval-coverage-v1",
+            "id": "unit-component-coverage",
+            "version": "0.1.0",
+            "required_review_ids": [review_id],
+            "coverage_thresholds": {
+                "required_review_count": 1,
+                "distinct_forest_count_min": 1,
+                "missing_contract_count_max": 0,
+                "missing_result_count_max": 1,
+                "stale_identity_count_max": 0,
+                "unresolved_review_count_max": 1,
+            },
+            "slots": [
+                {
+                    "slot_id": "component-eval-slot",
+                    "label": "Component eval slot",
+                    "review_id": review_id,
+                    "forest_unit_id": "unit-forest",
+                    "expected_source_set_id": "source-set-test",
+                    "eval_file": str(eval_file),
+                    "required": True,
+                }
+            ],
+        },
+    )
 
 
 if __name__ == "__main__":

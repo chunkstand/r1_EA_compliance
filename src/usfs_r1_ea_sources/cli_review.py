@@ -11,8 +11,10 @@ from .forest_plan_component_adjudication import (
     run_forest_plan_component_adjudication_eval,
     write_forest_plan_component_adjudication_template,
 )
-from .forest_plan_component_eval import DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH
 from .forest_plan_component_eval import run_forest_plan_component_eval
+from .forest_plan_component_eval_coverage import (
+    DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+)
 from .forest_plan_components import build_forest_plan_component_inventory
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_inventory_build_manifest import (
@@ -94,9 +96,10 @@ def register_review_commands(subparsers: argparse._SubParsersAction) -> None:
         help="Evaluate forest-plan component findings against adjudicated component cases.",
     )
     _add_review_lookup_args(component_eval)
+    component_eval.add_argument("--eval-file", type=Path)
     component_eval.add_argument(
-        "--eval-file",
-        default=DEFAULT_FOREST_PLAN_COMPONENT_EVAL_PATH,
+        "--manifest",
+        default=DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
         type=Path,
     )
     component_eval.add_argument("--output-path", type=Path)
@@ -208,6 +211,7 @@ def handle_review_command(args: argparse.Namespace, parser: argparse.ArgumentPar
             review_id=args.review_id,
             review_dir=args.review_dir,
             eval_file=args.eval_file,
+            manifest_path=args.manifest,
             output_path=args.output_path,
         )
         print_summary(result.summary)

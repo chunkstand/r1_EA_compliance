@@ -783,13 +783,21 @@ The `forest-plan-component-eval` command reads an existing forest-plan review di
 - `forest_plan_applicable_standard_coverage.json`
 - `forest_plan_reviewer_resolution_queue.json`
 
-It writes `forest_plan_component_eval_results.json` by default. The eval contract defaults to
-`config/forest_plan_component_eval_seed.json`, has schema version `forest-plan-component-eval-v0`,
-and records adjudicated component cases with expected applicability, EA package section, plan-source
-citations, package-evidence citations, compliance status, and reviewer-resolution state. Contracts
-may also include `coverage_requirements` for minimum case coverage and a hard requirement that every
-currently applicable standard in `forest_plan_applicable_standard_coverage.json` has an expected
-applicable-standard case.
+It writes `forest_plan_component_eval_results.json` by default. The eval contract has schema
+version `forest-plan-component-eval-v0` and records adjudicated component cases with expected
+applicability, EA package section, plan-source citations, package-evidence citations, compliance
+status, and reviewer-resolution state. Contracts may also include `coverage_requirements` for
+minimum case coverage and a hard requirement that every currently applicable standard in
+`forest_plan_applicable_standard_coverage.json` has an expected applicable-standard case.
+
+Tracked review-slot manifest:
+`config/forest_plan_component_eval_coverage_v1.json`
+
+When `--review-id` is supplied without `--eval-file`, the command resolves the per-review contract
+from `config/forest_plan_component_eval_coverage_v1.json`. That tracked manifest currently governs
+East Crazies current promotion, East Crazies source-delta replay, and West Reservoir. If no
+tracked review slot matches, the command fails closed unless an explicit `--eval-file` is
+provided.
 
 The result has schema version `forest-plan-component-eval-results-v0` and records:
 

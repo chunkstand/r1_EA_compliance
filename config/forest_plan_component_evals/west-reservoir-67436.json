@@ -1,0 +1,389 @@
+{
+  "schema_version": "forest-plan-component-eval-v0",
+  "eval_id": "west-reservoir-forest-plan-components-v0",
+  "review_id": "west-reservoir-67436",
+  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "description": "Adjudicated component-level eval cases for the West Reservoir Flathead review. Covers every currently applicable standard plus representative non-standard supported and open-queue findings from the live review artifacts.",
+  "coverage_requirements": {
+    "require_all_applicable_standards": true,
+    "minimum_cases_by_component_type": {
+      "guideline": 2,
+      "objective": 3,
+      "standard": 20,
+      "suitability": 2
+    },
+    "minimum_cases_by_applicability_status": {
+      "applicable": 21,
+      "not_applicable": 6
+    },
+    "minimum_not_applicable_cases": 6,
+    "minimum_section_bound_cases": 27
+  },
+  "metric_thresholds": {
+    "case_count": {
+      "min": 27
+    },
+    "expected_applicable_standard_count": {
+      "min": 14
+    },
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "false_applicable_component_rate": {
+      "max": 0.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "compliance_status_match_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "cases": [
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-WTR-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-WTR-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-RMZ-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-RMZ-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-SOIL-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-SOIL-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-WL-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-WL-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-REC-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-REC-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-IFS-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-IFS-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-NST-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-NST-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-TIMB-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-TIMB-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "West Reservoir Final Environmental Assessment.pdf",
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [
+        "EA-PACKAGE-011 (8156685c9137)",
+        "EA-PACKAGE-001 (7036dcfd2bd4)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-OFP-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-OFP-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-GR-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-GR-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-STD-CR-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-STD-CR-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-MA1a-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-MA1a-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-MA1b-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-MA1b-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-SM-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-SM-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-MA2-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-MA2-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-HH-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-HH-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-MF-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-MF-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-NF-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-NF-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-SF-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-SF-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-GA-SV-STD-01",
+      "component_id": "R1PLAN-flathead-nf-02-GA-SV-STD-01",
+      "component_type": "standard",
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "compliance_status": "not_applicable",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-OBJ-CWN-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-OBJ-CWN-01",
+      "component_type": "objective",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": "Draft West Reservoir EA.pdf",
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": ["EA-PACKAGE-001 (7036dcfd2bd4)"],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-OBJ-RMZ-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-OBJ-RMZ-01",
+      "component_type": "objective",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": "West Reservoir Final Environmental Assessment.pdf",
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [
+        "EA-PACKAGE-011 (8156685c9137)",
+        "EA-PACKAGE-001 (7036dcfd2bd4)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-SUIT-RMZ-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-SUIT-RMZ-01",
+      "component_type": "suitability",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": "Draft West Reservoir EA.pdf",
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (7036dcfd2bd4)",
+        "EA-PACKAGE-009 (6bd16c36cc20)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-MA2b-SUIT-01",
+      "component_id": "R1PLAN-flathead-nf-02-MA2b-SUIT-01",
+      "component_type": "suitability",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": "Draft West Reservoir EA.pdf",
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (7036dcfd2bd4)",
+        "EA-PACKAGE-009 (6bd16c36cc20)",
+        "EA-PACKAGE-011 (8156685c9137)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-GDL-SOIL-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-GDL-SOIL-01",
+      "component_type": "guideline",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-GDL-WL-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-GDL-WL-01",
+      "component_type": "guideline",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-flathead-nf-02-FW-OBJ-NNIP-01",
+      "component_id": "R1PLAN-flathead-nf-02-FW-OBJ-NNIP-01",
+      "component_type": "objective",
+      "applicability_status": "applicable",
+      "compliance_status": "not_evaluated_for_compliance",
+      "package_section": null,
+      "plan_source_citations": ["R1PLAN-flathead-nf-02 (1b597117365f)"],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    }
+  ]
+}

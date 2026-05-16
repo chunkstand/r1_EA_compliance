@@ -1,0 +1,47 @@
+{
+  "schema_version": "forest-plan-component-eval-coverage-v1",
+  "id": "region1-forest-plan-component-eval-coverage",
+  "version": "0.1.0",
+  "required_review_ids": [
+    "v1-cg-ecid-compliance-review",
+    "v1-cg-ecid-source-delta-review",
+    "west-reservoir-67436"
+  ],
+  "coverage_thresholds": {
+    "required_review_count": 3,
+    "distinct_forest_count_min": 2,
+    "missing_contract_count_max": 0,
+    "missing_result_count_max": 0,
+    "stale_identity_count_max": 0,
+    "unresolved_review_count_max": 0
+  },
+  "slots": [
+    {
+      "slot_id": "ecid-current-promotion",
+      "label": "East Crazies current-promotion component eval",
+      "review_id": "v1-cg-ecid-compliance-review",
+      "forest_unit_id": "custer-gallatin-nf",
+      "expected_source_set_id": "source-set-ba8d0feae79501b8",
+      "eval_file": "forest_plan_component_eval_seed.json",
+      "required": true
+    },
+    {
+      "slot_id": "ecid-source-delta-replay",
+      "label": "East Crazies source-delta replay component eval",
+      "review_id": "v1-cg-ecid-source-delta-review",
+      "forest_unit_id": "custer-gallatin-nf",
+      "expected_source_set_id": "source-set-8a4005c8a083af1a",
+      "eval_file": "forest_plan_component_evals/v1-cg-ecid-source-delta-review.json",
+      "required": true
+    },
+    {
+      "slot_id": "west-reservoir-flathead-review",
+      "label": "West Reservoir Flathead component eval",
+      "review_id": "west-reservoir-67436",
+      "forest_unit_id": "flathead-nf",
+      "expected_source_set_id": "source-set-5e65d845ce77e1a0",
+      "eval_file": "forest_plan_component_evals/west-reservoir-67436.json",
+      "required": true
+    }
+  ]
+}
