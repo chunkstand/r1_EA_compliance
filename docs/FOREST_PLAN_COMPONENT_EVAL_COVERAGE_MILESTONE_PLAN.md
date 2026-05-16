@@ -2,10 +2,12 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved in current worktree; Milestone 4 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved through local commit `e45d47e`; Milestone 4 next)
 
 Milestone 3 closeout summary on 2026-05-16:
 
+- The Milestone 3 closeout checkpoint is local commit `e45d47e`
+  (`eval: add aggregate component coverage gate`).
 - Milestone 3 now resolves the missing aggregate component-coverage gate.
 - The tracked manifest `config/forest_plan_component_eval_coverage_v1.json` now declares:
   a required standalone retrieval-eval input,

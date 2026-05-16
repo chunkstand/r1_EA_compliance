@@ -217,13 +217,13 @@ Latest closeout on 2026-05-13:
   `965201e` (`eval: add component retrieval coverage gate`): the standalone source-set
   component-retrieval eval producer is live, the active-source-set contract replay is green, and
   the next routed slice is Milestone `2`.
-- Forest-plan component-eval coverage Milestone `2` is now resolved in the current worktree: the
+- Forest-plan component-eval coverage Milestone `2` is now resolved through local commit
+  `a69d09d`: the
   tracked review-scoped component coverage manifest exists, West Reservoir now has its own
   governed review contract, tracked `forest-plan-component-eval --review-id ...` no longer
   silently falls back to the ECID seed contract, and the next routed slice is Milestone `3`.
-- Forest-plan component-eval coverage Milestone `2` closeout commit is `a69d09d`
-  (`eval: broaden tracked component review coverage`).
-- Forest-plan component-eval coverage Milestone `3` is now resolved in the current worktree: the
+- Forest-plan component-eval coverage Milestone `3` is now resolved through local commit
+  `e45d47e`: the
   aggregate `forest-plan-component-eval-coverage` lane is live, it consumes the standalone
   component-retrieval eval plus the tracked review-slot roster, it emits the governed aggregate
   results artifact under `source_library/evaluations/forest_plan_component_eval_coverage/`, and
@@ -235,6 +235,8 @@ Latest closeout on 2026-05-16:
 
 - Milestone `2` closeout commit is `a69d09d`
   (`eval: broaden tracked component review coverage`).
+- Milestone `3` closeout commit is `e45d47e`
+  (`eval: add aggregate component coverage gate`).
 - Milestone `3` now resolves the missing aggregate component-coverage gate.
 - The tracked manifest `config/forest_plan_component_eval_coverage_v1.json` now declares:
   the standalone retrieval-eval input,

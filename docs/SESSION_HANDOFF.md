@@ -5,6 +5,39 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 3 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`e45d47e` (`eval: add aggregate component coverage gate`).
+
+- scope:
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `3` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Milestone `3` checkpoint commit `e45d47e` and the
+  same next routed slice: Milestone `4` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the current-state routing layer now records the Milestone `3` checkpoint explicitly instead of
+  only describing the aggregate coverage behavior and next packet boundary as current-worktree
+  state.
+- supersession truth:
+  older lower handoff sections that still route this packet to Milestone `3` or describe the
+  Milestone `3` closeout without its checkpoint hash are historical only. The live routing truth
+  for this lane is this section plus the Milestone `3` closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `e45d47e` and route the next executable slice as Milestone `4` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice after the aggregate component-coverage packet is Milestone `4` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: wire the new component lane into
+  `phase-eval`, promotion, and coverage docs.
+
 ## Forest Plan Component Eval Coverage Milestone 3 Closeout
 
 This update resolves Milestone `3` in
@@ -24,6 +57,9 @@ This update resolves Milestone `3` in
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `3` is committed locally as `e45d47e`
+  (`eval: add aggregate component coverage gate`).
 - closeout truth:
   the repo now has one governed aggregate component-coverage owner instead of a loose combination
   of the standalone retrieval lane and the tracked review-slot helper. The new public command is
