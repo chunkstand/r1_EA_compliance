@@ -5,6 +5,62 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 3 Closeout
+
+This update resolves Milestone `3` in
+`docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/forest_plan_component_eval_coverage_v1.json`,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`,
+  `tests/test_cli.py`,
+  `tests/test_architecture_contract.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  the repo now has one governed aggregate component-coverage owner instead of a loose combination
+  of the standalone retrieval lane and the tracked review-slot helper. The new public command is
+  `forest-plan-component-eval-coverage`, implemented in
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py` and registered through
+  `src/usfs_r1_ea_sources/cli_eval.py`.
+- live signal:
+  the tracked manifest now declares the required standalone retrieval-eval input, an explicit
+  manifest-owned future-forest expansion policy, and zero typed-blocked slots in scope for this
+  packet; `forest-plan-component-retrieval-eval` remains green on
+  `source-set-5e65d845ce77e1a0`; and the new aggregate
+  `forest-plan-component-eval-coverage` replay now passes with
+  `required_review_count=3`,
+  `covered_review_count=3`,
+  `missing_contract_count=0`,
+  `missing_result_count=0`,
+  `stale_identity_count=0`,
+  `unresolved_review_count=0`,
+  and `blocked_typed_slot_count=0`.
+- boundary truth:
+  this milestone closes the aggregate component-coverage gate and makes future forest additions
+  explicit one review at a time through the coverage manifest, but it does not yet wire the new
+  aggregate summary into `phase-eval` or `promotion-suite`.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed `67` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`
+  passes on the active source set;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json`
+  passes and writes the governed aggregate summary; and
+  `git diff --check` passes before commit.
+- next routing:
+  the next executable slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is
+  Milestone `4`: wire the new component lane into `phase-eval`, promotion, and coverage docs.
+
 ## Forest Plan Component Eval Coverage Milestone 2 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

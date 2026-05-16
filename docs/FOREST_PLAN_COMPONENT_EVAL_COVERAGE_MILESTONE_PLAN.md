@@ -2,7 +2,50 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved in current worktree; Milestone 4 next)
+
+Milestone 3 closeout summary on 2026-05-16:
+
+- Milestone 3 now resolves the missing aggregate component-coverage gate.
+- The tracked manifest `config/forest_plan_component_eval_coverage_v1.json` now declares:
+  a required standalone retrieval-eval input,
+  an explicit manifest-owned future-forest expansion policy,
+  zero typed-blocked slots in scope for this packet, and
+  the required output summary fields for the new aggregate results artifact.
+- The repo now ships the public aggregate command `forest-plan-component-eval-coverage`,
+  registered through `src/usfs_r1_ea_sources/cli_eval.py`.
+- The aggregate producer is implemented in
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py` and writes
+  `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`.
+- The aggregate summary now records:
+  retrieval-lane status,
+  review-scoped component-eval coverage status,
+  required review count,
+  covered review count,
+  missing contract count,
+  missing result count,
+  stale identity count,
+  explicit future-forest expansion policy state, and
+  blocked typed-slot count.
+- Controlled-violation tests now prove the gate fails closed when:
+  the standalone retrieval result is missing,
+  West Reservoir lacks a valid contract/result slot,
+  tracked review identity drifts from contract/result expectations, or
+  the manifest drifts away from the one-review-at-a-time future-forest ownership policy.
+- The live aggregate lane is now green after replaying the standalone retrieval producer:
+  `forest-plan-component-retrieval-eval` passes on `source-set-5e65d845ce77e1a0`, and
+  `forest-plan-component-eval-coverage` passes with
+  `required_review_count=3`,
+  `covered_review_count=3`,
+  `missing_contract_count=0`,
+  `missing_result_count=0`,
+  `stale_identity_count=0`,
+  `unresolved_review_count=0`,
+  and `blocked_typed_slot_count=0`.
+- This milestone closes the aggregate coverage owner, but it does not yet wire that producer into
+  `phase-eval` or `promotion-suite`.
+- The next executable slice in this packet is Milestone 4: wire the new component lane into
+  `phase-eval`, promotion, and the coverage docs.
 
 Milestone 2 closeout summary on 2026-05-16:
 

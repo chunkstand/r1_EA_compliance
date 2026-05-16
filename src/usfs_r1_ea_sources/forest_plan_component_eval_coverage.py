@@ -8,17 +8,38 @@ import json
 
 
 FOREST_PLAN_COMPONENT_EVAL_COVERAGE_SCHEMA_VERSION = "forest-plan-component-eval-coverage-v1"
+FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_SCHEMA_VERSION = (
+    "forest-plan-component-eval-coverage-results-v1"
+)
 FOREST_PLAN_COMPONENT_EVAL_CONTRACT_SCHEMA_VERSION = "forest-plan-component-eval-v0"
 FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION = "forest-plan-component-eval-results-v0"
+FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_SCHEMA_VERSION = (
+    "forest-plan-component-retrieval-eval-v1"
+)
+FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION = (
+    "forest-plan-component-retrieval-eval-results-v1"
+)
 DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH = Path(
     "config/forest_plan_component_eval_coverage_v1.json"
 )
+DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_DIR = Path(
+    "evaluations/forest_plan_component_eval_coverage"
+)
+DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_RESULTS_PATH = Path(
+    "evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json"
+)
+EXPECTED_FUTURE_FOREST_EXPANSION_POLICY = {
+    "mode": "manifest_slots_only",
+    "allow_untracked_non_ecid_reviews": False,
+    "require_per_review_contract": True,
+}
 
 
 @dataclass(frozen=True)
 class ForestPlanComponentEvalCoverageResult:
     manifest_path: Path
     output_dir: Path
+    output_path: Path
     summary: dict[str, Any]
 
 
@@ -38,12 +59,28 @@ def evaluate_forest_plan_component_eval_coverage(
     *,
     output_dir: Path,
     manifest_path: Path = DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+    results_dir: Path | None = None,
 ) -> ForestPlanComponentEvalCoverageResult:
     output_dir = Path(output_dir)
     manifest_path = Path(manifest_path)
+    results_output_dir = (
+        Path(results_dir)
+        if results_dir is not None
+        else output_dir / DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_DIR
+    )
+    output_path = results_output_dir / "forest_plan_component_eval_coverage_results.json"
+
     manifest = _read_json(manifest_path)
     _validate_manifest(manifest)
 
+    output_expectations = _string_list(
+        (manifest.get("output_schema") or {}).get("required_summary_fields")
+    )
+    retrieval_state = _component_retrieval_eval_state(
+        spec=manifest.get("component_retrieval_eval"),
+        manifest_path=manifest_path,
+        output_dir=output_dir,
+    )
     slot_results = [
         _slot_result(
             slot=slot,
@@ -54,6 +91,7 @@ def evaluate_forest_plan_component_eval_coverage(
     ]
     required_slots = [slot for slot in slot_results if slot["required"]]
     covered_slots = [slot for slot in required_slots if slot["passed"]]
+    blocked_typed_slots = _typed_blocked_slots(manifest)
     distinct_forest_ids = sorted(
         {
             str(slot.get("forest_unit_id") or "")
@@ -74,18 +112,51 @@ def evaluate_forest_plan_component_eval_coverage(
         stale_identity_count=stale_identity_count,
         unresolved_review_count=unresolved_review_count,
     )
+    review_coverage_passed = all(slot["passed"] for slot in required_slots) and not threshold_failures
+    future_policy_state = _future_forest_expansion_policy_state(
+        manifest.get("future_forest_expansion_policy")
+    )
+
+    contract_checks = [
+        {
+            "name": "component_retrieval_eval_manifest_declared",
+            "passed": retrieval_state["manifest_declared"],
+            "details": {
+                "manifest_path": retrieval_state["manifest_path"],
+                "results_path": retrieval_state["results_path"],
+            },
+        },
+        {
+            "name": "typed_blocked_slots_declared",
+            "passed": isinstance(manifest.get("typed_blocked_slots"), list),
+            "details": {
+                "typed_blocked_slot_count": len(blocked_typed_slots),
+                "typed_blocked_review_ids": sorted(
+                    str(slot.get("review_id") or "").strip()
+                    for slot in blocked_typed_slots
+                    if str(slot.get("review_id") or "").strip()
+                ),
+            },
+        },
+        {
+            "name": "future_forest_expansion_policy_explicit",
+            "passed": future_policy_state["explicit"],
+            "details": future_policy_state["details"],
+        },
+        {
+            "name": "future_forest_expansion_policy_enforced",
+            "passed": future_policy_state["passed"],
+            "details": future_policy_state["details"],
+        },
+    ]
     failure_category_counts = _failure_category_counts(
         slot_results=required_slots,
         threshold_failures=threshold_failures,
+        retrieval_state=retrieval_state,
+        future_policy_state=future_policy_state,
     )
-    summary = {
-        "schema_version": FOREST_PLAN_COMPONENT_EVAL_COVERAGE_SCHEMA_VERSION,
-        "created_at": _utc_now(),
-        "manifest_path": str(manifest_path),
-        "coverage_id": manifest.get("id"),
-        "coverage_version": manifest.get("version"),
-        "passed": all(slot["passed"] for slot in required_slots) and not threshold_failures,
-        "required_review_ids": _string_list(manifest.get("required_review_ids")),
+    review_component_eval_coverage = {
+        "passed": review_coverage_passed,
         "required_review_count": len(required_slots),
         "covered_review_count": len(covered_slots),
         "covered_review_ids": sorted(slot["review_id"] for slot in covered_slots),
@@ -95,15 +166,227 @@ def evaluate_forest_plan_component_eval_coverage(
         "missing_result_count": missing_result_count,
         "stale_identity_count": stale_identity_count,
         "unresolved_review_count": unresolved_review_count,
+    }
+    summary = {
+        "schema_version": FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_SCHEMA_VERSION,
+        "manifest_schema_version": manifest.get("schema_version"),
+        "created_at": _utc_now(),
+        "manifest_path": str(manifest_path),
+        "results_dir": str(results_output_dir),
+        "output_path": str(output_path),
+        "coverage_id": manifest.get("id"),
+        "coverage_version": manifest.get("version"),
+        "passed": False,
+        "component_retrieval_eval": retrieval_state,
+        "review_component_eval_coverage": review_component_eval_coverage,
+        "required_review_ids": _string_list(manifest.get("required_review_ids")),
+        "required_review_count": len(required_slots),
+        "covered_review_count": len(covered_slots),
+        "covered_review_ids": review_component_eval_coverage["covered_review_ids"],
+        "distinct_forest_count": len(distinct_forest_ids),
+        "distinct_forest_ids": distinct_forest_ids,
+        "missing_contract_count": missing_contract_count,
+        "missing_result_count": missing_result_count,
+        "stale_identity_count": stale_identity_count,
+        "unresolved_review_count": unresolved_review_count,
+        "blocked_typed_slot_count": len(blocked_typed_slots),
+        "blocked_typed_slots": blocked_typed_slots,
+        "future_forest_expansion_policy": future_policy_state,
         "threshold_failures": threshold_failures,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "contract_checks": contract_checks,
         "slots": slot_results,
     }
+    summary["contract_checks"].append(
+        {
+            "name": "output_schema_fields_present",
+            "passed": not [
+                field for field in output_expectations if field not in summary and field != "passed"
+            ],
+            "details": {
+                "required_fields": output_expectations,
+                "missing_fields": [
+                    field
+                    for field in output_expectations
+                    if field not in summary and field != "passed"
+                ],
+            },
+        }
+    )
+    summary["passed"] = (
+        retrieval_state["passed"]
+        and review_coverage_passed
+        and future_policy_state["passed"]
+        and all(check["passed"] for check in summary["contract_checks"])
+    )
     return ForestPlanComponentEvalCoverageResult(
         manifest_path=manifest_path,
         output_dir=output_dir,
+        output_path=output_path,
         summary=summary,
     )
+
+
+def run_forest_plan_component_eval_coverage(
+    *,
+    output_dir: Path,
+    manifest_path: Path = DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+    results_dir: Path | None = None,
+) -> ForestPlanComponentEvalCoverageResult:
+    result = evaluate_forest_plan_component_eval_coverage(
+        output_dir=output_dir,
+        manifest_path=manifest_path,
+        results_dir=results_dir,
+    )
+    result.output_path.parent.mkdir(parents=True, exist_ok=True)
+    result.output_path.write_text(
+        json.dumps(result.summary, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return result
+
+
+def _component_retrieval_eval_state(
+    *,
+    spec: Any,
+    manifest_path: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    spec_dict = spec if isinstance(spec, dict) else {}
+    retrieval_manifest_text = str(spec_dict.get("manifest_path") or "").strip()
+    manifest_declared = bool(retrieval_manifest_text)
+    retrieval_manifest_path = (
+        _resolve_repo_path(retrieval_manifest_text, manifest_path)
+        if manifest_declared
+        else manifest_path.parent / "missing_component_retrieval_manifest.json"
+    )
+    retrieval_results_text = str(spec_dict.get("results_path") or "").strip()
+    results_path = (
+        _resolve_repo_path(retrieval_results_text, manifest_path)
+        if retrieval_results_text
+        else output_dir / DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_RESULTS_PATH
+    )
+
+    manifest_exists = manifest_declared and retrieval_manifest_path.exists()
+    retrieval_manifest = _read_json(retrieval_manifest_path) if manifest_exists else {}
+    results_exists = results_path.exists()
+    results = _read_json(results_path) if results_exists else {}
+
+    failure_reasons: list[str] = []
+    if not manifest_declared:
+        failure_reasons.append("component_retrieval_manifest_not_declared")
+    elif not manifest_exists:
+        failure_reasons.append("missing_component_retrieval_manifest")
+
+    manifest_schema_version = str(retrieval_manifest.get("schema_version") or "").strip()
+    manifest_valid = (
+        manifest_exists
+        and manifest_schema_version == FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_SCHEMA_VERSION
+    )
+    if manifest_exists and not manifest_valid:
+        failure_reasons.append("component_retrieval_manifest_schema_mismatch")
+
+    expected_contract_id = str(retrieval_manifest.get("contract_id") or "").strip()
+    expected_source_set_id = str(retrieval_manifest.get("source_set_id") or "").strip()
+
+    if not results_exists:
+        failure_reasons.append("missing_component_retrieval_result")
+
+    result_schema_version = str(results.get("schema_version") or "").strip()
+    result_valid = (
+        results_exists
+        and result_schema_version == FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION
+    )
+    if results_exists and not result_valid:
+        failure_reasons.append("component_retrieval_result_schema_mismatch")
+
+    result_manifest_path = str(results.get("manifest_path") or "").strip()
+    result_contract_id = str(results.get("contract_id") or "").strip()
+    result_source_set_id = str(results.get("source_set_id") or "").strip()
+    result_passed = bool(results.get("passed"))
+    if (
+        result_valid
+        and manifest_valid
+        and _resolve_result_reference_path(result_manifest_path) != retrieval_manifest_path.resolve()
+    ):
+        failure_reasons.append("component_retrieval_manifest_path_mismatch")
+    if result_valid and manifest_valid and expected_contract_id != result_contract_id:
+        failure_reasons.append("component_retrieval_contract_id_mismatch")
+    if result_valid and manifest_valid and expected_source_set_id != result_source_set_id:
+        failure_reasons.append("component_retrieval_source_set_id_mismatch")
+    if result_valid and not result_passed:
+        failure_reasons.append("component_retrieval_eval_not_passed")
+
+    return {
+        "manifest_declared": manifest_declared,
+        "manifest_path": str(retrieval_manifest_path),
+        "results_path": str(results_path),
+        "manifest_exists": manifest_exists,
+        "results_exists": results_exists,
+        "manifest_schema_version": manifest_schema_version,
+        "result_schema_version": result_schema_version,
+        "contract_id": result_contract_id or expected_contract_id,
+        "source_set_id": result_source_set_id or expected_source_set_id,
+        "result_passed": result_passed,
+        "missing_contract": any(
+            reason in {
+                "component_retrieval_manifest_not_declared",
+                "missing_component_retrieval_manifest",
+            }
+            for reason in failure_reasons
+        ),
+        "missing_result": "missing_component_retrieval_result" in failure_reasons,
+        "stale_identity": any(reason.endswith("_mismatch") for reason in failure_reasons),
+        "passed": not failure_reasons,
+        "failure_reasons": sorted(set(failure_reasons)),
+    }
+
+
+def _future_forest_expansion_policy_state(policy: Any) -> dict[str, Any]:
+    policy_dict = policy if isinstance(policy, dict) else {}
+    details = {
+        "expected": EXPECTED_FUTURE_FOREST_EXPANSION_POLICY,
+        "actual": {
+            "mode": policy_dict.get("mode"),
+            "allow_untracked_non_ecid_reviews": policy_dict.get(
+                "allow_untracked_non_ecid_reviews"
+            ),
+            "require_per_review_contract": policy_dict.get("require_per_review_contract"),
+        },
+    }
+    explicit = all(key in policy_dict for key in EXPECTED_FUTURE_FOREST_EXPANSION_POLICY)
+    passed = explicit and all(
+        policy_dict.get(key) == value
+        for key, value in EXPECTED_FUTURE_FOREST_EXPANSION_POLICY.items()
+    )
+    failure_reasons = []
+    if not explicit:
+        failure_reasons.append("future_review_contract_policy_missing")
+    elif not passed:
+        failure_reasons.append("future_review_contract_policy_drift")
+    return {
+        "explicit": explicit,
+        "passed": passed,
+        "failure_reasons": failure_reasons,
+        "details": details,
+    }
+
+
+def _typed_blocked_slots(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    slots = manifest.get("typed_blocked_slots")
+    if not isinstance(slots, list):
+        return []
+    return [
+        {
+            "slot_id": str(slot.get("slot_id") or "").strip(),
+            "label": str(slot.get("label") or "").strip(),
+            "review_id": str(slot.get("review_id") or "").strip(),
+            "forest_unit_id": str(slot.get("forest_unit_id") or "").strip(),
+            "blocked_reason": str(slot.get("blocked_reason") or "").strip(),
+        }
+        for slot in slots
+        if isinstance(slot, dict)
+    ]
 
 
 def _slot_result(
@@ -239,6 +522,8 @@ def _failure_category_counts(
     *,
     slot_results: list[dict[str, Any]],
     threshold_failures: list[dict[str, Any]],
+    retrieval_state: dict[str, Any],
+    future_policy_state: dict[str, Any],
 ) -> dict[str, int]:
     counts: dict[str, int] = {}
 
@@ -265,6 +550,36 @@ def _failure_category_counts(
                 bump("invalid_review_contract")
             elif reason == "result_schema_mismatch":
                 bump("invalid_review_result")
+
+    for reason in retrieval_state.get("failure_reasons", []):
+        if reason in {
+            "component_retrieval_manifest_not_declared",
+            "missing_component_retrieval_manifest",
+        }:
+            bump("missing_component_retrieval_contract")
+        elif reason == "missing_component_retrieval_result":
+            bump("missing_component_retrieval_result")
+        elif reason in {
+            "component_retrieval_manifest_schema_mismatch",
+            "component_retrieval_result_schema_mismatch",
+        }:
+            bump("invalid_component_retrieval_eval")
+        elif reason in {
+            "component_retrieval_manifest_path_mismatch",
+            "component_retrieval_contract_id_mismatch",
+            "component_retrieval_source_set_id_mismatch",
+        }:
+            bump("stale_component_retrieval_identity")
+        elif reason == "component_retrieval_eval_not_passed":
+            bump("failed_component_retrieval_eval")
+
+    for reason in future_policy_state.get("failure_reasons", []):
+        if reason in {
+            "future_review_contract_policy_missing",
+            "future_review_contract_policy_drift",
+        }:
+            bump("future_review_contract_policy_drift")
+
     for failure in threshold_failures:
         metric = str(failure.get("metric") or "")
         if metric == "required_review_count":
@@ -309,6 +624,44 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
     if not required_review_ids:
         raise ValueError("forest-plan component eval coverage manifest requires required_review_ids")
 
+    component_retrieval_eval = manifest.get("component_retrieval_eval")
+    if not isinstance(component_retrieval_eval, dict):
+        raise ValueError(
+            "forest-plan component eval coverage manifest requires component_retrieval_eval"
+        )
+    if not str(component_retrieval_eval.get("manifest_path") or "").strip():
+        raise ValueError(
+            "forest-plan component eval coverage manifest requires component_retrieval_eval.manifest_path"
+        )
+
+    output_schema = manifest.get("output_schema")
+    if not isinstance(output_schema, dict) or not _string_list(
+        output_schema.get("required_summary_fields")
+    ):
+        raise ValueError(
+            "forest-plan component eval coverage manifest requires output_schema.required_summary_fields"
+        )
+
+    future_policy = manifest.get("future_forest_expansion_policy")
+    if not isinstance(future_policy, dict):
+        raise ValueError(
+            "forest-plan component eval coverage manifest requires future_forest_expansion_policy"
+        )
+    for field in EXPECTED_FUTURE_FOREST_EXPANSION_POLICY:
+        if field not in future_policy:
+            raise ValueError(
+                "forest-plan component eval coverage manifest requires "
+                f"future_forest_expansion_policy.{field}"
+            )
+
+    typed_blocked_slots = manifest.get("typed_blocked_slots")
+    if not isinstance(typed_blocked_slots, list):
+        raise ValueError(
+            "forest-plan component eval coverage manifest requires typed_blocked_slots list"
+        )
+    for slot in typed_blocked_slots:
+        _validate_typed_blocked_slot(slot)
+
     slots = manifest.get("slots")
     if not isinstance(slots, list) or not slots:
         raise ValueError("forest-plan component eval coverage manifest requires slots")
@@ -334,9 +687,7 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
             required_slot_review_ids.add(review_id)
 
     if required_slot_review_ids != set(required_review_ids):
-        raise ValueError(
-            "required_review_ids must exactly match the required slot review_id set"
-        )
+        raise ValueError("required_review_ids must exactly match the required slot review_id set")
     thresholds = _int_dict(manifest.get("coverage_thresholds"))
     required_threshold = thresholds.get("required_review_count")
     if required_threshold is not None and required_slot_count < required_threshold:
@@ -362,6 +713,17 @@ def _validate_slot(slot: dict[str, Any]) -> None:
         raise ValueError("forest-plan component eval coverage slot requires required boolean")
 
 
+def _validate_typed_blocked_slot(slot: Any) -> None:
+    if not isinstance(slot, dict):
+        raise ValueError("forest-plan component eval coverage typed_blocked_slots must be objects")
+    for field in ("slot_id", "label", "review_id", "forest_unit_id", "blocked_reason"):
+        if not str(slot.get(field) or "").strip():
+            raise ValueError(
+                "forest-plan component eval coverage typed_blocked_slots require non-empty "
+                f"{field}"
+            )
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
@@ -374,6 +736,10 @@ def _resolve_repo_path(path_text: str, manifest_path: Path) -> Path:
     if path.is_absolute():
         return path
     return (manifest_path.parent / path).resolve()
+
+
+def _resolve_result_reference_path(path_text: str) -> Path:
+    return Path(path_text or ".").resolve()
 
 
 def _string_list(value: object) -> list[str]:

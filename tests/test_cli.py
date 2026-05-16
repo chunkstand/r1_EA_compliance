@@ -362,6 +362,25 @@ def test_forest_plan_component_retrieval_eval_parser_accepts_manifest_and_result
     assert args.results_dir == Path("source_library/evaluations/forest_plan_component_retrieval")
 
 
+def test_forest_plan_component_eval_coverage_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-plan-component-eval-coverage",
+            "--manifest",
+            "config/forest_plan_component_eval_coverage_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/evaluations/forest_plan_component_eval_coverage",
+        ]
+    )
+
+    assert args.command == "forest-plan-component-eval-coverage"
+    assert args.manifest == Path("config/forest_plan_component_eval_coverage_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/evaluations/forest_plan_component_eval_coverage")
+
+
 def test_forest_plan_component_eval_parser_accepts_manifest_without_eval_file() -> None:
     args = build_parser().parse_args(
         [
@@ -778,6 +797,42 @@ def test_forest_plan_component_eval_handler_propagates_manifest(monkeypatch) -> 
     assert captured["review_id"] == "west-reservoir-67436"
     assert captured["eval_file"] is None
     assert captured["manifest_path"] == Path("config/forest_plan_component_eval_coverage_v1.json")
+
+
+def test_forest_plan_component_eval_coverage_handler_propagates_manifest_and_results_dir(
+    monkeypatch,
+) -> None:
+    captured = {}
+
+    def fake_run_forest_plan_component_eval_coverage(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_forest_plan_component_eval_coverage",
+        fake_run_forest_plan_component_eval_coverage,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "forest-plan-component-eval-coverage",
+            "--manifest",
+            "config/forest_plan_component_eval_coverage_v1.json",
+            "--output-dir",
+            "library",
+            "--results-dir",
+            "library/evaluations/forest_plan_component_eval_coverage",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["manifest_path"] == Path("config/forest_plan_component_eval_coverage_v1.json")
+    assert captured["output_dir"] == Path("library")
+    assert captured["results_dir"] == Path("library/evaluations/forest_plan_component_eval_coverage")
 
 
 def test_gold_coverage_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:

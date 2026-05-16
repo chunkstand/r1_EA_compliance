@@ -864,6 +864,58 @@ missing or source-set-mismatched component inventory, malformed contract cases, 
 forest coverage, missing expected component hits, wrong-forest selections, hard-negative queries
 that return components, or unmet metric thresholds.
 
+### Forest Plan Component Eval Coverage
+
+The `forest-plan-component-eval-coverage` command writes:
+
+- `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
+
+It reads the tracked aggregate manifest, default
+`config/forest_plan_component_eval_coverage_v1.json`, and consumes:
+
+- the standalone retrieval manifest declared at
+  `component_retrieval_eval.manifest_path`
+- the standalone retrieval results at
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+  unless the manifest overrides that path explicitly
+- the tracked review-slot component-eval contracts and result artifacts declared in `slots`
+
+The manifest keeps schema version `forest-plan-component-eval-coverage-v1` and now records:
+
+- aggregate coverage identity: `id` and `version`
+- `component_retrieval_eval` inputs for the governed standalone retrieval lane
+- `required_review_ids` for the owned tracked review roster
+- `future_forest_expansion_policy` so future non-ECID review additions remain manifest-owned one
+  review at a time
+- `typed_blocked_slots` for any explicit blocked typed slots; this packet currently declares none
+- `coverage_thresholds` for required review count, forest diversity, missing contract count,
+  missing result count, stale identity count, and unresolved review count
+- `output_schema.required_summary_fields`
+- `slots` with `review_id`, `forest_unit_id`, `expected_source_set_id`, `eval_file`, and optional
+  `results_path`
+
+`forest_plan_component_eval_coverage_results.json` has schema version
+`forest-plan-component-eval-coverage-results-v1` and records:
+
+- aggregate identity, manifest path, results path, and creation timestamp
+- `component_retrieval_eval` status including manifest/result paths, contract identity,
+  source-set identity, missing/stale flags, and failure reasons
+- `review_component_eval_coverage` status including required review count, covered review count,
+  distinct forest count, missing contract count, missing result count, stale identity count, and
+  unresolved review count
+- top-level copies of the aggregate review counts plus `blocked_typed_slot_count`,
+  `future_forest_expansion_policy`, `threshold_failures`, `failure_category_counts`, and
+  `contract_checks`
+- per-slot review coverage details including expected/actual review identity, source-set identity,
+  eval path, result path, and failure reasons
+
+The aggregate coverage gate fails closed when the standalone retrieval producer is missing or
+failing, when a required tracked review slot is missing or unresolved, when West Reservoir lacks
+its own valid contract/result, when tracked review or retrieval identities drift, or when the
+manifest drifts away from explicit one-review-at-a-time future forest ownership. A green result is
+still only component coverage proof; it does not by itself prove reviewer-ready or live-package
+status.
+
 ### Forest Plan Component Adjudication
 
 The `forest-plan-component-adjudication-template` command reads an existing review directory with:

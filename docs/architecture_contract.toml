@@ -398,6 +398,7 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
+  "source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
   "source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json",
   "source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_report.md",
   "source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json",
@@ -504,6 +505,7 @@ name = "eval"
 commands = [
   "applicability-eval",
   "applicability-gold-eval",
+  "forest-plan-component-eval-coverage",
   "forest-plan-component-retrieval-eval",
   "forest-plan-profile-eval",
   "gold-coverage-eval",

@@ -774,6 +774,15 @@ current contracts also carry coverage requirements so they fail if the cases no 
 applicable standard, representative non-standard component types, hard negatives, and section-bound package
 evidence. Citation correctness is exact: extra or missing plan/package citations both fail the case.
 
+The same tracked manifest now also owns the aggregate
+`forest-plan-component-eval-coverage` lane. That aggregate gate consumes the standalone
+component-retrieval eval result plus the tracked review-slot component-eval results and writes
+`source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`.
+It proves that the retrieval producer is present and green, every required tracked review slot has
+its own valid contract/result, and future non-ECID review additions remain manifest-owned one
+review at a time. By design, this still does not prove reviewer-ready or live-package status by
+itself.
+
 ## Common Commands
 
 Dry-run workbook parsing without network access:
@@ -1702,6 +1711,21 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval
 and a Markdown report. It measures top-hit component retrieval precision/recall, applicable-standard
 component recall, wrong-forest selection rate, and hard-negative zero-match behavior before
 review-scoped component compliance scoring.
+
+Run the aggregate component-coverage gate:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage \
+  --output-dir source_library \
+  --manifest config/forest_plan_component_eval_coverage_v1.json
+```
+
+`forest-plan-component-eval-coverage` consumes the standalone retrieval results plus the tracked
+review-slot component-eval results and writes
+`source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`.
+It fails closed when the retrieval lane is missing or red, when a required tracked review slot is
+missing or unresolved, when West Reservoir lacks its own valid contract/result, or when manifest
+policy drifts away from one-review-at-a-time future forest ownership.
 
 Run phase-aligned readiness evaluation:
 

@@ -207,7 +207,7 @@ Latest closeout on 2026-05-13:
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
   eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `3` in
+  resumed, the next active packet is Milestone `4` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
@@ -223,6 +223,11 @@ Latest closeout on 2026-05-13:
   silently falls back to the ECID seed contract, and the next routed slice is Milestone `3`.
 - Forest-plan component-eval coverage Milestone `2` closeout commit is `a69d09d`
   (`eval: broaden tracked component review coverage`).
+- Forest-plan component-eval coverage Milestone `3` is now resolved in the current worktree: the
+  aggregate `forest-plan-component-eval-coverage` lane is live, it consumes the standalone
+  component-retrieval eval plus the tracked review-slot roster, it emits the governed aggregate
+  results artifact under `source_library/evaluations/forest_plan_component_eval_coverage/`, and
+  the next routed slice is Milestone `4`.
 
 ## Forest Plan Component Eval Coverage
 
@@ -230,31 +235,35 @@ Latest closeout on 2026-05-16:
 
 - Milestone `2` closeout commit is `a69d09d`
   (`eval: broaden tracked component review coverage`).
-- Milestone `2` now resolves the review-scoped component-eval breadth gap beyond the ECID-only
-  default path.
-- The repo now ships the tracked review coverage manifest at
-  `config/forest_plan_component_eval_coverage_v1.json`.
-- West Reservoir now has its own governed review contract at
-  `config/forest_plan_component_evals/west-reservoir-67436.json`.
-- `forest-plan-component-eval` now resolves tracked review IDs from the manifest when `--eval-file`
-  is omitted. East Crazies current promotion, East Crazies source-delta replay, and West Reservoir
-  are tracked; untracked review IDs fail closed instead of silently consuming the ECID seed.
-- The latest live tracked review replays are green and fail-closed:
-  `v1-cg-ecid-compliance-review` passes with `35` cases on `source-set-ba8d0feae79501b8`,
-  `west-reservoir-67436` passes with `27` cases on `source-set-5e65d845ce77e1a0`,
-  and the tracked coverage helper currently reports
+- Milestone `3` now resolves the missing aggregate component-coverage gate.
+- The tracked manifest `config/forest_plan_component_eval_coverage_v1.json` now declares:
+  the standalone retrieval-eval input,
+  an explicit one-review-at-a-time future-forest expansion policy,
+  and zero typed-blocked slots in scope for this packet.
+- The repo now ships the public aggregate command
+  `forest-plan-component-eval-coverage`, implemented in
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py` and registered through
+  `src/usfs_r1_ea_sources/cli_eval.py`.
+- The aggregate producer writes
+  `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
+  and fails closed when the standalone retrieval lane is missing/red, when a tracked review slot
+  is missing or unresolved, when West Reservoir lacks a valid contract/result, or when review or
+  retrieval identities drift.
+- The latest live governed replays are green and fail-closed:
+  `forest-plan-component-retrieval-eval` passes on `source-set-5e65d845ce77e1a0`,
+  and `forest-plan-component-eval-coverage` now passes with
   `required_review_count=3`,
   `covered_review_count=3`,
-  `distinct_forest_count=2`,
   `missing_contract_count=0`,
   `missing_result_count=0`,
   `stale_identity_count=0`,
-  and `unresolved_review_count=0`.
-- This milestone broadens governed review-scoped component coverage, but it does not yet emit the
-  aggregate component-coverage artifact or wire that aggregate summary into phase-eval/promotion.
+  `unresolved_review_count=0`,
+  and `blocked_typed_slot_count=0`.
 - South Plateau remains explicitly out of this packet’s minimum governed review set.
+- This milestone closes the aggregate component-coverage owner, but it does not yet wire that
+  summary into `phase-eval` or `promotion-suite`.
 - The next routed slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is now
-  Milestone `3`: add the aggregate component-coverage gate and future-forest routing.
+  Milestone `4`: wire the new component lane into `phase-eval`, promotion, and coverage docs.
 
 ## Cross-Forest Profile Eval Coverage
 

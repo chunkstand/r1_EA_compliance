@@ -1,12 +1,21 @@
 {
   "schema_version": "forest-plan-component-eval-coverage-v1",
   "id": "region1-forest-plan-component-eval-coverage",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "component_retrieval_eval": {
+    "manifest_path": "forest_plan_component_retrieval_eval_v1.json"
+  },
   "required_review_ids": [
     "v1-cg-ecid-compliance-review",
     "v1-cg-ecid-source-delta-review",
     "west-reservoir-67436"
   ],
+  "future_forest_expansion_policy": {
+    "mode": "manifest_slots_only",
+    "allow_untracked_non_ecid_reviews": false,
+    "require_per_review_contract": true
+  },
+  "typed_blocked_slots": [],
   "coverage_thresholds": {
     "required_review_count": 3,
     "distinct_forest_count_min": 2,
@@ -14,6 +23,24 @@
     "missing_result_count_max": 0,
     "stale_identity_count_max": 0,
     "unresolved_review_count_max": 0
+  },
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "coverage_id",
+      "component_retrieval_eval",
+      "review_component_eval_coverage",
+      "required_review_count",
+      "covered_review_count",
+      "missing_contract_count",
+      "missing_result_count",
+      "stale_identity_count",
+      "blocked_typed_slot_count",
+      "future_forest_expansion_policy",
+      "contract_checks",
+      "failure_category_counts",
+      "slots"
+    ]
   },
   "slots": [
     {
