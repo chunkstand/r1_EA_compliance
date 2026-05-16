@@ -3,8 +3,8 @@
 Date: 2026-05-13
 
 Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
-reduced through local commit `d013216`; Sequence 2 is reduced in the local closeout commit for this
-slice; Sequence 3 is now the next executable slice)
+reduced through local commit `d013216`; Sequence 2 is reduced through local commit `a29cee8`;
+Sequence 3 is now the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -61,7 +61,8 @@ Sequence 1 closeout summary on 2026-05-16:
 
 Sequence 2 closeout summary on 2026-05-16:
 
-- Sequence 2 is reduced in the local closeout commit for this slice.
+- The Sequence 2 closeout checkpoint is local commit `a29cee8`
+  (`architecture: split phase eval helper owners`).
 - The remaining neutral helper family no longer lives under the graph owner. Shared JSON, summary,
   selector, identity, and timestamp helpers now live in
   `src/usfs_r1_ea_sources/artifact_utils.py`.

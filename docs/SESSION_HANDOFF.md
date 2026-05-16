@@ -5,6 +5,33 @@ Date: 2026-05-16
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 2 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `a29cee8`
+(`architecture: split phase eval helper owners`).
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Sequence `2` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Sequence `2` checkpoint commit `a29cee8` and the same
+  next routed slice: Sequence `3` in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower references that describe Sequence `2` without the explicit `a29cee8` checkpoint hash
+  are historical only. The live routing truth for this lane is this section plus the Sequence `2`
+  closeout section immediately below.
+- verification:
+  targeted `rg` and `sed` checks confirmed shared `a29cee8` routing across the plan, current-state
+  doc, and newest handoff note;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Sequence `3` remains the next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Phase Eval Orchestration Boundary Sequence 2 Closeout
 
 This implementation pass reduces Sequence `2` in
@@ -23,7 +50,8 @@ This implementation pass reduces Sequence `2` in
   `docs/SESSION_HANDOFF.md`,
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
 - committed checkpoint:
-  Sequence `2` is reduced in the local closeout commit for this slice.
+  Sequence `2` is local commit `a29cee8`
+  (`architecture: split phase eval helper owners`).
 - owner boundary truth:
   the remaining neutral helper family no longer lives in `src/usfs_r1_ea_sources/evidence_graph.py`.
   Shared JSON, selector, summary, identity, and timestamp helpers now live in
