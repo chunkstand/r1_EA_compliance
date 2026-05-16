@@ -2,10 +2,12 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved; Milestone 2 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 next)
 
 Milestone 1 closeout summary on 2026-05-16:
 
+- The Milestone 1 closeout checkpoint is local commit `965201e`
+  (`eval: add component retrieval coverage gate`).
 - The repo now ships the standalone component-retrieval eval contract at
   `config/forest_plan_component_retrieval_eval_v1.json`.
 - The new owner command is `forest-plan-component-retrieval-eval`, implemented in

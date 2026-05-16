@@ -5,6 +5,39 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 1 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`965201e` (`eval: add component retrieval coverage gate`).
+
+- scope:
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `1` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Milestone `1` checkpoint commit `965201e` and the
+  same next routed slice: Milestone `2` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the current-state routing layer now records the Milestone `1` checkpoint explicitly instead of
+  only naming the new standalone retrieval lane and next packet boundary.
+- supersession truth:
+  older lower handoff sections that still route this packet to Milestone `1` or mention only the
+  pre-alignment Milestone `1` closeout note without the checkpoint hash are historical only. The
+  live routing truth for this lane is this section plus the Milestone `1` closeout section
+  immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `965201e` and route the next executable slice as Milestone `2` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice after the closed standalone retrieval packet is Milestone `2` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: expand review-scoped component eval
+  coverage beyond ECID and add the tracked West Reservoir contract surface.
+
 ## Forest Plan Component Eval Coverage Milestone 1 Closeout
 
 This update resolves Milestone `1` in
@@ -22,6 +55,9 @@ This update resolves Milestone `1` in
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `1` is committed locally as `965201e`
+  (`eval: add component retrieval coverage gate`).
 - closeout truth:
   the repo now ships a standalone component-retrieval eval producer instead of relying only on the
   downstream review-scoped component compliance eval. The new `forest-plan-component-retrieval-eval`

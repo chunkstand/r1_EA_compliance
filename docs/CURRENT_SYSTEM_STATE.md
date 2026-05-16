@@ -213,11 +213,17 @@ Latest closeout on 2026-05-13:
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
   West Reservoir in-scope decision, South Plateau routed-out decision, and ECID-only defaulting
   baseline are all pinned as the starting point for the broader component-coverage packet.
+- Forest-plan component-eval coverage Milestone `1` is now resolved through local commit
+  `965201e` (`eval: add component retrieval coverage gate`): the standalone source-set
+  component-retrieval eval producer is live, the active-source-set contract replay is green, and
+  the next routed slice is Milestone `2`.
 
 ## Forest Plan Component Eval Coverage
 
 Latest closeout on 2026-05-16:
 
+- Milestone `1` closeout commit is `965201e`
+  (`eval: add component retrieval coverage gate`).
 - Milestone `1` now resolves the missing standalone component-retrieval eval lane.
 - The repo now ships a tracked standalone retrieval contract at
   `config/forest_plan_component_retrieval_eval_v1.json`.
