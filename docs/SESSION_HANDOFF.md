@@ -1,9 +1,61 @@
 # Session Handoff
 
-Date: 2026-05-15
+Date: 2026-05-16
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Phase Eval Orchestration Boundary Sequence 2 Closeout
+
+This implementation pass reduces Sequence `2` in
+`docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `src/usfs_r1_ea_sources/artifact_utils.py`,
+  `src/usfs_r1_ea_sources/phase_eval.py`,
+  `src/usfs_r1_ea_sources/phase_eval_support.py`,
+  `src/usfs_r1_ea_sources/phase_eval_optional_phases.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `tests/test_phase_eval_boundary_contract.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/architecture_contract.toml`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- committed checkpoint:
+  Sequence `2` is reduced in the local closeout commit for this slice.
+- owner boundary truth:
+  the remaining neutral helper family no longer lives in `src/usfs_r1_ea_sources/evidence_graph.py`.
+  Shared JSON, selector, summary, identity, and timestamp helpers now live in
+  `src/usfs_r1_ea_sources/artifact_utils.py`, while the phase-eval owner now uses
+  `src/usfs_r1_ea_sources/phase_eval_support.py` and
+  `src/usfs_r1_ea_sources/phase_eval_optional_phases.py` as sibling owners.
+- graph-owner truth:
+  `src/usfs_r1_ea_sources/evidence_graph.py` is now `1205` lines and no longer supplies the
+  helper family consumed by `phase-eval`.
+- canonical-owner truth:
+  `src/usfs_r1_ea_sources/phase_eval.py` is now `1376` lines, which is below the `1800`-line
+  budget. The sibling owners are `src/usfs_r1_ea_sources/phase_eval_optional_phases.py` at `782`
+  lines and `src/usfs_r1_ea_sources/phase_eval_support.py` at `176` lines.
+- boundary gate:
+  `tests/test_phase_eval_boundary_contract.py` now fail-closes reintroduced
+  `phase_eval -> evidence_graph` helper imports, stale helper definitions in the graph owner, and
+  owner line-budget drift.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_architecture_contract.py tests/test_cli.py -q`
+  passed `63/63`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_applicability_eval.py tests/test_claim_extraction.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_ea_consistency_decision_support.py tests/test_nepa_knowledge_graph_export.py tests/test_phase_eval_direct_eval_contracts.py -q`
+  passed `92/92`;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
+  passed with `51` code files above `800` lines and no import cycles;
+  `rg -n "from \\.evidence_graph import" src/usfs_r1_ea_sources/phase_eval.py` returned no
+  matches; and `git diff --check` passes for the implementation slice.
+- residual risk:
+  the code-owner extraction is now reduced, but the test-owner extraction is not. The next
+  executable slice is Sequence `3`, which moves lingering phase-eval-specific coverage out of
+  `tests/test_evidence_graph.py` and into a dedicated `tests/test_phase_eval.py`.
 
 ## Phase Eval Orchestration Boundary Sequence 1 Alignment Pass
 

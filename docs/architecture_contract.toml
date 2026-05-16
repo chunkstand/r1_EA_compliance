@@ -5,10 +5,11 @@ description = "Layer ownership, import boundaries, generated artifacts, command 
 
 [[layers]]
 name = "foundation"
-summary = "Workbook, config, overrides, adapters, and source-row records."
+summary = "Workbook, config, overrides, adapters, source-row records, and neutral artifact helper utilities."
 modules = [
   "__init__",
   "adapters",
+  "artifact_utils",
   "catalog_surface",
   "config",
   "eval_metrics",
@@ -80,14 +81,19 @@ allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "revi
 [[layers]]
 name = "phase_eval"
 summary = "Source-set and review-scoped phase-eval orchestration, replay-context resolution, and direct-eval-aware readiness assembly."
-modules = ["phase_eval", "phase_eval_direct_eval", "replay_context"]
+modules = [
+  "phase_eval",
+  "phase_eval_direct_eval",
+  "phase_eval_optional_phases",
+  "phase_eval_support",
+  "replay_context",
+]
 allowed_import_layers = [
   "foundation",
   "extraction",
   "claims",
   "review",
   "decision_support",
-  "evidence_graph",
   "phase_eval",
 ]
 

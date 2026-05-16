@@ -36,13 +36,13 @@ instructions for agents or privileged tools.
 
 | Container | Role | Current Module Owners |
 | --- | --- | --- |
-| Workbook/config | Load workbook rows, overrides, settings, record identity, and source-partition contracts. | `workbook.py`, `records.py`, `source_partitions.py`, `config.py`, `overrides.py`, `adapters.py` |
+| Workbook/config | Load workbook rows, overrides, settings, record identity, source-partition contracts, and neutral artifact helper utilities. | `workbook.py`, `records.py`, `source_partitions.py`, `config.py`, `overrides.py`, `adapters.py`, `artifact_utils.py` |
 | Capture | Dry-run, preflight, download, batch, report, and run validation. | `dry_run.py`, `preflight.py`, `download.py`, `batches.py`, `report.py`, `validate_run.py`, `pilots.py` |
 | Catalog | Promote workbook rows and artifacts into reviewer-facing catalog surfaces. | `catalog.py` |
 | Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
 | Review support | Build cross-source-set reuse and readiness planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py`, `forest_plan_source_delta_readiness.py` |
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `claim_extraction.py`, `rule_claim_binding.py` |
-| Phase eval orchestration | Assemble source-set and review-scoped readiness summaries over graph, replay-context, direct-eval, and audited downstream artifacts. | `phase_eval.py`, `phase_eval_direct_eval.py`, `replay_context.py` |
+| Phase eval orchestration | Assemble source-set and review-scoped readiness summaries over graph, replay-context, direct-eval, and audited downstream artifacts. | `phase_eval.py`, `phase_eval_support.py`, `phase_eval_optional_phases.py`, `phase_eval_direct_eval.py`, `replay_context.py` |
 | NEPA 3D knowledge graph | Define and assemble source-set graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |

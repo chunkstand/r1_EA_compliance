@@ -3,7 +3,8 @@
 Date: 2026-05-13
 
 Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
-reduced through local commit `d013216`; Sequence 2 is now the next executable slice)
+reduced through local commit `d013216`; Sequence 2 is reduced in the local closeout commit for this
+slice; Sequence 3 is now the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -57,6 +58,30 @@ Sequence 1 closeout summary on 2026-05-16:
 - The next executable slice in this packet is Sequence 2: finish the owner cleanup by removing the
   remaining non-graph helper dependency on `evidence_graph.py` and splitting the oversized
   `phase_eval.py` owner below the line-budget cap.
+
+Sequence 2 closeout summary on 2026-05-16:
+
+- Sequence 2 is reduced in the local closeout commit for this slice.
+- The remaining neutral helper family no longer lives under the graph owner. Shared JSON, summary,
+  selector, identity, and timestamp helpers now live in
+  `src/usfs_r1_ea_sources/artifact_utils.py`.
+- `src/usfs_r1_ea_sources/phase_eval.py` no longer imports helper functions from
+  `src/usfs_r1_ea_sources/evidence_graph.py`. The canonical phase-eval owner now consumes sibling
+  owners `src/usfs_r1_ea_sources/phase_eval_support.py` and
+  `src/usfs_r1_ea_sources/phase_eval_optional_phases.py` for support helpers and optional-phase
+  assembly.
+- The live owner sizes are now:
+  `src/usfs_r1_ea_sources/evidence_graph.py` `1205` lines,
+  `src/usfs_r1_ea_sources/phase_eval.py` `1376` lines,
+  `src/usfs_r1_ea_sources/phase_eval_optional_phases.py` `782` lines, and
+  `src/usfs_r1_ea_sources/phase_eval_support.py` `176` lines.
+- `tests/test_phase_eval_boundary_contract.py` now fail-closes the moved helper family,
+  reintroduced `phase_eval -> evidence_graph` helper imports, and owner line-budget regressions.
+- The post-split architecture probe still reports no import cycles and `51` code files above
+  `800` lines, but `phase_eval.py` is no longer an oversized hotspot owner.
+- The next executable slice in this packet is Sequence 3: move the remaining phase-eval-specific
+  coverage out of `tests/test_evidence_graph.py` and make the test boundary match the new code
+  owner boundary.
 
 Owner context: This is a fresh standalone milestone plan for the P1 architecture finding that the
 `evidence_graph` boundary is collapsed. It does not reopen the now-resolved
