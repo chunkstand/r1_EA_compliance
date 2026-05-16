@@ -238,7 +238,7 @@ Latest closeout on 2026-05-16:
   (`eval: broaden tracked component review coverage`).
 - Milestone `3` closeout commit is `e45d47e`
   (`eval: add aggregate component coverage gate`).
-- Milestone `4` is now resolved in the local milestone implementation commit for this slice
+- Milestone `4` closeout commit is `6cd5fd9`
   (`eval: wire component coverage gates`).
 - The packet now resolves both the missing aggregate component-coverage gate and the missing
   readiness integration for that lane.

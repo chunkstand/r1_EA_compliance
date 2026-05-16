@@ -2,11 +2,11 @@
 
 Date: 2026-05-13
 
-Status: Resolved 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved through local commit `e45d47e`; Milestone 4 resolved in the local milestone implementation commit for this slice)
+Status: Resolved 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved through local commit `e45d47e`; Milestone 4 resolved through local commit `6cd5fd9`)
 
 Milestone 4 closeout summary on 2026-05-16:
 
-- The Milestone 4 closeout checkpoint is the local milestone implementation commit for this slice
+- The Milestone 4 closeout checkpoint is local commit `6cd5fd9`
   (`eval: wire component coverage gates`).
 - Milestone 4 now resolves the readiness-integration gap for the standalone source-set retrieval
   producer and the tracked aggregate component-coverage producer.

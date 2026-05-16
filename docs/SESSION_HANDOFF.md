@@ -5,6 +5,34 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 4 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`6cd5fd9` (`eval: wire component coverage gates`).
+
+- scope:
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `4` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Milestone `4` checkpoint commit `6cd5fd9` and the
+  same next routed packet:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower handoff sections that still route this packet to Milestone `4` or describe the
+  Milestone `4` closeout with placeholder checkpoint language are historical only. The live routing
+  truth for this lane is this section plus the Milestone `4` closeout section immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `6cd5fd9` and route the next packet to
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next routed packet after the resolved component-coverage lane is now
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Forest Plan Component Eval Coverage Milestone 4 Closeout
 
 This update resolves Milestone `4` in
@@ -25,7 +53,7 @@ This update resolves Milestone `4` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
 - committed checkpoint:
-  Milestone `4` is the local milestone implementation commit for this slice
+  Milestone `4` is local commit `6cd5fd9`
   (`eval: wire component coverage gates`).
 - closeout truth:
   the standalone component-retrieval producer and the aggregate component-coverage producer are no
