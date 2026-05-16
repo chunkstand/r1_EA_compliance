@@ -206,9 +206,10 @@ Latest closeout on 2026-05-13:
   `promotion_ready=true`, and `expansion_failure_category_counts={}`.
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
-  eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `4` in
-  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+  eval coverage Milestones `1-4` are now resolved in code/docs, and forest-plan component-eval
+  coverage Milestones `0-4` are now also resolved in code/docs. If the queued follow-on stack is
+  resumed, the next active packet is now
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
 - Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
   West Reservoir in-scope decision, South Plateau routed-out decision, and ECID-only defaulting
@@ -237,7 +238,10 @@ Latest closeout on 2026-05-16:
   (`eval: broaden tracked component review coverage`).
 - Milestone `3` closeout commit is `e45d47e`
   (`eval: add aggregate component coverage gate`).
-- Milestone `3` now resolves the missing aggregate component-coverage gate.
+- Milestone `4` is now resolved in the local milestone implementation commit for this slice
+  (`eval: wire component coverage gates`).
+- The packet now resolves both the missing aggregate component-coverage gate and the missing
+  readiness integration for that lane.
 - The tracked manifest `config/forest_plan_component_eval_coverage_v1.json` now declares:
   the standalone retrieval-eval input,
   an explicit one-review-at-a-time future-forest expansion policy,
@@ -251,6 +255,16 @@ Latest closeout on 2026-05-16:
   and fails closed when the standalone retrieval lane is missing/red, when a tracked review slot
   is missing or unresolved, when West Reservoir lacks a valid contract/result, or when review or
   retrieval identities drift.
+- `config/phase_eval_direct_eval_v1.json` now consumes:
+  the standalone retrieval producer as the `forest_plan_component_retrieval` direct-eval-required
+  phase for the active full-canonical source set, and
+  the aggregate component-coverage summary as a tracked review-scope direct-eval input when the
+  declared review ID is in the manifest-owned roster.
+- `config/promotion_suite_v1.json` now requires:
+  the full-canonical standalone component-retrieval eval artifact,
+  the full-canonical aggregate component-coverage artifact, and
+  a `phase_eval_core` summary whose `required_review_eval_ids` include
+  `forest_plan_component_eval_coverage` for the tracked East Crazies current-promotion review.
 - The latest live governed replays are green and fail-closed:
   `forest-plan-component-retrieval-eval` passes on `source-set-5e65d845ce77e1a0`,
   and `forest-plan-component-eval-coverage` now passes with
@@ -261,11 +275,14 @@ Latest closeout on 2026-05-16:
   `stale_identity_count=0`,
   `unresolved_review_count=0`,
   and `blocked_typed_slot_count=0`.
+- The lane boundary remains explicit:
+  standalone component retrieval proves source-set retrieval coverage only;
+  aggregate component coverage proves tracked review-slot coverage only;
+  neither artifact by itself proves reviewer-ready, adjudication closure, or live-package status.
 - South Plateau remains explicitly out of this packet’s minimum governed review set.
-- This milestone closes the aggregate component-coverage owner, but it does not yet wire that
-  summary into `phase-eval` or `promotion-suite`.
-- The next routed slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is now
-  Milestone `4`: wire the new component lane into `phase-eval`, promotion, and coverage docs.
+- This milestone plan is now resolved.
+- The next routed packet in the repo debt queue is now
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
 

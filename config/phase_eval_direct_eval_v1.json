@@ -1,5 +1,7 @@
 {
   "contract_id": "phase-eval-direct-eval-v1",
+  "component_review_coverage_manifest_path": "forest_plan_component_eval_coverage_v1.json",
+  "component_review_coverage_results_path": "evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
   "declared_review_eval_path": "v1_ea_eval_results.json",
   "downstream_manifest_path": "downstream_direct_eval_v1.json",
   "review_contract_manifest_path": "v1_real_package_review_coverage_v1.json",
@@ -39,7 +41,21 @@
       "lane_id": "forest_plan_profile_eval",
       "phase_name": "nepa_3d_source_set_graph",
       "producer": "forest_plan_profile_evaluation",
+      "required_source_set_ids": [
+        "source-set-5e65d845ce77e1a0"
+      ],
       "results_path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
+    },
+    {
+      "coverage_class": "direct_eval_required",
+      "expected_contract_id": "region1-forest-plan-component-retrieval-eval",
+      "lane_id": "forest_plan_component_retrieval_eval",
+      "phase_name": "forest_plan_component_retrieval",
+      "producer": "forest_plan_component_retrieval_evaluation",
+      "required_source_set_ids": [
+        "source-set-5e65d845ce77e1a0"
+      ],
+      "results_path": "evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json"
     },
     {
       "coverage_class": "direct_eval_required",
@@ -55,5 +71,5 @@
     }
   ],
   "upstream_results_path": "evaluations/upstream/upstream_evaluation_results.json",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }

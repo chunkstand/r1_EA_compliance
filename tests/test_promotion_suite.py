@@ -189,6 +189,184 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         == 0
     )
 
+    full_component_retrieval = suite_results[
+        "full_canonical_forest_plan_component_retrieval_eval"
+    ]
+    assert full_component_retrieval["required_for_current_promotion"] is False
+    assert full_component_retrieval["required_for_full_canonical_corpus"] is True
+    assert (
+        full_component_retrieval["path"]
+        == "evaluations/forest_plan_component_retrieval/"
+        "forest_plan_component_retrieval_eval_results.json"
+    )
+    full_component_retrieval_checks = {
+        check["name"]: check for check in full_component_retrieval["checks"]
+    }
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_passed"
+        ]["equals"]
+        is True
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_contract_id"
+        ]["equals"]
+        == "region1-forest-plan-component-retrieval-eval"
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_source_set_matches"
+        ]["equals"]
+        == "source-set-5e65d845ce77e1a0"
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches"
+        ]["equals"]
+        == ["source-set-5e65d845ce77e1a0"]
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_case_count"
+        ]["min"]
+        == 6
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_expected_pass_case_count"
+        ]["min"]
+        == 4
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_hard_negative_case_count"
+        ]["min"]
+        == 2
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_required_forests_covered"
+        ]["contains_all"]
+        == [
+            "beaverhead-deerlodge-nf",
+            "custer-gallatin-nf",
+            "flathead-nf",
+        ]
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_precision"
+        ]["min"]
+        == 1.0
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_recall"
+        ]["min"]
+        == 1.0
+    )
+    assert (
+        full_component_retrieval_checks[
+            "full_canonical_forest_plan_component_retrieval_eval_wrong_forest_rate"
+        ]["equals"]
+        == 0.0
+    )
+
+    full_component_coverage = suite_results[
+        "full_canonical_forest_plan_component_eval_coverage"
+    ]
+    assert full_component_coverage["required_for_current_promotion"] is False
+    assert full_component_coverage["required_for_full_canonical_corpus"] is True
+    assert (
+        full_component_coverage["path"]
+        == "evaluations/forest_plan_component_eval_coverage/"
+        "forest_plan_component_eval_coverage_results.json"
+    )
+    full_component_coverage_checks = {
+        check["name"]: check for check in full_component_coverage["checks"]
+    }
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_passed"
+        ]["equals"]
+        is True
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_id"
+        ]["equals"]
+        == "region1-forest-plan-component-eval-coverage"
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_required_review_count"
+        ]["equals"]
+        == 3
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_covered_review_count"
+        ]["equals"]
+        == 3
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_required_review_ids"
+        ]["contains_all"]
+        == [
+            "v1-cg-ecid-compliance-review",
+            "v1-cg-ecid-source-delta-review",
+            "west-reservoir-67436",
+        ]
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_covered_review_ids"
+        ]["contains_all"]
+        == [
+            "v1-cg-ecid-compliance-review",
+            "v1-cg-ecid-source-delta-review",
+            "west-reservoir-67436",
+        ]
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_distinct_forest_count"
+        ]["min"]
+        == 2
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_missing_contract_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_missing_result_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_stale_identity_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_unresolved_review_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_component_coverage_checks[
+            "full_canonical_forest_plan_component_eval_coverage_blocked_typed_slot_count"
+        ]["equals"]
+        == 0
+    )
+
 
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
@@ -295,6 +473,15 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     assert phase_checks["phase_eval_missing_direct_eval_phase_count"]["equals"] == 0
     assert phase_checks["phase_eval_threshold_failed_phase_count"]["equals"] == 0
     assert phase_checks["phase_eval_contract_backed_promotion_ready"]["equals"] is True
+    assert phase_checks["phase_eval_required_review_eval_ids"]["contains_all"] == [
+        "v1_ea_eval",
+        "real_package_review_coverage",
+        "forest_plan_component_eval_coverage",
+    ]
+    assert phase_checks["phase_eval_missing_review_eval_ids"]["equals"] == []
+    assert phase_checks["phase_eval_review_direct_eval_status"]["equals"] == (
+        "direct_eval_present"
+    )
     assert phase_checks["phase_eval_arbitration_summary_schema"]["equals"] == (
         "applicability-arbitration-summary-v0"
     )

@@ -23,6 +23,15 @@ V1_EA_EVAL_RESULTS_SCHEMA_VERSION = "v1-ea-real-review-eval-results-v0"
 FOREST_PLAN_PROFILE_EVAL_RESULTS_SCHEMA_VERSION = (
     "region1-forest-plan-profile-eval-results-v1"
 )
+FOREST_PLAN_COMPONENT_EVAL_COVERAGE_SCHEMA_VERSION = (
+    "forest-plan-component-eval-coverage-v1"
+)
+FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_SCHEMA_VERSION = (
+    "forest-plan-component-eval-coverage-results-v1"
+)
+FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION = (
+    "forest-plan-component-retrieval-eval-results-v1"
+)
 SOURCE_SET_COVERAGE_CLASSES = {"direct_eval_required", "validation_only_allowed"}
 REVIEW_COVERAGE_CLASSES = {
     "required_for_declared_review_contract",
@@ -30,6 +39,7 @@ REVIEW_COVERAGE_CLASSES = {
 }
 SOURCE_SET_PHASE_PRODUCERS = {
     "downstream_direct_evaluation",
+    "forest_plan_component_retrieval_evaluation",
     "forest_plan_profile_evaluation",
     "phase_eval",
     "upstream_evaluation",
@@ -67,9 +77,19 @@ def resolve_phase_eval_direct_eval_coverage(
         contract["review_contract_manifest_path"],
     )
     review_coverage_manifest = _read_json_if_exists(review_coverage_manifest_path)
+    component_review_coverage_manifest_path = _resolve_repo_path(
+        config_dir,
+        contract["component_review_coverage_manifest_path"],
+    )
+    component_review_coverage_manifest = _read_json_if_exists(
+        component_review_coverage_manifest_path
+    )
 
-    source_set_phase_statuses = {
-        str(spec["phase_name"]): _source_set_phase_status(
+    source_set_phase_statuses: dict[str, dict[str, Any]] = {}
+    for spec in contract.get("source_set_phases", []):
+        if not _source_set_phase_applies(spec=spec, source_set_id=source_set_id):
+            continue
+        source_set_phase_statuses[str(spec["phase_name"])] = _source_set_phase_status(
             spec=spec,
             source_set_id=source_set_id,
             output_dir=output_dir,
@@ -78,8 +98,6 @@ def resolve_phase_eval_direct_eval_coverage(
             downstream_manifest_path=downstream_manifest_path,
             downstream_manifest=downstream_manifest,
         )
-        for spec in contract.get("source_set_phases", [])
-    }
     review_scope = _review_scope_status(
         contract=contract,
         output_dir=output_dir,
@@ -87,6 +105,8 @@ def resolve_phase_eval_direct_eval_coverage(
         review_dir=review_dir,
         review_coverage_manifest_path=review_coverage_manifest_path,
         review_coverage_manifest=review_coverage_manifest,
+        component_review_coverage_manifest_path=component_review_coverage_manifest_path,
+        component_review_coverage_manifest=component_review_coverage_manifest,
     )
 
     return {
@@ -292,6 +312,15 @@ def build_evaluation_coverage_phase(
     return phase, summary_fields
 
 
+def _source_set_phase_applies(
+    *,
+    spec: dict[str, Any],
+    source_set_id: str,
+) -> bool:
+    required_source_set_ids = _string_list(spec.get("required_source_set_ids"))
+    return not required_source_set_ids or source_set_id in required_source_set_ids
+
+
 def _source_set_phase_status(
     *,
     spec: dict[str, Any],
@@ -349,6 +378,17 @@ def _source_set_phase_status(
             output_dir=output_dir,
             results_path_value=spec.get("results_path"),
             expected_contract_id=str(spec.get("expected_contract_id") or ""),
+        )
+    if producer == "forest_plan_component_retrieval_evaluation":
+        return _forest_plan_component_retrieval_phase_status(
+            phase_name=phase_name,
+            coverage_class=coverage_class,
+            lane_id=str(spec["lane_id"]),
+            source_set_id=source_set_id,
+            output_dir=output_dir,
+            results_path_value=spec.get("results_path"),
+            expected_contract_id=str(spec.get("expected_contract_id") or ""),
+            required_source_set_ids=_string_list(spec.get("required_source_set_ids")),
         )
     raise ValueError(f"Unsupported phase-eval direct-eval producer: {producer}")
 
@@ -570,6 +610,8 @@ def _review_scope_status(
     review_dir: Path | None,
     review_coverage_manifest_path: Path,
     review_coverage_manifest: dict[str, Any] | None,
+    component_review_coverage_manifest_path: Path,
+    component_review_coverage_manifest: dict[str, Any] | None,
 ) -> dict[str, Any] | None:
     if review_id is None:
         return None
@@ -632,6 +674,15 @@ def _review_scope_status(
         payload=coverage_results,
     )
     summaries.append(coverage_summary)
+    component_coverage_summary = _component_review_coverage_summary_for_review(
+        review_id=review_id,
+        contract=contract,
+        output_dir=output_dir,
+        manifest_path=component_review_coverage_manifest_path,
+        manifest=component_review_coverage_manifest,
+    )
+    if component_coverage_summary is not None:
+        summaries.append(component_coverage_summary)
 
     for summary in summaries:
         if summary["present"]:
@@ -840,6 +891,184 @@ def _review_coverage_summary(
     return summary
 
 
+def _component_review_coverage_summary_for_review(
+    *,
+    review_id: str,
+    contract: dict[str, Any],
+    output_dir: Path,
+    manifest_path: Path,
+    manifest: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if not isinstance(manifest, dict):
+        return {
+            "summary_id": "forest_plan_component_eval_coverage",
+            "path": str(output_dir / str(contract["component_review_coverage_results_path"])),
+            "present": False,
+            "status": "direct_eval_schema_invalid",
+            "passed": False,
+            "failure_reasons": ["direct_eval_schema_invalid"],
+            "details": {
+                "manifest_path": str(manifest_path),
+                "reason": "component_review_coverage_manifest_missing",
+            },
+        }
+    if (
+        manifest.get("schema_version")
+        != FOREST_PLAN_COMPONENT_EVAL_COVERAGE_SCHEMA_VERSION
+    ):
+        return {
+            "summary_id": "forest_plan_component_eval_coverage",
+            "path": str(output_dir / str(contract["component_review_coverage_results_path"])),
+            "present": False,
+            "status": "direct_eval_schema_invalid",
+            "passed": False,
+            "failure_reasons": ["direct_eval_schema_invalid"],
+            "details": {
+                "manifest_path": str(manifest_path),
+                "manifest_schema_version": manifest.get("schema_version"),
+            },
+        }
+    slot = next(
+        (
+            item
+            for item in manifest.get("slots", [])
+            if isinstance(item, dict) and str(item.get("review_id") or "") == review_id
+        ),
+        None,
+    )
+    if slot is None:
+        return None
+    results_path = output_dir / str(contract["component_review_coverage_results_path"])
+    payload = _read_json_if_exists(results_path)
+    return _component_review_coverage_summary(
+        review_id=review_id,
+        slot=slot,
+        manifest=manifest,
+        manifest_path=manifest_path,
+        path=results_path,
+        payload=payload,
+    )
+
+
+def _component_review_coverage_summary(
+    *,
+    review_id: str,
+    slot: dict[str, Any],
+    manifest: dict[str, Any],
+    manifest_path: Path,
+    path: Path,
+    payload: dict[str, Any] | None,
+) -> dict[str, Any]:
+    summary = {
+        "summary_id": "forest_plan_component_eval_coverage",
+        "path": str(path),
+        "present": isinstance(payload, dict),
+        "status": "direct_eval_missing",
+        "passed": False,
+        "failure_reasons": [],
+        "details": {
+            "manifest_path": str(manifest_path),
+            "expected_coverage_id": manifest.get("id"),
+            "expected_review_id": review_id,
+            "expected_slot_id": slot.get("slot_id"),
+            "expected_forest_unit_id": slot.get("forest_unit_id"),
+            "expected_source_set_id": slot.get("expected_source_set_id"),
+        },
+    }
+    if not isinstance(payload, dict):
+        summary["failure_reasons"] = ["missing_required_direct_eval"]
+        return summary
+    required_keys = (
+        "schema_version",
+        "coverage_id",
+        "passed",
+        "required_review_ids",
+        "covered_review_ids",
+        "slots",
+        "review_component_eval_coverage",
+        "component_retrieval_eval",
+    )
+    if any(key not in payload for key in required_keys):
+        summary["status"] = "direct_eval_schema_invalid"
+        summary["failure_reasons"] = ["direct_eval_schema_invalid"]
+        summary["details"]["missing_keys"] = [
+            key for key in required_keys if key not in payload
+        ]
+        return summary
+    required_review_ids = _string_list(payload.get("required_review_ids"))
+    covered_review_ids = _string_list(payload.get("covered_review_ids"))
+    slot_result = next(
+        (
+            item
+            for item in payload.get("slots", [])
+            if isinstance(item, dict) and str(item.get("review_id") or "") == review_id
+        ),
+        None,
+    )
+    summary["details"].update(
+        {
+            "schema_version": payload.get("schema_version"),
+            "actual_coverage_id": payload.get("coverage_id"),
+            "required_review_ids": required_review_ids,
+            "covered_review_ids": covered_review_ids,
+            "slot_result": slot_result,
+            "review_component_eval_coverage": payload.get("review_component_eval_coverage"),
+            "component_retrieval_eval": payload.get("component_retrieval_eval"),
+        }
+    )
+    if (
+        payload.get("schema_version")
+        != FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_SCHEMA_VERSION
+    ):
+        summary["status"] = "direct_eval_schema_invalid"
+        summary["failure_reasons"] = ["direct_eval_schema_invalid"]
+        return summary
+    if str(payload.get("coverage_id") or "") != str(manifest.get("id") or ""):
+        summary["status"] = "direct_eval_identity_mismatch"
+        summary["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return summary
+    if review_id not in _string_list(manifest.get("required_review_ids")):
+        summary["status"] = "direct_eval_identity_mismatch"
+        summary["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return summary
+    if review_id not in required_review_ids:
+        summary["status"] = "direct_eval_identity_mismatch"
+        summary["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return summary
+    if not isinstance(slot_result, dict):
+        summary["status"] = "direct_eval_missing"
+        summary["failure_reasons"] = ["missing_required_direct_eval"]
+        return summary
+    if (
+        str(slot_result.get("slot_id") or "") != str(slot.get("slot_id") or "")
+        or str(slot_result.get("review_id") or "") != review_id
+        or str(slot_result.get("forest_unit_id") or "")
+        != str(slot.get("forest_unit_id") or "")
+        or str(slot_result.get("expected_source_set_id") or "")
+        != str(slot.get("expected_source_set_id") or "")
+    ):
+        summary["status"] = "direct_eval_identity_mismatch"
+        summary["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return summary
+    review_coverage = payload.get("review_component_eval_coverage")
+    if not isinstance(review_coverage, dict):
+        summary["status"] = "direct_eval_schema_invalid"
+        summary["failure_reasons"] = ["direct_eval_schema_invalid"]
+        return summary
+    if (
+        not bool(payload.get("passed"))
+        or not bool(review_coverage.get("passed"))
+        or not bool(slot_result.get("passed"))
+        or review_id not in covered_review_ids
+    ):
+        summary["status"] = "direct_eval_failed"
+        summary["failure_reasons"] = ["direct_eval_threshold_failed"]
+        return summary
+    summary["status"] = "direct_eval_present"
+    summary["passed"] = True
+    return summary
+
+
 def _forest_plan_profile_phase_status(
     *,
     phase_name: str,
@@ -979,6 +1208,143 @@ def _forest_plan_profile_phase_status(
     return base
 
 
+def _forest_plan_component_retrieval_phase_status(
+    *,
+    phase_name: str,
+    coverage_class: str,
+    lane_id: str,
+    source_set_id: str,
+    output_dir: Path,
+    results_path_value: object,
+    expected_contract_id: str,
+    required_source_set_ids: list[str],
+) -> dict[str, Any]:
+    if not str(results_path_value or "").strip():
+        return {
+            "phase_name": phase_name,
+            "producer": "forest_plan_component_retrieval_evaluation",
+            "coverage_class": coverage_class,
+            "status": "direct_eval_schema_invalid",
+            "summary_present": False,
+            "summary_path": None,
+            "direct_eval_present": False,
+            "direct_eval_passed": False,
+            "case_count": None,
+            "hard_negative_case_count": None,
+            "threshold_failures": [],
+            "failure_reasons": ["direct_eval_schema_invalid"],
+            "contract_id": expected_contract_id or lane_id,
+            "details": {"lane_id": lane_id},
+        }
+
+    results_path = output_dir / str(results_path_value)
+    result = _read_json_if_exists(results_path)
+    base = {
+        "phase_name": phase_name,
+        "producer": "forest_plan_component_retrieval_evaluation",
+        "coverage_class": coverage_class,
+        "summary_present": isinstance(result, dict),
+        "summary_path": str(results_path),
+        "direct_eval_present": False,
+        "direct_eval_passed": False,
+        "case_count": None,
+        "hard_negative_case_count": None,
+        "threshold_failures": [],
+        "failure_reasons": [],
+        "contract_id": expected_contract_id or lane_id,
+        "details": {
+            "lane_id": lane_id,
+            "expected_contract_id": expected_contract_id or lane_id,
+            "expected_source_set_id": source_set_id,
+            "required_source_set_ids": required_source_set_ids,
+        },
+    }
+    if not isinstance(result, dict):
+        base["status"] = "direct_eval_missing"
+        base["failure_reasons"] = ["missing_required_direct_eval"]
+        return base
+    required_keys = (
+        "schema_version",
+        "contract_id",
+        "passed",
+        "source_set_id",
+        "expected_active_source_set_ids",
+        "case_count",
+        "expected_pass_case_count",
+        "hard_negative_case_count",
+        "covered_forest_unit_ids",
+        "required_forest_unit_ids",
+        "metrics",
+    )
+    if any(key not in result for key in required_keys):
+        base["status"] = "direct_eval_schema_invalid"
+        base["failure_reasons"] = ["direct_eval_schema_invalid"]
+        base["details"]["missing_keys"] = [
+            key for key in required_keys if key not in result
+        ]
+        return base
+    expected_active_source_set_ids = required_source_set_ids or [source_set_id]
+    actual_expected_active_source_set_ids = _string_list(
+        result.get("expected_active_source_set_ids")
+    )
+    base["case_count"] = _first_numeric(result.get("case_count"))
+    base["hard_negative_case_count"] = _first_numeric(
+        result.get("hard_negative_case_count"),
+        _metric_value(result, "hard_negative_case_count"),
+    )
+    base["details"].update(
+        {
+            "schema_version": result.get("schema_version"),
+            "actual_contract_id": result.get("contract_id"),
+            "actual_source_set_id": result.get("source_set_id"),
+            "expected_active_source_set_ids": expected_active_source_set_ids,
+            "actual_expected_active_source_set_ids": actual_expected_active_source_set_ids,
+            "expected_pass_case_count": result.get("expected_pass_case_count"),
+            "required_forest_unit_ids": result.get("required_forest_unit_ids", []),
+            "covered_forest_unit_ids": result.get("covered_forest_unit_ids", []),
+            "failed_case_ids": result.get("failed_case_ids", []),
+            "metrics": result.get("metrics", {}),
+            "failure_category_counts": result.get("failure_category_counts", {}),
+            "failed_contract_checks": _failed_contract_check_names(result),
+        }
+    )
+    if (
+        result.get("schema_version")
+        != FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION
+    ):
+        base["status"] = "direct_eval_schema_invalid"
+        base["failure_reasons"] = ["direct_eval_schema_invalid"]
+        return base
+    if expected_contract_id and str(result.get("contract_id") or "") != expected_contract_id:
+        base["status"] = "direct_eval_identity_mismatch"
+        base["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return base
+    if (
+        str(result.get("source_set_id") or "") != source_set_id
+        or actual_expected_active_source_set_ids != expected_active_source_set_ids
+    ):
+        base["status"] = "direct_eval_identity_mismatch"
+        base["failure_reasons"] = ["direct_eval_identity_mismatch"]
+        return base
+    threshold_failures = _forest_plan_component_retrieval_threshold_failures(result)
+    if not bool(result.get("passed")) or threshold_failures:
+        base["status"] = "direct_eval_failed"
+        base["direct_eval_present"] = True
+        base["failure_reasons"] = ["direct_eval_threshold_failed"]
+        base["threshold_failures"] = threshold_failures or [
+            {
+                "metric": "producer_passed",
+                "reason": "producer_failed",
+                "actual": result.get("passed"),
+            }
+        ]
+        return base
+    base["status"] = "direct_eval_present"
+    base["direct_eval_present"] = True
+    base["direct_eval_passed"] = True
+    return base
+
+
 def _downstream_threshold_failures(*, result: dict[str, Any], contract: dict[str, Any]) -> list[dict]:
     failures: list[dict] = []
     coverage_requirements = contract.get("coverage_requirements", {})
@@ -1102,6 +1468,7 @@ def _validate_contract(payload: dict[str, Any]) -> None:
         phase_name = str(spec.get("phase_name") or "").strip()
         coverage_class = str(spec.get("coverage_class") or "").strip()
         producer = str(spec.get("producer") or "").strip()
+        required_source_set_ids = _string_list(spec.get("required_source_set_ids"))
         if not phase_name:
             raise ValueError("source_set_phases entries require phase_name")
         if phase_name in seen_phase_names:
@@ -1125,11 +1492,25 @@ def _validate_contract(payload: dict[str, Any]) -> None:
             raise ValueError(
                 f"forest-plan-profile direct-eval phase {phase_name!r} requires results_path"
             )
+        if producer == "forest_plan_component_retrieval_evaluation" and not str(
+            spec.get("results_path") or ""
+        ).strip():
+            raise ValueError(
+                "forest-plan-component-retrieval direct-eval phase "
+                f"{phase_name!r} requires results_path"
+            )
+        if spec.get("required_source_set_ids") is not None and not required_source_set_ids:
+            raise ValueError(
+                f"phase-eval direct-eval phase {phase_name!r} has an empty "
+                "required_source_set_ids list"
+            )
     for key in (
         "upstream_results_path",
         "downstream_manifest_path",
         "review_contract_manifest_path",
         "review_contract_results_path",
+        "component_review_coverage_manifest_path",
+        "component_review_coverage_results_path",
         "declared_review_eval_path",
     ):
         if not str(payload.get(key) or "").strip():
@@ -1252,6 +1633,32 @@ def _forest_plan_profile_threshold_failures(result: dict[str, Any]) -> list[dict
                 "profiles_below_floor_ids": _string_list(
                     result.get("profiles_below_floor_ids")
                 ),
+            }
+        )
+    return failures
+
+
+def _forest_plan_component_retrieval_threshold_failures(
+    result: dict[str, Any],
+) -> list[dict[str, Any]]:
+    failures: list[dict[str, Any]] = []
+    failed_contract_checks = _failed_contract_check_names(result)
+    if failed_contract_checks:
+        failures.append(
+            {
+                "metric": "contract_checks",
+                "reason": "contract_checks_failed",
+                "failed_checks": failed_contract_checks,
+            }
+        )
+    failed_case_ids = _string_list(result.get("failed_case_ids"))
+    if failed_case_ids:
+        failures.append(
+            {
+                "metric": "failed_case_ids",
+                "reason": "case_failures",
+                "actual": len(failed_case_ids),
+                "failed_case_ids": failed_case_ids,
             }
         )
     return failures

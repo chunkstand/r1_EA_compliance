@@ -1771,6 +1771,159 @@
       ]
     },
     {
+      "id": "full_canonical_forest_plan_component_retrieval_eval",
+      "label": "Full canonical forest-plan component retrieval eval coverage",
+      "path": "evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "forest_plan_component_coverage_gap",
+      "checks": [
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_contract_id",
+          "json_path": "contract_id",
+          "equals": "region1-forest-plan-component-retrieval-eval",
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_source_set_matches",
+          "json_path": "source_set_id",
+          "equals": "source-set-5e65d845ce77e1a0",
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches",
+          "json_path": "expected_active_source_set_ids",
+          "equals": [
+            "source-set-5e65d845ce77e1a0"
+          ],
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_case_count",
+          "json_path": "case_count",
+          "min": 6
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_expected_pass_case_count",
+          "json_path": "expected_pass_case_count",
+          "min": 4
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_hard_negative_case_count",
+          "json_path": "hard_negative_case_count",
+          "min": 2
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_required_forests_covered",
+          "json_path": "covered_forest_unit_ids",
+          "contains_all": [
+            "beaverhead-deerlodge-nf",
+            "custer-gallatin-nf",
+            "flathead-nf"
+          ]
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_precision",
+          "json_path": "metrics.component_retrieval_precision",
+          "min": 1.0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_recall",
+          "json_path": "metrics.component_retrieval_recall",
+          "min": 1.0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_retrieval_eval_wrong_forest_rate",
+          "json_path": "metrics.wrong_forest_component_rate",
+          "equals": 0.0
+        }
+      ]
+    },
+    {
+      "id": "full_canonical_forest_plan_component_eval_coverage",
+      "label": "Full canonical forest-plan component review coverage",
+      "path": "evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "forest_plan_component_coverage_gap",
+      "checks": [
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_id",
+          "json_path": "coverage_id",
+          "equals": "region1-forest-plan-component-eval-coverage",
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_required_review_count",
+          "json_path": "required_review_count",
+          "equals": 3
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_covered_review_count",
+          "json_path": "covered_review_count",
+          "equals": 3
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_required_review_ids",
+          "json_path": "required_review_ids",
+          "contains_all": [
+            "v1-cg-ecid-compliance-review",
+            "v1-cg-ecid-source-delta-review",
+            "west-reservoir-67436"
+          ]
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_covered_review_ids",
+          "json_path": "covered_review_ids",
+          "contains_all": [
+            "v1-cg-ecid-compliance-review",
+            "v1-cg-ecid-source-delta-review",
+            "west-reservoir-67436"
+          ]
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_distinct_forest_count",
+          "json_path": "distinct_forest_count",
+          "min": 2
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_missing_contract_count",
+          "json_path": "missing_contract_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_missing_result_count",
+          "json_path": "missing_result_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_stale_identity_count",
+          "json_path": "stale_identity_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_unresolved_review_count",
+          "json_path": "unresolved_review_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_forest_plan_component_eval_coverage_blocked_typed_slot_count",
+          "json_path": "blocked_typed_slot_count",
+          "equals": 0
+        }
+      ]
+    },
+    {
       "id": "phase_eval_core",
       "label": "Current-promotion review phase eval readiness",
       "path": "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",
@@ -1816,6 +1969,28 @@
           "name": "phase_eval_contract_backed_promotion_ready",
           "json_path": "contract_backed_promotion_ready",
           "equals": true,
+          "failure_category": "unsupported_package_evidence"
+        },
+        {
+          "name": "phase_eval_required_review_eval_ids",
+          "json_path": "required_review_eval_ids",
+          "contains_all": [
+            "v1_ea_eval",
+            "real_package_review_coverage",
+            "forest_plan_component_eval_coverage"
+          ],
+          "failure_category": "unsupported_package_evidence"
+        },
+        {
+          "name": "phase_eval_missing_review_eval_ids",
+          "json_path": "missing_review_eval_ids",
+          "equals": [],
+          "failure_category": "unsupported_package_evidence"
+        },
+        {
+          "name": "phase_eval_review_direct_eval_status",
+          "json_path": "review_direct_eval_status",
+          "equals": "direct_eval_present",
           "failure_category": "unsupported_package_evidence"
         },
         {

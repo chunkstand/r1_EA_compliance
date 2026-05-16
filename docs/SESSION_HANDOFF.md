@@ -5,6 +5,62 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 4 Closeout
+
+This update resolves Milestone `4` in
+`docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_promotion_suite.py`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `4` is the local milestone implementation commit for this slice
+  (`eval: wire component coverage gates`).
+- closeout truth:
+  the standalone component-retrieval producer and the aggregate component-coverage producer are no
+  longer detached sidecars. `phase-eval` now consumes the standalone retrieval producer through the
+  `forest_plan_component_retrieval` phase for the active full-canonical source set, and tracked
+  declared-review `phase-eval` now requires the aggregate component-coverage summary when the
+  review ID is in the manifest-owned roster. `promotion-suite` now fails closed on the full-
+  canonical retrieval artifact, the full-canonical aggregate component-coverage artifact, and the
+  tracked current-promotion `phase_eval_core` summary if that review loses the required
+  `forest_plan_component_eval_coverage` review-scope input.
+- live signal:
+  `forest-plan-component-retrieval-eval` remains green on `source-set-5e65d845ce77e1a0`,
+  `forest-plan-component-eval-coverage` remains green with `3/3` tracked review slots covered
+  across `2` forests, and the lane boundary remains explicit:
+  standalone retrieval proves source-set retrieval coverage only;
+  aggregate component coverage proves tracked review-slot coverage only;
+  neither artifact by itself proves reviewer-ready, adjudication closure, or live-package status.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_promotion_suite.py tests/test_architecture_contract.py`
+  passed;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed after refreshing the tracked review-scoped phase artifact;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passed; and
+  `git diff --check` passed before commit.
+- next routing:
+  this milestone plan is now resolved. The next routed packet in the repo debt queue is now
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Forest Plan Component Eval Coverage Milestone 3 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

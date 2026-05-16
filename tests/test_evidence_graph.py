@@ -591,7 +591,7 @@ class EvidenceGraphTests(unittest.TestCase):
     def test_phase_eval_requires_cross_forest_profile_eval_for_source_set_graph(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            source_set_id = "source-set-test"
+            source_set_id = "source-set-5e65d845ce77e1a0"
             _write_catalog_validation(output_dir, passed=True)
             _write_extraction_diagnostics(
                 output_dir,
@@ -671,6 +671,93 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertEqual(
                 graph_phase["details"]["direct_eval_details"]["profile_failure_count"],
                 0,
+            )
+
+    def test_phase_eval_requires_component_retrieval_eval_for_full_canonical_component_phase(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-5e65d845ce77e1a0"
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-033"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-033",
+                        title="Component retrieval eval phase source",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1EA-033 | Component retrieval eval phase source | artifact abc123",
+                        text="The full-canonical source-set graph should require component retrieval coverage.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1EA-033": ["Forest plan component retrieval"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            graph_dir = output_dir / "derived" / source_set_id / "knowledge_graph"
+            graph_dir.mkdir(parents=True, exist_ok=True)
+            (graph_dir / "nepa_3d_graph_validation.json").write_text(
+                json.dumps(
+                    {
+                        "passed": True,
+                        "checks": [],
+                        "failure_category_counts": {},
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            (graph_dir / "nepa_3d_graph_summary.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "validation_passed": True,
+                        "validation_check_count": 66,
+                        "failed_validation_check_count": 0,
+                        "node_count": 10,
+                        "edge_count": 12,
+                        "readiness_blocker_counts": {},
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            missing_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            component_phase = _phase(missing_result.summary, "forest_plan_component_retrieval")
+            self.assertFalse(component_phase["passed"])
+            self.assertFalse(component_phase["reviewer_ready"])
+            self.assertEqual(component_phase["details"]["direct_eval_status"], "direct_eval_missing")
+            self.assertIn("missing_required_direct_eval", component_phase["failure_reasons"])
+            self.assertIn("proxy_only_coverage", component_phase["failure_reasons"])
+
+            _write_forest_plan_component_retrieval_eval_results(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+            )
+
+            ready_result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            component_phase = _phase(ready_result.summary, "forest_plan_component_retrieval")
+            self.assertTrue(component_phase["passed"])
+            self.assertTrue(component_phase["reviewer_ready"])
+            self.assertEqual(component_phase["details"]["direct_eval_status"], "direct_eval_present")
+            self.assertEqual(
+                component_phase["details"]["direct_eval_details"]["covered_forest_unit_ids"],
+                [
+                    "beaverhead-deerlodge-nf",
+                    "custer-gallatin-nf",
+                    "flathead-nf",
+                ],
             )
 
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
@@ -999,6 +1086,61 @@ def _write_forest_plan_profile_eval_results(
                     {
                         "forest_unit_id": "custer-gallatin-nf",
                         "hard_negative_case_count": 2,
+                    }
+                ],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_forest_plan_component_retrieval_eval_results(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    passed: bool = True,
+    failed_case_ids: list[str] | None = None,
+) -> None:
+    path = (
+        output_dir
+        / "evaluations"
+        / "forest_plan_component_retrieval"
+        / "forest_plan_component_retrieval_eval_results.json"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "forest-plan-component-retrieval-eval-results-v1",
+                "contract_id": "region1-forest-plan-component-retrieval-eval",
+                "contract_version": "1",
+                "source_set_id": source_set_id,
+                "expected_active_source_set_ids": [source_set_id],
+                "passed": passed,
+                "case_count": 6,
+                "expected_pass_case_count": 4,
+                "hard_negative_case_count": 2,
+                "covered_forest_unit_ids": [
+                    "beaverhead-deerlodge-nf",
+                    "custer-gallatin-nf",
+                    "flathead-nf",
+                ],
+                "required_forest_unit_ids": [
+                    "beaverhead-deerlodge-nf",
+                    "custer-gallatin-nf",
+                    "flathead-nf",
+                ],
+                "failed_case_ids": failed_case_ids or [],
+                "metrics": {
+                    "component_retrieval_precision": 1.0,
+                    "component_retrieval_recall": 1.0,
+                    "wrong_forest_component_rate": 0.0,
+                },
+                "contract_checks": [
+                    {
+                        "name": "metric_thresholds_met",
+                        "passed": passed,
                     }
                 ],
             },

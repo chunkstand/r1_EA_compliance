@@ -110,6 +110,13 @@ Current full-corpus promotion boundary:
   `applicable_standard_component_recall=1.0`,
   `wrong_forest_component_rate=0.0`,
   and `hard_negative_zero_match_rate=1.0`.
+- The aggregate component-coverage lane at
+  `config/forest_plan_component_eval_coverage_v1.json` is also now wired into the governed
+  readiness stack. Source-set `phase-eval` consumes the standalone retrieval producer through the
+  `forest_plan_component_retrieval` phase for the full-canonical source set, tracked declared
+  review `phase-eval` now requires the aggregate component-coverage summary when the review ID is
+  in that manifest-owned roster, and `promotion-suite` now fail-closes on both the full-canonical
+  retrieval artifact and the full-canonical aggregate component-coverage artifact.
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
   `2,889` nodes, `6,212` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
   `region1_forest_plan_blocked_profile_count=0`.
@@ -780,8 +787,10 @@ component-retrieval eval result plus the tracked review-slot component-eval resu
 `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`.
 It proves that the retrieval producer is present and green, every required tracked review slot has
 its own valid contract/result, and future non-ECID review additions remain manifest-owned one
-review at a time. By design, this still does not prove reviewer-ready or live-package status by
-itself.
+review at a time. Source-set `phase-eval` and `promotion-suite` now consume that lane as governed
+readiness inputs, but the boundary still matters: the standalone retrieval producer proves
+source-set retrieval coverage only, the aggregate component-coverage producer proves tracked
+review-slot coverage only, and neither one by itself proves reviewer-ready or live-package status.
 
 ## Common Commands
 
@@ -1747,6 +1756,19 @@ ID, active-source-set binding, covered/fixture/not-started counts, profile failu
 profiles below floor. Missing, stale, source-set-mismatched, or below-floor cross-forest profile
 summaries now fail that graph phase instead of letting the full-canonical roster claim depend only
 on structural graph counts. When
+`source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+exists and the committed direct-eval contract names it for the active full-canonical source set,
+phase eval also adds a `forest_plan_component_retrieval` phase and records the retrieval contract
+ID, expected versus actual source-set binding, covered forest-unit IDs, required forest-unit IDs,
+retrieval metrics, and failed contract checks. Missing, stale, source-set-mismatched, or below-
+floor component retrieval summaries now fail that phase and the aggregate `evaluation_coverage`
+gate rather than remaining a detached sidecar. For tracked declared-review runs, phase eval also
+consumes
+`source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
+through `review_scope`; when the review ID is in the manifest-owned component-coverage roster,
+that summary becomes a required review eval alongside `v1_ea_eval` and
+`real_package_review_coverage`, and current-promotion `phase_eval_core` can no longer ignore a
+missing or red tracked component-coverage producer. When
 `compliance_coverage_results.json` exists beside the rule-claim outputs, it also reports a
 `compliance_coverage` phase for matrix, source-claim, source-claim-term, and eval-case coverage.
 When `source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json` exists, it also

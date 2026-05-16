@@ -475,7 +475,16 @@ def _write_component_eval_manifest(root: Path, *, review_id: str, eval_file: Pat
             "schema_version": "forest-plan-component-eval-coverage-v1",
             "id": "unit-component-coverage",
             "version": "0.1.0",
+            "component_retrieval_eval": {
+                "manifest_path": "component-retrieval.json",
+            },
             "required_review_ids": [review_id],
+            "future_forest_expansion_policy": {
+                "mode": "manifest_slots_only",
+                "allow_untracked_non_ecid_reviews": False,
+                "require_per_review_contract": True,
+            },
+            "typed_blocked_slots": [],
             "coverage_thresholds": {
                 "required_review_count": 1,
                 "distinct_forest_count_min": 1,
@@ -483,6 +492,15 @@ def _write_component_eval_manifest(root: Path, *, review_id: str, eval_file: Pat
                 "missing_result_count_max": 1,
                 "stale_identity_count_max": 0,
                 "unresolved_review_count_max": 1,
+            },
+            "output_schema": {
+                "required_summary_fields": [
+                    "component_retrieval_eval",
+                    "review_component_eval_coverage",
+                    "required_review_count",
+                    "covered_review_count",
+                    "passed",
+                ]
             },
             "slots": [
                 {

@@ -659,6 +659,9 @@ def run_phase_aligned_eval(
         review_id=resolved_review_id,
         review_dir=review_dir,
     )
+    component_retrieval_direct_eval = direct_eval_coverage["source_set_phase_statuses"].get(
+        "forest_plan_component_retrieval"
+    )
 
     phases = [
         _phase(
@@ -830,6 +833,24 @@ def run_phase_aligned_eval(
                 validation_path=knowledge_graph_validation_path,
                 summary_path=knowledge_graph_summary_path,
                 expected_source_set_id=source_set_id,
+            )
+        )
+    if component_retrieval_direct_eval is not None:
+        phases.append(
+            _phase(
+                "forest_plan_component_retrieval",
+                passed=True,
+                reviewer_ready=True,
+                details={
+                    "results_path": component_retrieval_direct_eval.get("summary_path"),
+                    "expected_source_set_id": source_set_id,
+                    "required_source_set_ids": (
+                        component_retrieval_direct_eval.get("details", {}).get(
+                            "required_source_set_ids",
+                            [],
+                        )
+                    ),
+                },
             )
         )
     if review_dir is not None:

@@ -914,7 +914,14 @@ failing, when a required tracked review slot is missing or unresolved, when West
 its own valid contract/result, when tracked review or retrieval identities drift, or when the
 manifest drifts away from explicit one-review-at-a-time future forest ownership. A green result is
 still only component coverage proof; it does not by itself prove reviewer-ready or live-package
-status.
+status. The governed consumers are now explicit:
+
+- source-set `phase-eval` consumes the standalone retrieval producer through the
+  `forest_plan_component_retrieval` phase for the active full-canonical source set only
+- tracked declared-review `phase-eval` consumes the aggregate coverage summary when the review ID
+  appears in the manifest-owned slot roster
+- `promotion-suite` consumes the full-canonical standalone retrieval artifact and the full-
+  canonical aggregate component-coverage artifact as separate readiness checks
 
 ### Forest Plan Component Adjudication
 
@@ -4369,7 +4376,24 @@ Missing, stale, source-set-mismatched, schema-invalid, or below-floor cross-fore
 summaries now fail `nepa_3d_source_set_graph` and the aggregate `evaluation_coverage` phase rather
 than allowing the full-canonical roster claim to rely only on structural graph validation. This
 source-set graph direct-eval consumer still proves eval coverage only; it does not turn the roster
-green into reviewer-ready or live-package proof. When `compliance_gold_eval_results.json` exists under
+green into reviewer-ready or live-package proof. When the committed
+`phase-eval-direct-eval-v1` contract names
+`source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+for the active full-canonical source set, phase eval also includes a
+`forest_plan_component_retrieval` phase. That phase records the retrieval contract ID, expected
+versus actual source-set binding, expected active-source-set binding, covered forest-unit IDs,
+required forest-unit IDs, retrieval metrics, failure-category counts, and failed contract checks.
+Missing, stale, source-set-mismatched, schema-invalid, or below-floor component retrieval summaries
+now fail both `forest_plan_component_retrieval` and the aggregate `evaluation_coverage` phase.
+For tracked declared-review runs, the same committed direct-eval contract now also names
+`config/forest_plan_component_eval_coverage_v1.json` plus
+`source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
+as review-scope inputs. When the supplied review ID appears in that manifest-owned roster,
+`review_scope.required_summary_ids` now includes `forest_plan_component_eval_coverage` alongside
+`v1_ea_eval` and `real_package_review_coverage`; the review scope fails closed on missing, stale,
+or red aggregate coverage summaries for that tracked review. This review-scope component consumer
+still proves tracked review-slot coverage only; it does not collapse component coverage into
+reviewer-ready or live-package status by itself. When `compliance_gold_eval_results.json` exists under
 `source_library/reviews/compliance_gold_eval/`, phase eval also includes a `compliance_gold_eval`
 promotion phase with explicit failed-check details for stale source-set, rule-pack, failed-gold, or
 not-promotion-ready artifacts. For review-bound runs, phase eval prefers

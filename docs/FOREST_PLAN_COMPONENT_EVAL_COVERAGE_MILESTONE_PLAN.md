@@ -2,7 +2,36 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved through local commit `e45d47e`; Milestone 4 next)
+Status: Resolved 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 resolved through local commit `e45d47e`; Milestone 4 resolved in the local milestone implementation commit for this slice)
+
+Milestone 4 closeout summary on 2026-05-16:
+
+- The Milestone 4 closeout checkpoint is the local milestone implementation commit for this slice
+  (`eval: wire component coverage gates`).
+- Milestone 4 now resolves the readiness-integration gap for the standalone source-set retrieval
+  producer and the tracked aggregate component-coverage producer.
+- `config/phase_eval_direct_eval_v1.json` now declares:
+  a full-canonical-only direct-eval phase for
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`,
+  manifest-owned review-scope consumption of
+  `config/forest_plan_component_eval_coverage_v1.json`, and
+  the governed aggregate results path
+  `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`.
+- `phase-eval` now records the standalone retrieval producer through the
+  `forest_plan_component_retrieval` phase when the active source set matches the full-canonical
+  contract, and tracked declared reviews now require the
+  `forest_plan_component_eval_coverage` review-scope summary alongside `v1_ea_eval` and
+  `real_package_review_coverage`.
+- `config/promotion_suite_v1.json` now fails closed on missing, stale, or below-floor component
+  retrieval and aggregate component-coverage artifacts for the full-canonical corpus, and the
+  current-promotion `phase_eval_core` claim now requires the tracked review-scope component
+  coverage summary.
+- The coverage docs now preserve the boundary:
+  standalone component retrieval proves source-set retrieval coverage only;
+  aggregate component eval coverage proves tracked review-slot coverage only;
+  neither producer by itself proves reviewer-ready, adjudication closure, or live-package status.
+- The next routed packet after this resolved component-coverage lane is the architecture follow-on
+  in `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
 
 Milestone 3 closeout summary on 2026-05-16:
 
