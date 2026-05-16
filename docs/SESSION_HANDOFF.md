@@ -5,6 +5,61 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 1 Closeout
+
+This implementation pass reduces Sequence `1` in
+`docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `src/usfs_r1_ea_sources/phase_eval.py`,
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_phase_eval_boundary_contract.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_applicability_eval.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`,
+  `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/architecture_contract.toml`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- owner boundary truth:
+  `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
+  `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and the stable `phase-eval` CLI now imports
+  that owner from `src/usfs_r1_ea_sources/cli_eval.py`.
+- architecture truth:
+  `docs/architecture_contract.toml` now defines a dedicated `phase_eval` layer for
+  `phase_eval`, `phase_eval_direct_eval`, and `replay_context`, and phase-eval result artifacts now
+  belong to that owner boundary instead of the generic eval layer.
+- graph-owner truth:
+  `src/usfs_r1_ea_sources/evidence_graph.py` no longer defines the phase-eval entrypoints or
+  imports decision-support, final-QA, review-packet, replay-context, or direct-eval owner modules.
+  The graph owner is now `1317` lines, while `src/usfs_r1_ea_sources/phase_eval.py` is `2277`
+  lines.
+- boundary gate:
+  `tests/test_phase_eval_boundary_contract.py` now fail-closes canonical owner presence, stale
+  entrypoint definitions in `evidence_graph.py`, stale phase-eval owner imports inside
+  `evidence_graph.py`, and CLI import drift.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed `60/60`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_applicability_eval.py tests/test_claim_extraction.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_ea_consistency_decision_support.py tests/test_nepa_knowledge_graph_export.py tests/test_phase_eval_direct_eval_contracts.py -q`
+  passed `92/92`;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
+  passed with `51` code files above `800` lines and no import cycles;
+  `git diff --check` passed.
+- residual risk:
+  Sequence `1` established the canonical owner and guard, but the extracted owner is still
+  oversized and still imports generic helpers from `evidence_graph.py`. The next executable slice
+  is Sequence `2`, which now focuses on removing that helper dependency and splitting the
+  `phase_eval` owner under the `1800`-line budget.
+
 ## Phase Eval Orchestration Boundary Sequence 0 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint drift after commit `a983bdc`

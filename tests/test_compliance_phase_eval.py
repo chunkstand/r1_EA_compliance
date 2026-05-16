@@ -7,7 +7,7 @@ import unittest
 
 from usfs_r1_ea_sources.compliance_coverage import run_compliance_coverage
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
 from tests.support.compliance_component_fixtures import (

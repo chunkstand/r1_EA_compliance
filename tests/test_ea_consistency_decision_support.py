@@ -10,7 +10,7 @@ from usfs_r1_ea_sources.ea_consistency_decision_support import (
 from usfs_r1_ea_sources.ea_consistency_decision_support import (
     validate_ea_consistency_decision_support_report,
 )
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]

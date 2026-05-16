@@ -8,7 +8,7 @@ import unittest
 from usfs_r1_ea_sources.compliance_gold_eval import _effective_cases_for_rule_pack
 from usfs_r1_ea_sources.compliance_gold_eval import _gold_rule_pack_match_mode
 from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 
 from tests.support.compliance_phase_eval_fixtures import _write_graph_phase_outputs
 from tests.support.compliance_review_fixtures import (

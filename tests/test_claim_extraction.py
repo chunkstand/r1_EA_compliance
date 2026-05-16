@@ -12,7 +12,7 @@ from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.claim_extraction import run_claim_eval
 from usfs_r1_ea_sources.claim_extraction import validate_claim_outputs
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 

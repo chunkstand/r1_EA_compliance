@@ -11,7 +11,7 @@ from usfs_r1_ea_sources.applicability_eval import run_applicability_gold_eval
 from usfs_r1_ea_sources.applicability_eval import _read_case_artifacts
 from usfs_r1_ea_sources.applicability_eval import _score_case
 from usfs_r1_ea_sources.cli import main
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]

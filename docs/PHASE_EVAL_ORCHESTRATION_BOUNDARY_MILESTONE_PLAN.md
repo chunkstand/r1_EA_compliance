@@ -2,8 +2,8 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is now
-the next executable slice)
+Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
+reduced; Sequence 2 is now the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -34,6 +34,28 @@ Sequence 0 closeout summary on 2026-05-16:
   or unrelated dirty work needs to be parked before Sequence 1 begins.
 - The next executable slice in this packet is Sequence 1: create `src/usfs_r1_ea_sources/phase_eval.py`
   as the canonical owner and add the first boundary gate.
+
+Sequence 1 closeout summary on 2026-05-16:
+
+- Sequence 1 is reduced in the local closeout commit for this slice.
+- `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
+  `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and the stable `phase-eval` CLI now imports
+  that owner from `src/usfs_r1_ea_sources/cli_eval.py`.
+- `docs/architecture_contract.toml` now defines a dedicated `phase_eval` layer for
+  `phase_eval`, `phase_eval_direct_eval`, and `replay_context`, and phase-eval result artifacts now
+  belong to that owner boundary instead of the generic eval layer.
+- `src/usfs_r1_ea_sources/evidence_graph.py` no longer defines the phase-eval entrypoints or
+  imports decision-support, final-QA, review-packet, replay-context, or direct-eval owner modules.
+  The graph owner is now `1317` lines; the new canonical owner is `2277` lines.
+- `tests/test_phase_eval_boundary_contract.py` now fail-closes canonical owner presence, stale
+  entrypoint definitions in `evidence_graph.py`, stale phase-eval owner imports inside
+  `evidence_graph.py`, and CLI import drift.
+- The post-move architecture probe still reports no import cycles, but the hotspot picture has
+  changed: `51` code files now exceed `800` lines, `evidence_graph.py` is no longer the top
+  hotspot, and `phase_eval.py` is the new over-budget owner that Sequence 2 must split.
+- The next executable slice in this packet is Sequence 2: finish the owner cleanup by removing the
+  remaining non-graph helper dependency on `evidence_graph.py` and splitting the oversized
+  `phase_eval.py` owner below the line-budget cap.
 
 Owner context: This is a fresh standalone milestone plan for the P1 architecture finding that the
 `evidence_graph` boundary is collapsed. It does not reopen the now-resolved
@@ -381,17 +403,26 @@ Stop conditions:
 
 Outcome label: reduced
 
-Purpose: move the readiness helper tree out of `evidence_graph.py` until the graph owner is
-graph-only.
+Purpose: finish the owner extraction that Sequence 1 started by removing the remaining non-graph
+helper dependency on `evidence_graph.py` and shrinking the new `phase_eval` owner under budget.
 
 Implementation tasks:
 
-1. Move `run_phase_aligned_eval(...)` helper ownership into `phase_eval.py`, including:
-   - replay-context resolution and preflight
-   - source-set and review output-path resolution
-   - optional phase inclusion checks
-   - optional phase summary assembly for knowledge graph, applicability, compliance,
-     review-packet, decision-support, and final-QA lanes
+1. Move the remaining non-graph helper family currently imported from `evidence_graph.py` into the
+   `phase_eval` owner boundary or a small neutral helper module:
+   - `_read_json`
+   - `_read_json_if_exists`
+   - `_read_jsonl`
+   - `_write_json`
+   - `_dict`
+   - `_dict_list`
+   - `_extraction_summary_is_complete`
+   - `_int_from_summary`
+   - `_safe_int`
+   - `_current_queue_item_count`
+   - `_selector_value`
+   - `_source_set_id_from_catalog`
+   - `_utc_now`
 2. Leave `src/usfs_r1_ea_sources/evidence_graph.py` with graph-build concerns only:
    - `build_evidence_graph(...)`
    - graph record assembly
@@ -399,36 +430,37 @@ Implementation tasks:
    - graph metrics
    - graph SQLite writes
    - graph-specific helper functions used only by graph build
-3. Reuse `phase_eval_direct_eval.py` from the new owner instead of duplicating direct-eval contract
-   logic.
-4. Move `replay_context.py` with the `phase_eval` owner boundary so `evidence_graph.py` no longer
-   depends on it.
-5. Remove now-obsolete imports from `evidence_graph.py`, especially decision-support, final-QA,
-   review-packet, replay-context, direct-eval, and rule-claim path-resolution imports that belong
-   only to `phase-eval`.
-6. If the new owner would exceed the `1800` line budget, split optional phase helpers into a small
-   sibling module before closeout instead of accepting a renamed hotspot.
+3. Preserve reuse of `phase_eval_direct_eval.py` and `replay_context.py` from the new owner instead
+   of duplicating direct-eval or replay-context logic.
+4. Split `src/usfs_r1_ea_sources/phase_eval.py` if needed so the canonical owner is no larger than
+   `1800` lines at closeout, for example by moving optional phase summaries into a small sibling
+   owner such as `phase_eval_optional_phases.py`.
+5. Extend the boundary gate so future sessions cannot reintroduce a `phase_eval -> evidence_graph`
+   helper dependency after this cleanup lands.
 
 Acceptance signals:
 
-- `evidence_graph.py` no longer owns replay-context or readiness assembly logic
-- the canonical phase-eval owner consumes the direct-eval helper seam instead of duplicating it
-- the architecture contract passes with the tightened evidence-graph import direction
-- `evidence_graph.py` is at least `700` lines smaller than the Sequence 0 baseline and no larger
-  than `2800` lines
+- `phase_eval.py` no longer imports helper functions from `evidence_graph.py`
+- `evidence_graph.py` is graph-only and contains only graph-build helpers
+- the canonical phase-eval owner still consumes the direct-eval helper seam instead of duplicating
+  it
+- `evidence_graph.py` remains at least `700` lines smaller than the Sequence 0 baseline and no
+  larger than `2800` lines
+- the canonical phase-eval owner is no larger than `1800` lines after any sibling split
 
 Required verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_architecture_contract.py tests/test_cli.py -q
+rg -n "from \\.evidence_graph import" src/usfs_r1_ea_sources/phase_eval.py
 wc -l src/usfs_r1_ea_sources/evidence_graph.py src/usfs_r1_ea_sources/phase_eval.py
 git diff --check
 ```
 
 Stop conditions:
 
-- the move requires a broad rewrite of optional phase owners instead of a bounded extraction
-- the graph owner cannot shrink materially without changing external command behavior
+- the helper cleanup requires a broad rewrite of optional phase owners instead of a bounded split
+- the graph owner cannot stay graph-only without changing external command behavior
 - the new phase-eval owner exceeds the line budget and cannot be split safely inside the milestone
 
 ### Sequence 3 - Re-scope Tests To The New Owner Boundary
@@ -442,13 +474,9 @@ Implementation tasks:
 
 1. Create `tests/test_phase_eval.py` and move `phase-eval`-specific coverage there.
 2. Trim `tests/test_evidence_graph.py` so it owns only graph-build and graph-validation behaviors.
-3. Update repo-local imports of `run_phase_aligned_eval` to the new canonical owner where direct
-   Python imports are still needed:
-   - `tests/test_claim_extraction.py`
-   - `tests/test_applicability_eval.py`
-   - `tests/test_nepa_knowledge_graph_export.py`
-   - `tests/test_compliance_phase_eval.py`
-   - any other repo-local callers found in Sequence 0
+3. Keep repo-local callers on the new canonical owner import and remove any remaining hidden
+   `phase-eval` ownership from test modules that still treat `tests/test_evidence_graph.py` as the
+   primary home for readiness orchestration coverage.
 4. Keep cross-lane assertions where they belong, but do not leave phase-eval ownership hidden
    inside `tests/test_evidence_graph.py`.
 5. Prove no coverage was weakened during the move by preserving or strengthening:

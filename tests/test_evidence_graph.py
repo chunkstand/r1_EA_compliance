@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.replay_context import ReplayContextMismatchError
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 

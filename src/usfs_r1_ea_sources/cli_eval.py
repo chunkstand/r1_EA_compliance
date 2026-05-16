@@ -9,7 +9,6 @@ from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
 from .applicability_eval import run_applicability_eval
 from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
-from .evidence_graph import run_phase_aligned_eval
 from .forest_plan_component_retrieval_eval import (
     DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
 )
@@ -22,6 +21,7 @@ from .forest_plan_profile_eval import DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_
 from .forest_plan_profile_eval import run_forest_plan_profile_eval
 from .gold_coverage_eval import DEFAULT_GOLD_COVERAGE_MANIFEST_PATH
 from .gold_coverage_eval import run_gold_coverage_eval
+from .phase_eval import run_phase_aligned_eval
 from .real_package_review_coverage_eval import (
     DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
 )

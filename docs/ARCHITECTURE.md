@@ -19,6 +19,7 @@ Workbook and config
   -> reviewer catalog
   -> extraction and retrieval
   -> evidence graph and source claims
+  -> phase-eval readiness orchestration
   -> rule packs and rule-claim binding
   -> package facts and applicability
   -> EA, forest-plan, and compliance review
@@ -41,6 +42,7 @@ instructions for agents or privileged tools.
 | Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
 | Review support | Build cross-source-set reuse and readiness planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py`, `forest_plan_source_delta_readiness.py` |
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `claim_extraction.py`, `rule_claim_binding.py` |
+| Phase eval orchestration | Assemble source-set and review-scoped readiness summaries over graph, replay-context, direct-eval, and audited downstream artifacts. | `phase_eval.py`, `phase_eval_direct_eval.py`, `replay_context.py` |
 | NEPA 3D knowledge graph | Define and assemble source-set graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py` |
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |

@@ -78,15 +78,26 @@ modules = ["authority_currentness", "forest_plan_source_delta_readiness", "reuse
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
 [[layers]]
-name = "evidence_graph"
-summary = "Document evidence graph build and validation."
-modules = ["evidence_graph", "phase_eval_direct_eval", "replay_context"]
+name = "phase_eval"
+summary = "Source-set and review-scoped phase-eval orchestration, replay-context resolution, and direct-eval-aware readiness assembly."
+modules = ["phase_eval", "phase_eval_direct_eval", "replay_context"]
 allowed_import_layers = [
   "foundation",
   "extraction",
   "claims",
   "review",
   "decision_support",
+  "evidence_graph",
+  "phase_eval",
+]
+
+[[layers]]
+name = "evidence_graph"
+summary = "Document evidence graph build and validation."
+modules = ["evidence_graph"]
+allowed_import_layers = [
+  "foundation",
+  "extraction",
   "evidence_graph",
 ]
 
@@ -240,6 +251,7 @@ allowed_import_layers = [
   "review",
   "review_support",
   "evidence_graph",
+  "phase_eval",
   "knowledge_graph",
   "package_context",
   "applicability",
@@ -306,6 +318,13 @@ paths = [
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_edges.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite",
+]
+
+[[artifacts]]
+owner_layer = "phase_eval"
+paths = [
+  "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
+  "source_library/reviews/<review_id>/phase_eval_results.json",
 ]
 
 [[artifacts]]
@@ -405,7 +424,6 @@ paths = [
   "source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md",
   "source_library/evaluations/upstream/upstream_evaluation_results.json",
   "source_library/evaluations/upstream/upstream_evaluation_report.md",
-  "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
   "source_library/reviews/gold_coverage_eval/gold_coverage_eval_results.json",
   "source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",

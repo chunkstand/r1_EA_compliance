@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 import tempfile
 
-from usfs_r1_ea_sources.evidence_graph import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 
 

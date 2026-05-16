@@ -286,32 +286,31 @@ Latest closeout on 2026-05-16:
 
 ## Phase Eval Orchestration Boundary
 
-Latest baseline refresh on 2026-05-16:
+Latest closeout on 2026-05-16:
 
-- Sequence `0` closeout commit is `a983bdc`
+- Sequence `0` closeout commit remains `a983bdc`
   (`docs: close phase eval boundary sequence 0`).
-- Sequence `0` is now refreshed and routed. The next executable slice in
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `1`.
-- The predecessor direct-eval seam is already closed, so this packet no longer starts on top of
-  dirty overlapping phase-eval work. `git status -sb` was clean at the Sequence `0` baseline
-  lock.
-- The current owner-budget baseline is:
-  `src/usfs_r1_ea_sources/evidence_graph.py` `3565` lines,
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` `1675` lines, and
-  `tests/test_evidence_graph.py` `1317` lines.
-- The repo-local `run_phase_aligned_eval` caller baseline is explicit before the move:
-  `src/usfs_r1_ea_sources/cli_eval.py`,
-  `tests/test_applicability_eval.py`,
-  `tests/test_claim_extraction.py`,
-  `tests/test_compliance_gold_eval.py`,
-  `tests/test_compliance_phase_eval.py`,
-  `tests/test_ea_consistency_decision_support.py`,
-  `tests/test_evidence_graph.py`,
-  `tests/test_nepa_knowledge_graph_export.py`,
-  and the `phase-eval` CLI doubles in `tests/test_cli.py`.
-- The fresh architecture probe reports `50` code files above `800` lines, `evidence_graph.py` at
-  `32` revisions with hotspot score `114080`, and no import cycles. The boundary problem is still
-  ownership collapse, not cycle cleanup.
+- Sequence `1` is now reduced. The next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `2`.
+- `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
+  `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and `src/usfs_r1_ea_sources/cli_eval.py`
+  now imports the stable `phase-eval` command owner from that module.
+- `docs/architecture_contract.toml` now defines a dedicated `phase_eval` layer for
+  `phase_eval`, `phase_eval_direct_eval`, and `replay_context`, and phase-eval result artifacts now
+  belong to that owner boundary instead of the generic eval layer.
+- `src/usfs_r1_ea_sources/evidence_graph.py` no longer defines the phase-eval entrypoints or
+  imports decision-support, final-QA, review-packet, replay-context, or direct-eval owner modules.
+  The graph owner is now `1317` lines; `src/usfs_r1_ea_sources/phase_eval.py` is `2277` lines; and
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` remains `1675` lines.
+- `tests/test_phase_eval_boundary_contract.py` now fail-closes canonical owner presence, stale
+  entrypoint definitions in `evidence_graph.py`, stale phase-eval owner imports inside
+  `evidence_graph.py`, and CLI import drift.
+- The fresh architecture probe now reports `51` code files above `800` lines, no import cycles,
+  and `evidence_graph.py` is no longer the top hotspot. The new oversized owner is
+  `src/usfs_r1_ea_sources/phase_eval.py`.
+- The remaining work in this packet is no longer the entrypoint move itself. Sequence `2` now
+  focuses on removing the remaining `phase_eval -> evidence_graph` helper dependency and splitting
+  the oversized `phase_eval.py` owner below the `1800`-line budget.
 
 ## Cross-Forest Profile Eval Coverage
 
