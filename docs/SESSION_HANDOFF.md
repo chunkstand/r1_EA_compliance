@@ -5,6 +5,33 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 0 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `a983bdc`
+(`docs: close phase eval boundary sequence 0`).
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Sequence `0` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Sequence `0` checkpoint commit `a983bdc` and the same
+  next routed slice: Sequence `1` in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower references that describe Sequence `0` without an explicit checkpoint hash are
+  historical only. The live routing truth for this lane is this section plus the Sequence `0`
+  closeout section immediately below.
+- verification:
+  targeted `rg` and `sed` checks confirmed shared `a983bdc` routing across the plan, current-state
+  doc, and newest handoff note;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Sequence `1` remains the next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Phase Eval Orchestration Boundary Sequence 0 Closeout
 
 This docs-only update reduces Sequence `0` in
@@ -14,6 +41,9 @@ This docs-only update reduces Sequence `0` in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Sequence `0` is local commit `a983bdc`
+  (`docs: close phase eval boundary sequence 0`).
 - predecessor truth:
   the direct-eval seam in `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is already
   resolved on `2026-05-15`, the later cross-forest/component-coverage packets that consume that

@@ -288,6 +288,8 @@ Latest closeout on 2026-05-16:
 
 Latest baseline refresh on 2026-05-16:
 
+- Sequence `0` closeout commit is `a983bdc`
+  (`docs: close phase eval boundary sequence 0`).
 - Sequence `0` is now refreshed and routed. The next executable slice in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `1`.
 - The predecessor direct-eval seam is already closed, so this packet no longer starts on top of

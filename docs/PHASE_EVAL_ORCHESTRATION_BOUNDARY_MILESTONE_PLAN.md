@@ -2,11 +2,13 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Sequence 0 is refreshed against the live closed predecessor and
-current repo baseline; Sequence 1 is now the next executable slice)
+Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is now
+the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
+- The Sequence 0 closeout checkpoint is local commit `a983bdc`
+  (`docs: close phase eval boundary sequence 0`).
 - The predecessor direct-eval seam is no longer an open dirty overlap. The direct-eval lane in
   `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is resolved on `2026-05-15`, and the
   later cross-forest/component-coverage follow-ons that consume that seam are also now resolved.
