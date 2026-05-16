@@ -2,7 +2,33 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-15 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved; Milestone 2 next)
+
+Milestone 1 closeout summary on 2026-05-16:
+
+- The repo now ships the standalone component-retrieval eval contract at
+  `config/forest_plan_component_retrieval_eval_v1.json`.
+- The new owner command is `forest-plan-component-retrieval-eval`, implemented in
+  `src/usfs_r1_ea_sources/forest_plan_component_retrieval_eval.py` and registered through
+  `src/usfs_r1_ea_sources/cli_eval.py`.
+- The producer writes
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+  and
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_report.md`.
+- The shipped contract binds to active source set `source-set-5e65d845ce77e1a0`, requires `4`
+  expected-pass cases plus `2` hard negatives across Beaverhead-Deerlodge, Custer Gallatin, and
+  Flathead, and currently measures an exact top-hit retrieval surface with `top_k=1`.
+- The exact top-hit scope is intentional for Milestone 1. Focused tests still fail when required
+  components are missing, wrong-forest components are selected under higher-`top_k` fixture
+  pressure, or hard-negative queries return components. Broader multi-hit review coverage remains
+  Milestone 2 work.
+- The latest live replay on active source set `source-set-5e65d845ce77e1a0` is green and
+  fail-closed with `case_count=6`, `expected_pass_case_count=4`, `hard_negative_case_count=2`,
+  `component_retrieval_precision=1.0`, `component_retrieval_recall=1.0`,
+  `applicable_standard_component_recall=1.0`, `wrong_forest_component_rate=0.0`, and
+  `hard_negative_zero_match_rate=1.0`.
+- With the standalone retrieval producer now live, the next executable slice in this packet is
+  Milestone 2: expand review-scoped component eval coverage beyond ECID.
 
 Milestone 0 closeout summary on 2026-05-15:
 

@@ -10,6 +10,10 @@ from .applicability_eval import run_applicability_eval
 from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
 from .evidence_graph import run_phase_aligned_eval
+from .forest_plan_component_retrieval_eval import (
+    DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
+)
+from .forest_plan_component_retrieval_eval import run_forest_plan_component_retrieval_eval
 from .forest_plan_profile_eval import DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH
 from .forest_plan_profile_eval import run_forest_plan_profile_eval
 from .gold_coverage_eval import DEFAULT_GOLD_COVERAGE_MANIFEST_PATH
@@ -29,6 +33,7 @@ from .v1_ea_eval import run_v1_ea_review_eval
 EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
+    "forest-plan-component-retrieval-eval",
     "forest-plan-profile-eval",
     "upstream-eval",
     "phase-eval",
@@ -107,6 +112,22 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     forest_plan_profile_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
     forest_plan_profile_eval.add_argument("--results-dir", type=Path)
+
+    forest_plan_component_retrieval_eval = subparsers.add_parser(
+        "forest-plan-component-retrieval-eval",
+        help="Run the standalone source-set component retrieval coverage gate.",
+    )
+    forest_plan_component_retrieval_eval.add_argument(
+        "--manifest",
+        default=DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
+        type=Path,
+    )
+    forest_plan_component_retrieval_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    forest_plan_component_retrieval_eval.add_argument("--results-dir", type=Path)
 
     phase_eval = subparsers.add_parser(
         "phase-eval",
@@ -213,6 +234,15 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
 
     if args.command == "forest-plan-profile-eval":
         result = run_forest_plan_profile_eval(
+            manifest_path=args.manifest,
+            output_dir=args.output_dir,
+            results_dir=args.results_dir,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "forest-plan-component-retrieval-eval":
+        result = run_forest_plan_component_retrieval_eval(
             manifest_path=args.manifest,
             output_dir=args.output_dir,
             results_dir=args.results_dir,

@@ -5,6 +5,54 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 1 Closeout
+
+This update resolves Milestone `1` in
+`docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+
+- scope:
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `src/usfs_r1_ea_sources/forest_plan_component_retrieval_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_forest_plan_component_retrieval_eval.py`,
+  `tests/test_cli.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- closeout truth:
+  the repo now ships a standalone component-retrieval eval producer instead of relying only on the
+  downstream review-scoped component compliance eval. The new `forest-plan-component-retrieval-eval`
+  command reads the tracked manifest and the source-set component inventory, then writes governed
+  JSON/Markdown results under
+  `source_library/evaluations/forest_plan_component_retrieval/`.
+- live signal:
+  the shipped contract binds to active source set `source-set-5e65d845ce77e1a0`, currently governs
+  an exact top-hit retrieval surface with `top_k=1`, and requires `4` expected-pass cases plus `2`
+  hard negatives across Beaverhead-Deerlodge, Custer Gallatin, and Flathead. The live replay is
+  green with `case_count=6`, `expected_pass_case_count=4`, `hard_negative_case_count=2`,
+  `component_retrieval_precision=1.0`, `component_retrieval_recall=1.0`,
+  `applicable_standard_component_recall=1.0`, `wrong_forest_component_rate=0.0`, and
+  `hard_negative_zero_match_rate=1.0`.
+- boundary truth:
+  this closes the missing retrieval-artifact gap before review-scoped component compliance scoring,
+  but it does not yet widen review-scoped component-eval breadth beyond the ECID current-promotion
+  and ECID replay contracts/results locked in Milestone `0`.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_retrieval_eval.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed `56` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`
+  passed with the green live metrics above; and
+  `git diff --check` passed.
+- next routing:
+  the next executable slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is
+  Milestone `2`: expand review-scoped component eval coverage beyond ECID and add the tracked West
+  Reservoir contract surface.
+
 ## Forest Plan Component Eval Coverage Milestone 0 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

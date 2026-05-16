@@ -1,0 +1,120 @@
+{
+  "schema_version": "forest-plan-component-retrieval-eval-v1",
+  "contract_id": "region1-forest-plan-component-retrieval-eval",
+  "version": "1",
+  "description": "Standalone component-retrieval eval coverage for the active Region 1 multi-forest component inventory. Measures exact component recall, precision, applicable-standard recall, wrong-forest selection rate, and hard-negative behavior before review-scoped component compliance scoring.",
+  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "expected_active_source_set_ids": [
+    "source-set-5e65d845ce77e1a0"
+  ],
+  "search_config": {
+    "top_k": 1
+  },
+  "coverage_requirements": {
+    "minimum_expected_pass_case_count": 4,
+    "minimum_hard_negative_case_count": 2,
+    "required_forest_unit_ids": [
+      "beaverhead-deerlodge-nf",
+      "custer-gallatin-nf",
+      "flathead-nf"
+    ]
+  },
+  "metric_thresholds": {
+    "case_count": {
+      "min": 6
+    },
+    "expected_pass_case_count": {
+      "min": 4
+    },
+    "hard_negative_case_count": {
+      "min": 2
+    },
+    "component_retrieval_precision": {
+      "min": 1.0
+    },
+    "component_retrieval_recall": {
+      "min": 1.0
+    },
+    "applicable_standard_component_recall": {
+      "min": 1.0
+    },
+    "wrong_forest_component_rate": {
+      "max": 0.0
+    },
+    "hard_negative_zero_match_rate": {
+      "min": 1.0
+    }
+  },
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "contract_id",
+      "source_set_id",
+      "case_count",
+      "expected_pass_case_count",
+      "hard_negative_case_count",
+      "metrics",
+      "contract_checks",
+      "cases",
+      "failed_case_ids"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "custer-standard-soil-exact",
+      "case_type": "expected_pass",
+      "description": "Custer Gallatin soil standard exact retrieval should select the exact standard component with no wrong-forest noise.",
+      "query": "new management activities shall not create detrimental soil conditions on more than 15 percent of an activity area",
+      "expected_forest_unit_id": "custer-gallatin-nf",
+      "expected_component_ids": [
+        "R1PLAN-custer-gallatin-nf-02-FW-STD-SOIL-01"
+      ],
+      "applicable_standard_case": true
+    },
+    {
+      "case_id": "custer-goal-air-quality-exact",
+      "case_type": "expected_pass",
+      "description": "Custer Gallatin air quality goal exact retrieval should prove non-standard component retrieval is measured independently from compliance scoring.",
+      "query": "the custer gallatin national forest cooperates with tribal federal and state agencies to meet air quality regulations as necessary",
+      "expected_forest_unit_id": "custer-gallatin-nf",
+      "expected_component_ids": [
+        "R1PLAN-custer-gallatin-nf-02-FW-GO-AQ-01"
+      ],
+      "applicable_standard_case": false
+    },
+    {
+      "case_id": "flathead-standard-soil-exact",
+      "case_type": "expected_pass",
+      "description": "Flathead soil standard exact retrieval should select the correct Forest Plan component and preserve applicable-standard recall.",
+      "query": "vegetation management activities do not create detrimental soil conditions on more than 15 percent of an activity area",
+      "expected_forest_unit_id": "flathead-nf",
+      "expected_component_ids": [
+        "R1PLAN-flathead-nf-02-FW-STD-SOIL-01"
+      ],
+      "applicable_standard_case": true
+    },
+    {
+      "case_id": "beaverhead-standard-wilderness-exact",
+      "case_type": "expected_pass",
+      "description": "Beaverhead-Deerlodge wilderness standard exact retrieval should stay forest-correct on the active Region 1 inventory.",
+      "query": "commercial timber harvest is prohibited in recommended wilderness",
+      "expected_forest_unit_id": "beaverhead-deerlodge-nf",
+      "expected_component_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-02-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11"
+      ],
+      "applicable_standard_case": true
+    },
+    {
+      "case_id": "hard-negative-forest-plan-generic",
+      "case_type": "hard_negative",
+      "description": "Generic forest-plan phrasing must not count as a component-level retrieval hit.",
+      "query": "forest plan"
+    },
+    {
+      "case_id": "hard-negative-plan-consistency-generic",
+      "case_type": "hard_negative",
+      "description": "Broad plan-consistency phrasing must not retrieve unrelated component records.",
+      "query": "plan consistency"
+    }
+  ]
+}

@@ -809,6 +809,53 @@ type/applicability/section-bound case counts, unexpected applicability, package-
 exact plan citation mismatch, exact package evidence citation mismatch, unresolved or incorrect
 compliance status, reviewer-resolution state mismatch, or unmet metric thresholds.
 
+### Forest Plan Component Retrieval Eval
+
+The `forest-plan-component-retrieval-eval` command writes:
+
+- `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+- `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_report.md`
+
+It reads a tracked manifest, default
+`config/forest_plan_component_retrieval_eval_v1.json`, plus the source-set component inventory at
+`source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json` unless
+the manifest overrides the inventory path explicitly.
+
+The manifest has schema version `forest-plan-component-retrieval-eval-v1` and records:
+
+- contract identity: `contract_id`, `version`, and `description`
+- the governed `source_set_id` plus `expected_active_source_set_ids`
+- `search_config.top_k` for the selected retrieval surface under test
+- `coverage_requirements` including minimum expected-pass case count, minimum hard-negative case
+  count, and required forest-unit IDs
+- `metric_thresholds` for case counts, component retrieval precision/recall,
+  applicable-standard component recall, wrong-forest component rate, and hard-negative zero-match
+  rate
+- case fixtures with `case_id`, `case_type`, `query`, `expected_forest_unit_id`,
+  `expected_component_ids` and/or `expected_component_family_ids`, and whether the case counts
+  toward applicable-standard recall
+- `output_schema.required_summary_fields`
+
+`forest_plan_component_retrieval_eval_results.json` has schema version
+`forest-plan-component-retrieval-eval-results-v1` and records:
+
+- contract identity, `source_set_id`, active-source-set expectations, manifest path, inventory
+  path, output paths, and `top_k`
+- pass/fail summary, case counts, covered/required forest-unit IDs, selected result count, and
+  failed case IDs
+- metrics for component retrieval precision, component retrieval recall,
+  applicable-standard component recall, wrong-forest component rate, and hard-negative
+  zero-match rate
+- contract checks for manifest shape, source-set binding, inventory presence/schema, required case
+  coverage, required forest coverage, metric thresholds, and output schema fields
+- per-case selected results with component IDs, forest-unit IDs, component types, scores,
+  matched expected components, case precision/recall, and failure reasons
+
+The retrieval eval is separate from review-scoped `forest-plan-component-eval`. It fails closed on
+missing or source-set-mismatched component inventory, malformed contract cases, missing required
+forest coverage, missing expected component hits, wrong-forest selections, hard-negative queries
+that return components, or unmet metric thresholds.
+
 ### Forest Plan Component Adjudication
 
 The `forest-plan-component-adjudication-template` command reads an existing review directory with:

@@ -207,12 +207,46 @@ Latest closeout on 2026-05-13:
 - The broader operational blocker-recovery packet in
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
   eval coverage Milestones `1-4` are now resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is Milestone `1` in
+  resumed, the next active packet is Milestone `2` in
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
 - Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
   West Reservoir in-scope decision, South Plateau routed-out decision, and ECID-only defaulting
-  baseline are all pinned before Milestone `1` begins.
+  baseline are all pinned as the starting point for the broader component-coverage packet.
+
+## Forest Plan Component Eval Coverage
+
+Latest closeout on 2026-05-16:
+
+- Milestone `1` now resolves the missing standalone component-retrieval eval lane.
+- The repo now ships a tracked standalone retrieval contract at
+  `config/forest_plan_component_retrieval_eval_v1.json`.
+- The new owner command is `forest-plan-component-retrieval-eval`, implemented in
+  `src/usfs_r1_ea_sources/forest_plan_component_retrieval_eval.py` and registered through
+  `src/usfs_r1_ea_sources/cli_eval.py`.
+- The producer writes
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+  and
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_report.md`.
+- The shipped contract binds to active source set `source-set-5e65d845ce77e1a0` and currently
+  governs an exact top-hit retrieval surface with `top_k=1`, `4` expected-pass cases, `2` hard
+  negatives, and required forest coverage for Beaverhead-Deerlodge, Custer Gallatin, and
+  Flathead.
+- The latest live replay on `source-set-5e65d845ce77e1a0` is green and fail-closed with
+  `case_count=6`,
+  `expected_pass_case_count=4`,
+  `hard_negative_case_count=2`,
+  `component_retrieval_precision=1.0`,
+  `component_retrieval_recall=1.0`,
+  `applicable_standard_component_recall=1.0`,
+  `wrong_forest_component_rate=0.0`,
+  and `hard_negative_zero_match_rate=1.0`.
+- This milestone proves source-set component retrieval quality before review-scoped component
+  compliance scoring. It does not yet widen review-scoped component-eval coverage beyond the ECID
+  contracts/results locked in Milestone `0`.
+- The next routed slice in `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md` is now
+  Milestone `2`: expand review-scoped component eval coverage beyond ECID and add the tracked West
+  Reservoir contract surface.
 
 ## Cross-Forest Profile Eval Coverage
 

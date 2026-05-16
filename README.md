@@ -100,6 +100,16 @@ Current full-corpus promotion boundary:
   contract are now aligned to `source-set-5e65d845ce77e1a0`. The refreshed readiness truth now
   promotes all `10` tracked forests/grasslands, with no remaining active full-canonical
   parser/inventory blockers.
+- The repo now also ships a standalone component-retrieval eval contract at
+  `config/forest_plan_component_retrieval_eval_v1.json`. The latest live replay on active source
+  set `source-set-5e65d845ce77e1a0` writes
+  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+  and passes with `6` cases (`4` expected-pass, `2` hard negatives),
+  `component_retrieval_precision=1.0`,
+  `component_retrieval_recall=1.0`,
+  `applicable_standard_component_recall=1.0`,
+  `wrong_forest_component_rate=0.0`,
+  and `hard_negative_zero_match_rate=1.0`.
 - The refreshed active-source-set NEPA 3D graph replay now passes with `66` checks, `0` failed,
   `2,889` nodes, `6,212` edges, `region1_forest_plan_graph_ready_profile_count=10`, and
   `region1_forest_plan_blocked_profile_count=0`.
@@ -1668,6 +1678,21 @@ review artifacts. Use this after `forest-plan-resolve` or `compliance-review` wh
 component applicability, source binding, package evidence extraction, or reviewer-resolution logic.
 Replay-scoped component contracts can live outside `source_library`; the current East Crazies replay
 uses `config/forest_plan_component_evals/v1-cg-ecid-source-delta-review.json`.
+
+Run the standalone component-retrieval eval against the active source-set inventory:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval \
+  --output-dir source_library \
+  --manifest config/forest_plan_component_retrieval_eval_v1.json
+```
+
+`forest-plan-component-retrieval-eval` reads the tracked manifest plus the source-set
+`forest_plan_components/component_inventory.json` artifact and writes
+`source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
+and a Markdown report. It measures top-hit component retrieval precision/recall, applicable-standard
+component recall, wrong-forest selection rate, and hard-negative zero-match behavior before
+review-scoped component compliance scoring.
 
 Run phase-aligned readiness evaluation:
 
