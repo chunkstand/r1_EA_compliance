@@ -294,8 +294,9 @@ Latest closeout on 2026-05-16:
   (`architecture: create phase eval owner boundary`).
 - Sequence `2` closeout commit is `a29cee8`
   (`architecture: split phase eval helper owners`).
-- Sequence `3` is now reduced in the local closeout commit for this slice. The next executable
-  slice in `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `4`.
+- Sequence `3` closeout commit is `708fd14`
+  (`tests: split phase eval owner coverage`). The next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `4`.
 - `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
   `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and `src/usfs_r1_ea_sources/cli_eval.py`
   now imports the stable `phase-eval` command owner from that module.

@@ -4,8 +4,7 @@ Date: 2026-05-13
 
 Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
 reduced through local commit `d013216`; Sequence 2 is reduced through local commit `a29cee8`;
-Sequence 3 is reduced in the local closeout commit for this slice; Sequence 4 is now the next
-executable slice)
+Sequence 3 is reduced through local commit `708fd14`; Sequence 4 is now the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -87,7 +86,8 @@ Sequence 2 closeout summary on 2026-05-16:
 
 Sequence 3 closeout summary on 2026-05-16:
 
-- Sequence 3 is reduced in the local closeout commit for this slice.
+- The Sequence 3 closeout checkpoint is local commit `708fd14`
+  (`tests: split phase eval owner coverage`).
 - `tests/test_phase_eval.py` now exists as the canonical owner for focused phase-eval orchestration
   coverage, while `tests/test_evidence_graph.py` is trimmed back to graph-build and graph-validation
   behavior only.

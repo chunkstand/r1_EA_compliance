@@ -5,6 +5,33 @@ Date: 2026-05-16
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 3 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `708fd14`
+(`tests: split phase eval owner coverage`).
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Sequence `3` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Sequence `3` checkpoint commit `708fd14` and the same
+  next routed slice: Sequence `4` in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower references that describe Sequence `3` without the explicit `708fd14` checkpoint hash
+  are historical only. The live routing truth for this lane is this section plus the Sequence `3`
+  closeout section immediately below.
+- verification:
+  targeted `rg` and `sed` checks confirmed shared `708fd14` routing across the plan, current-state
+  doc, and newest handoff note;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Sequence `4` remains the next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Phase Eval Orchestration Boundary Sequence 3 Closeout
 
 This implementation pass reduces Sequence `3` in
@@ -19,7 +46,8 @@ This implementation pass reduces Sequence `3` in
   `docs/SESSION_HANDOFF.md`,
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
 - committed checkpoint:
-  Sequence `3` is reduced in the local closeout commit for this slice.
+  Sequence `3` is local commit `708fd14`
+  (`tests: split phase eval owner coverage`).
 - test-owner truth:
   `tests/test_phase_eval.py` now exists as the canonical owner for focused phase-eval orchestration
   coverage, while `tests/test_evidence_graph.py` is trimmed back to graph-build and graph-validation
