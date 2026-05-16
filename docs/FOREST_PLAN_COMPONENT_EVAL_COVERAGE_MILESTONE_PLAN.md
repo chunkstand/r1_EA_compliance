@@ -2,10 +2,12 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved; Milestone 3 next)
+Status: Proposed 2026-05-16 (Milestone 0 resolved through local commit `8fdcf25`; Milestone 1 resolved through local commit `965201e`; Milestone 2 resolved through local commit `a69d09d`; Milestone 3 next)
 
 Milestone 2 closeout summary on 2026-05-16:
 
+- The Milestone 2 closeout checkpoint is local commit `a69d09d`
+  (`eval: broaden tracked component review coverage`).
 - Milestone 2 now resolves the review-scoped component-eval breadth gap beyond the ECID-only
   default path.
 - The repo now ships the tracked review coverage manifest at

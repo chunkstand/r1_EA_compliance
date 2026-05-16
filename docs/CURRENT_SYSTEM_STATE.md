@@ -221,11 +221,15 @@ Latest closeout on 2026-05-13:
   tracked review-scoped component coverage manifest exists, West Reservoir now has its own
   governed review contract, tracked `forest-plan-component-eval --review-id ...` no longer
   silently falls back to the ECID seed contract, and the next routed slice is Milestone `3`.
+- Forest-plan component-eval coverage Milestone `2` closeout commit is `a69d09d`
+  (`eval: broaden tracked component review coverage`).
 
 ## Forest Plan Component Eval Coverage
 
 Latest closeout on 2026-05-16:
 
+- Milestone `2` closeout commit is `a69d09d`
+  (`eval: broaden tracked component review coverage`).
 - Milestone `2` now resolves the review-scoped component-eval breadth gap beyond the ECID-only
   default path.
 - The repo now ships the tracked review coverage manifest at

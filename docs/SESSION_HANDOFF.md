@@ -5,6 +5,39 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Forest Plan Component Eval Coverage Milestone 2 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint and routing drift after commit
+`a69d09d` (`eval: broaden tracked component review coverage`).
+
+- scope:
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Milestone `2` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Milestone `2` checkpoint commit `a69d09d` and the
+  same next routed slice: Milestone `3` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`.
+- broader-stack routing correction:
+  the current-state routing layer now records the Milestone `2` checkpoint explicitly instead of
+  only naming the broader tracked-review behavior change and next packet boundary.
+- supersession truth:
+  older lower handoff sections that still route this packet to Milestone `2` or mention only the
+  pre-alignment Milestone `2` closeout note without the checkpoint hash are historical only. The
+  live routing truth for this lane is this section plus the Milestone `2` closeout section
+  immediately below.
+- verification:
+  targeted `sed` and `rg` checks confirmed the plan, current-state doc, and newest handoff note
+  now pin commit `a69d09d` and route the next executable slice as Milestone `3` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  the next executable slice after the broadened tracked review packet is Milestone `3` in
+  `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`: add the aggregate
+  component-coverage gate and future-forest routing.
+
 ## Forest Plan Component Eval Coverage Milestone 2 Closeout
 
 This update resolves Milestone `2` in
@@ -27,6 +60,9 @@ This update resolves Milestone `2` in
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`
+- committed checkpoint:
+  Milestone `2` is committed locally as `a69d09d`
+  (`eval: broaden tracked component review coverage`).
 - closeout truth:
   the repo now has a tracked review-scoped component coverage manifest and a dedicated West
   Reservoir review contract. `forest-plan-component-eval` no longer silently defaults tracked
