@@ -2,10 +2,10 @@
 
 Date: 2026-05-13
 
-Status: Resolved 2026-05-16 in the local closeout commit for Sequence 4 (Sequence 0 reduced
-through local commit `a983bdc`; Sequence 1 is reduced through local commit `d013216`; Sequence 2 is
-reduced through local commit `a29cee8`; Sequence 3 is reduced through local commit `708fd14`; next
-routed packet is Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`)
+Status: Resolved 2026-05-16 in local commit `fee4185` (Sequence 0 reduced through local commit
+`a983bdc`; Sequence 1 is reduced through local commit `d013216`; Sequence 2 is reduced through
+local commit `a29cee8`; Sequence 3 is reduced through local commit `708fd14`; next routed packet
+is Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -97,7 +97,7 @@ Sequence 3 closeout summary on 2026-05-16:
   old graph-owner test module.
 - The live test-owner sizes are now:
   `tests/test_evidence_graph.py` `364` lines,
-  `tests/test_phase_eval.py` `731` lines, and
+  `tests/test_phase_eval.py` `730` lines, and
   `tests/support/phase_eval_fixtures.py` `412` lines.
 - `tests/test_phase_eval_boundary_contract.py` now fail-closes missing canonical test-owner
   coverage, reintroduced `run_phase_aligned_eval` usage in `tests/test_evidence_graph.py`, and
@@ -108,7 +108,8 @@ Sequence 3 closeout summary on 2026-05-16:
 
 Sequence 4 closeout summary on 2026-05-16:
 
-- Sequence 4 resolves this packet in the local closeout commit for this slice.
+- The Sequence 4 closeout checkpoint is local commit `fee4185`
+  (`docs: close phase eval boundary packet`).
 - The durable docs now describe one final owner truth:
   `src/usfs_r1_ea_sources/phase_eval.py` is the canonical owner for `phase-eval`,
   `src/usfs_r1_ea_sources/evidence_graph.py` is graph-only, and

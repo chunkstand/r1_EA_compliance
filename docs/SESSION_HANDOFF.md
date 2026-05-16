@@ -5,6 +5,33 @@ Date: 2026-05-16
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 4 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `fee4185`
+(`docs: close phase eval boundary packet`).
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Sequence `4` closeout summary, the current-state phase-eval closeout
+  note, and this top handoff note now all pin the same Sequence `4` checkpoint commit `fee4185`
+  and the same next routed packet:
+  Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower references that describe Sequence `4` without the explicit `fee4185` checkpoint hash
+  are historical only. The live routing truth for this lane is this section plus the Sequence `4`
+  closeout section immediately below.
+- verification:
+  targeted `rg` and `sed` checks confirmed shared `fee4185` routing across the plan, current-state
+  doc, and newest handoff note;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the next
+  executable packet.
+
 ## Phase Eval Orchestration Boundary Sequence 4 Closeout
 
 This docs-and-closeout pass resolves Sequence `4` in
@@ -18,7 +45,8 @@ This docs-and-closeout pass resolves Sequence `4` in
   `docs/SESSION_HANDOFF.md`,
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
 - committed checkpoint:
-  Sequence `4` resolves this packet in the local closeout commit for this slice.
+  Sequence `4` is local commit `fee4185`
+  (`docs: close phase eval boundary packet`).
 - resolved boundary truth:
   `src/usfs_r1_ea_sources/phase_eval.py` remains the canonical owner for `phase-eval`,
   `src/usfs_r1_ea_sources/evidence_graph.py` remains graph-only,
@@ -106,7 +134,7 @@ This implementation pass reduces Sequence `3` in
   phase-eval test owner no longer depends on the graph-owner test module for fixtures.
 - live size truth:
   `tests/test_evidence_graph.py` is now `364` lines,
-  `tests/test_phase_eval.py` is `731` lines, and
+  `tests/test_phase_eval.py` is `730` lines, and
   `tests/support/phase_eval_fixtures.py` is `412` lines.
 - boundary gate:
   `tests/test_phase_eval_boundary_contract.py` now fail-closes missing canonical phase-eval test
