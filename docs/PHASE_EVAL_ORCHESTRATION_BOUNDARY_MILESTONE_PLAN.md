@@ -2,9 +2,10 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
-reduced through local commit `d013216`; Sequence 2 is reduced through local commit `a29cee8`;
-Sequence 3 is reduced through local commit `708fd14`; Sequence 4 is now the next executable slice)
+Status: Resolved 2026-05-16 in the local closeout commit for Sequence 4 (Sequence 0 reduced
+through local commit `a983bdc`; Sequence 1 is reduced through local commit `d013216`; Sequence 2 is
+reduced through local commit `a29cee8`; Sequence 3 is reduced through local commit `708fd14`; next
+routed packet is Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -104,6 +105,28 @@ Sequence 3 closeout summary on 2026-05-16:
 - The next executable slice in this packet is Sequence 4: close the packet by updating the durable
   docs as a resolved owner boundary, recording the final size baseline, and landing the final
   atomic closeout state.
+
+Sequence 4 closeout summary on 2026-05-16:
+
+- Sequence 4 resolves this packet in the local closeout commit for this slice.
+- The durable docs now describe one final owner truth:
+  `src/usfs_r1_ea_sources/phase_eval.py` is the canonical owner for `phase-eval`,
+  `src/usfs_r1_ea_sources/evidence_graph.py` is graph-only, and
+  `tests/test_phase_eval.py` is the focused phase-eval test owner.
+- The final post-closeout size baseline is:
+  `src/usfs_r1_ea_sources/evidence_graph.py` `1205` lines,
+  `src/usfs_r1_ea_sources/phase_eval.py` `1376` lines,
+  `tests/test_evidence_graph.py` `364` lines, and
+  `tests/test_phase_eval.py` `730` lines.
+- The final verification stack for this packet is:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_phase_eval.py tests/test_cli.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`,
+  `wc -l src/usfs_r1_ea_sources/evidence_graph.py src/usfs_r1_ea_sources/phase_eval.py tests/test_evidence_graph.py tests/test_phase_eval.py`,
+  and `git diff --check`.
+- The broader queue is now rerouted past this resolved packet. The next implementation packet is
+  Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
 
 Owner context: This is a fresh standalone milestone plan for the P1 architecture finding that the
 `evidence_graph` boundary is collapsed. It does not reopen the now-resolved

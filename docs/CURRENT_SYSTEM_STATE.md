@@ -208,8 +208,8 @@ Latest closeout on 2026-05-13:
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
   eval coverage Milestones `1-4` are now resolved in code/docs, and forest-plan component-eval
   coverage Milestones `0-4` are now also resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is now Sequence `3` in
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+  resumed, the next active packet is now Phase `0` in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
 - Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
   West Reservoir in-scope decision, South Plateau routed-out decision, and ECID-only defaulting
@@ -281,8 +281,8 @@ Latest closeout on 2026-05-16:
   neither artifact by itself proves reviewer-ready, adjudication closure, or live-package status.
 - South Plateau remains explicitly out of this packet’s minimum governed review set.
 - This milestone plan is now resolved.
-- The next routed packet in the repo debt queue is now Sequence `4` in
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- The next routed packet in the repo debt queue is now Phase `0` in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
 
 ## Phase Eval Orchestration Boundary
 
@@ -295,8 +295,8 @@ Latest closeout on 2026-05-16:
 - Sequence `2` closeout commit is `a29cee8`
   (`architecture: split phase eval helper owners`).
 - Sequence `3` closeout commit is `708fd14`
-  (`tests: split phase eval owner coverage`). The next executable slice in
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `4`.
+  (`tests: split phase eval owner coverage`). Sequence `4` resolves this packet in the local
+  closeout commit for this slice.
 - `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
   `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and `src/usfs_r1_ea_sources/cli_eval.py`
   now imports the stable `phase-eval` command owner from that module.
@@ -317,14 +317,19 @@ Latest closeout on 2026-05-16:
 - `tests/test_phase_eval.py` now owns the focused phase-eval orchestration coverage, while
   `tests/test_evidence_graph.py` is down to `364` lines and no longer imports or exercises
   `run_phase_aligned_eval`. Shared setup builders for those suites now live in
-  `tests/support/phase_eval_fixtures.py` (`412` lines), and `tests/test_phase_eval.py` is `731`
+  `tests/support/phase_eval_fixtures.py` (`412` lines), and `tests/test_phase_eval.py` is `730`
   lines.
-- The fresh architecture probe now reports `51` code files above `800` lines, no import cycles,
-  and `evidence_graph.py` is no longer the top hotspot. `src/usfs_r1_ea_sources/phase_eval.py` is
-  no longer above the `1800`-line budget.
-- The remaining work in this packet is now final packet closeout rather than code/test owner
-  extraction. Sequence `4` records the final resolved boundary state across the durable docs,
-  handoff, and size baseline.
+- The final post-closeout size baseline for this resolved packet is:
+  `src/usfs_r1_ea_sources/evidence_graph.py` `1205` lines,
+  `src/usfs_r1_ea_sources/phase_eval.py` `1376` lines,
+  `tests/test_evidence_graph.py` `364` lines, and
+  `tests/test_phase_eval.py` `730` lines.
+- The fresh architecture probe now reports `50` code files above `800` lines, no import cycles,
+  `src/usfs_r1_ea_sources/project_sow_package.py` as the top hotspot, and
+  `src/usfs_r1_ea_sources/evidence_graph.py` is no longer the top hotspot.
+  `src/usfs_r1_ea_sources/phase_eval.py` remains below the `1800`-line budget.
+- This packet is now resolved. The next routed packet is Phase `0` in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
 
 ## Cross-Forest Profile Eval Coverage
 

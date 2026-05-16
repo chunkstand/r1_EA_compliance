@@ -328,6 +328,8 @@ paths = [
 
 [[artifacts]]
 owner_layer = "phase_eval"
+# The source-set phase-eval summary stays under evidence_graph/ for path stability, but ownership
+# and contract enforcement belong to the phase_eval layer.
 paths = [
   "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
   "source_library/reviews/<review_id>/phase_eval_results.json",

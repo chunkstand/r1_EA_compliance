@@ -4353,7 +4353,9 @@ The `phase-eval` command writes `phase_eval_results.json` in the same directory.
 `--review-id` or `--review-dir` is supplied, it also writes a review-scoped copy at
 `source_library/reviews/<review_id>/phase_eval_results.json` (or the supplied review directory) with
 the same summary plus `review_id` and `review_dir`, so promotion checks can evaluate multiple
-review-specific phase results without relying on the shared source-set phase artifact. It evaluates
+review-specific phase results without relying on the shared source-set phase artifact. The
+canonical owner for these readiness summaries is `phase_eval.py`; the source-set copy remains under
+the `evidence_graph/` directory only to preserve the established artifact path. It evaluates
 catalog capture, extraction, upstream direct-eval coverage, retrieval, evidence graph, claim
 extraction, and rule-claim binding as separate phases and records phase blockers so downstream
 compliance review cannot hide an upstream failure. When

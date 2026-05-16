@@ -5,6 +5,55 @@ Date: 2026-05-16
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 4 Closeout
+
+This docs-and-closeout pass resolves Sequence `4` in
+`docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `docs/ARCHITECTURE.md`,
+  `docs/architecture_contract.toml`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- committed checkpoint:
+  Sequence `4` resolves this packet in the local closeout commit for this slice.
+- resolved boundary truth:
+  `src/usfs_r1_ea_sources/phase_eval.py` remains the canonical owner for `phase-eval`,
+  `src/usfs_r1_ea_sources/evidence_graph.py` remains graph-only,
+  the source-set `phase_eval_results.json` path remains under
+  `source_library/derived/<source_set_id>/evidence_graph/` only for path stability while
+  ownership stays with the `phase_eval` layer, and
+  `tests/test_phase_eval.py` remains the focused phase-eval test owner while
+  `tests/test_evidence_graph.py` remains graph-only.
+- final size baseline:
+  `src/usfs_r1_ea_sources/evidence_graph.py` `1205` lines,
+  `src/usfs_r1_ea_sources/phase_eval.py` `1376` lines,
+  `tests/test_evidence_graph.py` `364` lines, and
+  `tests/test_phase_eval.py` `730` lines.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_boundary_contract.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_phase_eval.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed with `138 passed`;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `PYTHONPATH=src python -m compileall src` passed;
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
+  passed with `50` code files above `800` lines, no import cycles,
+  `src/usfs_r1_ea_sources/project_sow_package.py` as the top hotspot,
+  and `src/usfs_r1_ea_sources/evidence_graph.py` no longer the top hotspot;
+  `wc -l src/usfs_r1_ea_sources/evidence_graph.py src/usfs_r1_ea_sources/phase_eval.py tests/test_evidence_graph.py tests/test_phase_eval.py`
+  passed with `1205`, `1376`, `364`, and `730` lines respectively;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check` passed.
+- supersession truth:
+  older lower references that still queue Sequence `4` are historical only. The live routing truth
+  for this lane is now this section, the resolved plan status line, and the current-state closeout
+  note.
+- next routing:
+  the next routed packet is Phase `0` in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
+
 ## Phase Eval Orchestration Boundary Sequence 3 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint drift after commit `708fd14`
