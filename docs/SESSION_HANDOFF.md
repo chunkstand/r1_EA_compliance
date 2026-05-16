@@ -5,6 +5,54 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 0 Closeout
+
+This docs-only update reduces Sequence `0` in
+`docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- predecessor truth:
+  the direct-eval seam in `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is already
+  resolved on `2026-05-15`, the later cross-forest/component-coverage packets that consume that
+  seam are also resolved, and `git status -sb` was clean at Sequence `0` start. This packet no
+  longer begins on top of unresolved dirty overlap.
+- live baseline truth:
+  `src/usfs_r1_ea_sources/evidence_graph.py` is `3565` lines,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` is `1675` lines,
+  and `tests/test_evidence_graph.py` is `1317` lines.
+  The fresh architecture probe reports `50` code files above `800` lines,
+  `evidence_graph.py` at `32` revisions with hotspot score `114080`,
+  and no import cycles.
+- caller baseline:
+  repo-local `run_phase_aligned_eval` callers are now locked before the move:
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_applicability_eval.py`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`,
+  `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  and the `phase-eval` CLI doubles in `tests/test_cli.py`.
+- next routing:
+  Sequence `1` is now the next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`:
+  create `src/usfs_r1_ea_sources/phase_eval.py` as the canonical owner, retarget the stable
+  `phase-eval` CLI import, and add the first boundary gate.
+- verification:
+  `git status -sb` confirmed a clean worktree;
+  `wc -l src/usfs_r1_ea_sources/evidence_graph.py src/usfs_r1_ea_sources/phase_eval_direct_eval.py tests/test_evidence_graph.py`
+  recorded the baseline;
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown`
+  passed;
+  `rg -n "run_phase_aligned_eval" src tests` recorded the caller roster;
+  and
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  plus `git diff --check` pass for this docs-only slice.
+
 ## Forest Plan Component Eval Coverage Milestone 4 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint and routing drift after commit

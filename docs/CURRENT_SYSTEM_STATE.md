@@ -208,7 +208,7 @@ Latest closeout on 2026-05-13:
   `docs/SYSTEM_OPERATIONAL_RECOVERY_MILESTONE_PLAN.md` is now fully resolved. Cross-forest profile
   eval coverage Milestones `1-4` are now resolved in code/docs, and forest-plan component-eval
   coverage Milestones `0-4` are now also resolved in code/docs. If the queued follow-on stack is
-  resumed, the next active packet is now
+  resumed, the next active packet is now Sequence `1` in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
 - Forest-plan component-eval coverage Milestone `0` is now resolved through local commit
   `8fdcf25` (`docs: close component eval coverage milestone 0`): the live contract/result roster,
@@ -281,8 +281,35 @@ Latest closeout on 2026-05-16:
   neither artifact by itself proves reviewer-ready, adjudication closure, or live-package status.
 - South Plateau remains explicitly out of this packet’s minimum governed review set.
 - This milestone plan is now resolved.
-- The next routed packet in the repo debt queue is now
+- The next routed packet in the repo debt queue is now Sequence `1` in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+## Phase Eval Orchestration Boundary
+
+Latest baseline refresh on 2026-05-16:
+
+- Sequence `0` is now refreshed and routed. The next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `1`.
+- The predecessor direct-eval seam is already closed, so this packet no longer starts on top of
+  dirty overlapping phase-eval work. `git status -sb` was clean at the Sequence `0` baseline
+  lock.
+- The current owner-budget baseline is:
+  `src/usfs_r1_ea_sources/evidence_graph.py` `3565` lines,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` `1675` lines, and
+  `tests/test_evidence_graph.py` `1317` lines.
+- The repo-local `run_phase_aligned_eval` caller baseline is explicit before the move:
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_applicability_eval.py`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`,
+  `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  and the `phase-eval` CLI doubles in `tests/test_cli.py`.
+- The fresh architecture probe reports `50` code files above `800` lines, `evidence_graph.py` at
+  `32` revisions with hotspot score `114080`, and no import cycles. The boundary problem is still
+  ownership collapse, not cycle cleanup.
 
 ## Cross-Forest Profile Eval Coverage
 

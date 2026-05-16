@@ -2,15 +2,43 @@
 
 Date: 2026-05-13
 
-Status: Proposed 2026-05-13 (standalone architecture follow-on; stacks after the current direct-eval
-phase-eval lane closes and is committed)
+Status: Proposed 2026-05-16 (Sequence 0 is refreshed against the live closed predecessor and
+current repo baseline; Sequence 1 is now the next executable slice)
+
+Sequence 0 closeout summary on 2026-05-16:
+
+- The predecessor direct-eval seam is no longer an open dirty overlap. The direct-eval lane in
+  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` is resolved on `2026-05-15`, and the
+  later cross-forest/component-coverage follow-ons that consume that seam are also now resolved.
+- The live baseline for this packet is refreshed:
+  `src/usfs_r1_ea_sources/evidence_graph.py` is `3565` lines,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` is `1675` lines, and
+  `tests/test_evidence_graph.py` is `1317` lines.
+- The repo-local `run_phase_aligned_eval` caller baseline is now explicit:
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_applicability_eval.py`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`,
+  `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  and the `phase-eval` CLI doubles in `tests/test_cli.py`.
+- The fresh architecture probe on `2026-05-16` now reports
+  `50` code files above `800` lines,
+  `evidence_graph.py` at `32` revisions with hotspot score `114080`,
+  and no import cycles.
+- The overlap gate for this packet is currently green: `git status -sb` is clean, so no predecessor
+  or unrelated dirty work needs to be parked before Sequence 1 begins.
+- The next executable slice in this packet is Sequence 1: create `src/usfs_r1_ea_sources/phase_eval.py`
+  as the canonical owner and add the first boundary gate.
 
 Owner context: This is a fresh standalone milestone plan for the P1 architecture finding that the
-`evidence_graph` boundary is collapsed. It does not reopen the current dirty
-`docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` implementation slice. It starts only after
-that predecessor lane is either committed under its current owner names or explicitly parked and
-rebased in Sequence 0. Completion means the `phase-eval` command still works, but its orchestration
-no longer lives in `src/usfs_r1_ea_sources/evidence_graph.py`.
+`evidence_graph` boundary is collapsed. It does not reopen the now-resolved
+`docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md` implementation slice. Sequence 0 of this
+plan exists to refresh the landed helper names, file-size baseline, caller roster, and routing
+truth before the owner extraction starts. Completion means the `phase-eval` command still works,
+but its orchestration no longer lives in `src/usfs_r1_ea_sources/evidence_graph.py`.
 
 ## Purpose
 
@@ -36,22 +64,22 @@ slice is only ready-to-close.
 - `docs/ARCHITECTURE.md` separates NEPA 3D graph ownership from document evidence graph ownership,
   but it still presents `evidence_graph.py` as part of the evidence-and-claims lane while the live
   `phase-eval` command is implemented inside that file.
-- `src/usfs_r1_ea_sources/evidence_graph.py` is currently `3535` lines and defines both
+- `src/usfs_r1_ea_sources/evidence_graph.py` is currently `3565` lines and defines both
   `build_evidence_graph(...)` and `run_phase_aligned_eval(...)`.
 - `src/usfs_r1_ea_sources/evidence_graph.py` imports decision-support, final-QA, review-packet,
   direct-eval, replay-context, and rule-claim surfaces that are not graph-build concerns.
-- The current worktree already contains a dirty follow-on helper at
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` (`1035` lines) plus dirty wiring in
-  `src/usfs_r1_ea_sources/evidence_graph.py`, `docs/architecture_contract.toml`, and
-  `docs/PHASE_EVAL_DIRECT_EVAL_GATING_MILESTONE_PLAN.md`.
-- `tests/test_evidence_graph.py` is currently `961` lines and still mixes graph-build tests with
+- The direct-eval predecessor lane is now committed, and its helper owner remains live at
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` (`1675` lines). Sequence 0 started from a
+  clean worktree, so this packet no longer overlaps unresolved dirty predecessor edits.
+- `tests/test_evidence_graph.py` is currently `1317` lines and still mixes graph-build tests with
   `phase-eval` orchestration coverage.
 - Several other test modules still import `run_phase_aligned_eval` from `evidence_graph.py`,
   including `tests/test_claim_extraction.py`, `tests/test_applicability_eval.py`,
-  `tests/test_nepa_knowledge_graph_export.py`, and `tests/test_compliance_phase_eval.py`.
-- The fresh architecture probe on 2026-05-13 reported:
-  - `evidence_graph.py`: `3535` lines, `30` revisions, hotspot score `106050`
-  - `47` code files above `800` lines
+  `tests/test_compliance_gold_eval.py`, `tests/test_compliance_phase_eval.py`,
+  `tests/test_ea_consistency_decision_support.py`, and `tests/test_nepa_knowledge_graph_export.py`.
+- The fresh architecture probe on 2026-05-16 reported:
+  - `evidence_graph.py`: `3565` lines, `32` revisions, hotspot score `114080`
+  - `50` code files above `800` lines
   - no import cycles, which means the main remaining issue here is boundary ownership rather than
     cycle cleanup
 
