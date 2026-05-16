@@ -3,7 +3,7 @@
 Date: 2026-05-13
 
 Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
-reduced; Sequence 2 is now the next executable slice)
+reduced through local commit `d013216`; Sequence 2 is now the next executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -37,7 +37,8 @@ Sequence 0 closeout summary on 2026-05-16:
 
 Sequence 1 closeout summary on 2026-05-16:
 
-- Sequence 1 is reduced in the local closeout commit for this slice.
+- The Sequence 1 closeout checkpoint is local commit `d013216`
+  (`architecture: create phase eval owner boundary`).
 - `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
   `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and the stable `phase-eval` CLI now imports
   that owner from `src/usfs_r1_ea_sources/cli_eval.py`.

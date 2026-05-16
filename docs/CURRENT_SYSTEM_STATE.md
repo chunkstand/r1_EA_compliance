@@ -290,6 +290,8 @@ Latest closeout on 2026-05-16:
 
 - Sequence `0` closeout commit remains `a983bdc`
   (`docs: close phase eval boundary sequence 0`).
+- Sequence `1` closeout commit is `d013216`
+  (`architecture: create phase eval owner boundary`).
 - Sequence `1` is now reduced. The next executable slice in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `2`.
 - `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for

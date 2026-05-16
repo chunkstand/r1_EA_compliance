@@ -5,6 +5,33 @@ Date: 2026-05-15
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 1 Alignment Pass
+
+This docs-only alignment pass closes the remaining checkpoint drift after commit `d013216`
+(`architecture: create phase eval owner boundary`).
+
+- scope:
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan status line, the Sequence `1` closeout summary, the current-state routing notes, and
+  this top handoff note now all pin the same Sequence `1` checkpoint commit `d013216` and the same
+  next routed slice: Sequence `2` in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+- supersession truth:
+  older lower references that describe Sequence `1` without the explicit `d013216` checkpoint hash
+  are historical only. The live routing truth for this lane is this section plus the Sequence `1`
+  closeout section immediately below.
+- verification:
+  targeted `rg` and `sed` checks confirmed shared `d013216` routing across the plan, current-state
+  doc, and newest handoff note;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Sequence `2` remains the next executable slice in
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
 ## Phase Eval Orchestration Boundary Sequence 1 Closeout
 
 This implementation pass reduces Sequence `1` in
@@ -27,6 +54,9 @@ This implementation pass reduces Sequence `1` in
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`,
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- committed checkpoint:
+  Sequence `1` is local commit `d013216`
+  (`architecture: create phase eval owner boundary`).
 - owner boundary truth:
   `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
   `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and the stable `phase-eval` CLI now imports
