@@ -281,7 +281,7 @@ Latest closeout on 2026-05-16:
   neither artifact by itself proves reviewer-ready, adjudication closure, or live-package status.
 - South Plateau remains explicitly out of this packet’s minimum governed review set.
 - This milestone plan is now resolved.
-- The next routed packet in the repo debt queue is now Sequence `3` in
+- The next routed packet in the repo debt queue is now Sequence `4` in
   `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
 
 ## Phase Eval Orchestration Boundary
@@ -293,8 +293,9 @@ Latest closeout on 2026-05-16:
 - Sequence `1` closeout commit is `d013216`
   (`architecture: create phase eval owner boundary`).
 - Sequence `2` closeout commit is `a29cee8`
-  (`architecture: split phase eval helper owners`). The next executable slice in
-  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `3`.
+  (`architecture: split phase eval helper owners`).
+- Sequence `3` is now reduced in the local closeout commit for this slice. The next executable
+  slice in `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md` is Sequence `4`.
 - `src/usfs_r1_ea_sources/phase_eval.py` now exists as the canonical owner for
   `PhaseEvalResult` and `run_phase_aligned_eval(...)`, and `src/usfs_r1_ea_sources/cli_eval.py`
   now imports the stable `phase-eval` command owner from that module.
@@ -312,12 +313,17 @@ Latest closeout on 2026-05-16:
 - `tests/test_phase_eval_boundary_contract.py` now fail-closes canonical owner presence, stale
   entrypoint definitions in `evidence_graph.py`, stale phase-eval owner imports inside
   `evidence_graph.py`, reintroduced moved-helper definitions, and CLI import drift.
+- `tests/test_phase_eval.py` now owns the focused phase-eval orchestration coverage, while
+  `tests/test_evidence_graph.py` is down to `364` lines and no longer imports or exercises
+  `run_phase_aligned_eval`. Shared setup builders for those suites now live in
+  `tests/support/phase_eval_fixtures.py` (`412` lines), and `tests/test_phase_eval.py` is `731`
+  lines.
 - The fresh architecture probe now reports `51` code files above `800` lines, no import cycles,
   and `evidence_graph.py` is no longer the top hotspot. `src/usfs_r1_ea_sources/phase_eval.py` is
   no longer above the `1800`-line budget.
-- The remaining work in this packet is now test-boundary cleanup rather than owner extraction.
-  Sequence `3` re-scopes the lingering phase-eval-specific coverage out of
-  `tests/test_evidence_graph.py` and into a dedicated `tests/test_phase_eval.py` owner.
+- The remaining work in this packet is now final packet closeout rather than code/test owner
+  extraction. Sequence `4` records the final resolved boundary state across the durable docs,
+  handoff, and size baseline.
 
 ## Cross-Forest Profile Eval Coverage
 

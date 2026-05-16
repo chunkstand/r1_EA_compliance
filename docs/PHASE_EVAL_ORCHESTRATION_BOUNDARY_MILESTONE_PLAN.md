@@ -4,7 +4,8 @@ Date: 2026-05-13
 
 Status: Proposed 2026-05-16 (Sequence 0 reduced through local commit `a983bdc`; Sequence 1 is
 reduced through local commit `d013216`; Sequence 2 is reduced through local commit `a29cee8`;
-Sequence 3 is now the next executable slice)
+Sequence 3 is reduced in the local closeout commit for this slice; Sequence 4 is now the next
+executable slice)
 
 Sequence 0 closeout summary on 2026-05-16:
 
@@ -83,6 +84,26 @@ Sequence 2 closeout summary on 2026-05-16:
 - The next executable slice in this packet is Sequence 3: move the remaining phase-eval-specific
   coverage out of `tests/test_evidence_graph.py` and make the test boundary match the new code
   owner boundary.
+
+Sequence 3 closeout summary on 2026-05-16:
+
+- Sequence 3 is reduced in the local closeout commit for this slice.
+- `tests/test_phase_eval.py` now exists as the canonical owner for focused phase-eval orchestration
+  coverage, while `tests/test_evidence_graph.py` is trimmed back to graph-build and graph-validation
+  behavior only.
+- Shared tempdir/source-set fixture builders now live in
+  `tests/support/phase_eval_fixtures.py`, so the new phase-eval test owner does not depend on the
+  old graph-owner test module.
+- The live test-owner sizes are now:
+  `tests/test_evidence_graph.py` `364` lines,
+  `tests/test_phase_eval.py` `731` lines, and
+  `tests/support/phase_eval_fixtures.py` `412` lines.
+- `tests/test_phase_eval_boundary_contract.py` now fail-closes missing canonical test-owner
+  coverage, reintroduced `run_phase_aligned_eval` usage in `tests/test_evidence_graph.py`, and
+  stale `replay_context` coupling in the graph-owner test module.
+- The next executable slice in this packet is Sequence 4: close the packet by updating the durable
+  docs as a resolved owner boundary, recording the final size baseline, and landing the final
+  atomic closeout state.
 
 Owner context: This is a fresh standalone milestone plan for the P1 architecture finding that the
 `evidence_graph` boundary is collapsed. It does not reopen the now-resolved

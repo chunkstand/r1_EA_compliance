@@ -8,6 +8,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PHASE_EVAL_PATH = REPO_ROOT / "src" / "usfs_r1_ea_sources" / "phase_eval.py"
 EVIDENCE_GRAPH_PATH = REPO_ROOT / "src" / "usfs_r1_ea_sources" / "evidence_graph.py"
 CLI_EVAL_PATH = REPO_ROOT / "src" / "usfs_r1_ea_sources" / "cli_eval.py"
+TEST_PHASE_EVAL_PATH = REPO_ROOT / "tests" / "test_phase_eval.py"
+TEST_EVIDENCE_GRAPH_PATH = REPO_ROOT / "tests" / "test_evidence_graph.py"
 MAX_EVIDENCE_GRAPH_LINES = 2800
 MAX_PHASE_EVAL_LINES = 1800
 FORBIDDEN_EVIDENCE_GRAPH_IMPORTS = {
@@ -105,6 +107,24 @@ def test_owner_line_budgets_hold() -> None:
     assert phase_eval_lines <= MAX_PHASE_EVAL_LINES
 
 
+def test_phase_eval_test_owner_exists_and_imports_canonical_owner() -> None:
+    assert TEST_PHASE_EVAL_PATH.exists()
+    imported_modules = _imported_modules(TEST_PHASE_EVAL_PATH)
+    source = TEST_PHASE_EVAL_PATH.read_text(encoding="utf-8")
+
+    assert "phase_eval" in imported_modules
+    assert "run_phase_aligned_eval" in source
+
+
+def test_evidence_graph_test_owner_no_longer_exercises_phase_eval() -> None:
+    imported_modules = _imported_modules(TEST_EVIDENCE_GRAPH_PATH)
+    source = TEST_EVIDENCE_GRAPH_PATH.read_text(encoding="utf-8")
+
+    assert "phase_eval" not in imported_modules
+    assert "replay_context" not in imported_modules
+    assert "run_phase_aligned_eval" not in source
+
+
 def _parse(path: Path) -> ast.Module:
     return ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 
@@ -116,6 +136,13 @@ def _imported_modules(path: Path) -> set[str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module:
             imported_modules.add(node.module.split(".", 1)[0])
+        elif (
+            isinstance(node, ast.ImportFrom)
+            and node.level == 0
+            and node.module
+            and node.module.startswith("usfs_r1_ea_sources.")
+        ):
+            imported_modules.add(node.module.split(".", 2)[1])
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name.startswith("usfs_r1_ea_sources."):

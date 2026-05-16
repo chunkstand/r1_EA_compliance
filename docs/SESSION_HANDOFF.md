@@ -5,6 +5,48 @@ Date: 2026-05-16
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Phase Eval Orchestration Boundary Sequence 3 Closeout
+
+This implementation pass reduces Sequence `3` in
+`docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`.
+
+- scope:
+  `tests/test_phase_eval.py`,
+  `tests/test_evidence_graph.py`,
+  `tests/support/phase_eval_fixtures.py`,
+  `tests/test_phase_eval_boundary_contract.py`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/PHASE_EVAL_ORCHESTRATION_BOUNDARY_MILESTONE_PLAN.md`
+- committed checkpoint:
+  Sequence `3` is reduced in the local closeout commit for this slice.
+- test-owner truth:
+  `tests/test_phase_eval.py` now exists as the canonical owner for focused phase-eval orchestration
+  coverage, while `tests/test_evidence_graph.py` is trimmed back to graph-build and graph-validation
+  behavior only.
+- support-owner truth:
+  shared tempdir/source-set builders now live in `tests/support/phase_eval_fixtures.py`, so the
+  phase-eval test owner no longer depends on the graph-owner test module for fixtures.
+- live size truth:
+  `tests/test_evidence_graph.py` is now `364` lines,
+  `tests/test_phase_eval.py` is `731` lines, and
+  `tests/support/phase_eval_fixtures.py` is `412` lines.
+- boundary gate:
+  `tests/test_phase_eval_boundary_contract.py` now fail-closes missing canonical phase-eval test
+  ownership, reintroduced `run_phase_aligned_eval` usage in `tests/test_evidence_graph.py`, and
+  stale `replay_context` coupling in the graph-owner test module.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_evidence_graph.py tests/test_claim_extraction.py tests/test_applicability_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_compliance_phase_eval.py tests/test_cli.py tests/test_architecture_contract.py tests/test_phase_eval_boundary_contract.py -q`
+  passed `126/126`;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests` passed;
+  `git diff --check` passed;
+  and `rg -n "run_phase_aligned_eval|ReplayContextMismatchError" tests/test_evidence_graph.py`
+  returned no matches.
+- residual risk:
+  the code and test owners are now split, but the packet is not yet marked resolved in the durable
+  docs. The next executable slice is Sequence `4`, which records the final resolved owner boundary,
+  final size baseline, and atomic closeout state across the docs and handoff.
+
 ## Phase Eval Orchestration Boundary Sequence 2 Alignment Pass
 
 This docs-only alignment pass closes the remaining checkpoint drift after commit `a29cee8`
