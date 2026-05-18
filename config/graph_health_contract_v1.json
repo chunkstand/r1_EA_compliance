@@ -2,7 +2,7 @@
   "schema_version": "graph-health-contract-v1",
   "contract_id": "graph-health-contract-v1",
   "as_of_date": "2026-05-18",
-  "status": "phase-1-5-starter",
+  "status": "phase-5-live",
   "required_lens_ids": [
     "source-provenance",
     "authority-currentness",

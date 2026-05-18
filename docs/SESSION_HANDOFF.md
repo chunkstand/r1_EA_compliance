@@ -5,6 +5,53 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 5 Alignment Closeout
+
+This close-gaps pass aligns the Phase 5 semantic graph packet with the live
+repo state after implementation commit `4d24e10`.
+
+- aligned boundary:
+  Phase 5 remains resolved at the semantic graph boundary only. The active
+  proving slice still keeps `evidence-graph-build` and overall root
+  `phase-eval` blocked for Phase 4 placeholder-artifact reasons, and that
+  blocked state is now explicit in the plan wording rather than only in the
+  implementation closeout prose.
+- contract alignment:
+  `config/authority_ontology_eval_v1.json`,
+  `config/authority_relationship_eval_v1.json`,
+  `config/graph_health_contract_v1.json`, and
+  `config/graph_accuracy_eval_v1.json` no longer present as starter-only
+  artifacts; they now carry live Phase 5 status.
+- negative fixture alignment:
+  `tests/test_graph_accuracy_eval.py` now fails representative regressions for
+  missing required source-set ontology nodes, missing semantic lens metadata,
+  and broken `JUSTIFIED_BY` authority-path linkage. The manifest alignment
+  test in `tests/test_authority_ontology_starter.py` now also checks the new
+  canonical source-set graph requirement fields.
+- doc alignment:
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/EVALUATION_COVERAGE_REGISTER.md` now describe the live semantic graph
+  pass boundary, the explicit blocked `evidence-graph-build` residual, and the
+  new negative semantic-graph coverage without implying full reviewer-ready
+  downstream closure.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_graph_accuracy_eval.py tests/test_authority_ontology_starter.py tests/test_phase_eval.py tests/test_architecture_contract.py tests/test_cli.py -q`
+  passed with `83` tests;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  unchanged. Phase 6 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the
+  next executable packet: applicability, rule-pack, and legally accurate
+  review on the new corpus.
+- routing note:
+  the older Phase 5 section below is now historical where it still implied
+  starter-status contracts or omitted the focused negative semantic-graph
+  coverage now checked in tests.
+
 ## Canonical Source Register Refoundation Phase 5 Graph Accuracy, Provenance Completeness, And Knowledge-Graph Gating
 
 This implementation slice completes the Phase 5 semantic graph rebase for the

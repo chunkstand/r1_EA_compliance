@@ -2,7 +2,7 @@
   "schema_version": "graph-accuracy-eval-v1",
   "contract_id": "graph-accuracy-eval-v1",
   "as_of_date": "2026-05-18",
-  "status": "phase-1-5-starter",
+  "status": "phase-5-live",
   "required_node_class_ids": [
     "authority_document",
     "forest_plan",

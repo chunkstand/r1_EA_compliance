@@ -1182,6 +1182,8 @@ Required implementation artifacts:
 
 - authority ontology, relationship, alias, and graph-health contracts
 - graph accuracy eval contract and fixtures
+- focused negative semantic graph fixtures for node-loss, lens-loss, and
+  justification-path regressions
 - graph accuracy results and summary artifacts
 - updated graph export schema docs
 - phase-eval integration for graph accuracy
@@ -1199,18 +1201,25 @@ Closeout note for the active proving slice: `evidence-graph-build` and overall
 root `phase-eval` may remain blocked by inherited Phase 4 placeholder-artifact
 state. Phase 5 closes only when the source-set semantic graph export and the
 five semantic eval families pass without weakening those downstream gates.
+Focused negative coverage must also fail representative regressions in
+ontology-required source-set node classes, semantic lens presence, and
+authority-path justification linkage.
 
 Required verification gates:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build --output-dir source_library
+# On the active proving slice this is expected to remain non-green until real
+# direct documents replace the Phase 4 placeholder artifacts. Record that
+# blocked boundary; do not weaken or bypass it for Phase 5 closeout.
 PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources authority-ontology-validate --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources authority-relationship-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources citation-alias-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources graph-health-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources graph-accuracy-eval --output-dir source_library
-PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_nepa_3d_graph_contract.py tests/test_graph_accuracy_eval.py tests/test_architecture_contract.py
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-9dcf819bc4cca486
+PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_nepa_3d_graph_contract.py tests/test_graph_accuracy_eval.py tests/test_authority_ontology_starter.py tests/test_phase_eval.py tests/test_architecture_contract.py
 git diff --check
 ```
 

@@ -1,8 +1,8 @@
 {
   "schema_version": "authority-ontology-eval-v1",
   "contract_id": "authority-ontology-eval-v1",
-  "as_of_date": "2026-05-15",
-  "status": "starter_baseline",
+  "as_of_date": "2026-05-18",
+  "status": "phase-5-live",
   "required_class_ids": [
     "authority_family",
     "authority_document",

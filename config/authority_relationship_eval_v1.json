@@ -1,8 +1,8 @@
 {
   "schema_version": "authority-relationship-eval-v1",
   "contract_id": "authority-relationship-eval-v1",
-  "as_of_date": "2026-05-15",
-  "status": "starter_baseline",
+  "as_of_date": "2026-05-18",
+  "status": "phase-5-live",
   "required_relationship_types": [
     "IMPLEMENTS",
     "INTERPRETS",

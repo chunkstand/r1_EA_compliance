@@ -42,6 +42,15 @@ Latest closeout on 2026-05-18:
   `disconnected_component_count=1`; and
   `graph-accuracy-eval` records `authority_path_count=7`,
   `justification_path_count=7`, and `relationship_type_count=7`.
+- The Phase 5 contract/eval manifests are no longer marked as starter-only.
+  `config/authority_ontology_eval_v1.json`,
+  `config/authority_relationship_eval_v1.json`,
+  `config/graph_health_contract_v1.json`, and
+  `config/graph_accuracy_eval_v1.json` now all carry live Phase 5 status.
+- Focused negative semantic-graph coverage now fails representative regressions
+  for missing required source-set ontology nodes, missing semantic lens
+  metadata, and broken `JUSTIFIED_BY` authority-path linkage in
+  `tests/test_graph_accuracy_eval.py`.
 - `phase-eval` now appends separate `authority_ontology`,
   `authority_relationships`, `citation_aliases`, `graph_health`, and
   `graph_accuracy` source-set phases. For `source-set-9dcf819bc4cca486`, all

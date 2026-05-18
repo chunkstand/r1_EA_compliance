@@ -12,6 +12,8 @@ ALIAS_REGISTER_PATH = REPO_ROOT / "config" / "citation_alias_register_v1.json"
 SCOPE_REGISTER_PATH = REPO_ROOT / "config" / "jurisdiction_scope_register_v1.json"
 ONTOLOGY_EVAL_PATH = REPO_ROOT / "config" / "authority_ontology_eval_v1.json"
 RELATIONSHIP_EVAL_PATH = REPO_ROOT / "config" / "authority_relationship_eval_v1.json"
+GRAPH_ACCURACY_EVAL_PATH = REPO_ROOT / "config" / "graph_accuracy_eval_v1.json"
+GRAPH_HEALTH_CONTRACT_PATH = REPO_ROOT / "config" / "graph_health_contract_v1.json"
 
 
 def test_authority_ontology_starter_defines_required_semantic_layers() -> None:
@@ -132,6 +134,7 @@ def test_ontology_and_relationship_eval_manifests_stay_aligned() -> None:
     assert ontology_eval["schema_version"] == "authority-ontology-eval-v1"
     assert relationship_eval["schema_version"] == "authority-relationship-eval-v1"
     assert set(ontology_eval["required_class_ids"]).issubset(class_ids)
+    assert set(ontology_eval["source_set_required_class_ids"]).issubset(class_ids)
     assert set(ontology_eval["required_object_property_ids"]).issubset(object_property_ids)
     assert set(ontology_eval["required_disjoint_set_ids"]).issubset(disjoint_set_ids)
     assert set(relationship_eval["required_relationship_types"]).issubset(relationship_type_ids)
@@ -141,6 +144,27 @@ def test_ontology_and_relationship_eval_manifests_stay_aligned() -> None:
         assert coverage["question_id"] in competency_question_ids
         assert set(coverage["required_class_ids"]).issubset(class_ids)
         assert set(coverage["required_relationship_types"]).issubset(relationship_type_ids)
+
+
+def test_graph_accuracy_and_health_manifests_define_canonical_source_set_scope() -> None:
+    ontology = _load_json(ONTOLOGY_PATH)
+    accuracy_eval = _load_json(GRAPH_ACCURACY_EVAL_PATH)
+    health_contract = _load_json(GRAPH_HEALTH_CONTRACT_PATH)
+
+    class_ids = _ids(ontology["classes"], "class_id")
+
+    assert accuracy_eval["schema_version"] == "graph-accuracy-eval-v1"
+    assert health_contract["schema_version"] == "graph-health-contract-v1"
+    assert set(accuracy_eval["required_node_class_ids"]).issubset(class_ids)
+    assert set(accuracy_eval["source_set_required_node_class_ids"]).issubset(class_ids)
+    assert set(health_contract["knowledge_graph_required_lens_ids"]) == {
+        "authority_currentness",
+        "forest_plan",
+        "package_applicability",
+        "evidence_path",
+        "semantic_relationships",
+        "readiness_blockers",
+    }
 
 
 def _load_json(path: Path) -> dict:
