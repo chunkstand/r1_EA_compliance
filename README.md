@@ -114,6 +114,9 @@ Local active import baseline on 2026-05-18:
   workbook currently contains `38` rows on
   `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
   wrapper URLs.
+- Despite its `full-complete` run ID, that broader replay is partial blocker
+  evidence only. It must not be cited as a completed full-master Milestone 1
+  replay artifact.
 - Milestone 1 has therefore reached its workbook-repair stop condition. The
   next truthful slice is governed workbook URL repair for the `15`
   `www.usda.gov` rows and the `38` Forest Service directive-wrapper rows, then

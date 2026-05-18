@@ -69,6 +69,9 @@ Milestone 1 stop-condition checkpoint on 2026-05-18:
   and the active workbook currently contains `38`
   `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
   wrapper URLs that belong to the same repair class.
+- Despite its `full-complete` run ID, that broader replay remains partial
+  blocker evidence only. It must not be cited as a completed Milestone 1
+  validation artifact or as a fresh full-master preflight closeout.
 - The same partial broader replay preserved explicit `not_found` blocker rows
   for `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
 - Milestone 1 stop condition is now reached. The remaining work is a governed

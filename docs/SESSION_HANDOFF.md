@@ -5,6 +5,41 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Alignment Closeout
+
+This follow-up closes the remaining routing/alignment gaps after the
+workbook-repair stop-condition checkpoint.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the routed docs now explicitly treat
+  `phase2-canonical-preflight-full-complete-20260518` as partial blocker
+  evidence only despite its `full-complete` run ID. It is not a completed
+  full-master Milestone 1 validation artifact.
+- historical routing note:
+  the immediately following `Canonical Source Register Import Completion
+  Milestone 1 Workbook Repair Stop Condition` section remains the live routing
+  note for this lane. The older `Canonical Source Register Import Completion
+  Milestone 1 Ecos Transport Checkpoint` section below it is now explicit
+  historical pre-stop-condition context only; its five-row USDA blocker wording
+  and replay-first next routing no longer govern.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start with the governed workbook URL repair packet for the `15`
+  `www.usda.gov` rows and the `38` Forest Service directive-wrapper rows, then
+  rerun the full-master canonical preflight.
+
 ## Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
 
 This docs-only checkpoint closes the next truthful Milestone 1 pass after the

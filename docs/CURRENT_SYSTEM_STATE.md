@@ -98,6 +98,9 @@ Latest checkpoint on 2026-05-18:
   `USFS-033`, and the active workbook currently contains `38`
   `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
   wrapper URLs that belong to the same repair class.
+- Despite its `full-complete` run ID, that broader replay remains partial
+  blocker evidence only and must not be cited as a completed Milestone 1
+  validation artifact.
 - The partial broader replay also preserved the earlier explicit `not_found`
   blocker set:
   `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
