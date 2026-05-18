@@ -5,6 +5,43 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Workbook Repair Alignment Closeout
+
+This follow-up closes the remaining routing/alignment gaps after implementation
+commit `211f0c8` (`Repair directive workbook URLs for canonical preflight`).
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the live Milestone 1 checkpoint for this lane is now the immediately
+  following `Canonical Source Register Import Completion Milestone 1 Directive
+  Workbook Repair Checkpoint` section plus the matching top sections in
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and
+  the routed plan file.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1 Alignment
+  Closeout` and `Canonical Source Register Import Completion Milestone 1
+  Workbook Repair Stop Condition` sections below are now explicit historical
+  pre-`211f0c8` context only. Their `15`-row USDA plus `38`-row directive
+  wrapper repair routing no longer governs this lane.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  rerun the fresh full-master canonical preflight against the repaired
+  workbook, and keep the residual six-row `www.usda.gov` timeout family plus
+  the preserved `FED-*` `not_found` set explicit unless that replay or a later
+  repair packet closes them first.
+
 ## Canonical Source Register Import Completion Milestone 1 Directive Workbook Repair Checkpoint
 
 This implementation slice closes the governed workbook URL-repair packet that
@@ -74,6 +111,11 @@ the prior stop-condition checkpoint routed next.
 This follow-up closes the remaining routing/alignment gaps after the
 workbook-repair stop-condition checkpoint.
 
+Historical note: this section is pre-`211f0c8` routing context only. The newer
+`Canonical Source Register Import Completion Milestone 1 Workbook Repair
+Alignment Closeout` and `Canonical Source Register Import Completion Milestone
+1 Directive Workbook Repair Checkpoint` sections above now govern this lane.
+
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
 - aligned boundary:
@@ -100,14 +142,16 @@ workbook-repair stop-condition checkpoint.
   `git diff --check`
   passed.
 - next routing:
-  start with the governed workbook URL repair packet for the `15`
-  `www.usda.gov` rows and the `38` Forest Service directive-wrapper rows, then
-  rerun the full-master canonical preflight.
+  historical only. This pre-`211f0c8` routing was closed by the workbook
+  repair packet; use the newer sections above for the live next slice.
 
 ## Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
 
 This docs-only checkpoint closes the next truthful Milestone 1 pass after the
 `ecos.fws.gov` transport repair and records why Milestone 1 cannot yet resolve.
+
+Historical note: this section is pre-`211f0c8` stop-condition context only.
+The directive workbook repair packet it routes next has since landed.
 
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
@@ -128,18 +172,16 @@ This docs-only checkpoint closes the next truthful Milestone 1 pass after the
   was intentionally stopped after `105` finalized rows once a second blocker
   class surfaced on `www.fs.usda.gov`. The partial event log already records
   timeout rows for `USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, and
-  `USFS-033`, and the active workbook currently contains `38`
+  `USFS-033` from the pre-repair workbook state. Those `38`
   `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
-  wrapper URLs in that repair class.
+  wrapper URLs were later repaired in commit `211f0c8`.
 - preserved explicit blocker rows:
   the same partial broader replay still records `not_found` rows
   `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
 - stop condition:
-  Milestone 1 is still not resolved. Its workbook-repair stop condition is now
-  explicit: the remaining work is larger than a replay-only checkpoint can
-  close safely, so the next truthful slice is governed workbook URL repair for
-  the `15` `www.usda.gov` rows and the `38` Forest Service directive-wrapper
-  rows, then a fresh full-master preflight replay.
+  historical only. This pre-`211f0c8` stop condition routed the workbook URL
+  repair packet that has now landed; use the newer sections above for the live
+  residual blocker state and next routing.
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --host www.usda.gov --run-id phase2-canonical-preflight-usda-replay-20260518`
   completed with `0/15` `preflight_ok` and `15/15` `timeout`;
@@ -150,9 +192,8 @@ This docs-only checkpoint closes the next truthful Milestone 1 pass after the
   `git diff --check`
   passed.
 - next routing:
-  do not start with another blind full-master preflight replay. Start with a
-  governed workbook URL repair packet for the two blocker families named
-  above.
+  historical only. The governed workbook URL repair packet named here has
+  already landed; use the newer sections above for the live next slice.
 
 ## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
 

@@ -66,7 +66,7 @@ Latest closeout on 2026-05-18:
 
 ## Canonical Source Register Import Completion Milestone 1 Directive Workbook Repair Checkpoint
 
-Latest checkpoint on 2026-05-18:
+Latest checkpoint on 2026-05-18 after implementation commit `211f0c8`:
 
 - The first Milestone 1 code slice is now live in capture code and config:
   `config/downloader.toml` assigns `verified_transport="curl"` to

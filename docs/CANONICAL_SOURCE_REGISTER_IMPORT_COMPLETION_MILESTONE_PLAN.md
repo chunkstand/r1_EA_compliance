@@ -42,7 +42,8 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 directive workbook-repair checkpoint on 2026-05-18:
+Milestone 1 directive workbook-repair checkpoint on 2026-05-18 after
+implementation commit `211f0c8`:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
