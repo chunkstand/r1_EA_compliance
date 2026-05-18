@@ -5,6 +5,42 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Federal Blocker Alignment Closeout
+
+This follow-up closes the remaining routing/alignment gaps after implementation
+commit `c1dc100` (`Repair federal canonical blocker rows`).
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the live Milestone 1 checkpoint for this lane is now the immediately
+  following `Canonical Source Register Import Completion Milestone 1 Federal
+  Blocker Slice Checkpoint` section plus the matching top sections in
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the routed plan file.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1
+  Unsupported-Format Alignment Closeout` and
+  `Canonical Source Register Import Completion Milestone 1 Unsupported-Format
+  Slice Checkpoint` sections below are now explicit pre-`c1dc100` context
+  only. Their earlier `12`-row remaining-blocker routing no longer governs
+  this lane.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start the governed USDA transport/final-blocker closure packet for the `6`
+  residual timeout rows, then rerun the fresh full-master canonical preflight
+  before any full `download`, `batch-download`, or `catalog-build` for the
+  entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
 
 This implementation slice closes the routed repairable federal/challenge

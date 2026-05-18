@@ -115,6 +115,8 @@ Local active import baseline on 2026-05-18:
   unsupported-format implementation commit `cf2d5f6`
   (`Resolve unsupported-format canonical blocker slice`) and closes the
   repairable federal/challenge family before the remaining USDA transport lane.
+  The active checkpoint commit for that routed slice is now `c1dc100`
+  (`Repair federal canonical blocker rows`).
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired

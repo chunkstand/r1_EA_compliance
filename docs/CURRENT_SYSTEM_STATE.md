@@ -66,7 +66,9 @@ Latest closeout on 2026-05-18:
 
 ## Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
 
-Latest checkpoint on 2026-05-18 after implementation commit `cf2d5f6`
+Latest checkpoint on 2026-05-18 after implementation commit `c1dc100`
+(`Repair federal canonical blocker rows`), the earlier unsupported-format
+implementation commit `cf2d5f6`
 (`Resolve unsupported-format canonical blocker slice`), the earlier workbook
 repair slices, replay `phase2-canonical-preflight-full-repaired-20260518`, and
 the scoped unsupported-format direct-document validation set:

@@ -43,8 +43,10 @@ Milestone 0 closeout summary on 2026-05-18:
   is Milestone 1: canonical preflight and fetch-failure closure.
 
 Milestone 1 federal-blocker slice on 2026-05-18 after implementation
-commit `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`), the
-earlier workbook repair slices, replay
+commit `c1dc100` (`Repair federal canonical blocker rows`), the earlier
+unsupported-format implementation commit `cf2d5f6`
+(`Resolve unsupported-format canonical blocker slice`), the earlier workbook
+repair slices, replay
 `phase2-canonical-preflight-full-repaired-20260518`, the scoped
 unsupported-format direct-document validation set, and the scoped federal
 repair replay:
